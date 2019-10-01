@@ -4,6 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>Ball.h</itemPath>
+      <itemPath>Block.h</itemPath>
+      <itemPath>Map.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -12,6 +15,9 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>Ball.cpp</itemPath>
+      <itemPath>Block.cpp</itemPath>
+      <itemPath>Map.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -39,6 +45,18 @@
           <standard>8</standard>
         </ccTool>
       </compileType>
+      <item path="Ball.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Ball.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Block.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Block.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Map.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Map.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
@@ -62,6 +80,18 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Ball.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Ball.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Block.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Block.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Map.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Map.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
