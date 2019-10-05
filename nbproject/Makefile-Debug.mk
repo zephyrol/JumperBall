@@ -36,9 +36,13 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/coreClasses/Ball.o \
-	${OBJECTDIR}/coreClasses/BaseClass.o \
-	${OBJECTDIR}/coreClasses/Block.o \
 	${OBJECTDIR}/coreClasses/Map.o \
+	${OBJECTDIR}/coreClasses/blocks/BaseBlock.o \
+	${OBJECTDIR}/coreClasses/blocks/Block.o \
+	${OBJECTDIR}/coreClasses/blocks/BrittleBlock.o \
+	${OBJECTDIR}/coreClasses/blocks/FireBlock.o \
+	${OBJECTDIR}/coreClasses/blocks/IceBlock.o \
+	${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o \
 	${OBJECTDIR}/main.o
 
 
@@ -71,20 +75,40 @@ ${OBJECTDIR}/coreClasses/Ball.o: coreClasses/Ball.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Ball.o coreClasses/Ball.cpp
 
-${OBJECTDIR}/coreClasses/BaseClass.o: coreClasses/BaseClass.cpp
-	${MKDIR} -p ${OBJECTDIR}/coreClasses
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/BaseClass.o coreClasses/BaseClass.cpp
-
-${OBJECTDIR}/coreClasses/Block.o: coreClasses/Block.cpp
-	${MKDIR} -p ${OBJECTDIR}/coreClasses
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Block.o coreClasses/Block.cpp
-
 ${OBJECTDIR}/coreClasses/Map.o: coreClasses/Map.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Map.o coreClasses/Map.cpp
+
+${OBJECTDIR}/coreClasses/blocks/BaseBlock.o: coreClasses/blocks/BaseBlock.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/BaseBlock.o coreClasses/blocks/BaseBlock.cpp
+
+${OBJECTDIR}/coreClasses/blocks/Block.o: coreClasses/blocks/Block.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/Block.o coreClasses/blocks/Block.cpp
+
+${OBJECTDIR}/coreClasses/blocks/BrittleBlock.o: coreClasses/blocks/BrittleBlock.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/BrittleBlock.o coreClasses/blocks/BrittleBlock.cpp
+
+${OBJECTDIR}/coreClasses/blocks/FireBlock.o: coreClasses/blocks/FireBlock.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/FireBlock.o coreClasses/blocks/FireBlock.cpp
+
+${OBJECTDIR}/coreClasses/blocks/IceBlock.o: coreClasses/blocks/IceBlock.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/IceBlock.o coreClasses/blocks/IceBlock.cpp
+
+${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o: coreClasses/blocks/SpicyBlock.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o coreClasses/blocks/SpicyBlock.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
