@@ -35,9 +35,10 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/Ball.o \
-	${OBJECTDIR}/Block.o \
-	${OBJECTDIR}/Map.o \
+	${OBJECTDIR}/coreClasses/Ball.o \
+	${OBJECTDIR}/coreClasses/BaseClass.o \
+	${OBJECTDIR}/coreClasses/Block.o \
+	${OBJECTDIR}/coreClasses/Map.o \
 	${OBJECTDIR}/main.o
 
 
@@ -65,20 +66,25 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/balljumper: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/balljumper ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/Ball.o: Ball.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/coreClasses/Ball.o: coreClasses/Ball.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Ball.o Ball.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Ball.o coreClasses/Ball.cpp
 
-${OBJECTDIR}/Block.o: Block.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/coreClasses/BaseClass.o: coreClasses/BaseClass.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Block.o Block.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/BaseClass.o coreClasses/BaseClass.cpp
 
-${OBJECTDIR}/Map.o: Map.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/coreClasses/Block.o: coreClasses/Block.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Map.o Map.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Block.o coreClasses/Block.cpp
+
+${OBJECTDIR}/coreClasses/Map.o: coreClasses/Map.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Map.o coreClasses/Map.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}

@@ -18,7 +18,7 @@ class Block {
 public:
     Block();
     Block(const Block& orig);
-    virtual ~Block();
+    virtual ~Block() = 0;
 private:
 
 };
