@@ -5,20 +5,20 @@
  */
 
 /* 
- * File:   main.cpp
+ * File:   Camera.cpp
  * Author: seb
- *
- * Created on 30 septembre 2019, 20:52
- */
-
-#include <cstdlib>
-#include "coreClasses/Types.h"
-
-using namespace std;
-
-/*
  * 
+ * Created on 5 octobre 2019, 13:12
  */
-int main(int argc, char** argv) {
+
+#include "Camera.h"
+
+Camera::Camera() {
+}
+
+Camera::Camera(const Camera& orig) {
+}
+
+Camera::~Camera() {
 }
 

@@ -8,10 +8,12 @@
       <itemPath>coreClasses/blocks/BaseBlock.h</itemPath>
       <itemPath>coreClasses/blocks/Block.h</itemPath>
       <itemPath>coreClasses/blocks/BrittleBlock.h</itemPath>
+      <itemPath>coreClasses/Camera.h</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.h</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.h</itemPath>
       <itemPath>coreClasses/Map.h</itemPath>
       <itemPath>coreClasses/blocks/SpicyBlock.h</itemPath>
+      <itemPath>coreClasses/Types.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -24,6 +26,7 @@
       <itemPath>coreClasses/blocks/BaseBlock.cpp</itemPath>
       <itemPath>coreClasses/blocks/Block.cpp</itemPath>
       <itemPath>coreClasses/blocks/BrittleBlock.cpp</itemPath>
+      <itemPath>coreClasses/Camera.cpp</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.cpp</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.cpp</itemPath>
       <itemPath>coreClasses/Map.cpp</itemPath>
@@ -59,9 +62,15 @@
       </item>
       <item path="coreClasses/Ball.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="coreClasses/Camera.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/Camera.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="coreClasses/Map.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/Map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/Types.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="coreClasses/blocks/BaseBlock.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -112,18 +121,25 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibLibItem>glm_shared</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
       <item path="coreClasses/Ball.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/Ball.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="coreClasses/BaseClass.cpp" ex="false" tool="1" flavor2="0">
+      <item path="coreClasses/Camera.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="coreClasses/BaseClass.h" ex="false" tool="3" flavor2="0">
+      <item path="coreClasses/Camera.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="coreClasses/Map.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/Map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/Types.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="coreClasses/blocks/BaseBlock.cpp" ex="false" tool="1" flavor2="0">
       </item>

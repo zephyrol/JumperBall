@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/coreClasses/Ball.o \
+	${OBJECTDIR}/coreClasses/Camera.o \
 	${OBJECTDIR}/coreClasses/Map.o \
 	${OBJECTDIR}/coreClasses/blocks/BaseBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/Block.o \
@@ -60,7 +61,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-lglm_shared
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -74,6 +75,11 @@ ${OBJECTDIR}/coreClasses/Ball.o: coreClasses/Ball.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Ball.o coreClasses/Ball.cpp
+
+${OBJECTDIR}/coreClasses/Camera.o: coreClasses/Camera.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Camera.o coreClasses/Camera.cpp
 
 ${OBJECTDIR}/coreClasses/Map.o: coreClasses/Map.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses

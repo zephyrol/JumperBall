@@ -13,14 +13,21 @@
 
 #ifndef MAP_H
 #define MAP_H
+#include "Types.h"
 
 class Map {
 public:
     Map();
     Map(const Map& orig);
+    Map(const std::string content);
+    Map(std::ifstream file);
     virtual ~Map();
 private:
-
+    unsigned int _id;
+    std::vector _blocks;
+    unsigned int _boundingBoxXMax;
+    unsigned int _boundingBoxYMax;
+  
 };
 
 #endif /* MAP_H */

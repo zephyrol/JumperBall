@@ -13,14 +13,24 @@
 
 #ifndef BALL_H
 #define BALL_H
+#include "Types.h"
 
 class Ball {
 public:
     Ball();
     Ball(const Ball& orig);
     virtual ~Ball();
-private:
 
+private:
+    unsigned int _currentBlockX;
+    unsigned int _currentBlockY;
+    unsigned int _currentBlockZ;
+    double _3DPosX;
+    double _3DPosY;
+    double _3DPosZ;
+
+    ballJumperTypes::Orientation _orientation;
+        
 };
 
 #endif /* BALL_H */
