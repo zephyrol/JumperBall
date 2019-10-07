@@ -16,8 +16,8 @@
 IceBlock::IceBlock() {
 }
 
-IceBlock::IceBlock(const IceBlock& orig) {
-}
+/*IceBlock::IceBlock(const IceBlock& orig) {
+}*/
 
 IceBlock::~IceBlock() {
 }

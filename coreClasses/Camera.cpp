@@ -13,11 +13,14 @@
 
 #include "Camera.h"
 
-Camera::Camera() {
+Camera::Camera() : _posX(0), _posY(0), _posZ(0),
+                   _dirX(0), _dirY(0), _dirZ(0),
+                   _rightX(0), _rightY(0), _rightZ(0)
+{
 }
 
-Camera::Camera(const Camera& orig) {
-}
+/*Camera::Camera(const Camera& orig) {
+}*/
 
 Camera::~Camera() {
 }

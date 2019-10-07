@@ -13,11 +13,15 @@
 
 #include "Map.h"
 
-Map::Map() {
+Map::Map() : _id (nbMaps),
+             _blocks{},
+             _boundingBoxXMax (0),
+             _boundingBoxYMax (0)
+{
 }
 
-Map::Map(const Map& orig) {
-}
+/*Map::Map(const Map& orig) {
+}*/
 
 Map::~Map() {
 }

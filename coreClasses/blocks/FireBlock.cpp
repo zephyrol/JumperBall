@@ -16,8 +16,8 @@
 FireBlock::FireBlock() {
 }
 
-FireBlock::FireBlock(const FireBlock& orig) {
-}
+/*FireBlock::FireBlock(const FireBlock& orig) {
+}*/
 
 FireBlock::~FireBlock() {
 }

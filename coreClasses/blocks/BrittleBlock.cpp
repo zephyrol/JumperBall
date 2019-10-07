@@ -16,8 +16,8 @@
 BrittleBlock::BrittleBlock() {
 }
 
-BrittleBlock::BrittleBlock(const BrittleBlock& orig) {
-}
+/*BrittleBlock::BrittleBlock(const BrittleBlock& orig) {
+}*/
 
 BrittleBlock::~BrittleBlock() {
 }

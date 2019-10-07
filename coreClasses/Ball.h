@@ -25,11 +25,12 @@ private:
     unsigned int _currentBlockX;
     unsigned int _currentBlockY;
     unsigned int _currentBlockZ;
-    double _3DPosX;
-    double _3DPosY;
-    double _3DPosZ;
+    float _3DPosX;
+    float _3DPosY;
+    float _3DPosZ;
 
     ballJumperTypes::Orientation _orientation;
+    ballJumperTypes::Direction _direction;
         
 };
 

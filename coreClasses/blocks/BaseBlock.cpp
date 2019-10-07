@@ -16,8 +16,8 @@
 BaseBlock::BaseBlock() {
 }
 
-BaseBlock::BaseBlock(const BaseBlock& orig) {
-}
+/*BaseBlock::BaseBlock(const BaseBlock& orig) {
+}*/
 
 BaseBlock::~BaseBlock() {
 }

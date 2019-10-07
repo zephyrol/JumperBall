@@ -16,8 +16,8 @@
 SpicyBlock::SpicyBlock() {
 }
 
-SpicyBlock::SpicyBlock(const SpicyBlock& orig) {
-}
+/*SpicyBlock::SpicyBlock(const SpicyBlock& orig) {
+}*/
 
 SpicyBlock::~SpicyBlock() {
 }

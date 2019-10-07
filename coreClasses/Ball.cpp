@@ -13,11 +13,20 @@
 
 #include "Ball.h"
 
-Ball::Ball() {
+Ball::Ball(): _currentBlockX(0),
+         _currentBlockY(0),
+         _currentBlockZ(0),
+         _3DPosX(0.f),
+         _3DPosY(0.f),
+         _3DPosZ(0.f),
+         _orientation(ballJumperTypes::Orientation::Up),
+         _direction(ballJumperTypes::Direction::North)
+{
 }
 
-Ball::Ball(const Ball& orig) {
-}
+/*Ball::Ball(const Ball& orig):
+{
+}*/
 
 Ball::~Ball() {
 }
