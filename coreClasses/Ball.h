@@ -19,6 +19,8 @@ class Ball {
 public:
     Ball();
     Ball(const Ball& orig);
+    void turnLeft();
+    void turnRight();
     virtual ~Ball();
 
 private:

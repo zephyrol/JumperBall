@@ -15,9 +15,12 @@
 
 Map::Map() : _id (nbMaps),
              _blocks{},
+             _map3DData{},
              _boundingBoxXMax (0),
-             _boundingBoxYMax (0)
+             _boundingBoxYMax (0),
+             _boundingBoxZMax (0)
 {
+    Map::nbMaps++;
 }
 
 /*Map::Map(const Map& orig) {

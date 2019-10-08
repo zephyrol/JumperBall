@@ -15,6 +15,7 @@
 #define TYPES_H
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace ballJumperTypes {
     
