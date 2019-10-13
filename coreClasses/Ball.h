@@ -19,8 +19,9 @@ class Ball {
 public:
     Ball();
     Ball(const Ball& orig);
-    void turnLeft();
-    void turnRight();
+    void turnLeft() noexcept;
+    void turnRight() noexcept;
+    void goStraightOn() noexcept;
     virtual ~Ball();
 
 private:
@@ -31,8 +32,8 @@ private:
     float _3DPosY;
     float _3DPosZ;
 
-    ballJumperTypes::Orientation _orientation;
-    ballJumperTypes::Direction _direction;
+    ballJumperTypes::Direction _currentSide;
+    ballJumperTypes::Direction _lookTowards;
         
 };
 

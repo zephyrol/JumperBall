@@ -19,19 +19,13 @@
 
 namespace ballJumperTypes {
     
-    enum class Orientation{
+    enum class Direction{
         North,
         South,
         East,
         West,
         Up,
         Down 
-    };
-    enum class Direction{
-        North,
-        South,
-        East,
-        West
     };
 }
 
