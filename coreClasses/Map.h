@@ -25,8 +25,7 @@ public:
     Map(const std::string content, Map::KindOfData kData );
     Map(std::ifstream file);
 
-    std::shared_ptr<Block> map3DData(unsigned int x, unsigned int y,
-    unsigned int z) const;
+    std::shared_ptr<Block> map3DData(int x, int y, int z) const;
 
     virtual ~Map();
     
