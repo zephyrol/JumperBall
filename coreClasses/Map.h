@@ -24,8 +24,12 @@ public:
     Map(const Map& orig);
     Map(const std::string content, Map::KindOfData kData );
     Map(std::ifstream file);
-    virtual ~Map();
 
+    std::shared_ptr<Block> map3DData(unsigned int x, unsigned int y,
+    unsigned int z) const;
+
+    virtual ~Map();
+    
 private:
     const unsigned int _id;
     std::vector<Block> _blocks;
@@ -33,11 +37,9 @@ private:
     unsigned int _boundingBoxXMax;
     unsigned int _boundingBoxYMax;
     unsigned int _boundingBoxZMax;
-
     
     static unsigned int nbMaps;
 };
 
-unsigned int Map::nbMaps = 0;
 #endif /* MAP_H */
 

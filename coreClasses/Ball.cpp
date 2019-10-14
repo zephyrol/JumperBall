@@ -20,7 +20,8 @@ Ball::Ball(): _currentBlockX(0),
         _3DPosY(0.f),
         _3DPosZ(0.f),
         _currentSide(ballJumperTypes::Direction::Up),
-        _lookTowards(ballJumperTypes::Direction::North)
+        _lookTowards(ballJumperTypes::Direction::North),
+        _map(nullptr)
 {
 }
 
@@ -337,5 +338,42 @@ void Ball::goStraightOn() noexcept {
             }
         default :
             break;
+    }
+
+    if (_map->map3DData(aboveX,aboveY,aboveZ)) {
+     _currentBlockX = aboveX; _currentBlockY = aboveY; _currentBlockZ = aboveZ; 
+    } 
+    else if (_map->map3DData(inFrontOfX,inFrontOfY,inFrontOfZ)) {
+     _currentBlockX = inFrontOfX; _currentBlockY = inFrontOfY; 
+     _currentBlockZ = inFrontOfZ; 
+    } 
+    else if (!_map->map3DData(leftX,leftY,leftZ) && 
+            !_map->map3DData(rightX,rightY,rightZ)) {
+        
+        ballJumperTypes::Direction sideBeforeMovement = _currentSide;
+        _currentSide = _lookTowards;
+        
+        switch (sideBeforeMovement) {
+            case ballJumperTypes::Direction::North:
+                _lookTowards = ballJumperTypes::Direction::South;
+                break;
+            case ballJumperTypes::Direction::South:
+                _lookTowards = ballJumperTypes::Direction::North;
+                break;
+            case ballJumperTypes::Direction::East:
+                _lookTowards = ballJumperTypes::Direction::West;
+                break;
+            case ballJumperTypes::Direction::West:
+                _lookTowards = ballJumperTypes::Direction::East;
+                break;
+            case ballJumperTypes::Direction::Up:
+                _lookTowards = ballJumperTypes::Direction::Down;
+                break;
+            case ballJumperTypes::Direction::Down:
+                _lookTowards = ballJumperTypes::Direction::Up;
+                break;
+            default :
+                break;
+        }
     }
 }

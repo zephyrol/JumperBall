@@ -12,6 +12,9 @@
  */
 
 #include "Map.h"
+#include <cassert>
+
+unsigned int Map::nbMaps = 0;
 
 Map::Map() : _id (nbMaps),
              _blocks{},
@@ -29,3 +32,11 @@ Map::Map() : _id (nbMaps),
 Map::~Map() {
 }
 
+std::shared_ptr<Block> Map::map3DData(unsigned int x, unsigned int y,
+    unsigned int z) const {
+
+    assert (x < _boundingBoxXMax ||  y < _boundingBoxYMax 
+            || z < _boundingBoxZMax );
+        
+    return _map3DData.at( z *_boundingBoxYMax * y * _boundingBoxXMax + x);
+}

@@ -14,6 +14,7 @@
 #ifndef BALL_H
 #define BALL_H
 #include "Types.h"
+#include "Map.h"
 
 class Ball {
 public:
@@ -34,6 +35,8 @@ private:
 
     ballJumperTypes::Direction _currentSide;
     ballJumperTypes::Direction _lookTowards;
+
+   std::shared_ptr<const Map> _map;
         
 };
 
