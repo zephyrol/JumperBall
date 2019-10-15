@@ -22,3 +22,6 @@ FireBlock::FireBlock() {
 FireBlock::~FireBlock() {
 }
 
+void FireBlock::interaction() {
+
+}

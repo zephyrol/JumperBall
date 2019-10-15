@@ -13,12 +13,15 @@
 
 #ifndef BRITTLEBLOCK_H
 #define BRITTLEBLOCK_H
+#include "Block.h"
 
-class BrittleBlock {
+class BrittleBlock : public Block {
 public:
     BrittleBlock();
     BrittleBlock(const BrittleBlock& orig);
     virtual ~BrittleBlock();
+
+    void interaction();
 private:
 
 };

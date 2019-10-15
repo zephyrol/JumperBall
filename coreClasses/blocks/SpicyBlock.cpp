@@ -22,3 +22,6 @@ SpicyBlock::SpicyBlock() {
 SpicyBlock::~SpicyBlock() {
 }
 
+void SpicyBlock::interaction() {
+
+}

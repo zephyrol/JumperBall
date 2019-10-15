@@ -13,12 +13,16 @@
 
 #ifndef BASEBLOCK_H
 #define BASEBLOCK_H
+#include "Block.h"
 
-class BaseBlock {
+
+class BaseBlock : public Block {
 public:
     BaseBlock();
     BaseBlock(const BaseBlock& orig);
     virtual ~BaseBlock();
+
+    void interaction();
 private:
 
 };

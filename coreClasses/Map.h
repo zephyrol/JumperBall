@@ -15,15 +15,22 @@
 #define MAP_H
 #include "Types.h"
 #include "blocks/Block.h"
+#include "blocks/BaseBlock.h"
+#include "blocks/FireBlock.h"
+#include "blocks/IceBlock.h"
+#include "blocks/SpicyBlock.h"
+#include "blocks/BrittleBlock.h"
+#include <fstream>
 
 class Map {
 public:
     enum class KindOfData {Raw,Optimized};
+    enum class categoryOfBlocksInFile{None,Base,Fire,Ice,Spicy,Brittle};
     
     Map();
     Map(const Map& orig);
     Map(const std::string content, Map::KindOfData kData );
-    Map(std::ifstream file);
+    Map(std::ifstream& file);
 
     std::shared_ptr<Block> map3DData(int x, int y, int z) const;
 
@@ -31,7 +38,7 @@ public:
     
 private:
     const unsigned int _id;
-    std::vector<Block> _blocks;
+    //std::vector<Block> _blocks;
     std::vector< std::shared_ptr<Block> > _map3DData;
     unsigned int _boundingBoxXMax;
     unsigned int _boundingBoxYMax;

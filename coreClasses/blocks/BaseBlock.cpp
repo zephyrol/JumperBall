@@ -15,9 +15,13 @@
 
 BaseBlock::BaseBlock() {
 }
-
 /*BaseBlock::BaseBlock(const BaseBlock& orig) {
 }*/
+
+void BaseBlock::interaction() {
+
+}
+
 
 BaseBlock::~BaseBlock() {
 }

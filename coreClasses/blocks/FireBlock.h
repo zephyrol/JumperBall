@@ -13,12 +13,15 @@
 
 #ifndef FIREBLOCK_H
 #define FIREBLOCK_H
+#include "Block.h"
 
-class FireBlock {
+class FireBlock : public Block {
 public:
     FireBlock();
     FireBlock(const FireBlock& orig);
     virtual ~FireBlock();
+
+    void interaction();
 private:
 
 };

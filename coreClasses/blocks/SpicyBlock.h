@@ -13,12 +13,15 @@
 
 #ifndef SPICYBLOCK_H
 #define SPICYBLOCK_H
+#include "Block.h"
 
-class SpicyBlock {
+class SpicyBlock : public Block {
 public:
     SpicyBlock();
     SpicyBlock(const SpicyBlock& orig);
     virtual ~SpicyBlock();
+
+    void interaction();
 private:
 
 };

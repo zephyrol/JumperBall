@@ -13,12 +13,15 @@
 
 #ifndef ICEBLOCK_H
 #define ICEBLOCK_H
+#include "Block.h"
 
-class IceBlock {
+class IceBlock : public Block {
 public:
     IceBlock();
     IceBlock(const IceBlock& orig);
     virtual ~IceBlock();
+
+    void interaction();
 private:
 
 };

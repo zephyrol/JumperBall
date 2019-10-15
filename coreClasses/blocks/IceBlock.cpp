@@ -22,3 +22,7 @@ IceBlock::IceBlock() {
 IceBlock::~IceBlock() {
 }
 
+void IceBlock::interaction() {
+
+}
+
