@@ -11,6 +11,7 @@
  * Created on 1 octobre 2019, 21:18
  */
 
+#include <iostream>
 #include "Map.h"
 
 unsigned int Map::nbMaps = 0;
@@ -38,6 +39,10 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     file >> width; 
     file >> deep; 
     file >> height;
+    
+    _boundingBoxXMax = width;
+    _boundingBoxYMax = height;
+    _boundingBoxZMax = deep;
 
     /*auto getXYZ = [&width,&deep,&height] (unsigned int i) 
         -> std::vector<unsigned int>
@@ -52,40 +57,30 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
 
         unsigned int valueBlock ;
-        Map::categoryOfBlocksInFile blockType;
-        (void)blockType;
         std::shared_ptr <Block> block = nullptr ;
 
         file >> valueBlock;
         switch (valueBlock) {
             case 0:
-              blockType = Map::categoryOfBlocksInFile::None;
               break ;
             case 1:
-              blockType = Map::categoryOfBlocksInFile::Base;
-              block = std::make_shared<BaseBlock>();
-              break ;
+              block = std::make_shared<BaseBlock>(); break ;
             case 2:
-              blockType = Map::categoryOfBlocksInFile::Fire;
-              block = std::make_shared<FireBlock>();
-              break ;
+              block = std::make_shared<FireBlock>(); break ;
             case 3:
-              blockType = Map::categoryOfBlocksInFile::Ice;
-              block = std::make_shared<IceBlock>();
-              break ;
+              block = std::make_shared<IceBlock>(); break ;
             case 4:
-              blockType = Map::categoryOfBlocksInFile::Spicy;
-              block = std::make_shared<SpicyBlock>();
-              break ;
+              block = std::make_shared<SpicyBlock>(); break ;
+            case 5:
+              block = std::make_shared<BrittleBlock>(); break ;
             default :
-              blockType = Map::categoryOfBlocksInFile::Brittle;
-              block = std::make_shared<BrittleBlock>();
                break;
         }
         
         _map3DData.push_back(block); 
 
     }
+    Map::nbMaps++;
 }
 
 /*Map::Map(const Map& orig) {
@@ -103,6 +98,25 @@ std::shared_ptr<Block> Map::map3DData(int x, int y, int z) const {
             x < 0 || y < 0 || z < 0 )
         block = nullptr;
     else 
-        block = _map3DData.at(_boundingBoxXMax* (y + z * _boundingBoxYMax) + x);
+        block = _map3DData.at(_boundingBoxXMax* (z + y * _boundingBoxZMax) + x);
     return block;
 }
+
+void Map::printMap() const {
+    for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
+        for ( unsigned int z = 0 ; z < _boundingBoxZMax ; z++ ){
+            for ( unsigned int x = 0 ; x < _boundingBoxXMax ; x++ ){
+                const std::shared_ptr<const Block>& block = map3DData(x,y,z);
+                if (block) {
+                    std::cout << static_cast<const unsigned int>
+                            (block->getType()) << " ";
+                }
+                else std::cout << static_cast<const unsigned int>
+                            (Block::categoryOfBlocksInFile::None) << " ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+    }
+}
+

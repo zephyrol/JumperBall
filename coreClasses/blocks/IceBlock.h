@@ -21,7 +21,9 @@ public:
     IceBlock(const IceBlock& orig);
     virtual ~IceBlock();
 
-    void interaction();
+    Block::categoryOfBlocksInFile getType() const override;
+    void interaction() override;
+
 private:
 
 };

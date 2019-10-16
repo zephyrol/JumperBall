@@ -23,6 +23,10 @@ BrittleBlock::BrittleBlock() {
 BrittleBlock::~BrittleBlock() {
 }
 
+Block::categoryOfBlocksInFile BrittleBlock::getType() const {
+
+    return Block::categoryOfBlocksInFile::Brittle;
+}
 
 void BrittleBlock::interaction() {
 

@@ -22,6 +22,11 @@ IceBlock::IceBlock() {
 IceBlock::~IceBlock() {
 }
 
+Block::categoryOfBlocksInFile IceBlock::getType() const {
+    
+    return Block::categoryOfBlocksInFile::Ice;
+}
+
 void IceBlock::interaction() {
 
 }

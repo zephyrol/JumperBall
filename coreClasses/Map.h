@@ -25,7 +25,6 @@
 class Map {
 public:
     enum class KindOfData {Raw,Optimized};
-    enum class categoryOfBlocksInFile{None,Base,Fire,Ice,Spicy,Brittle};
     
     Map();
     Map(const Map& orig);
@@ -33,12 +32,13 @@ public:
     Map(std::ifstream& file);
 
     std::shared_ptr<Block> map3DData(int x, int y, int z) const;
+    void printMap() const;
 
     virtual ~Map();
     
 private:
     const unsigned int _id;
-    //std::vector<Block> _blocks;
+    //std::vector< std::shared_ptr<Block> >  _blocks;
     std::vector< std::shared_ptr<Block> > _map3DData;
     unsigned int _boundingBoxXMax;
     unsigned int _boundingBoxYMax;

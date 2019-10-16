@@ -22,7 +22,9 @@ public:
     BaseBlock(const BaseBlock& orig);
     virtual ~BaseBlock();
 
-    void interaction();
+    Block::categoryOfBlocksInFile getType() const override;
+    void interaction() override;
+
 private:
 
 };

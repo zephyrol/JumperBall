@@ -12,14 +12,27 @@
  */
 
 #include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <string>
 #include "coreClasses/Types.h"
+#include "coreClasses/Map.h"
 
 using namespace std;
 
 int main(int argc, char** argv) {
-
-    (void)argc;
-    (void)argv;
+    
+    if (argc > 1 ) {
+        ifstream file(argv[1]);  //Ouverture d'un fichier en lecture
+        Map m (file);
+        std::cout << "Map created" << std::endl;
+        m.printMap();
+        file.close();
+    }
+    else {
+        std::cout << "File not specified" << std::endl;        
+    }
+    
     return EXIT_SUCCESS;
 }
 

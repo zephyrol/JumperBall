@@ -22,6 +22,10 @@ SpicyBlock::SpicyBlock() {
 SpicyBlock::~SpicyBlock() {
 }
 
+Block::categoryOfBlocksInFile SpicyBlock::getType() const {
+    return Block::categoryOfBlocksInFile::Spicy;
+}
+
 void SpicyBlock::interaction() {
 
 }

@@ -21,7 +21,9 @@ public:
     FireBlock(const FireBlock& orig);
     virtual ~FireBlock();
 
-    void interaction();
+    Block::categoryOfBlocksInFile getType() const override;
+    void interaction() override;
+
 private:
 
 };

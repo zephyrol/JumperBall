@@ -22,6 +22,12 @@ FireBlock::FireBlock() {
 FireBlock::~FireBlock() {
 }
 
+
+Block::categoryOfBlocksInFile FireBlock::getType() const {
+
+    return Block::categoryOfBlocksInFile::Fire;
+}
+
 void FireBlock::interaction() {
 
 }

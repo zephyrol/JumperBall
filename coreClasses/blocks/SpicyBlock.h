@@ -21,7 +21,9 @@ public:
     SpicyBlock(const SpicyBlock& orig);
     virtual ~SpicyBlock();
 
-    void interaction();
+    Block::categoryOfBlocksInFile getType() const override;
+    void interaction() override;
+
 private:
 
 };

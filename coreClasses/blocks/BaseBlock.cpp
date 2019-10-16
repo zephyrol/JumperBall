@@ -22,6 +22,10 @@ void BaseBlock::interaction() {
 
 }
 
+Block::categoryOfBlocksInFile BaseBlock::getType() const {
+    return Block::categoryOfBlocksInFile::Base;
+}
+
 
 BaseBlock::~BaseBlock() {
 }

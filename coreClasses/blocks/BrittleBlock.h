@@ -21,7 +21,8 @@ public:
     BrittleBlock(const BrittleBlock& orig);
     virtual ~BrittleBlock();
 
-    void interaction();
+    Block::categoryOfBlocksInFile getType() const override;
+    void interaction() override;
 private:
 
 };

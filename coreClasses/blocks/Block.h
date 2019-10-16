@@ -20,7 +20,11 @@ public:
     Block(const Block& orig);
     virtual ~Block() ;
 
+    enum class categoryOfBlocksInFile{None,Base,Fire,Ice,Spicy,Brittle};
+
     virtual void interaction() = 0;
+    virtual categoryOfBlocksInFile getType() const = 0;
+
 private:
 
 };
