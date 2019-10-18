@@ -25,7 +25,8 @@ int main(int argc, char** argv) {
     if (argc > 1 ) {
         ifstream file(argv[1]);  //Ouverture d'un fichier en lecture
         if (!file) {
-          std::cerr << "ERROR: Opening " << argv[1] << " impossible .." << std::endl;
+          std::cerr << "ERROR: Opening " << argv[1] << " impossible .." 
+                  << std::endl;
           return EXIT_FAILURE;
         }
         Map m (file);
