@@ -16,6 +16,8 @@
 #include <string>
 #include <vector>
 #include <memory>
+#define EPSILON_F 0.0001f
+
 
 namespace ballJumperTypes {
      
@@ -27,6 +29,7 @@ namespace ballJumperTypes {
         Up,
         Down 
     };
+
 }
 
 #endif /* TYPES_H */

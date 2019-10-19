@@ -13,7 +13,10 @@
 
 #ifndef CLASSICALMECHANICS_H
 #define CLASSICALMECHANICS_H
+
+
 #include "Types.h"
+#include <functional>
 
 class ClassicalMechanics {
 public:
@@ -28,42 +31,67 @@ public:
   
 
     //---CONSTANTS---//
-    static constexpr float gravitationalAcceleration = 9.81f;
+    static constexpr float gravitationalAccelerationEarth = 9.81f;
+    static constexpr float coefficientWind = 3.f/2.f;
+    static constexpr float distanceJumpBasic = 2.f;
+    static constexpr float timeToStopWindBasic = 1.f;
+
+    static constexpr size_t sizeSampleEuler= 512;
 
     //---STRUCTURES---//
-    struct physics2DVector { float x; float y; };
+    struct physics2DVector { const float x; const float y; };
 
-    struct EulerMethodBuffer { const float delta {1.f};
-                               const struct physics2DVector a0 {0.f,0.f};
-                               const struct physics2DVector v0 {0.f,0.f};
+    struct EulerMethodBufferWind { 
+                               float deltaT ;
+                               float timeEndWind;
+                               float xEndWind;
+                               //function to get dx/dt with x and K
+                               std::function<float(const float&, 
+                               float&)> applicationFunction;
+                               std::vector<float> tBuffer;
+                               std::vector<float> vBuffer;
+                               std::vector<float> pBuffer;
     };
 
-    //---METHODS ---//
-    const physics2DVector getAcceleration(const float t) const; 
+    //---METHODS---//
+    float getGravitationalAcceleration() const; 
     const physics2DVector getVelocity(const float t, const physics2DVector& v0)
-                                                                          const;
+                                      const;
     const physics2DVector getVelocity(const float t, const float alpha,
                                       const float v0Norm) const;
     const physics2DVector getPosition(const float t, const physics2DVector& v0)
-                                                                          const;
+                                      const;
     const physics2DVector getPosition(const float t, const float alpha,
                                       const float v0Norm) const;
 
+    static void solveDifferentialEquationWind (
+                                        float& resultDerivativeFunction, 
+                                        const float& x, 
+                                        const float& K, 
+                                        std::function<float(const float&, 
+                                        const float&)>& unknownFunction
+                                      );
+
 private:
 
-    physics2DVector _acceleration;
+    //---MEMBERS---//
+    float _gravitationalAcceleration;
+    float _distanceJump;
+    float _timeToGetDestinationX;
+
     ballJumperTypes::Direction _directionGravity;
 
-    mutable EulerMethodBuffer _currentEulerMethodBuffer;
+    mutable EulerMethodBufferWind _EulerMethodBuffer;
 
-    float getAccelerationX(const float t) const;
-    float getAccelerationY(const float t) const;
+    //---METHODS---//
 
     float getVelocityX(const float t, const physics2DVector& v0) const;
     float getVelocityY(const float t, const physics2DVector& v0) const;
      
-    float gePositionX(const float t, const physics2DVector& v0) const;
+    float getPositionX(const float t) const;
     float getPositionY(const float t, const physics2DVector& v0) const;
+
+    void fillEulerBufferWind() const;
 
 };
 
