@@ -17,6 +17,7 @@
 #include <string>
 #include "coreClasses/Types.h"
 #include "coreClasses/Map.h"
+#include "coreClasses/ClassicalMechanics.h"
 
 using namespace std;
 

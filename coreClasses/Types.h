@@ -18,7 +18,7 @@
 #include <memory>
 
 namespace ballJumperTypes {
-    
+     
     enum class Direction{
         North,
         South,

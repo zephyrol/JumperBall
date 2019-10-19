@@ -9,8 +9,8 @@
       <itemPath>coreClasses/blocks/Block.h</itemPath>
       <itemPath>coreClasses/blocks/BrittleBlock.h</itemPath>
       <itemPath>coreClasses/Camera.h</itemPath>
+      <itemPath>coreClasses/ClassicalMechanics.h</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.h</itemPath>
-      <itemPath>coreClasses/Gravity.h</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.h</itemPath>
       <itemPath>coreClasses/Map.h</itemPath>
       <itemPath>coreClasses/blocks/SpicyBlock.h</itemPath>
@@ -28,8 +28,8 @@
       <itemPath>coreClasses/blocks/Block.cpp</itemPath>
       <itemPath>coreClasses/blocks/BrittleBlock.cpp</itemPath>
       <itemPath>coreClasses/Camera.cpp</itemPath>
+      <itemPath>coreClasses/ClassicalMechanics.cpp</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.cpp</itemPath>
-      <itemPath>coreClasses/Gravity.cpp</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.cpp</itemPath>
       <itemPath>coreClasses/Map.cpp</itemPath>
       <itemPath>coreClasses/blocks/SpicyBlock.cpp</itemPath>
@@ -70,9 +70,9 @@
       </item>
       <item path="coreClasses/Camera.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="coreClasses/Gravity.cpp" ex="false" tool="1" flavor2="0">
+      <item path="coreClasses/ClassicalMechanics.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="coreClasses/Gravity.h" ex="false" tool="3" flavor2="0">
+      <item path="coreClasses/ClassicalMechanics.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="coreClasses/Map.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -145,9 +145,9 @@
       </item>
       <item path="coreClasses/Camera.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="coreClasses/Gravity.cpp" ex="false" tool="1" flavor2="0">
+      <item path="coreClasses/ClassicalMechanics.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="coreClasses/Gravity.h" ex="false" tool="3" flavor2="0">
+      <item path="coreClasses/ClassicalMechanics.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="coreClasses/Map.cpp" ex="false" tool="1" flavor2="0">
       </item>

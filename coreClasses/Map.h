@@ -45,6 +45,7 @@ private:
     unsigned int _boundingBoxZMax;
     
     static unsigned int nbMaps;
+
 };
 
 #endif /* MAP_H */
