@@ -13,42 +13,25 @@
 
 #include "ClassicalMechanics.h"
 #include <math.h>
+#include <iostream>
+#include <initializer_list>
+
+
+const std::map<ClassicalMechanics::Fluid,float>
+ClassicalMechanics::listOfViscosities  {
+                                {ClassicalMechanics::Fluid::Air,       1.8e-5f},
+                                {ClassicalMechanics::Fluid::Water,   1.002e-3f},
+                                {ClassicalMechanics::Fluid::IcyWater,1.787e-3f},
+                                {ClassicalMechanics::Fluid::Oil,      56.2e-3f}
+};
 
 ClassicalMechanics::ClassicalMechanics():
     _gravitationalAcceleration{gravitationalAccelerationEarth},
     _distanceJump{distanceJumpBasic},
     _timeToGetDestinationX(timeToStopWindBasic),
-    _directionGravity(ballJumperTypes::Direction::Down),
-    _EulerMethodBuffer{}
-{
-}
-
-ClassicalMechanics::ClassicalMechanics(
-const ballJumperTypes::Direction& dirGravity):
-    _gravitationalAcceleration{gravitationalAccelerationEarth},
-    _distanceJump{distanceJumpBasic},
-    _timeToGetDestinationX(timeToStopWindBasic),
-    _directionGravity(dirGravity),
-    _EulerMethodBuffer{}
-{
-}
-
-ClassicalMechanics::ClassicalMechanics(const float& gAcceleration):
-    _gravitationalAcceleration{gAcceleration},
-    _distanceJump{distanceJumpBasic},
-    _timeToGetDestinationX(timeToStopWindBasic),
-    _directionGravity(ballJumperTypes::Direction::Down),
-    _EulerMethodBuffer{}
-{
-}
-
-ClassicalMechanics::ClassicalMechanics(
-const ballJumperTypes::Direction& dirGravity,
-        const float& gAcceleration):
-    _gravitationalAcceleration{gAcceleration},
-    _distanceJump{distanceJumpBasic},
-    _timeToGetDestinationX(timeToStopWindBasic),
-    _directionGravity(dirGravity),
+    _weightSphere(0.470f),
+    _v0 {1.f, 1.f},
+    _fluid(ClassicalMechanics::Fluid::IcyWater),
     _EulerMethodBuffer{}
 {
 }
@@ -88,17 +71,9 @@ const ClassicalMechanics::physics2DVector ClassicalMechanics::getVelocity(
 
 float ClassicalMechanics::getPositionX(const float t)
                                        const {
-    float posX;
-    fillEulerBufferWind();
-    if ( t < _EulerMethodBuffer.timeEndWind) {
-    float numberElementEuler= t * 
-                          static_cast<float>(_EulerMethodBuffer.tBuffer.size())
-                          / _EulerMethodBuffer.xEndWind;
-    posX = _EulerMethodBuffer.pBuffer.at(
-                          static_cast<unsigned int>(numberElementEuler));
-    }
-    else posX = _EulerMethodBuffer.xEndWind;
-    return posX;
+    float posX = 1;
+    fillEulerMethodBuffer();
+    return posX * t;
 }
 
 float ClassicalMechanics::getPositionY(const float t, const physics2DVector& v0)
@@ -107,62 +82,99 @@ float ClassicalMechanics::getPositionY(const float t, const physics2DVector& v0)
             + v0.y * t;
 }
 
-void ClassicalMechanics::fillEulerBufferWind() const {
+void ClassicalMechanics::fillEulerMethodBuffer() const {
 
   if ( _EulerMethodBuffer.pBuffer.size() != sizeSampleEuler ||
-       fabs(_EulerMethodBuffer.xEndWind-_distanceJump) > EPSILON_F ||
-       fabs(_EulerMethodBuffer.timeEndWind -_timeToGetDestinationX) 
-          > EPSILON_F) {
+       _EulerMethodBuffer.deltaT - durationStudy/sizeSampleEuler > EPSILON_F ||
+       _EulerMethodBuffer.fluid != _fluid) {
 
-      const float newXEndWind = _distanceJump;
-      const float newTimeEndWind = _timeToGetDestinationX;
-      const float newDeltaT= _timeToGetDestinationX / sizeSampleEuler;
-      const float coeffWind = coefficientWind;
+      const float newDeltaT= durationStudy / sizeSampleEuler;
 
-      std::vector<float> newTBuffer;
-      std::vector<float> newVBuffer;
-      std::vector<float> newPBuffer;
+      std::vector<float> newTBuffer (sizeSampleEuler);
+      std::vector<float> newPBuffer (sizeSampleEuler);
+      std::vector<float> newVBuffer (sizeSampleEuler);
+      std::vector<float> newABuffer (sizeSampleEuler);
 
-      newTBuffer.resize(sizeSampleEuler);
-      newVBuffer.resize(sizeSampleEuler);
-      newPBuffer.resize(sizeSampleEuler);
 
-      newTBuffer.at(sizeSampleEuler-1) = _timeToGetDestinationX;
-      newVBuffer.at(sizeSampleEuler-1) = 0.f;
-      newPBuffer.at(sizeSampleEuler-1) = _distanceJump;
-
+      newTBuffer.at(0) = 0.f;
+      newPBuffer.at(0) = 0.f;
+      newVBuffer.at(0) = 0.f;
       
-      std::function<float(const float&, const float&)> 
-      newApplicationFunction= [] (const float& x, const float& K) -> float {
-          return 1.f/(x*K);
+      const std::function<float(const std::array<float,5>&)> NewtonStokesFunc =
+      [] (std::array<float,5> params) -> float {
+          
+          const float velocity                  = params.at(0);
+          const float radiusSphere              = params.at(1);
+          const float viscosity                 = params.at(2);
+          const float gravitationalAcceleration = params.at(3);
+          const float weightSphere              = params.at(4);
+
+          const float gravityComponent= weightSphere* gravitationalAcceleration;
+          const float StokesComponent =  6.f* static_cast<float>(M_PI) *
+                                        viscosity * radiusSphere * 
+                                        -static_cast<float>(pow(velocity,2));
+
+          const float sumForces     = - (gravityComponent + StokesComponent); 
+          const float acceleration  = sumForces / weightSphere; 
+
+          return acceleration;
       };
 
-      for ( int i = sizeSampleEuler-2 ; i >= 0 ; i-- ) {
-        newTBuffer.at(i) = newTBuffer.at(i+1) - newDeltaT;
-        newPBuffer.at(i) = newPBuffer.at(i+1) - newDeltaT * newVBuffer[i+1];
-        newVBuffer.at(i) = newApplicationFunction(newPBuffer.at(i),
-                                                 coeffWind);
-        solveDifferentialEquationWind( newVBuffer.at(i), newPBuffer.at(i), 
-                                       coeffWind, newApplicationFunction);
-                
+          const std::array<float,5> paramsInitials  { newVBuffer.at(0), 
+                                                  radiusBall,
+                                                  listOfViscosities.at(_fluid), 
+                                                  _gravitationalAcceleration,
+                                                  _weightSphere
+                                                };
+          solveDifferentialEquation (newABuffer.at(0),
+                                     NewtonStokesFunc, 
+                                     paramsInitials);
+
+      for ( unsigned int i = 0 ; i < sizeSampleEuler-1 ; i++) {
+
+
+          newTBuffer.at(i+1) = newTBuffer.at(i) + newDeltaT ;
+          
+          newPBuffer.at(i+1) = newPBuffer.at(i) + newDeltaT * newVBuffer.at(i);
+
+          newVBuffer.at(i+1) = newVBuffer.at(i) + newDeltaT * newABuffer.at(i);
+
+          const std::array<float,5> parameters  { newVBuffer.at(i+1), 
+                                                  radiusBall,
+                                                  listOfViscosities.at(_fluid), 
+                                                  _gravitationalAcceleration,
+                                                  _weightSphere
+                                                };
+          
+          solveDifferentialEquation( newABuffer.at(i+1), NewtonStokesFunc, 
+                                     parameters);
       }
 
-      EulerMethodBufferWind newEulerTab {newDeltaT,newTimeEndWind, 
-                                        newXEndWind,newApplicationFunction,
-                                        newTBuffer,newVBuffer,newPBuffer};
+      EulerMethodBuffer newEulerTab { newDeltaT, _fluid, NewtonStokesFunc,
+                                      newTBuffer, newABuffer, newVBuffer,
+                                      newPBuffer };
 
-     _EulerMethodBuffer = newEulerTab; 
+      _EulerMethodBuffer = newEulerTab; 
   }
 }
 
-void ClassicalMechanics::solveDifferentialEquationWind(
-            float& resultDerivativeFunction, 
-            const float& x, 
-            const float& K, 
-            std::function<float(const float&, const float&) >& unknownFunction) 
+
+void ClassicalMechanics::solveDifferentialEquation(
+      float& derivative, 
+      const std::function<float(const std::array<float,5>&)>& computingFunction,
+      const std::array<float, 5>& params)
 {
-    resultDerivativeFunction = unknownFunction(x,K);
+    derivative = computingFunction ( params );
 }
 
 
+void ClassicalMechanics::printEulerBuffer() const {
 
+    fillEulerMethodBuffer();
+    for (unsigned int i = 0 ; i < _EulerMethodBuffer.tBuffer.size(); i++)  {
+      std::cout << "t = " << _EulerMethodBuffer.tBuffer.at(i) << "\tp = "
+              << _EulerMethodBuffer.pBuffer.at(i) << "\tv = "
+              << _EulerMethodBuffer.vBuffer.at(i) << "\ta = "
+              << _EulerMethodBuffer.aBuffer.at(i) << std::endl;
+    }
+}

@@ -39,6 +39,8 @@ int main(int argc, char** argv) {
         std::cout << "File not specified" << std::endl;        
     }
     
+    ClassicalMechanics newton;
+    newton.printEulerBuffer();
     return EXIT_SUCCESS;
 }
 

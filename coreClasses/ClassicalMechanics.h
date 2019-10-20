@@ -4,6 +4,10 @@
  * and open the template in the editor.
  */
 
+#ifndef CLASSICALMECHANICS_H
+#define CLASSICALMECHANICS_H
+
+
 /* 
  * File:   ClassicalMechanics.h
  * Author: seb
@@ -11,46 +15,44 @@
  * Created on 17 octobre 2019, 22:14
  */
 
-#ifndef CLASSICALMECHANICS_H
-#define CLASSICALMECHANICS_H
-
-
 #include "Types.h"
 #include <functional>
+#include <map>
+#include <array>
 
 class ClassicalMechanics {
 public:
 
     //---CONSTRUCTORS---//
     ClassicalMechanics();
-    ClassicalMechanics(const ballJumperTypes::Direction& dirGravity);
-    ClassicalMechanics(const float& gAcceleration);
-    ClassicalMechanics(const ballJumperTypes::Direction& dirGravity,
-            const float& gAcceleration);
     virtual ~ClassicalMechanics();
   
-
     //---CONSTANTS---//
     static constexpr float gravitationalAccelerationEarth = 9.81f;
-    static constexpr float coefficientWind = 3.f/2.f;
+    static constexpr float coefficientWind = 1.;
     static constexpr float distanceJumpBasic = 2.f;
     static constexpr float timeToStopWindBasic = 1.f;
 
-    static constexpr size_t sizeSampleEuler= 512;
+    static constexpr size_t sizeSampleEuler= 128;
+    static constexpr float durationStudy = 10;
+    static constexpr float radiusBall = 0.375f;
 
     //---STRUCTURES---//
+
+    enum class Fluid {Air,Water,IcyWater,Oil};
+    
+    static const std::map<Fluid,float> listOfViscosities;
+
     struct physics2DVector { const float x; const float y; };
 
-    struct EulerMethodBufferWind { 
-                               float deltaT ;
-                               float timeEndWind;
-                               float xEndWind;
-                               //function to get dx/dt with x and K
-                               std::function<float(const float&, 
-                               float&)> applicationFunction;
-                               std::vector<float> tBuffer;
-                               std::vector<float> vBuffer;
-                               std::vector<float> pBuffer;
+    struct EulerMethodBuffer { 
+      float deltaT ;
+      Fluid fluid;
+      std::function<float(const std::array<float,5>&)> computingFunction;
+      std::vector<float> tBuffer;
+      std::vector<float> aBuffer;
+      std::vector<float> vBuffer;
+      std::vector<float> pBuffer;
     };
 
     //---METHODS---//
@@ -64,13 +66,14 @@ public:
     const physics2DVector getPosition(const float t, const float alpha,
                                       const float v0Norm) const;
 
-    static void solveDifferentialEquationWind (
-                                        float& resultDerivativeFunction, 
-                                        const float& x, 
-                                        const float& K, 
-                                        std::function<float(const float&, 
-                                        const float&)>& unknownFunction
-                                      );
+    void printEulerBuffer()  const;
+
+    static void solveDifferentialEquation(
+      float& derivative,
+      const std::function<float(const std::array<float,5>&)>& computingFunction,
+      const std::array<float,5>& params
+      );
+
 
 private:
 
@@ -79,9 +82,13 @@ private:
     float _distanceJump;
     float _timeToGetDestinationX;
 
-    ballJumperTypes::Direction _directionGravity;
+    float _weightSphere;
 
-    mutable EulerMethodBufferWind _EulerMethodBuffer;
+    physics2DVector _v0;
+
+    ClassicalMechanics::Fluid _fluid;
+
+    mutable EulerMethodBuffer _EulerMethodBuffer;
 
     //---METHODS---//
 
@@ -91,7 +98,7 @@ private:
     float getPositionX(const float t) const;
     float getPositionY(const float t, const physics2DVector& v0) const;
 
-    void fillEulerBufferWind() const;
+    void fillEulerMethodBuffer() const;
 
 };
 
