@@ -29,9 +29,9 @@ ClassicalMechanics::ClassicalMechanics():
     _gravitationalAcceleration{gravitationalAccelerationEarth},
     _distanceJump{distanceJumpBasic},
     _timeToGetDestinationX(timeToStopWindBasic),
-    _weightSphere(0.470f),
+    _weightSphere(0.010f),
     _v0 {1.f, 1.f},
-    _fluid(ClassicalMechanics::Fluid::IcyWater),
+    _fluid(ClassicalMechanics::Fluid::Air),
     _EulerMethodBuffer{}
 {
 }
@@ -112,10 +112,10 @@ void ClassicalMechanics::fillEulerMethodBuffer() const {
           const float gravityComponent= weightSphere* gravitationalAcceleration;
           const float StokesComponent =  6.f* static_cast<float>(M_PI) *
                                         viscosity * radiusSphere * 
-                                        -static_cast<float>(pow(velocity,2));
+                                        + static_cast<float>(pow(velocity,2));
 
-          const float sumForces     = - (gravityComponent + StokesComponent); 
-          const float acceleration  = sumForces / weightSphere; 
+          const float sumForces     = gravityComponent - StokesComponent; 
+          const float acceleration  = - sumForces / weightSphere; 
 
           return acceleration;
       };

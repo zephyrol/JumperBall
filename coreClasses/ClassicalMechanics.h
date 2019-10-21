@@ -35,7 +35,7 @@ public:
 
     static constexpr size_t sizeSampleEuler= 128;
     static constexpr float durationStudy = 10;
-    static constexpr float radiusBall = 0.375f;
+    static constexpr float radiusBall = 0.015f;
 
     //---STRUCTURES---//
 
