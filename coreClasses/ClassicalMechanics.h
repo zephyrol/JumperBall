@@ -29,12 +29,12 @@ public:
   
     //---CONSTANTS---//
     static constexpr float gravitationalAccelerationEarth = 9.81f;
-    static constexpr float coefficientWind = 1.;
+    static constexpr float coefficientWind = 1.f;
     static constexpr float distanceJumpBasic = 2.f;
     static constexpr float timeToStopWindBasic = 1.f;
 
     static constexpr size_t sizeSampleEuler= 128;
-    static constexpr float durationStudy = 10;
+    static constexpr float durationStudy = 10.f;
     static constexpr float radiusBall = 0.015f;
 
     //---STRUCTURES---//
@@ -57,14 +57,9 @@ public:
 
     //---METHODS---//
     float getGravitationalAcceleration() const; 
-    const physics2DVector getVelocity(const float t, const physics2DVector& v0)
-                                      const;
-    const physics2DVector getVelocity(const float t, const float alpha,
-                                      const float v0Norm) const;
-    const physics2DVector getPosition(const float t, const physics2DVector& v0)
-                                      const;
-    const physics2DVector getPosition(const float t, const float alpha,
-                                      const float v0Norm) const;
+    const physics2DVector getAcceleration(const float t) const;
+    const physics2DVector getVelocity(const float t) const;
+    const physics2DVector getPosition(const float t) const;
 
     void printEulerBuffer()  const;
 
@@ -92,13 +87,19 @@ private:
 
     //---METHODS---//
 
-    float getVelocityX(const float t, const physics2DVector& v0) const;
-    float getVelocityY(const float t, const physics2DVector& v0) const;
+    float getVelocityX(const float t) const;
+    float getVelocityY(const float t) const;
      
     float getPositionX(const float t) const;
-    float getPositionY(const float t, const physics2DVector& v0) const;
+    float getPositionY(const float t) const;
+
+    float getAccelerationX(const float t) const;
+    float getAccelerationY(const float t) const;
+
 
     void fillEulerMethodBuffer() const;
+
+    float getV0xToRespectDistanceAndTime();
 
 };
 

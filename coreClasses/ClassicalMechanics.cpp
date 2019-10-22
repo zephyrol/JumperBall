@@ -30,7 +30,7 @@ ClassicalMechanics::ClassicalMechanics():
     _distanceJump{distanceJumpBasic},
     _timeToGetDestinationX(timeToStopWindBasic),
     _weightSphere(0.010f),
-    _v0 {1.f, 1.f},
+    _v0{getV0xToRespectDistanceAndTime(),1.f},
     _fluid(ClassicalMechanics::Fluid::Air),
     _EulerMethodBuffer{}
 {
@@ -43,43 +43,54 @@ float ClassicalMechanics::getGravitationalAcceleration() const {
     return _gravitationalAcceleration;
 }
 
-
-float ClassicalMechanics::getVelocityX(const float t, const physics2DVector& v0) 
-                                       const {
-    return t + v0.x;
-}
-
-float ClassicalMechanics::getVelocityY(const float t, const physics2DVector& v0) 
-                                       const {
-    return _gravitationalAcceleration * t + v0.y;
+const ClassicalMechanics::physics2DVector ClassicalMechanics::getPosition(
+                                          const float t) const {
+    return {getPositionX(t), getPositionY(t)};
 }
 
 const ClassicalMechanics::physics2DVector ClassicalMechanics::getVelocity(
-                                          const float t, 
-                                          const physics2DVector& v0) const {
-    return {getVelocityX(t,v0), getVelocityY(t,v0)};
+                                          const float t) const {
+    return {getVelocityX(t), getVelocityY(t)};
 }
 
-const ClassicalMechanics::physics2DVector ClassicalMechanics::getVelocity(
-                                                            const float t, 
-                                                            const float alpha,
-                                                            const float v0Norm) 
-                                                            const {
-    const physics2DVector v0 {cos(alpha) * v0Norm, sin(alpha) * v0Norm};
-    return getVelocity(t,v0);
+const ClassicalMechanics::physics2DVector ClassicalMechanics::getAcceleration(
+                                          const float t) const {
+    return {getAccelerationX(t), getAccelerationY(t)};
 }
 
-float ClassicalMechanics::getPositionX(const float t)
-                                       const {
-    float posX = 1;
+
+float ClassicalMechanics::getPositionX(const float t) const {
+    float posX = _v0.x * _timeToGetDestinationX * t - _v0.x * 
+       static_cast<float> (pow(t,2)) / 2.f ;
+    return posX ;
+}
+
+float ClassicalMechanics::getPositionY(const float t) const {
     fillEulerMethodBuffer();
-    return posX * t;
+    return _EulerMethodBuffer.pBuffer.at(
+            static_cast<unsigned int> (t * sizeSampleEuler / durationStudy ));
 }
 
-float ClassicalMechanics::getPositionY(const float t, const physics2DVector& v0)
-                                       const {
-    return (-_gravitationalAcceleration * static_cast<float>(pow(t,2)) / 2.f) 
-            + v0.y * t;
+
+float ClassicalMechanics::getVelocityX(const float t) const {
+    return _v0.x * ( _timeToGetDestinationX - t );
+}
+
+float ClassicalMechanics::getVelocityY(const float t) const {
+    fillEulerMethodBuffer();
+    return _EulerMethodBuffer.vBuffer.at(
+            static_cast<unsigned int> (t * sizeSampleEuler / durationStudy ));
+}
+
+float ClassicalMechanics::getAccelerationX(const float t) const {
+    static_cast<void> (t);
+    return -_v0.x;
+}
+
+float ClassicalMechanics::getAccelerationY(const float t) const {
+    fillEulerMethodBuffer();
+    return _EulerMethodBuffer.aBuffer.at(
+            static_cast<unsigned int> (t * sizeSampleEuler / durationStudy ));
 }
 
 void ClassicalMechanics::fillEulerMethodBuffer() const {
@@ -94,7 +105,6 @@ void ClassicalMechanics::fillEulerMethodBuffer() const {
       std::vector<float> newPBuffer (sizeSampleEuler);
       std::vector<float> newVBuffer (sizeSampleEuler);
       std::vector<float> newABuffer (sizeSampleEuler);
-
 
       newTBuffer.at(0) = 0.f;
       newPBuffer.at(0) = 0.f;
@@ -177,4 +187,9 @@ void ClassicalMechanics::printEulerBuffer() const {
               << _EulerMethodBuffer.vBuffer.at(i) << "\ta = "
               << _EulerMethodBuffer.aBuffer.at(i) << std::endl;
     }
+}
+
+float ClassicalMechanics::getV0xToRespectDistanceAndTime() {
+    return 2.f*_distanceJump/ static_cast<float>(pow(_timeToGetDestinationX,2));
+
 }
