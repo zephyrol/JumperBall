@@ -33,8 +33,8 @@ private:
     float _3DPosY;
     float _3DPosZ;
 
-    ballJumperTypes::Direction _currentSide;
-    ballJumperTypes::Direction _lookTowards;
+    JumperBallTypes::Direction _currentSide;
+    JumperBallTypes::Direction _lookTowards;
 
    std::shared_ptr<const Map> _map;
         

@@ -19,8 +19,8 @@ Ball::Ball(): _currentBlockX(0),
         _3DPosX(0.f),
         _3DPosY(0.f),
         _3DPosZ(0.f),
-        _currentSide(ballJumperTypes::Direction::Up),
-        _lookTowards(ballJumperTypes::Direction::North),
+        _currentSide(JumperBallTypes::Direction::Up),
+        _lookTowards(JumperBallTypes::Direction::North),
         _map(nullptr)
 {
 }
@@ -35,93 +35,93 @@ Ball::~Ball() {
 
 void Ball::turnLeft() noexcept {
     switch (_currentSide) {
-        case ballJumperTypes::Direction::North:
+        case JumperBallTypes::Direction::North:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North: break;
-                case ballJumperTypes::Direction::South: break;
-                case ballJumperTypes::Direction::East: 
-                    _lookTowards =  ballJumperTypes::Direction::Down; break;
-                case ballJumperTypes::Direction::West:
-                    _lookTowards =  ballJumperTypes::Direction::Up; break;
-                case ballJumperTypes::Direction::Up:
-                    _lookTowards =  ballJumperTypes::Direction::East; break;
-                case ballJumperTypes::Direction::Down:
-                    _lookTowards =  ballJumperTypes::Direction::West; break;
+                case JumperBallTypes::Direction::North: break;
+                case JumperBallTypes::Direction::South: break;
+                case JumperBallTypes::Direction::East: 
+                    _lookTowards =  JumperBallTypes::Direction::Down; break;
+                case JumperBallTypes::Direction::West:
+                    _lookTowards =  JumperBallTypes::Direction::Up; break;
+                case JumperBallTypes::Direction::Up:
+                    _lookTowards =  JumperBallTypes::Direction::East; break;
+                case JumperBallTypes::Direction::Down:
+                    _lookTowards =  JumperBallTypes::Direction::West; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::South:
+        case JumperBallTypes::Direction::South:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North: break;
-                case ballJumperTypes::Direction::South: break;
-                case ballJumperTypes::Direction::East: 
-                    _lookTowards =  ballJumperTypes::Direction::Up; break;
-                case ballJumperTypes::Direction::West:
-                    _lookTowards =  ballJumperTypes::Direction::Down; break;
-                case ballJumperTypes::Direction::Up:
-                    _lookTowards =  ballJumperTypes::Direction::West; break;
-                case ballJumperTypes::Direction::Down:
-                    _lookTowards =  ballJumperTypes::Direction::East; break;
+                case JumperBallTypes::Direction::North: break;
+                case JumperBallTypes::Direction::South: break;
+                case JumperBallTypes::Direction::East: 
+                    _lookTowards =  JumperBallTypes::Direction::Up; break;
+                case JumperBallTypes::Direction::West:
+                    _lookTowards =  JumperBallTypes::Direction::Down; break;
+                case JumperBallTypes::Direction::Up:
+                    _lookTowards =  JumperBallTypes::Direction::West; break;
+                case JumperBallTypes::Direction::Down:
+                    _lookTowards =  JumperBallTypes::Direction::East; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::East:
+        case JumperBallTypes::Direction::East:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
-                    _lookTowards =  ballJumperTypes::Direction::Up; break;
-                case ballJumperTypes::Direction::South:
-                    _lookTowards =  ballJumperTypes::Direction::Down; break;
-                case ballJumperTypes::Direction::East: break;
-                case ballJumperTypes::Direction::West: break;
-                case ballJumperTypes::Direction::Up:
-                    _lookTowards =  ballJumperTypes::Direction::South; break;
-                case ballJumperTypes::Direction::Down:
-                    _lookTowards =  ballJumperTypes::Direction::North; break;
+                case JumperBallTypes::Direction::North:
+                    _lookTowards =  JumperBallTypes::Direction::Up; break;
+                case JumperBallTypes::Direction::South:
+                    _lookTowards =  JumperBallTypes::Direction::Down; break;
+                case JumperBallTypes::Direction::East: break;
+                case JumperBallTypes::Direction::West: break;
+                case JumperBallTypes::Direction::Up:
+                    _lookTowards =  JumperBallTypes::Direction::South; break;
+                case JumperBallTypes::Direction::Down:
+                    _lookTowards =  JumperBallTypes::Direction::North; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::West:
+        case JumperBallTypes::Direction::West:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
-                    _lookTowards =  ballJumperTypes::Direction::Down; break;
-                case ballJumperTypes::Direction::South:
-                    _lookTowards =  ballJumperTypes::Direction::Up; break;
-                case ballJumperTypes::Direction::East: break;
-                case ballJumperTypes::Direction::West: break;
-                case ballJumperTypes::Direction::Up:
-                    _lookTowards =  ballJumperTypes::Direction::North; break;
-                case ballJumperTypes::Direction::Down:
-                    _lookTowards =  ballJumperTypes::Direction::South; break;
+                case JumperBallTypes::Direction::North:
+                    _lookTowards =  JumperBallTypes::Direction::Down; break;
+                case JumperBallTypes::Direction::South:
+                    _lookTowards =  JumperBallTypes::Direction::Up; break;
+                case JumperBallTypes::Direction::East: break;
+                case JumperBallTypes::Direction::West: break;
+                case JumperBallTypes::Direction::Up:
+                    _lookTowards =  JumperBallTypes::Direction::North; break;
+                case JumperBallTypes::Direction::Down:
+                    _lookTowards =  JumperBallTypes::Direction::South; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::Up:
+        case JumperBallTypes::Direction::Up:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
-                    _lookTowards =  ballJumperTypes::Direction::West; break;
-                case ballJumperTypes::Direction::South:
-                    _lookTowards =  ballJumperTypes::Direction::East; break;
-                case ballJumperTypes::Direction::East:
-                    _lookTowards =  ballJumperTypes::Direction::North; break;
-                case ballJumperTypes::Direction::West:
-                    _lookTowards =  ballJumperTypes::Direction::South; break;
-                case ballJumperTypes::Direction::Up: break;
-                case ballJumperTypes::Direction::Down: break;
+                case JumperBallTypes::Direction::North:
+                    _lookTowards =  JumperBallTypes::Direction::West; break;
+                case JumperBallTypes::Direction::South:
+                    _lookTowards =  JumperBallTypes::Direction::East; break;
+                case JumperBallTypes::Direction::East:
+                    _lookTowards =  JumperBallTypes::Direction::North; break;
+                case JumperBallTypes::Direction::West:
+                    _lookTowards =  JumperBallTypes::Direction::South; break;
+                case JumperBallTypes::Direction::Up: break;
+                case JumperBallTypes::Direction::Down: break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::Down:
+        case JumperBallTypes::Direction::Down:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
-                    _lookTowards =  ballJumperTypes::Direction::East; break;
-                case ballJumperTypes::Direction::South:
-                    _lookTowards =  ballJumperTypes::Direction::West; break;
-                case ballJumperTypes::Direction::East:
-                    _lookTowards =  ballJumperTypes::Direction::South; break;
-                case ballJumperTypes::Direction::West:
-                    _lookTowards =  ballJumperTypes::Direction::North; break;
-                case ballJumperTypes::Direction::Up: break;
-                case ballJumperTypes::Direction::Down: break;
+                case JumperBallTypes::Direction::North:
+                    _lookTowards =  JumperBallTypes::Direction::East; break;
+                case JumperBallTypes::Direction::South:
+                    _lookTowards =  JumperBallTypes::Direction::West; break;
+                case JumperBallTypes::Direction::East:
+                    _lookTowards =  JumperBallTypes::Direction::South; break;
+                case JumperBallTypes::Direction::West:
+                    _lookTowards =  JumperBallTypes::Direction::North; break;
+                case JumperBallTypes::Direction::Up: break;
+                case JumperBallTypes::Direction::Down: break;
                 default : break;
             }
             break;
@@ -133,93 +133,93 @@ void Ball::turnLeft() noexcept {
 
 void Ball::turnRight() noexcept {
     switch (_currentSide) {
-        case ballJumperTypes::Direction::North:
+        case JumperBallTypes::Direction::North:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North: break;
-                case ballJumperTypes::Direction::South: break;
-                case ballJumperTypes::Direction::East: 
-                    _lookTowards =  ballJumperTypes::Direction::Up; break;
-                case ballJumperTypes::Direction::West:
-                    _lookTowards =  ballJumperTypes::Direction::Down; break;
-                case ballJumperTypes::Direction::Up:
-                    _lookTowards =  ballJumperTypes::Direction::West; break;
-                case ballJumperTypes::Direction::Down:
-                    _lookTowards =  ballJumperTypes::Direction::East; break;
+                case JumperBallTypes::Direction::North: break;
+                case JumperBallTypes::Direction::South: break;
+                case JumperBallTypes::Direction::East: 
+                    _lookTowards =  JumperBallTypes::Direction::Up; break;
+                case JumperBallTypes::Direction::West:
+                    _lookTowards =  JumperBallTypes::Direction::Down; break;
+                case JumperBallTypes::Direction::Up:
+                    _lookTowards =  JumperBallTypes::Direction::West; break;
+                case JumperBallTypes::Direction::Down:
+                    _lookTowards =  JumperBallTypes::Direction::East; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::South:
+        case JumperBallTypes::Direction::South:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North: break;
-                case ballJumperTypes::Direction::South: break;
-                case ballJumperTypes::Direction::East: 
-                    _lookTowards =  ballJumperTypes::Direction::Down; break;
-                case ballJumperTypes::Direction::West:
-                    _lookTowards =  ballJumperTypes::Direction::Up; break;
-                case ballJumperTypes::Direction::Up:
-                    _lookTowards =  ballJumperTypes::Direction::East; break;
-                case ballJumperTypes::Direction::Down:
-                    _lookTowards =  ballJumperTypes::Direction::West; break;
+                case JumperBallTypes::Direction::North: break;
+                case JumperBallTypes::Direction::South: break;
+                case JumperBallTypes::Direction::East: 
+                    _lookTowards =  JumperBallTypes::Direction::Down; break;
+                case JumperBallTypes::Direction::West:
+                    _lookTowards =  JumperBallTypes::Direction::Up; break;
+                case JumperBallTypes::Direction::Up:
+                    _lookTowards =  JumperBallTypes::Direction::East; break;
+                case JumperBallTypes::Direction::Down:
+                    _lookTowards =  JumperBallTypes::Direction::West; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::East:
+        case JumperBallTypes::Direction::East:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
-                    _lookTowards =  ballJumperTypes::Direction::Down; break;
-                case ballJumperTypes::Direction::South:
-                    _lookTowards =  ballJumperTypes::Direction::Up; break;
-                case ballJumperTypes::Direction::East: break;
-                case ballJumperTypes::Direction::West: break;
-                case ballJumperTypes::Direction::Up:
-                    _lookTowards =  ballJumperTypes::Direction::North; break;
-                case ballJumperTypes::Direction::Down:
-                    _lookTowards =  ballJumperTypes::Direction::South; break;
+                case JumperBallTypes::Direction::North:
+                    _lookTowards =  JumperBallTypes::Direction::Down; break;
+                case JumperBallTypes::Direction::South:
+                    _lookTowards =  JumperBallTypes::Direction::Up; break;
+                case JumperBallTypes::Direction::East: break;
+                case JumperBallTypes::Direction::West: break;
+                case JumperBallTypes::Direction::Up:
+                    _lookTowards =  JumperBallTypes::Direction::North; break;
+                case JumperBallTypes::Direction::Down:
+                    _lookTowards =  JumperBallTypes::Direction::South; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::West:
+        case JumperBallTypes::Direction::West:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
-                    _lookTowards =  ballJumperTypes::Direction::Up; break;
-                case ballJumperTypes::Direction::South:
-                    _lookTowards =  ballJumperTypes::Direction::Down; break;
-                case ballJumperTypes::Direction::East: break;
-                case ballJumperTypes::Direction::West: break;
-                case ballJumperTypes::Direction::Up:
-                    _lookTowards =  ballJumperTypes::Direction::South; break;
-                case ballJumperTypes::Direction::Down:
-                    _lookTowards =  ballJumperTypes::Direction::North; break;
+                case JumperBallTypes::Direction::North:
+                    _lookTowards =  JumperBallTypes::Direction::Up; break;
+                case JumperBallTypes::Direction::South:
+                    _lookTowards =  JumperBallTypes::Direction::Down; break;
+                case JumperBallTypes::Direction::East: break;
+                case JumperBallTypes::Direction::West: break;
+                case JumperBallTypes::Direction::Up:
+                    _lookTowards =  JumperBallTypes::Direction::South; break;
+                case JumperBallTypes::Direction::Down:
+                    _lookTowards =  JumperBallTypes::Direction::North; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::Up:
+        case JumperBallTypes::Direction::Up:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
-                    _lookTowards =  ballJumperTypes::Direction::East; break;
-                case ballJumperTypes::Direction::South:
-                    _lookTowards =  ballJumperTypes::Direction::West; break;
-                case ballJumperTypes::Direction::East:
-                    _lookTowards =  ballJumperTypes::Direction::South; break;
-                case ballJumperTypes::Direction::West:
-                    _lookTowards =  ballJumperTypes::Direction::North; break;
-                case ballJumperTypes::Direction::Up: break;
-                case ballJumperTypes::Direction::Down: break;
+                case JumperBallTypes::Direction::North:
+                    _lookTowards =  JumperBallTypes::Direction::East; break;
+                case JumperBallTypes::Direction::South:
+                    _lookTowards =  JumperBallTypes::Direction::West; break;
+                case JumperBallTypes::Direction::East:
+                    _lookTowards =  JumperBallTypes::Direction::South; break;
+                case JumperBallTypes::Direction::West:
+                    _lookTowards =  JumperBallTypes::Direction::North; break;
+                case JumperBallTypes::Direction::Up: break;
+                case JumperBallTypes::Direction::Down: break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::Down:
+        case JumperBallTypes::Direction::Down:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
-                    _lookTowards =  ballJumperTypes::Direction::West; break;
-                case ballJumperTypes::Direction::South:
-                    _lookTowards =  ballJumperTypes::Direction::East; break;
-                case ballJumperTypes::Direction::East:
-                    _lookTowards =  ballJumperTypes::Direction::North; break;
-                case ballJumperTypes::Direction::West:
-                    _lookTowards =  ballJumperTypes::Direction::South; break;
-                case ballJumperTypes::Direction::Up: break;
-                case ballJumperTypes::Direction::Down: break;
+                case JumperBallTypes::Direction::North:
+                    _lookTowards =  JumperBallTypes::Direction::West; break;
+                case JumperBallTypes::Direction::South:
+                    _lookTowards =  JumperBallTypes::Direction::East; break;
+                case JumperBallTypes::Direction::East:
+                    _lookTowards =  JumperBallTypes::Direction::North; break;
+                case JumperBallTypes::Direction::West:
+                    _lookTowards =  JumperBallTypes::Direction::South; break;
+                case JumperBallTypes::Direction::Up: break;
+                case JumperBallTypes::Direction::Down: break;
                 default : break;
             }
             break;
@@ -247,93 +247,93 @@ void Ball::goStraightOn() noexcept {
     int aboveZ = _currentBlockZ;
     
     switch (_currentSide) {
-        case ballJumperTypes::Direction::North:
+        case JumperBallTypes::Direction::North:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North: break;
-                case ballJumperTypes::Direction::South: break;
-                case ballJumperTypes::Direction::East: 
+                case JumperBallTypes::Direction::North: break;
+                case JumperBallTypes::Direction::South: break;
+                case JumperBallTypes::Direction::East: 
                     ++inFrontOfX; ++aboveX; --aboveZ; --leftY; ++rightY; break;
-                case ballJumperTypes::Direction::West:
+                case JumperBallTypes::Direction::West:
                     --inFrontOfX; --aboveX; --aboveZ; ++leftY; --rightY; break;
-                case ballJumperTypes::Direction::Up:
+                case JumperBallTypes::Direction::Up:
                     ++inFrontOfY; ++aboveY; --aboveZ; ++leftX; --rightX; break;
-                case ballJumperTypes::Direction::Down:
+                case JumperBallTypes::Direction::Down:
                     --inFrontOfY; --aboveY; --aboveZ; --leftX; ++rightX; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::South:
+        case JumperBallTypes::Direction::South:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North: break;
-                case ballJumperTypes::Direction::South: break;
-                case ballJumperTypes::Direction::East: 
+                case JumperBallTypes::Direction::North: break;
+                case JumperBallTypes::Direction::South: break;
+                case JumperBallTypes::Direction::East: 
                     ++inFrontOfX; ++aboveX; ++aboveZ; ++leftY; --rightY; break;
-                case ballJumperTypes::Direction::West:
+                case JumperBallTypes::Direction::West:
                     --inFrontOfX; --aboveX; ++aboveZ; --leftY; ++rightY; break;
-                case ballJumperTypes::Direction::Up:
+                case JumperBallTypes::Direction::Up:
                     ++inFrontOfY; ++aboveY; ++aboveZ; --leftX; ++rightX; break;
-                case ballJumperTypes::Direction::Down:
+                case JumperBallTypes::Direction::Down:
                     --inFrontOfY; --aboveY; ++aboveZ; ++leftX; --rightX; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::East:
+        case JumperBallTypes::Direction::East:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
+                case JumperBallTypes::Direction::North:
                     --inFrontOfZ; --aboveZ; ++aboveX; ++leftY; --rightY; break;
-                case ballJumperTypes::Direction::South:
+                case JumperBallTypes::Direction::South:
                     ++inFrontOfZ; ++aboveZ; ++aboveX; --leftY; ++rightY; break;
-                case ballJumperTypes::Direction::East: break;
-                case ballJumperTypes::Direction::West: break;
-                case ballJumperTypes::Direction::Up:
+                case JumperBallTypes::Direction::East: break;
+                case JumperBallTypes::Direction::West: break;
+                case JumperBallTypes::Direction::Up:
                     ++inFrontOfY; ++aboveY; ++aboveX; --leftZ; ++rightZ; break;
-                case ballJumperTypes::Direction::Down:
+                case JumperBallTypes::Direction::Down:
                     --inFrontOfY; --aboveY; ++aboveX; ++leftZ; --rightZ; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::West:
+        case JumperBallTypes::Direction::West:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
+                case JumperBallTypes::Direction::North:
                     --inFrontOfZ; --aboveZ; --aboveX; --leftY; ++rightY; break;
-                case ballJumperTypes::Direction::South:
+                case JumperBallTypes::Direction::South:
                     ++inFrontOfZ; ++aboveZ; --aboveX; ++leftY; --rightY; break;
-                case ballJumperTypes::Direction::East: break;
-                case ballJumperTypes::Direction::West: break;
-                case ballJumperTypes::Direction::Up:
+                case JumperBallTypes::Direction::East: break;
+                case JumperBallTypes::Direction::West: break;
+                case JumperBallTypes::Direction::Up:
                     ++inFrontOfY; ++aboveY; --aboveX; ++leftZ; --rightZ; break;
-                case ballJumperTypes::Direction::Down:
+                case JumperBallTypes::Direction::Down:
                     --inFrontOfY; --aboveY; --aboveX; --leftZ; ++rightZ; break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::Up:
+        case JumperBallTypes::Direction::Up:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
+                case JumperBallTypes::Direction::North:
                     --inFrontOfZ; --aboveZ; ++aboveY; --leftX; ++rightX; break;
-                case ballJumperTypes::Direction::South:
+                case JumperBallTypes::Direction::South:
                     ++inFrontOfZ; ++aboveZ; ++aboveY; ++leftX; --rightX; break;
-                case ballJumperTypes::Direction::East:
+                case JumperBallTypes::Direction::East:
                     ++inFrontOfX; ++aboveX; ++aboveY; --leftZ; ++rightZ; break;
-                case ballJumperTypes::Direction::West:
+                case JumperBallTypes::Direction::West:
                     --inFrontOfX; --aboveX; ++aboveY; ++leftZ; --rightZ; break;
-                case ballJumperTypes::Direction::Up: break;
-                case ballJumperTypes::Direction::Down: break;
+                case JumperBallTypes::Direction::Up: break;
+                case JumperBallTypes::Direction::Down: break;
                 default : break;
             }
             break;
-        case ballJumperTypes::Direction::Down:
+        case JumperBallTypes::Direction::Down:
             switch (_lookTowards) {
-                case ballJumperTypes::Direction::North:
+                case JumperBallTypes::Direction::North:
                     --inFrontOfZ; --aboveZ; --aboveY; ++leftX; --rightX; break;
-                case ballJumperTypes::Direction::South:
+                case JumperBallTypes::Direction::South:
                     ++inFrontOfZ; ++aboveZ; --aboveY; --leftX; ++rightX; break;
-                case ballJumperTypes::Direction::East:
+                case JumperBallTypes::Direction::East:
                     ++inFrontOfX; ++aboveX; --aboveY; ++leftZ; --rightZ; break;
-                case ballJumperTypes::Direction::West:
+                case JumperBallTypes::Direction::West:
                     --inFrontOfX; --aboveX; --aboveY; --leftZ; ++rightZ; break;
-                case ballJumperTypes::Direction::Up: break;
-                case ballJumperTypes::Direction::Down: break;
+                case JumperBallTypes::Direction::Up: break;
+                case JumperBallTypes::Direction::Down: break;
                 default : break;
             }
         default :
@@ -350,27 +350,27 @@ void Ball::goStraightOn() noexcept {
     else if (!_map->map3DData(leftX,leftY,leftZ) && 
             !_map->map3DData(rightX,rightY,rightZ)) {
         
-        ballJumperTypes::Direction sideBeforeMovement = _currentSide;
+        JumperBallTypes::Direction sideBeforeMovement = _currentSide;
         _currentSide = _lookTowards;
         
         switch (sideBeforeMovement) {
-            case ballJumperTypes::Direction::North:
-                _lookTowards = ballJumperTypes::Direction::South;
+            case JumperBallTypes::Direction::North:
+                _lookTowards = JumperBallTypes::Direction::South;
                 break;
-            case ballJumperTypes::Direction::South:
-                _lookTowards = ballJumperTypes::Direction::North;
+            case JumperBallTypes::Direction::South:
+                _lookTowards = JumperBallTypes::Direction::North;
                 break;
-            case ballJumperTypes::Direction::East:
-                _lookTowards = ballJumperTypes::Direction::West;
+            case JumperBallTypes::Direction::East:
+                _lookTowards = JumperBallTypes::Direction::West;
                 break;
-            case ballJumperTypes::Direction::West:
-                _lookTowards = ballJumperTypes::Direction::East;
+            case JumperBallTypes::Direction::West:
+                _lookTowards = JumperBallTypes::Direction::East;
                 break;
-            case ballJumperTypes::Direction::Up:
-                _lookTowards = ballJumperTypes::Direction::Down;
+            case JumperBallTypes::Direction::Up:
+                _lookTowards = JumperBallTypes::Direction::Down;
                 break;
-            case ballJumperTypes::Direction::Down:
-                _lookTowards = ballJumperTypes::Direction::Up;
+            case JumperBallTypes::Direction::Down:
+                _lookTowards = JumperBallTypes::Direction::Up;
                 break;
             default :
                 break;

@@ -19,7 +19,7 @@
 #define EPSILON_F 0.0001f
 
 
-namespace ballJumperTypes {
+namespace JumperBallTypes {
      
     enum class Direction{
         North,
