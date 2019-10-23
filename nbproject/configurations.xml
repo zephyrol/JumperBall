@@ -59,7 +59,7 @@
       <compileType>
         <ccTool>
           <standard>8</standard>
-          <commandLine>-Werror -pedantic -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Wshadow -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wundef -Wlogical-op -Winline</commandLine>
+          <commandLine>-Werror -pedantic -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Wshadow -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wundef -Wlogical-op -Winline -Wformat=2 -Wformat-truncation=2 -Wmisleading-indentation</commandLine>
         </ccTool>
       </compileType>
       <item path="coreClasses/Ball.cpp" ex="false" tool="1" flavor2="0">

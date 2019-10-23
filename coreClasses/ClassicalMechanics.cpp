@@ -60,9 +60,14 @@ const ClassicalMechanics::physics2DVector ClassicalMechanics::getAcceleration(
 
 
 float ClassicalMechanics::getPositionX(const float t) const {
-    float posX = _v0.x * _timeToGetDestinationX * t - _v0.x * 
+    float posX;
+    if ( t < _timeToGetDestinationX) {
+    posX = _v0.x * _timeToGetDestinationX * t - _v0.x * 
        static_cast<float> (pow(t,2)) / 2.f ;
-    return posX ;
+    }
+    else 
+        posX = _distanceJump;
+    return posX;
 }
 
 float ClassicalMechanics::getPositionY(const float t) const {
@@ -73,7 +78,11 @@ float ClassicalMechanics::getPositionY(const float t) const {
 
 
 float ClassicalMechanics::getVelocityX(const float t) const {
-    return _v0.x * ( _timeToGetDestinationX - t );
+    float velocityX;
+    if ( t < _timeToGetDestinationX)
+    velocityX = _v0.x * ( _timeToGetDestinationX - t );
+    else velocityX = 0.f;
+    return velocityX;
 }
 
 float ClassicalMechanics::getVelocityY(const float t) const {
@@ -83,8 +92,13 @@ float ClassicalMechanics::getVelocityY(const float t) const {
 }
 
 float ClassicalMechanics::getAccelerationX(const float t) const {
-    static_cast<void> (t);
-    return -_v0.x;
+    float accelerationX;
+    if ( t < _timeToGetDestinationX)
+        accelerationX =  -_v0.x;
+    else
+        accelerationX = 0.f;
+
+    return accelerationX;
 }
 
 float ClassicalMechanics::getAccelerationY(const float t) const {
@@ -185,7 +199,8 @@ void ClassicalMechanics::printEulerBuffer() const {
       std::cout << "t = " << _EulerMethodBuffer.tBuffer.at(i) << "\tp = "
               << _EulerMethodBuffer.pBuffer.at(i) << "\tv = "
               << _EulerMethodBuffer.vBuffer.at(i) << "\ta = "
-              << _EulerMethodBuffer.aBuffer.at(i) << std::endl;
+              << _EulerMethodBuffer.aBuffer.at(i) << "\tX = "
+              << getPositionX(_EulerMethodBuffer.tBuffer.at(i)) << std::endl;
     }
 }
 
