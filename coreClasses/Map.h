@@ -20,6 +20,7 @@
 #include "blocks/IceBlock.h"
 #include "blocks/SpicyBlock.h"
 #include "blocks/BrittleBlock.h"
+#include "ClassicalMechanics.h"
 #include <fstream>
 
 class Map {

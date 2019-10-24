@@ -21,6 +21,8 @@ Ball::Ball(): _currentBlockX(0),
         _3DPosZ(0.f),
         _currentSide(JumperBallTypes::Direction::Up),
         _lookTowards(JumperBallTypes::Direction::North),
+        _state(Ball::State::Staying),
+        _timeAction(),
         _map(nullptr)
 {
 }
@@ -34,6 +36,7 @@ Ball::~Ball() {
 
 
 void Ball::turnLeft() noexcept {
+
     switch (_currentSide) {
         case JumperBallTypes::Direction::North:
             switch (_lookTowards) {
@@ -341,11 +344,12 @@ void Ball::goStraightOn() noexcept {
     }
 
     if (_map->map3DData(aboveX,aboveY,aboveZ)) {
-     _currentBlockX = aboveX; _currentBlockY = aboveY; _currentBlockZ = aboveZ; 
+        _currentBlockX = aboveX; _currentBlockY = aboveY; 
+        _currentBlockZ = aboveZ; 
     } 
     else if (_map->map3DData(inFrontOfX,inFrontOfY,inFrontOfZ)) {
-     _currentBlockX = inFrontOfX; _currentBlockY = inFrontOfY; 
-     _currentBlockZ = inFrontOfZ; 
+        _currentBlockX = inFrontOfX; _currentBlockY = inFrontOfY; 
+        _currentBlockZ = inFrontOfZ; 
     } 
     else if (!_map->map3DData(leftX,leftY,leftZ) && 
             !_map->map3DData(rightX,rightY,rightZ)) {
@@ -376,4 +380,61 @@ void Ball::goStraightOn() noexcept {
                 break;
         }
     }
+    else stay();
+}
+
+
+void Ball::jump() noexcept {
+    _state = Ball::State::Jumping;
+}
+
+void Ball::stay() noexcept {
+    _state = Ball::State::Staying;
+}
+
+void Ball::setTimeActionNow() noexcept {
+    _timeAction = std::chrono::system_clock::now();
+}
+
+
+Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
+    Ball::AnswerRequest answer (Ball::AnswerRequest::Accepted);
+    switch (action) {
+        case Ball::ActionRequest::GoStraightOn:
+            if (_state == Ball::State::Staying) {
+                _state = Ball::State::Moving;
+                goStraightOn();
+                
+            }
+            else answer = Ball::AnswerRequest::Rejected;
+            break;
+        case Ball::ActionRequest::TurnLeft:
+            if (_state == Ball::State::Staying) {
+                _state = Ball::State::Moving;
+                turnLeft();
+            }
+            else answer = Ball::AnswerRequest::Rejected;
+            break;
+        case Ball::ActionRequest::TurnRight:
+            if (_state == Ball::State::Staying) {
+                _state = Ball::State::Moving;
+                turnRight();
+            }
+            else answer = Ball::AnswerRequest::Rejected;
+            break;
+        case Ball::ActionRequest::Jump:
+            if (_state == Ball::State::Staying) {
+                _state = Ball::State::Jumping;
+                jump();
+            }
+            else answer = Ball::AnswerRequest::Rejected;
+            break;
+        default :
+            break;
+    }
+
+    if (answer == Ball::AnswerRequest::Accepted)
+        setTimeActionNow();
+    
+    return answer;
 }

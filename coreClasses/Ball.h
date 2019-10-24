@@ -20,11 +20,15 @@ class Ball {
 public:
     Ball();
     Ball(const Ball& orig);
-    void turnLeft() noexcept;
-    void turnRight() noexcept;
-    void goStraightOn() noexcept;
     virtual ~Ball();
 
+    enum class State { Staying, Moving, Jumping };
+
+    enum class ActionRequest { GoStraightOn, TurnLeft, TurnRight, Jump};
+    enum class AnswerRequest { Accepted, Rejected };
+
+    AnswerRequest doAction ( ActionRequest action);
+    
 private:
     unsigned int _currentBlockX;
     unsigned int _currentBlockY;
@@ -33,10 +37,21 @@ private:
     float _3DPosY;
     float _3DPosZ;
 
+
     JumperBallTypes::Direction _currentSide;
     JumperBallTypes::Direction _lookTowards;
+    Ball::State _state;
 
-   std::shared_ptr<const Map> _map;
+    std::chrono::time_point<std::chrono::system_clock> _timeAction;
+
+    std::shared_ptr<const Map> _map;
+
+    void turnLeft() noexcept;
+    void turnRight() noexcept;
+    void goStraightOn() noexcept;
+    void stay() noexcept;
+    void jump() noexcept;
+    void setTimeActionNow() noexcept;
         
 };
 
