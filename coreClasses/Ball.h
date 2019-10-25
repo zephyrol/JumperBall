@@ -15,6 +15,7 @@
 #define BALL_H
 #include "Types.h"
 #include "Map.h"
+#include "ClassicalMechanics.h"
 
 class Ball {
 public:
@@ -42,6 +43,8 @@ private:
     JumperBallTypes::Direction _lookTowards;
     Ball::State _state;
 
+
+    ClassicalMechanics _mechanicsPattern;
     std::chrono::time_point<std::chrono::system_clock> _timeAction;
 
     std::shared_ptr<const Map> _map;
@@ -51,7 +54,9 @@ private:
     void goStraightOn() noexcept;
     void stay() noexcept;
     void jump() noexcept;
+    void updatePosition() noexcept;
     void setTimeActionNow() noexcept;
+    AnswerRequest isFallingIntersectionBlock() noexcept;
         
 };
 

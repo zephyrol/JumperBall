@@ -22,6 +22,7 @@ Ball::Ball(): _currentBlockX(0),
         _currentSide(JumperBallTypes::Direction::Up),
         _lookTowards(JumperBallTypes::Direction::North),
         _state(Ball::State::Staying),
+        _mechanicsPattern(),
         _timeAction(),
         _map(nullptr)
 {
@@ -231,6 +232,25 @@ void Ball::turnRight() noexcept {
     }
 }
 
+void Ball::updatePosition() noexcept {
+  
+    constexpr float offsetRealPosition = 0.5f;
+    auto now = std::chrono::system_clock::now();
+    static_cast<void>(now);
+    if (_state == Ball::State::Staying) {
+        _3DPosX = static_cast<float> (_currentBlockX) + offsetRealPosition;
+        _3DPosY = static_cast<float> (_currentBlockY) + offsetRealPosition;
+        _3DPosZ = static_cast<float> (_currentBlockZ) + offsetRealPosition;
+    } else if ( _state == Ball::State::Moving){
+
+    } else if ( _state == Ball::State::Jumping){
+
+    }
+
+    
+}
+
+
 void Ball::goStraightOn() noexcept {
     
     int inFrontOfX = _currentBlockX;
@@ -438,3 +458,23 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
     
     return answer;
 }
+
+
+
+Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
+
+  Ball::AnswerRequest answer = Ball::AnswerRequest::Rejected; 
+  if ( _state == Ball::State::Jumping ) {
+      std::chrono::time_point<std::chrono::system_clock> timeNow = 
+          std::chrono::system_clock::now();
+      auto timeJump = timeNow - _timeAction;
+
+       if ( _mechanicsPattern.getVelocity(0.f).y < 0 ) {
+          answer = Ball::AnswerRequest::Accepted; 
+
+       }
+    
+  }
+  return answer;
+}
+
