@@ -467,13 +467,21 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
   if ( _state == Ball::State::Jumping ) {
       std::chrono::time_point<std::chrono::system_clock> timeNow = 
           std::chrono::system_clock::now();
-      auto timeJump = timeNow - _timeAction;
+      auto timeActionMs= std::chrono::time_point_cast<std::chrono::milliseconds>
+      (_timeAction);
 
-       if ( _mechanicsPattern.getVelocity(0.f).y < 0 ) {
+      auto timeNowMs= std::chrono::time_point_cast<std::chrono::milliseconds> 
+      (timeNow);
+
+      auto timeActionSinceEpoch = timeActionMs.time_since_epoch();
+      auto timeNowSinceEpoch    = timeNowMs.time_since_epoch();
+
+      auto difference = timeNowSinceEpoch - timeActionSinceEpoch;
+      std::chrono::duration<float> fDifference = difference;
+
+      if ( _mechanicsPattern.getVelocity(fDifference.count()).y < 0 ) {
           answer = Ball::AnswerRequest::Accepted; 
-
        }
-    
   }
   return answer;
 }
