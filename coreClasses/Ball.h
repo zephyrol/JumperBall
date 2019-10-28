@@ -29,6 +29,13 @@ public:
     enum class AnswerRequest { Accepted, Rejected };
 
     AnswerRequest doAction ( ActionRequest action);
+
+    using timePointMs = std::chrono::time_point<std::chrono::_V2::system_clock,
+    std::chrono::duration<long int, std::ratio<1,1000> > > ;
+    using durationMs = std::chrono::duration<long int,std::ratio<1,1000> > ;
+
+
+    static timePointMs getTimePointMSNow ();
     
 private:
     unsigned int _currentBlockX;
@@ -57,6 +64,8 @@ private:
     void updatePosition() noexcept;
     void setTimeActionNow() noexcept;
     AnswerRequest isFallingIntersectionBlock() noexcept;
+    timePointMs getTimeActionMs() noexcept;
+    std::vector<float> P2DTo3D(ClassicalMechanics::physics2DVector p2D);
         
 };
 

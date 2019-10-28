@@ -16,6 +16,7 @@
 #include <fstream>
 #include <string>
 #include "coreClasses/Types.h"
+#include "coreClasses/Ball.h"
 #include "coreClasses/Map.h"
 #include "coreClasses/ClassicalMechanics.h"
 
@@ -41,6 +42,7 @@ int main(int argc, char** argv) {
     
     ClassicalMechanics newton;
     newton.printEulerBuffer();
+    Ball b;
     return EXIT_SUCCESS;
 }
 
