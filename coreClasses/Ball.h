@@ -64,6 +64,9 @@ private:
     void updatePosition() noexcept;
     void setTimeActionNow() noexcept;
     AnswerRequest isFallingIntersectionBlock() noexcept;
+    std::shared_ptr<const std::vector<int> >  intersectBlock (float x,
+                                                              float y,
+                                                              float z);
     timePointMs getTimeActionMs() noexcept;
     std::vector<float> P2DTo3D(ClassicalMechanics::physics2DVector p2D);
         

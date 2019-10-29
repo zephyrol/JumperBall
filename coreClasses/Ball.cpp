@@ -236,7 +236,7 @@ void Ball::turnRight() noexcept {
 
 void Ball::updatePosition() noexcept {
   
-    constexpr float offsetRealPosition = 0.5f;
+    constexpr float offsetRealPosition = 0.5f + _mechanicsPattern.radiusBall;
     auto now = std::chrono::system_clock::now();
     static_cast<void>(now);
     if (_state == Ball::State::Staying) {
@@ -475,22 +475,83 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
   if ( _state == Ball::State::Jumping ) {
 
 
-      timePointMs timeActionMs        = getTimeActionMs(); 
-      timePointMs timeNowMs           = getTimePointMSNow(); 
+      const timePointMs timeActionMs        = getTimeActionMs(); 
+      const timePointMs timeNowMs           = getTimePointMSNow(); 
 
-      durationMs timeActionSinceEpoch = timeActionMs.time_since_epoch();
-      durationMs timeNowSinceEpoch    = timeNowMs.time_since_epoch();
+      const durationMs timeActionSinceEpoch = timeActionMs.time_since_epoch();
+      const durationMs timeNowSinceEpoch    = timeNowMs.time_since_epoch();
 
-      durationMs difference = timeNowSinceEpoch - timeActionSinceEpoch;
-      std::chrono::duration<float> fDifference = difference;
+      const durationMs difference = timeNowSinceEpoch - timeActionSinceEpoch;
+      const std::chrono::duration<float> durationFloatDifference = difference;
+      const float fDifference = durationFloatDifference.count();
 
-      if ( _mechanicsPattern.getVelocity(fDifference.count()).y < 0 ) {
+      if ( _mechanicsPattern.getVelocity(fDifference).y < 0 ) {
           answer = Ball::AnswerRequest::Accepted; 
-          
+
+          const ClassicalMechanics::physics2DVector pos2D = 
+                  _mechanicsPattern.getPosition(fDifference); 
+          const std::vector<float> pos3D = P2DTo3D(pos2D);
+
+          auto positionBlockPtr = intersectBlock(pos3D.at(0),pos3D.at(1),
+                                                 pos3D.at(2));
+          if (positionBlockPtr) {
+          _currentBlockX = positionBlockPtr->at(0) ;
+          _currentBlockY = positionBlockPtr->at(1) ;
+          _currentBlockZ = positionBlockPtr->at(2) ;
+          _state = Ball::State::Staying;
+          updatePosition();
+          }
+          else {
+          _3DPosX = pos3D.at(0);
+          _3DPosY = pos3D.at(1);
+          _3DPosZ = pos3D.at(2);
+          }
        }
+      answer = Ball::AnswerRequest::Accepted; 
   }
   return answer;
 }
+
+std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x, 
+                                                              float y, 
+                                                              float z) {
+    
+    const float offsetBlockPosition = _mechanicsPattern.radiusBall;
+
+    switch (_currentSide) {
+        case JumperBallTypes::Direction::North:
+            z += offsetBlockPosition ;
+            break;
+        case JumperBallTypes::Direction::South:
+            z -= offsetBlockPosition ;
+            break;
+        case JumperBallTypes::Direction::East:
+            x -= offsetBlockPosition ;
+            break;
+        case JumperBallTypes::Direction::West:
+            x += offsetBlockPosition ;
+            break;
+        case JumperBallTypes::Direction::Up:
+            y -= offsetBlockPosition ;
+            break;
+        case JumperBallTypes::Direction::Down:
+            y += offsetBlockPosition ;
+            break;
+        default :
+            break;
+    }
+    
+    int xInteger = static_cast<int> (x);
+    int yInteger = static_cast<int> (y);
+    int zInteger = static_cast<int> (z);
+
+    if (_map->map3DData(xInteger, yInteger, zInteger)) 
+        return std::make_shared<const std::vector<int> > (
+                std::initializer_list<int> ({xInteger,yInteger,zInteger})
+                );
+    else return nullptr;
+}
+
 
 Ball::timePointMs Ball::getTimeActionMs() noexcept {
       return std::chrono::time_point_cast<std::chrono::milliseconds>
