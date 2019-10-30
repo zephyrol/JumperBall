@@ -52,14 +52,19 @@
   <confs>
     <conf name="Debug" type="1">
       <toolsSet>
-        <compilerSet>default</compilerSet>
+        <compilerSet>GNU|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
         <ccTool>
           <standard>8</standard>
-          <commandLine>-Werror -pedantic -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Wshadow -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wundef -Wlogical-op -Winline -Wformat=2 -Wformat-truncation=2 -Wmisleading-indentation</commandLine>
+          <incDir>
+            <pElem>coreClasses</pElem>
+            <pElem>graphicsClasses</pElem>
+            <pElem>libs</pElem>
+          </incDir>
+          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline -Wformat=2 -Wformat-truncation=2 -Wmisleading-indentation</commandLine>
         </ccTool>
       </compileType>
       <item path="coreClasses/Ball.cpp" ex="false" tool="1" flavor2="0">
@@ -124,6 +129,13 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <standard>8</standard>
+          <incDir>
+            <pElem>coreClasses</pElem>
+            <pElem>graphicsClasses</pElem>
+            <pElem>libs</pElem>
+          </incDir>
+          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline -Wformat=2 -Wformat-truncation=2 -Wmisleading-indentation</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>

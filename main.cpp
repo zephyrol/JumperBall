@@ -19,6 +19,8 @@
 #include "coreClasses/Ball.h"
 #include "coreClasses/Map.h"
 #include "coreClasses/ClassicalMechanics.h"
+#include <glm/glm.hpp>
+#include <glm/matrix.hpp>
 
 using namespace std;
 

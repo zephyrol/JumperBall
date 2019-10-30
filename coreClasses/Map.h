@@ -44,6 +44,10 @@ private:
     unsigned int _boundingBoxXMax;
     unsigned int _boundingBoxYMax;
     unsigned int _boundingBoxZMax;
+
+    unsigned int _beginX;
+    unsigned int _beginY;
+    unsigned int _beginZ;
     
     static unsigned int nbMaps;
 

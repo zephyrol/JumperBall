@@ -21,7 +21,10 @@ Map::Map() : _id (nbMaps),
              _map3DData{},
              _boundingBoxXMax (0),
              _boundingBoxYMax (0),
-             _boundingBoxZMax (0)
+             _boundingBoxZMax (0),
+             _beginX (0),
+             _beginY (0),
+             _beginZ (0)
 {
     Map::nbMaps++;
 }
@@ -30,7 +33,10 @@ Map::Map(std::ifstream& file):_id (nbMaps),
                              _map3DData{},
                              _boundingBoxXMax (0),
                              _boundingBoxYMax (0),
-                             _boundingBoxZMax (0)
+                             _boundingBoxZMax (0),
+                             _beginX (0),
+                             _beginY (0),
+                             _beginZ (0)
 {
     unsigned int width;
     unsigned int deep;
@@ -44,15 +50,9 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     _boundingBoxYMax = height;
     _boundingBoxZMax = deep;
 
-    /*auto getXYZ = [&width,&deep,&height] (unsigned int i) 
-        -> std::vector<unsigned int>
-    {
-       unsigned int x = (i%(width*deep))%width;
-       unsigned int z = (i%(width*deep))/width;
-       unsigned int y = i/height; 
-
-       return std::vector<unsigned int> {x,y,z};
-    };*/
+    file >> _beginX;
+    file >> _beginY;
+    file >> _beginZ;
 
     for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
 

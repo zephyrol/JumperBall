@@ -1,0 +1,2 @@
+/home/seb/NetBeansProjects/JumperBall/libs/glm/CMakeFiles/rebuild_cache.dir
+/home/seb/NetBeansProjects/JumperBall/libs/glm/CMakeFiles/edit_cache.dir

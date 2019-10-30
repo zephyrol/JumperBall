@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=BallJumper
+PROJECTNAME=JumperBall
 
 # Active Configuration
 DEFAULTCONF=Debug

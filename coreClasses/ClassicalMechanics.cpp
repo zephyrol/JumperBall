@@ -134,9 +134,9 @@ void ClassicalMechanics::fillEulerMethodBuffer() const {
           const float weightSphere              = params.at(4);
 
           const float gravityComponent= weightSphere* gravitationalAcceleration;
-          const float StokesComponent =  6.f* static_cast<float>(M_PI) *
+          const float StokesComponent =  6.f * static_cast<float>(M_PI) *
                                         viscosity * radiusSphere * 
-                                        + static_cast<float>(pow(velocity,2));
+                                         static_cast<float>(pow(velocity,2));
 
           const float sumForces     = gravityComponent - StokesComponent; 
           const float acceleration  = - sumForces / weightSphere; 
