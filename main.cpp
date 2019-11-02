@@ -19,8 +19,7 @@
 #include "coreClasses/Ball.h"
 #include "coreClasses/Map.h"
 #include "coreClasses/ClassicalMechanics.h"
-#include <glm/glm.hpp>
-#include <glm/matrix.hpp>
+#include "graphicsClasses/testClass.h"
 
 using namespace std;
 
@@ -45,6 +44,8 @@ int main(int argc, char** argv) {
     ClassicalMechanics newton;
     newton.printEulerBuffer();
     Ball b;
+    testClass t;
+    
     return EXIT_SUCCESS;
 }
 

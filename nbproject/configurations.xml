@@ -15,6 +15,7 @@
       <itemPath>coreClasses/Map.h</itemPath>
       <itemPath>coreClasses/blocks/SpicyBlock.h</itemPath>
       <itemPath>coreClasses/Types.h</itemPath>
+      <itemPath>graphicsClasses/testClass.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -34,6 +35,7 @@
       <itemPath>coreClasses/Map.cpp</itemPath>
       <itemPath>coreClasses/blocks/SpicyBlock.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
+      <itemPath>graphicsClasses/testClass.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -61,92 +63,12 @@
           <standard>8</standard>
           <incDir>
             <pElem>coreClasses</pElem>
-            <pElem>graphicsClasses</pElem>
             <pElem>libs</pElem>
           </incDir>
           <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline -Wformat=2 -Wformat-truncation=2 -Wmisleading-indentation</commandLine>
         </ccTool>
-      </compileType>
-      <item path="coreClasses/Ball.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="coreClasses/Ball.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/Camera.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="coreClasses/Camera.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/ClassicalMechanics.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="coreClasses/ClassicalMechanics.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/Map.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="coreClasses/Map.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/Types.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/BaseBlock.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/BaseBlock.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/Block.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/Block.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/BrittleBlock.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/BrittleBlock.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/FireBlock.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/FireBlock.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/IceBlock.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/IceBlock.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/SpicyBlock.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="coreClasses/blocks/SpicyBlock.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="main.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="maps/map1.txt" ex="false" tool="3" flavor2="0">
-      </item>
-    </conf>
-    <conf name="Release" type="1">
-      <toolsSet>
-        <compilerSet>default</compilerSet>
-        <dependencyChecking>true</dependencyChecking>
-        <rebuildPropChanged>false</rebuildPropChanged>
-      </toolsSet>
-      <compileType>
-        <cTool>
-          <developmentMode>5</developmentMode>
-        </cTool>
-        <ccTool>
-          <developmentMode>5</developmentMode>
-          <standard>8</standard>
-          <incDir>
-            <pElem>coreClasses</pElem>
-            <pElem>graphicsClasses</pElem>
-            <pElem>libs</pElem>
-          </incDir>
-          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline -Wformat=2 -Wformat-truncation=2 -Wmisleading-indentation</commandLine>
-        </ccTool>
-        <fortranCompilerTool>
-          <developmentMode>5</developmentMode>
-        </fortranCompilerTool>
-        <asmTool>
-          <developmentMode>5</developmentMode>
-        </asmTool>
         <linkerTool>
-          <linkerLibItems>
-            <linkerLibLibItem>glm_shared</linkerLibLibItem>
-          </linkerLibItems>
+          <commandLine>-lglfw</commandLine>
         </linkerTool>
       </compileType>
       <item path="coreClasses/Ball.cpp" ex="false" tool="1" flavor2="0">
@@ -193,6 +115,93 @@
       <item path="coreClasses/blocks/SpicyBlock.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/blocks/SpicyBlock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/testClass.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/testClass.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="maps/map1.txt" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <standard>8</standard>
+          <incDir>
+            <pElem>coreClasses</pElem>
+            <pElem>libs</pElem>
+          </incDir>
+          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline -Wformat=2 -Wformat-truncation=2 -Wmisleading-indentation</commandLine>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <commandLine>-lglfw</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="coreClasses/Ball.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/Ball.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/Camera.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/Camera.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/ClassicalMechanics.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/ClassicalMechanics.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/Map.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/Map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/Types.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/BaseBlock.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/BaseBlock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/Block.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/Block.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/BrittleBlock.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/BrittleBlock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/FireBlock.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/FireBlock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/IceBlock.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/IceBlock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/SpicyBlock.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/blocks/SpicyBlock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/testClass.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/testClass.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
