@@ -45,7 +45,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/coreClasses/blocks/FireBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/IceBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o \
+	${OBJECTDIR}/graphicsClasses/Shader.o \
+	${OBJECTDIR}/graphicsClasses/ShaderProgram.o \
+	${OBJECTDIR}/graphicsClasses/Utility.o \
 	${OBJECTDIR}/graphicsClasses/testClass.o \
+	${OBJECTDIR}/libs/glad/glad.o \
 	${OBJECTDIR}/main.o
 
 
@@ -71,7 +75,7 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jumperball: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jumperball ${OBJECTFILES} ${LDLIBSOPTIONS} -lglfw
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jumperball ${OBJECTFILES} ${LDLIBSOPTIONS} -lglfw -ldl
 
 ${OBJECTDIR}/coreClasses/Ball.o: coreClasses/Ball.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses
@@ -123,10 +127,30 @@ ${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o: coreClasses/blocks/SpicyBlock.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o coreClasses/blocks/SpicyBlock.cpp
 
+${OBJECTDIR}/graphicsClasses/Shader.o: graphicsClasses/Shader.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Shader.o graphicsClasses/Shader.cpp
+
+${OBJECTDIR}/graphicsClasses/ShaderProgram.o: graphicsClasses/ShaderProgram.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/ShaderProgram.o graphicsClasses/ShaderProgram.cpp
+
+${OBJECTDIR}/graphicsClasses/Utility.o: graphicsClasses/Utility.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Utility.o graphicsClasses/Utility.cpp
+
 ${OBJECTDIR}/graphicsClasses/testClass.o: graphicsClasses/testClass.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/testClass.o graphicsClasses/testClass.cpp
+
+${OBJECTDIR}/libs/glad/glad.o: libs/glad/glad.c
+	${MKDIR} -p ${OBJECTDIR}/libs/glad
+	${RM} "$@.d"
+	$(COMPILE.c) -g -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/libs/glad/glad.o libs/glad/glad.c
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}

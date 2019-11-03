@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
     newton.printEulerBuffer();
     Ball b;
     testClass t;
+    t.run();
     
     return EXIT_SUCCESS;
 }

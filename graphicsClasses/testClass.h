@@ -13,11 +13,11 @@
 
 #ifndef TESTCLASS_H
 #define TESTCLASS_H
-#include <glad/include/glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/matrix.hpp>
 #include <Types.h>
+#include "Shader.h"
+#include "ShaderProgram.h"
 
 class testClass {
 public:
@@ -26,9 +26,11 @@ public:
     testClass(const testClass&);
     testClass& operator = (const testClass&);
     void run();
-    virtual ~testClass() = default;
+    virtual ~testClass();
+
+
 private:
-    GLFWwindow* window;
+    GLFWwindow* _window;
 
 };
 

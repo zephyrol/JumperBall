@@ -13,8 +13,12 @@
       <itemPath>coreClasses/blocks/FireBlock.h</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.h</itemPath>
       <itemPath>coreClasses/Map.h</itemPath>
+      <itemPath>graphicsClasses/Shader.h</itemPath>
+      <itemPath>graphicsClasses/ShaderProgram.h</itemPath>
       <itemPath>coreClasses/blocks/SpicyBlock.h</itemPath>
       <itemPath>coreClasses/Types.h</itemPath>
+      <itemPath>graphicsClasses/Utility.h</itemPath>
+      <itemPath>libs/glad/glad.h</itemPath>
       <itemPath>graphicsClasses/testClass.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -33,7 +37,11 @@
       <itemPath>coreClasses/blocks/FireBlock.cpp</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.cpp</itemPath>
       <itemPath>coreClasses/Map.cpp</itemPath>
+      <itemPath>graphicsClasses/Shader.cpp</itemPath>
+      <itemPath>graphicsClasses/ShaderProgram.cpp</itemPath>
       <itemPath>coreClasses/blocks/SpicyBlock.cpp</itemPath>
+      <itemPath>graphicsClasses/Utility.cpp</itemPath>
+      <itemPath>libs/glad/glad.c</itemPath>
       <itemPath>main.cpp</itemPath>
       <itemPath>graphicsClasses/testClass.cpp</itemPath>
     </logicalFolder>
@@ -48,6 +56,8 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>graphicsClasses/shaders/basicFs.fs</itemPath>
+    <itemPath>graphicsClasses/shaders/basicVs.vs</itemPath>
     <itemPath>maps/map1.txt</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
@@ -59,6 +69,11 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <incDir>
+            <pElem>libs</pElem>
+          </incDir>
+        </cTool>
         <ccTool>
           <standard>8</standard>
           <incDir>
@@ -68,7 +83,7 @@
           <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline -Wformat=2 -Wformat-truncation=2 -Wmisleading-indentation</commandLine>
         </ccTool>
         <linkerTool>
-          <commandLine>-lglfw</commandLine>
+          <commandLine>-lglfw -ldl</commandLine>
         </linkerTool>
       </compileType>
       <item path="coreClasses/Ball.cpp" ex="false" tool="1" flavor2="0">
@@ -116,9 +131,29 @@
       </item>
       <item path="coreClasses/blocks/SpicyBlock.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="graphicsClasses/Shader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/Shader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/ShaderProgram.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/ShaderProgram.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/Utility.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/Utility.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/basicFs.fs" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/basicVs.vs" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="graphicsClasses/testClass.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="graphicsClasses/testClass.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="libs/glad/glad.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="libs/glad/glad.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -134,6 +169,9 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>libs</pElem>
+          </incDir>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
@@ -151,7 +189,7 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <linkerTool>
-          <commandLine>-lglfw</commandLine>
+          <commandLine>-lglfw -ldl</commandLine>
         </linkerTool>
       </compileType>
       <item path="coreClasses/Ball.cpp" ex="false" tool="1" flavor2="0">
@@ -199,9 +237,29 @@
       </item>
       <item path="coreClasses/blocks/SpicyBlock.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="graphicsClasses/Shader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/Shader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/ShaderProgram.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/ShaderProgram.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/Utility.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/Utility.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/basicFs.fs" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/basicVs.vs" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="graphicsClasses/testClass.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="graphicsClasses/testClass.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="libs/glad/glad.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="libs/glad/glad.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
