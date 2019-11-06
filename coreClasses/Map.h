@@ -35,19 +35,23 @@ public:
     std::shared_ptr<Block> map3DData(int x, int y, int z) const;
     void printMap() const;
 
+    unsigned int boundingBoxXMax();
+    unsigned int boundingBoxYMax();
+    unsigned int boundingBoxZMax();
+
     virtual ~Map();
     
 private:
-    const unsigned int _id;
+    const unsigned int                    _id;
     //std::vector< std::shared_ptr<Block> >  _blocks;
     std::vector< std::shared_ptr<Block> > _map3DData;
-    unsigned int _boundingBoxXMax;
-    unsigned int _boundingBoxYMax;
-    unsigned int _boundingBoxZMax;
+    unsigned int                          _boundingBoxXMax;
+    unsigned int                          _boundingBoxYMax;
+    unsigned int                          _boundingBoxZMax;
 
-    unsigned int _beginX;
-    unsigned int _beginY;
-    unsigned int _beginZ;
+    unsigned int                          _beginX;
+    unsigned int                          _beginY;
+    unsigned int                          _beginZ;
     
     static unsigned int nbMaps;
 

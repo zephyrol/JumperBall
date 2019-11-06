@@ -29,13 +29,13 @@ public:
   
     //---CONSTANTS---//
     static constexpr float gravitationalAccelerationEarth = 9.81f;
-    static constexpr float coefficientWind = 1.f;
-    static constexpr float distanceJumpBasic = 2.f;
-    static constexpr float timeToStopWindBasic = 1.f;
+    static constexpr float coefficientWind                = 1.f;
+    static constexpr float distanceJumpBasic              = 2.f;
+    static constexpr float timeToStopWindBasic            = 1.f;
 
-    static constexpr size_t sizeSampleEuler= 128;
-    static constexpr float durationStudy = 10.f;
-    static constexpr float radiusBall = 0.015f;
+    static constexpr size_t sizeSampleEuler               = 128;
+    static constexpr float durationStudy                  = 10.f;
+    static constexpr float radiusBall                     = 0.015f;
 
     //---STRUCTURES---//
 
@@ -73,13 +73,13 @@ public:
 private:
 
     //---MEMBERS---//
-    float _gravitationalAcceleration;
-    float _distanceJump;
-    float _timeToGetDestinationX;
+    float                     _gravitationalAcceleration;
+    float                     _distanceJump;
+    float                     _timeToGetDestinationX;
 
-    float _weightSphere;
+    float                     _weightSphere;
 
-    physics2DVector _v0;
+    physics2DVector           _v0;
 
     ClassicalMechanics::Fluid _fluid;
 

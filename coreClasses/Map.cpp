@@ -120,3 +120,14 @@ void Map::printMap() const {
     }
 }
 
+unsigned int Map::boundingBoxXMax() {
+    return _boundingBoxXMax;
+}
+
+unsigned int Map::boundingBoxYMax() {
+    return _boundingBoxYMax;
+}
+
+unsigned int Map::boundingBoxZMax() {
+    return _boundingBoxZMax;
+}

@@ -20,8 +20,8 @@ class ShaderProgram {
 public:
     ShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
 
-    ShaderProgram& operator = (const ShaderProgram& shaderProgram) = delete;
-    ShaderProgram(const ShaderProgram& orig) = delete ; 
+    ShaderProgram& operator = (const ShaderProgram& shaderProgram)  = delete;
+    ShaderProgram(const ShaderProgram& orig)                        = delete ; 
 
     GLuint getHandle() const;
 
@@ -30,7 +30,7 @@ public:
     virtual ~ShaderProgram();
 
 private:
-    const GLuint _shaderProgramHandle; 
+    const GLuint  _shaderProgramHandle; 
     const Shader& _vertexShader; 
     const Shader& _fragmentShader; 
 

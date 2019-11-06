@@ -38,21 +38,21 @@ public:
     static timePointMs getTimePointMSNow ();
     
 private:
-    unsigned int _currentBlockX;
-    unsigned int _currentBlockY;
-    unsigned int _currentBlockZ;
-    float _3DPosX;
-    float _3DPosY;
-    float _3DPosZ;
+    unsigned int  _currentBlockX;
+    unsigned int  _currentBlockY;
+    unsigned int  _currentBlockZ;
+    float         _3DPosX;
+    float         _3DPosY;
+    float         _3DPosZ;
 
 
-    JumperBallTypes::Direction _currentSide;
-    JumperBallTypes::Direction _lookTowards;
-    Ball::State _state;
+    JumperBallTypes::Direction  _currentSide;
+    JumperBallTypes::Direction  _lookTowards;
+    Ball::State                 _state;
 
 
-    ClassicalMechanics _mechanicsPattern;
-    std::chrono::time_point<std::chrono::system_clock> _timeAction;
+    ClassicalMechanics                                  _mechanicsPattern;
+    std::chrono::time_point<std::chrono::system_clock>  _timeAction;
 
     std::shared_ptr<const Map> _map;
 

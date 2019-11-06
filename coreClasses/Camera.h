@@ -25,7 +25,7 @@ private:
     float _dirX, _dirY, _dirZ;
     float _rightX, _rightY, _rightZ;
     static constexpr float _zNear = 0.1f;
-    static constexpr float _zFar= 100.f;
+    static constexpr float _zFar  = 100.f;
 
 private:
 

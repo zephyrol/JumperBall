@@ -59,17 +59,25 @@ void testClass::run() {
                                                  0.f ,0.5f,0.f };
 
 
+    const std::vector<GLfloat> vertexColorBufferData  {1.f,1.f,0.f,
+                                                0.f,1.f,1.f,
+                                                 1.f ,0.f,1.f };
+
     GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
     glBindVertexArray(VertexArrayID);
 
-    GLuint idVertexBuffer;                                            
+    GLuint idVertexBuffer[2];                                            
     
-    glGenBuffers(1, &idVertexBuffer);
+    glGenBuffers(2, idVertexBuffer);
 
-    glBindBuffer(GL_ARRAY_BUFFER, idVertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, idVertexBuffer[0]);
     glBufferData(GL_ARRAY_BUFFER, vertexBufferData.size() * sizeof(GLfloat), 
             vertexBufferData.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, idVertexBuffer[1]);
+    glBufferData(GL_ARRAY_BUFFER, vertexColorBufferData.size() *
+            sizeof(GLfloat), vertexColorBufferData.data(), GL_STATIC_DRAW);
 
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
 
@@ -89,10 +97,21 @@ void testClass::run() {
         
         //------------ Rendering
         glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, idVertexBuffer);
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, idVertexBuffer[0]);
 
         glVertexAttribPointer ( 
                 0,
+                3, // 3 GL_FLOAT per vertex
+                GL_FLOAT,
+                GL_FALSE,
+                0,
+                nullptr
+                );
+        
+        glBindBuffer(GL_ARRAY_BUFFER, idVertexBuffer[1]);
+        glVertexAttribPointer ( 
+                1,
                 3, // 3 GL_FLOAT per vertex
                 GL_FLOAT,
                 GL_FALSE,
@@ -109,6 +128,5 @@ void testClass::run() {
 }
 
 testClass::~testClass() {
-    delete[] _window;
     glfwTerminate();
 }
