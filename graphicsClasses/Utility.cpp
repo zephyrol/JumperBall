@@ -68,7 +68,7 @@ std::vector<GLfloat> Utility::getPositionsLocalCube(){
         0.f,1.f,0.f, 0.f,1.f,1.f, 0.f,0.f,1.f,
         //Face 6
         1.f,0.f,0.f, 1.f,1.f,0.f, 1.f,0.f,1.f,
-        1.f,1.f,0.f, 1.f,1.f,1.f, 1.f,0.f,1.f,
+        1.f,1.f,0.f, 1.f,1.f,1.f, 1.f,0.f,1.f
     };
    return positions;
 }
@@ -79,7 +79,27 @@ std::vector<GLfloat> Utility::getNormalsLocalCube() {
     return normals;
 }
 std::vector<GLfloat> Utility::getColorsLocalCube() {
-    const std::vector<GLfloat> colors;
+    const std::vector<GLfloat> colors {
+        //Face 1 
+        1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
+        1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
+        //Face 2
+        0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
+        0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
+        //Face 3
+        0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
+        0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
+        //Face 4 
+        1.f,1.f,0.f, 1.f,1.f,0.f, 1.f,1.f,0.f,
+        1.f,1.f,0.f, 1.f,1.f,0.f, 1.f,1.f,0.f,
+        //Face 5
+        0.f,1.f,1.f, 0.f,1.f,1.f, 0.f,1.f,1.f,
+        0.f,1.f,1.f, 0.f,1.f,1.f, 0.f,1.f,1.f,
+        //Face 6
+        1.f,0.f,1.f, 1.f,0.f,1.f, 1.f,0.f,1.f,
+        1.f,0.f,1.f, 1.f,0.f,1.f, 1.f,0.f,1.f
+    };
+
     return colors;
 }
 

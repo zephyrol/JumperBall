@@ -43,6 +43,7 @@ private:
     static const std::string fsshaderMap; 
 
     verticesAttributeData<GLfloat>  _vData;
+
     const Map&                      _map;
     const Ball&                     _ball;
     const Camera&                   _camera;

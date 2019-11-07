@@ -39,6 +39,10 @@ Rendering::verticesAttributeData<GLfloat> Rendering::mapVertices() {
     return data;
 }
 
+void Rendering::render() const {
+
+}
+
 
 Rendering::~Rendering() {
 }
