@@ -20,6 +20,7 @@
 #include <Map.h>
 #include <Ball.h>
 #include <Camera.h>
+#include <glm/glm.hpp>
 #include "Shader.h"
 #include "ShaderProgram.h"
 
@@ -37,10 +38,18 @@ private:
 
     template<typename T>
     using verticesAttributeData = std::map<Attribute,std::vector<T> >;
+
+    template<typename T>
+    using uniformValue = std::map<std::string,T >;
     
     static const std::map<Attribute,unsigned int> nbComponents;
     static const std::string vsshaderMap; 
     static const std::string fsshaderMap; 
+
+    uniformValue<glm::mat4> _uniformMatrix4;
+    uniformValue<glm::vec4> _uniformVec4;
+    uniformValue<glm::vec4> _uniformVec3;
+    uniformValue<glm::vec4> _uniformVec2;
 
     verticesAttributeData<GLfloat>  _vData;
 
@@ -48,9 +57,11 @@ private:
     const Ball&                     _ball;
     const Camera&                   _camera;
 
-    verticesAttributeData<GLfloat> mapVertices ();
-
     const ShaderProgram _spMap;
+
+    verticesAttributeData<GLfloat> mapVertices ();
+    void renderMap();
+
 };
 
 #endif /* RENDERING_H */

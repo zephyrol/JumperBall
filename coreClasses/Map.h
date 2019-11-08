@@ -35,9 +35,9 @@ public:
     std::shared_ptr<Block> map3DData(int x, int y, int z) const;
     void printMap() const;
 
-    unsigned int boundingBoxXMax();
-    unsigned int boundingBoxYMax();
-    unsigned int boundingBoxZMax();
+    unsigned int boundingBoxXMax() const;
+    unsigned int boundingBoxYMax() const;
+    unsigned int boundingBoxZMax() const;
 
     virtual ~Map();
     

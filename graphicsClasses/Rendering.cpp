@@ -25,6 +25,10 @@ const std::string Rendering::fsshaderMap = "graphicsClasses/shaders/basicFs.fs";
 
 
 Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
+    _uniformMatrix4(),
+    _uniformVec4(),
+    _uniformVec3(),
+    _uniformVec2(),
     _vData(),
     _map(map),
     _ball(ball),
@@ -41,6 +45,36 @@ Rendering::verticesAttributeData<GLfloat> Rendering::mapVertices() {
 
 void Rendering::render() const {
 
+}
+
+void Rendering::renderMap() {
+    for (unsigned int x = 0; x < _map.boundingBoxXMax() ; ++x ) {
+        for (unsigned int y = 0; y < _map.boundingBoxYMax() ; ++y ) {
+            for (unsigned int z = 0; z < _map.boundingBoxZMax() ; ++z ) {
+                auto block = _map.map3DData(x,y,z);
+                if (block) {
+                    std::vector<GLfloat> pCube=Utility::getPositionsLocalCube();
+                    for (unsigned int i = 0 ; i < pCube.size(); i += 3 )
+                    {
+                        pCube.at(i)   +=  static_cast<GLfloat> (x) ;
+                        pCube.at(i+1) +=  static_cast<GLfloat> (y) ;
+                        pCube.at(i+2) +=  static_cast<GLfloat> (z) ;
+                    }
+                    _vData.at(Rendering::Attribute::Positions).insert(
+                    _vData.at(Rendering::Attribute::Positions).end(),
+                            pCube.begin(), pCube.end()
+                    );
+
+                    std::vector<GLfloat> cCube=Utility::getColorsLocalCube();
+                    _vData.at(Rendering::Attribute::Colors).insert(
+                    _vData.at(Rendering::Attribute::Colors).end(),
+                            cCube.begin(), cCube.end()
+                    );
+
+                }
+            }
+        }
+    }
 }
 
 
