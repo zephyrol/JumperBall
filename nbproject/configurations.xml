@@ -84,7 +84,7 @@
             <pElem>coreClasses</pElem>
             <pElem>libs</pElem>
           </incDir>
-          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline -Wformat=2 -Wformat-truncation=2 -Wmisleading-indentation</commandLine>
+          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline</commandLine>
         </ccTool>
         <linkerTool>
           <commandLine>-lglfw -ldl</commandLine>
@@ -192,7 +192,7 @@
             <pElem>coreClasses</pElem>
             <pElem>libs</pElem>
           </incDir>
-          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline -Wformat=2 -Wformat-truncation=2 -Wmisleading-indentation</commandLine>
+          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
