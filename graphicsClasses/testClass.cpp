@@ -51,10 +51,10 @@ testClass::testClass(): _window(nullptr)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void testClass::run() {
+void testClass::run(Rendering& r) {
    
 
-    const std::vector<GLfloat> vertexBufferData  {0.5f,-0.5f,0.f,
+    /*const std::vector<GLfloat> vertexBufferData  {0.5f,-0.5f,0.f,
                                                 -0.5f,-0.5f,0.f,
                                                  0.f ,0.5f,0.f };
 
@@ -79,7 +79,6 @@ void testClass::run() {
     glBufferData(GL_ARRAY_BUFFER, vertexColorBufferData.size() *
             sizeof(GLfloat), vertexColorBufferData.data(), GL_STATIC_DRAW);
 
-    glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
 
     Shader vShader (GL_VERTEX_SHADER , "graphicsClasses/shaders/basicVs.vs");
     Shader fShader (GL_FRAGMENT_SHADER , "graphicsClasses/shaders/basicFs.fs");
@@ -87,16 +86,18 @@ void testClass::run() {
     ShaderProgram program (vShader,fShader);
 
     
-    program.use();
+    program.use();*/
 
+    glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
           && glfwWindowShouldClose(_window) == 0 ) {
 
         glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
+        r.render();
         //------------ Rendering
-        glEnableVertexAttribArray(0);
+       /* glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glBindBuffer(GL_ARRAY_BUFFER, idVertexBuffer[0]);
 
@@ -120,7 +121,10 @@ void testClass::run() {
                 );
 
         glDrawArrays(GL_TRIANGLES,0,3);
-        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(0);*/
+
+        
+        
         // -------------------
         glfwSwapBuffers(_window);
         glfwPollEvents();

@@ -21,6 +21,9 @@
 #include <Ball.h>
 #include <Camera.h>
 #include <glm/glm.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/matrix.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "Shader.h"
 #include "ShaderProgram.h"
 
@@ -31,7 +34,7 @@ public:
 
     enum class Attribute { Positions, Normals, Colors, UVCoords };
     
-    void render() const ; 
+    void render() ; 
     
 private:
 
@@ -51,6 +54,9 @@ private:
     uniformValue<glm::vec4> _uniformVec3;
     uniformValue<glm::vec4> _uniformVec2;
 
+    GLuint _idVertexArray;
+    std::array<GLuint,2> _idVertexBuffer;
+
     verticesAttributeData<GLfloat>  _vData;
 
     const Map&                      _map;
@@ -61,6 +67,7 @@ private:
 
     verticesAttributeData<GLfloat> mapVertices ();
     void renderMap();
+    void renderCamera();
 
 };
 

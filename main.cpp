@@ -20,6 +20,7 @@
 #include "coreClasses/Map.h"
 #include "coreClasses/ClassicalMechanics.h"
 #include "graphicsClasses/testClass.h"
+#include "graphicsClasses/Rendering.h"
 
 using namespace std;
 
@@ -35,17 +36,25 @@ int main(int argc, char** argv) {
         Map m (file);
         std::cout << "Map created" << std::endl;
         m.printMap();
+
+
         file.close();
+
+        ClassicalMechanics newton;
+        newton.printEulerBuffer();
+
+        
+        
+        Ball b;
+        Camera c;
+        testClass t;
+        Rendering rendering (m,b,c);
+        t.run(rendering);
     }
     else {
         std::cout << "File not specified" << std::endl;        
     }
     
-    ClassicalMechanics newton;
-    newton.printEulerBuffer();
-    Ball b;
-    testClass t;
-    t.run();
     
     return EXIT_SUCCESS;
 }

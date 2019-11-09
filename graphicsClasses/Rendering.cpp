@@ -20,8 +20,8 @@ const std::map<Rendering::Attribute,unsigned int> Rendering::nbComponents {
     {Rendering::Attribute::UVCoords,   2}
 };
 
-const std::string Rendering::vsshaderMap = "graphicsClasses/shaders/basicVs.vs";
-const std::string Rendering::fsshaderMap = "graphicsClasses/shaders/basicFs.fs";
+const std::string Rendering::vsshaderMap = "graphicsClasses/shaders/mapVs.vs";
+const std::string Rendering::fsshaderMap = "graphicsClasses/shaders/mapFs.fs";
 
 
 Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
@@ -29,6 +29,8 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
     _uniformVec4(),
     _uniformVec3(),
     _uniformVec2(),
+    _idVertexArray(),
+    _idVertexBuffer(),
     _vData(),
     _map(map),
     _ball(ball),
@@ -36,6 +38,32 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
     _spMap( Shader (GL_VERTEX_SHADER, vsshaderMap ),
             Shader (GL_FRAGMENT_SHADER, fsshaderMap ))
 {
+
+    glGenVertexArrays(1, &_idVertexArray);
+    glBindVertexArray(_idVertexArray);
+
+    glGenBuffers(2, _idVertexBuffer.data());
+
+    renderMap();
+    renderCamera(); 
+
+
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
+    glBufferData(GL_ARRAY_BUFFER, _vData.at(Rendering::Attribute::Positions)
+            .size() * sizeof(GLfloat), 
+            _vData.at(Rendering::Attribute::Positions).data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
+    glBufferData(GL_ARRAY_BUFFER, _vData.at(Rendering::Attribute::Colors)
+            .size() * sizeof(GLfloat), 
+            _vData.at(Rendering::Attribute::Colors).data(), GL_STATIC_DRAW);
+
+    
+
+    _spMap.use();
+
+    glEnable(GL_DEPTH_TEST);  
+
 }
 
 Rendering::verticesAttributeData<GLfloat> Rendering::mapVertices() {
@@ -43,8 +71,34 @@ Rendering::verticesAttributeData<GLfloat> Rendering::mapVertices() {
     return data;
 }
 
-void Rendering::render() const {
+void Rendering::render() {
 
+    renderCamera();
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
+    
+    glVertexAttribPointer ( 
+            0,
+            3, // 3 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
+    glVertexAttribPointer ( 
+            1,
+            3, // 3 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+    glDrawArrays(GL_TRIANGLES,0,_vData.at(Rendering::Attribute::Positions)
+            .size());
 }
 
 void Rendering::renderMap() {
@@ -60,14 +114,14 @@ void Rendering::renderMap() {
                         pCube.at(i+1) +=  static_cast<GLfloat> (y) ;
                         pCube.at(i+2) +=  static_cast<GLfloat> (z) ;
                     }
-                    _vData.at(Rendering::Attribute::Positions).insert(
-                    _vData.at(Rendering::Attribute::Positions).end(),
+                    _vData[Rendering::Attribute::Positions].insert(
+                    _vData[Rendering::Attribute::Positions].end(),
                             pCube.begin(), pCube.end()
                     );
 
                     std::vector<GLfloat> cCube=Utility::getColorsLocalCube();
-                    _vData.at(Rendering::Attribute::Colors).insert(
-                    _vData.at(Rendering::Attribute::Colors).end(),
+                    _vData[Rendering::Attribute::Colors].insert(
+                    _vData[Rendering::Attribute::Colors].end(),
                             cCube.begin(), cCube.end()
                     );
 
@@ -77,7 +131,20 @@ void Rendering::renderMap() {
     }
 }
 
+void Rendering::renderCamera() {
+  _uniformMatrix4["MVP"] =  glm::mat4(
+  glm::perspective(glm::radians(70.f), 4.f/3.f, _camera._zNear, _camera._zFar)
+  * glm::lookAt(glm::vec3(7,5,8), glm::vec3(0,0,0), glm::vec3(0,1,0)));
+ 
+GLuint MatrixID = glGetUniformLocation(_spMap.getHandle(), "MVP");
+
+glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &_uniformMatrix4.at("MVP")[0][0]);
+
+}
+
+
 
 Rendering::~Rendering() {
+
 }
 

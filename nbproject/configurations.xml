@@ -61,6 +61,8 @@
     <itemPath>graphicsClasses/shaders/basicFs.fs</itemPath>
     <itemPath>graphicsClasses/shaders/basicVs.vs</itemPath>
     <itemPath>maps/map1.txt</itemPath>
+    <itemPath>graphicsClasses/shaders/mapFs.fs</itemPath>
+    <itemPath>graphicsClasses/shaders/mapVs.vs</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -152,6 +154,10 @@
       <item path="graphicsClasses/shaders/basicFs.fs" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphicsClasses/shaders/basicVs.vs" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/mapFs.fs" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/mapVs.vs" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphicsClasses/testClass.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -262,6 +268,10 @@
       <item path="graphicsClasses/shaders/basicFs.fs" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphicsClasses/shaders/basicVs.vs" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/mapFs.fs" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/mapVs.vs" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphicsClasses/testClass.cpp" ex="false" tool="1" flavor2="0">
       </item>

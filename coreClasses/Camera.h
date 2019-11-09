@@ -20,7 +20,6 @@ public:
     Camera(const Camera& orig);
     virtual ~Camera();
 
-private:
     float _posX, _posY, _posZ;
     float _dirX, _dirY, _dirZ;
     float _rightX, _rightY, _rightZ;

@@ -18,6 +18,7 @@
 #include <Types.h>
 #include "Shader.h"
 #include "ShaderProgram.h"
+#include "Rendering.h"
 
 class testClass {
 public:
@@ -25,7 +26,7 @@ public:
     
     testClass(const testClass&);
     testClass& operator = (const testClass&);
-    void run();
+    void run(Rendering& r);
     virtual ~testClass();
 
 
