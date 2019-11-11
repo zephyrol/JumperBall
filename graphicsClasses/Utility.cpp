@@ -12,7 +12,9 @@
  */
 
 #include "Utility.h"
+#include <math.h>
 #include <fstream>
+#include <glm/glm.hpp>
 
 std::string Utility::readFileSrc(const std::string& filePath) {
     // precondition
@@ -78,6 +80,7 @@ std::vector<GLfloat> Utility::getNormalsLocalCube() {
     const std::vector<GLfloat> normals;
     return normals;
 }
+
 std::vector<GLfloat> Utility::getColorsLocalCube() {
     const std::vector<GLfloat> colors {
         //Face 1 
@@ -103,3 +106,86 @@ std::vector<GLfloat> Utility::getColorsLocalCube() {
     return colors;
 }
 
+std::array<std::vector<GLfloat>,3> Utility::getLocalSphere(){
+ 
+    uint     iParaCount  = 40;
+    uint     iMeriCount  = 60;
+    float   r           = 0.5f;
+    
+    // Create a sphere --------------------------------------------------------------------------------
+    GLuint iVertexCount = iParaCount * iMeriCount;
+    
+    /*glm::vec3* afPositions  = new glm::vec3[ iVertexCount ];
+    glm::vec2* afTexCoords  = new glm::vec2[ iVertexCount ];*/
+
+    std::vector<GLfloat> afPositions (iVertexCount*3);
+    std::vector<GLfloat> afTexCoords(iVertexCount*2);
+    
+    float a1 = ( 180.0 / ( iParaCount + 1 ) ) * M_PI / 180.0;
+    float a2 = ( 360.0 / ( iMeriCount - 1 ) ) * M_PI / 180.0;
+    
+    // parallels ---------------------------------------------------------------------------------------
+    uint k = 0;
+    for( uint i = 0; i < iParaCount; ++i )
+    {
+        float fAngle    = - static_cast<float>(M_PI) / 2.0f + a1 * ( i + 1 );
+        float z         = r * sin( fAngle );
+        float fRadius   = r * cos( fAngle );
+        
+        for( uint j = 0; j < iMeriCount; ++j )
+        {
+
+            glm::vec3 afPos ( fRadius * cos( a2 * j ), 
+                                          fRadius * sin( a2 * j ), z );
+
+            afPositions.push_back(afPos.x);
+            afPositions.push_back(afPos.y);
+            afPositions.push_back(afPos.z);
+
+            glm::vec2 afTexC( static_cast<float>(j)/ iMeriCount, 
+                              static_cast<float>( iParaCount - i ) 
+                              / iParaCount);
+            afPositions.push_back(afTexC.x);
+            afPositions.push_back(afTexC.y);
+
+            k++;
+        }
+    }
+    
+        // compute normals --------------------------------------------------------------------------------
+        // on a 0 centered sphere : you just need to normalise the position!
+        std::vector<GLfloat> afNormals(iVertexCount*3);
+
+        for( uint i = 0; i < iVertexCount; ++i )
+        {
+            afNormals[ i ] = glm::normalize( afPositions[ i ] );
+        }
+
+        GLuint iElementsCount = ( iMeriCount - 1 ) * ( iParaCount - 1 ) * 2 * 3;
+        // for quads split in 2 
+ 
+        GLuint* auiIndices = new GLuint[ iElementsCount ]; 
+ 
+        k=0; 
+        for( uint i = 0; i < ( iParaCount - 1 ); ++i ) 
+        { 
+            for( uint j = 0; j < ( iMeriCount - 1 ); ++j ) 
+            { 
+                auiIndices[ k++ ] = iMeriCount * i + j; 
+                auiIndices[ k++ ] = iMeriCount * i + ( j + 1 ); 
+                auiIndices[ k++ ] = iMeriCount * ( i + 1 ) + ( j + 1 ); 
+                auiIndices[ k++ ] = iMeriCount * ( i + 1 ) + ( j + 1 ); 
+                auiIndices[ k++ ] = iMeriCount * ( i + 1 ) + j; 
+                auiIndices[ k++ ] = iMeriCount * i + j; 
+            } 
+        } 
+ 
+        /*m_MeshSphere.createFrom( GL_TRIANGLES, iVertexCount, afPositions, afNormals, afTexCoords, iElementsCount, auiIndices ); */
+        return std::array<std::vector<GLfloat>,3 > {afPositions,afNormals,
+                                                  afTexCoords};
+        /*delete [] afPositions; 
+        delete [] afNormals; 
+        delete [] afTexCoords; */
+
+
+}

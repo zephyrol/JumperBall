@@ -9,6 +9,8 @@ namespace Utility {
     std::vector<GLfloat> getPositionsLocalCube();
     std::vector<GLfloat> getNormalsLocalCube();
     std::vector<GLfloat> getColorsLocalCube();
+
+    std::array<std::vector<GLfloat>,3> getLocalSphere();
 }
 
 #endif /* UTILITY_H */
