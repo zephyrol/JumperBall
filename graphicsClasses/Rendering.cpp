@@ -45,6 +45,7 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
     glGenBuffers(2, _idVertexBuffer.data());
 
     renderMap();
+    renderBall();
     renderCamera(); 
 
 
@@ -131,6 +132,27 @@ void Rendering::renderMap() {
     }
 }
 
+void Rendering::renderBall() {
+
+    std::array<std::vector<GLfloat>,3 >sphere = Utility::getLocalSphere();
+    for (unsigned int i = 0 ; i < sphere.at(0).size(); i += 3 )
+    {
+        sphere.at(0).at(i)   +=  static_cast<GLfloat>  (3) ;
+        sphere.at(0).at(i+1) +=  static_cast<GLfloat> (3);
+        sphere.at(0).at(i+2) +=  static_cast<GLfloat>(6) ;
+    }
+
+    _vData[Rendering::Attribute::Positions].insert(
+    _vData[Rendering::Attribute::Positions].end(),
+            sphere.at(0).begin(),sphere.at(0).end()
+    );
+
+    _vData[Rendering::Attribute::Colors].insert(
+    _vData[Rendering::Attribute::Colors].end(),
+            sphere.at(1).begin(), sphere.at(1).end()
+    );
+}
+
 void Rendering::renderCamera() {
   _uniformMatrix4["MVP"] =  glm::mat4(
   glm::perspective(glm::radians(70.f), 4.f/3.f, _camera._zNear, _camera._zFar)
@@ -141,6 +163,7 @@ GLuint MatrixID = glGetUniformLocation(_spMap.getHandle(), "MVP");
 glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &_uniformMatrix4.at("MVP")[0][0]);
 
 }
+
 
 
 

@@ -152,13 +152,17 @@ std::array<std::vector<GLfloat>,3> Utility::getLocalSphere(){
         }
     }
     
-        // compute normals --------------------------------------------------------------------------------
+        // compute normals -----------------------------------------------------
         // on a 0 centered sphere : you just need to normalise the position!
         std::vector<GLfloat> afNormals(iVertexCount*3);
 
-        for( uint i = 0; i < iVertexCount; ++i )
+        for( uint i = 0; i < iVertexCount*3; i += 3 )
         {
-            afNormals[ i ] = glm::normalize( afPositions[ i ] );
+            glm::vec3 normal (afPositions[i],afPositions[i+1],afPositions[i+2]);
+            glm::normalize(normal);
+            afNormals[ i ]    = normal.x;
+            afNormals[ i+1 ]  = normal.y;
+            afNormals[ i+2 ]  = normal.z;
         }
 
         GLuint iElementsCount = ( iMeriCount - 1 ) * ( iParaCount - 1 ) * 2 * 3;

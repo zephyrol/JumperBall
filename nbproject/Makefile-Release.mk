@@ -45,6 +45,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/coreClasses/blocks/FireBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/IceBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o \
+	${OBJECTDIR}/graphicsClasses/Mesh.o \
 	${OBJECTDIR}/graphicsClasses/Rendering.o \
 	${OBJECTDIR}/graphicsClasses/Shader.o \
 	${OBJECTDIR}/graphicsClasses/ShaderProgram.o \
@@ -127,6 +128,11 @@ ${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o: coreClasses/blocks/SpicyBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o coreClasses/blocks/SpicyBlock.cpp
+
+${OBJECTDIR}/graphicsClasses/Mesh.o: graphicsClasses/Mesh.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Mesh.o graphicsClasses/Mesh.cpp
 
 ${OBJECTDIR}/graphicsClasses/Rendering.o: graphicsClasses/Rendering.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses

@@ -67,6 +67,7 @@ private:
 
     verticesAttributeData<GLfloat> mapVertices ();
     void renderMap();
+    void renderBall();
     void renderCamera();
 
 };
