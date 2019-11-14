@@ -20,16 +20,21 @@
 
 class Mesh {
 public:
-    Mesh();
+    //Mesh();
     Mesh(const Ball& ball);
     Mesh(const Map& map);
     virtual ~Mesh();
-private:
-    std::vector<glm::vec3> _positions;
-    std::vector<glm::vec3> _normals;
-    std::vector<glm::vec2> _uvCoords;
 
-    glm::mat4 _local;
+private:
+    std::vector<glm::vec3>  _positions;
+    std::vector<glm::vec3>  _normals;
+    std::vector<glm::vec3>  _colors;
+    std::vector<glm::vec2>  _uvCoords;
+
+    bool                    _useIndexing;
+    std::vector<GLushort>   _indices;
+
+    glm::mat4               _local;
 };
 
 #endif /* MESH_H */
