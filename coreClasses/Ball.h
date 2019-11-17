@@ -36,6 +36,8 @@ public:
 
 
     static timePointMs getTimePointMSNow ();
+
+    std::array<float,3> get3DPos() const;
     
 private:
     unsigned int  _currentBlockX;
@@ -49,7 +51,6 @@ private:
     JumperBallTypes::Direction  _currentSide;
     JumperBallTypes::Direction  _lookTowards;
     Ball::State                 _state;
-
 
     ClassicalMechanics                                  _mechanicsPattern;
     std::chrono::time_point<std::chrono::system_clock>  _timeAction;

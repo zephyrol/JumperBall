@@ -622,3 +622,6 @@ std::vector<float> Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) {
     return std::vector<float> {x,y,z};
 }
 
+std::array<float, 3> Ball::get3DPos() const{
+    return {_3DPosX,_3DPosY,_3DPosZ};
+}

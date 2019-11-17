@@ -35,6 +35,7 @@ private:
     std::vector<GLushort>   _indices;
 
     glm::mat4               _local;
+    glm::mat4               _world;
 };
 
 #endif /* MESH_H */
