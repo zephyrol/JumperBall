@@ -25,6 +25,7 @@ public:
     Mesh(const Map& map);
     virtual ~Mesh();
 
+    void render() const;
 private:
     std::vector<glm::vec3>  _positions;
     std::vector<glm::vec3>  _normals;
@@ -33,6 +34,10 @@ private:
 
     bool                    _useIndexing;
     std::vector<GLushort>   _indices;
+    GLuint                  _idElementBuffer;
+
+    GLuint                  _idVertexArray;
+    std::array<GLuint,2>    _idVertexBuffer;
 
     glm::mat4               _local;
     glm::mat4               _world;

@@ -26,6 +26,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Shader.h"
 #include "ShaderProgram.h"
+#include "Mesh.h"
 
 class Rendering {
 public:
@@ -59,9 +60,12 @@ private:
 
     verticesAttributeData<GLfloat>  _vData;
 
-    const Map&                      _map;
-    const Ball&                     _ball;
+    /*const Map&                      _map;
+    const Ball&                     _ball;*/
+    const Mesh          _map;
+    const Mesh          _ball;
     const Camera&                   _camera;
+
 
     const ShaderProgram _spMap;
 

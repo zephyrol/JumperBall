@@ -22,10 +22,20 @@ Mesh::Mesh(const Ball& ball):
       _uvCoords(),
       _useIndexing(true),
       _indices(),
+      _idElementBuffer(),
+      _idVertexArray(),
+      _idVertexBuffer(),
       _local(1.f),
       _world(1.f)
 {
   
+    glGenVertexArrays(1, &_idVertexArray);
+    glBindVertexArray(_idVertexArray);
+
+    glGenBuffers(2, _idVertexBuffer.data());
+
+
+
     uint     iParaCount  = 40;
     uint     iMeriCount  = 60;
     float    r           = 0.5f;
@@ -89,6 +99,11 @@ Mesh::Mesh(const Ball& ball):
     std::array<float,3> positionBall = ball.get3DPos();
     glm::translate(_world, glm::vec3(positionBall.at(1),positionBall.at(2)
                             ,positionBall.at(3)));
+
+    glGenBuffers(1, &_idElementBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,_indices.size() * sizeof (GLushort),
+            _indices.data(),GL_STATIC_DRAW);
 }
 
 Mesh::Mesh(const Map& map):
@@ -98,9 +113,18 @@ Mesh::Mesh(const Map& map):
       _uvCoords(),
       _useIndexing(false),
       _indices(),
+      _idElementBuffer(),
+      _idVertexArray(),
+      _idVertexBuffer(),
       _local(1.f),
       _world(1.f)
 {
+
+    glGenVertexArrays(1, &_idVertexArray);
+    glBindVertexArray(_idVertexArray);
+
+    glGenBuffers(2, _idVertexBuffer.data());
+
 
     for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
         for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
@@ -131,6 +155,39 @@ Mesh::Mesh(const Map& map):
         }
     }
 }
+
+void Mesh::render() const {
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
+    
+    glVertexAttribPointer ( 
+            0,
+            3, // 3 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
+    glVertexAttribPointer ( 
+            1,
+            3, // 3 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+    if (_useIndexing) {
+      
+    }
+    else {
+    glDrawArrays(GL_TRIANGLES,0,_positions.size());
+    }
+}
+
 
 Mesh::~Mesh() {
 }
