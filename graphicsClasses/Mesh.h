@@ -23,6 +23,8 @@ public:
     //Mesh();
     Mesh(const Ball& ball);
     Mesh(const Map& map);
+    const glm::mat4& local() const ;
+    const glm::mat4& world() const ;
     virtual ~Mesh();
 
     void render() const;

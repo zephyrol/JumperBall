@@ -39,6 +39,10 @@ public:
     unsigned int boundingBoxYMax() const;
     unsigned int boundingBoxZMax() const;
 
+    unsigned int beginX() const;
+    unsigned int beginY() const;
+    unsigned int beginZ() const;
+
     virtual ~Map();
     
 private:

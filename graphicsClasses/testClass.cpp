@@ -126,8 +126,10 @@ void testClass::run(Rendering& r) {
         
         
         // -------------------
+        glfwSwapInterval(1);
         glfwSwapBuffers(_window);
-        glfwPollEvents();
+        //glfwPollEvents();
+        glfwWaitEvents();
    }
 }
 

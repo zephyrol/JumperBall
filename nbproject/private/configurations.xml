@@ -28,8 +28,9 @@
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1.txt</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map3.txt</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" maps/map1.txt</runcommand>
+        <runcommand>"${OUTPUT_PATH}" maps/map3.txt</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

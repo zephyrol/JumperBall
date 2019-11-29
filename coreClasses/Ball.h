@@ -19,8 +19,8 @@
 
 class Ball {
 public:
-    Ball();
-    Ball(const Ball& orig);
+    //Ball();
+    Ball(const Map& map);
     virtual ~Ball();
 
     enum class State { Staying, Moving, Jumping };
@@ -38,6 +38,7 @@ public:
     static timePointMs getTimePointMSNow ();
 
     std::array<float,3> get3DPos() const;
+    float getRadius() const;
     
 private:
     unsigned int  _currentBlockX;
@@ -55,7 +56,7 @@ private:
     ClassicalMechanics                                  _mechanicsPattern;
     std::chrono::time_point<std::chrono::system_clock>  _timeAction;
 
-    std::shared_ptr<const Map> _map;
+    const Map& _map;
 
     void turnLeft() noexcept;
     void turnRight() noexcept;

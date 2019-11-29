@@ -39,17 +39,18 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
             Shader (GL_FRAGMENT_SHADER, fsshaderMap ))
 {
 
-    glGenVertexArrays(1, &_idVertexArray);
+    /*glGenVertexArrays(1, &_idVertexArray);
     glBindVertexArray(_idVertexArray);
 
-    glGenBuffers(2, _idVertexBuffer.data());
+    glGenBuffers(2, _idVertexBuffer.data());*/
 
-    renderMap();
-    renderBall();
-    renderCamera(); 
+    /*renderMap();
+    renderBall();*/
+    /*_map.render();
+    renderCamera(); */
 
 
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
+    /*glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
     glBufferData(GL_ARRAY_BUFFER, _vData.at(Rendering::Attribute::Positions)
             .size() * sizeof(GLfloat), 
             _vData.at(Rendering::Attribute::Positions).data(), GL_STATIC_DRAW);
@@ -57,7 +58,7 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
     glBufferData(GL_ARRAY_BUFFER, _vData.at(Rendering::Attribute::Colors)
             .size() * sizeof(GLfloat), 
-            _vData.at(Rendering::Attribute::Colors).data(), GL_STATIC_DRAW);
+            _vData.at(Rendering::Attribute::Colors).data(), GL_STATIC_DRAW);*/
 
     
 
@@ -67,6 +68,7 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
 
 }
 
+
 Rendering::verticesAttributeData<GLfloat> Rendering::mapVertices() {
     Rendering::verticesAttributeData<GLfloat> data;
     return data;
@@ -75,8 +77,19 @@ Rendering::verticesAttributeData<GLfloat> Rendering::mapVertices() {
 void Rendering::render() {
 
     renderCamera();
+    //_map.render();
 
-    glEnableVertexAttribArray(0);
+    GLuint modelWorldID = glGetUniformLocation(_spMap.getHandle(), "MW");
+    glm::mat4 matModelWorld = _ball.world() * _ball.local();
+    glUniformMatrix4fv(modelWorldID, 1, GL_FALSE, &matModelWorld[0][0]);
+
+    _ball.render();
+    Utility::printMatrix(matModelWorld);
+
+    matModelWorld = glm::mat4(1.f);
+    glUniformMatrix4fv(modelWorldID, 1, GL_FALSE, &matModelWorld[0][0]);
+    _map.render();
+    /*glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
     
@@ -99,10 +112,10 @@ void Rendering::render() {
             nullptr
             );
     glDrawArrays(GL_TRIANGLES,0,_vData.at(Rendering::Attribute::Positions)
-            .size());
+            .size());*/
 }
 
-void Rendering::renderMap() {
+/*void Rendering::renderMap() {
     for (unsigned int x = 0; x < _map.boundingBoxXMax() ; ++x ) {
         for (unsigned int y = 0; y < _map.boundingBoxYMax() ; ++y ) {
             for (unsigned int z = 0; z < _map.boundingBoxZMax() ; ++z ) {
@@ -130,7 +143,7 @@ void Rendering::renderMap() {
             }
         }
     }
-}
+}*/
 
 void Rendering::renderBall() {
 
@@ -154,13 +167,14 @@ void Rendering::renderBall() {
 }
 
 void Rendering::renderCamera() {
-  _uniformMatrix4["MVP"] =  glm::mat4(
+  _uniformMatrix4["VP"] =  glm::mat4(
   glm::perspective(glm::radians(70.f), 4.f/3.f, _camera._zNear, _camera._zFar)
   * glm::lookAt(glm::vec3(7,5,8), glm::vec3(0,0,0), glm::vec3(0,1,0)));
+  //* glm::lookAt(glm::vec3(5,2,2), glm::vec3(0,0,0), glm::vec3(0,1,0)));
  
-GLuint MatrixID = glGetUniformLocation(_spMap.getHandle(), "MVP");
+GLuint MatrixID = glGetUniformLocation(_spMap.getHandle(), "VP");
 
-glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &_uniformMatrix4.at("MVP")[0][0]);
+glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &_uniformMatrix4.at("VP")[0][0]);
 
 }
 

@@ -38,13 +38,14 @@ Mesh::Mesh(const Ball& ball):
 
     uint     iParaCount  = 40;
     uint     iMeriCount  = 60;
-    float    r           = 0.5f;
+    float    r           = ball.getRadius();
     
     // Create a sphere ---------------------------------------------------------
     GLuint iVertexCount = iParaCount * iMeriCount;
     
-    _positions.reserve(iVertexCount);
+    /*_positions.reserve(iVertexCount);
     _uvCoords.reserve(iVertexCount);
+    _colors.reserve(iVertexCount);*/
     
     float a1 = ( 180.0 / ( iParaCount + 1 ) ) * M_PI / 180.0;
     float a2 = ( 360.0 / ( iMeriCount - 1 ) ) * M_PI / 180.0;
@@ -59,12 +60,12 @@ Mesh::Mesh(const Ball& ball):
         
         for( uint j = 0; j < iMeriCount; ++j )
         {
-            _positions[ k ] = glm::vec3( 
+            _positions.push_back(glm::vec3( 
                     fRadius * static_cast<float>(cos( a2 * j )), 
                     fRadius * static_cast<float>(sin( a2 * j )), 
-                    z );
-            _uvCoords[ k ] = glm::vec2( float( j )/ iMeriCount, 
-                    float( iParaCount - i ) / iParaCount );
+                    z ));
+            _uvCoords.push_back(glm::vec2( float( j )/ iMeriCount, 
+                    float( iParaCount - i ) / iParaCount ));
             k++;
         }
     }
@@ -74,31 +75,54 @@ Mesh::Mesh(const Ball& ball):
     
     for( uint i = 0; i < iVertexCount; ++i )
     {
-        _normals[ i ] = glm::normalize( _positions[ i ] );
+        _normals.push_back(glm::normalize( _positions[ i ] ));
+        _colors.push_back(_normals[i]);
     }
     
-    GLuint iElementsCount = ( iMeriCount - 1 ) * ( iParaCount - 1 ) * 2 * 3; 
+    //GLuint iElementsCount = ( iMeriCount - 1 ) * ( iParaCount - 1 ) * 2 * 3; 
     // for quads split in 2
     
-    _indices.reserve(iElementsCount);
+    //_indices.reserve(iElementsCount);
     
     k=0;
     for( uint i = 0; i < ( iParaCount - 1 ); ++i )
     {
         for( uint j = 0; j < ( iMeriCount - 1 ); ++j )
         {
-            _indices[ k++ ] = iMeriCount * i + j;
-            _indices[ k++ ] = iMeriCount * i + ( j + 1 );
-            _indices[ k++ ] = iMeriCount * ( i + 1 ) + ( j + 1 );
-            _indices[ k++ ] = iMeriCount * ( i + 1 ) + ( j + 1 );
-            _indices[ k++ ] = iMeriCount * ( i + 1 ) + j;
-            _indices[ k++ ] = iMeriCount * i + j;
+            _indices.push_back(iMeriCount * i + j);
+            _indices.push_back(iMeriCount * i + ( j + 1 ));
+            _indices.push_back(iMeriCount * ( i + 1 ) + ( j + 1 ));
+            _indices.push_back(iMeriCount * ( i + 1 ) + ( j + 1 ));
+            _indices.push_back(iMeriCount * ( i + 1 ) + j);
+            _indices.push_back(iMeriCount * i + j);
         }
     }
    
     std::array<float,3> positionBall = ball.get3DPos();
-    glm::translate(_world, glm::vec3(positionBall.at(1),positionBall.at(2)
-                            ,positionBall.at(3)));
+    _world = glm::translate(_world, glm::vec3(positionBall.at(0),
+                            positionBall.at(1) ,positionBall.at(2)));
+
+    std::vector<GLfloat> positionsList ;
+    for (glm::vec3 pos : _positions) {
+      positionsList.push_back(pos.x) ;
+      positionsList.push_back(pos.y) ;
+      positionsList.push_back(pos.z) ;
+    }
+
+    std::vector<GLfloat> colorsList;
+    for (glm::vec3 color : _colors) {
+      colorsList.push_back(color.x) ;
+      colorsList.push_back(color.y) ;
+      colorsList.push_back(color.z) ;
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
+    glBufferData(GL_ARRAY_BUFFER, positionsList.size() * sizeof(GLfloat), 
+            positionsList.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
+    glBufferData(GL_ARRAY_BUFFER, colorsList.size() * sizeof(GLfloat), 
+            colorsList.data(), GL_STATIC_DRAW);
 
     glGenBuffers(1, &_idElementBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
@@ -154,12 +178,35 @@ Mesh::Mesh(const Map& map):
             }
         }
     }
+    
+    std::vector<GLfloat> positionsList ;
+    for (glm::vec3 pos : _positions) {
+      positionsList.push_back(pos.x) ;
+      positionsList.push_back(pos.y) ;
+      positionsList.push_back(pos.z) ;
+    }
+
+    std::vector<GLfloat> colorsList;
+    for (glm::vec3 color : _colors) {
+      colorsList.push_back(color.x) ;
+      colorsList.push_back(color.y) ;
+      colorsList.push_back(color.z) ;
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
+    glBufferData(GL_ARRAY_BUFFER, positionsList.size() * sizeof(GLfloat), 
+            positionsList.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
+    glBufferData(GL_ARRAY_BUFFER, colorsList.size() * sizeof(GLfloat), 
+            colorsList.data(), GL_STATIC_DRAW);
 }
 
 void Mesh::render() const {
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
     
     glVertexAttribPointer ( 
@@ -171,7 +218,7 @@ void Mesh::render() const {
             nullptr
             );
     
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
+        glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
     glVertexAttribPointer ( 
             1,
             3, // 3 GL_FLOAT per vertex
@@ -180,14 +227,23 @@ void Mesh::render() const {
             0,
             nullptr
             );
+
     if (_useIndexing) {
-      
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
+        glDrawElements(GL_TRIANGLES,_indices.size(),GL_UNSIGNED_SHORT,nullptr);
     }
     else {
-    glDrawArrays(GL_TRIANGLES,0,_positions.size());
+        glDrawArrays(GL_TRIANGLES,0,_positions.size());
     }
 }
 
+const glm::mat4& Mesh::local() const {
+    return _local;
+}
+
+const glm::mat4& Mesh::world() const {
+    return _world;
+}
 
 Mesh::~Mesh() {
 }

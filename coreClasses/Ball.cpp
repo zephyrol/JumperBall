@@ -15,7 +15,7 @@
 #include <iostream>
 #include <string>
 
-Ball::Ball(): _currentBlockX(0),
+/*Ball::Ball(): _currentBlockX(0),
         _currentBlockY(0),
         _currentBlockZ(0),
         _3DPosX(0.f),
@@ -28,11 +28,28 @@ Ball::Ball(): _currentBlockX(0),
         _timeAction(),
         _map(nullptr)
 {
-}
-
+}*/
 /*Ball::Ball(const Ball& orig):
  {
  }*/
+
+
+Ball::Ball(const Map& map): 
+        _currentBlockX(map.beginX()),
+        _currentBlockY(map.beginY()),
+        _currentBlockZ(map.beginZ()),
+        _3DPosX(0.f),
+        _3DPosY(0.f),
+        _3DPosZ(0.f),
+        _currentSide(JumperBallTypes::Direction::Up),
+        _lookTowards(JumperBallTypes::Direction::North),
+        _state(Ball::State::Staying),
+        _mechanicsPattern(),
+        _timeAction(),
+        _map(map){
+    updatePosition();
+       
+}
 
 Ball::~Ball() {
 }
@@ -236,13 +253,42 @@ void Ball::turnRight() noexcept {
 
 void Ball::updatePosition() noexcept {
   
-    constexpr float offsetRealPosition = 0.5f + _mechanicsPattern.radiusBall;
+    constexpr float offsetBlockPosition = 0.5f + _mechanicsPattern.radiusBall;
+
+    float x = static_cast<float> (_currentBlockX + 0.5f);
+    float y = static_cast<float> (_currentBlockY + 0.5f);
+    float z = static_cast<float> (_currentBlockZ + 0.5f);
+
+
     auto now = std::chrono::system_clock::now();
     static_cast<void>(now);
     if (_state == Ball::State::Staying) {
-        _3DPosX = static_cast<float> (_currentBlockX) + offsetRealPosition;
-        _3DPosY = static_cast<float> (_currentBlockY) + offsetRealPosition;
-        _3DPosZ = static_cast<float> (_currentBlockZ) + offsetRealPosition;
+
+    switch (_currentSide) {
+        case JumperBallTypes::Direction::North:
+            z -= offsetBlockPosition ;
+            break;
+        case JumperBallTypes::Direction::South:
+            z += offsetBlockPosition ;
+            break;
+        case JumperBallTypes::Direction::East:
+            x += offsetBlockPosition ;
+            break;
+        case JumperBallTypes::Direction::West:
+            x -= offsetBlockPosition ;
+            break;
+        case JumperBallTypes::Direction::Up:
+            y += offsetBlockPosition ;
+            break;
+        case JumperBallTypes::Direction::Down:
+            y -= offsetBlockPosition ;
+            break;
+        default :
+            break;
+    }
+        _3DPosX = x;
+        _3DPosY = y;
+        _3DPosZ = z; 
     } else if ( _state == Ball::State::Moving){
 
     } else if ( _state == Ball::State::Jumping){
@@ -365,16 +411,16 @@ void Ball::goStraightOn() noexcept {
             break;
     }
 
-    if (_map->map3DData(aboveX,aboveY,aboveZ)) {
+    if (_map.map3DData(aboveX,aboveY,aboveZ)) {
         _currentBlockX = aboveX; _currentBlockY = aboveY; 
         _currentBlockZ = aboveZ; 
     } 
-    else if (_map->map3DData(inFrontOfX,inFrontOfY,inFrontOfZ)) {
+    else if (_map.map3DData(inFrontOfX,inFrontOfY,inFrontOfZ)) {
         _currentBlockX = inFrontOfX; _currentBlockY = inFrontOfY; 
         _currentBlockZ = inFrontOfZ; 
     } 
-    else if (!_map->map3DData(leftX,leftY,leftZ) && 
-            !_map->map3DData(rightX,rightY,rightZ)) {
+    else if (!_map.map3DData(leftX,leftY,leftZ) && 
+            !_map.map3DData(rightX,rightY,rightZ)) {
         
         JumperBallTypes::Direction sideBeforeMovement = _currentSide;
         _currentSide = _lookTowards;
@@ -541,11 +587,11 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
             break;
     }
     
-    int xInteger = static_cast<int> (x);
-    int yInteger = static_cast<int> (y);
-    int zInteger = static_cast<int> (z);
+    const int xInteger = static_cast<int> (x);
+    const int yInteger = static_cast<int> (y);
+    const int zInteger = static_cast<int> (z);
 
-    if (_map->map3DData(xInteger, yInteger, zInteger)) 
+    if (_map.map3DData(xInteger, yInteger, zInteger)) 
         return std::make_shared<const std::vector<int> > (
                 std::initializer_list<int> ({xInteger,yInteger,zInteger})
                 );
@@ -624,4 +670,8 @@ std::vector<float> Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) {
 
 std::array<float, 3> Ball::get3DPos() const{
     return {_3DPosX,_3DPosY,_3DPosZ};
+}
+
+float Ball::getRadius() const {
+    return _mechanicsPattern.radiusBall;
 }

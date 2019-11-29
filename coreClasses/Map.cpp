@@ -51,8 +51,8 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     _boundingBoxZMax = deep;
 
     file >> _beginX;
-    file >> _beginY;
     file >> _beginZ;
+    file >> _beginY;
 
     for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
 
@@ -131,3 +131,17 @@ unsigned int Map::boundingBoxYMax() const {
 unsigned int Map::boundingBoxZMax() const {
     return _boundingBoxZMax;
 }
+
+unsigned int Map::beginX() const {
+    return _beginX;
+}
+
+unsigned int Map::beginY() const {
+    return _beginY;
+}
+
+unsigned int Map::beginZ() const {
+    return _beginZ;
+}
+
+

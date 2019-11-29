@@ -44,8 +44,7 @@ int main(int argc, char** argv) {
         newton.printEulerBuffer();
 
         
-        
-        Ball b;
+        Ball b (m);
         Camera c;
         testClass t;
         Rendering rendering (m,b,c);

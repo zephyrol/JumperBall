@@ -60,6 +60,7 @@ void ShaderProgram::verifyLinkStatus() {
                     &message, &log[0]);
             std::cerr << "Error log : " << std::endl << log ;
         }
+        exit(EXIT_FAILURE);
     } 
     else {
         std::cout << "Shader Program successfully linked" << std::endl;
