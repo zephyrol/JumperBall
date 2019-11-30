@@ -21,7 +21,7 @@ public:
     ShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
 
     ShaderProgram& operator = (const ShaderProgram& shaderProgram)  = delete;
-    ShaderProgram(const ShaderProgram& orig)                        = delete ; 
+    ShaderProgram(const ShaderProgram& orig)                        = delete; 
 
     GLuint getHandle() const;
 

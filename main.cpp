@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
 
         
         Ball b (m);
+        //b.doAction(Ball::ActionRequest::TurnRight);
         Camera c;
         testClass t;
         Rendering rendering (m,b,c);

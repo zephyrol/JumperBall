@@ -55,19 +55,19 @@ private:
     uniformValue<glm::vec4> _uniformVec3;
     uniformValue<glm::vec4> _uniformVec2;
 
-    GLuint _idVertexArray;
-    std::array<GLuint,2> _idVertexBuffer;
+    GLuint                  _idVertexArray;
+    std::array<GLuint,2>    _idVertexBuffer;
 
     verticesAttributeData<GLfloat>  _vData;
 
     /*const Map&                      _map;
     const Ball&                     _ball;*/
-    const Mesh          _map;
-    const Mesh          _ball;
-    const Camera&                   _camera;
+    const Mesh              _map;
+    const Mesh              _ball;
+    Camera                  _camera;
 
 
-    const ShaderProgram _spMap;
+    const ShaderProgram     _spMap;
 
     verticesAttributeData<GLfloat> mapVertices ();
     void renderMap();

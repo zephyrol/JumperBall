@@ -61,7 +61,7 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
             _vData.at(Rendering::Attribute::Colors).data(), GL_STATIC_DRAW);*/
 
     
-
+    _camera.follow(ball);
     _spMap.use();
 
     glEnable(GL_DEPTH_TEST);  
@@ -75,7 +75,7 @@ Rendering::verticesAttributeData<GLfloat> Rendering::mapVertices() {
 }
 
 void Rendering::render() {
-
+    
     renderCamera();
     //_map.render();
 
@@ -167,9 +167,16 @@ void Rendering::renderBall() {
 }
 
 void Rendering::renderCamera() {
+    const std::array<float,3> position  = _camera.pos();
+    const std::array<float,3> direction = _camera.dir();
+    const std::array<float,3> up        = _camera.up();
+
   _uniformMatrix4["VP"] =  glm::mat4(
   glm::perspective(glm::radians(70.f), 4.f/3.f, _camera._zNear, _camera._zFar)
-  * glm::lookAt(glm::vec3(7,5,8), glm::vec3(0,0,0), glm::vec3(0,1,0)));
+  * glm::lookAt(glm::vec3(position.at(0), position.at(1), position.at(2)), 
+                glm::vec3(direction.at(0),direction.at(1),direction.at(2)), 
+                glm::vec3(up.at(0),       up.at(1),       up.at(2))));
+  //* glm::lookAt(glm::vec3(7,5,8), glm::vec3(0,0,0), glm::vec3(0,1,0)));
   //* glm::lookAt(glm::vec3(5,2,2), glm::vec3(0,0,0), glm::vec3(0,1,0)));
  
 GLuint MatrixID = glGetUniformLocation(_spMap.getHandle(), "VP");

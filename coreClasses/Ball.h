@@ -39,6 +39,8 @@ public:
 
     std::array<float,3> get3DPos() const;
     float getRadius() const;
+    JumperBallTypes::Direction  currentSide() const;
+    JumperBallTypes::Direction  lookTowards() const;
     
 private:
     unsigned int  _currentBlockX;

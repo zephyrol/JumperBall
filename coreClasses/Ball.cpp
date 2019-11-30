@@ -470,7 +470,7 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
     switch (action) {
         case Ball::ActionRequest::GoStraightOn:
             if (_state == Ball::State::Staying) {
-                _state = Ball::State::Moving;
+                //_state = Ball::State::Moving;
                 goStraightOn();
                 
             }
@@ -478,21 +478,21 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
             break;
         case Ball::ActionRequest::TurnLeft:
             if (_state == Ball::State::Staying) {
-                _state = Ball::State::Moving;
+                //_state = Ball::State::Moving;
                 turnLeft();
             }
             else answer = Ball::AnswerRequest::Rejected;
             break;
         case Ball::ActionRequest::TurnRight:
             if (_state == Ball::State::Staying) {
-                _state = Ball::State::Moving;
+                //_state = Ball::State::Moving;
                 turnRight();
             }
             else answer = Ball::AnswerRequest::Rejected;
             break;
         case Ball::ActionRequest::Jump:
             if (_state == Ball::State::Staying) {
-                _state = Ball::State::Jumping;
+                //_state = Ball::State::Jumping;
                 jump();
             }
             else answer = Ball::AnswerRequest::Rejected;
@@ -675,3 +675,12 @@ std::array<float, 3> Ball::get3DPos() const{
 float Ball::getRadius() const {
     return _mechanicsPattern.radiusBall;
 }
+
+JumperBallTypes::Direction Ball::currentSide() const {
+    return _currentSide;
+}
+
+JumperBallTypes::Direction Ball::lookTowards() const {
+    return _lookTowards;
+}
+

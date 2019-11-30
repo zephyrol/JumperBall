@@ -13,18 +13,27 @@
 
 #ifndef CAMERA_H
 #define CAMERA_H
+#include "Types.h"
+#include "Ball.h"
+#include "Map.h"
 
 class Camera {
 public:
     Camera();
-    Camera(const Camera& orig);
     virtual ~Camera();
 
     float _posX, _posY, _posZ;
     float _dirX, _dirY, _dirZ;
-    float _rightX, _rightY, _rightZ;
+    float _upX, _upY, _upZ;
     static constexpr float _zNear = 0.1f;
     static constexpr float _zFar  = 100.f;
+
+    std::array<float,3> pos() const;
+    std::array<float,3> dir() const;
+    std::array<float,3> up() const;
+
+    void follow(const Ball& ball);
+    void follow(const Map& map);
 
 private:
 
