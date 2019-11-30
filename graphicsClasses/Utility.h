@@ -11,7 +11,6 @@ namespace Utility {
     std::vector<GLfloat> getNormalsLocalCube();
     std::vector<GLfloat> getColorsLocalCube();
 
-    std::array<std::vector<GLfloat>,3> getLocalSphere();
 
     void printMatrix(const glm::mat4& m);
 }

@@ -27,6 +27,7 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map2.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map3.txt</runcommandpicklistitem>
         </runcommandpicklist>

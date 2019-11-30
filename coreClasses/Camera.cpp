@@ -26,8 +26,8 @@ void Camera::follow(const Ball& ball) {
     const auto lookingDirection= ball.lookTowards();
 
     constexpr float distDirPoint = 2.f;
-    constexpr float distBehindBall = 1.5f;
-    constexpr float distAboveBall = 1.25f;
+    constexpr float distBehindBall = 1.3f;
+    constexpr float distAboveBall = 1.2f;
 
     switch (sideBall) {
         case JumperBallTypes::Direction::North:

@@ -47,14 +47,13 @@ Mesh::Mesh(const Ball& ball):
     _uvCoords.reserve(iVertexCount);
     _colors.reserve(iVertexCount);*/
     
-    float a1 = ( 180.0 / ( iParaCount + 1 ) ) * M_PI / 180.0;
+    float a1 = ( 180.0 / ( iParaCount - 1 ) ) * M_PI / 180.0;
     float a2 = ( 360.0 / ( iMeriCount - 1 ) ) * M_PI / 180.0;
     
     // parallels ---------------------------------------------------------------
-    uint k = 0;
     for( uint i = 0; i < iParaCount; ++i )
     {
-        float fAngle    = - static_cast<float>(M_PI) / 2.0f + a1 * ( i + 1 );
+        float fAngle    = - static_cast<float>(M_PI) / 2.0f + a1 * ( i );
         float z         = r * static_cast<float>(sin( fAngle ));
         float fRadius   = r * static_cast<float>(cos( fAngle ));
         
@@ -64,9 +63,8 @@ Mesh::Mesh(const Ball& ball):
                     fRadius * static_cast<float>(cos( a2 * j )), 
                     fRadius * static_cast<float>(sin( a2 * j )), 
                     z ));
-            _uvCoords.push_back(glm::vec2( float( j )/ iMeriCount, 
-                    float( iParaCount - i ) / iParaCount ));
-            k++;
+            _uvCoords.push_back(glm::vec2( static_cast<float>(j)/ iMeriCount, 
+                    static_cast<float>(iParaCount - i ) / iParaCount ));
         }
     }
     // compute normals ---------------------------------------------------------
@@ -84,7 +82,6 @@ Mesh::Mesh(const Ball& ball):
     
     //_indices.reserve(iElementsCount);
     
-    k=0;
     for( uint i = 0; i < ( iParaCount - 1 ); ++i )
     {
         for( uint j = 0; j < ( iMeriCount - 1 ); ++j )
