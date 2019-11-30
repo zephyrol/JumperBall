@@ -62,8 +62,12 @@ private:
 
     /*const Map&                      _map;
     const Ball&                     _ball;*/
-    const Mesh              _map;
-    const Mesh              _ball;
+    Mesh                    _meshMap;
+    Mesh                    _meshBall;
+
+    const Map&              _map;
+    const Ball&             _ball;
+
     Camera                  _camera;
 
 

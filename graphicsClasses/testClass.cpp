@@ -49,9 +49,10 @@ testClass::testClass(): _window(nullptr)
 
     glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
 }
 
-void testClass::run(Rendering& r) {
+void testClass::run(Rendering& r, Ball& b) {
    
 
     /*const std::vector<GLfloat> vertexBufferData  {0.5f,-0.5f,0.f,
@@ -87,14 +88,66 @@ void testClass::run(Rendering& r) {
 
     
     program.use();*/
-
+    bool leftButton = false;
+    bool rightButton = false;
+    bool upButton = false;
+    unsigned int counter = 0;
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
           && glfwWindowShouldClose(_window) == 0 ) {
 
+        std::cout << "counter " << counter << std::endl;
+        counter++;
         glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            if (!rightButton) {
+                rightButton = true;
+            std::cout << "Key Right Press" << std::endl;
+            b.doAction(Ball::ActionRequest::TurnRight);
+            }
+        }
         
+        if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_PRESS) {
+            if (!leftButton) {
+                leftButton = true;
+                std::cout << "Key Left Press" << std::endl;
+                b.doAction(Ball::ActionRequest::TurnLeft);
+            }
+        }
+
+        if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_PRESS) {
+            if (!upButton) {
+                upButton = true;
+                std::cout << "Key Up Press" << std::endl;
+                b.doAction(Ball::ActionRequest::GoStraightOn);
+            }
+        }
+
+
+        if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_RELEASE) {
+            if (rightButton) {
+                rightButton = false;
+            std::cout << "Key Right Release" << std::endl;
+            }
+        }
+        
+        if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_RELEASE) {
+            if (leftButton) {
+                leftButton = false ;
+                std::cout << "Key Left Release" << std::endl;
+            }
+        }
+
+        if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_RELEASE) {
+            if (upButton) {
+                upButton = false;
+                std::cout << "Key Up Release" << std::endl;
+            }
+        }
+
+
         r.render();
         //------------ Rendering
        /* glEnableVertexAttribArray(0);
@@ -128,8 +181,8 @@ void testClass::run(Rendering& r) {
         // -------------------
         glfwSwapInterval(1);
         glfwSwapBuffers(_window);
-        //glfwPollEvents();
         glfwWaitEvents();
+        //glfwPollEvents();
    }
 }
 

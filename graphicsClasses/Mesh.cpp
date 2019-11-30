@@ -245,6 +245,23 @@ const glm::mat4& Mesh::world() const {
     return _world;
 }
 
+void Mesh::local(const glm::mat4& l) {
+    _local = l; 
+}
+
+void Mesh::world(const glm::mat4& w) {
+    _world = w;
+}
+
+void Mesh::updateMatrices(const Ball& b) {
+    
+    std::array<float,3> positionBall = b.get3DPos();
+    _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.at(0),
+                            positionBall.at(1) ,positionBall.at(2)));
+}
+
+
 Mesh::~Mesh() {
 }
+
 

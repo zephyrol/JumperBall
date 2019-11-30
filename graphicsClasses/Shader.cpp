@@ -30,6 +30,7 @@ Shader::Shader(const GLenum& shaderType, const std::string& shaderFilename) :
     glShaderSource(_shaderHandle, numberOfStrings, &glCode, nullptr);
     glCompileShader(_shaderHandle);
     verifyCompileStatus();    
+
 }
 
 void Shader::verifyCompileStatus() {
@@ -60,6 +61,5 @@ GLuint Shader::getHandle() const {
 
 
 Shader::~Shader() {
-    glDeleteShader(_shaderHandle);
 }
 

@@ -25,7 +25,7 @@ void Camera::follow(const Ball& ball) {
     const auto sideBall = ball.currentSide();
     const auto lookingDirection= ball.lookTowards();
 
-    constexpr float distDirPoint = 3.f;
+    constexpr float distDirPoint = 2.f;
     constexpr float distBehindBall = 1.5f;
     constexpr float distAboveBall = 1.25f;
 

@@ -32,6 +32,8 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
     _idVertexArray(),
     _idVertexBuffer(),
     _vData(),
+    _meshMap(map),
+    _meshBall(ball),
     _map(map),
     _ball(ball),
     _camera(camera),
@@ -76,19 +78,24 @@ Rendering::verticesAttributeData<GLfloat> Rendering::mapVertices() {
 
 void Rendering::render() {
     
+    _camera.follow(_ball);
     renderCamera();
     //_map.render();
 
     GLuint modelWorldID = glGetUniformLocation(_spMap.getHandle(), "MW");
-    glm::mat4 matModelWorld = _ball.world() * _ball.local();
+    _meshBall.updateMatrices(_ball);
+    glm::mat4 matModelWorld = _meshBall.world() * _meshBall.local();
     glUniformMatrix4fv(modelWorldID, 1, GL_FALSE, &matModelWorld[0][0]);
 
-    _ball.render();
-    Utility::printMatrix(matModelWorld);
+    //Utility::printMatrix(matModelWorld);
+
+    _meshBall.render();
 
     matModelWorld = glm::mat4(1.f);
     glUniformMatrix4fv(modelWorldID, 1, GL_FALSE, &matModelWorld[0][0]);
-    _map.render();
+    _meshMap.render();
+
+
     /*glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));

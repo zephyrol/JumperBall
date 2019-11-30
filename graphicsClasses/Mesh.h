@@ -25,9 +25,16 @@ public:
     Mesh(const Map& map);
     const glm::mat4& local() const ;
     const glm::mat4& world() const ;
+
+    void local(const glm::mat4& l);
+    void world(const glm::mat4& w);
+    
     virtual ~Mesh();
 
     void render() const;
+
+    void updateMatrices (const Ball& b);
+
 private:
     std::vector<glm::vec3>  _positions;
     std::vector<glm::vec3>  _normals;

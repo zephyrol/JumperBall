@@ -33,6 +33,11 @@ ShaderProgram::ShaderProgram( const Shader& vertexShader,
 
     verifyLinkStatus();
 
+    glDetachShader(_shaderProgramHandle,_vertexShader.getHandle());
+    glDetachShader(_shaderProgramHandle,_fragmentShader.getHandle());
+    glDeleteShader(_vertexShader.getHandle());
+    glDeleteShader(_fragmentShader.getHandle());
+
 
 }
 
@@ -69,7 +74,5 @@ void ShaderProgram::verifyLinkStatus() {
 
 
 ShaderProgram::~ShaderProgram() {
-    glDetachShader(_shaderProgramHandle,_vertexShader.getHandle());
-    glDetachShader(_shaderProgramHandle,_fragmentShader.getHandle());
 }
 

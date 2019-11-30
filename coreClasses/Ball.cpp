@@ -414,6 +414,34 @@ void Ball::goStraightOn() noexcept {
     if (_map.map3DData(aboveX,aboveY,aboveZ)) {
         _currentBlockX = aboveX; _currentBlockY = aboveY; 
         _currentBlockZ = aboveZ; 
+
+        JumperBallTypes::Direction lookTowardsBeforeMovement = _lookTowards;
+
+        _lookTowards = _currentSide;
+        
+        switch (lookTowardsBeforeMovement) {
+            case JumperBallTypes::Direction::North:
+                _currentSide = JumperBallTypes::Direction::South;
+                break;
+            case JumperBallTypes::Direction::South:
+                _currentSide = JumperBallTypes::Direction::North;
+                break;
+            case JumperBallTypes::Direction::East:
+                _currentSide= JumperBallTypes::Direction::West;
+                break;
+            case JumperBallTypes::Direction::West:
+                _currentSide= JumperBallTypes::Direction::East;
+                break;
+            case JumperBallTypes::Direction::Up:
+                _currentSide= JumperBallTypes::Direction::Down;
+                break;
+            case JumperBallTypes::Direction::Down:
+                _currentSide= JumperBallTypes::Direction::Up;
+                break;
+            default :
+                break;
+        }
+
     } 
     else if (_map.map3DData(inFrontOfX,inFrontOfY,inFrontOfZ)) {
         _currentBlockX = inFrontOfX; _currentBlockY = inFrontOfY; 
@@ -449,6 +477,7 @@ void Ball::goStraightOn() noexcept {
         }
     }
     else stay();
+    updatePosition();
 }
 
 
@@ -501,9 +530,10 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
             break;
     }
 
+    updatePosition(); 
+
     if (answer == Ball::AnswerRequest::Accepted)
         setTimeActionNow();
-    
     return answer;
 }
 

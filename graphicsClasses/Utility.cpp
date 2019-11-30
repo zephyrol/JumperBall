@@ -54,8 +54,8 @@ std::string Utility::readFileSrc(const std::string& filePath) {
 std::vector<GLfloat> Utility::getPositionsLocalCube(){
     const std::vector<GLfloat> positions  {
         //Face 1 
-        0.f,0.f,0.f, 1.f,0.f,0.f, 0.f,1.f,0.f,
-        1.f,0.f,0.f, 1.f,1.f,0.f, 0.f,1.f,0.f,
+         0.f,1.f,0.f, 1.f,0.f,0.f,  0.f,0.f,0.f,
+         0.f,1.f,0.f, 1.f,1.f,0.f,  1.f,0.f,0.f,
         //Face 2
         0.f,0.f,1.f, 1.f,0.f,1.f, 0.f,1.f,1.f,
         1.f,0.f,1.f, 1.f,1.f,1.f, 0.f,1.f,1.f,
@@ -63,11 +63,11 @@ std::vector<GLfloat> Utility::getPositionsLocalCube(){
         0.f,0.f,0.f, 1.f,0.f,0.f, 0.f,0.f,1.f,
         1.f,0.f,0.f, 1.f,0.f,1.f, 0.f,0.f,1.f,
         //Face 4
-        0.f,1.f,0.f, 1.f,1.f,0.f, 0.f,1.f,1.f,
-        1.f,1.f,0.f, 1.f,1.f,1.f, 0.f,1.f,1.f,
+        0.f,1.f,1.f, 1.f,1.f,0.f,  0.f,1.f,0.f, 
+        0.f,1.f,1.f, 1.f,1.f,1.f,  1.f,1.f,0.f, 
         //Face 5
-        0.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f,
-        0.f,1.f,0.f, 0.f,1.f,1.f, 0.f,0.f,1.f,
+        0.f,0.f,1.f, 0.f,1.f,0.f,  0.f,0.f,0.f, 
+        0.f,0.f,1.f, 0.f,1.f,1.f,  0.f,1.f,0.f, 
         //Face 6
         1.f,0.f,0.f, 1.f,1.f,0.f, 1.f,0.f,1.f,
         1.f,1.f,0.f, 1.f,1.f,1.f, 1.f,0.f,1.f
