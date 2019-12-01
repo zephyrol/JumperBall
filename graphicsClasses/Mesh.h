@@ -33,7 +33,7 @@ public:
 
     void render() const;
 
-    void updateMatrices (const Ball& b, const std::array<float,3>& posBall);
+    void updateMatrices (const Ball& b);
 
 private:
     std::vector<glm::vec3>  _positions;

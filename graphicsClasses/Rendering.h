@@ -28,56 +28,62 @@
 #include "ShaderProgram.h"
 #include "Mesh.h"
 
-class Rendering {
-public:
-    Rendering(const Map& map, const Ball& ball, const Camera& camera);
-    virtual ~Rendering();
 
-    enum class Attribute { Positions, Normals, Colors, UVCoords };
+class Rendering {
+
+public:
+
+    //--CONSTRUCTORS & DESTRUCTORS--//
+    Rendering                       ( const Map& map, 
+                                      const Ball& ball, 
+                                      const Camera& camera );
+    virtual                         ~Rendering();
+
+
+    //------------TYPES------------//
+    enum class Attribute            { Positions, Normals, Colors, UVCoords };
     
     void render() ; 
     
 private:
 
+    //------------TYPES------------//
+    template<typename T>
+    using verticesAttributeData =   std::map<Attribute,std::vector<T> >;
 
     template<typename T>
-    using verticesAttributeData = std::map<Attribute,std::vector<T> >;
-
-    template<typename T>
-    using uniformValue = std::map<std::string,T >;
+    using uniformValue =            std::map<std::string,T >;
     
-    static const std::map<Attribute,unsigned int> nbComponents;
-    static const std::string vsshaderMap; 
-    static const std::string fsshaderMap; 
 
-    uniformValue<glm::mat4> _uniformMatrix4;
-    uniformValue<glm::vec4> _uniformVec4;
-    uniformValue<glm::vec3> _uniformVec3;
-    uniformValue<glm::vec2> _uniformVec2;
+    //--------ATTRIBUTES-----------//
+    uniformValue<glm::mat4>         _uniformMatrix4;
+    uniformValue<glm::vec4>         _uniformVec4;
+    uniformValue<glm::vec3>         _uniformVec3;
+    uniformValue<glm::vec2>         _uniformVec2;
 
-    GLuint                  _idVertexArray;
-    std::array<GLuint,2>    _idVertexBuffer;
+    Mesh                            _meshMap;
+    Mesh                            _meshBall;
 
+    const Map&                      _map;
+    const Ball&                     _ball;
+    const Camera&                   _camera;
+
+    const ShaderProgram             _spMap;
+    GLuint                          _idVertexArray;
+    std::array<GLuint,2>            _idVertexBuffer;
     verticesAttributeData<GLfloat>  _vData;
 
-    /*const Map&                      _map;
-    const Ball&                     _ball;*/
-    Mesh                    _meshMap;
-    Mesh                    _meshBall;
 
-    const Map&              _map;
-
-    const Ball&             _ball;
-    std::array<float,3>     _ballPosition;
-
-    Camera                  _camera;
+    //------------METHODS----------//
+    verticesAttributeData<GLfloat>  mapVertices ();
+    void                            renderMap();
+    void                            renderCamera();
 
 
-    const ShaderProgram     _spMap;
-
-    verticesAttributeData<GLfloat> mapVertices ();
-    void renderMap();
-    void renderCamera();
+    //--------STATIC METHODS-------//
+    static const std::map<Attribute,unsigned int> nbComponents;
+    static const std::string                      vsshaderMap; 
+    static const std::string                      fsshaderMap; 
 
 };
 

@@ -19,70 +19,88 @@
 
 class Ball {
 public:
-    //Ball();
-    Ball(const Map& map);
-    virtual ~Ball();
 
-    enum class State { Staying, Moving, Jumping };
+    //--CONSTRUCTORS & DESTRUCTORS--//
+    Ball                        (const Map& map);
+    virtual                     ~Ball();
 
-    enum class ActionRequest { GoStraightOn, TurnLeft, TurnRight, Jump};
-    enum class AnswerRequest { Accepted, Rejected };
+    //------------TYPES------------//
+    enum class State            { Staying, Moving, Jumping };
 
-    AnswerRequest doAction ( ActionRequest action);
+    enum class ActionRequest    { GoStraightOn, TurnLeft, TurnRight, Jump};
+    enum class AnswerRequest    { Accepted, Rejected };
 
-    using timePointMs = std::chrono::time_point<std::chrono::_V2::system_clock,
-    std::chrono::duration<long int, std::ratio<1,1000> > > ;
-    using durationMs = std::chrono::duration<long int,std::ratio<1,1000> > ;
+    using timePointMs =         std::chrono::time_point <
+                                    std::chrono::_V2::system_clock,
+                                    std::chrono::duration <
+                                    long int, std::ratio<1,1000> 
+                                                          > 
+                                                        >;
+    using durationMs =          std::chrono::duration<long int,
+                                                      std::ratio<1,1000> > ;
 
 
-    //void updatePosition() const noexcept;
-    std::array<float,3> get3DPosition() const noexcept;
+    //----------METHODS------------//
+    AnswerRequest               doAction ( ActionRequest action);
 
-    //std::array<float,3> get3DPos() const;
-    float getRadius() const;
-    std::array<float,3> lookTowardsThroughVector() const;
 
-    JumperBallTypes::Direction  currentSide() const;
-    JumperBallTypes::Direction  lookTowards() const;
+    //-------CONST METHODS--------//
+    std::array<float,3>         get3DPosition()                  const noexcept;
+    float                       getRadius()                               const;
+    std::array<float,3>         lookTowardsThroughVector()                const;
 
-    static timePointMs  getTimePointMSNow ();
-    static float        getTimeNowSecondsFloat() noexcept;
+    JumperBallTypes::Direction  currentSide()                             const;
+    JumperBallTypes::Direction  lookTowards()                             const;
+
+    void update() noexcept;
+
+
+    //--------STATIC METHODS-------//
+    static timePointMs          getTimePointMSNow ()                   noexcept;
+    static float                getTimeNowSecondsFloat()               noexcept;
     
 private:
-    unsigned int          _currentBlockX;
-    unsigned int          _currentBlockY;
-    unsigned int          _currentBlockZ;
     
-    /*mutable float         _3DPosX;
-    mutable float         _3DPosY;
-    mutable float         _3DPosZ;*/
-
+    //--------ATTRIBUTES-----------//
+    unsigned int                _currentBlockX;
+    unsigned int                _currentBlockY;
+    unsigned int                _currentBlockZ;
+    
+    float                       _3DPosX;
+    float                       _3DPosY;
+    float                       _3DPosZ;
 
     JumperBallTypes::Direction  _currentSide;
     JumperBallTypes::Direction  _lookTowards;
     Ball::State                 _state;
 
-    ClassicalMechanics                                  _mechanicsPattern;
+    const Map&                  _map;
+
+    ClassicalMechanics          _mechanicsPattern;
+
     std::chrono::time_point<std::chrono::system_clock>  _timeAction;
 
-    const Map& _map;
 
-    void turnLeft() noexcept;
-    void turnRight() noexcept;
-    void goStraightOn() noexcept;
-    void stay() noexcept;
-    void jump() noexcept;
-    void setTimeActionNow() noexcept;
-    AnswerRequest isFallingIntersectionBlock() noexcept;
-    std::shared_ptr<const std::vector<int> >  intersectBlock (float x,
-                                                              float y,
-                                                              float z);
-    timePointMs getTimeActionMs() const noexcept;
+    //----------METHODS------------//
+    void                        turnLeft()                             noexcept;
+    void                        turnRight()                            noexcept;
+    void                        goStraightOn()                         noexcept;
+    void                        stay()                                 noexcept;
+    void                        jump()                                 noexcept;
+    void                        setTimeActionNow()                     noexcept;
+    AnswerRequest               isFallingIntersectionBlock()           noexcept;
 
-    float getTimeActionSecondsFloat() const noexcept;
-    float getTimeSecondsSinceAction() const noexcept;
 
-    std::array<float,3> P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
+    //-------CONST METHODS--------//
+    std::shared_ptr<const std::vector<int> >  
+                                intersectBlock(float x, float y, float z) const;
+
+    timePointMs                 getTimeActionMs()                const noexcept;
+    float                       getTimeActionSecondsFloat()      const noexcept;
+    float                       getTimeSecondsSinceAction()      const noexcept;
+
+    std::array<float,3>         P2DTo3D(ClassicalMechanics::physics2DVector p2D)
+                                                                          const;
 
         
 };

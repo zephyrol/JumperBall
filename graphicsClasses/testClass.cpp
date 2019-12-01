@@ -53,7 +53,7 @@ testClass::testClass(): _window(nullptr)
     glEnable(GL_CULL_FACE);
 }
 
-void testClass::run(Rendering& r, Ball& b) {
+void testClass::run(Rendering& r, Ball& b, Camera& c) {
    
 
     /*const std::vector<GLfloat> vertexBufferData  {0.5f,-0.5f,0.f,
@@ -163,7 +163,8 @@ void testClass::run(Rendering& r, Ball& b) {
             }
         }
 
-
+        b.update();
+        c.follow(b);
         r.render();
         //------------ Rendering
        /* glEnableVertexAttribArray(0);

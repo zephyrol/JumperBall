@@ -45,9 +45,9 @@ int main(int argc, char** argv) {
 
         
         Ball b (m);
+        /*b.doAction(Ball::ActionRequest::GoStraightOn);
         b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::TurnRight);
+        b.doAction(Ball::ActionRequest::TurnRight);*/
         /*b.doAction(Ball::ActionRequest::GoStraightOn);
         b.doAction(Ball::ActionRequest::GoStraightOn);
         b.doAction(Ball::ActionRequest::TurnLeft);
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
         Camera c;
         testClass t;
         Rendering rendering (m,b,c);
-        t.run(rendering,b);
+        t.run(rendering,b,c);
     }
     else {
         std::cout << "File not specified" << std::endl;        

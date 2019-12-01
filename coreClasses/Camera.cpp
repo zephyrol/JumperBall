@@ -21,7 +21,7 @@ Camera::Camera() : _posX(1), _posY(1), _posZ(1),
 
 void Camera::follow(const Ball& ball) {
     
-    const std::array<float,3> position= ball.get3DPos();
+    const std::array<float,3> position= ball.get3DPosition();
     const auto sideBall = ball.currentSide();
     const auto lookingDirection= ball.lookTowards();
 

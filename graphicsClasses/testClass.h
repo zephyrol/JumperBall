@@ -26,7 +26,7 @@ public:
     
     testClass(const testClass&);
     testClass& operator = (const testClass&);
-    void run(Rendering& r, Ball& b);
+    void run(Rendering& r, Ball& b, Camera& c);
     virtual ~testClass();
 
 

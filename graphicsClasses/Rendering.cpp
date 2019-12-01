@@ -29,17 +29,16 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
     _uniformVec4(),
     _uniformVec3(),
     _uniformVec2(),
-    _idVertexArray(),
-    _idVertexBuffer(),
-    _vData(),
     _meshMap(map),
     _meshBall(ball),
     _map(map),
     _ball(ball),
-    _ballPosition(ball.get3DPosition()),
     _camera(camera),
     _spMap( Shader (GL_VERTEX_SHADER, vsshaderMap ),
-            Shader (GL_FRAGMENT_SHADER, fsshaderMap ))
+            Shader (GL_FRAGMENT_SHADER, fsshaderMap )),
+    _idVertexArray(),
+    _idVertexBuffer(),
+    _vData()
 {
 
 
@@ -57,11 +56,10 @@ Rendering::verticesAttributeData<GLfloat> Rendering::mapVertices() {
 
 void Rendering::render() {
     
-    _ballPosition = _ball.get3DPosition();
     renderCamera();
 
     GLuint modelWorldID = glGetUniformLocation(_spMap.getHandle(), "MW");
-    _meshBall.updateMatrices(_ball,_ballPosition);
+    _meshBall.updateMatrices(_ball);
     glm::mat4 matModelWorld = _meshBall.world() * _meshBall.local();
     glUniformMatrix4fv(modelWorldID, 1, GL_FALSE, &matModelWorld[0][0]);
 
@@ -80,21 +78,25 @@ void Rendering::render() {
 void Rendering::renderCamera() {
 
 
-  _camera.follow(_ball,_ballPosition);
+  //_camera.follow(_ball);
 
-  const std::array<float,3> position  = _camera.pos();
-  const std::array<float,3> direction = _camera.dir();
-  const std::array<float,3> up        = _camera.up();
+  const std::array<float,3> positionCam  = _camera.pos();
+  const std::array<float,3> directionCam = _camera.dir();
+  const std::array<float,3> upCam        = _camera.up();
 
   _uniformMatrix4["VP"] =  glm::mat4(
   glm::perspective(glm::radians(70.f), 4.f/3.f, _camera._zNear, _camera._zFar)
-  * glm::lookAt(glm::vec3(position.at(0), position.at(1), position.at(2)), 
-                glm::vec3(direction.at(0),direction.at(1),direction.at(2)), 
-                glm::vec3(up.at(0),       up.at(1),       up.at(2))));
+  * glm::lookAt (
+        glm::vec3( positionCam.at(0),  positionCam.at(1),   positionCam.at(2)), 
+        glm::vec3( directionCam.at(0), directionCam.at(1),  directionCam.at(2)), 
+        glm::vec3( upCam.at(0),        upCam.at(1),         upCam.at(2))
+                )
+                                    ); 
 
-  _uniformVec3["positionBall"] = glm::vec3( _ballPosition.at(0),
-                                            _ballPosition.at(1),
-                                            _ballPosition.at(2));
+  const std::array<float,3> positionBall = _ball.get3DPosition();
+  _uniformVec3["positionBall"] = glm::vec3( positionBall.at(0),
+                                            positionBall.at(1),
+                                            positionBall.at(2));
 
   const std::array<float,3> lookTowardsDir = _ball.lookTowardsThroughVector();
   _uniformVec3["lookDirection"] = glm::vec3(lookTowardsDir.at(0),

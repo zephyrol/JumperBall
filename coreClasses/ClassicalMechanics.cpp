@@ -26,13 +26,13 @@ ClassicalMechanics::listOfViscosities  {
 };
 
 ClassicalMechanics::ClassicalMechanics():
-    _gravitationalAcceleration{gravitationalAccelerationEarth},
-    _distanceJump{distanceJumpBasic},
-    _timeToGetDestinationX(timeToStopWindBasic),
-    _weightSphere(0.010f),
-    _v0{getV0xToRespectDistanceAndTime(),1.f},
-    _fluid(ClassicalMechanics::Fluid::Air),
-    _EulerMethodBuffer{}
+    _gravitationalAcceleration          {gravitationalAccelerationEarth},
+    _distanceJump                       {distanceJumpBasic},
+    _timeToGetDestinationX              (timeToStopWindBasic),
+    _weightSphere                       (0.010f),
+    _v0                                 {getV0xToRespectDistanceAndTime(),3.f},
+    _fluid                              (ClassicalMechanics::Fluid::Air),
+    _EulerMethodBuffer                  {}
 {
 }
 
@@ -122,7 +122,7 @@ void ClassicalMechanics::fillEulerMethodBuffer() const {
 
       newTBuffer.at(0) = 0.f;
       newPBuffer.at(0) = 0.f;
-      newVBuffer.at(0) = 0.f;
+      newVBuffer.at(0) = _v0.y;
       
       const std::function<float(const std::array<float,5>&)> NewtonStokesFunc =
       [] (std::array<float,5> params) -> float {
@@ -138,21 +138,21 @@ void ClassicalMechanics::fillEulerMethodBuffer() const {
                                         viscosity * radiusSphere * 
                                          static_cast<float>(pow(velocity,2));
 
-          const float sumForces     = gravityComponent - StokesComponent; 
-          const float acceleration  = - sumForces / weightSphere; 
+          const float sumForces     = (-gravityComponent) + StokesComponent; 
+          const float acceleration  = sumForces / weightSphere; 
 
           return acceleration;
       };
 
-          const std::array<float,5> paramsInitials  { newVBuffer.at(0), 
+      const std::array<float,5> paramsInitials  { newVBuffer.at(0), 
                                                   radiusBall,
                                                   listOfViscosities.at(_fluid), 
                                                   _gravitationalAcceleration,
                                                   _weightSphere
                                                 };
-          solveDifferentialEquation (newABuffer.at(0),
-                                     NewtonStokesFunc, 
-                                     paramsInitials);
+      solveDifferentialEquation (newABuffer.at(0),
+                                NewtonStokesFunc, 
+                                paramsInitials);
 
       for ( unsigned int i = 0 ; i < sizeSampleEuler-1 ; i++) {
 
@@ -205,6 +205,7 @@ void ClassicalMechanics::printEulerBuffer() const {
 }
 
 float ClassicalMechanics::getV0xToRespectDistanceAndTime() {
+    
     return 2.f*_distanceJump/ static_cast<float>(pow(_timeToGetDestinationX,2));
 
 }
