@@ -162,12 +162,28 @@ void Rendering::renderCamera() {
   * glm::lookAt(glm::vec3(position.at(0), position.at(1), position.at(2)), 
                 glm::vec3(direction.at(0),direction.at(1),direction.at(2)), 
                 glm::vec3(up.at(0),       up.at(1),       up.at(2))));
-  //* glm::lookAt(glm::vec3(7,5,8), glm::vec3(0,0,0), glm::vec3(0,1,0)));
-  //* glm::lookAt(glm::vec3(5,2,2), glm::vec3(0,0,0), glm::vec3(0,1,0)));
- 
-GLuint MatrixID = glGetUniformLocation(_spMap.getHandle(), "VP");
 
-glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &_uniformMatrix4.at("VP")[0][0]);
+  std::array<float,3> posBall = _ball.get3DPos();
+  _uniformVec3["positionBall"] = glm::vec3(posBall.at(0),
+                                           posBall.at(1),
+                                           posBall.at(2));
+
+  std::array<float,3> lookTowardsDir = _ball.lookTowardsThroughVector();
+  _uniformVec3["lookDirection"] = glm::vec3(lookTowardsDir.at(0),
+                                           lookTowardsDir.at(1),
+                                           lookTowardsDir.at(2));
+
+
+ 
+  GLuint MatrixID = glGetUniformLocation(_spMap.getHandle(), "VP");
+  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &_uniformMatrix4.at("VP")[0][0]);
+  
+  GLuint posBallID = glGetUniformLocation(_spMap.getHandle(), "positionBall");
+  glUniform3fv(posBallID, 1, &_uniformVec3.at("positionBall")[0]);
+
+  GLuint lookDirectionID = glGetUniformLocation(_spMap.getHandle(),
+                                                "lookDirection");
+  glUniform3fv(lookDirectionID, 1, &_uniformVec3.at("lookDirection")[0]);
 
 }
 

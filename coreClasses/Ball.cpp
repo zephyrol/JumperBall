@@ -714,3 +714,31 @@ JumperBallTypes::Direction Ball::lookTowards() const {
     return _lookTowards;
 }
 
+std::array<float, 3> Ball::lookTowardsThroughVector() const {
+    std::array<float,3> lookVec3 {0.f,0.f,0.f};
+    switch (_lookTowards) {
+        case JumperBallTypes::Direction::North:
+            lookVec3.at(2) = -1.f;
+            break;
+        case JumperBallTypes::Direction::South:
+            lookVec3.at(2) = 1.f;
+            break;
+        case JumperBallTypes::Direction::East:
+            lookVec3.at(0) = 1.f;
+            break;
+        case JumperBallTypes::Direction::West:
+            lookVec3.at(0) = -1.f;
+            break;
+        case JumperBallTypes::Direction::Up:
+            lookVec3.at(1) = 1.f;
+            break;
+        case JumperBallTypes::Direction::Down:
+            lookVec3.at(1) = -1.f;
+            break;
+        default :
+            break;
+    }
+
+    return lookVec3;
+
+}

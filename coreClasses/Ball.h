@@ -39,6 +39,8 @@ public:
 
     std::array<float,3> get3DPos() const;
     float getRadius() const;
+    std::array<float,3> lookTowardsThroughVector() const;
+
     JumperBallTypes::Direction  currentSide() const;
     JumperBallTypes::Direction  lookTowards() const;
     
@@ -73,6 +75,7 @@ private:
                                                               float z);
     timePointMs getTimeActionMs() noexcept;
     std::vector<float> P2DTo3D(ClassicalMechanics::physics2DVector p2D);
+
         
 };
 

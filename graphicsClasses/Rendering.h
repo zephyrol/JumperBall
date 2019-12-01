@@ -52,8 +52,8 @@ private:
 
     uniformValue<glm::mat4> _uniformMatrix4;
     uniformValue<glm::vec4> _uniformVec4;
-    uniformValue<glm::vec4> _uniformVec3;
-    uniformValue<glm::vec4> _uniformVec2;
+    uniformValue<glm::vec3> _uniformVec3;
+    uniformValue<glm::vec2> _uniformVec2;
 
     GLuint                  _idVertexArray;
     std::array<GLuint,2>    _idVertexBuffer;
