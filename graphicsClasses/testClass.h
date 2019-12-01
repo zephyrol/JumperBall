@@ -22,16 +22,22 @@
 
 class testClass {
 public:
+
+    //--CONSTRUCTORS & DESTRUCTORS--//
     testClass();
+    virtual       ~testClass();
+
     
-    testClass(const testClass&);
-    testClass& operator = (const testClass&);
-    void run(Rendering& r, Ball& b, Camera& c);
-    virtual ~testClass();
+    //----------METHODS-------------//
+    testClass     (const testClass&);
+    testClass&    operator = (const testClass&);
+    void          run(Rendering& r, Ball& b, Camera& c);
 
 
 private:
-    GLFWwindow* _window;
+
+    //--------ATTRIBUTES-----------//
+    GLFWwindow*   _window;
 
 };
 

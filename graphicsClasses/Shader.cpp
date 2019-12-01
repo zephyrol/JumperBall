@@ -33,7 +33,7 @@ Shader::Shader(const GLenum& shaderType, const std::string& shaderFilename) :
 
 }
 
-void Shader::verifyCompileStatus() {
+void Shader::verifyCompileStatus() const {
     GLint status;
     glGetShaderiv(_shaderHandle, GL_COMPILE_STATUS, &status);
     

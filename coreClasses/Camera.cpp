@@ -15,11 +15,11 @@
 
 Camera::Camera() : _posX(1), _posY(1), _posZ(1),
                    _dirX(0), _dirY(0), _dirZ(0),
-                   _upX(0), _upY(1), _upZ(0)
+                   _upX(0),  _upY(1),  _upZ(0)
 {
 }
 
-void Camera::follow(const Ball& ball) {
+void Camera::follow(const Ball& ball) noexcept {
     
     const std::array<float,3> position= ball.get3DPosition();
     const auto sideBall = ball.currentSide();
@@ -107,21 +107,16 @@ void Camera::follow(const Ball& ball) {
 
 }
 
-/*void Camera::follow(const Map& map) {
-  (void)map;
-}*/
-/*Camera::Camera(const Camera& orig) {
-}*/
 
-std::array<float, 3> Camera::dir() const {
+std::array<float, 3> Camera::dir() const noexcept{
     return std::array<float,3> {_dirX,_dirY,_dirZ};
 }
 
-std::array<float, 3> Camera::pos() const {
+std::array<float, 3> Camera::pos() const noexcept{
     return std::array<float,3> {_posX,_posY,_posZ};
 }
 
-std::array<float, 3> Camera::up() const {
+std::array<float, 3> Camera::up() const noexcept{
     return std::array<float,3> {_upX,_upY,_upZ};
 }
 

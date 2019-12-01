@@ -43,6 +43,7 @@ public:
     //------------TYPES------------//
     enum class Attribute            { Positions, Normals, Colors, UVCoords };
     
+    //------------METHODS----------//
     void render() ; 
     
 private:
@@ -61,8 +62,8 @@ private:
     uniformValue<glm::vec3>         _uniformVec3;
     uniformValue<glm::vec2>         _uniformVec2;
 
-    Mesh                            _meshMap;
-    Mesh                            _meshBall;
+    const Mesh                      _meshMap;
+    const Mesh                      _meshBall;
 
     const Map&                      _map;
     const Ball&                     _ball;

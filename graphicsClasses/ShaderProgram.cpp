@@ -49,7 +49,7 @@ void ShaderProgram::use() const {
     glUseProgram( _shaderProgramHandle );
 }
 
-void ShaderProgram::verifyLinkStatus() {
+void ShaderProgram::verifyLinkStatus() const{
     
     GLint status ;
     glGetProgramiv(_shaderProgramHandle, GL_LINK_STATUS, &status);

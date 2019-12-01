@@ -21,22 +21,30 @@
 class Shader {
 
 public:
-    Shader(const GLenum& shaderType, const std::string& shaderFilename);
 
-    Shader& operator = (const Shader& shader) = delete;
-    Shader(const Shader& orig) = delete ; 
+    //--CONSTRUCTORS & DESTRUCTORS--//
+    Shader            ( const GLenum& shaderType, 
+                        const std::string& shaderFilename);
+    virtual           ~Shader();
 
-    GLuint getHandle() const;
-    virtual ~Shader();
+    //-------CONST METHODS--------//
+    GLuint            getHandle() const;
+
+    //------DELETED METHODS-------//
+    Shader&           operator = (const Shader& shader)                = delete;
+    Shader            (const Shader& orig)                             = delete; 
+
 
 private:
 
+    //--------ATTRIBUTES-----------//
     const GLuint      _shaderHandle;
     const GLenum      _shaderType;
     const std::string _shaderFilename;
     const std::string _shaderCode;
 
-    void verifyCompileStatus();
+    //-------CONST METHODS--------//
+    void              verifyCompileStatus() const;
 
 };
 

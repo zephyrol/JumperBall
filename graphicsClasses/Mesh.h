@@ -20,28 +20,34 @@
 
 class Mesh {
 public:
-    //Mesh();
-    Mesh(const Ball& ball);
-    Mesh(const Map& map);
-    const glm::mat4& local() const ;
-    const glm::mat4& world() const ;
 
-    void local(const glm::mat4& l);
-    void world(const glm::mat4& w);
+    //--CONSTRUCTORS & DESTRUCTORS--//
+    Mesh                    (const Ball& ball);
+    Mesh                    (const Map& map);
+    virtual                 ~Mesh();
     
-    virtual ~Mesh();
 
-    void render() const;
+    //-------CONST METHODS----------//
+    const glm::mat4&        local()                                       const;
+    const glm::mat4&        world()                                       const;
+    void render()                                                         const;
 
-    void updateMatrices (const Ball& b);
+
+    //----------METHODS-------------//
+    void                    local(const glm::mat4& l);
+    void                    world(const glm::mat4& w);
+    void                    updateMatrices (const Ball& b);
+
 
 private:
+
+    //--------ATTRIBUTES-----------//
     std::vector<glm::vec3>  _positions;
     std::vector<glm::vec3>  _normals;
     std::vector<glm::vec3>  _colors;
     std::vector<glm::vec2>  _uvCoords;
 
-    bool                    _useIndexing;
+    const bool               _useIndexing;
     std::vector<GLushort>   _indices;
     GLuint                  _idElementBuffer;
 

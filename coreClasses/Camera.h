@@ -18,24 +18,35 @@
 #include "Map.h"
 
 class Camera {
+
 public:
-    Camera();
-    virtual ~Camera();
 
-    float _posX, _posY, _posZ;
-    float _dirX, _dirY, _dirZ;
-    float _upX, _upY, _upZ;
-    static constexpr float _zNear = 0.1f;
-    static constexpr float _zFar  = 100.f;
+    //--CONSTRUCTORS & DESTRUCTORS--//
+    Camera                        ();
+    virtual                       ~Camera();
 
-    std::array<float,3> pos() const;
-    std::array<float,3> dir() const;
-    std::array<float,3> up() const;
 
-    void follow(const Ball& ball);
-    void follow(const Map& map);
+    //---------CONSTANTS------------//
+    static constexpr float        _zNear                                = 0.1f;
+    static constexpr float        _zFar                                 = 100.f;
+
+
+    //-------CONST METHODS----------//
+    std::array<float,3>           pos()                          const noexcept;
+    std::array<float,3>           dir()                          const noexcept;
+    std::array<float,3>           up()                           const noexcept;
+
+
+    //----------METHODS-------------//
+    void                          follow(const Ball& ball)             noexcept;
+
 
 private:
+
+    //--------ATTRIBUTES-----------//
+    float                         _posX, _posY, _posZ;
+    float                         _dirX, _dirY, _dirZ;
+    float                         _upX, _upY, _upZ;
 
 };
 #endif /* CAMERA_H */

@@ -40,9 +40,6 @@ public:
                                                       std::ratio<1,1000> > ;
 
 
-    //----------METHODS------------//
-    AnswerRequest               doAction ( ActionRequest action);
-
 
     //-------CONST METHODS--------//
     std::array<float,3>         get3DPosition()                  const noexcept;
@@ -53,6 +50,10 @@ public:
     JumperBallTypes::Direction  lookTowards()                             const;
 
     void update() noexcept;
+
+
+    //----------METHODS------------//
+    AnswerRequest               doAction ( ActionRequest action);
 
 
     //--------STATIC METHODS-------//

@@ -18,23 +18,30 @@
 class ShaderProgram {
 
 public:
-    ShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
+    //--CONSTRUCTORS & DESTRUCTORS--//
+    ShaderProgram   (const Shader& vertexShader, const Shader& fragmentShader);
+    virtual         ~ShaderProgram();
 
-    ShaderProgram& operator = (const ShaderProgram& shaderProgram)  = delete;
-    ShaderProgram(const ShaderProgram& orig)                        = delete; 
 
-    GLuint getHandle() const;
+    //------DELETED METHODS-------//
+    ShaderProgram&  operator = (const ShaderProgram& shaderProgram)    = delete;
+    ShaderProgram   (const ShaderProgram& orig)                        = delete; 
 
-    void use() const;
 
-    virtual ~ShaderProgram();
+    //-------CONST METHODS--------//
+    GLuint          getHandle()                                           const;
+    void            use()                                                 const;
+
 
 private:
-    const GLuint  _shaderProgramHandle; 
-    const Shader& _vertexShader; 
-    const Shader& _fragmentShader; 
+    //--------ATTRIBUTES-----------//
+    const GLuint    _shaderProgramHandle; 
+    const Shader&   _vertexShader; 
+    const Shader&   _fragmentShader; 
 
-    void verifyLinkStatus();
+
+    //-------CONST METHODS--------//
+    void            verifyLinkStatus()                                    const;
 
 };
 

@@ -27,27 +27,28 @@ class Map {
 public:
     enum class KindOfData {Raw,Optimized};
     
-    Map();
-    Map(const Map& orig);
-    Map(const std::string content, Map::KindOfData kData );
-    Map(std::ifstream& file);
+    Map                                   ();
+    Map                                   ( const Map& orig );
+    Map                                   ( const std::string content, 
+                                            Map::KindOfData kData );
 
-    std::shared_ptr<Block> map3DData(int x, int y, int z) const;
-    void printMap() const;
+    Map                                   ( std::ifstream& file );
+    virtual                               ~Map();
 
-    unsigned int boundingBoxXMax() const;
-    unsigned int boundingBoxYMax() const;
-    unsigned int boundingBoxZMax() const;
+    std::shared_ptr<Block>                map3DData(int x, int y, int z)  const;
+    void                                  printMap()                      const;
 
-    unsigned int beginX() const;
-    unsigned int beginY() const;
-    unsigned int beginZ() const;
+    unsigned int                          boundingBoxXMax()               const;
+    unsigned int                          boundingBoxYMax()               const;
+    unsigned int                          boundingBoxZMax()               const;
 
-    virtual ~Map();
+    unsigned int                          beginX()                        const;
+    unsigned int                          beginY()                        const;
+    unsigned int                          beginZ()                        const;
+
     
 private:
     const unsigned int                    _id;
-    //std::vector< std::shared_ptr<Block> >  _blocks;
     std::vector< std::shared_ptr<Block> > _map3DData;
     unsigned int                          _boundingBoxXMax;
     unsigned int                          _boundingBoxYMax;
@@ -57,7 +58,7 @@ private:
     unsigned int                          _beginY;
     unsigned int                          _beginZ;
     
-    static unsigned int nbMaps;
+    static unsigned int                   nbMaps;
 
 };
 

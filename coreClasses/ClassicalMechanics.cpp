@@ -204,7 +204,7 @@ void ClassicalMechanics::printEulerBuffer() const {
     }
 }
 
-float ClassicalMechanics::getV0xToRespectDistanceAndTime() {
+float ClassicalMechanics::getV0xToRespectDistanceAndTime() const {
     
     return 2.f*_distanceJump/ static_cast<float>(pow(_timeToGetDestinationX,2));
 
