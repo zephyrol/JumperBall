@@ -15,6 +15,7 @@
 #include <fstream>
 #include <istream>
 #include <sstream>
+#include <unistd.h>
 
 
 testClass::testClass(): _window(nullptr)
@@ -91,6 +92,7 @@ void testClass::run(Rendering& r, Ball& b) {
     bool leftButton = false;
     bool rightButton = false;
     bool upButton = false;
+    bool enterButton = false;
     unsigned int counter = 0;
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
@@ -125,6 +127,13 @@ void testClass::run(Rendering& r, Ball& b) {
             }
         }
 
+        if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS) {
+            if (!enterButton) {
+                enterButton = true;
+                std::cout << "Key Enter Press" << std::endl;
+                b.doAction(Ball::ActionRequest::Jump);
+            }
+        }
 
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_RELEASE) {
             if (rightButton) {
@@ -144,6 +153,13 @@ void testClass::run(Rendering& r, Ball& b) {
             if (upButton) {
                 upButton = false;
                 std::cout << "Key Up Release" << std::endl;
+            }
+        }
+
+        if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE) {
+            if (enterButton) {
+                enterButton = false;
+                std::cout << "Key Enter Release" << std::endl;
             }
         }
 
@@ -181,8 +197,9 @@ void testClass::run(Rendering& r, Ball& b) {
         // -------------------
         glfwSwapInterval(1);
         glfwSwapBuffers(_window);
-        glfwWaitEvents();
-        //glfwPollEvents();
+        //glfwWaitEvents();
+        usleep(1000);
+        glfwPollEvents();
    }
 }
 

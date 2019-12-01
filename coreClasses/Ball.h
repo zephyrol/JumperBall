@@ -35,22 +35,27 @@ public:
     using durationMs = std::chrono::duration<long int,std::ratio<1,1000> > ;
 
 
-    static timePointMs getTimePointMSNow ();
+    //void updatePosition() const noexcept;
+    std::array<float,3> get3DPosition() const noexcept;
 
-    std::array<float,3> get3DPos() const;
+    //std::array<float,3> get3DPos() const;
     float getRadius() const;
     std::array<float,3> lookTowardsThroughVector() const;
 
     JumperBallTypes::Direction  currentSide() const;
     JumperBallTypes::Direction  lookTowards() const;
+
+    static timePointMs  getTimePointMSNow ();
+    static float        getTimeNowSecondsFloat() noexcept;
     
 private:
-    unsigned int  _currentBlockX;
-    unsigned int  _currentBlockY;
-    unsigned int  _currentBlockZ;
-    float         _3DPosX;
-    float         _3DPosY;
-    float         _3DPosZ;
+    unsigned int          _currentBlockX;
+    unsigned int          _currentBlockY;
+    unsigned int          _currentBlockZ;
+    
+    /*mutable float         _3DPosX;
+    mutable float         _3DPosY;
+    mutable float         _3DPosZ;*/
 
 
     JumperBallTypes::Direction  _currentSide;
@@ -67,14 +72,17 @@ private:
     void goStraightOn() noexcept;
     void stay() noexcept;
     void jump() noexcept;
-    void updatePosition() noexcept;
     void setTimeActionNow() noexcept;
     AnswerRequest isFallingIntersectionBlock() noexcept;
     std::shared_ptr<const std::vector<int> >  intersectBlock (float x,
                                                               float y,
                                                               float z);
-    timePointMs getTimeActionMs() noexcept;
-    std::vector<float> P2DTo3D(ClassicalMechanics::physics2DVector p2D);
+    timePointMs getTimeActionMs() const noexcept;
+
+    float getTimeActionSecondsFloat() const noexcept;
+    float getTimeSecondsSinceAction() const noexcept;
+
+    std::array<float,3> P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 
         
 };

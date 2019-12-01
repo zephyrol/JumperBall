@@ -36,28 +36,24 @@ Mesh::Mesh(const Ball& ball):
 
 
 
-    uint     iParaCount  = 40;
-    uint     iMeriCount  = 60;
-    float    r           = ball.getRadius();
+    const unsigned int  iParaCount  = 40;
+    const unsigned int  iMeriCount  = 60;
+    const float         r           = ball.getRadius();
     
     // Create a sphere ---------------------------------------------------------
     GLuint iVertexCount = iParaCount * iMeriCount;
     
-    /*_positions.reserve(iVertexCount);
-    _uvCoords.reserve(iVertexCount);
-    _colors.reserve(iVertexCount);*/
-    
-    float a1 = ( 180.0 / ( iParaCount - 1 ) ) * M_PI / 180.0;
-    float a2 = ( 360.0 / ( iMeriCount - 1 ) ) * M_PI / 180.0;
+    const float a1 = ( 180.0 / ( iParaCount - 1 ) ) * M_PI / 180.0;
+    const float a2 = ( 360.0 / ( iMeriCount - 1 ) ) * M_PI / 180.0;
     
     // parallels ---------------------------------------------------------------
-    for( uint i = 0; i < iParaCount; ++i )
+    for( unsigned int i = 0; i < iParaCount; ++i )
     {
-        float fAngle    = - static_cast<float>(M_PI) / 2.0f + a1 * ( i );
-        float z         = r * static_cast<float>(sin( fAngle ));
-        float fRadius   = r * static_cast<float>(cos( fAngle ));
+        const float fAngle    = - static_cast<float>(M_PI) / 2.0f + a1 * ( i );
+        const float z         = r * static_cast<float>(sin( fAngle ));
+        const float fRadius   = r * static_cast<float>(cos( fAngle ));
         
-        for( uint j = 0; j < iMeriCount; ++j )
+        for( unsigned int j = 0; j < iMeriCount; ++j )
         {
             _positions.push_back(glm::vec3( 
                     fRadius * static_cast<float>(cos( a2 * j )), 
@@ -71,7 +67,7 @@ Mesh::Mesh(const Ball& ball):
     // on a 0 centered sphere : you just need to normalise the position!
     _normals.reserve(iVertexCount);
     
-    for( uint i = 0; i < iVertexCount; ++i )
+    for( unsigned int i = 0; i < iVertexCount; ++i )
     {
         _normals.push_back(glm::normalize( _positions[ i ] ));
         _colors.push_back(_normals[i]);
@@ -80,11 +76,9 @@ Mesh::Mesh(const Ball& ball):
     //GLuint iElementsCount = ( iMeriCount - 1 ) * ( iParaCount - 1 ) * 2 * 3; 
     // for quads split in 2
     
-    //_indices.reserve(iElementsCount);
-    
-    for( uint i = 0; i < ( iParaCount - 1 ); ++i )
+    for( unsigned int i = 0; i < ( iParaCount - 1 ); ++i )
     {
-        for( uint j = 0; j < ( iMeriCount - 1 ); ++j )
+        for( unsigned int j = 0; j < ( iMeriCount - 1 ); ++j )
         {
             _indices.push_back(iMeriCount * i + j);
             _indices.push_back(iMeriCount * i + ( j + 1 ));
@@ -95,7 +89,7 @@ Mesh::Mesh(const Ball& ball):
         }
     }
    
-    std::array<float,3> positionBall = ball.get3DPos();
+    std::array<float,3> positionBall = ball.get3DPosition();
     _world = glm::translate(_world, glm::vec3(positionBall.at(0),
                             positionBall.at(1) ,positionBall.at(2)));
 
@@ -215,7 +209,7 @@ void Mesh::render() const {
             nullptr
             );
     
-        glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
     glVertexAttribPointer ( 
             1,
             3, // 3 GL_FLOAT per vertex
@@ -250,9 +244,10 @@ void Mesh::world(const glm::mat4& w) {
     _world = w;
 }
 
-void Mesh::updateMatrices(const Ball& b) {
-    
-    std::array<float,3> positionBall = b.get3DPos();
+void Mesh::updateMatrices(const Ball& b, const std::array<float,3>& posBall ) {
+   
+    (void) b; //We do not use the rotation state of the ball yet
+    std::array<float,3> positionBall = posBall;
     _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.at(0),
                             positionBall.at(1) ,positionBall.at(2)));
 }

@@ -66,7 +66,9 @@ private:
     Mesh                    _meshBall;
 
     const Map&              _map;
+
     const Ball&             _ball;
+    std::array<float,3>     _ballPosition;
 
     Camera                  _camera;
 

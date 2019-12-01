@@ -38,16 +38,16 @@ Ball::Ball(const Map& map):
         _currentBlockX(map.beginX()),
         _currentBlockY(map.beginY()),
         _currentBlockZ(map.beginZ()),
-        _3DPosX(0.f),
+        /*_3DPosX(0.f),
         _3DPosY(0.f),
-        _3DPosZ(0.f),
+        _3DPosZ(0.f),*/
         _currentSide(JumperBallTypes::Direction::Up),
         _lookTowards(JumperBallTypes::Direction::North),
         _state(Ball::State::Staying),
         _mechanicsPattern(),
         _timeAction(),
         _map(map){
-    updatePosition();
+    //updatePosition();
        
 }
 
@@ -251,53 +251,59 @@ void Ball::turnRight() noexcept {
     }
 }
 
-void Ball::updatePosition() noexcept {
+std::array<float,3> Ball::get3DPosition() const noexcept {
   
-    constexpr float offsetBlockPosition = 0.5f + _mechanicsPattern.radiusBall;
+    constexpr float offsetPosition = 0.5f + _mechanicsPattern.radiusBall;
 
-    float x = static_cast<float> (_currentBlockX + 0.5f);
-    float y = static_cast<float> (_currentBlockY + 0.5f);
-    float z = static_cast<float> (_currentBlockZ + 0.5f);
+    std::array<float,3> position3D {0.f,0.f,0.f};
 
 
-    auto now = std::chrono::system_clock::now();
-    static_cast<void>(now);
     if (_state == Ball::State::Staying) {
-
-    switch (_currentSide) {
-        case JumperBallTypes::Direction::North:
-            z -= offsetBlockPosition ;
-            break;
-        case JumperBallTypes::Direction::South:
-            z += offsetBlockPosition ;
-            break;
-        case JumperBallTypes::Direction::East:
-            x += offsetBlockPosition ;
-            break;
-        case JumperBallTypes::Direction::West:
-            x -= offsetBlockPosition ;
-            break;
-        case JumperBallTypes::Direction::Up:
-            y += offsetBlockPosition ;
-            break;
-        case JumperBallTypes::Direction::Down:
-            y -= offsetBlockPosition ;
-            break;
-        default :
-            break;
-    }
-        _3DPosX = x;
-        _3DPosY = y;
-        _3DPosZ = z; 
+        
+        float x = static_cast<float> (_currentBlockX + 0.5f);
+        float y = static_cast<float> (_currentBlockY + 0.5f);
+        float z = static_cast<float> (_currentBlockZ + 0.5f);
+        
+        
+        switch (_currentSide) {
+            case JumperBallTypes::Direction::North:
+                z -= offsetPosition ;
+                break;
+            case JumperBallTypes::Direction::South:
+                z += offsetPosition ;
+                break;
+            case JumperBallTypes::Direction::East:
+                x += offsetPosition ;
+                break;
+            case JumperBallTypes::Direction::West:
+                x -= offsetPosition ;
+                break;
+            case JumperBallTypes::Direction::Up:
+                y += offsetPosition ;
+                break;
+            case JumperBallTypes::Direction::Down:
+                y -= offsetPosition ;
+                break;
+            default :
+                break;
+        }
+        position3D = {x,y,z};
     } else if ( _state == Ball::State::Moving){
 
     } else if ( _state == Ball::State::Jumping){
-
+        ClassicalMechanics::physics2DVector pos2D = 
+          _mechanicsPattern.getPosition(getTimeSecondsSinceAction());
+        std::cout << "Time since jumping: " << 
+                getTimeSecondsSinceAction();
+        std::array<float,3> relativePositionJump = P2DTo3D(pos2D);
+        position3D = { relativePositionJump.at(0),
+                       relativePositionJump.at(1),
+                       relativePositionJump.at(2),
+                   };
     }
 
-    
+    return position3D;    
 }
-
 
 void Ball::goStraightOn() noexcept {
     
@@ -477,12 +483,13 @@ void Ball::goStraightOn() noexcept {
         }
     }
     else stay();
-    updatePosition();
+    //updatePosition();
 }
 
 
 void Ball::jump() noexcept {
     _state = Ball::State::Jumping;
+    setTimeActionNow();
 }
 
 void Ball::stay() noexcept {
@@ -521,7 +528,7 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
             break;
         case Ball::ActionRequest::Jump:
             if (_state == Ball::State::Staying) {
-                //_state = Ball::State::Jumping;
+                _state = Ball::State::Jumping;
                 jump();
             }
             else answer = Ball::AnswerRequest::Rejected;
@@ -530,7 +537,7 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
             break;
     }
 
-    updatePosition(); 
+    //updatePosition(); 
 
     if (answer == Ball::AnswerRequest::Accepted)
         setTimeActionNow();
@@ -566,7 +573,7 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
 
           const ClassicalMechanics::physics2DVector pos2D = 
                   _mechanicsPattern.getPosition(fDifference); 
-          const std::vector<float> pos3D = P2DTo3D(pos2D);
+          const std::array<float,3> pos3D = P2DTo3D(pos2D);
 
           auto positionBlockPtr = intersectBlock(pos3D.at(0),pos3D.at(1),
                                                  pos3D.at(2));
@@ -575,12 +582,12 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
           _currentBlockY = positionBlockPtr->at(1) ;
           _currentBlockZ = positionBlockPtr->at(2) ;
           _state = Ball::State::Staying;
-          updatePosition();
+          //updatePosition();
           }
           else {
-          _3DPosX = pos3D.at(0);
+          /*_3DPosX = pos3D.at(0);
           _3DPosY = pos3D.at(1);
-          _3DPosZ = pos3D.at(2);
+          _3DPosZ = pos3D.at(2);*/
           }
        }
       answer = Ball::AnswerRequest::Accepted; 
@@ -629,23 +636,23 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
 }
 
 
-Ball::timePointMs Ball::getTimeActionMs() noexcept {
-      return std::chrono::time_point_cast<std::chrono::milliseconds>
+Ball::timePointMs Ball::getTimeActionMs() const noexcept {
+    return std::chrono::time_point_cast<std::chrono::milliseconds>
                                                       (_timeAction);
 }
 
 Ball::timePointMs Ball::getTimePointMSNow() {
-
-        return std::chrono::time_point_cast<std::chrono::milliseconds> 
+    return std::chrono::time_point_cast<std::chrono::milliseconds> 
                                     (std::chrono::system_clock::now());
 }
 
 
-std::vector<float> Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) {
+std::array<float,3> Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const
+{
 
-    float x = static_cast<float> (_currentBlockX);
-    float y = static_cast<float> (_currentBlockY);
-    float z = static_cast<float> (_currentBlockZ);
+    float x = static_cast<float> (_currentBlockX + 0.5f);
+    float y = static_cast<float> (_currentBlockY + 0.5f);
+    float z = static_cast<float> (_currentBlockZ + 0.5f);
 
     const float offsetRealPosition = 0.5f + _mechanicsPattern.radiusBall;
 
@@ -695,12 +702,12 @@ std::vector<float> Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) {
             break;
     }
 
-    return std::vector<float> {x,y,z};
+    return std::array<float,3> {x,y,z};
 }
 
-std::array<float, 3> Ball::get3DPos() const{
+/*std::array<float, 3> Ball::get3DPos() const{
     return {_3DPosX,_3DPosY,_3DPosZ};
-}
+}*/
 
 float Ball::getRadius() const {
     return _mechanicsPattern.radiusBall;
@@ -713,6 +720,45 @@ JumperBallTypes::Direction Ball::currentSide() const {
 JumperBallTypes::Direction Ball::lookTowards() const {
     return _lookTowards;
 }
+
+float Ball::getTimeActionSecondsFloat() const noexcept {
+
+      const timePointMs timeActionMs           = getTimeActionMs(); 
+
+      const durationMs timeActionSinceEpoch    = timeActionMs.time_since_epoch();
+
+      const std::chrono::duration<float> durationFloat = timeActionSinceEpoch;
+      std::cout<< "timeaction float" << durationFloat.count()/1000.f << std::endl;
+      return durationFloat.count() / 1000.f ;
+}
+
+float Ball::getTimeNowSecondsFloat() noexcept {
+
+      const timePointMs timeNowMs           = getTimePointMSNow(); 
+
+      const durationMs timeNowSinceEpoch    = timeNowMs.time_since_epoch();
+
+      const std::chrono::duration<float> durationFloat = timeNowSinceEpoch;
+
+      std::cout<< "timenow time" << durationFloat.count()/1000.f << std::endl;
+      return durationFloat.count() / 1000.f ;
+}
+
+float Ball::getTimeSecondsSinceAction() const noexcept{
+
+      const timePointMs timeNowMs              = getTimePointMSNow(); 
+      const durationMs timeNowSinceEpoch       = timeNowMs.time_since_epoch();
+
+      const timePointMs timeActionMs           = getTimeActionMs(); 
+      const durationMs timeActionSinceEpoch    = timeActionMs.time_since_epoch();
+
+      const durationMs difference = timeNowSinceEpoch - timeActionSinceEpoch;
+      const std::chrono::duration<float> durationFloatDifference = difference;
+      const float fDifference = durationFloatDifference.count();
+
+    return fDifference;
+}
+
 
 std::array<float, 3> Ball::lookTowardsThroughVector() const {
     std::array<float,3> lookVec3 {0.f,0.f,0.f};
