@@ -43,6 +43,7 @@ public:
     //------------TYPES------------//
     enum class Attribute            { Positions, Normals, Colors, UVCoords };
     
+
     //------------METHODS----------//
     void render() ; 
     
@@ -61,9 +62,11 @@ private:
     uniformValue<glm::vec4>         _uniformVec4;
     uniformValue<glm::vec3>         _uniformVec3;
     uniformValue<glm::vec2>         _uniformVec2;
+    uniformValue<GLfloat>           _uniformFloat;
+    uniformValue<bool>              _uniformBool;
 
-    const Mesh                      _meshMap;
-    const Mesh                      _meshBall;
+    Mesh                            _meshMap;
+    Mesh                            _meshBall;
 
     const Map&                      _map;
     const Ball&                     _ball;
@@ -81,10 +84,12 @@ private:
     void                            renderCamera();
 
 
+
     //--------STATIC METHODS-------//
-    static const std::map<Attribute,unsigned int> nbComponents;
-    static const std::string                      vsshaderMap; 
-    static const std::string                      fsshaderMap; 
+    static const std::map<Attribute,unsigned int> 
+                                    nbComponents;
+    static const std::string        vsshaderMap; 
+    static const std::string        fsshaderMap; 
 
 };
 

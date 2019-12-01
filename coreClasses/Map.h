@@ -25,8 +25,12 @@
 
 class Map {
 public:
+
+    //------------TYPES------------//
     enum class KindOfData {Raw,Optimized};
     
+
+    //--CONSTRUCTORS & DESTRUCTORS--//
     Map                                   ();
     Map                                   ( const Map& orig );
     Map                                   ( const std::string content, 
@@ -35,6 +39,8 @@ public:
     Map                                   ( std::ifstream& file );
     virtual                               ~Map();
 
+
+    //-------CONST METHODS----------//
     std::shared_ptr<Block>                map3DData(int x, int y, int z)  const;
     void                                  printMap()                      const;
 
@@ -48,6 +54,7 @@ public:
 
     
 private:
+    //--------ATTRIBUTES-----------//
     const unsigned int                    _id;
     std::vector< std::shared_ptr<Block> > _map3DData;
     unsigned int                          _boundingBoxXMax;

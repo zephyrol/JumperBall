@@ -71,9 +71,14 @@ float ClassicalMechanics::getPositionX(const float t) const {
 }
 
 float ClassicalMechanics::getPositionY(const float t) const {
+    unsigned int index ;
     fillEulerMethodBuffer();
-    return _EulerMethodBuffer.pBuffer.at(
-            static_cast<unsigned int> (t * sizeSampleEuler / durationStudy ));
+
+    if (t < durationStudy)
+      index = static_cast<unsigned int> (t * sizeSampleEuler / durationStudy);
+    else index = durationStudy-1;
+
+    return _EulerMethodBuffer.pBuffer.at(index);
 }
 
 
@@ -86,9 +91,14 @@ float ClassicalMechanics::getVelocityX(const float t) const {
 }
 
 float ClassicalMechanics::getVelocityY(const float t) const {
+    unsigned int index ;
     fillEulerMethodBuffer();
-    return _EulerMethodBuffer.vBuffer.at(
-            static_cast<unsigned int> (t * sizeSampleEuler / durationStudy ));
+
+    if (t < durationStudy)
+      index = static_cast<unsigned int> (t * sizeSampleEuler / durationStudy);
+    else index = durationStudy-1;
+
+    return _EulerMethodBuffer.vBuffer.at(index);
 }
 
 float ClassicalMechanics::getAccelerationX(const float t) const {
@@ -102,9 +112,14 @@ float ClassicalMechanics::getAccelerationX(const float t) const {
 }
 
 float ClassicalMechanics::getAccelerationY(const float t) const {
+    unsigned int index ;
     fillEulerMethodBuffer();
-    return _EulerMethodBuffer.aBuffer.at(
-            static_cast<unsigned int> (t * sizeSampleEuler / durationStudy ));
+
+    if (t < durationStudy)
+      index = static_cast<unsigned int> (t * sizeSampleEuler / durationStudy);
+    else index = durationStudy-1;
+
+    return _EulerMethodBuffer.aBuffer.at(index);
 }
 
 void ClassicalMechanics::fillEulerMethodBuffer() const {

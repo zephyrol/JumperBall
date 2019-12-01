@@ -29,6 +29,8 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
     _uniformVec4(),
     _uniformVec3(),
     _uniformVec2(),
+    _uniformFloat(),
+    _uniformBool(),
     _meshMap(map),
     _meshBall(ball),
     _map(map),
@@ -103,7 +105,8 @@ void Rendering::renderCamera() {
                                             lookTowardsDir.at(1),
                                             lookTowardsDir.at(2));
 
-
+  _uniformFloat["distanceBehind"] = _ball.distanceBehindBall();
+  
  
   const GLuint MatrixID = glGetUniformLocation(_spMap.getHandle(), "VP");
   glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &_uniformMatrix4.at("VP")[0][0]);
@@ -116,6 +119,10 @@ void Rendering::renderCamera() {
                                                       "lookDirection");
   glUniform3fv(lookDirectionID, 1, &_uniformVec3.at("lookDirection")[0]);
 
+  const GLuint distanceBehindID = glGetUniformLocation(_spMap.getHandle(),
+                                                      "distanceBehind");
+  glUniform1fv(distanceBehindID, 1, &_uniformFloat.at("distanceBehind"));
+  std::cout << "distance behind :" << _ball.distanceBehindBall() << std::endl;
 }
 
 

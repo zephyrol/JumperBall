@@ -48,8 +48,9 @@ public:
 
     JumperBallTypes::Direction  currentSide()                             const;
     JumperBallTypes::Direction  lookTowards()                             const;
+    float                       distanceBehindBall()                      const;
 
-    void update() noexcept;
+    void                        update()                               noexcept;
 
 
     //----------METHODS------------//
@@ -79,7 +80,8 @@ private:
 
     ClassicalMechanics          _mechanicsPattern;
 
-    std::chrono::time_point<std::chrono::system_clock>  _timeAction;
+    std::chrono::time_point<std::chrono::system_clock>  
+                                _timeAction;
 
 
     //----------METHODS------------//

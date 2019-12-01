@@ -513,11 +513,11 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
 
           auto positionBlockPtr = intersectBlock(_3DPosX,_3DPosY, _3DPosZ);
           if (positionBlockPtr) {
-          _currentBlockX = positionBlockPtr->at(0) ;
-          _currentBlockY = positionBlockPtr->at(1) ;
-          _currentBlockZ = positionBlockPtr->at(2) ;
-          _state = Ball::State::Staying;
-          //updatePosition();
+          _currentBlockX  = positionBlockPtr->at(0) ;
+          _currentBlockY  = positionBlockPtr->at(1) ;
+          _currentBlockZ  = positionBlockPtr->at(2) ;
+          _state          = Ball::State::Staying;
+          update();
           }
           else {
           /*_3DPosX = pos3D.at(0);
@@ -528,6 +528,43 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
       answer = Ball::AnswerRequest::Accepted; 
   }
   return answer;
+}
+
+float Ball::distanceBehindBall() const 
+{
+    constexpr float offsetCenterBlock = 0.5f;
+    float distance;
+    switch (_lookTowards) {
+        case JumperBallTypes::Direction::North:
+            distance = _3DPosZ- (static_cast<float>(_currentBlockZ)
+                              + offsetCenterBlock);
+            break;
+        case JumperBallTypes::Direction::South:
+            distance = _3DPosZ- (static_cast<float>(_currentBlockZ)
+                              + offsetCenterBlock);
+            break;
+        case JumperBallTypes::Direction::East:
+            distance = _3DPosX- (static_cast<float>(_currentBlockX)
+                              + offsetCenterBlock);
+            break;
+        case JumperBallTypes::Direction::West:
+            distance = _3DPosX- (static_cast<float>(_currentBlockX)
+                              + offsetCenterBlock);
+            break;
+        case JumperBallTypes::Direction::Up:
+            distance = _3DPosY- (static_cast<float>(_currentBlockY)
+                              + offsetCenterBlock);
+            break;
+        case JumperBallTypes::Direction::Down:
+            distance = _3DPosY- (static_cast<float>(_currentBlockY)
+                              + offsetCenterBlock);
+            break;
+        default :
+            break;
+    }
+
+    if (distance < 0 ) distance = -distance;
+    return offsetCenterBlock + distance;
 }
 
 std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x, 
@@ -637,10 +674,6 @@ std::array<float,3> Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const
 
     return std::array<float,3> {x,y,z};
 }
-
-/*std::array<float, 3> Ball::get3DPos() const{
-    return {_3DPosX,_3DPosY,_3DPosZ};
-}*/
 
 float Ball::getRadius() const {
     return _mechanicsPattern.radiusBall;
@@ -757,6 +790,9 @@ void Ball::update() noexcept{
                 break;
         }
         position3D = {x,y,z};
+        _3DPosX = position3D.at(0);
+        _3DPosY = position3D.at(1);
+        _3DPosZ = position3D.at(2);
     } else if ( _state == Ball::State::Moving){
 
     } else if ( _state == Ball::State::Jumping){
@@ -765,13 +801,17 @@ void Ball::update() noexcept{
         std::cout << "Time since jumping: " << 
                 getTimeSecondsSinceAction();
         std::array<float,3> relativePositionJump = P2DTo3D(pos2D);
+        
+        
         position3D = { relativePositionJump.at(0),
                        relativePositionJump.at(1),
                        relativePositionJump.at(2),
                    };
+        _3DPosX = position3D.at(0);
+        _3DPosY = position3D.at(1);
+        _3DPosZ = position3D.at(2);
+
+        isFallingIntersectionBlock();
     }
 
-    _3DPosX = position3D.at(0);
-    _3DPosY = position3D.at(1);
-    _3DPosZ = position3D.at(2);
 }
