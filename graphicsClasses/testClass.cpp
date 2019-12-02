@@ -56,39 +56,6 @@ testClass::testClass(): _window(nullptr)
 void testClass::run(Rendering& r, Ball& b, Camera& c) {
    
 
-    /*const std::vector<GLfloat> vertexBufferData  {0.5f,-0.5f,0.f,
-                                                -0.5f,-0.5f,0.f,
-                                                 0.f ,0.5f,0.f };
-
-
-    const std::vector<GLfloat> vertexColorBufferData  {1.f,1.f,0.f,
-                                                0.f,1.f,1.f,
-                                                 1.f ,0.f,1.f };
-
-    GLuint VertexArrayID;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
-
-    GLuint idVertexBuffer[2];                                            
-    
-    glGenBuffers(2, idVertexBuffer);
-
-    glBindBuffer(GL_ARRAY_BUFFER, idVertexBuffer[0]);
-    glBufferData(GL_ARRAY_BUFFER, vertexBufferData.size() * sizeof(GLfloat), 
-            vertexBufferData.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, idVertexBuffer[1]);
-    glBufferData(GL_ARRAY_BUFFER, vertexColorBufferData.size() *
-            sizeof(GLfloat), vertexColorBufferData.data(), GL_STATIC_DRAW);
-
-
-    Shader vShader (GL_VERTEX_SHADER , "graphicsClasses/shaders/basicVs.vs");
-    Shader fShader (GL_FRAGMENT_SHADER , "graphicsClasses/shaders/basicFs.fs");
-    
-    ShaderProgram program (vShader,fShader);
-
-    
-    program.use();*/
     bool leftButton = false;
     bool rightButton = false;
     bool upButton = false;
@@ -199,7 +166,7 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         glfwSwapInterval(1);
         glfwSwapBuffers(_window);
         //glfwWaitEvents();
-        usleep(1000);
+        usleep(2000);
         glfwPollEvents();
    }
 }

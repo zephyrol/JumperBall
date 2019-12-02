@@ -798,8 +798,6 @@ void Ball::update() noexcept{
     } else if ( _state == Ball::State::Jumping){
         ClassicalMechanics::physics2DVector pos2D = 
           _mechanicsPattern.getPosition(getTimeSecondsSinceAction());
-        std::cout << "Time since jumping: " << 
-                getTimeSecondsSinceAction();
         std::array<float,3> relativePositionJump = P2DTo3D(pos2D);
         
         

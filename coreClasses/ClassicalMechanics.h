@@ -33,7 +33,7 @@ public:
     static constexpr float              distanceJumpBasic              = 2.f;
     static constexpr float              timeToStopWindBasic            = 0.7;
 
-    static constexpr size_t             sizeSampleEuler                = 8192;
+    static constexpr size_t             sizeSampleEuler                = 8192*8;
     static constexpr float              durationStudy                  = 10.f;
     static constexpr float              radiusBall                     = 0.20f;
 

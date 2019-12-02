@@ -122,7 +122,6 @@ void Rendering::renderCamera() {
   const GLuint distanceBehindID = glGetUniformLocation(_spMap.getHandle(),
                                                       "distanceBehind");
   glUniform1fv(distanceBehindID, 1, &_uniformFloat.at("distanceBehind"));
-  std::cout << "distance behind :" << _ball.distanceBehindBall() << std::endl;
 }
 
 

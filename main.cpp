@@ -45,21 +45,6 @@ int main(int argc, char** argv) {
 
         
         Ball b (m);
-        /*b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::TurnRight);*/
-        /*b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::TurnLeft);
-        b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::TurnLeft);
-        b.doAction(Ball::ActionRequest::TurnLeft);
-        b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::GoStraightOn);
-        b.doAction(Ball::ActionRequest::GoStraightOn);*/
         Camera c;
         testClass t;
         Rendering rendering (m,b,c);
