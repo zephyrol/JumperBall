@@ -100,7 +100,7 @@ void Rendering::renderCamera() {
                                             positionBall.at(1),
                                             positionBall.at(2));
 
-  const std::array<float,3> lookTowardsDir = _ball.lookTowardsThroughVector();
+  const std::array<float,3> lookTowardsDir = _ball.lookTowardsAsVector();
   _uniformVec3["lookDirection"] = glm::vec3(lookTowardsDir.at(0),
                                             lookTowardsDir.at(1),
                                             lookTowardsDir.at(2));

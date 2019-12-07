@@ -38,13 +38,16 @@ public:
                                                         >;
     using durationMs =          std::chrono::duration<long int,
                                                       std::ratio<1,1000> > ;
+    using shock     =           std::pair< std::array<unsigned int, 3 >,
+                                                      float > ; 
+                                                    
 
 
 
     //-------CONST METHODS--------//
     std::array<float,3>         get3DPosition()                  const noexcept;
     float                       getRadius()                               const;
-    std::array<float,3>         lookTowardsThroughVector()                const;
+    std::array<float,3>         lookTowardsAsVector()                const;
 
     JumperBallTypes::Direction  currentSide()                             const;
     JumperBallTypes::Direction  lookTowards()                             const;
@@ -83,16 +86,7 @@ private:
     std::chrono::time_point<std::chrono::system_clock>  
                                 _timeAction;
 
-
-    //----------METHODS------------//
-    void                        turnLeft()                             noexcept;
-    void                        turnRight()                            noexcept;
-    void                        goStraightOn()                         noexcept;
-    void                        stay()                                 noexcept;
-    void                        jump()                                 noexcept;
-    void                        setTimeActionNow()                     noexcept;
-    AnswerRequest               isFallingIntersectionBlock()           noexcept;
-
+    std::vector<shock>          _shocks; 
 
     //-------CONST METHODS--------//
     std::shared_ptr<const std::vector<int> >  
@@ -104,6 +98,17 @@ private:
 
     std::array<float,3>         P2DTo3D(ClassicalMechanics::physics2DVector p2D)
                                                                           const;
+
+    //----------METHODS------------//
+    void                        turnLeft()                             noexcept;
+    void                        turnRight()                            noexcept;
+    void                        goStraightOn()                         noexcept;
+    void                        stay()                                 noexcept;
+    void                        jump()                                 noexcept;
+    void                        setTimeActionNow()                     noexcept;
+    AnswerRequest               isFallingIntersectionBlock()           noexcept;
+
+
 
         
 };

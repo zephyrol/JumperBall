@@ -32,7 +32,8 @@ ClassicalMechanics::ClassicalMechanics():
     _weightSphere                       (0.010f),
     _v0                                 {getV0xToRespectDistanceAndTime(),3.f},
     _fluid                              (ClassicalMechanics::Fluid::Air),
-    _EulerMethodBuffer                  {}
+    _EulerMethodBuffer                  {},
+    _timesShock                         {}
 {
 }
 
@@ -59,14 +60,44 @@ const ClassicalMechanics::physics2DVector ClassicalMechanics::getAcceleration(
 }
 
 
-float ClassicalMechanics::getPositionX(const float t) const {
+
+float ClassicalMechanics::evalPositionX(const float t) const {
+
     float posX;
     if ( t < _timeToGetDestinationX) {
-    posX = _v0.x * _timeToGetDestinationX * t - _v0.x * 
-       static_cast<float> (pow(t,2)) / 2.f ;
+        posX = _v0.x * _timeToGetDestinationX * t - _v0.x * 
+                static_cast<float> (pow(t,2)) / 2.f ;
     }
     else 
         posX = _distanceJump;
+    return posX;
+}
+
+float ClassicalMechanics::getIntervalX(float tBegin, float tEnd) const {
+    return evalPositionX(tEnd) - evalPositionX(tBegin);
+}
+
+
+float ClassicalMechanics::getPositionX( const float t ) const {
+    
+    float posX;
+    std::cout << "size " << _timesShock.size() << std::endl;
+    if (_timesShock.empty()){
+      posX = evalPositionX(t) ;
+    }
+    else {
+        std::vector<float> intervalsPositions (_timesShock);
+        intervalsPositions.insert(intervalsPositions.begin(),0.f);
+        intervalsPositions.insert(intervalsPositions.end(),t);
+        
+        posX = 0;
+        while(_timesShock.size() > 1) {
+            posX += static_cast<float>(pow(-1.,_timesShock.size()))
+                    * getIntervalX(_timesShock.at(0), _timesShock.at(1));
+            intervalsPositions.erase(intervalsPositions.begin());
+        }
+    }
+
     return posX;
 }
 
@@ -224,3 +255,12 @@ float ClassicalMechanics::getV0xToRespectDistanceAndTime() const {
     return 2.f*_distanceJump/ static_cast<float>(pow(_timeToGetDestinationX,2));
 
 }
+
+const std::vector<float>& ClassicalMechanics::timesShock() {
+    return _timesShock;
+}
+
+void ClassicalMechanics::timesShock(const std::vector<float>& v) {
+    _timesShock = v;
+}
+

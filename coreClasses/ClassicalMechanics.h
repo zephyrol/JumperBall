@@ -19,6 +19,7 @@
 #include <functional>
 #include <map>
 #include <array>
+#include <vector>
 
 class ClassicalMechanics {
 public:
@@ -31,9 +32,9 @@ public:
     //---------CONSTANTS------------//
     static constexpr float              gravitationalAccelerationEarth = 9.81f;
     static constexpr float              distanceJumpBasic              = 2.f;
-    static constexpr float              timeToStopWindBasic            = 0.7;
+    static constexpr float              timeToStopWindBasic            = 0.7f;
 
-    static constexpr size_t             sizeSampleEuler                = 8192*8;
+    static constexpr size_t             sizeSampleEuler                = 8192;
     static constexpr float              durationStudy                  = 10.f;
     static constexpr float              radiusBall                     = 0.20f;
 
@@ -74,6 +75,9 @@ public:
       const std::array<float,5>& params
                                                                   );
 
+    //----------METHODS------------//
+    const std::vector<float>&           timesShock();
+    void                                timesShock(const std::vector<float>& v);
 
 private:
 
@@ -90,12 +94,16 @@ private:
 
     mutable EulerMethodBuffer           _EulerMethodBuffer;
 
-
+    std::vector<float>                  _timesShock;
 
     //-------CONST METHODS--------//
     float                               getVelocityX(const float t)       const;
     float                               getVelocityY(const float t)       const;
      
+
+    float                               getIntervalX(float tBegin, float tEnd)
+                                                                          const;
+    float                               evalPositionX(const float t)      const;
     float                               getPositionX(const float t)       const;
     float                               getPositionY(const float t)       const;
 
