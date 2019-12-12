@@ -14,7 +14,8 @@
 #include "Ball.h"
 #include <iostream>
 #include <string>
-
+#include <algorithm>
+            
 Ball::Ball(const Map& map): 
         _currentBlockX(map.beginX()),
         _currentBlockY(map.beginY()),
@@ -489,10 +490,6 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
         if ( _mechanicsPattern.getVelocity(fDifference).y < 0 ) {
             answer = Ball::AnswerRequest::Accepted; 
             
-            /*const ClassicalMechanics::physics2DVector pos2D = 
-             _mechanicsPattern.getPosition(fDifference); 
-             const std::array<float,3> pos3D = P2DTo3D(pos2D);*/
-            
             auto positionBlockPtr = intersectBlock(_3DPosX,_3DPosY, _3DPosZ);
             if (positionBlockPtr) {
 
@@ -568,11 +565,15 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
                       }
                 }
                 if (frontalShock) {
-                    shock s (shockPosition, getTimeSecondsSinceAction());
-                    _shocks.push_back(s);
-                    std::vector<float> shocks = _mechanicsPattern.timesShock();
-                    shocks.push_back(getTimeSecondsSinceAction());
-                    _mechanicsPattern.timesShock(shocks);
+                    shock s (shockPosition);
+                    auto it = std::find(_shocks.begin(),_shocks.end(),s);
+                    if ( it == _shocks.end()) {
+                        _shocks.push_back(s);
+                        std::vector<float> shocks=
+                                                _mechanicsPattern.timesShock();
+                        shocks.push_back(getTimeSecondsSinceAction());
+                        _mechanicsPattern.timesShock(shocks);
+                    }
                     
                 }
                 else {

@@ -38,8 +38,7 @@ public:
                                                         >;
     using durationMs =          std::chrono::duration<long int,
                                                       std::ratio<1,1000> > ;
-    using shock     =           std::pair< std::array<unsigned int, 3 >,
-                                                      float > ; 
+    using shock     =           std::array<unsigned int, 3 > ; 
                                                     
 
 
@@ -47,7 +46,7 @@ public:
     //-------CONST METHODS--------//
     std::array<float,3>         get3DPosition()                  const noexcept;
     float                       getRadius()                               const;
-    std::array<float,3>         lookTowardsAsVector()                const;
+    std::array<float,3>         lookTowardsAsVector()                     const;
 
     JumperBallTypes::Direction  currentSide()                             const;
     JumperBallTypes::Direction  lookTowards()                             const;

@@ -84,6 +84,7 @@ float ClassicalMechanics::getPositionX( const float t ) const {
     std::cout << "size " << _timesShock.size() << std::endl;
     if (_timesShock.empty()){
       posX = evalPositionX(t) ;
+      std::cout << "posX " << posX << " empty" << std::endl;
     }
     else {
         std::vector<float> intervalsPositions (_timesShock);
@@ -91,11 +92,27 @@ float ClassicalMechanics::getPositionX( const float t ) const {
         intervalsPositions.insert(intervalsPositions.end(),t);
         
         posX = 0;
-        while(_timesShock.size() > 1) {
-            posX += static_cast<float>(pow(-1.,_timesShock.size()))
-                    * getIntervalX(_timesShock.at(0), _timesShock.at(1));
+        bool firstPass = false;
+        while(intervalsPositions.size() > 1) {
+            posX += static_cast<float>(pow(-1.,intervalsPositions.size()+1))
+                    * getIntervalX( intervalsPositions.at(0),
+                                    intervalsPositions.at(1));
+
+            if (!firstPass) {
+                firstPass = true;
+                posX += static_cast<float>(pow(-1.,intervalsPositions.size()+1))
+                        * getIntervalX( intervalsPositions.at(0),
+                        intervalsPositions.at(1));
+            }
+            else {
+                posX += static_cast<float>(pow(-1.,intervalsPositions.size()+1))
+                        * getIntervalX( intervalsPositions.at(0),
+                        intervalsPositions.at(1)) +0.4f;
+            }
+
             intervalsPositions.erase(intervalsPositions.begin());
         }
+        std::cout << "posX " << posX << " else" << std::endl;
     }
 
     return posX;
