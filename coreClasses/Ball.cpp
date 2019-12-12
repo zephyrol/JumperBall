@@ -434,7 +434,6 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
     switch (action) {
         case Ball::ActionRequest::GoStraightOn:
             if (_state == Ball::State::Staying) {
-                //_state = Ball::State::Moving;
                 goStraightOn();
                 
             }
@@ -442,14 +441,12 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
             break;
         case Ball::ActionRequest::TurnLeft:
             if (_state == Ball::State::Staying) {
-                //_state = Ball::State::Moving;
                 turnLeft();
             }
             else answer = Ball::AnswerRequest::Rejected;
             break;
         case Ball::ActionRequest::TurnRight:
             if (_state == Ball::State::Staying) {
-                //_state = Ball::State::Moving;
                 turnRight();
             }
             else answer = Ball::AnswerRequest::Rejected;
@@ -472,12 +469,6 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
     return answer;
 }
 
-/*template <typename T>
-void function(T && param)
-{
-    std::cout << __PRETTY_FUNCTION__ << "\n";
-    reinterpret_cast<char*>  (param);
-}*/
 
 Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
 
@@ -546,34 +537,33 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
                       aboveNearY == positionBlockPtr->at(1) &&
                       aboveNearZ == positionBlockPtr->at(2))  {
                         frontalShock = true;               
-                        shockPosition = { static_cast<unsigned int>(aboveNearX),
-                                          static_cast<unsigned int>(aboveNearY),
-                                          static_cast<unsigned int>(aboveNearZ),
-                                         };
+                      
                       }
                 }
-
-                if (blockFar) {
+                else if (blockFar) {
                   if ( aboveFarX == positionBlockPtr->at(0) &&
                        aboveFarY == positionBlockPtr->at(1) &&
                        aboveFarZ == positionBlockPtr->at(2))  {
                         frontalShock = true;               
-                        shockPosition = { static_cast<unsigned int>(aboveFarX),
-                                          static_cast<unsigned int>(aboveFarY),
-                                          static_cast<unsigned int>(aboveFarZ),
-                                         };
+                        
                       }
                 }
                 if (frontalShock) {
                     shock s (shockPosition);
-                    auto it = std::find(_shocks.begin(),_shocks.end(),s);
+					
+					_shocks.clear();
+                    _mechanicsPattern.timesShock({});
+                    
+                    _state = Ball::State::Staying;
+					
+                    /*auto it = std::find(_shocks.begin(),_shocks.end(),s);
                     if ( it == _shocks.end()) {
                         _shocks.push_back(s);
                         std::vector<float> shocks=
                                                 _mechanicsPattern.timesShock();
                         shocks.push_back(getTimeSecondsSinceAction());
                         _mechanicsPattern.timesShock(shocks);
-                    }
+                    }*/
                     
                 }
                 else {
@@ -584,7 +574,7 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
                     _currentBlockZ  = positionBlockPtr->at(2) ;
                     _state = Ball::State::Staying;
                 }
-                update();
+                //update();
             }
             else {
                 /*_3DPosX = pos3D.at(0);
@@ -684,7 +674,7 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
         yIntersection = y;
         zIntersection = z;
         
-        switch (_lookTowards) {
+      /*  switch (_lookTowards) {
             case JumperBallTypes::Direction::North:
                 zIntersection -= offsetBlockPosition ;
                 break;
@@ -705,7 +695,7 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
                 break;
             default :
                 break;
-        }
+        }*/
         xInteger = static_cast<int> (xIntersection);
         yInteger = static_cast<int> (yIntersection);
         zInteger = static_cast<int> (zIntersection);
