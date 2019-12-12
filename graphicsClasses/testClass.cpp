@@ -60,13 +60,13 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
     bool rightButton = false;
     bool upButton = false;
     bool enterButton = false;
-    unsigned int counter = 0;
+    //unsigned int counter = 0;
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
           && glfwWindowShouldClose(_window) == 0 ) {
 
-        std::cout << "counter " << counter << std::endl;
-        counter++;
+        //std::cout << "counter " << counter << std::endl;
+        //counter++;
         glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -133,40 +133,11 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         b.update();
         c.follow(b);
         r.render();
-        //------------ Rendering
-       /* glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, idVertexBuffer[0]);
-
-        glVertexAttribPointer ( 
-                0,
-                3, // 3 GL_FLOAT per vertex
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                nullptr
-                );
-        
-        glBindBuffer(GL_ARRAY_BUFFER, idVertexBuffer[1]);
-        glVertexAttribPointer ( 
-                1,
-                3, // 3 GL_FLOAT per vertex
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                nullptr
-                );
-
-        glDrawArrays(GL_TRIANGLES,0,3);
-        glDisableVertexAttribArray(0);*/
-
-        
-        
-        // -------------------
+       
         glfwSwapInterval(1);
         glfwSwapBuffers(_window);
         //glfwWaitEvents();
-        usleep(2000);
+      
         glfwPollEvents();
    }
 }

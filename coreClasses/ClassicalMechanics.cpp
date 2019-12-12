@@ -81,10 +81,10 @@ float ClassicalMechanics::getIntervalX(float tBegin, float tEnd) const {
 float ClassicalMechanics::getPositionX( const float t ) const {
     
     float posX;
-    std::cout << "size " << _timesShock.size() << std::endl;
+   
     if (_timesShock.empty()){
       posX = evalPositionX(t) ;
-      std::cout << "posX " << posX << " empty" << std::endl;
+      
     }
     else {
         std::vector<float> intervalsPositions (_timesShock);
@@ -99,7 +99,7 @@ float ClassicalMechanics::getPositionX( const float t ) const {
           
             intervalsPositions.erase(intervalsPositions.begin());
         }
-        std::cout << "posX " << posX << " else" << std::endl;
+  
     }
 
     return posX;

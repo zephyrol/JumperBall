@@ -794,7 +794,6 @@ float Ball::getTimeActionSecondsFloat() const noexcept {
     const durationMs timeActionSinceEpoch    = timeActionMs.time_since_epoch();
     
     const std::chrono::duration<float> durationFloat = timeActionSinceEpoch;
-    std::cout<< "timeaction float" << durationFloat.count()/1000.f << std::endl;
     return durationFloat.count() / 1000.f ;
 }
 
@@ -806,7 +805,7 @@ float Ball::getTimeNowSecondsFloat() noexcept {
     
     const std::chrono::duration<float> durationFloat = timeNowSinceEpoch;
     
-    std::cout<< "timenow time" << durationFloat.count()/1000.f << std::endl;
+   
     return durationFloat.count() / 1000.f ;
 }
 
