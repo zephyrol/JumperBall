@@ -10,12 +10,12 @@ INSTALL:
  
 sudo apt-get install libglfw3-dev libglfw3
 
--run Make
+-run make
 
 
 HOW TO USE :
 
-run the program from the project directory:
+-run the program from the project directory:
 
 dist/Debug/GNU-Linux/jumperball maps/map3.txt
 
@@ -24,6 +24,6 @@ The parameter is the map that you want to load.
 
 HOW TO PLAY : 
 
-Use the arrows to move and Enter to jump.
+-Use the arrows to move and Enter to jump.
 
 
