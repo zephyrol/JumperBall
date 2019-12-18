@@ -90,7 +90,7 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
             if (!upButton) {
                 upButton = true;
                 std::cout << "Key Up Press" << std::endl;
-                b.doAction(Ball::ActionRequest::GoStraightOn);
+                b.doAction(Ball::ActionRequest::GoStraightAhead);
             }
         }
 
