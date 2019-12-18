@@ -115,7 +115,7 @@ private:
     //----------METHODS------------//
     void                        turnLeft()                             noexcept;
     void                        turnRight()                            noexcept;
-    void                        goStraightAhead()                         noexcept;
+    void                        goStraightAhead()                      noexcept;
     void                        stay()                                 noexcept;
     void                        jump()                                 noexcept;
     void                        setTimeActionNow()                     noexcept;
