@@ -901,7 +901,7 @@ void Ball::update() noexcept{
     float x,y,z;
 
     if (_state == Ball::State::Staying || _state == Ball::State::Moving) {
-       	 
+        
         x = static_cast<float> (_currentBlockX + 0.5f);
         y = static_cast<float> (_currentBlockY + 0.5f);
         z = static_cast<float> (_currentBlockZ + 0.5f);
@@ -929,41 +929,41 @@ void Ball::update() noexcept{
             default :
                 break;
         }
-
-	if ( _state == Ball::State::Staying){
-	    position3D = {x,y,z};
+        
+        if ( _state == Ball::State::Staying){
+            position3D = {x,y,z};
 	    _3DPosX = position3D.at(0);
 	    _3DPosY = position3D.at(1);
 	    _3DPosZ = position3D.at(2);
-
-	} else if ( _state == Ball::State::Moving){
-	    float msSinceAction = getTimeSecondsSinceAction();
-	    if (msSinceAction  >= timeToGetNextBlock) {
-		goStraightAhead();
-		stay();
-		update();
-	    }
-	    else {
-		position3D = {x,y,z};
-		_3DPosX = position3D.at(0);
-		_3DPosY = position3D.at(1);
-		_3DPosZ = position3D.at(2);
-	    }
-	}
+            
+    	} else if ( _state == Ball::State::Moving){
+            float msSinceAction = getTimeSecondsSinceAction();
+            if (msSinceAction  >= timeToGetNextBlock) {
+                goStraightAhead();
+                stay();
+                update();
+            }
+            else {
+                position3D = {x,y,z};
+                _3DPosX = position3D.at(0);
+                _3DPosY = position3D.at(1);
+                _3DPosZ = position3D.at(2);
+            }
+        }
     } else if ( _state == Ball::State::Jumping){
         ClassicalMechanics::physics2DVector pos2D = 
-          _mechanicsPattern.getPosition(getTimeSecondsSinceAction());
+                _mechanicsPattern.getPosition(getTimeSecondsSinceAction());
         std::array<float,3> relativePositionJump = P2DTo3D(pos2D);
         
         position3D = { relativePositionJump.at(0),
-                       relativePositionJump.at(1),
-                       relativePositionJump.at(2),
-                   };
+        relativePositionJump.at(1),
+        relativePositionJump.at(2),
+        };
         _3DPosX = position3D.at(0);
         _3DPosY = position3D.at(1);
         _3DPosZ = position3D.at(2);
-
+        
         isFallingIntersectionBlock();
     }
-
+    
 }
