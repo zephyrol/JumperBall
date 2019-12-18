@@ -235,8 +235,10 @@ std::array<float,3> Ball::get3DPosition() const noexcept {
     return std::array<float,3> {_3DPosX,_3DPosY,_3DPosZ};
 }
 
-void Ball::goStraightOn() noexcept {
-    
+Ball::nextBlockInformation Ball::getNextBlock() const noexcept{
+
+    struct nextBlockInformation nextBlock;
+
     int inFrontOfX = _currentBlockX;
     int inFrontOfY = _currentBlockY;
     int inFrontOfZ = _currentBlockZ;
@@ -348,31 +350,34 @@ void Ball::goStraightOn() noexcept {
     }
 
     if (_map.map3DData(aboveX,aboveY,aboveZ)) {
-        _currentBlockX = aboveX; _currentBlockY = aboveY; 
-        _currentBlockZ = aboveZ; 
+
+	      nextBlock.poxX = aboveX;
+	      nextBlock.poxY = aboveY;
+	      nextBlock.poxZ = aboveZ;
+	      nextBlock.nextLocal = NextBlockLocal::Above;
 
         JumperBallTypes::Direction lookTowardsBeforeMovement = _lookTowards;
 
-        _lookTowards = _currentSide;
+	      nextBlock.nextLook = _currentSide;
         
         switch (lookTowardsBeforeMovement) {
             case JumperBallTypes::Direction::North:
-                _currentSide = JumperBallTypes::Direction::South;
+                nextBlock.nextSide=JumperBallTypes::Direction::South;
                 break;
             case JumperBallTypes::Direction::South:
-                _currentSide = JumperBallTypes::Direction::North;
+                nextBlock.nextSide=JumperBallTypes::Direction::North;
                 break;
             case JumperBallTypes::Direction::East:
-                _currentSide= JumperBallTypes::Direction::West;
+                nextBlock.nextSide=JumperBallTypes::Direction::West;
                 break;
             case JumperBallTypes::Direction::West:
-                _currentSide= JumperBallTypes::Direction::East;
+                nextBlock.nextSide=JumperBallTypes::Direction::East;
                 break;
             case JumperBallTypes::Direction::Up:
-                _currentSide= JumperBallTypes::Direction::Down;
+                nextBlock.nextSide=JumperBallTypes::Direction::Down;
                 break;
             case JumperBallTypes::Direction::Down:
-                _currentSide= JumperBallTypes::Direction::Up;
+                nextBlock.nextSide=JumperBallTypes::Direction::Up;
                 break;
             default :
                 break;
@@ -380,40 +385,73 @@ void Ball::goStraightOn() noexcept {
 
     } 
     else if (_map.map3DData(inFrontOfX,inFrontOfY,inFrontOfZ)) {
-        _currentBlockX = inFrontOfX; _currentBlockY = inFrontOfY; 
-        _currentBlockZ = inFrontOfZ; 
+        
+        nextBlock.poxX 		  = inFrontOfX;
+        nextBlock.poxY 		  = inFrontOfY;
+        nextBlock.poxZ 		  = inFrontOfZ;
+        nextBlock.nextLocal = NextBlockLocal::InFrontOf;
+        nextBlock.nextLook	= _lookTowards;
+        nextBlock.nextSide 	= _currentSide;
+        
     } 
     else if (!_map.map3DData(leftX,leftY,leftZ) && 
             !_map.map3DData(rightX,rightY,rightZ)) {
         
+        nextBlock.poxX 		  = _currentBlockX;
+        nextBlock.poxY 		  = _currentBlockY;
+        nextBlock.poxZ 		  = _currentBlockZ;
+        nextBlock.nextLocal = NextBlockLocal::Same;
+
         JumperBallTypes::Direction sideBeforeMovement = _currentSide;
-        _currentSide = _lookTowards;
+
+        nextBlock.nextSide 	= _lookTowards;
         
         switch (sideBeforeMovement) {
             case JumperBallTypes::Direction::North:
-                _lookTowards = JumperBallTypes::Direction::South;
+                nextBlock.nextLook = JumperBallTypes::Direction::South;
                 break;
             case JumperBallTypes::Direction::South:
-                _lookTowards = JumperBallTypes::Direction::North;
+                nextBlock.nextLook = JumperBallTypes::Direction::North;
                 break;
             case JumperBallTypes::Direction::East:
-                _lookTowards = JumperBallTypes::Direction::West;
+                nextBlock.nextLook = JumperBallTypes::Direction::West;
                 break;
             case JumperBallTypes::Direction::West:
-                _lookTowards = JumperBallTypes::Direction::East;
+                nextBlock.nextLook = JumperBallTypes::Direction::East;
                 break;
             case JumperBallTypes::Direction::Up:
-                _lookTowards = JumperBallTypes::Direction::Down;
+                nextBlock.nextLook = JumperBallTypes::Direction::Down;
                 break;
             case JumperBallTypes::Direction::Down:
-                _lookTowards = JumperBallTypes::Direction::Up;
+                nextBlock.nextLook = JumperBallTypes::Direction::Up;
                 break;
             default :
                 break;
         }
     }
-    else stay();
-    //updatePosition();
+    else {
+
+        nextBlock.nextLocal = NextBlockLocal::None;
+        nextBlock.nextSide 	= _currentSide;
+        nextBlock.nextLook  = _lookTowards;
+        nextBlock.poxX      = _currentBlockX;
+        nextBlock.poxY      = _currentBlockY;
+        nextBlock.poxZ      = _currentBlockZ;
+    }
+            
+
+    return nextBlock;
+}
+
+
+void Ball::goStraightAhead() noexcept {
+    
+    struct nextBlockInformation nextBlock = getNextBlock(); 
+    _currentBlockX  = nextBlock.poxX;
+    _currentBlockY  = nextBlock.poxY;
+    _currentBlockZ  = nextBlock.poxZ;
+    _currentSide    = nextBlock.nextSide;
+    _lookTowards    = nextBlock.nextLook; 
 }
 
 void Ball::jump() noexcept {
@@ -432,9 +470,9 @@ void Ball::setTimeActionNow() noexcept {
 Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
     Ball::AnswerRequest answer (Ball::AnswerRequest::Accepted);
     switch (action) {
-        case Ball::ActionRequest::GoStraightOn:
+        case Ball::ActionRequest::GoStraightAhead:
             if (_state == Ball::State::Staying) {
-                goStraightOn();
+                goStraightAhead();
                 
             }
             else answer = Ball::AnswerRequest::Rejected;
@@ -483,7 +521,7 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
             
             auto positionBlockPtr = intersectBlock(_3DPosX,_3DPosY, _3DPosZ);
             if (positionBlockPtr) {
-
+				/*
                 int aboveNearX =  _currentBlockX;
                 int aboveNearY =  _currentBlockY;
                 int aboveNearZ =  _currentBlockZ;
@@ -555,7 +593,7 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
                     _mechanicsPattern.timesShock({});
                     
                     _state = Ball::State::Staying;
-					
+				*/	
                     /*auto it = std::find(_shocks.begin(),_shocks.end(),s);
                     if ( it == _shocks.end()) {
                         _shocks.push_back(s);
@@ -565,7 +603,7 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
                         _mechanicsPattern.timesShock(shocks);
                     }*/
                     
-                }
+                /*}
                 else {
                     _shocks.clear();
                     _mechanicsPattern.timesShock({});
@@ -573,13 +611,14 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
                     _currentBlockY  = positionBlockPtr->at(1) ;
                     _currentBlockZ  = positionBlockPtr->at(2) ;
                     _state = Ball::State::Staying;
-                }
-                //update();
-            }
-            else {
-                /*_3DPosX = pos3D.at(0);
-                 _3DPosY = pos3D.at(1);
-                 _3DPosZ = pos3D.at(2);*/
+                }*/
+                _shocks.clear();
+                _mechanicsPattern.timesShock({});
+                _currentBlockX  = positionBlockPtr->at(0) ;
+                _currentBlockY  = positionBlockPtr->at(1) ;
+                _currentBlockZ  = positionBlockPtr->at(2) ;
+                _state = Ball::State::Staying;
+                update();
             }
         }
         answer = Ball::AnswerRequest::Accepted; 
@@ -668,12 +707,12 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
     if (_map.map3DData(xInteger, yInteger, zInteger)) 
         blockIntersected = std::make_shared<const std::vector<int> > (
                 std::initializer_list<int> ({xInteger,yInteger,zInteger}));
-    else  {
+    /*else  {
 
         xIntersection = x;
         yIntersection = y;
         zIntersection = z;
-        
+        */
       /*  switch (_lookTowards) {
             case JumperBallTypes::Direction::North:
                 zIntersection -= offsetBlockPosition ;
@@ -696,13 +735,13 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
             default :
                 break;
         }*/
-        xInteger = static_cast<int> (xIntersection);
+    /*    xInteger = static_cast<int> (xIntersection);
         yInteger = static_cast<int> (yIntersection);
         zInteger = static_cast<int> (zIntersection);
         if (_map.map3DData(xInteger, yInteger, zInteger)) 
             blockIntersected = std::make_shared<const std::vector<int> > (
                     std::initializer_list<int> ({xInteger,yInteger,zInteger}));
-    }
+    }*/
     
     return blockIntersected;
 }
@@ -859,11 +898,13 @@ void Ball::update() noexcept{
 
     std::array<float,3> position3D {0.f,0.f,0.f};
 
-    if (_state == Ball::State::Staying) {
-        
-        float x = static_cast<float> (_currentBlockX + 0.5f);
-        float y = static_cast<float> (_currentBlockY + 0.5f);
-        float z = static_cast<float> (_currentBlockZ + 0.5f);
+    float x,y,z;
+
+    if (_state == Ball::State::Staying || _state == Ball::State::Moving) {
+       	 
+        x = static_cast<float> (_currentBlockX + 0.5f);
+        y = static_cast<float> (_currentBlockY + 0.5f);
+        z = static_cast<float> (_currentBlockZ + 0.5f);
         
         
         switch (_currentSide) {
@@ -888,12 +929,27 @@ void Ball::update() noexcept{
             default :
                 break;
         }
-        position3D = {x,y,z};
-        _3DPosX = position3D.at(0);
-        _3DPosY = position3D.at(1);
-        _3DPosZ = position3D.at(2);
-    } else if ( _state == Ball::State::Moving){
 
+	if ( _state == Ball::State::Staying){
+	    position3D = {x,y,z};
+	    _3DPosX = position3D.at(0);
+	    _3DPosY = position3D.at(1);
+	    _3DPosZ = position3D.at(2);
+
+	} else if ( _state == Ball::State::Moving){
+	    float msSinceAction = getTimeSecondsSinceAction();
+	    if (msSinceAction  >= timeToGetNextBlock) {
+		goStraightAhead();
+		stay();
+		update();
+	    }
+	    else {
+		position3D = {x,y,z};
+		_3DPosX = position3D.at(0);
+		_3DPosY = position3D.at(1);
+		_3DPosZ = position3D.at(2);
+	    }
+	}
     } else if ( _state == Ball::State::Jumping){
         ClassicalMechanics::physics2DVector pos2D = 
           _mechanicsPattern.getPosition(getTimeSecondsSinceAction());
