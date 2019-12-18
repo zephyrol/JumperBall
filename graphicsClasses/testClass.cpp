@@ -70,6 +70,9 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        b.update();
+        c.follow(b);
+
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_PRESS) {
             if (!rightButton) {
                 rightButton = true;
@@ -87,19 +90,19 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         }
 
         if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_PRESS) {
-            if (!upButton) {
+            //if (!upButton) {
                 upButton = true;
                 std::cout << "Key Up Press" << std::endl;
                 b.doAction(Ball::ActionRequest::GoStraightAhead);
-            }
+            //}
         }
 
         if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS) {
-            if (!enterButton) {
+            //if (!enterButton) {
                 enterButton = true;
                 std::cout << "Key Enter Press" << std::endl;
                 b.doAction(Ball::ActionRequest::Jump);
-            }
+            //}
         }
 
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_RELEASE) {
@@ -132,6 +135,8 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
 
         b.update();
         c.follow(b);
+
+
         r.render();
        
         glfwSwapInterval(1);

@@ -26,7 +26,7 @@ public:
 
 
     //---------CONSTANTS------------//
-	  static constexpr float		  timeToGetNextBlock						           = 0.3f;
+	  static constexpr float		  timeToGetNextBlock						           = 0.2f;
 
 
     //------------TYPES------------//
@@ -118,6 +118,7 @@ private:
     void                        goStraightAhead()                      noexcept;
     void                        stay()                                 noexcept;
     void                        jump()                                 noexcept;
+    void                        move()                                 noexcept;
     void                        setTimeActionNow()                     noexcept;
     AnswerRequest               isFallingIntersectionBlock()           noexcept;
 
