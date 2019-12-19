@@ -132,6 +132,7 @@ void Ball::turnLeft() noexcept {
         default :
             break;
     }
+    _state = Ball::State::TurningLeft;
 }
 
 void Ball::turnRight() noexcept {
@@ -229,6 +230,7 @@ void Ball::turnRight() noexcept {
         default :
             break;
     }
+    _state = Ball::State::TurningRight;
 }
 
 std::array<float,3> Ball::get3DPosition() const noexcept {
@@ -482,9 +484,7 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
     switch (action) {
         case Ball::ActionRequest::GoStraightAhead:
             if (_state == Ball::State::Staying) {
-                //goStraightAhead();
                 move();
-                
             }
             else answer = Ball::AnswerRequest::Rejected;
             break;
@@ -511,7 +511,6 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
             break;
     }
 
-    //updatePosition(); 
 
     if (answer == Ball::AnswerRequest::Accepted)
         setTimeActionNow();
@@ -671,7 +670,11 @@ float Ball::distanceBehindBall() const
     }
 
     if (distance < 0 ) distance = -distance;
-    return offsetCenterBlock + distance;
+
+    distance = offsetCenterBlock + distance ;
+    if (_state== Ball::State::TurningLeft ||_state== Ball::State::TurningRight)
+        distance *= 10;
+    return distance;
 }
 
 std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x, 
@@ -681,9 +684,9 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
     std::shared_ptr<const std::vector<int> > blockIntersected = nullptr;
     
     const float offsetBlockPosition = _mechanicsPattern.radiusBall;
-    int xInteger;
-    int yInteger;
-    int zInteger;
+    int   xInteger;
+    int   yInteger;
+    int   zInteger;
     float xIntersection = x;
     float yIntersection = y;
     float zIntersection = z;
@@ -911,7 +914,9 @@ void Ball::update() noexcept{
 
     float x,y,z;
 
-    if (_state == Ball::State::Staying || _state == Ball::State::Moving) {
+    if (_state == Ball::State::Staying || _state == Ball::State::Moving ||
+        _state == Ball::State::TurningLeft || 
+        _state == Ball::State::TurningRight) {
         
         x = static_cast<float> (_currentBlockX + 0.5f);
         y = static_cast<float> (_currentBlockY + 0.5f);
@@ -940,13 +945,13 @@ void Ball::update() noexcept{
                 break;
         }
         
-        if ( _state == Ball::State::Staying){
+        if ( _state == Ball::State::Staying ){
             position3D = {x,y,z};
-	          _3DPosX = position3D.at(0);
-	          _3DPosY = position3D.at(1);
-	          _3DPosZ = position3D.at(2);
+            _3DPosX = position3D.at(0);
+            _3DPosY = position3D.at(1);
+            _3DPosZ = position3D.at(2);
             
-    	} else if ( _state == Ball::State::Moving){
+    	  } else if ( _state == Ball::State::Moving){
             float sSinceAction = getTimeSecondsSinceAction();
             if (sSinceAction  >= timeToGetNextBlock) {
                 goStraightAhead();
@@ -956,7 +961,7 @@ void Ball::update() noexcept{
             else {
                 struct nextBlockInformation infoTarget = getNextBlockInfo();
                 position3D = {x,y,z};
-
+                
                 if (infoTarget.nextLocal == NextBlockLocal::InFrontOf){
                     _3DPosX = (sSinceAction * (
                             static_cast<float> (infoTarget.poxX)
@@ -972,28 +977,28 @@ void Ball::update() noexcept{
                             / timeToGetNextBlock) + position3D.at(2);
                 }
                 else if ( infoTarget.nextLocal == NextBlockLocal::Same ||
-                          infoTarget.nextLocal == NextBlockLocal::Above ) {
-
+                        infoTarget.nextLocal == NextBlockLocal::Above ) {
+                    
                     float distancePerStep;
-
+                    
                     if ( infoTarget.nextLocal == NextBlockLocal::Same)
-                    distancePerStep = 0.5f + _mechanicsPattern.radiusBall;
-
+                        distancePerStep = 0.5f + _mechanicsPattern.radiusBall;
+                    
                     if ( infoTarget.nextLocal == NextBlockLocal::Above)
-                    distancePerStep = 0.5f - _mechanicsPattern.radiusBall;
-                   
+                        distancePerStep = 0.5f - _mechanicsPattern.radiusBall;
+                    
                     float timeStep1 = sSinceAction;
                     if (timeStep1 > timeToGetNextBlock/2.f) 
                         timeStep1 = timeToGetNextBlock/2.f;
-
+                    
                     float timeStep2 = sSinceAction - timeToGetNextBlock/2.f;
                     if (timeStep2 < 0) 
                         timeStep2 = 0;
-
+                    
                     _3DPosX = position3D.at(0);
                     _3DPosY = position3D.at(1);
                     _3DPosZ = position3D.at(2);
-
+                    
                     switch (_lookTowards) {
                         case JumperBallTypes::Direction::North:
                             _3DPosZ = static_cast<float>(position3D.at(2)) 
@@ -1070,16 +1075,29 @@ void Ball::update() noexcept{
                 }
                 
             }
-        }
+    	  } else if ( _state == Ball::State::TurningLeft ||
+                    _state == Ball::State::TurningRight) {
+              
+              float sSinceAction = getTimeSecondsSinceAction();
+              if (sSinceAction  >= timeToGetNextBlock) {
+                  stay();
+                  update();
+              } else {
+                  position3D = {x,y,z};
+                  _3DPosX = position3D.at(0);
+                  _3DPosY = position3D.at(1);
+                  _3DPosZ = position3D.at(2);
+              }
+          }
     } else if ( _state == Ball::State::Jumping){
         ClassicalMechanics::physics2DVector pos2D = 
                 _mechanicsPattern.getPosition(getTimeSecondsSinceAction());
         std::array<float,3> relativePositionJump = P2DTo3D(pos2D);
         
         position3D = {  relativePositionJump.at(0),
-                        relativePositionJump.at(1),
-                        relativePositionJump.at(2),
-                      };
+        relativePositionJump.at(1),
+        relativePositionJump.at(2),
+        };
         _3DPosX = position3D.at(0);
         _3DPosY = position3D.at(1);
         _3DPosZ = position3D.at(2);

@@ -42,12 +42,8 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
     _idVertexBuffer(),
     _vData()
 {
-
-
     _spMap.use();
-
     glEnable(GL_DEPTH_TEST);  
-
 }
 
 
@@ -80,25 +76,14 @@ void Rendering::render() {
 void Rendering::renderCamera() {
 
 
-  //_camera.follow(_ball);
-
-  const glm::vec3 positionCam  = _camera.pos();
-  const glm::vec3 directionCam = _camera.dir();
-  const glm::vec3 upCam        = _camera.up();
-
   _uniformMatrix4["VP"] =  glm::mat4(
   glm::perspective(glm::radians(70.f), 4.f/3.f, _camera._zNear, _camera._zFar)
-  * glm::lookAt ( positionCam, directionCam, upCam )); 
+  * glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())); 
 
   const std::array<float,3> positionBall = _ball.get3DPosition();
   _uniformVec3["positionBall"] = glm::vec3( positionBall.at(0),
                                             positionBall.at(1),
                                             positionBall.at(2));
-
-  /*const std::array<float,3> lookTowardsDir = _ball.lookTowardsAsVector();
-  _uniformVec3["lookDirection"] = glm::vec3(lookTowardsDir.at(0),
-                                            lookTowardsDir.at(1),
-                                            lookTowardsDir.at(2));*/
 
   _uniformVec3["lookDirection"] = 
       glm::normalize( glm::cross  ( _camera.up() , 
@@ -107,26 +92,22 @@ void Rendering::renderCamera() {
                                   );
 
   _uniformFloat["distanceBehind"] = _ball.distanceBehindBall();
-  
  
-  const GLuint MatrixID = glGetUniformLocation(_spMap.getHandle(), "VP");
-  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &_uniformMatrix4.at("VP")[0][0]);
+  const GLuint MatrixID         = glGetUniformLocation(_spMap.getHandle(),"VP");
+  glUniformMatrix4fv(MatrixID,  1, GL_FALSE, &_uniformMatrix4.at("VP")[0][0]);
   
-  const GLuint posBallID = glGetUniformLocation(_spMap.getHandle(), 
-                                                "positionBall");
-  glUniform3fv(posBallID, 1, &_uniformVec3.at("positionBall")[0]);
+  const GLuint posBallID        = glGetUniformLocation(_spMap.getHandle(), 
+                                                        "positionBall");
+  glUniform3fv(posBallID,       1, &_uniformVec3.at("positionBall")[0]);
 
-  const GLuint lookDirectionID = glGetUniformLocation(_spMap.getHandle(),
-                                                      "lookDirection");
+  const GLuint lookDirectionID  = glGetUniformLocation(_spMap.getHandle(),
+                                                        "lookDirection");
   glUniform3fv(lookDirectionID, 1, &_uniformVec3.at("lookDirection")[0]);
 
   const GLuint distanceBehindID = glGetUniformLocation(_spMap.getHandle(),
-                                                      "distanceBehind");
-  glUniform1fv(distanceBehindID, 1, &_uniformFloat.at("distanceBehind"));
+                                                        "distanceBehind");
+  glUniform1fv(distanceBehindID,1, &_uniformFloat.at("distanceBehind"));
 }
-
-
-
 
 Rendering::~Rendering() {
 

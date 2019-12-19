@@ -35,7 +35,6 @@ Mesh::Mesh(const Ball& ball):
     glGenBuffers(2, _idVertexBuffer.data());
 
 
-
     const unsigned int  iParaCount  = 40;
     const unsigned int  iMeriCount  = 60;
     const float         r           = ball.getRadius();
@@ -158,10 +157,13 @@ Mesh::Mesh(const Map& map):
                     }
 
                     std::vector<GLfloat> cCube=Utility::getColorsLocalCube();
+                    std::vector<GLfloat> nCube=Utility::getNormalsLocalCube();
                     for (unsigned int i = 0 ; i < cCube.size(); i += 3 )
                     {
-                        _colors.push_back(glm::vec3(cCube.at(i),cCube.at(i+1)
-                                          ,cCube.at(i+2)));
+                        _colors.push_back(
+                          glm::vec3(cCube.at(i),cCube.at(i+1) ,cCube.at(i+2)));
+                        _normals.push_back(
+                          glm::vec3(nCube.at(i),nCube.at(i+1) ,nCube.at(i+2)));
                     }
 
 
@@ -220,7 +222,7 @@ void Mesh::render() const {
             );
 
     if (_useIndexing) {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
+        glBindBuffer  (GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
         glDrawElements(GL_TRIANGLES,_indices.size(),GL_UNSIGNED_SHORT,nullptr);
     }
     else {

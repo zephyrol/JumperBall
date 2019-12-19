@@ -30,7 +30,8 @@ public:
 
 
     //------------TYPES------------//
-    enum class State            { Staying, Moving, Jumping };
+    enum class State            { Staying, Moving, Jumping, 
+                                  TurningLeft, TurningRight };
 
     enum class ActionRequest    { GoStraightAhead, TurnLeft, TurnRight, Jump};
     enum class AnswerRequest    { Accepted, Rejected };

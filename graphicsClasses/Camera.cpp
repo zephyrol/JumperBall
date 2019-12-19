@@ -122,30 +122,30 @@ void Camera::follow(const Ball& ball) noexcept {
             break;
     }
 
+    const auto getAxis = [] (JumperBallTypes::Direction direction) {
+        glm::vec3 axisVector; 
+        switch (direction) {
+            case JumperBallTypes::Direction::North:
+                axisVector = {0.f,0.f,-1.f}; break;
+            case JumperBallTypes::Direction::South:
+                axisVector = {0.f,0.f,1.f}; break;
+            case JumperBallTypes::Direction::East:
+                axisVector = {1.f,0.f,0.f}; break;
+            case JumperBallTypes::Direction::West:
+                axisVector = {-1.f,0.f,0.f}; break;
+            case JumperBallTypes::Direction::Up:
+                axisVector = {0.f,1.f,0.f}; break;
+            case JumperBallTypes::Direction::Down:
+                axisVector = {0.f,-1.f,0.f}; break;
+            default :
+                break;
+        }
+        return axisVector;
+    };
+
+    const float timeSinceAction         = ball.getTimeSecondsSinceAction();
+
     if (stateBall == Ball::State::Moving) {
-        
-        auto getAxis = [] (JumperBallTypes::Direction direction) {
-            glm::vec3 axisVector; 
-            switch (direction) {
-                case JumperBallTypes::Direction::North:
-                    axisVector = {0.f,0.f,-1.f}; break;
-                case JumperBallTypes::Direction::South:
-                    axisVector = {0.f,0.f,1.f}; break;
-                case JumperBallTypes::Direction::East:
-                    axisVector = {1.f,0.f,0.f}; break;
-                case JumperBallTypes::Direction::West:
-                    axisVector = {-1.f,0.f,0.f}; break;
-                case JumperBallTypes::Direction::Up:
-                    axisVector = {0.f,1.f,0.f}; break;
-                case JumperBallTypes::Direction::Down:
-                    axisVector = {0.f,-1.f,0.f}; break;
-                default :
-                    break;
-            }
-            return axisVector;
-        };
-        
-        const float timeSinceAction         = ball.getTimeSecondsSinceAction();
         const auto  infoNext                = ball.getNextBlockInfo();
 
         const glm::vec3 axisOldLook      = getAxis(lookingDirection);
@@ -158,12 +158,35 @@ void Camera::follow(const Ball& ball) noexcept {
         const glm::quat quaternion (eulerAngles);
         matRotationCam = glm::toMat4(quaternion); 
     }
-    else {
+    else if (stateBall == Ball::State::TurningLeft) {
+        const glm::vec3 axisRotation     = glm::vec3(upVec);
+         
+        const glm::vec3 eulerAngles = 
+        -(static_cast<float>(M_PI)/2) * axisRotation
+        +
+        (timeSinceAction* 
+          (static_cast<float>(M_PI)/2)/ ball.timeToGetNextBlock) * axisRotation;
+
+        const glm::quat quaternion (eulerAngles);
+        matRotationCam = glm::toMat4(quaternion); 
+    }
+    else if (stateBall == Ball::State::TurningRight) {
+        const glm::vec3 axisRotation     = glm::vec3(upVec);
+         
+        const glm::vec3 eulerAngles = 
+        (static_cast<float>(M_PI)/2) * axisRotation
+        -
+        (timeSinceAction* 
+          (static_cast<float>(M_PI)/2)/ ball.timeToGetNextBlock) * axisRotation;
+
+        const glm::quat quaternion (eulerAngles);
+        matRotationCam = glm::toMat4(quaternion); 
+         
     }
 
     posVec = matPosBall * matRotationCam * matPosCam * posVec;
     dirVec = matPosBall * matRotationCam * matDirCam * dirVec;
-    upVec = matRotationCam * upVec;
+    upVec  = matRotationCam * upVec;
 
     _upX  = upVec.x;
     _upY  = upVec.y;
