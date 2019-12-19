@@ -82,28 +82,29 @@ void Rendering::renderCamera() {
 
   //_camera.follow(_ball);
 
-  const std::array<float,3> positionCam  = _camera.pos();
-  const std::array<float,3> directionCam = _camera.dir();
-  const std::array<float,3> upCam        = _camera.up();
+  const glm::vec3 positionCam  = _camera.pos();
+  const glm::vec3 directionCam = _camera.dir();
+  const glm::vec3 upCam        = _camera.up();
 
   _uniformMatrix4["VP"] =  glm::mat4(
   glm::perspective(glm::radians(70.f), 4.f/3.f, _camera._zNear, _camera._zFar)
-  * glm::lookAt (
-        glm::vec3( positionCam.at(0),  positionCam.at(1),   positionCam.at(2)), 
-        glm::vec3( directionCam.at(0), directionCam.at(1),  directionCam.at(2)), 
-        glm::vec3( upCam.at(0),        upCam.at(1),         upCam.at(2))
-                )
-                                    ); 
+  * glm::lookAt ( positionCam, directionCam, upCam )); 
 
   const std::array<float,3> positionBall = _ball.get3DPosition();
   _uniformVec3["positionBall"] = glm::vec3( positionBall.at(0),
                                             positionBall.at(1),
                                             positionBall.at(2));
 
-  const std::array<float,3> lookTowardsDir = _ball.lookTowardsAsVector();
+  /*const std::array<float,3> lookTowardsDir = _ball.lookTowardsAsVector();
   _uniformVec3["lookDirection"] = glm::vec3(lookTowardsDir.at(0),
                                             lookTowardsDir.at(1),
-                                            lookTowardsDir.at(2));
+                                            lookTowardsDir.at(2));*/
+
+  _uniformVec3["lookDirection"] = 
+      glm::normalize( glm::cross  ( _camera.up() , 
+                                    glm::cross( _camera.dir() - _camera.pos(),
+                                                _camera.up()))
+                                  );
 
   _uniformFloat["distanceBehind"] = _ball.distanceBehindBall();
   

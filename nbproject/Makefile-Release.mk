@@ -36,7 +36,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/coreClasses/Ball.o \
-	${OBJECTDIR}/coreClasses/Camera.o \
 	${OBJECTDIR}/coreClasses/ClassicalMechanics.o \
 	${OBJECTDIR}/coreClasses/Map.o \
 	${OBJECTDIR}/coreClasses/blocks/BaseBlock.o \
@@ -45,6 +44,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/coreClasses/blocks/FireBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/IceBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o \
+	${OBJECTDIR}/graphicsClasses/Camera.o \
 	${OBJECTDIR}/graphicsClasses/Mesh.o \
 	${OBJECTDIR}/graphicsClasses/Rendering.o \
 	${OBJECTDIR}/graphicsClasses/Shader.o \
@@ -59,8 +59,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline
-CXXFLAGS=-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline
+CCFLAGS=-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline
+CXXFLAGS=-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -83,11 +83,6 @@ ${OBJECTDIR}/coreClasses/Ball.o: coreClasses/Ball.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Ball.o coreClasses/Ball.cpp
-
-${OBJECTDIR}/coreClasses/Camera.o: coreClasses/Camera.cpp
-	${MKDIR} -p ${OBJECTDIR}/coreClasses
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Camera.o coreClasses/Camera.cpp
 
 ${OBJECTDIR}/coreClasses/ClassicalMechanics.o: coreClasses/ClassicalMechanics.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses
@@ -128,6 +123,11 @@ ${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o: coreClasses/blocks/SpicyBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o coreClasses/blocks/SpicyBlock.cpp
+
+${OBJECTDIR}/graphicsClasses/Camera.o: graphicsClasses/Camera.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Camera.o graphicsClasses/Camera.cpp
 
 ${OBJECTDIR}/graphicsClasses/Mesh.o: graphicsClasses/Mesh.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses

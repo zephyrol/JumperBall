@@ -8,7 +8,7 @@
       <itemPath>coreClasses/blocks/BaseBlock.h</itemPath>
       <itemPath>coreClasses/blocks/Block.h</itemPath>
       <itemPath>coreClasses/blocks/BrittleBlock.h</itemPath>
-      <itemPath>coreClasses/Camera.h</itemPath>
+      <itemPath>graphicsClasses/Camera.h</itemPath>
       <itemPath>coreClasses/ClassicalMechanics.h</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.h</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.h</itemPath>
@@ -34,7 +34,7 @@
       <itemPath>coreClasses/blocks/BaseBlock.cpp</itemPath>
       <itemPath>coreClasses/blocks/Block.cpp</itemPath>
       <itemPath>coreClasses/blocks/BrittleBlock.cpp</itemPath>
-      <itemPath>coreClasses/Camera.cpp</itemPath>
+      <itemPath>graphicsClasses/Camera.cpp</itemPath>
       <itemPath>coreClasses/ClassicalMechanics.cpp</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.cpp</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.cpp</itemPath>
@@ -86,7 +86,7 @@
             <pElem>coreClasses</pElem>
             <pElem>libs</pElem>
           </incDir>
-          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline</commandLine>
+          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline</commandLine>
         </ccTool>
         <linkerTool>
           <commandLine>-lglfw -ldl</commandLine>
@@ -95,10 +95,6 @@
       <item path="coreClasses/Ball.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/Ball.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/Camera.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="coreClasses/Camera.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="coreClasses/ClassicalMechanics.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -136,6 +132,10 @@
       <item path="coreClasses/blocks/SpicyBlock.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/blocks/SpicyBlock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/Camera.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/Camera.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphicsClasses/Mesh.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -198,7 +198,7 @@
             <pElem>coreClasses</pElem>
             <pElem>libs</pElem>
           </incDir>
-          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Weffc++ -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline</commandLine>
+          <commandLine>-Werror -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -213,10 +213,6 @@
       <item path="coreClasses/Ball.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/Ball.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="coreClasses/Camera.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="coreClasses/Camera.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="coreClasses/ClassicalMechanics.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -254,6 +250,10 @@
       <item path="coreClasses/blocks/SpicyBlock.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/blocks/SpicyBlock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/Camera.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/Camera.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphicsClasses/Mesh.cpp" ex="false" tool="1" flavor2="0">
       </item>

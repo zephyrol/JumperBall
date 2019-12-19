@@ -73,6 +73,14 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         b.update();
         c.follow(b);
 
+        if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS) {
+            //if (!enterButton) {
+                enterButton = true;
+                std::cout << "Key Enter Press" << std::endl;
+                b.doAction(Ball::ActionRequest::Jump);
+            //}
+        }
+
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_PRESS) {
             if (!rightButton) {
                 rightButton = true;
@@ -97,12 +105,11 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
             //}
         }
 
-        if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS) {
-            //if (!enterButton) {
-                enterButton = true;
-                std::cout << "Key Enter Press" << std::endl;
-                b.doAction(Ball::ActionRequest::Jump);
-            //}
+        if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE) {
+            if (enterButton) {
+                enterButton = false;
+                std::cout << "Key Enter Release" << std::endl;
+            }
         }
 
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_RELEASE) {
@@ -126,12 +133,6 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
             }
         }
 
-        if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE) {
-            if (enterButton) {
-                enterButton = false;
-                std::cout << "Key Enter Release" << std::endl;
-            }
-        }
 
         b.update();
         c.follow(b);

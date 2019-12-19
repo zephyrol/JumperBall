@@ -13,9 +13,14 @@
 
 #ifndef CAMERA_H
 #define CAMERA_H
-#include "Types.h"
-#include "Ball.h"
-#include "Map.h"
+#include <Types.h>
+#include <Ball.h>
+#include <Map.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp> 
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 class Camera {
 
@@ -32,9 +37,9 @@ public:
 
 
     //-------CONST METHODS----------//
-    std::array<float,3>           pos()                          const noexcept;
-    std::array<float,3>           dir()                          const noexcept;
-    std::array<float,3>           up()                           const noexcept;
+    glm::vec3                     pos()                          const noexcept;
+    glm::vec3                     dir()                          const noexcept;
+    glm::vec3                     up()                           const noexcept;
 
 
     //----------METHODS-------------//
@@ -44,9 +49,9 @@ public:
 private:
 
     //--------ATTRIBUTES-----------//
-    float                         _posX, _posY, _posZ;
-    float                         _dirX, _dirY, _dirZ;
-    float                         _upX, _upY, _upZ;
+    float                         _posX,  _posY,  _posZ;
+    float                         _dirX,  _dirY,  _dirZ;
+    float                         _upX,   _upY,   _upZ;
 
 };
 #endif /* CAMERA_H */

@@ -235,7 +235,7 @@ std::array<float,3> Ball::get3DPosition() const noexcept {
     return std::array<float,3> {_3DPosX,_3DPosY,_3DPosZ};
 }
 
-Ball::nextBlockInformation Ball::getNextBlock() const noexcept{
+Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
 
     struct nextBlockInformation nextBlock;
 
@@ -446,7 +446,7 @@ Ball::nextBlockInformation Ball::getNextBlock() const noexcept{
 
 void Ball::goStraightAhead() noexcept {
     
-    struct nextBlockInformation nextBlock = getNextBlock(); 
+    struct nextBlockInformation nextBlock = getNextBlockInfo(); 
     _currentBlockX  = nextBlock.poxX;
     _currentBlockY  = nextBlock.poxY;
     _currentBlockZ  = nextBlock.poxZ;
@@ -465,7 +465,7 @@ void Ball::stay() noexcept {
 
 void Ball::move() noexcept {
     
-    struct nextBlockInformation infos = getNextBlock();
+    struct nextBlockInformation infos = getNextBlockInfo();
     if (infos.nextLocal != NextBlockLocal::None)
     {
         _state = Ball::State::Moving;
@@ -954,7 +954,7 @@ void Ball::update() noexcept{
                 update();
             }
             else {
-                struct nextBlockInformation infoTarget = getNextBlock();
+                struct nextBlockInformation infoTarget = getNextBlockInfo();
                 position3D = {x,y,z};
 
                 if (infoTarget.nextLocal == NextBlockLocal::InFrontOf){
@@ -1087,4 +1087,8 @@ void Ball::update() noexcept{
         isFallingIntersectionBlock();
     }
     
+}
+
+Ball::State Ball::state() const {
+    return _state;
 }

@@ -19,7 +19,6 @@
 #include <vector>
 #include <Map.h>
 #include <Ball.h>
-#include <Camera.h>
 #include <glm/glm.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/matrix.hpp>
@@ -27,6 +26,7 @@
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include "Mesh.h"
+#include "Camera.h"
 
 
 class Rendering {

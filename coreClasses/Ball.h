@@ -62,11 +62,16 @@ public:
     JumperBallTypes::Direction  currentSide()                             const;
     JumperBallTypes::Direction  lookTowards()                             const;
     float                       distanceBehindBall()                      const;
+    Ball::State                 state()                                   const;
 
-    void                        update()                               noexcept;
+    float                       getTimeSecondsSinceAction()      const noexcept;
+
+	  struct nextBlockInformation getNextBlockInfo()					     const noexcept;
+
 
 
     //----------METHODS------------//
+    void                        update()                               noexcept;
     AnswerRequest               doAction ( ActionRequest action);
 
 
@@ -105,9 +110,6 @@ private:
 
     timePointMs                 getTimeActionMs()                const noexcept;
     float                       getTimeActionSecondsFloat()      const noexcept;
-    float                       getTimeSecondsSinceAction()      const noexcept;
-
-	  struct nextBlockInformation getNextBlock()					         const noexcept;
 
     std::array<float,3>         P2DTo3D(ClassicalMechanics::physics2DVector p2D)
                                                                           const;
