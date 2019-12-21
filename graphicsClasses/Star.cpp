@@ -25,7 +25,8 @@ Star::Star( const glm::vec3& colorInside, const glm::vec3& colorOutside,
         _radiusInside(radiusInside),
         _radiusOutside(radiusOutside),
         _transform( glm::translate(glm::vec3(0.f,0.f,-distance))
-                    * glm::scale(glm::vec3(radius,radius,radius)))
+                    * glm::scale(glm::vec3(radius,radius,radius))),
+        _timeCreation(Ball::getTimePointMSNow())
 {
     glGenVertexArrays(1, &_idVertexArray);
     glBindVertexArray(_idVertexArray);
@@ -85,7 +86,13 @@ GLfloat Star::radiusOutside() const {
 }
 
 glm::mat4 Star::transform() const {
-    return _transform;
+    float timeSinceCreation = Ball::getTimeSecondsSinceTimePoint(_timeCreation);
+    glm::mat4 rotationMatrix = glm::rotate( 
+                        timeSinceCreation*2.f*static_cast<float>(M_PI)/60.f,
+                        glm::vec3(0.f,1.f,0.f));
+
+    return rotationMatrix * _transform;
+
 }
 
 

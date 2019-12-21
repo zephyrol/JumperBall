@@ -111,6 +111,8 @@ void Rendering::render() {
     bindUniform ("MW",            _star.transform(),      _spStar);
     bindUniform ("radiusInside",  _star.radiusInside(),   _spStar);
     bindUniform ("radiusOutside", _star.radiusOutside(),  _spStar);
+    bindUniform ("colorInside",   _star.colorInside(),    _spStar);
+    bindUniform ("colorOutside",  _star.colorOutside(),   _spStar);
 
     renderCamera(_spStar);
     _star.draw();

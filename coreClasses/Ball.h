@@ -79,6 +79,8 @@ public:
     //--------STATIC METHODS-------//
     static timePointMs          getTimePointMSNow ()                   noexcept;
     static float                getTimeNowSecondsFloat()               noexcept;
+    static float                getTimeSecondsSinceTimePoint(
+                                    const timePointMs& timePoint)       noexcept;
     
 private:
     

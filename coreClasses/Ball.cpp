@@ -877,6 +877,21 @@ float Ball::getTimeSecondsSinceAction() const noexcept{
     return fDifference;
 }
 
+float Ball::getTimeSecondsSinceTimePoint(const timePointMs& timePoint) noexcept{
+
+    const timePointMs timeNowMs              = getTimePointMSNow(); 
+    const durationMs timeNowSinceEpoch       = timeNowMs.time_since_epoch();
+    
+    const timePointMs timeActionMs           = timePoint; 
+    const durationMs timeActionSinceEpoch    = timeActionMs.time_since_epoch();
+    
+    const durationMs difference = timeNowSinceEpoch - timeActionSinceEpoch;
+    const std::chrono::duration<float> durationFloatDifference = difference;
+    const float fDifference = durationFloatDifference.count();
+
+    return fDifference;
+}
+
 std::array<float, 3> Ball::lookTowardsAsVector() const {
     std::array<float,3> lookVec3 {0.f,0.f,0.f};
     switch (_lookTowards) {

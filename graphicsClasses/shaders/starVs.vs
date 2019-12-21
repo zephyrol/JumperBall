@@ -2,17 +2,28 @@
 
 uniform mat4  VP;
 uniform mat4  MW;
-uniform vec3  positionBall;
-uniform vec3  lookDirection;
-uniform float distanceBehind;
+uniform float radiusInside;
+uniform float radiusOutside;
+uniform vec3  colorInside;
+uniform vec3  colorOutside;
 
 layout (location=0) in vec3 vs_vertexPosition;
 
-out vec3 fs_vertexColor;
+out vec3  fs_colorInside;
+out vec3  fs_colorOutside;
+
+out float fs_radiusInside;
+out float fs_radiusOutside;
+
+out vec3  fs_vertexPosition;
 
 void main() {
   float w = 1.f;
-  //fs_vertexColor  = vs_vertexColor;
+  fs_colorInside  = colorInside;
+  fs_colorOutside = colorOutside;
+  fs_radiusInside = radiusInside;
+  fs_radiusOutside = radiusOutside;
+  fs_vertexPosition = vs_vertexPosition; 
   gl_Position     = VP * MW * vec4(vs_vertexPosition,w);
 }
 
