@@ -49,6 +49,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/graphicsClasses/Rendering.o \
 	${OBJECTDIR}/graphicsClasses/Shader.o \
 	${OBJECTDIR}/graphicsClasses/ShaderProgram.o \
+	${OBJECTDIR}/graphicsClasses/Star.o \
 	${OBJECTDIR}/graphicsClasses/Utility.o \
 	${OBJECTDIR}/graphicsClasses/testClass.o \
 	${OBJECTDIR}/libs/glad/glad.o \
@@ -148,6 +149,11 @@ ${OBJECTDIR}/graphicsClasses/ShaderProgram.o: graphicsClasses/ShaderProgram.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/ShaderProgram.o graphicsClasses/ShaderProgram.cpp
+
+${OBJECTDIR}/graphicsClasses/Star.o: graphicsClasses/Star.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Star.o graphicsClasses/Star.cpp
 
 ${OBJECTDIR}/graphicsClasses/Utility.o: graphicsClasses/Utility.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses

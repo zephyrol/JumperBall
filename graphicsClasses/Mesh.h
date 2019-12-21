@@ -30,7 +30,7 @@ public:
     //-------CONST METHODS----------//
     const glm::mat4&        local()                                       const;
     const glm::mat4&        world()                                       const;
-    void render()                                                         const;
+    void                    draw()                                        const;
 
 
     //----------METHODS-------------//
@@ -52,10 +52,13 @@ private:
     GLuint                  _idElementBuffer;
 
     GLuint                  _idVertexArray;
-    std::array<GLuint,2>    _idVertexBuffer;
+    std::array<GLuint,3>    _idVertexBuffer;
 
     glm::mat4               _local;
     glm::mat4               _world;
+
+    //-------CONST METHODS----------//
+    void                    bindVertexData()                              const;
 };
 
 #endif /* MESH_H */

@@ -32,7 +32,7 @@ Mesh::Mesh(const Ball& ball):
     glGenVertexArrays(1, &_idVertexArray);
     glBindVertexArray(_idVertexArray);
 
-    glGenBuffers(2, _idVertexBuffer.data());
+    glGenBuffers(3, _idVertexBuffer.data());
 
 
     const unsigned int  iParaCount  = 40;
@@ -72,7 +72,6 @@ Mesh::Mesh(const Ball& ball):
         _colors.push_back(_normals[i]);
     }
     
-    //GLuint iElementsCount = ( iMeriCount - 1 ) * ( iParaCount - 1 ) * 2 * 3; 
     // for quads split in 2
     
     for( unsigned int i = 0; i < ( iParaCount - 1 ); ++i )
@@ -92,27 +91,8 @@ Mesh::Mesh(const Ball& ball):
     _world = glm::translate(_world, glm::vec3(positionBall.at(0),
                             positionBall.at(1) ,positionBall.at(2)));
 
-    std::vector<GLfloat> positionsList ;
-    for (glm::vec3 pos : _positions) {
-      positionsList.push_back(pos.x) ;
-      positionsList.push_back(pos.y) ;
-      positionsList.push_back(pos.z) ;
-    }
 
-    std::vector<GLfloat> colorsList;
-    for (glm::vec3 color : _colors) {
-      colorsList.push_back(color.x) ;
-      colorsList.push_back(color.y) ;
-      colorsList.push_back(color.z) ;
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
-    glBufferData(GL_ARRAY_BUFFER, positionsList.size() * sizeof(GLfloat), 
-            positionsList.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
-    glBufferData(GL_ARRAY_BUFFER, colorsList.size() * sizeof(GLfloat), 
-            colorsList.data(), GL_STATIC_DRAW);
+    bindVertexData();
 
     glGenBuffers(1, &_idElementBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
@@ -137,7 +117,7 @@ Mesh::Mesh(const Map& map):
     glGenVertexArrays(1, &_idVertexArray);
     glBindVertexArray(_idVertexArray);
 
-    glGenBuffers(2, _idVertexBuffer.data());
+    glGenBuffers(3, _idVertexBuffer.data());
 
 
     for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
@@ -172,6 +152,11 @@ Mesh::Mesh(const Map& map):
         }
     }
     
+    bindVertexData();
+}
+
+void Mesh::bindVertexData() const {
+
     std::vector<GLfloat> positionsList ;
     for (glm::vec3 pos : _positions) {
       positionsList.push_back(pos.x) ;
@@ -186,6 +171,13 @@ Mesh::Mesh(const Map& map):
       colorsList.push_back(color.z) ;
     }
 
+    std::vector<GLfloat> normalsList;
+    for (glm::vec3 normal: _normals) {
+      normalsList.push_back(normal.x) ;
+      normalsList.push_back(normal.y) ;
+      normalsList.push_back(normal.z) ;
+    }
+
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
     glBufferData(GL_ARRAY_BUFFER, positionsList.size() * sizeof(GLfloat), 
             positionsList.data(), GL_STATIC_DRAW);
@@ -193,12 +185,18 @@ Mesh::Mesh(const Map& map):
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
     glBufferData(GL_ARRAY_BUFFER, colorsList.size() * sizeof(GLfloat), 
             colorsList.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(2));
+    glBufferData(GL_ARRAY_BUFFER, normalsList.size() * sizeof(GLfloat), 
+            normalsList.data(), GL_STATIC_DRAW);
+
 }
 
-void Mesh::render() const {
+void Mesh::draw() const {
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
     
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
     
@@ -221,6 +219,16 @@ void Mesh::render() const {
             nullptr
             );
 
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(2));
+    glVertexAttribPointer ( 
+            2,
+            3, // 3 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+
     if (_useIndexing) {
         glBindBuffer  (GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
         glDrawElements(GL_TRIANGLES,_indices.size(),GL_UNSIGNED_SHORT,nullptr);
@@ -228,6 +236,10 @@ void Mesh::render() const {
     else {
         glDrawArrays(GL_TRIANGLES,0,_positions.size());
     }
+
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
 }
 
 const glm::mat4& Mesh::local() const {

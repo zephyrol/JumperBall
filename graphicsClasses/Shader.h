@@ -44,7 +44,7 @@ private:
     const std::string _shaderCode;
 
     //-------CONST METHODS--------//
-    void              verifyCompileStatus() const;
+    void              verifyCompileStatus()                               const;
 
 };
 

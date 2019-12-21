@@ -43,11 +43,15 @@ int main(int argc, char** argv) {
         ClassicalMechanics newton;
         newton.printEulerBuffer();
 
-        
         Ball b (m);
         Camera c;
+
+        //Defining t allows to create an OpenGl context
         testClass t;
-        Rendering rendering (m,b,c);
+        
+        Star s (glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f)
+                ,0.1f,0.3f,10.f,5.f);
+        Rendering rendering (m,b,s,c);
         t.run(rendering,b,c);
     }
     else {

@@ -5,6 +5,5 @@ in vec3 fs_vertexColor;
 in vec3 fs_vertexNormal;
 
 void main() {
-  float opacity = 1.f;
-  pixelColor = vec4(fs_vertexColor, opacity);
+    pixelColor = vec4(1.f,1.f,1.f,1.f);
 }

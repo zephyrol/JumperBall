@@ -48,18 +48,19 @@ testClass::testClass(): _window(nullptr)
     }
 
 
-    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);  
 }
 
 void testClass::run(Rendering& r, Ball& b, Camera& c) {
    
 
-    bool leftButton = false;
-    bool rightButton = false;
-    bool upButton = false;
-    bool enterButton = false;
+    bool leftButton   = false;
+    bool rightButton  = false;
+    bool upButton     = false;
+    bool enterButton  = false;
     //unsigned int counter = 0;
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
@@ -67,6 +68,7 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
 
         //std::cout << "counter " << counter << std::endl;
         //counter++;
+        //glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
         glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

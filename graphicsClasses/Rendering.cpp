@@ -13,18 +13,16 @@
 
 #include "Rendering.h"
 
-const std::map<Rendering::Attribute,unsigned int> Rendering::nbComponents {
-    {Rendering::Attribute::Positions,  3},
-    {Rendering::Attribute::Normals,    3},
-    {Rendering::Attribute::Colors,     3},
-    {Rendering::Attribute::UVCoords,   2}
-};
+const std::string Rendering::vsshaderMap  = "graphicsClasses/shaders/mapVs.vs";
+const std::string Rendering::fsshaderMap  = "graphicsClasses/shaders/mapFs.fs";
 
-const std::string Rendering::vsshaderMap = "graphicsClasses/shaders/mapVs.vs";
-const std::string Rendering::fsshaderMap = "graphicsClasses/shaders/mapFs.fs";
+const std::string Rendering::vsshaderStar = "graphicsClasses/shaders/starVs.vs";
+const std::string Rendering::fsshaderStar = "graphicsClasses/shaders/starFs.fs";
 
-
-Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
+Rendering::Rendering(const Map&     map, 
+                     const Ball&    ball, 
+                     const Star&    star, 
+                     const Camera&  camera):
     _uniformMatrix4(),
     _uniformVec4(),
     _uniformVec3(),
@@ -35,78 +33,119 @@ Rendering::Rendering(const Map& map, const Ball& ball, const Camera& camera):
     _meshBall(ball),
     _map(map),
     _ball(ball),
+    _star(star),
     _camera(camera),
     _spMap( Shader (GL_VERTEX_SHADER, vsshaderMap ),
             Shader (GL_FRAGMENT_SHADER, fsshaderMap )),
-    _idVertexArray(),
-    _idVertexBuffer(),
-    _vData()
+    _spStar(Shader (GL_VERTEX_SHADER, vsshaderStar ),
+            Shader (GL_FRAGMENT_SHADER, fsshaderStar ))
 {
-    _spMap.use();
-    glEnable(GL_DEPTH_TEST);  
 }
 
+void Rendering::bindUniform(const std::string& name, 
+                            const glm::mat4& value, 
+                            const ShaderProgram& sp) {
 
-Rendering::verticesAttributeData<GLfloat> Rendering::mapVertices() {
-    Rendering::verticesAttributeData<GLfloat> data;
-    return data;
+    const GLuint uniformVariableID =
+            glGetUniformLocation(sp.getHandle(),name.c_str());
+    glUniformMatrix4fv( uniformVariableID, 1, GL_FALSE, &value[0][0]);
+}
+
+void Rendering::bindUniform(const std::string& name, 
+                            const glm::vec4& value, 
+                            const ShaderProgram& sp) {
+
+    const GLuint uniformVariableID =
+            glGetUniformLocation(sp.getHandle(),name.c_str());
+    glUniform4fv( uniformVariableID, 1, &value[0]);
+}
+
+void Rendering::bindUniform(const std::string& name, 
+                            const glm::vec3& value, 
+                            const ShaderProgram& sp) {
+
+    const GLuint uniformVariableID =
+            glGetUniformLocation(sp.getHandle(),name.c_str());
+    glUniform3fv( uniformVariableID, 1, &value[0]);
+}
+
+void Rendering::bindUniform(const std::string& name, 
+                            const glm::vec2& value, 
+                            const ShaderProgram& sp) {
+
+    const GLuint uniformVariableID =
+            glGetUniformLocation(sp.getHandle(),name.c_str());
+    glUniform2fv( uniformVariableID, 1, &value[0]);
+}
+
+void Rendering::bindUniform(const std::string& name, 
+                            const GLfloat& value, 
+                            const ShaderProgram& sp) {
+
+    const GLuint uniformVariableID =
+            glGetUniformLocation(sp.getHandle(),name.c_str());
+    glUniform1fv( uniformVariableID, 1, &value);
 }
 
 void Rendering::render() {
     
-    renderCamera();
+    //Ball and Map
+    _spMap.use();
+    renderCamera(_spMap);
 
-    GLuint modelWorldID = glGetUniformLocation(_spMap.getHandle(), "MW");
+    //Ball
     _meshBall.updateMatrices(_ball);
-    glm::mat4 matModelWorld = _meshBall.world() * _meshBall.local();
-    glUniformMatrix4fv(modelWorldID, 1, GL_FALSE, &matModelWorld[0][0]);
 
-    //Utility::printMatrix(matModelWorld);
+    bindUniform ("MW", _meshBall.world() * _meshBall.local(), _spStar);
 
-    _meshBall.render();
+    _meshBall.draw();
 
-    matModelWorld = glm::mat4(1.f);
-    glUniformMatrix4fv(modelWorldID, 1, GL_FALSE, &matModelWorld[0][0]);
-    _meshMap.render();
+    //Map
+    bindUniform ("MW", glm::mat4(1.f), _spStar);
+    _meshMap.draw();
 
+
+    //Star
+    _spStar.use();
+
+    bindUniform ("MW",            _star.transform(),      _spStar);
+    bindUniform ("radiusInside",  _star.radiusInside(),   _spStar);
+    bindUniform ("radiusOutside", _star.radiusOutside(),  _spStar);
+
+    renderCamera(_spStar);
+    _star.draw();
 
 }
 
 
-void Rendering::renderCamera() {
+void Rendering::renderCamera(const ShaderProgram& sp) {
 
+  const std::string nameVP = "VP";
+  const std::string namePositionBall = "positionBall";
+  const std::string nameDistanceBehind = "distanceBehind";
+  const std::string nameLookDirection = "lookDirection";
 
-  _uniformMatrix4["VP"] =  glm::mat4(
+  _uniformMatrix4[nameVP] =  glm::mat4(
   glm::perspective(glm::radians(70.f), 4.f/3.f, _camera._zNear, _camera._zFar)
   * glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())); 
 
   const std::array<float,3> positionBall = _ball.get3DPosition();
-  _uniformVec3["positionBall"] = glm::vec3( positionBall.at(0),
+  _uniformVec3[namePositionBall] = glm::vec3( positionBall.at(0),
                                             positionBall.at(1),
                                             positionBall.at(2));
 
-  _uniformVec3["lookDirection"] = 
+  _uniformVec3[nameLookDirection] = 
       glm::normalize( glm::cross  ( _camera.up() , 
                                     glm::cross( _camera.dir() - _camera.pos(),
                                                 _camera.up()))
                                   );
 
-  _uniformFloat["distanceBehind"] = _ball.distanceBehindBall();
- 
-  const GLuint MatrixID         = glGetUniformLocation(_spMap.getHandle(),"VP");
-  glUniformMatrix4fv(MatrixID,  1, GL_FALSE, &_uniformMatrix4.at("VP")[0][0]);
-  
-  const GLuint posBallID        = glGetUniformLocation(_spMap.getHandle(), 
-                                                        "positionBall");
-  glUniform3fv(posBallID,       1, &_uniformVec3.at("positionBall")[0]);
+  _uniformFloat[nameDistanceBehind] = _ball.distanceBehindBall();
 
-  const GLuint lookDirectionID  = glGetUniformLocation(_spMap.getHandle(),
-                                                        "lookDirection");
-  glUniform3fv(lookDirectionID, 1, &_uniformVec3.at("lookDirection")[0]);
-
-  const GLuint distanceBehindID = glGetUniformLocation(_spMap.getHandle(),
-                                                        "distanceBehind");
-  glUniform1fv(distanceBehindID,1, &_uniformFloat.at("distanceBehind"));
+  bindUniform (nameVP,              _uniformMatrix4.at(nameVP),           sp);
+  bindUniform (namePositionBall,    _uniformVec3.at(namePositionBall),    sp);
+  bindUniform (nameLookDirection,   _uniformVec3.at(nameLookDirection),   sp);
+  bindUniform (nameDistanceBehind,  _uniformFloat.at(nameDistanceBehind), sp);
 }
 
 Rendering::~Rendering() {

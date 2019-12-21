@@ -27,6 +27,7 @@
 #include "ShaderProgram.h"
 #include "Mesh.h"
 #include "Camera.h"
+#include "Star.h"
 
 
 class Rendering {
@@ -36,13 +37,10 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     Rendering                       ( const Map& map, 
                                       const Ball& ball, 
+                                      const Star& star, 
                                       const Camera& camera );
     virtual                         ~Rendering();
 
-
-    //------------TYPES------------//
-    enum class Attribute            { Positions, Normals, Colors, UVCoords };
-    
 
     //------------METHODS----------//
     void render() ; 
@@ -50,46 +48,64 @@ public:
 private:
 
     //------------TYPES------------//
-    template<typename T>
-    using verticesAttributeData =   std::map<Attribute,std::vector<T> >;
 
     template<typename T>
-    using uniformValue =            std::map<std::string,T >;
+    using uniformVariable           = std::map<std::string,T >;
     
 
     //--------ATTRIBUTES-----------//
-    uniformValue<glm::mat4>         _uniformMatrix4;
-    uniformValue<glm::vec4>         _uniformVec4;
-    uniformValue<glm::vec3>         _uniformVec3;
-    uniformValue<glm::vec2>         _uniformVec2;
-    uniformValue<GLfloat>           _uniformFloat;
-    uniformValue<bool>              _uniformBool;
+    uniformVariable<glm::mat4>      _uniformMatrix4;
+    uniformVariable<glm::vec4>      _uniformVec4;
+    uniformVariable<glm::vec3>      _uniformVec3;
+    uniformVariable<glm::vec2>      _uniformVec2;
+    uniformVariable<GLfloat>        _uniformFloat;
+    uniformVariable<bool>           _uniformBool;
 
     Mesh                            _meshMap;
     Mesh                            _meshBall;
 
     const Map&                      _map;
     const Ball&                     _ball;
+    const Star&                     _star;
     const Camera&                   _camera;
 
     const ShaderProgram             _spMap;
-    GLuint                          _idVertexArray;
-    std::array<GLuint,2>            _idVertexBuffer;
-    verticesAttributeData<GLfloat>  _vData;
+    const ShaderProgram             _spStar;
 
 
     //------------METHODS----------//
-    verticesAttributeData<GLfloat>  mapVertices ();
     void                            renderMap();
-    void                            renderCamera();
+    void                            renderCamera(const ShaderProgram& sp);
 
+    void                            bindUniform(const std::string&    name,
+                                                const glm::mat4&      value,
+                                                const ShaderProgram&  sp);
 
+    void                            bindUniform(const std::string&    name,
+                                                const glm::vec4&      value,
+                                                const ShaderProgram&  sp);
 
-    //--------STATIC METHODS-------//
-    static const std::map<Attribute,unsigned int> 
-                                    nbComponents;
+    void                            bindUniform(const std::string&    name,
+                                                const glm::vec3&      value,
+                                                const ShaderProgram&  sp);
+
+    void                            bindUniform(const std::string&    name,
+                                                const glm::vec2&      value,
+                                                const ShaderProgram&  sp);
+
+    void                            bindUniform(const std::string&    name,
+                                                const GLfloat&        value,
+                                                const ShaderProgram&  sp);
+
+    void                            bindUniform(const std::string&    name,
+                                                const bool&           value,
+                                                const ShaderProgram&  sp);
+
+    //------STATIC ATTRIBUTES------//
     static const std::string        vsshaderMap; 
     static const std::string        fsshaderMap; 
+    static const std::string        vsshaderStar; 
+    static const std::string        fsshaderStar; 
 
 };
 
