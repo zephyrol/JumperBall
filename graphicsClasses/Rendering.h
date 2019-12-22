@@ -101,6 +101,10 @@ private:
                                                 const bool&           value,
                                                 const ShaderProgram&  sp);
 
+    void                            bindUniformBlock(const std::string&    name,
+                                                const bool&           value,
+                                                const ShaderProgram&  sp);
+
     //------STATIC ATTRIBUTES------//
     static const std::string        vsshaderMap; 
     static const std::string        fsshaderMap; 

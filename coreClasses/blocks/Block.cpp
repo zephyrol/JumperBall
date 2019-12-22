@@ -16,9 +16,6 @@
 Block::Block() {
 }
 
-/*Block::Block(const Block& orig) {
-}*/
-
 Block::~Block() {
 }
 

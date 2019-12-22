@@ -18,12 +18,12 @@ out float fs_radiusOutside;
 out vec3  fs_vertexPosition;
 
 void main() {
-  float w = 1.f;
-  fs_colorInside  = colorInside;
-  fs_colorOutside = colorOutside;
-  fs_radiusInside = radiusInside;
-  fs_radiusOutside = radiusOutside;
+  const float w     = 1.f;
+  fs_colorInside    = colorInside;
+  fs_colorOutside   = colorOutside;
+  fs_radiusInside   = radiusInside;
+  fs_radiusOutside  = radiusOutside;
   fs_vertexPosition = vs_vertexPosition; 
-  gl_Position     = VP * MW * vec4(vs_vertexPosition,w);
+  gl_Position       = VP * MW * vec4(vs_vertexPosition,w);
 }
 

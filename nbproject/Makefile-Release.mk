@@ -52,6 +52,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/graphicsClasses/Star.o \
 	${OBJECTDIR}/graphicsClasses/Utility.o \
 	${OBJECTDIR}/graphicsClasses/testClass.o \
+	${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformBlock.o \
 	${OBJECTDIR}/libs/glad/glad.o \
 	${OBJECTDIR}/main.o
 
@@ -164,6 +165,11 @@ ${OBJECTDIR}/graphicsClasses/testClass.o: graphicsClasses/testClass.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/testClass.o graphicsClasses/testClass.cpp
+
+${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformBlock.o: graphicsClasses/uniformBlocks/uniformBlock.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/uniformBlocks
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformBlock.o graphicsClasses/uniformBlocks/uniformBlock.cpp
 
 ${OBJECTDIR}/libs/glad/glad.o: libs/glad/glad.c
 	${MKDIR} -p ${OBJECTDIR}/libs/glad

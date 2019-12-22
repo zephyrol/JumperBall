@@ -87,6 +87,21 @@ void Rendering::bindUniform(const std::string& name,
     glUniform1fv( uniformVariableID, 1, &value);
 }
 
+void Rendering::bindUniformBlock(const std::string& name, const bool& value, const ShaderProgram& sp) {
+     
+    // Index of block
+    const GLuint blockIndex = glGetUniformBlockIndex( sp.getHandle()
+                                                      ,name.c_str());
+    (void) value;
+    // Allocate space for the buffer to contain the data of the block
+    GLint blockSize;
+    glGetActiveUniformBlockiv ( sp.getHandle(), blockIndex, 
+                                GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
+    std::vector<GLubyte> dataBuffer (blockSize);
+
+}
+
+
 void Rendering::render() {
     
     //Ball and Map
@@ -149,6 +164,8 @@ void Rendering::renderCamera(const ShaderProgram& sp) {
   bindUniform (nameLookDirection,   _uniformVec3.at(nameLookDirection),   sp);
   bindUniform (nameDistanceBehind,  _uniformFloat.at(nameDistanceBehind), sp);
 }
+
+
 
 Rendering::~Rendering() {
 

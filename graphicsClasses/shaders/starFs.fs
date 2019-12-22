@@ -11,10 +11,17 @@ in float fs_radiusOutside;
 in vec3  fs_vertexPosition;
 
 void main() {
-    float dx = fs_vertexPosition.x - 0.5f;
-    float dy = fs_vertexPosition.y - 0.5f;
-    float dist = sqrt ( dx * dx + dy * dy );
 
-    pixelColor = mix (  vec4(fs_colorInside,1.f), vec4(fs_colorOutside,0.f),
-                        smoothstep ( fs_radiusInside, fs_radiusOutside, dist )); 
+    // Star center at the position 0.f,0.f
+    float dx          = fs_vertexPosition.x - 0.5f;
+    float dy          = fs_vertexPosition.y - 0.5f;
+
+    float distance    = sqrt ( dx * dx + dy * dy );
+    float coefficient = smoothstep( fs_radiusInside, 
+                                          fs_radiusOutside, 
+                                          distance);
+
+    pixelColor              = mix ( vec4(fs_colorInside,1.f), 
+                                    vec4(fs_colorOutside,0.f),
+                                    coefficient); 
 }
