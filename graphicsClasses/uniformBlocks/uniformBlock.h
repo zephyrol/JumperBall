@@ -24,22 +24,26 @@
 #include "../Shader.h"
 #include "../ShaderProgram.h"
 
-class uniformBlock {
+class UniformBlock {
 public:
-    uniformBlock                    ( const ShaderProgram& sp, 
+    UniformBlock                    ( const ShaderProgram& sp, 
                                       const std::string name,
                                       const std::vector<std::string>& 
                                               variablesNames
                                     );
-    virtual                         ~uniformBlock()                         = 0;
+    virtual ~UniformBlock           ()                                      = 0;
+
+    void                            bind()                                const; 
+
     
-private:
+protected:
 
     const GLuint                    _blockIndex;
     GLsizei                         _blockSize;
     std::vector<GLubyte>            _dataInsideBlock;
     const std::vector<std::string>  _variablesNames;
     std::vector<GLuint>             _variablesIndices;
+    std::vector<GLint>              _variablesOffset;
     GLuint                          _uboHandle;
 
 };

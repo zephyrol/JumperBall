@@ -1,12 +1,40 @@
 #version 330 core
 
-out vec4 pixelColor;
-in vec3 fs_vertexColor;
-in vec3 fs_vertexNormal;
-in float proximityObjectBehind;
+uniform vec3  positionCamera;
+
+uniform light {
+              vec3  positionLight;
+              vec3  ambiantLightIntensity;
+              vec3  diffuseLightIntensity;
+              vec3  specularLightIntensity;
+              };
+
+out vec4  pixelColor;
+in vec3   fs_vertexColor;
+in vec3   fs_vertexNormal;
+in vec3   fs_vertexPosition;
+in float  proximityObjectBehind;
+
 
 void main() {
-    const float epsilon = 0.999f;
+    const float epsilon     = 0.999f;
     if (proximityObjectBehind < epsilon ) discard;
-    pixelColor = vec4(fs_vertexColor,1.f);
+
+    vec3 toLight            = normalize(positionLight - fs_vertexPosition);
+    vec3 toCamera           = normalize(positionCamera - fs_vertexPosition);
+    vec3 reflection         = -toLight + 2.f * ( dot (toLight, fs_vertexNormal)) 
+                              * fs_vertexNormal;
+    reflection              = normalize(reflection);
+
+    vec3 ambiantComponent   = ambiantLightIntensity;
+
+    vec3 diffuseComponent   = diffuseLightIntensity * 
+                              max(0.f,dot(toLight,fs_vertexNormal));
+
+    vec3 specularComponent  = specularLightIntensity * 
+                              pow(max(0.f,dot(reflection,toCamera)),1.f);
+
+    pixelColor = vec4(ambiantComponent,1.f) * vec4(fs_vertexColor,1.f) 
+               + vec4(diffuseComponent,1.f);
+               //+ vec4(specularComponent,1.f);
 }

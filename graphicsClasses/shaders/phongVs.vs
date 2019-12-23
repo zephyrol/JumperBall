@@ -12,6 +12,7 @@ layout (location=2) in vec3 vs_vertexNormal;
 
 out vec3 fs_vertexColor;
 out vec3 fs_vertexNormal;
+out vec3 fs_vertexPosition;
 out float proximityObjectBehind;
 
 void main() {
@@ -28,6 +29,7 @@ void main() {
 
   fs_vertexColor              = vs_vertexColor;
   fs_vertexNormal             = vs_vertexNormal;
+  fs_vertexPosition           = vs_vertexPosition;
   gl_Position                 = VP * MW * vec4(vs_vertexPosition,w);
 }
 

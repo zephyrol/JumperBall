@@ -95,5 +95,7 @@ glm::mat4 Star::transform() const {
 
 }
 
-
+glm::vec3 Star::centralPosition() const {
+    return glm::vec3( transform() * glm::vec4(0.5f,0.5f,0.f,1.f) );
+}
 

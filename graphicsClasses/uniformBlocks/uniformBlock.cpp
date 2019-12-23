@@ -14,26 +14,30 @@
 #include "uniformBlock.h"
 #include <cstring>
 
-uniformBlock::uniformBlock( const ShaderProgram& sp, const std::string name,
+UniformBlock::UniformBlock( const ShaderProgram& sp, const std::string name,
                             const std::vector<std::string>& variablesNames) :
   _blockIndex(glGetUniformBlockIndex(sp.getHandle(),name.c_str())),
   _blockSize(),
   _dataInsideBlock(),
   _variablesNames(variablesNames),
   _variablesIndices(variablesNames.size()),
+  _variablesOffset(variablesNames.size()),
   _uboHandle()
 {
   const GLchar* *const cStrVarNames = new const GLchar* [variablesNames.size()];
 
   for (size_t i = 0 ; i < variablesNames.size(); ++i) {
-      const GLchar* cName = variablesNames.at(i).c_str();
-      cStrVarNames[i]     = cName;
+      cStrVarNames[i]     = variablesNames.at(i).c_str();
   }
   
   glGetActiveUniformBlockiv ( sp.getHandle(),_blockIndex,
                               GL_UNIFORM_BLOCK_DATA_SIZE, &_blockSize);
   glGetUniformIndices       ( sp.getHandle(),_variablesIndices.size(),
                               cStrVarNames,_variablesIndices.data());
+  glGetActiveUniformsiv     ( sp.getHandle(),_variablesOffset.size(), 
+                              _variablesIndices.data(), GL_UNIFORM_OFFSET,
+                              _variablesOffset.data());
+
   _dataInsideBlock.resize(_blockSize);
 
   delete[] cStrVarNames;
@@ -41,7 +45,12 @@ uniformBlock::uniformBlock( const ShaderProgram& sp, const std::string name,
   glGenBuffers(1, &_uboHandle);
 }
 
+void UniformBlock::bind() const {
+    glBindBufferBase(GL_UNIFORM_BUFFER,0, _uboHandle);
+}
 
-uniformBlock::~uniformBlock() {
+
+
+UniformBlock::~UniformBlock() {
 }
 

@@ -28,6 +28,7 @@
 #include "Mesh.h"
 #include "Camera.h"
 #include "Star.h"
+#include "uniformBlocks/uniformLight.h"
 
 
 class Rendering {

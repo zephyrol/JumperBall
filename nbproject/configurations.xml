@@ -24,6 +24,7 @@
       <itemPath>libs/glad/glad.h</itemPath>
       <itemPath>graphicsClasses/testClass.h</itemPath>
       <itemPath>graphicsClasses/uniformBlocks/uniformBlock.h</itemPath>
+      <itemPath>graphicsClasses/uniformBlocks/uniformLight.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -52,6 +53,7 @@
       <itemPath>main.cpp</itemPath>
       <itemPath>graphicsClasses/testClass.cpp</itemPath>
       <itemPath>graphicsClasses/uniformBlocks/uniformBlock.cpp</itemPath>
+      <itemPath>graphicsClasses/uniformBlocks/uniformLight.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -198,6 +200,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="graphicsClasses/uniformBlocks/uniformLight.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/uniformBlocks/uniformLight.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="libs/glad/glad.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="libs/glad/glad.h" ex="false" tool="3" flavor2="0">
@@ -326,6 +338,16 @@
             flavor2="0">
       </item>
       <item path="graphicsClasses/uniformBlocks/uniformBlock.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/uniformBlocks/uniformLight.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/uniformBlocks/uniformLight.h"
             ex="false"
             tool="3"
             flavor2="0">

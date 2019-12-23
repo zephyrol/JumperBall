@@ -29,12 +29,13 @@ public:
                       const float radius  );
 
     //-------CONST METHODS----------//
-    void              draw()                                                const;
-    glm::vec3         colorInside()                                         const;
-    glm::vec3         colorOutside()                                        const;
-    GLfloat           radiusInside()                                        const;
-    GLfloat           radiusOutside()                                       const;
-    glm::mat4         transform()                                           const;
+    void              draw()                                              const;
+    glm::vec3         colorInside()                                       const;
+    glm::vec3         colorOutside()                                      const;
+    GLfloat           radiusInside()                                      const;
+    GLfloat           radiusOutside()                                     const;
+    glm::mat4         transform()                                         const;
+    glm::vec3         centralPosition()                                   const;
     
 
 private:
@@ -54,7 +55,7 @@ private:
     Ball::timePointMs _timeCreation;
     
     //-------CONST METHODS----------//
-    void              bindVertexData()                                      const;
+    void              bindVertexData()                                    const;
     
 };
 

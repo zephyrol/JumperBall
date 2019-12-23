@@ -13,8 +13,8 @@
 
 #include "Rendering.h"
 
-const std::string Rendering::vsshaderMap  = "graphicsClasses/shaders/mapVs.vs";
-const std::string Rendering::fsshaderMap  = "graphicsClasses/shaders/mapFs.fs";
+const std::string Rendering::vsshaderMap  = "graphicsClasses/shaders/phongVs.vs";
+const std::string Rendering::fsshaderMap  = "graphicsClasses/shaders/phongFs.fs";
 
 const std::string Rendering::vsshaderStar = "graphicsClasses/shaders/starVs.vs";
 const std::string Rendering::fsshaderStar = "graphicsClasses/shaders/starFs.fs";
@@ -108,15 +108,26 @@ void Rendering::render() {
     _spMap.use();
     renderCamera(_spMap);
 
+    const UniformLight uniformLightVar (_spMap,"light",
+                                        _star.centralPosition(),
+                                        glm::vec3(0.7f,0.7f,0.7f),
+                                        glm::vec3(0.7f,0.7f,0.7f),
+                                        glm::vec3(0.3f,0.6f,0.6f)
+                                        );
+    uniformLightVar.bind();
+
     //Ball
     _meshBall.updateMatrices(_ball);
 
-    bindUniform ("MW", _meshBall.world() * _meshBall.local(), _spStar);
+    bindUniform ("MW", _meshBall.world() * _meshBall.local(), _spMap);
 
     _meshBall.draw();
 
     //Map
-    bindUniform ("MW", glm::mat4(1.f), _spStar);
+    bindUniform ("MW", glm::mat4(1.f), _spMap);
+
+    
+    
     _meshMap.draw();
 
 
@@ -137,32 +148,36 @@ void Rendering::render() {
 
 void Rendering::renderCamera(const ShaderProgram& sp) {
 
-  const std::string nameVP = "VP";
-  const std::string namePositionBall = "positionBall";
-  const std::string nameDistanceBehind = "distanceBehind";
-  const std::string nameLookDirection = "lookDirection";
+  const std::string nameVP              = "VP";
+  const std::string namePositionBall    = "positionBall";
+  const std::string nameDistanceBehind  = "distanceBehind";
+  const std::string nameLookDirection   = "lookDirection";
+  const std::string namePositionCamera  = "positionCamera";
 
   _uniformMatrix4[nameVP] =  glm::mat4(
   glm::perspective(glm::radians(70.f), 4.f/3.f, _camera._zNear, _camera._zFar)
   * glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())); 
 
-  const std::array<float,3> positionBall = _ball.get3DPosition();
-  _uniformVec3[namePositionBall] = glm::vec3( positionBall.at(0),
-                                            positionBall.at(1),
-                                            positionBall.at(2));
+  const std::array<float,3> positionBall = _ball.get3DPosition(); 
 
-  _uniformVec3[nameLookDirection] = 
+  _uniformVec3[namePositionBall]    = glm::vec3( positionBall.at(0),
+                                                 positionBall.at(1),
+                                                 positionBall.at(2));
+
+  _uniformVec3[nameLookDirection]   = 
       glm::normalize( glm::cross  ( _camera.up() , 
                                     glm::cross( _camera.dir() - _camera.pos(),
                                                 _camera.up()))
                                   );
 
+  _uniformVec3[namePositionCamera]  = _camera.pos();
   _uniformFloat[nameDistanceBehind] = _ball.distanceBehindBall();
 
   bindUniform (nameVP,              _uniformMatrix4.at(nameVP),           sp);
   bindUniform (namePositionBall,    _uniformVec3.at(namePositionBall),    sp);
   bindUniform (nameLookDirection,   _uniformVec3.at(nameLookDirection),   sp);
   bindUniform (nameDistanceBehind,  _uniformFloat.at(nameDistanceBehind), sp);
+  bindUniform (namePositionCamera,  _uniformVec3.at(namePositionCamera),  sp);
 }
 
 
