@@ -26,16 +26,6 @@ public:
                                     );
     ~UniformLight                   ()                       override = default;
 
-/*private:
-
-    const glm::vec3                 _positionLight;
-
-    const glm::vec3                 _ambiantLightIntensity;
-    const glm::vec3                 _diffuseLightIntensity;
-    const glm::vec3                 _specularLightIntensity;
-
-    const glm::vec3                 _colorLight;*/
-
 };
 
 #endif /* UNIFORMLIGHT_H */

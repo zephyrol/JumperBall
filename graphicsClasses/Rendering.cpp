@@ -110,9 +110,9 @@ void Rendering::render() {
 
     const UniformLight uniformLightVar (_spMap,"light",
                                         _star.centralPosition(),
-                                        glm::vec3(0.7f,0.7f,0.7f),
-                                        glm::vec3(0.7f,0.7f,0.7f),
-                                        glm::vec3(0.3f,0.6f,0.6f)
+                                        glm::vec3(0.8f,0.8f,0.8f),
+                                        glm::vec3(0.2f,0.2f,0.2f),
+                                        glm::vec3(0.2f,0.2f,0.2f)
                                         );
     uniformLightVar.bind();
 

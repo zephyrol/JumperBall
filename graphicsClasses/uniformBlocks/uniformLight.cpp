@@ -28,10 +28,6 @@ UniformLight::UniformLight (  const ShaderProgram& sp,
                               "diffuseLightIntensity","specularLightIntensity",
                             }
                             )
-              /*_ambiantLightIntensity  (ambiantLightIntensity),
-              _diffuseLightIntensity  (diffuseLightIntensity),
-              _specularLightIntensity (specularLightIntensity),
-              _colorLight             (colorLight)*/
 {
   constexpr size_t sizeVec3f = 3 * sizeof(GLfloat);
   memcpy      ( _dataInsideBlock.data() + _variablesOffset.at(0), 
@@ -42,7 +38,7 @@ UniformLight::UniformLight (  const ShaderProgram& sp,
                 &diffuseLightIntensity, sizeVec3f) ;
   memcpy      ( _dataInsideBlock.data() + _variablesOffset.at(3), 
                 &specularLightIntensity, sizeVec3f) ;
-
+  
   glBindBuffer( GL_UNIFORM_BUFFER, _uboHandle);
   glBufferData( GL_UNIFORM_BUFFER, _blockSize, 
                 _dataInsideBlock.data(), GL_DYNAMIC_DRAW);

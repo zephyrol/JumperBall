@@ -83,7 +83,6 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS) {
             //if (!enterButton) {
                 enterButton = true;
-                std::cout << "Key Enter Press" << std::endl;
                 b.doAction(Ball::ActionRequest::Jump);
             //}
         }
@@ -91,15 +90,13 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_PRESS) {
             if (!rightButton) {
                 rightButton = true;
-            std::cout << "Key Right Press" << std::endl;
-            b.doAction(Ball::ActionRequest::TurnRight);
+                b.doAction(Ball::ActionRequest::TurnRight);
             }
         }
         
         if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_PRESS) {
             if (!leftButton) {
                 leftButton = true;
-                std::cout << "Key Left Press" << std::endl;
                 b.doAction(Ball::ActionRequest::TurnLeft);
             }
         }
@@ -107,7 +104,6 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_PRESS) {
             //if (!upButton) {
                 upButton = true;
-                std::cout << "Key Up Press" << std::endl;
                 b.doAction(Ball::ActionRequest::GoStraightAhead);
             //}
         }
@@ -115,28 +111,24 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE) {
             if (enterButton) {
                 enterButton = false;
-                std::cout << "Key Enter Release" << std::endl;
             }
         }
 
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_RELEASE) {
             if (rightButton) {
                 rightButton = false;
-            std::cout << "Key Right Release" << std::endl;
             }
         }
         
         if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_RELEASE) {
             if (leftButton) {
                 leftButton = false ;
-                std::cout << "Key Left Release" << std::endl;
             }
         }
 
         if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_RELEASE) {
             if (upButton) {
                 upButton = false;
-                std::cout << "Key Up Release" << std::endl;
             }
         }
 
