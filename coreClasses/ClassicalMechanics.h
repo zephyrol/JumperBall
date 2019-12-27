@@ -50,7 +50,7 @@ public:
                                           float              deltaT ;
                                           Fluid              fluid;
                                           std::function <
-                                            float(const std::array<float,5>&)
+                                            float(const std::vector<float>&)
                                                         >    computingFunction;
                                           std::vector<float> tBuffer;
                                           std::vector<float> aBuffer;
@@ -71,13 +71,19 @@ public:
     //--------STATIC METHODS-------//
     static void                         solveDifferentialEquation (
       float& derivative,
-      const std::function<float(const std::array<float,5>&)>& computingFunction,
-      const std::array<float,5>& params
+      const std::function<float(const std::vector<float>&)>& computingFunction,
+      const std::vector<float>& params
                                                                   );
+
+    static void                         solveQuadraticEquation (
+                                        std::pair<float,float>& solutions, 
+                                        float a, float b, float c);
+                                                              
 
     //----------METHODS------------//
     const std::vector<float>&           timesShock();
     void                                timesShock(const std::vector<float>& v);
+    void                                addShockFromPosition(float pos);
 
 private:
 
@@ -105,6 +111,8 @@ private:
                                                                           const;
     float                               evalPositionX(const float t)      const;
     float                               getPositionX(const float t)       const;
+    float                               evalTimeFromPosX (const float x)  const;
+
     float                               getPositionY(const float t)       const;
 
     float                               getAccelerationX(const float t)   const;

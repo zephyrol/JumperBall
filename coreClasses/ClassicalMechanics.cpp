@@ -61,6 +61,7 @@ const ClassicalMechanics::physics2DVector ClassicalMechanics::getAcceleration(
 
 
 
+
 float ClassicalMechanics::evalPositionX(const float t) const {
 
     float posX;
@@ -73,6 +74,31 @@ float ClassicalMechanics::evalPositionX(const float t) const {
     return posX;
 }
 
+float ClassicalMechanics::evalTimeFromPosX(const float x) const {
+
+    float t;
+    
+    std::pair<float,float> solutions; 
+
+    std::cout << "evalTimefor " << x << std::endl;
+    solveQuadraticEquation( solutions,
+                            -_v0.x/2.f ,
+                            _v0.x*_timeToGetDestinationX,
+                            -x);
+
+    if (solutions.first >= 0.f ) t = solutions.first;
+    else if (solutions.second >= 0.f) t = solutions.second;
+    else {
+              std::cerr << " Error : negative value found about the time ... "
+                        << " 0 is return ... " 
+                        << std::endl;
+              t = 0.f;
+    }
+
+    return t;
+}
+
+
 float ClassicalMechanics::getIntervalX(float tBegin, float tEnd) const {
     return evalPositionX(tEnd) - evalPositionX(tBegin);
 }
@@ -81,25 +107,41 @@ float ClassicalMechanics::getIntervalX(float tBegin, float tEnd) const {
 float ClassicalMechanics::getPositionX( const float t ) const {
     
     float posX;
-   
+     
     if (_timesShock.empty()){
       posX = evalPositionX(t) ;
       
     }
     else {
-        std::vector<float> intervalsPositions (_timesShock);
-        intervalsPositions.insert(intervalsPositions.begin(),0.f);
-        intervalsPositions.insert(intervalsPositions.end(),t);
+        std::cout << "Hello" << std::endl;
+        std::vector<float> intervalsTimes { 0.f };
+      
+        for ( float time : _timesShock) {
+            if ( t > time) {
+            const float t1 = time;
+            const float t2 = evalTimeFromPosX(evalPositionX(t1) +
+                                              2.f * radiusBall);
+            intervalsTimes.push_back(t1);
+            intervalsTimes.push_back(t2);
+            }
+        }
+        
+        intervalsTimes.push_back(t);
         
         posX = 0;
-        while(intervalsPositions.size() > 1) {
-            posX += static_cast<float>(pow(-1.,intervalsPositions.size()+1))
-                    * getIntervalX( intervalsPositions.at(0),
-                                    intervalsPositions.at(1));
+        float sign = 1.f;
+        while(intervalsTimes.size() > 0) {
+            std::cout << "coucou" << intervalsTimes.size() << std::endl;
+            posX += sign * getIntervalX( intervalsTimes.at(0),
+                                         intervalsTimes.at(1));
           
-            intervalsPositions.erase(intervalsPositions.begin());
+            intervalsTimes.erase  ( intervalsTimes.begin(),
+                                    intervalsTimes.begin()+2
+                                  );
+            sign *= -1.f;
         }
-  
+            std::cout << "coucou out" << std::endl;
+         
     }
 
     return posX;
@@ -174,27 +216,40 @@ void ClassicalMechanics::fillEulerMethodBuffer() const {
       newPBuffer.at(0) = 0.f;
       newVBuffer.at(0) = _v0.y;
       
-      const std::function<float(const std::array<float,5>&)> NewtonStokesFunc =
-      [] (std::array<float,5> params) -> float {
+      const std::function<float(const std::vector<float>&)> NewtonStokesFunc =
+      [] (const std::vector<float>& params) -> float {
           
-          const float velocity                  = params.at(0);
-          const float radiusSphere              = params.at(1);
-          const float viscosity                 = params.at(2);
-          const float gravitationalAcceleration = params.at(3);
-          const float weightSphere              = params.at(4);
+          constexpr size_t numberParamsNewtonStokesFunc = 5;
+          float acceleration;
 
-          const float gravityComponent= weightSphere* gravitationalAcceleration;
-          const float StokesComponent =  6.f * static_cast<float>(M_PI) *
-                                        viscosity * radiusSphere * 
-                                         static_cast<float>(pow(velocity,2));
-
-          const float sumForces     = (-gravityComponent) + StokesComponent; 
-          const float acceleration  = sumForces / weightSphere; 
-
+          if (params.size() != numberParamsNewtonStokesFunc ) {
+              std::cerr << " Error : Bad number of parameters to compute "
+                        << " the vertical acceleration ... 0 is returned " 
+                        << std::endl;
+              acceleration = 0.f;
+          }
+          else {
+              const float velocity                  = params.at(0);
+              const float radiusSphere              = params.at(1);
+              const float viscosity                 = params.at(2);
+              const float gravitationalAcceleration = params.at(3);
+              const float weightSphere              = params.at(4);
+              
+              const float gravityComponent= weightSphere * 
+                                              gravitationalAcceleration;
+              const float StokesComponent = 6.f * static_cast<float>(M_PI) *
+                                            viscosity * radiusSphere * 
+                                            static_cast<float>(pow(velocity,2));
+              
+              const float sumForces       = (-gravityComponent) + 
+                                              StokesComponent; 
+              acceleration  = sumForces / weightSphere; 
+          }
+          
           return acceleration;
       };
 
-      const std::array<float,5> paramsInitials  { newVBuffer.at(0), 
+      const std::vector<float> paramsInitials   { newVBuffer.at(0), 
                                                   radiusBall,
                                                   listOfViscosities.at(_fluid), 
                                                   _gravitationalAcceleration,
@@ -213,7 +268,7 @@ void ClassicalMechanics::fillEulerMethodBuffer() const {
 
           newVBuffer.at(i+1) = newVBuffer.at(i) + newDeltaT * newABuffer.at(i);
 
-          const std::array<float,5> parameters  { newVBuffer.at(i+1), 
+          const std::vector<float> parameters   { newVBuffer.at(i+1), 
                                                   radiusBall,
                                                   listOfViscosities.at(_fluid), 
                                                   _gravitationalAcceleration,
@@ -235,11 +290,35 @@ void ClassicalMechanics::fillEulerMethodBuffer() const {
 
 void ClassicalMechanics::solveDifferentialEquation(
       float& derivative, 
-      const std::function<float(const std::array<float,5>&)>& computingFunction,
-      const std::array<float, 5>& params)
+      const std::function<float(const std::vector<float>&)>& computingFunction,
+      const std::vector<float>& params)
 {
     derivative = computingFunction ( params );
 }
+
+void ClassicalMechanics::solveQuadraticEquation(
+      std::pair<float, float>& solutions, float a, float b, float c) 
+{
+    if ( a < EPSILON_F && a > -EPSILON_F) {
+        std::cerr << "Error: Trying to divide by 0 ... " << 
+                "solutions cropped to 0... " 
+                << std::endl ;
+        solutions.first   = 0.f;
+        solutions.second  = 0.f;
+    }
+    const float delta = static_cast<float> (pow(b, 2.)) - 4.f * a * c;
+    if (delta < 0.f) {
+        std::cerr << "Error: Non-real solutions ... : cropped to 0... " 
+                << std::endl ;
+        solutions.first   = 0.f;
+        solutions.second  = 0.f;
+    }
+    else {
+        solutions.first   = (-b + sqrtf(delta))/(2.f*a);
+        solutions.second  = (-b - sqrtf(delta))/(2.f*a);
+    }
+}
+
 
 
 void ClassicalMechanics::printEulerBuffer() const {
@@ -267,4 +346,10 @@ const std::vector<float>& ClassicalMechanics::timesShock() {
 void ClassicalMechanics::timesShock(const std::vector<float>& v) {
     _timesShock = v;
 }
+
+void ClassicalMechanics::addShockFromPosition(float pos) {
+    _timesShock.push_back(evalTimeFromPosX(pos));
+}
+
+
 

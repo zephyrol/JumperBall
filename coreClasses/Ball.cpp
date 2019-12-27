@@ -28,8 +28,7 @@ Ball::Ball(const Map& map):
         _state(Ball::State::Staying),
         _map(map),
         _mechanicsPattern(),
-        _timeAction(),
-        _shocks{} {
+        _timeAction(){
        
 }
 
@@ -459,6 +458,7 @@ void Ball::goStraightAhead() noexcept {
 void Ball::jump() noexcept {
     _state = Ball::State::Jumping;
     setTimeActionNow();
+    isGoingStraightAheadIntersectBlock();
 }
 
 void Ball::stay() noexcept {
@@ -518,6 +518,79 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
 }
 
 
+Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
+
+    Ball::AnswerRequest answer = Ball::AnswerRequest::Rejected; 
+    if ( _state == Ball::State::Jumping ) {
+        
+        answer = Ball::AnswerRequest::Accepted; 
+        
+        
+        int aboveNearX =  _currentBlockX;
+        int aboveNearY =  _currentBlockY;
+        int aboveNearZ =  _currentBlockZ;
+        int aboveFarX =   _currentBlockX;
+        int aboveFarY =   _currentBlockY;
+        int aboveFarZ =   _currentBlockZ;
+        
+        switch (_currentSide) {
+            case JumperBallTypes::Direction::North:
+                --aboveNearZ; --aboveFarZ;   break;
+            case JumperBallTypes::Direction::South:
+                ++aboveNearZ; ++aboveFarZ;   break;
+            case JumperBallTypes::Direction::East: 
+                ++aboveNearX; ++aboveFarX;   break;
+            case JumperBallTypes::Direction::West:
+                --aboveNearX; --aboveFarX;   break;
+            case JumperBallTypes::Direction::Up:
+                ++aboveNearY; ++aboveFarY;   break;
+            case JumperBallTypes::Direction::Down:
+                --aboveNearY; --aboveFarY;   break;
+            default : break;
+        }
+        
+        switch (_lookTowards) {
+            case JumperBallTypes::Direction::North:
+                --aboveNearZ; aboveFarZ -= 2 ;   break;
+            case JumperBallTypes::Direction::South:
+                ++aboveNearZ; aboveFarZ += 2;   break;
+            case JumperBallTypes::Direction::East: 
+                ++aboveNearX; aboveFarX += 2;   break;
+            case JumperBallTypes::Direction::West:
+                --aboveNearX; aboveFarX -= 2;   break;
+            case JumperBallTypes::Direction::Up:
+                ++aboveNearY; aboveFarY += 2;   break;
+            case JumperBallTypes::Direction::Down:
+                --aboveNearY; aboveFarY -= 2;   break;
+            default : break;
+        }
+        
+        std::shared_ptr<Block> blockNear  = 
+                _map.map3DData(aboveNearX,aboveNearY,aboveNearZ);
+        
+        std::shared_ptr<Block> blockFar   = 
+                _map.map3DData(aboveFarX,aboveFarY,aboveFarZ);
+        
+        constexpr float distanceNear      = 1.f;
+        constexpr float distanceFar       = 2.f;
+        
+        if (blockNear) {
+            _mechanicsPattern.addShockFromPosition(distanceNear- 
+            getRadius());
+        }
+        else if (blockFar) {
+            _mechanicsPattern.addShockFromPosition(distanceFar- 
+            getRadius());
+        }
+        else {
+            _mechanicsPattern.timesShock({});
+        }
+    }
+    answer = Ball::AnswerRequest::Accepted; 
+    return answer;
+}
+
+
 Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
 
     Ball::AnswerRequest answer = Ball::AnswerRequest::Rejected; 
@@ -531,104 +604,12 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
             
             auto positionBlockPtr = intersectBlock(_3DPosX,_3DPosY, _3DPosZ);
             if (positionBlockPtr) {
-				/*
-                int aboveNearX =  _currentBlockX;
-                int aboveNearY =  _currentBlockY;
-                int aboveNearZ =  _currentBlockZ;
-                int aboveFarX =   _currentBlockX;
-                int aboveFarY =   _currentBlockY;
-                int aboveFarZ =   _currentBlockZ;
-
-                bool frontalShock = false;
-
-                switch (_currentSide) {
-                    case JumperBallTypes::Direction::North:
-                        --aboveNearZ; --aboveFarZ;   break;
-                    case JumperBallTypes::Direction::South:
-                        ++aboveNearZ; ++aboveFarZ;   break;
-                    case JumperBallTypes::Direction::East: 
-                        ++aboveNearX; ++aboveFarX;   break;
-                    case JumperBallTypes::Direction::West:
-                        --aboveNearX; --aboveFarX;   break;
-                    case JumperBallTypes::Direction::Up:
-                        ++aboveNearY; ++aboveFarY;   break;
-                    case JumperBallTypes::Direction::Down:
-                        --aboveNearY; --aboveFarY;   break;
-                    default : break;
-                }
-                
-                switch (_lookTowards) {
-                    case JumperBallTypes::Direction::North:
-                        --aboveNearZ; aboveFarZ -= 2 ;   break;
-                    case JumperBallTypes::Direction::South:
-                        ++aboveNearZ; aboveFarZ += 2;   break;
-                    case JumperBallTypes::Direction::East: 
-                        ++aboveNearX; aboveFarX += 2;   break;
-                    case JumperBallTypes::Direction::West:
-                        --aboveNearX; aboveFarX -= 2;   break;
-                    case JumperBallTypes::Direction::Up:
-                        ++aboveNearY; aboveFarY += 2;   break;
-                    case JumperBallTypes::Direction::Down:
-                        --aboveNearY; aboveFarY -= 2;   break;
-                    default : break;
-                }
-                
-                std::shared_ptr<Block> blockNear = 
-                              _map.map3DData(aboveNearX,aboveNearY,aboveNearZ);
-
-                std::shared_ptr<Block> blockFar = 
-                              _map.map3DData(aboveFarX,aboveFarY,aboveFarZ);
-
-                std::array<unsigned int,3> shockPosition;
-                if (blockNear) {
-                  if (aboveNearX == positionBlockPtr->at(0) &&
-                      aboveNearY == positionBlockPtr->at(1) &&
-                      aboveNearZ == positionBlockPtr->at(2))  {
-                        frontalShock = true;               
-                      
-                      }
-                }
-                else if (blockFar) {
-                  if ( aboveFarX == positionBlockPtr->at(0) &&
-                       aboveFarY == positionBlockPtr->at(1) &&
-                       aboveFarZ == positionBlockPtr->at(2))  {
-                        frontalShock = true;               
-                        
-                      }
-                }
-                if (frontalShock) {
-                    shock s (shockPosition);
-					
-					_shocks.clear();
-                    _mechanicsPattern.timesShock({});
-                    
-                    _state = Ball::State::Staying;
-				*/	
-                    /*auto it = std::find(_shocks.begin(),_shocks.end(),s);
-                    if ( it == _shocks.end()) {
-                        _shocks.push_back(s);
-                        std::vector<float> shocks=
-                                                _mechanicsPattern.timesShock();
-                        shocks.push_back(getTimeSecondsSinceAction());
-                        _mechanicsPattern.timesShock(shocks);
-                    }*/
-                    
-                /*}
-                else {
-                    _shocks.clear();
-                    _mechanicsPattern.timesShock({});
-                    _currentBlockX  = positionBlockPtr->at(0) ;
-                    _currentBlockY  = positionBlockPtr->at(1) ;
-                    _currentBlockZ  = positionBlockPtr->at(2) ;
-                    _state = Ball::State::Staying;
-                }*/
-                _shocks.clear();
-                _mechanicsPattern.timesShock({});
-                _currentBlockX  = positionBlockPtr->at(0) ;
-                _currentBlockY  = positionBlockPtr->at(1) ;
-                _currentBlockZ  = positionBlockPtr->at(2) ;
-                _state = Ball::State::Staying;
-                update();
+              _mechanicsPattern.timesShock({});
+              _currentBlockX      = positionBlockPtr->at(0) ;
+              _currentBlockY      = positionBlockPtr->at(1) ;
+              _currentBlockZ      = positionBlockPtr->at(2) ;
+              _state              = Ball::State::Staying;
+              update();
             }
         }
         answer = Ball::AnswerRequest::Accepted; 
@@ -684,74 +665,68 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
     std::shared_ptr<const std::vector<int> > blockIntersected = nullptr;
     
     const float offsetBlockPosition = _mechanicsPattern.radiusBall;
-    int   xInteger;
-    int   yInteger;
-    int   zInteger;
-    float xIntersection = x;
-    float yIntersection = y;
-    float zIntersection = z;
-    
+    float xIntersectionUnder = x;
+    float yIntersectionUnder = y;
+    float zIntersectionUnder = z;
+    int xInteger, yInteger, zInteger;
     switch (_currentSide) {
         case JumperBallTypes::Direction::North:
-            zIntersection += offsetBlockPosition ;
+            zIntersectionUnder += offsetBlockPosition ;
             break;
         case JumperBallTypes::Direction::South:
-            zIntersection -= offsetBlockPosition ;
+            zIntersectionUnder -= offsetBlockPosition ;
             break;
         case JumperBallTypes::Direction::East:
-            xIntersection -= offsetBlockPosition ;
+            xIntersectionUnder -= offsetBlockPosition ;
             break;
         case JumperBallTypes::Direction::West:
-            xIntersection += offsetBlockPosition ;
+            xIntersectionUnder += offsetBlockPosition ;
             break;
         case JumperBallTypes::Direction::Up:
-            yIntersection -= offsetBlockPosition ;
+            yIntersectionUnder -= offsetBlockPosition ;
             break;
         case JumperBallTypes::Direction::Down:
-            yIntersection += offsetBlockPosition ;
+            yIntersectionUnder += offsetBlockPosition ;
             break;
         default :
             break;
     }
     
-    xInteger = static_cast<int> (xIntersection);
-    yInteger = static_cast<int> (yIntersection);
-    zInteger = static_cast<int> (zIntersection);
+    xInteger = static_cast<int> (xIntersectionUnder);
+    yInteger = static_cast<int> (yIntersectionUnder);
+    zInteger = static_cast<int> (zIntersectionUnder);
     
     if (_map.map3DData(xInteger, yInteger, zInteger)) 
         blockIntersected = std::make_shared<const std::vector<int> > (
                 std::initializer_list<int> ({xInteger,yInteger,zInteger}));
-    /*else  {
+    /*else {
 
-        xIntersection = x;
-        yIntersection = y;
-        zIntersection = z;
-        */
-      /*  switch (_lookTowards) {
+        switch (_lookTowards) {
             case JumperBallTypes::Direction::North:
-                zIntersection -= offsetBlockPosition ;
+                zIntersectionFront -= offsetBlockPosition ;
                 break;
             case JumperBallTypes::Direction::South:
-                zIntersection += offsetBlockPosition ;
+                zIntersectionFront += offsetBlockPosition ;
                 break;
             case JumperBallTypes::Direction::East:
-                xIntersection += offsetBlockPosition ;
+                xIntersectionFront += offsetBlockPosition ;
                 break;
             case JumperBallTypes::Direction::West:
-                xIntersection -= offsetBlockPosition ;
+                xIntersectionFront -= offsetBlockPosition ;
                 break;
             case JumperBallTypes::Direction::Up:
-                yIntersection += offsetBlockPosition ;
+                yIntersectionFront += offsetBlockPosition ;
                 break;
             case JumperBallTypes::Direction::Down:
-                yIntersection -= offsetBlockPosition ;
+                yIntersectionFront -= offsetBlockPosition ;
                 break;
             default :
                 break;
-        }*/
-    /*    xInteger = static_cast<int> (xIntersection);
-        yInteger = static_cast<int> (yIntersection);
-        zInteger = static_cast<int> (zIntersection);
+        }
+        xInteger = static_cast<int> (xIntersectionFront);
+        yInteger = static_cast<int> (yIntersectionFront);
+        zInteger = static_cast<int> (zIntersectionFront);
+        
         if (_map.map3DData(xInteger, yInteger, zInteger)) 
             blockIntersected = std::make_shared<const std::vector<int> > (
                     std::initializer_list<int> ({xInteger,yInteger,zInteger}));

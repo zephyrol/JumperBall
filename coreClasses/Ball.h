@@ -104,7 +104,7 @@ private:
     std::chrono::time_point<std::chrono::system_clock>  
                                 _timeAction;
 
-    std::vector<shock>          _shocks; 
+    //std::vector<shock>          _shocks; 
 
 	
     //-------CONST METHODS--------//
@@ -126,9 +126,7 @@ private:
     void                        move()                                 noexcept;
     void                        setTimeActionNow()                     noexcept;
     AnswerRequest               isFallingIntersectionBlock()           noexcept;
-                                
-
-
+    AnswerRequest               isGoingStraightAheadIntersectBlock()   noexcept; 
 
 
 
