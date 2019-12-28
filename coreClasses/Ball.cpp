@@ -648,6 +648,7 @@ float Ball::distanceBehindBall() const
                               + offsetCenterBlock);
             break;
         default :
+            distance = 0.f;
             break;
     }
 
