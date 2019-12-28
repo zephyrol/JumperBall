@@ -71,14 +71,8 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
           && glfwWindowShouldClose(_window) == 0 ) {
 
-        //std::cout << "counter " << counter << std::endl;
-        //counter++;
-        //glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
         glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        b.update();
-        c.follow(b);
 
         if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS) {
             //if (!enterButton) {
