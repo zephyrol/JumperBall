@@ -573,14 +573,15 @@ Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
         
         constexpr float distanceNear      = 1.f;
         constexpr float distanceFar       = 2.f;
+        constexpr float sizeBlock         = 1.f;
         
         if (blockNear) {
-            _mechanicsPattern.addShockFromPosition(distanceNear- 
-            getRadius());
+            _mechanicsPattern.addShockFromPosition( distanceNear-sizeBlock/2.f
+                                                    -getRadius());
         }
         else if (blockFar) {
-            _mechanicsPattern.addShockFromPosition(distanceFar- 
-            getRadius());
+            _mechanicsPattern.addShockFromPosition( distanceFar-sizeBlock/2.f
+                                                    -getRadius());
         }
         else {
             _mechanicsPattern.timesShock({});

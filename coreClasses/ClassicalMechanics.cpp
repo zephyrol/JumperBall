@@ -113,7 +113,6 @@ float ClassicalMechanics::getPositionX( const float t ) const {
       
     }
     else {
-        std::cout << "Hello" << std::endl;
         std::vector<float> intervalsTimes { 0.f };
       
         for ( float time : _timesShock) {
@@ -123,15 +122,16 @@ float ClassicalMechanics::getPositionX( const float t ) const {
                                               2.f * radiusBall);
             intervalsTimes.push_back(t1);
             intervalsTimes.push_back(t2);
+            intervalsTimes.push_back(t2+(t-t1));
             }
+            else 
+            intervalsTimes.push_back(t);
         }
         
-        intervalsTimes.push_back(t);
         
         posX = 0;
         float sign = 1.f;
         while(intervalsTimes.size() > 0) {
-            std::cout << "coucou" << intervalsTimes.size() << std::endl;
             posX += sign * getIntervalX( intervalsTimes.at(0),
                                          intervalsTimes.at(1));
           
@@ -140,7 +140,6 @@ float ClassicalMechanics::getPositionX( const float t ) const {
                                   );
             sign *= -1.f;
         }
-            std::cout << "coucou out" << std::endl;
          
     }
 
