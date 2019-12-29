@@ -56,8 +56,6 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     file >> _beginZ;
     file >> _beginY;
 
-    std::string counterBuffer;
-    char readValue;
 
     auto convertToBase10 = [] (std::string s, unsigned int base)-> unsigned int{
         unsigned int value = 0; 
@@ -76,6 +74,9 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     };
 
     std::string infoMap;
+    std::string counterBuffer;
+    char readValue;
+
     file >> infoMap;
     while (!infoMap.empty()) {
         
@@ -93,7 +94,7 @@ Map::Map(std::ifstream& file):_id (nbMaps),
             }
             const unsigned int typeOfBlock = readValue - firstKindOfBlock;
             for (unsigned int i = 0 ; i < nbBlocksTowrite ; ++i) {
-                std::shared_ptr <Block> block     = nullptr ;
+                std::shared_ptr <Block> block = nullptr ;
                 switch (typeOfBlock) {
                     case 0:
                         break ;
@@ -114,10 +115,8 @@ Map::Map(std::ifstream& file):_id (nbMaps),
               counterBuffer.clear();
             }
         }
-
         infoMap.erase(infoMap.begin());
     }
-
     Map::nbMaps++;
 }
 
@@ -208,8 +207,6 @@ void Map::compress(std::ifstream& input) {
     output << beginY << " ";
     output << std::endl;  
     
-    //constexpr unsigned int  nbOfKindsOfBlocks             = 10;
-
 
     unsigned int counter = 1;
     unsigned int currentType;
@@ -222,12 +219,6 @@ void Map::compress(std::ifstream& input) {
     
     auto convertToBase = [] (unsigned int number, unsigned char base) 
         -> std::string {
-        
-        /*auto compressTypeBlockValue = [] (unsigned int value) 
-            -> unsigned char {
-            const unsigned char compressedType = value + firstKindOfBlock; 
-            return compressedType;
-        };*/
         
         std::string convertedNumber;
         

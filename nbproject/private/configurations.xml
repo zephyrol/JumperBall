@@ -28,12 +28,12 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map3.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map2.txt</runcommandpicklistitem>
           <runcommandpicklistitem>&lt;Different Values></runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" outmap.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1.txt -compress</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" outMap.txt</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1.txt</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" outMap.txt</runcommand>
+        <runcommand>"${OUTPUT_PATH}" maps/map1.txt</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>
