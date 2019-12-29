@@ -33,6 +33,14 @@ int main(int argc, char** argv) {
                   << std::endl;
           return EXIT_FAILURE;
         }
+        
+        if (argc == 3) {
+            const std::string arg (argv[2]);
+            if (arg == "-compress")
+                Map::compress(file);
+                return EXIT_SUCCESS;
+        }
+        
         Map m (file);
         std::cout << "Map created" << std::endl;
         m.printMap();
@@ -41,7 +49,6 @@ int main(int argc, char** argv) {
         file.close();
 
         ClassicalMechanics newton;
-        newton.printEulerBuffer();
 
         Ball b (m);
         Camera c;

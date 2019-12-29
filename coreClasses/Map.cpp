@@ -12,6 +12,7 @@
  */
 
 #include <iostream>
+#include <math.h>
 #include "Map.h"
 
 unsigned int Map::nbMaps = 0;
@@ -28,8 +29,9 @@ Map::Map() : _id (nbMaps),
 {
     Map::nbMaps++;
 }
+
+
 Map::Map(std::ifstream& file):_id (nbMaps),        
-                             //_blocks{},
                              _map3DData{},
                              _boundingBoxXMax (0),
                              _boundingBoxYMax (0),
@@ -54,37 +56,71 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     file >> _beginZ;
     file >> _beginY;
 
-    for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
+    std::string counterBuffer;
+    char readValue;
 
-        unsigned int valueBlock ;
-        std::shared_ptr <Block> block = nullptr ;
-
-        file >> valueBlock;
-        switch (valueBlock) {
-            case 0:
-              break ;
-            case 1:
-              block = std::make_shared<BaseBlock>(); break ;
-            case 2:
-              block = std::make_shared<FireBlock>(); break ;
-            case 3:
-              block = std::make_shared<IceBlock>(); break ;
-            case 4:
-              block = std::make_shared<SpicyBlock>(); break ;
-            case 5:
-              block = std::make_shared<BrittleBlock>(); break ;
-            default :
-               break;
+    auto convertToBase10 = [] (std::string s, unsigned int base)-> unsigned int{
+        unsigned int value = 0; 
+        while (s.length() > 0 ) {
+          unsigned int number = static_cast<unsigned int> (s.front());
+          value += number * static_cast<unsigned int> (pow(base,s.length()-1));
+          s.erase(s.begin());
         }
-        
-        _map3DData.push_back(block); 
+        return value;
+    };
 
+    auto substractOffset = [] (std::string& s, unsigned int offset) {
+        for (char& c : s) {
+            c -= offset;
+        }
+    };
+
+    std::string infoMap;
+    file >> infoMap;
+    while (!infoMap.empty()) {
+        
+        readValue = infoMap.front();
+        if (readValue >= firstNumberOfBlock) {
+            counterBuffer.push_back(readValue);
+        } else {
+            unsigned int nbBlocksTowrite;
+            if (counterBuffer.empty()){
+                nbBlocksTowrite = 1;
+            } else {
+            substractOffset(counterBuffer,firstNumberOfBlock);
+            nbBlocksTowrite = convertToBase10(counterBuffer,
+                                              nbOfCharactersUsedForNumbers);
+            }
+            const unsigned int typeOfBlock = readValue - firstKindOfBlock;
+            for (unsigned int i = 0 ; i < nbBlocksTowrite ; ++i) {
+                std::shared_ptr <Block> block     = nullptr ;
+                switch (typeOfBlock) {
+                    case 0:
+                        break ;
+                    case 1:
+                        block = std::make_shared<BaseBlock>(); break ;
+                    case 2:
+                        block = std::make_shared<FireBlock>(); break ;
+                    case 3:
+                        block = std::make_shared<IceBlock>(); break ;
+                    case 4:
+                        block = std::make_shared<SpicyBlock>(); break ;
+                    case 5:
+                        block = std::make_shared<BrittleBlock>(); break ;
+                    default :
+                        break;
+                }
+              _map3DData.push_back(block); 
+              counterBuffer.clear();
+            }
+        }
+
+        infoMap.erase(infoMap.begin());
     }
+
     Map::nbMaps++;
 }
 
-/*Map::Map(const Map& orig) {
-}*/
 
 Map::~Map() {
 }
@@ -144,4 +180,101 @@ unsigned int Map::beginZ() const {
     return _beginZ;
 }
 
+void Map::compress(std::ifstream& input) {
+    std::ofstream output ("outMap.txt");
 
+    unsigned int width;
+    unsigned int deep;
+    unsigned int height;
+    unsigned int beginX;
+    unsigned int beginY;
+    unsigned int beginZ;
+
+    input >> width; 
+    input >> deep; 
+    input >> height;
+  
+    output << width << " ";  
+    output << deep << " ";  
+    output << height << " ";  
+    output << std::endl;  
+
+    input >> beginX;
+    input >> beginZ;
+    input >> beginY;
+
+    output << beginX << " ";  
+    output << beginZ << " ";  
+    output << beginY << " ";
+    output << std::endl;  
+    
+    //constexpr unsigned int  nbOfKindsOfBlocks             = 10;
+
+
+    unsigned int counter = 1;
+    unsigned int currentType;
+
+    auto applyOffset = [] (std::string& s, unsigned int offset) {
+        for (char& c : s) {
+            c += offset;
+        }
+    };
+    
+    auto convertToBase = [] (unsigned int number, unsigned char base) 
+        -> std::string {
+        
+        /*auto compressTypeBlockValue = [] (unsigned int value) 
+            -> unsigned char {
+            const unsigned char compressedType = value + firstKindOfBlock; 
+            return compressedType;
+        };*/
+        
+        std::string convertedNumber;
+        
+        while (number > 0 ) {
+            const unsigned int remainder = number % base;
+            convertedNumber.insert( convertedNumber.begin(),
+                    remainder);
+            
+            number = number / base ;
+        }
+        
+        return convertedNumber;
+    };
+    
+    input >> currentType;
+
+    for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
+        
+        
+        unsigned int readValue ;
+        input >> readValue;
+
+        if (readValue != currentType){
+            if (counter > 1 )
+            {
+                std::string stringToWrite = convertToBase(
+                                        counter, nbOfCharactersUsedForNumbers);
+                applyOffset(stringToWrite, firstNumberOfBlock) ;
+                output << stringToWrite;
+            } 
+            output << currentType;
+
+            counter = 1;       
+            currentType = readValue;
+        }
+        else {
+            counter++;
+        }
+        
+    }
+    if (counter > 1 )
+    {
+        std::string stringToWrite = convertToBase(
+                counter, nbOfCharactersUsedForNumbers);
+        applyOffset(stringToWrite, firstNumberOfBlock) ;
+        output << stringToWrite;
+    } 
+    output << currentType;
+    output.close();
+}

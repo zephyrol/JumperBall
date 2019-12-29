@@ -80,7 +80,6 @@ float ClassicalMechanics::evalTimeFromPosX(const float x) const {
     
     std::pair<float,float> solutions; 
 
-    std::cout << "evalTimefor " << x << std::endl;
     solveQuadraticEquation( solutions,
                             -_v0.x/2.f ,
                             _v0.x*_timeToGetDestinationX,

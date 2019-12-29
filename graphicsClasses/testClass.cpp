@@ -74,6 +74,9 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        b.update();
+        c.follow(b);
+        
         if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS) {
             //if (!enterButton) {
                 enterButton = true;

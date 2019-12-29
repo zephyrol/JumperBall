@@ -116,6 +116,7 @@ private:
 
     std::array<float,3>         P2DTo3D(ClassicalMechanics::physics2DVector p2D)
                                                                           const;
+    std::array<float,3>         get3DPosStayingBall()                     const;
 
     //----------METHODS------------//
     void                        turnLeft()                             noexcept;

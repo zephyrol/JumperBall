@@ -701,38 +701,6 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
     if (_map.map3DData(xInteger, yInteger, zInteger)) 
         blockIntersected = std::make_shared<const std::vector<int> > (
                 std::initializer_list<int> ({xInteger,yInteger,zInteger}));
-    /*else {
-
-        switch (_lookTowards) {
-            case JumperBallTypes::Direction::North:
-                zIntersectionFront -= offsetBlockPosition ;
-                break;
-            case JumperBallTypes::Direction::South:
-                zIntersectionFront += offsetBlockPosition ;
-                break;
-            case JumperBallTypes::Direction::East:
-                xIntersectionFront += offsetBlockPosition ;
-                break;
-            case JumperBallTypes::Direction::West:
-                xIntersectionFront -= offsetBlockPosition ;
-                break;
-            case JumperBallTypes::Direction::Up:
-                yIntersectionFront += offsetBlockPosition ;
-                break;
-            case JumperBallTypes::Direction::Down:
-                yIntersectionFront -= offsetBlockPosition ;
-                break;
-            default :
-                break;
-        }
-        xInteger = static_cast<int> (xIntersectionFront);
-        yInteger = static_cast<int> (yIntersectionFront);
-        zInteger = static_cast<int> (zIntersectionFront);
-        
-        if (_map.map3DData(xInteger, yInteger, zInteger)) 
-            blockIntersected = std::make_shared<const std::vector<int> > (
-                    std::initializer_list<int> ({xInteger,yInteger,zInteger}));
-    }*/
     
     return blockIntersected;
 }
@@ -898,61 +866,74 @@ std::array<float, 3> Ball::lookTowardsAsVector() const {
 
 }
 
-void Ball::update() noexcept{
+std::array<float, 3> Ball::get3DPosStayingBall() const {
 
     constexpr float offsetPosition = 0.5f + _mechanicsPattern.radiusBall;
+    float x,y,z;
+
+    x = static_cast<float> (_currentBlockX + 0.5f);
+    y = static_cast<float> (_currentBlockY + 0.5f);
+    z = static_cast<float> (_currentBlockZ + 0.5f);
+        
+    switch (_currentSide) {
+        case JumperBallTypes::Direction::North:
+            z -= offsetPosition ;
+            break;
+        case JumperBallTypes::Direction::South:
+            z += offsetPosition ;
+            break;
+        case JumperBallTypes::Direction::East:
+            x += offsetPosition ;
+            break;
+        case JumperBallTypes::Direction::West:
+            x -= offsetPosition ;
+            break;
+        case JumperBallTypes::Direction::Up:
+            y += offsetPosition ;
+            break;
+        case JumperBallTypes::Direction::Down:
+            y -= offsetPosition ;
+            break;
+        default :
+            break;
+    }
+
+    const std::array<float,3> position3D {x,y,z};
+
+    return position3D;
+}
+
+
+void Ball::update() noexcept{
+
 
     std::array<float,3> position3D {0.f,0.f,0.f};
-
-    float x,y,z;
 
     if (_state == Ball::State::Staying || _state == Ball::State::Moving ||
         _state == Ball::State::TurningLeft || 
         _state == Ball::State::TurningRight) {
         
-        x = static_cast<float> (_currentBlockX + 0.5f);
-        y = static_cast<float> (_currentBlockY + 0.5f);
-        z = static_cast<float> (_currentBlockZ + 0.5f);
-        
-        switch (_currentSide) {
-            case JumperBallTypes::Direction::North:
-                z -= offsetPosition ;
-                break;
-            case JumperBallTypes::Direction::South:
-                z += offsetPosition ;
-                break;
-            case JumperBallTypes::Direction::East:
-                x += offsetPosition ;
-                break;
-            case JumperBallTypes::Direction::West:
-                x -= offsetPosition ;
-                break;
-            case JumperBallTypes::Direction::Up:
-                y += offsetPosition ;
-                break;
-            case JumperBallTypes::Direction::Down:
-                y -= offsetPosition ;
-                break;
-            default :
-                break;
-        }
-        
+        position3D = get3DPosStayingBall();
         if ( _state == Ball::State::Staying ){
-            position3D = {x,y,z};
             _3DPosX = position3D.at(0);
             _3DPosY = position3D.at(1);
             _3DPosZ = position3D.at(2);
             
     	  } else if ( _state == Ball::State::Moving){
             float sSinceAction = getTimeSecondsSinceAction();
-            if (sSinceAction  >= timeToGetNextBlock) {
+            if (sSinceAction >= timeToGetNextBlock) {
+                
                 goStraightAhead();
+
+                position3D  = get3DPosStayingBall();
+                _3DPosX     = position3D.at(0);
+                _3DPosY     = position3D.at(1);
+                _3DPosZ     = position3D.at(2);
+
                 stay();
-                update();
             }
             else {
                 struct nextBlockInformation infoTarget = getNextBlockInfo();
-                position3D = {x,y,z};
                 
                 if (infoTarget.nextLocal == NextBlockLocal::InFrontOf){
                     _3DPosX = (sSinceAction * (
@@ -1075,7 +1056,6 @@ void Ball::update() noexcept{
                   stay();
                   update();
               } else {
-                  position3D = {x,y,z};
                   _3DPosX = position3D.at(0);
                   _3DPosY = position3D.at(1);
                   _3DPosZ = position3D.at(2);

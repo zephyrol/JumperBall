@@ -29,6 +29,10 @@ public:
     //------------TYPES------------//
     enum class KindOfData {Raw,Optimized};
     
+    //---------CONSTANTS------------//
+    static constexpr unsigned char  firstNumberOfBlock                     = 58;
+    static constexpr unsigned int   nbOfCharactersUsedForNumbers           = 69;
+    static constexpr unsigned char  firstKindOfBlock                       = 48;
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Map                                   ();
@@ -52,6 +56,8 @@ public:
     unsigned int                          beginY()                        const;
     unsigned int                          beginZ()                        const;
 
+    //--------STATIC METHODS-------//
+    static void                           compress(std::ifstream& input);
     
 private:
     //--------ATTRIBUTES-----------//
