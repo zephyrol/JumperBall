@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
             const std::string arg (argv[2]);
             if (arg == "-compress")
                 Map::compress(file);
-                return EXIT_SUCCESS;
+            return EXIT_SUCCESS;
         }
         
         Map m (file);

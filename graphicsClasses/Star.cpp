@@ -32,7 +32,6 @@ Star::Star( const glm::vec3& colorInside, const glm::vec3& colorOutside,
     glBindVertexArray(_idVertexArray);
 
     glGenBuffers(1, &_idVertexBuffer);
-    Utility::printMatrix(_transform);
     bindVertexData();
 }
 
