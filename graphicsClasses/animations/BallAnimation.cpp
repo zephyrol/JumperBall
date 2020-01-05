@@ -73,12 +73,12 @@ void BallAnimation::updateTrans() {
 
         _rotationBeforeMovement     = _rotation; 
     }
-    else if ( _ball.state() == Ball::State::Moving ||
-            _ball.state() == Ball::State::Jumping) {
-        
+    else {
         constexpr float sizeBlock = 1.f;
         float t;
-        if (_ball.state() == Ball::State::Moving)
+        if (_ball.state() == Ball::State::Moving ||
+            _ball.state() == Ball::State::TurningLeft ||
+            _ball.state() == Ball::State::TurningRight )
             t = _ball.getTimeSecondsSinceAction()/
                     _ball.timeToGetNextBlock;
         else {
@@ -100,30 +100,22 @@ void BallAnimation::updateTrans() {
                 glm::cross( glmSideDir, glmLookDir));
 
 
-        _rotation    = rotationMatrix     * _rotationBeforeMovement;
+        if (_ball.state() == Ball::State::TurningLeft ||
+            _ball.state() == Ball::State::TurningRight){
+            _rotationBeforeMovement = _rotation; 
+        } else {
+            _rotation    = rotationMatrix     * _rotationBeforeMovement;
+        }
     
         if (t > 1.f ) t = 1.f;
         if (t < 0.f)  t = fabs(t);
+        
         _scale        = glm::scale  ( 
          _scaleBeforeMovement + t * ( glm::vec3(1.f) - _scaleBeforeMovement)
                                     );
         _translation  = glm::translate  ( _translationBeforeMovement * (1.f-t));
 
     }
-    else if ( _ball.state() == Ball::State::TurningLeft ||
-              _ball.state() == Ball::State::TurningRight ) {
-
-        const float t = _ball.getTimeSecondsSinceAction()/
-                         _ball.timeToGetNextBlock;
-
-        _scale        = glm::scale  ( _scaleBeforeMovement + 
-                                          t * ( glm::vec3(1.f) 
-                                                - _scaleBeforeMovement)
-                                    );
-        _translation  = glm::translate  ( _translationBeforeMovement * (1.f-t));
-        _rotationBeforeMovement = _rotation; 
-     }
-
 }
 
 
