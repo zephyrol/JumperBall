@@ -34,8 +34,11 @@ testClass::testClass(): _window(nullptr)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
     
-    _window = glfwCreateWindow(1024,768,"JumperBall",nullptr,nullptr);
-
+    /*_window = glfwCreateWindow(RESOLUTION_X,RESOLUTION_Y,
+                                "JumperBall",glfwGetPrimaryMonitor(),
+           nullptr);*/
+    _window = glfwCreateWindow( RESOLUTION_X,RESOLUTION_Y,
+                                "JumperBall",nullptr, nullptr);
     if( _window == nullptr ){
     std::cerr << "Failed to open GLFW window" << std::endl;
     glfwTerminate();
@@ -46,7 +49,6 @@ testClass::testClass(): _window(nullptr)
         std::cerr << "Unable to load OpenGL functions !" << std::endl;
         exit(EXIT_FAILURE);
     }
-
 
     glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

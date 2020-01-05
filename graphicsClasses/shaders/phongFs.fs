@@ -17,7 +17,7 @@ in float  proximityObjectBehind;
 
 
 void main() {
-    const float epsilon     = 0.999f;
+    const float epsilon     = 0.99999f;
     if (proximityObjectBehind < epsilon ) discard;
 
     vec3 toLight            = normalize(positionLight 

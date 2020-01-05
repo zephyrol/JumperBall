@@ -163,7 +163,11 @@ void Rendering::renderCamera(const ShaderProgram& sp) {
   const std::string namePositionCamera  = "positionCamera";
 
   _uniformMatrix4[nameVP] =  glm::mat4(
-  glm::perspective(glm::radians(70.f), 4.f/3.f, _camera._zNear, _camera._zFar)
+  glm::perspective( glm::radians(70.f), 
+                    static_cast<float>(RESOLUTION_X)/
+                      static_cast<float>(RESOLUTION_Y), 
+                    _camera._zNear, _camera._zFar)
+
   * glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())); 
 
   const std::array<float,3> positionBall = _ball.get3DPosition(); 
