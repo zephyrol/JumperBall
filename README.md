@@ -24,6 +24,6 @@ The parameter is the map that you want to load.
 
 HOW TO PLAY : 
 
--Use the arrows to move and Enter to jump.
+-Use the arrows to move and Space (or Enter ) to jump.
 
 
