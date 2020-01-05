@@ -67,6 +67,7 @@ public:
     Ball::State                 state()                                   const;
 
     float                       getTimeSecondsSinceAction()      const noexcept;
+    timePointMs                 getTimeActionMs()                const noexcept;
 
 	  struct nextBlockInformation getNextBlockInfo()					     const noexcept;
     const ClassicalMechanics&   getMechanics()                   const noexcept;
@@ -111,7 +112,6 @@ private:
     std::shared_ptr<const std::vector<int> >  
                                 intersectBlock(float x, float y, float z) const;
 
-    timePointMs                 getTimeActionMs()                const noexcept;
     float                       getTimeActionSecondsFloat()      const noexcept;
 
     std::array<float,3>         P2DTo3D(ClassicalMechanics::physics2DVector p2D)

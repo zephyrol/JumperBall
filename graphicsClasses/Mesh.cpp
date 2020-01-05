@@ -59,6 +59,9 @@ Mesh::Mesh(const Ball& ball):
                     z ));
             _uvCoords.push_back(glm::vec2( static_cast<float>(j)/ iMeriCount, 
                     static_cast<float>(iParaCount - i ) / iParaCount ));
+            _colors.push_back(glm::vec3(static_cast<float>(i)/iParaCount,
+                                        (j < iMeriCount/2) ? 1.f : 0.f,
+                                        0.5f));
         }
     }
     // compute normals ---------------------------------------------------------
@@ -68,7 +71,7 @@ Mesh::Mesh(const Ball& ball):
     for( unsigned int i = 0; i < iVertexCount; ++i )
     {
         _normals.push_back(glm::normalize( _positions[ i ] ));
-        _colors.push_back(_normals[i]);
+        //_colors.push_back(_normals[i]);
     }
     
     // for quads split in 2

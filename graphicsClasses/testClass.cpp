@@ -77,7 +77,9 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         b.update();
         c.follow(b);
         
-        if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS) {
+        if( glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS || 
+            glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_PRESS)
+        {
             //if (!enterButton) {
                 enterButton = true;
                 b.doAction(Ball::ActionRequest::Jump);
@@ -105,7 +107,9 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
             //}
         }
 
-        if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE) {
+        if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE ||
+            glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_RELEASE)
+        {
             if (enterButton) {
                 enterButton = false;
             }

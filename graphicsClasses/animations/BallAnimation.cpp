@@ -18,18 +18,29 @@
 
 BallAnimation::BallAnimation(const Ball& ball):
     _ball(ball) ,
-    _rotationBeforeMovement(1.f)
+    _rotationBeforeMovement(1.f),
+    _scaleBeforeMovement(1.f),
+    _translationBeforeMovement(0.f),
+    _referenceTimePoint(ball.getTimeActionMs()),
+    _referenceState(ball.state())
 {
     
 }
 
 void BallAnimation::updateTrans() {
     
-    // SCALE & TRANSLATE
+    if (_ball.getTimeActionMs() > _referenceTimePoint) {
+        _referenceTimePoint = _ball.getTimeActionMs();
+        if ( _ball.state() == _referenceState) {
+        _scaleBeforeMovement        = glm::vec3(1.f,1.f,1.f);
+        _translationBeforeMovement  = glm::vec3(0.f,0.f,0.f);
+        }
+        else _referenceState = _ball.state();
+    }
 
     if ( _ball.state() == Ball::State::Staying) {
 
-        constexpr float durationAnimation = 0.5f; 
+        constexpr float durationAnimation = 0.7f; 
         constexpr float maxCrushing       = 0.2f; 
 
         const float angleInCosinusFunc    = _ball.getTimeSecondsSinceAction() *
@@ -41,8 +52,6 @@ void BallAnimation::updateTrans() {
                                             maxCrushing)/2.f + 
                                             maxCrushing/2.f ;
          
-        std::cout << _ball.getTimeSecondsSinceAction() << std::endl;
-        std::cout << crushingCoefficient << std::endl;
         const std::array<float,3> sideDir = _ball.currentSideAsVector();
         const glm::vec3 glmSideDir{
                               sideDir.at(0), sideDir.at(1), sideDir.at(2)};
@@ -52,21 +61,19 @@ void BallAnimation::updateTrans() {
         const glm::vec3 scaleVector (glm::vec3(1.f) -  crushingCoefficient * 
                                                        deformationVector) ;
         const glm::mat4 scaleMatrix = glm::scale(scaleVector);
+
+        const glm::vec3 translationVector ( -crushingCoefficient *
+                                            _ball.getRadius() * glmSideDir);
         
+        _scale                      = scaleMatrix;
+        _scaleBeforeMovement        = scaleVector;
 
-        std::cout << crushingCoefficient << std::endl;
-        /*std::cout << scaleVector.x << " " << scaleVector.y << " " 
-                  << scaleVector.z << std::endl;*/
+        _translation                = glm::translate(translationVector);
+        _translationBeforeMovement  = translationVector;
 
-        _scale       = scaleMatrix;
-        _translation = glm::translate(-crushingCoefficient
-                                      *_ball.getRadius()*glmSideDir);
-
+        _rotationBeforeMovement     = _rotation; 
     }
-
-    // ROTATION
-
-    if ( _ball.state() == Ball::State::Moving ||
+    else if ( _ball.state() == Ball::State::Moving ||
             _ball.state() == Ball::State::Jumping) {
         
         constexpr float sizeBlock = 1.f;
@@ -74,10 +81,11 @@ void BallAnimation::updateTrans() {
         if (_ball.state() == Ball::State::Moving)
             t = _ball.getTimeSecondsSinceAction()/
                     _ball.timeToGetNextBlock;
-        else if (_ball.state() == Ball::State::Jumping)
+        else {
             t = _ball.getMechanics().getPosition(
                     _ball.getTimeSecondsSinceAction()
-                    ).x;
+                    ).x ;
+        }
         
         const float angleToGetBlock = sizeBlock/_ball.getRadius();
         const float currentAngle = t * angleToGetBlock;
@@ -89,21 +97,33 @@ void BallAnimation::updateTrans() {
         const glm::vec3 glmSideDir{sideDir.at(0), sideDir.at(1), sideDir.at(2)};
         
         const glm::mat4 rotationMatrix = glm::rotate( currentAngle,
-                glm::cross( glmSideDir,
-                glmLookDir));
-        _rotation    = rotationMatrix * _rotationBeforeMovement;
-        _scale       = glm::mat4(1.f);
-        _translation = glm::mat4(1.f);
-        std::cout << "Move" << std::endl;
-    }
-    else {
-        _rotationBeforeMovement = _rotation; 
-    }
+                glm::cross( glmSideDir, glmLookDir));
 
-    /*else if ( _ball.state() == Ball::State::Staying || 
-     _ball.state() == Ball::State::TurningLeft ||
-     _ball.state() == Ball::State::TurningRight ) {
-     }*/
+
+        _rotation    = rotationMatrix     * _rotationBeforeMovement;
+    
+        if (t > 1.f ) t = 1.f;
+        if (t < 0.f)  t = fabs(t);
+        _scale        = glm::scale  ( 
+         _scaleBeforeMovement + t * ( glm::vec3(1.f) - _scaleBeforeMovement)
+                                    );
+        _translation  = glm::translate  ( _translationBeforeMovement * (1.f-t));
+
+    }
+    else if ( _ball.state() == Ball::State::TurningLeft ||
+              _ball.state() == Ball::State::TurningRight ) {
+
+        const float t = _ball.getTimeSecondsSinceAction()/
+                         _ball.timeToGetNextBlock;
+
+        _scale        = glm::scale  ( _scaleBeforeMovement + 
+                                          t * ( glm::vec3(1.f) 
+                                                - _scaleBeforeMovement)
+                                    );
+        _translation  = glm::translate  ( _translationBeforeMovement * (1.f-t));
+        _rotationBeforeMovement = _rotation; 
+     }
+
 }
 
 
