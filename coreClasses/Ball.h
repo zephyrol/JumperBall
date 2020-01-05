@@ -59,6 +59,7 @@ public:
     std::array<float,3>         get3DPosition()                  const noexcept;
     float                       getRadius()                               const;
     std::array<float,3>         lookTowardsAsVector()                     const;
+    std::array<float,3>         currentSideAsVector()                     const;
 
     JumperBallTypes::Direction  currentSide()                             const;
     JumperBallTypes::Direction  lookTowards()                             const;
@@ -68,6 +69,7 @@ public:
     float                       getTimeSecondsSinceAction()      const noexcept;
 
 	  struct nextBlockInformation getNextBlockInfo()					     const noexcept;
+    const ClassicalMechanics&   getMechanics()                   const noexcept;
 
 
 
@@ -80,7 +82,7 @@ public:
     static timePointMs          getTimePointMSNow ()                   noexcept;
     static float                getTimeNowSecondsFloat()               noexcept;
     static float                getTimeSecondsSinceTimePoint(
-                                    const timePointMs& timePoint)       noexcept;
+                                    const timePointMs& timePoint)      noexcept;
     
 private:
     
@@ -103,8 +105,6 @@ private:
 
     std::chrono::time_point<std::chrono::system_clock>  
                                 _timeAction;
-
-    //std::vector<shock>          _shocks; 
 
 	
     //-------CONST METHODS--------//

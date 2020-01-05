@@ -28,13 +28,11 @@ public:
     
 
     //-------CONST METHODS----------//
-    const glm::mat4&        local()                                       const;
     const glm::mat4&        world()                                       const;
     void                    draw()                                        const;
 
 
     //----------METHODS-------------//
-    void                    local(const glm::mat4& l);
     void                    world(const glm::mat4& w);
     void                    updateMatrices (const Ball& b);
 
@@ -54,7 +52,6 @@ private:
     GLuint                  _idVertexArray;
     std::array<GLuint,3>    _idVertexBuffer;
 
-    glm::mat4               _local;
     glm::mat4               _world;
 
     //-------CONST METHODS----------//

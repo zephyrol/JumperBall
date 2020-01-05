@@ -4,7 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>graphicsClasses/animations/Animation.h</itemPath>
       <itemPath>coreClasses/Ball.h</itemPath>
+      <itemPath>graphicsClasses/animations/BallAnimation.h</itemPath>
       <itemPath>coreClasses/blocks/BaseBlock.h</itemPath>
       <itemPath>coreClasses/blocks/Block.h</itemPath>
       <itemPath>coreClasses/blocks/BrittleBlock.h</itemPath>
@@ -33,7 +35,9 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>graphicsClasses/animations/Animation.cpp</itemPath>
       <itemPath>coreClasses/Ball.cpp</itemPath>
+      <itemPath>graphicsClasses/animations/BallAnimation.cpp</itemPath>
       <itemPath>coreClasses/blocks/BaseBlock.cpp</itemPath>
       <itemPath>coreClasses/blocks/Block.cpp</itemPath>
       <itemPath>coreClasses/blocks/BrittleBlock.cpp</itemPath>
@@ -48,6 +52,7 @@
       <itemPath>graphicsClasses/ShaderProgram.cpp</itemPath>
       <itemPath>coreClasses/blocks/SpicyBlock.cpp</itemPath>
       <itemPath>graphicsClasses/Star.cpp</itemPath>
+      <itemPath>coreClasses/Types.cpp</itemPath>
       <itemPath>graphicsClasses/Utility.cpp</itemPath>
       <itemPath>libs/glad/glad.c</itemPath>
       <itemPath>main.cpp</itemPath>
@@ -98,7 +103,6 @@
           </incDir>
         </cTool>
         <ccTool>
-          <standard>8</standard>
           <incDir>
             <pElem>coreClasses</pElem>
             <pElem>libs</pElem>
@@ -120,6 +124,8 @@
       <item path="coreClasses/Map.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/Map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/Types.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/Types.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -177,6 +183,26 @@
       <item path="graphicsClasses/Utility.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="graphicsClasses/Utility.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/Animation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/Animation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/BallAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/BallAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="graphicsClasses/shaders/basicFs.fs" ex="false" tool="3" flavor2="0">
       </item>
@@ -234,7 +260,6 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <standard>8</standard>
           <incDir>
             <pElem>coreClasses</pElem>
             <pElem>libs</pElem>
@@ -262,6 +287,8 @@
       <item path="coreClasses/Map.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/Map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/Types.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/Types.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -319,6 +346,26 @@
       <item path="graphicsClasses/Utility.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="graphicsClasses/Utility.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/Animation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/Animation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/BallAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/BallAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="graphicsClasses/shaders/basicFs.fs" ex="false" tool="3" flavor2="0">
       </item>

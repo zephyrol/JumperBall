@@ -28,7 +28,7 @@ Ball::Ball(const Map& map):
         _state(Ball::State::Staying),
         _map(map),
         _mechanicsPattern(),
-        _timeAction(){
+        _timeAction(std::chrono::system_clock::now()){
        
 }
 
@@ -132,6 +132,7 @@ void Ball::turnLeft() noexcept {
             break;
     }
     _state = Ball::State::TurningLeft;
+    setTimeActionNow();
 }
 
 void Ball::turnRight() noexcept {
@@ -230,6 +231,7 @@ void Ball::turnRight() noexcept {
             break;
     }
     _state = Ball::State::TurningRight;
+    setTimeActionNow();
 }
 
 std::array<float,3> Ball::get3DPosition() const noexcept {
@@ -463,6 +465,7 @@ void Ball::jump() noexcept {
 
 void Ball::stay() noexcept {
     _state = Ball::State::Staying;
+    setTimeActionNow();
 }
 
 void Ball::move() noexcept {
@@ -476,7 +479,7 @@ void Ball::move() noexcept {
 }
 
 void Ball::setTimeActionNow() noexcept {
-    _timeAction = std::chrono::system_clock::now();
+   _timeAction = std::chrono::system_clock::now();
 }
 
 Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
@@ -511,9 +514,6 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
             break;
     }
 
-
-    if (answer == Ball::AnswerRequest::Accepted)
-        setTimeActionNow();
     return answer;
 }
 
@@ -589,6 +589,10 @@ Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
     }
     answer = Ball::AnswerRequest::Accepted; 
     return answer;
+}
+
+const ClassicalMechanics& Ball::getMechanics() const noexcept{
+    return _mechanicsPattern;
 }
 
 
@@ -838,42 +842,21 @@ float Ball::getTimeSecondsSinceTimePoint(const timePointMs& timePoint) noexcept{
 }
 
 std::array<float, 3> Ball::lookTowardsAsVector() const {
-    std::array<float,3> lookVec3 {0.f,0.f,0.f};
-    switch (_lookTowards) {
-        case JumperBallTypes::Direction::North:
-            lookVec3.at(2) = -1.f;
-            break;
-        case JumperBallTypes::Direction::South:
-            lookVec3.at(2) = 1.f;
-            break;
-        case JumperBallTypes::Direction::East:
-            lookVec3.at(0) = 1.f;
-            break;
-        case JumperBallTypes::Direction::West:
-            lookVec3.at(0) = -1.f;
-            break;
-        case JumperBallTypes::Direction::Up:
-            lookVec3.at(1) = 1.f;
-            break;
-        case JumperBallTypes::Direction::Down:
-            lookVec3.at(1) = -1.f;
-            break;
-        default :
-            break;
-    }
-
-    return lookVec3;
-
+    return JumperBallTypesMethods::directionAsVector(_lookTowards);
 }
+
+std::array<float, 3> Ball::currentSideAsVector() const {
+    return JumperBallTypesMethods::directionAsVector(_currentSide);
+}
+
 
 std::array<float, 3> Ball::get3DPosStayingBall() const {
 
     constexpr float offsetPosition = 0.5f + _mechanicsPattern.radiusBall;
-    float x,y,z;
 
-    x = static_cast<float> (_currentBlockX + 0.5f);
-    y = static_cast<float> (_currentBlockY + 0.5f);
-    z = static_cast<float> (_currentBlockZ + 0.5f);
+    float x = static_cast<float> (_currentBlockX + 0.5f);
+    float y = static_cast<float> (_currentBlockY + 0.5f);
+    float z = static_cast<float> (_currentBlockZ + 0.5f);
         
     switch (_currentSide) {
         case JumperBallTypes::Direction::North:

@@ -25,7 +25,6 @@ Mesh::Mesh(const Ball& ball):
       _idElementBuffer(),
       _idVertexArray(),
       _idVertexBuffer(),
-      _local(1.f),
       _world(1.f)
 {
   
@@ -110,7 +109,6 @@ Mesh::Mesh(const Map& map):
       _idElementBuffer(),
       _idVertexArray(),
       _idVertexBuffer(),
-      _local(1.f),
       _world(1.f)
 {
 
@@ -242,16 +240,9 @@ void Mesh::draw() const {
     glDisableVertexAttribArray(2);
 }
 
-const glm::mat4& Mesh::local() const {
-    return _local;
-}
 
 const glm::mat4& Mesh::world() const {
     return _world;
-}
-
-void Mesh::local(const glm::mat4& l) {
-    _local = l; 
 }
 
 void Mesh::world(const glm::mat4& w) {
@@ -260,7 +251,6 @@ void Mesh::world(const glm::mat4& w) {
 
 void Mesh::updateMatrices(const Ball& b) {
    
-    (void) b; //We do not use the rotation state of the ball yet
     std::array<float,3> positionBall = b.get3DPosition();
     _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.at(0),
                             positionBall.at(1) ,positionBall.at(2)));

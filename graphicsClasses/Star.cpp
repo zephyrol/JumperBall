@@ -85,12 +85,13 @@ GLfloat Star::radiusOutside() const {
 }
 
 glm::mat4 Star::transform() const {
-    float timeSinceCreation = Ball::getTimeSecondsSinceTimePoint(_timeCreation);
-    float timePerRound      = 10.f;
-    glm::mat4 rotationMatrix 
-                            = glm::rotate( timeSinceCreation * 2.f
-                                *static_cast<float>(M_PI)/timePerRound,
-                              glm::vec3(0.5f,1.f,0.f));
+    const float timeSinceCreation  = 
+                              Ball::getTimeSecondsSinceTimePoint(_timeCreation);
+    const float timePerRound       = 10.f;
+    const glm::mat4 rotationMatrix = glm::rotate( timeSinceCreation * 2.f
+                                        *static_cast<float>(M_PI)/timePerRound,
+                                        glm::vec3(0.5f,1.f,0.f)
+                                                );
 
     return rotationMatrix * _transform;
 

@@ -48,8 +48,6 @@ int main(int argc, char** argv) {
 
         file.close();
 
-        ClassicalMechanics newton;
-
         Ball b (m);
         Camera c;
 

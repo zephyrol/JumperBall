@@ -32,6 +32,11 @@ namespace JumperBallTypes {
         Down 
     };
 
+
+}
+
+namespace JumperBallTypesMethods {
+    std::array<float,3> directionAsVector (JumperBallTypes::Direction dir);
 }
 
 #endif /* TYPES_H */

@@ -29,6 +29,7 @@
 #include "Camera.h"
 #include "Star.h"
 #include "uniformBlocks/uniformLight.h"
+#include "animations/BallAnimation.h"
 
 
 class Rendering {
@@ -66,7 +67,10 @@ private:
     Mesh                            _meshBall;
 
     const Map&                      _map;
+
     const Ball&                     _ball;
+    BallAnimation                   _ballAnimation;
+
     const Star&                     _star;
     const Camera&                   _camera;
 

@@ -33,6 +33,7 @@ Rendering::Rendering(const Map&     map,
     _meshBall(ball),
     _map(map),
     _ball(ball),
+    _ballAnimation(ball),
     _star(star),
     _camera(camera),
     _spMap( Shader (GL_VERTEX_SHADER, vsshaderMap ),
@@ -118,13 +119,20 @@ void Rendering::render() {
 
     //Ball
     _meshBall.updateMatrices(_ball);
+    _ballAnimation.updateTrans();
 
-    bindUniform ("MW", _meshBall.world() * _meshBall.local(), _spMap);
+    bindUniform ("M", _ballAnimation.model(),           _spMap);
+    bindUniform ("SR", _ballAnimation.scaleRotation(),  _spMap);
+
+    bindUniform ("W",  _meshBall.world(),               _spMap);
 
     _meshBall.draw();
 
     //Map
-    bindUniform ("MW", glm::mat4(1.f), _spMap);
+    bindUniform ("M",  glm::mat4(1.f), _spMap);
+    bindUniform ("SR", glm::mat4(1.f), _spMap);
+
+    bindUniform ("W",  glm::mat4(1.f), _spMap);
 
     
     
