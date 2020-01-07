@@ -13,8 +13,8 @@
 
 #include "Rendering.h"
 
-const std::string Rendering::vsshaderMap  = "graphicsClasses/shaders/phongVs.vs";
-const std::string Rendering::fsshaderMap  = "graphicsClasses/shaders/phongFs.fs";
+const std::string Rendering::vsshaderMap = "graphicsClasses/shaders/phongVs.vs";
+const std::string Rendering::fsshaderMap = "graphicsClasses/shaders/phongFs.fs";
 
 const std::string Rendering::vsshaderStar = "graphicsClasses/shaders/starVs.vs";
 const std::string Rendering::fsshaderStar = "graphicsClasses/shaders/starFs.fs";
@@ -88,7 +88,8 @@ void Rendering::bindUniform(const std::string& name,
     glUniform1fv( uniformVariableID, 1, &value);
 }
 
-void Rendering::bindUniformBlock(const std::string& name, const bool& value, const ShaderProgram& sp) {
+void Rendering::bindUniformBlock(const std::string& name, const bool& value, 
+                                  const ShaderProgram& sp) {
      
     // Index of block
     const GLuint blockIndex = glGetUniformBlockIndex( sp.getHandle()
