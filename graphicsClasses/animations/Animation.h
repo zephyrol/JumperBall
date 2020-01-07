@@ -20,14 +20,22 @@
 
 class Animation {
 public:
+    
+    //--CONSTRUCTORS & DESTRUCTORS--//
     Animation                   ();
     virtual ~Animation          ()                                           =0;
+
+    //-------CONST METHODS----------//
     glm::mat4                   model()                                   const;
     glm::mat4                   scaleRotation()                           const;
     glm::mat4                   translation()                             const;
+
+    //----------METHODS------------//
     virtual void                updateTrans()                                =0;
 
 protected:
+    
+    //--------ATTRIBUTES-----------//
     glm::mat4                   _scale;
     glm::mat4                   _rotation;
     glm::mat4                   _translation;

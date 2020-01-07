@@ -26,7 +26,7 @@ public:
 
 
     //---------CONSTANTS------------//
-	  static constexpr float		  timeToGetNextBlock						           = 0.2f;
+    static constexpr float      timeToGetNextBlock                       = 0.2f;
 
 
     //------------TYPES------------//
@@ -35,7 +35,7 @@ public:
 
     enum class ActionRequest    { GoStraightAhead, TurnLeft, TurnRight, Jump};
     enum class AnswerRequest    { Accepted, Rejected };
-	  enum class NextBlockLocal	  { Above, InFrontOf, Same, None };
+    enum class NextBlockLocal   { Above, InFrontOf, Same, None };
 
     using timePointMs =         std::chrono::time_point <
                                     std::chrono::_V2::system_clock,
@@ -47,13 +47,13 @@ public:
                                                       std::ratio<1,1000> > ;
     using shock     =           std::array<unsigned int, 3 > ; 
                                                     
-	  struct nextBlockInformation { JumperBallTypes::Direction  nextSide;
-								                  JumperBallTypes::Direction  nextLook;
-								                  NextBlockLocal			        nextLocal;
-								                  unsigned int				        poxX;
-								                  unsigned int				        poxY;
-								                  unsigned int				        poxZ;
-								                };
+    struct nextBlockInformation { JumperBallTypes::Direction  nextSide;
+                                  JumperBallTypes::Direction  nextLook;
+                                  NextBlockLocal              nextLocal;
+                                  unsigned int                poxX;
+                                  unsigned int                poxY;
+                                  unsigned int                poxZ;
+                                };
 
     //-------CONST METHODS--------//
     std::array<float,3>         get3DPosition()                  const noexcept;
@@ -69,7 +69,7 @@ public:
     float                       getTimeSecondsSinceAction()      const noexcept;
     timePointMs                 getTimeActionMs()                const noexcept;
 
-	  struct nextBlockInformation getNextBlockInfo()					     const noexcept;
+    struct nextBlockInformation getNextBlockInfo()               const noexcept;
     const ClassicalMechanics&   getMechanics()                   const noexcept;
 
 
@@ -107,7 +107,6 @@ private:
     std::chrono::time_point<std::chrono::system_clock>  
                                 _timeAction;
 
-	
     //-------CONST METHODS--------//
     std::shared_ptr<const std::vector<int> >  
                                 intersectBlock(float x, float y, float z) const;
@@ -129,10 +128,6 @@ private:
     AnswerRequest               isFallingIntersectionBlock()           noexcept;
     AnswerRequest               isGoingStraightAheadIntersectBlock()   noexcept; 
 
-
-
-
-        
 };
 
 #endif /* BALL_H */

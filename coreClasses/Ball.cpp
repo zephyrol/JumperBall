@@ -354,14 +354,14 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
 
     if (_map.map3DData(aboveX,aboveY,aboveZ)) {
 
-	      nextBlock.poxX = aboveX;
-	      nextBlock.poxY = aboveY;
-	      nextBlock.poxZ = aboveZ;
-	      nextBlock.nextLocal = NextBlockLocal::Above;
+        nextBlock.poxX = aboveX;
+        nextBlock.poxY = aboveY;
+        nextBlock.poxZ = aboveZ;
+        nextBlock.nextLocal = NextBlockLocal::Above;
 
         JumperBallTypes::Direction lookTowardsBeforeMovement = _lookTowards;
 
-	      nextBlock.nextLook = _currentSide;
+        nextBlock.nextLook = _currentSide;
         
         switch (lookTowardsBeforeMovement) {
             case JumperBallTypes::Direction::North:
@@ -389,20 +389,20 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
     } 
     else if (_map.map3DData(inFrontOfX,inFrontOfY,inFrontOfZ)) {
         
-        nextBlock.poxX 		  = inFrontOfX;
-        nextBlock.poxY 		  = inFrontOfY;
-        nextBlock.poxZ 		  = inFrontOfZ;
+        nextBlock.poxX      = inFrontOfX;
+        nextBlock.poxY      = inFrontOfY;
+        nextBlock.poxZ      = inFrontOfZ;
         nextBlock.nextLocal = NextBlockLocal::InFrontOf;
-        nextBlock.nextLook	= _lookTowards;
-        nextBlock.nextSide 	= _currentSide;
+        nextBlock.nextLook  = _lookTowards;
+        nextBlock.nextSide  = _currentSide;
         
     } 
     else if (!_map.map3DData(leftX,leftY,leftZ) && 
             !_map.map3DData(rightX,rightY,rightZ)) {
         
-        nextBlock.poxX 		  = _currentBlockX;
-        nextBlock.poxY 		  = _currentBlockY;
-        nextBlock.poxZ 		  = _currentBlockZ;
+        nextBlock.poxX      = _currentBlockX;
+        nextBlock.poxY      = _currentBlockY;
+        nextBlock.poxZ      = _currentBlockZ;
         nextBlock.nextLocal = NextBlockLocal::Same;
 
         JumperBallTypes::Direction sideBeforeMovement = _currentSide;
@@ -435,7 +435,7 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
     else {
 
         nextBlock.nextLocal = NextBlockLocal::None;
-        nextBlock.nextSide 	= _currentSide;
+        nextBlock.nextSide  = _currentSide;
         nextBlock.nextLook  = _lookTowards;
         nextBlock.poxX      = _currentBlockX;
         nextBlock.poxY      = _currentBlockY;
@@ -902,7 +902,7 @@ void Ball::update() noexcept{
             _3DPosY = position3D.at(1);
             _3DPosZ = position3D.at(2);
             
-    	  } else if ( _state == Ball::State::Moving){
+        } else if ( _state == Ball::State::Moving){
             float sSinceAction = getTimeSecondsSinceAction();
             if (sSinceAction >= timeToGetNextBlock) {
                 
@@ -1031,19 +1031,19 @@ void Ball::update() noexcept{
                 }
                 
             }
-    	  } else if ( _state == Ball::State::TurningLeft ||
-                    _state == Ball::State::TurningRight) {
-              
-              float sSinceAction = getTimeSecondsSinceAction();
-              if (sSinceAction  >= timeToGetNextBlock) {
-                  stay();
-                  update();
-              } else {
-                  _3DPosX = position3D.at(0);
-                  _3DPosY = position3D.at(1);
-                  _3DPosZ = position3D.at(2);
-              }
-          }
+        } else if ( _state == Ball::State::TurningLeft ||
+                _state == Ball::State::TurningRight) {
+            
+            float sSinceAction = getTimeSecondsSinceAction();
+            if (sSinceAction  >= timeToGetNextBlock) {
+                stay();
+                update();
+            } else {
+                _3DPosX = position3D.at(0);
+                _3DPosY = position3D.at(1);
+                _3DPosZ = position3D.at(2);
+            }
+        }
     } else if ( _state == Ball::State::Jumping){
         ClassicalMechanics::physics2DVector pos2D = 
                 _mechanicsPattern.getPosition(getTimeSecondsSinceAction());

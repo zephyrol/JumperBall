@@ -45,7 +45,7 @@ public:
 
 
     //------------METHODS----------//
-    void render() ; 
+    void                            render() ; 
     
 private:
 

@@ -19,12 +19,18 @@
 
 class BallAnimation : public Animation {
 public:
+
+    //--CONSTRUCTORS & DESTRUCTORS--//
     BallAnimation                 (const Ball& ball);
     virtual ~BallAnimation        ();
 
+
+    //----------METHODS------------//
     void                           updateTrans()                       override;
 
 private:
+
+    //--------ATTRIBUTES-----------//
     const Ball&                   _ball;
     glm::mat4                     _rotationBeforeMovement;
     glm::vec3                     _scaleBeforeMovement;
