@@ -44,7 +44,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/coreClasses/blocks/BrittleBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/FireBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/IceBlock.o \
-	${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o \
+	${OBJECTDIR}/coreClasses/blocks/SharpBlock.o \
 	${OBJECTDIR}/graphicsClasses/Camera.o \
 	${OBJECTDIR}/graphicsClasses/Mesh.o \
 	${OBJECTDIR}/graphicsClasses/Rendering.o \
@@ -130,10 +130,10 @@ ${OBJECTDIR}/coreClasses/blocks/IceBlock.o: coreClasses/blocks/IceBlock.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/IceBlock.o coreClasses/blocks/IceBlock.cpp
 
-${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o: coreClasses/blocks/SpicyBlock.cpp
+${OBJECTDIR}/coreClasses/blocks/SharpBlock.o: coreClasses/blocks/SharpBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/SpicyBlock.o coreClasses/blocks/SpicyBlock.cpp
+	$(COMPILE.cc) -g -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/SharpBlock.o coreClasses/blocks/SharpBlock.cpp
 
 ${OBJECTDIR}/graphicsClasses/Camera.o: graphicsClasses/Camera.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses

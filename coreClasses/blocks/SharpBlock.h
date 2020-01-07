@@ -5,7 +5,7 @@
  */
 
 /* 
- * File:   SpicyBlock.h
+ * File:   SharpBlock.h
  * Author: seb
  *
  * Created on 5 octobre 2019, 12:51
@@ -15,11 +15,11 @@
 #define SPICYBLOCK_H
 #include "Block.h"
 
-class SpicyBlock : public Block {
+class SharpBlock : public Block {
 public:
-    SpicyBlock();
-    SpicyBlock(const SpicyBlock& orig);
-    virtual ~SpicyBlock();
+    SharpBlock();
+    SharpBlock(const SharpBlock& orig);
+    virtual ~SharpBlock();
 
     Block::categoryOfBlocksInFile getType() const override;
     void interaction() override;

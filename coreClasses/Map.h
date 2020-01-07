@@ -18,7 +18,7 @@
 #include "blocks/BaseBlock.h"
 #include "blocks/FireBlock.h"
 #include "blocks/IceBlock.h"
-#include "blocks/SpicyBlock.h"
+#include "blocks/SharpBlock.h"
 #include "blocks/BrittleBlock.h"
 #include "ClassicalMechanics.h"
 #include <fstream>

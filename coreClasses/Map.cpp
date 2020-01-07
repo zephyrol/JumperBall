@@ -105,7 +105,7 @@ Map::Map(std::ifstream& file):_id (nbMaps),
                     case 3:
                         block = std::make_shared<IceBlock>(); break ;
                     case 4:
-                        block = std::make_shared<SpicyBlock>(); break ;
+                        block = std::make_shared<SharpBlock>(); break ;
                     case 5:
                         block = std::make_shared<BrittleBlock>(); break ;
                     default :

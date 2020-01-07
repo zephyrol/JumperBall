@@ -24,7 +24,7 @@ public:
 
 
     //------------TYPES------------//
-    enum class categoryOfBlocksInFile {None,Base,Fire,Ice,Spicy,Brittle};
+    enum class categoryOfBlocksInFile {None,Base,Fire,Ice,Sharp,Brittle};
 
 
     //----------METHODS-------------//

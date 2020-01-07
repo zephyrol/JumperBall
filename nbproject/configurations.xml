@@ -19,7 +19,7 @@
       <itemPath>graphicsClasses/Rendering.h</itemPath>
       <itemPath>graphicsClasses/Shader.h</itemPath>
       <itemPath>graphicsClasses/ShaderProgram.h</itemPath>
-      <itemPath>coreClasses/blocks/SpicyBlock.h</itemPath>
+      <itemPath>coreClasses/blocks/SharpBlock.h</itemPath>
       <itemPath>graphicsClasses/Star.h</itemPath>
       <itemPath>coreClasses/Types.h</itemPath>
       <itemPath>graphicsClasses/Utility.h</itemPath>
@@ -50,7 +50,7 @@
       <itemPath>graphicsClasses/Rendering.cpp</itemPath>
       <itemPath>graphicsClasses/Shader.cpp</itemPath>
       <itemPath>graphicsClasses/ShaderProgram.cpp</itemPath>
-      <itemPath>coreClasses/blocks/SpicyBlock.cpp</itemPath>
+      <itemPath>coreClasses/blocks/SharpBlock.cpp</itemPath>
       <itemPath>graphicsClasses/Star.cpp</itemPath>
       <itemPath>coreClasses/Types.cpp</itemPath>
       <itemPath>graphicsClasses/Utility.cpp</itemPath>
@@ -152,9 +152,9 @@
       </item>
       <item path="coreClasses/blocks/IceBlock.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="coreClasses/blocks/SpicyBlock.cpp" ex="false" tool="1" flavor2="0">
+      <item path="coreClasses/blocks/SharpBlock.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="coreClasses/blocks/SpicyBlock.h" ex="false" tool="3" flavor2="0">
+      <item path="coreClasses/blocks/SharpBlock.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphicsClasses/Camera.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -315,9 +315,9 @@
       </item>
       <item path="coreClasses/blocks/IceBlock.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="coreClasses/blocks/SpicyBlock.cpp" ex="false" tool="1" flavor2="0">
+      <item path="coreClasses/blocks/SharpBlock.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="coreClasses/blocks/SpicyBlock.h" ex="false" tool="3" flavor2="0">
+      <item path="coreClasses/blocks/SharpBlock.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphicsClasses/Camera.cpp" ex="false" tool="1" flavor2="0">
       </item>
