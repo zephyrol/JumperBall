@@ -27,5 +27,6 @@ Block::categoryOfBlocksInFile SharpBlock::getType() const {
 }
 
 void SharpBlock::interaction() {
-
+     
 }
+

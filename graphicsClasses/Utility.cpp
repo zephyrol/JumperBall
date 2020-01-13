@@ -16,6 +16,8 @@
 #include <fstream>
 #include <glm/glm.hpp>
 
+
+
 std::string Utility::readFileSrc(const std::string& filePath) {
     // precondition
     if (filePath.size() == 0) 
@@ -51,80 +53,157 @@ std::string Utility::readFileSrc(const std::string& filePath) {
 }
 
 
+const std::vector<GLfloat> Utility::positionsCube {
+    //Face 1 
+    0.f,1.f,0.f, 1.f,0.f,0.f,  0.f,0.f,0.f,
+    0.f,1.f,0.f, 1.f,1.f,0.f,  1.f,0.f,0.f,
+    //Face 2
+    0.f,0.f,1.f, 1.f,0.f,1.f, 0.f,1.f,1.f,
+    1.f,0.f,1.f, 1.f,1.f,1.f, 0.f,1.f,1.f,
+    //Face 3
+    0.f,0.f,0.f, 1.f,0.f,0.f, 0.f,0.f,1.f,
+    1.f,0.f,0.f, 1.f,0.f,1.f, 0.f,0.f,1.f,
+    //Face 4
+    0.f,1.f,1.f, 1.f,1.f,0.f,  0.f,1.f,0.f, 
+    0.f,1.f,1.f, 1.f,1.f,1.f,  1.f,1.f,0.f, 
+    //Face 5
+    0.f,0.f,1.f, 0.f,1.f,0.f,  0.f,0.f,0.f, 
+    0.f,0.f,1.f, 0.f,1.f,1.f,  0.f,1.f,0.f, 
+    //Face 6
+    1.f,0.f,0.f, 1.f,1.f,0.f, 1.f,0.f,1.f,
+    1.f,1.f,0.f, 1.f,1.f,1.f, 1.f,0.f,1.f
+};
+
+const std::vector<GLfloat> Utility::normalsCube {
+    //Face 1 
+    0.f,0.f,-1.f, 0.f,0.f,-1.f, 0.f,0.f,-1.f,
+    0.f,0.f,-1.f, 0.f,0.f,-1.f, 0.f,0.f,-1.f,
+    //Face 2
+    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
+    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
+    //Face 3
+    0.f,-1.f,0.f, 0.f,-1.f,0.f, 0.f,-1.f,0.f,
+    0.f,-1.f,0.f, 0.f,-1.f,0.f, 0.f,-1.f,0.f,
+    //Face 4 
+    0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
+    0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
+    //Face 5
+    -1.f,0.f,0.f, -1.f,0.f,0.f, -1.f,0.f,0.f,
+    -1.f,0.f,0.f, -1.f,0.f,0.f, -1.f,0.f,0.f,
+    //Face 6
+    1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
+    1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
+};
+
+const std::vector<GLfloat> Utility::colorsCube {
+
+    //Face 1 
+    1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
+    1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
+    //Face 2
+    0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
+    0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
+    //Face 3
+    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
+    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
+    //Face 4 
+    1.f,1.f,0.f, 1.f,1.f,0.f, 1.f,1.f,0.f,
+    1.f,1.f,0.f, 1.f,1.f,0.f, 1.f,1.f,0.f,
+    //Face 5
+    0.f,1.f,1.f, 0.f,1.f,1.f, 0.f,1.f,1.f,
+    0.f,1.f,1.f, 0.f,1.f,1.f, 0.f,1.f,1.f,
+    //Face 6
+    1.f,0.f,1.f, 1.f,0.f,1.f, 1.f,0.f,1.f,
+    1.f,0.f,1.f, 1.f,0.f,1.f, 1.f,0.f,1.f
+};
+
+const std::vector<GLfloat> Utility::positionsPike {
+    //Base
+    0.f,0.f,1.f,  1.f,0.f,0.f,  0.f,0.f,0.f, 
+    0.f,0.f,1.f,  1.f,0.f,1.f,  1.f,0.f,0.f, 
+    //Face 1
+    0.f,0.f,0.f,  0.5f,1.f,0.f, 0.5f,0.f,0.f, 
+    0.5f,0.f,0.f, 0.5f,1.f,0.f, 1.f,0.f,0.f, 
+    //Face 2
+    0.5f,0.f,1.f, 0.5f,1.f,1.f, 0.f,0.f,1.f, 
+    1.f,0.f,1.f,  0.5f,1.f,1.f, 0.5f,0.f,1.f,
+    //Face 3
+    0.f,0.f,0.f,  0.f,1.f,0.5f, 0.f,0.f,0.5f, 
+    0.f,0.f,0.5f, 0.f,1.f,0.5f, 0.f,0.f,1.f, 
+    //Face 4
+    1.f,0.f,0.5f, 1.f,1.f,0.5f, 1.f,0.f,0.f, 
+    1.f,0.f,1.f,  1.f,1.f,0.5f, 1.f,0.f,0.5f,
+};
+
+const std::vector<GLfloat> Utility::colorsPike {
+    //Base
+    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
+    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
+    //Face 1
+    0.3f,0.3f,0.3f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
+    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.3f,0.3f,0.3f, 
+    //Face 2
+    0.3f,0.3f,0.3f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
+    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.3f,0.3f,0.3f, 
+    //Face 3
+    0.3f,0.3f,0.3f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
+    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.3f,0.3f,0.3f, 
+    //Face 4
+    0.3f,0.3f,0.3f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
+    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.3f,0.3f,0.3f, 
+};
+
+const std::vector<GLfloat> Utility::normalsPike {
+    
+    //Base
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    //Face 1
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    //Face 2
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    //Face 3
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    //Face 4
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    
+    /*glm::cross(glm::vec3( positionsPike.at(0), positionsPike.at(1),
+                          positionsPike.at(2)),
+               glm::vec3( positionsPike.at(3), positionsPike.at(4),
+                          positionsPike.at(5))),*/
+    
+
+};
+
 std::vector<GLfloat> Utility::getPositionsLocalCube(){
-    const std::vector<GLfloat> positions  {
-        //Face 1 
-        0.f,1.f,0.f, 1.f,0.f,0.f,  0.f,0.f,0.f,
-        0.f,1.f,0.f, 1.f,1.f,0.f,  1.f,0.f,0.f,
-        //Face 2
-        0.f,0.f,1.f, 1.f,0.f,1.f, 0.f,1.f,1.f,
-        1.f,0.f,1.f, 1.f,1.f,1.f, 0.f,1.f,1.f,
-        //Face 3
-        0.f,0.f,0.f, 1.f,0.f,0.f, 0.f,0.f,1.f,
-        1.f,0.f,0.f, 1.f,0.f,1.f, 0.f,0.f,1.f,
-        //Face 4
-        0.f,1.f,1.f, 1.f,1.f,0.f,  0.f,1.f,0.f, 
-        0.f,1.f,1.f, 1.f,1.f,1.f,  1.f,1.f,0.f, 
-        //Face 5
-        0.f,0.f,1.f, 0.f,1.f,0.f,  0.f,0.f,0.f, 
-        0.f,0.f,1.f, 0.f,1.f,1.f,  0.f,1.f,0.f, 
-        //Face 6
-        1.f,0.f,0.f, 1.f,1.f,0.f, 1.f,0.f,1.f,
-        1.f,1.f,0.f, 1.f,1.f,1.f, 1.f,0.f,1.f
-    };
-   return positions;
+   return positionsCube;
 }
 
-
 std::vector<GLfloat> Utility::getNormalsLocalCube() {
-    const std::vector<GLfloat> normals {
-        //Face 1 
-        0.f,0.f,-1.f, 0.f,0.f,-1.f, 0.f,0.f,-1.f,
-        0.f,0.f,-1.f, 0.f,0.f,-1.f, 0.f,0.f,-1.f,
-        //Face 2
-        0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
-        0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
-        //Face 3
-        0.f,-1.f,0.f, 0.f,-1.f,0.f, 0.f,-1.f,0.f,
-        0.f,-1.f,0.f, 0.f,-1.f,0.f, 0.f,-1.f,0.f,
-        //Face 4 
-        0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
-        0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
-        //Face 5
-        -1.f,0.f,0.f, -1.f,0.f,0.f, -1.f,0.f,0.f,
-        -1.f,0.f,0.f, -1.f,0.f,0.f, -1.f,0.f,0.f,
-        //Face 6
-        1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
-        1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
-    };
-
-    return normals;
+    return normalsCube;
 }
 
 std::vector<GLfloat> Utility::getColorsLocalCube() {
-    const std::vector<GLfloat> colors{
-        //Face 1 
-        1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
-        1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
-        //Face 2
-        0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
-        0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
-        //Face 3
-        0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
-        0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
-        //Face 4 
-        1.f,1.f,0.f, 1.f,1.f,0.f, 1.f,1.f,0.f,
-        1.f,1.f,0.f, 1.f,1.f,0.f, 1.f,1.f,0.f,
-        //Face 5
-        0.f,1.f,1.f, 0.f,1.f,1.f, 0.f,1.f,1.f,
-        0.f,1.f,1.f, 0.f,1.f,1.f, 0.f,1.f,1.f,
-        //Face 6
-        1.f,0.f,1.f, 1.f,0.f,1.f, 1.f,0.f,1.f,
-        1.f,0.f,1.f, 1.f,0.f,1.f, 1.f,0.f,1.f
-    };
-
-    return colors;
+    return colorsCube;
 }
+
+
+
+/*std::vector<GLfloat> getPositionsPike() {
+    return positionsPike;
+}
+
+std::vector<GLfloat>  getNormalsLocalPike() {
+    return normalsPike;
+}
+
+std::vector<GLfloat>  getColorsLocalPike() {
+    return colorsPike;
+}*/
 
 void Utility::printMatrix(const glm::mat4& m) {
 
