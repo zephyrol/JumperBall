@@ -21,6 +21,9 @@ namespace Utility {
 
     void                              printMatrix(const glm::mat4& m);
 
+    std::vector<GLfloat>              computeNormals(const std::vector<GLfloat>&
+                                                      positions);
+
     extern const std::vector<GLfloat> positionsCube;
     extern const std::vector<GLfloat> colorsCube;
     extern const std::vector<GLfloat> normalsCube;

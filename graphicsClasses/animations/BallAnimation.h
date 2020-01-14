@@ -36,7 +36,7 @@ private:
     glm::vec3                     _scaleBeforeMovement;
     glm::vec3                     _translationBeforeMovement;
     Ball::timePointMs             _referenceTimePoint;
-    Ball::State                    _referenceState;
+    Ball::State                   _referenceState;
 
 };
 

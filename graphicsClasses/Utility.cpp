@@ -153,57 +153,54 @@ const std::vector<GLfloat> Utility::colorsPike {
     0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.3f,0.3f,0.3f, 
 };
 
-const std::vector<GLfloat> Utility::normalsPike {
+const std::vector<GLfloat> Utility::normalsPike = 
+                                        Utility::computeNormals(positionsPike);
+
+
+
+std::vector<GLfloat> Utility::computeNormals(const std::vector<GLfloat>& 
+                                                positions) {
+    std::vector<GLfloat> normals;
+    constexpr unsigned int offsetPointA       = 0;
+    constexpr unsigned int offsetPointB       = 3;
+    constexpr unsigned int offsetPointC       = 6;
     
-    //Base
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    //Face 1
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    //Face 2
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    //Face 3
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    //Face 4
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    constexpr unsigned int offsetCoordX       = 0;
+    constexpr unsigned int offsetCoordY       = 1;
+    constexpr unsigned int offsetCoordZ       = 2;
     
-    /*glm::cross(glm::vec3( positionsPike.at(0), positionsPike.at(1),
-                          positionsPike.at(2)),
-               glm::vec3( positionsPike.at(3), positionsPike.at(4),
-                          positionsPike.at(5))),*/
+    constexpr unsigned int coordsPerTriangle  = 9;
+    constexpr unsigned int pointsPerTriangles = 3;
     
+    for ( size_t i = 0; i < positions.size(); i+=coordsPerTriangle) {
+        glm::vec3 normal  (
+            glm::cross( 
+                glm::vec3(  positionsPike.at(offsetPointB + offsetCoordX) -
+                            positionsPike.at(offsetPointA + offsetCoordX),
+                            positionsPike.at(offsetPointB + offsetCoordY) -
+                            positionsPike.at(offsetPointA + offsetCoordY),
+                            positionsPike.at(offsetPointB + offsetCoordZ) -
+                            positionsPike.at(offsetPointA + offsetCoordZ)
+                          ),
+                glm::vec3(  positionsPike.at(offsetPointC + offsetCoordX) -
+                            positionsPike.at(offsetPointA + offsetCoordX),
+                            positionsPike.at(offsetPointC + offsetCoordY) -
+                            positionsPike.at(offsetPointA + offsetCoordY),
+                            positionsPike.at(offsetPointC + offsetCoordZ) -
+                            positionsPike.at(offsetPointA + offsetCoordZ)
+                          ))); 
 
-};
-
-std::vector<GLfloat> Utility::getPositionsLocalCube(){
-   return positionsCube;
+        glm::normalize(normal);
+        for (unsigned int j = 0; j < pointsPerTriangles; j++) {
+            
+            normals.push_back(normal.x);
+            normals.push_back(normal.y);
+            normals.push_back(normal.z);
+        }
+    }
+    return normals;
 }
 
-std::vector<GLfloat> Utility::getNormalsLocalCube() {
-    return normalsCube;
-}
-
-std::vector<GLfloat> Utility::getColorsLocalCube() {
-    return colorsCube;
-}
-
-
-
-/*std::vector<GLfloat> getPositionsPike() {
-    return positionsPike;
-}
-
-std::vector<GLfloat>  getNormalsLocalPike() {
-    return normalsPike;
-}
-
-std::vector<GLfloat>  getColorsLocalPike() {
-    return colorsPike;
-}*/
 
 void Utility::printMatrix(const glm::mat4& m) {
 

@@ -71,7 +71,6 @@ Mesh::Mesh(const Ball& ball):
     for( unsigned int i = 0; i < iVertexCount; ++i )
     {
         _normals.push_back(glm::normalize( _positions[ i ] ));
-        //_colors.push_back(_normals[i]);
     }
     
     // for quads split in 2
@@ -126,7 +125,10 @@ Mesh::Mesh(const Map& map):
             for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
                 auto block = map.map3DData(x,y,z);
                 if (block) {
-                    std::vector<GLfloat> pCube=Utility::getPositionsLocalCube();
+
+                    std::vector<GLfloat> pCube= Utility::positionsCube;
+                    std::vector<GLfloat> cCube= Utility::colorsCube;
+                    std::vector<GLfloat> nCube= Utility::normalsCube;
 
                     for (unsigned int i = 0 ; i < pCube.size(); i += 3 )
                     {
@@ -137,8 +139,6 @@ Mesh::Mesh(const Map& map):
                                           ,pCube.at(i+2)));
                     }
 
-                    std::vector<GLfloat> cCube=Utility::getColorsLocalCube();
-                    std::vector<GLfloat> nCube=Utility::getNormalsLocalCube();
                     for (unsigned int i = 0 ; i < cCube.size(); i += 3 )
                     {
                         _colors.push_back(
@@ -160,23 +160,23 @@ void Mesh::bindVertexData() const {
 
     std::vector<GLfloat> positionsList ;
     for (glm::vec3 pos : _positions) {
-      positionsList.push_back(pos.x) ;
-      positionsList.push_back(pos.y) ;
-      positionsList.push_back(pos.z) ;
+        positionsList.push_back(pos.x) ;
+        positionsList.push_back(pos.y) ;
+        positionsList.push_back(pos.z) ;
     }
 
     std::vector<GLfloat> colorsList;
     for (glm::vec3 color : _colors) {
-      colorsList.push_back(color.x) ;
-      colorsList.push_back(color.y) ;
-      colorsList.push_back(color.z) ;
+        colorsList.push_back(color.x) ;
+        colorsList.push_back(color.y) ;
+        colorsList.push_back(color.z) ;
     }
 
     std::vector<GLfloat> normalsList;
     for (glm::vec3 normal: _normals) {
-      normalsList.push_back(normal.x) ;
-      normalsList.push_back(normal.y) ;
-      normalsList.push_back(normal.z) ;
+        normalsList.push_back(normal.x) ;
+        normalsList.push_back(normal.y) ;
+        normalsList.push_back(normal.z) ;
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
@@ -202,33 +202,33 @@ void Mesh::draw() const {
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
     
     glVertexAttribPointer ( 
-            0,
-            3, // 3 GL_FLOAT per vertex
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            nullptr
-            );
+        0,
+        3, // 3 GL_FLOAT per vertex
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        nullptr
+        );
     
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
     glVertexAttribPointer ( 
-            1,
-            3, // 3 GL_FLOAT per vertex
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            nullptr
-            );
+        1,
+        3, // 3 GL_FLOAT per vertex
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        nullptr
+        );
 
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(2));
     glVertexAttribPointer ( 
-            2,
-            3, // 3 GL_FLOAT per vertex
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            nullptr
-            );
+        2,
+        3, // 3 GL_FLOAT per vertex
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        nullptr
+        );
 
     if (_useIndexing) {
         glBindBuffer  (GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
