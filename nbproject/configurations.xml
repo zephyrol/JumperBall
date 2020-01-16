@@ -108,6 +108,7 @@
             <pElem>libs</pElem>
           </incDir>
           <commandLine>-pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline</commandLine>
+          <warningLevel>2</warningLevel>
         </ccTool>
         <linkerTool>
           <commandLine>-lglfw -ldl</commandLine>
@@ -265,6 +266,7 @@
             <pElem>libs</pElem>
           </incDir>
           <commandLine>-pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline</commandLine>
+          <warningLevel>2</warningLevel>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>

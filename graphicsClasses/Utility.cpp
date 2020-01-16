@@ -12,6 +12,7 @@
  */
 
 #include "Utility.h"
+#include "glm/gtx/transform.hpp"
 #include <math.h>
 #include <fstream>
 #include <glm/glm.hpp>
@@ -119,43 +120,60 @@ const std::vector<GLfloat> Utility::colorsCube {
 
 const std::vector<GLfloat> Utility::positionsPike {
     //Base
-    0.f,0.f,1.f,  1.f,0.f,0.f,  0.f,0.f,0.f, 
-    0.f,0.f,1.f,  1.f,0.f,1.f,  1.f,0.f,0.f, 
+    0.f,0.f,1.f,       0.f,0.f,0.f, 1.f,0.f,0.f, 
+    0.f,0.f,1.f,       1.f,0.f,0.f, 1.f,0.f,1.f, 
     //Face 1
-    0.f,0.f,0.f,  0.5f,1.f,0.f, 0.5f,0.f,0.f, 
-    0.5f,0.f,0.f, 0.5f,1.f,0.f, 1.f,0.f,0.f, 
+    0.f,0.f,0.f,    0.5f,1.f,0.5f,  0.5f,0.f,0.f, 
+    0.5f,0.f,0.f,   0.5f,1.f,0.5f,  1.f,0.f,0.f, 
     //Face 2
-    0.5f,0.f,1.f, 0.5f,1.f,1.f, 0.f,0.f,1.f, 
-    1.f,0.f,1.f,  0.5f,1.f,1.f, 0.5f,0.f,1.f,
+    0.5f,0.f,1.f,   0.5f,1.f,0.5f,  0.f,0.f,1.f, 
+    1.f,0.f,1.f,    0.5f,1.f,0.5f,  0.5f,0.f,1.f,
     //Face 3
-    0.f,0.f,0.f,  0.f,1.f,0.5f, 0.f,0.f,0.5f, 
-    0.f,0.f,0.5f, 0.f,1.f,0.5f, 0.f,0.f,1.f, 
+    0.f,0.f,0.f,    0.f,0.f,0.5f,   0.5f,1.f,0.5f,
+    0.f,0.f,0.5f,   0.f,0.f,1.f,    0.5f,1.f,0.5f,
     //Face 4
-    1.f,0.f,0.5f, 1.f,1.f,0.5f, 1.f,0.f,0.f, 
-    1.f,0.f,1.f,  1.f,1.f,0.5f, 1.f,0.f,0.5f,
+    1.f,0.f,0.5f,   1.f,0.f,0.f,    0.5f,1.f,0.5f,
+    1.f,0.f,1.f,    1.f,0.f,0.5f,   0.5f,1.f,0.5f,
 };
 
 const std::vector<GLfloat> Utility::colorsPike {
     //Base
-    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
-    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
+    0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,  0.5f,0.5f,0.5f, 
+    0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,  0.5f,0.5f,0.5f, 
     //Face 1
-    0.3f,0.3f,0.3f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
-    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.3f,0.3f,0.3f, 
+    0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f,  0.5f,0.5f,0.5f, 
+    0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,  0.1f,0.1f,0.1f, 
     //Face 2
-    0.3f,0.3f,0.3f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
-    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.3f,0.3f,0.3f, 
+    0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,  0.1f,0.1f,0.1f, 
+    0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f,  0.5f,0.5f,0.5f, 
     //Face 3
-    0.3f,0.3f,0.3f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
-    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.3f,0.3f,0.3f, 
+    0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,  
+    0.5f,0.5f,0.5f, 0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f, 
     //Face 4
-    0.3f,0.3f,0.3f, 0.7f,0.7f,0.7f,  0.7f,0.7f,0.7f, 
-    0.7f,0.7f,0.7f, 0.7f,0.7f,0.7f,  0.3f,0.3f,0.3f, 
+    0.5f,0.5f,0.5f, 0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f,
+    0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,
 };
+
+/*const std::vector<GLfloat> Utility::colorsPike {
+    //Base
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    //Face 1
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    //Face 2
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
+    //Face 3
+    0.f,0.f,0.f, 0.f,0.f,0.f, 0.f,0.f,0.f,  
+    0.f,0.f,0.f, 0.f,0.f,0.f, 0.f,0.f,0.f, 
+    //Face 4
+    0.f,0.f,0.f, 0.f,0.f,0.f, 0.f,0.f,0.f,
+    0.f,0.f,0.f, 0.f,0.f,0.f, 0.f,0.f,0.f,
+};*/
 
 const std::vector<GLfloat> Utility::normalsPike = 
                                         Utility::computeNormals(positionsPike);
-
 
 
 std::vector<GLfloat> Utility::computeNormals(const std::vector<GLfloat>& 
@@ -175,19 +193,21 @@ std::vector<GLfloat> Utility::computeNormals(const std::vector<GLfloat>&
     for ( size_t i = 0; i < positions.size(); i+=coordsPerTriangle) {
         glm::vec3 normal  (
             glm::cross( 
-                glm::vec3(  positionsPike.at(offsetPointB + offsetCoordX) -
+                glm::vec3(  
+                            positionsPike.at(offsetPointB + offsetCoordX) -
                             positionsPike.at(offsetPointA + offsetCoordX),
                             positionsPike.at(offsetPointB + offsetCoordY) -
                             positionsPike.at(offsetPointA + offsetCoordY),
                             positionsPike.at(offsetPointB + offsetCoordZ) -
                             positionsPike.at(offsetPointA + offsetCoordZ)
                           ),
-                glm::vec3(  positionsPike.at(offsetPointC + offsetCoordX) -
-                            positionsPike.at(offsetPointA + offsetCoordX),
+                glm::vec3(  
+                            positionsPike.at(offsetPointC + offsetCoordX) -
+                            positionsPike.at(offsetPointB + offsetCoordX),
                             positionsPike.at(offsetPointC + offsetCoordY) -
-                            positionsPike.at(offsetPointA + offsetCoordY),
+                            positionsPike.at(offsetPointB + offsetCoordY),
                             positionsPike.at(offsetPointC + offsetCoordZ) -
-                            positionsPike.at(offsetPointA + offsetCoordZ)
+                            positionsPike.at(offsetPointB + offsetCoordZ)
                           ))); 
 
         glm::normalize(normal);
@@ -199,6 +219,38 @@ std::vector<GLfloat> Utility::computeNormals(const std::vector<GLfloat>&
         }
     }
     return normals;
+}
+
+glm::mat4 Utility::rotationUpToDir( JumperBallTypes::Direction dir) {
+
+    glm::mat4 rotationMatrix;
+    constexpr float fPI   = static_cast<float>(M_PI);
+    constexpr float fPI2  = static_cast<float>(M_PI_2);
+
+    switch (dir) {
+        case JumperBallTypes::Direction::North:
+            rotationMatrix = glm::rotate(-fPI2,glm::vec3(1.f,0.f,0.f));
+            break;
+        case JumperBallTypes::Direction::South:
+            rotationMatrix = glm::rotate(+fPI2,glm::vec3(1.f,0.f,0.f));
+            break;
+        case JumperBallTypes::Direction::East:
+            rotationMatrix = glm::rotate(-fPI2,glm::vec3(0.f,0.f,1.f));
+            break;
+        case JumperBallTypes::Direction::West:
+            rotationMatrix = glm::rotate(fPI2,glm::vec3(0.f,0.f,1.f));
+            break;
+        case JumperBallTypes::Direction::Up:
+            rotationMatrix = glm::mat4(1.f);
+            break;
+        case JumperBallTypes::Direction::Down:
+            rotationMatrix = glm::rotate(fPI,glm::vec3(1.f,0.f,0.f));
+            break;
+        default :
+            break;
+    }
+
+    return rotationMatrix;
 }
 
 

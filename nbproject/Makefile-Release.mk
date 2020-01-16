@@ -88,112 +88,112 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jumperball: ${OBJECTFILES}
 ${OBJECTDIR}/coreClasses/Ball.o: coreClasses/Ball.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Ball.o coreClasses/Ball.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Ball.o coreClasses/Ball.cpp
 
 ${OBJECTDIR}/coreClasses/ClassicalMechanics.o: coreClasses/ClassicalMechanics.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/ClassicalMechanics.o coreClasses/ClassicalMechanics.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/ClassicalMechanics.o coreClasses/ClassicalMechanics.cpp
 
 ${OBJECTDIR}/coreClasses/Map.o: coreClasses/Map.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Map.o coreClasses/Map.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Map.o coreClasses/Map.cpp
 
 ${OBJECTDIR}/coreClasses/Types.o: coreClasses/Types.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Types.o coreClasses/Types.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/Types.o coreClasses/Types.cpp
 
 ${OBJECTDIR}/coreClasses/blocks/BaseBlock.o: coreClasses/blocks/BaseBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/BaseBlock.o coreClasses/blocks/BaseBlock.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/BaseBlock.o coreClasses/blocks/BaseBlock.cpp
 
 ${OBJECTDIR}/coreClasses/blocks/Block.o: coreClasses/blocks/Block.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/Block.o coreClasses/blocks/Block.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/Block.o coreClasses/blocks/Block.cpp
 
 ${OBJECTDIR}/coreClasses/blocks/BrittleBlock.o: coreClasses/blocks/BrittleBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/BrittleBlock.o coreClasses/blocks/BrittleBlock.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/BrittleBlock.o coreClasses/blocks/BrittleBlock.cpp
 
 ${OBJECTDIR}/coreClasses/blocks/FireBlock.o: coreClasses/blocks/FireBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/FireBlock.o coreClasses/blocks/FireBlock.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/FireBlock.o coreClasses/blocks/FireBlock.cpp
 
 ${OBJECTDIR}/coreClasses/blocks/IceBlock.o: coreClasses/blocks/IceBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/IceBlock.o coreClasses/blocks/IceBlock.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/IceBlock.o coreClasses/blocks/IceBlock.cpp
 
 ${OBJECTDIR}/coreClasses/blocks/SharpBlock.o: coreClasses/blocks/SharpBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/SharpBlock.o coreClasses/blocks/SharpBlock.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/SharpBlock.o coreClasses/blocks/SharpBlock.cpp
 
 ${OBJECTDIR}/graphicsClasses/Camera.o: graphicsClasses/Camera.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Camera.o graphicsClasses/Camera.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Camera.o graphicsClasses/Camera.cpp
 
 ${OBJECTDIR}/graphicsClasses/Mesh.o: graphicsClasses/Mesh.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Mesh.o graphicsClasses/Mesh.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Mesh.o graphicsClasses/Mesh.cpp
 
 ${OBJECTDIR}/graphicsClasses/Rendering.o: graphicsClasses/Rendering.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Rendering.o graphicsClasses/Rendering.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Rendering.o graphicsClasses/Rendering.cpp
 
 ${OBJECTDIR}/graphicsClasses/Shader.o: graphicsClasses/Shader.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Shader.o graphicsClasses/Shader.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Shader.o graphicsClasses/Shader.cpp
 
 ${OBJECTDIR}/graphicsClasses/ShaderProgram.o: graphicsClasses/ShaderProgram.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/ShaderProgram.o graphicsClasses/ShaderProgram.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/ShaderProgram.o graphicsClasses/ShaderProgram.cpp
 
 ${OBJECTDIR}/graphicsClasses/Star.o: graphicsClasses/Star.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Star.o graphicsClasses/Star.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Star.o graphicsClasses/Star.cpp
 
 ${OBJECTDIR}/graphicsClasses/Utility.o: graphicsClasses/Utility.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Utility.o graphicsClasses/Utility.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Utility.o graphicsClasses/Utility.cpp
 
 ${OBJECTDIR}/graphicsClasses/animations/Animation.o: graphicsClasses/animations/Animation.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/animations
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/animations/Animation.o graphicsClasses/animations/Animation.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/animations/Animation.o graphicsClasses/animations/Animation.cpp
 
 ${OBJECTDIR}/graphicsClasses/animations/BallAnimation.o: graphicsClasses/animations/BallAnimation.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/animations
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/animations/BallAnimation.o graphicsClasses/animations/BallAnimation.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/animations/BallAnimation.o graphicsClasses/animations/BallAnimation.cpp
 
 ${OBJECTDIR}/graphicsClasses/testClass.o: graphicsClasses/testClass.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/testClass.o graphicsClasses/testClass.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/testClass.o graphicsClasses/testClass.cpp
 
 ${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformBlock.o: graphicsClasses/uniformBlocks/uniformBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/uniformBlocks
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformBlock.o graphicsClasses/uniformBlocks/uniformBlock.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformBlock.o graphicsClasses/uniformBlocks/uniformBlock.cpp
 
 ${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformLight.o: graphicsClasses/uniformBlocks/uniformLight.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/uniformBlocks
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformLight.o graphicsClasses/uniformBlocks/uniformLight.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformLight.o graphicsClasses/uniformBlocks/uniformLight.cpp
 
 ${OBJECTDIR}/libs/glad/glad.o: libs/glad/glad.c
 	${MKDIR} -p ${OBJECTDIR}/libs/glad
@@ -203,7 +203,7 @@ ${OBJECTDIR}/libs/glad/glad.o: libs/glad/glad.c
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

@@ -35,3 +35,34 @@ std::array<float,3> JumperBallTypesMethods::directionAsVector (
     
     return dirVec3;
 }
+
+JumperBallTypes::Direction JumperBallTypesMethods::integerAsDirection  
+                                                        (unsigned int number) 
+{
+   JumperBallTypes::Direction dir ; 
+   switch (number){
+       case 0 : 
+           dir = JumperBallTypes::Direction::North;
+           break;
+       case 1 : 
+           dir = JumperBallTypes::Direction::South;
+           break;
+       case 2 : 
+           dir = JumperBallTypes::Direction::East;
+           break;
+       case 3 : 
+           dir = JumperBallTypes::Direction::West;
+           break;
+       case 4 : 
+           dir = JumperBallTypes::Direction::Up;
+           break;
+       case 5 : 
+           dir = JumperBallTypes::Direction::Down;
+           break;
+       default:
+           dir = JumperBallTypes::Direction::North;
+           break;
+   }
+
+   return dir;
+}

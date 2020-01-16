@@ -13,11 +13,10 @@
 
 #include "SharpBlock.h"
 
-SharpBlock::SharpBlock() {
+SharpBlock::SharpBlock() : 
+            _facesSharps{true,true,true,true,true,true}
+{
 }
-
-/*SharpBlock::SharpBlock(const SharpBlock& orig) {
-}*/
 
 SharpBlock::~SharpBlock() {
 }
@@ -28,5 +27,9 @@ Block::categoryOfBlocksInFile SharpBlock::getType() const {
 
 void SharpBlock::interaction() {
      
+}
+
+std::array<bool, 6 > SharpBlock::faceInfo() const {
+    return _facesSharps;
 }
 

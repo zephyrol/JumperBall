@@ -31,3 +31,4 @@ Block::categoryOfBlocksInFile FireBlock::getType() const {
 void FireBlock::interaction() {
 
 }
+

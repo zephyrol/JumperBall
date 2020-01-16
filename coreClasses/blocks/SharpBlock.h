@@ -17,15 +17,20 @@
 
 class SharpBlock : public Block {
 public:
-    SharpBlock();
-    SharpBlock(const SharpBlock& orig);
-    virtual ~SharpBlock();
+    //--CONSTRUCTORS & DESTRUCTORS--//
+    SharpBlock                                    ();
+    virtual ~SharpBlock                           ();
 
-    Block::categoryOfBlocksInFile getType() const override;
-    void interaction() override;
+    //-------CONST METHODS----------//
+    Block::categoryOfBlocksInFile                 getType()      const override;
+    std::array<bool,6>                            faceInfo()   const override;
 
+    //----------METHODS-------------//
+    void                                          interaction()        override;
+     
+    
 private:
-
+    const std::array<bool,6>                      _facesSharps;
 };
 
 #endif /* SPICYBLOCK_H */

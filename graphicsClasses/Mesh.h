@@ -54,6 +54,9 @@ private:
 
     glm::mat4               _world;
 
+    //----------METHODS-------------//
+    void                    genSharps(const Block& block, glm::vec3 posWorld);
+
     //-------CONST METHODS----------//
     void                    bindVertexData()                              const;
 };

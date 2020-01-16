@@ -13,6 +13,7 @@
 
 #include "Mesh.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/transform.hpp"
 
 
 Mesh::Mesh(const Ball& ball):
@@ -34,15 +35,15 @@ Mesh::Mesh(const Ball& ball):
     glGenBuffers(3, _idVertexBuffer.data());
 
 
-    const unsigned int  iParaCount  = 40;
-    const unsigned int  iMeriCount  = 60;
-    const float         r           = ball.getRadius();
+    constexpr unsigned int  iParaCount  = 40;
+    constexpr unsigned int  iMeriCount  = 60;
+    const     float         r           = ball.getRadius();
     
     // Create a sphere ---------------------------------------------------------
     GLuint iVertexCount = iParaCount * iMeriCount;
     
-    const float a1 = ( 180.0 / ( iParaCount - 1 ) ) * M_PI / 180.0;
-    const float a2 = ( 360.0 / ( iMeriCount - 1 ) ) * M_PI / 180.0;
+    constexpr float a1 = ( 180.0 / ( iParaCount - 1 ) ) * M_PI / 180.0;
+    constexpr float a2 = ( 360.0 / ( iMeriCount - 1 ) ) * M_PI / 180.0;
     
     // parallels ---------------------------------------------------------------
     for( unsigned int i = 0; i < iParaCount; ++i )
@@ -101,6 +102,7 @@ Mesh::Mesh(const Ball& ball):
             _indices.data(),GL_STATIC_DRAW);
 }
 
+
 Mesh::Mesh(const Map& map):
       _positions(),
       _normals(),
@@ -132,21 +134,20 @@ Mesh::Mesh(const Map& map):
 
                     for (unsigned int i = 0 ; i < pCube.size(); i += 3 )
                     {
+
                         pCube.at(i)   +=  static_cast<GLfloat> (x) ;
                         pCube.at(i+1) +=  static_cast<GLfloat> (y) ;
                         pCube.at(i+2) +=  static_cast<GLfloat> (z) ;
+
                         _positions.push_back(glm::vec3(pCube.at(i),pCube.at(i+1)
                                           ,pCube.at(i+2)));
-                    }
-
-                    for (unsigned int i = 0 ; i < cCube.size(); i += 3 )
-                    {
                         _colors.push_back(
                           glm::vec3(cCube.at(i),cCube.at(i+1) ,cCube.at(i+2)));
                         _normals.push_back(
                           glm::vec3(nCube.at(i),nCube.at(i+1) ,nCube.at(i+2)));
                     }
-
+                    
+                    genSharps(*block,glm::vec3(x,y,z));
 
                 }
             }
@@ -257,6 +258,92 @@ void Mesh::updateMatrices(const Ball& b) {
     std::array<float,3> positionBall = b.get3DPosition();
     _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.at(0),
                             positionBall.at(1) ,positionBall.at(2)));
+}
+
+void Mesh::genSharps(const Block& block, glm::vec3 posWorld) {
+    
+    if (block.getType() == Block::categoryOfBlocksInFile::Sharp) {
+        
+        const std::array<float,7> scales 
+         {.2f,.1f,.05f,.1f,.075f,.15f,0.175f};
+
+        const std::array<glm::vec2,7> translationFloorFactor 
+        {
+            glm::vec2(0.f,0.f),   glm::vec2(-0.6f,-0.4f), glm::vec2(0.6f,-0.6f),
+            glm::vec2(0.2f,0.6f), glm::vec2(-0.2f,-0.6f), glm::vec2(0.6f,0.6f),
+            glm::vec2(-0.6f,0.6f)
+        };
+        
+        for(size_t i = 0; i < block.faceInfo().size(); i++) {
+            
+            bool isSharp = block.faceInfo().at(i);
+            if (isSharp) {
+                
+                constexpr float sizeBlock = 1.f;
+                constexpr float offset = sizeBlock/2.f;
+                
+                JumperBallTypes::Direction currentDir =
+                        JumperBallTypesMethods::integerAsDirection(i);
+                std::array<float,3> vecDir = 
+                JumperBallTypesMethods::directionAsVector(currentDir);
+                
+                glm::mat4 translationOffset = glm::translate(
+                        glm::vec3( -offset, 0 , -offset ));
+                
+                glm::mat4 rotationLocal = 
+                        Utility::rotationUpToDir(currentDir);
+
+                
+                for (size_t j = 0 ; j < scales.size() ; j++) {
+
+                    glm::mat4 scaleLocal = 
+                          glm::scale(glm::vec3(scales.at(j),0.5f,scales.at(j)));
+                    
+                    //for ()
+
+                    glm::mat4 translationLocal =
+                            glm::translate( glm::vec3(
+                            posWorld.x + offset + vecDir.at(0) * offset,
+                            posWorld.y + offset + vecDir.at(1) * offset,
+                            posWorld.z + offset + vecDir.at(2) * offset
+                            ));
+                    
+                    glm::mat4 translationFloor = glm::translate( glm::vec3(
+                                        offset * translationFloorFactor.at(j).x,
+                                        0.f,
+                                        offset * translationFloorFactor.at(j).y
+                                        ));
+                    
+                    const std::vector<GLfloat> positions  = 
+                                                        Utility::positionsPike;
+                    const std::vector<GLfloat> colors     = 
+                                                        Utility::colorsPike;
+                    const std::vector<GLfloat> normals    = 
+                                                        Utility::normalsPike;
+                    
+                    for (unsigned int k = 0; k < positions.size(); k+=3)
+                    {
+                        glm::vec4 position  { positions.at(k),positions.at(k+1),
+                                              positions.at(k+2), 1.f};
+                        glm::vec4 normal    { normals.at(k), normals.at(k+1),
+                                              normals.at(k+2), 1.f};
+                        glm::vec3 color     { colors.at(k), colors.at(k+1), 
+                                              colors.at(k+2)};
+                        
+                        position  = translationLocal *  rotationLocal * 
+                                     translationFloor * scaleLocal * 
+                                    translationOffset * position;
+                        normal    = glm::normalize( rotationLocal * scaleLocal * 
+                                                    normal);
+
+                        _positions.push_back(glm::vec3(position));
+                        _normals.push_back(glm::vec3(normal));
+                        _colors.push_back(color);
+                }
+                } 
+            }
+        }
+    }
 }
 
 

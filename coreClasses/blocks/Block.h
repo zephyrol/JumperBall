@@ -13,13 +13,13 @@
 
 #ifndef BLOCK_H
 #define BLOCK_H
+#include "Types.h"
 
 class Block {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Block                             ();
-    Block                             (const Block& orig);
     virtual                           ~Block() ;
 
 
@@ -30,6 +30,10 @@ public:
     //----------METHODS-------------//
     virtual void                      interaction()                          =0;
     virtual                           categoryOfBlocksInFile getType() const =0;
+
+    //-------CONST METHODS----------//
+    virtual std::array<bool,6>        faceInfo()                        const;
+
 
 private:
 

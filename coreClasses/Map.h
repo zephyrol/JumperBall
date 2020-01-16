@@ -45,7 +45,7 @@ public:
 
 
     //-------CONST METHODS----------//
-    std::shared_ptr<Block>                map3DData(int x, int y, int z)  const;
+    std::shared_ptr<const Block>          map3DData(int x, int y, int z)  const;
     void                                  printMap()                      const;
 
     unsigned int                          boundingBoxXMax()               const;

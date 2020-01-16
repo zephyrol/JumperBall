@@ -565,10 +565,10 @@ Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
             default : break;
         }
         
-        std::shared_ptr<Block> blockNear  = 
+        std::shared_ptr<const Block> blockNear  = 
                 _map.map3DData(aboveNearX,aboveNearY,aboveNearZ);
         
-        std::shared_ptr<Block> blockFar   = 
+        std::shared_ptr<const Block> blockFar   = 
                 _map.map3DData(aboveFarX,aboveFarY,aboveFarZ);
         
         constexpr float distanceNear      = 1.f;

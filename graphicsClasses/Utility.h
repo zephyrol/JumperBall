@@ -8,22 +8,14 @@
 
 namespace Utility {
 
-    std::string                       readFileSrc( const std::string& filePath);
-
-    std::vector<GLfloat>              getPositionsLocalCube();
-    std::vector<GLfloat>              getNormalsLocalCube();
-    std::vector<GLfloat>              getColorsLocalCube();
-
-
-    std::vector<GLfloat>              getPositionsPike();
-    std::vector<GLfloat>              getNormalsLocalPike();
-    std::vector<GLfloat>              getColorsLocalPike();
-
+    std::string                       readFileSrc(const std::string& filePath);
     void                              printMatrix(const glm::mat4& m);
-
     std::vector<GLfloat>              computeNormals(const std::vector<GLfloat>&
                                                       positions);
+    glm::mat4                         rotationUpToDir(
+                                        JumperBallTypes::Direction dir);
 
+    
     extern const std::vector<GLfloat> positionsCube;
     extern const std::vector<GLfloat> colorsCube;
     extern const std::vector<GLfloat> normalsCube;

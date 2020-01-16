@@ -37,6 +37,7 @@ namespace JumperBallTypes {
 
 namespace JumperBallTypesMethods {
     std::array<float,3> directionAsVector (JumperBallTypes::Direction dir);
+    JumperBallTypes::Direction integerAsDirection (unsigned int number);
 }
 
 #endif /* TYPES_H */
