@@ -339,7 +339,7 @@ void Mesh::genSharps(const Block& block, glm::vec3 posWorld) {
                         _positions.push_back(glm::vec3(position));
                         _normals.push_back(glm::vec3(normal));
                         _colors.push_back(color);
-                }
+                    }
                 } 
             }
         }
