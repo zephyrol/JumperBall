@@ -203,8 +203,7 @@ void Camera::follow(const Ball& ball) noexcept {
 }
 
 void Camera::follow(const Map& map) noexcept{
-
-    
+  static_cast<void> (map);
 }
 
 
