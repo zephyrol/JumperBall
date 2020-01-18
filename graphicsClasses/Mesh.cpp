@@ -128,19 +128,21 @@ Mesh::Mesh(const Map& map):
                 auto block = map.map3DData(x,y,z);
                 if (block) {
 
-                    std::vector<GLfloat> pCube= Utility::positionsCube;
-                    std::vector<GLfloat> cCube= Utility::colorsCube;
-                    std::vector<GLfloat> nCube= Utility::normalsCube;
+                    const std::vector<GLfloat>& pCube= Utility::positionsCube;
+                    const std::vector<GLfloat>& cCube= Utility::colorsCube;
+                    const std::vector<GLfloat>& nCube= Utility::normalsCube;
 
                     for (unsigned int i = 0 ; i < pCube.size(); i += 3 )
                     {
+                        const GLfloat xAfterTranslation =  
+                                      pCube.at(i) + static_cast<GLfloat> (x);
+                        const GLfloat yAfterTranslation =  
+                                      pCube.at(i+1) + static_cast<GLfloat> (y);
+                        const GLfloat zAfterTranslation =  
+                                      pCube.at(i+2) + static_cast<GLfloat> (z);
 
-                        pCube.at(i)   +=  static_cast<GLfloat> (x) ;
-                        pCube.at(i+1) +=  static_cast<GLfloat> (y) ;
-                        pCube.at(i+2) +=  static_cast<GLfloat> (z) ;
-
-                        _positions.push_back(glm::vec3(pCube.at(i),pCube.at(i+1)
-                                          ,pCube.at(i+2)));
+                        _positions.push_back( glm::vec3(xAfterTranslation,
+                                yAfterTranslation , zAfterTranslation));
                         _colors.push_back(
                           glm::vec3(cCube.at(i),cCube.at(i+1) ,cCube.at(i+2)));
                         _normals.push_back(
@@ -314,11 +316,11 @@ void Mesh::genSharps(const Block& block, glm::vec3 posWorld) {
                                         offset * translationFloorFactor.at(j).y
                                         ));
                     
-                    const std::vector<GLfloat> positions  = 
+                    const std::vector<GLfloat>& positions  = 
                                                         Utility::positionsPike;
-                    const std::vector<GLfloat> colors     = 
+                    const std::vector<GLfloat>& colors     = 
                                                         Utility::colorsPike;
-                    const std::vector<GLfloat> normals    = 
+                    const std::vector<GLfloat>& normals    = 
                                                         Utility::normalsPike;
                     
                     for (unsigned int k = 0; k < positions.size(); k+=3)

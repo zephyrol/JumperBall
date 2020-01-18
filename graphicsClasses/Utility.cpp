@@ -154,24 +154,6 @@ const std::vector<GLfloat> Utility::colorsPike {
     0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,
 };
 
-/*const std::vector<GLfloat> Utility::colorsPike {
-    //Base
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    //Face 1
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    //Face 2
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    0.f,0.f,0.f, 0.f,0.f,0.f,  0.f,0.f,0.f, 
-    //Face 3
-    0.f,0.f,0.f, 0.f,0.f,0.f, 0.f,0.f,0.f,  
-    0.f,0.f,0.f, 0.f,0.f,0.f, 0.f,0.f,0.f, 
-    //Face 4
-    0.f,0.f,0.f, 0.f,0.f,0.f, 0.f,0.f,0.f,
-    0.f,0.f,0.f, 0.f,0.f,0.f, 0.f,0.f,0.f,
-};*/
-
 const std::vector<GLfloat> Utility::normalsPike = 
                                         Utility::computeNormals(positionsPike);
 

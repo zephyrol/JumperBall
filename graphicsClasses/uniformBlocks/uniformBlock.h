@@ -30,8 +30,14 @@ public:
                                         const std::vector<std::string>& 
                                                 variablesNames
                                       );
-    virtual ~UniformBlock             ()                                    = 0;
+    
 
+    UniformBlock                     ( const UniformBlock& 
+                                                uniformBlock)          = delete;
+    UniformBlock&                     operator=( const UniformBlock& 
+                                                        uniformBlock)  = delete;
+    
+    virtual ~UniformBlock             ()                                    = 0;
     
     virtual void                      bind( const std::string& name,
                                             const ShaderProgram& sp)        = 0; 
@@ -41,19 +47,30 @@ public:
     
 protected:
 
+
+    struct  variablesNames            { const char* const * const names;
+                                        const size_t number; };
+
     //const GLuint                    _blockIndex;
     //GLsizei                           _blockSize;
     //std::vector<GLubyte>              _dataInsideBlock;
-    std::vector<std::string>          _variablesNames;
+    //std::vector<std::string>          _variablesNames;
+    const struct variablesNames       _variablesNames;
     /*std::vector<GLuint>               _variablesIndices;
     std::vector<GLint>                _variablesOffset;*/
     GLuint                            _uboHandle;
 
-    std::pair<GLint,std::vector<GLint> >
-                                      configureDataBuffer(const ShaderProgram& sp,
-                                                    const std::string& name)
-                                                                          const; 
 
+    std::pair<GLint,std::vector<GLint> >
+                                      configureDataBuffer(
+                                                const ShaderProgram& sp,
+                                                const std::string& name)  const; 
+
+private:
+    
+  struct variablesNames               getStringsStoredLinearly( 
+                                                const std::vector<std::string>&
+                                                strNames);
 
 };
 

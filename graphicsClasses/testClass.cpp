@@ -70,9 +70,11 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
     bool enterButton  = false;
     //unsigned int counter = 0;
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
+    auto before = Ball::getTimePointMSNow();
+    unsigned int counter = 0;
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
           && glfwWindowShouldClose(_window) == 0 ) {
-
+        
         glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -142,11 +144,24 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
 
         r.render();
        
-        glfwSwapInterval(1);
+        //glfwSwapInterval(1);
         glfwSwapBuffers(_window);
         //glfwWaitEvents();
       
         glfwPollEvents();
+
+        counter++;
+        if (counter == 1000){
+            auto after = Ball::getTimePointMSNow(); 
+            const Ball::durationMs difference = after - before;
+            const std::chrono::duration<float> durationFloatDifference = 
+                      difference;
+            const float fDifference = durationFloatDifference.count();
+            std::cout << fDifference << std::endl;
+            counter = 0;
+            before = after;
+            
+        }
    }
 }
 

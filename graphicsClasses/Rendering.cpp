@@ -89,21 +89,6 @@ void Rendering::bindUniform(const std::string& name,
     glUniform1fv( uniformVariableID, 1, &value);
 }
 
-void Rendering::bindUniformBlock(const std::string& name, const bool& value, 
-                                  const ShaderProgram& sp) {
-     
-    // Index of block
-    const GLuint blockIndex = glGetUniformBlockIndex( sp.getHandle()
-                                                      ,name.c_str());
-    (void) value;
-    // Allocate space for the buffer to contain the data of the block
-    GLint blockSize;
-    glGetActiveUniformBlockiv ( sp.getHandle(), blockIndex, 
-                                GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
-    std::vector<GLubyte> dataBuffer (blockSize);
-
-}
-
 
 void Rendering::render() {
     
@@ -165,40 +150,35 @@ void Rendering::render() {
 
 void Rendering::renderCamera(const ShaderProgram& sp) {
 
-  const std::string nameVP              = "VP";
-  const std::string namePositionBall    = "positionBall";
-  const std::string nameDistanceBehind  = "distanceBehind";
-  const std::string nameLookDirection   = "lookDirection";
-  const std::string namePositionCamera  = "positionCamera";
 
-  _uniformMatrix4[nameVP] =  glm::mat4(
-  glm::perspective( glm::radians(70.f), 
+  _uniformMatrix4["VP"] =  
+          glm::mat4( 
+                    glm::perspective( glm::radians(70.f), 
                     static_cast<float>(RESOLUTION_X)/
-                      static_cast<float>(RESOLUTION_Y), 
-                    _camera._zNear, _camera._zFar)
+                    static_cast<float>(RESOLUTION_Y), 
+                    _camera._zNear, _camera._zFar) *
+                    glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())
+                    ); 
 
-  * glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())); 
+  const std::array<float,3>& positionBall = _ball.get3DPosition(); 
 
-  const std::array<float,3> positionBall = _ball.get3DPosition(); 
+  _uniformVec3["positionBall"]    = glm::vec3( positionBall.at(0),
+                                               positionBall.at(1),
+                                               positionBall.at(2));
 
-  _uniformVec3[namePositionBall]    = glm::vec3( positionBall.at(0),
-                                                 positionBall.at(1),
-                                                 positionBall.at(2));
-
-  _uniformVec3[nameLookDirection]   = 
+  _uniformVec3["lookDirection"]   = 
       glm::normalize( glm::cross  ( _camera.up() , 
                                     glm::cross( _camera.dir() - _camera.pos(),
                                                 _camera.up()))
                                   );
 
-  _uniformVec3[namePositionCamera]  = _camera.pos();
-  _uniformFloat[nameDistanceBehind] = _ball.distanceBehindBall();
-
-  bindUniform (nameVP,              _uniformMatrix4.at(nameVP),           sp);
-  bindUniform (namePositionBall,    _uniformVec3.at(namePositionBall),    sp);
-  bindUniform (nameLookDirection,   _uniformVec3.at(nameLookDirection),   sp);
-  bindUniform (nameDistanceBehind,  _uniformFloat.at(nameDistanceBehind), sp);
-  bindUniform (namePositionCamera,  _uniformVec3.at(namePositionCamera),  sp);
+  _uniformVec3["positionCamera"]  = _camera.pos();
+  _uniformFloat["distanceBehind"] = _ball.distanceBehindBall();
+  bindUniform ("VP",              _uniformMatrix4.at("VP"),           sp);
+  bindUniform ("positionBall",    _uniformVec3.at("positionBall"),    sp);
+  bindUniform ("lookDirection",   _uniformVec3.at("lookDirection"),   sp);
+  bindUniform ("distanceBehind",  _uniformFloat.at("distanceBehind"), sp);
+  bindUniform ("positionCamera",  _uniformVec3.at("positionCamera"),  sp);
 }
 
 

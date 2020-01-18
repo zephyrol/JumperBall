@@ -57,8 +57,8 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     file >> _beginY;
 
 
-    auto convertToBase10 = [] (std::string s, unsigned int base)-> unsigned int{
-        unsigned int value = 0; 
+    auto convertToBase10 = [] (std::string& s, unsigned int base)->unsigned int{
+        unsigned int value = 0;
         while (s.length() > 0 ) {
           unsigned int number = static_cast<unsigned int> (s.front());
           value += number * static_cast<unsigned int> (pow(base,s.length()-1));

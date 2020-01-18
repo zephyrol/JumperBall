@@ -24,10 +24,10 @@ public:
                       //const glm::vec3 diffuseLightIntensity,
                       //const glm::vec3 specularLightIntensity
                     );
-    void                      bind( const std::string& name,
-                                    const ShaderProgram& sp)          override; 
+    void            bind( const std::string& name,
+                          const ShaderProgram& sp)                     override; 
 
-    ~UniformLight   ()                       override = default;
+    ~UniformLight   ()                                       override = default;
 
     void            positionLight         (const glm::vec3& posLight);
     void            ambiantLightIntensity (const glm::vec3& ambLightIntensity);
