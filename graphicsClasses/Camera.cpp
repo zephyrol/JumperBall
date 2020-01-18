@@ -21,7 +21,7 @@ Camera::Camera() : _posX(1), _posY(1), _posZ(1),
 
 void Camera::follow(const Ball& ball) noexcept {
     
-    const std::array<float,3> position  = ball.get3DPosition();
+    const JumperBallTypes::vec3f position  = ball.get3DPosition();
     const auto sideBall                 = ball.currentSide();
     const auto lookingDirection         = ball.lookTowards();
 
@@ -43,7 +43,7 @@ void Camera::follow(const Ball& ball) noexcept {
     glm::mat4 matPosBall (1.f);
 
     matPosBall = glm::translate(matPosBall, 
-            glm::vec3(position.at(0),position.at(1),position.at(2)));
+            glm::vec3(position.x,position.y,position.z));
 
     
     switch (sideBall) {

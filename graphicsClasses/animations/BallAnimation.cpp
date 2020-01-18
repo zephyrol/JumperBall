@@ -52,12 +52,12 @@ void BallAnimation::updateTrans() {
                                             maxCrushing)/2.f + 
                                             maxCrushing/2.f ;
          
-        const std::array<float,3> sideDir = _ball.currentSideAsVector();
+        const JumperBallTypes::vec3f sideDir = _ball.currentSideAsVector();
         const glm::vec3 glmSideDir{
-                              sideDir.at(0), sideDir.at(1), sideDir.at(2)};
-        const glm::vec3 deformationVector { fabs(sideDir.at(0)),
-                                            fabs(sideDir.at(1)),
-                                            fabs(sideDir.at(2))};
+                              sideDir.x, sideDir.y, sideDir.z};
+        const glm::vec3 deformationVector { fabs(sideDir.x),
+                                            fabs(sideDir.y),
+                                            fabs(sideDir.z)};
         const glm::vec3 scaleVector (glm::vec3(1.f) -  crushingCoefficient * 
                                                        deformationVector) ;
         const glm::mat4 scaleMatrix = glm::scale(scaleVector);
@@ -90,11 +90,11 @@ void BallAnimation::updateTrans() {
         const float angleToGetBlock = sizeBlock/_ball.getRadius();
         const float currentAngle = t * angleToGetBlock;
         
-        const std::array<float,3> lookDir = _ball.lookTowardsAsVector();
-        const std::array<float,3> sideDir = _ball.currentSideAsVector();
+        const JumperBallTypes::vec3f lookDir = _ball.lookTowardsAsVector();
+        const JumperBallTypes::vec3f sideDir = _ball.currentSideAsVector();
         
-        const glm::vec3 glmLookDir{lookDir.at(0), lookDir.at(1), lookDir.at(2)};
-        const glm::vec3 glmSideDir{sideDir.at(0), sideDir.at(1), sideDir.at(2)};
+        const glm::vec3 glmLookDir{lookDir.x, lookDir.y, lookDir.z};
+        const glm::vec3 glmSideDir{sideDir.x, sideDir.y, sideDir.z};
         
         const glm::mat4 rotationMatrix = glm::rotate( currentAngle,
                 glm::cross( glmSideDir, glmLookDir));

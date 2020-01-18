@@ -32,11 +32,11 @@ namespace JumperBallTypes {
         Down 
     };
 
-
+    struct vec3f {float x; float y; float z;};
 }
 
 namespace JumperBallTypesMethods {
-    std::array<float,3> directionAsVector (JumperBallTypes::Direction dir);
+    JumperBallTypes::vec3f directionAsVector (JumperBallTypes::Direction dir);
     JumperBallTypes::Direction integerAsDirection (unsigned int number);
 }
 

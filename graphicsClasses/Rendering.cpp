@@ -160,11 +160,11 @@ void Rendering::renderCamera(const ShaderProgram& sp) {
                     glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())
                     ); 
 
-  const std::array<float,3>& positionBall = _ball.get3DPosition(); 
+  const JumperBallTypes::vec3f& positionBall = _ball.get3DPosition(); 
 
-  _uniformVec3["positionBall"]    = glm::vec3( positionBall.at(0),
-                                               positionBall.at(1),
-                                               positionBall.at(2));
+  _uniformVec3["positionBall"]    = glm::vec3( positionBall.x,
+                                               positionBall.y,
+                                               positionBall.z);
 
   _uniformVec3["lookDirection"]   = 
       glm::normalize( glm::cross  ( _camera.up() , 

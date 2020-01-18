@@ -89,9 +89,9 @@ Mesh::Mesh(const Ball& ball):
         }
     }
    
-    std::array<float,3> positionBall = ball.get3DPosition();
-    _world = glm::translate(_world, glm::vec3(positionBall.at(0),
-                            positionBall.at(1) ,positionBall.at(2)));
+    JumperBallTypes::vec3f positionBall = ball.get3DPosition();
+    _world = glm::translate(_world, glm::vec3(positionBall.x,
+                            positionBall.y ,positionBall.z));
 
 
     bindVertexData();
@@ -257,9 +257,9 @@ void Mesh::world(const glm::mat4& w) {
 
 void Mesh::updateMatrices(const Ball& b) {
    
-    std::array<float,3> positionBall = b.get3DPosition();
-    _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.at(0),
-                            positionBall.at(1) ,positionBall.at(2)));
+    JumperBallTypes::vec3f positionBall = b.get3DPosition();
+    _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
+                            positionBall.y ,positionBall.z));
 }
 
 void Mesh::genSharps(const Block& block, glm::vec3 posWorld) {
@@ -286,7 +286,7 @@ void Mesh::genSharps(const Block& block, glm::vec3 posWorld) {
                 
                 JumperBallTypes::Direction currentDir =
                         JumperBallTypesMethods::integerAsDirection(i);
-                std::array<float,3> vecDir = 
+                JumperBallTypes::vec3f vecDir = 
                 JumperBallTypesMethods::directionAsVector(currentDir);
                 
                 glm::mat4 translationOffset = glm::translate(
@@ -305,9 +305,9 @@ void Mesh::genSharps(const Block& block, glm::vec3 posWorld) {
 
                     glm::mat4 translationLocal =
                             glm::translate( glm::vec3(
-                            posWorld.x + offset + vecDir.at(0) * offset,
-                            posWorld.y + offset + vecDir.at(1) * offset,
-                            posWorld.z + offset + vecDir.at(2) * offset
+                            posWorld.x + offset + vecDir.x * offset,
+                            posWorld.y + offset + vecDir.y * offset,
+                            posWorld.z + offset + vecDir.z * offset
                             ));
                     
                     glm::mat4 translationFloor = glm::translate( glm::vec3(

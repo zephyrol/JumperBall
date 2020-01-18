@@ -60,8 +60,6 @@ const ClassicalMechanics::physics2DVector ClassicalMechanics::getAcceleration(
 }
 
 
-
-
 float ClassicalMechanics::evalPositionX(const float t) const {
 
     float posX;

@@ -56,10 +56,10 @@ public:
                                 };
 
     //-------CONST METHODS--------//
-    std::array<float,3>         get3DPosition()                  const noexcept;
+    JumperBallTypes::vec3f      get3DPosition()                  const noexcept;
     float                       getRadius()                               const;
-    std::array<float,3>         lookTowardsAsVector()                     const;
-    std::array<float,3>         currentSideAsVector()                     const;
+    JumperBallTypes::vec3f      lookTowardsAsVector()                     const;
+    JumperBallTypes::vec3f      currentSideAsVector()                     const;
 
     JumperBallTypes::Direction  currentSide()                             const;
     JumperBallTypes::Direction  lookTowards()                             const;
@@ -113,9 +113,9 @@ private:
 
     float                       getTimeActionSecondsFloat()      const noexcept;
 
-    std::array<float,3>         P2DTo3D(ClassicalMechanics::physics2DVector p2D)
+    JumperBallTypes::vec3f         P2DTo3D(ClassicalMechanics::physics2DVector p2D)
                                                                           const;
-    std::array<float,3>         get3DPosStayingBall()                     const;
+    JumperBallTypes::vec3f         get3DPosStayingBall()                     const;
 
     //----------METHODS------------//
     void                        turnLeft()                             noexcept;
