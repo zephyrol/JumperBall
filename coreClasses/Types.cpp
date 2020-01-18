@@ -7,7 +7,7 @@
 #include <Types.h>
 
 JumperBallTypes::vec3f JumperBallTypesMethods::directionAsVector (
-                                                JumperBallTypes::Direction dir) {
+                                                JumperBallTypes::Direction dir){
     
     JumperBallTypes::vec3f dirVec3 {0.f,0.f,0.f};
     switch (dir) {

@@ -113,9 +113,9 @@ private:
 
     float                       getTimeActionSecondsFloat()      const noexcept;
 
-    JumperBallTypes::vec3f         P2DTo3D(ClassicalMechanics::physics2DVector p2D)
+    JumperBallTypes::vec3f      P2DTo3D(ClassicalMechanics::physics2DVector p2D)
                                                                           const;
-    JumperBallTypes::vec3f         get3DPosStayingBall()                     const;
+    JumperBallTypes::vec3f      get3DPosStayingBall()                     const;
 
     //----------METHODS------------//
     void                        turnLeft()                             noexcept;

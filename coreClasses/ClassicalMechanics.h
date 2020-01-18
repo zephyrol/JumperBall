@@ -72,8 +72,7 @@ public:
     static void                         solveDifferentialEquation (
       float& derivative,
       const std::function<float(const std::vector<float>&)>& computingFunction,
-      const std::vector<float>& params
-                                                                  );
+      const std::vector<float>& params);
 
     static void                         solveQuadraticEquation (
                                         std::pair<float,float>& solutions, 
