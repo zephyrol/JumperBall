@@ -202,6 +202,11 @@ void Camera::follow(const Ball& ball) noexcept {
 
 }
 
+void Camera::follow(const Map& map) noexcept{
+
+    
+}
+
 
 glm::vec3 Camera::dir() const noexcept{
     return glm::vec3 {_dirX,_dirY,_dirZ};

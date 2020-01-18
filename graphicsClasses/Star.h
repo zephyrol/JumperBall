@@ -16,6 +16,7 @@
 #include "Utility.h"
 #include <Ball.h>
 #include <glm/glm.hpp>
+#include "uniformBlocks/uniformLight.h"
 
 class Star {
 public:

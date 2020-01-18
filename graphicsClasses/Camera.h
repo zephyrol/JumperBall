@@ -44,6 +44,7 @@ public:
 
     //----------METHODS-------------//
     void                          follow(const Ball& ball)             noexcept;
+    void                          follow(const Map& map)               noexcept;
 
 
 private:

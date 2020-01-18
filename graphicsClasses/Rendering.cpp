@@ -35,6 +35,7 @@ Rendering::Rendering(const Map&     map,
     _ball(ball),
     _ballAnimation(ball),
     _star(star),
+    _light(),
     _camera(camera),
     _spMap( Shader (GL_VERTEX_SHADER, vsshaderMap ),
             Shader (GL_FRAGMENT_SHADER, fsshaderMap )),
@@ -110,13 +111,19 @@ void Rendering::render() {
     _spMap.use();
     renderCamera(_spMap);
 
-    const UniformLight uniformLightVar (_spMap,"light",
+    _light.positionLight(_star.centralPosition());
+    _light.ambiantLightIntensity(  glm::vec3(0.7f,0.7f,0.7f));
+    _light.diffuseLightIntensity(  glm::vec3(0.25f,0.25f,0.25f));
+    _light.specularLightIntensity( glm::vec3(0.25f,0.25f,0.25f));
+                                        
+    _light.bind("light",_spMap);
+    
+    /*const UniformLight uniformLightVar (_spMap,"light",
                                         _star.centralPosition(),
                                         glm::vec3(0.7f,0.7f,0.7f),
                                         glm::vec3(0.25f,0.25f,0.25f),
                                         glm::vec3(0.25f,0.25f,0.25f)
-                                        );
-    uniformLightVar.bind();
+                                        );*/
 
     //Ball
     _meshBall.updateMatrices(_ball);
@@ -151,6 +158,7 @@ void Rendering::render() {
 
     renderCamera(_spStar);
     _star.draw();
+     
 
 }
 

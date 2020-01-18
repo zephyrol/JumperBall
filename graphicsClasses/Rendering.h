@@ -72,6 +72,8 @@ private:
     BallAnimation                   _ballAnimation;
 
     const Star&                     _star;
+    UniformLight                    _light;
+
     const Camera&                   _camera;
 
     const ShaderProgram             _spMap;
