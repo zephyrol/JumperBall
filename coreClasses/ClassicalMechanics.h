@@ -64,7 +64,6 @@ public:
     const physics2DVector               getAcceleration(const float t)    const;
     const physics2DVector               getVelocity(const float t)        const;
     const physics2DVector               getPosition(const float t)        const;
-
     void                                printEulerBuffer()                const;
 
 
@@ -75,8 +74,8 @@ public:
       const std::vector<float>& params);
 
     static void                         solveQuadraticEquation (
-                                        std::pair<float,float>& solutions, 
-                                        float a, float b, float c);
+                                              std::pair<float,float>& solutions, 
+                                              float a, float b, float c);
                                                               
 
     //----------METHODS------------//

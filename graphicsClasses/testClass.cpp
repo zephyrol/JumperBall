@@ -144,7 +144,7 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
 
         r.render();
        
-        //glfwSwapInterval(1);
+        glfwSwapInterval(1);
         glfwSwapBuffers(_window);
         //glfwWaitEvents();
       

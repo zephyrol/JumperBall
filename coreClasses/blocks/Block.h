@@ -32,7 +32,7 @@ public:
     virtual                           categoryOfBlocksInFile getType() const =0;
 
     //-------CONST METHODS----------//
-    virtual std::array<bool,6>        faceInfo()                        const;
+    virtual std::array<bool,6>        faceInfo()                          const;
 
 
 private:

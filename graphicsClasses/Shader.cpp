@@ -25,7 +25,7 @@ Shader::Shader(const GLenum& shaderType, const std::string& shaderFilename) :
     }
 
     constexpr GLsizei numberOfStrings = 1;
-    const GLchar* glCode = _shaderCode.c_str();
+    const GLchar* const glCode = _shaderCode.c_str();
 
     glShaderSource(_shaderHandle, numberOfStrings, &glCode, nullptr);
     glCompileShader(_shaderHandle);

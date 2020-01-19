@@ -14,47 +14,51 @@
 #include "uniformBlock.h"
 #include <cstring>
 
-UniformBlock::UniformBlock( //const ShaderProgram& sp,
-                            const std::vector<std::string>& variablesNames) :
+UniformBlock::UniformBlock(const std::vector<std::string>& variablesNames) :
   _variablesNames(getStringsStoredLinearly(variablesNames)),
+  _variablesIndices(variablesNames.size()),
+  _variablesOffsets(variablesNames.size()),
   _uboHandle()
 {
   glGenBuffers(1, &_uboHandle);
 }
 
-std::pair<GLint,std::vector<GLint> >UniformBlock::configureDataBuffer(
-                                                const ShaderProgram& sp, 
-                                                const std::string& name) const{
+void UniformBlock::configureDataBuffer( const ShaderProgram& sp, 
+                                        const std::string& name){
 
     const GLuint blockIndex =
                           glGetUniformBlockIndex(sp.getHandle(),name.c_str());
-    GLint blockSize;
-    std::vector<GLuint> variablesIndices  (_variablesNames.number);
-    std::vector<GLint>  variablesOffset   (_variablesNames.number);
+    //std::vector<GLint>  variablesOffset   (_variablesNames.number);
 
     //Getting the size of the uniform block for the shader program
     glGetActiveUniformBlockiv ( sp.getHandle(),blockIndex,
-                                GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
+                                GL_UNIFORM_BLOCK_DATA_SIZE, &_blockSize);
 
     //Getting the indices for each variable
     glGetUniformIndices       ( sp.getHandle(), _variablesNames.number,
-                                _variablesNames.names,variablesIndices.data());
-
+                                _variablesNames.names,_variablesIndices.data());
     //Getting the offset in the buffer for each variable
-    glGetActiveUniformsiv     ( sp.getHandle(),  variablesIndices.size(), 
-                                variablesIndices.data(), GL_UNIFORM_OFFSET,
-                                variablesOffset.data());
+    glGetActiveUniformsiv     ( sp.getHandle(),  _variablesIndices.size(), 
+                                _variablesIndices.data(), GL_UNIFORM_OFFSET,
+                                _variablesOffsets.data());
 
-    std::pair<GLint,std::vector<GLint> > infoDataBuffer;
+    if (_blockSize >= 0 ) {
+        unsigned int uSize = static_cast<unsigned int> (_blockSize);
+        if (_dataBuffer.size() != uSize) {
+            _dataBuffer.resize(uSize);
+        }
+    }
+
+   /* std::pair<GLint,std::vector<GLint> > infoDataBuffer;
     infoDataBuffer.first  = blockSize;
-    infoDataBuffer.second = variablesOffset;
+    infoDataBuffer.second = _variablesOffsets;
 
-    return infoDataBuffer;
+    return infoDataBuffer;*/
 }
 
 
 
-UniformBlock::variablesNames UniformBlock::getStringsStoredLinearly(
+UniformBlock::variablesNamesInfo UniformBlock::getStringsStoredLinearly(
                                                 const std::vector<std::string>&
                                                 strNames) {
 
@@ -70,11 +74,30 @@ UniformBlock::variablesNames UniformBlock::getStringsStoredLinearly(
         names[i] = cNameAllocated;
     }
 
-    UniformBlock::variablesNames infoNames {names,strNames.size()};
+    UniformBlock::variablesNamesInfo infoNames {names,strNames.size()};
     return infoNames ;
 }
 
+const std::vector<GLuint>& UniformBlock::variablesIndices() const {
+    return _variablesIndices;
+}
 
+const UniformBlock::variablesNamesInfo& UniformBlock::variablesNames() const {
+    return _variablesNames;
+}
+
+const std::vector<GLint>& UniformBlock::variablesOffsets() const {
+    return _variablesOffsets;
+
+}
+
+GLint UniformBlock::blockSize() const {
+    return _blockSize;
+}
+
+GLuint UniformBlock::uboHandle() const {
+    return _uboHandle;
+}
 
 
 UniformBlock::~UniformBlock() {
@@ -84,3 +107,4 @@ UniformBlock::~UniformBlock() {
     }
     delete[] _variablesNames.names;
 }
+

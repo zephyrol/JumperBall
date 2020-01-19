@@ -102,13 +102,6 @@ void Rendering::render() {
     _light.specularLightIntensity( glm::vec3(0.25f,0.25f,0.25f));
                                         
     _light.bind("light",_spMap);
-    
-    /*const UniformLight uniformLightVar (_spMap,"light",
-                                        _star.centralPosition(),
-                                        glm::vec3(0.7f,0.7f,0.7f),
-                                        glm::vec3(0.25f,0.25f,0.25f),
-                                        glm::vec3(0.25f,0.25f,0.25f)
-                                        );*/
 
     //Ball
     _meshBall.updateMatrices(_ball);
