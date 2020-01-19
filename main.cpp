@@ -43,7 +43,6 @@ int main(int argc, char** argv) {
         
         Map m (file);
         std::cout << "Map created" << std::endl;
-        m.printMap();
 
 
         file.close();

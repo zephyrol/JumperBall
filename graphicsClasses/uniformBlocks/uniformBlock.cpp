@@ -15,9 +15,11 @@
 #include <cstring>
 
 UniformBlock::UniformBlock(const std::vector<std::string>& variablesNames) :
+  _dataBuffer(),
   _variablesNames(getStringsStoredLinearly(variablesNames)),
   _variablesIndices(variablesNames.size()),
   _variablesOffsets(variablesNames.size()),
+  _blockSize(0),
   _uboHandle()
 {
   glGenBuffers(1, &_uboHandle);
@@ -28,7 +30,6 @@ void UniformBlock::configureDataBuffer( const ShaderProgram& sp,
 
     const GLuint blockIndex =
                           glGetUniformBlockIndex(sp.getHandle(),name.c_str());
-    //std::vector<GLint>  variablesOffset   (_variablesNames.number);
 
     //Getting the size of the uniform block for the shader program
     glGetActiveUniformBlockiv ( sp.getHandle(),blockIndex,
@@ -49,11 +50,6 @@ void UniformBlock::configureDataBuffer( const ShaderProgram& sp,
         }
     }
 
-   /* std::pair<GLint,std::vector<GLint> > infoDataBuffer;
-    infoDataBuffer.first  = blockSize;
-    infoDataBuffer.second = _variablesOffsets;
-
-    return infoDataBuffer;*/
 }
 
 

@@ -68,10 +68,8 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
     bool rightButton  = false;
     bool upButton     = false;
     bool enterButton  = false;
-    //unsigned int counter = 0;
+
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
-    auto before = Ball::getTimePointMSNow();
-    unsigned int counter = 0;
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
           && glfwWindowShouldClose(_window) == 0 ) {
         
@@ -84,10 +82,8 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         if( glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS || 
             glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_PRESS)
         {
-            //if (!enterButton) {
                 enterButton = true;
                 b.doAction(Ball::ActionRequest::Jump);
-            //}
         }
 
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_PRESS) {
@@ -105,10 +101,8 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         }
 
         if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_PRESS) {
-            //if (!upButton) {
                 upButton = true;
                 b.doAction(Ball::ActionRequest::GoStraightAhead);
-            //}
         }
 
         if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE ||
@@ -146,22 +140,9 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
        
         glfwSwapInterval(1);
         glfwSwapBuffers(_window);
-        //glfwWaitEvents();
       
         glfwPollEvents();
 
-        counter++;
-        if (counter == 1000){
-            auto after = Ball::getTimePointMSNow(); 
-            const Ball::durationMs difference = after - before;
-            const std::chrono::duration<float> durationFloatDifference = 
-                      difference;
-            const float fDifference = durationFloatDifference.count();
-            std::cout << fDifference << std::endl;
-            counter = 0;
-            before = after;
-            
-        }
    }
 }
 
