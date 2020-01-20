@@ -135,7 +135,6 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         b.update();
         c.follow(b);
 
-
         r.render();
        
         glfwSwapInterval(1);

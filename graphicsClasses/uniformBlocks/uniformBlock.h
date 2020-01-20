@@ -33,7 +33,7 @@ public:
     
 
     UniformBlock                      ( const UniformBlock& 
-                                                uniformBlock)          = delete;
+                                                uniformBlock);
     
     virtual ~UniformBlock             ();                                    
     
@@ -43,13 +43,13 @@ public:
 
 
     //------------TYPES------------//
-    struct  variablesNamesInfo          { const char *const *const names;
-                                          const size_t number; };
+    struct  variablesNamesInfo        { const char *const * names;
+                                        size_t number; };
 
 
     //----------METHODS------------//
     UniformBlock&                     operator=( const UniformBlock& 
-                                                        uniformBlock)  = delete;
+                                                        uniformBlock);
     virtual void                      bind( const std::string& name,
                                             const ShaderProgram& sp)        = 0;
 
@@ -57,22 +57,30 @@ public:
     //--------STATIC METHODS-------//
     static struct variablesNamesInfo  getStringsStoredLinearly( 
                                                 const std::vector<std::string>&
-                                                strNames);
+                                                  strNames);
+    static struct variablesNamesInfo  copyVariablesNamesInfo( 
+                                                const struct variablesNamesInfo& 
+                                                  varNamesInfo);
     
 protected:
 
+    //--------ATTRIBUTES-----------//
     std::vector<GLchar>               _dataBuffer;
 
+
+    //-------CONST METHODS----------//
     const struct variablesNamesInfo&  variablesNames()                    const;
     const std::vector<GLuint>&        variablesIndices()                  const;
     const std::vector<GLint>&         variablesOffsets()                  const;
+    const std::vector<GLchar>&        dataBuffer()                        const;
     GLint                             blockSize()                         const;
     GLuint                            uboHandle()                         const;
 
+
+    //----------METHODS------------//
     void                              configureDataBuffer(
                                                 const ShaderProgram& sp,
                                                 const std::string& name); 
-
 
 
 private:
@@ -83,6 +91,9 @@ private:
     std::vector<GLint>                _variablesOffsets;
     GLint                             _blockSize;
     GLuint                            _uboHandle;
+
+    //----------METHODS------------//
+    void                              deleteVariablesNamesInfo();
 };
 
 #endif /* UNIFORMBLOCK_H */

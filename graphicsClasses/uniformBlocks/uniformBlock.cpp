@@ -25,6 +25,36 @@ UniformBlock::UniformBlock(const std::vector<std::string>& variablesNames) :
   glGenBuffers(1, &_uboHandle);
 }
 
+
+UniformBlock::UniformBlock(const UniformBlock& uniformBlock) :
+  _dataBuffer(uniformBlock._dataBuffer),
+  _variablesNames(copyVariablesNamesInfo(uniformBlock._variablesNames)),
+  _variablesIndices(uniformBlock._variablesIndices),
+  _variablesOffsets(uniformBlock._variablesOffsets),
+  _blockSize(uniformBlock.blockSize()),
+  _uboHandle()
+{
+  glGenBuffers(1, &_uboHandle); //The uboHandle is always unique
+}
+
+UniformBlock& UniformBlock::operator=(const UniformBlock& uniformBlock) {
+
+   //We do not change the uboHandle ... it is unique
+  _dataBuffer                                 = uniformBlock.dataBuffer();
+  _variablesIndices                           = uniformBlock.variablesIndices();
+  _variablesOffsets                           = uniformBlock.variablesOffsets();
+  _blockSize                                  = uniformBlock.blockSize();
+
+  deleteVariablesNamesInfo();
+  UniformBlock::variablesNamesInfo& newInfo   = 
+                const_cast<UniformBlock::variablesNamesInfo&> (_variablesNames);
+  newInfo                                     = copyVariablesNamesInfo(
+                                                uniformBlock.variablesNames());
+
+  return *this;
+}
+
+
 void UniformBlock::configureDataBuffer( const ShaderProgram& sp, 
                                         const std::string& name){
 
@@ -74,6 +104,27 @@ UniformBlock::variablesNamesInfo UniformBlock::getStringsStoredLinearly(
     return infoNames ;
 }
 
+UniformBlock::variablesNamesInfo UniformBlock::copyVariablesNamesInfo(
+                        const UniformBlock::variablesNamesInfo& varNamesInfo) {
+
+    char** names = new char* [varNamesInfo.number];
+
+    for ( size_t i = 0; i < varNamesInfo.number; ++i)  {
+
+        size_t              length = strlen(varNamesInfo.names[i]);
+        char*               cNameAllocated  = new char[length+1];
+
+        strncpy(cNameAllocated,varNamesInfo.names[i],length+1);
+        names[i] = cNameAllocated;
+    }
+    
+    UniformBlock::variablesNamesInfo newVarNamesInfo { names, 
+                                                        varNamesInfo.number};
+
+    return newVarNamesInfo;
+}
+
+
 const std::vector<GLuint>& UniformBlock::variablesIndices() const {
     return _variablesIndices;
 }
@@ -87,6 +138,11 @@ const std::vector<GLint>& UniformBlock::variablesOffsets() const {
 
 }
 
+const std::vector<GLchar>& UniformBlock::dataBuffer() const{
+    return _dataBuffer;
+}
+
+
 GLint UniformBlock::blockSize() const {
     return _blockSize;
 }
@@ -96,11 +152,15 @@ GLuint UniformBlock::uboHandle() const {
 }
 
 
-UniformBlock::~UniformBlock() {
-
+void UniformBlock::deleteVariablesNamesInfo(){
+   
     for (size_t i = 0; i < _variablesNames.number; ++i) {
         delete[] _variablesNames.names[i];
     }
     delete[] _variablesNames.names;
+}
+
+UniformBlock::~UniformBlock() {
+    deleteVariablesNamesInfo();
 }
 
