@@ -22,7 +22,7 @@ HOW TO USE
 
 - Run the program from the project directory:
 ```
-    dist/Debug/GNU-Linux/jumperball maps/map1.txt
+dist/Debug/GNU-Linux/jumperball maps/map1.txt
 ```
 
 The parameter is the map that you want to load.
