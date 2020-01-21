@@ -25,7 +25,8 @@ Map::Map() : _id (nbMaps),
              _boundingBoxZMax (0),
              _beginX (0),
              _beginY (0),
-             _beginZ (0)
+             _beginZ (0),
+             _timeCreation(JumperBallTypesMethods::getTimePointMSNow())
 {
     Map::nbMaps++;
 }

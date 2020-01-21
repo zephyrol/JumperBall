@@ -21,112 +21,103 @@ class Ball {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Ball                        (const Map& map);
-    virtual                     ~Ball();
+    Ball                          (const Map& map);
+    virtual                       ~Ball();
 
 
     //---------CONSTANTS------------//
-    static constexpr float      timeToGetNextBlock                       = 0.2f;
+    static constexpr float        timeToGetNextBlock                     = 0.2f;
 
 
     //------------TYPES------------//
-    enum class State            { Staying, Moving, Jumping, 
-                                  TurningLeft, TurningRight };
+    enum class State              { Staying, Moving, Jumping, 
+                                    TurningLeft, TurningRight };
 
-    enum class ActionRequest    { GoStraightAhead, TurnLeft, TurnRight, Jump};
-    enum class AnswerRequest    { Accepted, Rejected };
-    enum class NextBlockLocal   { Above, InFrontOf, Same, None };
+    enum class ActionRequest      { GoStraightAhead, TurnLeft, TurnRight, Jump};
+    enum class AnswerRequest      { Accepted, Rejected };
+    enum class NextBlockLocal     { Above, InFrontOf, Same, None };
 
-    using timePointMs =         std::chrono::time_point <
-                                    std::chrono::_V2::system_clock,
-                                    std::chrono::duration <
-                                    long int, std::ratio<1,1000> 
-                                                          > 
-                                                        >;
-    using durationMs =          std::chrono::duration<long int,
-                                                      std::ratio<1,1000> > ;
-    using shock     =           std::array<unsigned int, 3 > ; 
-                                                    
-    struct nextBlockInformation { JumperBallTypes::Direction  nextSide;
-                                  JumperBallTypes::Direction  nextLook;
-                                  NextBlockLocal              nextLocal;
-                                  unsigned int                poxX;
-                                  unsigned int                poxY;
-                                  unsigned int                poxZ;
-                                };
+    using shock     =             std::array<unsigned int, 3 > ; 
+                                                      
+    struct nextBlockInformation   { JumperBallTypes::Direction  nextSide;
+                                    JumperBallTypes::Direction  nextLook;
+                                    NextBlockLocal              nextLocal;
+                                    unsigned int                poxX;
+                                    unsigned int                poxY;
+                                    unsigned int                poxZ;
+                                  };
 
-    //-------CONST METHODS--------//
-    JumperBallTypes::vec3f      get3DPosition()                  const noexcept;
-    float                       getRadius()                               const;
-    JumperBallTypes::vec3f      lookTowardsAsVector()                     const;
-    JumperBallTypes::vec3f      currentSideAsVector()                     const;
+    //-------CONST METHODS------  --//
+    JumperBallTypes::vec3f        get3DPosition()                const noexcept;
+    float                         getRadius()                             const;
+    JumperBallTypes::vec3f        lookTowardsAsVector()                   const;
+    JumperBallTypes::vec3f        currentSideAsVector()                   const;
 
-    JumperBallTypes::Direction  currentSide()                             const;
-    JumperBallTypes::Direction  lookTowards()                             const;
-    float                       distanceBehindBall()                      const;
-    Ball::State                 state()                                   const;
+    JumperBallTypes::Direction    currentSide()                           const;
+    JumperBallTypes::Direction    lookTowards()                           const;
+    float                         distanceBehindBall()                    const;
+    Ball::State                   state()                                 const;
 
-    float                       getTimeSecondsSinceAction()      const noexcept;
-    timePointMs                 getTimeActionMs()                const noexcept;
+    float                         getTimeSecondsSinceAction()    const noexcept;
+    JumperBallTypes::timePointMs  getTimeActionMs()              const noexcept;
 
-    struct nextBlockInformation getNextBlockInfo()               const noexcept;
-    const ClassicalMechanics&   getMechanics()                   const noexcept;
+    struct nextBlockInformation   getNextBlockInfo()             const noexcept;
+    const ClassicalMechanics&     getMechanics()                 const noexcept;
 
 
 
     //----------METHODS------------//
-    void                        update()                               noexcept;
-    AnswerRequest               doAction ( ActionRequest action);
+    void                          update()                             noexcept;
+    AnswerRequest                 doAction ( ActionRequest action);
 
 
     //--------STATIC METHODS-------//
-    static timePointMs          getTimePointMSNow ()                   noexcept;
-    static float                getTimeNowSecondsFloat()               noexcept;
-    static float                getTimeSecondsSinceTimePoint(
-                                    const timePointMs& timePoint)      noexcept;
+    static float                  getTimeNowSecondsFloat()             noexcept;
     
 private:
     
     //--------ATTRIBUTES-----------//
-    unsigned int                _currentBlockX;
-    unsigned int                _currentBlockY;
-    unsigned int                _currentBlockZ;
+    unsigned int                  _currentBlockX;
+    unsigned int                  _currentBlockY;
+    unsigned int                  _currentBlockZ;
     
-    float                       _3DPosX;
-    float                       _3DPosY;
-    float                       _3DPosZ;
+    float                         _3DPosX;
+    float                         _3DPosY;
+    float                         _3DPosZ;
 
-    JumperBallTypes::Direction  _currentSide;
-    JumperBallTypes::Direction  _lookTowards;
-    Ball::State                 _state;
+    JumperBallTypes::Direction    _currentSide;
+    JumperBallTypes::Direction    _lookTowards;
+    Ball::State                   _state;
 
-    const Map&                  _map;
+    const Map&                    _map;
 
-    ClassicalMechanics          _mechanicsPattern;
+    ClassicalMechanics            _mechanicsPattern;
 
     std::chrono::time_point<std::chrono::system_clock>  
-                                _timeAction;
+                                  _timeAction;
 
     //-------CONST METHODS--------//
     std::shared_ptr<const std::vector<int> >  
-                                intersectBlock(float x, float y, float z) const;
-
-    float                       getTimeActionSecondsFloat()      const noexcept;
-
-    JumperBallTypes::vec3f      P2DTo3D(ClassicalMechanics::physics2DVector p2D)
+                                  intersectBlock(float x, float y, float z) 
                                                                           const;
-    JumperBallTypes::vec3f      get3DPosStayingBall()                     const;
+
+    float                         getTimeActionSecondsFloat()    const noexcept;
+
+    JumperBallTypes::vec3f        P2DTo3D(
+                                      ClassicalMechanics::physics2DVector p2D)
+                                                                          const;
+    JumperBallTypes::vec3f        get3DPosStayingBall()                   const;
 
     //----------METHODS------------//
-    void                        turnLeft()                             noexcept;
-    void                        turnRight()                            noexcept;
-    void                        goStraightAhead()                      noexcept;
-    void                        stay()                                 noexcept;
-    void                        jump()                                 noexcept;
-    void                        move()                                 noexcept;
-    void                        setTimeActionNow()                     noexcept;
-    AnswerRequest               isFallingIntersectionBlock()           noexcept;
-    AnswerRequest               isGoingStraightAheadIntersectBlock()   noexcept; 
+    void                          turnLeft()                           noexcept;
+    void                          turnRight()                          noexcept;
+    void                          goStraightAhead()                    noexcept;
+    void                          stay()                               noexcept;
+    void                          jump()                               noexcept;
+    void                          move()                               noexcept;
+    void                          setTimeActionNow()                   noexcept;
+    AnswerRequest                 isFallingIntersectionBlock()         noexcept;
+    AnswerRequest                 isGoingStraightAheadIntersectBlock() noexcept; 
 
 };
 

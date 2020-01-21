@@ -35,7 +35,7 @@ private:
     glm::mat4                     _rotationBeforeMovement;
     glm::vec3                     _scaleBeforeMovement;
     glm::vec3                     _translationBeforeMovement;
-    Ball::timePointMs             _referenceTimePoint;
+    JumperBallTypes::timePointMs  _referenceTimePoint;
     Ball::State                   _referenceState;
 
 };

@@ -33,12 +33,25 @@ namespace JumperBallTypes {
     };
 
     struct vec3f {float x; float y; float z;};
+
+    using timePointMs =         std::chrono::time_point <
+                                    std::chrono::_V2::system_clock,
+                                    std::chrono::duration <
+                                    long int, std::ratio<1,1000> 
+                                                          > 
+                                                        >;
+    using durationMs =          std::chrono::duration<long int,
+                                                      std::ratio<1,1000> > ;
 }
+
 
 namespace JumperBallTypesMethods {
     JumperBallTypes::vec3f directionAsVector (JumperBallTypes::Direction dir);
-    JumperBallTypes::Direction integerAsDirection (unsigned int number);
+    JumperBallTypes::Direction    integerAsDirection (unsigned int number);
+    JumperBallTypes::timePointMs  getTimePointMSNow () noexcept;
+    float                         getTimeSecondsSinceTimePoint( 
+                                  const JumperBallTypes::timePointMs& timePoint)
+                                                                      noexcept;
 }
 
 #endif /* TYPES_H */
-

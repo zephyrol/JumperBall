@@ -709,15 +709,11 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
     return blockIntersected;
 }
 
-Ball::timePointMs Ball::getTimeActionMs() const noexcept {
+JumperBallTypes::timePointMs Ball::getTimeActionMs() const noexcept {
     return std::chrono::time_point_cast<std::chrono::milliseconds>
                                                       (_timeAction);
 }
 
-Ball::timePointMs Ball::getTimePointMSNow() noexcept {
-    return std::chrono::time_point_cast<std::chrono::milliseconds> 
-                                    (std::chrono::system_clock::now());
-}
 
 JumperBallTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) 
                                                                            const
@@ -792,9 +788,10 @@ JumperBallTypes::Direction Ball::lookTowards() const {
 
 float Ball::getTimeActionSecondsFloat() const noexcept {
 
-    const timePointMs timeActionMs           = getTimeActionMs(); 
+    const JumperBallTypes::timePointMs timeActionMs        = getTimeActionMs(); 
     
-    const durationMs timeActionSinceEpoch    = timeActionMs.time_since_epoch();
+    const JumperBallTypes::durationMs timeActionSinceEpoch =
+                                                timeActionMs.time_since_epoch();
     
     const std::chrono::duration<float> durationFloat = timeActionSinceEpoch;
     return durationFloat.count() / 1000.f ;
@@ -802,9 +799,11 @@ float Ball::getTimeActionSecondsFloat() const noexcept {
 
 float Ball::getTimeNowSecondsFloat() noexcept {
 
-    const timePointMs timeNowMs           = getTimePointMSNow(); 
+    const JumperBallTypes::timePointMs timeNowMs = JumperBallTypesMethods::
+                                                            getTimePointMSNow();
     
-    const durationMs timeNowSinceEpoch    = timeNowMs.time_since_epoch();
+    const JumperBallTypes::durationMs timeNowSinceEpoch  = 
+                                                  timeNowMs.time_since_epoch();
     
     const std::chrono::duration<float> durationFloat = timeNowSinceEpoch;
     
@@ -814,33 +813,21 @@ float Ball::getTimeNowSecondsFloat() noexcept {
 
 float Ball::getTimeSecondsSinceAction() const noexcept{
 
-    const timePointMs timeNowMs              = getTimePointMSNow(); 
-    const durationMs timeNowSinceEpoch       = timeNowMs.time_since_epoch();
-    
-    const timePointMs timeActionMs           = getTimeActionMs(); 
-    const durationMs timeActionSinceEpoch    = timeActionMs.time_since_epoch();
-    
-    const durationMs difference = timeNowSinceEpoch - timeActionSinceEpoch;
+    const JumperBallTypes::timePointMs timeNowMs = 
+                                    JumperBallTypesMethods::getTimePointMSNow();
+    const JumperBallTypes::durationMs timeNowSinceEpoch = 
+                                                  timeNowMs.time_since_epoch();
+    const JumperBallTypes::timePointMs timeActionMs = getTimeActionMs(); 
+    const JumperBallTypes::durationMs timeActionSinceEpoch    = 
+                                                timeActionMs.time_since_epoch();
+    const JumperBallTypes::durationMs difference = 
+                                      timeNowSinceEpoch - timeActionSinceEpoch;
     const std::chrono::duration<float> durationFloatDifference = difference;
     const float fDifference = durationFloatDifference.count();
 
     return fDifference;
 }
 
-float Ball::getTimeSecondsSinceTimePoint(const timePointMs& timePoint) noexcept{
-
-    const timePointMs timeNowMs              = getTimePointMSNow(); 
-    const durationMs timeNowSinceEpoch       = timeNowMs.time_since_epoch();
-    
-    const timePointMs timeActionMs           = timePoint; 
-    const durationMs timeActionSinceEpoch    = timeActionMs.time_since_epoch();
-    
-    const durationMs difference = timeNowSinceEpoch - timeActionSinceEpoch;
-    const std::chrono::duration<float> durationFloatDifference = difference;
-    const float fDifference = durationFloatDifference.count();
-
-    return fDifference;
-}
 
 JumperBallTypes::vec3f Ball::lookTowardsAsVector() const {
     return JumperBallTypesMethods::directionAsVector(_lookTowards);

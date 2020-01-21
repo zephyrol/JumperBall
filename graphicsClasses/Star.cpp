@@ -26,7 +26,7 @@ Star::Star( const glm::vec3& colorInside, const glm::vec3& colorOutside,
         _radiusOutside(radiusOutside),
         _transform( glm::translate(glm::vec3(0.f,0.f,-distance))
                     * glm::scale(glm::vec3(radius,radius,radius))),
-        _timeCreation(Ball::getTimePointMSNow())
+        _timeCreation(JumperBallTypesMethods::getTimePointMSNow())
 {
     glGenVertexArrays(1, &_idVertexArray);
     glBindVertexArray(_idVertexArray);
@@ -86,7 +86,7 @@ GLfloat Star::radiusOutside() const {
 
 glm::mat4 Star::transform() const {
     const float timeSinceCreation  = 
-                              Ball::getTimeSecondsSinceTimePoint(_timeCreation);
+            JumperBallTypesMethods::getTimeSecondsSinceTimePoint(_timeCreation);
     const float timePerRound       = 10.f;
     const glm::mat4 rotationMatrix = glm::rotate( timeSinceCreation * 2.f
                                         *static_cast<float>(M_PI)/timePerRound,

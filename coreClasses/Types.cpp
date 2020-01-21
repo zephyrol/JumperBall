@@ -66,3 +66,34 @@ JumperBallTypes::Direction JumperBallTypesMethods::integerAsDirection
 
    return dir;
 }
+
+
+JumperBallTypes::timePointMs JumperBallTypesMethods::getTimePointMSNow() 
+                                                                    noexcept {
+    return std::chrono::time_point_cast<std::chrono::milliseconds> 
+                                    (std::chrono::system_clock::now());
+}
+
+float JumperBallTypesMethods::getTimeSecondsSinceTimePoint(
+                      const JumperBallTypes::timePointMs& timePoint) noexcept{
+
+    const JumperBallTypes::timePointMs timeNowMs
+                                              = JumperBallTypesMethods::
+                                                            getTimePointMSNow();
+    const JumperBallTypes::durationMs timeNowSinceEpoch   
+                                              = timeNowMs.time_since_epoch();
+    
+    const JumperBallTypes::timePointMs timeActionMs           
+                                              = timePoint; 
+    const JumperBallTypes::durationMs timeActionSinceEpoch    
+                                              = timeActionMs.time_since_epoch();
+    
+    const JumperBallTypes::durationMs difference 
+                                              = timeNowSinceEpoch - 
+                                                          timeActionSinceEpoch;
+    const std::chrono::duration<float> durationFloatDifference 
+                                              = difference;
+    const float fDifference                   = durationFloatDifference.count();
+
+    return fDifference;
+}

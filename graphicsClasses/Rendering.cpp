@@ -97,9 +97,9 @@ void Rendering::render() {
     renderCamera(_spMap);
 
     _light.positionLight(_star.centralPosition());
-    _light.ambiantLightIntensity(  glm::vec3(0.7f,0.7f,0.7f));
-    _light.diffuseLightIntensity(  glm::vec3(0.25f,0.25f,0.25f));
-    _light.specularLightIntensity( glm::vec3(0.25f,0.25f,0.25f));
+    _light.ambiantLightIntensity(   glm::vec3(0.7f,0.7f,0.7f));
+    _light.diffuseLightIntensity(   glm::vec3(0.25f,0.25f,0.25f));
+    _light.specularLightIntensity(  glm::vec3(0.25f,0.25f,0.25f));
                                         
     _light.bind("light",_spMap);
 
@@ -107,10 +107,10 @@ void Rendering::render() {
     _meshBall.updateMatrices(_ball);
     _ballAnimation.updateTrans();
 
-    bindUniform ("M", _ballAnimation.model(),           _spMap);
-    bindUniform ("SR", _ballAnimation.scaleRotation(),  _spMap);
+    bindUniform ("M",   _ballAnimation.model(),         _spMap);
+    bindUniform ("SR",  _ballAnimation.scaleRotation(), _spMap);
 
-    bindUniform ("W",  _meshBall.world(),               _spMap);
+    bindUniform ("W",   _meshBall.world(),              _spMap);
 
     _meshBall.draw();
 

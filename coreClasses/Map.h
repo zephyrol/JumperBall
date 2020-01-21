@@ -60,8 +60,10 @@ public:
     static void                           compress(std::ifstream& input);
     
 private:
+
     //--------ATTRIBUTES-----------//
     const unsigned int                    _id;
+
     std::vector< std::shared_ptr<Block> > _map3DData;
     unsigned int                          _boundingBoxXMax;
     unsigned int                          _boundingBoxYMax;
@@ -70,6 +72,7 @@ private:
     unsigned int                          _beginX;
     unsigned int                          _beginY;
     unsigned int                          _beginZ;
+    const JumperBallTypes::timePointMs    _timeCreation;
     
     static unsigned int                   nbMaps;
 
