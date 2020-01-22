@@ -30,9 +30,9 @@ public:
     enum class KindOfData {Raw,Optimized};
     
     //---------CONSTANTS------------//
-    static constexpr unsigned char  firstNumberOfBlock                     = 58;
-    static constexpr unsigned int   nbOfCharactersUsedForNumbers           = 69;
-    static constexpr unsigned char  firstKindOfBlock                       = 48;
+    static constexpr unsigned char        firstNumberOfBlock               = 58;
+    static constexpr unsigned int         nbOfCharactersUsedForNumbers     = 69;
+    static constexpr unsigned char        firstKindOfBlock                 = 48;
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Map                                   ();
@@ -56,6 +56,9 @@ public:
     unsigned int                          beginY()                        const;
     unsigned int                          beginZ()                        const;
 
+    std::chrono::time_point<std::chrono::system_clock>  
+                                          timeCreation()                  const;
+
     //--------STATIC METHODS-------//
     static void                           compress(std::ifstream& input);
     
@@ -72,7 +75,8 @@ private:
     unsigned int                          _beginX;
     unsigned int                          _beginY;
     unsigned int                          _beginZ;
-    const JumperBallTypes::timePointMs    _timeCreation;
+    std::chrono::time_point<std::chrono::system_clock>  
+                                          _timeCreation;
     
     static unsigned int                   nbMaps;
 

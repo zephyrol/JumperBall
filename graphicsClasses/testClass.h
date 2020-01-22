@@ -31,7 +31,7 @@ public:
     //----------METHODS-------------//
     testClass     (const testClass&);
     testClass&    operator = (const testClass&);
-    void          run(Rendering& r, Ball& b, Camera& c);
+    void          run(Rendering& r, Ball& b, Camera& c, Map& m);
 
 
 private:

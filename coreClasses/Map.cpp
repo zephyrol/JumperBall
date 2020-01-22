@@ -19,27 +19,28 @@ unsigned int Map::nbMaps = 0;
 
 Map::Map() : _id (nbMaps),
              //_blocks{},
-             _map3DData{},
-             _boundingBoxXMax (0),
-             _boundingBoxYMax (0),
-             _boundingBoxZMax (0),
-             _beginX (0),
-             _beginY (0),
-             _beginZ (0),
-             _timeCreation(JumperBallTypesMethods::getTimePointMSNow())
+              _map3DData{},
+              _boundingBoxXMax (0),
+              _boundingBoxYMax (0),
+              _boundingBoxZMax (0),
+              _beginX (0),
+              _beginY (0),
+              _beginZ (0),
+              _timeCreation(std::chrono::system_clock::now())
 {
     Map::nbMaps++;
 }
 
 
 Map::Map(std::ifstream& file):_id (nbMaps),        
-                             _map3DData{},
-                             _boundingBoxXMax (0),
-                             _boundingBoxYMax (0),
-                             _boundingBoxZMax (0),
-                             _beginX (0),
-                             _beginY (0),
-                             _beginZ (0)
+                              _map3DData{},
+                              _boundingBoxXMax (0),
+                              _boundingBoxYMax (0),
+                              _boundingBoxZMax (0),
+                              _beginX (0),
+                              _beginY (0),
+                              _beginZ (0),
+                              _timeCreation(std::chrono::system_clock::now())
 {
     unsigned int width;
     unsigned int deep;
@@ -269,4 +270,8 @@ void Map::compress(std::ifstream& input) {
     } 
     output << currentType;
     output.close();
+}
+
+std::chrono::time_point<std::chrono::system_clock> Map::timeCreation() const {
+    return _timeCreation;
 }

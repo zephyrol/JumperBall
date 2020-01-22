@@ -89,6 +89,15 @@ void Rendering::bindUniform(const std::string& name,
     glUniform1fv( uniformVariableID, 1, &value);
 }
 
+void Rendering::bindUniform(const std::string& name, 
+                            const bool& value, 
+                            const ShaderProgram& sp) {
+
+    const GLuint uniformVariableID =
+            glGetUniformLocation(sp.getHandle(),name.c_str());
+    glUniform1i( uniformVariableID, value);
+}
+
 
 void Rendering::render() {
     
@@ -143,6 +152,7 @@ void Rendering::render() {
 
 void Rendering::renderCamera(const ShaderProgram& sp) {
 
+  _uniformBool["displayBehind"] = _camera.displayBehind();
 
   _uniformMatrix4["VP"] =  
           glm::mat4( 
@@ -172,6 +182,7 @@ void Rendering::renderCamera(const ShaderProgram& sp) {
   bindUniform ("lookDirection",   _uniformVec3.at("lookDirection"),   sp);
   bindUniform ("distanceBehind",  _uniformFloat.at("distanceBehind"), sp);
   bindUniform ("positionCamera",  _uniformVec3.at("positionCamera"),  sp);
+  bindUniform ("displayBehind",   _uniformBool.at("displayBehind"),   sp);
 }
 
 

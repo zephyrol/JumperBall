@@ -52,6 +52,11 @@ namespace JumperBallTypesMethods {
     float                         getTimeSecondsSinceTimePoint( 
                                   const JumperBallTypes::timePointMs& timePoint)
                                                                       noexcept;
+    float                         getFloatFromDurationMS(
+                                    const JumperBallTypes::durationMs& dms );
+    JumperBallTypes::timePointMs getTimePointMsFromTimePoint( const 
+       std::chrono::time_point<std::chrono::system_clock> & timePoint) noexcept;
+
 }
 
 #endif /* TYPES_H */

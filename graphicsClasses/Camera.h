@@ -40,6 +40,7 @@ public:
     glm::vec3                     pos()                          const noexcept;
     glm::vec3                     dir()                          const noexcept;
     glm::vec3                     up()                           const noexcept;
+    bool                          displayBehind()                const noexcept;
 
 
     //----------METHODS-------------//
@@ -53,6 +54,7 @@ private:
     float                         _posX,  _posY,  _posZ;
     float                         _dirX,  _dirY,  _dirZ;
     float                         _upX,   _upY,   _upZ;
+    bool                          _displayBehind;
 
 };
 #endif /* CAMERA_H */

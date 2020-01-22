@@ -97,3 +97,17 @@ float JumperBallTypesMethods::getTimeSecondsSinceTimePoint(
 
     return fDifference;
 }
+
+    float JumperBallTypesMethods::getFloatFromDurationMS(
+                                    const JumperBallTypes::durationMs& dms )
+    {
+        const std::chrono::duration<float> durationFloatDifference = dms;
+        const float fDifference = durationFloatDifference.count();
+        return fDifference;
+    }
+
+JumperBallTypes::timePointMs JumperBallTypesMethods::getTimePointMsFromTimePoint
+(const std::chrono::time_point<std::chrono::system_clock> & timePoint) noexcept{
+
+    return std::chrono::time_point_cast<std::chrono::milliseconds> (timePoint);
+}

@@ -61,7 +61,7 @@ testClass::testClass(): _window(nullptr)
     //-----
 }
 
-void testClass::run(Rendering& r, Ball& b, Camera& c) {
+void testClass::run(Rendering& r, Ball& b, Camera& c, Map& m) {
    
 
     bool leftButton   = false;
@@ -69,6 +69,8 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
     bool upButton     = false;
     bool enterButton  = false;
 
+    
+    m.printMap();
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
           && glfwWindowShouldClose(_window) == 0 ) {
