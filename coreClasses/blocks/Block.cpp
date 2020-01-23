@@ -23,4 +23,8 @@ std::array<bool, 6 > Block::faceInfo() const {
     return {false,false,false,false,false,false};
 }
 
+bool Block::stillExists() const {
+    return true;
+}
+
 

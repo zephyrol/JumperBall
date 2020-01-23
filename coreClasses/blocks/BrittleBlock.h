@@ -17,14 +17,25 @@
 
 class BrittleBlock : public Block {
 public:
-    BrittleBlock();
-    BrittleBlock(const BrittleBlock& orig);
-    virtual ~BrittleBlock();
+    BrittleBlock                  ();
+    virtual ~BrittleBlock         ();
 
-    Block::categoryOfBlocksInFile getType() const override;
-    void interaction() override;
+    Block::categoryOfBlocksInFile getType()                      const override;
+    void                          interaction(JumperBallTypes::Direction 
+                                                ballDir)               override;
+    bool                          stillExists()                  const override;
+
+    void                          setFallDirection (JumperBallTypes:: Direction 
+                                                             ballDir);
+
+    
+
 private:
-
+    bool                          _stillThere;
+    bool                          _isGoingToBreak;
+    std::chrono::time_point<std::chrono::system_clock> 
+                                  _collisionTime;
+    JumperBallTypes::Direction    _fallDirection;
 };
 
 #endif /* BRITTLEBLOCK_H */

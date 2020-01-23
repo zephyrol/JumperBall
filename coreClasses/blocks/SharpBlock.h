@@ -26,7 +26,8 @@ public:
     std::array<bool,6>                            faceInfo()     const override;
 
     //----------METHODS-------------//
-    void                                          interaction()        override;
+    void                                          interaction( JumperBallTypes::
+                                                    Direction ballDir) override;
      
     
 private:

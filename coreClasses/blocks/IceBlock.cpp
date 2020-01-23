@@ -25,7 +25,8 @@ Block::categoryOfBlocksInFile IceBlock::getType() const {
     return Block::categoryOfBlocksInFile::Ice;
 }
 
-void IceBlock::interaction() {
-
+void IceBlock::interaction(JumperBallTypes:: Direction ballDir) {
+    static_cast<void> (ballDir); //To remove warning... We want to do nothing.
+                                //Others classes may override the method.
 }
 

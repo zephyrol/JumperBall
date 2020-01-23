@@ -25,9 +25,12 @@ Block::categoryOfBlocksInFile SharpBlock::getType() const {
     return Block::categoryOfBlocksInFile::Sharp;
 }
 
-void SharpBlock::interaction() {
-     
+void SharpBlock::interaction(JumperBallTypes:: Direction ballDir) {
+    static_cast<void> (ballDir); //To remove warning... We want to do nothing.
+                                //Others classes may override the method.
 }
+
+
 
 std::array<bool, 6 > SharpBlock::faceInfo() const {
     return _facesSharps;

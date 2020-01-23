@@ -26,9 +26,11 @@ Ball::Ball(const Map& map):
         _currentSide(JumperBallTypes::Direction::Up),
         _lookTowards(JumperBallTypes::Direction::North),
         _state(Ball::State::Staying),
+        _stateOfLife(Ball::StateOfLife::Alive),
         _map(map),
         _mechanicsPattern(),
-        _timeAction(std::chrono::system_clock::now()){
+        _timeAction(std::chrono::system_clock::now()),
+        _timeStateOfLife(std::chrono::system_clock::now()){
        
 }
 

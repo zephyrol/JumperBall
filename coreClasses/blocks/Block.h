@@ -28,16 +28,17 @@ public:
 
 
     //----------METHODS-------------//
-    virtual void                      interaction()                          =0;
-    virtual                           categoryOfBlocksInFile getType() const =0;
+    virtual void                      interaction(JumperBallTypes::Direction 
+                                                    ballDir)                 =0;
+
 
     //-------CONST METHODS----------//
+    virtual                           categoryOfBlocksInFile getType() const =0;
     virtual std::array<bool,6>        faceInfo()                          const;
-
-
-private:
-
+    virtual bool                      stillExists()                       const;
 };
+
+    //--------ATTRIBUTES-----------//
 
 #endif /* BLOCK_H */
 

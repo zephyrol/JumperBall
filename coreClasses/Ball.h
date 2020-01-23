@@ -33,6 +33,8 @@ public:
     enum class State              { Staying, Moving, Jumping, 
                                     TurningLeft, TurningRight };
 
+    enum class StateOfLife        { Alive, Bursting, Burning, Dead};
+
     enum class ActionRequest      { GoStraightAhead, TurnLeft, TurnRight, Jump};
     enum class AnswerRequest      { Accepted, Rejected };
     enum class NextBlockLocal     { Above, InFrontOf, Same, None };
@@ -88,6 +90,7 @@ private:
     JumperBallTypes::Direction    _currentSide;
     JumperBallTypes::Direction    _lookTowards;
     Ball::State                   _state;
+    Ball::StateOfLife             _stateOfLife;
 
     const Map&                    _map;
 
@@ -95,6 +98,9 @@ private:
 
     std::chrono::time_point<std::chrono::system_clock>  
                                   _timeAction;
+
+    std::chrono::time_point<std::chrono::system_clock>  
+                                  _timeStateOfLife;
 
     //-------CONST METHODS--------//
     std::shared_ptr<const std::vector<int> >  
