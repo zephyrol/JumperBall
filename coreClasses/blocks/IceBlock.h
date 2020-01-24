@@ -22,7 +22,6 @@ public:
     virtual ~IceBlock();
 
     Block::categoryOfBlocksInFile getType() const override;
-    void interaction(JumperBallTypes:: Direction ballDir) override;
 
 private:
 

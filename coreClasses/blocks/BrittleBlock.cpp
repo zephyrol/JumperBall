@@ -27,13 +27,13 @@ Block::categoryOfBlocksInFile BrittleBlock::getType() const {
     return Block::categoryOfBlocksInFile::Brittle;
 }
 
-void BrittleBlock::interaction(JumperBallTypes:: Direction ballDir) {
-    if (!_isGoingToBreak) {
-        _collisionTime = std::chrono::system_clock::now();
-        _isGoingToBreak = true;
-        setFallDirection(ballDir);
-    }
+void BrittleBlock::interaction(const JumperBallTypes::Direction& ballDir, 
+                               const JumperBallTypes::timePointMs& currentTime){
+    static_cast<void> (ballDir);
+    static_cast<void> (currentTime);
 }
+
+
 
 void BrittleBlock::setFallDirection(JumperBallTypes::Direction ballDir) {
     switch (ballDir) {
@@ -66,6 +66,18 @@ void BrittleBlock::setFallDirection(JumperBallTypes::Direction ballDir) {
 bool BrittleBlock::stillExists() const {
     return _stillThere;
 }
+
+void BrittleBlock::detectionEvent(const JumperBallTypes::Direction& ballDir, 
+        const JumperBallTypes::timePointMs& currentTime) {
+
+    if (!_isGoingToBreak) {
+        _collisionTime = currentTime;
+        setFallDirection(ballDir);
+        _isGoingToBreak = true;
+    }
+}
+
+
 
 
 

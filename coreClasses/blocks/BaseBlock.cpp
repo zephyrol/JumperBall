@@ -16,15 +16,6 @@
 BaseBlock::BaseBlock() {
 }
 
-/*BaseBlock::BaseBlock(const BaseBlock& orig) {
-}*/
-
-
-void BaseBlock::interaction(JumperBallTypes::Direction ballDir) {
-    static_cast<void> (ballDir); //To remove warning... We want to do nothing.
-                                //Others classes may override the method.
-}
-
 
 Block::categoryOfBlocksInFile BaseBlock::getType() const {
     return Block::categoryOfBlocksInFile::Base;

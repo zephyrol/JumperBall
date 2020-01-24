@@ -103,6 +103,7 @@
           </incDir>
         </cTool>
         <ccTool>
+          <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>coreClasses</pElem>
             <pElem>libs</pElem>
@@ -261,6 +262,7 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>coreClasses</pElem>
             <pElem>libs</pElem>

@@ -23,7 +23,6 @@ public:
     virtual ~BaseBlock();
 
     Block::categoryOfBlocksInFile getType() const override;
-    void interaction(JumperBallTypes::Direction ballDir) override;
 
 private:
 

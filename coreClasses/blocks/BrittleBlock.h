@@ -21,20 +21,29 @@ public:
     virtual ~BrittleBlock         ();
 
     Block::categoryOfBlocksInFile getType()                      const override;
-    void                          interaction(JumperBallTypes::Direction 
-                                                ballDir)               override;
+
     bool                          stillExists()                  const override;
 
     void                          setFallDirection (JumperBallTypes:: Direction 
                                                              ballDir);
 
+    virtual void                  interaction(
+                                    const JumperBallTypes::Direction& 
+                                            ballDir,
+                                    const JumperBallTypes::timePointMs&
+                                            currentTime)               override;
+
+    virtual void                  detectionEvent(
+                                    const JumperBallTypes::Direction& 
+                                            ballDir,
+                                    const JumperBallTypes::timePointMs&
+                                            currentTime)               override;
     
 
 private:
     bool                          _stillThere;
     bool                          _isGoingToBreak;
-    std::chrono::time_point<std::chrono::system_clock> 
-                                  _collisionTime;
+    JumperBallTypes::timePointMs  _collisionTime;
     JumperBallTypes::Direction    _fallDirection;
 };
 

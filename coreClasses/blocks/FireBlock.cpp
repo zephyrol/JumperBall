@@ -28,8 +28,3 @@ Block::categoryOfBlocksInFile FireBlock::getType() const {
     return Block::categoryOfBlocksInFile::Fire;
 }
 
-void FireBlock::interaction(JumperBallTypes:: Direction ballDir) {
-    static_cast<void> (ballDir); //To remove warning... We want to do nothing.
-                                //Others classes may override the method.
-}
-

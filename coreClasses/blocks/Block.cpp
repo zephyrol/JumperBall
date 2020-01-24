@@ -13,7 +13,14 @@
 
 #include "Block.h"
 
-Block::Block() {
+Block::Block():
+  _localTransform {0.f,0.f,0.f,0.f,0.f,0.f,1.f,1.f,1.f}
+{
+}
+
+Block::Block(const std::array<float,9>& localTransform):
+  _localTransform(localTransform)
+{
 }
 
 Block::~Block() {
@@ -27,4 +34,27 @@ bool Block::stillExists() const {
     return true;
 }
 
+void Block::detectionEvent(const JumperBallTypes::Direction& ballDir, 
+        const JumperBallTypes::timePointMs& currentTime)
+{
+    //To remove warning... We want to do nothing.
+    //Others classes may override the method.
+
+    static_cast<void> (ballDir);
+    static_cast<void> (currentTime);
+}
+
+const std::array<float, 9>& Block::localTransform() const {
+    // 3 values for the translation, 3 for rotation, 3 for the scale
+    return _localTransform;
+}
+
+void Block::interaction(
+        const JumperBallTypes::Direction& ballDir, 
+        const JumperBallTypes::timePointMs& currentTime) {
+    //To remove warning... We want to do nothing.
+    //Others classes may override the method.
+    static_cast<void> (ballDir);
+    static_cast<void> (currentTime);
+}
 

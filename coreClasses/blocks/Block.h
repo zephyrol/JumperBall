@@ -20,7 +20,9 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Block                             ();
-    virtual                           ~Block() ;
+    Block                             (const std::array<float,9>& 
+                                                                localTransform);
+    virtual                           ~Block()                               =0;
 
 
     //------------TYPES------------//
@@ -28,17 +30,32 @@ public:
 
 
     //----------METHODS-------------//
-    virtual void                      interaction(JumperBallTypes::Direction 
-                                                    ballDir)                 =0;
+    virtual void                      interaction(
+                                        const JumperBallTypes::Direction& 
+                                                ballDir,
+                                        const JumperBallTypes::timePointMs&
+                                                currentTime);
+    virtual void                      detectionEvent(
+                                        const JumperBallTypes::Direction&
+                                                ballDir,
+                                        const JumperBallTypes::timePointMs&
+                                                currentTime
+                                                );
 
 
     //-------CONST METHODS----------//
     virtual                           categoryOfBlocksInFile getType() const =0;
     virtual std::array<bool,6>        faceInfo()                          const;
     virtual bool                      stillExists()                       const;
-};
+    virtual const std::array<float,9>&       
+                                      localTransform()                    const;
 
     //--------ATTRIBUTES-----------//
+    std::array<float,9>               _localTransform;
+
+
+};
+
 
 #endif /* BLOCK_H */
 
