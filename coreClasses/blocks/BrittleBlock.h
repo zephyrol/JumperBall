@@ -31,7 +31,10 @@ public:
                                     const JumperBallTypes::Direction& 
                                             ballDir,
                                     const JumperBallTypes::timePointMs&
-                                            currentTime)               override;
+                                            currentTime,
+                                    const JumperBallTypes::vec3f& posBall,
+                                    const std::array<unsigned int,3>& posBlock)
+                                                                       override;
 
     virtual void                  detectionEvent(
                                     const JumperBallTypes::Direction& 
@@ -39,6 +42,10 @@ public:
                                     const JumperBallTypes::timePointMs&
                                             currentTime)               override;
     
+    virtual const                 std::array<float,9>&       
+                                      localTransform(
+                                      const JumperBallTypes::timePointMs& 
+                                          currentTime);
 
 private:
     bool                          _stillThere;

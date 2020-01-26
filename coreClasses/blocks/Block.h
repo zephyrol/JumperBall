@@ -31,10 +31,12 @@ public:
 
     //----------METHODS-------------//
     virtual void                      interaction(
-                                        const JumperBallTypes::Direction& 
-                                                ballDir,
-                                        const JumperBallTypes::timePointMs&
-                                                currentTime);
+                                    const JumperBallTypes::Direction& 
+                                            ballDir,
+                                    const JumperBallTypes::timePointMs&
+                                            currentTime,
+                                    const JumperBallTypes::vec3f& posBall,
+                                    const std::array<unsigned int,3>& posBlock);
     virtual void                      detectionEvent(
                                         const JumperBallTypes::Direction&
                                                 ballDir,
@@ -48,7 +50,9 @@ public:
     virtual std::array<bool,6>        faceInfo()                          const;
     virtual bool                      stillExists()                       const;
     virtual const std::array<float,9>&       
-                                      localTransform()                    const;
+                                      localTransform(
+                                      const JumperBallTypes::timePointMs& 
+                                          currentTime);
 
     //--------ATTRIBUTES-----------//
     std::array<float,9>               _localTransform;

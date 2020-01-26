@@ -46,15 +46,18 @@ namespace JumperBallTypes {
 
 
 namespace JumperBallTypesMethods {
-    JumperBallTypes::vec3f directionAsVector (JumperBallTypes::Direction dir);
+    JumperBallTypes::vec3f        directionAsVector 
+                                              (JumperBallTypes::Direction dir);
     JumperBallTypes::Direction    integerAsDirection (unsigned int number);
-    JumperBallTypes::timePointMs  getTimePointMSNow () noexcept;
+    unsigned int                  directionAsInteger (JumperBallTypes::Direction
+                                                      dir);
+    JumperBallTypes::timePointMs  getTimePointMSNow ()                 noexcept;
     float                         getTimeSecondsSinceTimePoint( 
                                   const JumperBallTypes::timePointMs& timePoint)
-                                                                      noexcept;
+                                                                       noexcept;
     float                         getFloatFromDurationMS(
                                     const JumperBallTypes::durationMs& dms );
-    JumperBallTypes::timePointMs getTimePointMsFromTimePoint( const 
+    JumperBallTypes::timePointMs  getTimePointMsFromTimePoint( const 
        std::chrono::time_point<std::chrono::system_clock> & timePoint) noexcept;
 
 }

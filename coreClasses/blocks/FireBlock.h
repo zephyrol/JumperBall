@@ -24,8 +24,7 @@ public:
     Block::categoryOfBlocksInFile getType() const override;
 
 private:
-
+    bool _isBurning;
 };
 
 #endif /* FIREBLOCK_H */
-

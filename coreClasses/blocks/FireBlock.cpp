@@ -13,15 +13,12 @@
 
 #include "FireBlock.h"
 
-FireBlock::FireBlock() {
+FireBlock::FireBlock():
+  _isBurning(false){
 }
-
-/*FireBlock::FireBlock(const FireBlock& orig) {
-}*/
 
 FireBlock::~FireBlock() {
 }
-
 
 Block::categoryOfBlocksInFile FireBlock::getType() const {
 

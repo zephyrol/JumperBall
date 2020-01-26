@@ -39,32 +39,32 @@ JumperBallTypes::vec3f JumperBallTypesMethods::directionAsVector (
 JumperBallTypes::Direction JumperBallTypesMethods::integerAsDirection  
                                                         (unsigned int number) 
 {
-   JumperBallTypes::Direction dir ; 
-   switch (number){
-       case 0 : 
-           dir = JumperBallTypes::Direction::North;
-           break;
-       case 1 : 
-           dir = JumperBallTypes::Direction::South;
-           break;
-       case 2 : 
-           dir = JumperBallTypes::Direction::East;
-           break;
-       case 3 : 
-           dir = JumperBallTypes::Direction::West;
-           break;
-       case 4 : 
-           dir = JumperBallTypes::Direction::Up;
-           break;
-       case 5 : 
-           dir = JumperBallTypes::Direction::Down;
-           break;
-       default:
-           dir = JumperBallTypes::Direction::North;
-           break;
-   }
-
-   return dir;
+    JumperBallTypes::Direction dir ; 
+    switch (number){
+        case 0 : 
+            dir = JumperBallTypes::Direction::North;
+            break;
+        case 1 : 
+            dir = JumperBallTypes::Direction::South;
+            break;
+        case 2 : 
+            dir = JumperBallTypes::Direction::East;
+            break;
+        case 3 : 
+            dir = JumperBallTypes::Direction::West;
+            break;
+        case 4 : 
+            dir = JumperBallTypes::Direction::Up;
+            break;
+        case 5 : 
+            dir = JumperBallTypes::Direction::Down;
+            break;
+        default:
+            dir = JumperBallTypes::Direction::North;
+            break;
+    }
+    
+    return dir;
 }
 
 
@@ -110,4 +110,34 @@ JumperBallTypes::timePointMs JumperBallTypesMethods::getTimePointMsFromTimePoint
 (const std::chrono::time_point<std::chrono::system_clock> & timePoint) noexcept{
 
     return std::chrono::time_point_cast<std::chrono::milliseconds> (timePoint);
+}
+
+unsigned int JumperBallTypesMethods::directionAsInteger(
+                                              JumperBallTypes::Direction dir) {
+    
+    unsigned int number;
+    switch (dir){
+        case JumperBallTypes::Direction::North : 
+            number = 0;
+            break;
+        case JumperBallTypes::Direction::South : 
+            number = 1;
+            break;
+        case JumperBallTypes::Direction::East : 
+            number = 2;
+            break;
+        case JumperBallTypes::Direction::West : 
+            number = 3;
+            break;
+        case JumperBallTypes::Direction::Up: 
+            number = 4;
+            break;
+        case JumperBallTypes::Direction::Down: 
+            number = 5;
+            break;
+        default:
+            number = 0;
+            break;
+    }
+    return number;
 }

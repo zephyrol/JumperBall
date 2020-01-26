@@ -26,10 +26,19 @@ public:
     std::array<bool,6>                            faceInfo()     const override;
 
     //----------METHODS-------------//
+    virtual void                  interaction(
+                                    const JumperBallTypes::Direction& 
+                                            ballDir,
+                                    const JumperBallTypes::timePointMs&
+                                            currentTime,
+                                    const JumperBallTypes::vec3f& posBall,
+                                    const std::array<unsigned int,3>& posBlock)
+                                                                       override;
      
     
 private:
     const std::array<bool,6>                      _facesSharps;
+    bool                                          _hitBall;
 };
 
 #endif /* SPICYBLOCK_H */

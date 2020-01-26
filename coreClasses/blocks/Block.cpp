@@ -44,17 +44,28 @@ void Block::detectionEvent(const JumperBallTypes::Direction& ballDir,
     static_cast<void> (currentTime);
 }
 
-const std::array<float, 9>& Block::localTransform() const {
+
+const std::array<float, 9>& Block::localTransform(
+            const JumperBallTypes::timePointMs& currentTime) {
     // 3 values for the translation, 3 for rotation, 3 for the scale
+    static_cast<void> (currentTime);
     return _localTransform;
+
 }
 
-void Block::interaction(
-        const JumperBallTypes::Direction& ballDir, 
-        const JumperBallTypes::timePointMs& currentTime) {
+
+
+void Block::interaction(const JumperBallTypes::Direction& ballDir, 
+                        const JumperBallTypes::timePointMs& currentTime, 
+                        const JumperBallTypes::vec3f& posBall, 
+                        const std::array<unsigned int, 3>& posBlock) {
+
     //To remove warning... We want to do nothing.
     //Others classes may override the method.
     static_cast<void> (ballDir);
     static_cast<void> (currentTime);
+    static_cast<void> (posBall);
+    static_cast<void> (posBlock);
 }
+
 
