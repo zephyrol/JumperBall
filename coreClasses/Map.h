@@ -45,7 +45,7 @@ public:
 
 
     //-------CONST METHODS----------//
-    std::shared_ptr<const Block>          map3DData(int x, int y, int z)  const;
+    std::shared_ptr<Block>                map3DData(int x, int y, int z)  const;
     void                                  printMap()                      const;
 
     unsigned int                          boundingBoxXMax()               const;
@@ -58,6 +58,12 @@ public:
 
     std::chrono::time_point<std::chrono::system_clock>  
                                           timeCreation()                  const;
+
+    //----------METHODS------------//
+    void                                  interaction(
+                                      const JumperBallTypes::Direction& ballDir,
+                                      const JumperBallTypes::vec3f& posBall
+    );
 
     //--------STATIC METHODS-------//
     static void                           compress(std::ifstream& input);

@@ -43,14 +43,13 @@ public:
                                             currentTime)               override;
     
     virtual const                 std::array<float,9>&       
-                                      localTransform(
-                                      const JumperBallTypes::timePointMs& 
-                                          currentTime);
+                                      localTransform()                    const;
 
 private:
     bool                          _stillThere;
     bool                          _isGoingToBreak;
     JumperBallTypes::timePointMs  _collisionTime;
+    JumperBallTypes::timePointMs  _timeUpdate;
     JumperBallTypes::Direction    _fallDirection;
 };
 

@@ -17,6 +17,7 @@ BrittleBlock::BrittleBlock():
   _stillThere(true),
   _isGoingToBreak(false),
   _collisionTime(),
+  _timeUpdate(),
   _fallDirection(JumperBallTypes::Direction::Down)
 {
 }
@@ -36,12 +37,26 @@ void BrittleBlock::interaction( const JumperBallTypes::Direction& ballDir,
     static_cast<void> (posBall);
     static_cast<void> (posBlock);
     constexpr float timeToFall = 1.f;
+    _timeUpdate = currentTime;
     if (_isGoingToBreak && _stillThere) {
         JumperBallTypes::durationMs diff= currentTime - _collisionTime;
         float diffF = JumperBallTypesMethods::getFloatFromDurationMS(diff);
         if (diffF > timeToFall) {
             _stillThere = false;
         }
+    }
+
+    constexpr float fallSpeed = 20.f;
+    
+    if (!_stillThere)  {
+        const JumperBallTypes::vec3f dirVec =
+            JumperBallTypesMethods::directionAsVector(_fallDirection);
+        const JumperBallTypes::durationMs diff= currentTime - _collisionTime;
+        const float diffF= JumperBallTypesMethods::getFloatFromDurationMS(diff)
+                            - timeToFall;
+       _localTransform.at(0) = dirVec.x * diffF * fallSpeed;
+       _localTransform.at(1) = dirVec.y * diffF * fallSpeed;
+       _localTransform.at(2) = dirVec.z * diffF * fallSpeed;
     }
 
 }
@@ -89,20 +104,8 @@ void BrittleBlock::detectionEvent(const JumperBallTypes::Direction& ballDir,
     }
 }
 
-const std::array<float, 9>& BrittleBlock::localTransform(
-                   const JumperBallTypes::timePointMs& currentTime
-){
-    constexpr float fallSpeed = 10.f;
-    
-    if (_stillThere)  {
-        JumperBallTypes::vec3f dirVec =
-            JumperBallTypesMethods::directionAsVector(_fallDirection);
-        JumperBallTypes::durationMs diff= currentTime - _collisionTime;
-        float diffF = JumperBallTypesMethods::getFloatFromDurationMS(diff);
-       _localTransform.at(0) = dirVec.x * diffF * fallSpeed;
-       _localTransform.at(1) = dirVec.y * diffF * fallSpeed;
-       _localTransform.at(2) = dirVec.z * diffF * fallSpeed;
-    }
+const std::array<float, 9>& BrittleBlock::localTransform() const{
+
     return _localTransform;
 }
 

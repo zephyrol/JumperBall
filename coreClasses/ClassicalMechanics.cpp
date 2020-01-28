@@ -37,6 +37,22 @@ ClassicalMechanics::ClassicalMechanics():
 {
 }
 
+ClassicalMechanics::ClassicalMechanics( float distanceJump, 
+                                        float timeToGetDestination, 
+                                        float v0x, float v0y):
+    _gravitationalAcceleration          {gravitationalAccelerationEarth},
+    _distanceJump                       {distanceJump},
+    _timeToGetDestinationX              (timeToGetDestination),
+    _weightSphere                       (0.010f),
+    _v0                                 (ClassicalMechanics::physics2DVector
+                                        {v0x,v0y}),
+    _fluid                              (ClassicalMechanics::Fluid::Air),
+    _EulerMethodBuffer                  {},
+    _timesShock                         {}
+{
+}
+
+
 ClassicalMechanics::~ClassicalMechanics() {
 }
 

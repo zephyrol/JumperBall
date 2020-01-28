@@ -31,7 +31,7 @@ public:
 
     //------------TYPES------------//
     enum class State              { Staying, Moving, Jumping, 
-                                    TurningLeft, TurningRight };
+                                    TurningLeft, TurningRight, Falling };
 
     enum class StateOfLife        { Alive, Bursting, Burning, Dead};
 
@@ -64,7 +64,8 @@ public:
     JumperBallTypes::timePointMs  getTimeActionMs()              const noexcept;
 
     struct nextBlockInformation   getNextBlockInfo()             const noexcept;
-    const ClassicalMechanics&     getMechanics()                 const noexcept;
+    const ClassicalMechanics&     getMechanicsJumping()          const noexcept;
+    const ClassicalMechanics&     getMechanicsFalling()          const noexcept;
 
 
 
@@ -94,7 +95,8 @@ private:
 
     const Map&                    _map;
 
-    ClassicalMechanics            _mechanicsPattern;
+    ClassicalMechanics            _mechanicsPatternJumping;
+    ClassicalMechanics            _mechanicsPatternFalling;
 
     std::chrono::time_point<std::chrono::system_clock>  
                                   _timeAction;
@@ -121,6 +123,7 @@ private:
     void                          stay()                               noexcept;
     void                          jump()                               noexcept;
     void                          move()                               noexcept;
+    void                          fall()                               noexcept;
     void                          setTimeActionNow()                   noexcept;
     AnswerRequest                 isFallingIntersectionBlock()         noexcept;
     AnswerRequest                 isGoingStraightAheadIntersectBlock() noexcept; 

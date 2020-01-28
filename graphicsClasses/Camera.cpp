@@ -221,7 +221,7 @@ void Camera::follow(const Map& map) noexcept{
     if ( distanceMax < zMax) distanceMax = zMax;
     
     const float cameraDistanceNear = distanceMax * 0.75f;
-    const float cameraDistanceFar =  distanceMax * 1.5f;
+    const float cameraDistanceFar =  distanceMax * 1.2f;
     
     const JumperBallTypes::timePointMs now  = 
     JumperBallTypesMethods::getTimePointMSNow();

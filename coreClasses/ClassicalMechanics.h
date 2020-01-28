@@ -26,6 +26,13 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     ClassicalMechanics                  ();
+
+    ClassicalMechanics                  (
+                                          float distanceJump,
+                                          float timeToGetDestination,
+                                          float v0x,
+                                          float v0y
+                                        );
     virtual ~ClassicalMechanics         ();
 
   
@@ -44,7 +51,7 @@ public:
     
     static const std::map<Fluid,float>  listOfViscosities;
 
-    struct physics2DVector              { const float x; const float y; };
+    struct physics2DVector              { float x; float y; };
 
     struct EulerMethodBuffer            { 
                                           float              deltaT ;

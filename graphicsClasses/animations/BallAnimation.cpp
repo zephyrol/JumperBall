@@ -81,8 +81,13 @@ void BallAnimation::updateTrans() {
             _ball.state() == Ball::State::TurningRight )
             t = _ball.getTimeSecondsSinceAction()/
                     _ball.timeToGetNextBlock;
-        else {
-            t = _ball.getMechanics().getPosition(
+        else if (_ball.state() == Ball::State::Jumping) {
+            t = _ball.getMechanicsJumping().getPosition(
+                    _ball.getTimeSecondsSinceAction()
+                    ).x ;
+        }
+        else  {
+            t = _ball.getMechanicsFalling().getPosition(
                     _ball.getTimeSecondsSinceAction()
                     ).x ;
         }

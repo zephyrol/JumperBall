@@ -70,6 +70,8 @@ void testClass::run(Rendering& r, Ball& b, Camera& c, Map& m) {
     bool enterButton  = false;
 
     
+    auto before = JumperBallTypesMethods::getTimePointMSNow();
+    unsigned int counter = 0;
     m.printMap();
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
@@ -80,6 +82,7 @@ void testClass::run(Rendering& r, Ball& b, Camera& c, Map& m) {
 
         b.update();
         c.follow(b);
+        m.interaction(b.currentSide(),b.get3DPosition());
         
         if( glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS || 
             glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_PRESS)
@@ -136,6 +139,7 @@ void testClass::run(Rendering& r, Ball& b, Camera& c, Map& m) {
 
         b.update();
         c.follow(b);
+        m.interaction(b.currentSide(),b.get3DPosition());
 
         r.render();
        
@@ -143,6 +147,18 @@ void testClass::run(Rendering& r, Ball& b, Camera& c, Map& m) {
         glfwSwapBuffers(_window);
       
         glfwPollEvents();
+
+        counter++;
+        auto after = JumperBallTypesMethods::getTimePointMSNow();
+        auto diff = after - before;
+        const std::chrono::duration<float> durationFloatDifference= diff;
+        float diffF = durationFloatDifference.count();
+        if (diffF > 1.f) {
+            before = after;
+            std::cout << counter << " FPS"  << std::endl;
+            counter = 0;
+
+        }
 
    }
 }

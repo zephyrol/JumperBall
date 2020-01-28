@@ -126,7 +126,7 @@ Map::Map(std::ifstream& file):_id (nbMaps),
 Map::~Map() {
 }
 
-std::shared_ptr<const Block> Map::map3DData(int x, int y, int z) const {
+std::shared_ptr<Block> Map::map3DData(int x, int y, int z) const {
     
     std::shared_ptr<Block> block;
     if (x >= static_cast<int>(_boundingBoxXMax) ||  
@@ -275,3 +275,29 @@ void Map::compress(std::ifstream& input) {
 std::chrono::time_point<std::chrono::system_clock> Map::timeCreation() const {
     return _timeCreation;
 }
+
+void Map::interaction(
+        const JumperBallTypes::Direction& ballDir, 
+        const JumperBallTypes::vec3f& posBall) {
+
+    auto timeNow = JumperBallTypesMethods::getTimePointMSNow();
+
+    std::array<unsigned int,3> currentBlockPosition;
+    for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
+        currentBlockPosition.at(1) = y;
+        for ( unsigned int z = 0 ; z < _boundingBoxZMax ; z++ ){
+            currentBlockPosition.at(2) = z;
+            for ( unsigned int x = 0 ; x < _boundingBoxXMax ; x++ ){
+                currentBlockPosition.at(0) = 0;
+                const std::shared_ptr<Block>& block = map3DData(x,y,z);
+                if (block) {
+                    block->interaction(
+                        ballDir, timeNow, posBall,currentBlockPosition);
+                    
+                }
+            }
+        }
+    }
+
+}
+

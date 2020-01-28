@@ -29,7 +29,9 @@ public:
 
     //-------CONST METHODS----------//
     const glm::mat4&        world()                                       const;
-    void                    draw()                                        const;
+    void                    draw(bool drawAll = true,
+                                 unsigned int offset = 0, 
+                                 unsigned int number = 0)                 const;
 
 
     //----------METHODS-------------//

@@ -126,12 +126,33 @@ void Rendering::render() {
     //Map
     bindUniform ("M",  glm::mat4(1.f), _spMap);
     bindUniform ("SR", glm::mat4(1.f), _spMap);
+    unsigned int displayedCubes = 0;
+    constexpr unsigned int numberFaces = 6;
+    constexpr unsigned int numberVerticesPerFaces = 6;
+    constexpr unsigned int numberVerticesPerBlock = numberFaces*
+                                                      numberVerticesPerFaces;
+    for (unsigned int i = 0; i < _map.boundingBoxXMax() ; ++i){
+        for (unsigned int j = 0; j < _map.boundingBoxYMax() ; ++j){
+            for (unsigned int k = 0; k < _map.boundingBoxZMax() ; ++k){
+                auto block = _map.map3DData(i,j,k);
+                if (block){
+                    const std::array<float,9>& transform = 
+                          block->localTransform();
+                    glm::mat4 trans = glm::translate(glm::vec3( transform.at(0),
+                                              transform.at(1),transform.at(2)));
+                    bindUniform ("W",  trans, _spMap);
+                    _meshMap.draw(false,displayedCubes++*numberVerticesPerBlock,
+                                        numberVerticesPerBlock);
 
-    bindUniform ("W",  glm::mat4(1.f), _spMap);
+                }
+            }
+        }
+    }
+    _meshMap.draw(true,displayedCubes*numberVerticesPerBlock,0);
+    //bindUniform ("W",  glm::mat4(1.f), _spMap);
 
     
-    
-    _meshMap.draw();
+    //_meshMap.draw();
 
 
     //Star

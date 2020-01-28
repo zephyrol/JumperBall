@@ -148,13 +148,22 @@ Mesh::Mesh(const Map& map):
                         _normals.push_back(
                           glm::vec3(nCube.at(i),nCube.at(i+1) ,nCube.at(i+2)));
                     }
-                    
-                    genSharps(*block,glm::vec3(x,y,z));
-
                 }
             }
         }
     }
+
+    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
+        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
+            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
+                auto block = map.map3DData(x,y,z);
+                if (block) {
+                    genSharps(*block,glm::vec3(x,y,z));
+                }
+            }
+        }
+    }
+    //Gen sharps
     
     bindVertexData();
 }
@@ -196,7 +205,7 @@ void Mesh::bindVertexData() const {
 
 }
 
-void Mesh::draw() const {
+void Mesh::draw(bool drawAll, unsigned int offset, unsigned int number) const {
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -238,7 +247,12 @@ void Mesh::draw() const {
         glDrawElements(GL_TRIANGLES,_indices.size(),GL_UNSIGNED_SHORT,nullptr);
     }
     else {
-        glDrawArrays(GL_TRIANGLES,0,_positions.size());
+        if (drawAll){
+          glDrawArrays(GL_TRIANGLES,offset,_positions.size()-offset);
+        }
+        else {
+          glDrawArrays(GL_TRIANGLES,offset,number);
+        }
     }
 
     glDisableVertexAttribArray(0);
