@@ -16,7 +16,7 @@
 #include <string>
 #include <algorithm>
             
-Ball::Ball(const Map& map): 
+Ball::Ball(Map& map): 
         _currentBlockX(map.beginX()),
         _currentBlockY(map.beginY()),
         _currentBlockZ(map.beginZ()),

@@ -126,8 +126,9 @@ Map::Map(std::ifstream& file):_id (nbMaps),
 Map::~Map() {
 }
 
-std::shared_ptr<Block> Map::map3DData(int x, int y, int z) const {
-    
+
+std::shared_ptr<Block> Map::map3DData(int x, int y, int z){
+
     std::shared_ptr<Block> block;
     if (x >= static_cast<int>(_boundingBoxXMax) ||  
             y >= static_cast<int>(_boundingBoxYMax) ||
@@ -138,6 +139,20 @@ std::shared_ptr<Block> Map::map3DData(int x, int y, int z) const {
         block = _map3DData.at(_boundingBoxXMax* (z + y * _boundingBoxZMax) + x);
     return block;
 }
+
+std::shared_ptr<const Block> Map::map3DData(int x, int y, int z) const {
+    std::shared_ptr<const Block> block;
+    if (x >= static_cast<int>(_boundingBoxXMax) ||  
+            y >= static_cast<int>(_boundingBoxYMax) ||
+            z >= static_cast<int>(_boundingBoxZMax) ||
+            x < 0 || y < 0 || z < 0 )
+        block = nullptr;
+    else 
+        block = _map3DData.at(_boundingBoxXMax* (z + y * _boundingBoxZMax) + x);
+    return block;
+}
+
+
 
 void Map::printMap() const {
     for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
@@ -288,7 +303,7 @@ void Map::interaction(
         for ( unsigned int z = 0 ; z < _boundingBoxZMax ; z++ ){
             currentBlockPosition.at(2) = z;
             for ( unsigned int x = 0 ; x < _boundingBoxXMax ; x++ ){
-                currentBlockPosition.at(0) = 0;
+                currentBlockPosition.at(0) = x;
                 const std::shared_ptr<Block>& block = map3DData(x,y,z);
                 if (block) {
                     block->interaction(

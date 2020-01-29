@@ -21,7 +21,7 @@ class Ball {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Ball                          (const Map& map);
+    Ball                          (Map& map);
     virtual                       ~Ball();
 
 
@@ -93,7 +93,8 @@ private:
     Ball::State                   _state;
     Ball::StateOfLife             _stateOfLife;
 
-    const Map&                    _map;
+    //Through the interactions, a ball may modify a map
+    Map&                          _map;
 
     ClassicalMechanics            _mechanicsPatternJumping;
     ClassicalMechanics            _mechanicsPatternFalling;

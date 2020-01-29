@@ -34,7 +34,6 @@ const JumperBallTypes::Direction& ballDir,
 
     static_cast<void>(ballDir);
     static_cast<void>(currentTime);
-    static_cast<void>(posBlock);
     auto isInSharpZone = [](
     const JumperBallTypes::vec3f& position,
             float x_min, float x_max, 
@@ -47,10 +46,11 @@ const JumperBallTypes::Direction& ballDir,
         
     };
     
-    constexpr float sizeSharp = 0.6f;
-    float posBlockfX = static_cast<float> (positions.x);
-    float posBlockfY = static_cast<float> (positions.y);
-    float posBlockfZ = static_cast<float> (positions.z);
+    constexpr float sizeSharp     = 0.51f;
+    constexpr float offsetCenter  = 0.19;
+    float posBlockfX = static_cast<float> (posBlock.at(0));
+    float posBlockfY = static_cast<float> (posBlock.at(1));
+    float posBlockfZ = static_cast<float> (posBlock.at(2));
     for (size_t i = 0 ; i < _facesSharps.size();++i) {
         
         if(_facesSharps.at(i)) {
@@ -65,18 +65,43 @@ const JumperBallTypes::Direction& ballDir,
                     JumperBallTypesMethods::integerAsDirection(i);
             JumperBallTypes::vec3f dirVec = 
                     JumperBallTypesMethods::directionAsVector(dir);
-            if (dirVec.x < 0 ) 
-              posBlockfXMin -= sizeSharp;               
-            else 
-              posBlockfXMax += sizeSharp;               
-            if (dirVec.y < 0 ) 
-              posBlockfYMin -= sizeSharp;               
-            else 
-              posBlockfYMax += sizeSharp;               
-            if (dirVec.z < 0 ) 
-              posBlockfZMin -= sizeSharp;               
-            else 
-              posBlockfZMax += sizeSharp;               
+            
+            if ( dirVec.x > EPSILON_F || dirVec.x < -EPSILON_F) {
+              posBlockfYMin +=  offsetCenter;
+              posBlockfYMax -=  offsetCenter;
+              posBlockfZMin +=  offsetCenter;
+              posBlockfZMax -=  offsetCenter;
+              if (dirVec.x < 0 )  {
+                  posBlockfXMin -= sizeSharp;
+              }
+              else if (dirVec.x > 0) {
+                  posBlockfXMax += sizeSharp;               
+              }
+            }
+            if ( dirVec.y > EPSILON_F || dirVec.y < -EPSILON_F) {
+              posBlockfXMin +=  offsetCenter;
+              posBlockfXMax -=  offsetCenter;
+              posBlockfZMin +=  offsetCenter;
+              posBlockfZMax -=  offsetCenter;
+              if (dirVec.y < 0 )  {
+                  posBlockfYMin -= sizeSharp;               
+              }
+              else if (dirVec.y > 0) {
+                  posBlockfYMax += sizeSharp;               
+              }
+            }
+            if ( dirVec.z > EPSILON_F || dirVec.z < -EPSILON_F) {
+              posBlockfXMin +=  offsetCenter;
+              posBlockfXMax -=  offsetCenter;
+              posBlockfYMin +=  offsetCenter;
+              posBlockfYMax -=  offsetCenter;
+              if (dirVec.y < 0 )  {
+                  posBlockfZMin -= sizeSharp;               
+              }
+              else if (dirVec.y > 0) {
+                  posBlockfZMax += sizeSharp;               
+              }
+            }
 
             if (isInSharpZone(positions,
                     posBlockfXMin,
@@ -85,8 +110,9 @@ const JumperBallTypes::Direction& ballDir,
                     posBlockfYMax,
                     posBlockfZMin,
                     posBlockfZMax
-                    ))
-                    _hitBall = true;
+                    )){
+                _hitBall = true;
+            }
         }
     }
 }
