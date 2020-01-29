@@ -98,32 +98,8 @@ void Rendering::bindUniform(const std::string& name,
     glUniform1i( uniformVariableID, value);
 }
 
+void Rendering::renderMap() {
 
-void Rendering::render() {
-    
-    //Ball and Map
-    _spMap.use();
-    renderCamera(_spMap);
-
-    _light.positionLight(_star.centralPosition());
-    _light.ambiantLightIntensity(   glm::vec3(0.7f,0.7f,0.7f));
-    _light.diffuseLightIntensity(   glm::vec3(0.25f,0.25f,0.25f));
-    _light.specularLightIntensity(  glm::vec3(0.25f,0.25f,0.25f));
-                                        
-    _light.bind("light",_spMap);
-
-    //Ball
-    _meshBall.updateMatrices(_ball);
-    _ballAnimation.updateTrans();
-
-    bindUniform ("M",   _ballAnimation.model(),         _spMap);
-    bindUniform ("SR",  _ballAnimation.scaleRotation(), _spMap);
-
-    bindUniform ("W",   _meshBall.world(),              _spMap);
-
-    _meshBall.draw();
-
-    //Map
     bindUniform ("M",  glm::mat4(1.f), _spMap);
     bindUniform ("SR", glm::mat4(1.f), _spMap);
     unsigned int displayedCubes = 0;
@@ -149,11 +125,34 @@ void Rendering::render() {
         }
     }
     _meshMap.draw(true,displayedCubes*numberVerticesPerBlock,0);
-    //bindUniform ("W",  glm::mat4(1.f), _spMap);
+}
 
-    
-    //_meshMap.draw();
+void Rendering::render() {
 
+    //Ball and Map
+    _spMap.use();
+    renderCamera(_spMap);
+
+    _light.positionLight(_star.centralPosition());
+    _light.ambiantLightIntensity(   glm::vec3(0.7f,0.7f,0.7f));
+    _light.diffuseLightIntensity(   glm::vec3(0.25f,0.25f,0.25f));
+    _light.specularLightIntensity(  glm::vec3(0.25f,0.25f,0.25f));
+                                        
+    _light.bind("light",_spMap);
+
+    //Ball
+    _meshBall.updateMatrices(_ball);
+    _ballAnimation.updateTrans();
+
+    bindUniform ("M",   _ballAnimation.model(),         _spMap);
+    bindUniform ("SR",  _ballAnimation.scaleRotation(), _spMap);
+
+    bindUniform ("W",   _meshBall.world(),              _spMap);
+
+    _meshBall.draw();
+
+    //Map
+    renderMap();
 
     //Star
     _spStar.use();
