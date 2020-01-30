@@ -13,6 +13,7 @@
       <itemPath>graphicsClasses/Camera.h</itemPath>
       <itemPath>coreClasses/ClassicalMechanics.h</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.h</itemPath>
+      <itemPath>graphicsClasses/FrameBuffer.h</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.h</itemPath>
       <itemPath>coreClasses/Map.h</itemPath>
       <itemPath>graphicsClasses/Mesh.h</itemPath>
@@ -44,6 +45,7 @@
       <itemPath>graphicsClasses/Camera.cpp</itemPath>
       <itemPath>coreClasses/ClassicalMechanics.cpp</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.cpp</itemPath>
+      <itemPath>graphicsClasses/FrameBuffer.cpp</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.cpp</itemPath>
       <itemPath>coreClasses/Map.cpp</itemPath>
       <itemPath>graphicsClasses/Mesh.cpp</itemPath>
@@ -82,11 +84,35 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
     <itemPath>graphicsClasses/shaders/basicFs.fs</itemPath>
     <itemPath>graphicsClasses/shaders/basicVs.vs</itemPath>
     <itemPath>maps/map1.txt</itemPath>
     <itemPath>graphicsClasses/shaders/mapFs.fs</itemPath>
     <itemPath>graphicsClasses/shaders/mapVs.vs</itemPath>
+    <itemPath>graphicsClasses/shaders/basicFboFs.fs</itemPath>
+    <itemPath>graphicsClasses/shaders/basicFboVs.vs</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -162,6 +188,10 @@
       </item>
       <item path="graphicsClasses/Camera.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="graphicsClasses/FrameBuffer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/FrameBuffer.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="graphicsClasses/Mesh.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="graphicsClasses/Mesh.h" ex="false" tool="3" flavor2="0">
@@ -202,6 +232,16 @@
             flavor2="0">
       </item>
       <item path="graphicsClasses/animations/BallAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/basicFboFs.fs"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/basicFboVs.vs"
             ex="false"
             tool="3"
             flavor2="0">
@@ -327,6 +367,10 @@
       </item>
       <item path="graphicsClasses/Camera.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="graphicsClasses/FrameBuffer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/FrameBuffer.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="graphicsClasses/Mesh.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="graphicsClasses/Mesh.h" ex="false" tool="3" flavor2="0">
@@ -367,6 +411,16 @@
             flavor2="0">
       </item>
       <item path="graphicsClasses/animations/BallAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/basicFboFs.fs"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/shaders/basicFboVs.vs"
             ex="false"
             tool="3"
             flavor2="0">

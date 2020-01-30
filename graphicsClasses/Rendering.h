@@ -25,6 +25,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Shader.h"
 #include "ShaderProgram.h"
+#include "FrameBuffer.h"
 #include "Mesh.h"
 #include "Camera.h"
 #include "Star.h"
@@ -65,6 +66,7 @@ private:
 
     Mesh                            _meshMap;
     Mesh                            _meshBall;
+    Mesh                            _meshQuadFrame;
 
     const Map&                      _map;
 
@@ -78,6 +80,9 @@ private:
 
     const ShaderProgram             _spMap;
     const ShaderProgram             _spStar;
+
+    const FrameBuffer               _frameBuffer;
+    const ShaderProgram             _spFbo;
 
 
     //------------METHODS----------//
@@ -108,12 +113,19 @@ private:
                                                 const bool&           value,
                                                 const ShaderProgram&  sp);
 
+    void                            bindUniformTexture
+                                                (const std::string&    name,
+                                                const int&             value,
+                                                const ShaderProgram&  sp);
+
 
     //------STATIC ATTRIBUTES------//
     static const std::string        vsshaderMap; 
     static const std::string        fsshaderMap; 
     static const std::string        vsshaderStar; 
     static const std::string        fsshaderStar; 
+    static const std::string        vsshaderFBO; 
+    static const std::string        fsshaderFBO; 
 
 };
 

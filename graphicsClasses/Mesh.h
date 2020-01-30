@@ -22,6 +22,7 @@ class Mesh {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
+    Mesh                    ();
     Mesh                    (const Ball& ball);
     Mesh                    (const Map& map);
     virtual                 ~Mesh();
@@ -29,7 +30,7 @@ public:
 
     //-------CONST METHODS----------//
     const glm::mat4&        world()                                       const;
-    void                    draw(bool drawAll = true,
+    void                    draw(bool drawAll        = true,
                                  unsigned int offset = 0, 
                                  unsigned int number = 0)                 const;
 
@@ -47,12 +48,12 @@ private:
     std::vector<glm::vec3>  _colors;
     std::vector<glm::vec2>  _uvCoords;
 
-    const bool               _useIndexing;
+    const bool              _useIndexing;
     std::vector<GLushort>   _indices;
     GLuint                  _idElementBuffer;
 
     GLuint                  _idVertexArray;
-    std::array<GLuint,3>    _idVertexBuffer;
+    std::array<GLuint,4>    _idVertexBuffer;
 
     glm::mat4               _world;
 

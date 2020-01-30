@@ -54,6 +54,26 @@ std::string Utility::readFileSrc(const std::string& filePath) {
 }
 
 
+const std::vector<GLfloat> Utility::positionsQuadScreen {
+    -1.f,1.f,0.f, -1.f,-1.f,0.f,  1.f,-1.f,0.f,  
+    -1.f,1.f,0.f,  1.f,-1.f,0.f,   1.f,1.f,0.f
+};
+
+const std::vector<GLfloat> Utility::colorsQuadScreen {
+    1.f,1.f,1.f, 1.f,1.f,1.f,  1.f,1.f,1.f,
+    1.f,1.f,1.f, 1.f,1.f,1.f,  1.f,1.f,1.f
+};
+
+const std::vector<GLfloat> Utility::normalsQuadScreen {
+    0.f,0.f,-1.f, 0.f,0.f,-1.f,  0.f,0.f,-1.f,
+    0.f,0.f,-1.f, 0.f,0.f,-1.f,  0.f,0.f,-1.f
+};
+
+const std::vector<GLfloat> Utility::uvCoordsQuadScreen {
+    0.f,1.f, 0.f,0.f, 1.f,0.f,  
+    0.f,1.f, 1.f,0.f, 1.f,1.f
+};
+
 const std::vector<GLfloat> Utility::positionsCube {
     //Face 1 
     0.f,1.f,0.f, 1.f,0.f,0.f,  0.f,0.f,0.f,
@@ -73,6 +93,27 @@ const std::vector<GLfloat> Utility::positionsCube {
     //Face 6
     1.f,0.f,0.f, 1.f,1.f,0.f, 1.f,0.f,1.f,
     1.f,1.f,0.f, 1.f,1.f,1.f, 1.f,0.f,1.f
+};
+
+const std::vector<GLfloat> Utility::uvCoordsCube {
+    //Face 1 
+    0.f,1.f, 1.f,0.f, 0.f,0.f,
+    0.f,1.f, 1.f,1.f, 1.f,0.f,
+    //Face 2
+    0.f,0.f, 1.f,0.f, 0.f,1.f,
+    1.f,0.f, 1.f,1.f, 0.f,1.f,
+    //Face 3
+    0.f,0.f, 1.f,0.f, 0.f,0.f,
+    1.f,0.f, 1.f,0.f, 0.f,0.f,
+    //Face 4
+    0.f,1.f, 1.f,1.f, 0.f,1.f, 
+    0.f,1.f, 1.f,1.f, 1.f,1.f, 
+    //Face 5
+    0.f,0.f, 0.f,1.f, 0.f,0.f, 
+    0.f,0.f, 0.f,1.f, 0.f,1.f, 
+    //Face 6
+    1.f,0.f, 1.f,1.f, 1.f,0.f,
+    1.f,1.f, 1.f,1.f, 1.f,0.f
 };
 
 const std::vector<GLfloat> Utility::normalsCube {
@@ -120,8 +161,8 @@ const std::vector<GLfloat> Utility::colorsCube {
 
 const std::vector<GLfloat> Utility::positionsPike {
     //Base
-    0.f,0.f,1.f,       0.f,0.f,0.f, 1.f,0.f,0.f, 
-    0.f,0.f,1.f,       1.f,0.f,0.f, 1.f,0.f,1.f, 
+    0.f,0.f,1.f,    0.f,0.f,0.f,    1.f,0.f,0.f, 
+    0.f,0.f,1.f,    1.f,0.f,0.f,    1.f,0.f,1.f, 
     //Face 1
     0.f,0.f,0.f,    0.5f,1.f,0.5f,  0.5f,0.f,0.f, 
     0.5f,0.f,0.f,   0.5f,1.f,0.5f,  1.f,0.f,0.f, 
@@ -133,7 +174,25 @@ const std::vector<GLfloat> Utility::positionsPike {
     0.f,0.f,0.5f,   0.f,0.f,1.f,    0.5f,1.f,0.5f,
     //Face 4
     1.f,0.f,0.5f,   1.f,0.f,0.f,    0.5f,1.f,0.5f,
-    1.f,0.f,1.f,    1.f,0.f,0.5f,   0.5f,1.f,0.5f,
+    1.f,0.f,1.f,    1.f,0.f,0.5f,   0.5f,1.f,0.5f
+};
+
+const std::vector<GLfloat> Utility::uvCoordsPike{
+    //Base
+    0.f,0.f,    0.f,0.f,   1.f,0.f, 
+    0.f,0.f,    1.f,0.f,   1.f,0.f, 
+    //Face 1
+    0.f,0.f,    0.5f,1.f,  0.5f,0.f, 
+    0.5f,0.f,   0.5f,1.f,  1.f,0.f, 
+    //Face 2
+    0.5f,0.f,   0.5f,1.f,  0.f,0.f, 
+    1.f,0.f,    0.5f,1.f,  0.5f,0.f,
+    //Face 3
+    0.f,0.f,    0.f,0.f,   0.5f,1.f,
+    0.f,0.f,    0.f,0.f,   0.5f,1.f,
+    //Face 4
+    1.f,0.f,    1.f,0.f,   0.5f,1.f,
+    1.f,0.f,    1.f,0.f,   0.5f,1.f
 };
 
 const std::vector<GLfloat> Utility::colorsPike {

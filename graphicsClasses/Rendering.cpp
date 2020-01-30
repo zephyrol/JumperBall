@@ -19,6 +19,11 @@ const std::string Rendering::fsshaderMap = "graphicsClasses/shaders/phongFs.fs";
 const std::string Rendering::vsshaderStar = "graphicsClasses/shaders/starVs.vs";
 const std::string Rendering::fsshaderStar = "graphicsClasses/shaders/starFs.fs";
 
+const std::string Rendering::vsshaderFBO = 
+                                      "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderFBO = 
+                                      "graphicsClasses/shaders/basicFboFs.fs";
+
 Rendering::Rendering(const Map&     map, 
                      const Ball&    ball, 
                      const Star&    star, 
@@ -31,6 +36,7 @@ Rendering::Rendering(const Map&     map,
     _uniformBool(),
     _meshMap(map),
     _meshBall(ball),
+    _meshQuadFrame(),
     _map(map),
     _ball(ball),
     _ballAnimation(ball),
@@ -40,7 +46,10 @@ Rendering::Rendering(const Map&     map,
     _spMap( Shader (GL_VERTEX_SHADER, vsshaderMap ),
             Shader (GL_FRAGMENT_SHADER, fsshaderMap )),
     _spStar(Shader (GL_VERTEX_SHADER, vsshaderStar ),
-            Shader (GL_FRAGMENT_SHADER, fsshaderStar ))
+            Shader (GL_FRAGMENT_SHADER, fsshaderStar )),
+    _frameBuffer(),
+    _spFbo( Shader (GL_VERTEX_SHADER, vsshaderFBO ),
+            Shader (GL_FRAGMENT_SHADER, fsshaderFBO ))
 {
 }
 
@@ -98,6 +107,15 @@ void Rendering::bindUniform(const std::string& name,
     glUniform1i( uniformVariableID, value);
 }
 
+void Rendering::bindUniformTexture( const std::string& name, 
+                                    const int& value, 
+                                    const ShaderProgram& sp) {
+    const GLuint uniformVariableID =
+            glGetUniformLocation(sp.getHandle(),name.c_str());
+    glUniform1i( uniformVariableID, value);
+}
+
+
 void Rendering::renderMap() {
 
     bindUniform ("M",  glm::mat4(1.f), _spMap);
@@ -129,6 +147,7 @@ void Rendering::renderMap() {
 
 void Rendering::render() {
 
+    _frameBuffer.bind();
     //Ball and Map
     _spMap.use();
     renderCamera(_spMap);
@@ -165,7 +184,13 @@ void Rendering::render() {
 
     renderCamera(_spStar);
     _star.draw();
-     
+
+    _frameBuffer.unbind();
+
+    _spFbo.use();
+    bindUniformTexture("frameTexture", 0, _spFbo);
+    _meshQuadFrame.draw();
+         
 
 }
 

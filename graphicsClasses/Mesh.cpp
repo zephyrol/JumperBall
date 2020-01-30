@@ -15,6 +15,43 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
 
+Mesh::Mesh() :
+      _positions(),
+      _normals(),
+      _colors(),
+      _uvCoords(),
+      _useIndexing(false),
+      _indices(),
+      _idElementBuffer(),
+      _idVertexArray(),
+      _idVertexBuffer(),
+      _world(1.f)
+{
+
+    glGenVertexArrays(1, &_idVertexArray);
+    glBindVertexArray(_idVertexArray);
+
+    glGenBuffers(4, _idVertexBuffer.data());
+
+    const std::vector<GLfloat>& pQuad         = Utility::positionsQuadScreen;
+    const std::vector<GLfloat>& cQuad         = Utility::colorsQuadScreen;
+    const std::vector<GLfloat>& nQuad         = Utility::normalsQuadScreen;
+    const std::vector<GLfloat>& uvQuad        = Utility::uvCoordsQuadScreen;
+
+    for (unsigned int i = 0 ; i < 6 ; ++i) {
+    _positions.push_back(glm::vec3(pQuad.at(i*3),
+                                    pQuad.at(i*3+1),pQuad.at(i*3+2)));
+    _colors.push_back(glm::vec3(cQuad.at(i*3),
+                                    cQuad.at(i*3+1),cQuad.at(i*3+2)));
+    _normals.push_back(glm::vec3(nQuad.at(i*3),
+                                    nQuad.at(i*3+1),nQuad.at(i*3+2)));
+    _uvCoords.push_back(glm::vec2(uvQuad.at(i*2), uvQuad.at(i*2+1)));
+    }
+
+    
+    bindVertexData();
+}
+
 
 Mesh::Mesh(const Ball& ball):
       _positions(),
@@ -32,7 +69,7 @@ Mesh::Mesh(const Ball& ball):
     glGenVertexArrays(1, &_idVertexArray);
     glBindVertexArray(_idVertexArray);
 
-    glGenBuffers(3, _idVertexBuffer.data());
+    glGenBuffers(4, _idVertexBuffer.data());
 
 
     constexpr unsigned int  iParaCount  = 40;
@@ -119,7 +156,7 @@ Mesh::Mesh(const Map& map):
     glGenVertexArrays(1, &_idVertexArray);
     glBindVertexArray(_idVertexArray);
 
-    glGenBuffers(3, _idVertexBuffer.data());
+    glGenBuffers(4, _idVertexBuffer.data());
 
 
     for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
@@ -128,9 +165,10 @@ Mesh::Mesh(const Map& map):
                 auto block = map.map3DData(x,y,z);
                 if (block) {
 
-                    const std::vector<GLfloat>& pCube= Utility::positionsCube;
-                    const std::vector<GLfloat>& cCube= Utility::colorsCube;
-                    const std::vector<GLfloat>& nCube= Utility::normalsCube;
+                    const std::vector<GLfloat>& pCube  = Utility::positionsCube;
+                    const std::vector<GLfloat>& cCube  = Utility::colorsCube;
+                    const std::vector<GLfloat>& nCube  = Utility::normalsCube;
+                    const std::vector<GLfloat>& uvCube = Utility::uvCoordsCube;
 
                     for (unsigned int i = 0 ; i < pCube.size(); i += 3 )
                     {
@@ -147,6 +185,11 @@ Mesh::Mesh(const Map& map):
                           glm::vec3(cCube.at(i),cCube.at(i+1) ,cCube.at(i+2)));
                         _normals.push_back(
                           glm::vec3(nCube.at(i),nCube.at(i+1) ,nCube.at(i+2)));
+                    }
+                    for (unsigned int i = 0 ; i < uvCube.size(); i += 2 ){
+                        _uvCoords.push_back(
+                          glm::vec2(nCube.at(i),nCube.at(i+1)));
+
                     }
                 }
             }
@@ -191,6 +234,12 @@ void Mesh::bindVertexData() const {
         normalsList.push_back(normal.z) ;
     }
 
+    std::vector<GLfloat> uvCoordsList;
+    for (glm::vec2 uvCoord: _uvCoords) {
+        uvCoordsList.push_back(uvCoord.x) ;
+        uvCoordsList.push_back(uvCoord.y) ;
+    }
+
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
     glBufferData(GL_ARRAY_BUFFER, positionsList.size() * sizeof(GLfloat), 
             positionsList.data(), GL_STATIC_DRAW);
@@ -203,6 +252,10 @@ void Mesh::bindVertexData() const {
     glBufferData(GL_ARRAY_BUFFER, normalsList.size() * sizeof(GLfloat), 
             normalsList.data(), GL_STATIC_DRAW);
 
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(3));
+    glBufferData(GL_ARRAY_BUFFER, uvCoordsList.size() * sizeof(GLfloat), 
+            uvCoordsList.data(), GL_STATIC_DRAW);
+
 }
 
 void Mesh::draw(bool drawAll, unsigned int offset, unsigned int number) const {
@@ -210,6 +263,7 @@ void Mesh::draw(bool drawAll, unsigned int offset, unsigned int number) const {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
     
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
     
@@ -242,6 +296,16 @@ void Mesh::draw(bool drawAll, unsigned int offset, unsigned int number) const {
         nullptr
         );
 
+    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(3));
+    glVertexAttribPointer ( 
+        3,
+        2, // 2 GL_FLOAT per vertex
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        nullptr
+        );
+
     if (_useIndexing) {
         glBindBuffer  (GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
         glDrawElements(GL_TRIANGLES,_indices.size(),GL_UNSIGNED_SHORT,nullptr);
@@ -258,6 +322,7 @@ void Mesh::draw(bool drawAll, unsigned int offset, unsigned int number) const {
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
 }
 
 
@@ -336,6 +401,8 @@ void Mesh::genSharps(const Block& block, glm::vec3 posWorld) {
                                                         Utility::colorsPike;
                     const std::vector<GLfloat>& normals    = 
                                                         Utility::normalsPike;
+                    const std::vector<GLfloat>& uvCoords   = 
+                                                        Utility::uvCoordsPike;
                     
                     for (unsigned int k = 0; k < positions.size(); k+=3)
                     {
@@ -355,6 +422,11 @@ void Mesh::genSharps(const Block& block, glm::vec3 posWorld) {
                         _positions.push_back(glm::vec3(position));
                         _normals.push_back(glm::vec3(normal));
                         _colors.push_back(color);
+                    }
+                    for (unsigned int k = 0; k < uvCoords.size(); k+=2){
+
+                        glm::vec2 uvCoord   { uvCoords.at(k), uvCoords.at(k+1)};
+                        _uvCoords.push_back(uvCoord);
                     }
                 } 
             }

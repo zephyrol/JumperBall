@@ -3,8 +3,8 @@
 #include <Types.h>
 #include "Shader.h"
 #include <glm/glm.hpp>
-#define RESOLUTION_X 1024 
-#define RESOLUTION_Y 768
+#define RESOLUTION_X 1920
+#define RESOLUTION_Y 1080
 
 namespace Utility {
 
@@ -19,10 +19,17 @@ namespace Utility {
     extern const std::vector<GLfloat> positionsCube;
     extern const std::vector<GLfloat> colorsCube;
     extern const std::vector<GLfloat> normalsCube;
+    extern const std::vector<GLfloat> uvCoordsCube;
 
     extern const std::vector<GLfloat> positionsPike;
     extern const std::vector<GLfloat> colorsPike;
     extern const std::vector<GLfloat> normalsPike;
+    extern const std::vector<GLfloat> uvCoordsPike;
+
+    extern const std::vector<GLfloat> positionsQuadScreen;
+    extern const std::vector<GLfloat> colorsQuadScreen;
+    extern const std::vector<GLfloat> normalsQuadScreen;
+    extern const std::vector<GLfloat> uvCoordsQuadScreen;
     
 }
 
