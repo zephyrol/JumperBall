@@ -26,7 +26,8 @@ public:
     
     //-------CONST METHODS----------//
     GLuint              getHandle()                                       const;
-    void                bind()                                            const;
+    void                bindFrameBuffer()                                 const;
+    void                bindRenderTexture()                               const;
     void                unbind()                                          const;
 
 private:

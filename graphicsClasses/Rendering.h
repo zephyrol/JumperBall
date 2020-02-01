@@ -82,6 +82,7 @@ private:
     const ShaderProgram             _spStar;
 
     const FrameBuffer               _frameBuffer;
+    const FrameBuffer               _frameBuffer2;
     const ShaderProgram             _spFbo;
 
 
@@ -111,6 +112,10 @@ private:
 
     void                            bindUniform(const std::string&    name,
                                                 const bool&           value,
+                                                const ShaderProgram&  sp);
+
+    void                            bindUniform(const std::string&    name,
+                                                const int&            value,
                                                 const ShaderProgram&  sp);
 
     void                            bindUniformTexture

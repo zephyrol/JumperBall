@@ -2,11 +2,9 @@
 
 
 uniform sampler2D frameTexture;
-in vec2   fs_vertexUVs;
-out vec4  pixelColor;
+in      vec2  fs_vertexUVs;
+out     vec4  pixelColor;
 
 void main() {
-
     pixelColor = texture(frameTexture,fs_vertexUVs);
-    //pixelColor = vec4(1.f,1.f,1.f,1.f);
 }
