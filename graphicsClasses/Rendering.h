@@ -55,6 +55,10 @@ private:
     template<typename T>
     using uniformVariable           = std::map<std::string,T >;
     
+    //---------CONSTANTS------------//
+
+    static constexpr float          blurSigma                             = 4.f;
+    static constexpr size_t         blurPatchSize                           = 9;
 
     //--------ATTRIBUTES-----------//
     uniformVariable<glm::mat4>      _uniformMatrix4;
@@ -80,14 +84,17 @@ private:
 
     const ShaderProgram             _spMap;
     const ShaderProgram             _spStar;
-
-    const FrameBuffer               _frameBuffer;
-    const FrameBuffer               _frameBuffer2;
     const ShaderProgram             _spFbo;
+    const ShaderProgram             _spBlur;
+
+    const FrameBuffer               _frameBufferScene;
+    const FrameBuffer               _frameBufferHalfBlur;
+    const FrameBuffer               _frameBufferCompleteBlur;
 
 
     //------------METHODS----------//
     void                            renderMap();
+    void                            blurEffect( const FrameBuffer& basicFBO);
     void                            renderCamera(const ShaderProgram& sp);
 
     void                            bindUniform(const std::string&    name,
@@ -118,6 +125,14 @@ private:
                                                 const int&            value,
                                                 const ShaderProgram&  sp);
 
+    void                            bindUniform(const std::string&    name,
+                                                const std::vector<int>& value,
+                                                const ShaderProgram&  sp);
+
+    void                            bindUniform(const std::string&    name,
+                                                const std::vector<float>& value,
+                                                const ShaderProgram&  sp);
+
     void                            bindUniformTexture
                                                 (const std::string&    name,
                                                 const int&             value,
@@ -131,7 +146,10 @@ private:
     static const std::string        fsshaderStar; 
     static const std::string        vsshaderFBO; 
     static const std::string        fsshaderFBO; 
+    static const std::string        vsshaderBlur; 
+    static const std::string        fsshaderBlur; 
 
+    static const std::vector<float> gaussComputedValues;
 };
 
 #endif /* RENDERING_H */

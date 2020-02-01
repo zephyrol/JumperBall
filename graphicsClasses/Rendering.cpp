@@ -20,8 +20,17 @@ const std::string Rendering::vsshaderStar = "graphicsClasses/shaders/starVs.vs";
 const std::string Rendering::fsshaderStar = "graphicsClasses/shaders/starFs.fs";
 
 const std::string Rendering::vsshaderFBO = 
-                                      "graphicsClasses/shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderFBO = "graphicsClasses/shaders/blurFs.fs";
+                                        "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderFBO = 
+                                        "graphicsClasses/shaders/basicFboFs.fs";
+
+const std::string Rendering::vsshaderBlur = 
+                                        "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderBlur = "graphicsClasses/shaders/blurFs.fs";
+
+const std::vector<float> Rendering::gaussComputedValues = 
+  Utility::genGaussBuffer(Rendering::blurPatchSize, Rendering::blurSigma);
+
 
 Rendering::Rendering(const Map&     map, 
                      const Ball&    ball, 
@@ -46,10 +55,13 @@ Rendering::Rendering(const Map&     map,
             Shader (GL_FRAGMENT_SHADER, fsshaderMap )),
     _spStar(Shader (GL_VERTEX_SHADER, vsshaderStar ),
             Shader (GL_FRAGMENT_SHADER, fsshaderStar )),
-    _frameBuffer(),
-    _frameBuffer2(),
     _spFbo( Shader (GL_VERTEX_SHADER, vsshaderFBO ),
-            Shader (GL_FRAGMENT_SHADER, fsshaderFBO ))
+            Shader (GL_FRAGMENT_SHADER, fsshaderFBO )),
+    _spBlur(Shader (GL_VERTEX_SHADER, vsshaderBlur),
+            Shader (GL_FRAGMENT_SHADER, fsshaderBlur)),
+    _frameBufferScene(),
+    _frameBufferHalfBlur(),
+    _frameBufferCompleteBlur()
 {
 }
 
@@ -107,6 +119,7 @@ void Rendering::bindUniform(const std::string& name,
     glUniform1i( uniformVariableID, value);
 }
 
+
 void Rendering::bindUniform(const std::string& name, 
                             const int& value, 
                             const ShaderProgram& sp) {
@@ -114,6 +127,22 @@ void Rendering::bindUniform(const std::string& name,
     const GLuint uniformVariableID =
             glGetUniformLocation(sp.getHandle(),name.c_str());
     glUniform1i( uniformVariableID, value);
+}
+
+void Rendering::bindUniform(const std::string& name,
+                            const std::vector<int>& value,
+                            const ShaderProgram& sp) {
+    const GLuint uniformVariableID =
+            glGetUniformLocation(sp.getHandle(),name.c_str());
+    glUniform1iv( uniformVariableID, value.size(), value.data());
+}
+
+void Rendering::bindUniform(const std::string& name,
+                            const std::vector<float>& value,
+                            const ShaderProgram& sp) {
+    const GLuint uniformVariableID =
+            glGetUniformLocation(sp.getHandle(),name.c_str());
+    glUniform1fv( uniformVariableID, value.size(), value.data());
 }
 
 
@@ -155,11 +184,30 @@ void Rendering::renderMap() {
     _meshMap.draw(true,displayedCubes*numberVerticesPerBlock,0);
 }
 
+void Rendering::blurEffect( const FrameBuffer& basicFBO ) {
+
+    _spBlur.use();
+    _frameBufferHalfBlur.bindFrameBuffer();
+    basicFBO.bindRenderTexture();
+
+    bindUniformTexture("frameTexture", 0, _spBlur);
+    bindUniform("patchSize", static_cast<int>(blurPatchSize), _spBlur);
+    bindUniform("gaussWeights", gaussComputedValues, _spBlur);
+
+    bindUniform("firstPass", true, _spBlur);
+    _meshQuadFrame.draw();
+
+   _frameBufferCompleteBlur.bindFrameBuffer();
+    _frameBufferHalfBlur.bindRenderTexture();
+
+    bindUniform("firstPass", false, _spBlur);
+    _meshQuadFrame.draw();
+}
+
+
 void Rendering::render() {
 
-    _frameBuffer.bindFrameBuffer();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
+    _frameBufferScene.bindFrameBuffer();
     
     //Ball and Map
     _spMap.use();
@@ -198,24 +246,15 @@ void Rendering::render() {
     renderCamera(_spStar);
     _star.draw();
 
-    _frameBuffer2.bindFrameBuffer();
-    glClear(GL_COLOR_BUFFER_BIT);
-    glDisable(GL_DEPTH_TEST);
-    _frameBuffer.bindRenderTexture();
+    //blurEffect(_frameBufferScene);
 
     _spFbo.use();
-
+    FrameBuffer::bindDefaultFrameBuffer();
+    //_frameBufferCompleteBlur.bindRenderTexture();
+    _frameBufferScene.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spFbo);
-    bindUniform("firstPass", false, _spFbo);
-    bindUniform("sizePatch", 9, _spFbo);
     _meshQuadFrame.draw();
 
-    _frameBuffer2.unbind();
-    _frameBuffer2.bindRenderTexture();
-
-    bindUniformTexture("frameTexture", 0, _spFbo);
-    bindUniform("firstPass", true, _spFbo);
-    _meshQuadFrame.draw();
          
 
 }

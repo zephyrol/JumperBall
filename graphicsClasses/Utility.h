@@ -15,6 +15,10 @@ namespace Utility {
     glm::mat4                         rotationUpToDir(
                                         JumperBallTypes::Direction dir);
 
+    float                             evalGauss1D(float x, float sigma);
+    std::vector<GLfloat>              genGaussBuffer( size_t patchSize,
+                                                      float sigma);
+
     
     extern const std::vector<GLfloat> positionsCube;
     extern const std::vector<GLfloat> colorsCube;

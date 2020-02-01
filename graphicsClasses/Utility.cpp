@@ -295,6 +295,20 @@ glm::mat4 Utility::rotationUpToDir( JumperBallTypes::Direction dir) {
 }
 
 
+float Utility::evalGauss1D(float x, float sigma) {
+    return exp((-pow(x,2.))/(2.*pow(sigma,2.)))/(sqrt(2.*M_PI *pow(sigma,2.)));
+}
+
+
+std::vector<GLfloat> Utility::genGaussBuffer( size_t patchSize, float sigma) {
+    std::vector<GLfloat> gaussBuffer;
+    int patchSizeInteger = patchSize; 
+    for (int i = -patchSizeInteger/2; i <= patchSizeInteger/2 ; i++ ) {
+        gaussBuffer.push_back( evalGauss1D(i,sigma) ) ;
+    }
+    return gaussBuffer;
+}
+
 void Utility::printMatrix(const glm::mat4& m) {
 
     std::cout << 

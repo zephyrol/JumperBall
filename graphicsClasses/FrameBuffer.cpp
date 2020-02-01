@@ -51,7 +51,7 @@ _depthBuffer()
 
 void FrameBuffer::bindFrameBuffer() const {
     glBindFramebuffer(GL_FRAMEBUFFER, _fboHandle);
-    //glBindRenderbuffer(GL_RENDERBUFFER, _depthBuffer);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void FrameBuffer::bindRenderTexture() const {
@@ -60,8 +60,7 @@ void FrameBuffer::bindRenderTexture() const {
 
 }
 
-void FrameBuffer::unbind() const {
-
+void FrameBuffer::bindDefaultFrameBuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER,0);
 }
 

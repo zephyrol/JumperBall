@@ -28,7 +28,10 @@ public:
     GLuint              getHandle()                                       const;
     void                bindFrameBuffer()                                 const;
     void                bindRenderTexture()                               const;
-    void                unbind()                                          const;
+    
+    
+    //--------STATIC METHODS-------//
+    static void         bindDefaultFrameBuffer();
 
 private:
 

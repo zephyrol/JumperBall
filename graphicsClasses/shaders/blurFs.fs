@@ -2,55 +2,42 @@
 
 uniform sampler2D frameTexture;
 uniform bool      firstPass;
-uniform int       sizePatch;
+uniform int       patchSize;
+uniform float[9]   gaussWeights;
+
 in      vec2      fs_vertexUVs;
 out     vec4      pixelColor;
 
-float evalGauss1D(float x, float sigma) {
-    const float PI = 3.14159265;
-    return exp((-pow(x,2.))/(2.*pow(sigma,2.)))/(sqrt(2.* PI * pow(sigma,2.)));
-}
 
+void computeBlur(ivec2 factors){
 
-void horizontalPass() {
-  
-    float coefficientH ;
     ivec2 posPixel = ivec2(gl_FragCoord.xy);
     const int levelOfDetail = 0;
     
-    
     float sumCoefficients = 0;
     pixelColor = vec4(0.f,0.f,0.f,0.f);
-
-    for (int i = -sizePatch/2; i <= sizePatch/2 ; i++ ) {
-        coefficientH = evalGauss1D(i,4.f);
-        vec4 color = coefficientH * texelFetchOffset( 
-            frameTexture,posPixel, levelOfDetail, ivec2(i,0));
+    int counter = 0;
+    int last = patchSize/2;
+    for (int i = -patchSize/2; i <= last ; i++ ) {
+        float coefficient = gaussWeights[counter];
+        vec4 color = coefficient * texelFetchOffset( 
+            frameTexture,posPixel, levelOfDetail, ivec2(i,i) * factors);
         pixelColor += color;
-        sumCoefficients += coefficientH;
+        sumCoefficients += coefficient;
+        counter++;
     }
     pixelColor/=sumCoefficients;
 
+}
+
+void horizontalPass() {
+
+computeBlur(ivec2(1,0));
 }
 
 void verticalPass() {
 
-    float coefficientV ;
-    ivec2 posPixel = ivec2(gl_FragCoord.xy);
-    const int levelOfDetail = 0;
-    
-    float sumCoefficients = 0;
-    pixelColor = vec4(0.f,0.f,0.f,0.f);
-
-    for (int i = -sizePatch; i <= sizePatch/2 ; i++ ) {
-        coefficientV = evalGauss1D(i,4.f);
-        vec4 color = coefficientV * texelFetchOffset( 
-            frameTexture,posPixel, levelOfDetail, ivec2(0,i));
-        pixelColor += color;
-        sumCoefficients += coefficientV;
-    }
-    pixelColor/=sumCoefficients;
-
+computeBlur(ivec2(0,1));
 }
 
 void main() {
