@@ -130,6 +130,7 @@
           </incDir>
         </cTool>
         <ccTool>
+          <standard>8</standard>
           <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>coreClasses</pElem>
@@ -305,6 +306,7 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <standard>8</standard>
           <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>coreClasses</pElem>
