@@ -13,9 +13,10 @@
 
 #include "FrameBuffer.h"
 
-FrameBuffer::FrameBuffer() :
+FrameBuffer::FrameBuffer(bool HDRTexture) :
 _fboHandle(),
 _renderTexture(),
+_isHDRTexture(HDRTexture),
 _depthBuffer()
 {
     constexpr GLsizei levelTexture  = 1;
@@ -29,8 +30,13 @@ _depthBuffer()
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _renderTexture);
+    if (_isHDRTexture) {
     glTexStorage2D(GL_TEXTURE_2D,levelTexture,GL_RGBA8,
                     RESOLUTION_X,RESOLUTION_Y);
+    } else {
+    glTexStorage2D(GL_TEXTURE_2D,levelTexture,GL_RGBA32F,
+                    RESOLUTION_X,RESOLUTION_Y);
+    }
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 

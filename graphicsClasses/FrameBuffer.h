@@ -20,7 +20,7 @@ class FrameBuffer {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    FrameBuffer         ();
+    FrameBuffer         (bool HDRTexture);
     virtual             ~FrameBuffer();
 
     
@@ -37,7 +37,10 @@ private:
 
     //--------ATTRIBUTES-----------//
     GLuint              _fboHandle;
+
     GLuint              _renderTexture;
+    bool                _isHDRTexture;
+
     GLuint              _depthBuffer;
 };
 

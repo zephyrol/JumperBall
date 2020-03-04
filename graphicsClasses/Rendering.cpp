@@ -28,6 +28,11 @@ const std::string Rendering::vsshaderBlur =
                                         "graphicsClasses/shaders/basicFboVs.vs";
 const std::string Rendering::fsshaderBlur = "graphicsClasses/shaders/blurFs.fs";
 
+const std::string Rendering::vsshaderBrightPassFilter = 
+                                        "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderBrightPassFilter = 
+                                  "graphicsClasses/shaders/brightPassFilter.fs";
+
 const std::vector<float> Rendering::gaussComputedValues = 
   Utility::genGaussBuffer(Rendering::blurPatchSize, Rendering::blurSigma);
 
@@ -51,17 +56,21 @@ Rendering::Rendering(const Map&     map,
     _star(star),
     _light(),
     _camera(camera),
-    _spMap( Shader (GL_VERTEX_SHADER, vsshaderMap ),
+    _spMap( Shader (GL_VERTEX_SHADER,   vsshaderMap ),
             Shader (GL_FRAGMENT_SHADER, fsshaderMap )),
-    _spStar(Shader (GL_VERTEX_SHADER, vsshaderStar ),
+    _spStar(Shader (GL_VERTEX_SHADER,   vsshaderStar ),
             Shader (GL_FRAGMENT_SHADER, fsshaderStar )),
-    _spFbo( Shader (GL_VERTEX_SHADER, vsshaderFBO ),
+    _spFbo( Shader (GL_VERTEX_SHADER,   vsshaderFBO ),
             Shader (GL_FRAGMENT_SHADER, fsshaderFBO )),
-    _spBlur(Shader (GL_VERTEX_SHADER, vsshaderBlur),
+    _spBlur(Shader (GL_VERTEX_SHADER,   vsshaderBlur),
             Shader (GL_FRAGMENT_SHADER, fsshaderBlur)),
-    _frameBufferScene(),
-    _frameBufferHalfBlur(),
-    _frameBufferCompleteBlur()
+    _spBrightPassFilter
+          ( Shader (GL_VERTEX_SHADER,   vsshaderBrightPassFilter),
+            Shader (GL_FRAGMENT_SHADER, fsshaderBrightPassFilter)),
+    _frameBufferScene(true),
+    _frameBufferHalfBlur(true),
+    _frameBufferCompleteBlur(true),
+    _frameBufferBrightPassFilter(true)
 {
 }
 
@@ -184,11 +193,11 @@ void Rendering::renderMap() {
     _meshMap.draw(true,displayedCubes*numberVerticesPerBlock,0);
 }
 
-void Rendering::blurEffect( const FrameBuffer& basicFBO ) {
+void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
 
     _spBlur.use();
     _frameBufferHalfBlur.bindFrameBuffer();
-    basicFBO.bindRenderTexture();
+    referenceFBO.bindRenderTexture();
 
     bindUniformTexture("frameTexture", 0, _spBlur);
     bindUniform("patchSize", static_cast<int>(blurPatchSize), _spBlur);
@@ -197,13 +206,22 @@ void Rendering::blurEffect( const FrameBuffer& basicFBO ) {
     bindUniform("firstPass", true, _spBlur);
     _meshQuadFrame.draw();
 
-   _frameBufferCompleteBlur.bindFrameBuffer();
+    _frameBufferCompleteBlur.bindFrameBuffer();
     _frameBufferHalfBlur.bindRenderTexture();
 
     bindUniform("firstPass", false, _spBlur);
     _meshQuadFrame.draw();
 }
 
+void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
+    _spBrightPassFilter.use();
+    _frameBufferBrightPassFilter.bindFrameBuffer();
+    referenceFBO.bindRenderTexture();
+
+    bindUniformTexture("frameTexture", 0, _spBrightPassFilter);
+    bindUniform ("threshold",  2.3f,   _spBrightPassFilter);
+    _meshQuadFrame.draw();
+}
 
 void Rendering::render() {
 
@@ -213,7 +231,7 @@ void Rendering::render() {
     _spMap.use();
     renderCamera(_spMap);
 
-    _light.positionLight(_star.centralPosition());
+    _light.positionLight(           _star.centralPosition());
     _light.ambiantLightIntensity(   glm::vec3(0.7f,0.7f,0.7f));
     _light.diffuseLightIntensity(   glm::vec3(0.25f,0.25f,0.25f));
     _light.specularLightIntensity(  glm::vec3(0.25f,0.25f,0.25f));
@@ -246,11 +264,18 @@ void Rendering::render() {
     renderCamera(_spStar);
     _star.draw();
 
-    //blurEffect(_frameBufferScene);
+    brightPassEffect(_frameBufferScene);
+    blurEffect(_frameBufferBrightPassFilter);
 
-    _spFbo.use();
+
+
     FrameBuffer::bindDefaultFrameBuffer();
-    //_frameBufferCompleteBlur.bindRenderTexture();
+    _frameBufferCompleteBlur.bindRenderTexture();
+    //_frameBufferScene.bindRenderTexture();
+    bindUniformTexture("frameTexture", 0, _spBrightPassFilter);
+
+    
+    FrameBuffer::bindDefaultFrameBuffer();
     _frameBufferScene.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spFbo);
     _meshQuadFrame.draw();
