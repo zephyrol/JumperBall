@@ -19,6 +19,12 @@ namespace Utility {
     std::vector<GLfloat>              genGaussBuffer( size_t patchSize,
                                                       float sigma);
 
+    glm::vec3                         convertRBGToCIExyY(const glm::vec3&
+                                                            rbgColor);
+    glm::vec3                         convertCIExyYToRGB(const glm::vec3&
+                                                            CIExyYColor);
+    
+
     
     extern const std::vector<GLfloat> positionsCube;
     extern const std::vector<GLfloat> colorsCube;
@@ -34,6 +40,10 @@ namespace Utility {
     extern const std::vector<GLfloat> colorsQuadScreen;
     extern const std::vector<GLfloat> normalsQuadScreen;
     extern const std::vector<GLfloat> uvCoordsQuadScreen;
+
+    extern const glm::mat3            XYZToRGB;
+    extern const glm::mat3            RGBToXYZ;
+    
     
 }
 

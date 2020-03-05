@@ -216,6 +216,12 @@ const std::vector<GLfloat> Utility::colorsPike {
 const std::vector<GLfloat> Utility::normalsPike = 
                                         Utility::computeNormals(positionsPike);
 
+const glm::mat3 Utility::RGBToXYZ { 2.7689, 1.7517,   1.1302,
+                                    1.0000, 4.5907,   0.060100,
+                                    0.0000, 0.056508, 5.5943};
+                                    
+const glm::mat3 Utility::XYZToRGB = glm::inverse(Utility::XYZToRGB);
+
 
 std::vector<GLfloat> Utility::computeNormals(const std::vector<GLfloat>& 
                                                 positions) {
@@ -322,4 +328,18 @@ void Utility::printMatrix(const glm::mat4& m) {
             " " <<  m[3][3]  <<  std::endl <<
             std::endl;
 
+}
+
+glm::vec3 Utility::convertCIExyYToRGB(const glm::vec3& CIExyYColor){
+    const float scalar = CIExyYColor.z / CIExyYColor.y;
+    const glm::vec3 CIEXYZ {scalar * CIExyYColor.x, 
+                            CIExyYColor.z,
+                            scalar* (1-CIExyYColor.x-CIExyYColor.y)};
+    return Utility::XYZToRGB * CIEXYZ;
+}
+
+glm::vec3 Utility::convertRBGToCIExyY(const glm::vec3& rbgColor){
+    const glm::vec3 CIEXYZ = Utility::RGBToXYZ * rbgColor;
+    const float sumXYZ = CIEXYZ.x + CIEXYZ.y + CIEXYZ.z;
+    return glm::vec3 ( CIEXYZ.x/sumXYZ, CIEXYZ.y/sumXYZ, CIEXYZ.y);
 }

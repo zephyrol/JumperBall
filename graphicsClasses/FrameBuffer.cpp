@@ -31,10 +31,10 @@ _depthBuffer()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _renderTexture);
     if (_isHDRTexture) {
-    glTexStorage2D(GL_TEXTURE_2D,levelTexture,GL_RGBA8,
+    glTexStorage2D(GL_TEXTURE_2D,levelTexture,GL_RGBA32F,
                     RESOLUTION_X,RESOLUTION_Y);
     } else {
-    glTexStorage2D(GL_TEXTURE_2D,levelTexture,GL_RGBA32F,
+    glTexStorage2D(GL_TEXTURE_2D,levelTexture,GL_RGBA8,
                     RESOLUTION_X,RESOLUTION_Y);
     }
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

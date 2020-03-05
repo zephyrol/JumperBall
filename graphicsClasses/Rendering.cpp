@@ -67,10 +67,10 @@ Rendering::Rendering(const Map&     map,
     _spBrightPassFilter
           ( Shader (GL_VERTEX_SHADER,   vsshaderBrightPassFilter),
             Shader (GL_FRAGMENT_SHADER, fsshaderBrightPassFilter)),
-    _frameBufferScene(true),
-    _frameBufferHalfBlur(true),
-    _frameBufferCompleteBlur(true),
-    _frameBufferBrightPassFilter(true)
+    _frameBufferScene(false),
+    _frameBufferHalfBlur(false),
+    _frameBufferCompleteBlur(false),
+    _frameBufferBrightPassFilter(false)
 {
 }
 
@@ -226,6 +226,7 @@ void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
 void Rendering::render() {
 
     _frameBufferScene.bindFrameBuffer();
+    //FrameBuffer::bindDefaultFrameBuffer();
     
     //Ball and Map
     _spMap.use();
@@ -264,17 +265,17 @@ void Rendering::render() {
     renderCamera(_spStar);
     _star.draw();
 
-    brightPassEffect(_frameBufferScene);
-    blurEffect(_frameBufferBrightPassFilter);
+    /*brightPassEffect(_frameBufferScene);
+    blurEffect(_frameBufferBrightPassFilter);*/
 
 
 
-    FrameBuffer::bindDefaultFrameBuffer();
+    /*FrameBuffer::bindDefaultFrameBuffer();
     _frameBufferCompleteBlur.bindRenderTexture();
     //_frameBufferScene.bindRenderTexture();
-    bindUniformTexture("frameTexture", 0, _spBrightPassFilter);
+    bindUniformTexture("frameTexture", 0, _spBrightPassFilter);*/
 
-    
+    _spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();
     _frameBufferScene.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spFbo);
