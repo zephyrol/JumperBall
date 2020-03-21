@@ -343,3 +343,9 @@ glm::vec3 Utility::convertRBGToCIExyY(const glm::vec3& rbgColor){
     const float sumXYZ = CIEXYZ.x + CIEXYZ.y + CIEXYZ.z;
     return glm::vec3 ( CIEXYZ.x/sumXYZ, CIEXYZ.y/sumXYZ, CIEXYZ.y);
 }
+
+float Utility::getLuminance(const glm::vec3& rgbColor) {
+    const glm::vec3 CIExyYColor = convertRBGToCIExyY(rgbColor);
+
+    return CIExyYColor.z;
+}

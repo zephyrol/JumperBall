@@ -37,7 +37,9 @@ void main() {
     vec3 specularComponent  = specularLightIntensity * 
                               pow(max(0.f,dot(reflection,toCamera)),20.f);
 
-    pixelColor =  vec4(ambiantComponent,1.f) * vec4(fs_vertexColor,1.f) + 
-                  vec4(diffuseComponent,1.f)+
-                  vec4(specularComponent,1.f);
+    vec3 composition = ambiantComponent * fs_vertexColor + diffuseComponent
+                        + specularComponent;
+    pixelColor = vec4(composition,1.f);
+                  
+                  
 }

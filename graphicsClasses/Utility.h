@@ -23,6 +23,8 @@ namespace Utility {
                                                             rbgColor);
     glm::vec3                         convertCIExyYToRGB(const glm::vec3&
                                                             CIExyYColor);
+
+    float                             getLuminance(const glm::vec3& rgbColor);
     
 
     

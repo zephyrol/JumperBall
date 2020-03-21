@@ -87,9 +87,11 @@ private:
     const ShaderProgram             _spFbo;
 
     const ShaderProgram             _spBlur;
+    const ShaderProgram             _spToneMapping;
     const ShaderProgram             _spBrightPassFilter;
 
     const FrameBuffer               _frameBufferScene;
+    const FrameBuffer               _frameBufferToneMapping;
     const FrameBuffer               _frameBufferHalfBlur;
     const FrameBuffer               _frameBufferCompleteBlur;
     const FrameBuffer               _frameBufferBrightPassFilter;
@@ -98,6 +100,8 @@ private:
     //------------METHODS----------//
     void                            renderMap();
     void                            blurEffect( 
+                                                const FrameBuffer& referenceFBO);
+    void                            toneMappingEffect( 
                                                 const FrameBuffer& referenceFBO);
     void                            brightPassEffect( 
                                                 const FrameBuffer& referenceFBO);
@@ -154,6 +158,8 @@ private:
     static const std::string        fsshaderFBO; 
     static const std::string        vsshaderBlur; 
     static const std::string        fsshaderBlur; 
+    static const std::string        vsshaderToneMapping; 
+    static const std::string        fsshaderToneMapping; 
     static const std::string        vsshaderBrightPassFilter; 
     static const std::string        fsshaderBrightPassFilter; 
 

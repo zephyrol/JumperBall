@@ -28,6 +28,11 @@ const std::string Rendering::vsshaderBlur =
                                         "graphicsClasses/shaders/basicFboVs.vs";
 const std::string Rendering::fsshaderBlur = "graphicsClasses/shaders/blurFs.fs";
 
+const std::string Rendering::vsshaderToneMapping = 
+                                        "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderToneMapping = 
+                                     "graphicsClasses/shaders/toneMappingFs.fs";
+
 const std::string Rendering::vsshaderBrightPassFilter = 
                                         "graphicsClasses/shaders/basicFboVs.vs";
 const std::string Rendering::fsshaderBrightPassFilter = 
@@ -58,16 +63,20 @@ Rendering::Rendering(const Map&     map,
     _camera(camera),
     _spMap( Shader (GL_VERTEX_SHADER,   vsshaderMap ),
             Shader (GL_FRAGMENT_SHADER, fsshaderMap )),
-    _spStar(Shader (GL_VERTEX_SHADER,   vsshaderStar ),
-            Shader (GL_FRAGMENT_SHADER, fsshaderStar )),
+    _spStar(Shader (GL_VERTEX_SHADER,   vsshaderStar),
+            Shader (GL_FRAGMENT_SHADER, fsshaderStar)),
     _spFbo( Shader (GL_VERTEX_SHADER,   vsshaderFBO ),
             Shader (GL_FRAGMENT_SHADER, fsshaderFBO )),
     _spBlur(Shader (GL_VERTEX_SHADER,   vsshaderBlur),
             Shader (GL_FRAGMENT_SHADER, fsshaderBlur)),
+    _spToneMapping
+          ( Shader (GL_VERTEX_SHADER,   vsshaderToneMapping),
+            Shader (GL_FRAGMENT_SHADER, fsshaderToneMapping)),
     _spBrightPassFilter
           ( Shader (GL_VERTEX_SHADER,   vsshaderBrightPassFilter),
             Shader (GL_FRAGMENT_SHADER, fsshaderBrightPassFilter)),
-    _frameBufferScene(false),
+    _frameBufferScene(true),
+    _frameBufferToneMapping(false),
     _frameBufferHalfBlur(false),
     _frameBufferCompleteBlur(false),
     _frameBufferBrightPassFilter(false)
@@ -213,6 +222,20 @@ void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
     _meshQuadFrame.draw();
 }
 
+void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
+    _spToneMapping.use();
+    _frameBufferToneMapping.bindFrameBuffer();
+    referenceFBO.bindRenderTexture();
+
+    bindUniformTexture("frameTexture", 0, _spToneMapping);
+    bindUniform ("averageLuminance", 
+                  //referenceFBO.computeLogAverageLuminance(),
+                  0.6f,
+                  _spToneMapping);
+    
+    _meshQuadFrame.draw();
+}
+
 void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
     _spBrightPassFilter.use();
     _frameBufferBrightPassFilter.bindFrameBuffer();
@@ -265,6 +288,9 @@ void Rendering::render() {
     renderCamera(_spStar);
     _star.draw();
 
+    toneMappingEffect(_frameBufferScene);
+    
+
     /*brightPassEffect(_frameBufferScene);
     blurEffect(_frameBufferBrightPassFilter);*/
 
@@ -277,7 +303,7 @@ void Rendering::render() {
 
     _spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();
-    _frameBufferScene.bindRenderTexture();
+    _frameBufferToneMapping.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spFbo);
     _meshQuadFrame.draw();
 

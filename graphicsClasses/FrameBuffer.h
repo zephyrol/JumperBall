@@ -20,18 +20,23 @@ class FrameBuffer {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    FrameBuffer         (bool HDRTexture);
+    FrameBuffer         (bool HDRTexture = false, float scale = 1.f);
     virtual             ~FrameBuffer();
+
+    static constexpr float     
+                        luminanceKey                                     = 0.4f;
 
     
     //-------CONST METHODS----------//
     GLuint              getHandle()                                       const;
     void                bindFrameBuffer()                                 const;
     void                bindRenderTexture()                               const;
+    float               computeLogAverageLuminance()                      const;
     
     
     //--------STATIC METHODS-------//
     static void         bindDefaultFrameBuffer();
+
 
 private:
 
@@ -39,9 +44,11 @@ private:
     GLuint              _fboHandle;
 
     GLuint              _renderTexture;
-    bool                _isHDRTexture;
+    const bool          _isHDRTexture;
+    const float         _scale;
 
     GLuint              _depthBuffer;
+
 };
 
 #endif /* FRAMEBUFFER_H */
