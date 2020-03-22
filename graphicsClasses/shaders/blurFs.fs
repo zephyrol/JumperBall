@@ -3,7 +3,7 @@
 uniform sampler2D frameTexture;
 uniform bool      firstPass;
 uniform int       patchSize;
-uniform float[9]   gaussWeights;
+uniform float[25]   gaussWeights;
 
 in      vec2      fs_vertexUVs;
 out     vec4      pixelColor;

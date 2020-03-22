@@ -58,7 +58,7 @@ private:
     //---------CONSTANTS------------//
 
     static constexpr float          blurSigma                             = 4.f;
-    static constexpr size_t         blurPatchSize                         = 9;
+    static constexpr size_t         blurPatchSize                         = 25;
 
     //--------ATTRIBUTES-----------//
     uniformVariable<glm::mat4>      _uniformMatrix4;
@@ -89,12 +89,14 @@ private:
     const ShaderProgram             _spBlur;
     const ShaderProgram             _spToneMapping;
     const ShaderProgram             _spBrightPassFilter;
+    const ShaderProgram             _spBloom;
 
     const FrameBuffer               _frameBufferScene;
     const FrameBuffer               _frameBufferToneMapping;
     const FrameBuffer               _frameBufferHalfBlur;
     const FrameBuffer               _frameBufferCompleteBlur;
     const FrameBuffer               _frameBufferBrightPassFilter;
+    const FrameBuffer               _frameBufferBloom;
 
 
     //------------METHODS----------//
@@ -105,6 +107,9 @@ private:
                                                 const FrameBuffer& referenceFBO);
     void                            brightPassEffect( 
                                                 const FrameBuffer& referenceFBO);
+    void                            bloomEffect(  const FrameBuffer& fboScene,
+                                                  const FrameBuffer& fboLight );
+
     void                            renderCamera(const ShaderProgram& sp);
 
     void                            bindUniform(const std::string&    name,
@@ -162,6 +167,8 @@ private:
     static const std::string        fsshaderToneMapping; 
     static const std::string        vsshaderBrightPassFilter; 
     static const std::string        fsshaderBrightPassFilter; 
+    static const std::string        vsshaderBloom; 
+    static const std::string        fsshaderBloom; 
 
     static const std::vector<float> gaussComputedValues;
 };

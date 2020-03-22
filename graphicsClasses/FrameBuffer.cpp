@@ -31,13 +31,17 @@ _depthBuffer()
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _renderTexture);
+
+    GLenum internalFormat; 
     if (_isHDRTexture) {
-    glTexStorage2D(GL_TEXTURE_2D,levelTexture,GL_RGB32F,
-                    RESOLUTION_X,RESOLUTION_Y);
+        internalFormat = GL_RGB32F;
     } else {
-    glTexStorage2D(GL_TEXTURE_2D,levelTexture,GL_RGB8,
-                    RESOLUTION_X,RESOLUTION_Y);
+        internalFormat = GL_RGB8;
     }
+
+    glTexStorage2D(GL_TEXTURE_2D,levelTexture,internalFormat,
+                    RESOLUTION_X * scale ,RESOLUTION_Y * scale);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -46,7 +50,7 @@ _depthBuffer()
 
     glBindRenderbuffer(GL_RENDERBUFFER, _depthBuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 
-                            RESOLUTION_X, RESOLUTION_Y);
+                            RESOLUTION_X * scale, RESOLUTION_Y * scale);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,
                                 GL_RENDERBUFFER, _depthBuffer);
     const GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
@@ -61,8 +65,8 @@ void FrameBuffer::bindFrameBuffer() const {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void FrameBuffer::bindRenderTexture() const {
-    glActiveTexture(GL_TEXTURE0);
+void FrameBuffer::bindRenderTexture(unsigned int offset) const {
+    glActiveTexture(GL_TEXTURE0+offset);
     glBindTexture(GL_TEXTURE_2D,_renderTexture);
 
 }

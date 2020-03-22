@@ -38,6 +38,11 @@ const std::string Rendering::vsshaderBrightPassFilter =
 const std::string Rendering::fsshaderBrightPassFilter = 
                                   "graphicsClasses/shaders/brightPassFilter.fs";
 
+const std::string Rendering::vsshaderBloom = 
+                                        "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderBloom = 
+                                           "graphicsClasses/shaders/bloomFs.fs";
+
 const std::vector<float> Rendering::gaussComputedValues = 
   Utility::genGaussBuffer(Rendering::blurPatchSize, Rendering::blurSigma);
 
@@ -75,11 +80,15 @@ Rendering::Rendering(const Map&     map,
     _spBrightPassFilter
           ( Shader (GL_VERTEX_SHADER,   vsshaderBrightPassFilter),
             Shader (GL_FRAGMENT_SHADER, fsshaderBrightPassFilter)),
+    _spBloom
+          ( Shader (GL_VERTEX_SHADER,   vsshaderBloom),
+            Shader (GL_FRAGMENT_SHADER, fsshaderBloom)),
     _frameBufferScene(true),
     _frameBufferToneMapping(false),
     _frameBufferHalfBlur(false),
     _frameBufferCompleteBlur(false),
-    _frameBufferBrightPassFilter(false)
+    _frameBufferBrightPassFilter(false),
+    _frameBufferBloom(false)
 {
 }
 
@@ -206,8 +215,8 @@ void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
 
     _spBlur.use();
     _frameBufferHalfBlur.bindFrameBuffer();
-    referenceFBO.bindRenderTexture();
 
+    referenceFBO.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spBlur);
     bindUniform("patchSize", static_cast<int>(blurPatchSize), _spBlur);
     bindUniform("gaussWeights", gaussComputedValues, _spBlur);
@@ -225,12 +234,12 @@ void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
 void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
     _spToneMapping.use();
     _frameBufferToneMapping.bindFrameBuffer();
-    referenceFBO.bindRenderTexture();
 
+    referenceFBO.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spToneMapping);
-    bindUniform ("averageLuminance", 
+    bindUniform ( "averageLuminance", 
                   //referenceFBO.computeLogAverageLuminance(),
-                  0.6f,
+                  1.8f,
                   _spToneMapping);
     
     _meshQuadFrame.draw();
@@ -239,12 +248,27 @@ void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
 void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
     _spBrightPassFilter.use();
     _frameBufferBrightPassFilter.bindFrameBuffer();
-    referenceFBO.bindRenderTexture();
 
+    referenceFBO.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spBrightPassFilter);
-    bindUniform ("threshold",  2.3f,   _spBrightPassFilter);
+    bindUniform ("threshold",  25.f,   _spBrightPassFilter);
     _meshQuadFrame.draw();
 }
+
+void Rendering::bloomEffect(  const FrameBuffer& fboScene, 
+                              const FrameBuffer& fboLight) {
+    _spBloom.use();
+    _frameBufferBloom.bindFrameBuffer();
+
+    fboScene.bindRenderTexture(0);
+    bindUniformTexture("frameToneMappingTexture", 0, _spBloom);
+
+    fboLight.bindRenderTexture(1);
+    bindUniformTexture("frameBrightPassFilterTexture", 1, _spBloom);
+
+    _meshQuadFrame.draw();
+}
+
 
 void Rendering::render() {
 
@@ -289,12 +313,11 @@ void Rendering::render() {
     _star.draw();
 
     toneMappingEffect(_frameBufferScene);
-    
+     
+    brightPassEffect(_frameBufferScene);
+    blurEffect(_frameBufferBrightPassFilter);
 
-    /*brightPassEffect(_frameBufferScene);
-    blurEffect(_frameBufferBrightPassFilter);*/
-
-
+    bloomEffect(_frameBufferToneMapping,_frameBufferCompleteBlur);
 
     /*FrameBuffer::bindDefaultFrameBuffer();
     _frameBufferCompleteBlur.bindRenderTexture();
@@ -303,7 +326,7 @@ void Rendering::render() {
 
     _spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();
-    _frameBufferToneMapping.bindRenderTexture();
+    _frameBufferBloom.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spFbo);
     _meshQuadFrame.draw();
 

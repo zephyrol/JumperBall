@@ -30,7 +30,7 @@ public:
     //-------CONST METHODS----------//
     GLuint              getHandle()                                       const;
     void                bindFrameBuffer()                                 const;
-    void                bindRenderTexture()                               const;
+    void                bindRenderTexture(unsigned int offset = 0)        const;
     float               computeLogAverageLuminance()                      const;
     
     
