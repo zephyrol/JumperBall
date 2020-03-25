@@ -28,6 +28,7 @@ public:
 
     //------------TYPES------------//
     enum class KindOfData {Raw,Optimized};
+    enum class EffectOnBall {Nothing,Burst,Burnt,Slide};
     
     //---------CONSTANTS------------//
     static constexpr unsigned char        firstNumberOfBlock               = 58;
@@ -60,7 +61,7 @@ public:
                                           timeCreation()                  const;
 
     //----------METHODS------------//
-    void                                  interaction(
+    EffectOnBall interaction(
                                       const JumperBallTypes::Direction& ballDir,
                                       const JumperBallTypes::vec3f& posBall
     );

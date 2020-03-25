@@ -50,6 +50,10 @@ const std::array<float, 9>& Block::localTransform() const {
 
 }
 
+bool Block::burstBall() const {
+    return false;
+}
+
 
 
 void Block::interaction(const JumperBallTypes::Direction& ballDir, 

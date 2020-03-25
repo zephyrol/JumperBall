@@ -26,6 +26,11 @@ Block::categoryOfBlocksInFile SharpBlock::getType() const {
     return Block::categoryOfBlocksInFile::Sharp;
 }
 
+bool SharpBlock::burstBall() const {
+    return _hitBall;
+}
+
+
 void SharpBlock::interaction(
         const JumperBallTypes::Direction& ballDir, 
         const JumperBallTypes::timePointMs& currentTime, 

@@ -734,6 +734,10 @@ JumperBallTypes::timePointMs Ball::getTimeActionMs() const noexcept {
                                                       (_timeAction);
 }
 
+JumperBallTypes::timePointMs Ball::getTimeStateOfLifeMs() const noexcept {
+    return std::chrono::time_point_cast<std::chrono::milliseconds>
+                                                      (_timeStateOfLife);
+}
 
 JumperBallTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) 
                                                                            const
@@ -842,6 +846,24 @@ float Ball::getTimeSecondsSinceAction() const noexcept{
                                                 timeActionMs.time_since_epoch();
     const JumperBallTypes::durationMs difference = 
                                       timeNowSinceEpoch - timeActionSinceEpoch;
+    const std::chrono::duration<float> durationFloatDifference = difference;
+    const float fDifference = durationFloatDifference.count();
+
+    return fDifference;
+}
+
+float Ball::getTimeSecondsSinceStateOfLife() const noexcept{
+
+    const JumperBallTypes::timePointMs timeNowMs = 
+                                    JumperBallTypesMethods::getTimePointMSNow();
+    const JumperBallTypes::durationMs timeNowSinceEpoch = 
+                                                  timeNowMs.time_since_epoch();
+    const JumperBallTypes::timePointMs timeStateOfLifeMs = 
+                                                  getTimeStateOfLifeMs(); 
+    const JumperBallTypes::durationMs timeStateOfLifeSinceEpoch    = 
+                                          timeStateOfLifeMs.time_since_epoch();
+    const JumperBallTypes::durationMs difference = 
+                                  timeNowSinceEpoch - timeStateOfLifeSinceEpoch;
     const std::chrono::duration<float> durationFloatDifference = difference;
     const float fDifference = durationFloatDifference.count();
 
@@ -1091,9 +1113,36 @@ void Ball::update() noexcept{
         
         isFallingIntersectionBlock();
     }
+    mapInteraction();
     
 }
 
+void Ball::mapInteraction() noexcept{
+
+    Map::EffectOnBall effect = _map.interaction(_currentSide,get3DPosition());
+
+    switch ( effect ) {
+        case Map::EffectOnBall::Nothing: 
+            break;
+        case Map::EffectOnBall::Burnt: 
+            break;
+        case Map::EffectOnBall::Burst: 
+            if(_stateOfLife != StateOfLife::Bursting) {
+                _stateOfLife = StateOfLife::Bursting;
+                _timeStateOfLife = JumperBallTypesMethods::getTimePointMSNow(); 
+            }
+            break;
+        case Map::EffectOnBall::Slide: 
+            break;
+        default: break;
+    }
+}
+
+
 Ball::State Ball::state() const {
     return _state;
+}
+
+Ball::StateOfLife Ball::stateOfLife() const {
+    return _stateOfLife;
 }

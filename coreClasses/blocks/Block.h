@@ -49,6 +49,7 @@ public:
     virtual                           categoryOfBlocksInFile getType() const =0;
     virtual std::array<bool,6>        faceInfo()                          const;
     virtual bool                      stillExists()                       const;
+    virtual bool                      burstBall()                         const;
     virtual const std::array<float,9>&       
                                       localTransform()                    const;
 

@@ -21,22 +21,15 @@ BallAnimation::BallAnimation(const Ball& ball):
     _rotationBeforeMovement(1.f),
     _scaleBeforeMovement(1.f),
     _translationBeforeMovement(0.f),
-    _referenceTimePoint(ball.getTimeActionMs()),
+    _referenceTimePointAction(ball.getTimeActionMs()),
+    _referenceTimePointStateOfLife(ball.getTimeStateOfLifeMs()),
     _referenceState(ball.state())
 {
     
 }
 
-void BallAnimation::updateTrans() {
-    
-    if (_ball.getTimeActionMs() > _referenceTimePoint) {
-        _referenceTimePoint = _ball.getTimeActionMs();
-        if ( _ball.state() == _referenceState) {
-      _scaleBeforeMovement        = glm::vec3(1.f,1.f,1.f);
-        _translationBeforeMovement  = glm::vec3(0.f,0.f,0.f);
-        }
-        else _referenceState = _ball.state();
-    }
+void BallAnimation::animationAlive() {
+
 
     if ( _ball.state() == Ball::State::Staying) {
 
@@ -116,10 +109,60 @@ void BallAnimation::updateTrans() {
         if (t < 0.f)  t = fabs(t);
         
         _scale        = glm::scale  ( 
-         _scaleBeforeMovement + t * ( glm::vec3(1.f) - _scaleBeforeMovement)
+        _scaleBeforeMovement + t * ( glm::vec3(1.f) - _scaleBeforeMovement)
                                     );
         _translation  = glm::translate  ( _translationBeforeMovement * (1.f-t));
 
+    }
+
+}
+
+void BallAnimation::animationBursting() {
+
+
+        constexpr float durationBursting      = 0.07f; 
+        constexpr float radiusScalarBursting  = 2.5f;
+
+        float t = _ball.getTimeSecondsSinceStateOfLife() / durationBursting ;
+
+        float scaleBursting;
+
+        if (t > 1.f) scaleBursting = 0.f;
+        else scaleBursting  = (1.f-t) + radiusScalarBursting * t;
+
+        const glm::vec3 scaleVec3   =  glm::vec3(scaleBursting);
+        const glm::mat4 scaleMatrix = glm::scale(scaleVec3);
+        
+        _scale                      = scaleMatrix;
+        _scaleBeforeMovement        = scaleVec3;
+
+}
+
+
+void BallAnimation::updateTrans() {
+    
+    if (_ball.getTimeActionMs() > _referenceTimePointAction) {
+        _referenceTimePointAction = _ball.getTimeActionMs();
+        if ( _ball.state() == _referenceState) {
+        _scaleBeforeMovement        = glm::vec3(1.f,1.f,1.f);
+        _translationBeforeMovement  = glm::vec3(0.f,0.f,0.f);
+        }
+        else _referenceState = _ball.state();
+    }
+
+    if (_ball.getTimeStateOfLifeMs() > _referenceTimePointStateOfLife) {
+        _referenceTimePointStateOfLife = _ball.getTimeActionMs();
+        if ( _ball.stateOfLife() == _referenceStateOfLife) {
+        _scaleBeforeMovement        = glm::vec3(1.f,1.f,1.f);
+        _translationBeforeMovement  = glm::vec3(0.f,0.f,0.f);
+        }
+        else _referenceStateOfLife = _ball.stateOfLife();
+    }
+
+    if (_ball.stateOfLife() == Ball::StateOfLife::Alive) {
+        animationAlive();
+    } else if (_ball.stateOfLife() == Ball::StateOfLife::Bursting) {
+        animationBursting();
     }
 }
 

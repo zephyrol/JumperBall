@@ -59,9 +59,14 @@ public:
     JumperBallTypes::Direction    lookTowards()                           const;
     float                         distanceBehindBall()                    const;
     Ball::State                   state()                                 const;
+    Ball::StateOfLife             stateOfLife()                           const;
 
     float                         getTimeSecondsSinceAction()    const noexcept;
     JumperBallTypes::timePointMs  getTimeActionMs()              const noexcept;
+
+    float                         getTimeSecondsSinceStateOfLife()    
+                                                                 const noexcept;
+    JumperBallTypes::timePointMs  getTimeStateOfLifeMs()         const noexcept;
 
     struct nextBlockInformation   getNextBlockInfo()             const noexcept;
     const ClassicalMechanics&     getMechanicsJumping()          const noexcept;
@@ -126,6 +131,7 @@ private:
     void                          move()                               noexcept;
     void                          fall()                               noexcept;
     void                          setTimeActionNow()                   noexcept;
+    void                          mapInteraction()                     noexcept;
     AnswerRequest                 isFallingIntersectionBlock()         noexcept;
     AnswerRequest                 isGoingStraightAheadIntersectBlock() noexcept; 
 

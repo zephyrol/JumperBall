@@ -27,6 +27,8 @@ public:
 
     //----------METHODS------------//
     void                           updateTrans()                       override;
+    void                           animationAlive();
+    void                           animationBursting();
 
 private:
 
@@ -35,8 +37,12 @@ private:
     glm::mat4                     _rotationBeforeMovement;
     glm::vec3                     _scaleBeforeMovement;
     glm::vec3                     _translationBeforeMovement;
-    JumperBallTypes::timePointMs  _referenceTimePoint;
+
+    JumperBallTypes::timePointMs  _referenceTimePointAction;
+    JumperBallTypes::timePointMs  _referenceTimePointStateOfLife;
+
     Ball::State                   _referenceState;
+    Ball::StateOfLife             _referenceStateOfLife;
 
 };
 

@@ -82,7 +82,6 @@ void testClass::run(Rendering& r, Ball& b, Camera& c, Map& m) {
 
         b.update();
         c.follow(b);
-        m.interaction(b.currentSide(),b.get3DPosition());
         
         if( glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS || 
             glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_PRESS)
@@ -139,7 +138,6 @@ void testClass::run(Rendering& r, Ball& b, Camera& c, Map& m) {
 
         b.update();
         c.follow(b);
-        m.interaction(b.currentSide(),b.get3DPosition());
 
         r.render();
        

@@ -291,10 +291,11 @@ std::chrono::time_point<std::chrono::system_clock> Map::timeCreation() const {
     return _timeCreation;
 }
 
-void Map::interaction(
+Map::EffectOnBall Map::interaction(
         const JumperBallTypes::Direction& ballDir, 
         const JumperBallTypes::vec3f& posBall) {
 
+    Map::EffectOnBall effect = Map::EffectOnBall::Nothing;
     auto timeNow = JumperBallTypesMethods::getTimePointMSNow();
 
     std::array<unsigned int,3> currentBlockPosition;
@@ -308,11 +309,13 @@ void Map::interaction(
                 if (block) {
                     block->interaction(
                         ballDir, timeNow, posBall,currentBlockPosition);
-                    
+                    if (block->burstBall()) {
+                        effect = Map::EffectOnBall::Burst;
+                    }
                 }
             }
         }
     }
-
+    return effect; 
 }
 

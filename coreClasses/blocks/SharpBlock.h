@@ -24,6 +24,7 @@ public:
     //-------CONST METHODS----------//
     Block::categoryOfBlocksInFile                 getType()      const override;
     std::array<bool,6>                            faceInfo()     const override;
+    bool                                          burstBall()    const override;
 
     //----------METHODS-------------//
     virtual void                  interaction(
