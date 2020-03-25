@@ -31,7 +31,8 @@ public:
     GLuint              getHandle()                                       const;
     void                bindFrameBuffer()                                 const;
     void                bindRenderTexture(unsigned int offset = 0)        const;
-    float               computeLogAverageLuminance()                      const;
+    std::pair<float,float>               
+                        computeLogAverageLuminanceAndMax()              const;
     
     
     //--------STATIC METHODS-------//

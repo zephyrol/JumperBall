@@ -3,6 +3,7 @@
 
 uniform sampler2D frameTexture;
 uniform float     averageLuminance;
+uniform float     whiteLuminance;
 
 in      vec2      fs_vertexUVs;
 
@@ -37,17 +38,17 @@ float getLuminance(vec3 xyYColor) {
 
 vec3 toneMappingOperator ( vec3 rgbColor ) {
 
-    const float exposureLevelKey = 0.4f;
+    const float exposureLevelKey = 2.f;
     //const float luminanceWhite   = 6.39891f;
-    const float luminanceWhite   = 1.5f;
+    //const float luminanceWhite   = 1.5f;
 
     vec3 xyYColor = convertRBGToCIExyY ( rgbColor );
     float luminanceAfterToonMapping = exposureLevelKey * xyYColor.z 
                                       / averageLuminance;
     /*float compressedLuminance = luminanceAfterToonMapping 
-      * ( 1.f + (luminanceAfterToonMapping / pow(luminanceWhite,2.f)))
+      * ( 1.f + (luminanceAfterToonMapping / (whiteLuminance*whiteLuminance)))
       / ( 1.f + luminanceAfterToonMapping );
-    xyYColor.z = compressedLuminance;*/
+    xyYColor.z = compressedLuminance ;*/
 
     xyYColor.z = luminanceAfterToonMapping;
 

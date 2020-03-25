@@ -27,7 +27,7 @@ Block::categoryOfBlocksInFile SharpBlock::getType() const {
 }
 
 void SharpBlock::interaction(
-const JumperBallTypes::Direction& ballDir, 
+        const JumperBallTypes::Direction& ballDir, 
         const JumperBallTypes::timePointMs& currentTime, 
         const JumperBallTypes::vec3f& positions,
         const std::array<unsigned int,3>& posBlock) {

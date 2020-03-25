@@ -28,13 +28,13 @@ void main() {
                                 * fs_vertexNormal;
     reflection              = normalize(reflection);
 
-    vec3 ambiantComponent   = ambiantLightIntensity*5;
+    vec3 ambiantComponent   = ambiantLightIntensity;
 
-    vec3 diffuseComponent   = diffuseLightIntensity * 5*
+    vec3 diffuseComponent   = diffuseLightIntensity *
                               max(0.f,dot(toLight,fs_vertexNormal));
 
     
-    vec3 specularComponent  = specularLightIntensity * 5* 
+    vec3 specularComponent  = specularLightIntensity *
                               pow(max(0.f,dot(reflection,toCamera)),20.f);
 
     vec3 composition = ambiantComponent * fs_vertexColor + diffuseComponent

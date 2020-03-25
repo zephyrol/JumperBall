@@ -21,7 +21,7 @@ void main() {
                                     fs_radiusOutside, 
                                     dist);
 
-    pixelColor        = mix ( vec4(5*fs_colorInside,1.f), 
-                              vec4(5*fs_colorOutside,0.f),
+    pixelColor        = mix ( vec4(fs_colorInside,1.f), 
+                              vec4(fs_colorOutside,0.f),
                               coefficient); 
 }

@@ -85,7 +85,7 @@ GLuint FrameBuffer::getHandle() const{
 
 
 
-float FrameBuffer::computeLogAverageLuminance() const {
+std::pair<float,float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
 
     constexpr float         epsilon             = 0.001f;
     constexpr unsigned int  levelOfDetail       = 0; //0 is the base image level
@@ -101,16 +101,19 @@ float FrameBuffer::computeLogAverageLuminance() const {
                   GL_RGB, GL_FLOAT, textureData.data());
     
     float sumLogLuminance = 0.f;
+    float maxLuminance = 0.f;
     for ( unsigned int i = 0; i < numberOfPixels; ++i) {
-        sumLogLuminance += logf ( epsilon+ 
-          Utility::getLuminance ( glm::vec3(textureData.at(i),
+        const float luminance = 
+          Utility::getLuminance ( epsilon + glm::vec3(textureData.at(i),
                                             textureData.at(i+1),
                                             textureData.at(i+2)
-                                            )
-                                ));
+                                            ));
+        sumLogLuminance += logf ( luminance);
+        if ( luminance > maxLuminance) maxLuminance = luminance;
     }
 
-   return exp(sumLogLuminance/numberOfPixels); 
+   return std::pair<float,float>(exp(sumLogLuminance/numberOfPixels),
+                                  maxLuminance); 
 }
 
 

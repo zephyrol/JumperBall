@@ -232,14 +232,25 @@ void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
 }
 
 void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
+
+    std::pair<float,float> averageLuminanceAndMax {0.f,0.f};
+    //referenceFBO.computeLogAverageLuminanceAndMax();
+    
+
     _spToneMapping.use();
     _frameBufferToneMapping.bindFrameBuffer();
 
     referenceFBO.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spToneMapping);
     bindUniform ( "averageLuminance", 
+                  //averageLuminanceAndMax.first,
                   //referenceFBO.computeLogAverageLuminance(),
                   1.8f,
+                  _spToneMapping);
+    bindUniform ( "whiteLuminance", 
+                  averageLuminanceAndMax.second,
+                  //referenceFBO.computeLogAverageLuminance(),
+                  //1.8f,
                   _spToneMapping);
     
     _meshQuadFrame.draw();
@@ -251,7 +262,7 @@ void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
 
     referenceFBO.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spBrightPassFilter);
-    bindUniform ("threshold",  25.f,   _spBrightPassFilter);
+    bindUniform ("threshold",  5.6f,   _spBrightPassFilter);
     _meshQuadFrame.draw();
 }
 
