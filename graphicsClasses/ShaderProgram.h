@@ -20,7 +20,6 @@ class ShaderProgram {
 public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     ShaderProgram   (const Shader& vertexShader, const Shader& fragmentShader);
-    virtual         ~ShaderProgram();
 
 
     //------DELETED METHODS-------//

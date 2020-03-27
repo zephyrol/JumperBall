@@ -73,6 +73,3 @@ void ShaderProgram::verifyLinkStatus() const{
 }
 
 
-ShaderProgram::~ShaderProgram() {
-}
-

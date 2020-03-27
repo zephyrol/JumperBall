@@ -23,9 +23,6 @@ Block::Block(const std::array<float,9>& localTransform):
 {
 }
 
-Block::~Block() {
-}
-
 std::array<bool, 6 > Block::faceInfo() const {
     return {false,false,false,false,false,false};
 }

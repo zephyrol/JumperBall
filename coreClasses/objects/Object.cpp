@@ -5,21 +5,16 @@
  */
 
 /* 
- * File:   IceBlock.cpp
+ * File:   Object.cpp
  * Author: seb
  * 
- * Created on 5 octobre 2019, 12:49
+ * Created on 27 mars 2020, 19:40
  */
 
-#include "IceBlock.h"
+#include "Object.h"
 
-IceBlock::IceBlock() {
+Object::Object() {
 }
 
-
-Block::categoryOfBlocksInFile IceBlock::getType() const {
-    
-    return Block::categoryOfBlocksInFile::Ice;
-}
 
 

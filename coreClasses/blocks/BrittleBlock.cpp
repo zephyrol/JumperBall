@@ -108,7 +108,3 @@ const std::array<float, 9>& BrittleBlock::localTransform() const{
 
     return _localTransform;
 }
-
-
-BrittleBlock::~BrittleBlock() {
-}

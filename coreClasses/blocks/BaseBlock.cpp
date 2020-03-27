@@ -22,6 +22,3 @@ Block::categoryOfBlocksInFile BaseBlock::getType() const {
 }
 
 
-BaseBlock::~BaseBlock() {
-}
-

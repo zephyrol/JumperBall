@@ -28,7 +28,6 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Camera                        ();
-    virtual                       ~Camera();
 
 
     //---------CONSTANTS------------//

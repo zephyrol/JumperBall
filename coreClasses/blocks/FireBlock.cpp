@@ -17,8 +17,6 @@ FireBlock::FireBlock():
   _isBurning(false){
 }
 
-FireBlock::~FireBlock() {
-}
 
 Block::categoryOfBlocksInFile FireBlock::getType() const {
 

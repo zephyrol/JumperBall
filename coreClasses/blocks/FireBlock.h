@@ -19,7 +19,6 @@ class FireBlock : public Block {
 public:
     FireBlock();
     FireBlock(const FireBlock& orig);
-    virtual ~FireBlock();
 
     Block::categoryOfBlocksInFile getType() const override;
 

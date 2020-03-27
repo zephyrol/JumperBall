@@ -45,6 +45,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/coreClasses/blocks/FireBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/IceBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/SharpBlock.o \
+	${OBJECTDIR}/coreClasses/objects/Object.o \
 	${OBJECTDIR}/graphicsClasses/Camera.o \
 	${OBJECTDIR}/graphicsClasses/FrameBuffer.o \
 	${OBJECTDIR}/graphicsClasses/Mesh.o \
@@ -135,6 +136,11 @@ ${OBJECTDIR}/coreClasses/blocks/SharpBlock.o: coreClasses/blocks/SharpBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/SharpBlock.o coreClasses/blocks/SharpBlock.cpp
+
+${OBJECTDIR}/coreClasses/objects/Object.o: coreClasses/objects/Object.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/objects
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/objects/Object.o coreClasses/objects/Object.cpp
 
 ${OBJECTDIR}/graphicsClasses/Camera.o: graphicsClasses/Camera.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses

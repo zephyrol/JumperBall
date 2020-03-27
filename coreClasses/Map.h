@@ -42,8 +42,6 @@ public:
                                             Map::KindOfData kData );
 
     Map                                   ( std::ifstream& file );
-    virtual                               ~Map();
-
 
     //-------CONST METHODS----------//
     std::shared_ptr< const Block>         map3DData(int x, int y, int z)  const;

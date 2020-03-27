@@ -25,7 +25,7 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     Shader            ( const GLenum& shaderType, 
                         const std::string& shaderFilename);
-    virtual           ~Shader();
+    ~Shader           ();
 
     //-------CONST METHODS--------//
     GLuint            getHandle() const;

@@ -19,7 +19,6 @@ class IceBlock : public Block {
 public:
     IceBlock();
     IceBlock(const IceBlock& orig);
-    virtual ~IceBlock();
 
     Block::categoryOfBlocksInFile getType() const override;
 

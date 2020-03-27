@@ -25,7 +25,7 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     testClass();
-    virtual       ~testClass();
+    ~testClass();
 
     
     //----------METHODS-------------//

@@ -35,9 +35,6 @@ Ball::Ball(Map& map):
        
 }
 
-Ball::~Ball() {
-}
-
 void Ball::turnLeft() noexcept {
 
     switch (_currentSide) {

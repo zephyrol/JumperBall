@@ -18,7 +18,6 @@
 class BrittleBlock : public Block {
 public:
     BrittleBlock                  ();
-    virtual ~BrittleBlock         ();
 
     Block::categoryOfBlocksInFile getType()                      const override;
 

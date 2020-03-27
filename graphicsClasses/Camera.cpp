@@ -302,9 +302,3 @@ glm::vec3 Camera::up() const noexcept{
 bool Camera::displayBehind() const noexcept{
     return _displayBehind;
 }
-
-
-
-Camera::~Camera() {
-}
-

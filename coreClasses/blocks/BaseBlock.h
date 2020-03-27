@@ -20,7 +20,6 @@ class BaseBlock : public Block {
 public:
     BaseBlock();
     BaseBlock(const BaseBlock& orig);
-    virtual ~BaseBlock();
 
     Block::categoryOfBlocksInFile getType() const override;
 

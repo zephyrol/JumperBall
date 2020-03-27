@@ -19,8 +19,6 @@ SharpBlock::SharpBlock() :
 {
 }
 
-SharpBlock::~SharpBlock() {
-}
 
 Block::categoryOfBlocksInFile SharpBlock::getType() const {
     return Block::categoryOfBlocksInFile::Sharp;

@@ -19,7 +19,6 @@ class SharpBlock : public Block {
 public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     SharpBlock                                    ();
-    virtual ~SharpBlock                           ();
 
     //-------CONST METHODS----------//
     Block::categoryOfBlocksInFile                 getType()      const override;

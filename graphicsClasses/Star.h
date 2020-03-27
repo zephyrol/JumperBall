@@ -42,21 +42,21 @@ public:
 private:
 
     //--------ATTRIBUTES-----------//
-    GLuint                       _idVertexArray;
+    GLuint                        _idVertexArray;
 
     // We only have one buffer about vertices (the positions)
-    GLuint                       _idVertexBuffer;
+    GLuint                        _idVertexBuffer;
 
-    const glm::vec3              _colorInside;
-    const glm::vec3              _colorOutside;
-    const GLfloat                _radiusInside;
-    const GLfloat                _radiusOutside;
-    glm::mat4                    _transform;
+    const glm::vec3               _colorInside;
+    const glm::vec3               _colorOutside;
+    const GLfloat                 _radiusInside;
+    const GLfloat                 _radiusOutside;
+    glm::mat4                     _transform;
 
-    JumperBallTypes::timePointMs _timeCreation;
+    JumperBallTypes::timePointMs  _timeCreation;
     
     //-------CONST METHODS----------//
-    void              bindVertexData()                                    const;
+    void                          bindVertexData()                        const;
     
 };
 

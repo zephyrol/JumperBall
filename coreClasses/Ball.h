@@ -22,7 +22,6 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Ball                          (Map& map);
-    virtual                       ~Ball();
 
 
     //---------CONSTANTS------------//

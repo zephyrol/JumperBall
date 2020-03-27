@@ -123,10 +123,6 @@ Map::Map(std::ifstream& file):_id (nbMaps),
 }
 
 
-Map::~Map() {
-}
-
-
 std::shared_ptr<Block> Map::map3DData(int x, int y, int z){
 
     std::shared_ptr<Block> block;
