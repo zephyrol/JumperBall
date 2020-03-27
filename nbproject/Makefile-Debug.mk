@@ -45,6 +45,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/coreClasses/blocks/FireBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/IceBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/SharpBlock.o \
+	${OBJECTDIR}/coreClasses/objects/Bonus.o \
+	${OBJECTDIR}/coreClasses/objects/Clock.o \
+	${OBJECTDIR}/coreClasses/objects/Coin.o \
+	${OBJECTDIR}/coreClasses/objects/Key.o \
 	${OBJECTDIR}/coreClasses/objects/Object.o \
 	${OBJECTDIR}/graphicsClasses/Camera.o \
 	${OBJECTDIR}/graphicsClasses/FrameBuffer.o \
@@ -136,6 +140,26 @@ ${OBJECTDIR}/coreClasses/blocks/SharpBlock.o: coreClasses/blocks/SharpBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/SharpBlock.o coreClasses/blocks/SharpBlock.cpp
+
+${OBJECTDIR}/coreClasses/objects/Bonus.o: coreClasses/objects/Bonus.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/objects
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/objects/Bonus.o coreClasses/objects/Bonus.cpp
+
+${OBJECTDIR}/coreClasses/objects/Clock.o: coreClasses/objects/Clock.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/objects
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/objects/Clock.o coreClasses/objects/Clock.cpp
+
+${OBJECTDIR}/coreClasses/objects/Coin.o: coreClasses/objects/Coin.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/objects
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/objects/Coin.o coreClasses/objects/Coin.cpp
+
+${OBJECTDIR}/coreClasses/objects/Key.o: coreClasses/objects/Key.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/objects
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/objects/Key.o coreClasses/objects/Key.cpp
 
 ${OBJECTDIR}/coreClasses/objects/Object.o: coreClasses/objects/Object.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/objects

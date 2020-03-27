@@ -5,16 +5,20 @@
  */
 
 /* 
- * File:   Object.cpp
+ * File:   Coin.cpp
  * Author: seb
  * 
- * Created on 27 mars 2020, 19:40
+ * Created on 27 mars 2020, 20:49
  */
 
-#include "Object.h"
+#include "Coin.h"
 
-Object::Object(): 
-_gotten(false)
+Coin::Coin():
+  Bonus(100)
 {
+}
+
+Object::CategoryOfObjects Coin::getCategory() {
+    return Object::CategoryOfObjects::Coin;
 }
 

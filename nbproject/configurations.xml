@@ -9,12 +9,16 @@
       <itemPath>graphicsClasses/animations/BallAnimation.h</itemPath>
       <itemPath>coreClasses/blocks/BaseBlock.h</itemPath>
       <itemPath>coreClasses/blocks/Block.h</itemPath>
+      <itemPath>coreClasses/objects/Bonus.h</itemPath>
       <itemPath>coreClasses/blocks/BrittleBlock.h</itemPath>
       <itemPath>graphicsClasses/Camera.h</itemPath>
       <itemPath>coreClasses/ClassicalMechanics.h</itemPath>
+      <itemPath>coreClasses/objects/Clock.h</itemPath>
+      <itemPath>coreClasses/objects/Coin.h</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.h</itemPath>
       <itemPath>graphicsClasses/FrameBuffer.h</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.h</itemPath>
+      <itemPath>coreClasses/objects/Key.h</itemPath>
       <itemPath>coreClasses/Map.h</itemPath>
       <itemPath>graphicsClasses/Mesh.h</itemPath>
       <itemPath>coreClasses/objects/Object.h</itemPath>
@@ -42,12 +46,16 @@
       <itemPath>graphicsClasses/animations/BallAnimation.cpp</itemPath>
       <itemPath>coreClasses/blocks/BaseBlock.cpp</itemPath>
       <itemPath>coreClasses/blocks/Block.cpp</itemPath>
+      <itemPath>coreClasses/objects/Bonus.cpp</itemPath>
       <itemPath>coreClasses/blocks/BrittleBlock.cpp</itemPath>
       <itemPath>graphicsClasses/Camera.cpp</itemPath>
       <itemPath>coreClasses/ClassicalMechanics.cpp</itemPath>
+      <itemPath>coreClasses/objects/Clock.cpp</itemPath>
+      <itemPath>coreClasses/objects/Coin.cpp</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.cpp</itemPath>
       <itemPath>graphicsClasses/FrameBuffer.cpp</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.cpp</itemPath>
+      <itemPath>coreClasses/objects/Key.cpp</itemPath>
       <itemPath>coreClasses/Map.cpp</itemPath>
       <itemPath>graphicsClasses/Mesh.cpp</itemPath>
       <itemPath>coreClasses/objects/Object.cpp</itemPath>
@@ -187,6 +195,22 @@
       <item path="coreClasses/blocks/SharpBlock.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/blocks/SharpBlock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Bonus.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Bonus.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Clock.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Clock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Coin.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Coin.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Key.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Key.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="coreClasses/objects/Object.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -373,6 +397,22 @@
       <item path="coreClasses/blocks/SharpBlock.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="coreClasses/blocks/SharpBlock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Bonus.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Bonus.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Clock.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Clock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Coin.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Coin.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Key.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="coreClasses/objects/Key.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="coreClasses/objects/Object.cpp" ex="false" tool="1" flavor2="0">
       </item>

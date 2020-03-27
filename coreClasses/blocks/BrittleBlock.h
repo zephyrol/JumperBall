@@ -41,8 +41,8 @@ public:
                                     const JumperBallTypes::timePointMs&
                                             currentTime)               override;
     
-    virtual const                 std::array<float,9>&       
-                                      localTransform()                    const;
+    virtual const std::array<float,9>&       
+                                  localTransform()               const override;
 
 private:
     bool                          _stillThere;

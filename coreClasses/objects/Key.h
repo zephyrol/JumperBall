@@ -5,16 +5,24 @@
  */
 
 /* 
- * File:   Object.cpp
+ * File:   Key.h
  * Author: seb
- * 
- * Created on 27 mars 2020, 19:40
+ *
+ * Created on 27 mars 2020, 20:45
  */
 
+#ifndef KEY_H
+#define KEY_H
 #include "Object.h"
 
-Object::Object(): 
-_gotten(false)
-{
-}
+class Key : public Object{
+public:
+    Key();
+    Object::CategoryOfObjects getCategory() override;
+
+private:
+
+};
+
+#endif /* KEY_H */
 

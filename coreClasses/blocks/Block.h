@@ -22,7 +22,7 @@ public:
     Block                             ();
     Block                             (const std::array<float,9>& 
                                                                 localTransform);
-    virtual                           ~Block()                         =default;
+    virtual                           ~Block()                        = default;
 
 
     //------------TYPES------------//

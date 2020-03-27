@@ -5,16 +5,20 @@
  */
 
 /* 
- * File:   Object.cpp
+ * File:   Bonus.cpp
  * Author: seb
  * 
- * Created on 27 mars 2020, 19:40
+ * Created on 27 mars 2020, 20:48
  */
 
-#include "Object.h"
+#include "Bonus.h"
 
-Object::Object(): 
-_gotten(false)
+Bonus::Bonus(unsigned int value): 
+_value(value)
 {
+}
+
+Bonus::~Bonus() {
+
 }
 

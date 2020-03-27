@@ -5,16 +5,25 @@
  */
 
 /* 
- * File:   Object.cpp
+ * File:   Clock.h
  * Author: seb
- * 
- * Created on 27 mars 2020, 19:40
+ *
+ * Created on 27 mars 2020, 20:48
  */
 
+#ifndef CLOCK_H
+#define CLOCK_H
 #include "Object.h"
 
-Object::Object(): 
-_gotten(false)
-{
-}
+class Clock : Object{
+public:
+    Clock();
+    Object::CategoryOfObjects getCategory() override;
+
+    
+private:
+
+};
+
+#endif /* CLOCK_H */
 

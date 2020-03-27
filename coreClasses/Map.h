@@ -27,7 +27,7 @@ class Map {
 public:
 
     //------------TYPES------------//
-    enum class KindOfData {Raw,Optimized};
+    enum class KindOfData   {Raw,Optimized};
     enum class EffectOnBall {Nothing,Burst,Burnt,Slide};
     
     //---------CONSTANTS------------//

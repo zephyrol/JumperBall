@@ -5,16 +5,18 @@
  */
 
 /* 
- * File:   Object.cpp
+ * File:   Key.cpp
  * Author: seb
  * 
- * Created on 27 mars 2020, 19:40
+ * Created on 27 mars 2020, 20:45
  */
 
-#include "Object.h"
+#include "Key.h"
 
-Object::Object(): 
-_gotten(false)
-{
+Key::Key() {
+}
+
+Object::CategoryOfObjects Key::getCategory() {
+    return Object::CategoryOfObjects::Key;
 }
 

@@ -17,9 +17,15 @@
 class Object {
 public:
     Object();
-    virtual ~Object()  =default;
-private:
 
+    virtual ~Object() = default;
+
+    enum class CategoryOfObjects {Key,Coin,Clock};
+
+    virtual CategoryOfObjects getCategory() = 0;
+
+private:
+    bool         _gotten;
 };
 
 #endif /* OBJECT_H */
