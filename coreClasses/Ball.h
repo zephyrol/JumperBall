@@ -33,7 +33,7 @@ public:
     enum class State              { Staying, Moving, Jumping, 
                                     TurningLeft, TurningRight, Falling };
 
-    enum class StateOfLife        { Alive, Bursting, Burning, Dead};
+    enum class StateOfLife        { Normal, Bursting, Burning, Dead};
 
     enum class ActionRequest      { GoStraightAhead, TurnLeft, TurnRight, Jump};
     enum class AnswerRequest      { Accepted, Rejected };

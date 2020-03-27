@@ -140,23 +140,23 @@ const std::vector<GLfloat> Utility::normalsCube {
 const std::vector<GLfloat> Utility::colorsCube {
 
     //Face 1 
-    1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
-    1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
+    0.5f,0.f,0.f, 0.5f,0.f,0.f, 0.5f,0.f,0.f,
+    0.5f,0.f,0.f, 0.5f,0.f,0.f, 0.5f,0.f,0.f,
     //Face 2
-    0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
-    0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
+    0.f,0.5f,0.f, 0.f,0.5f,0.f, 0.f,0.5f,0.f,
+    0.f,0.5f,0.f, 0.f,0.5f,0.f, 0.f,0.5f,0.f,
     //Face 3
-    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
-    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
+    0.f,0.f,0.8f, 0.f,0.f,0.8f, 0.f,0.f,0.8f,
+    0.f,0.f,0.8f, 0.f,0.f,0.8f, 0.f,0.f,0.8f,
     //Face 4 
-    1.f,1.f,0.f, 1.f,1.f,0.f, 1.f,1.f,0.f,
-    1.f,1.f,0.f, 1.f,1.f,0.f, 1.f,1.f,0.f,
+    0.5f,0.5f,0.f, 0.5f,0.5f,0.f, 0.5f,0.5f,0.f,
+    0.5f,0.5f,0.f, 0.5f,0.5f,0.f, 0.5f,0.5f,0.f,
     //Face 5
-    0.f,1.f,1.f, 0.f,1.f,1.f, 0.f,1.f,1.f,
-    0.f,1.f,1.f, 0.f,1.f,1.f, 0.f,1.f,1.f,
+    0.f,0.5f,0.5f, 0.f,0.5f,0.5f, 0.f,0.5f,0.5f,
+    0.f,0.5f,0.5f, 0.f,0.5f,0.5f, 0.f,0.5f,0.5f,
     //Face 6
-    1.f,0.f,1.f, 1.f,0.f,1.f, 1.f,0.f,1.f,
-    1.f,0.f,1.f, 1.f,0.f,1.f, 1.f,0.f,1.f
+    0.5f,0.f,0.5f, 0.5f,0.f,0.5f, 0.5f,0.f,0.5f,
+    0.5f,0.f,0.5f, 0.5f,0.f,0.5f, 0.5f,0.f,0.5f
 };
 
 const std::vector<GLfloat> Utility::positionsPike {

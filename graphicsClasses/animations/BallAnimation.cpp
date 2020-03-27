@@ -123,7 +123,8 @@ void BallAnimation::animationBursting() {
         constexpr float durationBursting      = 0.07f; 
         constexpr float radiusScalarBursting  = 2.5f;
 
-        float t = _ball.getTimeSecondsSinceStateOfLife() / durationBursting ;
+        const float t = _ball.getTimeSecondsSinceStateOfLife() / 
+                          durationBursting ;
 
         float scaleBursting;
 
@@ -159,7 +160,7 @@ void BallAnimation::updateTrans() {
         else _referenceStateOfLife = _ball.stateOfLife();
     }
 
-    if (_ball.stateOfLife() == Ball::StateOfLife::Alive) {
+    if (_ball.stateOfLife() == Ball::StateOfLife::Normal) {
         animationAlive();
     } else if (_ball.stateOfLife() == Ball::StateOfLife::Bursting) {
         animationBursting();

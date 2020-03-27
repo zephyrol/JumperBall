@@ -26,7 +26,7 @@ Ball::Ball(Map& map):
         _currentSide(JumperBallTypes::Direction::Up),
         _lookTowards(JumperBallTypes::Direction::North),
         _state(Ball::State::Staying),
-        _stateOfLife(Ball::StateOfLife::Alive),
+        _stateOfLife(Ball::StateOfLife::Normal),
         _map(map),
         _mechanicsPatternJumping(),
         _mechanicsPatternFalling(0.f,0.f,0.f,0.f),

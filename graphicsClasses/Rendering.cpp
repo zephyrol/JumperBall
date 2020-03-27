@@ -262,7 +262,7 @@ void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
 
     referenceFBO.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spBrightPassFilter);
-    bindUniform ("threshold",  5.6f,   _spBrightPassFilter);
+    bindUniform ("threshold",  5.f,   _spBrightPassFilter);
     _meshQuadFrame.draw();
 }
 
