@@ -27,7 +27,7 @@ using namespace std;
 int main(int argc, char** argv) {
     
     if (argc > 1 ) {
-        ifstream file(argv[1]);  //Ouverture d'un fichier en lecture
+        ifstream file(argv[1]);  //Opening file to read
         if (!file) {
           std::cerr << "ERROR: Opening " << argv[1] << " impossible .." 
                   << std::endl;

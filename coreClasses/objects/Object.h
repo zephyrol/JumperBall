@@ -18,7 +18,8 @@
 
 class Object {
 public:
-    Object(const Block& block, JumperBallTypes::Direction side);
+    Object( const std::shared_ptr<const Block>& block, 
+            JumperBallTypes::Direction side);
 
     virtual ~Object() = default;
 
@@ -27,9 +28,9 @@ public:
     virtual CategoryOfObjects getCategory() = 0;
 
 private:
-    const Block&                _block;  
-    JumperBallTypes::Direction  _side;
-    bool                        _gotten;
+    const std::shared_ptr<const Block>                _block;  
+    JumperBallTypes::Direction                        _side;
+    bool                                              _gotten;
 };
 
 #endif /* OBJECT_H */

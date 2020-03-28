@@ -15,9 +15,10 @@
 #define CLOCK_H
 #include "Object.h"
 
-class Clock : Object{
+class Clock : public Object{
 public:
-    Clock(const Block& block, JumperBallTypes::Direction side);
+    Clock(const std::shared_ptr<const Block>& block,
+          JumperBallTypes::Direction side);
     Object::CategoryOfObjects getCategory() override;
 
     

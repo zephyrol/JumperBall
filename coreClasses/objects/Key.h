@@ -17,7 +17,8 @@
 
 class Key : public Object{
 public:
-    Key(const Block& block, JumperBallTypes::Direction side);
+    Key(const std::shared_ptr<const Block>& block, 
+        JumperBallTypes::Direction side);
     Object::CategoryOfObjects getCategory() override;
 
 private:

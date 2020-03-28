@@ -13,7 +13,7 @@
 
 #include "Bonus.h"
 
-Bonus::Bonus( const Block& block, 
+Bonus::Bonus( const std::shared_ptr<const Block>& block,
               JumperBallTypes::Direction side, 
               unsigned int value): 
 Object(block,side),

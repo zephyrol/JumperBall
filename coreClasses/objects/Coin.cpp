@@ -13,7 +13,8 @@
 
 #include "Coin.h"
 
-Coin::Coin(const Block& block, JumperBallTypes::Direction side):
+Coin::Coin(const std::shared_ptr<const Block>& block,
+           JumperBallTypes::Direction side):
   Bonus(block, side, 100)
 {
 }

@@ -13,7 +13,8 @@
 
 #include "Key.h"
 
-Key::Key(const Block& block, JumperBallTypes::Direction side) :
+Key::Key( const std::shared_ptr<const Block>& block, 
+          JumperBallTypes::Direction side) :
 Object(block, side)
 {
 }

@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <math.h>
+#include <cctype>
 #include "Map.h"
 
 unsigned int Map::nbMaps = 0;
@@ -118,6 +119,60 @@ Map::Map(std::ifstream& file):_id (nbMaps),
         }
         infoMap.erase(infoMap.begin());
     }
+
+    std::string infoObjects;
+    std::string counterWithoutObjectsBuffer;
+    unsigned int currentIndex = 0;
+
+    file >> infoObjects;
+    while (!infoObjects.empty()) {
+        
+        readValue = infoObjects.front();
+        if (readValue >= firstNumberWithoutAnyObjects) {
+            counterWithoutObjectsBuffer.push_back(readValue);
+        } else {
+            if (!counterWithoutObjectsBuffer.empty()){
+            substractOffset(counterWithoutObjectsBuffer,
+                            firstNumberWithoutAnyObjects);
+            currentIndex += convertToBase10(counterWithoutObjectsBuffer,
+                                              nbOfCharactersWithoutObjects);
+            } 
+
+            const unsigned int typeOfObject = readValue - firstNumberType;
+
+            infoObjects.erase(infoObjects.begin());
+            readValue = infoObjects.front();
+
+            const unsigned int side = readValue - firstNumberSide; 
+            JumperBallTypes::Direction dir = 
+                    JumperBallTypesMethods::integerAsDirection(side);
+
+            std::shared_ptr <Object> object;
+
+            switch (typeOfObject) {
+                case 0:
+                    object = std::make_shared<Key>  (_blocks.at(currentIndex),
+                                                    dir); 
+                    break;
+                case 1:
+                    object = std::make_shared<Coin> (_blocks.at(currentIndex),
+                                                    dir); 
+                    break;
+                case 2:
+                    object = std::make_shared<Clock>(_blocks.at(currentIndex),
+                                                    dir); 
+                    break;
+                default :
+                    object = nullptr;
+                    break;
+            }
+            
+            _objects.push_back(object);
+            counterWithoutObjectsBuffer.clear();
+        }
+        infoObjects.erase(infoObjects.begin());
+    }
+
     Map::nbMaps++;
 }
 
@@ -245,6 +300,8 @@ void Map::compress(std::ifstream& input) {
         return convertedNumber;
     };
     
+
+    // BLOCKS PART
     input >> currentType;
 
     for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
@@ -279,6 +336,51 @@ void Map::compress(std::ifstream& input) {
         output << stringToWrite;
     } 
     output << currentType;
+
+    output << std::endl;  
+    // OBJECTS PART
+
+    std::string readString;
+    unsigned int counterWithoutObjects = 0;
+
+    for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
+        input >> readString;
+        if (std::isdigit(readString.at(0)) != 0) {
+            ++counterWithoutObjects;
+        } else {
+            if (counterWithoutObjects > 0) {
+                std::string stringToWrite = convertToBase(
+                        counterWithoutObjects, nbOfCharactersWithoutObjects);
+                applyOffset(stringToWrite, firstNumberWithoutAnyObjects) ;
+                output << stringToWrite;
+                counterWithoutObjects = 0;
+            }
+
+            //char currentObject = 0; //None at the initialization
+            //char currentDirection = 0; //None at the initialization
+            for (unsigned char c : readString) {
+                std::cout << c << " is read" << std::endl;
+                unsigned char charToWrite;
+                switch (c) {
+                    case 'N' : charToWrite = firstNumberSide; break;
+                    case 'S' : charToWrite = firstNumberSide+1; break;
+                    case 'E' : charToWrite = firstNumberSide+2; break;
+                    case 'W' : charToWrite = firstNumberSide+3; break;
+                    case 'U' : charToWrite = firstNumberSide+4; break;
+                    case 'D' : charToWrite = firstNumberSide+5; break;
+                    case 'K' : charToWrite = firstNumberType; break;
+                    case 'I' : charToWrite = firstNumberType+1; break;
+                    case 'C' : charToWrite = firstNumberType+2; break;
+                    default : std::cerr << "Unknown object character: " 
+                                        << c << std::endl; 
+                              charToWrite = 0; break;
+                }
+                output << charToWrite;
+            }
+        }
+        
+    }
+
     output.close();
 }
 
