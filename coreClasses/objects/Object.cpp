@@ -6,7 +6,7 @@
 
 /* 
  * File:   Object.cpp
- * Author: seb
+ * Author: Morgenthaler S
  * 
  * Created on 27 mars 2020, 19:40
  */

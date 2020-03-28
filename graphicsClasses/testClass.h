@@ -6,7 +6,7 @@
 
 /* 
  * File:   testClass.h
- * Author: seb
+ * Author: Morgenthaler S
  *
  * Created on 2 novembre 2019, 11:17
  */

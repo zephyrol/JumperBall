@@ -6,7 +6,7 @@
 
 /* 
  * File:   Star.h
- * Author: morgenthaler
+ * Author: Morgenthlaler S 
  *
  * Created on 20 décembre 2019, 13:46
  */

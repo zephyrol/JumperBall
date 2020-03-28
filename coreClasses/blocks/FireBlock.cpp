@@ -6,7 +6,7 @@
 
 /* 
  * File:   FireBlock.cpp
- * Author: seb
+ * Author: Morgenthaler S
  * 
  * Created on 5 octobre 2019, 12:50
  */

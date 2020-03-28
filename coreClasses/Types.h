@@ -6,7 +6,7 @@
 
 /* 
  * File:   Types.h
- * Author: seb
+ * Author: Morgenthaler S
  *
  * Created on 6 octobre 2019, 09:49
  */

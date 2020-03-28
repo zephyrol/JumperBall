@@ -6,7 +6,7 @@
 
 /* 
  * File:   FrameBuffer.h
- * Author: seb
+ * Author: Morgenthaler S
  *
  * Created on 29 janvier 2020, 21:51
  */

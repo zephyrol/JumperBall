@@ -6,7 +6,7 @@
 
 /* 
  * File:   Utility.cpp
- * Author: seb
+ * Author: Morgenthaler S
  * 
  * Created on 3 novembre 2019, 15:45
  */

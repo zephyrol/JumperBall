@@ -6,7 +6,7 @@
 
 /* 
  * File:   Rendering.h
- * Author: seb
+ * Author: Morgenthaler S
  *
  * Created on 6 novembre 2019, 20:38
  */

@@ -6,7 +6,7 @@
 
 /* 
  * File:   Camera.h
- * Author: seb
+ * Author: Morgenthaler S
  *
  * Created on 5 octobre 2019, 13:12
  */

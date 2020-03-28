@@ -6,7 +6,7 @@
 
 /* 
  * File:   Clock.cpp
- * Author: seb
+ * Author: Morgenthaler S
  * 
  * Created on 27 mars 2020, 20:48
  */

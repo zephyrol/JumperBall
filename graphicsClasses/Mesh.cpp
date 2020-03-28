@@ -6,7 +6,7 @@
 
 /* 
  * File:   Mesh.cpp
- * Author: seb
+ * Author: Morgenthaler S
  * 
  * Created on 13 novembre 2019, 21:05
  */

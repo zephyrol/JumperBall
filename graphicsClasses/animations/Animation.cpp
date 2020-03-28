@@ -6,7 +6,7 @@
 
 /* 
  * File:   Animation.cpp
- * Author: seb
+ * Author: Morgenthaler S
  * 
  * Created on 5 janvier 2020, 11:19
  */

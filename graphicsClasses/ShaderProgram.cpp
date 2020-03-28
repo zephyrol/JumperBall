@@ -6,7 +6,7 @@
 
 /* 
  * File:   ShaderProgram.cpp
- * Author: seb
+ * Author: Morgenthaler S
  * 
  * Created on 3 novembre 2019, 17:13
  */

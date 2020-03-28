@@ -6,7 +6,7 @@
 
 /* 
  * File:   uniformLight.h
- * Author: morgenthaler
+ * Author: Morgenthaler S 
  *
  * Created on 22 décembre 2019, 20:03
  */

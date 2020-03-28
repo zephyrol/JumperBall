@@ -6,7 +6,7 @@
 
 /* 
  * File:   Star.cpp
- * Author: morgenthaler
+ * Author: Morgenthaler S 
  * 
  * Created on 20 décembre 2019, 13:46
  */

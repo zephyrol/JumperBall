@@ -6,7 +6,7 @@
 
 /* 
  * File:   main.cpp
- * Author: seb
+ * Author: Morgenthaler S
  *
  * Created on 30 septembre 2019, 20:52
  */

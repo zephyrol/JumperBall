@@ -10,7 +10,7 @@
 
 /* 
  * File:   ClassicalMechanics.h
- * Author: seb
+ * Author: Morgenthaler S
  *
  * Created on 17 octobre 2019, 22:14
  */

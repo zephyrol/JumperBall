@@ -6,7 +6,7 @@
 
 /* 
  * File:   Block.h
- * Author: seb
+ * Author: Morgenthaler S
  *
  * Created on 1 octobre 2019, 21:18
  */
