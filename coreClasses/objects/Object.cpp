@@ -13,7 +13,9 @@
 
 #include "Object.h"
 
-Object::Object(): 
+Object::Object(const Block& block, JumperBallTypes::Direction side): 
+_block(block),
+_side(side),
 _gotten(false)
 {
 }

@@ -194,7 +194,7 @@ void Rendering::renderMap() {
     for (unsigned int i = 0; i < _map.boundingBoxXMax() ; ++i){
         for (unsigned int j = 0; j < _map.boundingBoxYMax() ; ++j){
             for (unsigned int k = 0; k < _map.boundingBoxZMax() ; ++k){
-                auto block = _map.map3DData(i,j,k);
+                auto block = _map.getBlock(i,j,k);
                 if (block){
                     const std::array<float,9>& transform = 
                           block->localTransform();

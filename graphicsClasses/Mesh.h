@@ -25,6 +25,13 @@ public:
     Mesh                    ();
     Mesh                    (const Ball& ball);
     Mesh                    (const Map& map);
+
+    Mesh                    (const Mesh& mesh)                        = default;
+    Mesh&                    operator= (const Mesh& mesh)             = default;
+
+    Mesh                    (Mesh&& mesh)                             = default;
+    Mesh&                    operator= (Mesh&& mesh)                  = default;
+
     virtual                 ~Mesh();
     
 

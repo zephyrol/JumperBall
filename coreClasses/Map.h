@@ -20,7 +20,9 @@
 #include "blocks/IceBlock.h"
 #include "blocks/SharpBlock.h"
 #include "blocks/BrittleBlock.h"
-#include "ClassicalMechanics.h"
+#include "objects/Key.h"
+#include "objects/Coin.h"
+#include "objects/Clock.h"
 #include <fstream>
 
 class Map {
@@ -44,7 +46,7 @@ public:
     Map                                   ( std::ifstream& file );
 
     //-------CONST METHODS----------//
-    std::shared_ptr< const Block>         map3DData(int x, int y, int z)  const;
+    std::shared_ptr< const Block>         getBlock(int x, int y, int z)  const;
     void                                  printMap()                      const;
 
     unsigned int                          boundingBoxXMax()               const;
@@ -63,7 +65,7 @@ public:
                                       const JumperBallTypes::Direction& ballDir,
                                       const JumperBallTypes::vec3f& posBall
     );
-    std::shared_ptr<Block>                map3DData(int x, int y, int z);
+    std::shared_ptr<Block>                getBlock(int x, int y, int z);
 
     //--------STATIC METHODS-------//
     static void                           compress(std::ifstream& input);
@@ -73,7 +75,9 @@ private:
     //--------ATTRIBUTES-----------//
     const unsigned int                    _id;
 
-    std::vector< std::shared_ptr<Block> > _map3DData;
+    std::vector< std::shared_ptr<Block> > _blocks;
+    std::vector<Object> 
+                                          _objects;
     unsigned int                          _boundingBoxXMax;
     unsigned int                          _boundingBoxYMax;
     unsigned int                          _boundingBoxZMax;

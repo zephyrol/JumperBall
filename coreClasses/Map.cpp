@@ -17,9 +17,9 @@
 
 unsigned int Map::nbMaps = 0;
 
-Map::Map() : _id (nbMaps),
-             //_blocks{},
-              _map3DData{},
+Map::Map() :  _id     (nbMaps++),
+              _blocks {},
+              _objects{},
               _boundingBoxXMax (0),
               _boundingBoxYMax (0),
               _boundingBoxZMax (0),
@@ -28,12 +28,11 @@ Map::Map() : _id (nbMaps),
               _beginZ (0),
               _timeCreation(std::chrono::system_clock::now())
 {
-    Map::nbMaps++;
 }
 
 
 Map::Map(std::ifstream& file):_id (nbMaps),        
-                              _map3DData{},
+                              _blocks{},
                               _boundingBoxXMax (0),
                               _boundingBoxYMax (0),
                               _boundingBoxZMax (0),
@@ -62,7 +61,7 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     auto convertToBase10 = [] (std::string& s, unsigned int base)->unsigned int{
         unsigned int value = 0;
         while (s.length() > 0 ) {
-          unsigned int number = static_cast<unsigned int> (s.front());
+          const unsigned int number = static_cast<unsigned int> (s.front());
           value += number * static_cast<unsigned int> (pow(base,s.length()-1));
           s.erase(s.begin());
         }
@@ -113,7 +112,7 @@ Map::Map(std::ifstream& file):_id (nbMaps),
                     default :
                         break;
                 }
-              _map3DData.push_back(block); 
+              _blocks.push_back(block); 
               counterBuffer.clear();
             }
         }
@@ -123,7 +122,7 @@ Map::Map(std::ifstream& file):_id (nbMaps),
 }
 
 
-std::shared_ptr<Block> Map::map3DData(int x, int y, int z){
+std::shared_ptr<Block> Map::getBlock(int x, int y, int z){
 
     std::shared_ptr<Block> block;
     if (x >= static_cast<int>(_boundingBoxXMax) ||  
@@ -132,11 +131,11 @@ std::shared_ptr<Block> Map::map3DData(int x, int y, int z){
             x < 0 || y < 0 || z < 0 )
         block = nullptr;
     else 
-        block = _map3DData.at(_boundingBoxXMax* (z + y * _boundingBoxZMax) + x);
+        block = _blocks.at(_boundingBoxXMax* (z + y * _boundingBoxZMax) + x);
     return block;
 }
 
-std::shared_ptr<const Block> Map::map3DData(int x, int y, int z) const {
+std::shared_ptr<const Block> Map::getBlock(int x, int y, int z) const {
     std::shared_ptr<const Block> block;
     if (x >= static_cast<int>(_boundingBoxXMax) ||  
             y >= static_cast<int>(_boundingBoxYMax) ||
@@ -144,7 +143,7 @@ std::shared_ptr<const Block> Map::map3DData(int x, int y, int z) const {
             x < 0 || y < 0 || z < 0 )
         block = nullptr;
     else 
-        block = _map3DData.at(_boundingBoxXMax* (z + y * _boundingBoxZMax) + x);
+        block = _blocks.at(_boundingBoxXMax* (z + y * _boundingBoxZMax) + x);
     return block;
 }
 
@@ -154,7 +153,7 @@ void Map::printMap() const {
     for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
         for ( unsigned int z = 0 ; z < _boundingBoxZMax ; z++ ){
             for ( unsigned int x = 0 ; x < _boundingBoxXMax ; x++ ){
-                const std::shared_ptr<const Block>& block = map3DData(x,y,z);
+                const std::shared_ptr<const Block>& block = getBlock(x,y,z);
                 if (block) {
                     std::cout << static_cast<const unsigned int>
                             (block->getType()) << " ";
@@ -301,7 +300,7 @@ Map::EffectOnBall Map::interaction(
             currentBlockPosition.at(2) = z;
             for ( unsigned int x = 0 ; x < _boundingBoxXMax ; x++ ){
                 currentBlockPosition.at(0) = x;
-                const std::shared_ptr<Block>& block = map3DData(x,y,z);
+                const std::shared_ptr<Block>& block = getBlock(x,y,z);
                 if (block) {
                     block->interaction(
                         ballDir, timeNow, posBall,currentBlockPosition);

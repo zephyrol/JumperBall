@@ -162,7 +162,7 @@ Mesh::Mesh(const Map& map):
     for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
         for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
             for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
-                auto block = map.map3DData(x,y,z);
+                auto block = map.getBlock(x,y,z);
                 if (block) {
 
                     const std::vector<GLfloat>& pCube  = Utility::positionsCube;
@@ -199,7 +199,7 @@ Mesh::Mesh(const Map& map):
     for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
         for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
             for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
-                auto block = map.map3DData(x,y,z);
+                auto block = map.getBlock(x,y,z);
                 if (block) {
                     genSharps(*block,glm::vec3(x,y,z));
                 }

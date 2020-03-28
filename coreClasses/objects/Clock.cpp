@@ -13,7 +13,9 @@
 
 #include "Clock.h"
 
-Clock::Clock() {
+Clock::Clock(const Block& block, JumperBallTypes::Direction side) :
+Object (block,side) 
+{
 }
 
 Object::CategoryOfObjects Clock::getCategory() {

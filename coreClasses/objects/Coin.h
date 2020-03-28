@@ -17,7 +17,7 @@
 
 class Coin : public Bonus {
 public:
-    Coin();
+    Coin(const Block& block, JumperBallTypes::Direction side);
     Object::CategoryOfObjects getCategory() override;
 
 private:

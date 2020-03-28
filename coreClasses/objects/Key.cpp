@@ -13,7 +13,9 @@
 
 #include "Key.h"
 
-Key::Key() {
+Key::Key(const Block& block, JumperBallTypes::Direction side) :
+Object(block, side)
+{
 }
 
 Object::CategoryOfObjects Key::getCategory() {

@@ -17,7 +17,7 @@
 
 class Key : public Object{
 public:
-    Key();
+    Key(const Block& block, JumperBallTypes::Direction side);
     Object::CategoryOfObjects getCategory() override;
 
 private:

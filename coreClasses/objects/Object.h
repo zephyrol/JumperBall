@@ -13,10 +13,12 @@
 
 #ifndef OBJECT_H
 #define OBJECT_H
+#include "../Types.h"
+#include "../blocks/Block.h"
 
 class Object {
 public:
-    Object();
+    Object(const Block& block, JumperBallTypes::Direction side);
 
     virtual ~Object() = default;
 
@@ -25,7 +27,9 @@ public:
     virtual CategoryOfObjects getCategory() = 0;
 
 private:
-    bool         _gotten;
+    const Block&                _block;  
+    JumperBallTypes::Direction  _side;
+    bool                        _gotten;
 };
 
 #endif /* OBJECT_H */

@@ -13,8 +13,8 @@
 
 #include "Coin.h"
 
-Coin::Coin():
-  Bonus(100)
+Coin::Coin(const Block& block, JumperBallTypes::Direction side):
+  Bonus(block, side, 100)
 {
 }
 

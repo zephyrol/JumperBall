@@ -17,7 +17,7 @@
 
 class Clock : Object{
 public:
-    Clock();
+    Clock(const Block& block, JumperBallTypes::Direction side);
     Object::CategoryOfObjects getCategory() override;
 
     

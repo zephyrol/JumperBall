@@ -23,7 +23,8 @@ BallAnimation::BallAnimation(const Ball& ball):
     _translationBeforeMovement(0.f),
     _referenceTimePointAction(ball.getTimeActionMs()),
     _referenceTimePointStateOfLife(ball.getTimeStateOfLifeMs()),
-    _referenceState(ball.state())
+    _referenceState(ball.state()),
+    _referenceStateOfLife(ball.stateOfLife())
 {
     
 }

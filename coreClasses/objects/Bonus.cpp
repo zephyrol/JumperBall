@@ -13,7 +13,10 @@
 
 #include "Bonus.h"
 
-Bonus::Bonus(unsigned int value): 
+Bonus::Bonus( const Block& block, 
+              JumperBallTypes::Direction side, 
+              unsigned int value): 
+Object(block,side),
 _value(value)
 {
 }

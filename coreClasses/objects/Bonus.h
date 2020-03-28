@@ -17,7 +17,10 @@
 
 class Bonus : public Object{
 public:
-    Bonus(unsigned int value);
+    Bonus(const Block& block,
+          JumperBallTypes::Direction side, 
+          unsigned int value);
+
     virtual ~Bonus() = 0;
 private:
     unsigned int _value;

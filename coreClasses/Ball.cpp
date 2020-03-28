@@ -351,10 +351,10 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
         default :
             break;
     }
-    auto blockAbove = _map.map3DData(aboveX,aboveY,aboveZ);
-    auto blockInFrontOf = _map.map3DData(inFrontOfX,inFrontOfY,inFrontOfZ);
-    auto blockLeft = _map.map3DData(leftX,leftY,leftZ);
-    auto blockRight = _map.map3DData(rightX,rightY,rightZ);
+    auto blockAbove = _map.getBlock(aboveX,aboveY,aboveZ);
+    auto blockInFrontOf = _map.getBlock(inFrontOfX,inFrontOfY,inFrontOfZ);
+    auto blockLeft = _map.getBlock(leftX,leftY,leftZ);
+    auto blockRight = _map.getBlock(rightX,rightY,rightZ);
 
     if (blockAbove && blockAbove->stillExists()) {
         nextBlock.poxX = aboveX;
@@ -574,10 +574,10 @@ Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
         }
         
         std::shared_ptr<const Block> blockNear  = 
-                _map.map3DData(aboveNearX,aboveNearY,aboveNearZ);
+                _map.getBlock(aboveNearX,aboveNearY,aboveNearZ);
         
         std::shared_ptr<const Block> blockFar   = 
-                _map.map3DData(aboveFarX,aboveFarY,aboveFarZ);
+                _map.getBlock(aboveFarX,aboveFarY,aboveFarZ);
         
         constexpr float distanceNear      = 1.f;
         constexpr float distanceFar       = 2.f;
@@ -626,7 +626,7 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
               _currentBlockY      = positionBlockPtr->at(1) ;
               _currentBlockZ      = positionBlockPtr->at(2) ;
               _state              = Ball::State::Staying;
-              _map.map3DData(_currentBlockX,_currentBlockY,_currentBlockZ)
+              _map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ)
               ->detectionEvent(_currentSide,
                            JumperBallTypesMethods::getTimePointMsFromTimePoint(
                            _timeAction));
@@ -718,7 +718,7 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
     yInteger = static_cast<int> (yIntersectionUnder);
     zInteger = static_cast<int> (zIntersectionUnder);
     
-    auto block = _map.map3DData(xInteger,yInteger,zInteger);
+    auto block = _map.getBlock(xInteger,yInteger,zInteger);
     if (block && block->stillExists()) 
         blockIntersected = std::make_shared<const std::vector<int> > (
                 std::initializer_list<int> ({xInteger,yInteger,zInteger}));
@@ -927,7 +927,7 @@ void Ball::update() noexcept{
         
         position3D = get3DPosStayingBall();
         if ( _state == Ball::State::Staying ){
-            if (_map.map3DData(_currentBlockX,_currentBlockY,_currentBlockZ)
+            if (_map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ)
                     ->stillExists()) {
                 _3DPosX = position3D.x;
                 _3DPosY = position3D.y;
@@ -949,7 +949,7 @@ void Ball::update() noexcept{
                 _3DPosY     = position3D.y;
                 _3DPosZ     = position3D.z;
 
-                _map.map3DData(_currentBlockX,_currentBlockY,_currentBlockZ)
+                _map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ)
                 ->detectionEvent(_currentSide,
                            JumperBallTypesMethods::getTimePointMsFromTimePoint(
                            _timeAction));
