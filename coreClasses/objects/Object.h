@@ -14,12 +14,10 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 #include "../Types.h"
-#include "../blocks/Block.h"
 
 class Object {
 public:
-    Object( const std::shared_ptr<const Block>& block, 
-            JumperBallTypes::Direction side);
+    Object();
 
     virtual ~Object() = default;
 
@@ -28,8 +26,6 @@ public:
     virtual CategoryOfObjects getCategory() = 0;
 
 private:
-    const std::shared_ptr<const Block>                _block;  
-    JumperBallTypes::Direction                        _side;
     bool                                              _gotten;
 };
 

@@ -17,8 +17,7 @@
 
 class Coin : public Bonus {
 public:
-    Coin( const std::shared_ptr<const Block>& block,
-          JumperBallTypes::Direction side);
+    Coin();
     Object::CategoryOfObjects getCategory() override;
 
 private:

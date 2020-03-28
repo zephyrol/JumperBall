@@ -17,8 +17,7 @@
 
 class Clock : public Object{
 public:
-    Clock(const std::shared_ptr<const Block>& block,
-          JumperBallTypes::Direction side);
+    Clock();
     Object::CategoryOfObjects getCategory() override;
 
     

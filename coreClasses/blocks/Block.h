@@ -14,6 +14,9 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 #include "Types.h"
+#include "../objects/Clock.h"
+#include "../objects/Coin.h"
+#include "../objects/Key.h"
 
 class Block {
 public:
@@ -43,6 +46,9 @@ public:
                                         const JumperBallTypes::timePointMs&
                                                 currentTime
                                                 );
+    virtual void                      createObject(
+                                        Object::CategoryOfObjects category, 
+                                        JumperBallTypes::Direction dir);
 
 
     //-------CONST METHODS----------//
@@ -53,8 +59,13 @@ public:
     virtual const std::array<float,9>&       
                                       localTransform()                    const;
 
+protected:
     //--------ATTRIBUTES-----------//
     std::array<float,9>               _localTransform;
+    std::array<std::shared_ptr<Object>,6> 
+                                      _objects;
+                                      
+
 
 
 };

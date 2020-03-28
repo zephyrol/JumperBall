@@ -13,10 +13,7 @@
 
 #include "Object.h"
 
-Object::Object( const std::shared_ptr<const Block>& block, 
-                JumperBallTypes::Direction side): 
-_block(block),
-_side(side),
+Object::Object(): 
 _gotten(false)
 {
 }

@@ -17,9 +17,7 @@
 
 class Bonus : public Object{
 public:
-    Bonus(const std::shared_ptr<const Block>& block,
-          JumperBallTypes::Direction side, 
-          unsigned int value);
+    Bonus( unsigned int value);
 
     virtual ~Bonus() = 0;
 private:

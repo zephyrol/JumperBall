@@ -26,7 +26,6 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
-          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map3.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map2.txt</runcommandpicklistitem>
           <runcommandpicklistitem>&lt;Different Values></runcommandpicklistitem>
@@ -34,6 +33,8 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1.txt -compress</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" outMap.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1Obj.txt</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1Old.txt</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1Old.txt -compress</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1.txt</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}" maps/map1.txt</runcommand>

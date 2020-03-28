@@ -14,12 +14,14 @@
 #include "Block.h"
 
 Block::Block():
-  _localTransform {0.f,0.f,0.f,0.f,0.f,0.f,1.f,1.f,1.f}
+  _localTransform {0.f,0.f,0.f,0.f,0.f,0.f,1.f,1.f,1.f},
+  _objects {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr}
 {
 }
 
 Block::Block(const std::array<float,9>& localTransform):
-  _localTransform(localTransform)
+  _localTransform(localTransform),
+  _objects {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr}
 {
 }
 
@@ -64,6 +66,26 @@ void Block::interaction(const JumperBallTypes::Direction& ballDir,
     static_cast<void> (currentTime);
     static_cast<void> (posBall);
     static_cast<void> (posBlock);
+}
+
+void Block::createObject( Object::CategoryOfObjects category, 
+                        JumperBallTypes::Direction dir) {
+    switch (category) {
+        case Object::CategoryOfObjects::Clock : 
+            _objects.at(JumperBallTypesMethods::directionAsInteger(dir)) 
+                    = std::make_shared<Clock>();
+            break;
+        case Object::CategoryOfObjects::Coin : 
+            _objects.at(JumperBallTypesMethods::directionAsInteger(dir)) 
+                    = std::make_shared<Coin>();
+            break;
+        case Object::CategoryOfObjects::Key : 
+            _objects.at(JumperBallTypesMethods::directionAsInteger(dir)) 
+                    = std::make_shared<Key>();
+            break;
+        default :
+            break;
+    }
 }
 
 

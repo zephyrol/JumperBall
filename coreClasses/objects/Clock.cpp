@@ -13,9 +13,8 @@
 
 #include "Clock.h"
 
-Clock::Clock(const std::shared_ptr<const Block>& block,
-             JumperBallTypes::Direction side) :
-Object (block,side) 
+Clock::Clock() :
+Object () 
 {
 }
 

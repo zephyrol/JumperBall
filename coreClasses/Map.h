@@ -84,7 +84,7 @@ private:
     const unsigned int                    _id;
 
     std::vector<std::shared_ptr<Block> >  _blocks;
-    std::vector<std::shared_ptr<Object> > _objects;
+    //std::vector<std::shared_ptr<Object> > _objects;
     unsigned int                          _boundingBoxXMax;
     unsigned int                          _boundingBoxYMax;
     unsigned int                          _boundingBoxZMax;

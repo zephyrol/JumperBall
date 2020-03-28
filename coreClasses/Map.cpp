@@ -20,7 +20,6 @@ unsigned int Map::nbMaps = 0;
 
 Map::Map() :  _id     (nbMaps++),
               _blocks {},
-              _objects{},
               _boundingBoxXMax (0),
               _boundingBoxYMax (0),
               _boundingBoxZMax (0),
@@ -90,8 +89,8 @@ Map::Map(std::ifstream& file):_id (nbMaps),
             if (counterBuffer.empty()){
                 nbBlocksTowrite = 1;
             } else {
-            substractOffset(counterBuffer,firstNumberOfBlock);
-            nbBlocksTowrite = convertToBase10(counterBuffer,
+                substractOffset(counterBuffer,firstNumberOfBlock);
+                nbBlocksTowrite = convertToBase10(counterBuffer,
                                               nbOfCharactersUsedForNumbers);
             }
             const unsigned int typeOfBlock = readValue - firstKindOfBlock;
@@ -113,8 +112,8 @@ Map::Map(std::ifstream& file):_id (nbMaps),
                     default :
                         break;
                 }
-              _blocks.push_back(block); 
-              counterBuffer.clear();
+                _blocks.push_back(block); 
+                counterBuffer.clear();
             }
         }
         infoMap.erase(infoMap.begin());
@@ -123,6 +122,7 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     std::string infoObjects;
     std::string counterWithoutObjectsBuffer;
     unsigned int currentIndex = 0;
+    char previousReadValue = 0;
 
     file >> infoObjects;
     while (!infoObjects.empty()) {
@@ -130,6 +130,12 @@ Map::Map(std::ifstream& file):_id (nbMaps),
         readValue = infoObjects.front();
         if (readValue >= firstNumberWithoutAnyObjects) {
             counterWithoutObjectsBuffer.push_back(readValue);
+            infoObjects.erase(infoObjects.begin());
+
+            if (previousReadValue < firstNumberWithoutAnyObjects &&
+                previousReadValue >= firstNumberType) {
+                ++currentIndex; //We increment the cursor to the next block
+            }
         } else {
             if (!counterWithoutObjectsBuffer.empty()){
             substractOffset(counterWithoutObjectsBuffer,
@@ -147,30 +153,27 @@ Map::Map(std::ifstream& file):_id (nbMaps),
             JumperBallTypes::Direction dir = 
                     JumperBallTypesMethods::integerAsDirection(side);
 
-            std::shared_ptr <Object> object;
-
+            Object::CategoryOfObjects category;
             switch (typeOfObject) {
                 case 0:
-                    object = std::make_shared<Key>  (_blocks.at(currentIndex),
-                                                    dir); 
+                    category = Object::CategoryOfObjects::Key;
                     break;
                 case 1:
-                    object = std::make_shared<Coin> (_blocks.at(currentIndex),
-                                                    dir); 
+                    category = Object::CategoryOfObjects::Coin;
                     break;
                 case 2:
-                    object = std::make_shared<Clock>(_blocks.at(currentIndex),
-                                                    dir); 
+                    category = Object::CategoryOfObjects::Clock;
                     break;
                 default :
-                    object = nullptr;
+                    category = Object::CategoryOfObjects::Coin;
                     break;
             }
             
-            _objects.push_back(object);
+            _blocks.at(currentIndex)->createObject(category,dir);
             counterWithoutObjectsBuffer.clear();
+            infoObjects.erase(infoObjects.begin(), infoObjects.begin()+1);
         }
-        infoObjects.erase(infoObjects.begin());
+        previousReadValue = readValue;
     }
 
     Map::nbMaps++;
@@ -304,7 +307,7 @@ void Map::compress(std::ifstream& input) {
     // BLOCKS PART
     input >> currentType;
 
-    for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
+    for (unsigned int i = 1 ; i < width * deep * height ; ++i) {
         
         
         unsigned int readValue ;
@@ -345,6 +348,7 @@ void Map::compress(std::ifstream& input) {
 
     for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
         input >> readString;
+        std::cout << "Read string : " << readString << std::endl;
         if (std::isdigit(readString.at(0)) != 0) {
             ++counterWithoutObjects;
         } else {
@@ -356,8 +360,6 @@ void Map::compress(std::ifstream& input) {
                 counterWithoutObjects = 0;
             }
 
-            //char currentObject = 0; //None at the initialization
-            //char currentDirection = 0; //None at the initialization
             for (unsigned char c : readString) {
                 std::cout << c << " is read" << std::endl;
                 unsigned char charToWrite;
@@ -391,10 +393,11 @@ std::chrono::time_point<std::chrono::system_clock> Map::timeCreation() const {
 Map::EffectOnBall Map::interaction(
         const JumperBallTypes::Direction& ballDir, 
         const JumperBallTypes::vec3f& posBall) {
-
+    
     Map::EffectOnBall effect = Map::EffectOnBall::Nothing;
     auto timeNow = JumperBallTypesMethods::getTimePointMSNow();
 
+    //Blocks interaction 
     std::array<unsigned int,3> currentBlockPosition;
     for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
         currentBlockPosition.at(1) = y;
@@ -413,6 +416,10 @@ Map::EffectOnBall Map::interaction(
             }
         }
     }
+
+
+    //Objects interaction 
+    
     return effect; 
 }
 
