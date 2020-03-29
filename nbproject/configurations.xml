@@ -15,17 +15,22 @@
       <itemPath>coreClasses/ClassicalMechanics.h</itemPath>
       <itemPath>coreClasses/objects/Clock.h</itemPath>
       <itemPath>coreClasses/objects/Coin.h</itemPath>
+      <itemPath>graphicsClasses/geometry/Cube.h</itemPath>
+      <itemPath>graphicsClasses/geometry/Cylinder.h</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.h</itemPath>
       <itemPath>graphicsClasses/FrameBuffer.h</itemPath>
+      <itemPath>graphicsClasses/geometry/GeometricShape.h</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.h</itemPath>
       <itemPath>coreClasses/objects/Key.h</itemPath>
       <itemPath>coreClasses/Map.h</itemPath>
       <itemPath>graphicsClasses/Mesh.h</itemPath>
       <itemPath>coreClasses/objects/Object.h</itemPath>
+      <itemPath>graphicsClasses/geometry/Pyramid.h</itemPath>
       <itemPath>graphicsClasses/Rendering.h</itemPath>
       <itemPath>graphicsClasses/Shader.h</itemPath>
       <itemPath>graphicsClasses/ShaderProgram.h</itemPath>
       <itemPath>coreClasses/blocks/SharpBlock.h</itemPath>
+      <itemPath>graphicsClasses/geometry/Sphere.h</itemPath>
       <itemPath>graphicsClasses/Star.h</itemPath>
       <itemPath>coreClasses/Types.h</itemPath>
       <itemPath>graphicsClasses/Utility.h</itemPath>
@@ -52,17 +57,22 @@
       <itemPath>coreClasses/ClassicalMechanics.cpp</itemPath>
       <itemPath>coreClasses/objects/Clock.cpp</itemPath>
       <itemPath>coreClasses/objects/Coin.cpp</itemPath>
+      <itemPath>graphicsClasses/geometry/Cube.cpp</itemPath>
+      <itemPath>graphicsClasses/geometry/Cylinder.cpp</itemPath>
       <itemPath>coreClasses/blocks/FireBlock.cpp</itemPath>
       <itemPath>graphicsClasses/FrameBuffer.cpp</itemPath>
+      <itemPath>graphicsClasses/geometry/GeometricShape.cpp</itemPath>
       <itemPath>coreClasses/blocks/IceBlock.cpp</itemPath>
       <itemPath>coreClasses/objects/Key.cpp</itemPath>
       <itemPath>coreClasses/Map.cpp</itemPath>
       <itemPath>graphicsClasses/Mesh.cpp</itemPath>
       <itemPath>coreClasses/objects/Object.cpp</itemPath>
+      <itemPath>graphicsClasses/geometry/Pyramid.cpp</itemPath>
       <itemPath>graphicsClasses/Rendering.cpp</itemPath>
       <itemPath>graphicsClasses/Shader.cpp</itemPath>
       <itemPath>graphicsClasses/ShaderProgram.cpp</itemPath>
       <itemPath>coreClasses/blocks/SharpBlock.cpp</itemPath>
+      <itemPath>graphicsClasses/geometry/Sphere.cpp</itemPath>
       <itemPath>graphicsClasses/Star.cpp</itemPath>
       <itemPath>coreClasses/Types.cpp</itemPath>
       <itemPath>graphicsClasses/Utility.cpp</itemPath>
@@ -268,6 +278,44 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="graphicsClasses/geometry/Cube.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Cube.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Cylinder.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Cylinder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/GeometricShape.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/GeometricShape.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Pyramid.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Pyramid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Sphere.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Sphere.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="graphicsClasses/shaders/basicFboFs.fs"
             ex="false"
             tool="3"
@@ -469,6 +517,44 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Cube.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Cube.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Cylinder.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Cylinder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/GeometricShape.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/GeometricShape.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Pyramid.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Pyramid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Sphere.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/geometry/Sphere.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphicsClasses/shaders/basicFboFs.fs"
             ex="false"

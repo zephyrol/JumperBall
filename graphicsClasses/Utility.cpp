@@ -159,6 +159,7 @@ const std::vector<GLfloat> Utility::colorsCube {
     0.5f,0.f,0.5f, 0.5f,0.f,0.5f, 0.5f,0.f,0.5f
 };
 
+
 const std::vector<GLfloat> Utility::positionsPike {
     //Base
     0.f,0.f,1.f,    0.f,0.f,0.f,    1.f,0.f,0.f, 
@@ -223,6 +224,16 @@ const glm::mat3 Utility::RGBToXYZ { 2.7689, 1.7517,   1.1302,
 const glm::mat3 Utility::XYZToRGB = glm::inverse(Utility::XYZToRGB);
 
 
+std::vector<GLfloat> Utility::uniColorsCube( const glm::vec3& color) {
+    std::vector<GLfloat> colors;
+    for (unsigned int i = 0; i < 36 ; ++i) {
+        colors.push_back(color.r);
+        colors.push_back(color.g);
+        colors.push_back(color.b);
+    }
+    return colors;
+}
+
 std::vector<GLfloat> Utility::computeNormals(const std::vector<GLfloat>& 
                                                 positions) {
     std::vector<GLfloat> normals;
@@ -267,6 +278,38 @@ std::vector<GLfloat> Utility::computeNormals(const std::vector<GLfloat>&
     }
     return normals;
 }
+
+
+
+std::vector<glm::vec3> Utility::GLfloatListToGlmVec3(
+                                            const std::vector<GLfloat>& list) {
+    std::vector<glm::vec3> vecList;
+    if ((list.size()%3) != 0 ) {
+        std::cerr << "Error ... Trying to convert a vector with a wrong size"
+                << std::endl;
+    } else {
+        for(unsigned int i = 0 ; i < list.size() ; i+= 3) {
+            vecList.push_back(glm::vec3(list.at(i),list.at(i+1),list.at(i+2)));
+        }
+    }
+    return vecList;
+}
+
+std::vector<glm::vec2> Utility::GLfloatListToGlmVec2(
+                                            const std::vector<GLfloat>& list) {
+    std::vector<glm::vec2> vecList;
+    if ((list.size()%2) != 0 ) {
+        std::cerr << "Error ... Trying to convert a vector with a wrong size"
+                << std::endl;
+    } else {
+        for(unsigned int i = 0 ; i < list.size() ; i+= 2) {
+            vecList.push_back(glm::vec2(list.at(i),list.at(i+1)));
+        }
+    }
+    return vecList;
+}
+
+
 
 glm::mat4 Utility::rotationUpToDir( JumperBallTypes::Direction dir) {
 

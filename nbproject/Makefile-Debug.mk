@@ -60,6 +60,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/graphicsClasses/Utility.o \
 	${OBJECTDIR}/graphicsClasses/animations/Animation.o \
 	${OBJECTDIR}/graphicsClasses/animations/BallAnimation.o \
+	${OBJECTDIR}/graphicsClasses/geometry/Cube.o \
+	${OBJECTDIR}/graphicsClasses/geometry/Cylinder.o \
+	${OBJECTDIR}/graphicsClasses/geometry/GeometricShape.o \
+	${OBJECTDIR}/graphicsClasses/geometry/Pyramid.o \
+	${OBJECTDIR}/graphicsClasses/geometry/Sphere.o \
 	${OBJECTDIR}/graphicsClasses/testClass.o \
 	${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformBlock.o \
 	${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformLight.o \
@@ -215,6 +220,31 @@ ${OBJECTDIR}/graphicsClasses/animations/BallAnimation.o: graphicsClasses/animati
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/animations
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/animations/BallAnimation.o graphicsClasses/animations/BallAnimation.cpp
+
+${OBJECTDIR}/graphicsClasses/geometry/Cube.o: graphicsClasses/geometry/Cube.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/geometry
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/geometry/Cube.o graphicsClasses/geometry/Cube.cpp
+
+${OBJECTDIR}/graphicsClasses/geometry/Cylinder.o: graphicsClasses/geometry/Cylinder.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/geometry
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/geometry/Cylinder.o graphicsClasses/geometry/Cylinder.cpp
+
+${OBJECTDIR}/graphicsClasses/geometry/GeometricShape.o: graphicsClasses/geometry/GeometricShape.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/geometry
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/geometry/GeometricShape.o graphicsClasses/geometry/GeometricShape.cpp
+
+${OBJECTDIR}/graphicsClasses/geometry/Pyramid.o: graphicsClasses/geometry/Pyramid.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/geometry
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/geometry/Pyramid.o graphicsClasses/geometry/Pyramid.cpp
+
+${OBJECTDIR}/graphicsClasses/geometry/Sphere.o: graphicsClasses/geometry/Sphere.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/geometry
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/geometry/Sphere.o graphicsClasses/geometry/Sphere.cpp
 
 ${OBJECTDIR}/graphicsClasses/testClass.o: graphicsClasses/testClass.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses

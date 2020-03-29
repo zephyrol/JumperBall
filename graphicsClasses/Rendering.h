@@ -70,6 +70,9 @@ private:
 
     Mesh                            _meshMap;
     Mesh                            _meshBall;
+    Mesh                            _meshKey;
+    Mesh                            _meshCoin;
+    Mesh                            _meshClock;
     Mesh                            _meshQuadFrame;
 
     const Map&                      _map;
@@ -102,11 +105,11 @@ private:
     //------------METHODS----------//
     void                            renderMap();
     void                            blurEffect( 
-                                                const FrameBuffer& referenceFBO);
+                                               const FrameBuffer& referenceFBO);
     void                            toneMappingEffect( 
-                                                const FrameBuffer& referenceFBO);
+                                               const FrameBuffer& referenceFBO);
     void                            brightPassEffect( 
-                                                const FrameBuffer& referenceFBO);
+                                               const FrameBuffer& referenceFBO);
     void                            bloomEffect(  const FrameBuffer& fboScene,
                                                   const FrameBuffer& fboLight );
 

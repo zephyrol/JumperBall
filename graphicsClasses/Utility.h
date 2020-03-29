@@ -25,7 +25,13 @@ namespace Utility {
                                                             CIExyYColor);
 
     float                             getLuminance(const glm::vec3& rgbColor);
-    
+    std::vector<GLfloat>              uniColorsCube (const glm::vec3& color);
+
+    std::vector<glm::vec3>            GLfloatListToGlmVec3(
+                                            const std::vector<GLfloat>& list);
+
+    std::vector<glm::vec2>            GLfloatListToGlmVec2(
+                                            const std::vector<GLfloat>& list);
 
     
     extern const std::vector<GLfloat> positionsCube;

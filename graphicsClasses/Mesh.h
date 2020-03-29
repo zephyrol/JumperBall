@@ -16,6 +16,7 @@
 #include "Shader.h"
 #include <Ball.h>
 #include <Map.h>
+#include <objects/Object.h>
 #include <glm/glm.hpp>
 
 class Mesh {
@@ -25,6 +26,7 @@ public:
     Mesh                    ();
     Mesh                    (const Ball& ball);
     Mesh                    (const Map& map);
+    Mesh                    (Object::CategoryOfObjects category);
 
     Mesh                    (const Mesh& mesh)                        = default;
     Mesh&                    operator= (const Mesh& mesh)             = default;
@@ -45,6 +47,9 @@ public:
     //----------METHODS-------------//
     void                    world(const glm::mat4& w);
     void                    updateMatrices (const Ball& b);
+    //void                    updateMatrices(
+    //                          const std::array<unsigned int,3>& blockPosition,
+    //                          JumperBallTypes::Direction objectDirection);
 
 
 private:

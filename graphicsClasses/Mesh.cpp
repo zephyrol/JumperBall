@@ -211,55 +211,130 @@ Mesh::Mesh(const Map& map):
     bindVertexData();
 }
 
-void Mesh::bindVertexData() const {
+Mesh::Mesh(Object::CategoryOfObjects category):
+      _positions(),
+      _normals(),
+      _colors(),
+      _uvCoords(),
+      _useIndexing(false),
+      _indices(),
+      _idElementBuffer(),
+      _idVertexArray(),
+      _idVertexBuffer(),
+      _world(1.f)
+{
+    glGenVertexArrays(1, &_idVertexArray);
+    glBindVertexArray(_idVertexArray);
 
+    glGenBuffers(4, _idVertexBuffer.data());
+
+    switch(category) {
+        case Object::CategoryOfObjects::Key :
+        {
+            const std::vector<GLfloat>& pCube  = Utility::positionsCube;
+            const std::vector<GLfloat>  cCube  = Utility::uniColorsCube
+                                              (glm::vec3(1.f,215.f/255.f,0.f));
+            const std::vector<GLfloat>& nCube  = Utility::normalsCube;
+            const std::vector<GLfloat>& uvCube = Utility::uvCoordsCube;
+            
+            constexpr unsigned int nbCubesToCreateAKey = 4;
+            std::vector<glm::vec3> scales =
+            { {0.2f,0.2f,0.1f},{0.1f,0.5f,0.1f},
+              {0.15f,0.1f,0.1f},{0.15f,0.1f,0.1f} };
+
+            std::vector<glm::vec3> localTranslations=
+            { {0.0f,0.15f,0.0f},{0.0f,-0.1f,0.f},
+              {0.125f,-0.15f,0.f},{0.125f,-0.35f,0.f} };
+            for (unsigned int i = 0 ; i  <  nbCubesToCreateAKey ; ++i ) {
+                for (unsigned int j = 0 ; j < pCube.size(); j += 3 )
+                {
+
+                    _positions.push_back( glm::vec3(
+                            pCube.at(j)*scales.at(i).x+
+                                          localTranslations.at(i).x,
+                            pCube.at(j+1)*scales.at(i).y+
+                                          localTranslations.at(i).y,
+                            pCube.at(j+2)*scales.at(i).z+
+                                          localTranslations.at(i).z) 
+                            );
+
+                    _colors.push_back(
+                    glm::vec3(cCube.at(j),cCube.at(j+1) ,cCube.at(j+2)));
+
+                    //there is no rotation and about the scales
+                    // all faces are normal to the axis,
+                    //so there is useless to change them
+                    _normals.push_back(
+                    glm::vec3(nCube.at(j),nCube.at(j+1) ,nCube.at(j+2)));
+
+                }
+                for (unsigned int i = 0 ; i < uvCube.size(); i += 2 ){
+                    _uvCoords.push_back(
+                    glm::vec2(nCube.at(i),nCube.at(i+1)));
+                    
+                }
+            }
+            break;
+        }
+        case Object::CategoryOfObjects::Clock :
+            break;
+        case Object::CategoryOfObjects::Coin :
+            break;
+        default : break;
+    }
+    
+    
+}
+
+void Mesh::bindVertexData() const {
+    
     std::vector<GLfloat> positionsList ;
     for (glm::vec3 pos : _positions) {
         positionsList.push_back(pos.x) ;
         positionsList.push_back(pos.y) ;
         positionsList.push_back(pos.z) ;
     }
-
+    
     std::vector<GLfloat> colorsList;
     for (glm::vec3 color : _colors) {
         colorsList.push_back(color.x) ;
         colorsList.push_back(color.y) ;
         colorsList.push_back(color.z) ;
     }
-
+    
     std::vector<GLfloat> normalsList;
     for (glm::vec3 normal: _normals) {
         normalsList.push_back(normal.x) ;
         normalsList.push_back(normal.y) ;
         normalsList.push_back(normal.z) ;
     }
-
+    
     std::vector<GLfloat> uvCoordsList;
     for (glm::vec2 uvCoord: _uvCoords) {
         uvCoordsList.push_back(uvCoord.x) ;
         uvCoordsList.push_back(uvCoord.y) ;
     }
-
+    
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
     glBufferData(GL_ARRAY_BUFFER, positionsList.size() * sizeof(GLfloat), 
             positionsList.data(), GL_STATIC_DRAW);
-
+    
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
     glBufferData(GL_ARRAY_BUFFER, colorsList.size() * sizeof(GLfloat), 
             colorsList.data(), GL_STATIC_DRAW);
-
+    
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(2));
     glBufferData(GL_ARRAY_BUFFER, normalsList.size() * sizeof(GLfloat), 
             normalsList.data(), GL_STATIC_DRAW);
-
+    
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(3));
     glBufferData(GL_ARRAY_BUFFER, uvCoordsList.size() * sizeof(GLfloat), 
             uvCoordsList.data(), GL_STATIC_DRAW);
-
+    
 }
 
 void Mesh::draw(bool drawAll, unsigned int offset, unsigned int number) const {
-
+    
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
@@ -268,57 +343,57 @@ void Mesh::draw(bool drawAll, unsigned int offset, unsigned int number) const {
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
     
     glVertexAttribPointer ( 
-        0,
-        3, // 3 GL_FLOAT per vertex
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        nullptr
-        );
+            0,
+            3, // 3 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
     
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
     glVertexAttribPointer ( 
-        1,
-        3, // 3 GL_FLOAT per vertex
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        nullptr
-        );
-
+            1,
+            3, // 3 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+    
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(2));
     glVertexAttribPointer ( 
-        2,
-        3, // 3 GL_FLOAT per vertex
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        nullptr
-        );
-
+            2,
+            3, // 3 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+    
     glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(3));
     glVertexAttribPointer ( 
-        3,
-        2, // 2 GL_FLOAT per vertex
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        nullptr
-        );
-
+            3,
+            2, // 2 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+    
     if (_useIndexing) {
         glBindBuffer  (GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
         glDrawElements(GL_TRIANGLES,_indices.size(),GL_UNSIGNED_SHORT,nullptr);
     }
     else {
         if (drawAll){
-          glDrawArrays(GL_TRIANGLES,offset,_positions.size()-offset);
+            glDrawArrays(GL_TRIANGLES,offset,_positions.size()-offset);
         }
         else {
-          glDrawArrays(GL_TRIANGLES,offset,number);
+            glDrawArrays(GL_TRIANGLES,offset,number);
         }
     }
-
+    
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
@@ -340,6 +415,14 @@ void Mesh::updateMatrices(const Ball& b) {
     _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
                             positionBall.y ,positionBall.z));
 }
+
+//void Mesh::updateMatrices(const std::array<unsigned int,3>& blockPosition,
+//                          JumperBallTypes::Direction objectDirection) {
+//   
+//    /*JumperBallTypes::vec3f positionBall = b.get3DPosition();
+//    _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
+//                            positionBall.y ,positionBall.z));*/
+//}
 
 void Mesh::genSharps(const Block& block, glm::vec3 posWorld) {
     
