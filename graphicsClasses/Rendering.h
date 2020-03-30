@@ -68,17 +68,16 @@ private:
     uniformVariable<GLfloat>        _uniformFloat;
     uniformVariable<bool>           _uniformBool;
 
-    Mesh                            _meshMap;
-    Mesh                            _meshBall;
-    Mesh                            _meshKey;
-    Mesh                            _meshCoin;
-    Mesh                            _meshClock;
-    Mesh                            _meshQuadFrame;
+    Mesh<Map>                       _meshMap;
+    Mesh<Ball>                      _meshBall;
+    //Mesh                            _meshKey;
+    //Mesh                            _meshCoin;
+    //Mesh                            _meshClock;
+    //Mesh                            _meshQuadFrame;
 
     const Map&                      _map;
 
     const Ball&                     _ball;
-    BallAnimation                   _ballAnimation;
 
     const Star&                     _star;
     UniformLight                    _light;
@@ -115,46 +114,6 @@ private:
 
     void                            renderCamera(const ShaderProgram& sp);
 
-    void                            bindUniform(const std::string&    name,
-                                                const glm::mat4&      value,
-                                                const ShaderProgram&  sp);
-
-    void                            bindUniform(const std::string&    name,
-                                                const glm::vec4&      value,
-                                                const ShaderProgram&  sp);
-
-    void                            bindUniform(const std::string&    name,
-                                                const glm::vec3&      value,
-                                                const ShaderProgram&  sp);
-
-    void                            bindUniform(const std::string&    name,
-                                                const glm::vec2&      value,
-                                                const ShaderProgram&  sp);
-
-    void                            bindUniform(const std::string&    name,
-                                                const GLfloat&        value,
-                                                const ShaderProgram&  sp);
-
-    void                            bindUniform(const std::string&    name,
-                                                const bool&           value,
-                                                const ShaderProgram&  sp);
-
-    void                            bindUniform(const std::string&    name,
-                                                const int&            value,
-                                                const ShaderProgram&  sp);
-
-    void                            bindUniform(const std::string&    name,
-                                                const std::vector<int>& value,
-                                                const ShaderProgram&  sp);
-
-    void                            bindUniform(const std::string&    name,
-                                                const std::vector<float>& value,
-                                                const ShaderProgram&  sp);
-
-    void                            bindUniformTexture
-                                                (const std::string&    name,
-                                                const int&             value,
-                                                const ShaderProgram&  sp);
 
 
     //------STATIC ATTRIBUTES------//

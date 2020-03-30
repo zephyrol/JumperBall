@@ -16,11 +16,16 @@
 #include "GeometricShape.h"
 
 
-class Sphere : GeometricShape {
+class Sphere : public GeometricShape {
 public:
-    Sphere(const glm::mat4& transform);
-    Sphere(const glm::mat4& transform,const glm::vec3& customColor);
-    Sphere(const Sphere& sphere, const glm::mat4& transform);
+    Sphere( const glm::mat4& modelTransform    = glm::mat4(1.f),
+            const glm::mat4& normalsTransform  = glm::mat4(1.f));
+    Sphere( const glm::vec3& customColor,
+            const glm::mat4& modelTransform    = glm::mat4(1.f),
+            const glm::mat4& normalsTransform  = glm::mat4(1.f));
+    Sphere( const Sphere& sphere, 
+            const glm::mat4& modelTransform    = glm::mat4(1.f),
+            const glm::mat4& normalsTransform  = glm::mat4(1.f));
 
     struct InfoSphere {
       std::vector<glm::vec3> positions;

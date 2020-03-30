@@ -33,6 +33,7 @@ namespace Utility {
     std::vector<glm::vec2>            GLfloatListToGlmVec2(
                                             const std::vector<GLfloat>& list);
 
+
     
     extern const std::vector<GLfloat> positionsCube;
     extern const std::vector<GLfloat> colorsCube;

@@ -26,9 +26,9 @@ public:
 
 
     //----------METHODS------------//
-    void                           updateTrans()                       override;
-    void                           animationAlive();
-    void                           animationBursting();
+    void                          updateTrans()                        override;
+    void                          animationAlive();
+    void                          animationBursting();
 
 private:
 

@@ -5,34 +5,36 @@
  */
 
 /* 
- * File:   Cube.h
+ * File:   Quad.h
  * Author: Morgenthaler S 
  *
- * Created on 29 mars 2020, 09:18
+ * Created on 30 mars 2020, 18:34
  */
 
-#ifndef CUBE_H
-#define CUBE_H
+#ifndef QUAD_H
+#define QUAD_H
+
 #include "GeometricShape.h"
 
-class Cube : public GeometricShape {
+class Quad : public GeometricShape {
 public:
-    Cube( const glm::mat4& modelTransform    = glm::mat4(1.f),
+    Quad( const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
-    Cube( const glm::vec3& customColor,
+    Quad( const glm::vec3& customColor,
           const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
-    Cube( const Cube& cube, 
+    Quad( const Quad& quad, 
           const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
 private:
     
 
-    static const std::vector<glm::vec3> basicPositionsCube;
-    static const std::vector<glm::vec3> basicColorsCube;
-    static const std::vector<glm::vec3> basicNormalsCube;
-    static const std::vector<glm::vec2> basicUVCoordsCube;
+    static const std::vector<glm::vec3> basicPositionsQuad;
+    static const std::vector<glm::vec3> basicColorsQuad;
+    static const std::vector<glm::vec3> basicNormalsQuad;
+    static const std::vector<glm::vec2> basicUVCoordsQuad;
 };
 
-#endif /* CUBE_H */
+
+#endif /* QUAD_H */
 

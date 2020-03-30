@@ -24,13 +24,43 @@ public:
 
     //------DELETED METHODS-------//
     ShaderProgram&  operator = (const ShaderProgram& shaderProgram)    = delete;
-    ShaderProgram   (const ShaderProgram& orig)                        = delete; 
+    ShaderProgram   (const ShaderProgram& shaderProgram)               = delete; 
 
 
     //-------CONST METHODS--------//
     GLuint          getHandle()                                           const;
     void            use()                                                 const;
 
+    void            bindUniform(const std::string&    name,
+                                const glm::mat4&      value)              const;
+
+    void            bindUniform(const std::string&    name,
+                                const glm::vec4&      value)              const;
+
+    void            bindUniform(const std::string&    name,
+                                const glm::vec3&      value)              const;
+
+    void            bindUniform(const std::string&    name,
+                                const glm::vec2&      value)              const;
+
+    void            bindUniform(const std::string&    name,
+                                const GLfloat&        value)              const;
+
+    void            bindUniform(const std::string&    name,
+                                const bool&           value)              const;
+
+    void            bindUniform(const std::string&    name,
+                                const int&            value)              const;
+
+    void            bindUniform(const std::string&    name,
+                                const std::vector<int>& value)            const;
+
+    void            bindUniform(const std::string&    name,
+                                const std::vector<float>& value)          const;
+
+    void            bindUniformTexture
+                                (const std::string&    name,
+                                const int&             value)             const;
 
 private:
     //--------ATTRIBUTES-----------//

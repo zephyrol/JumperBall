@@ -18,11 +18,17 @@
 
 class Pyramid: public GeometricShape {
 public:
-    Pyramid(const glm::mat4& transform);
-    Pyramid(const glm::mat4& transform,const glm::vec3& customColor);
-    Pyramid(const Pyramid& pyramid, const glm::mat4& transform);
+
+    Pyramid(  const glm::mat4& modelTransform    = glm::mat4(1.f),
+              const glm::mat4& normalsTransform  = glm::mat4(1.f));
+    Pyramid(  const glm::vec3& customColor,
+              const glm::mat4& modelTransform    = glm::mat4(1.f),
+              const glm::mat4& normalsTransform  = glm::mat4(1.f));
+    Pyramid(  const Pyramid& pyramid, 
+              const glm::mat4& modelTransform    = glm::mat4(1.f),
+              const glm::mat4& normalsTransform  = glm::mat4(1.f));
+
 private:
-    
 
     static const std::vector<glm::vec3> basicPositionsPyramid;
     static const std::vector<glm::vec3> basicColorsPyramid;

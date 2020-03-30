@@ -53,6 +53,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/graphicsClasses/Camera.o \
 	${OBJECTDIR}/graphicsClasses/FrameBuffer.o \
 	${OBJECTDIR}/graphicsClasses/Mesh.o \
+	${OBJECTDIR}/graphicsClasses/MeshComponent.o \
 	${OBJECTDIR}/graphicsClasses/Rendering.o \
 	${OBJECTDIR}/graphicsClasses/Shader.o \
 	${OBJECTDIR}/graphicsClasses/ShaderProgram.o \
@@ -64,6 +65,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/graphicsClasses/geometry/Cylinder.o \
 	${OBJECTDIR}/graphicsClasses/geometry/GeometricShape.o \
 	${OBJECTDIR}/graphicsClasses/geometry/Pyramid.o \
+	${OBJECTDIR}/graphicsClasses/geometry/Quad.o \
 	${OBJECTDIR}/graphicsClasses/geometry/Sphere.o \
 	${OBJECTDIR}/graphicsClasses/testClass.o \
 	${OBJECTDIR}/graphicsClasses/uniformBlocks/uniformBlock.o \
@@ -186,6 +188,11 @@ ${OBJECTDIR}/graphicsClasses/Mesh.o: graphicsClasses/Mesh.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Mesh.o graphicsClasses/Mesh.cpp
 
+${OBJECTDIR}/graphicsClasses/MeshComponent.o: graphicsClasses/MeshComponent.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/MeshComponent.o graphicsClasses/MeshComponent.cpp
+
 ${OBJECTDIR}/graphicsClasses/Rendering.o: graphicsClasses/Rendering.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
@@ -240,6 +247,11 @@ ${OBJECTDIR}/graphicsClasses/geometry/Pyramid.o: graphicsClasses/geometry/Pyrami
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/geometry
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/geometry/Pyramid.o graphicsClasses/geometry/Pyramid.cpp
+
+${OBJECTDIR}/graphicsClasses/geometry/Quad.o: graphicsClasses/geometry/Quad.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/geometry
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/geometry/Quad.o graphicsClasses/geometry/Quad.cpp
 
 ${OBJECTDIR}/graphicsClasses/geometry/Sphere.o: graphicsClasses/geometry/Sphere.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/geometry

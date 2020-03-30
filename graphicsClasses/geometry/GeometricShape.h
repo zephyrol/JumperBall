@@ -24,18 +24,24 @@ public:
             const std::vector<glm::vec3>& normals,
             const std::vector<glm::vec3>& colors,
             const std::vector<glm::vec2>& uvCoords,
-            const glm::mat4&              transform = glm::mat4(1.f),
+            const glm::mat4&              modelTransform    = glm::mat4(1.f),
+            const glm::mat4&              normalsTransform  = glm::mat4(1.f),
             const std::vector<GLushort>&  indices = {}
             );
 
-    //It's useless to have a copy of a shape with exactly the same transform
+    /*//It's useless to have a copy of a shape with exactly the same transform
     //and vertices, every attributes are const...
     GeometricShape(const GeometricShape& geometricShape) = delete;
     GeometricShape& operator= (const GeometricShape& geometricShape) = delete;
 
+    GeometricShape(GeometricShape&& geometricShape) = default;
+    GeometricShape& operator= (GeometricShape&& geometricShape) = default;*/
+
+
     //Use this constructor to make a copy with a different transform
     GeometricShape(const GeometricShape& geometricShape, 
-                    const glm::mat4& transform);
+                    const glm::mat4& modelTransform,
+                    const glm::mat4& normalsTransform);
 
     virtual ~GeometricShape() = default;
 
@@ -58,7 +64,8 @@ public:
                                                                           const;
     const std::shared_ptr<const std::vector<GLushort> >&   indices()      const;
 
-    const glm::mat4& transform()                                          const;
+    const glm::mat4& modelTransform()                                     const;
+    const glm::mat4& normalsTransform()                                   const;
 
 
     static std::vector<glm::vec3>   createCustomColorBuffer(
@@ -78,7 +85,8 @@ private:
     const std::shared_ptr<GLuint>                         _elementBufferObject;
     const std::shared_ptr<const std::vector<GLushort> >   _indices;
 
-    const glm::mat4                                       _shapeTransform;
+    const glm::mat4                                       _modelTransform;
+    const glm::mat4                                       _normalsTransform;
 
 };
 

@@ -20,7 +20,8 @@ GeometricShape::GeometricShape(
                                const std::vector<glm::vec3>& normals,
                                const std::vector<glm::vec3>& colors,
                                const std::vector<glm::vec2>& uvCoords,
-                               const glm::mat4&              transform,
+                               const glm::mat4&              modelTransform,
+                               const glm::mat4&              normalsTransform,
                                const std::vector<GLushort>&  indices
                               ):
 _positions            (std::make_shared<std::vector<glm::vec3> >(positions)),
@@ -33,7 +34,8 @@ _elementBufferObject  (!indices.empty()? std::make_shared<GLuint>() : nullptr),
 _indices              (!indices.empty()? 
                           std::make_shared<std::vector<GLushort> >(indices) 
                           : nullptr ),
-_shapeTransform (transform)
+_modelTransform       (modelTransform),
+_normalsTransform     (normalsTransform)
 {
     glGenVertexArrays(1, _vertexArrayObject.get());
     glBindVertexArray(*_vertexArrayObject);
@@ -44,10 +46,12 @@ _shapeTransform (transform)
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,_indices->size()* sizeof(GLushort),
                       _indices->data(),GL_STATIC_DRAW);
     }
+    bindVerticesData();
 }
 
 GeometricShape::GeometricShape(const GeometricShape& geometricShape, 
-                                const glm::mat4& transform):
+                               const glm::mat4& modelTransform,
+                               const glm::mat4& normalsTransform):
 _positions            (geometricShape.positions()),
 _normals              (geometricShape.normals()),
 _colors               (geometricShape.colors()),
@@ -56,7 +60,8 @@ _vertexArrayObject    (geometricShape.vertexArrayObject()),
 _vertexBufferObjects  (geometricShape.vertexBufferObjects()),
 _elementBufferObject  (geometricShape.elementBufferObject()),
 _indices              (geometricShape.indices()),
-_shapeTransform       (transform)
+_modelTransform       (modelTransform),
+_normalsTransform     (normalsTransform)
 {
 
 }
@@ -101,9 +106,14 @@ const std::shared_ptr<const std::vector<GLushort> >&
     return _indices;
 }
 
-const glm::mat4& GeometricShape::transform() const{
-    return _shapeTransform;
+const glm::mat4& GeometricShape::modelTransform() const{
+    return _modelTransform;
 }
+
+const glm::mat4& GeometricShape::normalsTransform() const {
+    return _normalsTransform;
+}
+
 
 std::vector<glm::vec3> GeometricShape::createCustomColorBuffer(
                                           const glm::vec3& customColor,
@@ -183,10 +193,10 @@ void GeometricShape::bind() const {
             nullptr
             );
 
-    glDisableVertexAttribArray(0);
+    /*glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
-    glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(3);*/
 }
 
 
@@ -198,6 +208,10 @@ void GeometricShape::draw() const {
     }
     else {
         constexpr unsigned int offset = 0;
+        /*std::cout << _positions->size() << std::endl;
+        for (glm::vec3 pos : *_positions) {
+          std::cout << pos.x <<","<< pos.y << "," << pos.z << std::endl;
+        }*/
         glDrawArrays(GL_TRIANGLES,offset,_positions->size());
     }
     

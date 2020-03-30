@@ -13,27 +13,38 @@
 
 #include "Cube.h"
 
-Cube::Cube(const glm::mat4& transform): GeometricShape( basicPositionsCube,
-                                                        basicNormalsCube,
-                                                        basicColorsCube,
-                                                        basicUVCoordsCube,
-                                                        transform) {
+Cube::Cube( const glm::mat4& modelTransform,
+            const glm::mat4& normalsTransform  
+        ): 
+    GeometricShape ( 
+        basicPositionsCube,
+        basicNormalsCube,
+        basicColorsCube,
+        basicUVCoordsCube,
+        modelTransform,
+        normalsTransform) {
 }
 
-Cube::Cube(const glm::mat4& transform,const glm::vec3& customColor): 
+Cube::Cube( const glm::vec3& customColor,
+            const glm::mat4& modelTransform,
+            const glm::mat4& normalsTransform  
+        ): 
     GeometricShape (
         basicPositionsCube,
         basicNormalsCube,
         GeometricShape::createCustomColorBuffer(customColor, 
         basicPositionsCube.size()),
         basicUVCoordsCube,
-        transform)
+        modelTransform,
+        normalsTransform)
 {
 }
 
 
-Cube::Cube(const Cube& cube, const glm::mat4& transform) :
-    GeometricShape(cube,transform) {
+Cube::Cube(const Cube& cube, 
+           const glm::mat4& modelTransform,
+           const glm::mat4& normalsTransform ):
+    GeometricShape(cube,modelTransform,normalsTransform) {
 }
 
 

@@ -11,514 +11,756 @@
  * Created on 13 novembre 2019, 21:05
  */
 
-#include "Mesh.h"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtx/transform.hpp"
-
-Mesh::Mesh() :
-      _positions(),
-      _normals(),
-      _colors(),
-      _uvCoords(),
-      _useIndexing(false),
-      _indices(),
-      _idElementBuffer(),
-      _idVertexArray(),
-      _idVertexBuffer(),
-      _world(1.f)
-{
-
-    glGenVertexArrays(1, &_idVertexArray);
-    glBindVertexArray(_idVertexArray);
-
-    glGenBuffers(4, _idVertexBuffer.data());
-
-    const std::vector<GLfloat>& pQuad         = Utility::positionsQuadScreen;
-    const std::vector<GLfloat>& cQuad         = Utility::colorsQuadScreen;
-    const std::vector<GLfloat>& nQuad         = Utility::normalsQuadScreen;
-    const std::vector<GLfloat>& uvQuad        = Utility::uvCoordsQuadScreen;
-
-    for (unsigned int i = 0 ; i < 6 ; ++i) {
-    _positions.push_back(glm::vec3(pQuad.at(i*3),
-                                    pQuad.at(i*3+1),pQuad.at(i*3+2)));
-    _colors.push_back(glm::vec3(cQuad.at(i*3),
-                                    cQuad.at(i*3+1),cQuad.at(i*3+2)));
-    _normals.push_back(glm::vec3(nQuad.at(i*3),
-                                    nQuad.at(i*3+1),nQuad.at(i*3+2)));
-    _uvCoords.push_back(glm::vec2(uvQuad.at(i*2), uvQuad.at(i*2+1)));
-    }
-
-    
-    bindVertexData();
-}
-
-
-Mesh::Mesh(const Ball& ball):
-      _positions(),
-      _normals(),
-      _colors(),
-      _uvCoords(),
-      _useIndexing(true),
-      _indices(),
-      _idElementBuffer(),
-      _idVertexArray(),
-      _idVertexBuffer(),
-      _world(1.f)
-{
-  
-    glGenVertexArrays(1, &_idVertexArray);
-    glBindVertexArray(_idVertexArray);
-
-    glGenBuffers(4, _idVertexBuffer.data());
-
-
-    constexpr unsigned int  iParaCount  = 40;
-    constexpr unsigned int  iMeriCount  = 60;
-    const     float         r           = ball.getRadius();
-    
-    // Create a sphere ---------------------------------------------------------
-    GLuint iVertexCount = iParaCount * iMeriCount;
-    
-    constexpr float a1 = ( 180.0 / ( iParaCount - 1 ) ) * M_PI / 180.0;
-    constexpr float a2 = ( 360.0 / ( iMeriCount - 1 ) ) * M_PI / 180.0;
-    
-    // parallels ---------------------------------------------------------------
-    for( unsigned int i = 0; i < iParaCount; ++i )
-    {
-        const float fAngle    = - static_cast<float>(M_PI) / 2.0f + a1 * ( i );
-        const float z         = r * static_cast<float>(sin( fAngle ));
-        const float fRadius   = r * static_cast<float>(cos( fAngle ));
-        
-        for( unsigned int j = 0; j < iMeriCount; ++j )
-        {
-            _positions.push_back(glm::vec3( 
-                    fRadius * static_cast<float>(cos( a2 * j )), 
-                    fRadius * static_cast<float>(sin( a2 * j )), 
-                    z ));
-            _uvCoords.push_back(glm::vec2( static_cast<float>(j)/ iMeriCount, 
-                    static_cast<float>(iParaCount - i ) / iParaCount ));
-            _colors.push_back(glm::vec3(static_cast<float>(i)/iParaCount,
-                                        (j < iMeriCount/2) ? 1.f : 0.f,
-                                        0.5f));
-        }
-    }
-    // compute normals ---------------------------------------------------------
-    // on a 0 centered sphere : you just need to normalise the position!
-    _normals.reserve(iVertexCount);
-    
-    for( unsigned int i = 0; i < iVertexCount; ++i )
-    {
-        _normals.push_back(glm::normalize( _positions[ i ] ));
-    }
-    
-    // for quads split in 2
-    
-    for( unsigned int i = 0; i < ( iParaCount - 1 ); ++i )
-    {
-        for( unsigned int j = 0; j < ( iMeriCount - 1 ); ++j )
-        {
-            _indices.push_back(iMeriCount * i + j);
-            _indices.push_back(iMeriCount * i + ( j + 1 ));
-            _indices.push_back(iMeriCount * ( i + 1 ) + ( j + 1 ));
-            _indices.push_back(iMeriCount * ( i + 1 ) + ( j + 1 ));
-            _indices.push_back(iMeriCount * ( i + 1 ) + j);
-            _indices.push_back(iMeriCount * i + j);
-        }
-    }
-   
-    JumperBallTypes::vec3f positionBall = ball.get3DPosition();
-    _world = glm::translate(_world, glm::vec3(positionBall.x,
-                            positionBall.y ,positionBall.z));
-
-
-    bindVertexData();
-
-    glGenBuffers(1, &_idElementBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,_indices.size() * sizeof (GLushort),
-            _indices.data(),GL_STATIC_DRAW);
-}
-
-
-Mesh::Mesh(const Map& map):
-      _positions(),
-      _normals(),
-      _colors(),
-      _uvCoords(),
-      _useIndexing(false),
-      _indices(),
-      _idElementBuffer(),
-      _idVertexArray(),
-      _idVertexBuffer(),
-      _world(1.f)
-{
-
-    glGenVertexArrays(1, &_idVertexArray);
-    glBindVertexArray(_idVertexArray);
-
-    glGenBuffers(4, _idVertexBuffer.data());
-
-
-    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
-        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
-            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
-                auto block = map.getBlock(x,y,z);
-                if (block) {
-
-                    const std::vector<GLfloat>& pCube  = Utility::positionsCube;
-                    const std::vector<GLfloat>& cCube  = Utility::colorsCube;
-                    const std::vector<GLfloat>& nCube  = Utility::normalsCube;
-                    const std::vector<GLfloat>& uvCube = Utility::uvCoordsCube;
-
-                    for (unsigned int i = 0 ; i < pCube.size(); i += 3 )
-                    {
-                        const GLfloat xAfterTranslation =  
-                                      pCube.at(i) + static_cast<GLfloat> (x);
-                        const GLfloat yAfterTranslation =  
-                                      pCube.at(i+1) + static_cast<GLfloat> (y);
-                        const GLfloat zAfterTranslation =  
-                                      pCube.at(i+2) + static_cast<GLfloat> (z);
-
-                        _positions.push_back( glm::vec3(xAfterTranslation,
-                                yAfterTranslation , zAfterTranslation));
-                        _colors.push_back(
-                          glm::vec3(cCube.at(i),cCube.at(i+1) ,cCube.at(i+2)));
-                        _normals.push_back(
-                          glm::vec3(nCube.at(i),nCube.at(i+1) ,nCube.at(i+2)));
-                    }
-                    for (unsigned int i = 0 ; i < uvCube.size(); i += 2 ){
-                        _uvCoords.push_back(
-                          glm::vec2(nCube.at(i),nCube.at(i+1)));
-
-                    }
-                }
-            }
-        }
-    }
-
-    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
-        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
-            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
-                auto block = map.getBlock(x,y,z);
-                if (block) {
-                    genSharps(*block,glm::vec3(x,y,z));
-                }
-            }
-        }
-    }
-    //Gen sharps
-    
-    bindVertexData();
-}
-
-Mesh::Mesh(Object::CategoryOfObjects category):
-      _positions(),
-      _normals(),
-      _colors(),
-      _uvCoords(),
-      _useIndexing(false),
-      _indices(),
-      _idElementBuffer(),
-      _idVertexArray(),
-      _idVertexBuffer(),
-      _world(1.f)
-{
-    glGenVertexArrays(1, &_idVertexArray);
-    glBindVertexArray(_idVertexArray);
-
-    glGenBuffers(4, _idVertexBuffer.data());
-
-    switch(category) {
-        case Object::CategoryOfObjects::Key :
-        {
-            const std::vector<GLfloat>& pCube  = Utility::positionsCube;
-            const std::vector<GLfloat>  cCube  = Utility::uniColorsCube
-                                              (glm::vec3(1.f,215.f/255.f,0.f));
-            const std::vector<GLfloat>& nCube  = Utility::normalsCube;
-            const std::vector<GLfloat>& uvCube = Utility::uvCoordsCube;
-            
-            constexpr unsigned int nbCubesToCreateAKey = 4;
-            std::vector<glm::vec3> scales =
-            { {0.2f,0.2f,0.1f},{0.1f,0.5f,0.1f},
-              {0.15f,0.1f,0.1f},{0.15f,0.1f,0.1f} };
-
-            std::vector<glm::vec3> localTranslations=
-            { {0.0f,0.15f,0.0f},{0.0f,-0.1f,0.f},
-              {0.125f,-0.15f,0.f},{0.125f,-0.35f,0.f} };
-            for (unsigned int i = 0 ; i  <  nbCubesToCreateAKey ; ++i ) {
-                for (unsigned int j = 0 ; j < pCube.size(); j += 3 )
-                {
-
-                    _positions.push_back( glm::vec3(
-                            pCube.at(j)*scales.at(i).x+
-                                          localTranslations.at(i).x,
-                            pCube.at(j+1)*scales.at(i).y+
-                                          localTranslations.at(i).y,
-                            pCube.at(j+2)*scales.at(i).z+
-                                          localTranslations.at(i).z) 
-                            );
-
-                    _colors.push_back(
-                    glm::vec3(cCube.at(j),cCube.at(j+1) ,cCube.at(j+2)));
-
-                    //there is no rotation and about the scales
-                    // all faces are normal to the axis,
-                    //so there is useless to change them
-                    _normals.push_back(
-                    glm::vec3(nCube.at(j),nCube.at(j+1) ,nCube.at(j+2)));
-
-                }
-                for (unsigned int i = 0 ; i < uvCube.size(); i += 2 ){
-                    _uvCoords.push_back(
-                    glm::vec2(nCube.at(i),nCube.at(i+1)));
-                    
-                }
-            }
-            break;
-        }
-        case Object::CategoryOfObjects::Clock :
-            break;
-        case Object::CategoryOfObjects::Coin :
-            break;
-        default : break;
-    }
-    
-    
-}
-
-void Mesh::bindVertexData() const {
-    
-    std::vector<GLfloat> positionsList ;
-    for (glm::vec3 pos : _positions) {
-        positionsList.push_back(pos.x) ;
-        positionsList.push_back(pos.y) ;
-        positionsList.push_back(pos.z) ;
-    }
-    
-    std::vector<GLfloat> colorsList;
-    for (glm::vec3 color : _colors) {
-        colorsList.push_back(color.x) ;
-        colorsList.push_back(color.y) ;
-        colorsList.push_back(color.z) ;
-    }
-    
-    std::vector<GLfloat> normalsList;
-    for (glm::vec3 normal: _normals) {
-        normalsList.push_back(normal.x) ;
-        normalsList.push_back(normal.y) ;
-        normalsList.push_back(normal.z) ;
-    }
-    
-    std::vector<GLfloat> uvCoordsList;
-    for (glm::vec2 uvCoord: _uvCoords) {
-        uvCoordsList.push_back(uvCoord.x) ;
-        uvCoordsList.push_back(uvCoord.y) ;
-    }
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
-    glBufferData(GL_ARRAY_BUFFER, positionsList.size() * sizeof(GLfloat), 
-            positionsList.data(), GL_STATIC_DRAW);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
-    glBufferData(GL_ARRAY_BUFFER, colorsList.size() * sizeof(GLfloat), 
-            colorsList.data(), GL_STATIC_DRAW);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(2));
-    glBufferData(GL_ARRAY_BUFFER, normalsList.size() * sizeof(GLfloat), 
-            normalsList.data(), GL_STATIC_DRAW);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(3));
-    glBufferData(GL_ARRAY_BUFFER, uvCoordsList.size() * sizeof(GLfloat), 
-            uvCoordsList.data(), GL_STATIC_DRAW);
-    
-}
-
-void Mesh::draw(bool drawAll, unsigned int offset, unsigned int number) const {
-    
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
-    
-    glVertexAttribPointer ( 
-            0,
-            3, // 3 GL_FLOAT per vertex
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            nullptr
-            );
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
-    glVertexAttribPointer ( 
-            1,
-            3, // 3 GL_FLOAT per vertex
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            nullptr
-            );
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(2));
-    glVertexAttribPointer ( 
-            2,
-            3, // 3 GL_FLOAT per vertex
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            nullptr
-            );
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(3));
-    glVertexAttribPointer ( 
-            3,
-            2, // 2 GL_FLOAT per vertex
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            nullptr
-            );
-    
-    if (_useIndexing) {
-        glBindBuffer  (GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
-        glDrawElements(GL_TRIANGLES,_indices.size(),GL_UNSIGNED_SHORT,nullptr);
-    }
-    else {
-        if (drawAll){
-            glDrawArrays(GL_TRIANGLES,offset,_positions.size()-offset);
-        }
-        else {
-            glDrawArrays(GL_TRIANGLES,offset,number);
-        }
-    }
-    
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
-    glDisableVertexAttribArray(3);
-}
-
-
-const glm::mat4& Mesh::world() const {
-    return _world;
-}
-
-void Mesh::world(const glm::mat4& w) {
-    _world = w;
-}
-
-void Mesh::updateMatrices(const Ball& b) {
-   
-    JumperBallTypes::vec3f positionBall = b.get3DPosition();
-    _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
-                            positionBall.y ,positionBall.z));
-}
-
-//void Mesh::updateMatrices(const std::array<unsigned int,3>& blockPosition,
-//                          JumperBallTypes::Direction objectDirection) {
-//   
-//    /*JumperBallTypes::vec3f positionBall = b.get3DPosition();
-//    _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
-//                            positionBall.y ,positionBall.z));*/
+//#include "Mesh.h"
+//#include "glm/gtc/matrix_transform.hpp"
+//#include "glm/gtx/transform.hpp"
+//#include "geometry/Cube.h"
+//#include "geometry/Pyramid.h"
+//#include "geometry/Quad.h"
+//#include "geometry/Sphere.h"
+//#include "animations/BallAnimation.h"
+//
+////Mesh::Mesh() :
+////      /*_positions(),
+////      _normals(),
+////      _colors(),
+////      _uvCoords(),
+////      _useIndexing(false),
+////      _indices(),
+////      _idElementBuffer(),
+////      _idVertexArray(),
+////      _idVertexBuffer(),*/
+////      _world(1.f)
+////{
+////
+////    /*glGenVertexArrays(1, &_idVertexArray);
+////    glBindVertexArray(_idVertexArray);
+////
+////    glGenBuffers(4, _idVertexBuffer.data());
+////
+////    const std::vector<GLfloat>& pQuad         = Utility::positionsQuadScreen;
+////    const std::vector<GLfloat>& cQuad         = Utility::colorsQuadScreen;
+////    const std::vector<GLfloat>& nQuad         = Utility::normalsQuadScreen;
+////    const std::vector<GLfloat>& uvQuad        = Utility::uvCoordsQuadScreen;
+////
+////    for (unsigned int i = 0 ; i < 6 ; ++i) {
+////    _positions.push_back(glm::vec3(pQuad.at(i*3),
+////                                    pQuad.at(i*3+1),pQuad.at(i*3+2)));
+////    _colors.push_back(glm::vec3(cQuad.at(i*3),
+////                                    cQuad.at(i*3+1),cQuad.at(i*3+2)));
+////    _normals.push_back(glm::vec3(nQuad.at(i*3),
+////                                    nQuad.at(i*3+1),nQuad.at(i*3+2)));
+////    _uvCoords.push_back(glm::vec2(uvQuad.at(i*2), uvQuad.at(i*2+1)));
+////    }
+////   
+////    
+////    bindVertexData();*/
+////
+////    //TODO THIS  SEB FOR THE QUAD
+////    /*Quad q;
+////
+////    Component component (std::make_shared<Quad>(q),
+////            nullptr);
+////    _components.push_back(component);*/
+////}
+//
+//
+//template<typename T>
+//Mesh<T>::Mesh(const T& base):
+//  _base(base),
+//  //_components(genComponents(base)),
+//  _world(1.f)
+//{
+//
 //}
-
-void Mesh::genSharps(const Block& block, glm::vec3 posWorld) {
-    
-    if (block.getType() == Block::categoryOfBlocksInFile::Sharp) {
-        
-        const std::array<float,7> scales 
-         {.2f,.1f,.05f,.1f,.075f,.15f,0.175f};
-
-        const std::array<glm::vec2,7> translationFloorFactor 
-        {
-            glm::vec2(0.f,0.f),   glm::vec2(-0.6f,-0.4f), glm::vec2(0.6f,-0.6f),
-            glm::vec2(0.2f,0.6f), glm::vec2(-0.2f,-0.6f), glm::vec2(0.6f,0.6f),
-            glm::vec2(-0.6f,0.6f)
-        };
-        
-        for(size_t i = 0; i < block.faceInfo().size(); i++) {
-            
-            bool isSharp = block.faceInfo().at(i);
-            if (isSharp) {
-                
-                constexpr float sizeBlock = 1.f;
-                constexpr float offset = sizeBlock/2.f;
-                
-                JumperBallTypes::Direction currentDir =
-                        JumperBallTypesMethods::integerAsDirection(i);
-                JumperBallTypes::vec3f vecDir = 
-                JumperBallTypesMethods::directionAsVector(currentDir);
-                
-                glm::mat4 translationOffset = glm::translate(
-                        glm::vec3( -offset, 0 , -offset ));
-                
-                glm::mat4 rotationLocal = 
-                        Utility::rotationUpToDir(currentDir);
-
-                
-                for (size_t j = 0 ; j < scales.size() ; j++) {
-
-                    glm::mat4 scaleLocal = 
-                          glm::scale(glm::vec3(scales.at(j),0.5f,scales.at(j)));
-                    
-                    //for ()
-
-                    glm::mat4 translationLocal =
-                            glm::translate( glm::vec3(
-                            posWorld.x + offset + vecDir.x * offset,
-                            posWorld.y + offset + vecDir.y * offset,
-                            posWorld.z + offset + vecDir.z * offset
-                            ));
-                    
-                    glm::mat4 translationFloor = glm::translate( glm::vec3(
-                                        offset * translationFloorFactor.at(j).x,
-                                        0.f,
-                                        offset * translationFloorFactor.at(j).y
-                                        ));
-                    
-                    const std::vector<GLfloat>& positions  = 
-                                                        Utility::positionsPike;
-                    const std::vector<GLfloat>& colors     = 
-                                                        Utility::colorsPike;
-                    const std::vector<GLfloat>& normals    = 
-                                                        Utility::normalsPike;
-                    const std::vector<GLfloat>& uvCoords   = 
-                                                        Utility::uvCoordsPike;
-                    
-                    for (unsigned int k = 0; k < positions.size(); k+=3)
-                    {
-                        glm::vec4 position  { positions.at(k),positions.at(k+1),
-                                              positions.at(k+2), 1.f};
-                        glm::vec4 normal    { normals.at(k), normals.at(k+1),
-                                              normals.at(k+2), 1.f};
-                        glm::vec3 color     { colors.at(k), colors.at(k+1), 
-                                              colors.at(k+2)};
-                        
-                        position  = translationLocal *  rotationLocal * 
-                                     translationFloor * scaleLocal * 
-                                    translationOffset * position;
-                        normal    = glm::normalize( rotationLocal * scaleLocal * 
-                                                    normal);
-
-                        _positions.push_back(glm::vec3(position));
-                        _normals.push_back(glm::vec3(normal));
-                        _colors.push_back(color);
-                    }
-                    for (unsigned int k = 0; k < uvCoords.size(); k+=2){
-
-                        glm::vec2 uvCoord   { uvCoords.at(k), uvCoords.at(k+1)};
-                        _uvCoords.push_back(uvCoord);
-                    }
-                } 
-            }
-        }
-    }
-}
-
-
-Mesh::~Mesh() {
-}
-
-
+//
+//template<typename T>
+//void Mesh<T>::update() {
+//    update(_base);
+//}
+//
+//
+//// About the using of Component:
+//// Note the typename because Component is a dependent type 
+////    (it depends on the type of Mesh)
+//// Note the Mesh<T>::Component because Component 
+////    is a type dependent on Mesh's type.
+//template<typename T>
+//std::vector<typename Mesh<T>::Component> 
+//                                      Mesh<T>::genComponents(const Ball& ball) {
+//
+//    glm::mat4 scaleMatrix = glm::scale(glm::vec3(ball.getRadius()));
+//    Sphere sphere;
+//     
+//    Component component ( std::make_shared<Sphere>(sphere,scaleMatrix),
+//                          std::make_shared<BallAnimation>(ball));
+//    return std::vector<typename Mesh<T>::Component> {component};
+//}
+//
+//template<typename T>
+//std::vector<typename Mesh<T>::Component> 
+//                                      Mesh<T>::genComponents(const Map& map) {
+//
+//    std::vector<typename Mesh<T>::Component> components;
+//    Cube  cube; // Basic cube for the blocks
+//    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
+//        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
+//            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
+//                auto block = map.getBlock(x,y,z);
+//                if (block) {
+//                    glm::mat4 transform (glm::translate(glm::vec3(x,y,z)));
+//                    Component component (std::make_shared<Cube>(cube,transform),
+//                                          nullptr);
+//                    components.push_back(component);
+//                }
+//            }
+//        }
+//    }
+//
+//
+//    //We have better performances if the components are stored with objects
+//    //with the same VAO/VBO, we will not have to change the binding later
+//    Pyramid pyramid; // Basic pyramid for the sharps
+//    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
+//        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
+//            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
+//                auto block = map.getBlock(x,y,z);
+//                if (block) {
+//                    genSharps(*block,glm::vec3(x,y,z),pyramid);
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//
+//
+//
+////Mesh::Mesh(const Ball& ball):
+////      /*_positions(),
+////      _normals(),
+////      _colors(),
+////      _uvCoords(),
+////      _useIndexing(true),
+////      _indices(),
+////      _idElementBuffer(),
+////      _idVertexArray(),
+////      _idVertexBuffer(),*/
+////      _world(1.f)
+////{
+////     
+////    /*glGenVertexArrays(1, &_idVertexArray);
+////    glBindVertexArray(_idVertexArray);
+////
+////    glGenBuffers(4, _idVertexBuffer.data());
+////
+////
+////    constexpr unsigned int  iParaCount  = 40;
+////    constexpr unsigned int  iMeriCount  = 60;
+////    const     float         r           = ball.getRadius();
+////    
+////    // Create a sphere ---------------------------------------------------------
+////    GLuint iVertexCount = iParaCount * iMeriCount;
+////    
+////    constexpr float a1 = ( 180.0 / ( iParaCount - 1 ) ) * M_PI / 180.0;
+////    constexpr float a2 = ( 360.0 / ( iMeriCount - 1 ) ) * M_PI / 180.0;
+////    
+////    // parallels ---------------------------------------------------------------
+////    for( unsigned int i = 0; i < iParaCount; ++i )
+////    {
+////        const float fAngle    = - static_cast<float>(M_PI) / 2.0f + a1 * ( i );
+////        const float z         = r * static_cast<float>(sin( fAngle ));
+////        const float fRadius   = r * static_cast<float>(cos( fAngle ));
+////        
+////        for( unsigned int j = 0; j < iMeriCount; ++j )
+////        {
+////            _positions.push_back(glm::vec3( 
+////                    fRadius * static_cast<float>(cos( a2 * j )), 
+////                    fRadius * static_cast<float>(sin( a2 * j )), 
+////                    z ));
+////            _uvCoords.push_back(glm::vec2( static_cast<float>(j)/ iMeriCount, 
+////                    static_cast<float>(iParaCount - i ) / iParaCount ));
+////            _colors.push_back(glm::vec3(static_cast<float>(i)/iParaCount,
+////                                        (j < iMeriCount/2) ? 1.f : 0.f,
+////                                        0.5f));
+////        }
+////    }
+////    // compute normals ---------------------------------------------------------
+////    // on a 0 centered sphere : you just need to normalise the position!
+////    _normals.reserve(iVertexCount);
+////    
+////    for( unsigned int i = 0; i < iVertexCount; ++i )
+////    {
+////        _normals.push_back(glm::normalize( _positions[ i ] ));
+////    }
+////    
+////    // for quads split in 2
+////    
+////    for( unsigned int i = 0; i < ( iParaCount - 1 ); ++i )
+////    {
+////        for( unsigned int j = 0; j < ( iMeriCount - 1 ); ++j )
+////        {
+////            _indices.push_back(iMeriCount * i + j);
+////            _indices.push_back(iMeriCount * i + ( j + 1 ));
+////            _indices.push_back(iMeriCount * ( i + 1 ) + ( j + 1 ));
+////            _indices.push_back(iMeriCount * ( i + 1 ) + ( j + 1 ));
+////            _indices.push_back(iMeriCount * ( i + 1 ) + j);
+////            _indices.push_back(iMeriCount * i + j);
+////        }
+////    }
+////   
+////    JumperBallTypes::vec3f positionBall = ball.get3DPosition();
+////    _world = glm::translate(_world, glm::vec3(positionBall.x,
+////                            positionBall.y ,positionBall.z));
+////
+////
+////    bindVertexData();
+////
+////    glGenBuffers(1, &_idElementBuffer);
+////    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
+////    glBufferData(GL_ELEMENT_ARRAY_BUFFER,_indices.size() * sizeof (GLushort),
+////            _indices.data(),GL_STATIC_DRAW);*/
+////    glm::mat4 scaleMatrix = glm::scale(glm::vec3(ball.getRadius()));
+////    Sphere sphere;
+////     
+////    Component component ( std::make_shared<Sphere>(sphere,scaleMatrix),
+////                          std::make_shared<BallAnimation>(ball));
+////    _components.push_back(component);
+////}
+//
+//template<typename T>
+//void Mesh<T>::update(const Ball& base) {
+//
+//    JumperBallTypes::vec3f positionBall = base.get3DPosition();
+//    _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
+//                            positionBall.y ,positionBall.z));
+//
+//    if (_components.size() > 0)
+//        _components.at(0).animation->updateTrans();
+//}
+//
+//template<typename T>
+//void Mesh<T>::update(const Map& map) {
+//
+//}
+//
+//
+//
+//
+////Mesh::Mesh(const Map& map):
+////      /*_positions(),
+////      _normals(),
+////      _colors(),
+////      _uvCoords(),
+////      _useIndexing(false),
+////      _indices(),
+////      _idElementBuffer(),
+////      _idVertexArray(),
+////      _idVertexBuffer(),*/
+////      _world(1.f)
+////{
+////
+////    /*glGenVertexArrays(1, &_idVertexArray);
+////    glBindVertexArray(_idVertexArray);
+////
+////    glGenBuffers(4, _idVertexBuffer.data());
+////
+////
+////    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
+////        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
+////            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
+////                auto block = map.getBlock(x,y,z);
+////                if (block) {
+////
+////                    const std::vector<GLfloat>& pCube  = Utility::positionsCube;
+////                    const std::vector<GLfloat>& cCube  = Utility::colorsCube;
+////                    const std::vector<GLfloat>& nCube  = Utility::normalsCube;
+////                    const std::vector<GLfloat>& uvCube = Utility::uvCoordsCube;
+////
+////                    for (unsigned int i = 0 ; i < pCube.size(); i += 3 )
+////                    {
+////                        const GLfloat xAfterTranslation =  
+////                                      pCube.at(i) + static_cast<GLfloat> (x);
+////                        const GLfloat yAfterTranslation =  
+////                                      pCube.at(i+1) + static_cast<GLfloat> (y);
+////                        const GLfloat zAfterTranslation =  
+////                                      pCube.at(i+2) + static_cast<GLfloat> (z);
+////
+////                        _positions.push_back( glm::vec3(xAfterTranslation,
+////                                yAfterTranslation , zAfterTranslation));
+////                        _colors.push_back(
+////                          glm::vec3(cCube.at(i),cCube.at(i+1) ,cCube.at(i+2)));
+////                        _normals.push_back(
+////                          glm::vec3(nCube.at(i),nCube.at(i+1) ,nCube.at(i+2)));
+////                    }
+////                    for (unsigned int i = 0 ; i < uvCube.size(); i += 2 ){
+////                        _uvCoords.push_back(
+////                          glm::vec2(nCube.at(i),nCube.at(i+1)));
+////
+////                    }
+////                }
+////            }
+////        }
+////    }
+////
+////    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
+////        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
+////            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
+////                auto block = map.getBlock(x,y,z);
+////                if (block) {
+////                    genSharps(*block,glm::vec3(x,y,z));
+////                }
+////            }
+////        }
+////    }
+////    //Gen sharps
+////    
+////    bindVertexData();*/
+////
+////
+////    Cube  cube; // Basic cube for the blocks
+////    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
+////        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
+////            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
+////                auto block = map.getBlock(x,y,z);
+////                if (block) {
+////                    glm::mat4 transform (glm::translate(glm::vec3(x,y,z)));
+////                    Component component (std::make_shared<Cube>(cube,transform),
+////                                          nullptr);
+////                    _components.push_back(component);
+////                }
+////            }
+////        }
+////    }
+////
+////
+////    //We have better performances if the components are stored with objects
+////    //with the same VAO/VBO, we will not have to change the binding later
+////    Pyramid pyramid; // Basic pyramid for the sharps
+////    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
+////        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
+////            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
+////                auto block = map.getBlock(x,y,z);
+////                if (block) {
+////                    genSharps(*block,glm::vec3(x,y,z),pyramid);
+////                }
+////            }
+////        }
+////    }
+////    
+////}
+//
+////Mesh::Mesh(Object::CategoryOfObjects category):
+////      /*_positions(),
+////      _normals(),
+////      _colors(),
+////      _uvCoords(),
+////      _useIndexing(false),
+////      _indices(),
+////      _idElementBuffer(),
+////      _idVertexArray(),
+////      _idVertexBuffer(),*/
+////      _world(1.f)
+////{
+////    /*glGenVertexArrays(1, &_idVertexArray);
+////    glBindVertexArray(_idVertexArray);
+////
+////    glGenBuffers(4, _idVertexBuffer.data());
+////
+////    switch(category) {
+////        case Object::CategoryOfObjects::Key :
+////        {
+////            const std::vector<GLfloat>& pCube  = Utility::positionsCube;
+////            const std::vector<GLfloat>  cCube  = Utility::uniColorsCube
+////                                              (glm::vec3(1.f,215.f/255.f,0.f));
+////            const std::vector<GLfloat>& nCube  = Utility::normalsCube;
+////            const std::vector<GLfloat>& uvCube = Utility::uvCoordsCube;
+////            
+////            constexpr unsigned int nbCubesToCreateAKey = 4;
+////            std::vector<glm::vec3> scales =
+////            { {0.2f,0.2f,0.1f},{0.1f,0.5f,0.1f},
+////              {0.15f,0.1f,0.1f},{0.15f,0.1f,0.1f} };
+////
+////            std::vector<glm::vec3> localTranslations=
+////            { {0.0f,0.15f,0.0f},{0.0f,-0.1f,0.f},
+////              {0.125f,-0.15f,0.f},{0.125f,-0.35f,0.f} };
+////            for (unsigned int i = 0 ; i  <  nbCubesToCreateAKey ; ++i ) {
+////                for (unsigned int j = 0 ; j < pCube.size(); j += 3 )
+////                {
+////
+////                    _positions.push_back( glm::vec3(
+////                            pCube.at(j)*scales.at(i).x+
+////                                          localTranslations.at(i).x,
+////                            pCube.at(j+1)*scales.at(i).y+
+////                                          localTranslations.at(i).y,
+////                            pCube.at(j+2)*scales.at(i).z+
+////                                          localTranslations.at(i).z) 
+////                            );
+////
+////                    _colors.push_back(
+////                    glm::vec3(cCube.at(j),cCube.at(j+1) ,cCube.at(j+2)));
+////
+////                    //there is no rotation and about the scales
+////                    // all faces are normal to the axis,
+////                    //so there is useless to change them
+////                    _normals.push_back(
+////                    glm::vec3(nCube.at(j),nCube.at(j+1) ,nCube.at(j+2)));
+////
+////                }
+////                for (unsigned int i = 0 ; i < uvCube.size(); i += 2 ){
+////                    _uvCoords.push_back(
+////                    glm::vec2(nCube.at(i),nCube.at(i+1)));
+////                    
+////                }
+////            }
+////            break;
+////        }
+////        case Object::CategoryOfObjects::Clock :
+////            break;
+////        case Object::CategoryOfObjects::Coin :
+////            break;
+////        default : break;
+////    }
+////    
+////    */
+////}
+//
+///*void Mesh::bindVertexData() const {
+//    
+//    std::vector<GLfloat> positionsList ;
+//    for (glm::vec3 pos : _positions) {
+//        positionsList.push_back(pos.x) ;
+//        positionsList.push_back(pos.y) ;
+//        positionsList.push_back(pos.z) ;
+//    }
+//    
+//    std::vector<GLfloat> colorsList;
+//    for (glm::vec3 color : _colors) {
+//        colorsList.push_back(color.x) ;
+//        colorsList.push_back(color.y) ;
+//        colorsList.push_back(color.z) ;
+//    }
+//    
+//    std::vector<GLfloat> normalsList;
+//    for (glm::vec3 normal: _normals) {
+//        normalsList.push_back(normal.x) ;
+//        normalsList.push_back(normal.y) ;
+//        normalsList.push_back(normal.z) ;
+//    }
+//    
+//    std::vector<GLfloat> uvCoordsList;
+//    for (glm::vec2 uvCoord: _uvCoords) {
+//        uvCoordsList.push_back(uvCoord.x) ;
+//        uvCoordsList.push_back(uvCoord.y) ;
+//    }
+//    
+//    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
+//    glBufferData(GL_ARRAY_BUFFER, positionsList.size() * sizeof(GLfloat), 
+//            positionsList.data(), GL_STATIC_DRAW);
+//    
+//    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
+//    glBufferData(GL_ARRAY_BUFFER, colorsList.size() * sizeof(GLfloat), 
+//            colorsList.data(), GL_STATIC_DRAW);
+//    
+//    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(2));
+//    glBufferData(GL_ARRAY_BUFFER, normalsList.size() * sizeof(GLfloat), 
+//            normalsList.data(), GL_STATIC_DRAW);
+//    
+//    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(3));
+//    glBufferData(GL_ARRAY_BUFFER, uvCoordsList.size() * sizeof(GLfloat), 
+//            uvCoordsList.data(), GL_STATIC_DRAW);
+//    
+//}*/
+///*void Mesh::draw(bool drawAll, unsigned int offset, unsigned int number) const {
+//    
+//    glEnableVertexAttribArray(0);
+//    glEnableVertexAttribArray(1);
+//    glEnableVertexAttribArray(2);
+//    glEnableVertexAttribArray(3);
+//    
+//    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(0));
+//    
+//    glVertexAttribPointer ( 
+//            0,
+//            3, // 3 GL_FLOAT per vertex
+//            GL_FLOAT,
+//            GL_FALSE,
+//            0,
+//            nullptr
+//            );
+//    
+//    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(1));
+//    glVertexAttribPointer ( 
+//            1,
+//            3, // 3 GL_FLOAT per vertex
+//            GL_FLOAT,
+//            GL_FALSE,
+//            0,
+//            nullptr
+//            );
+//    
+//    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(2));
+//    glVertexAttribPointer ( 
+//            2,
+//            3, // 3 GL_FLOAT per vertex
+//            GL_FLOAT,
+//            GL_FALSE,
+//            0,
+//            nullptr
+//            );
+//    
+//    glBindBuffer(GL_ARRAY_BUFFER, _idVertexBuffer.at(3));
+//    glVertexAttribPointer ( 
+//            3,
+//            2, // 2 GL_FLOAT per vertex
+//            GL_FLOAT,
+//            GL_FALSE,
+//            0,
+//            nullptr
+//            );
+//    
+//    if (_useIndexing) {
+//        glBindBuffer  (GL_ELEMENT_ARRAY_BUFFER,_idElementBuffer);
+//        glDrawElements(GL_TRIANGLES,_indices.size(),GL_UNSIGNED_SHORT,nullptr);
+//    }
+//    else {
+//        if (drawAll){
+//            glDrawArrays(GL_TRIANGLES,offset,_positions.size()-offset);
+//        }
+//        else {
+//            glDrawArrays(GL_TRIANGLES,offset,number);
+//        }
+//    }
+//    
+//    glDisableVertexAttribArray(0);
+//    glDisableVertexAttribArray(1);
+//    glDisableVertexAttribArray(2);
+//    glDisableVertexAttribArray(3);
+//}*/
+//
+//
+//
+//
+//
+//
+//template<typename T>
+//const glm::mat4& Mesh<T>::world() const {
+//    return _world;
+//}
+//
+//template<typename T>
+//void Mesh<T>::world(const glm::mat4& w) {
+//    _world = w;
+//}
+//
+///*void Mesh::updateMatrices(const Ball& b) {
+//   
+//    JumperBallTypes::vec3f positionBall = b.get3DPosition();
+//    _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
+//                            positionBall.y ,positionBall.z));
+//    _components.at(0).animation->updateTrans();
+//}*/
+//
+////void Mesh::updateMatrices(const std::array<unsigned int,3>& blockPosition,
+////                          JumperBallTypes::Direction objectDirection) {
+////   
+////    /*JumperBallTypes::vec3f positionBall = b.get3DPosition();
+////    _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
+////                            positionBall.y ,positionBall.z));*/
+////}
+//
+//template<typename T>
+//void Mesh<T>::genSharps(const Block& block, glm::vec3 posWorld,
+//                      const Pyramid& pyramid) {
+//    
+//    /*if (block.getType() == Block::categoryOfBlocksInFile::Sharp) {
+//        
+//        const std::array<float,7> scales 
+//         {.2f,.1f,.05f,.1f,.075f,.15f,0.175f};
+//
+//        const std::array<glm::vec2,7> translationFloorFactor 
+//        {
+//            glm::vec2(0.f,0.f),   glm::vec2(-0.6f,-0.4f), glm::vec2(0.6f,-0.6f),
+//            glm::vec2(0.2f,0.6f), glm::vec2(-0.2f,-0.6f), glm::vec2(0.6f,0.6f),
+//            glm::vec2(-0.6f,0.6f)
+//        };
+//        
+//        for(size_t i = 0; i < block.faceInfo().size(); i++) {
+//            
+//            bool isSharp = block.faceInfo().at(i);
+//            if (isSharp) {
+//                
+//                constexpr float sizeBlock = 1.f;
+//                constexpr float offset = sizeBlock/2.f;
+//                
+//                JumperBallTypes::Direction currentDir =
+//                        JumperBallTypesMethods::integerAsDirection(i);
+//                JumperBallTypes::vec3f vecDir = 
+//                JumperBallTypesMethods::directionAsVector(currentDir);
+//                
+//                glm::mat4 translationOffset = glm::translate(
+//                        glm::vec3( -offset, 0 , -offset ));
+//                
+//                glm::mat4 rotationLocal = 
+//                        Utility::rotationUpToDir(currentDir);
+//
+//                
+//                for (size_t j = 0 ; j < scales.size() ; j++) {
+//
+//                    glm::mat4 scaleLocal = 
+//                          glm::scale(glm::vec3(scales.at(j),0.5f,scales.at(j)));
+//                    
+//                    //for ()
+//
+//                    glm::mat4 translationLocal =
+//                            glm::translate( glm::vec3(
+//                            posWorld.x + offset + vecDir.x * offset,
+//                            posWorld.y + offset + vecDir.y * offset,
+//                            posWorld.z + offset + vecDir.z * offset
+//                            ));
+//                    
+//                    glm::mat4 translationFloor = glm::translate( glm::vec3(
+//                                        offset * translationFloorFactor.at(j).x,
+//                                        0.f,
+//                                        offset * translationFloorFactor.at(j).y
+//                                        ));
+//                    
+//                    const std::vector<GLfloat>& positions  = 
+//                                                        Utility::positionsPike;
+//                    const std::vector<GLfloat>& colors     = 
+//                                                        Utility::colorsPike;
+//                    const std::vector<GLfloat>& normals    = 
+//                                                        Utility::normalsPike;
+//                    const std::vector<GLfloat>& uvCoords   = 
+//                                                        Utility::uvCoordsPike;
+//                    
+//                    for (unsigned int k = 0; k < positions.size(); k+=3)
+//                    {
+//                        glm::vec4 position  { positions.at(k),positions.at(k+1),
+//                                              positions.at(k+2), 1.f};
+//                        glm::vec4 normal    { normals.at(k), normals.at(k+1),
+//                                              normals.at(k+2), 1.f};
+//                        glm::vec3 color     { colors.at(k), colors.at(k+1), 
+//                                              colors.at(k+2)};
+//                        
+//                        position  = translationLocal *  rotationLocal * 
+//                                     translationFloor * scaleLocal * 
+//                                    translationOffset * position;
+//                        normal    = glm::normalize( rotationLocal * scaleLocal * 
+//                                                    normal);
+//
+//                        _positions.push_back(glm::vec3(position));
+//                        _normals.push_back(glm::vec3(normal));
+//                        _colors.push_back(color);
+//                    }
+//                    for (unsigned int k = 0; k < uvCoords.size(); k+=2){
+//
+//                        glm::vec2 uvCoord   { uvCoords.at(k), uvCoords.at(k+1)};
+//                        _uvCoords.push_back(uvCoord);
+//                    }
+//                } 
+//            }
+//        }
+//    }*/
+//    if (block.getType() == Block::categoryOfBlocksInFile::Sharp) {
+//        
+//        const std::array<float,7> scales 
+//         {.2f,.1f,.05f,.1f,.075f,.15f,0.175f};
+//
+//        const std::array<glm::vec2,7> translationFloorFactor 
+//        {
+//            glm::vec2(0.f,0.f),   glm::vec2(-0.6f,-0.4f), glm::vec2(0.6f,-0.6f),
+//            glm::vec2(0.2f,0.6f), glm::vec2(-0.2f,-0.6f), glm::vec2(0.6f,0.6f),
+//            glm::vec2(-0.6f,0.6f)
+//        };
+//        
+//        for(size_t i = 0; i < block.faceInfo().size(); i++) {
+//            
+//            bool isSharp = block.faceInfo().at(i);
+//            if (isSharp) {
+//                
+//                constexpr float sizeBlock = 1.f;
+//                constexpr float offset = sizeBlock/2.f;
+//                
+//                JumperBallTypes::Direction currentDir =
+//                        JumperBallTypesMethods::integerAsDirection(i);
+//                JumperBallTypes::vec3f vecDir = 
+//                JumperBallTypesMethods::directionAsVector(currentDir);
+//                
+//                glm::mat4 translationOffset = glm::translate(
+//                        glm::vec3( -offset, 0 , -offset ));
+//                
+//                glm::mat4 rotationLocal = 
+//                        Utility::rotationUpToDir(currentDir);
+//
+//                
+//                for (size_t j = 0 ; j < scales.size() ; j++) {
+//
+//                    glm::mat4 scaleLocal = 
+//                          glm::scale(glm::vec3(scales.at(j),0.5f,scales.at(j)));
+//                    
+//                    //for ()
+//
+//                    glm::mat4 translationLocal =
+//                            glm::translate( glm::vec3(
+//                            posWorld.x + offset + vecDir.x * offset,
+//                            posWorld.y + offset + vecDir.y * offset,
+//                            posWorld.z + offset + vecDir.z * offset
+//                            ));
+//                    
+//                    glm::mat4 translationFloor = glm::translate( glm::vec3(
+//                                        offset * translationFloorFactor.at(j).x,
+//                                        0.f,
+//                                        offset * translationFloorFactor.at(j).y
+//                                        ));
+//                    
+//                    glm::mat4 modelTranf= translationLocal * rotationLocal * 
+//                            translationFloor * scaleLocal * 
+//                            translationOffset;
+//                    glm::mat4 normalsTrans= rotationLocal /* * scaleLocal*/;
+//                    Component component ( std::make_shared<Pyramid>
+//                                            (pyramid,modelTranf,normalsTrans),
+//                                          nullptr);
+//                    _components.push_back(component);
+//                } 
+//            }
+//        }
+//    }
+//
+//}
+//
+//template<typename T>
+//void Mesh<T>::render(const ShaderProgram& sp) const {
+//
+//    sp.bindUniform("W",_world);
+//    GLuint currentVAO = 0; 
+//    for( const Component& component : _components) {
+//        glm::mat4 modelTransform(1.f);
+//        glm::mat4 normalsTransform(1.f);
+//        if(component.element) {
+//            modelTransform = component.element->modelTransform();
+//            normalsTransform = component.element->normalsTransform();
+//        }
+//        if(component.animation) {
+//            modelTransform = component.animation->model() * modelTransform;
+//            normalsTransform = component.animation->scaleRotation() * 
+//                    normalsTransform;
+//        }
+//        sp.bindUniform("M",modelTransform);
+//        sp.bindUniform("SR",normalsTransform);
+//        
+//        if(currentVAO != *component.element->vertexArrayObject()){
+//            component.element->bind();
+//            currentVAO = *component.element->vertexArrayObject();
+//        }
+//        component.element->draw();
+//    }
+//}
+//
+//
+//template<typename T>
+//Mesh<T>::~Mesh() {
+//}
+//
+//
+//

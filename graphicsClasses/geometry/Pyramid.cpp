@@ -14,28 +14,37 @@
 #include "Pyramid.h"
 
 
-Pyramid::Pyramid(const glm::mat4& transform): GeometricShape (
-                                                        basicPositionsPyramid,
-                                                        basicNormalsPyramid,
-                                                        basicColorsPyramid,
-                                                        basicUVCoordsPyramid,
-                                                        transform) {
+Pyramid::Pyramid( const glm::mat4& modelTransform,
+            const glm::mat4& normalsTransform  
+        ): 
+    GeometricShape ( 
+        basicPositionsPyramid,
+        basicNormalsPyramid,
+        basicColorsPyramid,
+        basicUVCoordsPyramid,
+        modelTransform,
+        normalsTransform) {
 }
 
-Pyramid::Pyramid(const glm::mat4& transform,const glm::vec3& customColor): 
+Pyramid::Pyramid( const glm::vec3& customColor,
+            const glm::mat4& modelTransform,
+            const glm::mat4& normalsTransform  
+        ): 
     GeometricShape (
         basicPositionsPyramid,
         basicNormalsPyramid,
         GeometricShape::createCustomColorBuffer(customColor, 
         basicPositionsPyramid.size()),
         basicUVCoordsPyramid,
-        transform)
+        modelTransform,
+        normalsTransform)
 {
 }
 
-
-Pyramid::Pyramid(const Pyramid& pyramid, const glm::mat4& transform) :
-    GeometricShape(pyramid,transform) {
+Pyramid::Pyramid(const Pyramid& pyramid, 
+           const glm::mat4& modelTransform,
+           const glm::mat4& normalsTransform ):
+    GeometricShape(pyramid,modelTransform,normalsTransform) {
 }
 
 

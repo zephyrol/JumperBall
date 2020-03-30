@@ -14,29 +14,36 @@
 #include "Sphere.h"
 
 
-Sphere::Sphere(const glm::mat4& transform): GeometricShape( 
+Sphere::Sphere( const glm::mat4& modelTransform,
+                const glm::mat4& normalsTransform): GeometricShape( 
                               Sphere::basicInfoSphere.positions,
                               Sphere::basicInfoSphere.normals,
                               Sphere::basicInfoSphere.colors,
                               Sphere::basicInfoSphere.uvCoords,
-                              transform,
+                              modelTransform,
+                              normalsTransform,
                               Sphere::basicInfoSphere.indices) {
 }
 
-Sphere::Sphere( const glm::mat4& transform,
-                const glm::vec3& customColor): GeometricShape ( 
+Sphere::Sphere( const glm::vec3& customColor,
+                const glm::mat4& modelTransform,
+                const glm::mat4& normalsTransform): GeometricShape ( 
                               Sphere::basicInfoSphere.positions,
                               Sphere::basicInfoSphere.normals,
                               GeometricShape::createCustomColorBuffer(
                                 customColor,
                                 Sphere::basicInfoSphere.colors.size()),
                               Sphere::basicInfoSphere.uvCoords,
-                              transform,
+                              modelTransform,
+                              normalsTransform,
                               Sphere::basicInfoSphere.indices) {
 }
 
-Sphere::Sphere(const Sphere& sphere, const glm::mat4& transform) :
-    GeometricShape(sphere,transform) {
+
+Sphere::Sphere( const Sphere& sphere, 
+                const glm::mat4& modelTransform,
+                const glm::mat4& normalsTransform ):
+    GeometricShape(sphere,modelTransform,normalsTransform) {
 }
 
 Sphere::InfoSphere Sphere::computeBasicInfoSphere() {

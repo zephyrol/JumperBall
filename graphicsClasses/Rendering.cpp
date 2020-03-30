@@ -59,13 +59,12 @@ Rendering::Rendering(const Map&     map,
     _uniformBool(),
     _meshMap(map),
     _meshBall(ball),
-    _meshKey(),
+    /*_meshKey(),
     _meshCoin(),
     _meshClock(),
-    _meshQuadFrame(),
+    _meshQuadFrame(),*/
     _map(map),
     _ball(ball),
-    _ballAnimation(ball),
     _star(star),
     _light(),
     _camera(camera),
@@ -95,100 +94,12 @@ Rendering::Rendering(const Map&     map,
 {
 }
 
-void Rendering::bindUniform(const std::string& name, 
-                            const glm::mat4& value, 
-                            const ShaderProgram& sp) {
-
-    const GLuint uniformVariableID =
-            glGetUniformLocation(sp.getHandle(),name.c_str());
-    glUniformMatrix4fv( uniformVariableID, 1, GL_FALSE, &value[0][0]);
-}
-
-void Rendering::bindUniform(const std::string& name, 
-                            const glm::vec4& value, 
-                            const ShaderProgram& sp) {
-
-    const GLuint uniformVariableID =
-            glGetUniformLocation(sp.getHandle(),name.c_str());
-    glUniform4fv( uniformVariableID, 1, &value[0]);
-}
-
-void Rendering::bindUniform(const std::string& name, 
-                            const glm::vec3& value, 
-                            const ShaderProgram& sp) {
-
-    const GLuint uniformVariableID =
-            glGetUniformLocation(sp.getHandle(),name.c_str());
-    glUniform3fv( uniformVariableID, 1, &value[0]);
-}
-
-void Rendering::bindUniform(const std::string& name, 
-                            const glm::vec2& value, 
-                            const ShaderProgram& sp) {
-
-    const GLuint uniformVariableID =
-            glGetUniformLocation(sp.getHandle(),name.c_str());
-    glUniform2fv( uniformVariableID, 1, &value[0]);
-}
-
-void Rendering::bindUniform(const std::string& name, 
-                            const GLfloat& value, 
-                            const ShaderProgram& sp) {
-
-    const GLuint uniformVariableID =
-            glGetUniformLocation(sp.getHandle(),name.c_str());
-    glUniform1fv( uniformVariableID, 1, &value);
-}
-
-void Rendering::bindUniform(const std::string& name, 
-                            const bool& value, 
-                            const ShaderProgram& sp) {
-
-    const GLuint uniformVariableID =
-            glGetUniformLocation(sp.getHandle(),name.c_str());
-    glUniform1i( uniformVariableID, value);
-}
-
-
-void Rendering::bindUniform(const std::string& name, 
-                            const int& value, 
-                            const ShaderProgram& sp) {
-
-    const GLuint uniformVariableID =
-            glGetUniformLocation(sp.getHandle(),name.c_str());
-    glUniform1i( uniformVariableID, value);
-}
-
-void Rendering::bindUniform(const std::string& name,
-                            const std::vector<int>& value,
-                            const ShaderProgram& sp) {
-    const GLuint uniformVariableID =
-            glGetUniformLocation(sp.getHandle(),name.c_str());
-    glUniform1iv( uniformVariableID, value.size(), value.data());
-}
-
-void Rendering::bindUniform(const std::string& name,
-                            const std::vector<float>& value,
-                            const ShaderProgram& sp) {
-    const GLuint uniformVariableID =
-            glGetUniformLocation(sp.getHandle(),name.c_str());
-    glUniform1fv( uniformVariableID, value.size(), value.data());
-}
-
-
-void Rendering::bindUniformTexture( const std::string& name, 
-                                    const int& value, 
-                                    const ShaderProgram& sp) {
-    const GLuint uniformVariableID =
-            glGetUniformLocation(sp.getHandle(),name.c_str());
-    glUniform1i( uniformVariableID, value);
-}
 
 
 void Rendering::renderMap() {
 
-    bindUniform ("M",  glm::mat4(1.f), _spMap);
-    bindUniform ("SR", glm::mat4(1.f), _spMap);
+    /*_spMap.bindUniform ("M",  glm::mat4(1.f));
+    _spMap.bindUniform ("SR", glm::mat4(1.f));
     unsigned int displayedCubes = 0;
     constexpr unsigned int numberFaces = 6;
     constexpr unsigned int numberVerticesPerFaces = 6;
@@ -203,15 +114,17 @@ void Rendering::renderMap() {
                           block->localTransform();
                     glm::mat4 trans = glm::translate(glm::vec3( transform.at(0),
                                               transform.at(1),transform.at(2)));
-                    bindUniform ("W",  trans, _spMap);
+                    _spMap.bindUniform ("W",  trans);
                     _meshMap.draw(false,displayedCubes++*numberVerticesPerBlock,
                                         numberVerticesPerBlock);
 
                 }
             }
         }
-    }
-    _meshMap.draw(true,displayedCubes*numberVerticesPerBlock,0);
+    }*/
+ //   _meshMap.draw(true,displayedCubes*numberVerticesPerBlock,0);
+    _meshMap.update();
+    _meshMap.render(_spMap);
 }
 
 void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
@@ -220,18 +133,18 @@ void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
     _frameBufferHalfBlur.bindFrameBuffer();
 
     referenceFBO.bindRenderTexture();
-    bindUniformTexture("frameTexture", 0, _spBlur);
-    bindUniform("patchSize", static_cast<int>(blurPatchSize), _spBlur);
-    bindUniform("gaussWeights", gaussComputedValues, _spBlur);
+    _spBlur.bindUniformTexture("frameTexture", 0);
+    _spBlur.bindUniform("patchSize", static_cast<int>(blurPatchSize));
+    _spBlur.bindUniform("gaussWeights", gaussComputedValues);
 
-    bindUniform("firstPass", true, _spBlur);
-    _meshQuadFrame.draw();
+    _spBlur.bindUniform("firstPass", true);
+    //_meshQuadFrame.draw();
 
     _frameBufferCompleteBlur.bindFrameBuffer();
     _frameBufferHalfBlur.bindRenderTexture();
 
-    bindUniform("firstPass", false, _spBlur);
-    _meshQuadFrame.draw();
+    _spBlur.bindUniform("firstPass", false);
+    //_meshQuadFrame.draw();
 }
 
 void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
@@ -244,19 +157,17 @@ void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
     _frameBufferToneMapping.bindFrameBuffer();
 
     referenceFBO.bindRenderTexture();
-    bindUniformTexture("frameTexture", 0, _spToneMapping);
-    bindUniform ( "averageLuminance", 
+    _spToneMapping.bindUniformTexture("frameTexture", 0);
+    _spToneMapping.bindUniform ( "averageLuminance", 
                   //averageLuminanceAndMax.first,
                   //referenceFBO.computeLogAverageLuminance(),
-                  1.8f,
-                  _spToneMapping);
-    bindUniform ( "whiteLuminance", 
-                  averageLuminanceAndMax.second,
+                  1.8f);
+    _spToneMapping.bindUniform ( "whiteLuminance", 
+                  averageLuminanceAndMax.second);
                   //referenceFBO.computeLogAverageLuminance(),
                   //1.8f,
-                  _spToneMapping);
     
-    _meshQuadFrame.draw();
+    //_meshQuadFrame.draw();
 }
 
 void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
@@ -264,9 +175,9 @@ void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
     _frameBufferBrightPassFilter.bindFrameBuffer();
 
     referenceFBO.bindRenderTexture();
-    bindUniformTexture("frameTexture", 0, _spBrightPassFilter);
-    bindUniform ("threshold",  5.f,   _spBrightPassFilter);
-    _meshQuadFrame.draw();
+    _spBrightPassFilter.bindUniformTexture("frameTexture", 0);
+    _spBrightPassFilter.bindUniform ("threshold",  5.f);
+    //_meshQuadFrame.draw();
 }
 
 void Rendering::bloomEffect(  const FrameBuffer& fboScene, 
@@ -275,19 +186,19 @@ void Rendering::bloomEffect(  const FrameBuffer& fboScene,
     _frameBufferBloom.bindFrameBuffer();
 
     fboScene.bindRenderTexture(0);
-    bindUniformTexture("frameToneMappingTexture", 0, _spBloom);
+    _spBloom.bindUniformTexture("frameToneMappingTexture", 0);
 
     fboLight.bindRenderTexture(1);
-    bindUniformTexture("frameBrightPassFilterTexture", 1, _spBloom);
+    _spBloom.bindUniformTexture("frameBrightPassFilterTexture", 1);
 
-    _meshQuadFrame.draw();
+    //_meshQuadFrame.draw();
 }
 
 
 void Rendering::render() {
 
-    _frameBufferScene.bindFrameBuffer();
-    //FrameBuffer::bindDefaultFrameBuffer();
+    //_frameBufferScene.bindFrameBuffer();
+    FrameBuffer::bindDefaultFrameBuffer();
     
     //Ball and Map
     _spMap.use();
@@ -301,15 +212,16 @@ void Rendering::render() {
     _light.bind("light",_spMap);
 
     //Ball
-    _meshBall.updateMatrices(_ball);
-    _ballAnimation.updateTrans();
+    //_meshBall.updateMatrices(_ball);
+    //_ballAnimation.updateTrans();
 
-    bindUniform ("M",   _ballAnimation.model(),         _spMap);
-    bindUniform ("SR",  _ballAnimation.scaleRotation(), _spMap);
+    /*_spMap.bindUniform ("M",   _ballAnimation.model());
+    _spMap.bindUniform ("SR",  _ballAnimation.scaleRotation());
 
-    bindUniform ("W",   _meshBall.world(),              _spMap);
+    _spMap.bindUniform ("W",   _meshBall.world());*/
 
-    _meshBall.draw();
+    _meshBall.update();
+    _meshBall.render(_spMap);
 
     //Map
     renderMap();
@@ -317,32 +229,32 @@ void Rendering::render() {
     //Star
     _spStar.use();
 
-    bindUniform ("MW",            _star.transform(),      _spStar);
-    bindUniform ("radiusInside",  _star.radiusInside(),   _spStar);
-    bindUniform ("radiusOutside", _star.radiusOutside(),  _spStar);
-    bindUniform ("colorInside",   _star.colorInside(),    _spStar);
-    bindUniform ("colorOutside",  _star.colorOutside(),   _spStar);
+    _spStar.bindUniform("MW",            _star.transform());
+    _spStar.bindUniform("radiusInside",  _star.radiusInside());
+    _spStar.bindUniform("radiusOutside", _star.radiusOutside());
+    _spStar.bindUniform("colorInside",   _star.colorInside());
+    _spStar.bindUniform("colorOutside",  _star.colorOutside());
 
     renderCamera(_spStar);
     _star.draw();
 
-    toneMappingEffect(_frameBufferScene);
+    /*toneMappingEffect(_frameBufferScene);
      
     brightPassEffect(_frameBufferScene);
     blurEffect(_frameBufferBrightPassFilter);
 
-    bloomEffect(_frameBufferToneMapping,_frameBufferCompleteBlur);
+    bloomEffect(_frameBufferToneMapping,_frameBufferCompleteBlur);*/
 
     /*FrameBuffer::bindDefaultFrameBuffer();
     _frameBufferCompleteBlur.bindRenderTexture();
     //_frameBufferScene.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spBrightPassFilter);*/
 
-    _spFbo.use();
+    /*_spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();
     _frameBufferBloom.bindRenderTexture();
-    bindUniformTexture("frameTexture", 0, _spFbo);
-    _meshQuadFrame.draw();
+    _spFbo.bindUniformTexture("frameTexture", 0);
+    _meshQuadFrame.draw();*/
 
          
 
@@ -376,12 +288,12 @@ void Rendering::renderCamera(const ShaderProgram& sp) {
 
   _uniformVec3["positionCamera"]  = _camera.pos();
   _uniformFloat["distanceBehind"] = _ball.distanceBehindBall();
-  bindUniform ("VP",              _uniformMatrix4.at("VP"),           sp);
-  bindUniform ("positionBall",    _uniformVec3.at("positionBall"),    sp);
-  bindUniform ("lookDirection",   _uniformVec3.at("lookDirection"),   sp);
-  bindUniform ("distanceBehind",  _uniformFloat.at("distanceBehind"), sp);
-  bindUniform ("positionCamera",  _uniformVec3.at("positionCamera"),  sp);
-  bindUniform ("displayBehind",   _uniformBool.at("displayBehind"),   sp);
+  sp.bindUniform ("VP",              _uniformMatrix4.at("VP"));
+  sp.bindUniform ("positionBall",   _uniformVec3.at("positionBall"));
+  sp.bindUniform ("lookDirection",  _uniformVec3.at("lookDirection"));
+  sp.bindUniform ("distanceBehind", _uniformFloat.at("distanceBehind"));
+  sp.bindUniform ("positionCamera", _uniformVec3.at("positionCamera"));
+  sp.bindUniform ("displayBehind",  _uniformBool.at("displayBehind"));
 }
 
 
