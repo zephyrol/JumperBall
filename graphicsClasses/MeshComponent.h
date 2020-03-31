@@ -18,18 +18,22 @@
 
 class MeshComponent {
 public:
+    //--CONSTRUCTORS & DESTRUCTORS--//
     MeshComponent ( const std::shared_ptr<const GeometricShape>& shape,
                     const std::shared_ptr<Animation>& anim);
-    
-    const std::shared_ptr<const GeometricShape>& shape() const ;
-    const std::shared_ptr<Animation>&      animation() const; 
     ~MeshComponent();
+    
+
+    //-------CONST METHODS----------//
+    const std::shared_ptr<const GeometricShape>&  shape()                 const;
+    const std::shared_ptr<Animation>&             animation()             const; 
 
 
 private:
     
-    const std::shared_ptr<const GeometricShape> _shape;
-    const std::shared_ptr<Animation>            _animation; 
+    //--------ATTRIBUTES-----------//
+    const std::shared_ptr<const GeometricShape>   _shape;
+    const std::shared_ptr<Animation>              _animation; 
 
 };
 

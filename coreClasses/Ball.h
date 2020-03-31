@@ -48,7 +48,7 @@ public:
                                     unsigned int                poxZ;
                                   };
 
-    //-------CONST METHODS------  --//
+    //-------CONST METHODS--------//
     JumperBallTypes::vec3f        get3DPosition()                const noexcept;
     float                         getRadius()                             const;
     JumperBallTypes::vec3f        lookTowardsAsVector()                   const;

@@ -18,6 +18,7 @@
 
 class Quad : public GeometricShape {
 public:
+    //--CONSTRUCTORS & DESTRUCTORS--//
     Quad( const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
     Quad( const glm::vec3& customColor,

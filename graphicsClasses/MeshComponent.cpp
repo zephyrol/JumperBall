@@ -6,7 +6,7 @@
 
 /* 
  * File:   MeshComponent.cpp
- * Author: seb
+ * Author: Morgenthaler S 
  * 
  * Created on 31 mars 2020, 00:35
  */

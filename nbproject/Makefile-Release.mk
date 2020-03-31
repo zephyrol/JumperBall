@@ -52,7 +52,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/coreClasses/objects/Object.o \
 	${OBJECTDIR}/graphicsClasses/Camera.o \
 	${OBJECTDIR}/graphicsClasses/FrameBuffer.o \
-	${OBJECTDIR}/graphicsClasses/Mesh.o \
 	${OBJECTDIR}/graphicsClasses/MeshComponent.o \
 	${OBJECTDIR}/graphicsClasses/Rendering.o \
 	${OBJECTDIR}/graphicsClasses/Shader.o \
@@ -182,11 +181,6 @@ ${OBJECTDIR}/graphicsClasses/FrameBuffer.o: graphicsClasses/FrameBuffer.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/FrameBuffer.o graphicsClasses/FrameBuffer.cpp
-
-${OBJECTDIR}/graphicsClasses/Mesh.o: graphicsClasses/Mesh.cpp
-	${MKDIR} -p ${OBJECTDIR}/graphicsClasses
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/Mesh.o graphicsClasses/Mesh.cpp
 
 ${OBJECTDIR}/graphicsClasses/MeshComponent.o: graphicsClasses/MeshComponent.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses

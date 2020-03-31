@@ -20,7 +20,7 @@ class FrameBuffer {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    FrameBuffer         (bool HDRTexture = false, float scale = 1.f);
+    FrameBuffer         (bool HDRTexture = false);
     virtual             ~FrameBuffer();
 
     static constexpr float     
@@ -46,7 +46,6 @@ private:
 
     GLuint              _renderTexture;
     const bool          _isHDRTexture;
-    const float         _scale;
 
     GLuint              _depthBuffer;
 

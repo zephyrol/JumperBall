@@ -19,6 +19,8 @@
 
 class GeometricShape {
 public:
+
+    //--CONSTRUCTORS & DESTRUCTORS--//
     GeometricShape(
             const std::vector<glm::vec3>& positions,
             const std::vector<glm::vec3>& normals,
@@ -31,6 +33,7 @@ public:
 
     /*//It's useless to have a copy of a shape with exactly the same transform
     //and vertices, every attributes are const...
+    //TODO: try to delete the special member functions
     GeometricShape(const GeometricShape& geometricShape) = delete;
     GeometricShape& operator= (const GeometricShape& geometricShape) = delete;
 
@@ -43,12 +46,15 @@ public:
                     const glm::mat4& modelTransform,
                     const glm::mat4& normalsTransform);
 
-    virtual ~GeometricShape();
+    virtual ~GeometricShape                                ();
 
-    void bindVerticesData() const;
 
-    void bind() const;
-    void draw() const;
+    //-------CONST METHODS------ --//
+    void                                                   bindVerticesData() 
+                                                                          const;
+
+    void                                                   bind()         const;
+    void                                                   draw()         const;
 
 
     const std::shared_ptr<const std::vector<glm::vec3> >&  positions()    const;
@@ -64,10 +70,10 @@ public:
                                                                           const;
     const std::shared_ptr<const std::vector<GLushort> >&   indices()      const;
 
-    const glm::mat4& modelTransform()                                     const;
-    const glm::mat4& normalsTransform()                                   const;
-
-
+    const glm::mat4&                                       modelTransform()  
+                                                                          const;
+    const glm::mat4&                                       normalsTransform()                                                                               const;
+    //--------STATIC METHODS-------//
     static std::vector<glm::vec3>   createCustomColorBuffer(
                                           const glm::vec3& customColor,
                                           size_t size);

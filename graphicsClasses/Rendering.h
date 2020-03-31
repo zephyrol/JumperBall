@@ -74,14 +74,12 @@ private:
     Mesh<Star>                      _meshStar;
     Mesh<Quad>                      _meshQuadFrame;
 
-    const Map&                      _map;
-
     const Ball&                     _ball;
-
     const Star&                     _star;
+    const Camera&                   _camera;
+
     UniformLight                    _light;
 
-    const Camera&                   _camera;
 
     const ShaderProgram             _spMap;
     const ShaderProgram             _spStar;

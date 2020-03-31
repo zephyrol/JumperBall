@@ -16,7 +16,10 @@
 #include "GeometricShape.h"
 
 class Cube : public GeometricShape {
+
 public:
+
+    //--CONSTRUCTORS & DESTRUCTORS--//
     Cube( const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
     Cube( const glm::vec3& customColor,
@@ -25,8 +28,8 @@ public:
     Cube( const Cube& cube, 
           const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
+
 private:
-    
 
     static const std::vector<glm::vec3> basicPositionsCube;
     static const std::vector<glm::vec3> basicColorsCube;

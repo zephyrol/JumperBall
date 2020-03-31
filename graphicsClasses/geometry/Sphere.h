@@ -18,6 +18,8 @@
 
 class Sphere : public GeometricShape {
 public:
+
+    //--CONSTRUCTORS & DESTRUCTORS--//
     Sphere( const glm::mat4& modelTransform    = glm::mat4(1.f),
             const glm::mat4& normalsTransform  = glm::mat4(1.f));
     Sphere( const glm::vec3& customColor,
@@ -27,6 +29,8 @@ public:
             const glm::mat4& modelTransform    = glm::mat4(1.f),
             const glm::mat4& normalsTransform  = glm::mat4(1.f));
 
+
+    //------------TYPES------------//
     struct InfoSphere {
       std::vector<glm::vec3> positions;
       std::vector<glm::vec3> normals;
@@ -40,6 +44,7 @@ private:
 
     static const InfoSphere basicInfoSphere;
 
+    //--------STATIC METHODS-------//
     static InfoSphere computeBasicInfoSphere();
 
 };

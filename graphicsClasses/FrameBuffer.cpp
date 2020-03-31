@@ -13,11 +13,10 @@
 
 #include "FrameBuffer.h"
 
-FrameBuffer::FrameBuffer(bool HDRTexture, float scale) :
+FrameBuffer::FrameBuffer(bool HDRTexture) :
 _fboHandle(),
 _renderTexture(),
 _isHDRTexture(HDRTexture),
-_scale(scale),
 _depthBuffer()
 {
     constexpr GLsizei levelTexture  = 1;
@@ -40,7 +39,7 @@ _depthBuffer()
     }
 
     glTexStorage2D(GL_TEXTURE_2D,levelTexture,internalFormat,
-                    RESOLUTION_X * scale ,RESOLUTION_Y * scale);
+                    RESOLUTION_X, RESOLUTION_Y);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -49,14 +48,15 @@ _depthBuffer()
                             GL_TEXTURE_2D, _renderTexture, mipmapLevel);
 
     glBindRenderbuffer(GL_RENDERBUFFER, _depthBuffer);
+
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 
-                            RESOLUTION_X * scale, RESOLUTION_Y * scale);
+                           RESOLUTION_X, RESOLUTION_Y);
+
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,
                                 GL_RENDERBUFFER, _depthBuffer);
     const GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
     glDrawBuffers(1,&drawBuffer);
 
-    glBindFramebuffer(GL_FRAMEBUFFER,0);
 
 }
 
@@ -90,8 +90,7 @@ std::pair<float,float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
     constexpr float         epsilon             = 0.001f;
     constexpr unsigned int  levelOfDetail       = 0; //0 is the base image level
     constexpr unsigned int  numberOfComponents  = 3; //RGB
-    const size_t            numberOfPixels      = RESOLUTION_X * RESOLUTION_Y
-                                                  * _scale;
+    const size_t            numberOfPixels      = RESOLUTION_X * RESOLUTION_Y;
     std::vector<GLfloat>    textureData         (numberOfPixels * 
                                                   numberOfComponents);
 

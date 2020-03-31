@@ -40,7 +40,6 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Mesh                    (const T& base);
-    //Mesh                    (Object::CategoryOfObjects category);
 
     Mesh                    (const Mesh& mesh)                        = default;
     Mesh&                    operator= (const Mesh& mesh)             = default;
@@ -51,32 +50,30 @@ public:
     ~Mesh();
     
     //-------CONST METHODS----------//
-    const T&                base()                                        const;
     const glm::mat4&        world()                                       const;
     void                    render(const ShaderProgram& sp)               const;
      
     //----------METHODS-------------//
     void                    update();
-    //void                    updatematrices(
-    //                          const std::array<unsigned int,3>& blockPosition,
-    //                          JumperBallTypes::Direction objectDirection);
+
 
 private:
 
     //--------ATTRIBUTES-----------//
-
     const T&                _base;
     std::vector<MeshComponent>  
                             _components;
-
     glm::mat4               _world;
-    //----------METHODS-------------//
 
+
+    //----------METHODS-------------//
     void                    update(const Ball& base);
     void                    update(const Map&  base);
     void                    update(const Quad& base);
     void                    update(const Star& base);
 
+
+    //--------STATIC METHODS-------//
     static std::vector<MeshComponent>
                             genComponents(const Ball& ball);
     static std::vector<MeshComponent>
@@ -96,7 +93,6 @@ Mesh<T>::Mesh(const T& base):
   _components(genComponents(base)),
   _world(1.f)
 {
-
 }
 
 template<typename T>
@@ -307,11 +303,6 @@ void Mesh<T>::render(const ShaderProgram& sp) const {
         }
         component.shape()->draw();
     }
-}
-
-template<typename T>
-const T& Mesh<T>::base() const{
-    return base;
 }
 
 template<typename T>

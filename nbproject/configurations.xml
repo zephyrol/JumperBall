@@ -67,7 +67,6 @@
       <itemPath>coreClasses/blocks/IceBlock.cpp</itemPath>
       <itemPath>coreClasses/objects/Key.cpp</itemPath>
       <itemPath>coreClasses/Map.cpp</itemPath>
-      <itemPath>graphicsClasses/Mesh.cpp</itemPath>
       <itemPath>graphicsClasses/MeshComponent.cpp</itemPath>
       <itemPath>coreClasses/objects/Object.cpp</itemPath>
       <itemPath>graphicsClasses/geometry/Pyramid.cpp</itemPath>
@@ -237,8 +236,6 @@
       <item path="graphicsClasses/FrameBuffer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="graphicsClasses/FrameBuffer.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="graphicsClasses/Mesh.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="graphicsClasses/Mesh.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -485,8 +482,6 @@
       <item path="graphicsClasses/FrameBuffer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="graphicsClasses/FrameBuffer.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="graphicsClasses/Mesh.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="graphicsClasses/Mesh.h" ex="false" tool="3" flavor2="0">
       </item>
