@@ -13,14 +13,14 @@
 
 #include "MeshComponent.h"
 
-MeshComponent::MeshComponent(const std::shared_ptr<GeometricShape>& elem, 
+MeshComponent::MeshComponent(const std::shared_ptr<const GeometricShape>& elem, 
                              const std::shared_ptr<Animation>& anim):
                       _shape(elem),
                       _animation(anim){
 
 }
 
-const std::shared_ptr<GeometricShape>& MeshComponent::shape() const {
+const std::shared_ptr<const GeometricShape>& MeshComponent::shape() const {
     return _shape;
 }
 
@@ -28,6 +28,9 @@ const std::shared_ptr<Animation>& MeshComponent::animation() const {
     return _animation;
 }
 
+MeshComponent::~MeshComponent() {
+
+}
 
 
 

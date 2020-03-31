@@ -68,8 +68,11 @@ private:
     uniformVariable<GLfloat>        _uniformFloat;
     uniformVariable<bool>           _uniformBool;
 
+    const Quad                      _quadFrame;
     Mesh<Map>                       _meshMap;
     Mesh<Ball>                      _meshBall;
+    Mesh<Quad>                      _meshQuadFrame;
+
     //Mesh                            _meshKey;
     //Mesh                            _meshCoin;
     //Mesh                            _meshClock;

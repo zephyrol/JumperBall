@@ -218,5 +218,8 @@ void GeometricShape::draw() const {
 
 }
 
+GeometricShape::~GeometricShape() {
+
+}
 
 

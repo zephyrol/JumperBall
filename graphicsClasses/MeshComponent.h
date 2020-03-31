@@ -18,16 +18,18 @@
 
 class MeshComponent {
 public:
-    MeshComponent ( const std::shared_ptr<GeometricShape>& shape,
+    MeshComponent ( const std::shared_ptr<const GeometricShape>& shape,
                     const std::shared_ptr<Animation>& anim);
     
-    const std::shared_ptr<GeometricShape>& shape() const ;
+    const std::shared_ptr<const GeometricShape>& shape() const ;
     const std::shared_ptr<Animation>&      animation() const; 
+    ~MeshComponent();
+
 
 private:
     
-    const std::shared_ptr<GeometricShape> _shape;
-    const std::shared_ptr<Animation>      _animation; 
+    const std::shared_ptr<const GeometricShape> _shape;
+    const std::shared_ptr<Animation>            _animation; 
 
 };
 

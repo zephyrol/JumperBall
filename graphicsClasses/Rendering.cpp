@@ -57,12 +57,13 @@ Rendering::Rendering(const Map&     map,
     _uniformVec2(),
     _uniformFloat(),
     _uniformBool(),
+    _quadFrame(),
     _meshMap(map),
     _meshBall(ball),
     /*_meshKey(),
     _meshCoin(),
-    _meshClock(),
-    _meshQuadFrame(),*/
+    _meshClock(),*/
+    _meshQuadFrame(_quadFrame),
     _map(map),
     _ball(ball),
     _star(star),
@@ -139,12 +140,14 @@ void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
 
     _spBlur.bindUniform("firstPass", true);
     //_meshQuadFrame.draw();
+    _meshQuadFrame.render(_spBlur);
 
     _frameBufferCompleteBlur.bindFrameBuffer();
     _frameBufferHalfBlur.bindRenderTexture();
 
     _spBlur.bindUniform("firstPass", false);
     //_meshQuadFrame.draw();
+    _meshQuadFrame.render(_spBlur);
 }
 
 void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
@@ -167,6 +170,7 @@ void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
                   //referenceFBO.computeLogAverageLuminance(),
                   //1.8f,
     
+    _meshQuadFrame.render(_spToneMapping);
     //_meshQuadFrame.draw();
 }
 
@@ -177,6 +181,7 @@ void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
     referenceFBO.bindRenderTexture();
     _spBrightPassFilter.bindUniformTexture("frameTexture", 0);
     _spBrightPassFilter.bindUniform ("threshold",  5.f);
+    _meshQuadFrame.render(_spBrightPassFilter);
     //_meshQuadFrame.draw();
 }
 
@@ -190,15 +195,15 @@ void Rendering::bloomEffect(  const FrameBuffer& fboScene,
 
     fboLight.bindRenderTexture(1);
     _spBloom.bindUniformTexture("frameBrightPassFilterTexture", 1);
-
+    _meshQuadFrame.render(_spBloom);
     //_meshQuadFrame.draw();
 }
 
 
 void Rendering::render() {
 
-    //_frameBufferScene.bindFrameBuffer();
-    FrameBuffer::bindDefaultFrameBuffer();
+    _frameBufferScene.bindFrameBuffer();
+    //FrameBuffer::bindDefaultFrameBuffer();
     
     //Ball and Map
     _spMap.use();
@@ -238,23 +243,23 @@ void Rendering::render() {
     renderCamera(_spStar);
     _star.draw();
 
-    /*toneMappingEffect(_frameBufferScene);
+    toneMappingEffect(_frameBufferScene);
      
     brightPassEffect(_frameBufferScene);
     blurEffect(_frameBufferBrightPassFilter);
 
-    bloomEffect(_frameBufferToneMapping,_frameBufferCompleteBlur);*/
+    bloomEffect(_frameBufferToneMapping,_frameBufferCompleteBlur);
 
     /*FrameBuffer::bindDefaultFrameBuffer();
     _frameBufferCompleteBlur.bindRenderTexture();
     //_frameBufferScene.bindRenderTexture();
     bindUniformTexture("frameTexture", 0, _spBrightPassFilter);*/
 
-    /*_spFbo.use();
+    _spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();
     _frameBufferBloom.bindRenderTexture();
     _spFbo.bindUniformTexture("frameTexture", 0);
-    _meshQuadFrame.draw();*/
+    _meshQuadFrame.render(_spFbo);
 
          
 

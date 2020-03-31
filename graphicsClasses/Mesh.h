@@ -24,6 +24,7 @@
 #include "geometry/Cube.h"
 #include "geometry/Quad.h"
 #include "animations/BallAnimation.h"
+#include "FrameBuffer.h"
 #include "MeshComponent.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
@@ -38,17 +39,15 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Mesh                    (const T& base);
-    //Mesh                    (const Ball& ball);
-    //Mesh                    (const Map& map);
     //Mesh                    (Object::CategoryOfObjects category);
 
-    /*Mesh                    (const Mesh& mesh)                        = default;
+    Mesh                    (const Mesh& mesh)                        = default;
     Mesh&                    operator= (const Mesh& mesh)             = default;
 
     Mesh                    (Mesh&& mesh)                             = default;
-    Mesh&                    operator= (Mesh&& mesh)                  = default;*/
+    Mesh&                    operator= (Mesh&& mesh)                  = default;
 
-    virtual                 ~Mesh();
+    ~Mesh();
     
     //-------CONST METHODS----------//
     const glm::mat4&        world()                                       const;
@@ -57,28 +56,15 @@ public:
      
     //----------METHODS-------------//
     void                    world(const glm::mat4& w);
-    void                    updateMatrices (const Ball& b);
 
     void                    update();
-    //void                    updateMatrices(
+    //void                    updatematrices(
     //                          const std::array<unsigned int,3>& blockPosition,
     //                          JumperBallTypes::Direction objectDirection);
 
 private:
 
     //--------ATTRIBUTES-----------//
-    /*std::vector<glm::vec3>  _positions;
-    std::vector<glm::vec3>  _normals;
-    std::vector<glm::vec3>  _colors;
-    std::vector<glm::vec2>  _uvCoords;
-
-    const bool              _useIndexing;
-    std::vector<GLushort>   _indices;
-    GLuint                  _idElementBuffer;
-
-    GLuint                  _idVertexArray;
-    std::array<GLuint,4>    _idVertexBuffer;*/
-
 
     const T&                _base;
     std::vector<MeshComponent>  
@@ -86,22 +72,18 @@ private:
 
     glm::mat4               _world;
     //----------METHODS-------------//
-    void                    genSharps(const Block& block,
-                                      glm::vec3 posWorld,
-                                      const Pyramid& pyramid);
-
 
     void                    update(const Ball& base);
     void                    update(const Map&  base);
+    void                    update(const Quad& base);
 
     static std::vector<MeshComponent>
                             genComponents(const Ball& ball);
     static std::vector<MeshComponent>
                             genComponents(const Map&  map);
+    static std::vector<MeshComponent>
+                            genComponents(const Quad& screen);
 
-
-    //-------CONST METHODS----------//
-    //void                    bindVertexData()                              const;
 };
 
 
@@ -148,9 +130,10 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Map& map) {
             
             const std::array<glm::vec2,7> translationFloorFactor 
             {
-                glm::vec2(0.f,0.f),   glm::vec2(-0.6f,-0.4f), glm::vec2(0.6f,-0.6f),
-                        glm::vec2(0.2f,0.6f), glm::vec2(-0.2f,-0.6f), glm::vec2(0.6f,0.6f),
-                        glm::vec2(-0.6f,0.6f)
+                glm::vec2(0.f,0.f),glm::vec2(-0.6f,-0.4f), 
+                glm::vec2(0.6f,-0.6f), glm::vec2(0.2f,0.6f),
+                glm::vec2(-0.2f,-0.6f), glm::vec2(0.6f,0.6f),
+                glm::vec2(-0.6f,0.6f)
             };
             
             for(size_t i = 0; i < block.faceInfo().size(); i++) {
@@ -163,8 +146,8 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Map& map) {
                     
                     JumperBallTypes::Direction currentDir =
                             JumperBallTypesMethods::integerAsDirection(i);
-                    JumperBallTypes::vec3f vecDir = 
-                            JumperBallTypesMethods::directionAsVector(currentDir);
+                    JumperBallTypes::vec3f vecDir = JumperBallTypesMethods::
+                                                  directionAsVector(currentDir);
                     
                     glm::mat4 translationOffset = glm::translate(
                             glm::vec3( -offset, 0 , -offset ));
@@ -176,7 +159,8 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Map& map) {
                     for (size_t j = 0 ; j < scales.size() ; j++) {
                         
                         glm::mat4 scaleLocal = 
-                                glm::scale(glm::vec3(scales.at(j),0.5f,scales.at(j)));
+                                glm::scale(glm::vec3(scales.at(j),0.5f,
+                                              scales.at(j)));
                         
                         
                         glm::mat4 translationLocal =
@@ -240,6 +224,16 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Map& map) {
     return components;
 }
 
+template<typename T>
+std::vector<MeshComponent> Mesh<T>::genComponents(const Quad& quad) {
+
+     
+    MeshComponent component ( 
+                                std::make_shared<Quad>(quad),
+                                nullptr);
+    return std::vector<MeshComponent> {component};
+}
+
 
 template<typename T>
 void Mesh<T>::update(const Ball& base) {
@@ -257,6 +251,11 @@ void Mesh<T>::update(const Map& map) {
     (void) map;
 }
 
+template<typename T>
+void Mesh<T>::update(const Quad& screen) {
+    (void) screen;
+}
+
 
 template<typename T>
 const glm::mat4& Mesh<T>::world() const {
@@ -268,12 +267,6 @@ void Mesh<T>::world(const glm::mat4& w) {
     _world = w;
 }
 
-template<typename T>
-void Mesh<T>::genSharps(const Block& block, glm::vec3 posWorld,
-                      const Pyramid& pyramid) {
-    
-
-}
 
 template<typename T>
 void Mesh<T>::render(const ShaderProgram& sp) const {
