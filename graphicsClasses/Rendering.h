@@ -71,12 +71,8 @@ private:
     const Quad                      _quadFrame;
     Mesh<Map>                       _meshMap;
     Mesh<Ball>                      _meshBall;
+    Mesh<Star>                      _meshStar;
     Mesh<Quad>                      _meshQuadFrame;
-
-    //Mesh                            _meshKey;
-    //Mesh                            _meshCoin;
-    //Mesh                            _meshClock;
-    //Mesh                            _meshQuadFrame;
 
     const Map&                      _map;
 
@@ -105,7 +101,6 @@ private:
 
 
     //------------METHODS----------//
-    void                            renderMap();
     void                            blurEffect( 
                                                const FrameBuffer& referenceFBO);
     void                            toneMappingEffect( 

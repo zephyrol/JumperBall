@@ -60,9 +60,7 @@ Rendering::Rendering(const Map&     map,
     _quadFrame(),
     _meshMap(map),
     _meshBall(ball),
-    /*_meshKey(),
-    _meshCoin(),
-    _meshClock(),*/
+    _meshStar(star),
     _meshQuadFrame(_quadFrame),
     _map(map),
     _ball(ball),
@@ -96,38 +94,6 @@ Rendering::Rendering(const Map&     map,
 }
 
 
-
-void Rendering::renderMap() {
-
-    /*_spMap.bindUniform ("M",  glm::mat4(1.f));
-    _spMap.bindUniform ("SR", glm::mat4(1.f));
-    unsigned int displayedCubes = 0;
-    constexpr unsigned int numberFaces = 6;
-    constexpr unsigned int numberVerticesPerFaces = 6;
-    constexpr unsigned int numberVerticesPerBlock = numberFaces*
-                                                      numberVerticesPerFaces;
-    for (unsigned int i = 0; i < _map.boundingBoxXMax() ; ++i){
-        for (unsigned int j = 0; j < _map.boundingBoxYMax() ; ++j){
-            for (unsigned int k = 0; k < _map.boundingBoxZMax() ; ++k){
-                auto block = _map.getBlock(i,j,k);
-                if (block){
-                    const std::array<float,9>& transform = 
-                          block->localTransform();
-                    glm::mat4 trans = glm::translate(glm::vec3( transform.at(0),
-                                              transform.at(1),transform.at(2)));
-                    _spMap.bindUniform ("W",  trans);
-                    _meshMap.draw(false,displayedCubes++*numberVerticesPerBlock,
-                                        numberVerticesPerBlock);
-
-                }
-            }
-        }
-    }*/
- //   _meshMap.draw(true,displayedCubes*numberVerticesPerBlock,0);
-    _meshMap.update();
-    _meshMap.render(_spMap);
-}
-
 void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
 
     _spBlur.use();
@@ -139,14 +105,12 @@ void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
     _spBlur.bindUniform("gaussWeights", gaussComputedValues);
 
     _spBlur.bindUniform("firstPass", true);
-    //_meshQuadFrame.draw();
     _meshQuadFrame.render(_spBlur);
 
     _frameBufferCompleteBlur.bindFrameBuffer();
     _frameBufferHalfBlur.bindRenderTexture();
 
     _spBlur.bindUniform("firstPass", false);
-    //_meshQuadFrame.draw();
     _meshQuadFrame.render(_spBlur);
 }
 
@@ -171,7 +135,6 @@ void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
                   //1.8f,
     
     _meshQuadFrame.render(_spToneMapping);
-    //_meshQuadFrame.draw();
 }
 
 void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
@@ -182,7 +145,6 @@ void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
     _spBrightPassFilter.bindUniformTexture("frameTexture", 0);
     _spBrightPassFilter.bindUniform ("threshold",  5.f);
     _meshQuadFrame.render(_spBrightPassFilter);
-    //_meshQuadFrame.draw();
 }
 
 void Rendering::bloomEffect(  const FrameBuffer& fboScene, 
@@ -196,7 +158,6 @@ void Rendering::bloomEffect(  const FrameBuffer& fboScene,
     fboLight.bindRenderTexture(1);
     _spBloom.bindUniformTexture("frameBrightPassFilterTexture", 1);
     _meshQuadFrame.render(_spBloom);
-    //_meshQuadFrame.draw();
 }
 
 
@@ -216,32 +177,25 @@ void Rendering::render() {
                                         
     _light.bind("light",_spMap);
 
-    //Ball
-    //_meshBall.updateMatrices(_ball);
-    //_ballAnimation.updateTrans();
-
-    /*_spMap.bindUniform ("M",   _ballAnimation.model());
-    _spMap.bindUniform ("SR",  _ballAnimation.scaleRotation());
-
-    _spMap.bindUniform ("W",   _meshBall.world());*/
-
     _meshBall.update();
     _meshBall.render(_spMap);
 
     //Map
-    renderMap();
+    _meshMap.update();
+    _meshMap.render(_spMap);
 
     //Star
     _spStar.use();
 
-    _spStar.bindUniform("MW",            _star.transform());
     _spStar.bindUniform("radiusInside",  _star.radiusInside());
     _spStar.bindUniform("radiusOutside", _star.radiusOutside());
     _spStar.bindUniform("colorInside",   _star.colorInside());
     _spStar.bindUniform("colorOutside",  _star.colorOutside());
 
     renderCamera(_spStar);
-    _star.draw();
+
+    _meshStar.update();
+    _meshStar.render(_spStar);
 
     toneMappingEffect(_frameBufferScene);
      
@@ -249,11 +203,6 @@ void Rendering::render() {
     blurEffect(_frameBufferBrightPassFilter);
 
     bloomEffect(_frameBufferToneMapping,_frameBufferCompleteBlur);
-
-    /*FrameBuffer::bindDefaultFrameBuffer();
-    _frameBufferCompleteBlur.bindRenderTexture();
-    //_frameBufferScene.bindRenderTexture();
-    bindUniformTexture("frameTexture", 0, _spBrightPassFilter);*/
 
     _spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();

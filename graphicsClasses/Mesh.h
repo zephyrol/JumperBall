@@ -17,6 +17,7 @@
 #include "ShaderProgram.h"
 #include <Ball.h>
 #include <Map.h>
+#include "Star.h"
 #include <objects/Object.h>
 #include "geometry/GeometricShape.h"
 #include "geometry/Pyramid.h"
@@ -50,13 +51,11 @@ public:
     ~Mesh();
     
     //-------CONST METHODS----------//
+    const T&                base()                                        const;
     const glm::mat4&        world()                                       const;
-
     void                    render(const ShaderProgram& sp)               const;
      
     //----------METHODS-------------//
-    void                    world(const glm::mat4& w);
-
     void                    update();
     //void                    updatematrices(
     //                          const std::array<unsigned int,3>& blockPosition,
@@ -76,6 +75,7 @@ private:
     void                    update(const Ball& base);
     void                    update(const Map&  base);
     void                    update(const Quad& base);
+    void                    update(const Star& base);
 
     static std::vector<MeshComponent>
                             genComponents(const Ball& ball);
@@ -83,6 +83,8 @@ private:
                             genComponents(const Map&  map);
     static std::vector<MeshComponent>
                             genComponents(const Quad& screen);
+    static std::vector<MeshComponent>
+                            genComponents(const Star& star);
 
 };
 
@@ -236,6 +238,17 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Quad& quad) {
 
 
 template<typename T>
+std::vector<MeshComponent> Mesh<T>::genComponents(const Star& star) {
+
+    Quad quad;
+    MeshComponent component ( 
+                                std::make_shared<Quad>(quad,
+                                                       star.initialTransform()),
+                                nullptr);
+    return std::vector<MeshComponent> {component};
+}
+
+template<typename T>
 void Mesh<T>::update(const Ball& base) {
 
     JumperBallTypes::vec3f positionBall = base.get3DPosition();
@@ -247,24 +260,24 @@ void Mesh<T>::update(const Ball& base) {
 }
 
 template<typename T>
-void Mesh<T>::update(const Map& map) {
-    (void) map;
+void Mesh<T>::update(const Map& base) {
+    (void) base;
 }
 
 template<typename T>
-void Mesh<T>::update(const Quad& screen) {
-    (void) screen;
+void Mesh<T>::update(const Quad& base) {
+    (void) base;
+}
+
+template<typename T>
+void Mesh<T>::update(const Star& base) {
+    _world = base.transform();
 }
 
 
 template<typename T>
 const glm::mat4& Mesh<T>::world() const {
     return _world;
-}
-
-template<typename T>
-void Mesh<T>::world(const glm::mat4& w) {
-    _world = w;
 }
 
 
@@ -296,6 +309,10 @@ void Mesh<T>::render(const ShaderProgram& sp) const {
     }
 }
 
+template<typename T>
+const T& Mesh<T>::base() const{
+    return base;
+}
 
 template<typename T>
 Mesh<T>::~Mesh() {

@@ -1,7 +1,8 @@
 #version 330 core
 
 uniform mat4  VP;
-uniform mat4  MW;
+uniform mat4  M;
+uniform mat4  W;
 uniform float radiusInside;
 uniform float radiusOutside;
 uniform vec3  colorInside;
@@ -24,6 +25,6 @@ void main() {
   fs_radiusInside   = radiusInside;
   fs_radiusOutside  = radiusOutside;
   fs_vertexPosition = vs_vertexPosition.xy; 
-  gl_Position       = VP * MW * vec4(vs_vertexPosition,w);
+  gl_Position       = VP * W * M * vec4(vs_vertexPosition,w);
 }
 

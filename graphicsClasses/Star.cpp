@@ -18,24 +18,17 @@
 Star::Star( const glm::vec3& colorInside, const glm::vec3& colorOutside, 
             const GLfloat radiusInside,   const GLfloat radiusOutside, 
             const float distance,         const float radius):
-        _idVertexArray(),
-        _idVertexBuffer(),
         _colorInside(colorInside),
         _colorOutside(colorOutside),
         _radiusInside(radiusInside),
         _radiusOutside(radiusOutside),
-        _transform( glm::translate(glm::vec3(0.f,0.f,-distance))
+        _initialTransform( glm::translate(glm::vec3(0.f,0.f,-distance))
                     * glm::scale(glm::vec3(radius,radius,radius))),
         _timeCreation(JumperBallTypesMethods::getTimePointMSNow())
 {
-    glGenVertexArrays(1, &_idVertexArray);
-    glBindVertexArray(_idVertexArray);
-
-    glGenBuffers(1, &_idVertexBuffer);
-    bindVertexData();
 }
 
-void Star::bindVertexData() const {
+/*void Star::bindVertexData() const {
 
     std::vector<GLfloat> positionsQuad {
      0.f,0.f,0.f, 1.f,0.f,0.f, 0.f,1.f,0.f,  
@@ -46,9 +39,9 @@ void Star::bindVertexData() const {
     glBufferData(GL_ARRAY_BUFFER, positionsQuad.size() * sizeof(GLfloat), 
             positionsQuad.data(), GL_STATIC_DRAW);
 
-}
+}*/
 
-void Star::draw() const {
+/*void Star::draw() const {
 
     glEnableVertexAttribArray(0);
     
@@ -66,7 +59,7 @@ void Star::draw() const {
     glDrawArrays(GL_TRIANGLES,0,6);
 
     glDisableVertexAttribArray(0);
-}
+}*/
 
 glm::vec3 Star::colorInside() const {
     return _colorInside;
@@ -84,20 +77,27 @@ GLfloat Star::radiusOutside() const {
     return _radiusOutside;
 }
 
+const JumperBallTypes::timePointMs& Star::timeCreation() const {
+  return _timeCreation; 
+}
+
+glm::mat4 Star::initialTransform() const {
+  return _initialTransform;
+}
+
 glm::mat4 Star::transform() const {
+
     const float timeSinceCreation  = 
             JumperBallTypesMethods::getTimeSecondsSinceTimePoint(_timeCreation);
-    const float timePerRound       = 10.f;
-    const glm::mat4 rotationMatrix = glm::rotate( timeSinceCreation * 2.f
-                                        *static_cast<float>(M_PI)/timePerRound,
-                                        glm::vec3(0.5f,1.f,0.f)
-                                                );
-
-    return rotationMatrix * _transform;
+    constexpr float timePerRound       = 10.f;
+    return glm::rotate( timeSinceCreation * 2.f
+                        *static_cast<float>(M_PI)/timePerRound,
+                        glm::vec3(0.5f,1.f,0.f));
 
 }
 
 glm::vec3 Star::centralPosition() const {
-    return glm::vec3( transform() * glm::vec4(0.5f,0.5f,0.f,1.f) );
+    return glm::vec3( transform() * _initialTransform * 
+            glm::vec4(0.5f,0.5f,0.f,1.f) );
 }
 

@@ -3,7 +3,7 @@
 #include <Types.h>
 #include "Shader.h"
 #include <glm/glm.hpp>
-#define RESOLUTION_X 1024 
+#define RESOLUTION_X 1024
 #define RESOLUTION_Y 768
 
 namespace Utility {

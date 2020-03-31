@@ -30,33 +30,29 @@ public:
                                   const float radius  );
 
     //-------CONST METHODS----------//
-    void                          draw()                                  const;
     glm::vec3                     colorInside()                           const;
     glm::vec3                     colorOutside()                          const;
     GLfloat                       radiusInside()                          const;
     GLfloat                       radiusOutside()                         const;
+    glm::mat4                     initialTransform()                      const;
     glm::mat4                     transform()                             const;
     glm::vec3                     centralPosition()                       const;
+    const JumperBallTypes::timePointMs&  
+                                  timeCreation()                          const;
     
 
 private:
 
     //--------ATTRIBUTES-----------//
-    GLuint                        _idVertexArray;
-
-    // We only have one buffer about vertices (the positions)
-    GLuint                        _idVertexBuffer;
 
     const glm::vec3               _colorInside;
     const glm::vec3               _colorOutside;
     const GLfloat                 _radiusInside;
     const GLfloat                 _radiusOutside;
-    glm::mat4                     _transform;
+    const glm::mat4               _initialTransform;
 
     JumperBallTypes::timePointMs  _timeCreation;
     
-    //-------CONST METHODS----------//
-    void                          bindVertexData()                        const;
     
 };
 
