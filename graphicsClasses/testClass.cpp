@@ -61,7 +61,7 @@ testClass::testClass(): _window(nullptr)
     //-----
 }
 
-void testClass::run(Rendering& r, Ball& b, Camera& c, Map& m) {
+void testClass::run(Rendering& r, Ball& b, Camera& c) {
    
 
     bool leftButton   = false;
@@ -72,7 +72,6 @@ void testClass::run(Rendering& r, Ball& b, Camera& c, Map& m) {
     
     auto before = JumperBallTypesMethods::getTimePointMSNow();
     unsigned int counter = 0;
-    m.printMap();
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
           && glfwWindowShouldClose(_window) == 0 ) {
