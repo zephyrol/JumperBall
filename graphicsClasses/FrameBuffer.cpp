@@ -13,11 +13,12 @@
 
 #include "FrameBuffer.h"
 
-FrameBuffer::FrameBuffer(bool HDRTexture) :
+FrameBuffer::FrameBuffer(bool HDRTexture, bool hasDepthBuffer, float scale) :
 _fboHandle(),
 _renderTexture(),
 _isHDRTexture(HDRTexture),
-_depthBuffer()
+_depthBuffer(),
+_scale(scale)
 {
     constexpr GLsizei levelTexture  = 1;
     constexpr GLsizei mipmapLevel   = 0;
@@ -39,14 +40,14 @@ _depthBuffer()
     }
 
     glTexStorage2D(GL_TEXTURE_2D,levelTexture,internalFormat,
-                    RESOLUTION_X, RESOLUTION_Y);
+                    RESOLUTION_X*scale, RESOLUTION_Y*scale);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,
                             GL_TEXTURE_2D, _renderTexture, mipmapLevel);
-
+    if (hasDepthBuffer){
     glBindRenderbuffer(GL_RENDERBUFFER, _depthBuffer);
 
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 
@@ -54,6 +55,7 @@ _depthBuffer()
 
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,
                                 GL_RENDERBUFFER, _depthBuffer);
+    }
     const GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
     glDrawBuffers(1,&drawBuffer);
 
@@ -63,6 +65,7 @@ _depthBuffer()
 void FrameBuffer::bindFrameBuffer() const {
     glBindFramebuffer(GL_FRAMEBUFFER, _fboHandle);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0,0,RESOLUTION_X*_scale,RESOLUTION_Y*_scale);
 }
 
 void FrameBuffer::bindRenderTexture(unsigned int offset) const {

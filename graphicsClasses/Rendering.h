@@ -59,6 +59,9 @@ private:
 
     static constexpr float          blurSigma                             = 4.f;
     static constexpr size_t         blurPatchSize                         = 25;
+    static constexpr size_t         heightBloomTexture                    = 192;
+    static constexpr float          scaleBloomTexture =     heightBloomTexture /
+                                               static_cast<float>(RESOLUTION_Y);
 
     //--------ATTRIBUTES-----------//
     uniformVariable<glm::mat4>      _uniformMatrix4;

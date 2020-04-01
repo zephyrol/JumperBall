@@ -32,6 +32,7 @@ public:
 
     //------------TYPES------------//
     struct InfoSphere {
+      InfoSphere():positions{},normals{},colors{},uvCoords{},indices{}{}
       std::vector<glm::vec3> positions;
       std::vector<glm::vec3> normals;
       std::vector<glm::vec3> colors;

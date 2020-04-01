@@ -140,19 +140,21 @@
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="Debug" type="1">
+    <conf name="Release" type="1">
       <toolsSet>
-        <compilerSet>GNU|GNU</compilerSet>
+        <compilerSet>default</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
         <cTool>
+          <developmentMode>5</developmentMode>
           <incDir>
             <pElem>libs</pElem>
           </incDir>
         </cTool>
         <ccTool>
+          <developmentMode>5</developmentMode>
           <standard>8</standard>
           <commandlineTool>g++</commandlineTool>
           <incDir>
@@ -162,6 +164,12 @@
           <commandLine>-pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline</commandLine>
           <warningLevel>2</warningLevel>
         </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
         <linkerTool>
           <commandLine>-lglfw -ldl</commandLine>
         </linkerTool>
@@ -378,21 +386,19 @@
       <item path="maps/map1.txt" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
-    <conf name="Release" type="1">
+    <conf name="Debug" type="1">
       <toolsSet>
-        <compilerSet>default</compilerSet>
+        <compilerSet>GNU|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
         <cTool>
-          <developmentMode>5</developmentMode>
           <incDir>
             <pElem>libs</pElem>
           </incDir>
         </cTool>
         <ccTool>
-          <developmentMode>5</developmentMode>
           <standard>8</standard>
           <commandlineTool>g++</commandlineTool>
           <incDir>
@@ -402,12 +408,6 @@
           <commandLine>-pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op -Winline</commandLine>
           <warningLevel>2</warningLevel>
         </ccTool>
-        <fortranCompilerTool>
-          <developmentMode>5</developmentMode>
-        </fortranCompilerTool>
-        <asmTool>
-          <developmentMode>5</developmentMode>
-        </asmTool>
         <linkerTool>
           <commandLine>-lglfw -ldl</commandLine>
         </linkerTool>

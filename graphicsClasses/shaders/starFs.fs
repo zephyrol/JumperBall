@@ -13,8 +13,8 @@ in vec2  fs_vertexPosition;
 void main() {
 
     // Star center at the position 0.f,0.f
-    float dx          = fs_vertexPosition.x - 0.5f;
-    float dy          = fs_vertexPosition.y - 0.5f;
+    float dx          = fs_vertexPosition.x  ;
+    float dy          = fs_vertexPosition.y  ;
 
     float dist        = sqrt ( dx * dx + dy * dy );
     float coefficient = smoothstep( fs_radiusInside, 

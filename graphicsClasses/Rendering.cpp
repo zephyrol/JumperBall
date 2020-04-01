@@ -13,40 +13,6 @@
 
 #include "Rendering.h"
 
-const std::string Rendering::vsshaderMap = "graphicsClasses/shaders/phongVs.vs";
-const std::string Rendering::fsshaderMap = "graphicsClasses/shaders/phongFs.fs";
-
-const std::string Rendering::vsshaderStar = "graphicsClasses/shaders/starVs.vs";
-const std::string Rendering::fsshaderStar = "graphicsClasses/shaders/starFs.fs";
-
-const std::string Rendering::vsshaderFBO = 
-                                        "graphicsClasses/shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderFBO = 
-                                        "graphicsClasses/shaders/basicFboFs.fs";
-
-const std::string Rendering::vsshaderBlur = 
-                                        "graphicsClasses/shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderBlur = "graphicsClasses/shaders/blurFs.fs";
-
-const std::string Rendering::vsshaderToneMapping = 
-                                        "graphicsClasses/shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderToneMapping = 
-                                     "graphicsClasses/shaders/toneMappingFs.fs";
-
-const std::string Rendering::vsshaderBrightPassFilter = 
-                                        "graphicsClasses/shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderBrightPassFilter = 
-                                  "graphicsClasses/shaders/brightPassFilter.fs";
-
-const std::string Rendering::vsshaderBloom = 
-                                        "graphicsClasses/shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderBloom = 
-                                           "graphicsClasses/shaders/bloomFs.fs";
-
-const std::vector<float> Rendering::gaussComputedValues = 
-  Utility::genGaussBuffer(Rendering::blurPatchSize, Rendering::blurSigma);
-
-
 Rendering::Rendering(const Map&     map, 
                      const Ball&    ball, 
                      const Star&    star, 
@@ -84,11 +50,11 @@ Rendering::Rendering(const Map&     map,
           ( Shader (GL_VERTEX_SHADER,   vsshaderBloom),
             Shader (GL_FRAGMENT_SHADER, fsshaderBloom)),
     _frameBufferScene(true),
-    _frameBufferToneMapping(false),
-    _frameBufferHalfBlur(false),
-    _frameBufferCompleteBlur(false),
-    _frameBufferBrightPassFilter(false),
-    _frameBufferBloom(false)
+    _frameBufferToneMapping(false,false),
+    _frameBufferHalfBlur(false,false,scaleBloomTexture),
+    _frameBufferCompleteBlur(false,false,scaleBloomTexture),
+    _frameBufferBrightPassFilter(false,false,scaleBloomTexture),
+    _frameBufferBloom(false,false)
 {
 }
 
@@ -254,4 +220,38 @@ void Rendering::renderCamera(const ShaderProgram& sp) {
 Rendering::~Rendering() {
 
 }
+
+
+const std::string Rendering::vsshaderMap = "graphicsClasses/shaders/phongVs.vs";
+const std::string Rendering::fsshaderMap = "graphicsClasses/shaders/phongFs.fs";
+
+const std::string Rendering::vsshaderStar = "graphicsClasses/shaders/starVs.vs";
+const std::string Rendering::fsshaderStar = "graphicsClasses/shaders/starFs.fs";
+
+const std::string Rendering::vsshaderFBO = 
+                                        "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderFBO = 
+                                        "graphicsClasses/shaders/basicFboFs.fs";
+
+const std::string Rendering::vsshaderBlur = 
+                                        "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderBlur = "graphicsClasses/shaders/blurFs.fs";
+
+const std::string Rendering::vsshaderToneMapping = 
+                                        "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderToneMapping = 
+                                     "graphicsClasses/shaders/toneMappingFs.fs";
+
+const std::string Rendering::vsshaderBrightPassFilter = 
+                                        "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderBrightPassFilter = 
+                                  "graphicsClasses/shaders/brightPassFilter.fs";
+
+const std::string Rendering::vsshaderBloom = 
+                                        "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderBloom = 
+                                           "graphicsClasses/shaders/bloomFs.fs";
+
+const std::vector<float> Rendering::gaussComputedValues = 
+  Utility::genGaussBuffer(Rendering::blurPatchSize, Rendering::blurSigma);
 

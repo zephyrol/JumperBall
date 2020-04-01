@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
         testClass t;
         
         Star s (glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f)
-                ,0.1f,0.5f,50.f,5.f);
+                ,0.3f,0.5f,50.f,5.f);
         Rendering rendering (m,b,s,c);
         t.run(rendering,b,c,m);
     }
