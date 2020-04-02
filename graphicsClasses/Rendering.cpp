@@ -31,7 +31,10 @@ Rendering::Rendering(const Map&     map,
     _ball(ball),
     _star(star),
     _camera(camera),
-    _light(),
+    _light( glm::vec3(0.f,0.f,0.f),
+            glm::vec3(0.7f,0.7f,0.7f),
+            glm::vec3(0.25f,0.25f,0.25f),
+            glm::vec3(0.25f,0.25f,0.25f)),
     _spMap( Shader (GL_VERTEX_SHADER,   vsshaderMap ),
             Shader (GL_FRAGMENT_SHADER, fsshaderMap )),
     _spStar(Shader (GL_VERTEX_SHADER,   vsshaderStar),
@@ -135,10 +138,7 @@ void Rendering::render() {
     _spMap.use();
     renderCamera(_spMap);
 
-    _light.positionLight(           _star.centralPosition());
-    _light.ambiantLightIntensity(   glm::vec3(0.7f,0.7f,0.7f));
-    _light.diffuseLightIntensity(   glm::vec3(0.25f,0.25f,0.25f));
-    _light.specularLightIntensity(  glm::vec3(0.25f,0.25f,0.25f));
+    _light.positionLight(_star.centralPosition());
                                         
     _light.bind("light",_spMap);
 
