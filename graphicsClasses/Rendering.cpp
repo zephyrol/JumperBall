@@ -96,9 +96,9 @@ void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
     _spToneMapping.bindUniform ( "averageLuminance", 
                   //averageLuminanceAndMax.first,
                   //referenceFBO.computeLogAverageLuminance(),
-                  1.8f);
+                    1.8f);
     _spToneMapping.bindUniform ( "whiteLuminance", 
-                  averageLuminanceAndMax.second);
+                    averageLuminanceAndMax.second);
                   //referenceFBO.computeLogAverageLuminance(),
                   //1.8f,
     

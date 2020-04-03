@@ -18,7 +18,7 @@ Coin::Coin():
 {
 }
 
-Object::CategoryOfObjects Coin::getCategory() {
+Object::CategoryOfObjects Coin::getCategory() const {
     return Object::CategoryOfObjects::Coin;
 }
 

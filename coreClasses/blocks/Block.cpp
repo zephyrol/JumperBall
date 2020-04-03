@@ -88,4 +88,46 @@ void Block::createObject( Object::CategoryOfObjects category,
     }
 }
 
+const std::array<std::shared_ptr<const Object>,6 >& Block::objects() const {
+    return _objects;
+}
+
+JumperBallTypes::vec3f Block::positionObject(
+                 const std::array<unsigned int, 3>& pos, unsigned int dirUint) {
+
+    constexpr float offsetPosition = 1.f; 
+    float x = static_cast<float> (pos.at(0)+ 0.5f);
+    float y = static_cast<float> (pos.at(1)+ 0.5f);
+    float z = static_cast<float> (pos.at(2)+ 0.5f);
+    const JumperBallTypes::Direction direction =
+                  JumperBallTypesMethods::integerAsDirection(dirUint);
+
+    switch (direction) {
+        case JumperBallTypes::Direction::North:
+            z -= offsetPosition ;
+            break;
+        case JumperBallTypes::Direction::South:
+            z += offsetPosition ;
+            break;
+        case JumperBallTypes::Direction::East:
+            x += offsetPosition ;
+            break;
+        case JumperBallTypes::Direction::West:
+            x -= offsetPosition ;
+            break;
+        case JumperBallTypes::Direction::Up:
+            y += offsetPosition ;
+            break;
+        case JumperBallTypes::Direction::Down:
+            y -= offsetPosition ;
+            break;
+        default :
+            break;
+    }
+
+    return JumperBallTypes::vec3f{x,y,z};
+
+}
+
+
 

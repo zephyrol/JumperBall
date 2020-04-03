@@ -37,10 +37,10 @@ int main(int argc, char** argv) {
         if (argc == 3) {
             const std::string arg (argv[2]);
             if (arg == "-compress")
-                Map::compress(file);
+                    Map::compress(file);
             else {
-                std::cerr << "ERROR: Unknown option" << std::endl;
-                return EXIT_FAILURE;
+                    std::cerr << "ERROR: Unknown option" << std::endl;
+                    return EXIT_FAILURE;
             }
             return EXIT_SUCCESS;
         }

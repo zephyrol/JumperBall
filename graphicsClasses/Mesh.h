@@ -82,6 +82,9 @@ private:
                             genComponents(const Quad& screen);
     static std::vector<MeshComponent>
                             genComponents(const Star& star);
+    static std::vector<MeshComponent>
+                            genComponents(
+                                      const std::shared_ptr<const Object>& obj);
 
 };
 
@@ -115,90 +118,126 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Ball& ball) {
 template<typename T>
 std::vector<MeshComponent> Mesh<T>::genComponents(const Map& map) {
 
-    auto genSharps = [] (
+
+    auto blockManager = [] (
             std::vector<MeshComponent>& components,
             const Block& block, 
-            glm::vec3 posWorld, 
-            const Pyramid& pyramid) {
+            const std::array<unsigned int,3>& position
+            ) {
         
-        if (block.getType() == Block::categoryOfBlocksInFile::Sharp) {
+        auto genSharps = [] (
+        std::vector<MeshComponent>& components,
+                const Block& block, 
+                glm::vec3 posWorld, 
+                const Pyramid& pyramid) {
             
-            const std::array<float,7> scales 
-            {.2f,.1f,.05f,.1f,.075f,.15f,0.175f};
-            
-            const std::array<glm::vec2,7> translationFloorFactor 
-            {
-                glm::vec2(0.f,0.f),glm::vec2(-0.6f,-0.4f), 
-                glm::vec2(0.6f,-0.6f), glm::vec2(0.2f,0.6f),
-                glm::vec2(-0.2f,-0.6f), glm::vec2(0.6f,0.6f),
-                glm::vec2(-0.6f,0.6f)
-            };
-            
-            for(size_t i = 0; i < block.faceInfo().size(); i++) {
+            if (block.getType() == Block::categoryOfBlocksInFile::Sharp) {
                 
-                bool isSharp = block.faceInfo().at(i);
-                if (isSharp) {
+                const std::array<float,7> scales 
+                {.2f,.1f,.05f,.1f,.075f,.15f,0.175f};
+                
+                const std::array<glm::vec2,7> translationFloorFactor 
+                {
+                    glm::vec2(0.f,0.f),glm::vec2(-0.6f,-0.4f), 
+                            glm::vec2(0.6f,-0.6f), glm::vec2(0.2f,0.6f),
+                            glm::vec2(-0.2f,-0.6f), glm::vec2(0.6f,0.6f),
+                            glm::vec2(-0.6f,0.6f)
+                };
+                
+                for(size_t i = 0; i < block.faceInfo().size(); i++) {
                     
-                    constexpr float sizeBlock = 1.f;
-                    constexpr float offset = sizeBlock/2.f;
-                    
-                    JumperBallTypes::Direction currentDir =
-                            JumperBallTypesMethods::integerAsDirection(i);
-                    JumperBallTypes::vec3f vecDir = JumperBallTypesMethods::
-                                                  directionAsVector(currentDir);
-                    
-                    glm::mat4 translationOffset = glm::translate(
-                            glm::vec3( -offset, 0 , -offset ));
-                    
-                    glm::mat4 rotationLocal = 
-                            Utility::rotationUpToDir(currentDir);
-                    
-                    
-                    for (size_t j = 0 ; j < scales.size() ; j++) {
+                    bool isSharp = block.faceInfo().at(i);
+                    if (isSharp) {
                         
-                        glm::mat4 scaleLocal = 
-                                glm::scale(glm::vec3(scales.at(j),0.5f,
-                                              scales.at(j)));
+                        constexpr float sizeBlock = 1.f;
+                        constexpr float offset = sizeBlock/2.f;
+                        
+                        JumperBallTypes::Direction currentDir =
+                                JumperBallTypesMethods::integerAsDirection(i);
+                        JumperBallTypes::vec3f vecDir = JumperBallTypesMethods::
+                                directionAsVector(currentDir);
+                        
+                        glm::mat4 translationOffset = glm::translate(
+                                glm::vec3( -offset, 0 , -offset ));
+                        
+                        glm::mat4 rotationLocal = 
+                                Utility::rotationUpToDir(currentDir);
                         
                         
-                        glm::mat4 translationLocal =
-                                glm::translate( glm::vec3(
-                                posWorld.x + offset + vecDir.x * offset,
-                                posWorld.y + offset + vecDir.y * offset,
-                                posWorld.z + offset + vecDir.z * offset
-                                ));
-                        
-                        glm::mat4 translationFloor = glm::translate( glm::vec3(
-                                offset * translationFloorFactor.at(j).x,
-                                0.f,
-                                offset * translationFloorFactor.at(j).y
-                                ));
-                        
-                        glm::mat4 modelTranf= translationLocal * rotationLocal * 
-                                translationFloor * scaleLocal * 
-                                translationOffset;
-                        glm::mat4 normalsTrans= rotationLocal /* * scaleLocal*/;
-
-                        MeshComponent component ( std::make_shared<Pyramid>
-                        (pyramid,modelTranf,normalsTrans),
-                                nullptr);
-                        components.push_back(component);
-                    } 
+                        for (size_t j = 0 ; j < scales.size() ; j++) {
+                            
+                            glm::mat4 scaleLocal = 
+                                    glm::scale(glm::vec3(scales.at(j),0.5f,
+                                    scales.at(j)));
+                            
+                            
+                            glm::mat4 translationLocal =
+                                    glm::translate( glm::vec3(
+                                    posWorld.x + offset + vecDir.x * offset,
+                                    posWorld.y + offset + vecDir.y * offset,
+                                    posWorld.z + offset + vecDir.z * offset
+                                    ));
+                            
+                            glm::mat4 translationFloor = glm::translate( 
+                                    glm::vec3(
+                                    offset * translationFloorFactor.at(j).x,
+                                    0.f,
+                                    offset * translationFloorFactor.at(j).y
+                                    ));
+                            
+                            glm::mat4 modelTranf= translationLocal * 
+                                rotationLocal * translationFloor * scaleLocal *
+                                    translationOffset;
+                            glm::mat4 normalsTrans= rotationLocal; 
+                            
+                            MeshComponent component ( std::make_shared<Pyramid>
+                            (pyramid,modelTranf,normalsTrans),
+                                    nullptr);
+                            components.push_back(component);
+                        } 
+                    }
                 }
+            }
+        };
+        
+        
+        Cube  cube; // Basic cube for the blocks
+        Pyramid pyramidSharp; // Basic pyramid for the sharps
+        Sphere sphereKey; 
+        
+        glm::vec3 glmPosition { position.at(0), position.at(1), position.at(2)};
+        glm::mat4 transform (glm::translate(glmPosition));
+        
+        MeshComponent component 
+        (std::make_shared<Cube>(cube,transform), nullptr);
+        components.push_back(component);
+        
+        genSharps(components,block,glmPosition,pyramidSharp);
+        
+        
+        glm::mat4 transformBase1 (glm::translate(glmPosition));
+        const std::array<std::shared_ptr<const Object>,6> objects =
+        block.objects();
+        for (size_t i = 0; i < objects.size() ; ++i) {
+            if ( objects.at(i) ) {
+                //const JumperBallTypes::vec3f pos =
+                //                Block::positionObject(position, i);
+                //const glm::mat4 rotationLocal = Utility::rotationUpToDir(
+                //                JumperBallTypesMethods::integerAsDirection(i));
+                genComponents(objects.at(i));
+                
             }
         }
     };
+
     std::vector<MeshComponent> components;
-    Cube  cube; // Basic cube for the blocks
     for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
         for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
             for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
                 auto block = map.getBlock(x,y,z);
                 if (block) {
-                    glm::mat4 transform (glm::translate(glm::vec3(x,y,z)));
-                    MeshComponent component 
-                        (std::make_shared<Cube>(cube,transform), nullptr);
-                    components.push_back(component);
+                    blockManager(components,*block,
+                                std::array<unsigned int,3> {x,y,z});
                 }
             }
         }
@@ -207,13 +246,22 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Map& map) {
 
     //We have better performances if the components are stored with objects
     //with the same VAO/VBO, we will not have to change the binding later
-    Pyramid pyramid; // Basic pyramid for the sharps
     for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
         for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
             for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
                 auto block = map.getBlock(x,y,z);
                 if (block) {
-                    genSharps(components,*block,glm::vec3(x,y,z),pyramid);
+
+                }
+            }
+        }
+    }
+
+    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
+        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
+            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
+                auto block = map.getBlock(x,y,z);
+                if (block) {
                 }
             }
         }
@@ -243,6 +291,53 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Star& star) {
                                 nullptr);
     return std::vector<MeshComponent> {component};
 }
+
+template<typename T>
+std::vector<MeshComponent>
+                    Mesh<T>::genComponents(
+                                const std::shared_ptr<const Object>& obj)
+{
+
+    Cube  cube(glm::vec3(1.f,215.f/255.f,0.f)); // Gold cube for the keys
+    std::vector<MeshComponent> components;
+    if (obj) {
+        switch ( obj->getCategory() ) {
+            case Object::CategoryOfObjects::Key: {
+                constexpr size_t nbCubesToCreateAKey = 4;
+
+                const std::array<glm::vec3,nbCubesToCreateAKey> scales
+                { glm::vec3(0.2f,0.2f,0.1f),glm::vec3(0.1f,0.5f,0.1f),
+                  glm::vec3(0.15f,0.1f,0.1f), glm::vec3(0.15f,0.1f,0.1f) };
+                
+                const std::array<glm::vec3,nbCubesToCreateAKey> translations
+                { glm::vec3(0.f,0.15f,0.f),glm::vec3(0.f,-0.1f,0.f),
+                  glm::vec3(0.125f,0.15f,0.f),glm::vec3(0.125f,-0.35f,0.f)};
+
+                for (unsigned int i = 0 ; i  <  nbCubesToCreateAKey ; ++i ) {
+                    const glm::mat4 scaleMatrix = glm::scale(scales.at(i));
+                    const glm::mat4 translationMatrix =
+                                        glm::translate(translations.at(i));
+                    const glm::mat4 tranform = translationMatrix * scaleMatrix;
+                    const MeshComponent component = 
+                      {std::make_shared<Cube>(cube, tranform), nullptr};
+                    components.push_back(component); 
+               }
+                
+                break;
+            }
+            case Object::CategoryOfObjects::Coin: {
+              
+                break;
+            }
+            case Object::CategoryOfObjects::Clock: {
+                break;
+            }
+            default : break;
+        }
+    }
+    return components;
+}
+
 
 template<typename T>
 void Mesh<T>::update(const Ball& base) {

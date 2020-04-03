@@ -18,7 +18,7 @@
 class Clock : public Object{
 public:
     Clock();
-    Object::CategoryOfObjects getCategory() override;
+    Object::CategoryOfObjects getCategory() const override;
 
     
 private:

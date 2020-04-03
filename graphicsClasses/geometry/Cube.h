@@ -29,6 +29,7 @@ public:
           const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
 
+
 private:
 
     static const std::vector<glm::vec3> basicPositionsCube;

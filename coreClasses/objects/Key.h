@@ -18,7 +18,7 @@
 class Key : public Object{
 public:
     Key();
-    Object::CategoryOfObjects getCategory() override;
+    Object::CategoryOfObjects getCategory() const override;
 
 private:
 

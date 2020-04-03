@@ -23,7 +23,7 @@ public:
 
     enum class CategoryOfObjects {Key,Coin,Clock};
 
-    virtual CategoryOfObjects getCategory() = 0;
+    virtual CategoryOfObjects getCategory() const = 0;
 
 private:
     bool                                              _gotten;

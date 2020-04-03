@@ -18,6 +18,6 @@ Object ()
 {
 }
 
-Object::CategoryOfObjects Clock::getCategory() {
+Object::CategoryOfObjects Clock::getCategory() const{
     return Object::CategoryOfObjects::Clock;
 }

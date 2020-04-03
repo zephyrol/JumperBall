@@ -18,7 +18,7 @@ Object()
 {
 }
 
-Object::CategoryOfObjects Key::getCategory() {
+Object::CategoryOfObjects Key::getCategory() const {
     return Object::CategoryOfObjects::Key;
 }
 

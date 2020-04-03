@@ -58,11 +58,18 @@ public:
     virtual bool                      burstBall()                         const;
     virtual const std::array<float,9>&       
                                       localTransform()                    const;
+    virtual const std::array<std::shared_ptr<const Object>,6 >&
+                                      objects()                           const; 
+
+    //--------STATIC METHODS-------//
+    static JumperBallTypes::vec3f     positionObject
+                                        (const std::array<unsigned int,3>& pos,
+                                         unsigned int dirUint);
 
 protected:
     //--------ATTRIBUTES-----------//
     std::array<float,9>               _localTransform;
-    std::array<std::shared_ptr<Object>,6> 
+    std::array<std::shared_ptr<const Object>,6> 
                                       _objects;
                                       
 
