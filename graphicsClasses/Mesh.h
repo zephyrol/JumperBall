@@ -25,6 +25,7 @@
 #include "geometry/Cube.h"
 #include "geometry/Quad.h"
 #include "animations/BallAnimation.h"
+#include "animations/ObjectAnimation.h"
 #include "FrameBuffer.h"
 #include "MeshComponent.h"
 #include "glm/gtc/matrix_transform.hpp"
@@ -84,7 +85,9 @@ private:
                             genComponents(const Star& star);
     static std::vector<MeshComponent>
                             genComponents(
-                                      const std::shared_ptr<const Object>& obj);
+                                      const std::shared_ptr<const Object>& obj,
+                                      const glm::vec3& position,
+                                      const JumperBallTypes::Direction& dir);
 
 };
 
@@ -203,10 +206,10 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Map& map) {
         
         Cube  cube; // Basic cube for the blocks
         Pyramid pyramidSharp; // Basic pyramid for the sharps
-        Sphere sphereKey; 
         
-        glm::vec3 glmPosition { position.at(0), position.at(1), position.at(2)};
-        glm::mat4 transform (glm::translate(glmPosition));
+        const glm::vec3 glmPosition { 
+            position.at(0), position.at(1), position.at(2)};
+        const glm::mat4 transform (glm::translate(glmPosition));
         
         MeshComponent component 
         (std::make_shared<Cube>(cube,transform), nullptr);
@@ -214,18 +217,19 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Map& map) {
         
         genSharps(components,block,glmPosition,pyramidSharp);
         
-        
-        glm::mat4 transformBase1 (glm::translate(glmPosition));
+       std::cout <<"here" <<std::endl;
         const std::array<std::shared_ptr<const Object>,6> objects =
         block.objects();
         for (size_t i = 0; i < objects.size() ; ++i) {
             if ( objects.at(i) ) {
-                //const JumperBallTypes::vec3f pos =
-                //                Block::positionObject(position, i);
-                //const glm::mat4 rotationLocal = Utility::rotationUpToDir(
-                //                JumperBallTypesMethods::integerAsDirection(i));
-                genComponents(objects.at(i));
-                
+                const JumperBallTypes::Direction dir =
+                        JumperBallTypesMethods::integerAsDirection(i);
+                const std::vector<MeshComponent> v =
+                        genComponents(objects.at(i),glmPosition,dir);
+                for(const MeshComponent& m : v) {
+                    components.push_back(m);
+                }
+                //components.insert(components.end(),v.begin(),v.end()) ;
             }
         }
     };
@@ -295,32 +299,49 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Star& star) {
 template<typename T>
 std::vector<MeshComponent>
                     Mesh<T>::genComponents(
-                                const std::shared_ptr<const Object>& obj)
+                                const std::shared_ptr<const Object>& obj,
+                                const glm::vec3& position,
+                                const JumperBallTypes::Direction& dir)
 {
 
     Cube  cube(glm::vec3(1.f,215.f/255.f,0.f)); // Gold cube for the keys
+    Sphere sphere(glm::vec3(1.f,215.f/255.f,0.f)); // Gold cube for the keys
     std::vector<MeshComponent> components;
+    std::cout << "there" << std::endl;
     if (obj) {
         switch ( obj->getCategory() ) {
             case Object::CategoryOfObjects::Key: {
-                constexpr size_t nbCubesToCreateAKey = 4;
+                constexpr size_t nbGeometriesToCreateAKey = 4;
 
-                const std::array<glm::vec3,nbCubesToCreateAKey> scales
-                { glm::vec3(0.2f,0.2f,0.1f),glm::vec3(0.1f,0.5f,0.1f),
-                  glm::vec3(0.15f,0.1f,0.1f), glm::vec3(0.15f,0.1f,0.1f) };
+                const std::array<glm::vec3,nbGeometriesToCreateAKey> scales
+                { glm::vec3(0.075f,0.075f,0.075f),glm::vec3(0.05f,0.3f,0.05f),
+                  glm::vec3(0.1f,0.05f,0.05f), glm::vec3(0.1f,0.05f,0.05f) };
                 
-                const std::array<glm::vec3,nbCubesToCreateAKey> translations
-                { glm::vec3(0.f,0.15f,0.f),glm::vec3(0.f,-0.1f,0.f),
-                  glm::vec3(0.125f,0.15f,0.f),glm::vec3(0.125f,-0.35f,0.f)};
+                const std::array<glm::vec3,nbGeometriesToCreateAKey> 
+                    translations
+                { glm::vec3(0.3f+0.2f,   0.1f+0.35f,0.5f),
+                  glm::vec3(0.3f+0.175f, 0.1f+0.0f, 0.475f),
+                  glm::vec3(0.3f+0.175f, 0.1f+0.f,  0.475f),
+                  glm::vec3(0.3f+0.175f, 0.1f+0.1f, 0.475f)
+                };
 
-                for (unsigned int i = 0 ; i  <  nbCubesToCreateAKey ; ++i ) {
+
+                for (unsigned int i = 0; i <  nbGeometriesToCreateAKey; ++i ) {
                     const glm::mat4 scaleMatrix = glm::scale(scales.at(i));
                     const glm::mat4 translationMatrix =
                                         glm::translate(translations.at(i));
                     const glm::mat4 tranform = translationMatrix * scaleMatrix;
-                    const MeshComponent component = 
-                      {std::make_shared<Cube>(cube, tranform), nullptr};
-                    components.push_back(component); 
+                    if (i == 0){
+                    const MeshComponent componentSphere = 
+                      {std::make_shared<Sphere>(sphere, tranform), 
+                        std::make_shared<ObjectAnimation>(*obj,position,dir)};
+                    components.push_back(componentSphere); 
+                    } else {
+                    const MeshComponent componentCube = 
+                      {std::make_shared<Cube>(cube, tranform), 
+                        std::make_shared<ObjectAnimation>(*obj,position,dir)};
+                    components.push_back(componentCube); 
+                    }
                }
                 
                 break;
@@ -353,6 +374,11 @@ void Mesh<T>::update(const Ball& base) {
 template<typename T>
 void Mesh<T>::update(const Map& base) {
     (void) base;
+    for(const MeshComponent& component : _components){
+        if (component.animation()) {
+            component.animation()->updateTrans();
+        }
+    }
 }
 
 template<typename T>

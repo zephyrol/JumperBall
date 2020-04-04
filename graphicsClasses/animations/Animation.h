@@ -26,8 +26,8 @@ public:
     virtual ~Animation          ()                                           =0;
 
     //-------CONST METHODS----------//
-    glm::mat4                   model()                                   const;
-    glm::mat4                   scaleRotation()                           const;
+    virtual glm::mat4           model()                                   const;
+    virtual glm::mat4           scaleRotation()                           const;
     glm::mat4                   translation()                             const;
 
     //----------METHODS------------//

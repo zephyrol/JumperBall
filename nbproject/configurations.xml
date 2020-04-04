@@ -26,6 +26,7 @@
       <itemPath>graphicsClasses/Mesh.h</itemPath>
       <itemPath>graphicsClasses/MeshComponent.h</itemPath>
       <itemPath>coreClasses/objects/Object.h</itemPath>
+      <itemPath>graphicsClasses/animations/ObjectAnimation.h</itemPath>
       <itemPath>graphicsClasses/geometry/Pyramid.h</itemPath>
       <itemPath>graphicsClasses/geometry/Quad.h</itemPath>
       <itemPath>graphicsClasses/Rendering.h</itemPath>
@@ -69,6 +70,7 @@
       <itemPath>coreClasses/Map.cpp</itemPath>
       <itemPath>graphicsClasses/MeshComponent.cpp</itemPath>
       <itemPath>coreClasses/objects/Object.cpp</itemPath>
+      <itemPath>graphicsClasses/animations/ObjectAnimation.cpp</itemPath>
       <itemPath>graphicsClasses/geometry/Pyramid.cpp</itemPath>
       <itemPath>graphicsClasses/geometry/Quad.cpp</itemPath>
       <itemPath>graphicsClasses/Rendering.cpp</itemPath>
@@ -287,6 +289,16 @@
             flavor2="0">
       </item>
       <item path="graphicsClasses/animations/BallAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/ObjectAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/ObjectAnimation.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -525,6 +537,16 @@
             flavor2="0">
       </item>
       <item path="graphicsClasses/animations/BallAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/ObjectAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="graphicsClasses/animations/ObjectAnimation.h"
             ex="false"
             tool="3"
             flavor2="0">

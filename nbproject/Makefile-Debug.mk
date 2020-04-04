@@ -60,6 +60,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/graphicsClasses/Utility.o \
 	${OBJECTDIR}/graphicsClasses/animations/Animation.o \
 	${OBJECTDIR}/graphicsClasses/animations/BallAnimation.o \
+	${OBJECTDIR}/graphicsClasses/animations/ObjectAnimation.o \
 	${OBJECTDIR}/graphicsClasses/geometry/Cube.o \
 	${OBJECTDIR}/graphicsClasses/geometry/Cylinder.o \
 	${OBJECTDIR}/graphicsClasses/geometry/GeometricShape.o \
@@ -221,6 +222,11 @@ ${OBJECTDIR}/graphicsClasses/animations/BallAnimation.o: graphicsClasses/animati
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/animations
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/animations/BallAnimation.o graphicsClasses/animations/BallAnimation.cpp
+
+${OBJECTDIR}/graphicsClasses/animations/ObjectAnimation.o: graphicsClasses/animations/ObjectAnimation.cpp
+	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/animations
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphicsClasses/animations/ObjectAnimation.o graphicsClasses/animations/ObjectAnimation.cpp
 
 ${OBJECTDIR}/graphicsClasses/geometry/Cube.o: graphicsClasses/geometry/Cube.cpp
 	${MKDIR} -p ${OBJECTDIR}/graphicsClasses/geometry
