@@ -19,7 +19,7 @@
 #include <Map.h>
 #include "Star.h"
 #include <objects/Object.h>
-#include "geometry/GeometricShape.h"
+#include "geometry/Cylinder.h"
 #include "geometry/Pyramid.h"
 #include "geometry/Sphere.h"
 #include "geometry/Cube.h"
@@ -242,26 +242,6 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Map& map) {
 
     //We have better performances if the components are stored with objects
     //with the same VAO/VBO, we will not have to change the binding later
-    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
-        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
-            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
-                auto block = map.getBlock(x,y,z);
-                if (block) {
-
-                }
-            }
-        }
-    }
-
-    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
-        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
-            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
-                auto block = map.getBlock(x,y,z);
-                if (block) {
-                }
-            }
-        }
-    }
 
     return components;
 }
@@ -340,6 +320,31 @@ std::vector<MeshComponent>
             }
             case Object::CategoryOfObjects::Coin: {
               
+
+                Cylinder cylinder(glm::vec3(1.f,215.f/255.f,0.f),
+                                  //glm::vec3(0.f,0.f,0.f),
+                                  glm::vec3(150.f/255.f,75.f/255.f,0.f));
+                const glm::vec3 scale { 0.3f,0.3f,0.05f};
+                
+                const glm::vec3 translation {0.5f, 0.3f, 0.5f-0.025f};
+
+
+                const glm::mat4 scaleMatrix = glm::scale(scale);
+                const glm::mat4 translationMatrix = glm::translate(translation);
+                const glm::mat4 rotationMatrix = 
+                  glm::rotate(static_cast<float>(M_PI/2.),
+                              glm::vec3(1.f,0.f,0.f));
+
+                //We apply the rotation before the scale
+                const glm::mat4 tranformLocal = 
+                  translationMatrix *scaleMatrix * rotationMatrix;
+                const glm::mat4 tranformNormals = rotationMatrix;
+
+                const MeshComponent componentCube = 
+                {std::make_shared<Cylinder>(cylinder, tranformLocal,
+                        tranformNormals ), 
+                std::make_shared<ObjectAnimation>(*obj,position,dir)};
+                components.push_back(componentCube); 
                 break;
             }
             case Object::CategoryOfObjects::Clock: {

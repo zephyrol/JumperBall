@@ -82,6 +82,8 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder() {
     glm::vec3(0.f,-1.f,0.f));
     infoCylinder.colors.push_back(
     glm::vec3(1.f,0.f,0.f));
+    infoCylinder.uvCoords.push_back(
+    glm::vec2(0.f,0.f));
     
     infoCylinder.positions.push_back(
     glm::vec3(0.f,1.f,0.f));
@@ -89,6 +91,8 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder() {
     glm::vec3(0.f,1.f,0.f));
     infoCylinder.colors.push_back(
     glm::vec3(0.f,1.f,0.f));
+    infoCylinder.uvCoords.push_back(
+    glm::vec2(0.f,0.f));
     
     
     const glm::vec3 initialPositionBase (r,0.f,0.f);
@@ -103,15 +107,19 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder() {
     infoCylinder.colors.push_back(glm::vec3(1.f,0.f,0.f));
     infoCylinder.colors.push_back(glm::vec3(0.f,1.f,0.f));
     
+    infoCylinder.normals.push_back(glm::normalize(initialPositionBase));
+    infoCylinder.normals.push_back(glm::normalize(initialPositionBase));
+    infoCylinder.normals.push_back(glm::vec3(0.f,-1.f,0.f));
+    infoCylinder.normals.push_back(glm::vec3(0.f,1.f,0.f));
     
     infoCylinder.uvCoords.push_back(
-    glm::vec2( initialPositionBase.x, initialPositionBase.z));
+      glm::vec2( initialPositionBase.x, initialPositionBase.z));
     infoCylinder.uvCoords.push_back(
-    glm::vec2( initialPositionTop.x,  initialPositionTop.z));
+      glm::vec2( initialPositionTop.x,  initialPositionTop.z));
     infoCylinder.uvCoords.push_back(
-    glm::vec2( initialPositionBase.x, initialPositionBase.z));
+      glm::vec2( initialPositionBase.x, initialPositionBase.z));
     infoCylinder.uvCoords.push_back(
-    glm::vec2( initialPositionTop.x,  initialPositionTop.z));
+      glm::vec2( initialPositionTop.x,  initialPositionTop.z));
     
     
     
@@ -144,34 +152,32 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder() {
         
     }
     
-    for( unsigned int j = 0; j < ( iMeriCount - 1 ); ++j )
+    for( unsigned int i = 0; i < ( iMeriCount - 1 ); ++i )
     {
         infoCylinder.indices.push_back(0);
-        infoCylinder.indices.push_back(2+(j-1)*4);
-        infoCylinder.indices.push_back(2+j*4);
+        infoCylinder.indices.push_back(2+i*4);
+        infoCylinder.indices.push_back(2+(i+1)*4);
         
         infoCylinder.indices.push_back(1);
-        infoCylinder.indices.push_back(2+(j-1)*4+1);
-        infoCylinder.indices.push_back(2+j*4+1);
+        infoCylinder.indices.push_back(2+i*4+1);
+        infoCylinder.indices.push_back(2+(i+1)*4+1);
 
-        infoCylinder.indices.push_back(2+(j-1)*4);
-        infoCylinder.indices.push_back(2+j*4);
-        infoCylinder.indices.push_back(2+(j-1)*4+1);
+        infoCylinder.indices.push_back(2+i*4);
+        infoCylinder.indices.push_back(2+(i+1)*4);
+        infoCylinder.indices.push_back(2+i*4+1);
 
-        infoCylinder.indices.push_back(2+(j-1)*4+1);
-        infoCylinder.indices.push_back(2+(j-1)*4);
-        infoCylinder.indices.push_back(2+j*4);
+        infoCylinder.indices.push_back(2+(i+1)*4);
+        infoCylinder.indices.push_back(2+(i+1)*4+1);
+        infoCylinder.indices.push_back(2+i*4+1);
 
-        infoCylinder.indices.push_back(1);
-        infoCylinder.indices.push_back(2+(j-1)*4+1);
-        infoCylinder.indices.push_back(2+j*4+1);
     }
     
     return infoCylinder;
 }
 
 
-const Cylinder::InfoCylinder Cylinder::basicInfoCylinder = computeBasicInfoCylinder();
+const Cylinder::InfoCylinder Cylinder::basicInfoCylinder = 
+  computeBasicInfoCylinder();
 
 std::vector<glm::vec3> Cylinder::createCenterAndEdgeColorBuffer(
     const glm::vec3& customColorCenter, 
@@ -180,7 +186,7 @@ std::vector<glm::vec3> Cylinder::createCenterAndEdgeColorBuffer(
   
     std::vector<glm::vec3> customColorCube;
     customColorCube.push_back(customColorCenter);
-    customColorCube.push_back(customColorEdge);
+    customColorCube.push_back(customColorCenter);
     for(size_t i = 2; i < size ; ++i){
         customColorCube.push_back(customColorEdge);
     }

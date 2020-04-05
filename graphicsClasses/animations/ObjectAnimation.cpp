@@ -39,7 +39,8 @@ glm::mat4 ObjectAnimation::scaleRotation() const {
 
 
 void ObjectAnimation::updateTrans() {
-   float seconds = JumperBallTypesMethods::getTimeSecondsSinceTimePoint(_referenceTimePointCreation);
+    float seconds = JumperBallTypesMethods::getTimeSecondsSinceTimePoint(
+      _referenceTimePointCreation);
     
     constexpr float speedFactor = 10.f;
     _movingRotation = glm::rotate(speedFactor* seconds,glm::vec3(0.f,1.f,0.f));
