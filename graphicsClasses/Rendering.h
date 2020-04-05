@@ -42,7 +42,6 @@ public:
                                       const Ball& ball, 
                                       const Star& star, 
                                       const Camera& camera );
-    virtual                         ~Rendering();
 
 
     //------------METHODS----------//

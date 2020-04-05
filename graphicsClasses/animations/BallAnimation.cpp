@@ -167,10 +167,3 @@ void BallAnimation::updateTrans() {
         animationBursting();
     }
 }
-
-
-BallAnimation::~BallAnimation() {
-}
-
-
-

@@ -52,10 +52,6 @@ ClassicalMechanics::ClassicalMechanics( float distanceJump,
 {
 }
 
-
-ClassicalMechanics::~ClassicalMechanics() {
-}
-
 float ClassicalMechanics::getGravitationalAcceleration() const {
     return _gravitationalAcceleration;
 }

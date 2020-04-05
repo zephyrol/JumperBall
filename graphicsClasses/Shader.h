@@ -25,15 +25,17 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     Shader            ( const GLenum& shaderType, 
                         const std::string& shaderFilename);
-    ~Shader           ();
+
+    Shader&           operator = (const Shader& shader)                = delete;
+    Shader            (const Shader& shader)                           = delete; 
+
+    Shader&           operator = (Shader&& shader)                    = default;
+    Shader            (Shader&& shader)                               = default;
+
+    ~Shader           ()                                              = default;
 
     //-------CONST METHODS--------//
     GLuint            getHandle() const;
-
-    //------DELETED METHODS-------//
-    Shader&           operator = (const Shader& shader)                = delete;
-    Shader            (const Shader& orig)                             = delete; 
-
 
 private:
 

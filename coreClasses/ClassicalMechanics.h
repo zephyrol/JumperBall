@@ -33,7 +33,6 @@ public:
                                           float v0x,
                                           float v0y
                                         );
-    virtual ~ClassicalMechanics         ();
 
   
     //---------CONSTANTS------------//

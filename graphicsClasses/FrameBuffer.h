@@ -22,7 +22,6 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     FrameBuffer         (bool HDRTexture = false, bool hasDepthBuffer = true,
                           float scale = 1.f);
-    virtual             ~FrameBuffer();
 
     static constexpr float     
                         luminanceKey                                     = 0.4f;

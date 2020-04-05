@@ -216,12 +216,6 @@ void Rendering::renderCamera(const ShaderProgram& sp) {
 }
 
 
-
-Rendering::~Rendering() {
-
-}
-
-
 const std::string Rendering::vsshaderMap = "graphicsClasses/shaders/phongVs.vs";
 const std::string Rendering::fsshaderMap = "graphicsClasses/shaders/phongFs.fs";
 

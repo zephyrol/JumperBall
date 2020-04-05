@@ -24,7 +24,7 @@ public:
     ObjectAnimation                 ( const Object& object,
                                       const glm::vec3& blockPosition,
                                       const JumperBallTypes::Direction& dir);
-    virtual ~ObjectAnimation        ();
+    virtual ~ObjectAnimation        ()                                = default;
 
 
     //----------METHODS------------//
@@ -45,7 +45,7 @@ private:
 
     static const glm::mat4 translationOnBlock;
     static const glm::mat4 translationCenter;
-    static const glm::mat4 inversedTanslationCenter;
+    static const glm::mat4 inversedTranslationCenter;
 };
 
 #endif /* OBJECTANIMATION_H */

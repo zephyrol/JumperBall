@@ -27,10 +27,3 @@ const std::shared_ptr<const GeometricShape>& MeshComponent::shape() const {
 const std::shared_ptr<Animation>& MeshComponent::animation() const {
     return _animation;
 }
-
-MeshComponent::~MeshComponent() {
-
-}
-
-
-

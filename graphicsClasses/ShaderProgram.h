@@ -21,10 +21,13 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     ShaderProgram   (const Shader& vertexShader, const Shader& fragmentShader);
 
-
-    //------DELETED METHODS-------//
     ShaderProgram&  operator = (const ShaderProgram& shaderProgram)    = delete;
     ShaderProgram   (const ShaderProgram& shaderProgram)               = delete; 
+
+    ShaderProgram&  operator = (ShaderProgram&& shaderProgram)        = default;
+    ShaderProgram   (ShaderProgram&& shaderProgram)                   = default; 
+
+    ~ShaderProgram  ()                                                = default;
 
 
     //-------CONST METHODS--------//

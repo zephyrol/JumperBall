@@ -60,7 +60,3 @@ GLuint Shader::getHandle() const {
     return _shaderHandle;
 }
 
-
-Shader::~Shader() {
-}
-

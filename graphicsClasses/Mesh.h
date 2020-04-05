@@ -41,14 +41,6 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Mesh                    (const T& base);
-
-    Mesh                    (const Mesh& mesh)                        = default;
-    Mesh&                    operator= (const Mesh& mesh)             = default;
-
-    Mesh                    (Mesh&& mesh)                             = default;
-    Mesh&                    operator= (Mesh&& mesh)                  = default;
-
-    ~Mesh();
     
     //-------CONST METHODS----------//
     const glm::mat4&        world()                                       const;
@@ -425,11 +417,6 @@ void Mesh<T>::render(const ShaderProgram& sp) const {
         component.shape()->draw();
     }
 }
-
-template<typename T>
-Mesh<T>::~Mesh() {
-}
-
 
 #endif /* MESH_H */
 

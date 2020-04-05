@@ -46,7 +46,7 @@ public:
                     const glm::mat4& modelTransform,
                     const glm::mat4& normalsTransform);
 
-    virtual ~GeometricShape                                ();
+    virtual ~GeometricShape                                ()          =default;
 
 
     //-------CONST METHODS------ --//

@@ -21,7 +21,6 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     MeshComponent ( const std::shared_ptr<const GeometricShape>& shape,
                     const std::shared_ptr<Animation>& anim);
-    ~MeshComponent();
     
 
     //-------CONST METHODS----------//

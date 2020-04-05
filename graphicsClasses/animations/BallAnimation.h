@@ -22,7 +22,7 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     BallAnimation                 (const Ball& ball);
-    virtual ~BallAnimation        ();
+    virtual ~BallAnimation        ()                                   =default;
 
 
     //----------METHODS------------//

@@ -40,6 +40,24 @@ Cylinder::Cylinder( const glm::vec3& customColor,
                               Cylinder::basicInfoCylinder.indices) {
 }
 
+Cylinder::Cylinder( const glm::vec3& customColorCenter, 
+                    const glm::vec3& customColorEdge, 
+                    const glm::mat4& modelTransform, 
+                    const glm::mat4& normalsTransform): GeometricShape(
+                              Cylinder::basicInfoCylinder.positions,
+                              Cylinder::basicInfoCylinder.normals,
+                              createCenterAndEdgeColorBuffer(
+                                customColorCenter,
+                                customColorEdge,
+                                Cylinder::basicInfoCylinder.colors.size()),
+                              Cylinder::basicInfoCylinder.uvCoords,
+                              modelTransform,
+                              normalsTransform,
+                              Cylinder::basicInfoCylinder.indices) {
+
+}
+
+
 
 Cylinder::Cylinder( const Cylinder& Cylinder, 
                 const glm::mat4& modelTransform,
@@ -154,6 +172,20 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder() {
 
 
 const Cylinder::InfoCylinder Cylinder::basicInfoCylinder = computeBasicInfoCylinder();
+
+std::vector<glm::vec3> Cylinder::createCenterAndEdgeColorBuffer(
+    const glm::vec3& customColorCenter, 
+    const glm::vec3& customColorEdge, 
+    size_t size) {
+  
+    std::vector<glm::vec3> customColorCube;
+    customColorCube.push_back(customColorCenter);
+    customColorCube.push_back(customColorEdge);
+    for(size_t i = 2; i < size ; ++i){
+        customColorCube.push_back(customColorEdge);
+    }
+    return customColorCube;
+}
 
 
 

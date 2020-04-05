@@ -29,7 +29,7 @@ _initialRotation(Utility::rotationUpToDir(dir))
 
 glm::mat4 ObjectAnimation::model() const {
     return  _translationToBlock *
-             _initialRotation * translationOnBlock * inversedTanslationCenter
+             _initialRotation * translationOnBlock * inversedTranslationCenter
               * _movingRotation * translationCenter;
 }
 
@@ -52,12 +52,5 @@ const glm::mat4 ObjectAnimation::translationOnBlock =
 const glm::mat4 ObjectAnimation::translationCenter = 
                           glm::translate(glm::vec3(-0.5f,-0.3f,-0.5f));
 
-const glm::mat4 ObjectAnimation::inversedTanslationCenter = 
+const glm::mat4 ObjectAnimation::inversedTranslationCenter = 
 glm::inverse(ObjectAnimation::translationCenter);
-
-
-ObjectAnimation::~ObjectAnimation() {
-}
-
-
-

@@ -78,10 +78,6 @@ void FrameBuffer::bindDefaultFrameBuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER,0);
 }
 
-
-FrameBuffer::~FrameBuffer() {
-}
-
 GLuint FrameBuffer::getHandle() const{
     return _fboHandle;
 }

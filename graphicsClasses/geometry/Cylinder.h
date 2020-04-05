@@ -24,6 +24,10 @@ public:
     Cylinder( const glm::vec3& customColor,
               const glm::mat4& modelTransform    = glm::mat4(1.f),
               const glm::mat4& normalsTransform  = glm::mat4(1.f));
+    Cylinder( const glm::vec3& customColorCenter,
+              const glm::vec3& customColorEdge,
+              const glm::mat4& modelTransform    = glm::mat4(1.f),
+              const glm::mat4& normalsTransform  = glm::mat4(1.f));
     Cylinder( const Cylinder& cylinder, 
               const glm::mat4& modelTransform    = glm::mat4(1.f),
               const glm::mat4& normalsTransform  = glm::mat4(1.f));
@@ -37,7 +41,6 @@ public:
       std::vector<glm::vec3> colors;
       std::vector<glm::vec2> uvCoords;
       std::vector<GLushort>  indices;
-      ~InfoCylinder() {}
     };
 
 private:
@@ -46,6 +49,11 @@ private:
 
     //--------STATIC METHODS-------//
     static InfoCylinder computeBasicInfoCylinder();
+    static std::vector<glm::vec3> createCenterAndEdgeColorBuffer(
+      const glm::vec3& customColorCenter, 
+      const glm::vec3& customColorEdge,
+      size_t size
+    );
 
 };
 

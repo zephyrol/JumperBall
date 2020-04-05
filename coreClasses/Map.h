@@ -47,7 +47,6 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Map                                   ();
-    Map                                   ( const Map& orig );
     Map                                   ( const std::string content, 
                                             Map::KindOfData kData );
 

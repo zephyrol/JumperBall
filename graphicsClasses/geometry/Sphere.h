@@ -38,7 +38,6 @@ public:
       std::vector<glm::vec3> colors;
       std::vector<glm::vec2> uvCoords;
       std::vector<GLushort>  indices;
-      ~InfoSphere() {}
     };
 
 private:
