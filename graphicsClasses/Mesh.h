@@ -209,7 +209,6 @@ std::vector<MeshComponent> Mesh<T>::genComponents(const Map& map) {
         
         genSharps(components,block,glmPosition,pyramidSharp);
         
-       std::cout <<"here" <<std::endl;
         const std::array<std::shared_ptr<const Object>,6> objects =
         block.objects();
         for (size_t i = 0; i < objects.size() ; ++i) {
@@ -279,7 +278,6 @@ std::vector<MeshComponent>
     Cube  cube(glm::vec3(1.f,215.f/255.f,0.f)); // Gold cube for the keys
     Sphere sphere(glm::vec3(1.f,215.f/255.f,0.f)); // Gold cube for the keys
     std::vector<MeshComponent> components;
-    std::cout << "there" << std::endl;
     if (obj) {
         switch ( obj->getCategory() ) {
             case Object::CategoryOfObjects::Key: {

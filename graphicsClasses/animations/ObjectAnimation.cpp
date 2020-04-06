@@ -37,6 +37,11 @@ glm::mat4 ObjectAnimation::scaleRotation() const {
     return _initialRotation * _movingRotation;
 }
 
+glm::mat4 ObjectAnimation::translation() const {
+    return _translationToBlock * translationOnBlock;
+}
+
+
 
 void ObjectAnimation::updateTrans() {
     float seconds = JumperBallTypesMethods::getTimeSecondsSinceTimePoint(

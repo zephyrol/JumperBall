@@ -155,12 +155,12 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder() {
     for( unsigned int i = 0; i < ( iMeriCount - 1 ); ++i )
     {
         infoCylinder.indices.push_back(0);
-        infoCylinder.indices.push_back(2+i*4);
-        infoCylinder.indices.push_back(2+(i+1)*4);
+        infoCylinder.indices.push_back(2+i*4+2);
+        infoCylinder.indices.push_back(2+(i+1)*4+2);
         
         infoCylinder.indices.push_back(1);
-        infoCylinder.indices.push_back(2+i*4+1);
-        infoCylinder.indices.push_back(2+(i+1)*4+1);
+        infoCylinder.indices.push_back(2+i*4+2+1);
+        infoCylinder.indices.push_back(2+(i+1)*4+2+1);
 
         infoCylinder.indices.push_back(2+i*4);
         infoCylinder.indices.push_back(2+(i+1)*4);

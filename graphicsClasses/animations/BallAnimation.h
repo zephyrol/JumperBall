@@ -27,6 +27,9 @@ public:
 
     //----------METHODS------------//
     void                          updateTrans()                        override;
+    glm::mat4                     model()                        const override;
+    glm::mat4                     translation()                  const override;
+    glm::mat4                     scaleRotation()                const override;
     void                          animationAlive();
     void                          animationBursting();
 
@@ -37,6 +40,10 @@ private:
     glm::mat4                     _rotationBeforeMovement;
     glm::vec3                     _scaleBeforeMovement;
     glm::vec3                     _translationBeforeMovement;
+
+    glm::mat4                     _scale;
+    glm::mat4                     _rotation;
+    glm::mat4                     _translation;
 
     JumperBallTypes::timePointMs  _referenceTimePointAction;
     JumperBallTypes::timePointMs  _referenceTimePointStateOfLife;

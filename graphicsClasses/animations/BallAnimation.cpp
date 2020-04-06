@@ -21,6 +21,9 @@ BallAnimation::BallAnimation(const Ball& ball):
     _rotationBeforeMovement(1.f),
     _scaleBeforeMovement(1.f),
     _translationBeforeMovement(0.f),
+    _scale(1.f),
+    _rotation(1.f),
+    _translation(1.f),
     _referenceTimePointAction(ball.getTimeActionMs()),
     _referenceTimePointStateOfLife(ball.getTimeStateOfLifeMs()),
     _referenceState(ball.state()),
@@ -140,6 +143,19 @@ void BallAnimation::animationBursting() {
 
 }
 
+
+glm::mat4 BallAnimation::model() const {
+    return translation() * scaleRotation();
+}
+
+glm::mat4 BallAnimation::scaleRotation() const {
+    //For our animations, we apply the scale after the rotation
+    return _scale * _rotation;
+}
+
+glm::mat4 BallAnimation::translation() const {
+    return _translation;
+}
 
 void BallAnimation::updateTrans() {
     

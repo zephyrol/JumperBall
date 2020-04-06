@@ -12,29 +12,3 @@
  */
 
 #include "Animation.h"
-
-Animation::Animation(): 
-            _scale(1.f),
-            _rotation(1.f),
-            _translation(1.f) 
-{
-}
-
-glm::mat4 Animation::model() const {
-    return translation() * scaleRotation();
-}
-
-glm::mat4 Animation::scaleRotation() const {
-    //For our animations, we apply the scale after the rotation
-    return _scale * _rotation;
-}
-
-glm::mat4 Animation::translation() const {
-    return _translation;
-}
-
-
-Animation::~Animation() {
-
-}
-

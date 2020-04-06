@@ -30,6 +30,7 @@ public:
     //----------METHODS------------//
     void                                updateTrans()                  override;
     glm::mat4                           model()                  const override;
+    glm::mat4                           translation()            const override;
     glm::mat4                           scaleRotation()          const override;
 private:
 
@@ -43,9 +44,9 @@ private:
     glm::mat4                           _movingRotation;
     glm::mat4                           _movingScale;
 
-    static const glm::mat4 translationOnBlock;
-    static const glm::mat4 translationCenter;
-    static const glm::mat4 inversedTranslationCenter;
+    static const glm::mat4              translationOnBlock;
+    static const glm::mat4              translationCenter;
+    static const glm::mat4              inversedTranslationCenter;
 };
 
 #endif /* OBJECTANIMATION_H */

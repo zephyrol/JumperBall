@@ -193,10 +193,6 @@ void GeometricShape::bind() const {
             nullptr
             );
 
-    /*glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
-    glDisableVertexAttribArray(3);*/
 }
 
 
@@ -208,10 +204,6 @@ void GeometricShape::draw() const {
     }
     else {
         constexpr unsigned int offset = 0;
-        /*std::cout << _positions->size() << std::endl;
-        for (glm::vec3 pos : *_positions) {
-          std::cout << pos.x <<","<< pos.y << "," << pos.z << std::endl;
-        }*/
         glDrawArrays(GL_TRIANGLES,offset,_positions->size());
     }
     
