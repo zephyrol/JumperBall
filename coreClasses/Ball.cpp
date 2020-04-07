@@ -27,12 +27,16 @@ Ball::Ball(Map& map):
         _lookTowards(JumperBallTypes::Direction::North),
         _state(Ball::State::Staying),
         _stateOfLife(Ball::StateOfLife::Normal),
+        _jumpingType(Ball::JumpingType::Short),
         _map(map),
         _mechanicsPatternJumping(),
-        _mechanicsPatternFalling(0.f,0.f,0.f,0.f),
+        _mechanicsPatternLongJumping( 3.f,
+                                      ClassicalMechanics::timeToStopWindBasic,
+                                      3.f),
+        _mechanicsPatternFalling(0.f,0.f,0.f),
         _timeAction(std::chrono::system_clock::now()),
         _timeStateOfLife(std::chrono::system_clock::now()){
-       
+      std::cout << "cree"  << std::endl;
 }
 
 void Ball::turnLeft() noexcept {
@@ -582,17 +586,18 @@ Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
         constexpr float distanceNear      = 1.f;
         constexpr float distanceFar       = 2.f;
         constexpr float sizeBlock         = 1.f;
-        
+       
+        ClassicalMechanics& refMechanicsJumping = getMechanicsJumping();
         if (blockNear && blockNear->stillExists()) {
-            _mechanicsPatternJumping.addShockFromPosition
+            refMechanicsJumping.addShockFromPosition
             ( distanceNear-sizeBlock/2.f -getRadius());
         }
         else if (blockFar && blockFar->stillExists()) {
-            _mechanicsPatternJumping.addShockFromPosition
+            refMechanicsJumping.addShockFromPosition
             ( distanceFar-sizeBlock/2.f -getRadius());
         }
         else {
-            _mechanicsPatternJumping.timesShock({});
+            refMechanicsJumping.timesShock({});
         }
     }
     answer = Ball::AnswerRequest::Accepted; 
@@ -600,7 +605,9 @@ Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
 }
 
 const ClassicalMechanics& Ball::getMechanicsJumping() const noexcept{
+    if (_jumpingType == Ball::JumpingType::Short)
     return _mechanicsPatternJumping;
+    else return _mechanicsPatternLongJumping;
 }
 
 const ClassicalMechanics& Ball::getMechanicsFalling() const noexcept{
@@ -621,7 +628,7 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
             
             auto positionBlockPtr = intersectBlock(_3DPosX,_3DPosY, _3DPosZ);
             if (positionBlockPtr) {
-              _mechanicsPatternJumping.timesShock({});
+              getMechanicsJumping().timesShock({});
               _currentBlockX      = positionBlockPtr->at(0) ;
               _currentBlockY      = positionBlockPtr->at(1) ;
               _currentBlockZ      = positionBlockPtr->at(2) ;
@@ -876,6 +883,12 @@ JumperBallTypes::vec3f Ball::currentSideAsVector() const {
     return JumperBallTypesMethods::directionAsVector(_currentSide);
 }
 
+ClassicalMechanics& Ball::getMechanicsJumping() noexcept {
+    //Scott Meyer's advice to avoid code duplication
+    return const_cast<ClassicalMechanics&> (
+            static_cast<const Ball&>(*this).getMechanicsJumping());
+}
+
 
 JumperBallTypes::vec3f Ball::get3DPosStayingBall() const {
 
@@ -1091,7 +1104,7 @@ void Ball::update() noexcept{
 
         ClassicalMechanics::physics2DVector pos2D;
         if (_state == Ball::State::Jumping) {
-            pos2D = _mechanicsPatternJumping.
+            pos2D = getMechanicsJumping().
                     getPosition(getTimeSecondsSinceAction());
         } else {
             pos2D = _mechanicsPatternFalling.

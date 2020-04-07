@@ -34,6 +34,8 @@ public:
 
     enum class StateOfLife        { Normal, Bursting, Burning, Dead};
 
+    enum class JumpingType        { Short,  Long};
+
     enum class ActionRequest      { GoStraightAhead, TurnLeft, TurnRight, Jump};
     enum class AnswerRequest      { Accepted, Rejected };
     enum class NextBlockLocal     { Above, InFrontOf, Same, None };
@@ -96,12 +98,16 @@ private:
     JumperBallTypes::Direction    _lookTowards;
     Ball::State                   _state;
     Ball::StateOfLife             _stateOfLife;
+    Ball::JumpingType             _jumpingType;
 
     //Through the interactions, a ball may modify a map
     Map&                          _map;
 
     ClassicalMechanics            _mechanicsPatternJumping;
+    ClassicalMechanics            _mechanicsPatternLongJumping;
+
     ClassicalMechanics            _mechanicsPatternFalling;
+
 
     std::chrono::time_point<std::chrono::system_clock>  
                                   _timeAction;
@@ -131,6 +137,7 @@ private:
     void                          fall()                               noexcept;
     void                          setTimeActionNow()                   noexcept;
     void                          mapInteraction()                     noexcept;
+    ClassicalMechanics&           getMechanicsJumping()                noexcept;
     AnswerRequest                 isFallingIntersectionBlock()         noexcept;
     AnswerRequest                 isGoingStraightAheadIntersectBlock() noexcept; 
 

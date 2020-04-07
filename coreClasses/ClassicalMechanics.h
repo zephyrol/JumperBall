@@ -30,7 +30,6 @@ public:
     ClassicalMechanics                  (
                                           float distanceJump,
                                           float timeToGetDestination,
-                                          float v0x,
                                           float v0y
                                         );
 
