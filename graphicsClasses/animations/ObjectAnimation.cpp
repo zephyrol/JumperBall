@@ -47,7 +47,7 @@ void ObjectAnimation::updateTrans() {
     float seconds = JumperBallTypesMethods::getTimeSecondsSinceTimePoint(
       _referenceTimePointCreation);
     
-    constexpr float speedFactor = 10.f;
+    constexpr float speedFactor = 1.f;
     _movingRotation = glm::rotate(speedFactor* seconds,glm::vec3(0.f,1.f,0.f));
 
 }

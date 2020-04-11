@@ -72,7 +72,7 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder() {
     constexpr unsigned int  iMeriCount  = 60;
     constexpr float         r           = 0.5f;
     
-   // Create a Cylinder ---------------------------------------------------------
+   // Create a Cylinder --------------------------------------------------------
     
     constexpr float a2 = ( 360.0 / ( iMeriCount - 1 ) ) * M_PI / 180.0;
     
@@ -155,8 +155,8 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder() {
     for( unsigned int i = 0; i < ( iMeriCount - 1 ); ++i )
     {
         infoCylinder.indices.push_back(0);
-        infoCylinder.indices.push_back(2+i*4+2);
         infoCylinder.indices.push_back(2+(i+1)*4+2);
+        infoCylinder.indices.push_back(2+i*4+2);
         
         infoCylinder.indices.push_back(1);
         infoCylinder.indices.push_back(2+i*4+2+1);

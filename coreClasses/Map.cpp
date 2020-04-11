@@ -182,15 +182,11 @@ Map::Map(std::ifstream& file):_id (nbMaps),
 
 std::shared_ptr<Block> Map::getBlock(int x, int y, int z){
 
-    std::shared_ptr<Block> block;
-    if (x >= static_cast<int>(_boundingBoxXMax) ||  
-            y >= static_cast<int>(_boundingBoxYMax) ||
-            z >= static_cast<int>(_boundingBoxZMax) ||
-            x < 0 || y < 0 || z < 0 )
-        block = nullptr;
-    else 
-        block = _blocks.at(_boundingBoxXMax* (z + y * _boundingBoxZMax) + x);
-    return block;
+    std::shared_ptr<const Block> constBlock =
+            static_cast<const Map&>(*this).getBlock(x,y,z);
+
+    return std::const_pointer_cast<Block> (constBlock);
+
 }
 
 std::shared_ptr<const Block> Map::getBlock(int x, int y, int z) const {
