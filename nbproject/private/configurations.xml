@@ -13,8 +13,6 @@
         <gdb_interceptlist>
           <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
         </gdb_interceptlist>
-        <gdb_signals>
-        </gdb_signals>
         <gdb_options>
           <DebugOptions>
           </DebugOptions>
@@ -27,12 +25,8 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
-          <runcommandpicklistitem>&lt;Different Values></runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map2.txt</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1_2.txt</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1.txt</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" maps/map1.txt</runcommand>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>
@@ -65,15 +59,7 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map2.txt</runcommandpicklistitem>
-          <runcommandpicklistitem>&lt;Different Values></runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" outmap.txt</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1.txt -compress</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" outMap.txt</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1Obj.txt</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1Old.txt</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1Old.txt -compress</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1_2.txt</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" maps/map1.txt</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}" maps/map1.txt</runcommand>

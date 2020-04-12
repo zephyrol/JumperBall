@@ -41,7 +41,7 @@ Cube::Cube( const glm::vec3& customColor,
 }
 
 
-Cube::Cube(const Cube& cube, 
+Cube::Cube(const GeometricShape& cube, 
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform ):
     GeometricShape(cube,modelTransform,normalsTransform) {

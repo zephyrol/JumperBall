@@ -25,7 +25,7 @@ public:
     Pyramid(  const glm::vec3& customColor,
               const glm::mat4& modelTransform    = glm::mat4(1.f),
               const glm::mat4& normalsTransform  = glm::mat4(1.f));
-    Pyramid(  const Pyramid& pyramid, 
+    Pyramid(  const GeometricShape& pyramid, 
               const glm::mat4& modelTransform    = glm::mat4(1.f),
               const glm::mat4& normalsTransform  = glm::mat4(1.f));
 

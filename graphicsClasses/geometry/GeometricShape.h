@@ -33,11 +33,11 @@ public:
 
     //It's useless to have a copy of a shape with exactly the same transform
     //and vertices, every attributes are const...
-    GeometricShape(const GeometricShape& geometricShape) = delete;
-    GeometricShape& operator= (const GeometricShape& geometricShape) = delete;
+    GeometricShape(const GeometricShape& geometricShape)               = delete;
+    GeometricShape& operator= (const GeometricShape& geometricShape)   = delete;
 
-    GeometricShape(GeometricShape&& geometricShape) = default;
-    GeometricShape& operator= (GeometricShape&& geometricShape) = default;
+    GeometricShape(GeometricShape&& geometricShape)                   = default;
+    GeometricShape& operator= (GeometricShape&& geometricShape)       = default;
 
 
     //Use this constructor to make a copy with a different transform

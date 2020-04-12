@@ -25,7 +25,7 @@ public:
     Cube( const glm::vec3& customColor,
           const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
-    Cube( const Cube& cube, 
+    Cube( const GeometricShape& cube, 
           const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
 

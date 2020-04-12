@@ -59,7 +59,7 @@ Cylinder::Cylinder( const glm::vec3& customColorCenter,
 
 
 
-Cylinder::Cylinder( const Cylinder& Cylinder, 
+Cylinder::Cylinder( const GeometricShape& Cylinder, 
                 const glm::mat4& modelTransform,
                 const glm::mat4& normalsTransform ):
     GeometricShape(Cylinder,modelTransform,normalsTransform) {

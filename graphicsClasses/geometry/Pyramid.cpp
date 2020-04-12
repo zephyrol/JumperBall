@@ -41,7 +41,7 @@ Pyramid::Pyramid( const glm::vec3& customColor,
 {
 }
 
-Pyramid::Pyramid(const Pyramid& pyramid, 
+Pyramid::Pyramid(const GeometricShape& pyramid, 
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform ):
     GeometricShape(pyramid,modelTransform,normalsTransform) {

@@ -41,7 +41,7 @@ Quad::Quad( const glm::vec3& customColor,
 }
 
 
-Quad::Quad(const Quad& quad, 
+Quad::Quad(const GeometricShape& quad, 
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform ):
     GeometricShape(quad,modelTransform,normalsTransform) {

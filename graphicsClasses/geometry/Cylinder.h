@@ -28,7 +28,7 @@ public:
               const glm::vec3& customColorEdge,
               const glm::mat4& modelTransform    = glm::mat4(1.f),
               const glm::mat4& normalsTransform  = glm::mat4(1.f));
-    Cylinder( const Cylinder& cylinder, 
+    Cylinder( const GeometricShape& cylinder, 
               const glm::mat4& modelTransform    = glm::mat4(1.f),
               const glm::mat4& normalsTransform  = glm::mat4(1.f));
 

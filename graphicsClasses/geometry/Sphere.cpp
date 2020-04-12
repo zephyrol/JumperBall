@@ -40,7 +40,7 @@ Sphere::Sphere( const glm::vec3& customColor,
 }
 
 
-Sphere::Sphere( const Sphere& sphere, 
+Sphere::Sphere( const GeometricShape& sphere, 
                 const glm::mat4& modelTransform,
                 const glm::mat4& normalsTransform ):
     GeometricShape(sphere,modelTransform,normalsTransform) {

@@ -25,7 +25,7 @@ public:
     Sphere( const glm::vec3& customColor,
             const glm::mat4& modelTransform    = glm::mat4(1.f),
             const glm::mat4& normalsTransform  = glm::mat4(1.f));
-    Sphere( const Sphere& sphere, 
+    Sphere( const GeometricShape& sphere, 
             const glm::mat4& modelTransform    = glm::mat4(1.f),
             const glm::mat4& normalsTransform  = glm::mat4(1.f));
 
