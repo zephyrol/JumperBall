@@ -628,16 +628,16 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
             
             auto positionBlockPtr = intersectBlock(_3DPosX,_3DPosY, _3DPosZ);
             if (positionBlockPtr) {
-              getMechanicsJumping().timesShock({});
-              _currentBlockX      = positionBlockPtr->at(0) ;
-              _currentBlockY      = positionBlockPtr->at(1) ;
-              _currentBlockZ      = positionBlockPtr->at(2) ;
-              _state              = Ball::State::Staying;
-              _map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ)
-              ->detectionEvent(_currentSide,
-                           JumperBallTypesMethods::getTimePointMsFromTimePoint(
-                           _timeAction));
-              update();
+                getMechanicsJumping().timesShock({});
+                _currentBlockX      = positionBlockPtr->at(0) ;
+                _currentBlockY      = positionBlockPtr->at(1) ;
+                _currentBlockZ      = positionBlockPtr->at(2) ;
+                _state              = Ball::State::Staying;
+                _map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ)
+                ->detectionEvent(_currentSide,
+                        JumperBallTypesMethods::getTimePointMsFromTimePoint(
+                            _timeAction));
+                update();
             }
         }
         answer = Ball::AnswerRequest::Accepted; 

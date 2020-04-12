@@ -29,7 +29,7 @@ public:
 
 
     //------------TYPES------------//
-    enum class categoryOfBlocksInFile {None,Base,Fire,Ice,Sharp,Brittle};
+    enum class categoryOfBlocksInFile {None,Base,Fire,Ice,Sharp,Brittle,Jump};
 
 
     //----------METHODS-------------//

@@ -13,8 +13,8 @@
 
 #include "SharpBlock.h"
 
-SharpBlock::SharpBlock() : 
-            _facesSharps{true,true,true,true,true,true},
+SharpBlock::SharpBlock(const std::array<bool,6>& facesSharps) : 
+            _facesSharps(facesSharps),
             _hitBall(false)
 {
 }

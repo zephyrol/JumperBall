@@ -18,7 +18,8 @@
 class SharpBlock : public Block {
 public:
     //--CONSTRUCTORS & DESTRUCTORS--//
-    SharpBlock                                    ();
+    SharpBlock                                    (const std::array<bool,6>&
+                                                      facesSharps);
 
     //-------CONST METHODS----------//
     Block::categoryOfBlocksInFile                 getType()      const override;

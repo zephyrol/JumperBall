@@ -12,6 +12,7 @@
  */
 
 #include <iostream>
+#include <algorithm>
 #include <math.h>
 #include <cctype>
 #include "Map.h"
@@ -58,30 +59,15 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     file >> _beginY;
 
 
-    auto convertToBase10 = [] (std::string& s, unsigned int base)->unsigned int{
-        unsigned int value = 0;
-        while (s.length() > 0 ) {
-          const unsigned int number = static_cast<unsigned int> (s.front());
-          value += number * static_cast<unsigned int> (pow(base,s.length()-1));
-          s.erase(s.begin());
-        }
-        return value;
-    };
-
-    auto substractOffset = [] (std::string& s, unsigned int offset) {
-        for (char& c : s) {
-            c -= offset;
-        }
-    };
-
     std::string infoMap;
     std::string counterBuffer;
-    char readValue;
 
+    char readValue;
     file >> infoMap;
     while (!infoMap.empty()) {
         
         readValue = infoMap.front();
+        infoMap.erase(infoMap.begin());
         if (readValue >= firstNumberOfBlock) {
             counterBuffer.push_back(readValue);
         } else {
@@ -96,6 +82,32 @@ Map::Map(std::ifstream& file):_id (nbMaps),
             const unsigned int typeOfBlock = readValue - firstKindOfBlock;
             for (unsigned int i = 0 ; i < nbBlocksTowrite ; ++i) {
                 std::shared_ptr <Block> block = nullptr ;
+                const std::vector<unsigned int> blockWithSpecialParams {4,6};
+                std::array<bool,6> specialParams
+                {false,false,false,false,false,false};
+                if( std::find( blockWithSpecialParams.begin(),
+                    blockWithSpecialParams.end(), typeOfBlock) !=
+                    blockWithSpecialParams.end()) {
+                    const char readParam =  infoMap.front() - firstNumberParams;
+                    infoMap.erase(infoMap.begin());
+                    const std::string sParam =
+                        convertToBase(static_cast<unsigned int>(readParam),2);
+                    for(unsigned int i = 0 ; i < specialParams.size(); ++i){
+                        const size_t diffSize = 
+                          specialParams.size()-sParam.size();
+                        if ( i >=  diffSize){
+                          if (sParam.at(i-diffSize) == 0) {
+                            specialParams.at(i)  = false;
+                          } else {
+                              specialParams.at(i) = true;
+                          }
+                        } else {
+                            specialParams.at(i) = false;
+                        }
+
+                    }
+                }
+
                 switch (typeOfBlock) {
                     case 0:
                         break ;
@@ -105,10 +117,14 @@ Map::Map(std::ifstream& file):_id (nbMaps),
                         block = std::make_shared<FireBlock>(); break ;
                     case 3:
                         block = std::make_shared<IceBlock>(); break ;
-                    case 4:
-                        block = std::make_shared<SharpBlock>(); break ;
+                    case 4: 
+                        block = std::make_shared<SharpBlock>(specialParams); 
+                        break ;
                     case 5:
                         block = std::make_shared<BrittleBlock>(); break ;
+                    case 6:
+                        block = std::make_shared<JumpBlock>(specialParams); 
+                        break ;
                     default :
                         break;
                 }
@@ -116,7 +132,6 @@ Map::Map(std::ifstream& file):_id (nbMaps),
                 counterBuffer.clear();
             }
         }
-        infoMap.erase(infoMap.begin());
     }
 
     std::string infoObjects;
@@ -245,6 +260,45 @@ unsigned int Map::beginZ() const {
     return _beginZ;
 }
 
+std::string Map::convertToBase(unsigned int number, unsigned char base) {
+    std::string convertedNumber;
+    
+    while (number > 0 ) {
+        const unsigned int remainder = number % base;
+        convertedNumber.insert( convertedNumber.begin(),
+                remainder);
+        
+        number = number / base ;
+    }
+    
+    return convertedNumber;
+}
+
+unsigned int Map::convertToBase10(std::string& s, unsigned int base) {
+    unsigned int value = 0;
+    while (s.length() > 0 ) {
+        const unsigned int number = static_cast<unsigned int> (s.front());
+        value += number * static_cast<unsigned int> (pow(base,s.length()-1));
+        s.erase(s.begin());
+    }
+    return value;
+}
+
+void Map::substractOffset(std::string& s, int offset) {
+    for (char& c : s) {
+        c -= offset;
+    }
+ }
+
+
+void Map::applyOffset(std::string& s, int offset) {
+    for (char& c : s) {
+        c += offset;
+    }
+ }
+
+
+
 void Map::compress(std::ifstream& input) {
     std::ofstream output ("outMap.txt");
 
@@ -277,54 +331,47 @@ void Map::compress(std::ifstream& input) {
     unsigned int counter = 1;
     unsigned int currentType;
 
-    auto applyOffset = [] (std::string& s, unsigned int offset) {
-        for (char& c : s) {
-            c += offset;
-        }
-    };
-    
-    auto convertToBase = [] (unsigned int number, unsigned char base) 
-        -> std::string {
-        
-        std::string convertedNumber;
-        
-        while (number > 0 ) {
-            const unsigned int remainder = number % base;
-            convertedNumber.insert( convertedNumber.begin(),
-                    remainder);
-            
-            number = number / base ;
-        }
-        
-        return convertedNumber;
-    };
-    
-
     // BLOCKS PART
     input >> currentType;
 
+    const std::vector<unsigned int> blockWithSpecialParams {4,6};
     for (unsigned int i = 1 ; i < width * deep * height ; ++i) {
-        
         
         unsigned int readValue ;
         input >> readValue;
 
         if (readValue != currentType){
-            if (counter > 1 )
-            {
-                std::string stringToWrite = convertToBase(
-                                        counter, nbOfCharactersUsedForNumbers);
-                applyOffset(stringToWrite, firstNumberOfBlock) ;
-                output << stringToWrite;
-            } 
-            output << currentType;
-
-            counter = 1;       
-            currentType = readValue;
+                if (counter > 1 )
+                {
+                    std::string stringToWrite = convertToBase(
+                            counter, nbOfCharactersUsedForNumbers);
+                    applyOffset(stringToWrite, firstNumberOfBlock) ;
+                    output << stringToWrite;
+                } 
+                
+                if (counter > 0 ) {
+                    output << currentType;
+                }
+                currentType = readValue;
+                counter = 1;       
         }
         else {
             counter++;
         }
+        if( std::find( blockWithSpecialParams.begin(),
+                blockWithSpecialParams.end(), readValue ) !=
+                blockWithSpecialParams.end()) {
+            currentType = readValue;
+            output << currentType;
+            std::string blockParams;
+            input >> blockParams;
+            substractOffset(blockParams, static_cast<unsigned int>('a'));
+            const unsigned int numberBase10= convertToBase10(blockParams,2);
+            std::string numberBase64 = convertToBase(numberBase10,64);
+            applyOffset(numberBase64,firstNumberParams);
+            output << numberBase64;
+            counter = 0;
+        } 
         
     }
     if (counter > 1 )
@@ -337,6 +384,7 @@ void Map::compress(std::ifstream& input) {
     output << currentType;
 
     output << std::endl;  
+    
     // OBJECTS PART
 
     std::string readString;

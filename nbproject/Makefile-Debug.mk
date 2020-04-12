@@ -44,6 +44,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/coreClasses/blocks/BrittleBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/FireBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/IceBlock.o \
+	${OBJECTDIR}/coreClasses/blocks/JumpBlock.o \
 	${OBJECTDIR}/coreClasses/blocks/SharpBlock.o \
 	${OBJECTDIR}/coreClasses/objects/Bonus.o \
 	${OBJECTDIR}/coreClasses/objects/Clock.o \
@@ -142,6 +143,11 @@ ${OBJECTDIR}/coreClasses/blocks/IceBlock.o: coreClasses/blocks/IceBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/IceBlock.o coreClasses/blocks/IceBlock.cpp
+
+${OBJECTDIR}/coreClasses/blocks/JumpBlock.o: coreClasses/blocks/JumpBlock.cpp
+	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -IcoreClasses -Ilibs -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/coreClasses/blocks/JumpBlock.o coreClasses/blocks/JumpBlock.cpp
 
 ${OBJECTDIR}/coreClasses/blocks/SharpBlock.o: coreClasses/blocks/SharpBlock.cpp
 	${MKDIR} -p ${OBJECTDIR}/coreClasses/blocks

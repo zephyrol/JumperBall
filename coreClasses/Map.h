@@ -20,6 +20,7 @@
 #include "blocks/IceBlock.h"
 #include "blocks/SharpBlock.h"
 #include "blocks/BrittleBlock.h"
+#include "blocks/JumpBlock.h"
 #include "objects/Key.h"
 #include "objects/Coin.h"
 #include "objects/Clock.h"
@@ -38,6 +39,8 @@ public:
     static constexpr unsigned char        firstKindOfBlock                 = 48;
     static constexpr unsigned char        firstNumberOfBlock               = 58;
     static constexpr unsigned int         nbOfCharactersUsedForNumbers     = 69;
+
+    static constexpr unsigned int         firstNumberParams                = 33;
 
     //Objects compression
     static constexpr unsigned char        firstNumberType                  = 33;
@@ -76,6 +79,16 @@ public:
 
     //--------STATIC METHODS-------//
     static void                           compress(std::ifstream& input);
+
+    static std::string                    convertToBase (unsigned int number, 
+                                                          unsigned char base);
+    static unsigned int                   convertToBase10(std::string& s, 
+                                                            unsigned int base);
+    static void                           applyOffset (std::string& s,
+                                                        int offset);
+    static void                           substractOffset(std::string& s, 
+                                                          int offset);
+
     
 private:
 
