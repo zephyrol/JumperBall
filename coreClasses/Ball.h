@@ -137,6 +137,8 @@ private:
     void                          fall()                               noexcept;
     void                          setTimeActionNow()                   noexcept;
     void                          mapInteraction()                     noexcept;
+    void                          blockEvent(std::shared_ptr<Block> block)
+                                                                       noexcept;
     ClassicalMechanics&           getMechanicsJumping()                noexcept;
     AnswerRequest                 isFallingIntersectionBlock()         noexcept;
     AnswerRequest                 isGoingStraightAheadIntersectBlock() noexcept; 

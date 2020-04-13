@@ -51,8 +51,10 @@ namespace MeshGenerator {
                                                             position);
     std::vector<MeshComponent>  genSharps( 
                                         const Block& block, 
-                                        glm::vec3 posWorld, 
-                                        const Pyramid& pyramid);
+                                        glm::vec3 posWorld);
+    std::vector<MeshComponent>  genJumpers( 
+                                        const Block& block, 
+                                        glm::vec3 posWorld);
 
     extern std::map<std::string, std::shared_ptr<GeometricShape> >
                                 commonShapes;

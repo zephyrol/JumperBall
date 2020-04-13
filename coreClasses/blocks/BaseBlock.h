@@ -19,7 +19,6 @@
 class BaseBlock : public Block {
 public:
     BaseBlock();
-    BaseBlock(const BaseBlock& orig);
 
     Block::categoryOfBlocksInFile getType() const override;
 

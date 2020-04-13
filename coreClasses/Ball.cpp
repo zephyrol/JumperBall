@@ -36,7 +36,6 @@ Ball::Ball(Map& map):
         _mechanicsPatternFalling(0.f,0.f,0.f),
         _timeAction(std::chrono::system_clock::now()),
         _timeStateOfLife(std::chrono::system_clock::now()){
-      std::cout << "cree"  << std::endl;
 }
 
 void Ball::turnLeft() noexcept {
@@ -453,7 +452,6 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
     return nextBlock;
 }
 
-
 void Ball::goStraightAhead() noexcept {
     
     struct nextBlockInformation nextBlock = getNextBlockInfo(); 
@@ -528,7 +526,6 @@ Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
 
     return answer;
 }
-
 
 Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
 
@@ -633,10 +630,8 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
                 _currentBlockY      = positionBlockPtr->at(1) ;
                 _currentBlockZ      = positionBlockPtr->at(2) ;
                 _state              = Ball::State::Staying;
-                _map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ)
-                ->detectionEvent(_currentSide,
-                        JumperBallTypesMethods::getTimePointMsFromTimePoint(
-                            _timeAction));
+                blockEvent(_map.getBlock(
+                        _currentBlockX,_currentBlockY,_currentBlockZ));
                 update();
             }
         }
@@ -874,7 +869,6 @@ float Ball::getTimeSecondsSinceStateOfLife() const noexcept{
     return fDifference;
 }
 
-
 JumperBallTypes::vec3f Ball::lookTowardsAsVector() const {
     return JumperBallTypesMethods::directionAsVector(_lookTowards);
 }
@@ -888,7 +882,6 @@ ClassicalMechanics& Ball::getMechanicsJumping() noexcept {
     return const_cast<ClassicalMechanics&> (
             static_cast<const Ball&>(*this).getMechanicsJumping());
 }
-
 
 JumperBallTypes::vec3f Ball::get3DPosStayingBall() const {
 
@@ -926,6 +919,14 @@ JumperBallTypes::vec3f Ball::get3DPosStayingBall() const {
     return position3D;
 }
 
+void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
+
+    block->detectionEvent(_currentSide,
+            JumperBallTypesMethods::getTimePointMsFromTimePoint(
+            _timeAction));
+    
+ }
+
 
 void Ball::update() noexcept{
 
@@ -962,10 +963,8 @@ void Ball::update() noexcept{
                 _3DPosY     = position3D.y;
                 _3DPosZ     = position3D.z;
 
-                _map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ)
-                ->detectionEvent(_currentSide,
-                           JumperBallTypesMethods::getTimePointMsFromTimePoint(
-                           _timeAction));
+                blockEvent(_map.getBlock
+                        (_currentBlockX,_currentBlockY,_currentBlockZ));
 
                 stay();
             }
@@ -1147,7 +1146,6 @@ void Ball::mapInteraction() noexcept{
         default: break;
     }
 }
-
 
 Ball::State Ball::state() const {
     return _state;
