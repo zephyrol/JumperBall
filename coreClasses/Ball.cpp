@@ -32,7 +32,7 @@ Ball::Ball(Map& map):
         _mechanicsPatternJumping(),
         _mechanicsPatternLongJumping( 3.f,
                                       ClassicalMechanics::timeToStopWindBasic,
-                                      3.f),
+                                      4.2f),
         _mechanicsPatternFalling(0.f,0.f,0.f),
         _timeAction(std::chrono::system_clock::now()),
         _timeStateOfLife(std::chrono::system_clock::now()){
@@ -470,6 +470,7 @@ void Ball::jump() noexcept {
 
 void Ball::stay() noexcept {
     _state = Ball::State::Staying;
+    _jumpingType = Ball::JumpingType::Short;
     setTimeActionNow();
 }
 
@@ -492,48 +493,38 @@ void Ball::setTimeActionNow() noexcept {
    _timeAction = std::chrono::system_clock::now();
 }
 
-Ball::AnswerRequest Ball::doAction(Ball::ActionRequest action) {
-    Ball::AnswerRequest answer (Ball::AnswerRequest::Accepted);
+void Ball::doAction(Ball::ActionRequest action) {
     switch (action) {
         case Ball::ActionRequest::GoStraightAhead:
             if (_state == Ball::State::Staying) {
                 move();
             }
-            else answer = Ball::AnswerRequest::Rejected;
             break;
         case Ball::ActionRequest::TurnLeft:
             if (_state == Ball::State::Staying) {
                 turnLeft();
             }
-            else answer = Ball::AnswerRequest::Rejected;
             break;
         case Ball::ActionRequest::TurnRight:
             if (_state == Ball::State::Staying) {
                 turnRight();
             }
-            else answer = Ball::AnswerRequest::Rejected;
             break;
         case Ball::ActionRequest::Jump:
             if (_state == Ball::State::Staying) {
                 _state = Ball::State::Jumping;
                 jump();
             }
-            else answer = Ball::AnswerRequest::Rejected;
             break;
         default :
             break;
     }
 
-    return answer;
 }
 
-Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
+void Ball::isGoingStraightAheadIntersectBlock()   noexcept {
 
-    Ball::AnswerRequest answer = Ball::AnswerRequest::Rejected; 
     if ( _state == Ball::State::Jumping ) {
-        
-        answer = Ball::AnswerRequest::Accepted; 
-        
         
         int aboveNearX =  _currentBlockX;
         int aboveNearY =  _currentBlockY;
@@ -541,36 +532,39 @@ Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
         int aboveFarX =   _currentBlockX;
         int aboveFarY =   _currentBlockY;
         int aboveFarZ =   _currentBlockZ;
+        int aboveVeryFarX =   _currentBlockX;
+        int aboveVeryFarY =   _currentBlockY;
+        int aboveVeryFarZ =   _currentBlockZ;
         
         switch (_currentSide) {
             case JumperBallTypes::Direction::North:
-                --aboveNearZ; --aboveFarZ;   break;
+                --aboveNearZ; --aboveFarZ; --aboveVeryFarZ;   break;
             case JumperBallTypes::Direction::South:
-                ++aboveNearZ; ++aboveFarZ;   break;
+                ++aboveNearZ; ++aboveFarZ; ++aboveVeryFarZ;  break;
             case JumperBallTypes::Direction::East: 
-                ++aboveNearX; ++aboveFarX;   break;
+                ++aboveNearX; ++aboveFarX; ++aboveVeryFarX; break;
             case JumperBallTypes::Direction::West:
-                --aboveNearX; --aboveFarX;   break;
+                --aboveNearX; --aboveFarX; --aboveVeryFarX;   break;
             case JumperBallTypes::Direction::Up:
-                ++aboveNearY; ++aboveFarY;   break;
+                ++aboveNearY; ++aboveFarY; ++aboveVeryFarY;  break;
             case JumperBallTypes::Direction::Down:
-                --aboveNearY; --aboveFarY;   break;
+                --aboveNearY; --aboveFarY; --aboveVeryFarY;   break;
             default : break;
         }
         
         switch (_lookTowards) {
             case JumperBallTypes::Direction::North:
-                --aboveNearZ; aboveFarZ -= 2 ;   break;
+                --aboveNearZ; aboveFarZ -= 2; aboveVeryFarZ -= 3;   break;
             case JumperBallTypes::Direction::South:
-                ++aboveNearZ; aboveFarZ += 2;   break;
+                ++aboveNearZ; aboveFarZ += 2; aboveVeryFarZ += 3;  break;
             case JumperBallTypes::Direction::East: 
-                ++aboveNearX; aboveFarX += 2;   break;
+                ++aboveNearX; aboveFarX += 2; aboveVeryFarX += 3;  break;
             case JumperBallTypes::Direction::West:
-                --aboveNearX; aboveFarX -= 2;   break;
+                --aboveNearX; aboveFarX -= 2; aboveVeryFarX -= 3;  break;
             case JumperBallTypes::Direction::Up:
-                ++aboveNearY; aboveFarY += 2;   break;
+                ++aboveNearY; aboveFarY += 2; aboveVeryFarY += 3;  break;
             case JumperBallTypes::Direction::Down:
-                --aboveNearY; aboveFarY -= 2;   break;
+                --aboveNearY; aboveFarY -= 2; aboveVeryFarY -= 3;  break;
             default : break;
         }
         
@@ -579,9 +573,13 @@ Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
         
         std::shared_ptr<const Block> blockFar   = 
                 _map.getBlock(aboveFarX,aboveFarY,aboveFarZ);
+
+        std::shared_ptr<const Block> blockVeryFar   = 
+                _map.getBlock(aboveVeryFarX,aboveVeryFarY,aboveVeryFarZ);
         
         constexpr float distanceNear      = 1.f;
         constexpr float distanceFar       = 2.f;
+        constexpr float distanceVeryFar   = 3.f;
         constexpr float sizeBlock         = 1.f;
        
         ClassicalMechanics& refMechanicsJumping = getMechanicsJumping();
@@ -593,12 +591,15 @@ Ball::AnswerRequest Ball::isGoingStraightAheadIntersectBlock()   noexcept {
             refMechanicsJumping.addShockFromPosition
             ( distanceFar-sizeBlock/2.f -getRadius());
         }
+        else if (_jumpingType == Ball::JumpingType::Long && blockVeryFar && 
+                blockVeryFar->stillExists()) {
+            refMechanicsJumping.addShockFromPosition
+            ( distanceVeryFar-sizeBlock/2.f -getRadius());
+        }
         else {
             refMechanicsJumping.timesShock({});
         }
     }
-    answer = Ball::AnswerRequest::Accepted; 
-    return answer;
 }
 
 const ClassicalMechanics& Ball::getMechanicsJumping() const noexcept{
@@ -611,9 +612,8 @@ const ClassicalMechanics& Ball::getMechanicsFalling() const noexcept{
     return _mechanicsPatternFalling;
 }
 
-Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
+void Ball::isFallingIntersectionBlock() noexcept {
 
-    Ball::AnswerRequest answer = Ball::AnswerRequest::Rejected; 
 
     if ( _state == Ball::State::Jumping  || _state == Ball::State::Falling) {
         
@@ -621,7 +621,6 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
 
         if ( _state == Ball::State::Falling || 
                 _mechanicsPatternJumping.getVelocity(fDifference).y < 0 ) {
-            answer = Ball::AnswerRequest::Accepted; 
             
             auto positionBlockPtr = intersectBlock(_3DPosX,_3DPosY, _3DPosZ);
             if (positionBlockPtr) {
@@ -629,15 +628,13 @@ Ball::AnswerRequest Ball::isFallingIntersectionBlock() noexcept {
                 _currentBlockX      = positionBlockPtr->at(0) ;
                 _currentBlockY      = positionBlockPtr->at(1) ;
                 _currentBlockZ      = positionBlockPtr->at(2) ;
-                _state              = Ball::State::Staying;
+                stay();
                 blockEvent(_map.getBlock(
                         _currentBlockX,_currentBlockY,_currentBlockZ));
                 update();
             }
         }
-        answer = Ball::AnswerRequest::Accepted; 
     }
-    return answer;
 }
 
 float Ball::distanceBehindBall() const 
@@ -925,6 +922,13 @@ void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
             JumperBallTypesMethods::getTimePointMsFromTimePoint(
             _timeAction));
     
+    if (block && (block->getType() == Block::categoryOfBlocksInFile::Jump)) {
+        uint dir = JumperBallTypesMethods::directionAsInteger(_currentSide);
+        if (block->faceInfo().at(dir)){
+          _jumpingType = Ball::JumpingType::Long; 
+          jump();
+        }
+    }
  }
 
 
@@ -963,10 +967,9 @@ void Ball::update() noexcept{
                 _3DPosY     = position3D.y;
                 _3DPosZ     = position3D.z;
 
+                stay();
                 blockEvent(_map.getBlock
                         (_currentBlockX,_currentBlockY,_currentBlockZ));
-
-                stay();
             }
             else {
                 struct nextBlockInformation infoTarget = getNextBlockInfo();

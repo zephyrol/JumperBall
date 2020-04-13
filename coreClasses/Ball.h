@@ -37,7 +37,6 @@ public:
     enum class JumpingType        { Short,  Long};
 
     enum class ActionRequest      { GoStraightAhead, TurnLeft, TurnRight, Jump};
-    enum class AnswerRequest      { Accepted, Rejected };
     enum class NextBlockLocal     { Above, InFrontOf, Same, None };
 
     using shock     =             std::array<unsigned int, 3 > ; 
@@ -77,7 +76,7 @@ public:
 
     //----------METHODS------------//
     void                          update()                             noexcept;
-    AnswerRequest                 doAction ( ActionRequest action);
+    void                          doAction ( ActionRequest action);
 
 
     //--------STATIC METHODS-------//
@@ -140,8 +139,8 @@ private:
     void                          blockEvent(std::shared_ptr<Block> block)
                                                                        noexcept;
     ClassicalMechanics&           getMechanicsJumping()                noexcept;
-    AnswerRequest                 isFallingIntersectionBlock()         noexcept;
-    AnswerRequest                 isGoingStraightAheadIntersectBlock() noexcept; 
+    void                          isFallingIntersectionBlock()         noexcept;
+    void                          isGoingStraightAheadIntersectBlock() noexcept; 
 
 };
 

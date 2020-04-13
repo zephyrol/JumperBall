@@ -322,7 +322,7 @@ std::vector<MeshComponent>
                 }
 
                 const std::array<glm::vec3,nbGeometriesToCreateAKey> scales
-                { glm::vec3(0.075f,0.075f,0.075f),glm::vec3(0.05f,0.3f,0.05f),
+                { glm::vec3(0.09f,0.075f,0.050f),glm::vec3(0.05f,0.3f,0.05f),
                   glm::vec3(0.1f,0.05f,0.05f), glm::vec3(0.1f,0.05f,0.05f) };
                 
                 const std::array<glm::vec3,nbGeometriesToCreateAKey> 
