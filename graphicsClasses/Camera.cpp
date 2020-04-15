@@ -195,7 +195,6 @@ void Camera::follow(const Ball& ball) noexcept {
     if ( _isComingBack) {
         const float durationSinceComeBack = 
         JumperBallTypesMethods::getFloatFromDurationMS(now- _timePointComeBack);
-        std::cout << durationSinceComeBack << std::endl;
         if (durationSinceComeBack > durationMoveComingBack)
         {
           _isComingBack = false;
