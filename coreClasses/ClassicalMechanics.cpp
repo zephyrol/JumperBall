@@ -56,17 +56,17 @@ float ClassicalMechanics::getGravitationalAcceleration() const {
     return _gravitationalAcceleration;
 }
 
-const ClassicalMechanics::physics2DVector ClassicalMechanics::getPosition(
+ClassicalMechanics::physics2DVector ClassicalMechanics::getPosition(
                                           const float t) const {
     return {getPositionX(t), getPositionY(t)};
 }
 
-const ClassicalMechanics::physics2DVector ClassicalMechanics::getVelocity(
+ClassicalMechanics::physics2DVector ClassicalMechanics::getVelocity(
                                           const float t) const {
     return {getVelocityX(t), getVelocityY(t)};
 }
 
-const ClassicalMechanics::physics2DVector ClassicalMechanics::getAcceleration(
+ClassicalMechanics::physics2DVector ClassicalMechanics::getAcceleration(
                                           const float t) const {
     return {getAccelerationX(t), getAccelerationY(t)};
 }
@@ -206,6 +206,11 @@ float ClassicalMechanics::getAccelerationY(const float t) const {
 
     return _EulerMethodBuffer.aBuffer.at(index);
 }
+
+float ClassicalMechanics::getTimeToGetDestination() const {
+    return _timeToGetDestinationX;
+ }
+
 
 void ClassicalMechanics::fillEulerMethodBuffer() const {
 

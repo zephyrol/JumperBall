@@ -54,6 +54,10 @@ private:
     float                         _dirX,  _dirY,  _dirZ;
     float                         _upX,   _upY,   _upZ;
     bool                          _displayBehind;
+    bool                          _willComeBack;
+    bool                          _isComingBack;
+    float                         _cameraAboveWay;
+    JumperBallTypes::timePointMs  _timePointComeBack;
 
 };
 #endif /* CAMERA_H */

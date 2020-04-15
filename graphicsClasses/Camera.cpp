@@ -16,7 +16,12 @@
 Camera::Camera() :  _posX(1), _posY(1), _posZ(1),
                     _dirX(0), _dirY(0), _dirZ(0),
                     _upX(0),  _upY(1),  _upZ(0),
-                    _displayBehind(false) 
+                    _displayBehind(false),
+                    _willComeBack(false),
+                    _isComingBack(false),
+                    _cameraAboveWay(0.f),
+                    _timePointComeBack()
+                    
 {
 }
 
@@ -82,46 +87,15 @@ void Camera::follow(const Ball& ball) noexcept {
             break;
     }
     
-    switch (lookingDirection) {
-        case JumperBallTypes::Direction::North:
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(0.f,0.f,distBehindBall));
-            matDirCam = glm::translate(matDirCam, 
-                    glm::vec3(0.f,0.f,-distDirPoint));
-            break;
-        case JumperBallTypes::Direction::South:
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(0.f,0.f,-distBehindBall));
-            matDirCam = glm::translate(matDirCam, 
-                    glm::vec3(0.f,0.f,distDirPoint));
-            break;
-        case JumperBallTypes::Direction::East:
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(-distBehindBall,0.f,0.f));
-            matDirCam = glm::translate(matDirCam, 
-                    glm::vec3(distDirPoint,0.f,0.f));
-            break;
-        case JumperBallTypes::Direction::West:
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(distBehindBall,0.f,0.f));
-            matDirCam = glm::translate(matDirCam, 
-                    glm::vec3(-distDirPoint,0.f,0.f));
-            break;
-        case JumperBallTypes::Direction::Up:
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(0.f,-distBehindBall,0.f));
-            matDirCam = glm::translate(matDirCam, 
-                    glm::vec3(0.f,distDirPoint,0.f));
-            break;
-        case JumperBallTypes::Direction::Down:
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(0.f,distBehindBall,0.f));
-            matDirCam = glm::translate(matDirCam, 
-                    glm::vec3(0.f,-distDirPoint,0.f));
-            break;
-        default :
-            break;
-    }
+    JumperBallTypes::vec3f dir = 
+        JumperBallTypesMethods::directionAsVector(lookingDirection);
+    matPosCam = glm::translate(matPosCam,
+            -glm::vec3(dir.x * distBehindBall,dir.y * distBehindBall,
+              dir.z * distBehindBall));
+    matDirCam = glm::translate(matDirCam, 
+            -glm::vec3(dir.x * -distDirPoint, dir.y * -distDirPoint,
+            dir.z * -distDirPoint));
+
 
     const auto getAxis = [] (JumperBallTypes::Direction direction) {
         glm::vec3 axisVector; 
@@ -144,10 +118,23 @@ void Camera::follow(const Ball& ball) noexcept {
         return axisVector;
     };
 
-    const float timeSinceAction         = ball.getTimeSecondsSinceAction();
+    constexpr float durationMoveAbove = 0.2f;
+    constexpr float durationMoveComingBack = 0.2f;
 
+    const float timeSinceAction         = ball.getTimeSecondsSinceAction();
+    const JumperBallTypes::timePointMs timeAction = ball.getTimeActionMs();
+    const JumperBallTypes::timePointMs now = 
+                                    JumperBallTypesMethods::getTimePointMSNow();
+
+    if (stateBall == Ball::State::Staying) {
+        if(_willComeBack) {
+            _timePointComeBack= now;
+            _isComingBack = true;
+            _willComeBack = false;
+        }
+    }
     if (stateBall == Ball::State::Moving) {
-        const auto  infoNext                = ball.getNextBlockInfo();
+        const auto  infoNext             = ball.getNextBlockInfo();
 
         const glm::vec3 axisOldLook      = getAxis(lookingDirection);
         const glm::vec3 axisNewLook      = getAxis(infoNext.nextLook);
@@ -184,6 +171,49 @@ void Camera::follow(const Ball& ball) noexcept {
         matRotationCam = glm::toMat4(quaternion); 
          
     }
+    else if (stateBall == Ball::State::Jumping) {
+        constexpr float offsetTimeToBeginCamMoving = 0.2f;
+        const float timeSinceBeginningMoving =
+          JumperBallTypesMethods::getFloatFromDurationMS(now-timeAction);
+        if (timeSinceBeginningMoving > 
+                (ball.getMechanicsJumping().getTimeToGetDestination()
+                  + offsetTimeToBeginCamMoving)){
+            
+            float timeSinceBeginningCameraMoving = timeSinceBeginningMoving- 
+                (ball.getMechanicsJumping().getTimeToGetDestination()
+                  + offsetTimeToBeginCamMoving);
+
+            if (timeSinceBeginningCameraMoving > durationMoveAbove) {
+                timeSinceBeginningCameraMoving = durationMoveAbove;
+            }
+            _willComeBack = true;
+            _cameraAboveWay = timeSinceBeginningCameraMoving/durationMoveAbove; 
+            
+        } 
+    }
+    
+    if ( _isComingBack) {
+        const float durationSinceComeBack = 
+        JumperBallTypesMethods::getFloatFromDurationMS(now- _timePointComeBack);
+        std::cout << durationSinceComeBack << std::endl;
+        if (durationSinceComeBack > durationMoveComingBack)
+        {
+          _isComingBack = false;
+          _willComeBack= false;
+          _cameraAboveWay = 0.f;           
+        } else {
+          _cameraAboveWay = 1.f-(durationSinceComeBack/durationMoveComingBack);
+        }
+    }
+
+    const glm::vec3 upVector          = glm::vec3(upVec);
+    const glm::vec3 axisView          = getAxis(lookingDirection);
+    const glm::vec3 axisRotation      = glm::cross(upVector,axisView);
+    glm::vec3 eulerAngles;
+    eulerAngles = _cameraAboveWay * static_cast<float>(M_PI/3) * axisRotation;
+    
+    const glm::quat quaternion (eulerAngles);
+    matRotationCam = glm::toMat4(quaternion) * matRotationCam; 
 
     posVec = matPosBall * matRotationCam * matPosCam * posVec;
     dirVec = matPosBall * matRotationCam * matDirCam * dirVec;

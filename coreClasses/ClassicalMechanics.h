@@ -66,9 +66,10 @@ public:
 
     //-------CONST METHODS--------//
     float                               getGravitationalAcceleration()    const; 
-    const physics2DVector               getAcceleration(const float t)    const;
-    const physics2DVector               getVelocity(const float t)        const;
-    const physics2DVector               getPosition(const float t)        const;
+    physics2DVector                     getAcceleration(const float t)    const;
+    physics2DVector                     getVelocity(const float t)        const;
+    physics2DVector                     getPosition(const float t)        const;
+    float                               getTimeToGetDestination()         const;
     void                                printEulerBuffer()                const;
 
 
