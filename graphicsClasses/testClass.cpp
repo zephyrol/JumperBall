@@ -11,22 +11,19 @@
  * Created on 2 novembre 2019, 11:17
  */
 
-#include "testClass.h"
 #include <fstream>
 #include <istream>
 #include <sstream>
+#include "testClass.h"
 
 
 testClass::testClass(): _window(nullptr)
               
 {
-
-
     if( !glfwInit() )
     {
       std::cerr << "Failed to init glfw" << std::endl;
     }
-
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
@@ -62,12 +59,10 @@ testClass::testClass(): _window(nullptr)
 
 void testClass::run(Rendering& r, Ball& b, Camera& c) {
    
-
     bool leftButton   = false;
     bool rightButton  = false;
     bool upButton     = false;
     bool enterButton  = false;
-
     
     auto before = JumperBallTypesMethods::getTimePointMSNow();
     unsigned int counter = 0;
@@ -153,9 +148,7 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
             before = after;
             std::cout << counter << " FPS"  << std::endl;
             counter = 0;
-
         }
-
    }
 }
 
