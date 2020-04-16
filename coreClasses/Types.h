@@ -19,6 +19,12 @@
 #include <memory>
 #include <chrono>
 #define EPSILON_F 0.0001f
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
+#ifndef M_PI_2
+    #define M_PI_2 3.14159265358979323846/2.
+#endif
 
 
 namespace JumperBallTypes {

@@ -923,7 +923,8 @@ void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
             _timeAction));
     
     if (block && (block->getType() == Block::categoryOfBlocksInFile::Jump)) {
-        uint dir = JumperBallTypesMethods::directionAsInteger(_currentSide);
+        unsigned int dir = 
+                       JumperBallTypesMethods::directionAsInteger(_currentSide);
         if (block->faceInfo().at(dir)){
           _jumpingType = Ball::JumpingType::Long; 
           jump();
