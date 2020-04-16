@@ -13,7 +13,7 @@
 
 #ifndef BLOCK_H
 #define BLOCK_H
-#include "Types.h"
+#include "../Types.h"
 #include "../objects/Clock.h"
 #include "../objects/Coin.h"
 #include "../objects/Key.h"

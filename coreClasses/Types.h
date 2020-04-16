@@ -16,6 +16,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <array>
 #include <memory>
 #include <chrono>
 #define EPSILON_F 0.0001f
@@ -41,7 +42,7 @@ namespace JumperBallTypes {
     struct vec3f {float x; float y; float z;};
 
     using timePointMs =         std::chrono::time_point <
-                                    std::chrono::_V2::system_clock,
+                                    std::chrono::system_clock,
                                     std::chrono::duration <
                                     long int, std::ratio<1,1000> 
                                                           > 
