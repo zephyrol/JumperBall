@@ -15,12 +15,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "coreClasses/Types.h"
-#include "coreClasses/Ball.h"
-#include "coreClasses/Map.h"
-#include "coreClasses/ClassicalMechanics.h"
-#include "graphicsClasses/testClass.h"
-#include "graphicsClasses/Rendering.h"
+#include <Types.h>
+#include <Ball.h>
+#include <Map.h>
+#include <ClassicalMechanics.h>
+#include <Rendering.h>
+#include <testClass.h>
 
 using namespace std;
 
