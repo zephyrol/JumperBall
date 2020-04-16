@@ -245,9 +245,9 @@ void Camera::follow(const Map& map) noexcept{
     const float centerY = yMax/2.f;
     const float centerZ = zMax/2.f;
     
-    float distanceMax = xMax;
-    if ( distanceMax < yMax) distanceMax = yMax;
-    if ( distanceMax < zMax) distanceMax = zMax;
+    float distanceMax = static_cast<float>(xMax);
+    if ( distanceMax < yMax) distanceMax = static_cast<float>(yMax);
+    if ( distanceMax < zMax) distanceMax = static_cast<float>(zMax);
     
     const float cameraDistanceNear = distanceMax * 0.75f;
     const float cameraDistanceFar =  distanceMax * 1.2f;

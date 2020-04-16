@@ -200,11 +200,13 @@ void GeometricShape::draw() const {
 
     if (_elementBufferObject && _indices) {
         glBindBuffer  (GL_ELEMENT_ARRAY_BUFFER,*_elementBufferObject);
-        glDrawElements(GL_TRIANGLES,_indices->size(),GL_UNSIGNED_SHORT,nullptr);
+        glDrawElements(GL_TRIANGLES,static_cast<GLsizei>(_indices->size()),
+            GL_UNSIGNED_SHORT,nullptr);
     }
     else {
-        constexpr unsigned int offset = 0;
-        glDrawArrays(GL_TRIANGLES,offset,_positions->size());
+        constexpr int offset = 0;
+        glDrawArrays(GL_TRIANGLES,offset,
+            static_cast<GLsizei>(_positions->size()));
     }
     
 

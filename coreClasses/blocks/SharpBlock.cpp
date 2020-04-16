@@ -50,7 +50,7 @@ void SharpBlock::interaction(
     };
     
     constexpr float sizeSharp     = 0.51f;
-    constexpr float offsetCenter  = 0.19;
+    constexpr float offsetCenter  = 0.19f;
     float posBlockfX = static_cast<float> (posBlock.at(0));
     float posBlockfY = static_cast<float> (posBlock.at(1));
     float posBlockfZ = static_cast<float> (posBlock.at(2));
@@ -65,7 +65,8 @@ void SharpBlock::interaction(
             float posBlockfZMax = posBlockfZ+1;
             
             JumperBallTypes::Direction dir = 
-                    JumperBallTypesMethods::integerAsDirection(i);
+                    JumperBallTypesMethods::integerAsDirection(
+                        static_cast<unsigned int>(i));
             JumperBallTypes::vec3f dirVec = 
                     JumperBallTypesMethods::directionAsVector(dir);
             

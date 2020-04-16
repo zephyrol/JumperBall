@@ -215,7 +215,7 @@ const std::vector<GLfloat> Utility::colorsPike {
 };
 
 const std::vector<GLfloat> Utility::normalsPike = 
-                                        Utility::computeNormals(positionsPike);
+                                 Utility::computeNormals(Utility::positionsPike);
 
 const glm::mat3 Utility::RGBToXYZ { 2.7689, 1.7517,   1.1302,
                                     1.0000, 4.5907,   0.060100,
@@ -288,7 +288,7 @@ std::vector<glm::vec3> Utility::GLfloatListToGlmVec3(
         std::cerr << "Error ... Trying to convert a vector with a wrong size"
                 << std::endl;
     } else {
-        for(unsigned int i = 0 ; i < list.size() ; i+= 3) {
+        for(size_t i = 0 ; i < list.size() ; i+= 3) {
             vecList.push_back(glm::vec3(list.at(i),list.at(i+1),list.at(i+2)));
         }
     }
@@ -302,7 +302,7 @@ std::vector<glm::vec2> Utility::GLfloatListToGlmVec2(
         std::cerr << "Error ... Trying to convert a vector with a wrong size"
                 << std::endl;
     } else {
-        for(unsigned int i = 0 ; i < list.size() ; i+= 2) {
+        for(size_t i = 0 ; i < list.size() ; i+= 2) {
             vecList.push_back(glm::vec2(list.at(i),list.at(i+1)));
         }
     }
@@ -337,6 +337,7 @@ glm::mat4 Utility::rotationUpToDir( JumperBallTypes::Direction dir) {
             rotationMatrix = glm::rotate(fPI,glm::vec3(1.f,0.f,0.f));
             break;
         default :
+            rotationMatrix = glm::mat4(1.f);
             break;
     }
 
@@ -345,15 +346,16 @@ glm::mat4 Utility::rotationUpToDir( JumperBallTypes::Direction dir) {
 
 
 float Utility::evalGauss1D(float x, float sigma) {
-    return exp((-pow(x,2.))/(2.*pow(sigma,2.)))/(sqrt(2.*M_PI *pow(sigma,2.)));
+    return static_cast<float>(
+        exp((-pow(x,2.))/(2.*pow(sigma,2.)))/(sqrt(2.*M_PI *pow(sigma,2.))));
 }
 
 
 std::vector<GLfloat> Utility::genGaussBuffer( size_t patchSize, float sigma) {
     std::vector<GLfloat> gaussBuffer;
-    int patchSizeInteger = patchSize; 
+    int patchSizeInteger = static_cast<int>(patchSize); 
     for (int i = -patchSizeInteger/2; i <= patchSizeInteger/2 ; i++ ) {
-        gaussBuffer.push_back( evalGauss1D(i,sigma) ) ;
+        gaussBuffer.push_back( evalGauss1D(static_cast<float>(i),sigma));
     }
     return gaussBuffer;
 }

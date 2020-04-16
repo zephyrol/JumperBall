@@ -74,7 +74,8 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder() {
     
    // Create a Cylinder --------------------------------------------------------
     
-    constexpr float a2 = ( 360.0 / ( iMeriCount - 1 ) ) * M_PI / 180.0;
+    constexpr float a2 = ( 360.0f / static_cast<float>( iMeriCount - 1 ) ) * 
+        static_cast<float>(M_PI)/ 180.0f;
     
     infoCylinder.positions.push_back(
     glm::vec3(0.f,0.f,0.f));

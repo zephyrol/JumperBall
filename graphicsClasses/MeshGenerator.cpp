@@ -51,7 +51,8 @@ std::vector<MeshComponent> MeshGenerator::genJumpers(
                 constexpr float offset = sizeBlock/2.f;
                 
                 const JumperBallTypes::Direction currentDir =
-                        JumperBallTypesMethods::integerAsDirection(i);
+                        JumperBallTypesMethods::integerAsDirection(
+                            static_cast<unsigned int>(i));
                 const JumperBallTypes::vec3f vecDir = JumperBallTypesMethods::
                         directionAsVector(currentDir);
                 
@@ -115,7 +116,8 @@ std::vector<MeshComponent> MeshGenerator::genSharps(
                 constexpr float offset = sizeBlock/2.f;
                 
                 const JumperBallTypes::Direction currentDir =
-                        JumperBallTypesMethods::integerAsDirection(i);
+                        JumperBallTypesMethods::integerAsDirection(
+                            static_cast<unsigned int>(i));
                 const JumperBallTypes::vec3f vecDir = JumperBallTypesMethods::
                         directionAsVector(currentDir);
                 
@@ -174,7 +176,7 @@ std::vector<MeshComponent> MeshGenerator::sortComponents(
     }
     while(hasToSwap) {
         hasToSwap = false;
-        for (unsigned int i = 0; i < components.size()-1; ++i) {
+        for (size_t i = 0; i < components.size()-1; ++i) {
             const MeshComponent& c1 = components.at(indices.at(i));
             const MeshComponent& c2 = components.at(indices.at(i+1));
             if (*c1.shape()->vertexArrayObject() > 
@@ -231,7 +233,8 @@ std::vector<MeshComponent> MeshGenerator::blockManager ( const Block& block,
     for (size_t i = 0; i < objects.size() ; ++i) {
         if ( objects.at(i) ) {
             const JumperBallTypes::Direction dir =
-                JumperBallTypesMethods::integerAsDirection(i);
+                JumperBallTypesMethods::integerAsDirection(
+                    static_cast<unsigned int>(i));
             std::vector<MeshComponent> v =
                 genComponents(objects.at(i),glmPosition,dir);
             for(MeshComponent& m : v) {

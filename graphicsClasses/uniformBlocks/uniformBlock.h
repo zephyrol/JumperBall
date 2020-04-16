@@ -42,11 +42,6 @@ public:
     static constexpr size_t           sizeVec3f           = 3 * sizeof(GLfloat);
 
 
-    //------------TYPES------------//
-    struct  variablesNamesInfo        { const char *const * names;
-                                        size_t number; };
-
-
     //----------METHODS------------//
     UniformBlock&                     operator=( const UniformBlock& 
                                                         uniformBlock);
@@ -55,11 +50,11 @@ public:
 
 
     //--------STATIC METHODS-------//
-    static struct variablesNamesInfo  getStringsStoredLinearly( 
+    static std::vector<const char*>   getStringsStoredLinearly( 
                                                 const std::vector<std::string>&
                                                   strNames);
-    static struct variablesNamesInfo  copyVariablesNamesInfo( 
-                                                const struct variablesNamesInfo& 
+    static std::vector<const char*>   copyVariablesNamesInfo( 
+                                                const std::vector<const char*>& 
                                                   varNamesInfo);
     
 protected:
@@ -69,7 +64,7 @@ protected:
 
 
     //-------CONST METHODS----------//
-    const struct variablesNamesInfo&  variablesNames()                    const;
+    const std::vector<const char*>&   variablesNames()                    const;
     const std::vector<GLuint>&        variablesIndices()                  const;
     const std::vector<GLint>&         variablesOffsets()                  const;
     const std::vector<GLchar>&        dataBuffer()                        const;
@@ -86,7 +81,7 @@ protected:
 private:
 
     //--------ATTRIBUTES-----------//
-    const struct variablesNamesInfo   _variablesNames;
+    const std::vector<const char*>    _variablesNames;
     std::vector<GLuint>               _variablesIndices;
     std::vector<GLint>                _variablesOffsets;
     GLint                             _blockSize;

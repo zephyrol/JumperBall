@@ -133,14 +133,16 @@ void ShaderProgram::bindUniform(const std::string& name,
                             const std::vector<int>& value) const {
     const GLuint uniformVariableID =
             glGetUniformLocation(getHandle(),name.c_str());
-    glUniform1iv( uniformVariableID, value.size(), value.data());
+    const GLsizei size = static_cast<GLsizei>(value.size());
+    glUniform1iv( uniformVariableID, size, value.data());
 }
 
 void ShaderProgram::bindUniform(const std::string& name,
                             const std::vector<float>& value) const {
     const GLuint uniformVariableID =
             glGetUniformLocation(getHandle(),name.c_str());
-    glUniform1fv( uniformVariableID, value.size(), value.data());
+    const GLsizei size = static_cast<GLsizei>(value.size());
+    glUniform1fv( uniformVariableID, size, value.data());
 }
 
 void ShaderProgram::bindUniformTexture( const std::string& name, 

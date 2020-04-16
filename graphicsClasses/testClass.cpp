@@ -15,7 +15,6 @@
 #include <fstream>
 #include <istream>
 #include <sstream>
-#include <unistd.h>
 
 
 testClass::testClass(): _window(nullptr)

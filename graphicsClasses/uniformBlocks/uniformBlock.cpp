@@ -46,8 +46,8 @@ UniformBlock& UniformBlock::operator=(const UniformBlock& uniformBlock) {
   _blockSize                                  = uniformBlock.blockSize();
 
   deleteVariablesNamesInfo();
-  UniformBlock::variablesNamesInfo& newInfo   = 
-                const_cast<UniformBlock::variablesNamesInfo&> (_variablesNames);
+  std::vector<const char*>& newInfo   = 
+                const_cast<std::vector<const char*>&> (_variablesNames);
   newInfo                                     = copyVariablesNamesInfo(
                                                 uniformBlock.variablesNames());
 
@@ -66,10 +66,13 @@ void UniformBlock::configureDataBuffer( const ShaderProgram& sp,
                                 GL_UNIFORM_BLOCK_DATA_SIZE, &_blockSize);
 
     //Getting the indices for each variable
-    glGetUniformIndices       ( sp.getHandle(), _variablesNames.number,
-                                _variablesNames.names,_variablesIndices.data());
+    glGetUniformIndices       ( sp.getHandle(),
+                                static_cast<GLsizei>(_variablesNames.size()),
+                                _variablesNames.data(),
+                                _variablesIndices.data());
     //Getting the offset in the buffer for each variable
-    glGetActiveUniformsiv     ( sp.getHandle(),  _variablesIndices.size(), 
+    glGetActiveUniformsiv     ( sp.getHandle(),
+                                static_cast<GLsizei>(_variablesIndices.size()), 
                                 _variablesIndices.data(), GL_UNIFORM_OFFSET,
                                 _variablesOffsets.data());
 
@@ -84,11 +87,12 @@ void UniformBlock::configureDataBuffer( const ShaderProgram& sp,
 
 
 
-UniformBlock::variablesNamesInfo UniformBlock::getStringsStoredLinearly(
+std::vector<const char*> UniformBlock::getStringsStoredLinearly(
                                                 const std::vector<std::string>&
                                                 strNames) {
 
-    char** names = new char* [strNames.size()];
+    //char** names = new char* [strNames.size()];
+    std::vector<const char*> names (strNames.size());
 
     for ( size_t i = 0; i < strNames.size(); ++i)  {
 
@@ -96,32 +100,29 @@ UniformBlock::variablesNamesInfo UniformBlock::getStringsStoredLinearly(
         const char*         cName           = strName.c_str();
         char*               cNameAllocated  = new char[strName.length()+1];
 
-        strncpy(cNameAllocated,cName,strName.length()+1);
+        strncpy_s(cNameAllocated,strName.length()+1,cName,strName.length()+1);
         names[i] = cNameAllocated;
     }
 
-    UniformBlock::variablesNamesInfo infoNames {names,strNames.size()};
-    return infoNames ;
+    return names;
 }
 
-UniformBlock::variablesNamesInfo UniformBlock::copyVariablesNamesInfo(
-                        const UniformBlock::variablesNamesInfo& varNamesInfo) {
+std::vector<const char*> UniformBlock::copyVariablesNamesInfo(
+                        const std::vector<const char*>& varNamesInfo) {
 
-    char** names = new char* [varNamesInfo.number];
+    std::vector<const char*> names (varNamesInfo.size());
 
-    for ( size_t i = 0; i < varNamesInfo.number; ++i)  {
+    for ( size_t i = 0; i < varNamesInfo.size(); ++i)  {
 
-        size_t              length = strlen(varNamesInfo.names[i]);
+        size_t              length = strlen(varNamesInfo[i]);
         char*               cNameAllocated  = new char[length+1];
 
-        strncpy(cNameAllocated,varNamesInfo.names[i],length+1);
+        strncpy_s(cNameAllocated,length+1,varNamesInfo[i],length+1);
         names[i] = cNameAllocated;
     }
     
-    UniformBlock::variablesNamesInfo newVarNamesInfo { names, 
-                                                        varNamesInfo.number};
 
-    return newVarNamesInfo;
+    return names;
 }
 
 
@@ -129,7 +130,7 @@ const std::vector<GLuint>& UniformBlock::variablesIndices() const {
     return _variablesIndices;
 }
 
-const UniformBlock::variablesNamesInfo& UniformBlock::variablesNames() const {
+const std::vector<const char*>& UniformBlock::variablesNames() const {
     return _variablesNames;
 }
 
@@ -154,10 +155,9 @@ GLuint UniformBlock::uboHandle() const {
 
 void UniformBlock::deleteVariablesNamesInfo(){
    
-    for (size_t i = 0; i < _variablesNames.number; ++i) {
-        delete[] _variablesNames.names[i];
+    for (size_t i = 0; i < _variablesNames.size(); ++i) {
+        delete[] _variablesNames[i];
     }
-    delete[] _variablesNames.names;
 }
 
 UniformBlock::~UniformBlock() {

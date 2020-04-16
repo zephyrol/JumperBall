@@ -161,7 +161,7 @@ float ClassicalMechanics::getPositionY(const float t) const {
 
     if (t < durationStudy)
       index = static_cast<unsigned int> (t * sizeSampleEuler / durationStudy);
-    else index = durationStudy-1;
+    else index = static_cast<unsigned int> (durationStudy-1);
 
     return _EulerMethodBuffer.pBuffer.at(index);
 }
@@ -181,7 +181,7 @@ float ClassicalMechanics::getVelocityY(const float t) const {
 
     if (t < durationStudy)
       index = static_cast<unsigned int> (t * sizeSampleEuler / durationStudy);
-    else index = durationStudy-1;
+    else index = static_cast<unsigned int>(durationStudy-1);
 
     return _EulerMethodBuffer.vBuffer.at(index);
 }
@@ -201,8 +201,8 @@ float ClassicalMechanics::getAccelerationY(const float t) const {
     fillEulerMethodBuffer();
 
     if (t < durationStudy)
-      index = static_cast<unsigned int> (t * sizeSampleEuler / durationStudy);
-    else index = durationStudy-1;
+        index = static_cast<unsigned int> (t * sizeSampleEuler / durationStudy);
+    else index = static_cast<unsigned int> (durationStudy - 1);
 
     return _EulerMethodBuffer.aBuffer.at(index);
 }
@@ -272,7 +272,7 @@ void ClassicalMechanics::fillEulerMethodBuffer() const {
                                 NewtonStokesFunc, 
                                 paramsInitials);
 
-      for ( unsigned int i = 0 ; i < sizeSampleEuler-1 ; i++) {
+      for ( size_t i = 0 ; i < sizeSampleEuler-1 ; i++) {
 
 
           newTBuffer.at(i+1) = newTBuffer.at(i) + newDeltaT ;
