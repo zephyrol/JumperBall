@@ -40,16 +40,16 @@ UniformBlock::UniformBlock(const UniformBlock& uniformBlock) :
 UniformBlock& UniformBlock::operator=(const UniformBlock& uniformBlock) {
 
    //We do not change the uboHandle ... it is unique
-  _dataBuffer                                 = uniformBlock.dataBuffer();
-  _variablesIndices                           = uniformBlock.variablesIndices();
-  _variablesOffsets                           = uniformBlock.variablesOffsets();
-  _blockSize                                  = uniformBlock.blockSize();
+  _dataBuffer                       = uniformBlock.dataBuffer();
+  _variablesIndices                 = uniformBlock.variablesIndices();
+  _variablesOffsets                 = uniformBlock.variablesOffsets();
+  _blockSize                        = uniformBlock.blockSize();
 
   deleteVariablesNamesInfo();
-  std::vector<const char*>& newInfo   = 
+  std::vector<const char*>& newInfo = 
                 const_cast<std::vector<const char*>&> (_variablesNames);
-  newInfo                                     = copyVariablesNamesInfo(
-                                                uniformBlock.variablesNames());
+  newInfo                           = copyVariablesNamesInfo(
+                                        uniformBlock.variablesNames());
 
   return *this;
 }
