@@ -10,6 +10,7 @@
  * 
  * Created on 22 décembre 2019, 12:22
  */
+#define __STDC_WANT_LIB_EXT1__ 1
 
 #include "uniformBlock.h"
 #include <cstring>
@@ -91,7 +92,6 @@ std::vector<const char*> UniformBlock::getStringsStoredLinearly(
                                                 const std::vector<std::string>&
                                                 strNames) {
 
-    //char** names = new char* [strNames.size()];
     std::vector<const char*> names (strNames.size());
 
     for ( size_t i = 0; i < strNames.size(); ++i)  {
@@ -100,7 +100,12 @@ std::vector<const char*> UniformBlock::getStringsStoredLinearly(
         const char*         cName           = strName.c_str();
         char*               cNameAllocated  = new char[strName.length()+1];
 
+
+        #ifdef _WIN32  
         strncpy_s(cNameAllocated,strName.length()+1,cName,strName.length()+1);
+        #else
+        strncpy(cNameAllocated,varNamesInfo[i],length+1);
+        #endif
         names[i] = cNameAllocated;
     }
 
@@ -117,7 +122,12 @@ std::vector<const char*> UniformBlock::copyVariablesNamesInfo(
         size_t              length = strlen(varNamesInfo[i]);
         char*               cNameAllocated  = new char[length+1];
 
+        #ifdef _WIN32  
         strncpy_s(cNameAllocated,length+1,varNamesInfo[i],length+1);
+        #else
+        strncpy(cNameAllocated,varNamesInfo[i],length+1);
+        #endif
+
         names[i] = cNameAllocated;
     }
     
@@ -151,7 +161,6 @@ GLint UniformBlock::blockSize() const {
 GLuint UniformBlock::uboHandle() const {
     return _uboHandle;
 }
-
 
 void UniformBlock::deleteVariablesNamesInfo(){
    
