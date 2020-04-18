@@ -104,7 +104,7 @@ std::vector<const char*> UniformBlock::getStringsStoredLinearly(
         #ifdef _WIN32  
         strncpy_s(cNameAllocated,strName.length()+1,cName,strName.length()+1);
         #else
-        strncpy(cNameAllocated,varNamesInfo[i],length+1);
+        strncpy(cNameAllocated,cName,strName.length()+1);
         #endif
         names[i] = cNameAllocated;
     }
