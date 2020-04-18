@@ -12,8 +12,6 @@
  */
 
 #include "BallAnimation.h"
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp> 
 #include <math.h>
 
 BallAnimation::BallAnimation(const Ball& ball):

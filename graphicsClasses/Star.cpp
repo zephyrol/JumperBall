@@ -12,8 +12,6 @@
  */
 
 #include "Star.h"
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp> 
 
 Star::Star( const glm::vec3& colorInside, const glm::vec3& colorOutside, 
             const GLfloat radiusInside,   const GLfloat radiusOutside, 

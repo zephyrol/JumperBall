@@ -12,8 +12,6 @@
  */
 
 #include "ObjectAnimation.h"
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp> 
 #include <math.h>
 
 ObjectAnimation::ObjectAnimation(const Object& object,

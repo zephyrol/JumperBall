@@ -26,13 +26,20 @@ using namespace std;
 
 int main(int argc, char** argv) {
     
-    if (argc > 1 ) {
-        ifstream file(argv[1]);  //Opening file to read
-        if (!file) {
-          std::cerr << "ERROR: Opening " << argv[1] << " impossible .." 
-                  << std::endl;
-          return EXIT_FAILURE;
+        ifstream file;
+        std::string fileToOpen;
+        if (argc > 1) {
+            fileToOpen = argv[1];
         }
+        else {
+            fileToOpen = "maps/map1.txt";
+        }
+            file.open(fileToOpen);  //Opening file to read
+		if (!file) {
+			std::cerr << "ERROR: Opening " << fileToOpen << " impossible .."
+				<< std::endl;
+			return EXIT_FAILURE;
+		}
         
         if (argc == 3) {
             const std::string arg (argv[2]);
@@ -61,10 +68,6 @@ int main(int argc, char** argv) {
                 ,0.3f,0.5f,50.f,5.f);
         Rendering rendering (m,b,s,c);
         t.run(rendering,b,c);
-    }
-    else {
-        std::cout << "File not specified" << std::endl;        
-    }
     
     
     return EXIT_SUCCESS;

@@ -12,8 +12,6 @@
  */
 
 #include "Cylinder.h"
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp> 
 
 Cylinder::Cylinder( const glm::mat4& modelTransform,
                 const glm::mat4& normalsTransform): GeometricShape( 

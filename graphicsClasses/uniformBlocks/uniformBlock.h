@@ -17,10 +17,6 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <glm/glm.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/matrix.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include "../Shader.h"
 #include "../ShaderProgram.h"
 

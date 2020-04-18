@@ -13,9 +13,6 @@
 
 #ifndef SHADER_H
 #define SHADER_H
-#include <glad.h>
-//#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include "Utility.h"
 
 class Shader {

@@ -12,8 +12,6 @@
  */
 
 #include "GeometricShape.h"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtx/transform.hpp"
 
 GeometricShape::GeometricShape(
                                const std::vector<glm::vec3>& positions,

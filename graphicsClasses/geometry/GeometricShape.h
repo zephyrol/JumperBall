@@ -15,7 +15,6 @@
 #define GEOMETRICSHAPE_H
 #include "../Shader.h"
 #include "../Utility.h"
-#include <glm/glm.hpp>
 
 class GeometricShape {
 public:

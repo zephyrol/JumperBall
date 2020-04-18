@@ -19,10 +19,6 @@
 #include <vector>
 #include <Map.h>
 #include <Ball.h>
-#include <glm/glm.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/matrix.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include "FrameBuffer.h"

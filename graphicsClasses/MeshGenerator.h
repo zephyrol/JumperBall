@@ -26,9 +26,6 @@
 #include "animations/ObjectAnimation.h"
 #include "FrameBuffer.h"
 #include "MeshComponent.h"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtx/transform.hpp"
-#include <glm/glm.hpp>
 
 
 namespace MeshGenerator {

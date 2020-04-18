@@ -12,11 +12,8 @@
  */
 
 #include "Utility.h"
-#include "glm/gtx/transform.hpp"
 #include <math.h>
 #include <fstream>
-#include <glm/glm.hpp>
-
 
 
 std::string Utility::readFileSrc(const std::string& filePath) {

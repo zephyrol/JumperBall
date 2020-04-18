@@ -13,8 +13,6 @@
 
 #ifndef TESTCLASS_H
 #define TESTCLASS_H
-#include <glm/glm.hpp>
-#include <glm/matrix.hpp>
 #include <Types.h>
 #include "Shader.h"
 #include "ShaderProgram.h"
