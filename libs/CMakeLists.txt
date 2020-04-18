@@ -9,8 +9,8 @@ SET(GLM_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/libs/GLM_install/)
 
 INCLUDE(ExternalProject)
 ExternalProject_Add( _GLFW_
-  URL 		"https://github.com/glfw/glfw/archive/3.3.tar.gz"
-  SOURCE_DIR 	"${CMAKE_SOURCE_DIR}/libs/glfw-3.3"
+  URL 		"https://github.com/glfw/glfw/archive/3.3.2.tar.gz"
+  SOURCE_DIR 	"${CMAKE_SOURCE_DIR}/libs/glfw-3.3.2"
   PREFIX 	GLFW_library	
   CMAKE_ARGS 	-DGLFW_BUILD_DOCS=OFF 
   		-DGLFW_BUILD_TESTS=OFF
@@ -18,6 +18,31 @@ ExternalProject_Add( _GLFW_
 		-DCMAKE_INSTALL_PREFIX=${GLFW_INSTALL_PREFIX}
   TEST_COMMAND 	""
   )
+
+  set( GLFW_LIBRARIES 
+	  "${GLFW_INSTALL_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}glfw3${CMAKE_STATIC_LIBRARY_SUFFIX}" CACHE STRING "") 
+
+
+  if(UNIX)
+	  find_package(Threads REQUIRED)
+	  find_package(X11 REQUIRED)
+		
+	  FOREACH ( X11_LIB X11_Xrandr X11_xf86vmode X11_Xcursor X11_Xinerama X11_Xinerama)
+		
+		  if(NOT ${X11_LIB}_FOUND)
+			  MESSAGE(FATAL_ERROR "${X11_LIB} library is required for GLFW but not found ...")
+		  endif()
+	  ENDFOREACH(X11_LIB)
+
+	  list(APPEND GLFW_LIBRARIES
+		  "${X11_Xrandr_LIB}" 
+		  "${X11_Xxf86vm_LIB}"
+		  "${X11_Xcursor_LIB}"
+		  "${X11_Xinerama_LIB}"
+		  "${X11_Xinput_LIB}"
+		  "${CMAKE_THREAD_LIBS_INIT}" -lrt -ldl)
+  endif()
+
 
 INCLUDE(ExternalProject)
 ExternalProject_Add( _GLM_
@@ -28,5 +53,6 @@ ExternalProject_Add( _GLM_
  		-DCMAKE_INSTALL_PREFIX=${GLM_INSTALL_PREFIX}
   TEST_COMMAND 	""
   )
+
 
 
