@@ -4,10 +4,9 @@ IF (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
 	SET (CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
 ENDIF()
 
-if (UNIX)
+IF (UNIX)
 	SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -no-pie" CACHE STRING "" FORCE) #allows Netbeans to load the app
-endif (UNIX)
-
+ENDIF(UNIX)
 
 
 PROJECT(JumperBallApplication)
@@ -16,13 +15,27 @@ IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 	SET(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR} CACHE PATH "" FORCE)
 ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
+SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD_REQUIRED ON)
+SET(CMAKE_CXX_EXTENSIONS OFF)
+
+IF ( CMAKE_COMPILER_IS_GNUCC )
+	SET (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op" CACHE STRING "" FORCE)
+ELSE()
+	message("fou de ma gueule !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+ENDIF()
+
+IF ( MSVC )
+	SET (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W3" CACHE STRING "" FORCE)
+ENDIF()
+
+
 ADD_SUBDIRECTORY(libs)
 ADD_SUBDIRECTORY(coreClasses)
 ADD_SUBDIRECTORY(graphicsClasses)
 	
-SET(CMAKE_CXX_STANDARD 11)
-SET(CMAKE_CXX_STANDARD_REQUIRED ON)
-SET(CMAKE_CXX_EXTENSIONS OFF)
+
+
 
 FILE(GLOB SOURCE_FILES
 	${CMAKE_SOURCE_DIR}/main.cpp)
