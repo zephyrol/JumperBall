@@ -21,8 +21,6 @@ SET(CMAKE_CXX_EXTENSIONS OFF)
 
 IF ( CMAKE_COMPILER_IS_GNUCC )
 	SET (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op" CACHE STRING "" FORCE)
-ELSE()
-	message("fou de ma gueule !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 ENDIF()
 
 IF ( MSVC )
