@@ -51,169 +51,6 @@ std::string Utility::readFileSrc(const std::string& filePath) {
 }
 
 
-const std::vector<GLfloat> Utility::positionsQuadScreen {
-    -1.f,1.f,0.f, -1.f,-1.f,0.f,  1.f,-1.f,0.f,  
-    -1.f,1.f,0.f,  1.f,-1.f,0.f,   1.f,1.f,0.f
-};
-
-const std::vector<GLfloat> Utility::colorsQuadScreen {
-    1.f,1.f,1.f, 1.f,1.f,1.f,  1.f,1.f,1.f,
-    1.f,1.f,1.f, 1.f,1.f,1.f,  1.f,1.f,1.f
-};
-
-const std::vector<GLfloat> Utility::normalsQuadScreen {
-    0.f,0.f,-1.f, 0.f,0.f,-1.f,  0.f,0.f,-1.f,
-    0.f,0.f,-1.f, 0.f,0.f,-1.f,  0.f,0.f,-1.f
-};
-
-const std::vector<GLfloat> Utility::uvCoordsQuadScreen {
-    0.f,1.f, 0.f,0.f, 1.f,0.f,  
-    0.f,1.f, 1.f,0.f, 1.f,1.f
-};
-
-const std::vector<GLfloat> Utility::positionsCube {
-    //Face 1 
-    0.f,1.f,0.f, 1.f,0.f,0.f,  0.f,0.f,0.f,
-    0.f,1.f,0.f, 1.f,1.f,0.f,  1.f,0.f,0.f,
-    //Face 2
-    0.f,0.f,1.f, 1.f,0.f,1.f, 0.f,1.f,1.f,
-    1.f,0.f,1.f, 1.f,1.f,1.f, 0.f,1.f,1.f,
-    //Face 3
-    0.f,0.f,0.f, 1.f,0.f,0.f, 0.f,0.f,1.f,
-    1.f,0.f,0.f, 1.f,0.f,1.f, 0.f,0.f,1.f,
-    //Face 4
-    0.f,1.f,1.f, 1.f,1.f,0.f,  0.f,1.f,0.f, 
-    0.f,1.f,1.f, 1.f,1.f,1.f,  1.f,1.f,0.f, 
-    //Face 5
-    0.f,0.f,1.f, 0.f,1.f,0.f,  0.f,0.f,0.f, 
-    0.f,0.f,1.f, 0.f,1.f,1.f,  0.f,1.f,0.f, 
-    //Face 6
-    1.f,0.f,0.f, 1.f,1.f,0.f, 1.f,0.f,1.f,
-    1.f,1.f,0.f, 1.f,1.f,1.f, 1.f,0.f,1.f
-};
-
-const std::vector<GLfloat> Utility::uvCoordsCube {
-    //Face 1 
-    0.f,1.f, 1.f,0.f, 0.f,0.f,
-    0.f,1.f, 1.f,1.f, 1.f,0.f,
-    //Face 2
-    0.f,0.f, 1.f,0.f, 0.f,1.f,
-    1.f,0.f, 1.f,1.f, 0.f,1.f,
-    //Face 3
-    0.f,0.f, 1.f,0.f, 0.f,0.f,
-    1.f,0.f, 1.f,0.f, 0.f,0.f,
-    //Face 4
-    0.f,1.f, 1.f,1.f, 0.f,1.f, 
-    0.f,1.f, 1.f,1.f, 1.f,1.f, 
-    //Face 5
-    0.f,0.f, 0.f,1.f, 0.f,0.f, 
-    0.f,0.f, 0.f,1.f, 0.f,1.f, 
-    //Face 6
-    1.f,0.f, 1.f,1.f, 1.f,0.f,
-    1.f,1.f, 1.f,1.f, 1.f,0.f
-};
-
-const std::vector<GLfloat> Utility::normalsCube {
-    //Face 1 
-    0.f,0.f,-1.f, 0.f,0.f,-1.f, 0.f,0.f,-1.f,
-    0.f,0.f,-1.f, 0.f,0.f,-1.f, 0.f,0.f,-1.f,
-    //Face 2
-    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
-    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.f,1.f,
-    //Face 3
-    0.f,-1.f,0.f, 0.f,-1.f,0.f, 0.f,-1.f,0.f,
-    0.f,-1.f,0.f, 0.f,-1.f,0.f, 0.f,-1.f,0.f,
-    //Face 4 
-    0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
-    0.f,1.f,0.f, 0.f,1.f,0.f, 0.f,1.f,0.f,
-    //Face 5
-    -1.f,0.f,0.f, -1.f,0.f,0.f, -1.f,0.f,0.f,
-    -1.f,0.f,0.f, -1.f,0.f,0.f, -1.f,0.f,0.f,
-    //Face 6
-    1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
-    1.f,0.f,0.f, 1.f,0.f,0.f, 1.f,0.f,0.f,
-};
-
-const std::vector<GLfloat> Utility::colorsCube {
-
-    //Face 1 
-    0.5f,0.f,0.f, 0.5f,0.f,0.f, 0.5f,0.f,0.f,
-    0.5f,0.f,0.f, 0.5f,0.f,0.f, 0.5f,0.f,0.f,
-    //Face 2
-    0.f,0.5f,0.f, 0.f,0.5f,0.f, 0.f,0.5f,0.f,
-    0.f,0.5f,0.f, 0.f,0.5f,0.f, 0.f,0.5f,0.f,
-    //Face 3
-    0.f,0.f,0.8f, 0.f,0.f,0.8f, 0.f,0.f,0.8f,
-    0.f,0.f,0.8f, 0.f,0.f,0.8f, 0.f,0.f,0.8f,
-    //Face 4 
-    0.5f,0.5f,0.f, 0.5f,0.5f,0.f, 0.5f,0.5f,0.f,
-    0.5f,0.5f,0.f, 0.5f,0.5f,0.f, 0.5f,0.5f,0.f,
-    //Face 5
-    0.f,0.5f,0.5f, 0.f,0.5f,0.5f, 0.f,0.5f,0.5f,
-    0.f,0.5f,0.5f, 0.f,0.5f,0.5f, 0.f,0.5f,0.5f,
-    //Face 6
-    0.5f,0.f,0.5f, 0.5f,0.f,0.5f, 0.5f,0.f,0.5f,
-    0.5f,0.f,0.5f, 0.5f,0.f,0.5f, 0.5f,0.f,0.5f
-};
-
-
-const std::vector<GLfloat> Utility::positionsPike {
-    //Base
-    0.f,0.f,1.f,    0.f,0.f,0.f,    1.f,0.f,0.f, 
-    0.f,0.f,1.f,    1.f,0.f,0.f,    1.f,0.f,1.f, 
-    //Face 1
-    0.f,0.f,0.f,    0.5f,1.f,0.5f,  0.5f,0.f,0.f, 
-    0.5f,0.f,0.f,   0.5f,1.f,0.5f,  1.f,0.f,0.f, 
-    //Face 2
-    0.5f,0.f,1.f,   0.5f,1.f,0.5f,  0.f,0.f,1.f, 
-    1.f,0.f,1.f,    0.5f,1.f,0.5f,  0.5f,0.f,1.f,
-    //Face 3
-    0.f,0.f,0.f,    0.f,0.f,0.5f,   0.5f,1.f,0.5f,
-    0.f,0.f,0.5f,   0.f,0.f,1.f,    0.5f,1.f,0.5f,
-    //Face 4
-    1.f,0.f,0.5f,   1.f,0.f,0.f,    0.5f,1.f,0.5f,
-    1.f,0.f,1.f,    1.f,0.f,0.5f,   0.5f,1.f,0.5f
-};
-
-const std::vector<GLfloat> Utility::uvCoordsPike{
-    //Base
-    0.f,0.f,    0.f,0.f,   1.f,0.f, 
-    0.f,0.f,    1.f,0.f,   1.f,0.f, 
-    //Face 1
-    0.f,0.f,    0.5f,1.f,  0.5f,0.f, 
-    0.5f,0.f,   0.5f,1.f,  1.f,0.f, 
-    //Face 2
-    0.5f,0.f,   0.5f,1.f,  0.f,0.f, 
-    1.f,0.f,    0.5f,1.f,  0.5f,0.f,
-    //Face 3
-    0.f,0.f,    0.f,0.f,   0.5f,1.f,
-    0.f,0.f,    0.f,0.f,   0.5f,1.f,
-    //Face 4
-    1.f,0.f,    1.f,0.f,   0.5f,1.f,
-    1.f,0.f,    1.f,0.f,   0.5f,1.f
-};
-
-const std::vector<GLfloat> Utility::colorsPike {
-    //Base
-    0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,  0.5f,0.5f,0.5f, 
-    0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,  0.5f,0.5f,0.5f, 
-    //Face 1
-    0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f,  0.5f,0.5f,0.5f, 
-    0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,  0.1f,0.1f,0.1f, 
-    //Face 2
-    0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,  0.1f,0.1f,0.1f, 
-    0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f,  0.5f,0.5f,0.5f, 
-    //Face 3
-    0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,  
-    0.5f,0.5f,0.5f, 0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f, 
-    //Face 4
-    0.5f,0.5f,0.5f, 0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f,
-    0.1f,0.1f,0.1f, 0.5f,0.5f,0.5f, 0.5f,0.5f,0.5f,
-};
-
-const std::vector<GLfloat> Utility::normalsPike = 
-                                 Utility::computeNormals(Utility::positionsPike);
-
 const glm::mat3 Utility::RGBToXYZ { 2.7689, 1.7517,   1.1302,
                                     1.0000, 4.5907,   0.060100,
                                     0.0000, 0.056508, 5.5943};
@@ -244,25 +81,24 @@ std::vector<GLfloat> Utility::computeNormals(const std::vector<GLfloat>&
     
     constexpr unsigned int coordsPerTriangle  = 9;
     constexpr unsigned int pointsPerTriangles = 3;
-    
     for ( size_t i = 0; i < positions.size(); i+=coordsPerTriangle) {
         glm::vec3 normal  (
             glm::cross( 
                 glm::vec3(  
-                            positionsPike.at(offsetPointB + offsetCoordX) -
-                            positionsPike.at(offsetPointA + offsetCoordX),
-                            positionsPike.at(offsetPointB + offsetCoordY) -
-                            positionsPike.at(offsetPointA + offsetCoordY),
-                            positionsPike.at(offsetPointB + offsetCoordZ) -
-                            positionsPike.at(offsetPointA + offsetCoordZ)
+                            positions.at(offsetPointB + offsetCoordX) -
+                            positions.at(offsetPointA + offsetCoordX),
+                            positions.at(offsetPointB + offsetCoordY) -
+                            positions.at(offsetPointA + offsetCoordY),
+                            positions.at(offsetPointB + offsetCoordZ) -
+                            positions.at(offsetPointA + offsetCoordZ)
                           ),
                 glm::vec3(  
-                            positionsPike.at(offsetPointC + offsetCoordX) -
-                            positionsPike.at(offsetPointB + offsetCoordX),
-                            positionsPike.at(offsetPointC + offsetCoordY) -
-                            positionsPike.at(offsetPointB + offsetCoordY),
-                            positionsPike.at(offsetPointC + offsetCoordZ) -
-                            positionsPike.at(offsetPointB + offsetCoordZ)
+                            positions.at(offsetPointC + offsetCoordX) -
+                            positions.at(offsetPointB + offsetCoordX),
+                            positions.at(offsetPointC + offsetCoordY) -
+                            positions.at(offsetPointB + offsetCoordY),
+                            positions.at(offsetPointC + offsetCoordZ) -
+                            positions.at(offsetPointB + offsetCoordZ)
                           ))); 
 
         glm::normalize(normal);
