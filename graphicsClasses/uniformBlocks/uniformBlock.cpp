@@ -11,6 +11,7 @@
  * Created on 22 décembre 2019, 12:22
  */
 
+#define __STDC_WANT_LIB_EXT1__ 1
 #include "uniformBlock.h"
 #include <cstring>
 
@@ -100,7 +101,7 @@ std::vector<const char*> UniformBlock::getStringsStoredLinearly(
         char*               cNameAllocated  = new char[strName.length()+1];
 
 
-        #ifdef __STDC_LIB_EXT1__
+        #if defined (__STDC_LIB_EXT1__) || defined (_MSC_VER)
         strncpy_s(cNameAllocated,strName.length()+1,cName,strName.length()+1);
         #else
         strncpy(cNameAllocated,cName,strName.length()+1);
@@ -121,7 +122,7 @@ std::vector<const char*> UniformBlock::copyVariablesNamesInfo(
         size_t              length = strlen(varNamesInfo[i]);
         char*               cNameAllocated  = new char[length+1];
 
-        #ifdef __STDC_LIB_EXT1__
+        #if defined (__STDC_LIB_EXT1__) || defined (_MSC_VER)
         strncpy_s(cNameAllocated,length+1,varNamesInfo[i],length+1);
         #else
         strncpy(cNameAllocated,varNamesInfo[i],length+1);

@@ -58,9 +58,7 @@ ExternalProject_Add( _GLFW_
 		  "${CMAKE_THREAD_LIBS_INIT}" -lrt -ldl -lX11)
   ENDIF()
 
-  MESSAGE ( "LIST ${LIST_LIBRARIES}")
   set( GLFW_LIBRARIES ${LIST_LIBRARIES} CACHE STRING "") 
-  MESSAGE ( "GLFW  ${LIST_LIBRARIES}")
   
 ExternalProject_Add( _GLM_
   URL 		"https://github.com/g-truc/glm/archive/0.9.9.0.tar.gz"

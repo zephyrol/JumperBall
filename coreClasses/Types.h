@@ -13,6 +13,7 @@
 
 #ifndef TYPES_H
 #define TYPES_H
+#define __STDC_WANT_LIB_EXT1__ 1
 #include <iostream>
 #include <string>
 #include <vector>

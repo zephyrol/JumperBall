@@ -15,7 +15,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <Types.h>
 #include <Ball.h>
 #include <Map.h>
@@ -39,12 +38,12 @@ int main(int argc, char** argv) {
     if (!file) {
         std::cerr << "ERROR: Opening " << fileToOpen << " impossible .."
 				<< std::endl;
-        #ifdef _WIN32  
+        #ifdef _MSC_VER
         std::cerr << "Did you forget to install the files ?" << std::endl
          << "On Visual Studio, build the INSTALL solution" << std::endl;
         #else
-        std::cerr << "Did you forget to run \"make install\" " <<
-                     "or \"cmake --build . --target install\" ?" << std::endl;
+        std::cerr << "Did you forget to run " << 
+            "\"cmake --build . --target install\" ?" << std::endl;
         #endif
         return EXIT_FAILURE;
     }

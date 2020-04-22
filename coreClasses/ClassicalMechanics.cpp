@@ -35,6 +35,7 @@ ClassicalMechanics::ClassicalMechanics():
     _EulerMethodBuffer                  {},
     _timesShock                         {}
 {
+    fillEulerMethodBuffer();
 }
 
 ClassicalMechanics::ClassicalMechanics( float distanceJump, 
@@ -50,6 +51,7 @@ ClassicalMechanics::ClassicalMechanics( float distanceJump,
     _EulerMethodBuffer                  {},
     _timesShock                         {}
 {
+    fillEulerMethodBuffer();
 }
 
 float ClassicalMechanics::getGravitationalAcceleration() const {
