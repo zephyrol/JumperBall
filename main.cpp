@@ -42,7 +42,8 @@ int main(int argc, char** argv) {
         std::cerr << "Did you forget to install the files ?" << std::endl
          << "On Visual Studio, build the INSTALL solution" << std::endl;
         #else
-        std::cerr << "Did you forget to run \"make install\" ?" << std::endl;
+        std::cerr << "Did you forget to run \"make install\" " <<
+                     "or \"cmake --build . --target install\" ?" << std::endl;
         #endif
         return EXIT_FAILURE;
     }
