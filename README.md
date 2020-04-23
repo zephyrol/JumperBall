@@ -15,7 +15,7 @@ The core of the project (physics,maps) is currently under development.
 - **Microsoft Visual Studio 2017/2019** or **MinGW**
 
 
-## Generation of the solution
+## Generation of the solution and compilation
 
 - Checkout this repository's master branch:
 
@@ -23,34 +23,12 @@ The core of the project (physics,maps) is currently under development.
   git clone https://github.com/zephyrol/JumperBall.git
   ```
 
+
 ### Specifically for Windows
 
 - Run Cmake-gui once, select the repo root as a source directory, `"repoRoot"/build/` as the build directory. Configure, select the Visual Studio 2019, Visual Studio 2017 or MinGW Makesfiles generetor 
 - Generate
 
-
-### Specifically for Unix/Linux
-
-- Go to the repo root directory and create a `build` directory
-  ```
-  mkdir build
-  ```
-
-- Go to the `build` dir
-  ```
-  cd build
-  ```
-
-- run cmake specifying the parent directory containing sources
-  ```
-  cmake ..
-  ```
-
-
-## Compilation
-
-
-### Specifically for Windows
 
 If you use **Visual Studio**:
 
@@ -75,6 +53,21 @@ If you use a **MinGW Makefile**:
 
 ### Specifically for Unix/Linux
 
+- Go to the repo root directory and create a `build` directory
+  ```
+  mkdir build
+  ```
+
+- Go to the `build` dir
+  ```
+  cd build
+  ```
+
+- run cmake specifying the parent directory containing sources
+  ```
+  cmake ..
+  ```
+
 - Build the solution
   ```
   make -j 4
@@ -89,6 +82,7 @@ If you use a **MinGW Makefile**:
   ```
   ./JumperBallApplication
   ```
+
 
 ## How to play
 
