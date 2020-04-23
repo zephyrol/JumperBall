@@ -9,7 +9,7 @@ The core of the project (physics,maps) is currently under development.
 - **CMake >= 3.2** to generate the solution : [Download CMake](https://cmake.org/download/)
 
 
-**Specifically for Windows** 
+### Specifically for Windows
 
 
 - **Microsoft Visual Studio 2017/2019** or **MinGW**
@@ -23,13 +23,13 @@ The core of the project (physics,maps) is currently under development.
   git clone https://github.com/zephyrol/JumperBall.git
   ```
 
-**Specifically for Windows** 
+### Specifically for Windows
 
 - Run Cmake-gui once, select the repo root as a source directory, `"repoRoot"/build/` as the build directory. Configure, select the Visual Studio 2019, Visual Studio 2017 or MinGW Makesfiles generetor 
 - Generate
 
 
-**Specifically for Unix/Linux** 
+### Specifically for Unix/Linux
 
 - Go to the repo root directory and create a `build` directory
   ```
@@ -50,7 +50,7 @@ The core of the project (physics,maps) is currently under development.
 ## Compilation
 
 
-**Specifically for Windows** 
+### Specifically for Windows
 
 If you use **Visual Studio**:
 
@@ -73,7 +73,7 @@ If you use a **MinGW Makefile**:
   ```
 
 
-**Specifically for Unix/Linux** 
+### Specifically for Unix/Linux
 
 - Build the solution
   ```
