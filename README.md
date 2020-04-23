@@ -6,7 +6,7 @@ The core of the project (physics,maps) is currently under development.
 
 ## Install requirements
 
-- **CMake >= 3.2** to generate the solution : [a link](https://cmake.org/download/)
+- **CMake >= 3.2** to generate the solution : [Download CMake](https://cmake.org/download/)
 
 
 **Specifically for Windows** 
@@ -32,19 +32,19 @@ The core of the project (physics,maps) is currently under development.
 **Specifically for Unix/Linux** 
 
 - Go to the repo root directory and create a `build` directory
-```
-mkdir build
-```
+  ```
+  mkdir build
+  ```
 
 - Go to the `build` dir
-```
-cd build
-```
+  ```
+  cd build
+  ```
 
 - run cmake specifying the parent directory containing sources
-```
-cmake ..
-```
+  ```
+  cmake ..
+  ```
 
 
 ## Compilation
@@ -63,31 +63,32 @@ If you use a **MinGW Makefile**:
 
 - Go to your build directory with the terminal (use cmd or cygwin)
 - Build and install the project
-```
-cmake --build . --target install 
-```
+  ```
+  cmake --build . --target install 
+  ```
 
 - Run the project
-```
-JumperBallApplication.exe
-```
+  ```
+  JumperBallApplication.exe
+  ```
+
 
 **Specifically for Unix/Linux** 
 
 - Build the solution
-```
-make -j 4
-```
+  ```
+  make -j 4
+  ```
 
 - Install the project
-```
-make install
-```
+  ```
+  make install
+  ```
 
 - Run the project
-```
-./JumperBallApplication
-```
+  ```
+  ./JumperBallApplication
+  ```
 
 ## How to play
 
