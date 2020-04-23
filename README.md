@@ -1,35 +1,95 @@
-JUMPER BALL GAME
-================
+# JUMPER BALL GAME
 
 This project was started in October 2019, there is no a beautiful visual rendering for now.
 The core of the project (physics,maps) is currently under development.
 
 
-INSTALLATION
-------------
+## Install requirements
 
-- You need to install glfw3 library:
-```
-sudo apt-get install libglfw3-dev libglfw3
-```
-- Run make:
-```
-make
-```
-
-HOW TO USE
-----------
-
-- Run the program from the project directory:
-```
-dist/Release/GNU-Linux/jumperball maps/map1.txt
-```
-
-The parameter is the map that you want to load.
+- **CMake >= 3.2** to generate the solution : [a link](https://cmake.org/download/)
 
 
-HOW TO PLAY
------------
+**Specifically for Windows** 
+
+
+- **Microsoft Visual Studio 2017/2019** or **MinGW**
+
+
+## Generation of the solution
+
+- Checkout this repository's master branch:
+
+  ```sh
+  git clone https://github.com/zephyrol/JumperBall.git
+  ```
+
+**Specifically for Windows** 
+
+- Run Cmake-gui once, select the repo root as a source directory, `"repoRoot"/build/` as the build directory. Configure, select the Visual Studio 2019, Visual Studio 2017 or MinGW Makesfiles generetor 
+- Generate
+
+
+**Specifically for Unix/Linux** 
+
+- Go to the repo root directory and create a `build` directory
+```
+mkdir build
+```
+
+- Go to the `build` dir
+```
+cd build
+```
+
+- run cmake specifying the parent directory containing sources
+```
+cmake ..
+```
+
+
+## Compilation
+
+
+**Specifically for Windows** 
+
+If you use **Visual Studio**:
+
+- Open the generated Visual Studio solution (`build/JumperBallApplication.sln`)
+- Build the `ALL_BUILD` target, and then the `INSTALL` target
+- Select the JumperBallApplication as startup project and run it
+
+
+If you use a **MinGW Makefile**:
+
+- Go to your build directory with the terminal (use cmd or cygwin)
+- Build and install the project
+```
+cmake --build . --target install 
+```
+
+- Run the project
+```
+JumperBallApplication.exe
+```
+
+**Specifically for Unix/Linux** 
+
+- Build the solution
+```
+make -j 4
+```
+
+- Install the project
+```
+make install
+```
+
+- Run the project
+```
+./JumperBallApplication
+```
+
+## How to play
 
 - Use the arrows to move and Space (or Enter ) to jump.
 

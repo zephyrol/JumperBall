@@ -11,7 +11,6 @@
  * Created on 22 décembre 2019, 12:22
  */
 
-#define __STDC_WANT_LIB_EXT1__ 1
 #include "uniformBlock.h"
 #include <cstring>
 
