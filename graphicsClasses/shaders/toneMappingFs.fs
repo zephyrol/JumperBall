@@ -10,10 +10,12 @@ in      vec2      fs_vertexUVs;
 out     vec4      pixelColor;
 
 const mat3  RGBToXYZ  = mat3 ( 2.7689, 1.7517,   1.1302,
-                        1.0000, 4.5907,   0.060100,
-                        0.0000, 0.056508, 5.5943);
-const mat3 XYZToRGB = inverse(RGBToXYZ);
-                                    
+                               1.0000, 4.5907,   0.060100,
+                               0.0000, 0.056508, 5.5943);
+const mat3 XYZToRGB = mat3   ( 0.41847,-0.15866, -0.082835,
+                               -0.091169,0.25243,0.015708,
+                                0.00092090, -0.0025498, 0.17860 );
+//const mat3 XYZToRGB = inverse(RGBToXYZ);
 
 vec3 convertCIExyYToRGB(vec3 CIExyYColor){
 
