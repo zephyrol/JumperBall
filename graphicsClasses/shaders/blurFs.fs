@@ -3,28 +3,36 @@
 uniform sampler2D frameTexture;
 uniform bool      firstPass;
 uniform int       patchSize;
-uniform float[25]   gaussWeights;
+uniform float[25]  gaussWeights;
 
 in      vec2      fs_vertexUVs;
 out     vec4      pixelColor;
 
 
-void computeBlur(ivec2 factors){
+void computeBlur(bool horizontal){
+
+    const int pixelOffset [25] =
+	int[](-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11,12);
+
+    const int levelOfDetail = 0;
 
     ivec2 posPixel = ivec2(gl_FragCoord.xy);
-    const int levelOfDetail = 0;
-    
     float sumCoefficients = 0;
     pixelColor = vec4(0.f,0.f,0.f,0.f);
-    int counter = 0;
-    int last = patchSize/2;
-    for (int i = -patchSize/2; i <= last ; i++ ) {
-        float coefficient = gaussWeights[counter];
-        vec4 color = coefficient * texelFetchOffset( 
-            frameTexture,posPixel, levelOfDetail, ivec2(i,i) * factors);
-        pixelColor += color;
+    for (int i = 0; i < 25 ; i++ ) {
+        float coefficient = gaussWeights[i];
+	if ( horizontal ) {
+		pixelColor+= coefficient * texelFetchOffset(
+				frameTexture,posPixel, levelOfDetail,
+				ivec2(pixelOffset[i],0));
+	}
+	else {
+		pixelColor+= coefficient * texelFetchOffset(
+				frameTexture,posPixel, levelOfDetail,
+				ivec2(0,pixelOffset[i]));
+	}
+
         sumCoefficients += coefficient;
-        counter++;
     }
     pixelColor/=sumCoefficients;
 
@@ -32,12 +40,12 @@ void computeBlur(ivec2 factors){
 
 void horizontalPass() {
 
-  computeBlur(ivec2(1,0));
+  computeBlur(true);
 }
 
 void verticalPass() {
 
-  computeBlur(ivec2(0,1));
+  computeBlur(false);
 }
 
 void main() {
