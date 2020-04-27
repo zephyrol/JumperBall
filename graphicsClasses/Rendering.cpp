@@ -192,16 +192,7 @@ void Rendering::render() {
 
     phongEffect(_frameBufferDepth);
 
-
-    _spFbo.use();
-    FrameBuffer::bindDefaultFrameBuffer();
-    //_frameBufferDepth.bindRenderTexture();
-    _frameBufferScene.bindRenderTexture();
-    _spFbo.bindUniformTexture("frameTexture", 0);
-    _meshQuadFrame.render(_spFbo);
-
-
-    /*toneMappingEffect(_frameBufferScene);
+    toneMappingEffect(_frameBufferScene);
      
     brightPassEffect(_frameBufferScene);
     blurEffect(_frameBufferBrightPassFilter);
@@ -212,7 +203,7 @@ void Rendering::render() {
     FrameBuffer::bindDefaultFrameBuffer();
     _frameBufferBloom.bindRenderTexture();
     _spFbo.bindUniformTexture("frameTexture", 0);
-    _meshQuadFrame.render(_spFbo);*/
+    _meshQuadFrame.render(_spFbo);
 
 }
 
