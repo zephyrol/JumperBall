@@ -13,10 +13,11 @@
 
 #include "FrameBuffer.h"
 
-FrameBuffer::FrameBuffer(bool HDRTexture, bool hasDepthBuffer, float scale) :
+FrameBuffer::FrameBuffer(FrameBuffer::TextureCaterory category, 
+    bool hasDepthBuffer, float scale) :
 _fboHandle(),
 _renderTexture(),
-_isHDRTexture(HDRTexture),
+_textureCategory(category),
 _depthBuffer(),
 _scale(scale)
 {
@@ -32,17 +33,19 @@ _scale(scale)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _renderTexture);
 
-    GLenum internalFormat; 
-    if (_isHDRTexture) {
-        internalFormat = GL_RGB32F;
-    } else {
-        internalFormat = GL_RGB8;
+    GLenum dataFormat;
+    if (_textureCategory == FrameBuffer::TextureCaterory::SDR) {
+        dataFormat = GL_RGB8;
     }
-
-    glTexStorage2D(GL_TEXTURE_2D,levelTexture,internalFormat,
-                    static_cast<GLsizei>(RESOLUTION_X*scale), 
-                    static_cast<GLsizei>(RESOLUTION_Y*scale));
-
+    else if (_textureCategory == FrameBuffer::TextureCaterory::HDR) {
+        dataFormat = GL_RGB32F;
+    }
+    else {
+        dataFormat = GL_DEPTH_COMPONENT24;
+    }
+	glTexStorage2D(GL_TEXTURE_2D, levelTexture, dataFormat,
+	    static_cast<GLsizei>(RESOLUTION_X * scale),
+        static_cast<GLsizei>(RESOLUTION_Y * scale));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -102,7 +105,7 @@ std::pair<float,float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
     
     float sumLogLuminance = 0.f;
     float maxLuminance = 0.f;
-    for ( unsigned int i = 0; i < numberOfPixels; ++i) {
+    for ( size_t i = 0; i < numberOfPixels; ++i) {
         const float luminance = 
           Utility::getLuminance ( epsilon + glm::vec3(textureData.at(i),
                                             textureData.at(i+1),

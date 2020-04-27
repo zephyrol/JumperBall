@@ -33,6 +33,7 @@ public:
     //-------CONST METHODS----------//
     const glm::mat4&        world()                                       const;
     void                    render(const ShaderProgram& sp)               const;
+    const T&                base()                                        const;
      
     //----------METHODS-------------//
     void                    update();
@@ -64,6 +65,7 @@ Mesh<T>::Mesh(const T& base):
   _world(1.f)
 {
 }
+
 
 template<typename T>
 void Mesh<T>::update() {
@@ -134,6 +136,12 @@ void Mesh<T>::render(const ShaderProgram& sp) const {
         }
         component.shape()->draw();
     }
+}
+
+template<typename T>
+inline const T& Mesh<T>::base() const
+{
+    return _base;
 }
 
 #endif /* MESH_H */

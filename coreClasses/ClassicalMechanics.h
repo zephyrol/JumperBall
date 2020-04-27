@@ -27,11 +27,9 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     ClassicalMechanics                  ();
 
-    ClassicalMechanics                  (
-                                          float distanceJump,
+    ClassicalMechanics                  ( float distanceJump,
                                           float timeToGetDestination,
-                                          float v0y
-                                        );
+                                          float v0y );
 
   
     //---------CONSTANTS------------//
@@ -51,8 +49,7 @@ public:
 
     struct physics2DVector              { float x; float y; };
 
-    struct EulerMethodBuffer            { 
-                                          float              deltaT ;
+    struct EulerMethodBuffer            { float              deltaT ;
                                           Fluid              fluid;
                                           std::function <
                                             float(const std::vector<float>&)
@@ -60,8 +57,7 @@ public:
                                           std::vector<float> tBuffer;
                                           std::vector<float> aBuffer;
                                           std::vector<float> vBuffer;
-                                          std::vector<float> pBuffer;
-                                        };
+                                          std::vector<float> pBuffer; };
 
 
     //-------CONST METHODS--------//

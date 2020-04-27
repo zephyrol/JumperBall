@@ -10,4 +10,5 @@ out     vec4      pixelColor;
 
 void main() {
     pixelColor = texture(frameTexture,fs_vertexUVs);
+    //pixelColor = vec4(1.0,1.0,1.0,1.0);
 }

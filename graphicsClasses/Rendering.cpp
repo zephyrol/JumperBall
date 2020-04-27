@@ -52,15 +52,55 @@ Rendering::Rendering(const Map&     map,
     _spBloom
           ( Shader (GL_VERTEX_SHADER,   vsshaderBloom),
             Shader (GL_FRAGMENT_SHADER, fsshaderBloom)),
-    _frameBufferScene(true),
-    _frameBufferToneMapping(false,false),
-    _frameBufferHalfBlur(false,false,scaleBloomTexture),
-    _frameBufferCompleteBlur(false,false,scaleBloomTexture),
-    _frameBufferBrightPassFilter(false,false,scaleBloomTexture),
-    _frameBufferBloom(false,false)
+    _spDepth
+          ( Shader (GL_VERTEX_SHADER,   vsshaderDepth),
+            Shader (GL_FRAGMENT_SHADER, fsshaderDepth)),
+    _frameBufferDepth(FrameBuffer::TextureCaterory::HDR),
+    _frameBufferScene(FrameBuffer::TextureCaterory::HDR),
+    _frameBufferToneMapping(FrameBuffer::TextureCaterory::SDR,false),
+    _frameBufferHalfBlur(FrameBuffer::TextureCaterory::SDR,false,
+        scaleBloomTexture),
+    _frameBufferCompleteBlur(FrameBuffer::TextureCaterory::SDR,false,
+        scaleBloomTexture),
+    _frameBufferBrightPassFilter(FrameBuffer::TextureCaterory::SDR,false,
+        scaleBloomTexture),
+    _frameBufferBloom(FrameBuffer::TextureCaterory::SDR,false)
 {
 }
 
+void Rendering::phongEffect( const FrameBuffer& referenceFBO ) {
+
+    glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
+    _frameBufferScene.bindFrameBuffer();
+    referenceFBO.bindRenderTexture();
+    _spMap.use();
+    _spMap.bindUniformTexture("depthTexture", 0);
+
+    //Ball and Map
+    bindCamera (_spMap);
+
+    _light.positionLight(_star.centralPosition());
+                                        
+    _light.bind("light",_spMap);
+
+    _meshBall.render(_spMap);
+
+    //Map
+    _meshMap.render(_spMap);
+
+    //Star
+    _spStar.use();
+
+    _spStar.bindUniform("radiusInside",  _star.radiusInside());
+    _spStar.bindUniform("radiusOutside", _star.radiusOutside());
+    _spStar.bindUniform("colorInside",   _star.colorInside());
+    _spStar.bindUniform("colorOutside",  _star.colorOutside());
+
+    bindCamera(_spStar);
+
+    _meshStar.render(_spStar);
+
+}
 
 void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
 
@@ -128,41 +168,40 @@ void Rendering::bloomEffect(  const FrameBuffer& fboScene,
     _meshQuadFrame.render(_spBloom);
 }
 
+void Rendering::depthFromStar() {
+
+    glClearColor(1.0f, 1.0f, 1.f, 0.0f);
+    _frameBufferDepth.bindFrameBuffer();
+    _spDepth.use();
+    bindStarView(_spDepth);
+    //bindCamera(_spDepth);
+    //_spDepth.bindUniformTexture("frameTexture", 0);
+    //_spDepth.bindUniform ("threshold",  5.f);
+    _meshBall.render(_spDepth);
+    _meshMap.render(_spDepth);
+    //_meshQuadFrame.render(_spDepth);
+}
 
 void Rendering::render() {
 
-    _frameBufferScene.bindFrameBuffer();
-    //FrameBuffer::bindDefaultFrameBuffer();
-    
-    //Ball and Map
-    _spMap.use();
-    renderCamera(_spMap);
-
-    _light.positionLight(_star.centralPosition());
-                                        
-    _light.bind("light",_spMap);
-
-    _meshBall.update();
-    _meshBall.render(_spMap);
-
-    //Map
     _meshMap.update();
-    _meshMap.render(_spMap);
-
-    //Star
-    _spStar.use();
-
-    _spStar.bindUniform("radiusInside",  _star.radiusInside());
-    _spStar.bindUniform("radiusOutside", _star.radiusOutside());
-    _spStar.bindUniform("colorInside",   _star.colorInside());
-    _spStar.bindUniform("colorOutside",  _star.colorOutside());
-
-    renderCamera(_spStar);
-
+    _meshBall.update();
     _meshStar.update();
-    _meshStar.render(_spStar);
 
-    toneMappingEffect(_frameBufferScene);
+    depthFromStar();
+
+    phongEffect(_frameBufferDepth);
+
+
+    _spFbo.use();
+    FrameBuffer::bindDefaultFrameBuffer();
+    //_frameBufferDepth.bindRenderTexture();
+    _frameBufferScene.bindRenderTexture();
+    _spFbo.bindUniformTexture("frameTexture", 0);
+    _meshQuadFrame.render(_spFbo);
+
+
+    /*toneMappingEffect(_frameBufferScene);
      
     brightPassEffect(_frameBufferScene);
     blurEffect(_frameBufferBrightPassFilter);
@@ -173,14 +212,11 @@ void Rendering::render() {
     FrameBuffer::bindDefaultFrameBuffer();
     _frameBufferBloom.bindRenderTexture();
     _spFbo.bindUniformTexture("frameTexture", 0);
-    _meshQuadFrame.render(_spFbo);
-
-         
+    _meshQuadFrame.render(_spFbo);*/
 
 }
 
-
-void Rendering::renderCamera(const ShaderProgram& sp) {
+void Rendering::bindCamera(const ShaderProgram& sp) {
 
   _uniformBool["displayBehind"] = _camera.displayBehind();
 
@@ -189,7 +225,7 @@ void Rendering::renderCamera(const ShaderProgram& sp) {
                     glm::perspective( glm::radians(70.f), 
                     static_cast<float>(RESOLUTION_X)/
                     static_cast<float>(RESOLUTION_Y), 
-                    _camera._zNear, _camera._zFar) *
+                    _camera.zNear, _camera.zFar) *
                     glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())
                     ); 
 
@@ -207,7 +243,8 @@ void Rendering::renderCamera(const ShaderProgram& sp) {
 
   _uniformVec3["positionCamera"]  = _camera.pos();
   _uniformFloat["distanceBehind"] = _ball.distanceBehindBall();
-  sp.bindUniform ("VP",              _uniformMatrix4.at("VP"));
+  sp.bindUniform ("VP",             _uniformMatrix4.at("VP"));
+  sp.bindUniform ("VPStar",         _uniformMatrix4.at("VPStar"));
   sp.bindUniform ("positionBall",   _uniformVec3.at("positionBall"));
   sp.bindUniform ("lookDirection",  _uniformVec3.at("lookDirection"));
   sp.bindUniform ("distanceBehind", _uniformFloat.at("distanceBehind"));
@@ -215,6 +252,34 @@ void Rendering::renderCamera(const ShaderProgram& sp) {
   sp.bindUniform ("displayBehind",  _uniformBool.at("displayBehind"));
 }
 
+void Rendering::bindStarView(const ShaderProgram& sp) {
+     
+    const Map& map = _meshMap.base();
+
+    const glm::vec3 center{ map.boundingBoxXMax()/2.f,
+                            map.boundingBoxYMax()/2.f,
+                            map.boundingBoxZMax()/2.f };
+    
+    float boundingBoxMax = static_cast<float>(map.boundingBoxXMax());
+    if (boundingBoxMax < static_cast<float>(map.boundingBoxYMax()))
+        boundingBoxMax = static_cast<float>(map.boundingBoxYMax());
+    if (boundingBoxMax < static_cast<float>(map.boundingBoxZMax())) 
+        boundingBoxMax = static_cast<float>(map.boundingBoxZMax());
+    
+    constexpr float offsetJumpingBall = 1.f; //size of ball + jump height
+    float halfBoundingBoxSize = std::move(boundingBoxMax);
+    halfBoundingBoxSize = halfBoundingBoxSize/2.f + offsetJumpingBall;
+
+    _uniformMatrix4["VP"] =
+    glm::mat4(glm::ortho(-halfBoundingBoxSize*RESOLUTION_X/RESOLUTION_Y , 
+                         halfBoundingBoxSize*RESOLUTION_X/RESOLUTION_Y, 
+                        -halfBoundingBoxSize, halfBoundingBoxSize,
+                        _camera.zNear, _camera.zFar) *
+              glm::lookAt ( _star.centralPosition(), center, 
+                            glm::vec3(0.f,1.f,0.f) ));
+    _uniformMatrix4["VPStar"] = _uniformMatrix4["VP"];
+    sp.bindUniform ("VP", _uniformMatrix4.at("VP"));
+}
 
 const std::string Rendering::vsshaderMap = "graphicsClasses/shaders/phongVs.vs";
 const std::string Rendering::fsshaderMap = "graphicsClasses/shaders/phongFs.fs";
@@ -245,6 +310,10 @@ const std::string Rendering::vsshaderBloom =
                                         "graphicsClasses/shaders/basicFboVs.vs";
 const std::string Rendering::fsshaderBloom = 
                                            "graphicsClasses/shaders/bloomFs.fs";
+const std::string Rendering::vsshaderDepth = 
+                                           "graphicsClasses/shaders/depthVs.vs";
+const std::string Rendering::fsshaderDepth = 
+                                           "graphicsClasses/shaders/depthFs.fs";
 
 const std::vector<float> Rendering::gaussComputedValues = 
   Utility::genGaussBuffer(Rendering::blurPatchSize, Rendering::blurSigma);

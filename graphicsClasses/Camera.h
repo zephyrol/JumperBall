@@ -32,8 +32,8 @@ public:
 
 
     //---------CONSTANTS------------//
-    static constexpr float        _zNear                                = 0.1f;
-    static constexpr float        _zFar                                 = 100.f;
+    static constexpr float        zNear                                 = 0.1f;
+    static constexpr float        zFar                                  = 100.f;
 
 
     //-------CONST METHODS----------//

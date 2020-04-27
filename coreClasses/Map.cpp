@@ -211,8 +211,10 @@ std::shared_ptr<const Block> Map::getBlock(int x, int y, int z) const {
             z >= static_cast<int>(_boundingBoxZMax) ||
             x < 0 || y < 0 || z < 0 )
         block = nullptr;
-    else 
-        block = _blocks.at(_boundingBoxXMax* (z + y * _boundingBoxZMax) + x);
+    else {
+        size_t index = _boundingBoxXMax * (z + y * _boundingBoxZMax) + x;
+        block = _blocks.at(index);
+    }
     return block;
 }
 

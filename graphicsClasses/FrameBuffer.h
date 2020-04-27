@@ -19,20 +19,24 @@ class FrameBuffer {
 
 public:
 
-    //--CONSTRUCTORS & DESTRUCTORS--//
-    FrameBuffer         (bool HDRTexture = false, bool hasDepthBuffer = true,
-                          float scale = 1.f);
+    //------------TYPES------------//
+    enum class          TextureCaterory {SDR, HDR, Depth};
 
+	//--CONSTRUCTORS & DESTRUCTORS--//
+	FrameBuffer( TextureCaterory category = TextureCaterory::SDR, 
+                 bool hasDepthBuffer = true, float scale = 1.f);
+
+    //---------CONSTANTS------------//
     static constexpr float     
                         luminanceKey                                     = 0.4f;
 
-    
+
     //-------CONST METHODS----------//
     GLuint              getHandle()                                       const;
     void                bindFrameBuffer()                                 const;
     void                bindRenderTexture(unsigned int offset = 0)        const;
     std::pair<float,float>               
-                        computeLogAverageLuminanceAndMax()              const;
+                        computeLogAverageLuminanceAndMax()                const;
     
     
     //--------STATIC METHODS-------//
@@ -45,8 +49,8 @@ private:
     GLuint              _fboHandle;
 
     GLuint              _renderTexture;
-    const bool          _isHDRTexture;
-
+    const TextureCaterory _textureCategory;
+                        
     GLuint              _depthBuffer;
     float               _scale;
 

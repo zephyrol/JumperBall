@@ -87,7 +87,10 @@ private:
     const ShaderProgram             _spToneMapping;
     const ShaderProgram             _spBrightPassFilter;
     const ShaderProgram             _spBloom;
+    const ShaderProgram             _spDepth;
 
+
+    const FrameBuffer               _frameBufferDepth;
     const FrameBuffer               _frameBufferScene;
     const FrameBuffer               _frameBufferToneMapping;
     const FrameBuffer               _frameBufferHalfBlur;
@@ -97,6 +100,8 @@ private:
 
 
     //------------METHODS----------//
+    void                            phongEffect( 
+                                               const FrameBuffer& referenceFBO);
     void                            blurEffect( 
                                                const FrameBuffer& referenceFBO);
     void                            toneMappingEffect( 
@@ -105,8 +110,10 @@ private:
                                                const FrameBuffer& referenceFBO);
     void                            bloomEffect(  const FrameBuffer& fboScene,
                                                   const FrameBuffer& fboLight );
+    void                            depthFromStar();
 
-    void                            renderCamera(const ShaderProgram& sp);
+    void                            bindCamera(const ShaderProgram& sp);
+    void                            bindStarView(const ShaderProgram& sp);
 
 
 
@@ -125,6 +132,8 @@ private:
     static const std::string        fsshaderBrightPassFilter; 
     static const std::string        vsshaderBloom; 
     static const std::string        fsshaderBloom; 
+    static const std::string        vsshaderDepth; 
+    static const std::string        fsshaderDepth; 
 
     static const std::vector<float> gaussComputedValues;
 };
