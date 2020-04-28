@@ -413,7 +413,7 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
 
         JumperBallTypes::Direction sideBeforeMovement = _currentSide;
 
-        nextBlock.nextSide 	= _lookTowards;
+        nextBlock.nextSide  = _lookTowards;
         
         switch (sideBeforeMovement) {
             case JumperBallTypes::Direction::North:
