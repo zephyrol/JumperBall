@@ -30,7 +30,6 @@ public:
     static constexpr float     
                         luminanceKey                                     = 0.4f;
 
-
     //-------CONST METHODS----------//
     GLuint              getHandle()                                       const;
     void                bindFrameBuffer()                                 const;
@@ -50,7 +49,8 @@ private:
 
     GLuint              _renderTexture;
     const TextureCaterory _textureCategory;
-                        
+
+    bool                _hasDepthBuffer;
     GLuint              _depthBuffer;
     float               _scale;
 
