@@ -16,13 +16,13 @@
  */
 
 
-class MessageLabel : Label
+class SwitchLabel: Label
 {
 public:
-    MessageLabel(float width,float height,const std::string& message);
+    SwitchLabel(float width,float height,bool switchButton);
 
 private:
-    const std::string _message;
+    const bool _switch;
 };
 
 #endif // MESSAGELABEL_H
