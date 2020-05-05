@@ -11,35 +11,45 @@ out     vec4      pixelColor;
 
 void computeBlur(bool horizontal){
 
-    const int pixelOffset [25] =
+    const int indicesOffset [25] =
         int[](-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,
               1,2,3,4,5,6,7,8,9,10,11,12);
 
     const int levelOfDetail = 0;
 
-    ivec2 posPixel = ivec2(gl_FragCoord.xy);
     float sumCoefficients = 0;
-    pixelColor = vec4(0.f,0.f,0.f,0.f);
+    vec3 blurColor = vec3(0.f,0.f,0.f);
+    vec2 texelOffset = 1.f/textureSize(frameTexture,0);
     if ( horizontal ) {
         for (int i = 0; i < 25 ; i++ ) {
             float coefficient = gaussWeights[i];
-            pixelColor+= coefficient * texelFetchOffset(
-                                        frameTexture,posPixel, levelOfDetail,
-                                        ivec2(pixelOffset[i],0));
-            sumCoefficients += coefficient;
+            vec2 neighboringPixelUV = fs_vertexUVs + 
+                vec2(texelOffset.x * indicesOffset[i],0.f);
+
+            if ( neighboringPixelUV.x > 0.f && neighboringPixelUV.x < 
+                     (1.f-4.f*texelOffset.x)) {
+                blurColor += coefficient * 
+                    texture( frameTexture, neighboringPixelUV ).xyz;
+            }
+                sumCoefficients += coefficient;
         }
     }
     else {
         for (int i = 0; i < 25 ; i++ ) {
             float coefficient = gaussWeights[i];
-            pixelColor+= coefficient * texelFetchOffset(
-                    frameTexture,posPixel, levelOfDetail,
-                    ivec2(0,pixelOffset[i]));
-            sumCoefficients += coefficient;
+
+            vec2 neighboringPixelUV = fs_vertexUVs + 
+                vec2(0.f,texelOffset.y * indicesOffset[i]);
+            if ( neighboringPixelUV.y > 0.f && neighboringPixelUV.y < 
+                     (1.f-4.f*texelOffset.y)) {
+                blurColor += coefficient * 
+                    texture( frameTexture, neighboringPixelUV ).xyz;
+            }   
+                sumCoefficients += coefficient;
         }
     }
-
-    pixelColor/=sumCoefficients;
+    blurColor /=sumCoefficients;
+    pixelColor = vec4 (blurColor, 1.f);
 
 }
 
