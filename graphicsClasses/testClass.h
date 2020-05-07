@@ -17,6 +17,7 @@
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include "Rendering.h"
+#include <TextRendering.h>
 
 class testClass {
 public:

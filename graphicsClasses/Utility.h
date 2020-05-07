@@ -37,6 +37,8 @@ namespace Utility {
     std::vector<glm::vec2>            GLfloatListToGlmVec2(
                                             const std::vector<GLfloat>& list);
 
+    void                              displayInstallError();
+
     extern const glm::mat3            XYZToRGB;
     extern const glm::mat3            RGBToXYZ;
     

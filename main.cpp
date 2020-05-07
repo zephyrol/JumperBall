@@ -20,6 +20,7 @@
 #include <ClassicalMechanics.h>
 #include <Rendering.h>
 #include <testClass.h>
+//#include <TextRendering.h>
 
 using namespace std;
 
@@ -37,14 +38,7 @@ int main(int argc, char** argv) {
     if (!file) {
         std::cerr << "ERROR: Opening " << fileToOpen << " impossible .."
                   << std::endl;
-        #ifdef _MSC_VER
-        std::cerr << "Did you forget to install the files ?" << std::endl
-         << "On Visual Studio, build the INSTALL solution" << std::endl;
-        #else
-        std::cerr << "Did you forget to install the project ?" << std::endl <<
-            "Run \"cmake --build . --target install\" " <<
-            "or \"make install\"" << std::endl;
-        #endif
+        Utility::displayInstallError();
         return EXIT_FAILURE;
     }
     
@@ -58,13 +52,15 @@ int main(int argc, char** argv) {
         }
         return EXIT_SUCCESS;
     }
+
+
     
     Map m (file);
     std::cout << "Map created" << std::endl;
     
-    
     file.close();
     
+
     Ball b (m);
     Camera c;
     
@@ -76,7 +72,7 @@ int main(int argc, char** argv) {
     Rendering rendering (m,b,s,c);
     t.run(rendering,b,c);
     
-    
+    //TextRendering::clearFreeTypeRessources();
     return EXIT_SUCCESS;
 }
 
