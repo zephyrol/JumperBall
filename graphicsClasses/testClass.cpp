@@ -158,4 +158,5 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
 
 testClass::~testClass() {
     glfwTerminate();
+    TextRendering::clearFreeTypeRessources();
 }
