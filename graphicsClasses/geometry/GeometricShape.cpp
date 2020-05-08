@@ -44,7 +44,7 @@ _normalsTransform     (normalsTransform)
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,_indices->size()* sizeof(GLushort),
                       _indices->data(),GL_STATIC_DRAW);
     }
-    bindVerticesData();
+    setVerticesData();
 }
 
 GeometricShape::GeometricShape(const GeometricShape& geometricShape, 
@@ -123,7 +123,7 @@ std::vector<glm::vec3> GeometricShape::createCustomColorBuffer(
     return customColorCube;
 }
 
-void GeometricShape::bindVerticesData() const {
+void GeometricShape::setVerticesData() const {
 
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(0));
     glBufferData(GL_ARRAY_BUFFER, _positions->size() * 3 * sizeof(GLfloat), 

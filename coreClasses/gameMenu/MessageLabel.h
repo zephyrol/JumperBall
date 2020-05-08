@@ -16,10 +16,12 @@
  */
 
 
-class MessageLabel : Label
+class MessageLabel : public Label
 {
 public:
     MessageLabel(float width,float height,const std::string& message);
+
+    const std::string& message() const;
 
 private:
     const std::string _message;

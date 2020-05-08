@@ -87,21 +87,24 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
                 b.doAction(Ball::ActionRequest::Jump);
         }
 
-        if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_PRESS) {
+        if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_PRESS ||
+           glfwGetKey(_window,GLFW_KEY_L) == GLFW_PRESS) {
             if (!rightButton) {
                 rightButton = true;
                 b.doAction(Ball::ActionRequest::TurnRight);
             }
         }
         
-        if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_PRESS) {
+        if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_PRESS ||
+           glfwGetKey(_window,GLFW_KEY_H) == GLFW_PRESS) {
             if (!leftButton) {
                 leftButton = true;
                 b.doAction(Ball::ActionRequest::TurnLeft);
             }
         }
 
-        if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_PRESS) {
+        if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_PRESS ||
+           glfwGetKey(_window,GLFW_KEY_K) == GLFW_PRESS) {
                 upButton = true;
                 b.doAction(Ball::ActionRequest::GoStraightAhead);
         }
@@ -114,19 +117,22 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
             }
         }
 
-        if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_RELEASE) {
+        if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_RELEASE ||
+           glfwGetKey(_window,GLFW_KEY_L) == GLFW_RELEASE) {
             if (rightButton) {
                 rightButton = false;
             }
         }
         
-        if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_RELEASE) {
+        if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_RELEASE ||
+           glfwGetKey(_window,GLFW_KEY_H) == GLFW_RELEASE) {
             if (leftButton) {
                 leftButton = false ;
             }
         }
 
-        if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_RELEASE) {
+        if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_RELEASE || 
+           glfwGetKey(_window,GLFW_KEY_K) == GLFW_RELEASE) {
             if (upButton) {
                 upButton = false;
             }

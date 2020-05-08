@@ -32,7 +32,7 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Label           (float width,float height);
-    virtual ~Label  () = 0;
+    virtual ~Label  () = default;
 
     //-------CONST METHODS----------//
     float width() const;

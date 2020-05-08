@@ -14,8 +14,7 @@
 #include "Quad.h"
 
 Quad::Quad( const glm::mat4& modelTransform,
-            const glm::mat4& normalsTransform  
-        ): 
+            const glm::mat4& normalsTransform ): 
     GeometricShape ( 
         basicPositionsQuad,
         basicNormalsQuad,
@@ -27,8 +26,7 @@ Quad::Quad( const glm::mat4& modelTransform,
 
 Quad::Quad( const glm::vec3& customColor,
             const glm::mat4& modelTransform,
-            const glm::mat4& normalsTransform  
-        ): 
+            const glm::mat4& normalsTransform ): 
     GeometricShape (
         basicPositionsQuad,
         basicNormalsQuad,

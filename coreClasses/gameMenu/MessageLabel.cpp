@@ -5,3 +5,8 @@ MessageLabel::MessageLabel(float width,float height,const std::string& message):
     _message(message)
 {
 }
+
+const std::string& MessageLabel::message() const
+{
+    return _message;
+}

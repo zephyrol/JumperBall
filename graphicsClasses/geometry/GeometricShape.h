@@ -48,7 +48,7 @@ public:
 
 
     //-------CONST METHODS------ --//
-    void                                                   bindVerticesData() 
+    void                                                   setVerticesData() 
                                                                           const;
 
     void                                                   bind()         const;

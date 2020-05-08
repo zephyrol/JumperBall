@@ -30,7 +30,7 @@ void main() {
     const mat4 biasMatrix   = mat4(0.5f,0.f, 0.f, 0.f,
                                0.f, 0.5f,0.f, 0.f,
                                0.f, 0.f, 0.5f,0.f,
-                               0.5f, 0.5f, 0.5f ,1.f);
+                               0.5f, 0.5f, 0.5f, 1.f);
 
     if (proximityObjectBehind < epsilon ) discard;
 

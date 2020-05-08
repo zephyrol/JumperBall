@@ -1,8 +1,24 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   TextRendering.cpp
+ * Author: Morgenthaler S
+ * 
+ * Created on ? mai 2020, ??:??
+ */
+
 #include "TextRendering.h"
+#include "ShaderProgram.h"
 
 TextRendering::TextRendering(const std::vector<unsigned char>& characters,
                              unsigned int height):
-    _alphabet(initAlphabet(characters,height))
+    _alphabet(initAlphabet(characters,height)),
+    _fontHeight(height),
+    _displayQuad()
 {
 
 }
@@ -32,7 +48,7 @@ void TextRendering::clearFreeTypeRessources() {
 }
 
 std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
-        const std::vector<unsigned char> characters, unsigned int height)
+        const std::vector<unsigned char>& characters, unsigned int height)
 {
     std::map<unsigned char, TextRendering::Character> alphabet;
 
@@ -71,6 +87,35 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
     }
     return alphabet;
 }
+
+void TextRendering::render( const ShaderProgram& sp, const MessageLabel& label, 
+                            const std::pair<float,float>& position,
+                            const glm::vec3& color) {
+    sp.use();
+
+    const float pitch = label.width()/label.message().size();
+    const glm::mat4 scale = glm::scale( glm::vec3{pitch, label.height(),0.f});
+    float offsetX = -label.width()/2.f;
+    const glm::mat4 biasMatrix  = glm::inverse(glm::mat4{ 0.5f,0.f, 0.f, 0.f,
+                                                          0.f, 0.5f,0.f, 0.f,
+                                                          0.f, 0.f, 0.5f,0.f,
+                                                          0.5f, 0.5f, 0.5f, 1.f}
+                                              );
+
+    for (const char& c : label.message()) {
+        const glm::mat4 translate = glm::translate(
+                                glm::vec3{ position.first+offsetX,
+                                        position.second,0.f});
+      glm::mat4 transformCharacter = biasMatrix * translate * scale;
+      sp.bindUniformTexture("characterTexture",_alphabet.at(c).texture);
+      sp.bindUniform("fontColor",color);
+      sp.bindUniform("M",transformCharacter);
+      _displayQuad.draw();
+      offsetX += pitch;
+    }
+}
+
+
 
 
 FT_Library TextRendering::ftLib;
