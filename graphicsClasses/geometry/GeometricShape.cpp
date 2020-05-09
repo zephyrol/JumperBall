@@ -45,6 +45,53 @@ _normalsTransform     (normalsTransform)
                       _indices->data(),GL_STATIC_DRAW);
     }
     setVerticesData();
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(0));
+    
+    glVertexAttribPointer ( 
+            0,
+            3, // 3 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(1));
+    glVertexAttribPointer ( 
+            1,
+            3, // 3 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(2));
+    glVertexAttribPointer ( 
+            2,
+            3, // 3 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(3));
+    glVertexAttribPointer ( 
+            3,
+            2, // 2 GL_FLOAT per vertex
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            nullptr
+            );
+
 }
 
 GeometricShape::GeometricShape(const GeometricShape& geometricShape, 
@@ -144,53 +191,7 @@ void GeometricShape::setVerticesData() const {
 }
 
 void GeometricShape::bind() const {
-
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(0));
-    
-    glVertexAttribPointer ( 
-            0,
-            3, // 3 GL_FLOAT per vertex
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            nullptr
-            );
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(1));
-    glVertexAttribPointer ( 
-            1,
-            3, // 3 GL_FLOAT per vertex
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            nullptr
-            );
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(2));
-    glVertexAttribPointer ( 
-            2,
-            3, // 3 GL_FLOAT per vertex
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            nullptr
-            );
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(3));
-    glVertexAttribPointer ( 
-            3,
-            2, // 2 GL_FLOAT per vertex
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            nullptr
-            );
-
+    glBindVertexArray(*_vertexArrayObject);
 }
 
 

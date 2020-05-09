@@ -95,7 +95,6 @@ void TextRendering::render( const ShaderProgram& sp, const MessageLabel& label,
                             const glm::vec3& color) const {
     sp.use();
 
-    const 
     const float pitch = label.width()/label.message().size();
     const glm::mat4 scale = glm::scale( glm::vec3{pitch, label.height(),0.f});
     float offsetX = -label.width()/2.f + pitch/2.f;
