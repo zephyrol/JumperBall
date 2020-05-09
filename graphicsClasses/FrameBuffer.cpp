@@ -79,6 +79,7 @@ _scale(scale)
     }
     glDrawBuffers(1,&drawBuffer);
 
+    glBindFramebuffer(GL_FRAMEBUFFER,0);
 }
 
 void FrameBuffer::bindFrameBuffer() const {

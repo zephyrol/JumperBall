@@ -164,9 +164,12 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
 
 void testClass::runMenu() {
 
-    const TextRendering textRendering ({'C','o','u','c'},48);
 
-    const MessageLabel label (0.6f,0.2f,"Coucou");
+    const MessageLabel label (0.5f,0.1f,"Test");
+
+    const TextRendering textRendering 
+    ({'T','e','s','t'},
+        static_cast<unsigned int>(RESOLUTION_Y*label.height()));
 
 
     const ShaderProgram spLabels ( 
@@ -178,11 +181,11 @@ void testClass::runMenu() {
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
           && glfwWindowShouldClose(_window) == 0 ) {
         
-        //glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         textRendering.render(spLabels, label, std::pair<float,float>(0.5f,0.5f),
-                              glm::vec3(0,0,1));
+                              glm::vec3(0,1.f,1.f));
        
         glfwSwapInterval(1);
         glfwSwapBuffers(_window);

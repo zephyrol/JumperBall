@@ -52,6 +52,8 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
 {
     std::map<unsigned char, TextRendering::Character> alphabet;
 
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
+
     FT_Set_Pixel_Sizes(fontFace,0,height);
     for (const unsigned char& character : characters) {
 
@@ -93,26 +95,30 @@ void TextRendering::render( const ShaderProgram& sp, const MessageLabel& label,
                             const glm::vec3& color) const {
     sp.use();
 
+    const 
     const float pitch = label.width()/label.message().size();
     const glm::mat4 scale = glm::scale( glm::vec3{pitch, label.height(),0.f});
-    float offsetX = -label.width()/2.f;
-    const glm::mat4 biasMatrix  = glm::inverse(glm::mat4{ 0.5f,0.f, 0.f, 0.f,
-                                                          0.f, 0.5f,0.f, 0.f,
-                                                          0.f, 0.f, 0.5f,0.f,
-                                                          0.5f, 0.5f, 0.5f, 1.f}
-                                              );
+    float offsetX = -label.width()/2.f + pitch/2.f;
+    const glm::mat4 biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,
+                                             0.f,  1.f, 0.f, 0.f,
+                                             0.f,  0.f,  1.f, 0.f,
+                                             -1.f, -1.f, 0.f, 1.f} ;
 
+    _displayQuad.bind();
     for (const char& c : label.message()) {
+        constexpr float biasScalar = 2.f; //To multiply the translation by 2
         const glm::mat4 translate = glm::translate(
-                                glm::vec3{ position.first+offsetX,
-                                        position.second,0.f});
-      glm::mat4 transformCharacter = biasMatrix * translate * scale;
-      sp.bindUniformTexture("characterTexture",_alphabet.at(c).texture);
-      sp.bindUniform("fontColor",color);
-      sp.bindUniform("M",transformCharacter);
-      _displayQuad.bind();
-      _displayQuad.draw();
-      offsetX += pitch;
+                                biasScalar * glm::vec3{ position.first+offsetX,
+                                position.second,0.f});
+        const glm::mat4 transformCharacter = biasMatrix * translate * scale;
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, _alphabet.at(c).texture);
+        sp.bindUniformTexture("characterTexture", 0);
+        sp.bindUniform("fontColor",color);
+        sp.bindUniform("M",transformCharacter);
+        _displayQuad.draw();
+        offsetX += pitch;
     }
 }
 
