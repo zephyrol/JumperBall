@@ -48,7 +48,7 @@ testClass::testClass(): _window(nullptr)
 
     if (!TextRendering::initFreeTypeAndFont()) {
         exit(EXIT_FAILURE);
-    }
+    } 
 
     glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -161,6 +161,38 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         }
    }
 }
+
+void testClass::runMenu() {
+
+    const TextRendering textRendering ({'C','o','u','c'},48);
+
+    const MessageLabel label (0.6f,0.2f,"Coucou");
+
+
+    const ShaderProgram spLabels ( 
+    Shader (GL_VERTEX_SHADER,   "graphicsClasses/shaders/fontVs.vs"),
+    Shader (GL_FRAGMENT_SHADER, "graphicsClasses/shaders/fontFs.fs" ));
+        
+
+    glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
+    while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
+          && glfwWindowShouldClose(_window) == 0 ) {
+        
+        //glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        textRendering.render(spLabels, label, std::pair<float,float>(0.5f,0.5f),
+                              glm::vec3(0,0,1));
+       
+        glfwSwapInterval(1);
+        glfwSwapBuffers(_window);
+      
+        glfwPollEvents();
+
+   }
+}
+
+
 
 testClass::~testClass() {
     glfwTerminate();

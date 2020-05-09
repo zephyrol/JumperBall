@@ -55,7 +55,7 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
     FT_Set_Pixel_Sizes(fontFace,0,height);
     for (const unsigned char& character : characters) {
 
-        if (FT_Load_Char(fontFace,character,FT_LOAD_RENDER)) {
+        if (!FT_Load_Char(fontFace,character,FT_LOAD_RENDER)) {
 
             GLuint textureID;
             glGenTextures(1,&textureID);
@@ -90,7 +90,7 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
 
 void TextRendering::render( const ShaderProgram& sp, const MessageLabel& label, 
                             const std::pair<float,float>& position,
-                            const glm::vec3& color) {
+                            const glm::vec3& color) const {
     sp.use();
 
     const float pitch = label.width()/label.message().size();
@@ -110,6 +110,7 @@ void TextRendering::render( const ShaderProgram& sp, const MessageLabel& label,
       sp.bindUniformTexture("characterTexture",_alphabet.at(c).texture);
       sp.bindUniform("fontColor",color);
       sp.bindUniform("M",transformCharacter);
+      _displayQuad.bind();
       _displayQuad.draw();
       offsetX += pitch;
     }

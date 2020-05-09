@@ -71,6 +71,7 @@ int main(int argc, char** argv) {
     ,0.3f,0.5f,50.f,5.f);
     Rendering rendering (m,b,s,c);
     t.run(rendering,b,c);
+    //t.runMenu();
     
     //TextRendering::clearFreeTypeRessources();
     return EXIT_SUCCESS;

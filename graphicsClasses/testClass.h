@@ -17,7 +17,7 @@
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include "Rendering.h"
-#include <TextRendering.h>
+#include "TextRendering.h"
 
 class testClass {
 public:
@@ -31,6 +31,7 @@ public:
     testClass     (const testClass&);
     testClass&    operator = (const testClass&);
     void          run(Rendering& r, Ball& b, Camera& c);
+    void          runMenu();
 
 
 private:

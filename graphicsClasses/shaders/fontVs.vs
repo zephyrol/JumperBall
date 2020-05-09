@@ -11,7 +11,8 @@ void main() {
   const float w               = 1.f;
 
   fs_vertexUVs                = vs_vertexUVs;
-  gl_Position                 = M * vec4(vs_vertexPosition,w);
+  //gl_Position                 = vec4(vec4(M * vec4(vs_vertexPosition,w)).xy,0.f,w);
+  gl_Position                 = vec4(vec3(vs_vertexPosition).xy,0.f,w);
 }
 
 

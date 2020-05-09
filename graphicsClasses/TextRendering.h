@@ -35,6 +35,12 @@ public:
                                                 glm::ivec2 size;
                                                 glm::ivec2 bearing; };
 
+    void                                      render(
+                                        const ShaderProgram& sp, 
+                                        const MessageLabel& label, 
+                                        const std::pair<float,float>& position,
+                                        const glm::vec3& color) const;
+
 private:
 
     const std::map<unsigned char, Character>  _alphabet;
@@ -45,10 +51,6 @@ private:
                                   const std::vector<unsigned char>& characters,  
                                                           unsigned int height);
 
-    void                                      render(const ShaderProgram& sp, 
-                                                    const MessageLabel& label, 
-                                         const std::pair<float,float>& position,
-                                                    const glm::vec3& color);
 
     static FT_Library                         ftLib;
     static FT_Face                            fontFace;
