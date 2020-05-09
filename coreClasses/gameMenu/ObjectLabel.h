@@ -5,18 +5,18 @@
  */
 
 /*
- * File:   Map.cpp
+ * File:   ObjectLabel.cpp
  * Author: Morgenthaler S
  *
  * Created on 28 avril 2020, 19:43
  */
 
-#ifndef MESSAGELABEL_H
-#define MESSAGELABEL_H
+#ifndef OBJECTLABEL_H
+#define OBJECTLABEL_H
 #include "Label.h"
 
 
-class ObjectLabel: Label
+class ObjectLabel: public Label
 {
 public:
     ObjectLabel(float width,float height,
@@ -26,4 +26,4 @@ private:
     const std::shared_ptr<Object>_object;
 };
 
-#endif // MESSAGELABEL_H
+#endif // OBJECTLABEL_H

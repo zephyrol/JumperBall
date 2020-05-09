@@ -1,7 +1,3 @@
-#ifndef MESSAGELABEL_H
-#define MESSAGELABEL_H
-#include "Label.h"
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,12 +5,16 @@
  */
 
 /*
- * File:   Map.cpp
+ * File:   MessageLabel.h
  * Author: Morgenthaler S
  *
  * Created on 28 avril 2020, 19:43
  */
 
+
+#ifndef MESSAGELABEL_H
+#define MESSAGELABEL_H
+#include "Label.h"
 
 class MessageLabel : public Label
 {
