@@ -23,8 +23,8 @@ public:
     enum class          TextureCaterory {SDR, HDR, Depth};
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    FrameBuffer( TextureCaterory category = TextureCaterory::SDR,
-                 bool hasDepthBuffer = true, float scale = 1.f);
+    FrameBuffer         ( TextureCaterory category = TextureCaterory::SDR,
+                          bool hasDepthBuffer = true, float scale = 1.f);
 
     //---------CONSTANTS------------//
     static constexpr float     

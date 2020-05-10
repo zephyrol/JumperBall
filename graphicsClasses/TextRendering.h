@@ -45,7 +45,7 @@ private:
 
     const std::map<unsigned char, Character>  _alphabet;
     const unsigned int                        _fontHeight;
-    Quad                                      _displayQuad;
+    const Quad                                _displayQuad;
 
     std::map<unsigned char, Character>        initAlphabet(
                                   const std::vector<unsigned char>& characters,  

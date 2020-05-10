@@ -19,14 +19,16 @@
 class Page
 {
 public:
-    Page(const std::vector<std::shared_ptr<Label> >& labels,
-         const std::shared_ptr<Page>& parent = nullptr,
+    Page(const std::vector<std::shared_ptr<const Label> >& labels,
+         const std::shared_ptr<const Page>& parent = nullptr,
          bool visibleOnParent  = false);
 
 private:
-    std::vector<std::shared_ptr<Label> > _labels;
-    std::shared_ptr<Page>                _parent;
-    bool                                 _visibleOnParent;
+    const std::vector<std::shared_ptr<const Label> >  _labels;
+    const std::map<std::shared_ptr<const Label>,std::shared_ptr<const Page> > 
+                                                      _bridges;
+    const std::shared_ptr<const Page>                 _parent;
+    const bool                                        _visibleOnParent;
 };
 
 #endif // PAGE_H

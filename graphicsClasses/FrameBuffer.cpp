@@ -110,8 +110,6 @@ GLuint FrameBuffer::getHandle() const{
     return _fboHandle;
 }
 
-
-
 std::pair<float,float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
 
     constexpr float         epsilon             = 0.001f;

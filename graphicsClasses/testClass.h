@@ -18,6 +18,7 @@
 #include "ShaderProgram.h"
 #include "Rendering.h"
 #include "TextRendering.h"
+#include "gameMenu/Page.h"
 
 class testClass {
 public:

@@ -13,8 +13,8 @@
  * Created on 28 avril 2020, 18:56
  */
 
-Page::Page(const std::vector<std::shared_ptr<Label> >& labels,
-           const std::shared_ptr<Page>& parent,
+Page::Page(const std::vector<std::shared_ptr<const Label> >& labels,
+           const std::shared_ptr<const Page>& parent,
            bool  visibleOnParent):
     _labels(labels),
     _parent(parent),

@@ -127,7 +127,7 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
         if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_RELEASE ||
            glfwGetKey(_window,GLFW_KEY_H) == GLFW_RELEASE) {
             if (leftButton) {
-                leftButton = false ;
+                leftButton = false;
             }
         }
 
@@ -164,14 +164,22 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
 
 void testClass::runMenu() {
 
+    std::shared_ptr<const MessageLabel> label = 
+        std::make_shared<const MessageLabel> (0.5f,0.1f,"Jumper Ball");
+    std::shared_ptr<const MessageLabel> label2 = 
+        std::make_shared<const MessageLabel> (0.5f,0.1f,"Play");
+    std::shared_ptr<const MessageLabel> label3 = 
+        std::make_shared<const MessageLabel> (0.5f,0.1f,"Store");
+    std::shared_ptr<const MessageLabel> label4 = 
+        std::make_shared<const MessageLabel> (0.5f,0.1f,"Exit");
 
-    const MessageLabel label (0.5f,0.1f,"Test");
+    const Page page({label,label2,label3,label4});
 
-    const TextRendering textRendering 
-    ({'T','e','s','t'},
-        static_cast<unsigned int>(RESOLUTION_Y*label.height()));
+    const TextRendering textRendering (
+        {'a','B','e','J','l','m','p','r','u',' '},
+        static_cast<unsigned int>(RESOLUTION_Y*label->height()));
 
-
+  
     const ShaderProgram spLabels ( 
     Shader (GL_VERTEX_SHADER,   "graphicsClasses/shaders/fontVs.vs"),
     Shader (GL_FRAGMENT_SHADER, "graphicsClasses/shaders/fontFs.fs" ));
@@ -184,7 +192,7 @@ void testClass::runMenu() {
         glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        textRendering.render(spLabels, label, std::pair<float,float>(0.5f,0.5f),
+        textRendering.render(spLabels,*label, std::pair<float,float>(0.5f,0.5f),
                               glm::vec3(0,1.f,1.f));
        
         glfwSwapInterval(1);
