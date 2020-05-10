@@ -20,18 +20,17 @@
 
 std::vector<MeshComponent> MeshGenerator::genComponents(const Ball& ball) {
 
-    glm::mat4 scaleMatrix = glm::scale(glm::vec3(ball.getRadius()));
-    Sphere sphere;
+    const glm::mat4 scaleMatrix = glm::scale(glm::vec3(ball.getRadius()));
+    const Sphere sphere;
      
-    MeshComponent component ( 
-                                std::make_shared<Sphere>(sphere,scaleMatrix),
+    MeshComponent component ( std::make_shared<Sphere>(sphere,scaleMatrix),
                                 std::make_shared<BallAnimation>(ball));
     return std::vector<MeshComponent> {component};
 }
 
 std::vector<MeshComponent> MeshGenerator::genJumpers( 
                                         const Block& block, 
-                                        glm::vec3 posWorld) {
+                                        const glm::vec3& posWorld) {
     std::vector<MeshComponent> components;
     if (block.getType() == Block::categoryOfBlocksInFile::Jump) {
         
@@ -87,7 +86,7 @@ std::vector<MeshComponent> MeshGenerator::genJumpers(
 
 std::vector<MeshComponent> MeshGenerator::genSharps( 
                                         const Block& block, 
-                                        glm::vec3 posWorld) {
+                                        const glm::vec3& posWorld) {
     
     std::vector<MeshComponent> components;
     if (block.getType() == Block::categoryOfBlocksInFile::Sharp) {
@@ -96,20 +95,18 @@ std::vector<MeshComponent> MeshGenerator::genSharps(
             commonShapes["pyramidSharp"] = std::make_shared<Pyramid> ();
         }
 
-        const std::array<float,7> scales 
-        {.2f,.1f,.05f,.1f,.075f,.15f,0.175f};
+        const std::array<float,7> scales {.2f,.1f,.05f,.1f,.075f,.15f,.175f};
         
         const std::array<glm::vec2,7> translationFloorFactor 
         {
-            glm::vec2(0.f,0.f),glm::vec2(-0.6f,-0.4f), 
-                    glm::vec2(0.6f,-0.6f), glm::vec2(0.2f,0.6f),
-                    glm::vec2(-0.2f,-0.6f), glm::vec2(0.6f,0.6f),
-                    glm::vec2(-0.6f,0.6f)
+            glm::vec2(0.f,0.f),glm::vec2(-0.6f,-0.4f), glm::vec2(0.6f,-0.6f),
+            glm::vec2(0.2f,0.6f), glm::vec2(-0.2f,-0.6f), glm::vec2(0.6f,0.6f),
+            glm::vec2(-0.6f,0.6f)
         };
         
         for(size_t i = 0; i < block.faceInfo().size(); i++) {
             
-            bool isSharp = block.faceInfo().at(i);
+            const bool isSharp = block.faceInfo().at(i);
             if (isSharp) {
                 
                 constexpr float sizeBlock = 1.f;
@@ -118,8 +115,8 @@ std::vector<MeshComponent> MeshGenerator::genSharps(
                 const JumperBallTypes::Direction currentDir =
                         JumperBallTypesMethods::integerAsDirection(
                             static_cast<unsigned int>(i));
-                const JumperBallTypes::vec3f vecDir = JumperBallTypesMethods::
-                        directionAsVector(currentDir);
+                const JumperBallTypes::vec3f vecDir = 
+                    JumperBallTypesMethods:: directionAsVector(currentDir);
                 
                 const glm::mat4 translationOffset = glm::translate(
                         glm::vec3( -offset, 0 , -offset ));
@@ -189,7 +186,7 @@ std::vector<MeshComponent> MeshGenerator::sortComponents(
     }
     
     for (unsigned int i = 0; i < components.size(); ++i) {
-        size_t index = indices.at(i);
+        const size_t index = indices.at(i);
         sortedComponents.push_back(std::move(components.at(index)));
     }
     return sortedComponents;
@@ -202,11 +199,9 @@ std::vector<MeshComponent> MeshGenerator::blockManager ( const Block& block,
 
     std::vector<MeshComponent> components;
     
-
     if (commonShapes.find("basicCube") == commonShapes.end()) {
         commonShapes["basicCube"] = std::make_shared<Cube> ();
     }
-
 
     const glm::vec3 glmPosition { position.at(0), position.at(1), 
                                   position.at(2)};
@@ -216,20 +211,18 @@ std::vector<MeshComponent> MeshGenerator::blockManager ( const Block& block,
     (std::make_shared<Cube>(*commonShapes.at("basicCube"),transform), nullptr);
     components.push_back(component);
     
-    std::vector<MeshComponent> sharpsComponents = 
-            genSharps(block,glmPosition);
+    std::vector<MeshComponent> sharpsComponents = genSharps(block,glmPosition);
     for(MeshComponent& m : sharpsComponents) {
         components.push_back(std::move(m));
     }
 
-    std::vector<MeshComponent> jumperComponents = 
-            genJumpers(block,glmPosition);
+    std::vector<MeshComponent> jumperComponents = genJumpers(block,glmPosition);
     for(MeshComponent& m : jumperComponents) {
         components.push_back(std::move(m));
     }
     
-    const std::array<std::shared_ptr<const Object>,6> objects =
-        block.objects();
+    const std::array<std::shared_ptr<const Object>,6> objects = block.objects();
+
     for (size_t i = 0; i < objects.size() ; ++i) {
         if ( objects.at(i) ) {
             const JumperBallTypes::Direction dir =
@@ -257,7 +250,7 @@ std::vector<MeshComponent> MeshGenerator::genComponents(const Map& map) {
                 if (block) {
                     std::vector<MeshComponent> blockComponents =
                             blockManager(*block,
-                            std::array<unsigned int,3> {x,y,z});
+                              std::array<unsigned int,3> {x,y,z});
 
                     for(MeshComponent& m : blockComponents) {
                         components.push_back(std::move(m));
@@ -281,9 +274,7 @@ std::vector<MeshComponent> MeshGenerator::genComponents(const Quad& quad) {
         commonShapes["screenQuad"] = std::make_shared<Quad> ();
     }
      
-    MeshComponent component ( 
-                                commonShapes.at("screenQuad"),
-                                nullptr);
+    MeshComponent component ( commonShapes.at("screenQuad"), nullptr);
     return std::vector<MeshComponent> {component};
 }
 
@@ -293,8 +284,7 @@ std::vector<MeshComponent> MeshGenerator::genComponents(const Star& star) {
     if (commonShapes.find("starQuad") == commonShapes.end()) {
         commonShapes["starQuad"] = std::make_shared<Quad> ();
     }
-    MeshComponent component ( 
-                                std::make_shared<Quad>(
+    const MeshComponent component ( std::make_shared<Quad>(
                                     *commonShapes.at("starQuad"),
                                     star.initialTransform()),
                                 nullptr);

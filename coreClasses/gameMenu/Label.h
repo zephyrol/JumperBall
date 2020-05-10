@@ -23,6 +23,7 @@ class Label{
 public:
 
     //------------TYPES------------//
+    enum class typeOfLabel { Object, Message, Switch};
     struct Child {
         std::shared_ptr<Label> childLabel;
         std::pair<float,float> position;

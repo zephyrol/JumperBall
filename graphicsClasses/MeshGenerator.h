@@ -35,23 +35,21 @@ namespace MeshGenerator {
     std::vector<MeshComponent>  genComponents(const Map& map);
     std::vector<MeshComponent>  genComponents(const Star& star);
     std::vector<MeshComponent>  genComponents(
-                                const std::shared_ptr<const Object>& obj,
-                                const glm::vec3& position,
-                                const JumperBallTypes::Direction& dir);
+                                    const std::shared_ptr<const Object>& obj,
+                                    const glm::vec3& position,
+                                    const JumperBallTypes::Direction& dir);
 
 
     std::vector<MeshComponent>  sortComponents(std::vector<MeshComponent>&
                                                   components);
     
-    std::vector<MeshComponent>  blockManager ( const Block& block, 
+    std::vector<MeshComponent>  blockManager( const Block& block, 
                                               const std::array<unsigned int,3>& 
                                                             position);
-    std::vector<MeshComponent>  genSharps( 
-                                        const Block& block, 
-                                        glm::vec3 posWorld);
-    std::vector<MeshComponent>  genJumpers( 
-                                        const Block& block, 
-                                        glm::vec3 posWorld);
+    std::vector<MeshComponent>  genSharps(  const Block& block, 
+                                            const glm::vec3& posWorld);
+    std::vector<MeshComponent>  genJumpers( const Block& block, 
+                                            const glm::vec3& posWorld);
 
     extern std::map<std::string, std::shared_ptr<GeometricShape> >
                                 commonShapes;

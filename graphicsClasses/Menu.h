@@ -19,10 +19,12 @@
 class Menu
 {
 public:
-    Menu();
+    Menu(const std::shared_ptr<const Page>& rootPage);
+    void render() const;
+
+
 private:
-    std::vector<std::shared_ptr<const Page> > childrenPages;
-    std::shared_ptr<const Page> rootPage;
+    const std::shared_ptr<const Page> _rootPage;
 };
 
 #endif /* MENU_H */

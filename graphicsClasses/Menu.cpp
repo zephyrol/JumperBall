@@ -13,5 +13,9 @@
 
 #include "Menu.h"
 
-Menu::Menu() { }
+Menu::Menu(const std::shared_ptr<const Page>& rootPage):
+  _rootPage(rootPage)
+{
+
+}
 
