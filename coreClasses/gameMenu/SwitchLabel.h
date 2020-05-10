@@ -20,6 +20,8 @@ class SwitchLabel: public Label
 public:
     SwitchLabel(float width,float height,bool switchButton);
 
+    virtual Label::TypeOfLabel typeOfLabel() const override;
+
 private:
     const bool _switch;
 };

@@ -17,5 +17,8 @@ ObjectLabel::ObjectLabel(float width, float height,
     const std::shared_ptr<Object>& object): 
     Label(width,height),
     _object(object)
-{
-}
+{ }
+
+Label::TypeOfLabel ObjectLabel::typeOfLabel() const {
+    return Label::TypeOfLabel::Object;
+ }

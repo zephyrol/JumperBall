@@ -23,7 +23,7 @@ class Label{
 public:
 
     //------------TYPES------------//
-    enum class typeOfLabel { Object, Message, Switch};
+    enum class TypeOfLabel { Object, Message, Switch};
     struct Child {
         std::shared_ptr<Label> childLabel;
         std::pair<float,float> position;
@@ -39,15 +39,16 @@ public:
     float width() const;
     float height() const;
     std::vector<std::shared_ptr<Child> > children() const;
+    virtual TypeOfLabel typeOfLabel() const = 0;
 
     //----------METHODS------------//
     
     //--------STATIC METHODS-------//
 
 private:
-    float                                _width;
-    float                                _height;
-    std::vector<std::shared_ptr<Child> > _children;
+    const float                                 _width;
+    const float                                 _height;
+    const std::vector<std::shared_ptr<Child> >  _children;
 };
 
 #endif /* LABEL_H */

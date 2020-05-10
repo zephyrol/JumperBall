@@ -14,8 +14,34 @@
 #include "Menu.h"
 
 Menu::Menu(const std::shared_ptr<const Page>& rootPage):
-  _rootPage(rootPage)
+  _rootPage(rootPage),
+  _textRendering(initTextRendering(rootPage))
 {
 
 }
+
+std::map<unsigned int, TextRendering> Menu::initTextRendering(
+                                      const std::shared_ptr<const Page>& root) {
+    std::map<unsigned int, TextRendering> textRendering;
+
+    std::shared_ptr<const Page> currentPage = root;
+    for( const std::shared_ptr<const Label>& label : currentPage->labels()) {
+
+        if (currentPage->bridges().find(label) != currentPage->bridges().end()
+                && currentPage->bridges().at(label)){
+
+            std::map<unsigned int, TextRendering> child = 
+                initTextRendering(currentPage->bridges().at(label));
+
+            for (std::map<unsigned int, TextRendering>::iterator it 
+                    = child.begin(); it != child.end() ; ++it) {
+                textRendering[it->first()] = it->second();
+            }
+
+        }
+    }
+
+    return textRendering;
+ }
+
 

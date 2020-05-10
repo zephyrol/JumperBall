@@ -21,6 +21,7 @@ class ObjectLabel: public Label
 public:
     ObjectLabel(float width,float height,
                 const std::shared_ptr<Object>& object);
+    virtual Label::TypeOfLabel typeOfLabel() const override;
 
 private:
     const std::shared_ptr<Object>_object;

@@ -17,7 +17,7 @@
 TextRendering::TextRendering(const std::vector<unsigned char>& characters,
                              unsigned int height):
     _alphabet(initAlphabet(characters,height)),
-    _fontHeight(height),
+    //_fontHeight(height),
     _displayQuad()
 {
 

@@ -25,35 +25,36 @@
 class TextRendering
 {
 public:
-    TextRendering                             (const std::vector<unsigned char>& 
+    TextRendering                       ( const std::vector<unsigned char>& 
                                                   characters,
-                                                unsigned int height);
-    static bool                               initFreeTypeAndFont();
-    static void                               clearFreeTypeRessources();
+                                          unsigned int height);
+    static bool                         initFreeTypeAndFont();
+    static void                         clearFreeTypeRessources();
 
-    struct Character                          { GLuint texture;
-                                                glm::ivec2 size;
-                                                glm::ivec2 bearing; };
+    struct Character                    { GLuint texture; glm::ivec2 size;
+                                          glm::ivec2 bearing; };
 
-    void                                      render(
-                                        const ShaderProgram& sp, 
-                                        const MessageLabel& label, 
-                                        const std::pair<float,float>& position,
-                                        const glm::vec3& color) const;
+    void                                render( const ShaderProgram& sp, 
+                                                const MessageLabel& label, 
+                                                const std::pair<float,float>& 
+                                                                      position,
+                                                const glm::vec3& color) const;
 
 private:
 
-    const std::map<unsigned char, Character>  _alphabet;
-    const unsigned int                        _fontHeight;
-    const Quad                                _displayQuad;
+    const std::map<unsigned char, Character>  
+                                        _alphabet;
+    //const unsigned int                  _fontHeight;
+    const Quad                          _displayQuad;
 
-    std::map<unsigned char, Character>        initAlphabet(
-                                  const std::vector<unsigned char>& characters,  
+    std::map<unsigned char, Character>  initAlphabet(
+                                              const std::vector<unsigned char>& 
+                                                                    characters,  
                                                           unsigned int height);
 
 
-    static FT_Library                         ftLib;
-    static FT_Face                            fontFace;
+    static FT_Library                   ftLib;
+    static FT_Face                      fontFace;
 
 
 };

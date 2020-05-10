@@ -24,7 +24,10 @@ public:
 
 
 private:
+    std::map<unsigned int, TextRendering> initTextRendering(
+                                      const std::shared_ptr<const Page>& root);
     const std::shared_ptr<const Page> _rootPage;
+    const std::map<unsigned int, TextRendering> _textRendering;
 };
 
 #endif /* MENU_H */

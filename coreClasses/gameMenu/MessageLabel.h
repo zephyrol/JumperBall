@@ -21,6 +21,7 @@ class MessageLabel : public Label
 public:
     MessageLabel(float width,float height,const std::string& message);
 
+    virtual Label::TypeOfLabel typeOfLabel() const override;
     const std::string& message() const;
 
 private:

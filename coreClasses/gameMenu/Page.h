@@ -25,11 +25,17 @@ public:
           const std::shared_ptr<const Page>& parent = nullptr,
           bool visibleOnParent  = false);
 
+    
+    const std::vector<std::shared_ptr<const Label> >& labels() const;
+    const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >& 
+                                                      bridges() const;
+    const std::shared_ptr<const Page>&                parent() const;
+    bool                                              visibleOnParent() const;
 
 private:
 
     const std::vector<std::shared_ptr<const Label> >  _labels;
-    const std::map<std::shared_ptr<const Label>,std::shared_ptr<const Page> > 
+    const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> > 
                                                       _bridges;
     const std::shared_ptr<const Page>                 _parent;
     const bool                                        _visibleOnParent;

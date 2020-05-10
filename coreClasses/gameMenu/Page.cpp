@@ -22,5 +22,22 @@ Page::Page(const std::vector<std::shared_ptr<const Label> >& labels,
     _bridges(bridges),
     _parent(parent),
     _visibleOnParent(visibleOnParent)
-{
+{ }
+
+const std::vector<std::shared_ptr<const Label> >& Page::labels() const{
+    return _labels;
 }
+
+const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >& 
+Page::bridges() const {
+    return _bridges;
+}
+
+const std::shared_ptr<const Page>& Page::parent() const {
+    return _parent;
+}
+
+bool Page::visibleOnParent() const {
+    return _visibleOnParent;
+ }
+

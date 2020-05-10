@@ -20,39 +20,37 @@ class FrameBuffer {
 public:
 
     //------------TYPES------------//
-    enum class          TextureCaterory {SDR, HDR, Depth};
+    enum class              TextureCaterory {SDR, HDR, Depth};
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    FrameBuffer         ( TextureCaterory category = TextureCaterory::SDR,
-                          bool hasDepthBuffer = true, float scale = 1.f);
+    FrameBuffer             ( TextureCaterory category = TextureCaterory::SDR,
+                              bool hasDepthBuffer = true, float scale = 1.f);
 
     //---------CONSTANTS------------//
-    static constexpr float     
-                        luminanceKey                                     = 0.4f;
+    static constexpr float  luminanceKey                                 = 0.4f;
 
     //-------CONST METHODS----------//
-    GLuint              getHandle()                                       const;
-    void                bindFrameBuffer()                                 const;
-    void                bindRenderTexture(unsigned int offset = 0)        const;
-    std::pair<float,float>               
-                        computeLogAverageLuminanceAndMax()                const;
+    GLuint                  getHandle()                                   const;
+    void                    bindFrameBuffer()                             const;
+    void                    bindRenderTexture(unsigned int offset = 0)    const;
+    std::pair<float,float>  computeLogAverageLuminanceAndMax()            const;
     
     
     //--------STATIC METHODS-------//
-    static void         bindDefaultFrameBuffer();
+    static void             bindDefaultFrameBuffer();
 
 
 private:
 
     //--------ATTRIBUTES-----------//
-    GLuint              _fboHandle;
+    GLuint                  _fboHandle;
 
-    GLuint              _renderTexture;
-    const TextureCaterory _textureCategory;
+    GLuint                  _renderTexture;
+    const TextureCaterory   _textureCategory;
 
-    bool                _hasDepthBuffer;
-    GLuint              _depthBuffer;
-    float               _scale;
+    const bool              _hasDepthBuffer;
+    GLuint                  _depthBuffer;
+    const float             _scale;
 
 };
 

@@ -15,5 +15,8 @@
 SwitchLabel::SwitchLabel(float width, float height, bool switchButton):
     Label(width,height),
     _switch(switchButton)
-{
-}
+{ }
+
+Label::TypeOfLabel SwitchLabel::typeOfLabel() const {
+    return Label::TypeOfLabel::Switch;
+ }
