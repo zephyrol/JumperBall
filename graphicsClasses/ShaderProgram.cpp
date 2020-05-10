@@ -13,11 +13,11 @@
 
 #include "ShaderProgram.h"
 
-ShaderProgram::ShaderProgram( const Shader& vertexShader, 
-                              const Shader& fragmentShader) :
+ShaderProgram::ShaderProgram( Shader&& vertexShader,
+                              Shader&& fragmentShader) :
                 _shaderProgramHandle(glCreateProgram()),
-                _vertexShader(vertexShader),
-                _fragmentShader(fragmentShader)
+                _vertexShader(std::move(vertexShader)),
+                _fragmentShader(std::move(fragmentShader))
 
 {
     if (_shaderProgramHandle == 0 ) {

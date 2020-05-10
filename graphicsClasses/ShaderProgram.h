@@ -19,13 +19,13 @@ class ShaderProgram {
 
 public:
     //--CONSTRUCTORS & DESTRUCTORS--//
-    ShaderProgram   (const Shader& vertexShader, const Shader& fragmentShader);
+    ShaderProgram   (Shader&& vertexShader, Shader&& fragmentShader);
 
+    ShaderProgram   (const ShaderProgram& shaderProgram)               = delete;
     ShaderProgram&  operator = (const ShaderProgram& shaderProgram)    = delete;
-    ShaderProgram   (const ShaderProgram& shaderProgram)               = delete; 
 
+    ShaderProgram   (ShaderProgram&& shaderProgram)                   = default;
     ShaderProgram&  operator = (ShaderProgram&& shaderProgram)        = default;
-    ShaderProgram   (ShaderProgram&& shaderProgram)                   = default; 
 
     ~ShaderProgram  ()                                                = default;
 
@@ -67,9 +67,9 @@ public:
 
 private:
     //--------ATTRIBUTES-----------//
-    const GLuint    _shaderProgramHandle; 
-    const Shader&   _vertexShader; 
-    const Shader&   _fragmentShader; 
+    GLuint          _shaderProgramHandle;
+    Shader          _vertexShader;
+    Shader          _fragmentShader;
 
 
     //-------CONST METHODS--------//

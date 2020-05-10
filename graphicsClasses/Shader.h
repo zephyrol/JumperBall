@@ -23,11 +23,11 @@ public:
     Shader            ( const GLenum& shaderType, 
                         const std::string& shaderFilename);
 
+    Shader            (const Shader& shader)                           = delete;
     Shader&           operator = (const Shader& shader)                = delete;
-    Shader            (const Shader& shader)                           = delete; 
 
-    Shader&           operator = (Shader&& shader)                    = default;
     Shader            (Shader&& shader)                               = default;
+    Shader&           operator = (Shader&& shader)                    = default;
 
     ~Shader           ()                                              = default;
 
@@ -37,10 +37,10 @@ public:
 private:
 
     //--------ATTRIBUTES-----------//
-    const GLuint      _shaderHandle;
-    const GLenum      _shaderType;
-    const std::string _shaderFilename;
-    const std::string _shaderCode;
+    GLuint      _shaderHandle;
+    GLenum      _shaderType;
+    std::string _shaderFilename;
+    std::string _shaderCode;
 
     //-------CONST METHODS--------//
     void              verifyCompileStatus()                               const;
