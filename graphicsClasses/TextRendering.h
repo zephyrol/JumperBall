@@ -26,8 +26,8 @@ class TextRendering
 {
 public:
     TextRendering                       ( const std::vector<unsigned char>& 
-                                                  characters,
-                                          unsigned int height);
+                                          characters = {},
+                                          unsigned int height = 0);
     static bool                         initFreeTypeAndFont();
     static void                         clearFreeTypeRessources();
 
@@ -42,10 +42,10 @@ public:
 
 private:
 
-    const std::map<unsigned char, Character>  
+    std::map<unsigned char, Character>
                                         _alphabet;
     //const unsigned int                  _fontHeight;
-    const Quad                          _displayQuad;
+    Quad                          _displayQuad;
 
     std::map<unsigned char, Character>  initAlphabet(
                                               const std::vector<unsigned char>& 

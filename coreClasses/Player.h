@@ -27,7 +27,7 @@ public:
     size_t levelProgression() const;
     unsigned int getMoney() const;
 
-    void currentMap(const std::shared_ptr<Map>& _currentMap);
+    void currentMap(const std::shared_ptr<Map>& currentMap);
     void unlockNewLevel();
     void increaseMoney(unsigned int value);
     void decreaseMoney(unsigned int value);

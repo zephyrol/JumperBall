@@ -78,19 +78,19 @@ public:
 private:
 
     //--------ATTRIBUTES-----------//
-    const std::shared_ptr<const std::vector<glm::vec3> >  _positions;
-    const std::shared_ptr<const std::vector<glm::vec3> >  _normals;
-    const std::shared_ptr<const std::vector<glm::vec3> >  _colors;
-    const std::shared_ptr<const std::vector<glm::vec2> >  _uvCoords;
+     std::shared_ptr<const std::vector<glm::vec3> >  _positions;
+     std::shared_ptr<const std::vector<glm::vec3> >  _normals;
+     std::shared_ptr<const std::vector<glm::vec3> >  _colors;
+     std::shared_ptr<const std::vector<glm::vec2> >  _uvCoords;
 
-    const std::shared_ptr<GLuint>                         _vertexArrayObject;
-    const std::shared_ptr<std::array<GLuint,4> >          _vertexBufferObjects;
+     std::shared_ptr<GLuint>                         _vertexArrayObject;
+     std::shared_ptr<std::array<GLuint,4> >          _vertexBufferObjects;
 
-    const std::shared_ptr<GLuint>                         _elementBufferObject;
-    const std::shared_ptr<const std::vector<GLushort> >   _indices;
+     std::shared_ptr<GLuint>                         _elementBufferObject;
+     std::shared_ptr<const std::vector<GLushort> >   _indices;
 
-    const glm::mat4                                       _modelTransform;
-    const glm::mat4                                       _normalsTransform;
+     glm::mat4                                       _modelTransform;
+     glm::mat4                                       _normalsTransform;
 
 };
 

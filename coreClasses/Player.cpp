@@ -29,9 +29,9 @@ Player::Player() :
     _bonusLevel(1)
 { }
 
-void Player::currentMap(const std::shared_ptr<Map>& _currentMap)
+void Player::currentMap(const std::shared_ptr<Map>& currentMap)
 {
-    _currentMap = _currentMap;
+    _currentMap = currentMap;
 }
 
 const std::shared_ptr<Map>& Player::currentMap() const
@@ -40,7 +40,7 @@ const std::shared_ptr<Map>& Player::currentMap() const
 }
 
 size_t Player::levelProgression() const {
-    return levelProgression;
+    return _levelProgression;
 }
 
 void Player::unlockNewLevel() {
