@@ -20,14 +20,27 @@ class Menu
 {
 public:
     Menu(const std::shared_ptr<const Page>& rootPage);
-    void render() const;
+    void render(const ShaderProgram& sp) const;
 
 
 private:
-    std::map<unsigned int, TextRendering> initTextRendering(
-                                      const std::shared_ptr<const Page>& root);
+    //TextRendering initTextRendering( const std::shared_ptr<const Page>& root);
     const std::shared_ptr<const Page> _rootPage;
-    const std::map<unsigned int, TextRendering> _textRendering;
+    TextRendering _textRendering;
+    std::shared_ptr<const Page> _currentPage;
+
+
+    void renderPage(const ShaderProgram& sp,
+        const std::shared_ptr<const Page>& page) const;
+
+    const std::shared_ptr<const Page>& currentPage() const;
+    void currentPage(std::shared_ptr<const Page>& page);
+    
+
+    static std::vector<unsigned char> getCharacters
+        (const std::shared_ptr<const Page>& page);
+    static float getHeight (const std::shared_ptr<const Page>& page);
+    static unsigned int getNumberOfPixelsHeight(float height);
 };
 
 #endif /* MENU_H */

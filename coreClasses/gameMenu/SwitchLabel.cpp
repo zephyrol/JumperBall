@@ -12,8 +12,10 @@
  * Created on 28 avril 2020, 19:43
  */
 
-SwitchLabel::SwitchLabel(float width, float height, bool switchButton):
-    Label(width,height),
+SwitchLabel::SwitchLabel(float width, float height, 
+    const JumperBallTypes::vec2f& position,
+    bool switchButton):
+    Label(width,height,position),
     _switch(switchButton)
 { }
 

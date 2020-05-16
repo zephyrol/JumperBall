@@ -14,7 +14,6 @@
 #include "ClassicalMechanics.h"
 #include <math.h>
 #include <iostream>
-#include <initializer_list>
 
 
 const std::map<ClassicalMechanics::Fluid,float>

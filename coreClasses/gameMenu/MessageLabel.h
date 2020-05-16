@@ -19,10 +19,13 @@
 class MessageLabel : public Label
 {
 public:
-    MessageLabel(float width,float height,const std::string& message);
+    MessageLabel(float width,float height,
+        const JumperBallTypes::vec2f& position,
+        const std::string& message
+        );
 
     virtual Label::TypeOfLabel typeOfLabel() const override;
-    const std::string& message() const;
+    std::string message() const override;
 
 private:
     const std::string _message;

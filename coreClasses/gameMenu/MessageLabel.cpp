@@ -12,13 +12,15 @@
  */
 #include "MessageLabel.h"
 
-MessageLabel::MessageLabel(float width,float height,const std::string& message):
-    Label(width,height),
+MessageLabel::MessageLabel(float width,float height,
+    const JumperBallTypes::vec2f& position,
+    const std::string& message):
+    Label(width,height,position),
     _message(message)
 {
 }
 
-const std::string& MessageLabel::message() const
+std::string MessageLabel::message() const
 {
     return _message;
 }

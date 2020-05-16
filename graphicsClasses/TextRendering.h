@@ -35,9 +35,7 @@ public:
                                           glm::ivec2 bearing; };
 
     void                                render( const ShaderProgram& sp, 
-                                                const MessageLabel& label, 
-                                                const std::pair<float,float>& 
-                                                                      position,
+                                                const Label& label, 
                                                 const glm::vec3& color) const;
 
 private:
@@ -45,7 +43,7 @@ private:
     std::map<unsigned char, Character>
                                         _alphabet;
     //const unsigned int                  _fontHeight;
-    Quad                          _displayQuad;
+    Quad                                _displayQuad;
 
     std::map<unsigned char, Character>  initAlphabet(
                                               const std::vector<unsigned char>& 

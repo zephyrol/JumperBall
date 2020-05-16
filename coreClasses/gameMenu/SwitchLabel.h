@@ -18,7 +18,9 @@
 class SwitchLabel: public Label
 {
 public:
-    SwitchLabel(float width,float height,bool switchButton);
+    SwitchLabel(float width,float height,
+        const JumperBallTypes::vec2f& position,
+        bool switchButton);
 
     virtual Label::TypeOfLabel typeOfLabel() const override;
 

@@ -42,6 +42,7 @@ namespace JumperBallTypes {
     };
 
     struct vec3f {float x; float y; float z;};
+    struct vec2f {float x; float y;};
 
     using timePointMs =         std::chrono::time_point <
                                     std::chrono::system_clock,

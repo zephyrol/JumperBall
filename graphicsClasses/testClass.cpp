@@ -15,6 +15,7 @@
 #include <istream>
 #include <sstream>
 #include "testClass.h"
+#include <initializer_list>
 
 
 testClass::testClass(): _window(nullptr)
@@ -165,19 +166,40 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
 void testClass::runMenu() {
 
     std::shared_ptr<const MessageLabel> label = 
-        std::make_shared<const MessageLabel> (0.5f,0.1f,"Jumper Ball");
+        std::make_shared<const MessageLabel>(0.5f, 0.1f, 
+            JumperBallTypes::vec2f{0.5f,0.8f},
+            "Jumper Ball");
     std::shared_ptr<const MessageLabel> label2 = 
-        std::make_shared<const MessageLabel> (0.5f,0.1f,"Play");
+        std::make_shared<const MessageLabel> (0.5f,0.1f,
+            JumperBallTypes::vec2f{0.5f,0.6f},
+            "Play");
     std::shared_ptr<const MessageLabel> label3 = 
-        std::make_shared<const MessageLabel> (0.5f,0.1f,"Store");
+        std::make_shared<const MessageLabel> (0.5f,0.1f,
+            JumperBallTypes::vec2f{0.5f,0.4f},
+            "Store");
     std::shared_ptr<const MessageLabel> label4 = 
-        std::make_shared<const MessageLabel> (0.5f,0.1f,"Exit");
+        std::make_shared<const MessageLabel> (0.5f,0.1f,
+            JumperBallTypes::vec2f{0.5f,0.2f},
+            "Exit");
 
-    const Page page({label,label2,label3,label4});
 
-    const TextRendering textRendering (
+    const std::vector<std::shared_ptr<const Label> > labels 
+    {label, label2, label3, label4};
+
+
+    const std::map<std::shared_ptr<const Label>,
+        std::shared_ptr<const Page> > bridges;
+
+    const std::shared_ptr<const Page> page =
+        std::make_shared<const Page> (labels,bridges, nullptr,false);
+
+    Menu menu(page);
+
+    /*const TextRendering textRendering (
         {'a','B','e','J','l','m','p','r','u',' '},
-        static_cast<unsigned int>(RESOLUTION_Y*label->height()));
+        static_cast<unsigned int>(RESOLUTION_Y*label->height()));*/
+
+    
 
   
     const ShaderProgram spLabels ( 
@@ -192,8 +214,8 @@ void testClass::runMenu() {
         glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        textRendering.render(spLabels,*label, std::pair<float,float>(0.5f,0.5f),
-                              glm::vec3(0,1.f,1.f));
+        //textRendering.render(spLabels,*label, glm::vec3(0,1.f,1.f));
+        menu.render(spLabels);
        
         glfwSwapInterval(1);
         glfwSwapBuffers(_window);

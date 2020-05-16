@@ -17,10 +17,11 @@
 #include <cctype>
 #include "Label.h"
 
-Label::Label(float width, float height):
+Label::Label(float width, float height, const JumperBallTypes::vec2f& position):
     _width(width),
     _height(height),
-    _children{}
+    _children{},
+    _position(position)
 {
 }
 
@@ -34,7 +35,18 @@ float Label::height() const
     return _height;
 }
 
-std::vector<std::shared_ptr<Label::Child> > Label::children() const
-{
+
+const std::vector<std::shared_ptr<const Label> >& Label::children() const {
     return _children;
 }
+
+JumperBallTypes::vec2f Label::position() const {
+    return _position;
+}
+
+std::string Label::message() const
+{
+    return {};
+}
+
+

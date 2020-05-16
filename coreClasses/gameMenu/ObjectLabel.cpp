@@ -14,8 +14,9 @@
 #include "ObjectLabel.h"
 
 ObjectLabel::ObjectLabel(float width, float height, 
+    const JumperBallTypes::vec2f& position,
     const std::shared_ptr<Object>& object): 
-    Label(width,height),
+    Label(width,height,position),
     _object(object)
 { }
 

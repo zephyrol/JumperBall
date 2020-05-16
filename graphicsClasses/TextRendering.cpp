@@ -90,11 +90,11 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
     return alphabet;
 }
 
-void TextRendering::render( const ShaderProgram& sp, const MessageLabel& label, 
-                            const std::pair<float,float>& position,
+void TextRendering::render( const ShaderProgram& sp, const Label& label, 
                             const glm::vec3& color) const {
     sp.use();
 
+    const JumperBallTypes::vec2f& position = label.position();
     const float pitch = label.width()/label.message().size();
     const glm::mat4 scale = glm::scale( glm::vec3{pitch, label.height(),0.f});
     float offsetX = -label.width()/2.f + pitch/2.f;
@@ -107,8 +107,8 @@ void TextRendering::render( const ShaderProgram& sp, const MessageLabel& label,
     for (const char& c : label.message()) {
         constexpr float biasScalar = 2.f; //To multiply the translation by 2
         const glm::mat4 translate = glm::translate(
-                                biasScalar * glm::vec3{ position.first+offsetX,
-                                position.second,0.f});
+                                biasScalar * glm::vec3{ position.x+offsetX,
+                                position.y,0.f});
         const glm::mat4 transformCharacter = biasMatrix * translate * scale;
 
         glActiveTexture(GL_TEXTURE0);
