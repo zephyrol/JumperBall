@@ -13,10 +13,10 @@ ADD_SUBDIRECTORY(graphicsClasses)
 
 PROJECT(JumperBallApplication)
 
-
-IF (UNIX)
+	
+IF (UNIX AND NOT APPLE)
 	SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -no-pie" CACHE STRING "" FORCE) #allows Netbeans to load the app
-ENDIF(UNIX)
+ENDIF()
 
 
 

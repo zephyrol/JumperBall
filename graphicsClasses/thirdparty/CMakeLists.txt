@@ -38,7 +38,10 @@ ExternalProject_Add( _GLFW_
   TEST_COMMAND 	""
   )
 
-  if(UNIX)
+  IF(APPLE)
+	  LIST(APPEND LIST_LIBRARIES
+		  "-framework Cocoa -framework OpenGL  -framework IOKit")
+  ELSEIF(UNIX)
 	  find_package(Threads REQUIRED)
 	  find_package(X11 REQUIRED)
 		
