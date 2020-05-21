@@ -272,39 +272,29 @@ void Rendering::bindStarView(const ShaderProgram& sp) {
     sp.bindUniform ("VP", _uniformMatrix4.at("VP"));
 }
 
-const std::string Rendering::vsshaderMap = "graphicsClasses/shaders/phongVs.vs";
-const std::string Rendering::fsshaderMap = "graphicsClasses/shaders/phongFs.fs";
+const std::string Rendering::vsshaderMap = "shaders/phongVs.vs";
+const std::string Rendering::fsshaderMap = "shaders/phongFs.fs";
 
-const std::string Rendering::vsshaderStar = "graphicsClasses/shaders/starVs.vs";
-const std::string Rendering::fsshaderStar = "graphicsClasses/shaders/starFs.fs";
+const std::string Rendering::vsshaderStar = "shaders/starVs.vs";
+const std::string Rendering::fsshaderStar = "shaders/starFs.fs";
 
-const std::string Rendering::vsshaderFBO = 
-                                        "graphicsClasses/shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderFBO = 
-                                        "graphicsClasses/shaders/basicFboFs.fs";
+const std::string Rendering::vsshaderFBO = "shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderFBO = "shaders/basicFboFs.fs";
 
-const std::string Rendering::vsshaderBlur = 
-                                        "graphicsClasses/shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderBlur = "graphicsClasses/shaders/blurFs.fs";
+const std::string Rendering::vsshaderBlur = "shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderBlur = "shaders/blurFs.fs";
 
-const std::string Rendering::vsshaderToneMapping = 
-                                        "graphicsClasses/shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderToneMapping = 
-                                     "graphicsClasses/shaders/toneMappingFs.fs";
+const std::string Rendering::vsshaderToneMapping = "shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderToneMapping = "shaders/toneMappingFs.fs";
 
-const std::string Rendering::vsshaderBrightPassFilter = 
-                                        "graphicsClasses/shaders/basicFboVs.vs";
+const std::string Rendering::vsshaderBrightPassFilter = "shaders/basicFboVs.vs";
 const std::string Rendering::fsshaderBrightPassFilter = 
-                                  "graphicsClasses/shaders/brightPassFilter.fs";
+                                                  "shaders/brightPassFilter.fs";
 
-const std::string Rendering::vsshaderBloom = 
-                                        "graphicsClasses/shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderBloom = 
-                                           "graphicsClasses/shaders/bloomFs.fs";
-const std::string Rendering::vsshaderDepth = 
-                                           "graphicsClasses/shaders/depthVs.vs";
-const std::string Rendering::fsshaderDepth = 
-                                           "graphicsClasses/shaders/depthFs.fs";
+const std::string Rendering::vsshaderBloom = "shaders/basicFboVs.vs";
+const std::string Rendering::fsshaderBloom = "shaders/bloomFs.fs";
+const std::string Rendering::vsshaderDepth = "shaders/depthVs.vs";
+const std::string Rendering::fsshaderDepth = "shaders/depthFs.fs";
 
 const std::vector<float> Rendering::gaussComputedValues = 
   Utility::genGaussBuffer(Rendering::blurPatchSize, Rendering::blurSigma);
