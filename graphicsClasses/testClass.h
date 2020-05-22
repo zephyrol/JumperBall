@@ -29,7 +29,7 @@ public:
     
     //----------METHODS-------------//
     void          run(Rendering& r, Ball& b, Camera& c);
-    void          runMenu();
+    void          runMenu(Rendering& r, Ball& b, Camera& c, Map& m);
 
 
 private:
