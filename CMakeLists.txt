@@ -32,6 +32,10 @@ IF ( MSVC )
 	SET (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W3" CACHE STRING "" FORCE)
 ENDIF()
 
+IF (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	SET (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wc++11-compat-pedantic" CACHE STRING "" FORCE)
+ENDIF()
+
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 
