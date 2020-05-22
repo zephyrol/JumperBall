@@ -19,13 +19,12 @@
 
 
 testClass::testClass(): _window(nullptr)
-              
 {
     if( !glfwInit() )
     {
       std::cerr << "Failed to init glfw" << std::endl;
     }
-
+    glfwWindowHint(GLFW_RESIZABLE, false);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
@@ -36,6 +35,14 @@ testClass::testClass(): _window(nullptr)
            nullptr);*/
     _window = glfwCreateWindow( RESOLUTION_X,RESOLUTION_Y,
                                 "JumperBall",nullptr, nullptr);
+    
+    int widthWindow;
+    int heightWindow;
+    glfwGetFramebufferSize(_window ,&widthWindow ,&heightWindow);
+    
+    Utility::windowResolutionX = widthWindow;
+    Utility::windowResolutionY = heightWindow;
+
     if( _window == nullptr ){
     std::cerr << "Failed to open GLFW window" << std::endl;
     glfwTerminate();
@@ -203,30 +210,30 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
 
   
     const ShaderProgram spLabels ( 
-    Shader (GL_VERTEX_SHADER,   "graphicsClasses/shaders/fontVs.vs"),
-    Shader (GL_FRAGMENT_SHADER, "graphicsClasses/shaders/fontFs.fs" ));
+    Shader (GL_VERTEX_SHADER,   "shaders/fontVs.vs"),
+    Shader (GL_FRAGMENT_SHADER, "shaders/fontFs.fs" ));
         
 
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
-    while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
-          && glfwWindowShouldClose(_window) == 0 ) {
+    while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS
+           && glfwWindowShouldClose(_window) == 0 ) {
         
         glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         //textRendering.render(spLabels,*label, glm::vec3(0,1.f,1.f));
-	b.update();
-	c.follow(m);
-
-	r.render();
+        b.update();
+        c.follow(m);
+        
+        r.render();
         menu.render(spLabels);
-       
+        
         glfwSwapInterval(1);
         glfwSwapBuffers(_window);
-      
+        
         glfwPollEvents();
-
-   }
+        
+    }
 }
 
 

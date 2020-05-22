@@ -101,7 +101,7 @@ float Menu::getHeight(const std::shared_ptr<const Page>& page)
 
 unsigned int Menu::getNumberOfPixelsHeight(float height)
 {
-    return static_cast<unsigned int> (RESOLUTION_Y * height);
+    return static_cast<unsigned int> (Utility::windowResolutionY * height);
 }
 
 

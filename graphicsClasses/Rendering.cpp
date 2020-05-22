@@ -59,11 +59,11 @@ Rendering::Rendering(const Map&     map,
     _frameBufferScene(FrameBuffer::TextureCaterory::HDR),
     _frameBufferToneMapping(FrameBuffer::TextureCaterory::SDR,false),
     _frameBufferHalfBlur(FrameBuffer::TextureCaterory::SDR,false,
-        scaleBloomTexture),
+        heightBloomTexture / static_cast<float>(Utility::windowResolutionY)),
     _frameBufferCompleteBlur(FrameBuffer::TextureCaterory::SDR,false,
-        scaleBloomTexture),
+        heightBloomTexture / static_cast<float>(Utility::windowResolutionY)),
     _frameBufferBrightPassFilter(FrameBuffer::TextureCaterory::SDR,false,
-        scaleBloomTexture),
+        heightBloomTexture / static_cast<float>(Utility::windowResolutionY)),
     _frameBufferBloom(FrameBuffer::TextureCaterory::SDR,false)
 {
 }
@@ -217,8 +217,8 @@ void Rendering::bindCamera(const ShaderProgram& sp) {
   _uniformMatrix4["VP"] =  
           glm::mat4( 
                     glm::perspective( glm::radians(70.f), 
-                    static_cast<float>(RESOLUTION_X)/
-                    static_cast<float>(RESOLUTION_Y), 
+                    static_cast<float>(Utility::windowResolutionX)/
+                    static_cast<float>(Utility::windowResolutionY),
                     _camera.zNear, _camera.zFar) *
                     glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())
                     ); 
@@ -265,8 +265,10 @@ void Rendering::bindStarView(const ShaderProgram& sp) {
     halfBoundingBoxSize = halfBoundingBoxSize/2.f + offsetJumpingBall;
 
     _uniformMatrix4["VP"] =
-    glm::mat4(glm::ortho(-halfBoundingBoxSize*RESOLUTION_X/RESOLUTION_Y , 
-                         halfBoundingBoxSize*RESOLUTION_X/RESOLUTION_Y, 
+    glm::mat4(glm::ortho(-halfBoundingBoxSize*
+                         Utility::windowResolutionX/Utility::windowResolutionY,
+                         halfBoundingBoxSize*
+                         Utility::windowResolutionX/Utility::windowResolutionY,
                         -halfBoundingBoxSize, halfBoundingBoxSize,
                         _camera.zNear, _camera.zFar) *
               glm::lookAt ( _star.centralPosition(), center, 

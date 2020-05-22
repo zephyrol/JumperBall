@@ -37,19 +37,20 @@ _scale(scale)
     if (_textureCategory == FrameBuffer::TextureCaterory::SDR) {
         dataFormat = GL_RGB8;
         glTexStorage2D(GL_TEXTURE_2D, levelTexture, dataFormat,
-               static_cast<GLsizei>(RESOLUTION_X * scale),
-               static_cast<GLsizei>(RESOLUTION_Y * scale));
+               static_cast<GLsizei>(Utility::windowResolutionX * scale),
+               static_cast<GLsizei>(Utility::windowResolutionY * scale));
     }
     else if (_textureCategory == FrameBuffer::TextureCaterory::HDR) {
         dataFormat = GL_RGB32F;
         glTexStorage2D(GL_TEXTURE_2D, levelTexture, dataFormat,
-               static_cast<GLsizei>(RESOLUTION_X * scale),
-               static_cast<GLsizei>(RESOLUTION_Y * scale));
+               static_cast<GLsizei>(Utility::windowResolutionX * scale),
+               static_cast<GLsizei>(Utility::windowResolutionY * scale));
     }
     else {
         dataFormat = GL_DEPTH_COMPONENT16;
         glTexImage2D(GL_TEXTURE_2D, 0,dataFormat,
-             RESOLUTION_X, RESOLUTION_Y, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+                     Utility::windowResolutionX , Utility::windowResolutionY,
+                     0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 
     }
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -72,7 +73,7 @@ _scale(scale)
     glBindRenderbuffer(GL_RENDERBUFFER, _depthBuffer);
 
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 
-                           RESOLUTION_X, RESOLUTION_Y);
+                Utility::windowResolutionX, Utility::windowResolutionY);
 
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,
                                 GL_RENDERBUFFER, _depthBuffer);
@@ -92,8 +93,8 @@ void FrameBuffer::bindFrameBuffer() const {
         glClear(GL_DEPTH_BUFFER_BIT);
     }
 
-    glViewport(0,0,static_cast<GLsizei>(RESOLUTION_X*_scale),
-        static_cast<GLsizei>(RESOLUTION_Y*_scale));
+    glViewport(0,0,static_cast<GLsizei>(Utility::windowResolutionX*_scale),
+        static_cast<GLsizei>(Utility::windowResolutionY*_scale));
 }
 
 void FrameBuffer::bindRenderTexture(unsigned int offset) const {
@@ -115,7 +116,8 @@ std::pair<float,float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
     constexpr float         epsilon             = 0.001f;
     constexpr unsigned int  levelOfDetail       = 0; //0 is the base image level
     constexpr unsigned int  numberOfComponents  = 3; //RGB
-    const size_t            numberOfPixels      = RESOLUTION_X * RESOLUTION_Y;
+    const size_t            numberOfPixels      =
+        Utility::windowResolutionX * Utility::windowResolutionY;
     std::vector<GLfloat>    textureData         (numberOfPixels * 
                                                   numberOfComponents);
 

@@ -222,6 +222,9 @@ glm::vec3 Utility::convertRBGToCIExyY(const glm::vec3& rbgColor){
     return glm::vec3 ( CIEXYZ.x/sumXYZ, CIEXYZ.y/sumXYZ, CIEXYZ.y);
 }
 
+unsigned int Utility::windowResolutionX = 0;
+unsigned int Utility::windowResolutionY = 0;
+
 float Utility::getLuminance(const glm::vec3& rgbColor) {
     const glm::vec3 CIExyYColor = convertRBGToCIExyY(rgbColor);
 
