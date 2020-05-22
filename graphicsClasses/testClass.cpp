@@ -163,22 +163,22 @@ void testClass::run(Rendering& r, Ball& b, Camera& c) {
    }
 }
 
-void testClass::runMenu() {
+void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
 
     std::shared_ptr<const MessageLabel> label = 
         std::make_shared<const MessageLabel>(0.5f, 0.1f, 
             JumperBallTypes::vec2f{0.5f,0.8f},
             "Jumper Ball");
     std::shared_ptr<const MessageLabel> label2 = 
-        std::make_shared<const MessageLabel> (0.5f,0.1f,
+        std::make_shared<const MessageLabel> (0.2f,0.05f,
             JumperBallTypes::vec2f{0.5f,0.6f},
             "Play");
     std::shared_ptr<const MessageLabel> label3 = 
-        std::make_shared<const MessageLabel> (0.5f,0.1f,
+        std::make_shared<const MessageLabel> (0.3f,0.05f,
             JumperBallTypes::vec2f{0.5f,0.4f},
             "Store");
     std::shared_ptr<const MessageLabel> label4 = 
-        std::make_shared<const MessageLabel> (0.5f,0.1f,
+        std::make_shared<const MessageLabel> (0.2f,0.05f,
             JumperBallTypes::vec2f{0.5f,0.2f},
             "Exit");
 
@@ -215,6 +215,10 @@ void testClass::runMenu() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         //textRendering.render(spLabels,*label, glm::vec3(0,1.f,1.f));
+	b.update();
+	c.follow(m);
+
+	r.render();
         menu.render(spLabels);
        
         glfwSwapInterval(1);

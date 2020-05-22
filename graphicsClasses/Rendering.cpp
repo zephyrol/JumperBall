@@ -184,6 +184,9 @@ void Rendering::depthFromStar() {
 
 void Rendering::render() {
 
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+
     _meshMap.update();
     _meshBall.update();
     _meshStar.update();
