@@ -22,6 +22,8 @@ Menu::Menu(const std::shared_ptr<const Page>& rootPage):
 
 void Menu::render(const ShaderProgram& sp) const
 {
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     renderPage(sp, _rootPage);
 }
 
@@ -34,7 +36,7 @@ void Menu::renderPage(const ShaderProgram& sp,
     }
 
     for( const std::shared_ptr<const Label>& label :_rootPage->labels()) {
-        _textRendering.render(sp, *label, glm::vec3(0, 0, 1));
+        _textRendering.render(sp, *label, glm::vec3(0, 1.f, 1.f));
     }
     
 }
@@ -44,34 +46,11 @@ const std::shared_ptr<const Page>& Menu::currentPage() const
     return _currentPage;
 }
 
+
 void Menu::currentPage(std::shared_ptr<const Page>& page)
 {
     _currentPage = page;
 }
-//TextRendering Menu::initTextRendering(
-//                                      const std::shared_ptr<const Page>& root) {
-//    TextRendering textRendering;
-//    /*std::shared_ptr<const Page> currentPage = root;
-//    for( const std::shared_ptr<const Label>& label : currentPage->labels()) {
-//
-//		if (currentPage->bridges().find(label) != currentPage->bridges().end()
-//			&& currentPage->bridges().at(label)) {
-//            TextRendering t 
-//
-//            textRendering[size] = 
-//		}
-//
-//		std::map<unsigned int, TextRendering> child =
-//			initTextRendering(currentPage->bridges().at(label));
-//		for (std::map<unsigned int, TextRendering>::iterator it
-//			= child.begin(); it != child.end(); ++it) {
-//			textRendering[it->first] = std::move(it->second);
-//		}
-//    }*/
-//
-//    return textRendering;
-// }
-
 std::vector<unsigned char> Menu::getCharacters(
     const std::shared_ptr<const Page>& page)
 {
