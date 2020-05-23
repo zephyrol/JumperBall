@@ -24,10 +24,6 @@ public:
 
     //------------TYPES------------//
     enum class TypeOfLabel { Object, Message, Switch};
-    struct Child {
-        std::shared_ptr<Label> childLabel;
-        std::pair<float,float> position;
-    };
 
     //---------CONSTANTS------------//
 

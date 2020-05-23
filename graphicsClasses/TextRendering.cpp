@@ -17,7 +17,7 @@
 TextRendering::TextRendering(const std::vector<unsigned char>& characters,
                              unsigned int height):
     _alphabet(initAlphabet(characters,height)),
-    //_fontHeight(height),
+    _fontHeight(height),
     _displayQuad()
 {
 
@@ -74,11 +74,22 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
+            
+            float width;
+            if (character == ' ') {
+                width = static_cast<float>(height);
+            } else {
+                width = static_cast<float>(height) *
+                    fontFace->glyph->bitmap.width/ fontFace->glyph->bitmap.rows;
+            }
             const TextRendering::Character graphicChar {
                 textureID,
-                {fontFace->glyph->bitmap.width, fontFace->glyph->bitmap.rows},
-                {fontFace->glyph->bitmap_left, fontFace->glyph->bitmap_top}
+//                {fontFace->glyph->bitmap.width, fontFace->glyph->bitmap.rows},
+                //{fontFace->glyph->bitmap_left, fontFace->glyph->bitmap_top}
+                {fontFace->glyph->bitmap.width/width,
+                    fontFace->glyph->bitmap.rows/static_cast<float>(height)},
+                {fontFace->glyph->bitmap_left/width,
+                    fontFace->glyph->bitmap_top/static_cast<float>(height)}
             };
             alphabet[character] = graphicChar;
         }
@@ -96,7 +107,6 @@ void TextRendering::render( const ShaderProgram& sp, const Label& label,
 
     const JumperBallTypes::vec2f& position = label.position();
     const float pitch = label.width()/label.message().size();
-    const glm::mat4 scale = glm::scale( glm::vec3{pitch, label.height(),0.f});
     float offsetX = -label.width()/2.f + pitch/2.f;
     const glm::mat4 biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,
                                              0.f,  1.f, 0.f, 0.f,
@@ -106,10 +116,23 @@ void TextRendering::render( const ShaderProgram& sp, const Label& label,
     _displayQuad.bind();
     for (const char& c : label.message()) {
         constexpr float biasScalar = 2.f; //To multiply the translation by 2
-        const glm::mat4 translate = glm::translate(
-                                biasScalar * glm::vec3{ position.x+offsetX,
-                                position.y,0.f});
-        const glm::mat4 transformCharacter = biasMatrix * translate * scale;
+        const glm::vec3 scale = glm::vec3{pitch * _alphabet.at(c).localScale.x,
+            label.height() * _alphabet.at(c).localScale.y ,0.f};
+        
+        const glm::mat4 scaleMatrix = glm::scale(scale);
+        
+        std::cout << _alphabet.at(c).localTranslate.y * label.height()
+            <<std::endl;
+        std::cout << label.height()
+            <<std::endl;
+        
+        const glm::mat4 translate = glm::translate( biasScalar *
+              glm::vec3{  position.x+ offsetX
+            + _alphabet.at(c).localTranslate.x * scale.x ,
+            position.y - (1.f-_alphabet.at(c).localTranslate.y) * scale.y
+            , 0.f});
+        const glm::mat4 transformCharacter =
+            biasMatrix * translate * scaleMatrix;
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, _alphabet.at(c).texture);
@@ -120,9 +143,6 @@ void TextRendering::render( const ShaderProgram& sp, const Label& label,
         offsetX += pitch;
     }
 }
-
-
-
 
 FT_Library TextRendering::ftLib;
 FT_Face TextRendering::fontFace;
