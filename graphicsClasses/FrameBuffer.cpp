@@ -97,10 +97,8 @@ void FrameBuffer::bindFrameBuffer() const {
         static_cast<GLsizei>(Utility::windowResolutionY*_scale));
 }
 
-void FrameBuffer::bindRenderTexture(unsigned int offset) const {
-    glActiveTexture(GL_TEXTURE0+offset);
-    glBindTexture(GL_TEXTURE_2D,_renderTexture);
-
+GLuint FrameBuffer::getRenderTexture() const {
+    return _renderTexture;
 }
 
 void FrameBuffer::bindDefaultFrameBuffer() {
@@ -121,8 +119,8 @@ std::pair<float,float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
     std::vector<GLfloat>    textureData         (numberOfPixels * 
                                                   numberOfComponents);
 
-    
-    bindRenderTexture();
+    //bindRenderTexture(); TODO: update with new architecture if you use it
+                        
     glGetTexImage(GL_TEXTURE_2D, levelOfDetail, 
                   GL_RGB, GL_FLOAT, textureData.data());
     

@@ -72,9 +72,9 @@ void Rendering::phongEffect( const FrameBuffer& referenceFBO ) {
 
     glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
     _frameBufferScene.bindFrameBuffer();
-    referenceFBO.bindRenderTexture();
     _spMap.use();
-    _spMap.bindUniformTexture("depthTexture", 0);
+    _spMap.bindUniformTexture("depthTexture", 0,
+                              referenceFBO.getRenderTexture());
 
     //Ball and Map
     bindCamera (_spMap);
@@ -107,16 +107,16 @@ void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
     _spBlur.use();
     _frameBufferHalfBlur.bindFrameBuffer();
 
-    referenceFBO.bindRenderTexture();
-    _spBlur.bindUniformTexture("frameTexture", 0);
+    _spBlur.bindUniformTexture("frameTexture", 0,
+                               referenceFBO.getRenderTexture());
     _spBlur.bindUniform("patchSize", static_cast<int>(blurPatchSize));
     _spBlur.bindUniform("gaussWeights", gaussComputedValues);
 
     _spBlur.bindUniform("firstPass", true);
     _meshQuadFrame.render(_spBlur);
-
     _frameBufferCompleteBlur.bindFrameBuffer();
-    _frameBufferHalfBlur.bindRenderTexture();
+    _spBlur.bindUniformTexture("frameTexture", 0,
+                               _frameBufferHalfBlur.getRenderTexture());
 
     _spBlur.bindUniform("firstPass", false);
     _meshQuadFrame.render(_spBlur);
@@ -131,8 +131,8 @@ void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
     _spToneMapping.use();
     _frameBufferToneMapping.bindFrameBuffer();
 
-    referenceFBO.bindRenderTexture();
-    _spToneMapping.bindUniformTexture("frameTexture", 0);
+    _spToneMapping.bindUniformTexture("frameTexture", 0,
+                                      referenceFBO.getRenderTexture());
     _spToneMapping.bindUniform ( "averageLuminance", 
                   //averageLuminanceAndMax.first,
                   //referenceFBO.computeLogAverageLuminance(),
@@ -149,8 +149,8 @@ void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
     _spBrightPassFilter.use();
     _frameBufferBrightPassFilter.bindFrameBuffer();
 
-    referenceFBO.bindRenderTexture();
-    _spBrightPassFilter.bindUniformTexture("frameTexture", 0);
+    _spBrightPassFilter.bindUniformTexture("frameTexture", 0,
+                                           referenceFBO.getRenderTexture());
     _spBrightPassFilter.bindUniform ("threshold",  5.f);
     _meshQuadFrame.render(_spBrightPassFilter);
 }
@@ -160,11 +160,11 @@ void Rendering::bloomEffect(  const FrameBuffer& fboScene,
     _spBloom.use();
     _frameBufferBloom.bindFrameBuffer();
 
-    fboScene.bindRenderTexture(0);
-    _spBloom.bindUniformTexture("frameToneMappingTexture", 0);
+    _spBloom.bindUniformTexture("frameToneMappingTexture", 0,
+                                fboScene.getRenderTexture());
 
-    fboLight.bindRenderTexture(1);
-    _spBloom.bindUniformTexture("frameBrightPassFilterTexture", 1);
+    _spBloom.bindUniformTexture("frameBrightPassFilterTexture", 1,
+                                fboLight.getRenderTexture());
     _meshQuadFrame.render(_spBloom);
 }
 
@@ -204,8 +204,8 @@ void Rendering::render() {
 
     _spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();
-    _frameBufferBloom.bindRenderTexture();
-    _spFbo.bindUniformTexture("frameTexture", 0);
+    _spFbo.bindUniformTexture("frameTexture", 0,
+                              _frameBufferBloom.getRenderTexture());
     _meshQuadFrame.render(_spFbo);
 
 }

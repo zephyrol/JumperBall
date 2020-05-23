@@ -63,7 +63,8 @@ public:
 
     void            bindUniformTexture
                                 (const std::string&    name,
-                                const int&             value)             const;
+                                 const int&            textureNumber,
+                                 GLuint                textureID)         const;
 
 private:
     //--------ATTRIBUTES-----------//

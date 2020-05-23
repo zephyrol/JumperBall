@@ -84,8 +84,6 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
             }
             const TextRendering::Character graphicChar {
                 textureID,
-//                {fontFace->glyph->bitmap.width, fontFace->glyph->bitmap.rows},
-                //{fontFace->glyph->bitmap_left, fontFace->glyph->bitmap_top}
                 {fontFace->glyph->bitmap.width/width,
                     fontFace->glyph->bitmap.rows/static_cast<float>(height)},
                 {fontFace->glyph->bitmap_left/width,
@@ -120,12 +118,7 @@ void TextRendering::render( const ShaderProgram& sp, const Label& label,
             label.height() * _alphabet.at(c).localScale.y ,0.f};
         
         const glm::mat4 scaleMatrix = glm::scale(scale);
-        
-        std::cout << _alphabet.at(c).localTranslate.y * label.height()
-            <<std::endl;
-        std::cout << label.height()
-            <<std::endl;
-        
+
         const glm::mat4 translate = glm::translate( biasScalar *
               glm::vec3{  position.x+ offsetX
             + _alphabet.at(c).localTranslate.x * scale.x ,
@@ -134,9 +127,7 @@ void TextRendering::render( const ShaderProgram& sp, const Label& label,
         const glm::mat4 transformCharacter =
             biasMatrix * translate * scaleMatrix;
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, _alphabet.at(c).texture);
-        sp.bindUniformTexture("characterTexture", 0);
+        sp.bindUniformTexture("characterTexture", 0, _alphabet.at(c).texture);
         sp.bindUniform("fontColor",color);
         sp.bindUniform("M",transformCharacter);
         _displayQuad.draw();

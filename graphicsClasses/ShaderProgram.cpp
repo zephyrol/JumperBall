@@ -146,9 +146,11 @@ void ShaderProgram::bindUniform(const std::string& name,
 }
 
 void ShaderProgram::bindUniformTexture( const std::string& name, 
-                                    const int& value ) const {
+                                    const int& textureNumber,
+                                    GLuint textureID) const {
+    glActiveTexture(GL_TEXTURE0+textureNumber);
+    glBindTexture(GL_TEXTURE_2D,textureID);
     const GLuint uniformVariableID =
             glGetUniformLocation(getHandle(),name.c_str());
-    glUniform1i( uniformVariableID, value);
+    glUniform1i( uniformVariableID, textureNumber);
 }
-
