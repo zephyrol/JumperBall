@@ -28,15 +28,13 @@ public:
     TextRendering                       ( const std::vector<unsigned char>& 
                                           characters = {},
                                           unsigned int height = 0);
+    
     static bool                         initFreeTypeAndFont();
     static void                         clearFreeTypeRessources();
 
-    struct Character                    { GLuint texture;
-                                          //glm::ivec2 size;
-                                          //glm::ivec2 bearing;
-        glm::vec2 localScale;
-        glm::vec2 localTranslate;
-    };
+    struct Character                    {   GLuint texture;
+                                            glm::vec2 localScale;
+                                            glm::vec2 localTranslate; };
 
     void                                render( const ShaderProgram& sp, 
                                                 const Label& label, 

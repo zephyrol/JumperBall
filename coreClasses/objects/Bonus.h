@@ -18,6 +18,8 @@
 class Bonus : public Object{
 public:
     Bonus( unsigned int value);
+    
+    unsigned int value() const;
 
     virtual ~Bonus() = 0;
 private:

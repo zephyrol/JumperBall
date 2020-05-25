@@ -29,8 +29,20 @@ public:
 
     void currentMap(const std::shared_ptr<Map>& currentMap);
     void unlockNewLevel();
+    
     void increaseMoney(unsigned int value);
     void decreaseMoney(unsigned int value);
+    
+    void decreaseDiamonds(unsigned int value);
+    void addDiamond();
+    
+    void speedLevelUp();
+    void gravityLevelUp();
+    void fireResistanceLevelUp();
+
+    void timeLevelUp();
+    void clockItemLevelUp();
+    void bonusLevelUp();
 
     Statut statut() const;
     void statut(const Statut& s);

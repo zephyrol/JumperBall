@@ -56,6 +56,19 @@ void Player::decreaseMoney(unsigned int value) {
     }
 }
 
+void Player::decreaseDiamonds(unsigned int value) {
+    if ( _diamondsCounter < value ) {
+        std::cerr << "Error ... negative value ! ... Cropped to 0";
+        _diamondsCounter = 0;
+    } else {
+        _diamondsCounter -= value;
+    }
+}
+
+void Player::addDiamond() {
+    _diamondsCounter++;
+}
+
 void Player::increaseMoney(unsigned int value) {
     _money += value;
 }
@@ -68,9 +81,35 @@ Player::Statut Player::statut() const {
     return _statut;
 }
 
+
 void Player::statut(const Player::Statut& s) {
     _statut = s;
     if (_statut == Player::Statut::INMENU) {
       _currentMap = nullptr;
     }
- }
+}
+
+void Player::bonusLevelUp() {
+    _bonusLevel++;
+}
+
+void Player::clockItemLevelUp() {
+    _clockItemLevel++;
+}
+
+void Player::timeLevelUp() {
+    _timeLevel++;
+}
+
+void Player::fireResistanceLevelUp() {
+    _fireResistanceLevel++;
+}
+
+void Player::gravityLevelUp() {
+    _gravityLevel++;
+}
+
+void Player::speedLevelUp() {
+    _speedLevel++;
+}
+
