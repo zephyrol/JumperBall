@@ -18,7 +18,9 @@
 #include <initializer_list>
 
 
-testClass::testClass(): _window(nullptr)
+testClass::testClass(): _window(nullptr),
+_player(),
+_controller(_player)
 {
     if( !glfwInit() )
     {
@@ -67,6 +69,100 @@ testClass::testClass(): _window(nullptr)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //-----
+}
+
+void testClass::runController(Rendering& r, const std::shared_ptr<Ball>& b,
+                              Camera& c) {
+
+    auto before = JumperBallTypesMethods::getTimePointMSNow();
+    unsigned int counter = 0;
+    
+    _player.statut(Player::Statut::INGAME);
+    _controller.assignBall(b);
+    
+    glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
+    while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS
+           && glfwWindowShouldClose(_window) == 0 ) {
+        
+        glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        b->update();
+        c.follow(*b);
+        
+        if( glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS ||
+           glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_PRESS)
+        {
+            //ballPtr->doAction(Ball::ActionRequest::Jump);
+            _controller.interaction(Controller::Button::Validate,
+                                    Controller::Status::Pressed);
+        }
+        
+        if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_PRESS ||
+           glfwGetKey(_window,GLFW_KEY_L) == GLFW_PRESS) {
+            _controller.interaction(Controller::Button::Right,
+                                    Controller::Status::Pressed);
+        }
+        
+        if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_PRESS ||
+           glfwGetKey(_window,GLFW_KEY_H) == GLFW_PRESS) {
+            _controller.interaction(Controller::Button::Left,
+                                    Controller::Status::Pressed);
+        }
+        
+        if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_PRESS ||
+           glfwGetKey(_window,GLFW_KEY_K) == GLFW_PRESS) {
+            _controller.interaction(Controller::Button::Up,
+                                    Controller::Status::Pressed);
+        }
+        
+        if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE ||
+           glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_RELEASE)
+        {
+            _controller.interaction(Controller::Button::Validate,
+                                    Controller::Status::Released);
+        }
+        
+        if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_RELEASE ||
+           glfwGetKey(_window,GLFW_KEY_L) == GLFW_RELEASE) {
+            _controller.interaction(Controller::Button::Right,
+                                    Controller::Status::Released);
+        }
+        
+        if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_RELEASE ||
+           glfwGetKey(_window,GLFW_KEY_H) == GLFW_RELEASE) {
+            _controller.interaction(Controller::Button::Left,
+                                    Controller::Status::Released);
+        }
+        
+        if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_RELEASE ||
+           glfwGetKey(_window,GLFW_KEY_K) == GLFW_RELEASE) {
+            _controller.interaction(Controller::Button::Up,
+                                    Controller::Status::Released);
+        }
+        
+        
+        b->update();
+        c.follow(*b);
+        
+        r.render();
+        
+        glfwSwapInterval(1);
+        glfwSwapBuffers(_window);
+        
+        glfwPollEvents();
+        
+        counter++;
+        auto after = JumperBallTypesMethods::getTimePointMSNow();
+        auto diff = after - before;
+        const std::chrono::duration<float> durationFloatDifference= diff;
+        float diffF = durationFloatDifference.count();
+        if (diffF > 1.f) {
+            before = after;
+            std::cout << counter << " FPS"  << std::endl;
+            counter = 0;
+        }
+    }
 }
 
 void testClass::run(Rendering& r, Ball& b, Camera& c) {

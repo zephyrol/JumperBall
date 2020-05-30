@@ -19,6 +19,7 @@
 #include "ShaderProgram.h"
 #include "Rendering.h"
 #include "Menu.h"
+#include "Controller.h"
 
 class testClass {
 public:
@@ -30,6 +31,8 @@ public:
     
     //----------METHODS-------------//
     void          run(Rendering& r, Ball& b, Camera& c);
+    void          runController(Rendering& r, const std::shared_ptr<Ball>& b,
+                                Camera& c);
     void          runMenu(Rendering& r, Ball& b, Camera& c, Map& m);
 
 
@@ -37,6 +40,8 @@ private:
 
     //--------ATTRIBUTES-----------//
     GLFWwindow*   _window;
+    Player        _player;
+    Controller    _controller;
 
 };
 
