@@ -19,7 +19,7 @@
 #include <Map.h>
 #include <ClassicalMechanics.h>
 #include <Rendering.h>
-#include <testClass.h>
+#include "testClass.h"
 //#include <TextRendering.h>
 
 using namespace std;

@@ -14,12 +14,12 @@
 #ifndef TESTCLASS_H
 #define TESTCLASS_H
 #include <Types.h>
-#include "Utility.h"
-#include "Shader.h"
-#include "ShaderProgram.h"
-#include "Rendering.h"
-#include "Menu.h"
-#include "Controller.h"
+#include <Utility.h>
+#include <Shader.h>
+#include <ShaderProgram.h>
+#include <Rendering.h>
+#include <Menu.h>
+#include <Controller.h>
 
 class testClass {
 public:
