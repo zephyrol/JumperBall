@@ -19,7 +19,9 @@ public:
     enum class Button {Up, Down, Left, Right, Escape, Validate};
     
     Controller(Player& player);
-    void interaction(const Button& button, const Status& status);
+    void interactionButtons(const Button& button, const Status& status);
+    void interactionMouse(const Status& status, float posX, float posY);
+    
     void assignBall ( const std::shared_ptr<Ball>& ball );
     
 private:
@@ -38,8 +40,11 @@ private:
     
     Player&   _player;
     std::shared_ptr<Ball>  _ball;
-    
     std::map<Button, Status> _buttonsStatuts;
+    
+    float _mousePressingXCoord;
+    float _mousePressingYCoord;
+    bool  _mouseIsPressed;
 
 };
 

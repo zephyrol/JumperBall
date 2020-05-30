@@ -30,7 +30,6 @@ public:
 
     
     //----------METHODS-------------//
-    void          run(Rendering& r, Ball& b, Camera& c);
     void          runController(Rendering& r, const std::shared_ptr<Ball>& b,
                                 Camera& c);
     void          runMenu(Rendering& r, Ball& b, Camera& c, Map& m);

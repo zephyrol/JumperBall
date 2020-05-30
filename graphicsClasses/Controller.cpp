@@ -6,6 +6,7 @@
 //
 
 #include "Controller.h"
+#include "cmath"
 
 Controller::Controller(Player& player):
 _player(player),
@@ -16,11 +17,14 @@ _buttonsStatuts{
     { Controller::Button::Right,    Controller::Status::Released },
     { Controller::Button::Left,     Controller::Status::Released },
     { Controller::Button::Escape,   Controller::Status::Released },
-    { Controller::Button::Validate, Controller::Status::Released }}
+    { Controller::Button::Validate, Controller::Status::Released }},
+_mousePressingXCoord(0.f),
+_mousePressingYCoord(0.f),
+_mouseIsPressed(false)
 {
 }
 
-void Controller::interaction(const Controller::Button& button,
+void Controller::interactionButtons(const Controller::Button& button,
                              const Controller::Status& status) {
 
     switch ( button ) {
@@ -44,6 +48,21 @@ void Controller::interaction(const Controller::Button& button,
             break;
     }
     _buttonsStatuts[button] = status;
+}
+
+
+void Controller::interactionMouse(const Status& status, float posX, float posY){
+    if( status == Controller::Status::Released) {
+        if (_mouseIsPressed) {
+            releaseMouse(posX,posY);
+            _mouseIsPressed = false;
+        }
+    } else {
+        if(!_mouseIsPressed) {
+            pressMouse(posX,posY);
+            _mouseIsPressed = true;
+        }
+    }
 }
 
 void Controller::manageValidate(const Controller::Status &status) {
@@ -100,4 +119,23 @@ void Controller::manageUp(const Controller::Status &status) {
 
 void Controller::assignBall ( const std::shared_ptr<Ball>& ball ) {
     _ball = ball;
+}
+
+void Controller::pressMouse ( float posX, float posY ) {
+    _mousePressingXCoord = posX;
+    _mousePressingYCoord = posY;
+}
+
+void Controller::updateMouse ( float posX, float posY ) {
+    
+}
+
+void Controller::releaseMouse ( float posX, float posY ) {
+    
+    constexpr float thresholdMoving = 0.1;
+    const float distance = sqrtf(pow(posX - _mousePressingXCoord,2) +
+                                 pow(posY - _mousePressingYCoord, 2)) ;
+    if (distance < thresholdMoving) {
+        manageValidate(Controller::Status::Pressed);
+    }
 }

@@ -94,51 +94,71 @@ void testClass::runController(Rendering& r, const std::shared_ptr<Ball>& b,
            glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_PRESS)
         {
             //ballPtr->doAction(Ball::ActionRequest::Jump);
-            _controller.interaction(Controller::Button::Validate,
+            _controller.interactionButtons(Controller::Button::Validate,
                                     Controller::Status::Pressed);
         }
         
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_PRESS ||
            glfwGetKey(_window,GLFW_KEY_L) == GLFW_PRESS) {
-            _controller.interaction(Controller::Button::Right,
+            _controller.interactionButtons(Controller::Button::Right,
                                     Controller::Status::Pressed);
         }
         
         if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_PRESS ||
            glfwGetKey(_window,GLFW_KEY_H) == GLFW_PRESS) {
-            _controller.interaction(Controller::Button::Left,
+            _controller.interactionButtons(Controller::Button::Left,
                                     Controller::Status::Pressed);
         }
         
         if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_PRESS ||
            glfwGetKey(_window,GLFW_KEY_K) == GLFW_PRESS) {
-            _controller.interaction(Controller::Button::Up,
+            _controller.interactionButtons(Controller::Button::Up,
                                     Controller::Status::Pressed);
+        }
+        
+        if(glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1 ) == GLFW_PRESS) {
+            double posX, posY;
+            glfwGetCursorPos(_window,&posX ,&posY);
+            posX = posX / static_cast<double>(RESOLUTION_X);
+            posY = posY / static_cast<double>(RESOLUTION_Y);
+
+            _controller.interactionMouse(Controller::Status::Pressed,
+                                         posX, posY);
         }
         
         if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE ||
            glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_RELEASE)
         {
-            _controller.interaction(Controller::Button::Validate,
+            _controller.interactionButtons(Controller::Button::Validate,
                                     Controller::Status::Released);
         }
         
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_RELEASE ||
            glfwGetKey(_window,GLFW_KEY_L) == GLFW_RELEASE) {
-            _controller.interaction(Controller::Button::Right,
+            _controller.interactionButtons(Controller::Button::Right,
                                     Controller::Status::Released);
         }
         
         if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_RELEASE ||
            glfwGetKey(_window,GLFW_KEY_H) == GLFW_RELEASE) {
-            _controller.interaction(Controller::Button::Left,
+            _controller.interactionButtons(Controller::Button::Left,
                                     Controller::Status::Released);
         }
         
         if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_RELEASE ||
            glfwGetKey(_window,GLFW_KEY_K) == GLFW_RELEASE) {
-            _controller.interaction(Controller::Button::Up,
+            _controller.interactionButtons(Controller::Button::Up,
                                     Controller::Status::Released);
+        }
+        
+        if(glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1 ) == GLFW_RELEASE) {
+            double posX, posY;
+            glfwGetCursorPos(_window,&posX ,&posY);
+            posX = posX / static_cast<double>(RESOLUTION_X);
+            posY = posY / static_cast<double>(RESOLUTION_Y);
+            
+            _controller.interactionMouse(Controller::Status::Released,
+                                         posX, posY);
         }
         
         
@@ -165,106 +185,6 @@ void testClass::runController(Rendering& r, const std::shared_ptr<Ball>& b,
     }
 }
 
-void testClass::run(Rendering& r, Ball& b, Camera& c) {
-   
-    bool leftButton   = false;
-    bool rightButton  = false;
-    bool upButton     = false;
-    bool enterButton  = false;
-    
-    auto before = JumperBallTypesMethods::getTimePointMSNow();
-    unsigned int counter = 0;
-    glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
-    while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS 
-          && glfwWindowShouldClose(_window) == 0 ) {
-        
-        glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        b.update();
-        c.follow(b);
-        
-        if( glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS || 
-            glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_PRESS)
-        {
-                enterButton = true;
-                b.doAction(Ball::ActionRequest::Jump);
-        }
-
-        if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_PRESS ||
-           glfwGetKey(_window,GLFW_KEY_L) == GLFW_PRESS) {
-            if (!rightButton) {
-                rightButton = true;
-                b.doAction(Ball::ActionRequest::TurnRight);
-            }
-        }
-        
-        if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_PRESS ||
-           glfwGetKey(_window,GLFW_KEY_H) == GLFW_PRESS) {
-            if (!leftButton) {
-                leftButton = true;
-                b.doAction(Ball::ActionRequest::TurnLeft);
-            }
-        }
-
-        if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_PRESS ||
-           glfwGetKey(_window,GLFW_KEY_K) == GLFW_PRESS) {
-                upButton = true;
-                b.doAction(Ball::ActionRequest::GoStraightAhead);
-        }
-
-        if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE ||
-            glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_RELEASE)
-        {
-            if (enterButton) {
-                enterButton = false;
-            }
-        }
-
-        if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_RELEASE ||
-           glfwGetKey(_window,GLFW_KEY_L) == GLFW_RELEASE) {
-            if (rightButton) {
-                rightButton = false;
-            }
-        }
-        
-        if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_RELEASE ||
-           glfwGetKey(_window,GLFW_KEY_H) == GLFW_RELEASE) {
-            if (leftButton) {
-                leftButton = false;
-            }
-        }
-
-        if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_RELEASE || 
-           glfwGetKey(_window,GLFW_KEY_K) == GLFW_RELEASE) {
-            if (upButton) {
-                upButton = false;
-            }
-        }
-
-
-        b.update();
-        c.follow(b);
-
-        r.render();
-       
-        glfwSwapInterval(1);
-        glfwSwapBuffers(_window);
-      
-        glfwPollEvents();
-
-        counter++;
-        auto after = JumperBallTypesMethods::getTimePointMSNow();
-        auto diff = after - before;
-        const std::chrono::duration<float> durationFloatDifference= diff;
-        float diffF = durationFloatDifference.count();
-        if (diffF > 1.f) {
-            before = after;
-            std::cout << counter << " FPS"  << std::endl;
-            counter = 0;
-        }
-   }
-}
 
 void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
 
