@@ -61,6 +61,8 @@ void Controller::interactionMouse(const Status& status, float posX, float posY){
         if(!_mouseIsPressed) {
             pressMouse(posX,posY);
             _mouseIsPressed = true;
+        } else {
+            updateMouse(posX, posY);
         }
     }
 }
@@ -121,21 +123,95 @@ void Controller::assignBall ( const std::shared_ptr<Ball>& ball ) {
     _ball = ball;
 }
 
+Controller::ScreenDirection Controller::nearestDirection
+                                            (float posX, float posY) const {
+    
+    auto computeDistance = [] ( float x0, float y0, float x1, float y1) {
+        return sqrtf(pow(x1 - x0, 2) + pow(y1 - y0, 2)) ;
+    };
+    
+    Controller::ScreenDirection nearestDir = Controller::ScreenDirection::North;
+    float computedDistance;
+    float nearestDistance = computeDistance(_mousePressingXCoord,
+                                            _mousePressingYCoord - 1.f,
+                                            posX,posY);
+    if ((computedDistance = computeDistance(_mousePressingXCoord,
+                                            _mousePressingYCoord + 1.f,
+                                            posX, posY))
+                                            <  nearestDistance ){
+        nearestDistance= computedDistance;
+        nearestDir = Controller::ScreenDirection::South;
+    }
+    else if ((computedDistance = computeDistance(_mousePressingXCoord + 1.f,
+                                                  _mousePressingYCoord,
+                                                  posX, posY))
+                                                  <  nearestDistance ){
+        nearestDistance= computedDistance;
+        nearestDir = Controller::ScreenDirection::East;
+    }
+    else if ((computedDistance = computeDistance(_mousePressingXCoord - 1.f,
+                                                 _mousePressingYCoord,
+                                                 posX, posY))
+                                                 <  nearestDistance ){
+        nearestDistance= computedDistance;
+        nearestDir = Controller::ScreenDirection::West;
+    }
+                            
+    return nearestDir;
+}
+
 void Controller::pressMouse ( float posX, float posY ) {
+    
     _mousePressingXCoord = posX;
     _mousePressingYCoord = posY;
 }
 
 void Controller::updateMouse ( float posX, float posY ) {
     
+    constexpr float thresholdMoving = 0.05f;
+    
+    auto computeDistance = [] ( float x0, float y0, float x1, float y1) {
+        return sqrtf(pow(x1 - x0, 2) + pow(y1 - y0, 2)) ;
+    };
+    
+    const float distance = computeDistance(_mousePressingXCoord,
+                                           _mousePressingYCoord, posX, posY);
+    if (distance > thresholdMoving) {
+        Controller::ScreenDirection sDir = nearestDirection(posX, posY);
+        
+        if (sDir == Controller::ScreenDirection::North) {
+            manageUp(Controller::Status::Pressed);
+        }
+        else if (sDir == Controller::ScreenDirection::South) {
+            manageDown(Controller::Status::Pressed);
+        }
+    }
+    
 }
 
 void Controller::releaseMouse ( float posX, float posY ) {
     
-    constexpr float thresholdMoving = 0.1;
-    const float distance = sqrtf(pow(posX - _mousePressingXCoord,2) +
-                                 pow(posY - _mousePressingYCoord, 2)) ;
+    constexpr float thresholdMoving = 0.05f;
+    
+    auto computeDistance = [] ( float x0, float y0, float x1, float y1) {
+        return sqrtf(pow(x1 - x0, 2) + pow(y1 - y0, 2)) ;
+    };
+    
+    const float distance = computeDistance(_mousePressingXCoord,
+                                           _mousePressingYCoord, posX, posY);
     if (distance < thresholdMoving) {
         manageValidate(Controller::Status::Pressed);
+    } else {
+
+        if (distance > thresholdMoving) {
+            Controller::ScreenDirection sDir = nearestDirection(posX, posY);
+            
+            if (sDir == Controller::ScreenDirection::East) {
+                manageRight(Controller::Status::Pressed);
+            }
+            else if (sDir == Controller::ScreenDirection::West) {
+                manageLeft(Controller::Status::Pressed);
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@ public:
     
     enum class Status {Pressed,Released};
     enum class Button {Up, Down, Left, Right, Escape, Validate};
+    enum class ScreenDirection {North, South, East, West};
     
     Controller(Player& player);
     void interactionButtons(const Button& button, const Status& status);
@@ -37,6 +38,9 @@ private:
     void pressMouse ( float posX, float posY );
     void updateMouse ( float posX, float posY );
     void releaseMouse ( float posX, float posY );
+    
+    ScreenDirection nearestDirection(float posX, float posY) const;
+    
     
     Player&   _player;
     std::shared_ptr<Ball>  _ball;
