@@ -60,15 +60,6 @@ _controller(_player)
         exit(EXIT_FAILURE);
     } 
 
-    glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);  
-
-    //alpha
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //-----
 }
 
 void testClass::runController(Rendering& r, const std::shared_ptr<Ball>& b,
@@ -84,16 +75,13 @@ void testClass::runController(Rendering& r, const std::shared_ptr<Ball>& b,
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS
            && glfwWindowShouldClose(_window) == 0 ) {
         
-        glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
         b->update();
         c.follow(*b);
         
         if( glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS ||
            glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_PRESS)
         {
-            //ballPtr->doAction(Ball::ActionRequest::Jump);
             _controller.interactionButtons(Controller::Button::Validate,
                                     Controller::Status::Pressed);
         }
@@ -218,14 +206,8 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
 
     Menu menu(page);
 
-    /*const TextRendering textRendering (
-        {'a','B','e','J','l','m','p','r','u',' '},
-        static_cast<unsigned int>(RESOLUTION_Y*label->height()));*/
-
     
-
-  
-    const ShaderProgram spLabels ( 
+    const ShaderProgram spLabels (
     Shader (GL_VERTEX_SHADER,   "shaders/fontVs.vs"),
     Shader (GL_FRAGMENT_SHADER, "shaders/fontFs.fs" ));
         
@@ -234,10 +216,6 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS
            && glfwWindowShouldClose(_window) == 0 ) {
         
-        glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        //textRendering.render(spLabels,*label, glm::vec3(0,1.f,1.f));
         b.update();
         c.follow(m);
         
@@ -251,8 +229,6 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
         
     }
 }
-
-
 
 testClass::~testClass() {
     glfwTerminate();

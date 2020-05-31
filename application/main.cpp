@@ -20,7 +20,6 @@
 #include <ClassicalMechanics.h>
 #include <Rendering.h>
 #include "testClass.h"
-//#include <TextRendering.h>
 
 using namespace std;
 
@@ -71,9 +70,8 @@ int main(int argc, char** argv) {
     ,0.3f,0.5f,50.f,5.f);
     Rendering rendering (m,*b,s,c);
     t.runController(rendering,b,c);
-    //t.runMenu(rendering,b,c,m);
+    //t.runMenu(rendering,*b,c,m);
     
-    //TextRendering::clearFreeTypeRessources();
     return EXIT_SUCCESS;
 }
 
