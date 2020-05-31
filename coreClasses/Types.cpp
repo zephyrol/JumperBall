@@ -141,3 +141,4 @@ unsigned int JumperBallTypesMethods::directionAsInteger(
     }
     return number;
 }
+

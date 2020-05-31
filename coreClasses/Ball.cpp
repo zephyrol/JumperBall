@@ -996,8 +996,7 @@ void Ball::update() noexcept{
                     
                     if ( infoTarget.nextLocal == NextBlockLocal::Same)
                         distancePerStep = 0.5f + ClassicalMechanics::radiusBall;
-                    
-                    if ( infoTarget.nextLocal == NextBlockLocal::Above)
+                    else
                         distancePerStep = 0.5f - ClassicalMechanics::radiusBall;
                     
                     float timeStep1 = sSinceAction;
