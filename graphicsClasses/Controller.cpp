@@ -142,14 +142,14 @@ Controller::ScreenDirection Controller::nearestDirection
         nearestDistance= computedDistance;
         nearestDir = Controller::ScreenDirection::South;
     }
-    else if ((computedDistance = computeDistance(_mousePressingXCoord + 1.f,
+    if ((computedDistance = computeDistance(_mousePressingXCoord + 1.f,
                                                   _mousePressingYCoord,
                                                   posX, posY))
                                                   <  nearestDistance ){
         nearestDistance= computedDistance;
         nearestDir = Controller::ScreenDirection::East;
     }
-    else if ((computedDistance = computeDistance(_mousePressingXCoord - 1.f,
+    if ((computedDistance = computeDistance(_mousePressingXCoord - 1.f,
                                                  _mousePressingYCoord,
                                                  posX, posY))
                                                  <  nearestDistance ){
