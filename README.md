@@ -26,7 +26,9 @@ The core of the project (physics,maps) is currently under development.
 
 ### Specifically for Windows
 
-- Run Cmake-gui once, select the repo root as a source directory, `"repoRoot"/build/` as the build directory. Configure, select the Visual Studio 2019, Visual Studio 2017 or MinGW Makesfiles generetor 
+- Run Cmake-gui once, select the repo root as a source directory, `REPO_DIR/build/` as the build directory. 
+- Configure
+- Select the Visual Studio 2019, Visual Studio 2017 or MinGW Makesfiles generator 
 - Generate
 
 
@@ -63,7 +65,7 @@ If you use a **MinGW Makefile**:
   cd build
   ```
 
-- run cmake specifying the parent directory containing sources
+- Run cmake specifying the parent directory containing sources
   ```
   cmake ..
   ```
@@ -78,13 +80,38 @@ If you use a **MinGW Makefile**:
   make install
   ```
 
+- Go to the `bin` dir
+  ```
+  cd bin 
+  ```
+
 - Run the project
   ```
   ./JumperBallApplication
   ```
+### Specifically for macOS
+
+- Run Cmake-gui once, select the repo root as a source directory, `REPO_DIR/build/` as the build directory. 
+- Configure
+- Select the Xcode or Unix Makesfiles generator 
+- Generate
+
+If you use **Xcode**:
+
+- In Cmake-gui, run `Open Project`
+- Build the `ALL_BUILD` target, and then the `install` target
+- Select the JumperBallApplication project and run it
+
+
+If you use a **Unix Makefiles**:
+
+- Follow the steps in **Specifically for Unix/Linux** session
 
 
 ## How to play
 
-- Use the arrows to move and Space (or Enter ) to jump.
+### Keyboard
+- Use the **arrows**, **HJKL** to move and **Space** or **Enter** to jump.
 
+### Mouse 
+- **Click** on the screen to Jump, **press and swipe up** to go ahead, **press and swipe left or right** to turn.
