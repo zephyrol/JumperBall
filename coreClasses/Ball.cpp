@@ -1091,7 +1091,7 @@ void Ball::update() noexcept{
                 _state == Ball::State::TurningRight) {
             
             float sSinceAction = getTimeSecondsSinceAction();
-            if (sSinceAction  >= timeToGetNextBlock) {
+            if (sSinceAction  >= (timeToTurn)) {
                 stay();
                 update();
             } else {

@@ -153,7 +153,8 @@ void Camera::follow(const Ball& ball) noexcept {
         -(static_cast<float>(M_PI)/2) * axisRotation
         +
         (timeSinceAction* 
-          (static_cast<float>(M_PI)/2)/ ball.timeToGetNextBlock) * axisRotation;
+         (static_cast<float>(M_PI)/2)/ (ball.timeToTurn))
+            * axisRotation;
 
         const glm::quat quaternion (eulerAngles);
         matRotationCam = glm::toMat4(quaternion); 
@@ -165,7 +166,8 @@ void Camera::follow(const Ball& ball) noexcept {
         (static_cast<float>(M_PI)/2) * axisRotation
         -
         (timeSinceAction* 
-          (static_cast<float>(M_PI)/2)/ ball.timeToGetNextBlock) * axisRotation;
+         (static_cast<float>(M_PI)/2)/ (ball.timeToTurn))
+            * axisRotation;
 
         const glm::quat quaternion (eulerAngles);
         matRotationCam = glm::toMat4(quaternion); 

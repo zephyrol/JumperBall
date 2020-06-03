@@ -84,10 +84,7 @@ void Controller::manageEscape(const Controller::Status &status) {
 void Controller::manageRight(const Controller::Status &status) {
     
     if ( _player.statut() == Player::Statut::INGAME ) {
-        if (status == Controller::Status::Pressed &&
-            _buttonsStatuts.at(Controller::Button::Right)
-                == Controller::Status::Released &&
-            _ball) {
+        if (status == Controller::Status::Pressed && _ball) {
             _ball->doAction(Ball::ActionRequest::TurnRight);
         }
     }
@@ -95,10 +92,7 @@ void Controller::manageRight(const Controller::Status &status) {
 
 void Controller::manageLeft(const Status& status) {
     if ( _player.statut() == Player::Statut::INGAME ) {
-        if (status == Controller::Status::Pressed &&
-            _buttonsStatuts.at(Controller::Button::Right)
-            == Controller::Status::Released &&
-            _ball) {
+        if (status == Controller::Status::Pressed && _ball) {
             _ball->doAction(Ball::ActionRequest::TurnLeft);
         }
     }
@@ -185,6 +179,12 @@ void Controller::updateMouse ( float posX, float posY ) {
         else if (sDir == Controller::ScreenDirection::South) {
             manageDown(Controller::Status::Pressed);
         }
+        if (sDir == Controller::ScreenDirection::East) {
+            manageRight(Controller::Status::Pressed);
+        }
+        else if (sDir == Controller::ScreenDirection::West) {
+            manageLeft(Controller::Status::Pressed);
+        }
     }
     
 }
@@ -201,17 +201,5 @@ void Controller::releaseMouse ( float posX, float posY ) {
                                            _mousePressingYCoord, posX, posY);
     if (distance < thresholdMoving) {
         manageValidate(Controller::Status::Pressed);
-    } else {
-
-        if (distance > thresholdMoving) {
-            Controller::ScreenDirection sDir = nearestDirection(posX, posY);
-            
-            if (sDir == Controller::ScreenDirection::East) {
-                manageRight(Controller::Status::Pressed);
-            }
-            else if (sDir == Controller::ScreenDirection::West) {
-                manageLeft(Controller::Status::Pressed);
-            }
-        }
     }
 }
