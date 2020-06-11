@@ -19,6 +19,7 @@
 class Page
 {
 public:
+    //--CONSTRUCTORS & DESTRUCTORS--//
     Page( const std::vector<std::shared_ptr<const Label> >& labels,
           const std::map<std::shared_ptr<const Label>,
             std::shared_ptr<const Page> >& bridges = {},
@@ -26,16 +27,18 @@ public:
           bool visibleOnParent  = false);
 
     
-    const std::vector<std::shared_ptr<const Label> >& labels() const;
+    //-------CONST METHODS--------//
+    const std::vector<std::shared_ptr<const Label> >& labels()            const;
     const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >& 
-                                                      bridges() const;
-    const std::shared_ptr<const Page>&                parent() const;
-    bool                                              visibleOnParent() const;
+                                                      bridges()           const;
+    const std::shared_ptr<const Page>&                parent()            const;
+    bool                                              visibleOnParent()   const;
 
     std::shared_ptr<const Page>                       child(float x, float y)
                                                                           const;
 private:
 
+    //--------ATTRIBUTES-----------//
     const std::vector<std::shared_ptr<const Label> >  _labels;
     const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> > 
                                                       _bridges;

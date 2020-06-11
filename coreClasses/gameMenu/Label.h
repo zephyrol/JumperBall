@@ -28,23 +28,25 @@ public:
     //---------CONSTANTS------------//
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Label           (float width,float height,
-                     const JumperBallTypes::vec2f& position);
-    virtual ~Label  () = default;
+    Label                   (float width,float height,
+                            const JumperBallTypes::vec2f& position);
+    virtual ~Label          ()                                        = default;
 
     //-------CONST METHODS----------//
-    float width() const;
-    float height() const;
-    const std::vector<std::shared_ptr<const Label> >& children() const;
-    JumperBallTypes::vec2f position() const;
-    virtual TypeOfLabel typeOfLabel() const = 0;
-    virtual std::string message() const;
-
-    //----------METHODS------------//
+    float                   width()                                       const;
+    float                   height()                                      const;
     
-    //--------STATIC METHODS-------//
+    const std::vector<std::shared_ptr<const Label> >&
+                            children()                                    const;
+    
+    JumperBallTypes::vec2f  position()                                    const;
+    virtual TypeOfLabel     typeOfLabel()                             const = 0;
+    virtual std::string     message()                                     const;
+
 
 private:
+    
+    //--------ATTRIBUTES-----------//
     const float                                       _width;
     const float                                       _height;
     const std::vector<std::shared_ptr<const Label> >  _children;
