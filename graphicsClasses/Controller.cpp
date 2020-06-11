@@ -73,6 +73,14 @@ void Controller::manageValidate(const Controller::Status &status) {
             _ball->doAction(Ball::ActionRequest::Jump);
         }
     }
+    else if (_player.statut() == Player::Statut::INMENU) {
+        const std::shared_ptr<const Page> newPage =
+            _player.currentPage()->child(_mousePressingXCoord,
+                                         _mousePressingYCoord);
+        if (newPage) {
+            _player.currentPage(newPage);
+        }
+    }
 }
 
 

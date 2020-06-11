@@ -57,4 +57,4 @@ const glm::mat4 ObjectAnimation::translationCenter =
                           glm::translate(glm::vec3(-0.5f,-0.3f,-0.5f));
 
 const glm::mat4 ObjectAnimation::inversedTranslationCenter = 
-glm::inverse(ObjectAnimation::translationCenter);
+    glm::inverse(ObjectAnimation::translationCenter);

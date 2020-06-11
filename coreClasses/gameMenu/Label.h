@@ -45,10 +45,10 @@ public:
     //--------STATIC METHODS-------//
 
 private:
-    const float                                 _width;
-    const float                                 _height;
+    const float                                       _width;
+    const float                                       _height;
     const std::vector<std::shared_ptr<const Label> >  _children;
-    const JumperBallTypes::vec2f _position;
+    const JumperBallTypes::vec2f                      _position;
 
 };
 

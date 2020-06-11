@@ -32,6 +32,8 @@ public:
     const std::shared_ptr<const Page>&                parent() const;
     bool                                              visibleOnParent() const;
 
+    std::shared_ptr<const Page>                       child(float x, float y)
+                                                                          const;
 private:
 
     const std::vector<std::shared_ptr<const Label> >  _labels;

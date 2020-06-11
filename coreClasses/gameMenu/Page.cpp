@@ -41,3 +41,16 @@ bool Page::visibleOnParent() const {
     return _visibleOnParent;
  }
 
+std::shared_ptr<const Page> Page::child(float x, float y) const{
+
+    for (const std::shared_ptr<const Label>& label : _labels) {
+        if( (_bridges.find(label) != bridges().end()) && bridges().at(label) &&
+           x > label->position().x - label->width()/2.f &&
+           x < label->position().x + label->width()/2.f &&
+           y > label->position().y - label->height()/2.f &&
+           y < label->position().y + label->height()/2.f) {
+            return bridges().at(label);
+        }
+    }
+    return nullptr;
+}

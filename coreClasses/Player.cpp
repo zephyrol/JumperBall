@@ -29,12 +29,12 @@ Player::Player() :
     _bonusLevel(1)
 { }
 
-void Player::currentMap(const std::shared_ptr<Map>& currentMap)
+void Player::currentMap(const std::shared_ptr<const Map>& currentMap)
 {
     _currentMap = currentMap;
 }
 
-const std::shared_ptr<Map>& Player::currentMap() const
+const std::shared_ptr<const Map>& Player::currentMap() const
 {
     return _currentMap;
 }
@@ -111,5 +111,14 @@ void Player::gravityLevelUp() {
 
 void Player::speedLevelUp() {
     _speedLevel++;
+}
+
+
+void Player::currentPage(const std::shared_ptr<const Page>& currentPage) {
+    _currentPage = currentPage;
+}
+
+const std::shared_ptr<const Page>& Player::currentPage() const {
+    return _currentPage;
 }
 

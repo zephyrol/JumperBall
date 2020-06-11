@@ -23,11 +23,9 @@ public:
 
     enum class Statut { INGAME, INMENU, INPAUSE };
 
-    const std::shared_ptr<Map>& currentMap() const;
     size_t levelProgression() const;
     unsigned int getMoney() const;
 
-    void currentMap(const std::shared_ptr<Map>& currentMap);
     void unlockNewLevel();
     
     void increaseMoney(unsigned int value);
@@ -46,11 +44,17 @@ public:
 
     Statut statut() const;
     void statut(const Statut& s);
+    
+    void currentMap(const std::shared_ptr<const Map>& currentMap);
+    const std::shared_ptr<const Map>& currentMap() const;
+    
+    void currentPage(const std::shared_ptr<const Page>& currentPage);
+    const std::shared_ptr<const Page>& currentPage() const;
 
 private:
    
-    std::shared_ptr<Map> _currentMap;
-    std::shared_ptr<Page> _currentPage;
+    std::shared_ptr<const Map> _currentMap;
+    std::shared_ptr<const Page> _currentPage;
     Statut _statut;
     size_t _levelProgression;
     unsigned int _money;
