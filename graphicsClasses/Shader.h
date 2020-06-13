@@ -33,6 +33,7 @@ public:
 
     //-------CONST METHODS--------//
     GLuint            getHandle() const;
+    GLenum            getShaderType() const;
 
 private:
 

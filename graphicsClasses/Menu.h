@@ -20,7 +20,7 @@ class Menu
 {
 public:
     Menu(const std::shared_ptr<const Page>& rootPage);
-    void render(const ShaderProgram& sp) const;
+    void render() const;
 
 
 private:
@@ -30,8 +30,7 @@ private:
     std::shared_ptr<const Page> _currentPage;
 
 
-    void renderPage(const ShaderProgram& sp,
-        const std::shared_ptr<const Page>& page) const;
+    void renderPage( const std::shared_ptr<const Page>& page) const;
 
     const std::shared_ptr<const Page>& currentPage() const;
     void currentPage(std::shared_ptr<const Page>& page);

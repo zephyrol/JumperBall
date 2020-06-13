@@ -36,9 +36,9 @@ public:
                                             glm::vec2 localScale;
                                             glm::vec2 localTranslate; };
 
-    void                                render( const ShaderProgram& sp, 
-                                                const Label& label, 
+    void                                render( const Label& label, 
                                                 const glm::vec3& color) const;
+    unsigned int                        fontHeight() const;
 
 private:
 
@@ -52,11 +52,14 @@ private:
                                               const std::vector<unsigned char>& 
                                                                     characters,  
                                                           unsigned int height);
+    const ShaderProgram                 _spFont;
 
 
     static FT_Library                   ftLib;
     static FT_Face                      fontFace;
 
+    static const std::string            vsshaderFont;
+    static const std::string            fsshaderFont;
 
 };
 

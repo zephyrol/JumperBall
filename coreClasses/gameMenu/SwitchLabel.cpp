@@ -21,4 +21,14 @@ SwitchLabel::SwitchLabel(float width, float height,
 
 Label::TypeOfLabel SwitchLabel::typeOfLabel() const {
     return Label::TypeOfLabel::Switch;
- }
+}
+
+void SwitchLabel::turnOn() { 
+    _switch = true;
+}
+
+void SwitchLabel::turnOff() {
+    _switch = false;
+
+}
+

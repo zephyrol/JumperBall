@@ -42,7 +42,7 @@ glm::mat4 ObjectAnimation::translation() const {
 
 
 void ObjectAnimation::updateTrans() {
-    float seconds = JumperBallTypesMethods::getTimeSecondsSinceTimePoint(
+    const float seconds = JumperBallTypesMethods::getTimeSecondsSinceTimePoint(
       _referenceTimePointCreation);
     
     constexpr float speedFactor = 5.f;

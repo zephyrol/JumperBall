@@ -206,11 +206,6 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
 
     Menu menu(page);
 
-    
-    const ShaderProgram spLabels (
-    Shader (GL_VERTEX_SHADER,   "shaders/fontVs.vs"),
-    Shader (GL_FRAGMENT_SHADER, "shaders/fontFs.fs" ));
-        
 
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
     while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS
@@ -220,7 +215,7 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
         c.follow(m);
         
         r.render();
-        menu.render(spLabels);
+        menu.render();
         
         glfwSwapInterval(1);
         glfwSwapBuffers(_window);

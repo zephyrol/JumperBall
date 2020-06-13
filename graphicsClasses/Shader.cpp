@@ -60,3 +60,6 @@ GLuint Shader::getHandle() const {
     return _shaderHandle;
 }
 
+GLenum Shader::getShaderType() const {
+    return _shaderType;
+}

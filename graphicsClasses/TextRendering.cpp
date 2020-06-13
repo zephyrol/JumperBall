@@ -18,7 +18,9 @@ TextRendering::TextRendering(const std::vector<unsigned char>& characters,
                              unsigned int height):
     _alphabet(initAlphabet(characters,height)),
     _fontHeight(height),
-    _displayQuad()
+    _displayQuad(),
+    _spFont(Shader (GL_VERTEX_SHADER,   "shaders/fontVs.vs"),
+            Shader (GL_FRAGMENT_SHADER, "shaders/fontFs.fs"))
 {
 
 }
@@ -99,9 +101,9 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
     return alphabet;
 }
 
-void TextRendering::render( const ShaderProgram& sp, const Label& label, 
+void TextRendering::render( const Label& label, 
                             const glm::vec3& color) const {
-    sp.use();
+    _spFont.use();
 
     const JumperBallTypes::vec2f& position = label.position();
     const float pitch = label.width()/label.message().size();
@@ -127,13 +129,23 @@ void TextRendering::render( const ShaderProgram& sp, const Label& label,
         const glm::mat4 transformCharacter =
             biasMatrix * translate * scaleMatrix;
 
-        sp.bindUniformTexture("characterTexture", 0, _alphabet.at(c).texture);
-        sp.bindUniform("fontColor",color);
-        sp.bindUniform("M",transformCharacter);
+        _spFont.bindUniformTexture("characterTexture", 0,
+                                   _alphabet.at(c).texture);
+        _spFont.bindUniform("fontColor",color);
+        _spFont.bindUniform("M",transformCharacter);
         _displayQuad.draw();
         offsetX += pitch;
     }
 }
 
+unsigned int TextRendering::fontHeight() const {
+    return _fontHeight;
+}
+
 FT_Library TextRendering::ftLib;
 FT_Face TextRendering::fontFace;
+
+
+const std::string TextRendering::vsshaderFont = "shaders/fontVs.vs";
+const std::string TextRendering::fsshaderFont = "shaders/fontFs.fs";
+

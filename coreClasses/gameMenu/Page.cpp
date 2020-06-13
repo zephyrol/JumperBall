@@ -17,11 +17,14 @@ Page::Page(const std::vector<std::shared_ptr<const Label> >& labels,
 	const std::map<std::shared_ptr<const Label>,
 	    std::shared_ptr<const Page> >& bridges,
 	const std::shared_ptr<const Page>& parent,
-	bool visibleOnParent) :
+	bool visibleOnParent,
+    float height) :
     _labels(labels),
     _bridges(bridges),
     _parent(parent),
-    _visibleOnParent(visibleOnParent)
+    _visibleOnParent(visibleOnParent),
+    _height(height),
+    _posY(0.f)
 { }
 
 const std::vector<std::shared_ptr<const Label> >& Page::labels() const{
@@ -39,7 +42,7 @@ const std::shared_ptr<const Page>& Page::parent() const {
 
 bool Page::visibleOnParent() const {
     return _visibleOnParent;
- }
+}
 
 std::shared_ptr<const Page> Page::child(float x, float y) const{
 
@@ -54,3 +57,8 @@ std::shared_ptr<const Page> Page::child(float x, float y) const{
     }
     return nullptr;
 }
+
+float Page::height() const {
+    return _height;
+}
+

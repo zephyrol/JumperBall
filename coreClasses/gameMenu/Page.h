@@ -24,7 +24,8 @@ public:
           const std::map<std::shared_ptr<const Label>,
             std::shared_ptr<const Page> >& bridges = {},
           const std::shared_ptr<const Page>& parent = nullptr,
-          bool visibleOnParent  = false);
+          bool visibleOnParent  = false,
+          float height = 1.f);
 
     
     //-------CONST METHODS--------//
@@ -36,14 +37,17 @@ public:
 
     std::shared_ptr<const Page>                       child(float x, float y)
                                                                           const;
+    float                                             height()            const;
 private:
 
     //--------ATTRIBUTES-----------//
     const std::vector<std::shared_ptr<const Label> >  _labels;
-    const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> > 
+    const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >
                                                       _bridges;
     const std::shared_ptr<const Page>                 _parent;
     const bool                                        _visibleOnParent;
+    const float                                       _height;
+    float                                             _posY;
 };
 
 #endif // PAGE_H

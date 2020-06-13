@@ -20,23 +20,24 @@ Menu::Menu(const std::shared_ptr<const Page>& rootPage):
 {
 }
 
-void Menu::render(const ShaderProgram& sp) const
+void Menu::render() const
 {
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    renderPage(sp, _rootPage);
+    renderPage(_rootPage);
 }
 
 
-void Menu::renderPage(const ShaderProgram& sp,
-    const std::shared_ptr<const Page>& page) const {
+void Menu::renderPage( const std::shared_ptr<const Page>& page) const {
     
     if (page->parent() && page->visibleOnParent()) {
-        renderPage(sp,page->parent());
+        renderPage(page->parent());
     }
 
     for( const std::shared_ptr<const Label>& label :_rootPage->labels()) {
-        _textRendering.render(sp, *label, glm::vec3(0, 1.f, 1.f));
+        if (label->typeOfLabel() == Label::TypeOfLabel::Message){
+            _textRendering.render(*label, glm::vec3(0, 1.f, 1.f));
+        }
     }
     
 }

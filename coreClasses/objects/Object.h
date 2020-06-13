@@ -24,9 +24,11 @@ public:
     enum class CategoryOfObjects {Key,Coin,Clock};
 
     virtual CategoryOfObjects getCategory() const = 0;
+    
+    bool isGotten() const;
 
 private:
-    bool                                              _gotten;
+    bool _gotten;
 };
 
 #endif /* OBJECT_H */

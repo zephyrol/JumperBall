@@ -23,13 +23,14 @@ class Label{
 public:
 
     //------------TYPES------------//
-    enum class TypeOfLabel { Object, Message, Switch};
+    enum class TypeOfLabel { Object, Message, Switch, Box};
 
     //---------CONSTANTS------------//
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Label                   (float width,float height,
-                            const JumperBallTypes::vec2f& position);
+                             const JumperBallTypes::vec2f& position,
+                             bool fixed = false);
     virtual ~Label          ()                                        = default;
 
     //-------CONST METHODS----------//
@@ -38,6 +39,7 @@ public:
     
     const std::vector<std::shared_ptr<const Label> >&
                             children()                                    const;
+    bool                    isFixed()                                     const;
     
     JumperBallTypes::vec2f  position()                                    const;
     virtual TypeOfLabel     typeOfLabel()                             const = 0;
@@ -51,6 +53,7 @@ private:
     const float                                       _height;
     const std::vector<std::shared_ptr<const Label> >  _children;
     const JumperBallTypes::vec2f                      _position;
+    const bool                                        _fixed;
 
 };
 

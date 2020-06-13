@@ -20,12 +20,14 @@ class SwitchLabel: public Label
 public:
     SwitchLabel(float width,float height,
         const JumperBallTypes::vec2f& position,
-        bool switchButton);
+        bool switchButton = false);
 
     virtual Label::TypeOfLabel typeOfLabel() const override;
+    void turnOn();
+    void turnOff();
 
 private:
-    const bool _switch;
+    bool _switch;
 };
 
 #endif // SWITCHLABEL_H

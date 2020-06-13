@@ -67,10 +67,10 @@ int main(int argc, char** argv) {
     testClass t;
     
     Star s (glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f)
-    ,0.3f,0.5f,50.f,5.f);
+            ,0.3f,0.5f,50.f,5.f);
     Rendering rendering (m,*b,s,c);
-    t.runController(rendering,b,c);
-    //t.runMenu(rendering,*b,c,m);
+    //t.runController(rendering,b,c);
+    t.runMenu(rendering,*b,c,m);
     
     return EXIT_SUCCESS;
 }

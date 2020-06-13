@@ -18,3 +18,8 @@ _gotten(false)
 {
 }
 
+bool Object::isGotten() const { 
+    return _gotten;
+}
+
+
