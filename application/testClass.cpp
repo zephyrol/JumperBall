@@ -111,7 +111,8 @@ void testClass::runController(Rendering& r, const std::shared_ptr<Ball>& b,
             posY = posY / static_cast<double>(RESOLUTION_Y);
 
             _controller.interactionMouse(Controller::Status::Pressed,
-                                         posX, posY);
+                                         static_cast<float>(posX), 
+                                         static_cast<float>(posY));
         }
         
         if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE ||
@@ -146,7 +147,8 @@ void testClass::runController(Rendering& r, const std::shared_ptr<Ball>& b,
             posY = posY / static_cast<double>(RESOLUTION_Y);
             
             _controller.interactionMouse(Controller::Status::Released,
-                                         posX, posY);
+                                         static_cast<float>(posX), 
+                                         static_cast<float>(posY));
         }
         
         
