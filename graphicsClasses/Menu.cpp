@@ -16,7 +16,8 @@
 Menu::Menu(const std::shared_ptr<const Page>& rootPage):
   _rootPage(rootPage),
   _textRendering(getCharacters(rootPage), 
-      getNumberOfPixelsHeight(getHeight(rootPage)))
+      getNumberOfPixelsHeight(getHeight(rootPage))),
+  _currentPage(rootPage)
 {
 }
 

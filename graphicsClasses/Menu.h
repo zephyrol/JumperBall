@@ -24,7 +24,6 @@ public:
 
 
 private:
-    //TextRendering initTextRendering( const std::shared_ptr<const Page>& root);
     const std::shared_ptr<const Page> _rootPage;
     TextRendering _textRendering;
     std::shared_ptr<const Page> _currentPage;

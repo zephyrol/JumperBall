@@ -46,6 +46,7 @@ void Controller::interactionButtons(const Controller::Button& button,
         case Controller::Button::Escape :
             manageEscape(status);
             break;
+        default: break;
     }
     _buttonsStatuts[button] = status;
 }
