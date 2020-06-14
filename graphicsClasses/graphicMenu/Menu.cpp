@@ -17,6 +17,7 @@ Menu::Menu(const std::shared_ptr<const Page>& rootPage):
   _rootPage(rootPage),
   _textRendering(getCharacters(rootPage), 
       getNumberOfPixelsHeight(getHeight(rootPage))),
+  _boxRendering(glm::vec3(0.f,0.f,1.f),glm::vec3(0.f,1.f,1.f)),
   _currentPage(rootPage)
 {
 }
@@ -38,6 +39,8 @@ void Menu::renderPage( const std::shared_ptr<const Page>& page) const {
     for( const std::shared_ptr<const Label>& label :_rootPage->labels()) {
         if (label->typeOfLabel() == Label::TypeOfLabel::Message){
             _textRendering.render(*label, glm::vec3(0, 1.f, 1.f));
+        } else if (label->typeOfLabel() == Label::TypeOfLabel::Box) {
+            _boxRendering.render(*label);
         }
     }
     

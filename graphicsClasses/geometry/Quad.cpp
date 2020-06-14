@@ -38,11 +38,39 @@ Quad::Quad( const glm::vec3& customColor,
 {
 }
 
+Quad::Quad(const glm::vec3 &customColor1,
+           const glm::vec3 &customColor2,
+           const glm::mat4 &modelTransform,
+           const glm::mat4 &normalsTransform):
+    GeometricShape (
+        basicPositionsQuad,
+        basicNormalsQuad,
+        createCustomDoubleColors(customColor1, customColor2),
+        basicUVCoordsQuad,
+        modelTransform,
+        normalsTransform)
+{
+}
+
 
 Quad::Quad(const GeometricShape& quad, 
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform ):
     GeometricShape(quad,modelTransform,normalsTransform) {
+}
+
+std::vector<glm::vec3> Quad::createCustomDoubleColors(
+        const glm::vec3 &customColor1, const glm::vec3 &customColor2)
+{
+return Utility::GLfloatListToGlmVec3({
+    customColor2.r, customColor2.g, customColor2.b,
+    customColor1.r, customColor1.g, customColor1.b,
+    customColor2.r, customColor2.g, customColor2.b,
+
+    customColor2.r, customColor2.g, customColor2.b,
+    customColor2.r, customColor2.g, customColor2.b,
+    customColor1.r, customColor1.g, customColor1.b
+});
 }
 
 

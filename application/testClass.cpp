@@ -178,7 +178,10 @@ void testClass::runController(Rendering& r, const std::shared_ptr<Ball>& b,
 
 void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
 
-    std::shared_ptr<const MessageLabel> label = 
+    std::shared_ptr<const BoxLabel> labelBox =
+        std::make_shared<const BoxLabel>(0.5f, 0.1f,
+            JumperBallTypes::vec2f{0.5f,0.8f} );
+    std::shared_ptr<const MessageLabel> label =
         std::make_shared<const MessageLabel>(0.5f, 0.1f, 
             JumperBallTypes::vec2f{0.5f,0.8f},
             "Jumper Ball");
@@ -197,7 +200,7 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
 
 
     const std::vector<std::shared_ptr<const Label> > labels 
-    {label, label2, label3, label4};
+    {labelBox, label, label2, label3, label4};
 
 
     const std::map<std::shared_ptr<const Label>,

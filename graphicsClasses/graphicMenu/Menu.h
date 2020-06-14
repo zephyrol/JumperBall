@@ -15,6 +15,7 @@
 #define MENU_H
 #include <gameMenu/Page.h>
 #include "TextRendering.h"
+#include "BoxRendering.h"
 
 class Menu
 {
@@ -26,6 +27,7 @@ public:
 private:
     const std::shared_ptr<const Page> _rootPage;
     TextRendering _textRendering;
+    BoxRendering _boxRendering;
     std::shared_ptr<const Page> _currentPage;
 
 

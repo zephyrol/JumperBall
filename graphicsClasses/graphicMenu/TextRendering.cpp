@@ -19,8 +19,8 @@ TextRendering::TextRendering(const std::vector<unsigned char>& characters,
     _alphabet(initAlphabet(characters,height)),
     _fontHeight(height),
     _displayQuad(),
-    _spFont(Shader (GL_VERTEX_SHADER,   "shaders/fontVs.vs"),
-            Shader (GL_FRAGMENT_SHADER, "shaders/fontFs.fs"))
+    _spFont(Shader (GL_VERTEX_SHADER,   vsshaderFont),
+            Shader (GL_FRAGMENT_SHADER, fsshaderFont))
 {
 
 }

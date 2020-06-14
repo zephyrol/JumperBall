@@ -18,7 +18,7 @@
 #include <Shader.h>
 #include <ShaderProgram.h>
 #include <Rendering.h>
-#include <Menu.h>
+#include <graphicMenu/Menu.h>
 #include <Controller.h>
 
 class testClass {

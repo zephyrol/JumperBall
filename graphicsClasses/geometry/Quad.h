@@ -24,11 +24,19 @@ public:
     Quad( const glm::vec3& customColor,
           const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
-    Quad( const GeometricShape& quad, 
+    Quad( const glm::vec3& customColor1,
+          const glm::vec3& customColor2,
+          const glm::mat4& modelTransform    = glm::mat4(1.f),
+          const glm::mat4& normalsTransform  = glm::mat4(1.f));
+    Quad( const GeometricShape& quad,
           const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
 private:
     
+    //--------STATIC METHODS-------//
+    static std::vector<glm::vec3>   createCustomDoubleColors(
+                                          const glm::vec3& customColor1,
+                                          const glm::vec3& customColor2);
 
     static const std::vector<glm::vec3> basicPositionsQuad;
     static const std::vector<glm::vec3> basicColorsQuad;
