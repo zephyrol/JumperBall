@@ -55,8 +55,6 @@ private:
     static constexpr float          blurSigma                             = 4.f;
     static constexpr size_t         blurPatchSize                         = 25;
     static constexpr size_t         heightBloomTexture                    = 192;
-    //static constexpr float          scaleBloomTexture =   heightBloomTexture /
-      //                           static_cast<float>(Utility::windowResolutionY);
 
     //--------ATTRIBUTES-----------//
     uniformVariable<glm::mat4>      _uniformMatrix4;
@@ -89,7 +87,6 @@ private:
     const ShaderProgram             _spBloom;
     const ShaderProgram             _spDepth;
 
-
     const FrameBuffer               _frameBufferDepth;
     const FrameBuffer               _frameBufferScene;
     const FrameBuffer               _frameBufferToneMapping;
@@ -114,7 +111,6 @@ private:
 
     void                            bindCamera(const ShaderProgram& sp);
     void                            bindStarView(const ShaderProgram& sp);
-
 
 
     //------STATIC ATTRIBUTES------//

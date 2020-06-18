@@ -231,6 +231,12 @@ float Utility::getLuminance(const glm::vec3& rgbColor) {
     return CIExyYColor.z;
 }
 
+
+float Utility::getWindowRatio() {
+    return static_cast<float>(Utility::windowResolutionX) /
+        static_cast<float>(Utility::windowResolutionY);
+}
+
 void Utility::displayInstallError() {
         #ifdef _MSC_VER
         std::cerr << "Did you forget to install the files ?" << std::endl

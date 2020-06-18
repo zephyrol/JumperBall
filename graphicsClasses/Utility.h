@@ -38,13 +38,14 @@ namespace Utility {
                                             const std::vector<GLfloat>& list);
 
     void                              displayInstallError();
+    float                             getWindowRatio();
 
     extern const glm::mat3            XYZToRGB;
     extern const glm::mat3            RGBToXYZ;
     extern unsigned int               windowResolutionX;
     extern unsigned int               windowResolutionY;
-    
-    
+
+
 }
 
 #endif /* UTILITY_H */
