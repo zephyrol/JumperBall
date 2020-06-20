@@ -247,3 +247,9 @@ void Utility::displayInstallError() {
             "or \"make install\"" << std::endl;
         #endif
 }
+
+float Utility::xScreenToPortrait(float x) {
+    constexpr float maxRatio = 2.75f;
+    return x / ( static_cast<float>(windowResolutionX) /
+                (static_cast<float>(windowResolutionY) / maxRatio) ) ;
+}

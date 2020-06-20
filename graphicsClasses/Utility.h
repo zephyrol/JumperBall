@@ -37,6 +37,8 @@ namespace Utility {
     std::vector<glm::vec2>            GLfloatListToGlmVec2(
                                             const std::vector<GLfloat>& list);
 
+    float                             xScreenToPortrait(float x);
+
     void                              displayInstallError();
     float                             getWindowRatio();
 
@@ -44,6 +46,7 @@ namespace Utility {
     extern const glm::mat3            RGBToXYZ;
     extern unsigned int               windowResolutionX;
     extern unsigned int               windowResolutionY;
+
 
 
 }

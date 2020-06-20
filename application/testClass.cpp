@@ -180,39 +180,68 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
 
     //Menu 1
     std::shared_ptr<const MessageLabel> label =
-        std::make_shared<const MessageLabel>(0.5f, 0.1f, 
+        std::make_shared<const MessageLabel>(
+            Utility::xScreenToPortrait(1.f), 0.1f,
             JumperBallTypes::vec2f{0.5f,0.8f},
             "Jumper Ball");
     std::shared_ptr<const MessageLabel> label2 = 
-        std::make_shared<const MessageLabel> (0.2f,0.05f,
+        std::make_shared<const MessageLabel> (
+            Utility::xScreenToPortrait(0.4f), 0.05f,
             JumperBallTypes::vec2f{0.5f,0.6f},
             "Play");
     std::shared_ptr<const MessageLabel> label3 = 
-        std::make_shared<const MessageLabel> (0.3f,0.05f,
+        std::make_shared<const MessageLabel> (
+            Utility::xScreenToPortrait(0.6f), 0.05f,
             JumperBallTypes::vec2f{0.5f,0.4f},
             "Store");
     std::shared_ptr<const MessageLabel> label4 = 
-        std::make_shared<const MessageLabel> (0.2f,0.05f,
+        std::make_shared<const MessageLabel> (
+            Utility::xScreenToPortrait(0.4f), 0.05f,
             JumperBallTypes::vec2f{0.5f,0.2f},
             "Exit");
     
+    //Menu 2
+    std::vector<std::shared_ptr<const Label> > labelsPage2;
+    
+    for (size_t i = 0; i < 15; ++i) {
+        std::string sNumber;
+        if( i < 10 ) {
+            sNumber.append("0");
+        }
+        sNumber.append(std::to_string(i));
+        
+        std::shared_ptr<const MessageLabel> labelLevel =
+        std::make_shared<const MessageLabel>
+        (Utility::xScreenToPortrait(.2f),
+        0.1f, JumperBallTypes::vec2f{0.3f + (i % 3) * 0.2f, 0.3f + i * 0.3f},
+        sNumber);
+        
+        labelsPage2.push_back(labelLevel);
+    }
+
     //Menu 2
     std::shared_ptr<const BoxLabel> labelBox =
     std::make_shared<const BoxLabel>(0.5f, 0.1f,
                                      JumperBallTypes::vec2f{0.5f,0.8f} );
     
 
-    const std::vector<std::shared_ptr<const Label> > labels 
-    {labelBox, label, label2, label3, label4};
+    const std::vector<std::shared_ptr<const Label> > labelsPage1
+    {label, label2, label3, label4};
 
 
-    const std::map<std::shared_ptr<const Label>,
-        std::shared_ptr<const Page> > bridges;
+    std::map<std::shared_ptr<const Label>,
+        std::shared_ptr<const Page> > bridgesPage1 ;
+    
+    std::map<std::shared_ptr<const Label>,
+    std::shared_ptr<const Page> > bridgesPage2 ;
 
-    const std::shared_ptr<const Page> page =
-        std::make_shared<const Page> (labels,bridges, nullptr,false);
+    const std::shared_ptr<const Page> page1 =
+        std::make_shared<const Page> (labelsPage1,bridgesPage1, nullptr,false);
+    
+    const std::shared_ptr<const Page> page2 =
+        std::make_shared<const Page> (labelsPage2,bridgesPage2, nullptr,false);
 
-    Menu menu(page);
+    Menu menu(page1);
 
 
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;

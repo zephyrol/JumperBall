@@ -56,6 +56,7 @@ void Menu::currentPage(std::shared_ptr<const Page>& page)
 {
     _currentPage = page;
 }
+
 std::vector<unsigned char> Menu::getCharacters(
     const std::shared_ptr<const Page>& page)
 {
