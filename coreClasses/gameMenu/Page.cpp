@@ -14,13 +14,11 @@
  */
 
 Page::Page(const std::vector<std::shared_ptr<const Label> >& labels,
-	const std::map<std::shared_ptr<const Label>,
-	    std::shared_ptr<const Page> >& bridges,
 	const std::shared_ptr<const Page>& parent,
 	bool visibleOnParent,
     float height) :
     _labels(labels),
-    _bridges(bridges),
+    _bridges{},
     _parent(parent),
     _visibleOnParent(visibleOnParent),
     _height(height),
@@ -47,7 +45,7 @@ bool Page::visibleOnParent() const {
 std::shared_ptr<const Page> Page::child(float x, float y) const{
 
     for (const std::shared_ptr<const Label>& label : _labels) {
-        if( (_bridges.find(label) != bridges().end()) && bridges().at(label) &&
+        if( (_bridges.find(label) != _bridges.end()) && _bridges.at(label) &&
            x > label->position().x - label->width()/2.f &&
            x < label->position().x + label->width()/2.f &&
            y > label->position().y - label->height()/2.f &&
@@ -62,3 +60,12 @@ float Page::height() const {
     return _height;
 }
 
+void Page::addBridge(const std::shared_ptr<const Label> label,
+                     const std::shared_ptr<const Page> page) {
+    if (std::find(_labels.begin(), _labels.end(), label) == _labels.end()) {
+        std::cout << "Trying to associate a label that does not exist in the" <<
+            "current page ... the operation is skipped ..." << std::endl;
+    } else {
+        _bridges[label] = page;
+    }
+}

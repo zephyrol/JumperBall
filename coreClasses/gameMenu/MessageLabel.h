@@ -29,6 +29,7 @@ public:
 
 private:
     const std::string _message;
+    
 };
 
 #endif // MESSAGELABEL_H

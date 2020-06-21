@@ -203,19 +203,38 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
     //Menu 2
     std::vector<std::shared_ptr<const Label> > labelsPage2;
     
+    std::shared_ptr<const MessageLabel> labelLevels =
+    std::make_shared<const MessageLabel>
+    (Utility::xScreenToPortrait(1.  ),
+     0.2f, JumperBallTypes::vec2f{0.5f, 1.f - 0.1f},
+     "Levels");
+    labelsPage2.push_back(labelLevels);
+    
+    //constexpr float offsetBox = 0.02f;
     for (size_t i = 0; i < 15; ++i) {
+        
         std::string sNumber;
         if( i < 10 ) {
             sNumber.append("0");
         }
-        sNumber.append(std::to_string(i));
+        sNumber.append(std::to_string(i+1));
+        
+        
+        /*std::shared_ptr<const BoxLabel> boxLabelLevels =
+        std::make_shared<const BoxLabel>
+        (   Utility::xScreenToPortrait(.2f), 0.1f,
+         JumperBallTypes::vec2f{.5f - Utility::xScreenToPortrait(.5f)
+            + Utility::xScreenToPortrait(.1f + (i%3) * .4f), 1.f-(0.3f + i/3 * 0.3f)-offsetBox});
+        labelsPage2.push_back(boxLabelLevels);*/
         
         std::shared_ptr<const MessageLabel> labelLevel =
         std::make_shared<const MessageLabel>
-        (Utility::xScreenToPortrait(.2f),
-        0.1f, JumperBallTypes::vec2f{0.3f + (i % 3) * 0.2f, 0.3f + i * 0.3f},
-        sNumber);
+        (Utility::xScreenToPortrait(.2f), 0.1f,
+         JumperBallTypes::vec2f{ .5f - Utility::xScreenToPortrait(.5f)
+            + Utility::xScreenToPortrait(.1f + (i%3) * .4f),
+            1.f-(0.3f + i/3 * 0.3f)}, sNumber);
         
+
         labelsPage2.push_back(labelLevel);
     }
 
@@ -233,15 +252,17 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
         std::shared_ptr<const Page> > bridgesPage1 ;
     
     std::map<std::shared_ptr<const Label>,
-    std::shared_ptr<const Page> > bridgesPage2 ;
+        std::shared_ptr<const Page> > bridgesPage2 ;
 
-    const std::shared_ptr<const Page> page1 =
-        std::make_shared<const Page> (labelsPage1,bridgesPage1, nullptr,false);
+    const std::shared_ptr<Page> page1 =
+        std::make_shared<Page> (labelsPage1, nullptr, false);
     
-    const std::shared_ptr<const Page> page2 =
-        std::make_shared<const Page> (labelsPage2,bridgesPage2, nullptr,false);
+    const std::shared_ptr<Page> page2 =
+        std::make_shared<Page> (labelsPage2, page1, false);
+    
+    page1->addBridge(label2, page2);
 
-    Menu menu(page1);
+    Menu menu(page2);
 
 
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
