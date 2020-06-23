@@ -64,13 +64,18 @@ int main(int argc, char** argv) {
     Camera c;
     
     //Defining t allows to create an OpenGl context
-    testClass t;
+    testClass t(b,c,m);
     
     Star s (glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f)
             ,0.3f,0.5f,50.f,5.f);
-    Rendering rendering (m,*b,s,c);
+    //Rendering rendering (m,*b,s,c);
+    std::shared_ptr<Rendering> rendering =
+            std::make_shared<Rendering>(m,*b,s,c);
+
+    t.assignRenderingEngine(rendering);
+    t.run();
     //t.runController(rendering,b,c);
-    t.runMenu(rendering,*b,c,m);
+    //t.runMenu(rendering,*b,c,m);
     
     return EXIT_SUCCESS;
 }

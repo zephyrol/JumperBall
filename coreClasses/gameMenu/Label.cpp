@@ -18,12 +18,13 @@
 #include "Label.h"
 
 Label::Label(float width, float height, const JumperBallTypes::vec2f& position,
-             bool fixed):
+             bool activated, bool fixed):
     _width(width),
     _height(height),
     _children{},
     _position(position),
-    _fixed(fixed)
+    _fixed(fixed),
+    _activated(activated)
 {
 }
 
@@ -51,4 +52,26 @@ bool Label::isFixed() const {
     return _fixed;
 }
 
+bool Label::isActivated() const {
+    return _activated;
+}
 
+void Label::activate() {
+   _activated = true;
+}
+void Label::deactivate() {
+   _activated = false;
+}
+
+
+void Label::updateLabelsLevels(
+        const std::vector<std::shared_ptr<Label> > &labels,
+        size_t end) {
+    for (size_t i = 0; i < labels.size(); i++) {
+        if (i < end) {
+            labels.at(i)->activate();
+        } else {
+            labels.at(i)->deactivate();
+        }
+    }
+}

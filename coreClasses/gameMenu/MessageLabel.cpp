@@ -14,8 +14,9 @@
 
 MessageLabel::MessageLabel(float width,float height,
     const JumperBallTypes::vec2f& position,
-    const std::string& message):
-    Label(width,height,position),
+    const std::string& message,
+    bool activated):
+    Label(width,height,position,activated),
     _message(message)
 {
 }
@@ -24,6 +25,8 @@ std::string MessageLabel::message() const
 {
     return _message;
 }
+
+
 
 Label::TypeOfLabel MessageLabel::typeOfLabel() const {
     return Label::TypeOfLabel::Message;

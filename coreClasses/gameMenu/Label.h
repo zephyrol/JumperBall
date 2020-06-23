@@ -30,6 +30,7 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     Label                   (float width,float height,
                              const JumperBallTypes::vec2f& position,
+                             bool activated = false,
                              bool fixed = false);
     virtual ~Label          ()                                        = default;
 
@@ -40,11 +41,20 @@ public:
     const std::vector<std::shared_ptr<const Label> >&
                             children()                                    const;
     bool                    isFixed()                                     const;
-    
+    bool                    isActivated()                                 const;
+
     JumperBallTypes::vec2f  position()                                    const;
     virtual TypeOfLabel     typeOfLabel()                             const = 0;
     virtual std::string     message()                                     const;
 
+    //----------METHODS-------------//
+    void                    activate();
+    void                    deactivate();
+
+    //--------STATIC METHODS-------//
+    static void updateLabelsLevels(
+            const std::vector<std::shared_ptr<Label> >& labels,
+            size_t end);
 
 private:
     
@@ -54,6 +64,7 @@ private:
     const std::vector<std::shared_ptr<const Label> >  _children;
     const JumperBallTypes::vec2f                      _position;
     const bool                                        _fixed;
+    bool                                              _activated;
 
 };
 

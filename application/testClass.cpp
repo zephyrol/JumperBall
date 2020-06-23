@@ -18,9 +18,16 @@
 #include <initializer_list>
 
 
-testClass::testClass(): _window(nullptr),
-_player(),
-_controller(_player)
+testClass::testClass(
+        const std::shared_ptr<Ball> &ball,
+        Camera &cam, Map &map):
+    _window(nullptr),
+    _player(),
+    _controller(_player),
+    _renderingEngine(nullptr),
+    _ball(ball),
+    _map(map),
+    _camera(cam)
 {
     if( !glfwInit() )
     {
@@ -60,50 +67,48 @@ _controller(_player)
         exit(EXIT_FAILURE);
     } 
 
+    _controller.assignBall(ball);
 }
 
-void testClass::runController(Rendering& r, const std::shared_ptr<Ball>& b,
-                              Camera& c) {
 
-    auto before = JumperBallTypesMethods::getTimePointMSNow();
-    unsigned int counter = 0;
-    
-    _player.statut(Player::Statut::INGAME);
-    _controller.assignBall(b);
+
+bool testClass::runController() {
+
+    bool exit;
     
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
-    while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS
-           && glfwWindowShouldClose(_window) == 0 ) {
-        
 
-        b->update();
-        c.follow(*b);
-        
+    if (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS
+            && glfwWindowShouldClose(_window) == 0 ) {
+
+        _ball->update();
+        _camera.follow(*_ball);
+
         if( glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_PRESS ||
-           glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_PRESS)
+                glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_PRESS)
         {
             _controller.interactionButtons(Controller::Button::Validate,
-                                    Controller::Status::Pressed);
+                                           Controller::Status::Pressed);
         }
-        
+
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_PRESS ||
-           glfwGetKey(_window,GLFW_KEY_L) == GLFW_PRESS) {
+                glfwGetKey(_window,GLFW_KEY_L) == GLFW_PRESS) {
             _controller.interactionButtons(Controller::Button::Right,
-                                    Controller::Status::Pressed);
+                                           Controller::Status::Pressed);
         }
-        
+
         if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_PRESS ||
-           glfwGetKey(_window,GLFW_KEY_H) == GLFW_PRESS) {
+                glfwGetKey(_window,GLFW_KEY_H) == GLFW_PRESS) {
             _controller.interactionButtons(Controller::Button::Left,
-                                    Controller::Status::Pressed);
+                                           Controller::Status::Pressed);
         }
-        
+
         if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_PRESS ||
-           glfwGetKey(_window,GLFW_KEY_K) == GLFW_PRESS) {
+                glfwGetKey(_window,GLFW_KEY_K) == GLFW_PRESS) {
             _controller.interactionButtons(Controller::Button::Up,
-                                    Controller::Status::Pressed);
+                                           Controller::Status::Pressed);
         }
-        
+
         if(glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1 ) == GLFW_PRESS) {
             double posX, posY;
             glfwGetCursorPos(_window,&posX ,&posY);
@@ -111,72 +116,56 @@ void testClass::runController(Rendering& r, const std::shared_ptr<Ball>& b,
             posY = posY / static_cast<double>(RESOLUTION_Y);
 
             _controller.interactionMouse(Controller::Status::Pressed,
-                                         static_cast<float>(posX), 
+                                         static_cast<float>(posX),
                                          static_cast<float>(posY));
         }
-        
+
         if(glfwGetKey(_window,GLFW_KEY_ENTER) == GLFW_RELEASE ||
-           glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_RELEASE)
+                glfwGetKey(_window,GLFW_KEY_SPACE) == GLFW_RELEASE)
         {
             _controller.interactionButtons(Controller::Button::Validate,
-                                    Controller::Status::Released);
+                                           Controller::Status::Released);
         }
-        
+
         if(glfwGetKey(_window,GLFW_KEY_RIGHT) == GLFW_RELEASE ||
-           glfwGetKey(_window,GLFW_KEY_L) == GLFW_RELEASE) {
+                glfwGetKey(_window,GLFW_KEY_L) == GLFW_RELEASE) {
             _controller.interactionButtons(Controller::Button::Right,
-                                    Controller::Status::Released);
+                                           Controller::Status::Released);
         }
-        
+
         if(glfwGetKey(_window,GLFW_KEY_LEFT) == GLFW_RELEASE ||
-           glfwGetKey(_window,GLFW_KEY_H) == GLFW_RELEASE) {
+                glfwGetKey(_window,GLFW_KEY_H) == GLFW_RELEASE) {
             _controller.interactionButtons(Controller::Button::Left,
-                                    Controller::Status::Released);
+                                           Controller::Status::Released);
         }
-        
+
         if(glfwGetKey(_window,GLFW_KEY_UP) == GLFW_RELEASE ||
-           glfwGetKey(_window,GLFW_KEY_K) == GLFW_RELEASE) {
+                glfwGetKey(_window,GLFW_KEY_K) == GLFW_RELEASE) {
             _controller.interactionButtons(Controller::Button::Up,
-                                    Controller::Status::Released);
+                                           Controller::Status::Released);
         }
-        
+
         if(glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1 ) == GLFW_RELEASE) {
             double posX, posY;
             glfwGetCursorPos(_window,&posX ,&posY);
             posX = posX / static_cast<double>(RESOLUTION_X);
             posY = posY / static_cast<double>(RESOLUTION_Y);
-            
+
             _controller.interactionMouse(Controller::Status::Released,
-                                         static_cast<float>(posX), 
+                                         static_cast<float>(posX),
                                          static_cast<float>(posY));
         }
-        
-        
-        b->update();
-        c.follow(*b);
-        
-        r.render();
-        
-        glfwSwapInterval(1);
-        glfwSwapBuffers(_window);
-        
-        glfwPollEvents();
-        
-        counter++;
-        auto after = JumperBallTypesMethods::getTimePointMSNow();
-        auto diff = after - before;
-        const std::chrono::duration<float> durationFloatDifference= diff;
-        float diffF = durationFloatDifference.count();
-        if (diffF > 1.f) {
-            before = after;
-            std::cout << counter << " FPS"  << std::endl;
-            counter = 0;
-        }
+
+        exit = false;
+
+    } else {
+        exit = true;
     }
+    return exit;
 }
 
 
-void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
+void testClass::runMenu() {
 
     //Menu 1
     std::shared_ptr<const MessageLabel> label =
@@ -203,14 +192,16 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
     //Menu 2
     std::vector<std::shared_ptr<const Label> > labelsPage2;
     
-    std::shared_ptr<const MessageLabel> labelLevels =
+    std::shared_ptr<const MessageLabel> labelLevelsTitle =
     std::make_shared<const MessageLabel>
     (Utility::xScreenToPortrait(1.  ),
      0.2f, JumperBallTypes::vec2f{0.5f, 1.f - 0.1f},
      "Levels");
-    labelsPage2.push_back(labelLevels);
+    labelsPage2.push_back(labelLevelsTitle);
     
     //constexpr float offsetBox = 0.02f;
+
+    std::vector<std::shared_ptr<Label> > labelLevels;
     for (size_t i = 0; i < 15; ++i) {
         
         std::string sNumber;
@@ -227,16 +218,18 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
             + Utility::xScreenToPortrait(.1f + (i%3) * .4f), 1.f-(0.3f + i/3 * 0.3f)-offsetBox});
         labelsPage2.push_back(boxLabelLevels);*/
         
-        std::shared_ptr<const MessageLabel> labelLevel =
-        std::make_shared<const MessageLabel>
+        std::shared_ptr<MessageLabel> labelLevel =
+        std::make_shared<MessageLabel>
         (Utility::xScreenToPortrait(.2f), 0.1f,
          JumperBallTypes::vec2f{ .5f - Utility::xScreenToPortrait(.5f)
             + Utility::xScreenToPortrait(.1f + (i%3) * .4f),
             1.f-(0.3f + i/3 * 0.3f)}, sNumber);
         
-
         labelsPage2.push_back(labelLevel);
+        labelLevels.push_back(labelLevel);
     }
+
+    Label::updateLabelsLevels(labelLevels, _player.levelProgression());
 
     //Menu 2
     std::shared_ptr<const BoxLabel> labelBox =
@@ -262,25 +255,68 @@ void testClass::runMenu(Rendering& r, Ball& b, Camera& c, Map& m) {
     
     page1->addBridge(label2, page2);
 
-    Menu menu(page2);
+    Menu menu(page1);
 
+        
+    _ball->update();
+    _camera.follow(_map);
 
-    glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
-    while (glfwGetKey(_window,GLFW_KEY_ESCAPE) != GLFW_PRESS
-           && glfwWindowShouldClose(_window) == 0 ) {
+    _renderingEngine->render();
+    menu.render();
         
-        b.update();
-        c.follow(m);
         
-        r.render();
-        menu.render();
-        
-        glfwSwapInterval(1);
-        glfwSwapBuffers(_window);
-        
-        glfwPollEvents();
-        
-    }
+}
+
+void testClass::runGame()
+{
+
+}
+
+void testClass::run()
+{
+
+    auto before = JumperBallTypesMethods::getTimePointMSNow();
+    unsigned int counter = 0;
+    while (!runController())
+	{
+
+		if (_player.statut() == Player::Statut::INMENU) {
+			runMenu();
+		} else if (_player.statut() == Player::Statut::INGAME) {
+			//runGame();
+			_ball->update();
+			_camera.follow(*_ball);
+
+			_renderingEngine->render();
+		}
+
+        //glfwSwapInterval(1);
+		glfwSwapBuffers(_window);
+
+		glfwPollEvents();
+
+		counter++;
+		auto after = JumperBallTypesMethods::getTimePointMSNow();
+		auto diff = after - before;
+		const std::chrono::duration<float> durationFloatDifference= diff;
+		float diffF = durationFloatDifference.count();
+		if (diffF > 1.f) {
+			before = after;
+			std::cout << counter << " FPS"  << std::endl;
+			counter = 0;
+		}
+
+		if (_player.statut() == Player::Statut::INGAME) {
+			_ball->update();
+			_camera.follow(*_ball);
+		}
+	}
+
+}
+
+void testClass::assignRenderingEngine(std::shared_ptr<Rendering> rendering)
+{
+   _renderingEngine = rendering;
 }
 
 testClass::~testClass() {

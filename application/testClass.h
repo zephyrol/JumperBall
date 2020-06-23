@@ -25,14 +25,16 @@ class testClass {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    testClass();
+    testClass( const std::shared_ptr<Ball>& ball,
+              Camera& cam,
+              Map& map
+              );
     ~testClass();
 
     
     //----------METHODS-------------//
-    void          runController(Rendering& r, const std::shared_ptr<Ball>& b,
-                                Camera& c);
-    void          runMenu(Rendering& r, Ball& b, Camera& c, Map& m);
+    void          run();
+    void          assignRenderingEngine(std::shared_ptr<Rendering> rendering);
 
 
 private:
@@ -41,6 +43,15 @@ private:
     GLFWwindow*   _window;
     Player        _player;
     Controller    _controller;
+    std::shared_ptr<Rendering>    _renderingEngine;
+    const std::shared_ptr<Ball> _ball;
+    Map&          _map;
+    Camera&       _camera;
+
+    //----------METHODS-------------//
+    bool          runController();
+    void          runMenu();
+    void          runGame();
 
 };
 

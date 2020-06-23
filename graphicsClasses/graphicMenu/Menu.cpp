@@ -38,7 +38,11 @@ void Menu::renderPage( const std::shared_ptr<const Page>& page) const {
 
     for( const std::shared_ptr<const Label>& label :_rootPage->labels()) {
         if (label->typeOfLabel() == Label::TypeOfLabel::Message){
-            _textRendering.render(*label, glm::vec3(0, 1.f, 1.f));
+            if (label->isActivated()) {
+                _textRendering.render(*label, glm::vec3(0, 1.f, 1.f));
+            } else {
+                _textRendering.render(*label, glm::vec3(.2f, .2f, .2f));
+            }
         } else if (label->typeOfLabel() == Label::TypeOfLabel::Box) {
             _boxRendering.render(*label);
         }
