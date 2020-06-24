@@ -23,6 +23,49 @@
 
 using namespace std;
 
+GLFWwindow* initLibraries() {
+    GLFWwindow* window;
+    if( !glfwInit() )
+    {
+      std::cerr << "Failed to init glfw" << std::endl;
+    }
+    glfwWindowHint(GLFW_RESIZABLE, false);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+
+    /*_window = glfwCreateWindow(RESOLUTION_X,RESOLUTION_Y,
+                                "JumperBall",glfwGetPrimaryMonitor(),
+           nullptr);*/
+    window = glfwCreateWindow( RESOLUTION_X,RESOLUTION_Y,
+                                "JumperBall",nullptr, nullptr);
+
+    int widthWindow;
+    int heightWindow;
+    glfwGetFramebufferSize(window ,&widthWindow ,&heightWindow);
+
+    Utility::windowResolutionX = widthWindow;
+    Utility::windowResolutionY = heightWindow;
+
+    if( window == nullptr ){
+    std::cerr << "Failed to open GLFW window" << std::endl;
+    glfwTerminate();
+    }
+
+    glfwMakeContextCurrent(window);
+    if (!gladLoadGL()) {
+        std::cerr << "Unable to load OpenGL functions !" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if (!TextRendering::initFreeTypeAndFont()) {
+        exit(EXIT_FAILURE);
+    }
+    return window;
+
+}
+
 int main(int argc, char** argv) {
     
     ifstream file;
@@ -52,7 +95,7 @@ int main(int argc, char** argv) {
         return EXIT_SUCCESS;
     }
 
-
+    GLFWwindow* window = initLibraries();
     
     Map m (file);
     std::cout << "Map created" << std::endl;
@@ -64,7 +107,7 @@ int main(int argc, char** argv) {
     Camera c;
     
     //Defining t allows to create an OpenGl context
-    testClass t(b,c,m);
+    testClass t(b,c,m,window);
     
     Star s (glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f)
             ,0.3f,0.5f,50.f,5.f);

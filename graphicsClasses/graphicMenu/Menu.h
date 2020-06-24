@@ -21,8 +21,10 @@ class Menu
 {
 public:
     Menu(const std::shared_ptr<const Page>& rootPage);
-    void render() const;
 
+    void render() const;
+    const std::shared_ptr<const Page>& currentPage() const;
+    void currentPage(const std::shared_ptr<const Page>& page);
 
 private:
     const std::shared_ptr<const Page> _rootPage;
@@ -32,10 +34,6 @@ private:
 
 
     void renderPage( const std::shared_ptr<const Page>& page) const;
-
-    const std::shared_ptr<const Page>& currentPage() const;
-    void currentPage(std::shared_ptr<const Page>& page);
-    
 
     static std::vector<unsigned char> getCharacters
         (const std::shared_ptr<const Page>& page);

@@ -56,7 +56,7 @@ const std::shared_ptr<const Page>& Menu::currentPage() const
 }
 
 
-void Menu::currentPage(std::shared_ptr<const Page>& page)
+void Menu::currentPage(const std::shared_ptr<const Page> &page)
 {
     _currentPage = page;
 }

@@ -53,8 +53,6 @@ public:
 
 private:
    
-    std::shared_ptr<const Map> _currentMap;
-    std::shared_ptr<const Page> _currentPage;
     Statut _statut;
     size_t _levelProgression;
     unsigned int _money;

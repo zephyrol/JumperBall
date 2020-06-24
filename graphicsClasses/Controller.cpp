@@ -10,6 +10,7 @@
 
 Controller::Controller(Player& player):
 _player(player),
+_menu(nullptr),
 _ball(nullptr),
 _buttonsStatuts{
     { Controller::Button::Up,       Controller::Status::Released },
@@ -75,11 +76,13 @@ void Controller::manageValidate(const Controller::Status &status) {
         }
     }
     else if (_player.statut() == Player::Statut::INMENU) {
-        const std::shared_ptr<const Page> newPage =
-            _player.currentPage()->child(_mousePressingXCoord,
-                                         _mousePressingYCoord);
-        if (newPage) {
-            _player.currentPage(newPage);
+        if(_menu->currentPage()) {
+            const std::shared_ptr<const Page> newPage =
+                    _menu->currentPage()->child(_mousePressingXCoord,
+                                                 _mousePressingYCoord);
+            if (newPage) {
+                _menu->currentPage(newPage);
+            }
         }
     }
 }
@@ -124,6 +127,11 @@ void Controller::manageUp(const Controller::Status &status) {
 
 void Controller::assignBall ( const std::shared_ptr<Ball>& ball ) {
     _ball = ball;
+}
+
+void Controller::assignMenu(const std::shared_ptr<Menu> &menu)
+{
+   _menu = menu;
 }
 
 Controller::ScreenDirection Controller::nearestDirection

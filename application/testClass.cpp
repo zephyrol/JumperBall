@@ -20,54 +20,20 @@
 
 testClass::testClass(
         const std::shared_ptr<Ball> &ball,
-        Camera &cam, Map &map):
-    _window(nullptr),
+        Camera &cam, Map &map,
+        GLFWwindow* window
+        ):
+    _window(window),
     _player(),
     _controller(_player),
     _renderingEngine(nullptr),
     _ball(ball),
     _map(map),
-    _camera(cam)
+    _camera(cam),
+    _mainMenu(initMainMenu(_player.levelProgression()))
 {
-    if( !glfwInit() )
-    {
-      std::cerr << "Failed to init glfw" << std::endl;
-    }
-    glfwWindowHint(GLFW_RESIZABLE, false);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
-    
-    /*_window = glfwCreateWindow(RESOLUTION_X,RESOLUTION_Y,
-                                "JumperBall",glfwGetPrimaryMonitor(),
-           nullptr);*/
-    _window = glfwCreateWindow( RESOLUTION_X,RESOLUTION_Y,
-                                "JumperBall",nullptr, nullptr);
-    
-    int widthWindow;
-    int heightWindow;
-    glfwGetFramebufferSize(_window ,&widthWindow ,&heightWindow);
-    
-    Utility::windowResolutionX = widthWindow;
-    Utility::windowResolutionY = heightWindow;
-
-    if( _window == nullptr ){
-    std::cerr << "Failed to open GLFW window" << std::endl;
-    glfwTerminate();
-    }
-    
-    glfwMakeContextCurrent(_window);
-    if (!gladLoadGL()) {
-        std::cerr << "Unable to load OpenGL functions !" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    if (!TextRendering::initFreeTypeAndFont()) {
-        exit(EXIT_FAILURE);
-    } 
-
     _controller.assignBall(ball);
+    _controller.assignMenu(_mainMenu);
 }
 
 
@@ -167,102 +133,13 @@ bool testClass::runController() {
 
 void testClass::runMenu() {
 
-    //Menu 1
-    std::shared_ptr<const MessageLabel> label =
-        std::make_shared<const MessageLabel>(
-            Utility::xScreenToPortrait(1.f), 0.1f,
-            JumperBallTypes::vec2f{0.5f,0.8f},
-            "Jumper Ball");
-    std::shared_ptr<const MessageLabel> label2 = 
-        std::make_shared<const MessageLabel> (
-            Utility::xScreenToPortrait(0.4f), 0.05f,
-            JumperBallTypes::vec2f{0.5f,0.6f},
-            "Play");
-    std::shared_ptr<const MessageLabel> label3 = 
-        std::make_shared<const MessageLabel> (
-            Utility::xScreenToPortrait(0.6f), 0.05f,
-            JumperBallTypes::vec2f{0.5f,0.4f},
-            "Store");
-    std::shared_ptr<const MessageLabel> label4 = 
-        std::make_shared<const MessageLabel> (
-            Utility::xScreenToPortrait(0.4f), 0.05f,
-            JumperBallTypes::vec2f{0.5f,0.2f},
-            "Exit");
-    
-    //Menu 2
-    std::vector<std::shared_ptr<const Label> > labelsPage2;
-    
-    std::shared_ptr<const MessageLabel> labelLevelsTitle =
-    std::make_shared<const MessageLabel>
-    (Utility::xScreenToPortrait(1.  ),
-     0.2f, JumperBallTypes::vec2f{0.5f, 1.f - 0.1f},
-     "Levels");
-    labelsPage2.push_back(labelLevelsTitle);
-    
-    //constexpr float offsetBox = 0.02f;
-
-    std::vector<std::shared_ptr<Label> > labelLevels;
-    for (size_t i = 0; i < 15; ++i) {
-        
-        std::string sNumber;
-        if( i < 10 ) {
-            sNumber.append("0");
-        }
-        sNumber.append(std::to_string(i+1));
-        
-        
-        /*std::shared_ptr<const BoxLabel> boxLabelLevels =
-        std::make_shared<const BoxLabel>
-        (   Utility::xScreenToPortrait(.2f), 0.1f,
-         JumperBallTypes::vec2f{.5f - Utility::xScreenToPortrait(.5f)
-            + Utility::xScreenToPortrait(.1f + (i%3) * .4f), 1.f-(0.3f + i/3 * 0.3f)-offsetBox});
-        labelsPage2.push_back(boxLabelLevels);*/
-        
-        std::shared_ptr<MessageLabel> labelLevel =
-        std::make_shared<MessageLabel>
-        (Utility::xScreenToPortrait(.2f), 0.1f,
-         JumperBallTypes::vec2f{ .5f - Utility::xScreenToPortrait(.5f)
-            + Utility::xScreenToPortrait(.1f + (i%3) * .4f),
-            1.f-(0.3f + i/3 * 0.3f)}, sNumber);
-        
-        labelsPage2.push_back(labelLevel);
-        labelLevels.push_back(labelLevel);
-    }
-
-    Label::updateLabelsLevels(labelLevels, _player.levelProgression());
-
-    //Menu 2
-    std::shared_ptr<const BoxLabel> labelBox =
-    std::make_shared<const BoxLabel>(0.5f, 0.1f,
-                                     JumperBallTypes::vec2f{0.5f,0.8f} );
-    
-
-    const std::vector<std::shared_ptr<const Label> > labelsPage1
-    {label, label2, label3, label4};
-
-
-    std::map<std::shared_ptr<const Label>,
-        std::shared_ptr<const Page> > bridgesPage1 ;
-    
-    std::map<std::shared_ptr<const Label>,
-        std::shared_ptr<const Page> > bridgesPage2 ;
-
-    const std::shared_ptr<Page> page1 =
-        std::make_shared<Page> (labelsPage1, nullptr, false);
-    
-    const std::shared_ptr<Page> page2 =
-        std::make_shared<Page> (labelsPage2, page1, false);
-    
-    page1->addBridge(label2, page2);
-
-    Menu menu(page1);
 
         
     _ball->update();
     _camera.follow(_map);
 
     _renderingEngine->render();
-    menu.render();
+    _mainMenu->render();
         
         
 }
@@ -317,6 +194,103 @@ void testClass::run()
 void testClass::assignRenderingEngine(std::shared_ptr<Rendering> rendering)
 {
    _renderingEngine = rendering;
+}
+
+std::shared_ptr<Menu> testClass::initMainMenu(size_t currentLevel)
+{
+    //Menu 1
+    std::shared_ptr<const MessageLabel> label =
+        std::make_shared<const MessageLabel>(
+            Utility::xScreenToPortrait(1.f), 0.1f,
+            JumperBallTypes::vec2f{0.5f,0.8f},
+            "Jumper Ball");
+    std::shared_ptr<const MessageLabel> label2 =
+        std::make_shared<const MessageLabel> (
+            Utility::xScreenToPortrait(0.4f), 0.05f,
+            JumperBallTypes::vec2f{0.5f,0.6f},
+            "Play");
+    std::shared_ptr<const MessageLabel> label3 =
+        std::make_shared<const MessageLabel> (
+            Utility::xScreenToPortrait(0.6f), 0.05f,
+            JumperBallTypes::vec2f{0.5f,0.4f},
+            "Store");
+    std::shared_ptr<const MessageLabel> label4 =
+        std::make_shared<const MessageLabel> (
+            Utility::xScreenToPortrait(0.4f), 0.05f,
+            JumperBallTypes::vec2f{0.5f,0.2f},
+            "Exit");
+
+    //Menu 2
+    std::vector<std::shared_ptr<const Label> > labelsPage2;
+
+    std::shared_ptr<const MessageLabel> labelLevelsTitle =
+    std::make_shared<const MessageLabel>
+    (Utility::xScreenToPortrait(1.  ),
+     0.2f, JumperBallTypes::vec2f{0.5f, 1.f - 0.1f},
+     "Levels");
+    labelsPage2.push_back(labelLevelsTitle);
+
+    //constexpr float offsetBox = 0.02f;
+
+    std::vector<std::shared_ptr<Label> > labelLevels;
+    for (size_t i = 0; i < 15; ++i) {
+
+        std::string sNumber;
+        if( i < 10 ) {
+            sNumber.append("0");
+        }
+        sNumber.append(std::to_string(i+1));
+
+
+        /*std::shared_ptr<const BoxLabel> boxLabelLevels =
+        std::make_shared<const BoxLabel>
+        (   Utility::xScreenToPortrait(.2f), 0.1f,
+         JumperBallTypes::vec2f{.5f - Utility::xScreenToPortrait(.5f)
+            + Utility::xScreenToPortrait(.1f + (i%3) * .4f), 1.f-(0.3f + i/3 * 0.3f)-offsetBox});
+        labelsPage2.push_back(boxLabelLevels);*/
+
+        std::shared_ptr<MessageLabel> labelLevel =
+        std::make_shared<MessageLabel>
+        (Utility::xScreenToPortrait(.2f), 0.1f,
+         JumperBallTypes::vec2f{ .5f - Utility::xScreenToPortrait(.5f)
+            + Utility::xScreenToPortrait(.1f + (i%3) * .4f),
+            1.f-(0.3f + i/3 * 0.3f)}, sNumber);
+
+        labelsPage2.push_back(labelLevel);
+        labelLevels.push_back(labelLevel);
+    }
+
+    Label::updateLabelsLevels(labelLevels, currentLevel
+                              /*_player.levelProgression()*/);
+
+    //Menu 2
+    std::shared_ptr<const BoxLabel> labelBox =
+    std::make_shared<const BoxLabel>(0.5f, 0.1f,
+                                     JumperBallTypes::vec2f{0.5f,0.8f} );
+
+
+    const std::vector<std::shared_ptr<const Label> > labelsPage1
+    {label, label2, label3, label4};
+
+
+    std::map<std::shared_ptr<const Label>,
+        std::shared_ptr<const Page> > bridgesPage1 ;
+
+    std::map<std::shared_ptr<const Label>,
+        std::shared_ptr<const Page> > bridgesPage2 ;
+
+    const std::shared_ptr<Page> page1 =
+        std::make_shared<Page> (labelsPage1, nullptr, false);
+
+    const std::shared_ptr<Page> page2 =
+        std::make_shared<Page> (labelsPage2, page1, false);
+
+    page1->addBridge(label2, page2);
+
+
+    std::shared_ptr<Menu> menu = std::make_shared<Menu> (page1);
+    return std::make_shared<Menu> (page1);
+
 }
 
 testClass::~testClass() {

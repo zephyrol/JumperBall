@@ -14,9 +14,7 @@
 #include "Player.h"
 
 Player::Player() :
-    _currentMap (nullptr),
-    _currentPage(nullptr),
-    _statut(Player::Statut::INGAME),
+    _statut(Player::Statut::INMENU),
     _levelProgression(1),
     _money(0),
     _diamonds(false),
@@ -28,16 +26,6 @@ Player::Player() :
     _clockItemLevel(1),
     _bonusLevel(1)
 { }
-
-void Player::currentMap(const std::shared_ptr<const Map>& currentMap)
-{
-    _currentMap = currentMap;
-}
-
-const std::shared_ptr<const Map>& Player::currentMap() const
-{
-    return _currentMap;
-}
 
 size_t Player::levelProgression() const {
     return _levelProgression;
@@ -81,12 +69,8 @@ Player::Statut Player::statut() const {
     return _statut;
 }
 
-
 void Player::statut(const Player::Statut& s) {
     _statut = s;
-    if (_statut == Player::Statut::INMENU) {
-      _currentMap = nullptr;
-    }
 }
 
 void Player::bonusLevelUp() {
@@ -112,13 +96,3 @@ void Player::gravityLevelUp() {
 void Player::speedLevelUp() {
     _speedLevel++;
 }
-
-
-void Player::currentPage(const std::shared_ptr<const Page>& currentPage) {
-    _currentPage = currentPage;
-}
-
-const std::shared_ptr<const Page>& Player::currentPage() const {
-    return _currentPage;
-}
-

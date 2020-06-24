@@ -27,7 +27,8 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     testClass( const std::shared_ptr<Ball>& ball,
               Camera& cam,
-              Map& map
+              Map& map,
+              GLFWwindow* window
               );
     ~testClass();
 
@@ -47,11 +48,14 @@ private:
     const std::shared_ptr<Ball> _ball;
     Map&          _map;
     Camera&       _camera;
+    std::shared_ptr<Menu> _mainMenu;
 
     //----------METHODS-------------//
     bool          runController();
     void          runMenu();
     void          runGame();
+
+    static std::shared_ptr<Menu> initMainMenu(size_t currentLevel);
 
 };
 

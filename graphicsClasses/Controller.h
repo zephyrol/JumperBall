@@ -10,6 +10,7 @@
 
 #include <Player.h>
 #include <Ball.h>
+#include "graphicMenu/Menu.h"
 
 class Controller {
     
@@ -31,7 +32,8 @@ public:
                                      float posX, float posY);
     
     void            assignBall (const std::shared_ptr<Ball>& ball );
-    
+    void            assignMenu (const std::shared_ptr<Menu>& menu);
+
     
 private:
     //-------CONST METHODS--------//
@@ -52,8 +54,10 @@ private:
 
     //--------ATTRIBUTES-----------//
     Player&         _player;
+    std::shared_ptr<Menu> _menu;
     std::shared_ptr<Ball> _ball;
     std::map<Button, Status> _buttonsStatuts;
+
     
     float           _mousePressingXCoord;
     float           _mousePressingYCoord;
