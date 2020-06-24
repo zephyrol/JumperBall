@@ -79,7 +79,8 @@ bool testClass::runController() {
             double posX, posY;
             glfwGetCursorPos(_window,&posX ,&posY);
             posX = posX / static_cast<double>(RESOLUTION_X);
-            posY = posY / static_cast<double>(RESOLUTION_Y);
+            posY = 1.-posY / static_cast<double>(RESOLUTION_Y); //GLFW defines
+                                                          //the y=0 as the top
 
             _controller.interactionMouse(Controller::Status::Pressed,
                                          static_cast<float>(posX),
@@ -115,7 +116,7 @@ bool testClass::runController() {
             double posX, posY;
             glfwGetCursorPos(_window,&posX ,&posY);
             posX = posX / static_cast<double>(RESOLUTION_X);
-            posY = posY / static_cast<double>(RESOLUTION_Y);
+            posY = 1.-posY / static_cast<double>(RESOLUTION_Y);
 
             _controller.interactionMouse(Controller::Status::Released,
                                          static_cast<float>(posX),

@@ -42,7 +42,7 @@ void Controller::interactionButtons(const Controller::Button& button,
             manageRight(status);
             break;
         case Controller::Button::Validate :
-            manageValidate(status);
+            manageValidateButton(status);
             break;
         case Controller::Button::Escape :
             manageEscape(status);
@@ -69,13 +69,20 @@ void Controller::interactionMouse(const Status& status, float posX, float posY){
     }
 }
 
-void Controller::manageValidate(const Controller::Status &status) {
+void Controller::manageValidateButton(const Controller::Status &status) {
     if ( _player.statut() == Player::Statut::INGAME ) {
         if (status == Controller::Status::Pressed && _ball) {
             _ball->doAction(Ball::ActionRequest::Jump);
         }
     }
-    else if (_player.statut() == Player::Statut::INMENU) {
+}
+
+void Controller::manageValidateMouse()
+{
+    if ( _player.statut() == Player::Statut::INGAME && _ball) {
+            _ball->doAction(Ball::ActionRequest::Jump);
+    }
+    else if (_player.statut() == Player::Statut::INMENU ) {
         if(_menu->currentPage()) {
             const std::shared_ptr<const Page> newPage =
                     _menu->currentPage()->child(_mousePressingXCoord,
@@ -85,6 +92,7 @@ void Controller::manageValidate(const Controller::Status &status) {
             }
         }
     }
+
 }
 
 
@@ -144,10 +152,10 @@ Controller::ScreenDirection Controller::nearestDirection
     Controller::ScreenDirection nearestDir = Controller::ScreenDirection::North;
     float computedDistance;
     float nearestDistance = computeDistance(_mousePressingXCoord,
-                                            _mousePressingYCoord - 1.f,
+                                            _mousePressingYCoord + 1.f,
                                             posX,posY);
     if ((computedDistance = computeDistance(_mousePressingXCoord,
-                                            _mousePressingYCoord + 1.f,
+                                            _mousePressingYCoord - 1.f,
                                             posX, posY))
                                             <  nearestDistance ){
         nearestDistance= computedDistance;
@@ -217,6 +225,6 @@ void Controller::releaseMouse ( float posX, float posY ) {
     const float distance = computeDistance(_mousePressingXCoord,
                                            _mousePressingYCoord, posX, posY);
     if (distance < thresholdMoving) {
-        manageValidate(Controller::Status::Pressed);
+        manageValidateMouse();
     }
 }

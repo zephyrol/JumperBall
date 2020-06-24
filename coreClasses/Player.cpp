@@ -14,7 +14,7 @@
 #include "Player.h"
 
 Player::Player() :
-    _statut(Player::Statut::INMENU),
+    _statut(Player::Statut::INGAME),
     _levelProgression(1),
     _money(0),
     _diamonds(false),

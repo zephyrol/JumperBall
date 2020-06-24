@@ -45,12 +45,13 @@ private:
     void            manageRight (const Status& status);
     void            manageLeft (const Status& status);
     void            manageEscape (const Status& status);
-    void            manageValidate (const Status& status);
+    void            manageValidateButton (const Status& status);
     
     //Mouse/TouchPad/TouchScreen
     void            pressMouse (float posX, float posY);
     void            updateMouse (float posX, float posY);
     void            releaseMouse (float posX, float posY);
+    void            manageValidateMouse ();
 
     //--------ATTRIBUTES-----------//
     Player&         _player;
