@@ -25,12 +25,29 @@ public:
     //------------TYPES------------//
     enum class TypeOfLabel { Object, Message, Switch, Box};
 
+    enum class Action { PredefinedAction, GoLevel };
+    enum class PredefinedAction { ExitGame, ChooseEnglish, ChooseFrench };
+
+    struct LabelAnswer {
+        Label::Action action;
+
+        union {
+            size_t chooseLevel;
+            //bool switchMusic;
+            //bool switchSound;
+            PredefinedAction predefinedAction;
+        };
+    };
+
+
     //---------CONSTANTS------------//
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Label                   (float width,float height,
                              const JumperBallTypes::vec2f& position,
                              bool activated = false,
+                             const std::shared_ptr<LabelAnswer> action
+                                = nullptr,
                              bool fixed = false);
     virtual ~Label          ()                                        = default;
 
@@ -38,10 +55,10 @@ public:
     float                   width()                                       const;
     float                   height()                                      const;
     
-    const std::vector<std::shared_ptr<const Label> >&
-                            children()                                    const;
+    const std::vector<std::shared_ptr<const Label> >& children()          const;
     bool                    isFixed()                                     const;
     bool                    isActivated()                                 const;
+    const std::shared_ptr<LabelAnswer> action()                           const;
 
     JumperBallTypes::vec2f  position()                                    const;
     virtual TypeOfLabel     typeOfLabel()                             const = 0;
@@ -52,7 +69,7 @@ public:
     void                    deactivate();
 
     //--------STATIC METHODS-------//
-    static void updateLabelsLevels(
+    static void             updateLabelsLevels(
             const std::vector<std::shared_ptr<Label> >& labels,
             size_t end);
 
@@ -65,6 +82,7 @@ private:
     const JumperBallTypes::vec2f                      _position;
     const bool                                        _fixed;
     bool                                              _activated;
+    const std::shared_ptr<LabelAnswer>                _action;
 
 };
 

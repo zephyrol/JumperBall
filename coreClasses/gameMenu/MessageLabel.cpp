@@ -15,8 +15,9 @@
 MessageLabel::MessageLabel(float width,float height,
     const JumperBallTypes::vec2f& position,
     const std::string& message,
-    bool activated):
-    Label(width,height,position,activated),
+    bool activated,
+    const std::shared_ptr<LabelAnswer> action ):
+    Label(width,height,position,activated,action),
     _message(message)
 {
 }

@@ -18,13 +18,16 @@
 #include "Label.h"
 
 Label::Label(float width, float height, const JumperBallTypes::vec2f& position,
-             bool activated, bool fixed):
+             bool activated,
+             const std::shared_ptr<LabelAnswer> action,
+             bool fixed):
     _width(width),
     _height(height),
     _children{},
     _position(position),
     _fixed(fixed),
-    _activated(activated)
+    _activated(activated),
+    _action(action)
 {
 }
 
@@ -74,4 +77,8 @@ void Label::updateLabelsLevels(
             labels.at(i)->deactivate();
         }
     }
+}
+
+const std::shared_ptr<Label::LabelAnswer> Label::action() const {
+    return _action;
 }
