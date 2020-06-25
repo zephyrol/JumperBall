@@ -84,15 +84,23 @@ void Controller::manageValidateMouse()
     }
     else if (_player.statut() == Player::Statut::INMENU ) {
         if(_menu->currentPage()) {
-            const std::shared_ptr<const Page> newPage =
-                    _menu->currentPage()->child(_mousePressingXCoord,
-                                                 _mousePressingYCoord);
-            if (newPage) {
-                _menu->currentPage(newPage);
+
+            const std::shared_ptr<const Label> label =
+                    _menu->currentPage()->matchedLabel(
+                        _mousePressingXCoord,
+                        _mousePressingYCoord);
+            if (label) {
+                const std::shared_ptr<const Page> newPage =
+                        _menu->currentPage()->child(label);
+                if (newPage) {
+                    _menu->currentPage(newPage);
+                } else if  ( const std::shared_ptr<const Label::LabelAnswer>&
+                             action = label->action()) {
+                    _player.treatAction(*action);
+                }
             }
         }
     }
-
 }
 
 

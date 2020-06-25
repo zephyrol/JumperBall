@@ -33,8 +33,15 @@ public:
     const std::shared_ptr<const Page>&                parent()            const;
     bool                                              visibleOnParent()   const;
 
-    std::shared_ptr<const Page>                       child(float x, float y)
+    std::shared_ptr<const Page>                       child(
+                               const std::shared_ptr<const Label>& label) const;
+
+    std::shared_ptr<const Page>                       child( float x, float y)
                                                                           const;
+
+    std::shared_ptr<const Label>                      matchedLabel(
+                                                        float x, float y) const;
+
     float                                             height()            const;
     
     //----------METHODS-----------//
@@ -44,6 +51,7 @@ public:
     
 private:
 
+    //-------CONST METHODS--------//
     //--------ATTRIBUTES-----------//
     const std::vector<std::shared_ptr<const Label> >  _labels;
     std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >

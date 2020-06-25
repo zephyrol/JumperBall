@@ -73,6 +73,30 @@ void Player::statut(const Player::Statut& s) {
     _statut = s;
 }
 
+void Player::currentMap(const std::shared_ptr<Map> &currentMap)
+{
+    _currentMap = currentMap;
+}
+
+const std::shared_ptr<Map> &Player::currentMap() const
+{
+   return _currentMap;
+}
+
+void Player::treatAction(const Label::LabelAnswer& action)
+{
+
+    switch(action.typeOfAction) {
+    case Label::TypeOfAction::PredefinedAction :
+        break;
+    case Label::TypeOfAction::GoLevel:
+        //std::cout << "go Level " << action.chooseLevel << std::endl;
+        _statut = Player::Statut::INGAME;
+        break;
+    default : break;
+    }
+}
+
 void Player::bonusLevelUp() {
     _bonusLevel++;
 }

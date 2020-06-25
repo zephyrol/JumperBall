@@ -45,16 +45,16 @@ public:
     Statut statut() const;
     void statut(const Statut& s);
     
-    void currentMap(const std::shared_ptr<const Map>& currentMap);
-    const std::shared_ptr<const Map>& currentMap() const;
-    
-    void currentPage(const std::shared_ptr<const Page>& currentPage);
-    const std::shared_ptr<const Page>& currentPage() const;
+    void currentMap(const std::shared_ptr<Map>& currentMap);
+    const std::shared_ptr<Map> &currentMap() const;
+
+    void treatAction(const Label::LabelAnswer& action);
 
 private:
    
     Statut _statut;
     size_t _levelProgression;
+    std::shared_ptr<Map> _currentMap;
     unsigned int _money;
     std::vector<bool> _diamonds;
 

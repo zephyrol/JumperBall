@@ -27,7 +27,7 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     testClass( const std::shared_ptr<Ball>& ball,
               Camera& cam,
-              Map& map,
+              const std::shared_ptr<Map>& map,
               GLFWwindow* window
               );
     ~testClass();
@@ -46,9 +46,8 @@ private:
     Controller    _controller;
     std::shared_ptr<Rendering>    _renderingEngine;
     const std::shared_ptr<Ball> _ball;
-    Map&          _map;
+    //Map&          _map;
     Camera&       _camera;
-    //std::shared_ptr<Menu> _mainMenu;
 
     //----------METHODS-------------//
     bool          runController();

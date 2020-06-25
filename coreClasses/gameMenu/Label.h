@@ -25,11 +25,11 @@ public:
     //------------TYPES------------//
     enum class TypeOfLabel { Object, Message, Switch, Box};
 
-    enum class Action { PredefinedAction, GoLevel };
+    enum class TypeOfAction { PredefinedAction, GoLevel };
     enum class PredefinedAction { ExitGame, ChooseEnglish, ChooseFrench };
 
     struct LabelAnswer {
-        Label::Action action;
+        Label::TypeOfAction typeOfAction;
 
         union {
             size_t chooseLevel;
@@ -58,7 +58,7 @@ public:
     const std::vector<std::shared_ptr<const Label> >& children()          const;
     bool                    isFixed()                                     const;
     bool                    isActivated()                                 const;
-    const std::shared_ptr<LabelAnswer> action()                           const;
+    const std::shared_ptr<LabelAnswer>& action()                          const;
 
     JumperBallTypes::vec2f  position()                                    const;
     virtual TypeOfLabel     typeOfLabel()                             const = 0;

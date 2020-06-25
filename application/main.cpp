@@ -97,13 +97,13 @@ int main(int argc, char** argv) {
 
     GLFWwindow* window = initLibraries();
     
-    Map m (file);
+    std::shared_ptr<Map> m = std::make_shared<Map>(file);
     std::cout << "Map created" << std::endl;
     
     file.close();
     
 
-    std::shared_ptr<Ball> b = std::make_shared<Ball>(m);
+    std::shared_ptr<Ball> b = std::make_shared<Ball>(*m);
     Camera c;
     
     //Defining t allows to create an OpenGl context
@@ -113,7 +113,7 @@ int main(int argc, char** argv) {
             ,0.3f,0.5f,50.f,5.f);
     //Rendering rendering (m,*b,s,c);
     std::shared_ptr<Rendering> rendering =
-            std::make_shared<Rendering>(m,*b,s,c);
+            std::make_shared<Rendering>(*m,*b,s,c);
 
     t.assignRenderingEngine(rendering);
     t.run();

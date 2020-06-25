@@ -22,8 +22,8 @@ public:
     MessageLabel(float width,float height,
         const JumperBallTypes::vec2f& position,
         const std::string& message,
-        bool activated = true,
-        const std::shared_ptr<LabelAnswer> action = nullptr
+        const std::shared_ptr<LabelAnswer> action = nullptr,
+        bool activated = true
         );
 
     virtual Label::TypeOfLabel typeOfLabel() const override;

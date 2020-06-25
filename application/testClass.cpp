@@ -20,7 +20,8 @@
 
 testClass::testClass(
         const std::shared_ptr<Ball> &ball,
-        Camera &cam, Map &map,
+        Camera &cam,
+        const std::shared_ptr<Map>& map,
         GLFWwindow* window
         ):
     _window(window),
@@ -28,10 +29,10 @@ testClass::testClass(
     _controller(_player),
     _renderingEngine(nullptr),
     _ball(ball),
-    _map(map),
+    //_map(map),
     _camera(cam)
-    //_mainMenu(initMainMenu(_player.levelProgression()))
 {
+    _player.currentMap(map);
     _controller.assignBall(ball);
     _controller.assignMenu(initMainMenu(_player.levelProgression()));
 }
@@ -137,7 +138,7 @@ void testClass::runMenu() {
 
         
     _ball->update();
-    _camera.follow(_map);
+    _camera.follow(*_player.currentMap());
 
     _renderingEngine->render();
     _controller.menu()->render();
@@ -250,13 +251,20 @@ std::shared_ptr<Menu> testClass::initMainMenu(size_t currentLevel)
             + Utility::xScreenToPortrait(.1f + (i%3) * .4f), 1.f-(0.3f + i/3 * 0.3f)-offsetBox});
         labelsPage2.push_back(boxLabelLevels);*/
 
-        std::shared_ptr<MessageLabel> labelLevel =
-        std::make_shared<MessageLabel>
-        (Utility::xScreenToPortrait(.2f), 0.1f,
-         JumperBallTypes::vec2f{ .5f - Utility::xScreenToPortrait(.5f)
-            + Utility::xScreenToPortrait(.1f + (i%3) * .4f),
-            1.f-(0.3f + i/3 * 0.3f)}, sNumber);
+        Label::LabelAnswer associatedLevel;
+        associatedLevel.typeOfAction = Label::TypeOfAction::GoLevel;
+        associatedLevel.chooseLevel = i;
 
+
+        std::shared_ptr<MessageLabel> labelLevel =
+        std::make_shared<MessageLabel> (
+            Utility::xScreenToPortrait(.2f), 0.1f,
+            JumperBallTypes::vec2f{ .5f - Utility::xScreenToPortrait(.5f)
+                + Utility::xScreenToPortrait(.1f + (i%3) * .4f),
+                1.f-(0.3f + i/3 * 0.3f)},
+            sNumber,
+            std::make_shared<Label::LabelAnswer> (associatedLevel)
+         );
         labelsPage2.push_back(labelLevel);
         labelLevels.push_back(labelLevel);
     }

@@ -79,6 +79,6 @@ void Label::updateLabelsLevels(
     }
 }
 
-const std::shared_ptr<Label::LabelAnswer> Label::action() const {
+const std::shared_ptr<Label::LabelAnswer>& Label::action() const {
     return _action;
 }

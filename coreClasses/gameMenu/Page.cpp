@@ -43,18 +43,27 @@ bool Page::visibleOnParent() const {
     return _visibleOnParent;
 }
 
+std::shared_ptr<const Page> Page::child(
+        const std::shared_ptr<const Label> &label) const {
+
+    if ( _bridges.find(label) != _bridges.end() ) {
+        return _bridges.at(label);
+    }
+    else {
+       return nullptr;
+    }
+
+}
+
 std::shared_ptr<const Page> Page::child(float x, float y) const{
 
-    for (const std::shared_ptr<const Label>& label : _labels) {
-        if( (_bridges.find(label) != _bridges.end()))
-            if (x > (label->position().x - label->width()/2.f) &&
-                x < (label->position().x + label->width()/2.f) &&
-                y > (label->position().y - label->height()/2.f) &&
-                y < (label->position().y + label->height()/2.f)) {
-                return bridges().at(label);
-            }
+    std::shared_ptr<const Page> childPage = nullptr;
+    if (const std::shared_ptr<const Label> label = matchedLabel(x,y)) {
+        if ( _bridges.find(label) != _bridges.end() ) {
+            childPage = _bridges.at(label);
+        }
     }
-    return nullptr;
+    return childPage;
 }
 
 float Page::height() const {
@@ -69,4 +78,17 @@ void Page::addBridge(const std::shared_ptr<const Label> label,
     } else {
         _bridges[label] = page;
     }
+}
+
+std::shared_ptr<const Label> Page::matchedLabel(float x, float y) const
+{
+    for (const std::shared_ptr<const Label>& label : _labels) {
+        if (x > (label->position().x - label->width()/2.f) &&
+                x < (label->position().x + label->width()/2.f) &&
+                y > (label->position().y - label->height()/2.f) &&
+                y < (label->position().y + label->height()/2.f)) {
+            return label;
+        }
+    }
+    return nullptr;
 }
