@@ -228,3 +228,7 @@ void Controller::releaseMouse ( float posX, float posY ) {
         manageValidateMouse();
     }
 }
+
+const std::shared_ptr<Menu>&  Controller::menu() const {
+    return _menu;
+}

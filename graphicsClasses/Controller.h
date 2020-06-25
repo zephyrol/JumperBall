@@ -33,6 +33,7 @@ public:
     
     void            assignBall (const std::shared_ptr<Ball>& ball );
     void            assignMenu (const std::shared_ptr<Menu>& menu);
+    const std::shared_ptr<Menu>&  menu() const;
 
     
 private:

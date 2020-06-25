@@ -48,7 +48,7 @@ private:
     const std::shared_ptr<Ball> _ball;
     Map&          _map;
     Camera&       _camera;
-    std::shared_ptr<Menu> _mainMenu;
+    //std::shared_ptr<Menu> _mainMenu;
 
     //----------METHODS-------------//
     bool          runController();

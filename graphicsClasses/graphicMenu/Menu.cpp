@@ -26,7 +26,7 @@ void Menu::render() const
 {
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    renderPage(_rootPage);
+    renderPage(_currentPage);
 }
 
 
@@ -36,7 +36,7 @@ void Menu::renderPage( const std::shared_ptr<const Page>& page) const {
         renderPage(page->parent());
     }
 
-    for( const std::shared_ptr<const Label>& label :_rootPage->labels()) {
+    for( const std::shared_ptr<const Label>& label :page->labels()) {
         if (label->typeOfLabel() == Label::TypeOfLabel::Message){
             if (label->isActivated()) {
                 _textRendering.render(*label, glm::vec3(0, 1.f, 1.f));

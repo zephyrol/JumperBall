@@ -29,11 +29,11 @@ testClass::testClass(
     _renderingEngine(nullptr),
     _ball(ball),
     _map(map),
-    _camera(cam),
-    _mainMenu(initMainMenu(_player.levelProgression()))
+    _camera(cam)
+    //_mainMenu(initMainMenu(_player.levelProgression()))
 {
     _controller.assignBall(ball);
-    _controller.assignMenu(_mainMenu);
+    _controller.assignMenu(initMainMenu(_player.levelProgression()));
 }
 
 
@@ -140,7 +140,7 @@ void testClass::runMenu() {
     _camera.follow(_map);
 
     _renderingEngine->render();
-    _mainMenu->render();
+    _controller.menu()->render();
         
         
 }
