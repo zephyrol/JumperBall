@@ -46,6 +46,8 @@ public:
     //----------METHODS-------------//
     void                          follow(const Ball& ball)             noexcept;
     void                          follow(const Map& map)               noexcept;
+    void                          transitionEffect(const Ball& ball,
+                                                   const Map& map)     noexcept;
 
 
 private:

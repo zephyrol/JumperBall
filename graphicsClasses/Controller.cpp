@@ -8,10 +8,9 @@
 #include "Controller.h"
 #include "cmath"
 
-Controller::Controller(Player& player):
-_player(player),
-_menu(nullptr),
-_ball(nullptr),
+Controller::Controller():
+_player(),
+_menu(Menu::getJumperBallMenu(1)),
 _buttonsStatuts{
     { Controller::Button::Up,       Controller::Status::Released },
     { Controller::Button::Down,     Controller::Status::Released },
@@ -21,7 +20,13 @@ _buttonsStatuts{
     { Controller::Button::Validate, Controller::Status::Released }},
 _mousePressingXCoord(0.f),
 _mousePressingYCoord(0.f),
-_mouseIsPressed(false)
+_mouseIsPressed(false),
+_currentMap(loadMap(_player.levelProgression())),
+_currentBall(std::make_shared<Ball>(*_currentMap)),
+_currentCamera(std::make_shared<Camera>()),
+_currentStar(std::make_shared<Star>(glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f)
+            ,0.3f,0.5f,50.f,5.f)),
+_renderingEngine(*_currentMap,*_currentBall,*_currentStar,*_currentCamera)
 {
 }
 
@@ -69,18 +74,39 @@ void Controller::interactionMouse(const Status& status, float posX, float posY){
     }
 }
 
+void Controller::run()
+{
+
+    if (_player.statut() == Player::Statut::INMENU) {
+        _currentBall->update();
+        _currentCamera->follow(*_currentMap);
+
+        _renderingEngine.render();
+        _menu->render();
+    } else if (_player.statut() == Player::Statut::INGAME) {
+        _currentBall->update();
+        _currentCamera->follow(*_currentBall);
+        _renderingEngine.render();
+
+    } else if (_player.statut() == Player::Statut::INTRANSITION){
+        _currentCamera->transitionEffect(*_currentBall, *_currentMap);
+        _currentBall->update();
+        _renderingEngine.render();
+    }
+}
+
 void Controller::manageValidateButton(const Controller::Status &status) {
     if ( _player.statut() == Player::Statut::INGAME ) {
-        if (status == Controller::Status::Pressed && _ball) {
-            _ball->doAction(Ball::ActionRequest::Jump);
+        if (status == Controller::Status::Pressed && _currentBall) {
+            _currentBall->doAction(Ball::ActionRequest::Jump);
         }
     }
 }
 
 void Controller::manageValidateMouse()
 {
-    if ( _player.statut() == Player::Statut::INGAME && _ball) {
-            _ball->doAction(Ball::ActionRequest::Jump);
+    if ( _player.statut() == Player::Statut::INGAME && _currentBall) {
+            _currentBall->doAction(Ball::ActionRequest::Jump);
     }
     else if (_player.statut() == Player::Statut::INMENU ) {
         if(_menu->currentPage()) {
@@ -108,46 +134,33 @@ void Controller::manageEscape(const Controller::Status &status) {
     static_cast<void>(status);
 }
 
-
 void Controller::manageRight(const Controller::Status &status) {
     
     if ( _player.statut() == Player::Statut::INGAME ) {
-        if (status == Controller::Status::Pressed && _ball) {
-            _ball->doAction(Ball::ActionRequest::TurnRight);
+        if (status == Controller::Status::Pressed && _currentBall) {
+            _currentBall->doAction(Ball::ActionRequest::TurnRight);
         }
     }
 }
 
 void Controller::manageLeft(const Status& status) {
     if ( _player.statut() == Player::Statut::INGAME ) {
-        if (status == Controller::Status::Pressed && _ball) {
-            _ball->doAction(Ball::ActionRequest::TurnLeft);
+        if (status == Controller::Status::Pressed && _currentBall) {
+            _currentBall->doAction(Ball::ActionRequest::TurnLeft);
         }
     }
 }
-
 
 void Controller::manageDown(const Controller::Status &status) {
     static_cast<void>(status);
 }
 
-
 void Controller::manageUp(const Controller::Status &status) {
     if ( _player.statut() == Player::Statut::INGAME ) {
-        if (status == Controller::Status::Pressed && _ball) {
-            _ball->doAction(Ball::ActionRequest::GoStraightAhead);
+        if (status == Controller::Status::Pressed && _currentBall) {
+            _currentBall->doAction(Ball::ActionRequest::GoStraightAhead);
         }
     }
-}
-
-
-void Controller::assignBall ( const std::shared_ptr<Ball>& ball ) {
-    _ball = ball;
-}
-
-void Controller::assignMenu(const std::shared_ptr<Menu> &menu)
-{
-   _menu = menu;
 }
 
 Controller::ScreenDirection Controller::nearestDirection
@@ -237,6 +250,46 @@ void Controller::releaseMouse ( float posX, float posY ) {
     }
 }
 
+std::shared_ptr<Map> Controller::loadMap(size_t mapNumber)
+{
+    const std::string fileToOpen = "maps/map" +
+            std::to_string(mapNumber) + ".txt";
+    std::ifstream mapFile;
+    mapFile.open(fileToOpen);  //Opening file to read
+    if (!mapFile) {
+        std::cerr << "ERROR: Opening " << fileToOpen << " impossible .."
+                  << std::endl;
+        JumperBallTypesMethods::displayInstallError();
+        exit(EXIT_FAILURE);
+    }
+    Map map (mapFile);
+    std::cout << "Map " << mapNumber << " loaded" << std::endl;
+
+    mapFile.close();
+
+    return std::make_shared<Map>(map);
+}
+
 const std::shared_ptr<Menu>&  Controller::menu() const {
     return _menu;
+}
+
+void Controller::currentMap(const std::shared_ptr<Map> &currentMap)
+{
+    _currentMap = currentMap;
+}
+
+const std::shared_ptr<Map> &Controller::currentMap() const
+{
+    return _currentMap;
+}
+
+void Controller::currentBall(const std::shared_ptr<Ball> &currentBall)
+{
+   _currentBall = currentBall;
+}
+
+const std::shared_ptr<Ball> &Controller::currentBall() const
+{
+   return _currentBall;
 }

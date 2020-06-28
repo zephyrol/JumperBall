@@ -70,6 +70,8 @@ namespace JumperBallTypesMethods {
     JumperBallTypes::timePointMs  getTimePointMsFromTimePoint( const 
        std::chrono::time_point<std::chrono::system_clock> & timePoint) noexcept;
 
+    void                          displayInstallError();
+
 }
 
 #endif /* TYPES_H */

@@ -39,7 +39,6 @@ namespace Utility {
 
     float                             xScreenToPortrait(float x);
 
-    void                              displayInstallError();
     float                             getWindowRatio();
 
     extern const glm::mat3            XYZToRGB;

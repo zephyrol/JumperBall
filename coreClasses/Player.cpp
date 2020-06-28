@@ -1,4 +1,4 @@
-/*
+﻿/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -73,29 +73,21 @@ void Player::statut(const Player::Statut& s) {
     _statut = s;
 }
 
-void Player::currentMap(const std::shared_ptr<Map> &currentMap)
-{
-    _currentMap = currentMap;
-}
-
-const std::shared_ptr<Map> &Player::currentMap() const
-{
-   return _currentMap;
-}
 
 void Player::treatAction(const Label::LabelAnswer& action)
 {
 
     switch(action.typeOfAction) {
+    //default : break;
     case Label::TypeOfAction::PredefinedAction :
         break;
     case Label::TypeOfAction::GoLevel:
         //std::cout << "go Level " << action.chooseLevel << std::endl;
         _statut = Player::Statut::INGAME;
         break;
-    default : break;
     }
 }
+
 
 void Player::bonusLevelUp() {
     _bonusLevel++;

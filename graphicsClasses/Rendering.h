@@ -34,9 +34,9 @@ class Rendering {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Rendering                       ( const Map& map, 
-                                      const Ball& ball, 
-                                      const Star& star, 
+    Rendering                       ( const Map& map,
+                                      const Ball& ball,
+                                      const Star& star,
                                       const Camera& camera );
 
 
@@ -46,12 +46,10 @@ public:
 private:
 
     //------------TYPES------------//
-
     template<typename T>
     using uniformVariable           = std::map<std::string,T >;
     
     //---------CONSTANTS------------//
-
     static constexpr float          blurSigma                             = 4.f;
     static constexpr size_t         blurPatchSize                         = 25;
     static constexpr size_t         heightBloomTexture                    = 192;

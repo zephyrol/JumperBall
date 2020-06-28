@@ -13,9 +13,9 @@
 
 #include "Rendering.h"
 
-Rendering::Rendering(const Map&     map, 
-                     const Ball&    ball, 
-                     const Star&    star, 
+Rendering::Rendering(const Map&     map,
+                     const Ball&    ball,
+                     const Star&    star,
                      const Camera&  camera):
     _uniformMatrix4(),
     _uniformVec4(),

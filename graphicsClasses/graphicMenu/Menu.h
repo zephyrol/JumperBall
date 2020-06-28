@@ -26,6 +26,8 @@ public:
     const std::shared_ptr<const Page>& currentPage() const;
     void currentPage(const std::shared_ptr<const Page>& page);
 
+    static std::shared_ptr<Menu> getJumperBallMenu(size_t currentLevel);
+
 private:
     const std::shared_ptr<const Page> _rootPage;
     TextRendering _textRendering;

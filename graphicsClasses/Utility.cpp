@@ -237,16 +237,6 @@ float Utility::getWindowRatio() {
         static_cast<float>(Utility::windowResolutionY);
 }
 
-void Utility::displayInstallError() {
-        #ifdef _MSC_VER
-        std::cerr << "Did you forget to install the files ?" << std::endl
-         << "On Visual Studio, build the INSTALL solution" << std::endl;
-        #else
-        std::cerr << "Did you forget to install the project ?" << std::endl <<
-            "Run \"cmake --build . --target install\" " <<
-            "or \"make install\"" << std::endl;
-        #endif
-}
 
 float Utility::xScreenToPortrait(float x) {
     constexpr float maxRatio = 2.75f;

@@ -36,7 +36,7 @@ bool TextRendering::initFreeTypeAndFont() {
                    0,&fontFace)){
         std::cerr << "Error: Impossible to load the font" <<
                      "Cousine-Regular.ttf ... " << std::endl;
-        Utility::displayInstallError();
+        JumperBallTypesMethods::displayInstallError();
         FT_Done_FreeType(ftLib);
         return false;
     }

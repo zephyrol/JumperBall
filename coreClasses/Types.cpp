@@ -142,3 +142,13 @@ unsigned int JumperBallTypesMethods::directionAsInteger(
     return number;
 }
 
+void JumperBallTypesMethods::displayInstallError() {
+        #ifdef _MSC_VER
+        std::cerr << "Did you forget to install the files ?" << std::endl
+         << "On Visual Studio, build the INSTALL solution" << std::endl;
+        #else
+        std::cerr << "Did you forget to install the project ?" << std::endl <<
+            "Run \"cmake --build . --target install\" " <<
+            "or \"make install\"" << std::endl;
+        #endif
+}

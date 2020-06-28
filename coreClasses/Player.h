@@ -13,7 +13,7 @@
 
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "Map.h"
+#include "Ball.h"
 #include "gameMenu/Page.h"
 
 class Player
@@ -21,7 +21,7 @@ class Player
 public:
     Player();
 
-    enum class Statut { INGAME, INMENU, INPAUSE };
+    enum class Statut { INGAME, INMENU, INPAUSE, INTRANSITION };
 
     size_t levelProgression() const;
     unsigned int getMoney() const;
@@ -44,9 +44,6 @@ public:
 
     Statut statut() const;
     void statut(const Statut& s);
-    
-    void currentMap(const std::shared_ptr<Map>& currentMap);
-    const std::shared_ptr<Map> &currentMap() const;
 
     void treatAction(const Label::LabelAnswer& action);
 
@@ -54,7 +51,7 @@ private:
    
     Statut _statut;
     size_t _levelProgression;
-    std::shared_ptr<Map> _currentMap;
+
     unsigned int _money;
     std::vector<bool> _diamonds;
 
@@ -67,6 +64,7 @@ private:
     unsigned int _timeLevel;
     unsigned int _clockItemLevel;
     unsigned int _bonusLevel;
+
 };
 
 #endif /* PLAYER_H */

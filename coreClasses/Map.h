@@ -55,41 +55,35 @@ public:
 
     Map                                   ( std::ifstream& file );
 
+
     //-------CONST METHODS----------//
-    std::shared_ptr< const Block>         getBlock(int x, int y, int z)  const;
-    void                                  printMap()                      const;
+    unsigned int                          beginX()                        const;
+    unsigned int                          beginY()                        const;
+    unsigned int                          beginZ()                        const;
+
+    std::shared_ptr< const Block>         getBlock(int x, int y, int z)   const;
 
     unsigned int                          boundingBoxXMax()               const;
     unsigned int                          boundingBoxYMax()               const;
     unsigned int                          boundingBoxZMax()               const;
 
-    unsigned int                          beginX()                        const;
-    unsigned int                          beginY()                        const;
-    unsigned int                          beginZ()                        const;
 
-    std::chrono::time_point<std::chrono::system_clock>  
+
+
+    std::chrono::time_point<std::chrono::system_clock>
                                           timeCreation()                  const;
+    void                                  printMap()                      const;
 
     //----------METHODS------------//
-    EffectOnBall interaction(
+    EffectOnBall                          interaction(
                                       const JumperBallTypes::Direction& ballDir,
-                                      const JumperBallTypes::vec3f& posBall
-    );
+                                      const JumperBallTypes::vec3f& posBall );
     std::shared_ptr<Block>                getBlock(int x, int y, int z);
 
     //--------STATIC METHODS-------//
     static void                           compress(std::ifstream& input);
 
-    static std::string                    convertToBase (unsigned int number, 
-                                                          unsigned char base);
-    static unsigned int                   convertToBase10(std::string& s, 
-                                                            unsigned int base);
-    static void                           applyOffset (std::string& s,
-                                                        int offset);
-    static void                           substractOffset(std::string& s, 
-                                                          int offset);
 
-    
 private:
 
     //--------ATTRIBUTES-----------//
@@ -108,6 +102,17 @@ private:
                                           _timeCreation;
     
     static unsigned int                   nbMaps;
+
+
+    //--------STATIC METHODS-------//
+    static std::string                    convertToBase (unsigned int number,
+                                                          unsigned char base);
+    static unsigned int                   convertToBase10(std::string& s,
+                                                            unsigned int base);
+    static void                           applyOffset (std::string& s,
+                                                        int offset);
+    static void                           substractOffset(std::string& s,
+                                                          int offset);
 
 };
 

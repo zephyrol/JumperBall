@@ -9,7 +9,7 @@
 #define Controller_h
 
 #include <Player.h>
-#include <Ball.h>
+#include <Rendering.h>
 #include "graphicMenu/Menu.h"
 
 class Controller {
@@ -23,16 +23,22 @@ public:
     
     
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Controller(Player& player);
+    Controller();
     
     //----------METHODS------------//
     void            interactionButtons (const Button& button,
                                      const Status& status);
     void            interactionMouse (const Status& status,
                                      float posX, float posY);
-    
-    void            assignBall (const std::shared_ptr<Ball>& ball );
-    void            assignMenu (const std::shared_ptr<Menu>& menu);
+
+    void            run();
+
+    void currentMap(const std::shared_ptr<Map>& currentMap);
+    const std::shared_ptr<Map> &currentMap() const;
+
+    void currentBall(const std::shared_ptr<Ball>& currentBall);
+    const std::shared_ptr<Ball> &currentBall() const;
+
     const std::shared_ptr<Menu>&  menu() const;
 
     
@@ -55,9 +61,8 @@ private:
     void            manageValidateMouse ();
 
     //--------ATTRIBUTES-----------//
-    Player&         _player;
-    std::shared_ptr<Menu> _menu;
-    std::shared_ptr<Ball> _ball;
+    Player                   _player;
+    std::shared_ptr<Menu>    _menu;
     std::map<Button, Status> _buttonsStatuts;
 
     
@@ -65,6 +70,13 @@ private:
     float           _mousePressingYCoord;
     bool            _mouseIsPressed;
 
+    std::shared_ptr<Map>    _currentMap;
+    std::shared_ptr<Ball>   _currentBall;
+    std::shared_ptr<Camera> _currentCamera;
+    std::shared_ptr<Star>   _currentStar;
+    Rendering _renderingEngine;
+
+    static std::shared_ptr<Map> loadMap(size_t mapNumber);
 };
 
 #endif /* Controller_h */
