@@ -26,7 +26,8 @@ _currentBall(std::make_shared<Ball>(*_currentMap)),
 _currentCamera(std::make_shared<Camera>()),
 _currentStar(std::make_shared<Star>(glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f)
             ,0.3f,0.5f,50.f,5.f)),
-_renderingEngine(*_currentMap,*_currentBall,*_currentStar,*_currentCamera)
+_renderingEngine( std::make_shared<Rendering>
+                  (*_currentMap,*_currentBall,*_currentStar,*_currentCamera))
 {
 }
 
@@ -77,21 +78,20 @@ void Controller::interactionMouse(const Status& status, float posX, float posY){
 void Controller::run()
 {
 
+    _currentBall->update();
     if (_player.statut() == Player::Statut::INMENU) {
-        _currentBall->update();
         _currentCamera->follow(*_currentMap);
-
-        _renderingEngine.render();
+        _renderingEngine->render();
         _menu->render();
     } else if (_player.statut() == Player::Statut::INGAME) {
-        _currentBall->update();
         _currentCamera->follow(*_currentBall);
-        _renderingEngine.render();
+        _renderingEngine->render();
 
     } else if (_player.statut() == Player::Statut::INTRANSITION){
-        _currentCamera->transitionEffect(*_currentBall, *_currentMap);
-        _currentBall->update();
-        _renderingEngine.render();
+        if (_currentCamera->transitionEffect(*_currentBall, *_currentMap)) {
+            _player.statut(Player::Statut::INGAME);
+        }
+        _renderingEngine->render();
     }
 }
 
@@ -101,6 +101,19 @@ void Controller::manageValidateButton(const Controller::Status &status) {
             _currentBall->doAction(Ball::ActionRequest::Jump);
         }
     }
+}
+
+void Controller::runGame(size_t level)
+{
+
+_currentMap = loadMap(level);
+_currentBall = std::make_shared<Ball>(*_currentMap);
+_currentCamera = std::make_shared<Camera>();
+_currentStar = std::make_shared<Star>(
+            glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f) ,0.3f,0.5f,50.f,5.f);
+_renderingEngine = std::make_shared<Rendering>
+        (*_currentMap,*_currentBall,*_currentStar,*_currentCamera);
+
 }
 
 void Controller::manageValidateMouse()
@@ -123,6 +136,11 @@ void Controller::manageValidateMouse()
                 } else if  ( const std::shared_ptr<const Label::LabelAnswer>&
                              action = label->action()) {
                     _player.treatAction(*action);
+
+                    //New level case
+                    if (_player.statut() == Player::Statut::INTRANSITION ) {
+                        runGame(action->chooseLevel+1);
+                    }
                 }
             }
         }

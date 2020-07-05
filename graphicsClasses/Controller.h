@@ -53,6 +53,7 @@ private:
     void            manageLeft (const Status& status);
     void            manageEscape (const Status& status);
     void            manageValidateButton (const Status& status);
+    void            runGame(size_t level);
     
     //Mouse/TouchPad/TouchScreen
     void            pressMouse (float posX, float posY);
@@ -61,20 +62,20 @@ private:
     void            manageValidateMouse ();
 
     //--------ATTRIBUTES-----------//
-    Player                   _player;
-    std::shared_ptr<Menu>    _menu;
-    std::map<Button, Status> _buttonsStatuts;
+    Player                      _player;
+    std::shared_ptr<Menu>       _menu;
+    std::map<Button, Status>    _buttonsStatuts;
 
     
-    float           _mousePressingXCoord;
-    float           _mousePressingYCoord;
-    bool            _mouseIsPressed;
+    float                       _mousePressingXCoord;
+    float                       _mousePressingYCoord;
+    bool                        _mouseIsPressed;
 
-    std::shared_ptr<Map>    _currentMap;
-    std::shared_ptr<Ball>   _currentBall;
-    std::shared_ptr<Camera> _currentCamera;
-    std::shared_ptr<Star>   _currentStar;
-    Rendering _renderingEngine;
+    std::shared_ptr<Map>        _currentMap;
+    std::shared_ptr<Ball>       _currentBall;
+    std::shared_ptr<Camera>     _currentCamera;
+    std::shared_ptr<Star>       _currentStar;
+    std::shared_ptr<Rendering>  _renderingEngine;
 
     static std::shared_ptr<Map> loadMap(size_t mapNumber);
 };

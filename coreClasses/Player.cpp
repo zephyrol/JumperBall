@@ -83,7 +83,7 @@ void Player::treatAction(const Label::LabelAnswer& action)
         break;
     case Label::TypeOfAction::GoLevel:
         //std::cout << "go Level " << action.chooseLevel << std::endl;
-        _statut = Player::Statut::INGAME;
+        _statut = Player::Statut::INTRANSITION;
         break;
     }
 }

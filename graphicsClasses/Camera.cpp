@@ -315,9 +315,9 @@ void Camera::follow(const Map& map) noexcept{
     _displayBehind = true;
 }
 
-void Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
+bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
 {
-
+    bool animationIsFinished;
 
     const JumperBallTypes::vec3f position  = ball.get3DPosition();
 
@@ -333,34 +333,37 @@ void Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
       JumperBallTypesMethods::getTimePointMsFromTimePoint(map.timeCreation());
 
     const float diffF = JumperBallTypesMethods::getFloatFromDurationMS(diff);
-    constexpr float transitionDuration = 1.5f;
+    constexpr float transitionDuration = 2.f;
     float t = diffF / transitionDuration ;
 
-    constexpr float distanceXStarting = 7.f;
-    constexpr float distanceYStarting = 3.f;
-    constexpr float distanceZStarting = 5.f;
+    constexpr float distanceXStarting = 10.f;
+    constexpr float distanceYStarting = 5.f;
+    constexpr float distanceZStarting = 10.f;
 
-    if (t > 1.f) t = 1.f;
+    if (t > 1.f) {
+        t = 1.f;
+        animationIsFinished = true;
+    } else  {
+        animationIsFinished = false;
+    }
 
-    const float tSinusEnd = sinf( t * static_cast<float>(M_PI_2));
-    const float tSinusBegin = sinf( (1.f-t) * static_cast<float>(M_PI_2));
-
+    const float tCos = cosf( t * static_cast<float>(M_PI_2) +
+                                  static_cast<float>(M_PI)) + 1.f;
 
     const glm::vec3 directionVector =
             glm::normalize( glm::vec3{_dirX - _posX, _dirY - _posY,
                                 _dirZ - _posZ });
-    const glm::mat4 upRotation = glm::rotate( tSinusEnd * 2.f *
+    const glm::mat4 upRotation = glm::rotate( tCos * 2.f *
                                               static_cast<float>(M_PI),
                                               directionVector);
     const glm::vec4 upVector = upRotation * glm::vec4(0.f,1.f,0.f,1.f);
 
-
-    _posX = tSinusEnd * position.x  +
-            tSinusBegin * position.x + distanceXStarting ;
-    _posY = tSinusEnd * position.y + distAboveBall  +
-            tSinusBegin * position.y + distAboveBall +  distanceYStarting ;
-    _posZ = tSinusEnd * position.z + distBehindBall +
-            tSinusBegin * position.z + distBehindBall +  distanceZStarting ;
+    _posX = tCos *  position.x +
+            (1.f-tCos) * (position.x + distanceXStarting);
+    _posY = t* (position.y + distAboveBall) +
+            (1.f-tCos) * (position.y + distAboveBall + distanceYStarting);
+    _posZ = t* (position.z + distBehindBall) +
+            (1.f-tCos) * (position.z + distBehindBall + distanceZStarting);
 
     _dirX = position.x;
     _dirY = position.y;
@@ -370,7 +373,9 @@ void Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
     _upY = upVector.y;
     _upZ = upVector.z;
 
-    _displayBehind = false;
+    _displayBehind = true;
+
+    return animationIsFinished;
 }
 
 
