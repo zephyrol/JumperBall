@@ -35,7 +35,7 @@ Page::bridges() const {
     return _bridges;
 }
 
-const std::shared_ptr<const Page>& Page::parent() const {
+const std::weak_ptr<const Page>& Page::parent() const {
     return _parent;
 }
 

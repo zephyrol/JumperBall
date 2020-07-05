@@ -30,13 +30,14 @@ void Menu::render() const
 }
 
 
-void Menu::renderPage( const std::shared_ptr<const Page>& page) const {
-    
-    if (page->parent() && page->visibleOnParent()) {
-        renderPage(page->parent());
+void Menu::renderPage( const std::weak_ptr<const Page>& page) const {
+
+    std::shared_ptr<const Page> spPage = page.lock();
+    if (spPage->parent().lock() && spPage->visibleOnParent()) {
+        renderPage(spPage->parent());
     }
 
-    for( const std::shared_ptr<const Label>& label :page->labels()) {
+    for( const std::shared_ptr<const Label>& label : page.lock()->labels()) {
         if (label->typeOfLabel() == Label::TypeOfLabel::Message){
             if (label->isActivated()) {
                 _textRendering.render(*label, glm::vec3(0, 1.f, 1.f));

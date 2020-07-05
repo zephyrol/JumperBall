@@ -30,7 +30,7 @@ public:
     const std::vector<std::shared_ptr<const Label> >& labels()            const;
     const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >& 
                                                       bridges()           const;
-    const std::shared_ptr<const Page>&                parent()            const;
+    const std::weak_ptr<const Page> &                 parent()            const;
     bool                                              visibleOnParent()   const;
 
     std::shared_ptr<const Page>                       child(
@@ -56,7 +56,7 @@ private:
     const std::vector<std::shared_ptr<const Label> >  _labels;
     std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >
                                                       _bridges;
-    const std::shared_ptr<const Page>                 _parent;
+    const std::weak_ptr<const Page>                   _parent;
     const bool                                        _visibleOnParent;
     const float                                       _height;
     float                                             _posY;

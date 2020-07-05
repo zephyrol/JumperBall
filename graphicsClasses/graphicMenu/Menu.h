@@ -35,7 +35,7 @@ private:
     std::shared_ptr<const Page> _currentPage;
 
 
-    void renderPage( const std::shared_ptr<const Page>& page) const;
+    void renderPage( const std::weak_ptr<const Page>& page) const;
 
     static std::vector<unsigned char> getCharacters
         (const std::shared_ptr<const Page>& page);
