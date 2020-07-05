@@ -2,6 +2,7 @@
 
 This project was started in October 2019, there is no a beautiful visual rendering for now.
 The core of the project (physics,maps) is currently under development.
+The project works on **Windows**, **Unix/Linux** and **macOS**.
 
 
 ## Install requirements
@@ -14,6 +15,14 @@ The core of the project (physics,maps) is currently under development.
 
 - **Microsoft Visual Studio 2017/2019** or **MinGW**
 
+
+### Specifically for Unix/Linux
+
+- Install those packages (necessary to build GLFW and the project)
+
+  ```
+  sudo apt-get install build-essential libx11-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev
+  ```
 
 ## Generation of the solution and compilation
 
@@ -93,7 +102,7 @@ If you use a **MinGW Makefile**:
 
 - Run Cmake-gui once, select the repo root as a source directory, `REPO_DIR/build/` as the build directory. 
 - Configure
-- Select the Xcode or Unix Makesfiles generator 
+- Select the Xcode or Unix Makefiles generator 
 - Generate
 
 If you use **Xcode**:

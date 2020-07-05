@@ -38,7 +38,7 @@ ExternalProject_Add( _GLFW_
 	  find_package(Threads REQUIRED)
 	  find_package(X11 REQUIRED)
 		
-	  FOREACH ( X11_LIB X11_Xrandr X11_xf86vmode X11_Xcursor X11_Xinerama X11_Xinerama)
+	  FOREACH ( X11_LIB X11_Xrandr X11_Xcursor X11_Xinerama X11_Xinput )
 		
 		  IF(NOT ${X11_LIB}_FOUND)
 			  MESSAGE(FATAL_ERROR "${X11_LIB} library is required for GLFW but not found ...")
@@ -47,7 +47,6 @@ ExternalProject_Add( _GLFW_
 
 	  LIST(APPEND LIST_LIBRARIES
 		  "${X11_Xrandr_LIB}" 
-		  "${X11_Xxf86vm_LIB}"
 		  "${X11_Xcursor_LIB}"
 		  "${X11_Xinerama_LIB}"
 		  "${X11_Xinput_LIB}"
