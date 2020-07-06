@@ -126,6 +126,7 @@ private:
                                       ClassicalMechanics::physics2DVector p2D)
                                                                           const;
     JumperBallTypes::vec3f        get3DPosStayingBall()                   const;
+    bool                          isOutOfTheMap()                         const;
 
     //----------METHODS------------//
     void                          turnLeft()                           noexcept;
@@ -139,6 +140,7 @@ private:
     void                          mapInteraction()                     noexcept;
     void                          blockEvent(std::shared_ptr<Block> block)
                                                                        noexcept;
+    void                          die()                                noexcept;
     ClassicalMechanics&           getMechanicsJumping()                noexcept;
     void                          isFallingIntersectionBlock()         noexcept;
     void                          isGoingStraightAheadIntersectBlock() noexcept; 

@@ -87,6 +87,11 @@ void Controller::run()
     } else if (_player.statut() == Player::Statut::INGAME) {
         _currentCamera->follow(*_currentBall);
         _renderingEngine->render();
+        
+        if (_currentBall->stateOfLife() == Ball::StateOfLife::Dead) {
+            _player.statut(Player::Statut::INMENU);
+            _menu->currentPage(_menu->failurePage());
+        }
 
     } else if (_player.statut() == Player::Statut::INTRANSITION){
         if (_currentCamera->transitionEffect(*_currentBall, *_currentMap)) {

@@ -935,15 +935,12 @@ void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
 
 void Ball::update() noexcept{
 
-
     JumperBallTypes::vec3f position3D {0.f,0.f,0.f};
 
     if (_state == Ball::State::Staying || _state == Ball::State::Moving ||
             _state == Ball::State::TurningLeft || 
             _state == Ball::State::TurningRight) {
-        
-        
-        
+
         position3D = get3DPosStayingBall();
         if ( _state == Ball::State::Staying ){
             if (_map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ)
@@ -1127,6 +1124,7 @@ void Ball::update() noexcept{
     }
     mapInteraction();
     
+    if (isOutOfTheMap()) die();
 }
 
 void Ball::mapInteraction() noexcept{
@@ -1156,4 +1154,21 @@ Ball::State Ball::state() const {
 
 Ball::StateOfLife Ball::stateOfLife() const {
     return _stateOfLife;
+}
+
+void Ball::die() noexcept{
+    _stateOfLife = Ball::StateOfLife::Dead;
+}
+
+bool Ball::isOutOfTheMap() const {
+    constexpr float thresholdOut = 5.f;
+    if ( _3DPosX < -thresholdOut ||
+        _3DPosX > (static_cast<float>(_map.boundingBoxXMax()) + thresholdOut) ||
+        _3DPosY < -thresholdOut ||
+        _3DPosY > (static_cast<float>(_map.boundingBoxYMax()) + thresholdOut) ||
+        _3DPosZ < -thresholdOut ||
+        _3DPosZ > (static_cast<float>(_map.boundingBoxZMax()) + thresholdOut)) {
+        return true;
+    }
+    else return false;
 }
