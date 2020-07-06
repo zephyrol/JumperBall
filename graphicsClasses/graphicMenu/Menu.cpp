@@ -13,9 +13,15 @@
 
 #include "Menu.h"
 
-Menu::Menu(const std::shared_ptr<const Page>& rootPage):
+Menu::Menu(const std::shared_ptr<const Page>& rootPage,
+           const std::shared_ptr<const Page>& pausePage,
+           const std::shared_ptr<const Page>& successPage,
+           const std::shared_ptr<const Page>& failurePage):
   _rootPage(rootPage),
-  _textRendering(getCharacters(rootPage), 
+  _pausePage(pausePage),
+  _successPage(successPage),
+  _failurePage(failurePage),
+  _textRendering(getCharacters({pausePage,successPage,failurePage}),
       getNumberOfPixelsHeight(getHeight(rootPage))),
   _boxRendering(glm::vec3(0.f,0.f,1.f),glm::vec3(0.f,1.f,1.f)),
   _currentPage(rootPage)
@@ -63,24 +69,27 @@ void Menu::currentPage(const std::shared_ptr<const Page> &page)
 }
 
 std::vector<unsigned char> Menu::getCharacters(
-    const std::shared_ptr<const Page>& page)
+    const std::vector<std::shared_ptr<const Page> >& pages)
 {
     std::vector<unsigned char> characters;
 
-    for( const std::shared_ptr<const Label>& label : page->labels()) {
-
-		if (page->bridges().find(label) != page->bridges().end()
-			&& page->bridges().at(label)) {
-
-			const std::vector<unsigned char> childCaracters =
-				getCharacters(page->bridges().at(label));
-			characters.insert(characters.end(), childCaracters.begin(),
-				childCaracters.end());
-		}
-
-        if (label->typeOfLabel() == Label::TypeOfLabel::Message) {
-            for (const char& c : label->message()) {
-                characters.push_back(c);
+    for( const std::shared_ptr<const Page>& page : pages) {
+        if (page)
+        for( const std::shared_ptr<const Label>& label : page->labels()) {
+            
+            if (page->bridges().find(label) != page->bridges().end()
+                && page->bridges().at(label)) {
+                
+                const std::vector<unsigned char> childCaracters =
+                getCharacters({page->bridges().at(label)});
+                characters.insert(characters.end(), childCaracters.begin(),
+                                  childCaracters.end());
+            }
+            
+            if (label->typeOfLabel() == Label::TypeOfLabel::Message) {
+                for (const char& c : label->message()) {
+                    characters.push_back(c);
+                }
             }
         }
     }
@@ -218,6 +227,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
     const std::vector<std::shared_ptr<const Label> > labelsPage3
     {label1Page3, label2Page3, label3Page3};
 
+    
     //Page 4 (Pause page)
     /*std::shared_ptr<const MessageLabel> label1Page3 =
         std::make_shared<const MessageLabel>(
@@ -261,6 +271,23 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
     page3->addBridge(label3Page3, page1);
     page4->addBridge(label2Page4, page1);
 
-    return std::make_shared<Menu> (page1);
+    return std::make_shared<Menu> (page1,page4,nullptr,page3);
 }
+
+const std::shared_ptr<const Page> &Menu::pausePage() const {
+    return _pausePage;
+}
+
+const std::shared_ptr<const Page> &Menu::failurePage() const { 
+    return _failurePage;
+}
+
+const std::shared_ptr<const Page> &Menu::successPage() const {
+    return _successPage;
+}
+
+const std::shared_ptr<const Page> &Menu::rootPage() const { 
+    return _rootPage;
+}
+
 

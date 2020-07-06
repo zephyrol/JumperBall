@@ -21,6 +21,7 @@ _buttonsStatuts{
 _mousePressingXCoord(0.f),
 _mousePressingYCoord(0.f),
 _mouseIsPressed(false),
+_requestToLeave(false),
 _currentMap(loadMap(_player.levelProgression())),
 _currentBall(std::make_shared<Ball>(*_currentMap)),
 _currentCamera(std::make_shared<Camera>()),
@@ -119,22 +120,21 @@ _renderingEngine = std::make_shared<Rendering>
 void Controller::manageValidateMouse()
 {
     if ( _player.statut() == Player::Statut::INGAME && _currentBall) {
-            _currentBall->doAction(Ball::ActionRequest::Jump);
+        _currentBall->doAction(Ball::ActionRequest::Jump);
     }
     else if (_player.statut() == Player::Statut::INMENU ) {
         if(_menu->currentPage()) {
-
             const std::shared_ptr<const Label> label =
-                    _menu->currentPage()->matchedLabel(
-                        _mousePressingXCoord,
-                        _mousePressingYCoord);
+                _menu->currentPage()->matchedLabel(
+                    _mousePressingXCoord,
+                    _mousePressingYCoord);
             if (label) {
                 const std::shared_ptr<const Page> newPage =
                         _menu->currentPage()->child(label);
                 if (newPage) {
                     _menu->currentPage(newPage);
-                } else if  ( const std::shared_ptr<const Label::LabelAnswer>&
-                             action = label->action()) {
+                } else if  ( const std::shared_ptr< const
+                        Label::LabelAnswer>& action = label->action()) {
                     _player.treatAction(*action);
 
                     //New level case
@@ -149,7 +149,18 @@ void Controller::manageValidateMouse()
 
 
 void Controller::manageEscape(const Controller::Status &status) {
-    static_cast<void>(status);
+    if ( _player.statut() == Player::Statut::INMENU ) {
+        if (status == Controller::Status::Released &&
+            _buttonsStatuts.at(Button::Escape) == Status::Pressed) {
+            _requestToLeave = true;
+        }
+    } else if ( _player.statut() == Player::Statut::INGAME ) {
+        if (status == Controller::Status::Released &&
+            _buttonsStatuts.at(Button::Escape) == Status::Pressed) {
+            _menu->currentPage(_menu->pausePage());
+            _player.statut(Player::Statut::INMENU);
+        }
+    }
 }
 
 void Controller::manageRight(const Controller::Status &status) {
@@ -304,10 +315,14 @@ const std::shared_ptr<Map> &Controller::currentMap() const
 
 void Controller::currentBall(const std::shared_ptr<Ball> &currentBall)
 {
-   _currentBall = currentBall;
+    _currentBall = currentBall;
 }
 
 const std::shared_ptr<Ball> &Controller::currentBall() const
 {
-   return _currentBall;
+    return _currentBall;
+}
+
+bool Controller::requestToLeave() const {
+    return _requestToLeave;
 }

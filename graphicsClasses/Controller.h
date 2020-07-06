@@ -40,6 +40,7 @@ public:
     const std::shared_ptr<Ball> &currentBall() const;
 
     const std::shared_ptr<Menu>&  menu() const;
+    bool requestToLeave() const;
 
     
 private:
@@ -70,6 +71,7 @@ private:
     float                       _mousePressingXCoord;
     float                       _mousePressingYCoord;
     bool                        _mouseIsPressed;
+    bool                        _requestToLeave;
 
     std::shared_ptr<Map>        _currentMap;
     std::shared_ptr<Ball>       _currentBall;

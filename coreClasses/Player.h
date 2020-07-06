@@ -21,7 +21,7 @@ class Player
 public:
     Player();
 
-    enum class Statut { INGAME, INMENU, INPAUSE, INTRANSITION };
+    enum class Statut { INGAME, INMENU, INTRANSITION };
 
     size_t levelProgression() const;
     unsigned int getMoney() const;
