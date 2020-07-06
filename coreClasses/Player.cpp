@@ -78,7 +78,7 @@ void Player::treatAction(const Label::LabelAnswer& action)
 {
 
     switch(action.typeOfAction) {
-    //default : break;
+    default : break;
     case Label::TypeOfAction::PredefinedAction :
         break;
     case Label::TypeOfAction::GoLevel:
