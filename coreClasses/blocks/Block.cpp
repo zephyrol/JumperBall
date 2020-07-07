@@ -33,13 +33,9 @@ bool Block::stillExists() const {
     return true;
 }
 
-void Block::detectionEvent(const JumperBallTypes::Direction& ballDir, 
-        const JumperBallTypes::timePointMs& currentTime)
+void Block::detectionEvent(const JumperBallTypes::Direction&,
+        const JumperBallTypes::timePointMs&)
 {
-    //To remove warning... We want to do nothing.
-    //Others classes may override the method.
-    static_cast<void> (ballDir);
-    static_cast<void> (currentTime);
 }
 
 
@@ -55,17 +51,11 @@ bool Block::burstBall() const {
 
 
 
-void Block::interaction(const JumperBallTypes::Direction& ballDir, 
-                        const JumperBallTypes::timePointMs& currentTime, 
-                        const JumperBallTypes::vec3f& posBall, 
-                        const std::array<unsigned int, 3>& posBlock) {
+void Block::interaction(const JumperBallTypes::Direction&,
+                        const JumperBallTypes::timePointMs&,
+                        const JumperBallTypes::vec3f&,
+                        const std::array<unsigned int, 3>&) {
 
-    //To remove warning... We want to do nothing.
-    //Others classes may override the method.
-    static_cast<void> (ballDir);
-    static_cast<void> (currentTime);
-    static_cast<void> (posBall);
-    static_cast<void> (posBlock);
 }
 
 void Block::createObject( Object::CategoryOfObjects category, 

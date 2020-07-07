@@ -28,14 +28,11 @@ Block::categoryOfBlocksInFile BrittleBlock::getType() const {
     return Block::categoryOfBlocksInFile::Brittle;
 }
 
-void BrittleBlock::interaction( const JumperBallTypes::Direction& ballDir, 
+void BrittleBlock::interaction( const JumperBallTypes::Direction& ,
                                 const JumperBallTypes::timePointMs& currentTime, 
-                                const JumperBallTypes::vec3f& posBall, 
-                                const std::array<unsigned int, 3>& posBlock) {
+                                const JumperBallTypes::vec3f& ,
+                                const std::array<unsigned int, 3>& ) {
 
-    static_cast<void> (ballDir);
-    static_cast<void> (posBall);
-    static_cast<void> (posBlock);
     constexpr float timeToFall = 1.f;
     _timeUpdate = currentTime;
     if (_isGoingToBreak && _stillThere) {

@@ -266,10 +266,11 @@ std::vector<MeshComponent> MeshGenerator::genComponents(const Map& map) {
     return sortedComponents;
 }
 
-std::vector<MeshComponent> MeshGenerator::genComponents(const Quad& quad) {
+std::vector<MeshComponent> MeshGenerator::genComponents(const Quad& ) {
 
-    static_cast<void>(quad);//The quad var is just used to specify that
-                            //we want to gen a MeshComponent from a Quad
+    //The quad var is just used to specify that
+    //we want to gen a MeshComponent from a Quad
+    
     if (commonShapes.find("screenQuad") == commonShapes.end()) {
         commonShapes["screenQuad"] = std::make_shared<Quad> ();
     }

@@ -30,13 +30,11 @@ bool SharpBlock::burstBall() const {
 
 
 void SharpBlock::interaction(
-        const JumperBallTypes::Direction& ballDir, 
-        const JumperBallTypes::timePointMs& currentTime, 
+        const JumperBallTypes::Direction&,
+        const JumperBallTypes::timePointMs&,
         const JumperBallTypes::vec3f& positions,
         const std::array<unsigned int,3>& posBlock) {
 
-    static_cast<void>(ballDir);
-    static_cast<void>(currentTime);
     auto isInSharpZone = [](
     const JumperBallTypes::vec3f& position,
             float x_min, float x_max, 

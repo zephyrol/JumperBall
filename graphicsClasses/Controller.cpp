@@ -185,8 +185,7 @@ void Controller::manageLeft(const Status& status) {
     }
 }
 
-void Controller::manageDown(const Controller::Status &status) {
-    static_cast<void>(status);
+void Controller::manageDown(const Controller::Status &) {
 }
 
 void Controller::manageUp(const Controller::Status &status) {
