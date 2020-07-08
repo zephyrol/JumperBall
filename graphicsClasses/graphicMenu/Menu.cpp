@@ -212,7 +212,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
         std::make_shared<const MessageLabel>(
             Utility::xScreenToPortrait(1.f), 0.1f,
             JumperBallTypes::vec2f{0.5f,0.8f},
-            "You loosed");
+            "You lost");
     std::shared_ptr<const MessageLabel> label2Page3 =
         std::make_shared<const MessageLabel> (
             Utility::xScreenToPortrait(0.4f), 0.05f,
