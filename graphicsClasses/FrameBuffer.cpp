@@ -78,10 +78,7 @@ _scale(scale)
 
 void FrameBuffer::bindFrameBuffer() const {
     glBindFramebuffer(GL_FRAMEBUFFER, _fboHandle);
-    if (_textureCategory == FrameBuffer::TextureCaterory::SDR ||
-            _textureCategory == FrameBuffer::TextureCaterory::HDR ){
-        glClear(GL_COLOR_BUFFER_BIT);
-    }
+    glClear(GL_COLOR_BUFFER_BIT);
     if (_hasDepthBuffer) {
         glClear(GL_DEPTH_BUFFER_BIT);
     }
