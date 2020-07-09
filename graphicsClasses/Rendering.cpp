@@ -55,7 +55,7 @@ Rendering::Rendering(const Map&     map,
     _spDepth
           ( Shader (GL_VERTEX_SHADER,   vsshaderDepth),
             Shader (GL_FRAGMENT_SHADER, fsshaderDepth)),
-    _frameBufferDepth(FrameBuffer::TextureCaterory::HDR),
+    _frameBufferDepth(FrameBuffer::TextureCaterory::Depth),
     _frameBufferScene(FrameBuffer::TextureCaterory::HDR),
     _frameBufferToneMapping(FrameBuffer::TextureCaterory::SDR,false),
     _frameBufferHalfBlur(FrameBuffer::TextureCaterory::SDR,false,

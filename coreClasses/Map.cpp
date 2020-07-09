@@ -300,7 +300,6 @@ void Map::applyOffset(std::string& s, int offset) {
  }
 
 
-
 void Map::compress(std::ifstream& input) {
     std::ofstream output ("outMap.txt");
 
@@ -463,9 +462,7 @@ Map::EffectOnBall Map::interaction(
         }
     }
 
-
     //Objects interaction 
-    
     return effect; 
 }
 

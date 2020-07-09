@@ -28,7 +28,6 @@ std::string MessageLabel::message() const
 }
 
 
-
 Label::TypeOfLabel MessageLabel::typeOfLabel() const {
     return Label::TypeOfLabel::Message;
  }

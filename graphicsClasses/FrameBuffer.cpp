@@ -47,27 +47,20 @@ _scale(scale)
                static_cast<GLsizei>(Utility::windowResolutionY * scale));
     }
     else {
-        dataFormat = GL_DEPTH_COMPONENT16;
-        glTexImage2D(GL_TEXTURE_2D, 0,dataFormat,
-                     Utility::windowResolutionX , Utility::windowResolutionY,
-                     0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-
+        dataFormat = GL_R32F;
+        glTexStorage2D(GL_TEXTURE_2D, levelTexture, dataFormat,
+               static_cast<GLsizei>(Utility::windowResolutionX * scale),
+               static_cast<GLsizei>(Utility::windowResolutionY * scale));
     }
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 
     GLenum drawBuffer;
-    if (_textureCategory == FrameBuffer::TextureCaterory::Depth){
-    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,
-                            GL_TEXTURE_2D, _renderTexture, mipmapLevel);
-    drawBuffer = GL_NONE;
-    }
-    else {
     glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,
                             GL_TEXTURE_2D, _renderTexture, mipmapLevel);
     drawBuffer = GL_COLOR_ATTACHMENT0;
-    }
+    
     if (hasDepthBuffer){
     glGenRenderbuffers(1,&_depthBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _depthBuffer);

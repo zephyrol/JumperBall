@@ -37,7 +37,7 @@ void main() {
     bool inShadow;
     vec4 fragStarSysCoord   = biasMatrix * fs_vertexDepthMapSpace;
     
-    if ( texture(depthTexture, fragStarSysCoord.xy).z 
+    if ( texture(depthTexture, fragStarSysCoord.xy).x
           < ((fragStarSysCoord.z) - 0.001) )
         inShadow = true;
     else {

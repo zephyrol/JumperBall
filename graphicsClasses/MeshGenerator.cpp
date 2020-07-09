@@ -328,7 +328,7 @@ std::vector<MeshComponent>
                 };
 
 
-                for (unsigned int i = 0; i <  nbGeometriesToCreateAKey; ++i ) {
+                for (unsigned int i = 0; i < nbGeometriesToCreateAKey; ++i ) {
                     const glm::mat4 scaleMatrix = glm::scale(scales.at(i));
                     const glm::mat4 translationMatrix =
                                         glm::translate(translations.at(i));

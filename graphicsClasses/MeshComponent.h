@@ -33,7 +33,6 @@ private:
     //--------ATTRIBUTES-----------//
     const std::shared_ptr<const GeometricShape>   _shape;
     const std::shared_ptr<Animation>              _animation; 
-
 };
 
 #endif /* MESHCOMPONENT_H */

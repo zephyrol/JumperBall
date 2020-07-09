@@ -62,6 +62,7 @@ bool Label::isActivated() const {
 void Label::activate() {
    _activated = true;
 }
+
 void Label::deactivate() {
    _activated = false;
 }

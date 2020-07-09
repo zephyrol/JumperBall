@@ -21,14 +21,15 @@ _object(object),
 _referenceTimePointCreation(JumperBallTypesMethods::getTimePointMSNow()),
 _direction(dir),
 _translationToBlock(glm::translate(blockPosition)),
-_initialRotation(Utility::rotationUpToDir(dir))
+_initialRotation(Utility::rotationUpToDir(_direction)),
+_movingRotation(1.f),
+_movingScale(1.f)
 {
 }
 
 glm::mat4 ObjectAnimation::model() const {
-    return  _translationToBlock *
-             _initialRotation * translationOnBlock * inversedTranslationCenter
-              * _movingRotation * translationCenter;
+    return  _translationToBlock * _initialRotation * translationOnBlock *
+    inversedTranslationCenter * _movingRotation * translationCenter;
 }
 
 glm::mat4 ObjectAnimation::scaleRotation() const {
@@ -38,8 +39,6 @@ glm::mat4 ObjectAnimation::scaleRotation() const {
 glm::mat4 ObjectAnimation::translation() const {
     return _translationToBlock * translationOnBlock;
 }
-
-
 
 void ObjectAnimation::updateTrans() {
     const float seconds = JumperBallTypesMethods::getTimeSecondsSinceTimePoint(
