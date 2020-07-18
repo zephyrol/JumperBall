@@ -19,6 +19,8 @@
 class Page
 {
 public:
+    
+
     //--CONSTRUCTORS & DESTRUCTORS--//
     Page( const std::vector<std::shared_ptr<const Label> >& labels,
           const std::shared_ptr<const Page>& parent = nullptr,
@@ -48,6 +50,10 @@ public:
     void                                              addBridge(
                                     const std::shared_ptr<const Label> label,
                                     const std::shared_ptr<const Page> page);
+    void                                              updateTimeSlide();
+    void                                              pressOnPage();
+    void                                              release();
+    void                                              update();
     
 private:
 
@@ -59,7 +65,10 @@ private:
     const std::weak_ptr<const Page>                   _parent;
     const bool                                        _visibleOnParent;
     const float                                       _height;
-    float                                             _posY;
+    bool                                              _isPressed;
+    float                                             _posYPressed;
+    float                                             _derivativeRelease;
+    JumperBallTypes::timePointMs                      _lastUpdateTimePoint;
 };
 
 #endif // PAGE_H

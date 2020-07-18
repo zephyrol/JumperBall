@@ -23,8 +23,9 @@ Page::Page(const std::vector<std::shared_ptr<const Label> >& labels,
     _parent(parent),
     _visibleOnParent(visibleOnParent),
     _height(height),
-    _posY(0.f)
-{ }
+    _posYPressed(0.f),
+    _lastUpdateTimePoint()
+{}
 
 const std::vector<std::shared_ptr<const Label> >& Page::labels() const{
     return _labels;
@@ -92,3 +93,15 @@ std::shared_ptr<const Label> Page::matchedLabel(float x, float y) const
     }
     return nullptr;
 }
+
+void Page::updateTimeSlide() {
+    _slideTimePoint = JumperBallTypesMethods::getTimePointMSNow();
+}
+
+void Page::update() {
+    
+    if (_isPressed) {
+        
+    }
+}
+

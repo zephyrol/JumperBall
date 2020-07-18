@@ -47,7 +47,7 @@ _scale(scale)
                static_cast<GLsizei>(Utility::windowResolutionY * scale));
     }
     else {
-        dataFormat = GL_R32F;
+        dataFormat = GL_R16F;
         glTexStorage2D(GL_TEXTURE_2D, levelTexture, dataFormat,
                static_cast<GLsizei>(Utility::windowResolutionX * scale),
                static_cast<GLsizei>(Utility::windowResolutionY * scale));
