@@ -23,8 +23,13 @@ Page::Page(const std::vector<std::shared_ptr<const Label> >& labels,
     _parent(parent),
     _visibleOnParent(visibleOnParent),
     _height(height),
-    _posYPressed(0.f),
-    _lastUpdateTimePoint()
+    _localPosY(0.f),
+    _localReleasedPosY(0.f),
+    _isPressed(false),
+    _pressedScreenPosY(0.f),
+    _releasedScreenPosY(0.f),
+    _lastUpdates{},
+    _countingUpdates(0)
 {}
 
 const std::vector<std::shared_ptr<const Label> >& Page::labels() const{
@@ -95,13 +100,63 @@ std::shared_ptr<const Label> Page::matchedLabel(float x, float y) const
 }
 
 void Page::updateTimeSlide() {
-    //_slideTimePoint = JumperBallTypesMethods::getTimePointMSNow();
 }
 
-void Page::update() {
+void Page::update(bool isPressed, float screenPosY) {
+
+    //Press cases
+    if (isPressed && !_isPressed) {
+        _countingUpdates = 0;
+        _pressedScreenPosY = screenPosY;
+        _isPressed = true;
+    }
 
     if (_isPressed) {
-
+        if (_countingUpdates < 2 ) {
+            _lastUpdates.at(_countingUpdates).first =
+                    JumperBallTypesMethods::getTimePointMSNow();
+            _lastUpdates.at(_countingUpdates).second = screenPosY;
+            ++_countingUpdates;
+        } else {
+            _lastUpdates.at(0) = std::move(_lastUpdates.at(1));
+            _lastUpdates.at(1).first =
+                    JumperBallTypesMethods::getTimePointMSNow();
+            _lastUpdates.at(1).second = screenPosY;
+        }
     }
+
+    //Release cases
+    if (!isPressed && _isPressed) {
+        if (_countingUpdates == 2 ) {
+            float deltaT = JumperBallTypesMethods::getFloatFromDurationMS(
+                        _lastUpdates.at(1).first -_lastUpdates.at(0).first );
+
+            // the velocity is the position derivative (pourcentagePage / ms)
+            _releaseVelocity =  (_lastUpdates.at(1).second -
+                                 _lastUpdates.at(0).second) / std::move(deltaT);
+            _releasedScreenPosY = screenPosY;
+
+            _localReleasedPosY = _localPosY;
+            _isPressed = false;
+        }
+    }
+    if ( !_isPressed) {
+        if (_countingUpdates == 2) {
+            float diffT = JumperBallTypesMethods::getFloatFromDurationMS(
+                        JumperBallTypesMethods::getTimePointMSNow() -
+                        _lastUpdates.at(1).first);
+            float deceleration = decelerationCoefficient * powf(diffT,2.f)/2.f;
+
+            if (_releaseVelocity < 0.f ) {
+                deceleration = -deceleration;
+            }
+            _localPosY = -deceleration + _releaseVelocity * diffT
+                    + _localReleasedPosY ;
+
+            if (_localPosY < 0.f) _localPosY = 0.f;
+            else if (_localPosY > _height) _localPosY = _height;
+        }
+    }
+
 }
 

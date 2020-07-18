@@ -20,6 +20,9 @@ class Page
 {
 public:
     
+    // Slide state => timepoint and yScreenPosition
+    using slideState = std::pair<JumperBallTypes::timePointMs, float>;
+
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Page( const std::vector<std::shared_ptr<const Label> >& labels,
@@ -31,44 +34,52 @@ public:
     //-------CONST METHODS--------//
     const std::vector<std::shared_ptr<const Label> >& labels()            const;
     const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >& 
-                                                      bridges()           const;
-    const std::weak_ptr<const Page> &                 parent()            const;
-    bool                                              visibleOnParent()   const;
+                                      bridges()                           const;
+    const std::weak_ptr<const Page> & parent()                            const;
+    bool                              visibleOnParent()                   const;
 
-    std::shared_ptr<const Page>                       child(
+    std::shared_ptr<const Page>       child(
                                const std::shared_ptr<const Label>& label) const;
 
-    std::shared_ptr<const Page>                       child( float x, float y)
-                                                                          const;
+    std::shared_ptr<const Page>       child( float x, float y)            const;
 
-    std::shared_ptr<const Label>                      matchedLabel(
-                                                        float x, float y) const;
+    std::shared_ptr<const Label>      matchedLabel( float x, float y)     const;
 
-    float                                             height()            const;
+    float                             height()                            const;
     
     //----------METHODS-----------//
-    void                                              addBridge(
+    void                              addBridge(
                                     const std::shared_ptr<const Label> label,
                                     const std::shared_ptr<const Page> page);
-    void                                              updateTimeSlide();
-    void                                              pressOnPage();
-    void                                              release();
-    void                                              update();
+    void                              updateTimeSlide();
+    void                              pressOnPage();
+    void                              release();
+    void                              update(bool isPressed,
+                                             float screenPosY = 0.f);
     
 private:
 
     //-------CONST METHODS--------//
     //--------ATTRIBUTES-----------//
+
+    constexpr static float decelerationCoefficient = 1.f; //    pagePourcentage
+                                                          //    / ms^2
+
     const std::vector<std::shared_ptr<const Label> >  _labels;
     std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >
-                                                      _bridges;
-    const std::weak_ptr<const Page>                   _parent;
-    const bool                                        _visibleOnParent;
-    const float                                       _height;
-    bool                                              _isPressed;
-    float                                             _posYPressed;
-    float                                             _derivativeRelease;
-    JumperBallTypes::timePointMs                      _lastUpdateTimePoint;
+                                      _bridges;
+    const std::weak_ptr<const Page>   _parent;
+    const bool                        _visibleOnParent;
+    const float                       _height;
+    float                             _localPosY;
+    float                             _localReleasedPosY;
+    bool                              _isPressed;
+    float                             _pressedScreenPosY;
+    float                             _releasedScreenPosY;
+
+    std::array<slideState,2>          _lastUpdates;
+    unsigned int                      _countingUpdates;
+    float                             _releaseVelocity;
 };
 
 #endif // PAGE_H
