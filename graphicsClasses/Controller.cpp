@@ -268,7 +268,7 @@ void Controller::updateMouse ( float posX, float posY ) {
     
 }
 
-void Controller::releaseMouse ( float posX, float posY ) {
+void Controller::releaseMouse (float posX, float posY) {
     
     constexpr float thresholdMoving = 0.05f;
     
@@ -285,22 +285,36 @@ void Controller::releaseMouse ( float posX, float posY ) {
 
 std::shared_ptr<Map> Controller::loadMap(size_t mapNumber)
 {
-    const std::string fileToOpen = "maps/map" +
-            std::to_string(mapNumber) + ".txt";
-    std::ifstream mapFile;
-    mapFile.open(fileToOpen);  //Opening file to read
-    if (!mapFile) {
-        std::cerr << "ERROR: Opening " << fileToOpen << " impossible .."
+    std::shared_ptr<Map> map = nullptr;
+
+    std::string mapFileToOpenV1 = "maps/map" +
+        std::to_string(mapNumber) + ".txt";
+    std::string mapFileToOpenV2 = "bin/maps/map" +
+        std::to_string(mapNumber) + ".txt";
+    const std::vector<std::string> fileNames {
+        std::move(mapFileToOpenV1), std::move(mapFileToOpenV2)};
+
+    bool foundFile = false;
+    for (size_t i = 0; i < fileNames.size() && !foundFile; ++i) {
+        std::ifstream mapFile;
+        mapFile.open(fileNames.at(i));  //Opening file to read
+        if (mapFile) {
+            foundFile = true;
+            map = std::make_shared<Map>(mapFile);
+            mapFile.close();
+        }
+    }
+
+    if (!foundFile) {
+        std::cerr << "ERROR: Opening " << mapFileToOpenV1 << " impossible .."
                   << std::endl;
         JumperBallTypesMethods::displayInstallError();
         exit(EXIT_FAILURE);
     }
-    Map map (mapFile);
     std::cout << "Map " << mapNumber << " loaded" << std::endl;
 
-    mapFile.close();
 
-    return std::make_shared<Map>(map);
+    return map;
 }
 
 const std::shared_ptr<Menu>&  Controller::menu() const {

@@ -18,36 +18,48 @@
 
 std::string Utility::readFileSrc(const std::string& filePath) {
     // precondition
-    if (filePath.size() == 0) 
-        std::cerr << "Invalid parameter filePath : size() must not be 0." 
-                << std::endl;
+    if (filePath.size() == 0)
+        std::cerr << "Invalid parameter filePath : size() must not be 0."
+                  << std::endl;
     //--------------------------------------------------------------------------
 
-    std::cout << "Opening file " <<  filePath << std::endl;
 
     std::string strContent;
 
+    std::string filePathV2 = "bin/" + filePath;
+    const std::vector<std::string> fileNames {
+        filePath, std::move(filePathV2)};
 
-    std::ifstream file(filePath.c_str());
-    if (!file) {
-    std::cerr << "Could not open file " << filePath << std::endl;
+    bool foundFile = false;
+    for (size_t i = 0; i < fileNames.size() && !foundFile; ++i) {
+        std::ifstream shaderFile(fileNames.at(i));
+        if (shaderFile) {
+            std::cout << "Opening file " <<  fileNames.at(i) << std::endl;
+            foundFile = true;
+
+            shaderFile.seekg(0, std::ios::end);
+            strContent.reserve(shaderFile.tellg());
+            shaderFile.seekg(0, std::ios::beg);
+            strContent.assign((std::istreambuf_iterator<char>(shaderFile)),
+                              std::istreambuf_iterator<char>());
+
+            // postcondition
+            if (strContent.size() == 0)
+                std::cout << "Invalid content read strContent(\"" << strContent
+                          << "\") : size() must not be 0."  << std::endl;
+            //------------------------------------------------------------------
+            shaderFile.close();
+        }
     }
 
-    file.seekg(0, std::ios::end);
-    strContent.reserve(file.tellg());
-    file.seekg(0, std::ios::beg);
-    strContent.assign((std::istreambuf_iterator<char>(file)),
-            std::istreambuf_iterator<char>());
 
 
-    // postcondition
-    if (strContent.size() == 0)  
-        std::cout << "Invalid content read strContent(\"" << strContent 
-                << "\") : size() must not be 0."  << std::endl;
-    //--------------------------------------------------------------------------
+
+    if (!foundFile) {
+        std::cerr << "Could not open file " << filePath << std::endl;
+    }
 
     return strContent;
-
 }
 
 

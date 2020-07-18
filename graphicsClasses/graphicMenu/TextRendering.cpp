@@ -32,15 +32,27 @@ bool TextRendering::initFreeTypeAndFont() {
         return false;
     }
 
-    if(FT_New_Face(ftLib,"fonts/Cousine-Regular.ttf",
-                   0,&fontFace)){
+    std::string fontFileToOpenV1 = "fonts/Cousine-Regular.ttf";
+    std::string fontFileToOpenV2 = "bin/fonts/Cousine-Regular.ttf";
+    const std::vector<std::string> fileNames {
+        std::move(fontFileToOpenV1), std::move(fontFileToOpenV2)};
+
+    bool foundFile = false;
+    for (size_t i = 0; i < fileNames.size() && !foundFile; ++i) {
+        if(FT_New_Face(ftLib,fileNames.at(i).c_str(),
+                   0,&fontFace) == 0) {
+            foundFile = true;
+        }
+    }
+    if (!foundFile) {
         std::cerr << "Error: Impossible to load the font" <<
                      "Cousine-Regular.ttf ... " << std::endl;
         JumperBallTypesMethods::displayInstallError();
         FT_Done_FreeType(ftLib);
         return false;
+    } else  {
+        return true;
     }
-    return true;
 
 }
 

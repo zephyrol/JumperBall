@@ -15,8 +15,8 @@
  */
 
 Page::Page(const std::vector<std::shared_ptr<const Label> >& labels,
-	const std::shared_ptr<const Page>& parent,
-	bool visibleOnParent,
+    const std::shared_ptr<const Page>& parent,
+    bool visibleOnParent,
     float height) :
     _labels(labels),
     _bridges{},
@@ -31,7 +31,7 @@ const std::vector<std::shared_ptr<const Label> >& Page::labels() const{
     return _labels;
 }
 
-const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >& 
+const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >&
 Page::bridges() const {
     return _bridges;
 }
@@ -95,13 +95,13 @@ std::shared_ptr<const Label> Page::matchedLabel(float x, float y) const
 }
 
 void Page::updateTimeSlide() {
-    _slideTimePoint = JumperBallTypesMethods::getTimePointMSNow();
+    //_slideTimePoint = JumperBallTypesMethods::getTimePointMSNow();
 }
 
 void Page::update() {
-    
+
     if (_isPressed) {
-        
+
     }
 }
 
