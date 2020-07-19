@@ -1,4 +1,5 @@
 #include "Page.h"
+#include <math.h>
 #include <algorithm>
 
 /*
