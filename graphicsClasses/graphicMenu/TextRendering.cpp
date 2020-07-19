@@ -113,11 +113,15 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
     return alphabet;
 }
 
-void TextRendering::render( const Label& label, 
-                            const glm::vec3& color) const {
+void TextRendering::render(const Label& label, const glm::vec3& color,
+                           float offsetY) const {
     _spFont.use();
 
-    const JumperBallTypes::vec2f& position = label.position();
+    JumperBallTypes::vec2f position = label.position();
+    if (!label.isFixed()) {
+        position.y += offsetY;
+    }
+
     const float pitch = label.width()/label.message().size();
     float offsetX = -label.width()/2.f + pitch/2.f;
     const glm::mat4 biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,

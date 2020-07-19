@@ -18,11 +18,13 @@ _buttonsStatuts{
     { Controller::Button::Left,     Controller::Status::Released },
     { Controller::Button::Escape,   Controller::Status::Released },
     { Controller::Button::Validate, Controller::Status::Released }},
+_mouseCurrentXCoord(0.f),
+_mouseCurrentYCoord(0.f),
 _mousePressingXCoord(0.f),
 _mousePressingYCoord(0.f),
 _mouseIsPressed(false),
 _requestToLeave(false),
-_currentMap(loadMap(_player.levelProgression())),
+_currentMap(Map::loadMap(_player.levelProgression())),
 _currentBall(std::make_shared<Ball>(*_currentMap)),
 _currentCamera(std::make_shared<Camera>()),
 _currentStar(std::make_shared<Star>(glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f)
@@ -82,6 +84,7 @@ void Controller::run()
     _currentBall->update();
     if (_player.statut() == Player::Statut::INMENU) {
         _currentCamera->follow(*_currentMap);
+        _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
         _renderingEngine->render();
         _menu->render();
     } else if (_player.statut() == Player::Statut::INGAME) {
@@ -112,7 +115,7 @@ void Controller::manageValidateButton(const Controller::Status &status) {
 void Controller::runGame(size_t level)
 {
 
-_currentMap = loadMap(level);
+_currentMap = Map::loadMap(level);
 _currentBall = std::make_shared<Ball>(*_currentMap);
 _currentCamera = std::make_shared<Camera>();
 _currentStar = std::make_shared<Star>(
@@ -134,7 +137,7 @@ void Controller::manageValidateMouse()
                     _mousePressingXCoord,
                     _mousePressingYCoord);
             if (label) {
-                const std::shared_ptr<const Page> newPage =
+                const std::shared_ptr<Page> newPage =
                         _menu->currentPage()->child(label);
                 if (newPage) {
                     _menu->currentPage(newPage);
@@ -237,12 +240,15 @@ void Controller::pressMouse ( float posX, float posY ) {
     
     _mousePressingXCoord = posX;
     _mousePressingYCoord = posY;
+    _mouseCurrentXCoord = posX;
+    _mouseCurrentYCoord = posY;
 }
 
 void Controller::updateMouse ( float posX, float posY ) {
     
     constexpr float thresholdMoving = 0.05f;
     
+
     auto computeDistance = [] ( float x0, float y0, float x1, float y1) {
         return sqrtf(pow(x1 - x0, 2) + pow(y1 - y0, 2)) ;
     };
@@ -264,6 +270,9 @@ void Controller::updateMouse ( float posX, float posY ) {
         else if (sDir == Controller::ScreenDirection::West) {
             manageLeft(Controller::Status::Pressed);
         }
+
+        _mouseCurrentXCoord = posX;
+        _mouseCurrentYCoord = posY;
     }
     
 }
@@ -283,39 +292,6 @@ void Controller::releaseMouse (float posX, float posY) {
     }
 }
 
-std::shared_ptr<Map> Controller::loadMap(size_t mapNumber)
-{
-    std::shared_ptr<Map> map = nullptr;
-
-    std::string mapFileToOpenV1 = "maps/map" +
-        std::to_string(mapNumber) + ".txt";
-    std::string mapFileToOpenV2 = "bin/maps/map" +
-        std::to_string(mapNumber) + ".txt";
-    const std::vector<std::string> fileNames {
-        std::move(mapFileToOpenV1), std::move(mapFileToOpenV2)};
-
-    bool foundFile = false;
-    for (size_t i = 0; i < fileNames.size() && !foundFile; ++i) {
-        std::ifstream mapFile;
-        mapFile.open(fileNames.at(i));  //Opening file to read
-        if (mapFile) {
-            foundFile = true;
-            map = std::make_shared<Map>(mapFile);
-            mapFile.close();
-        }
-    }
-
-    if (!foundFile) {
-        std::cerr << "ERROR: Opening " << mapFileToOpenV1 << " impossible .."
-                  << std::endl;
-        JumperBallTypesMethods::displayInstallError();
-        exit(EXIT_FAILURE);
-    }
-    std::cout << "Map " << mapNumber << " loaded" << std::endl;
-
-
-    return map;
-}
 
 const std::shared_ptr<Menu>&  Controller::menu() const {
     return _menu;

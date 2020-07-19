@@ -24,11 +24,12 @@ Page::Page(const std::vector<std::shared_ptr<const Label> >& labels,
     _visibleOnParent(visibleOnParent),
     _height(height),
     _localPosY(0.f),
+    _localPressedPosY(0.f),
     _localReleasedPosY(0.f),
     _isPressed(false),
     _pressedScreenPosY(0.f),
-    _releasedScreenPosY(0.f),
-    _lastUpdates{},
+    _lastUpdate{},
+    _lastSwipeUpdates{},
     _countingUpdates(0)
 {}
 
@@ -36,8 +37,8 @@ const std::vector<std::shared_ptr<const Label> >& Page::labels() const{
     return _labels;
 }
 
-const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >&
-Page::bridges() const {
+const std::map<std::shared_ptr<const Label>, std::shared_ptr<Page> >&
+Page::bridges() {
     return _bridges;
 }
 
@@ -45,12 +46,16 @@ const std::weak_ptr<const Page>& Page::parent() const {
     return _parent;
 }
 
+float Page::localPosY() const {
+    return _localPosY;
+}
+
 bool Page::visibleOnParent() const {
     return _visibleOnParent;
 }
 
-std::shared_ptr<const Page> Page::child(
-        const std::shared_ptr<const Label> &label) const {
+std::shared_ptr<Page> Page::child(
+        const std::shared_ptr<const Label> &label) {
 
     if ( _bridges.find(label) != _bridges.end() ) {
         return _bridges.at(label);
@@ -77,7 +82,7 @@ float Page::height() const {
 }
 
 void Page::addBridge(const std::shared_ptr<const Label> label,
-                     const std::shared_ptr<const Page> page) {
+                     const std::shared_ptr<Page> page) {
     if (std::find(_labels.begin(), _labels.end(), label) == _labels.end()) {
         std::cout << "Trying to associate a label that does not exist in the" <<
             "current page ... the operation is skipped ..." << std::endl;
@@ -104,57 +109,79 @@ void Page::updateTimeSlide() {
 
 void Page::update(bool isPressed, float screenPosY) {
 
+
+    constexpr float cancelingThresholdDuration = 1.f;
+    const auto now = JumperBallTypesMethods::getTimePointMSNow();
+
+    //We reinit the keyframes if the page are not updated for 1 seconde
+    if (_countingUpdates > 0 && JumperBallTypesMethods::getFloatFromDurationMS(
+            now - _lastUpdate ) > cancelingThresholdDuration) {
+        _countingUpdates = 0;
+        _isPressed = false;
+    }
+
+    _lastUpdate = now;
+
     //Press cases
     if (isPressed && !_isPressed) {
         _countingUpdates = 0;
         _pressedScreenPosY = screenPosY;
+        _localPressedPosY = _localPosY;
         _isPressed = true;
     }
 
     if (_isPressed) {
+        constexpr float thresholdDeltaT = 0.05f; //50 ms
+        const bool thresholdIsCrossed =
+                (JumperBallTypesMethods::getFloatFromDurationMS(
+                     now - _lastSwipeUpdates.at(0).first ) > thresholdDeltaT);
         if (_countingUpdates < 2 ) {
-            _lastUpdates.at(_countingUpdates).first =
-                    JumperBallTypesMethods::getTimePointMSNow();
-            _lastUpdates.at(_countingUpdates).second = screenPosY;
-            ++_countingUpdates;
-        } else {
-            _lastUpdates.at(0) = std::move(_lastUpdates.at(1));
-            _lastUpdates.at(1).first =
-                    JumperBallTypesMethods::getTimePointMSNow();
-            _lastUpdates.at(1).second = screenPosY;
+            if ( _countingUpdates == 0 || thresholdIsCrossed ) {
+                _lastSwipeUpdates.at(_countingUpdates).first = now;
+                _lastSwipeUpdates.at(_countingUpdates).second = screenPosY;
+                ++_countingUpdates;
+            }
+        } else if ( thresholdIsCrossed  ){
+            std::cout << "updating" << std::endl;
+            _lastSwipeUpdates.at(0) = std::move(_lastSwipeUpdates.at(1));
+            _lastSwipeUpdates.at(1).first = now;
+            _lastSwipeUpdates.at(1).second = screenPosY;
         }
+        _localPosY = _localPressedPosY + (screenPosY - _pressedScreenPosY);
     }
 
     //Release cases
     if (!isPressed && _isPressed) {
         if (_countingUpdates == 2 ) {
             float deltaT = JumperBallTypesMethods::getFloatFromDurationMS(
-                        _lastUpdates.at(1).first -_lastUpdates.at(0).first );
+                _lastSwipeUpdates.at(1).first -_lastSwipeUpdates.at(0).first );
 
             // the velocity is the position derivative (pourcentagePage / ms)
-            _releaseVelocity =  (_lastUpdates.at(1).second -
-                                 _lastUpdates.at(0).second) / std::move(deltaT);
-            _releasedScreenPosY = screenPosY;
-
+            _releaseVelocity =  (_lastSwipeUpdates.at(1).second -
+                _lastSwipeUpdates.at(0).second) / std::move(deltaT);
             _localReleasedPosY = _localPosY;
             _isPressed = false;
         }
     }
-    if ( !_isPressed) {
+    if (!_isPressed) {
         if (_countingUpdates == 2) {
-            float diffT = JumperBallTypesMethods::getFloatFromDurationMS(
-                        JumperBallTypesMethods::getTimePointMSNow() -
-                        _lastUpdates.at(1).first);
-            float deceleration = decelerationCoefficient * powf(diffT,2.f)/2.f;
+            const float t = JumperBallTypesMethods::getFloatFromDurationMS(
+                        now - _lastSwipeUpdates.at(1).first);
+            float deceleration = decelerationCoefficient * powf(t,2.f)/2.f;
 
-            if (_releaseVelocity < 0.f ) {
-                deceleration = -deceleration;
+            if (_releaseVelocity > 0.f &&
+                    t < -(_releaseVelocity)/(2.f *-decelerationCoefficient/2.f) ) {
+                _localPosY = -deceleration +
+                        _releaseVelocity * t + _localReleasedPosY ;
             }
-            _localPosY = -deceleration + _releaseVelocity * diffT
-                    + _localReleasedPosY ;
+            else if (_releaseVelocity < 0.f &&
+                    t < -(_releaseVelocity)/(2.f *decelerationCoefficient/2.f) ) {
+                _localPosY = deceleration +
+                        _releaseVelocity * t + _localReleasedPosY ;
+            }
 
             if (_localPosY < 0.f) _localPosY = 0.f;
-            else if (_localPosY > _height) _localPosY = _height;
+            else if (_localPosY > _height - 1.f) _localPosY = _height - 1.f;
         }
     }
 

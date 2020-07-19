@@ -13,10 +13,10 @@
 
 #include "Menu.h"
 
-Menu::Menu(const std::shared_ptr<const Page>& rootPage,
-           const std::shared_ptr<const Page>& pausePage,
-           const std::shared_ptr<const Page>& successPage,
-           const std::shared_ptr<const Page>& failurePage):
+Menu::Menu(const std::shared_ptr<Page>& rootPage,
+           const std::shared_ptr<Page>& pausePage,
+           const std::shared_ptr<Page>& successPage,
+           const std::shared_ptr<Page>& failurePage):
   _rootPage(rootPage),
   _pausePage(pausePage),
   _successPage(successPage),
@@ -46,9 +46,11 @@ void Menu::renderPage( const std::weak_ptr<const Page>& page) const {
     for( const std::shared_ptr<const Label>& label : page.lock()->labels()) {
         if (label->typeOfLabel() == Label::TypeOfLabel::Message){
             if (label->isActivated()) {
-                _textRendering.render(*label, glm::vec3(0, 1.f, 1.f));
+                _textRendering.render(*label, glm::vec3(0, 1.f, 1.f),
+                                      spPage->localPosY());
             } else {
-                _textRendering.render(*label, glm::vec3(.2f, .2f, .2f));
+                _textRendering.render(*label, glm::vec3(.2f, .2f, .2f),
+                                      spPage->localPosY());
             }
         } else if (label->typeOfLabel() == Label::TypeOfLabel::Box) {
             _boxRendering.render(*label);
@@ -57,23 +59,28 @@ void Menu::renderPage( const std::weak_ptr<const Page>& page) const {
     
 }
 
-const std::shared_ptr<const Page>& Menu::currentPage() const
+const std::shared_ptr<Page>& Menu::currentPage()
 {
     return _currentPage;
 }
 
 
-void Menu::currentPage(const std::shared_ptr<const Page> &page)
+void Menu::currentPage(const std::shared_ptr<Page> &page)
 {
     _currentPage = page;
 }
 
+void Menu::update(bool isPressed, float screenPosY)
+{
+    _currentPage->update(isPressed, screenPosY);
+}
+
 std::vector<unsigned char> Menu::getCharacters(
-    const std::vector<std::shared_ptr<const Page> >& pages)
+    const std::vector<std::shared_ptr<Page> >& pages)
 {
     std::vector<unsigned char> characters;
 
-    for( const std::shared_ptr<const Page>& page : pages) {
+    for( const std::shared_ptr<Page>& page : pages) {
         if (page)
         for( const std::shared_ptr<const Label>& label : page->labels()) {
             
@@ -97,7 +104,7 @@ std::vector<unsigned char> Menu::getCharacters(
     return characters;
 }
 
-float Menu::getHeight(const std::shared_ptr<const Page>& page)
+float Menu::getHeight(const std::shared_ptr<Page>& page)
 {
     float height = 0.f;
 
@@ -164,7 +171,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
     //constexpr float offsetBox = 0.02f;
 
     std::vector<std::shared_ptr<Label> > labelLevels;
-    for (size_t i = 0; i < 15; ++i) {
+    for (size_t i = 0; i < 99; ++i) {
 
         std::string sNumber;
         if( i < 10 ) {
@@ -256,10 +263,10 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
         std::shared_ptr<const Page> > bridgesPage2 ;*/
 
     const std::shared_ptr<Page> page1 =
-        std::make_shared<Page> (labelsPage1, nullptr, false);
+        std::make_shared<Page> (labelsPage1, nullptr, false, 2.f);
 
     const std::shared_ptr<Page> page2 =
-        std::make_shared<Page> (labelsPage2, page1, false);
+        std::make_shared<Page> (labelsPage2, page1, false, 10.f);
 
     const std::shared_ptr<Page> page3 =
         std::make_shared<Page> (labelsPage3, nullptr, false);
@@ -274,19 +281,19 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
     return std::make_shared<Menu> (page1,page4,nullptr,page3);
 }
 
-const std::shared_ptr<const Page> &Menu::pausePage() const {
+const std::shared_ptr<Page> &Menu::pausePage(){
     return _pausePage;
 }
 
-const std::shared_ptr<const Page> &Menu::failurePage() const { 
+const std::shared_ptr<Page> &Menu::failurePage() {
     return _failurePage;
 }
 
-const std::shared_ptr<const Page> &Menu::successPage() const {
+const std::shared_ptr<Page> &Menu::successPage() {
     return _successPage;
 }
 
-const std::shared_ptr<const Page> &Menu::rootPage() const { 
+const std::shared_ptr<Page> &Menu::rootPage() {
     return _rootPage;
 }
 

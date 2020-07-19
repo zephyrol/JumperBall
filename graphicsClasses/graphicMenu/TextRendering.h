@@ -37,7 +37,8 @@ public:
                                             glm::vec2 localTranslate; };
 
     void                                render( const Label& label, 
-                                                const glm::vec3& color) const;
+                                                const glm::vec3& color,
+                                                float offsetY = 0) const;
     unsigned int                        fontHeight() const;
 
 private:

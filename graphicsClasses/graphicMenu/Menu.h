@@ -20,40 +20,42 @@
 class Menu
 {
 public:
-    Menu(const std::shared_ptr<const Page>& rootPage,
-         const std::shared_ptr<const Page>& pausePage,
-         const std::shared_ptr<const Page>& successPage,
-         const std::shared_ptr<const Page>& failurePage);
+    Menu(const std::shared_ptr<Page>& rootPage,
+         const std::shared_ptr<Page>& pausePage,
+         const std::shared_ptr<Page>& successPage,
+         const std::shared_ptr<Page>& failurePage);
 
     void render() const;
-    const std::shared_ptr<const Page>& currentPage() const;
-    void currentPage(const std::shared_ptr<const Page>& page);
+    const std::shared_ptr<Page>& currentPage();
+    void currentPage(const std::shared_ptr<Page>& page);
+
+    void update(bool isPressed, float screenPosY);
 
     
-    const std::shared_ptr<const Page>& rootPage() const;
-    const std::shared_ptr<const Page>& pausePage() const;
-    const std::shared_ptr<const Page>& successPage() const;
-    const std::shared_ptr<const Page>& failurePage() const;
+    const std::shared_ptr<Page>& rootPage();
+    const std::shared_ptr<Page>& pausePage();
+    const std::shared_ptr<Page>& successPage();
+    const std::shared_ptr<Page>& failurePage();
     
     static std::shared_ptr<Menu> getJumperBallMenu(size_t currentLevel);
 
 private:
     
-    const std::shared_ptr<const Page> _rootPage;
-    const std::shared_ptr<const Page> _pausePage;
-    const std::shared_ptr<const Page> _successPage;
-    const std::shared_ptr<const Page> _failurePage;
+    const std::shared_ptr<Page> _rootPage;
+    const std::shared_ptr<Page> _pausePage;
+    const std::shared_ptr<Page> _successPage;
+    const std::shared_ptr<Page> _failurePage;
     
     TextRendering _textRendering;
     BoxRendering _boxRendering;
-    std::shared_ptr<const Page> _currentPage;
+    std::shared_ptr<Page> _currentPage;
 
 
     void renderPage( const std::weak_ptr<const Page>& page) const;
 
     static std::vector<unsigned char> getCharacters
-        (const std::vector<std::shared_ptr<const Page> >& pages);
-    static float getHeight (const std::shared_ptr<const Page>& page);
+        (const std::vector<std::shared_ptr<Page> >& pages);
+    static float getHeight (const std::shared_ptr<Page> &page);
     static unsigned int getNumberOfPixelsHeight(float height);
 };
 

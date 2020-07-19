@@ -466,3 +466,36 @@ Map::EffectOnBall Map::interaction(
     return effect; 
 }
 
+std::shared_ptr<Map> Map::loadMap(size_t mapNumber)
+{
+    std::shared_ptr<Map> map = nullptr;
+
+    std::string mapFileToOpenV1 = "maps/map" +
+        std::to_string(mapNumber) + ".txt";
+    std::string mapFileToOpenV2 = "bin/maps/map" +
+        std::to_string(mapNumber) + ".txt";
+    const std::vector<std::string> fileNames {
+        std::move(mapFileToOpenV1), std::move(mapFileToOpenV2)};
+
+    bool foundFile = false;
+    for (size_t i = 0; i < fileNames.size() && !foundFile; ++i) {
+        std::ifstream mapFile;
+        mapFile.open(fileNames.at(i));  //Opening file to read
+        if (mapFile) {
+            foundFile = true;
+            map = std::make_shared<Map>(mapFile);
+            mapFile.close();
+        }
+    }
+
+    if (!foundFile) {
+        std::cerr << "ERROR: Opening " << mapFileToOpenV1 << " impossible .."
+                  << std::endl;
+        JumperBallTypesMethods::displayInstallError();
+        exit(EXIT_FAILURE);
+    }
+    std::cout << "Map " << mapNumber << " loaded" << std::endl;
+
+
+    return map;
+}

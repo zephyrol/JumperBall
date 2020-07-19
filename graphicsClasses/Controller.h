@@ -33,7 +33,7 @@ public:
 
     void            run();
 
-    void currentMap(const std::shared_ptr<Map>& currentMap);
+    void            currentMap(const std::shared_ptr<Map>& currentMap);
     const std::shared_ptr<Map> &currentMap() const;
 
     void currentBall(const std::shared_ptr<Ball>& currentBall);
@@ -68,6 +68,8 @@ private:
     std::map<Button, Status>    _buttonsStatuts;
 
     
+    float                       _mouseCurrentXCoord;
+    float                       _mouseCurrentYCoord;
     float                       _mousePressingXCoord;
     float                       _mousePressingYCoord;
     bool                        _mouseIsPressed;
@@ -79,7 +81,6 @@ private:
     std::shared_ptr<Star>       _currentStar;
     std::shared_ptr<Rendering>  _renderingEngine;
 
-    static std::shared_ptr<Map> loadMap(size_t mapNumber);
 };
 
 #endif /* Controller_h */

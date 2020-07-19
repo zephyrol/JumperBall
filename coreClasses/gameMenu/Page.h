@@ -27,30 +27,31 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     Page( const std::vector<std::shared_ptr<const Label> >& labels,
           const std::shared_ptr<const Page>& parent = nullptr,
-          bool visibleOnParent  = false,
+          bool visibleOnParent = false,
           float height = 1.f);
 
     
     //-------CONST METHODS--------//
     const std::vector<std::shared_ptr<const Label> >& labels()            const;
-    const std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >& 
-                                      bridges()                           const;
+    const std::map<std::shared_ptr<const Label>, std::shared_ptr<Page> >&
+                                      bridges();
     const std::weak_ptr<const Page> & parent()                            const;
     bool                              visibleOnParent()                   const;
 
-    std::shared_ptr<const Page>       child(
-                               const std::shared_ptr<const Label>& label) const;
 
-    std::shared_ptr<const Page>       child( float x, float y)            const;
+    std::shared_ptr<const Page>       child(float x, float y)            const;
 
-    std::shared_ptr<const Label>      matchedLabel( float x, float y)     const;
+    std::shared_ptr<const Label>      matchedLabel(float x, float y)     const;
 
     float                             height()                            const;
-    
+    float                             localPosY()                         const;
+
     //----------METHODS-----------//
     void                              addBridge(
                                     const std::shared_ptr<const Label> label,
-                                    const std::shared_ptr<const Page> page);
+                                    const std::shared_ptr<Page> page);
+    std::shared_ptr<Page>             child(
+                                    const std::shared_ptr<const Label>& label);
     void                              updateTimeSlide();
     void                              pressOnPage();
     void                              release();
@@ -62,22 +63,22 @@ private:
     //-------CONST METHODS--------//
     //--------ATTRIBUTES-----------//
 
-    constexpr static float decelerationCoefficient = 1.f; //    pagePourcentage
-                                                          //    / ms^2
+    constexpr static float decelerationCoefficient = 10.f; //    pagePourcentage
+                                                          //    / s^2
 
-    const std::vector<std::shared_ptr<const Label> >  _labels;
-    std::map<std::shared_ptr<const Label>, std::shared_ptr<const Page> >
+    const std::vector<std::shared_ptr<const Label> > _labels;
+    std::map<std::shared_ptr<const Label>, std::shared_ptr<Page> >
                                       _bridges;
     const std::weak_ptr<const Page>   _parent;
     const bool                        _visibleOnParent;
     const float                       _height;
-    float                             _localPosY;
+    float                             _localPosY; // Page position
+    float                             _localPressedPosY;
     float                             _localReleasedPosY;
     bool                              _isPressed;
     float                             _pressedScreenPosY;
-    float                             _releasedScreenPosY;
-
-    std::array<slideState,2>          _lastUpdates;
+    JumperBallTypes::timePointMs      _lastUpdate;
+    std::array<slideState,2>          _lastSwipeUpdates;
     unsigned int                      _countingUpdates;
     float                             _releaseVelocity;
 };

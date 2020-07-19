@@ -82,7 +82,7 @@ public:
 
     //--------STATIC METHODS-------//
     static void                           compress(std::ifstream& input);
-
+    static std::shared_ptr<Map>           loadMap(size_t mapNumber);
 
 private:
 
