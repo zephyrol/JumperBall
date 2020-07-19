@@ -255,3 +255,9 @@ float Utility::xScreenToPortrait(float x) {
     return x / ( static_cast<float>(windowResolutionX) /
                 (static_cast<float>(windowResolutionY) / maxRatio) ) ;
 }
+
+GLsizei Utility::getWidthFromHeight(unsigned int resolutionY) {
+    return static_cast<GLsizei> ( static_cast<float>(resolutionY) *
+                                  static_cast<float>(windowResolutionX) /
+                                  static_cast<float>(windowResolutionY));
+}

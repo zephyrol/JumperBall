@@ -55,16 +55,27 @@ Rendering::Rendering(const Map&     map,
     _spDepth
           ( Shader (GL_VERTEX_SHADER,   vsshaderDepth),
             Shader (GL_FRAGMENT_SHADER, fsshaderDepth)),
-    _frameBufferDepth(FrameBuffer::TextureCaterory::Depth),
+    _frameBufferDepth(FrameBuffer::TextureCaterory::Depth,
+                         sizeDepthTexture,sizeDepthTexture),
     _frameBufferScene(FrameBuffer::TextureCaterory::HDR),
-    _frameBufferToneMapping(FrameBuffer::TextureCaterory::SDR,false),
-    _frameBufferHalfBlur(FrameBuffer::TextureCaterory::SDR,false,
-        heightBloomTexture / static_cast<float>(Utility::windowResolutionY)),
-    _frameBufferCompleteBlur(FrameBuffer::TextureCaterory::SDR,false,
-        heightBloomTexture / static_cast<float>(Utility::windowResolutionY)),
-    _frameBufferBrightPassFilter(FrameBuffer::TextureCaterory::SDR,false,
-        heightBloomTexture / static_cast<float>(Utility::windowResolutionY)),
-    _frameBufferBloom(FrameBuffer::TextureCaterory::SDR,false)
+    _frameBufferToneMapping(FrameBuffer::TextureCaterory::SDR,
+                         Utility::windowResolutionX,
+                         Utility::windowResolutionY, false),
+    _frameBufferHalfBlur(FrameBuffer::TextureCaterory::SDR,
+                         Utility::getWidthFromHeight(heightBloomTexture),
+                         heightBloomTexture,
+                         false),
+    _frameBufferCompleteBlur(FrameBuffer::TextureCaterory::SDR,
+                         Utility::getWidthFromHeight(heightBloomTexture),
+                         heightBloomTexture,
+                         false),
+    _frameBufferBrightPassFilter(FrameBuffer::TextureCaterory::SDR,
+                         heightBloomTexture,
+                         Utility::getWidthFromHeight(heightBloomTexture),
+                         false),
+    _frameBufferBloom(FrameBuffer::TextureCaterory::SDR,
+                         Utility::windowResolutionX,
+                         Utility::windowResolutionY, false)
 {
 }
 
@@ -272,10 +283,8 @@ void Rendering::bindStarView(const ShaderProgram& sp) {
     halfBoundingBoxSize = halfBoundingBoxSize/2.f + offsetJumpingBall;
 
     _uniformMatrix4["VP"] =
-    glm::mat4(glm::ortho(-halfBoundingBoxSize*
-                         Utility::windowResolutionX/Utility::windowResolutionY,
-                         halfBoundingBoxSize*
-                         Utility::windowResolutionX/Utility::windowResolutionY,
+    glm::mat4(glm::ortho(-halfBoundingBoxSize,
+                         halfBoundingBoxSize,
                         -halfBoundingBoxSize, halfBoundingBoxSize,
                         _camera.zNear, _camera.zFar) *
               glm::lookAt ( _star.centralPosition(), center, 

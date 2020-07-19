@@ -13,14 +13,17 @@
 
 #include "FrameBuffer.h"
 
-FrameBuffer::FrameBuffer(FrameBuffer::TextureCaterory category, 
-    bool hasDepthBuffer, float scale) :
+FrameBuffer::FrameBuffer(FrameBuffer::TextureCaterory category,
+                         GLsizei resolutionX,
+                         GLsizei resolutionY,
+                         bool hasDepthBuffer) :
 _fboHandle(),
 _renderTexture(),
 _textureCategory(category),
 _hasDepthBuffer(hasDepthBuffer),
 _depthBuffer(),
-_scale(scale)
+_resolutionX(resolutionX),
+_resolutionY(resolutionY)
 {
     constexpr GLsizei levelTexture  = 1;
     constexpr GLsizei mipmapLevel   = 0;
@@ -36,22 +39,18 @@ _scale(scale)
     GLenum dataFormat;
     if (_textureCategory == FrameBuffer::TextureCaterory::SDR) {
         dataFormat = GL_RGB8;
-        glTexStorage2D(GL_TEXTURE_2D, levelTexture, dataFormat,
-               static_cast<GLsizei>(Utility::windowResolutionX * scale),
-               static_cast<GLsizei>(Utility::windowResolutionY * scale));
     }
     else if (_textureCategory == FrameBuffer::TextureCaterory::HDR) {
         dataFormat = GL_RGB32F;
-        glTexStorage2D(GL_TEXTURE_2D, levelTexture, dataFormat,
-               static_cast<GLsizei>(Utility::windowResolutionX * scale),
-               static_cast<GLsizei>(Utility::windowResolutionY * scale));
     }
-    else {
+    else { //Depth Map
         dataFormat = GL_R16F;
-        glTexStorage2D(GL_TEXTURE_2D, levelTexture, dataFormat,
-               static_cast<GLsizei>(Utility::windowResolutionX * scale),
-               static_cast<GLsizei>(Utility::windowResolutionY * scale));
     }
+
+    glTexStorage2D(GL_TEXTURE_2D, levelTexture, dataFormat,
+                   static_cast<GLsizei>(resolutionX),
+                   static_cast<GLsizei>(resolutionY));
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -62,14 +61,14 @@ _scale(scale)
     drawBuffer = GL_COLOR_ATTACHMENT0;
     
     if (hasDepthBuffer){
-    glGenRenderbuffers(1,&_depthBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, _depthBuffer);
+        glGenRenderbuffers(1,&_depthBuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, _depthBuffer);
 
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 
-                Utility::windowResolutionX, Utility::windowResolutionY);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                              resolutionX, resolutionY);
 
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,
-                                GL_RENDERBUFFER, _depthBuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,
+                                  GL_RENDERBUFFER, _depthBuffer);
     }
     glDrawBuffers(1,&drawBuffer);
 
@@ -83,8 +82,7 @@ void FrameBuffer::bindFrameBuffer() const {
         glClear(GL_DEPTH_BUFFER_BIT);
     }
 
-    glViewport(0,0,static_cast<GLsizei>(Utility::windowResolutionX*_scale),
-        static_cast<GLsizei>(Utility::windowResolutionY*_scale));
+    glViewport(0,0,_resolutionX, _resolutionY);
 }
 
 GLuint FrameBuffer::getRenderTexture() const {

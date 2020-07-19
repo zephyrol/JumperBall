@@ -41,6 +41,9 @@ namespace Utility {
 
     float                             getWindowRatio();
 
+    GLsizei                           getWidthFromHeight(unsigned int
+                                                         resolutionY);
+
     extern const glm::mat3            XYZToRGB;
     extern const glm::mat3            RGBToXYZ;
     extern unsigned int               windowResolutionX;

@@ -174,7 +174,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
     for (size_t i = 0; i < 99; ++i) {
 
         std::string sNumber;
-        if( i < 10 ) {
+        if( i <= 10 ) {
             sNumber.append("0");
         }
         sNumber.append(std::to_string(i+1));
@@ -253,7 +253,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
             "Main menu");
 
     const std::vector<std::shared_ptr<const Label> > labelsPage4
-    {label1Page4, label2Page4};
+        {label1Page4, label2Page4};
 
 
     /*std::map<std::shared_ptr<const Label>,

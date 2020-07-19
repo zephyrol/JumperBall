@@ -50,9 +50,10 @@ private:
     using uniformVariable           = std::map<std::string,T >;
     
     //---------CONSTANTS------------//
-    static constexpr float          blurSigma                             = 4.f;
-    static constexpr size_t         blurPatchSize                         = 25;
-    static constexpr size_t         heightBloomTexture                    = 192;
+    static constexpr float          blurSigma                            = 4.f;
+    static constexpr size_t         blurPatchSize                        = 25;
+    static constexpr size_t         heightBloomTexture                   = 192;
+    static constexpr size_t         sizeDepthTexture                     = 1024;
 
     //--------ATTRIBUTES-----------//
     uniformVariable<glm::mat4>      _uniformMatrix4;

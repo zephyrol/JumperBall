@@ -173,13 +173,13 @@ void Page::update(bool isPressed, float screenPosY) {
                         now - _lastSwipeUpdates.at(1).first);
             float deceleration = decelerationCoefficient * powf(t,2.f)/2.f;
 
-            if (_releaseVelocity > 0.f &&
-                    t < -(_releaseVelocity)/(2.f *-decelerationCoefficient/2.f) ) {
+            if (_releaseVelocity > 0.f && t < -(_releaseVelocity)/
+                    (2.f *-decelerationCoefficient/2.f) ) {
                 _localPosY = -deceleration +
                         _releaseVelocity * t + _localReleasedPosY ;
             }
-            else if (_releaseVelocity < 0.f &&
-                    t < -(_releaseVelocity)/(2.f *decelerationCoefficient/2.f) ) {
+            else if (_releaseVelocity < 0.f && t < -(_releaseVelocity)/
+                     (2.f *decelerationCoefficient/2.f) ) {
                 _localPosY = deceleration +
                         _releaseVelocity * t + _localReleasedPosY ;
             }

@@ -24,7 +24,9 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     FrameBuffer             ( TextureCaterory category = TextureCaterory::SDR,
-                              bool hasDepthBuffer = true, float scale = 1.f);
+                              GLsizei resolutionX = Utility::windowResolutionX,
+                              GLsizei resolutionY = Utility::windowResolutionY,
+                              bool hasDepthBuffer = true);
 
     //---------CONSTANTS------------//
     static constexpr float  luminanceKey                                 = 0.4f;
@@ -50,8 +52,9 @@ private:
 
     const bool              _hasDepthBuffer;
     GLuint                  _depthBuffer;
-    const float             _scale;
 
+    const GLsizei           _resolutionX;
+    const GLsizei           _resolutionY;
 };
 
 #endif /* FRAMEBUFFER_H */

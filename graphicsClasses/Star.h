@@ -50,7 +50,8 @@ private:
     const GLfloat                 _radiusOutside;
     const glm::mat4               _initialTransform;
 
-    JumperBallTypes::timePointMs  _timeCreation;
+    const JumperBallTypes::timePointMs
+                                  _timeCreation;
     
     
 };
