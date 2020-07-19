@@ -97,8 +97,8 @@ std::shared_ptr<const Label> Page::matchedLabel(float x, float y) const
     for (const std::shared_ptr<const Label>& label : _labels) {
         if (x > (label->position().x - label->width()/2.f) &&
                 x < (label->position().x + label->width()/2.f) &&
-                y > (label->position().y - label->height()/2.f) &&
-                y < (label->position().y + label->height()/2.f)) {
+                y > (label->position().y + _localPosY - label->height()/2.f) &&
+                y < (label->position().y + _localPosY + label->height()/2.f)) {
             return label;
         }
     }
@@ -110,6 +110,10 @@ void Page::updateTimeSlide() {
 
 void Page::update(bool isPressed, float screenPosY) {
 
+
+    if (_height - 1.f < EPSILON_F) {
+        return;
+    }
 
     constexpr float cancelingThresholdDuration = 1.f;
     const auto now = JumperBallTypesMethods::getTimePointMSNow();
@@ -143,7 +147,6 @@ void Page::update(bool isPressed, float screenPosY) {
                 ++_countingUpdates;
             }
         } else if ( thresholdIsCrossed  ){
-            std::cout << "updating" << std::endl;
             _lastSwipeUpdates.at(0) = std::move(_lastSwipeUpdates.at(1));
             _lastSwipeUpdates.at(1).first = now;
             _lastSwipeUpdates.at(1).second = screenPosY;

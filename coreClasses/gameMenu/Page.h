@@ -39,9 +39,9 @@ public:
     bool                              visibleOnParent()                   const;
 
 
-    std::shared_ptr<const Page>       child(float x, float y)            const;
+    std::shared_ptr<const Page>       child(float x, float y)             const;
 
-    std::shared_ptr<const Label>      matchedLabel(float x, float y)     const;
+    std::shared_ptr<const Label>      matchedLabel(float x, float y)      const;
 
     float                             height()                            const;
     float                             localPosY()                         const;

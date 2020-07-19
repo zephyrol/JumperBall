@@ -263,7 +263,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
         std::shared_ptr<const Page> > bridgesPage2 ;*/
 
     const std::shared_ptr<Page> page1 =
-        std::make_shared<Page> (labelsPage1, nullptr, false, 2.f);
+        std::make_shared<Page> (labelsPage1, nullptr, false);
 
     const std::shared_ptr<Page> page2 =
         std::make_shared<Page> (labelsPage2, page1, false, 10.f);
