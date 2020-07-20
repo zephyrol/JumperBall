@@ -33,14 +33,14 @@ public:
 
     //-------CONST METHODS----------//
     GLuint                  getHandle()                                   const;
-    void                    bindFrameBuffer()                             const;
+    void                    bindFrameBuffer(bool clean = true)            const;
     std::pair<float,float>  computeLogAverageLuminanceAndMax()            const;
     GLuint                  getRenderTexture()                            const;
     
     
     //--------STATIC METHODS-------//
-    static void             bindDefaultFrameBuffer();
-
+    static void             bindDefaultFrameBuffer(bool clean = true);
+    static void             cleanCurrentFrameBuffer(bool hasDepthBuffer = true);
 
 private:
 

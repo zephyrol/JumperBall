@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   Rendering.cpp
  * Author: Morgenthaler S
- * 
+ *
  * Created on 6 novembre 2019, 20:38
  */
 
@@ -57,32 +57,21 @@ Rendering::Rendering(const Map&     map,
             Shader (GL_FRAGMENT_SHADER, fsshaderDepth)),
     _frameBufferDepth(FrameBuffer::TextureCaterory::Depth,
                          sizeDepthTexture,sizeDepthTexture),
-    _frameBufferScene(FrameBuffer::TextureCaterory::HDR),
-    _frameBufferToneMapping(FrameBuffer::TextureCaterory::SDR,
+    _frameBufferSceneHDR(FrameBuffer::TextureCaterory::HDR),
+    _frameBufferSceneSDR(FrameBuffer::TextureCaterory::SDR,
                          Utility::windowResolutionX,
                          Utility::windowResolutionY, false),
-    _frameBufferHalfBlur(FrameBuffer::TextureCaterory::SDR,
+    _frameBufferBloomEffect(FrameBuffer::TextureCaterory::SDR,
                          Utility::getWidthFromHeight(heightBloomTexture),
                          heightBloomTexture,
-                         false),
-    _frameBufferCompleteBlur(FrameBuffer::TextureCaterory::SDR,
-                         Utility::getWidthFromHeight(heightBloomTexture),
-                         heightBloomTexture,
-                         false),
-    _frameBufferBrightPassFilter(FrameBuffer::TextureCaterory::SDR,
-                         heightBloomTexture,
-                         Utility::getWidthFromHeight(heightBloomTexture),
-                         false),
-    _frameBufferBloom(FrameBuffer::TextureCaterory::SDR,
-                         Utility::windowResolutionX,
-                         Utility::windowResolutionY, false)
+                         false)
 {
 }
 
 void Rendering::phongEffect( const FrameBuffer& referenceFBO ) {
 
     glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
-    _frameBufferScene.bindFrameBuffer();
+    _frameBufferSceneHDR.bindFrameBuffer(true);
     _spMap.use();
     _spMap.bindUniformTexture("depthTexture", 0,
                               referenceFBO.getRenderTexture());
@@ -91,7 +80,7 @@ void Rendering::phongEffect( const FrameBuffer& referenceFBO ) {
     bindCamera (_spMap);
 
     _light.positionLight(_star.centralPosition());
-                                        
+
     _light.bind("light",_spMap);
 
     _meshBall.render(_spMap);
@@ -116,7 +105,7 @@ void Rendering::phongEffect( const FrameBuffer& referenceFBO ) {
 void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
 
     _spBlur.use();
-    _frameBufferHalfBlur.bindFrameBuffer();
+    _frameBufferBloomEffect.bindFrameBuffer(false);
 
     _spBlur.bindUniformTexture("frameTexture", 0,
                                referenceFBO.getRenderTexture());
@@ -125,9 +114,10 @@ void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
 
     _spBlur.bindUniform("firstPass", true);
     _meshQuadFrame.render(_spBlur);
-    _frameBufferCompleteBlur.bindFrameBuffer();
+
+    _frameBufferBloomEffect.bindFrameBuffer(false);
     _spBlur.bindUniformTexture("frameTexture", 0,
-                               _frameBufferHalfBlur.getRenderTexture());
+                               _frameBufferBloomEffect.getRenderTexture());
 
     _spBlur.bindUniform("firstPass", false);
     _meshQuadFrame.render(_spBlur);
@@ -137,28 +127,28 @@ void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
 
     std::pair<float,float> averageLuminanceAndMax {0.f,0.f};
     //referenceFBO.computeLogAverageLuminanceAndMax();
-    
+
 
     _spToneMapping.use();
-    _frameBufferToneMapping.bindFrameBuffer();
+    _frameBufferSceneSDR.bindFrameBuffer(false);
 
     _spToneMapping.bindUniformTexture("frameTexture", 0,
                                       referenceFBO.getRenderTexture());
-    _spToneMapping.bindUniform ( "averageLuminance", 
+    _spToneMapping.bindUniform ( "averageLuminance",
                   //averageLuminanceAndMax.first,
                   //referenceFBO.computeLogAverageLuminance(),
                     1.8f);
-    _spToneMapping.bindUniform ( "whiteLuminance", 
+    _spToneMapping.bindUniform ( "whiteLuminance",
                     averageLuminanceAndMax.second);
                   //referenceFBO.computeLogAverageLuminance(),
                   //1.8f,
-    
+
     _meshQuadFrame.render(_spToneMapping);
 }
 
 void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
     _spBrightPassFilter.use();
-    _frameBufferBrightPassFilter.bindFrameBuffer();
+    _frameBufferBloomEffect.bindFrameBuffer(false);
 
     _spBrightPassFilter.bindUniformTexture("frameTexture", 0,
                                            referenceFBO.getRenderTexture());
@@ -166,10 +156,10 @@ void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
     _meshQuadFrame.render(_spBrightPassFilter);
 }
 
-void Rendering::bloomEffect(  const FrameBuffer& fboScene, 
+void Rendering::bloomEffect(  const FrameBuffer& fboScene,
                               const FrameBuffer& fboLight) {
     _spBloom.use();
-    _frameBufferBloom.bindFrameBuffer();
+    FrameBuffer::bindDefaultFrameBuffer();
 
     _spBloom.bindUniformTexture("frameToneMappingTexture", 0,
                                 fboScene.getRenderTexture());
@@ -181,8 +171,8 @@ void Rendering::bloomEffect(  const FrameBuffer& fboScene,
 
 void Rendering::depthFromStar() {
 
-    glClearColor(1.0f, 1.0f, 1.f, 0.0f);
-    _frameBufferDepth.bindFrameBuffer();
+    glClearColor(1.f, 1.f, 1.f, 0.0f);
+    _frameBufferDepth.bindFrameBuffer(true);
     _spDepth.use();
     bindStarView(_spDepth);
     //bindCamera(_spDepth);
@@ -200,10 +190,7 @@ void Rendering::render() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //-----
     glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
     glEnable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
 
     _meshMap.update();
     _meshBall.update();
@@ -213,18 +200,18 @@ void Rendering::render() {
 
     phongEffect(_frameBufferDepth);
 
-    toneMappingEffect(_frameBufferScene);
-     
-    brightPassEffect(_frameBufferScene);
-    blurEffect(_frameBufferBrightPassFilter);
+    toneMappingEffect(_frameBufferSceneHDR);
 
-    bloomEffect(_frameBufferToneMapping,_frameBufferCompleteBlur);
+    brightPassEffect(_frameBufferSceneSDR);
+    blurEffect(_frameBufferBloomEffect);
 
-    _spFbo.use();
+    bloomEffect(_frameBufferSceneSDR,_frameBufferBloomEffect);
+
+    /*_spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();
     _spFbo.bindUniformTexture("frameTexture", 0,
-                              _frameBufferBloom.getRenderTexture());
-    _meshQuadFrame.render(_spFbo);
+                              _frameBufferSceneSDR.getRenderTexture());
+    _meshQuadFrame.render(_spFbo);*/
 
 }
 
@@ -232,23 +219,23 @@ void Rendering::bindCamera(const ShaderProgram& sp) {
 
   _uniformBool["displayBehind"] = _camera.displayBehind();
 
-  _uniformMatrix4["VP"] =  
-          glm::mat4( 
-                    glm::perspective( glm::radians(70.f), 
+  _uniformMatrix4["VP"] =
+          glm::mat4(
+                    glm::perspective( glm::radians(70.f),
                     static_cast<float>(Utility::windowResolutionX)/
                     static_cast<float>(Utility::windowResolutionY),
                     _camera.zNear, _camera.zFar) *
                     glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())
-                    ); 
+                    );
 
-  const JumperBallTypes::vec3f& positionBall = _ball.get3DPosition(); 
+  const JumperBallTypes::vec3f& positionBall = _ball.get3DPosition();
 
   _uniformVec3["positionBall"]    = glm::vec3( positionBall.x,
                                                positionBall.y,
                                                positionBall.z);
 
-  _uniformVec3["lookDirection"]   = 
-      glm::normalize( glm::cross  ( _camera.up() , 
+  _uniformVec3["lookDirection"]   =
+      glm::normalize( glm::cross  ( _camera.up() ,
                                     glm::cross( _camera.dir() - _camera.pos(),
                                                 _camera.up()))
                                   );
@@ -265,19 +252,19 @@ void Rendering::bindCamera(const ShaderProgram& sp) {
 }
 
 void Rendering::bindStarView(const ShaderProgram& sp) {
-     
+
     const Map& map = _meshMap.base();
 
     const glm::vec3 center{ map.boundingBoxXMax()/2.f,
                             map.boundingBoxYMax()/2.f,
                             map.boundingBoxZMax()/2.f };
-    
+
     float boundingBoxMax = static_cast<float>(map.boundingBoxXMax());
     if (boundingBoxMax < static_cast<float>(map.boundingBoxYMax()))
         boundingBoxMax = static_cast<float>(map.boundingBoxYMax());
-    if (boundingBoxMax < static_cast<float>(map.boundingBoxZMax())) 
+    if (boundingBoxMax < static_cast<float>(map.boundingBoxZMax()))
         boundingBoxMax = static_cast<float>(map.boundingBoxZMax());
-    
+
     constexpr float offsetJumpingBall = 1.f; //size of ball + jump height
     float halfBoundingBoxSize = std::move(boundingBoxMax);
     halfBoundingBoxSize = halfBoundingBoxSize/2.f + offsetJumpingBall;
@@ -287,7 +274,7 @@ void Rendering::bindStarView(const ShaderProgram& sp) {
                          halfBoundingBoxSize,
                         -halfBoundingBoxSize, halfBoundingBoxSize,
                         _camera.zNear, _camera.zFar) *
-              glm::lookAt ( _star.centralPosition(), center, 
+              glm::lookAt ( _star.centralPosition(), center,
                             glm::vec3(0.f,1.f,0.f) ));
     _uniformMatrix4["VPStar"] = _uniformMatrix4["VP"];
     sp.bindUniform ("VP", _uniformMatrix4.at("VP"));
@@ -309,7 +296,7 @@ const std::string Rendering::vsshaderToneMapping = "shaders/basicFboVs.vs";
 const std::string Rendering::fsshaderToneMapping = "shaders/toneMappingFs.fs";
 
 const std::string Rendering::vsshaderBrightPassFilter = "shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderBrightPassFilter = 
+const std::string Rendering::fsshaderBrightPassFilter =
                                                   "shaders/brightPassFilter.fs";
 
 const std::string Rendering::vsshaderBloom = "shaders/basicFboVs.vs";
@@ -317,6 +304,6 @@ const std::string Rendering::fsshaderBloom = "shaders/bloomFs.fs";
 const std::string Rendering::vsshaderDepth = "shaders/depthVs.vs";
 const std::string Rendering::fsshaderDepth = "shaders/depthFs.fs";
 
-const std::vector<float> Rendering::gaussComputedValues = 
+const std::vector<float> Rendering::gaussComputedValues =
   Utility::genGaussBuffer(Rendering::blurPatchSize, Rendering::blurSigma);
 

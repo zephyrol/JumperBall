@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   Rendering.h
  * Author: Morgenthaler S
  *
@@ -41,14 +41,14 @@ public:
 
 
     //------------METHODS----------//
-    void                            render() ; 
-    
+    void                            render() ;
+
 private:
 
     //------------TYPES------------//
     template<typename T>
     using uniformVariable           = std::map<std::string,T >;
-    
+
     //---------CONSTANTS------------//
     static constexpr float          blurSigma                            = 4.f;
     static constexpr size_t         blurPatchSize                        = 25;
@@ -87,22 +87,19 @@ private:
     const ShaderProgram             _spDepth;
 
     const FrameBuffer               _frameBufferDepth;
-    const FrameBuffer               _frameBufferScene;
-    const FrameBuffer               _frameBufferToneMapping;
-    const FrameBuffer               _frameBufferHalfBlur;
-    const FrameBuffer               _frameBufferCompleteBlur;
-    const FrameBuffer               _frameBufferBrightPassFilter;
-    const FrameBuffer               _frameBufferBloom;
+    const FrameBuffer               _frameBufferSceneHDR;
+    const FrameBuffer               _frameBufferSceneSDR;
+    const FrameBuffer               _frameBufferBloomEffect;
 
 
     //------------METHODS----------//
-    void                            phongEffect( 
+    void                            phongEffect(
                                                const FrameBuffer& referenceFBO);
-    void                            blurEffect( 
+    void                            blurEffect(
                                                const FrameBuffer& referenceFBO);
-    void                            toneMappingEffect( 
+    void                            toneMappingEffect(
                                                const FrameBuffer& referenceFBO);
-    void                            brightPassEffect( 
+    void                            brightPassEffect(
                                                const FrameBuffer& referenceFBO);
     void                            bloomEffect(  const FrameBuffer& fboScene,
                                                   const FrameBuffer& fboLight );
@@ -113,22 +110,22 @@ private:
 
 
     //------STATIC ATTRIBUTES------//
-    static const std::string        vsshaderMap; 
-    static const std::string        fsshaderMap; 
-    static const std::string        vsshaderStar; 
-    static const std::string        fsshaderStar; 
-    static const std::string        vsshaderFBO; 
-    static const std::string        fsshaderFBO; 
-    static const std::string        vsshaderBlur; 
-    static const std::string        fsshaderBlur; 
-    static const std::string        vsshaderToneMapping; 
-    static const std::string        fsshaderToneMapping; 
-    static const std::string        vsshaderBrightPassFilter; 
-    static const std::string        fsshaderBrightPassFilter; 
-    static const std::string        vsshaderBloom; 
-    static const std::string        fsshaderBloom; 
-    static const std::string        vsshaderDepth; 
-    static const std::string        fsshaderDepth; 
+    static const std::string        vsshaderMap;
+    static const std::string        fsshaderMap;
+    static const std::string        vsshaderStar;
+    static const std::string        fsshaderStar;
+    static const std::string        vsshaderFBO;
+    static const std::string        fsshaderFBO;
+    static const std::string        vsshaderBlur;
+    static const std::string        fsshaderBlur;
+    static const std::string        vsshaderToneMapping;
+    static const std::string        fsshaderToneMapping;
+    static const std::string        vsshaderBrightPassFilter;
+    static const std::string        fsshaderBrightPassFilter;
+    static const std::string        vsshaderBloom;
+    static const std::string        fsshaderBloom;
+    static const std::string        vsshaderDepth;
+    static const std::string        fsshaderDepth;
 
     static const std::vector<float> gaussComputedValues;
 };

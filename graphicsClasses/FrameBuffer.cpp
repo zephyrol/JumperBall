@@ -75,11 +75,11 @@ _resolutionY(resolutionY)
     glBindFramebuffer(GL_FRAMEBUFFER,0);
 }
 
-void FrameBuffer::bindFrameBuffer() const {
+void FrameBuffer::bindFrameBuffer(bool clean) const {
     glBindFramebuffer(GL_FRAMEBUFFER, _fboHandle);
-    glClear(GL_COLOR_BUFFER_BIT);
-    if (_hasDepthBuffer) {
-        glClear(GL_DEPTH_BUFFER_BIT);
+
+    if (clean) {
+        cleanCurrentFrameBuffer(_hasDepthBuffer);
     }
 
     glViewport(0,0,_resolutionX, _resolutionY);
@@ -89,8 +89,24 @@ GLuint FrameBuffer::getRenderTexture() const {
     return _renderTexture;
 }
 
-void FrameBuffer::bindDefaultFrameBuffer() {
+void FrameBuffer::bindDefaultFrameBuffer(bool clean) {
+
     glBindFramebuffer(GL_FRAMEBUFFER,0);
+    if (clean) {
+        cleanCurrentFrameBuffer(true);
+    }
+}
+
+void FrameBuffer::cleanCurrentFrameBuffer(bool hasDepthBuffer)
+{
+        glClear(GL_COLOR_BUFFER_BIT);
+        if (hasDepthBuffer) {
+            glEnable(GL_DEPTH_TEST);
+            glClear(GL_DEPTH_BUFFER_BIT);
+        } else {
+           glDisable(GL_DEPTH_TEST);
+        }
+        glViewport(0,0,Utility::windowResolutionX, Utility::windowResolutionY);
 }
 
 GLuint FrameBuffer::getHandle() const{
