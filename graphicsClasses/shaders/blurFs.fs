@@ -26,12 +26,9 @@ void computeBlur(bool horizontal){
             vec2 neighboringPixelUV = fs_vertexUVs + 
                 vec2(texelOffset.x * indicesOffset[i],0.f);
 
-            if ( neighboringPixelUV.x > 0.f && neighboringPixelUV.x < 
-                     (1.f-4.f*texelOffset.x)) {
-                blurColor += coefficient * 
-                    texture( frameTexture, neighboringPixelUV ).xyz;
-            }
-                sumCoefficients += coefficient;
+            blurColor += coefficient * 
+                texture( frameTexture, neighboringPixelUV ).xyz;
+            sumCoefficients += coefficient;
         }
     }
     else {
@@ -40,12 +37,9 @@ void computeBlur(bool horizontal){
 
             vec2 neighboringPixelUV = fs_vertexUVs + 
                 vec2(0.f,texelOffset.y * indicesOffset[i]);
-            if ( neighboringPixelUV.y > 0.f && neighboringPixelUV.y < 
-                     (1.f-4.f*texelOffset.y)) {
-                blurColor += coefficient * 
-                    texture( frameTexture, neighboringPixelUV ).xyz;
-            }   
-                sumCoefficients += coefficient;
+            blurColor += coefficient * 
+                texture( frameTexture, neighboringPixelUV ).xyz;
+            sumCoefficients += coefficient;
         }
     }
     blurColor /=sumCoefficients;

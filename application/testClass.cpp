@@ -142,7 +142,7 @@ void testClass::run()
 
         _controller.run();
 
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
 		glfwSwapBuffers(_window);
 
 		glfwPollEvents();
