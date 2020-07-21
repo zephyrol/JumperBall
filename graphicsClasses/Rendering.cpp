@@ -64,7 +64,11 @@ Rendering::Rendering(const Map&     map,
     _frameBufferBloomEffect(FrameBuffer::TextureCaterory::SDR,
                          Utility::getWidthFromHeight(heightBloomTexture),
                          heightBloomTexture,
-                         false)
+                         false),
+    _frameBufferBlurEffect(FrameBuffer::TextureCaterory::SDR,
+                        Utility::getWidthFromHeight(heightBloomTexture),
+                        heightBloomTexture,
+                        false)
 {
 }
 
@@ -105,7 +109,7 @@ void Rendering::phongEffect( const FrameBuffer& referenceFBO ) {
 void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
 
     _spBlur.use();
-    _frameBufferBloomEffect.bindFrameBuffer(false);
+    _frameBufferBlurEffect.bindFrameBuffer(false);
 
     _spBlur.bindUniformTexture("frameTexture", 0,
                                referenceFBO.getRenderTexture());
@@ -117,7 +121,7 @@ void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
 
     _frameBufferBloomEffect.bindFrameBuffer(false);
     _spBlur.bindUniformTexture("frameTexture", 0,
-                               _frameBufferBloomEffect.getRenderTexture());
+                              _frameBufferBlurEffect.getRenderTexture());
 
     _spBlur.bindUniform("firstPass", false);
     _meshQuadFrame.render(_spBlur);

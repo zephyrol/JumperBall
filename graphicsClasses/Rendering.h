@@ -90,6 +90,7 @@ private:
     const FrameBuffer               _frameBufferSceneHDR;
     const FrameBuffer               _frameBufferSceneSDR;
     const FrameBuffer               _frameBufferBloomEffect;
+    const FrameBuffer               _frameBufferBlurEffect;
 
 
     //------------METHODS----------//

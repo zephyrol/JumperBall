@@ -101,14 +101,14 @@ void FrameBuffer::bindDefaultFrameBuffer(bool clean) {
 
 void FrameBuffer::cleanCurrentFrameBuffer(bool hasDepthBuffer)
 {
-        glClear(GL_COLOR_BUFFER_BIT);
-        if (hasDepthBuffer) {
-            glEnable(GL_DEPTH_TEST);
-            glClear(GL_DEPTH_BUFFER_BIT);
-        } else {
-           glDisable(GL_DEPTH_TEST);
-        }
-        glViewport(0,0,Utility::windowResolutionX, Utility::windowResolutionY);
+    glClear(GL_COLOR_BUFFER_BIT);
+    if (hasDepthBuffer) {
+        glEnable(GL_DEPTH_TEST);
+        glClear(GL_DEPTH_BUFFER_BIT);
+    } else {
+        glDisable(GL_DEPTH_TEST);
+    }
+    glViewport(0,0,Utility::windowResolutionX, Utility::windowResolutionY);
 }
 
 GLuint FrameBuffer::getHandle() const{
