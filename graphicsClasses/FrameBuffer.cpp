@@ -41,7 +41,7 @@ _resolutionY(resolutionY)
         dataFormat = GL_RGB8;
     }
     else if (_textureCategory == FrameBuffer::TextureCaterory::HDR) {
-        dataFormat = GL_RGB32F;
+        dataFormat = GL_RGB16F;
     }
     else { //Depth Map
         dataFormat = GL_R16F;

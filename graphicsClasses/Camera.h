@@ -54,7 +54,7 @@ private:
 
     //--------ATTRIBUTES-----------//
     float                         _posX,  _posY,  _posZ;
-    float                         _dirX,  _dirY,  _dirZ;
+    float                         _centerX,  _centerY,  _centerZ;
     float                         _upX,   _upY,   _upZ;
     bool                          _displayBehind;
     bool                          _willComeBack;

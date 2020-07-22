@@ -14,7 +14,7 @@
 #include "Camera.h"
 
 Camera::Camera() :  _posX(1), _posY(1), _posZ(1),
-                    _dirX(0), _dirY(0), _dirZ(0),
+                    _centerX(0), _centerY(0), _centerZ(0),
                     _upX(0),  _upY(1),  _upZ(0),
                     _displayBehind(false),
                     _willComeBack(false),
@@ -43,7 +43,7 @@ void Camera::follow(const Ball& ball) noexcept {
     glm::mat4 matRotationCam(1.f);
 
     glm::vec4 posVec(0.f,0.f,0.f,1.f);
-    glm::vec4 dirVec(0.f,0.f,0.f,1.f);
+    glm::vec4 centerVec(0.f,0.f,0.f,1.f);
     glm::vec4 upVec (0.f,0.f,0.f,1.f);
 
     glm::mat4 matPosBall =  glm::translate(
@@ -215,7 +215,7 @@ void Camera::follow(const Ball& ball) noexcept {
     matRotationCam = glm::toMat4(quaternion) * matRotationCam; 
 
     posVec = matPosBall * matRotationCam * matPosCam * posVec;
-    dirVec = matPosBall * matRotationCam * matDirCam * dirVec;
+    centerVec = matPosBall * matRotationCam * matDirCam * centerVec;
     upVec  = matRotationCam * upVec;
 
     _upX  = upVec.x;
@@ -226,9 +226,9 @@ void Camera::follow(const Ball& ball) noexcept {
     _posY = posVec.y;
     _posZ = posVec.z;
 
-    _dirX = dirVec.x;
-    _dirY = dirVec.y;
-    _dirZ = dirVec.z;
+    _centerX = centerVec.x;
+    _centerY = centerVec.y;
+    _centerZ = centerVec.z;
 
     _displayBehind = false;
 
@@ -298,13 +298,10 @@ void Camera::follow(const Map& map) noexcept{
     _posY = positionCamera.y;
     _posZ = positionCamera.z;
 
-    _dirX = centerX;
-    _dirY = centerY;
-    _dirZ = centerZ;
+    _centerX = centerX;
+    _centerY = centerY;
+    _centerZ = centerZ;
 
-    /*glm::vec3 directionVector(_dirX-_posX,_dirY-_posY, _dirZ-_posZ);
-    glm::normalize(directionVector);
-    glm::vec3 axeOne (-directionVector.y,direction)*/
     glm::vec4 up(0.f,1.f,0.f,1.f);
     up = rotation * up;
 
@@ -351,8 +348,8 @@ bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
                                   static_cast<float>(M_PI)) + 1.f;
 
     const glm::vec3 directionVector =
-            glm::normalize( glm::vec3{_dirX - _posX, _dirY - _posY,
-                                _dirZ - _posZ });
+            glm::normalize( glm::vec3{_centerX - _posX, _centerY - _posY,
+                                _centerZ - _posZ });
     const glm::mat4 upRotation = glm::rotate( tCos * 2.f *
                                               static_cast<float>(M_PI),
                                               directionVector);
@@ -365,9 +362,9 @@ bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
     _posZ = t* (position.z + distBehindBall) +
             (1.f-tCos) * (position.z + distBehindBall + distanceZStarting);
 
-    _dirX = position.x;
-    _dirY = position.y;
-    _dirZ = position.z - distDirPoint;
+    _centerX = position.x;
+    _centerY = position.y;
+    _centerZ = position.z - distDirPoint;
 
     _upX = upVector.x;
     _upY = upVector.y;
@@ -380,7 +377,7 @@ bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
 
 
 glm::vec3 Camera::dir() const noexcept{
-    return glm::vec3 {_dirX,_dirY,_dirZ};
+    return glm::vec3 {_centerX,_centerY,_centerZ};
 }
 
 glm::vec3 Camera::pos() const noexcept{
