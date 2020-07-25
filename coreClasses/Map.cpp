@@ -260,19 +260,21 @@ void Map::verificationMap(std::ifstream& input) const
 
                     typeOfBlock = static_cast<unsigned int> (block->getType());
 
-                    output << static_cast<const unsigned int> (typeOfBlock)
-                           << " ";
+                    output << static_cast<const unsigned int> (typeOfBlock) ;
                 }
-                else output << static_cast<const unsigned int>
-                            (Block::categoryOfBlocksInFile::None) << " ";
+                else {
+                    output << static_cast<const unsigned int>
+                            (Block::categoryOfBlocksInFile::None);
+                }
                 if (typeOfBlock == 4 || typeOfBlock == 6) {
+                    output << " ";
                     const auto infos = block->faceInfo();
                     for (bool info : infos) {
                         if (info) output << "b" ;
                         else output << "a" ;
                     }
-                    output << " ";
                 }
+                if ( x != _boundingBoxXMax - 1 )  output << " ";
             }
             output << std::endl;
         }
@@ -308,29 +310,36 @@ void Map::verificationMap(std::ifstream& input) const
                                 return direction;
                             };
 
+                            std::string s;
+                            s.push_back(getDirection(i));
                             if (objects.at(i)->getCategory() ==
                                     Object::CategoryOfObjects::Key) {
-                                output << "K" << std::to_string(getDirection(i)) ;
+                                output << "K" << s;
                             }
                             else if (objects.at(i)->getCategory() ==
                                      Object::CategoryOfObjects::Coin) {
-                                output << "I" << std::to_string(getDirection(i)) ;
+                                output << "I" << s;
                             }
                             else if (objects.at(i)->getCategory() ==
                                      Object::CategoryOfObjects::Clock) {
-                                output << "C" << std::to_string(getDirection(i)) ;
+                                output << "C" << s;
                             }
                             found = true;
                         }
 
-                        if (!found) {
-                            output << static_cast<const unsigned int>
-                                      (block->getType()) << " ";
-                        }
                     }
+                    if (!found) {
+                        unsigned int typeOfBlock =
+                                static_cast<unsigned int> (block->getType());
+                        output << static_cast<const unsigned int> (typeOfBlock);
+                    }
+                    if (x != _boundingBoxXMax -1 ) output << " ";
                 }
-                else output << static_cast<const unsigned int>
-                               (Block::categoryOfBlocksInFile::None) << " ";
+                else {
+                    output << static_cast<const unsigned int>
+                               (Block::categoryOfBlocksInFile::None);
+                    if (x != _boundingBoxXMax -1 ) output << " ";
+                }
             }
             output << std::endl;
         }
@@ -345,14 +354,17 @@ void Map::verificationMap(std::ifstream& input) const
     std::string lineV2;
 
     bool hasDifferences = false;
+    unsigned int counterLines = 1;
     while(getline(input, lineV1) && getline(inputV2,lineV2))
     {
         if ( lineV1.compare(lineV2) != 0) {
-            std::cout << "Differences found: " << std::endl;
+            std::cout << "Differences found line " << counterLines <<":"
+                      << std::endl;
             std::cout << "V1: " << lineV1 << std::endl;
             std::cout << "V2: " << lineV2 << std::endl;
             hasDifferences = true;
         }
+        counterLines++;
     }
     if (hasDifferences) {
         std::cout << "Failed map test ... verify your map " <<
