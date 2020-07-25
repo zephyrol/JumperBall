@@ -238,6 +238,130 @@ void Map::printMap() const {
     }
 }
 
+void Map::verificationMap(std::ifstream& input) const
+{
+
+    std::ofstream output ("outMapVerification.txt");
+
+    output << boundingBoxXMax() << " " << boundingBoxZMax() << " "
+           << boundingBoxYMax() << std::endl ;
+
+    output << beginX() << " " << beginZ() << " " << beginY() << std::endl
+           << std::endl;
+
+    for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
+        for ( unsigned int z = 0 ; z < _boundingBoxZMax ; z++ ){
+            for ( unsigned int x = 0 ; x < _boundingBoxXMax ; x++ ){
+                const std::shared_ptr<const Block>& block = getBlock(x,y,z);
+
+                unsigned int typeOfBlock = 0;
+
+                if (block) {
+
+                    typeOfBlock = static_cast<unsigned int> (block->getType());
+
+                    output << static_cast<const unsigned int> (typeOfBlock)
+                           << " ";
+                }
+                else output << static_cast<const unsigned int>
+                            (Block::categoryOfBlocksInFile::None) << " ";
+                if (typeOfBlock == 4 || typeOfBlock == 6) {
+                    const auto infos = block->faceInfo();
+                    for (bool info : infos) {
+                        if (info) output << "b" ;
+                        else output << "a" ;
+                    }
+                    output << " ";
+                }
+            }
+            output << std::endl;
+        }
+        output << std::endl;
+    }
+
+    output << std::endl;
+
+    for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
+        for ( unsigned int z = 0 ; z < _boundingBoxZMax ; z++ ){
+            for ( unsigned int x = 0 ; x < _boundingBoxXMax ; x++ ){
+                const std::shared_ptr<const Block>& block = getBlock(x,y,z);
+                if (block) {
+                    const auto objects = block->objects();
+                    bool found = false;
+                    for ( size_t i = 0 ; i < objects.size(); ++i ) {
+
+                        if (objects.at(i)) {
+                            const std::function<unsigned char(size_t)> getDirection =
+                                    [](size_t face) {
+
+                                unsigned char direction;
+                                switch(face) {
+                                case 0 : direction = 'N'; break;
+                                case 1 : direction = 'S'; break;
+                                case 2 : direction = 'E'; break;
+                                case 3 : direction = 'W'; break;
+                                case 4 : direction = 'U'; break;
+                                case 5 : direction = 'D'; break;
+                                default: direction = '?'; break;
+                                }
+
+                                return direction;
+                            };
+
+                            if (objects.at(i)->getCategory() ==
+                                    Object::CategoryOfObjects::Key) {
+                                output << "K" << std::to_string(getDirection(i)) ;
+                            }
+                            else if (objects.at(i)->getCategory() ==
+                                     Object::CategoryOfObjects::Coin) {
+                                output << "I" << std::to_string(getDirection(i)) ;
+                            }
+                            else if (objects.at(i)->getCategory() ==
+                                     Object::CategoryOfObjects::Clock) {
+                                output << "C" << std::to_string(getDirection(i)) ;
+                            }
+                            found = true;
+                        }
+
+                        if (!found) {
+                            output << static_cast<const unsigned int>
+                                      (block->getType()) << " ";
+                        }
+                    }
+                }
+                else output << static_cast<const unsigned int>
+                               (Block::categoryOfBlocksInFile::None) << " ";
+            }
+            output << std::endl;
+        }
+        output << std::endl;
+    }
+
+    output.close();
+
+    std::ifstream inputV2 ("outMapVerification.txt");
+
+    std::string lineV1;
+    std::string lineV2;
+
+    bool hasDifferences = false;
+    while(getline(input, lineV1) && getline(inputV2,lineV2))
+    {
+        if ( lineV1.compare(lineV2) != 0) {
+            std::cout << "Differences found: " << std::endl;
+            std::cout << "V1: " << lineV1 << std::endl;
+            std::cout << "V2: " << lineV2 << std::endl;
+            hasDifferences = true;
+        }
+    }
+    if (hasDifferences) {
+        std::cout << "Failed map test ... verify your map " <<
+                     "or the run length encoding"<< std::endl;
+    } else {
+        std::cout << "Map test : Success !" << std::endl;
+    }
+}
+
 unsigned int Map::boundingBoxXMax() const {
     return _boundingBoxXMax;
 }
@@ -430,6 +554,7 @@ void Map::compress(std::ifstream& input) {
 
     output.close();
 }
+
 
 std::chrono::time_point<std::chrono::system_clock> Map::timeCreation() const {
     return _timeCreation;

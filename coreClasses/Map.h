@@ -73,6 +73,8 @@ public:
     std::chrono::time_point<std::chrono::system_clock>
                                           timeCreation()                  const;
     void                                  printMap()                      const;
+    void                                  verificationMap(std::ifstream &input)
+                                                                          const;
 
     //----------METHODS------------//
     EffectOnBall                          interaction(
@@ -82,6 +84,7 @@ public:
 
     //--------STATIC METHODS-------//
     static void                           compress(std::ifstream& input);
+
     static std::shared_ptr<Map>           loadMap(size_t mapNumber);
 
 private:

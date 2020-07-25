@@ -85,7 +85,7 @@ void Camera::follow(const Ball& ball) noexcept {
             break;
     }
     
-    JumperBallTypes::vec3f dir = 
+    const JumperBallTypes::vec3f dir =
         JumperBallTypesMethods::directionAsVector(lookingDirection);
     matPosCam = glm::translate(matPosCam,
             -glm::vec3(dir.x * distBehindBall,dir.y * distBehindBall,

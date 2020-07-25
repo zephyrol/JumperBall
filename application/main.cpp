@@ -87,8 +87,15 @@ int main(int argc, char** argv) {
             return EXIT_FAILURE;
         }
         const std::string arg (argv[2]);
-        if (arg == "-compress")
+        if (arg == "-compress") {
             Map::compress(file);
+            std::ifstream mapFile ("outMap.txt");
+            std::ifstream mapFile2 (fileToOpen);
+            Map map (mapFile);
+            std::cout << "Verification" << std::endl;
+            map.verificationMap(mapFile2);
+            std::cout << "Done" << std::endl;
+        }
         else {
             std::cerr << "ERROR: Unknown option" << std::endl;
             return EXIT_FAILURE;
