@@ -58,6 +58,7 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     file >> _beginZ;
     file >> _beginY;
 
+    // BLOCKS PART
 
     std::string infoMap;
     std::string counterBuffer;
@@ -134,6 +135,7 @@ Map::Map(std::ifstream& file):_id (nbMaps),
         }
     }
 
+    // OBJECTS PART
     std::string infoObjects;
     std::string counterWithoutObjectsBuffer;
     unsigned int currentIndex = 0;
@@ -143,7 +145,10 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     while (!infoObjects.empty()) {
         
         readValue = infoObjects.front();
-        if (readValue >= firstNumberWithoutAnyObjects) {
+        if (readValue == nextBlockAction){
+            infoObjects.erase(infoObjects.begin());
+            ++currentIndex;//We increment the cursor to the next block
+        } else if (readValue >= firstNumberWithoutAnyObjects) {
             counterWithoutObjectsBuffer.push_back(readValue);
             infoObjects.erase(infoObjects.begin());
 
@@ -153,11 +158,11 @@ Map::Map(std::ifstream& file):_id (nbMaps),
             }
         } else {
             if (!counterWithoutObjectsBuffer.empty()){
-            substractOffset(counterWithoutObjectsBuffer,
-                            firstNumberWithoutAnyObjects);
-            currentIndex += convertToBase10(counterWithoutObjectsBuffer,
-                                              nbOfCharactersWithoutObjects);
-            } 
+                substractOffset(counterWithoutObjectsBuffer,
+                                firstNumberWithoutAnyObjects);
+                currentIndex += convertToBase10(counterWithoutObjectsBuffer,
+                                                nbOfCharactersWithoutObjects);
+            }
 
             const unsigned int typeOfObject = readValue - firstNumberType;
 
@@ -217,8 +222,6 @@ std::shared_ptr<const Block> Map::getBlock(int x, int y, int z) const {
     }
     return block;
 }
-
-
 
 void Map::printMap() const {
     for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
@@ -293,8 +296,8 @@ void Map::verificationMap(std::ifstream& input) const
                     for ( size_t i = 0 ; i < objects.size(); ++i ) {
 
                         if (objects.at(i)) {
-                            const std::function<unsigned char(size_t)> getDirection =
-                                    [](size_t face) {
+                            const std::function<unsigned char(size_t)>
+                                    getDirection = [](size_t face) {
 
                                 unsigned char direction;
                                 switch(face) {
@@ -372,6 +375,8 @@ void Map::verificationMap(std::ifstream& input) const
     } else {
         std::cout << "Map test : Success !" << std::endl;
     }
+    input.close();
+    inputV2.close();
 }
 
 unsigned int Map::boundingBoxXMax() const {
@@ -539,6 +544,12 @@ void Map::compress(std::ifstream& input) {
                 applyOffset(stringToWrite, firstNumberWithoutAnyObjects) ;
                 output << stringToWrite;
                 counterWithoutObjects = 0;
+            } else if (i > 0 ) {
+                // we need to differentiate this block and the future block
+                // if two blocks with objects are side-by-side
+                // and we do not apply this separator character if it's the
+                // the FIRST block
+                output << nextBlockAction;
             }
 
             for (unsigned char c : readString) {

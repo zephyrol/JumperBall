@@ -92,9 +92,7 @@ int main(int argc, char** argv) {
             std::ifstream mapFile ("outMap.txt");
             std::ifstream mapFile2 (fileToOpen);
             Map map (mapFile);
-            std::cout << "Verification" << std::endl;
             map.verificationMap(mapFile2);
-            std::cout << "Done" << std::endl;
         }
         else {
             std::cerr << "ERROR: Unknown option" << std::endl;

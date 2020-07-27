@@ -43,7 +43,8 @@ public:
     static constexpr unsigned int         firstNumberParams                = 33;
 
     //Objects compression
-    static constexpr unsigned char        firstNumberType                  = 33;
+    static constexpr unsigned char        nextBlockAction                  = 33;
+    static constexpr unsigned char        firstNumberType                  = 34;
     static constexpr unsigned char        firstNumberSide                  = 42;
     static constexpr unsigned char        firstNumberWithoutAnyObjects     = 48;
     static constexpr unsigned int         nbOfCharactersWithoutObjects     = 79;
