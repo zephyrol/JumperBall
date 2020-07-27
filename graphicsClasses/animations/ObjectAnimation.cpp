@@ -28,8 +28,7 @@ _movingScale(1.f)
 }
 
 glm::mat4 ObjectAnimation::model() const {
-    return  _translationToBlock * _initialRotation * translationOnBlock *
-    inversedTranslationCenter * _movingRotation * translationCenter;
+    return  _translationToBlock * translationCenter * _initialRotation * translationOnBlock * _movingRotation;
 }
 
 glm::mat4 ObjectAnimation::scaleRotation() const {
@@ -50,10 +49,10 @@ void ObjectAnimation::updateTrans() {
 }
 
 const glm::mat4 ObjectAnimation::translationOnBlock = 
-                          glm::translate(glm::vec3(0.f,1.f,0.f));
+                          glm::translate(glm::vec3(0.f,0.75f,0.f));
 
 const glm::mat4 ObjectAnimation::translationCenter = 
-                          glm::translate(glm::vec3(-0.5f,-0.3f,-0.5f));
+                          glm::translate(glm::vec3(0.5f,0.5f,0.5f));
 
 const glm::mat4 ObjectAnimation::inversedTranslationCenter = 
     glm::inverse(ObjectAnimation::translationCenter);

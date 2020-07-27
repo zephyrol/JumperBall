@@ -318,13 +318,13 @@ std::vector<MeshComponent>
                 const std::array<glm::vec3,nbGeometriesToCreateAKey> scales
                 { glm::vec3(0.09f,0.075f,0.050f),glm::vec3(0.05f,0.3f,0.05f),
                   glm::vec3(0.1f,0.05f,0.05f), glm::vec3(0.1f,0.05f,0.05f) };
-                
-                const std::array<glm::vec3,nbGeometriesToCreateAKey> 
-                    translations
-                { glm::vec3(0.3f+0.2f,   0.1f+0.35f,0.5f),
-                  glm::vec3(0.3f+0.175f, 0.1f+0.0f, 0.475f),
-                  glm::vec3(0.3f+0.175f, 0.1f+0.f,  0.475f),
-                  glm::vec3(0.3f+0.175f, 0.1f+0.1f, 0.475f)
+
+                const std::array<glm::vec3,nbGeometriesToCreateAKey>
+                translations
+                {   glm::vec3(0.f, 0.175f,0.f),
+                    glm::vec3(-0.025f, -0.175f,-0.025f ),
+                    glm::vec3(-0.025f, -0.075f, -0.025f ),
+                    glm::vec3(-0.025f, -0.175f, -0.025f )
                 };
 
 
@@ -359,9 +359,9 @@ std::vector<MeshComponent>
                                         glm::vec3(150.f/255.f,75.f/255.f,0.f));
                 }
 
-                const glm::vec3 scale { 0.3f,0.3f,0.05f};
+                const glm::vec3 scale {0.3f, 0.05f, 0.3f};
                 
-                const glm::vec3 translation {0.5f, 0.3f, 0.5f-0.025f};
+                const glm::vec3 translation {0.f, 0.f, -0.025f };
 
 
                 const glm::mat4 scaleMatrix = glm::scale(scale);
@@ -370,9 +370,8 @@ std::vector<MeshComponent>
                   glm::rotate(static_cast<float>(M_PI/2.),
                               glm::vec3(1.f,0.f,0.f));
 
-                //We apply the rotation before the scale
-                const glm::mat4 tranformLocal = 
-                  translationMatrix *scaleMatrix * rotationMatrix;
+                const glm::mat4 tranformLocal =
+                  translationMatrix * rotationMatrix * scaleMatrix ;
                 const glm::mat4 tranformNormals = rotationMatrix;
 
                 const MeshComponent componentCube = 
