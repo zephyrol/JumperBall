@@ -41,6 +41,21 @@ Cube::Cube( const glm::vec3& customColor,
 }
 
 
+Cube::Cube( const std::vector<glm::vec3>& customColors,
+            const glm::mat4& modelTransform,
+            const glm::mat4& normalsTransform  
+        ): 
+    GeometricShape (
+        basicPositionsCube,
+        basicNormalsCube,
+        customColors,
+        basicUVCoordsCube,
+        modelTransform,
+        normalsTransform)
+{
+}
+
+
 Cube::Cube(const GeometricShape& cube, 
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform ):
@@ -113,6 +128,29 @@ Utility::GLfloatListToGlmVec3({
     //Face 6
     0.5f,0.f,0.5f, 0.5f,0.f,0.5f, 0.5f,0.f,0.5f,
     0.5f,0.f,0.5f, 0.5f,0.f,0.5f, 0.5f,0.f,0.5f
+});
+
+const std::vector<glm::vec3> Cube::iceColorsCube =
+Utility::GLfloatListToGlmVec3({
+
+    //Face 1 
+    0.f,0.f,1.0f, 0.f,0.f,1.f, 0.f,0.8f,0.8f,
+    0.f,0.f,1.0f, 0.f,0.8f,0.8f, 0.f,0.f,1.f,
+    //Face 2
+    0.f,0.8f,0.8f, 0.f,0.f,1.f, 0.f,0.f,1.f,
+    0.f,0.f,1.f, 0.f,0.8f,0.8f, 0.f,0.f,1.f,
+    //Face 3
+    0.f,0.8f,0.8f, 0.f,0.f,1.f, 0.f,0.f,1.f,
+    0.f,0.f,1.f, 0.f,0.8f,0.8f, 0.f,0.f,1.f,
+    //Face 4 
+    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.8f,0.8f,
+    0.f,0.f,1.f, 0.f,0.8f,0.8f, 0.f,0.f,1.f,
+    //Face 5
+    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.8f,0.8f,
+    0.f,0.f,1.f, 0.f,0.8f,0.8f, 0.f,0.f,1.f,
+    //Face 6
+    0.f,0.8f,0.8f, 0.f,0.f,1.f, 0.f,0.f,1.f,
+    0.f,0.f,1.f, 0.f,0.8f,0.8f, 0.f,0.f,1.f,
 });
 
 const std::vector<glm::vec2> Cube::basicUVCoordsCube =

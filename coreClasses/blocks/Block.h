@@ -71,12 +71,7 @@ protected:
     std::array<float,9>               _localTransform;
     std::array<std::shared_ptr<const Object>,6> 
                                       _objects;
-                                      
-
-
-
 };
-
 
 #endif /* BLOCK_H */
 

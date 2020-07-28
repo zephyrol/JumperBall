@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <functional>
 #include <math.h>
 #include <cctype>
 #include "Map.h"

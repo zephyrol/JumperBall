@@ -199,16 +199,26 @@ std::vector<MeshComponent> MeshGenerator::blockManager ( const Block& block,
 
     std::vector<MeshComponent> components;
     
-    if (commonShapes.find("basicCube") == commonShapes.end()) {
-        commonShapes["basicCube"] = std::make_shared<Cube> ();
+    std::shared_ptr<GeometricShape> shape;
+    if (block.getType() == Block::categoryOfBlocksInFile::Ice) {
+        if (commonShapes.find("iceCube") == commonShapes.end()) {
+            commonShapes["iceCube"] = std::make_shared<Cube>
+                (Cube::iceColorsCube);
+        }
+        shape = commonShapes.at("iceCube");
+    } else {
+        if (commonShapes.find("basicCube") == commonShapes.end()) {
+            commonShapes["basicCube"] = std::make_shared<Cube>();
+        }
+        shape = commonShapes.at("basicCube");
     }
 
     const glm::vec3 glmPosition { position.at(0), position.at(1), 
                                   position.at(2)};
     const glm::mat4 transform (glm::translate(glmPosition));
     
-    MeshComponent component 
-    (std::make_shared<Cube>(*commonShapes.at("basicCube"),transform), nullptr);
+    MeshComponent component (std::make_shared<Cube>
+        (*shape,transform), nullptr);
     components.push_back(component);
     
     std::vector<MeshComponent> sharpsComponents = genSharps(block,glmPosition);

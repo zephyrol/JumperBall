@@ -25,17 +25,22 @@ public:
     Cube( const glm::vec3& customColor,
           const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
+    Cube(const std::vector<glm::vec3> &customColors,
+         const glm::mat4 &modelTransform     = glm::mat4(1.f),
+         const glm::mat4 &normalsTransform   = glm::mat4(1.f));
     Cube( const GeometricShape& cube, 
           const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f));
 
+    static const std::vector<glm::vec3> iceColorsCube;
+    static const std::vector<glm::vec3> fireColorsCube;
 
 private:
 
     static const std::vector<glm::vec3> basicPositionsCube;
-    static const std::vector<glm::vec3> basicColorsCube;
     static const std::vector<glm::vec3> basicNormalsCube;
     static const std::vector<glm::vec2> basicUVCoordsCube;
+    static const std::vector<glm::vec3> basicColorsCube;
 };
 
 #endif /* CUBE_H */
