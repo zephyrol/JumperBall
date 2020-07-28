@@ -7,8 +7,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp> 
-#define RESOLUTION_X 320 
-#define RESOLUTION_Y 240 
+#define RESOLUTION_X 1024
+#define RESOLUTION_Y 768
 
 namespace Utility {
 

@@ -206,6 +206,12 @@ std::vector<MeshComponent> MeshGenerator::blockManager ( const Block& block,
                 (Cube::iceColorsCube);
         }
         shape = commonShapes.at("iceCube");
+    } else if (block.getType() == Block::categoryOfBlocksInFile::Fire) {
+        if (commonShapes.find("fireCube") == commonShapes.end()) {
+            commonShapes["fireCube"] = std::make_shared<Cube>
+                (Cube::fireColorsCube);
+        }
+        shape = commonShapes.at("fireCube");
     } else {
         if (commonShapes.find("basicCube") == commonShapes.end()) {
             commonShapes["basicCube"] = std::make_shared<Cube>();
