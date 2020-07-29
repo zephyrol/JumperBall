@@ -27,7 +27,7 @@ public:
     //---------CONSTANTS------------//
     static constexpr float        timeToGetNextBlock                    = 0.25f;
     static constexpr float        timeToTurn                             = 0.3f;
-
+    static constexpr float        timeToBurn                              = 2.f;
 
     //------------TYPES------------//
     enum class State              { Staying, Moving, Jumping, 
@@ -114,6 +114,9 @@ private:
 
     std::chrono::time_point<std::chrono::system_clock>  
                                   _timeStateOfLife;
+    
+    //BurnCoefficient at the last state change
+    float                         _burnCoefficient;
 
     //-------CONST METHODS--------//
     std::shared_ptr<const std::vector<int> >  

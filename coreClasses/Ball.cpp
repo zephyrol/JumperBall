@@ -35,7 +35,8 @@ Ball::Ball(Map& map):
                                       4.2f),
         _mechanicsPatternFalling(0.f,0.f,0.f),
         _timeAction(std::chrono::system_clock::now()),
-        _timeStateOfLife(std::chrono::system_clock::now()){
+        _timeStateOfLife(std::chrono::system_clock::now()),
+        _burnCoefficient(0.f){
 }
 
 void Ball::turnLeft() noexcept {
@@ -922,12 +923,16 @@ void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
             JumperBallTypesMethods::getTimePointMsFromTimePoint(
             _timeAction));
     
-    if (block && (block->getType() == Block::categoryOfBlocksInFile::Jump)) {
-        unsigned int dir = 
-                       JumperBallTypesMethods::directionAsInteger(_currentSide);
-        if (block->faceInfo().at(dir)){
-          _jumpingType = Ball::JumpingType::Long; 
-          jump();
+    if (block) {
+        if ((block->getType() == Block::categoryOfBlocksInFile::Jump)) {
+            const unsigned int dir =
+                JumperBallTypesMethods::directionAsInteger(_currentSide);
+            if (block->faceInfo().at(dir)){
+                _jumpingType = Ball::JumpingType::Long;
+                jump();
+            }
+        } else if ((block->getType() == Block::categoryOfBlocksInFile::Fire)) {
+            _burnCoefficient += .2f;
         }
     }
  }
@@ -943,8 +948,8 @@ void Ball::update() noexcept{
 
         position3D = get3DPosStayingBall();
         if ( _state == Ball::State::Staying ){
-            if (_map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ)
-                    ->stillExists()) {
+            const std::shared_ptr<Block> block =_map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ);
+            if (block &&  block ->stillExists()) {
                 _3DPosX = position3D.x;
                 _3DPosY = position3D.y;
                 _3DPosZ = position3D.z;
@@ -953,7 +958,21 @@ void Ball::update() noexcept{
                 fall();
                 update();
             }
+            if (block && block->getType() ==
+                Block::categoryOfBlocksInFile::Fire) {
+                const auto now = JumperBallTypesMethods::getTimePointMSNow();
+                const JumperBallTypes::durationMs duration =
+                    now - getTimeActionMs();
+                const float time =
+                    JumperBallTypesMethods::getFloatFromDurationMS(duration);
+                if( _burnCoefficient + time > timeToBurn  ) {
+                    
+                }
+
+            }
             
+            
+
         } else if ( _state == Ball::State::Moving){
             float sSinceAction = getTimeSecondsSinceAction();
             if (sSinceAction >= timeToGetNextBlock) {
@@ -1114,8 +1133,7 @@ void Ball::update() noexcept{
         
         position3D = {  relativePositionJump.x,
                         relativePositionJump.y,
-                        relativePositionJump.z
-                      };
+                        relativePositionJump.z };
         _3DPosX = position3D.x;
         _3DPosY = position3D.y;
         _3DPosZ = position3D.z;
@@ -1134,7 +1152,11 @@ void Ball::mapInteraction() noexcept{
     switch ( effect ) {
         case Map::EffectOnBall::Nothing: 
             break;
-        case Map::EffectOnBall::Burnt: 
+        case Map::EffectOnBall::Burnt:
+            if(_stateOfLife != StateOfLife::Burning) {
+                _stateOfLife = StateOfLife::Burning;
+                _timeStateOfLife = JumperBallTypesMethods::getTimePointMSNow();
+            }
             break;
         case Map::EffectOnBall::Burst: 
             if(_stateOfLife != StateOfLife::Bursting) {
