@@ -21,7 +21,7 @@ class Page
 public:
     
     // Slide state => timepoint and yScreenPosition
-    using slideState = std::pair<JumperBallTypes::timePointMs, float>;
+    using slideState = std::pair<JBTypes::timePointMs, float>;
 
 
     //--CONSTRUCTORS & DESTRUCTORS--//
@@ -77,7 +77,7 @@ private:
     float                             _localReleasedPosY;
     bool                              _isPressed;
     float                             _pressedScreenPosY;
-    JumperBallTypes::timePointMs      _lastUpdate;
+    JBTypes::timePointMs      _lastUpdate;
     std::array<slideState,2>          _lastSwipeUpdates;
     unsigned int                      _countingUpdates;
     float                             _releaseVelocity;

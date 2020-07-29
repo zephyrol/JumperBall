@@ -30,7 +30,7 @@
 #endif
 
 
-namespace JumperBallTypes {
+namespace JBTypes {
      
     enum class Direction{
         North,
@@ -40,6 +40,8 @@ namespace JumperBallTypes {
         Up,
         Down 
     };
+
+    using Dir = Direction;
 
     struct vec3f {float x; float y; float z;};
     struct vec2f {float x; float y;};
@@ -55,19 +57,19 @@ namespace JumperBallTypes {
 }
 
 
-namespace JumperBallTypesMethods {
-    JumperBallTypes::vec3f        directionAsVector 
-                                              (JumperBallTypes::Direction dir);
-    JumperBallTypes::Direction    integerAsDirection (unsigned int number);
-    unsigned int                  directionAsInteger (JumperBallTypes::Direction
+namespace JBTypesMethods {
+    JBTypes::vec3f        directionAsVector 
+                                              (JBTypes::Dir dir);
+    JBTypes::Dir    integerAsDirection (unsigned int number);
+    unsigned int                  directionAsInteger (JBTypes::Dir
                                                       dir);
-    JumperBallTypes::timePointMs  getTimePointMSNow ()                 noexcept;
+    JBTypes::timePointMs  getTimePointMSNow ()                 noexcept;
     float                         getTimeSecondsSinceTimePoint( 
-                                  const JumperBallTypes::timePointMs& timePoint)
+                                  const JBTypes::timePointMs& timePoint)
                                                                        noexcept;
     float                         getFloatFromDurationMS(
-                                    const JumperBallTypes::durationMs& dms );
-    JumperBallTypes::timePointMs  getTimePointMsFromTimePoint( const 
+                                    const JBTypes::durationMs& dms );
+    JBTypes::timePointMs  getTimePointMsFromTimePoint( const 
        std::chrono::time_point<std::chrono::system_clock> & timePoint) noexcept;
 
     void                          displayInstallError();

@@ -28,11 +28,11 @@ public:
 
     //----------METHODS-------------//
     virtual void                  interaction(
-                                    const JumperBallTypes::Direction& 
+                                    const JBTypes::Dir& 
                                             ballDir,
-                                    const JumperBallTypes::timePointMs&
+                                    const JBTypes::timePointMs&
                                             currentTime,
-                                    const JumperBallTypes::vec3f& posBall,
+                                    const JBTypes::vec3f& posBall,
                                     const std::array<unsigned int,3>& posBlock)
                                                                        override;
      

@@ -135,7 +135,7 @@ bool testClass::inputManagement() {
 void testClass::run()
 {
 
-    auto before = JumperBallTypesMethods::getTimePointMSNow();
+    auto before = JBTypesMethods::getTimePointMSNow();
     unsigned int counter = 0;
     while (!inputManagement())
 	{
@@ -148,7 +148,7 @@ void testClass::run()
 		glfwPollEvents();
 
 		counter++;
-		auto after = JumperBallTypesMethods::getTimePointMSNow();
+		auto after = JBTypesMethods::getTimePointMSNow();
 		auto diff = after - before;
 		const std::chrono::duration<float> durationFloatDifference= diff;
 		float diffF = durationFloatDifference.count();

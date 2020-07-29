@@ -23,8 +23,8 @@ Ball::Ball(Map& map):
         _3DPosX(0.f),
         _3DPosY(0.f),
         _3DPosZ(0.f),
-        _currentSide(JumperBallTypes::Direction::Up),
-        _lookTowards(JumperBallTypes::Direction::North),
+        _currentSide(JBTypes::Dir::Up),
+        _lookTowards(JBTypes::Dir::North),
         _state(Ball::State::Staying),
         _stateOfLife(Ball::StateOfLife::Normal),
         _jumpingType(Ball::JumpingType::Short),
@@ -42,93 +42,93 @@ Ball::Ball(Map& map):
 void Ball::turnLeft() noexcept {
 
     switch (_currentSide) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North: break;
-                case JumperBallTypes::Direction::South: break;
-                case JumperBallTypes::Direction::East: 
-                    _lookTowards =  JumperBallTypes::Direction::Down; break;
-                case JumperBallTypes::Direction::West:
-                    _lookTowards =  JumperBallTypes::Direction::Up; break;
-                case JumperBallTypes::Direction::Up:
-                    _lookTowards =  JumperBallTypes::Direction::East; break;
-                case JumperBallTypes::Direction::Down:
-                    _lookTowards =  JumperBallTypes::Direction::West; break;
+                case JBTypes::Dir::North: break;
+                case JBTypes::Dir::South: break;
+                case JBTypes::Dir::East: 
+                    _lookTowards =  JBTypes::Dir::Down; break;
+                case JBTypes::Dir::West:
+                    _lookTowards =  JBTypes::Dir::Up; break;
+                case JBTypes::Dir::Up:
+                    _lookTowards =  JBTypes::Dir::East; break;
+                case JBTypes::Dir::Down:
+                    _lookTowards =  JBTypes::Dir::West; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North: break;
-                case JumperBallTypes::Direction::South: break;
-                case JumperBallTypes::Direction::East: 
-                    _lookTowards =  JumperBallTypes::Direction::Up; break;
-                case JumperBallTypes::Direction::West:
-                    _lookTowards =  JumperBallTypes::Direction::Down; break;
-                case JumperBallTypes::Direction::Up:
-                    _lookTowards =  JumperBallTypes::Direction::West; break;
-                case JumperBallTypes::Direction::Down:
-                    _lookTowards =  JumperBallTypes::Direction::East; break;
+                case JBTypes::Dir::North: break;
+                case JBTypes::Dir::South: break;
+                case JBTypes::Dir::East: 
+                    _lookTowards =  JBTypes::Dir::Up; break;
+                case JBTypes::Dir::West:
+                    _lookTowards =  JBTypes::Dir::Down; break;
+                case JBTypes::Dir::Up:
+                    _lookTowards =  JBTypes::Dir::West; break;
+                case JBTypes::Dir::Down:
+                    _lookTowards =  JBTypes::Dir::East; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
-                    _lookTowards =  JumperBallTypes::Direction::Up; break;
-                case JumperBallTypes::Direction::South:
-                    _lookTowards =  JumperBallTypes::Direction::Down; break;
-                case JumperBallTypes::Direction::East: break;
-                case JumperBallTypes::Direction::West: break;
-                case JumperBallTypes::Direction::Up:
-                    _lookTowards =  JumperBallTypes::Direction::South; break;
-                case JumperBallTypes::Direction::Down:
-                    _lookTowards =  JumperBallTypes::Direction::North; break;
+                case JBTypes::Dir::North:
+                    _lookTowards =  JBTypes::Dir::Up; break;
+                case JBTypes::Dir::South:
+                    _lookTowards =  JBTypes::Dir::Down; break;
+                case JBTypes::Dir::East: break;
+                case JBTypes::Dir::West: break;
+                case JBTypes::Dir::Up:
+                    _lookTowards =  JBTypes::Dir::South; break;
+                case JBTypes::Dir::Down:
+                    _lookTowards =  JBTypes::Dir::North; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
-                    _lookTowards =  JumperBallTypes::Direction::Down; break;
-                case JumperBallTypes::Direction::South:
-                    _lookTowards =  JumperBallTypes::Direction::Up; break;
-                case JumperBallTypes::Direction::East: break;
-                case JumperBallTypes::Direction::West: break;
-                case JumperBallTypes::Direction::Up:
-                    _lookTowards =  JumperBallTypes::Direction::North; break;
-                case JumperBallTypes::Direction::Down:
-                    _lookTowards =  JumperBallTypes::Direction::South; break;
+                case JBTypes::Dir::North:
+                    _lookTowards =  JBTypes::Dir::Down; break;
+                case JBTypes::Dir::South:
+                    _lookTowards =  JBTypes::Dir::Up; break;
+                case JBTypes::Dir::East: break;
+                case JBTypes::Dir::West: break;
+                case JBTypes::Dir::Up:
+                    _lookTowards =  JBTypes::Dir::North; break;
+                case JBTypes::Dir::Down:
+                    _lookTowards =  JBTypes::Dir::South; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
-                    _lookTowards =  JumperBallTypes::Direction::West; break;
-                case JumperBallTypes::Direction::South:
-                    _lookTowards =  JumperBallTypes::Direction::East; break;
-                case JumperBallTypes::Direction::East:
-                    _lookTowards =  JumperBallTypes::Direction::North; break;
-                case JumperBallTypes::Direction::West:
-                    _lookTowards =  JumperBallTypes::Direction::South; break;
-                case JumperBallTypes::Direction::Up: break;
-                case JumperBallTypes::Direction::Down: break;
+                case JBTypes::Dir::North:
+                    _lookTowards =  JBTypes::Dir::West; break;
+                case JBTypes::Dir::South:
+                    _lookTowards =  JBTypes::Dir::East; break;
+                case JBTypes::Dir::East:
+                    _lookTowards =  JBTypes::Dir::North; break;
+                case JBTypes::Dir::West:
+                    _lookTowards =  JBTypes::Dir::South; break;
+                case JBTypes::Dir::Up: break;
+                case JBTypes::Dir::Down: break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
-                    _lookTowards =  JumperBallTypes::Direction::East; break;
-                case JumperBallTypes::Direction::South:
-                    _lookTowards =  JumperBallTypes::Direction::West; break;
-                case JumperBallTypes::Direction::East:
-                    _lookTowards =  JumperBallTypes::Direction::South; break;
-                case JumperBallTypes::Direction::West:
-                    _lookTowards =  JumperBallTypes::Direction::North; break;
-                case JumperBallTypes::Direction::Up: break;
-                case JumperBallTypes::Direction::Down: break;
+                case JBTypes::Dir::North:
+                    _lookTowards =  JBTypes::Dir::East; break;
+                case JBTypes::Dir::South:
+                    _lookTowards =  JBTypes::Dir::West; break;
+                case JBTypes::Dir::East:
+                    _lookTowards =  JBTypes::Dir::South; break;
+                case JBTypes::Dir::West:
+                    _lookTowards =  JBTypes::Dir::North; break;
+                case JBTypes::Dir::Up: break;
+                case JBTypes::Dir::Down: break;
                 default : break;
             }
             break;
@@ -141,93 +141,93 @@ void Ball::turnLeft() noexcept {
 
 void Ball::turnRight() noexcept {
     switch (_currentSide) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North: break;
-                case JumperBallTypes::Direction::South: break;
-                case JumperBallTypes::Direction::East: 
-                    _lookTowards =  JumperBallTypes::Direction::Up; break;
-                case JumperBallTypes::Direction::West:
-                    _lookTowards =  JumperBallTypes::Direction::Down; break;
-                case JumperBallTypes::Direction::Up:
-                    _lookTowards =  JumperBallTypes::Direction::West; break;
-                case JumperBallTypes::Direction::Down:
-                    _lookTowards =  JumperBallTypes::Direction::East; break;
+                case JBTypes::Dir::North: break;
+                case JBTypes::Dir::South: break;
+                case JBTypes::Dir::East: 
+                    _lookTowards =  JBTypes::Dir::Up; break;
+                case JBTypes::Dir::West:
+                    _lookTowards =  JBTypes::Dir::Down; break;
+                case JBTypes::Dir::Up:
+                    _lookTowards =  JBTypes::Dir::West; break;
+                case JBTypes::Dir::Down:
+                    _lookTowards =  JBTypes::Dir::East; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North: break;
-                case JumperBallTypes::Direction::South: break;
-                case JumperBallTypes::Direction::East: 
-                    _lookTowards =  JumperBallTypes::Direction::Down; break;
-                case JumperBallTypes::Direction::West:
-                    _lookTowards =  JumperBallTypes::Direction::Up; break;
-                case JumperBallTypes::Direction::Up:
-                    _lookTowards =  JumperBallTypes::Direction::East; break;
-                case JumperBallTypes::Direction::Down:
-                    _lookTowards =  JumperBallTypes::Direction::West; break;
+                case JBTypes::Dir::North: break;
+                case JBTypes::Dir::South: break;
+                case JBTypes::Dir::East: 
+                    _lookTowards =  JBTypes::Dir::Down; break;
+                case JBTypes::Dir::West:
+                    _lookTowards =  JBTypes::Dir::Up; break;
+                case JBTypes::Dir::Up:
+                    _lookTowards =  JBTypes::Dir::East; break;
+                case JBTypes::Dir::Down:
+                    _lookTowards =  JBTypes::Dir::West; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
-                    _lookTowards =  JumperBallTypes::Direction::Down; break;
-                case JumperBallTypes::Direction::South:
-                    _lookTowards =  JumperBallTypes::Direction::Up; break;
-                case JumperBallTypes::Direction::East: break;
-                case JumperBallTypes::Direction::West: break;
-                case JumperBallTypes::Direction::Up:
-                    _lookTowards =  JumperBallTypes::Direction::North; break;
-                case JumperBallTypes::Direction::Down:
-                    _lookTowards =  JumperBallTypes::Direction::South; break;
+                case JBTypes::Dir::North:
+                    _lookTowards =  JBTypes::Dir::Down; break;
+                case JBTypes::Dir::South:
+                    _lookTowards =  JBTypes::Dir::Up; break;
+                case JBTypes::Dir::East: break;
+                case JBTypes::Dir::West: break;
+                case JBTypes::Dir::Up:
+                    _lookTowards =  JBTypes::Dir::North; break;
+                case JBTypes::Dir::Down:
+                    _lookTowards =  JBTypes::Dir::South; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
-                    _lookTowards =  JumperBallTypes::Direction::Up; break;
-                case JumperBallTypes::Direction::South:
-                    _lookTowards =  JumperBallTypes::Direction::Down; break;
-                case JumperBallTypes::Direction::East: break;
-                case JumperBallTypes::Direction::West: break;
-                case JumperBallTypes::Direction::Up:
-                    _lookTowards =  JumperBallTypes::Direction::South; break;
-                case JumperBallTypes::Direction::Down:
-                    _lookTowards =  JumperBallTypes::Direction::North; break;
+                case JBTypes::Dir::North:
+                    _lookTowards =  JBTypes::Dir::Up; break;
+                case JBTypes::Dir::South:
+                    _lookTowards =  JBTypes::Dir::Down; break;
+                case JBTypes::Dir::East: break;
+                case JBTypes::Dir::West: break;
+                case JBTypes::Dir::Up:
+                    _lookTowards =  JBTypes::Dir::South; break;
+                case JBTypes::Dir::Down:
+                    _lookTowards =  JBTypes::Dir::North; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
-                    _lookTowards =  JumperBallTypes::Direction::East; break;
-                case JumperBallTypes::Direction::South:
-                    _lookTowards =  JumperBallTypes::Direction::West; break;
-                case JumperBallTypes::Direction::East:
-                    _lookTowards =  JumperBallTypes::Direction::South; break;
-                case JumperBallTypes::Direction::West:
-                    _lookTowards =  JumperBallTypes::Direction::North; break;
-                case JumperBallTypes::Direction::Up: break;
-                case JumperBallTypes::Direction::Down: break;
+                case JBTypes::Dir::North:
+                    _lookTowards =  JBTypes::Dir::East; break;
+                case JBTypes::Dir::South:
+                    _lookTowards =  JBTypes::Dir::West; break;
+                case JBTypes::Dir::East:
+                    _lookTowards =  JBTypes::Dir::South; break;
+                case JBTypes::Dir::West:
+                    _lookTowards =  JBTypes::Dir::North; break;
+                case JBTypes::Dir::Up: break;
+                case JBTypes::Dir::Down: break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
-                    _lookTowards =  JumperBallTypes::Direction::West; break;
-                case JumperBallTypes::Direction::South:
-                    _lookTowards =  JumperBallTypes::Direction::East; break;
-                case JumperBallTypes::Direction::East:
-                    _lookTowards =  JumperBallTypes::Direction::North; break;
-                case JumperBallTypes::Direction::West:
-                    _lookTowards =  JumperBallTypes::Direction::South; break;
-                case JumperBallTypes::Direction::Up: break;
-                case JumperBallTypes::Direction::Down: break;
+                case JBTypes::Dir::North:
+                    _lookTowards =  JBTypes::Dir::West; break;
+                case JBTypes::Dir::South:
+                    _lookTowards =  JBTypes::Dir::East; break;
+                case JBTypes::Dir::East:
+                    _lookTowards =  JBTypes::Dir::North; break;
+                case JBTypes::Dir::West:
+                    _lookTowards =  JBTypes::Dir::South; break;
+                case JBTypes::Dir::Up: break;
+                case JBTypes::Dir::Down: break;
                 default : break;
             }
             break;
@@ -238,8 +238,8 @@ void Ball::turnRight() noexcept {
     setTimeActionNow();
 }
 
-JumperBallTypes::vec3f Ball::get3DPosition() const noexcept {
-    return JumperBallTypes::vec3f {_3DPosX,_3DPosY,_3DPosZ};
+JBTypes::vec3f Ball::get3DPosition() const noexcept {
+    return JBTypes::vec3f {_3DPosX,_3DPosY,_3DPosZ};
 }
 
 Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
@@ -263,93 +263,93 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
     int aboveZ = _currentBlockZ;
     
     switch (_currentSide) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North: break;
-                case JumperBallTypes::Direction::South: break;
-                case JumperBallTypes::Direction::East: 
+                case JBTypes::Dir::North: break;
+                case JBTypes::Dir::South: break;
+                case JBTypes::Dir::East: 
                     ++inFrontOfX; ++aboveX; --aboveZ; --leftY; ++rightY; break;
-                case JumperBallTypes::Direction::West:
+                case JBTypes::Dir::West:
                     --inFrontOfX; --aboveX; --aboveZ; ++leftY; --rightY; break;
-                case JumperBallTypes::Direction::Up:
+                case JBTypes::Dir::Up:
                     ++inFrontOfY; ++aboveY; --aboveZ; ++leftX; --rightX; break;
-                case JumperBallTypes::Direction::Down:
+                case JBTypes::Dir::Down:
                     --inFrontOfY; --aboveY; --aboveZ; --leftX; ++rightX; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North: break;
-                case JumperBallTypes::Direction::South: break;
-                case JumperBallTypes::Direction::East: 
+                case JBTypes::Dir::North: break;
+                case JBTypes::Dir::South: break;
+                case JBTypes::Dir::East: 
                     ++inFrontOfX; ++aboveX; ++aboveZ; ++leftY; --rightY; break;
-                case JumperBallTypes::Direction::West:
+                case JBTypes::Dir::West:
                     --inFrontOfX; --aboveX; ++aboveZ; --leftY; ++rightY; break;
-                case JumperBallTypes::Direction::Up:
+                case JBTypes::Dir::Up:
                     ++inFrontOfY; ++aboveY; ++aboveZ; --leftX; ++rightX; break;
-                case JumperBallTypes::Direction::Down:
+                case JBTypes::Dir::Down:
                     --inFrontOfY; --aboveY; ++aboveZ; ++leftX; --rightX; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
+                case JBTypes::Dir::North:
                     --inFrontOfZ; --aboveZ; ++aboveX; ++leftY; --rightY; break;
-                case JumperBallTypes::Direction::South:
+                case JBTypes::Dir::South:
                     ++inFrontOfZ; ++aboveZ; ++aboveX; --leftY; ++rightY; break;
-                case JumperBallTypes::Direction::East: break;
-                case JumperBallTypes::Direction::West: break;
-                case JumperBallTypes::Direction::Up:
+                case JBTypes::Dir::East: break;
+                case JBTypes::Dir::West: break;
+                case JBTypes::Dir::Up:
                     ++inFrontOfY; ++aboveY; ++aboveX; --leftZ; ++rightZ; break;
-                case JumperBallTypes::Direction::Down:
+                case JBTypes::Dir::Down:
                     --inFrontOfY; --aboveY; ++aboveX; ++leftZ; --rightZ; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
+                case JBTypes::Dir::North:
                     --inFrontOfZ; --aboveZ; --aboveX; --leftY; ++rightY; break;
-                case JumperBallTypes::Direction::South:
+                case JBTypes::Dir::South:
                     ++inFrontOfZ; ++aboveZ; --aboveX; ++leftY; --rightY; break;
-                case JumperBallTypes::Direction::East: break;
-                case JumperBallTypes::Direction::West: break;
-                case JumperBallTypes::Direction::Up:
+                case JBTypes::Dir::East: break;
+                case JBTypes::Dir::West: break;
+                case JBTypes::Dir::Up:
                     ++inFrontOfY; ++aboveY; --aboveX; ++leftZ; --rightZ; break;
-                case JumperBallTypes::Direction::Down:
+                case JBTypes::Dir::Down:
                     --inFrontOfY; --aboveY; --aboveX; --leftZ; ++rightZ; break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
+                case JBTypes::Dir::North:
                     --inFrontOfZ; --aboveZ; ++aboveY; --leftX; ++rightX; break;
-                case JumperBallTypes::Direction::South:
+                case JBTypes::Dir::South:
                     ++inFrontOfZ; ++aboveZ; ++aboveY; ++leftX; --rightX; break;
-                case JumperBallTypes::Direction::East:
+                case JBTypes::Dir::East:
                     ++inFrontOfX; ++aboveX; ++aboveY; --leftZ; ++rightZ; break;
-                case JumperBallTypes::Direction::West:
+                case JBTypes::Dir::West:
                     --inFrontOfX; --aboveX; ++aboveY; ++leftZ; --rightZ; break;
-                case JumperBallTypes::Direction::Up: break;
-                case JumperBallTypes::Direction::Down: break;
+                case JBTypes::Dir::Up: break;
+                case JBTypes::Dir::Down: break;
                 default : break;
             }
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             switch (_lookTowards) {
-                case JumperBallTypes::Direction::North:
+                case JBTypes::Dir::North:
                     --inFrontOfZ; --aboveZ; --aboveY; ++leftX; --rightX; break;
-                case JumperBallTypes::Direction::South:
+                case JBTypes::Dir::South:
                     ++inFrontOfZ; ++aboveZ; --aboveY; --leftX; ++rightX; break;
-                case JumperBallTypes::Direction::East:
+                case JBTypes::Dir::East:
                     ++inFrontOfX; ++aboveX; --aboveY; ++leftZ; --rightZ; break;
-                case JumperBallTypes::Direction::West:
+                case JBTypes::Dir::West:
                     --inFrontOfX; --aboveX; --aboveY; --leftZ; ++rightZ; break;
-                case JumperBallTypes::Direction::Up: break;
-                case JumperBallTypes::Direction::Down: break;
+                case JBTypes::Dir::Up: break;
+                case JBTypes::Dir::Down: break;
                 default : break;
             }
         default :
@@ -366,28 +366,28 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
         nextBlock.poxZ = aboveZ;
         nextBlock.nextLocal = NextBlockLocal::Above;
 
-        JumperBallTypes::Direction lookTowardsBeforeMovement = _lookTowards;
+        JBTypes::Dir lookTowardsBeforeMovement = _lookTowards;
 
         nextBlock.nextLook = _currentSide;
         
         switch (lookTowardsBeforeMovement) {
-            case JumperBallTypes::Direction::North:
-                nextBlock.nextSide=JumperBallTypes::Direction::South;
+            case JBTypes::Dir::North:
+                nextBlock.nextSide=JBTypes::Dir::South;
                 break;
-            case JumperBallTypes::Direction::South:
-                nextBlock.nextSide=JumperBallTypes::Direction::North;
+            case JBTypes::Dir::South:
+                nextBlock.nextSide=JBTypes::Dir::North;
                 break;
-            case JumperBallTypes::Direction::East:
-                nextBlock.nextSide=JumperBallTypes::Direction::West;
+            case JBTypes::Dir::East:
+                nextBlock.nextSide=JBTypes::Dir::West;
                 break;
-            case JumperBallTypes::Direction::West:
-                nextBlock.nextSide=JumperBallTypes::Direction::East;
+            case JBTypes::Dir::West:
+                nextBlock.nextSide=JBTypes::Dir::East;
                 break;
-            case JumperBallTypes::Direction::Up:
-                nextBlock.nextSide=JumperBallTypes::Direction::Down;
+            case JBTypes::Dir::Up:
+                nextBlock.nextSide=JBTypes::Dir::Down;
                 break;
-            case JumperBallTypes::Direction::Down:
-                nextBlock.nextSide=JumperBallTypes::Direction::Up;
+            case JBTypes::Dir::Down:
+                nextBlock.nextSide=JBTypes::Dir::Up;
                 break;
             default :
                 break;
@@ -412,28 +412,28 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
         nextBlock.poxZ      = _currentBlockZ;
         nextBlock.nextLocal = NextBlockLocal::Same;
 
-        JumperBallTypes::Direction sideBeforeMovement = _currentSide;
+        JBTypes::Dir sideBeforeMovement = _currentSide;
 
         nextBlock.nextSide  = _lookTowards;
         
         switch (sideBeforeMovement) {
-            case JumperBallTypes::Direction::North:
-                nextBlock.nextLook = JumperBallTypes::Direction::South;
+            case JBTypes::Dir::North:
+                nextBlock.nextLook = JBTypes::Dir::South;
                 break;
-            case JumperBallTypes::Direction::South:
-                nextBlock.nextLook = JumperBallTypes::Direction::North;
+            case JBTypes::Dir::South:
+                nextBlock.nextLook = JBTypes::Dir::North;
                 break;
-            case JumperBallTypes::Direction::East:
-                nextBlock.nextLook = JumperBallTypes::Direction::West;
+            case JBTypes::Dir::East:
+                nextBlock.nextLook = JBTypes::Dir::West;
                 break;
-            case JumperBallTypes::Direction::West:
-                nextBlock.nextLook = JumperBallTypes::Direction::East;
+            case JBTypes::Dir::West:
+                nextBlock.nextLook = JBTypes::Dir::East;
                 break;
-            case JumperBallTypes::Direction::Up:
-                nextBlock.nextLook = JumperBallTypes::Direction::Down;
+            case JBTypes::Dir::Up:
+                nextBlock.nextLook = JBTypes::Dir::Down;
                 break;
-            case JumperBallTypes::Direction::Down:
-                nextBlock.nextLook = JumperBallTypes::Direction::Up;
+            case JBTypes::Dir::Down:
+                nextBlock.nextLook = JBTypes::Dir::Up;
                 break;
             default :
                 break;
@@ -538,33 +538,33 @@ void Ball::isGoingStraightAheadIntersectBlock()   noexcept {
         int aboveVeryFarZ =   _currentBlockZ;
         
         switch (_currentSide) {
-            case JumperBallTypes::Direction::North:
+            case JBTypes::Dir::North:
                 --aboveNearZ; --aboveFarZ; --aboveVeryFarZ;   break;
-            case JumperBallTypes::Direction::South:
+            case JBTypes::Dir::South:
                 ++aboveNearZ; ++aboveFarZ; ++aboveVeryFarZ;  break;
-            case JumperBallTypes::Direction::East: 
+            case JBTypes::Dir::East: 
                 ++aboveNearX; ++aboveFarX; ++aboveVeryFarX; break;
-            case JumperBallTypes::Direction::West:
+            case JBTypes::Dir::West:
                 --aboveNearX; --aboveFarX; --aboveVeryFarX;   break;
-            case JumperBallTypes::Direction::Up:
+            case JBTypes::Dir::Up:
                 ++aboveNearY; ++aboveFarY; ++aboveVeryFarY;  break;
-            case JumperBallTypes::Direction::Down:
+            case JBTypes::Dir::Down:
                 --aboveNearY; --aboveFarY; --aboveVeryFarY;   break;
             default : break;
         }
         
         switch (_lookTowards) {
-            case JumperBallTypes::Direction::North:
+            case JBTypes::Dir::North:
                 --aboveNearZ; aboveFarZ -= 2; aboveVeryFarZ -= 3;   break;
-            case JumperBallTypes::Direction::South:
+            case JBTypes::Dir::South:
                 ++aboveNearZ; aboveFarZ += 2; aboveVeryFarZ += 3;  break;
-            case JumperBallTypes::Direction::East: 
+            case JBTypes::Dir::East: 
                 ++aboveNearX; aboveFarX += 2; aboveVeryFarX += 3;  break;
-            case JumperBallTypes::Direction::West:
+            case JBTypes::Dir::West:
                 --aboveNearX; aboveFarX -= 2; aboveVeryFarX -= 3;  break;
-            case JumperBallTypes::Direction::Up:
+            case JBTypes::Dir::Up:
                 ++aboveNearY; aboveFarY += 2; aboveVeryFarY += 3;  break;
-            case JumperBallTypes::Direction::Down:
+            case JBTypes::Dir::Down:
                 --aboveNearY; aboveFarY -= 2; aboveVeryFarY -= 3;  break;
             default : break;
         }
@@ -643,27 +643,27 @@ float Ball::distanceBehindBall() const
     constexpr float offsetCenterBlock = 0.5f;
     float distance;
     switch (_lookTowards) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             distance = _3DPosZ- (static_cast<float>(_currentBlockZ)
                               + offsetCenterBlock);
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             distance = _3DPosZ- (static_cast<float>(_currentBlockZ)
                               + offsetCenterBlock);
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             distance = _3DPosX- (static_cast<float>(_currentBlockX)
                               + offsetCenterBlock);
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             distance = _3DPosX- (static_cast<float>(_currentBlockX)
                               + offsetCenterBlock);
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             distance = _3DPosY- (static_cast<float>(_currentBlockY)
                               + offsetCenterBlock);
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             distance = _3DPosY- (static_cast<float>(_currentBlockY)
                               + offsetCenterBlock);
             break;
@@ -692,22 +692,22 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
     float zIntersectionUnder = z;
     int xInteger, yInteger, zInteger;
     switch (_currentSide) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             zIntersectionUnder += offsetBlockPosition ;
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             zIntersectionUnder -= offsetBlockPosition ;
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             xIntersectionUnder -= offsetBlockPosition ;
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             xIntersectionUnder += offsetBlockPosition ;
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             yIntersectionUnder -= offsetBlockPosition ;
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             yIntersectionUnder += offsetBlockPosition ;
             break;
         default :
@@ -726,17 +726,17 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
     return blockIntersected;
 }
 
-JumperBallTypes::timePointMs Ball::getTimeActionMs() const noexcept {
+JBTypes::timePointMs Ball::getTimeActionMs() const noexcept {
     return std::chrono::time_point_cast<std::chrono::milliseconds>
                                                       (_timeAction);
 }
 
-JumperBallTypes::timePointMs Ball::getTimeStateOfLifeMs() const noexcept {
+JBTypes::timePointMs Ball::getTimeStateOfLifeMs() const noexcept {
     return std::chrono::time_point_cast<std::chrono::milliseconds>
                                                       (_timeStateOfLife);
 }
 
-JumperBallTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) 
+JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) 
                                                                            const
 {
 
@@ -747,22 +747,22 @@ JumperBallTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D)
     const float offsetRealPosition = 0.5f + ClassicalMechanics::radiusBall;
 
     switch (_currentSide) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             z -= offsetRealPosition + p2D.y;
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             z += offsetRealPosition + p2D.y;
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             x += offsetRealPosition + p2D.y;
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             x -= offsetRealPosition + p2D.y;
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             y += offsetRealPosition + p2D.y;
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             y -= offsetRealPosition + p2D.y;
             break;
         default :
@@ -770,48 +770,48 @@ JumperBallTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D)
     }
 
     switch (_lookTowards) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             z -=  p2D.x;
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             z += p2D.x;
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             x += p2D.x;
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             x -= p2D.x;
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             y += p2D.x;
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             y -= p2D.x;
             break;
         default :
             break;
     }
 
-    return JumperBallTypes::vec3f {x,y,z};
+    return JBTypes::vec3f {x,y,z};
 }
 
 float Ball::getRadius() const {
     return ClassicalMechanics::radiusBall;
 }
 
-JumperBallTypes::Direction Ball::currentSide() const {
+JBTypes::Dir Ball::currentSide() const {
     return _currentSide;
 }
 
-JumperBallTypes::Direction Ball::lookTowards() const {
+JBTypes::Dir Ball::lookTowards() const {
     return _lookTowards;
 }
 
 float Ball::getTimeActionSecondsFloat() const noexcept {
 
-    const JumperBallTypes::timePointMs timeActionMs        = getTimeActionMs(); 
+    const JBTypes::timePointMs timeActionMs        = getTimeActionMs(); 
     
-    const JumperBallTypes::durationMs timeActionSinceEpoch =
+    const JBTypes::durationMs timeActionSinceEpoch =
                                                 timeActionMs.time_since_epoch();
     
     const std::chrono::duration<float> durationFloat = timeActionSinceEpoch;
@@ -820,10 +820,10 @@ float Ball::getTimeActionSecondsFloat() const noexcept {
 
 float Ball::getTimeNowSecondsFloat() noexcept {
 
-    const JumperBallTypes::timePointMs timeNowMs = JumperBallTypesMethods::
+    const JBTypes::timePointMs timeNowMs = JBTypesMethods::
                                                             getTimePointMSNow();
     
-    const JumperBallTypes::durationMs timeNowSinceEpoch  = 
+    const JBTypes::durationMs timeNowSinceEpoch  = 
                                                   timeNowMs.time_since_epoch();
     
     const std::chrono::duration<float> durationFloat = timeNowSinceEpoch;
@@ -834,14 +834,14 @@ float Ball::getTimeNowSecondsFloat() noexcept {
 
 float Ball::getTimeSecondsSinceAction() const noexcept{
 
-    const JumperBallTypes::timePointMs timeNowMs = 
-                                    JumperBallTypesMethods::getTimePointMSNow();
-    const JumperBallTypes::durationMs timeNowSinceEpoch = 
+    const JBTypes::timePointMs timeNowMs = 
+                                    JBTypesMethods::getTimePointMSNow();
+    const JBTypes::durationMs timeNowSinceEpoch = 
                                                   timeNowMs.time_since_epoch();
-    const JumperBallTypes::timePointMs timeActionMs = getTimeActionMs(); 
-    const JumperBallTypes::durationMs timeActionSinceEpoch    = 
+    const JBTypes::timePointMs timeActionMs = getTimeActionMs(); 
+    const JBTypes::durationMs timeActionSinceEpoch    = 
                                                 timeActionMs.time_since_epoch();
-    const JumperBallTypes::durationMs difference = 
+    const JBTypes::durationMs difference = 
                                       timeNowSinceEpoch - timeActionSinceEpoch;
     const std::chrono::duration<float> durationFloatDifference = difference;
     const float fDifference = durationFloatDifference.count();
@@ -851,15 +851,15 @@ float Ball::getTimeSecondsSinceAction() const noexcept{
 
 float Ball::getTimeSecondsSinceStateOfLife() const noexcept{
 
-    const JumperBallTypes::timePointMs timeNowMs = 
-                                    JumperBallTypesMethods::getTimePointMSNow();
-    const JumperBallTypes::durationMs timeNowSinceEpoch = 
+    const JBTypes::timePointMs timeNowMs = 
+                                    JBTypesMethods::getTimePointMSNow();
+    const JBTypes::durationMs timeNowSinceEpoch = 
                                                   timeNowMs.time_since_epoch();
-    const JumperBallTypes::timePointMs timeStateOfLifeMs = 
+    const JBTypes::timePointMs timeStateOfLifeMs = 
                                                   getTimeStateOfLifeMs(); 
-    const JumperBallTypes::durationMs timeStateOfLifeSinceEpoch    = 
+    const JBTypes::durationMs timeStateOfLifeSinceEpoch    = 
                                           timeStateOfLifeMs.time_since_epoch();
-    const JumperBallTypes::durationMs difference = 
+    const JBTypes::durationMs difference = 
                                   timeNowSinceEpoch - timeStateOfLifeSinceEpoch;
     const std::chrono::duration<float> durationFloatDifference = difference;
     const float fDifference = durationFloatDifference.count();
@@ -867,12 +867,12 @@ float Ball::getTimeSecondsSinceStateOfLife() const noexcept{
     return fDifference;
 }
 
-JumperBallTypes::vec3f Ball::lookTowardsAsVector() const {
-    return JumperBallTypesMethods::directionAsVector(_lookTowards);
+JBTypes::vec3f Ball::lookTowardsAsVector() const {
+    return JBTypesMethods::directionAsVector(_lookTowards);
 }
 
-JumperBallTypes::vec3f Ball::currentSideAsVector() const {
-    return JumperBallTypesMethods::directionAsVector(_currentSide);
+JBTypes::vec3f Ball::currentSideAsVector() const {
+    return JBTypesMethods::directionAsVector(_currentSide);
 }
 
 ClassicalMechanics& Ball::getMechanicsJumping() noexcept {
@@ -881,7 +881,7 @@ ClassicalMechanics& Ball::getMechanicsJumping() noexcept {
             static_cast<const Ball&>(*this).getMechanicsJumping());
 }
 
-JumperBallTypes::vec3f Ball::get3DPosStayingBall() const {
+JBTypes::vec3f Ball::get3DPosStayingBall() const {
 
     constexpr float offsetPosition = 0.5f + ClassicalMechanics::radiusBall;
 
@@ -890,29 +890,29 @@ JumperBallTypes::vec3f Ball::get3DPosStayingBall() const {
     float z = static_cast<float> (_currentBlockZ + 0.5f);
         
     switch (_currentSide) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             z -= offsetPosition ;
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             z += offsetPosition ;
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             x += offsetPosition ;
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             x -= offsetPosition ;
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             y += offsetPosition ;
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             y -= offsetPosition ;
             break;
         default :
             break;
     }
 
-    const JumperBallTypes::vec3f position3D {x,y,z};
+    const JBTypes::vec3f position3D {x,y,z};
 
     return position3D;
 }
@@ -920,13 +920,13 @@ JumperBallTypes::vec3f Ball::get3DPosStayingBall() const {
 void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
 
     block->detectionEvent(_currentSide,
-            JumperBallTypesMethods::getTimePointMsFromTimePoint(
+            JBTypesMethods::getTimePointMsFromTimePoint(
             _timeAction));
     
     if (block) {
         if ((block->getType() == Block::categoryOfBlocksInFile::Jump)) {
             const unsigned int dir =
-                JumperBallTypesMethods::directionAsInteger(_currentSide);
+                JBTypesMethods::directionAsInteger(_currentSide);
             if (block->faceInfo().at(dir)){
                 _jumpingType = Ball::JumpingType::Long;
                 jump();
@@ -940,7 +940,7 @@ void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
 
 void Ball::update() noexcept{
 
-    JumperBallTypes::vec3f position3D {0.f,0.f,0.f};
+    JBTypes::vec3f position3D {0.f,0.f,0.f};
 
     if (_state == Ball::State::Staying || _state == Ball::State::Moving ||
             _state == Ball::State::TurningLeft || 
@@ -960,11 +960,11 @@ void Ball::update() noexcept{
             }
             if (block && block->getType() ==
                 Block::categoryOfBlocksInFile::Fire) {
-                const auto now = JumperBallTypesMethods::getTimePointMSNow();
-                const JumperBallTypes::durationMs duration =
+                const auto now = JBTypesMethods::getTimePointMSNow();
+                const JBTypes::durationMs duration =
                     now - getTimeActionMs();
                 const float time =
-                    JumperBallTypesMethods::getFloatFromDurationMS(duration);
+                    JBTypesMethods::getFloatFromDurationMS(duration);
                 if( _burnCoefficient + time > timeToBurn  ) {
                     
                 }
@@ -1028,32 +1028,32 @@ void Ball::update() noexcept{
                     _3DPosZ = position3D.z;
                     
                     switch (_lookTowards) {
-                        case JumperBallTypes::Direction::North:
+                        case JBTypes::Dir::North:
                             _3DPosZ = static_cast<float>(position3D.z) 
                                     - distancePerStep * timeStep1
                                     / (timeToGetNextBlock/2.f);
                             break;
-                        case JumperBallTypes::Direction::South:
+                        case JBTypes::Dir::South:
                             _3DPosZ = static_cast<float>(position3D.z)
                                     + distancePerStep * timeStep1
                                     / (timeToGetNextBlock/2.f);
                             break;
-                        case JumperBallTypes::Direction::East:
+                        case JBTypes::Dir::East:
                             _3DPosX = static_cast<float>(position3D.x)
                                     + distancePerStep * timeStep1
                                     / (timeToGetNextBlock/2.f);
                             break;
-                        case JumperBallTypes::Direction::West:
+                        case JBTypes::Dir::West:
                             _3DPosX = static_cast<float>(position3D.x)
                                     - distancePerStep * timeStep1
                                     / (timeToGetNextBlock/2.f);
                             break;
-                        case JumperBallTypes::Direction::Up:
+                        case JBTypes::Dir::Up:
                             _3DPosY = static_cast<float>(position3D.y)
                                     + distancePerStep * timeStep1
                                     / (timeToGetNextBlock/2.f);
                             break;
-                        case JumperBallTypes::Direction::Down:
+                        case JBTypes::Dir::Down:
                             _3DPosY = static_cast<float>(position3D.y)
                                     - distancePerStep * timeStep1
                                     / (timeToGetNextBlock/2.f);
@@ -1062,32 +1062,32 @@ void Ball::update() noexcept{
                             break;
                     }
                     switch (infoTarget.nextLook) {
-                        case JumperBallTypes::Direction::North:
+                        case JBTypes::Dir::North:
                             _3DPosZ = static_cast<float>(_3DPosZ) 
                                     - distancePerStep * timeStep2
                                     / (timeToGetNextBlock/2.f);
                             break;
-                        case JumperBallTypes::Direction::South:
+                        case JBTypes::Dir::South:
                             _3DPosZ = static_cast<float>(_3DPosZ)
                                     + distancePerStep * timeStep2
                                     / (timeToGetNextBlock/2.f);
                             break;
-                        case JumperBallTypes::Direction::East:
+                        case JBTypes::Dir::East:
                             _3DPosX = static_cast<float>(_3DPosX)
                                     + distancePerStep * timeStep2
                                     / (timeToGetNextBlock/2.f);
                             break;
-                        case JumperBallTypes::Direction::West:
+                        case JBTypes::Dir::West:
                             _3DPosX = static_cast<float>(_3DPosX)
                                     - distancePerStep * timeStep2
                                     / (timeToGetNextBlock/2.f);
                             break;
-                        case JumperBallTypes::Direction::Up:
+                        case JBTypes::Dir::Up:
                             _3DPosY = static_cast<float>(_3DPosY)
                                     + distancePerStep * timeStep2
                                     / (timeToGetNextBlock/2.f);
                             break;
-                        case JumperBallTypes::Direction::Down:
+                        case JBTypes::Dir::Down:
                             _3DPosY = static_cast<float>(_3DPosY)
                                     - distancePerStep * timeStep2
                                     / (timeToGetNextBlock/2.f);
@@ -1129,7 +1129,7 @@ void Ball::update() noexcept{
                     getPosition(getTimeSecondsSinceAction());
         }
 
-        JumperBallTypes::vec3f relativePositionJump = P2DTo3D(pos2D);
+        JBTypes::vec3f relativePositionJump = P2DTo3D(pos2D);
         
         position3D = {  relativePositionJump.x,
                         relativePositionJump.y,
@@ -1155,13 +1155,13 @@ void Ball::mapInteraction() noexcept{
         case Map::EffectOnBall::Burnt:
             if(_stateOfLife != StateOfLife::Burning) {
                 _stateOfLife = StateOfLife::Burning;
-                _timeStateOfLife = JumperBallTypesMethods::getTimePointMSNow();
+                _timeStateOfLife = JBTypesMethods::getTimePointMSNow();
             }
             break;
         case Map::EffectOnBall::Burst: 
             if(_stateOfLife != StateOfLife::Bursting) {
                 _stateOfLife = StateOfLife::Bursting;
-                _timeStateOfLife = JumperBallTypesMethods::getTimePointMSNow(); 
+                _timeStateOfLife = JBTypesMethods::getTimePointMSNow(); 
             }
             break;
         case Map::EffectOnBall::Slide: 

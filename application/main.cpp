@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
         if (!file) {
             std::cerr << "ERROR: Opening " << fileToOpen << " impossible .."
                       << std::endl;
-            JumperBallTypesMethods::displayInstallError();
+            JBTypesMethods::displayInstallError();
             return EXIT_FAILURE;
         }
         const std::string arg (argv[2]);

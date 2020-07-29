@@ -16,9 +16,9 @@
 
 ObjectAnimation::ObjectAnimation(const Object& object,
                                  const glm::vec3& blockPosition,
-                                 const JumperBallTypes::Direction& dir):
+                                 const JBTypes::Dir& dir):
 _object(object),
-_referenceTimePointCreation(JumperBallTypesMethods::getTimePointMSNow()),
+_referenceTimePointCreation(JBTypesMethods::getTimePointMSNow()),
 _direction(dir),
 _translationToBlock(glm::translate(blockPosition)),
 _initialRotation(Utility::rotationUpToDir(_direction)),
@@ -40,7 +40,7 @@ glm::mat4 ObjectAnimation::translation() const {
 }
 
 void ObjectAnimation::updateTrans() {
-    const float seconds = JumperBallTypesMethods::getTimeSecondsSinceTimePoint(
+    const float seconds = JBTypesMethods::getTimeSecondsSinceTimePoint(
       _referenceTimePointCreation);
     
     constexpr float speedFactor = 5.f;

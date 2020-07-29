@@ -17,7 +17,7 @@ namespace Utility {
     std::vector<GLfloat>              computeNormals(const std::vector<GLfloat>&
                                                       positions);
     glm::mat4                         rotationUpToDir(
-                                        JumperBallTypes::Direction dir);
+                                        JBTypes::Dir dir);
 
     float                             evalGauss1D(float x, float sigma);
     std::vector<GLfloat>              genGaussBuffer( size_t patchSize,

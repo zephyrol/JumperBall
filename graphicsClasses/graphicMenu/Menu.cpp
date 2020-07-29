@@ -137,22 +137,22 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
     std::shared_ptr<const MessageLabel> label =
         std::make_shared<const MessageLabel>(
             Utility::xScreenToPortrait(1.f), 0.1f,
-            JumperBallTypes::vec2f{0.5f,0.8f},
+            JBTypes::vec2f{0.5f,0.8f},
             "Jumper Ball");
     std::shared_ptr<const MessageLabel> label2 =
         std::make_shared<const MessageLabel> (
             Utility::xScreenToPortrait(0.4f), 0.05f,
-            JumperBallTypes::vec2f{0.5f,0.6f},
+            JBTypes::vec2f{0.5f,0.6f},
             "Play");
     std::shared_ptr<const MessageLabel> label3 =
         std::make_shared<const MessageLabel> (
             Utility::xScreenToPortrait(0.6f), 0.05f,
-            JumperBallTypes::vec2f{0.5f,0.4f},
+            JBTypes::vec2f{0.5f,0.4f},
             "Store");
     std::shared_ptr<const MessageLabel> label4 =
         std::make_shared<const MessageLabel> (
             Utility::xScreenToPortrait(0.4f), 0.05f,
-            JumperBallTypes::vec2f{0.5f,0.2f},
+            JBTypes::vec2f{0.5f,0.2f},
             "Exit");
 
     const std::vector<std::shared_ptr<const Label> > labelsPage1
@@ -164,7 +164,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
     std::shared_ptr<const MessageLabel> labelLevelsTitle =
     std::make_shared<const MessageLabel>
     (Utility::xScreenToPortrait(1.  ),
-     0.2f, JumperBallTypes::vec2f{0.5f, 1.f - 0.1f},
+     0.2f, JBTypes::vec2f{0.5f, 1.f - 0.1f},
      "Levels");
     labelsPage2.push_back(labelLevelsTitle);
 
@@ -183,7 +183,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
         /*std::shared_ptr<const BoxLabel> boxLabelLevels =
         std::make_shared<const BoxLabel>
         (   Utility::xScreenToPortrait(.2f), 0.1f,
-         JumperBallTypes::vec2f{.5f - Utility::xScreenToPortrait(.5f)
+         JBTypes::vec2f{.5f - Utility::xScreenToPortrait(.5f)
             + Utility::xScreenToPortrait(.1f + (i%3) * .4f), 1.f-(0.3f + i/3 * 0.3f)-offsetBox});
         labelsPage2.push_back(boxLabelLevels);*/
 
@@ -195,7 +195,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
         std::shared_ptr<MessageLabel> labelLevel =
         std::make_shared<MessageLabel> (
             Utility::xScreenToPortrait(.2f), 0.1f,
-            JumperBallTypes::vec2f{ .5f - Utility::xScreenToPortrait(.5f)
+            JBTypes::vec2f{ .5f - Utility::xScreenToPortrait(.5f)
                 + Utility::xScreenToPortrait(.1f + (i%3) * .4f),
                 1.f-(0.3f + i/3 * 0.3f)},
             sNumber,
@@ -210,7 +210,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
 
     std::shared_ptr<const BoxLabel> labelBox =
     std::make_shared<const BoxLabel>(0.5f, 0.1f,
-                                     JumperBallTypes::vec2f{0.5f,0.8f} );
+                                     JBTypes::vec2f{0.5f,0.8f} );
 
 
     //Page 3 (Failure page)
@@ -218,17 +218,17 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
     std::shared_ptr<const MessageLabel> label1Page3 =
         std::make_shared<const MessageLabel>(
             Utility::xScreenToPortrait(1.f), 0.1f,
-            JumperBallTypes::vec2f{0.5f,0.8f},
+            JBTypes::vec2f{0.5f,0.8f},
             "You lost");
     std::shared_ptr<const MessageLabel> label2Page3 =
         std::make_shared<const MessageLabel> (
             Utility::xScreenToPortrait(0.4f), 0.05f,
-            JumperBallTypes::vec2f{0.5f,0.6f},
+            JBTypes::vec2f{0.5f,0.6f},
             "Retry");
     std::shared_ptr<const MessageLabel> label3Page3 =
         std::make_shared<const MessageLabel> (
             Utility::xScreenToPortrait(0.4f), 0.05f,
-            JumperBallTypes::vec2f{0.5f,0.3f},
+            JBTypes::vec2f{0.5f,0.3f},
             "Exit");
 
     const std::vector<std::shared_ptr<const Label> > labelsPage3
@@ -239,17 +239,17 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
     /*std::shared_ptr<const MessageLabel> label1Page3 =
         std::make_shared<const MessageLabel>(
             Utility::xScreenToPortrait(1.f), 0.1f,
-            JumperBallTypes::vec2f{0.5f,0.8f},
+            JBTypes::vec2f{0.5f,0.8f},
             "");*/
     std::shared_ptr<const MessageLabel> label1Page4 =
         std::make_shared<const MessageLabel> (
             Utility::xScreenToPortrait(0.4f), 0.05f,
-            JumperBallTypes::vec2f{0.5f,0.4f},
+            JBTypes::vec2f{0.5f,0.4f},
             "Continue");
     std::shared_ptr<const MessageLabel> label2Page4 =
         std::make_shared<const MessageLabel> (
             Utility::xScreenToPortrait(0.7f), 0.05f,
-            JumperBallTypes::vec2f{0.5f,0.6f},
+            JBTypes::vec2f{0.5f,0.6f},
             "Main menu");
 
     const std::vector<std::shared_ptr<const Label> > labelsPage4

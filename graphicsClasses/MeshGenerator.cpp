@@ -49,10 +49,10 @@ std::vector<MeshComponent> MeshGenerator::genJumpers(
                 constexpr float sizeBlock = 1.f;
                 constexpr float offset = sizeBlock/2.f;
                 
-                const JumperBallTypes::Direction currentDir =
-                        JumperBallTypesMethods::integerAsDirection(
+                const JBTypes::Dir currentDir =
+                        JBTypesMethods::integerAsDirection(
                             static_cast<unsigned int>(i));
-                const JumperBallTypes::vec3f vecDir = JumperBallTypesMethods::
+                const JBTypes::vec3f vecDir = JBTypesMethods::
                         directionAsVector(currentDir);
                 
                 const glm::mat4 rotationLocal = 
@@ -112,11 +112,11 @@ std::vector<MeshComponent> MeshGenerator::genSharps(
                 constexpr float sizeBlock = 1.f;
                 constexpr float offset = sizeBlock/2.f;
                 
-                const JumperBallTypes::Direction currentDir =
-                        JumperBallTypesMethods::integerAsDirection(
+                const JBTypes::Dir currentDir =
+                        JBTypesMethods::integerAsDirection(
                             static_cast<unsigned int>(i));
-                const JumperBallTypes::vec3f vecDir = 
-                    JumperBallTypesMethods:: directionAsVector(currentDir);
+                const JBTypes::vec3f vecDir = 
+                    JBTypesMethods:: directionAsVector(currentDir);
                 
                 const glm::mat4 translationOffset = glm::translate(
                         glm::vec3( -offset, 0 , -offset ));
@@ -241,8 +241,8 @@ std::vector<MeshComponent> MeshGenerator::blockManager ( const Block& block,
 
     for (size_t i = 0; i < objects.size() ; ++i) {
         if ( objects.at(i) ) {
-            const JumperBallTypes::Direction dir =
-                JumperBallTypesMethods::integerAsDirection(
+            const JBTypes::Dir dir =
+                JBTypesMethods::integerAsDirection(
                     static_cast<unsigned int>(i));
             std::vector<MeshComponent> v =
                 genComponents(objects.at(i),glmPosition,dir);
@@ -312,7 +312,7 @@ std::vector<MeshComponent>
                     MeshGenerator::genComponents(
                                 const std::shared_ptr<const Object>& obj,
                                 const glm::vec3& position,
-                                const JumperBallTypes::Direction& dir)
+                                const JBTypes::Dir& dir)
 {
 
     std::vector<MeshComponent> components;

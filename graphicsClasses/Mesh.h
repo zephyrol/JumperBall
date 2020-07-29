@@ -75,7 +75,7 @@ void Mesh<T>::update() {
 template<typename T>
 void Mesh<T>::update(const Ball& base) {
 
-    JumperBallTypes::vec3f positionBall = base.get3DPosition();
+    JBTypes::vec3f positionBall = base.get3DPosition();
     _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
                             positionBall.y ,positionBall.z));
 

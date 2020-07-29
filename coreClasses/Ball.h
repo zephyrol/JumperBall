@@ -14,7 +14,7 @@
 #ifndef BALL_H
 #define BALL_H
 #include "Types.h"
-#include "Map.h"
+#include "movements/Movement.h"
 #include "ClassicalMechanics.h"
 
 class Ball {
@@ -42,8 +42,8 @@ public:
 
     using shock     =             std::array<unsigned int, 3 > ; 
                                                       
-    struct nextBlockInformation   { JumperBallTypes::Direction  nextSide;
-                                    JumperBallTypes::Direction  nextLook;
+    struct nextBlockInformation   { JBTypes::Dir  nextSide;
+                                    JBTypes::Dir  nextLook;
                                     NextBlockLocal              nextLocal;
                                     unsigned int                poxX;
                                     unsigned int                poxY;
@@ -51,23 +51,23 @@ public:
                                   };
 
     //-------CONST METHODS--------//
-    JumperBallTypes::vec3f        get3DPosition()                const noexcept;
+    JBTypes::vec3f        get3DPosition()                const noexcept;
     float                         getRadius()                             const;
-    JumperBallTypes::vec3f        lookTowardsAsVector()                   const;
-    JumperBallTypes::vec3f        currentSideAsVector()                   const;
+    JBTypes::vec3f        lookTowardsAsVector()                   const;
+    JBTypes::vec3f        currentSideAsVector()                   const;
 
-    JumperBallTypes::Direction    currentSide()                           const;
-    JumperBallTypes::Direction    lookTowards()                           const;
+    JBTypes::Dir    currentSide()                           const;
+    JBTypes::Dir    lookTowards()                           const;
     float                         distanceBehindBall()                    const;
     Ball::State                   state()                                 const;
     Ball::StateOfLife             stateOfLife()                           const;
 
     float                         getTimeSecondsSinceAction()    const noexcept;
-    JumperBallTypes::timePointMs  getTimeActionMs()              const noexcept;
+    JBTypes::timePointMs  getTimeActionMs()              const noexcept;
 
     float                         getTimeSecondsSinceStateOfLife()    
                                                                  const noexcept;
-    JumperBallTypes::timePointMs  getTimeStateOfLifeMs()         const noexcept;
+    JBTypes::timePointMs  getTimeStateOfLifeMs()         const noexcept;
 
     struct nextBlockInformation   getNextBlockInfo()             const noexcept;
     const ClassicalMechanics&     getMechanicsJumping()          const noexcept;
@@ -94,11 +94,12 @@ private:
     float                         _3DPosY;
     float                         _3DPosZ;
 
-    JumperBallTypes::Direction    _currentSide;
-    JumperBallTypes::Direction    _lookTowards;
+    JBTypes::Dir    _currentSide;
+    JBTypes::Dir    _lookTowards;
     Ball::State                   _state;
     Ball::StateOfLife             _stateOfLife;
     Ball::JumpingType             _jumpingType;
+    //Movement                      _turnLeftFct;
 
     //Through the interactions, a ball may modify a map
     Map&                          _map;
@@ -125,10 +126,10 @@ private:
 
     float                         getTimeActionSecondsFloat()    const noexcept;
 
-    JumperBallTypes::vec3f        P2DTo3D(
+    JBTypes::vec3f        P2DTo3D(
                                       ClassicalMechanics::physics2DVector p2D)
                                                                           const;
-    JumperBallTypes::vec3f        get3DPosStayingBall()                   const;
+    JBTypes::vec3f        get3DPosStayingBall()                   const;
     bool                          isOutOfTheMap()                         const;
 
     //----------METHODS------------//

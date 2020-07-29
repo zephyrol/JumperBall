@@ -27,7 +27,7 @@ Camera::Camera() :  _posX(1), _posY(1), _posZ(1),
 
 void Camera::follow(const Ball& ball) noexcept {
     
-    const JumperBallTypes::vec3f position  = ball.get3DPosition();
+    const JBTypes::vec3f position  = ball.get3DPosition();
     const auto sideBall                 = ball.currentSide();
     const auto lookingDirection         = ball.lookTowards();
 
@@ -51,32 +51,32 @@ void Camera::follow(const Ball& ball) noexcept {
 
     
     switch (sideBall) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             upVec.z = -1.f;
             matPosCam = glm::translate(matPosCam,
                     glm::vec3(0.f,0.f,-distAboveBall));
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             upVec.z = 1.f;
             matPosCam = glm::translate(matPosCam,
                     glm::vec3(0.f,0.f,distAboveBall));
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             upVec.x = 1.f;
             matPosCam = glm::translate(matPosCam,
                     glm::vec3(distAboveBall,0.f,0.f));
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             upVec.x = -1.f;
             matPosCam = glm::translate(matPosCam,
                     glm::vec3(-distAboveBall,0.f,0.f));
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             upVec.y = 1.f;
             matPosCam = glm::translate(matPosCam,
                     glm::vec3(0.f,distAboveBall,0.f));
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             upVec.y = -1.f;
             matPosCam = glm::translate(matPosCam,
                     glm::vec3(0.f,-distAboveBall,0.f));
@@ -85,8 +85,8 @@ void Camera::follow(const Ball& ball) noexcept {
             break;
     }
     
-    const JumperBallTypes::vec3f dir =
-        JumperBallTypesMethods::directionAsVector(lookingDirection);
+    const JBTypes::vec3f dir =
+        JBTypesMethods::directionAsVector(lookingDirection);
     matPosCam = glm::translate(matPosCam,
             -glm::vec3(dir.x * distBehindBall,dir.y * distBehindBall,
               dir.z * distBehindBall));
@@ -95,20 +95,20 @@ void Camera::follow(const Ball& ball) noexcept {
             dir.z * -distDirPoint));
 
 
-    const auto getAxis = [] (JumperBallTypes::Direction direction) {
+    const auto getAxis = [] (JBTypes::Dir direction) {
         glm::vec3 axisVector; 
         switch (direction) {
-            case JumperBallTypes::Direction::North:
+            case JBTypes::Dir::North:
                 axisVector = {0.f,0.f,-1.f}; break;
-            case JumperBallTypes::Direction::South:
+            case JBTypes::Dir::South:
                 axisVector = {0.f,0.f,1.f}; break;
-            case JumperBallTypes::Direction::East:
+            case JBTypes::Dir::East:
                 axisVector = {1.f,0.f,0.f}; break;
-            case JumperBallTypes::Direction::West:
+            case JBTypes::Dir::West:
                 axisVector = {-1.f,0.f,0.f}; break;
-            case JumperBallTypes::Direction::Up:
+            case JBTypes::Dir::Up:
                 axisVector = {0.f,1.f,0.f}; break;
-            case JumperBallTypes::Direction::Down:
+            case JBTypes::Dir::Down:
                 axisVector = {0.f,-1.f,0.f}; break;
             default :
                 break;
@@ -120,9 +120,9 @@ void Camera::follow(const Ball& ball) noexcept {
     constexpr float durationMoveComingBack = 0.2f;
 
     const float timeSinceAction         = ball.getTimeSecondsSinceAction();
-    const JumperBallTypes::timePointMs timeAction = ball.getTimeActionMs();
-    const JumperBallTypes::timePointMs now = 
-                                    JumperBallTypesMethods::getTimePointMSNow();
+    const JBTypes::timePointMs timeAction = ball.getTimeActionMs();
+    const JBTypes::timePointMs now = 
+                                    JBTypesMethods::getTimePointMSNow();
 
     if (stateBall == Ball::State::Staying) {
         if(_willComeBack) {
@@ -174,7 +174,7 @@ void Camera::follow(const Ball& ball) noexcept {
     else if (stateBall == Ball::State::Jumping) {
         constexpr float offsetTimeToBeginCamMoving = 0.2f;
         const float timeSinceBeginningMoving =
-          JumperBallTypesMethods::getFloatFromDurationMS(now-timeAction);
+          JBTypesMethods::getFloatFromDurationMS(now-timeAction);
         if (timeSinceBeginningMoving > 
                 (ball.getMechanicsJumping().getTimeToGetDestination()
                   + offsetTimeToBeginCamMoving)){
@@ -194,7 +194,7 @@ void Camera::follow(const Ball& ball) noexcept {
     
     if ( _isComingBack) {
         const float durationSinceComeBack = 
-        JumperBallTypesMethods::getFloatFromDurationMS(now- _timePointComeBack);
+        JBTypesMethods::getFloatFromDurationMS(now- _timePointComeBack);
         if (durationSinceComeBack > durationMoveComingBack)
         {
           _isComingBack = false;
@@ -252,14 +252,14 @@ void Camera::follow(const Map& map) noexcept{
     const float cameraDistanceNear = distanceMax * 0.75f;
     const float cameraDistanceFar =  distanceMax * 1.2f;
     
-    const JumperBallTypes::timePointMs now  = 
-    JumperBallTypesMethods::getTimePointMSNow();
+    const JBTypes::timePointMs now  = 
+    JBTypesMethods::getTimePointMSNow();
 
-    const JumperBallTypes::durationMs  diff = now - 
-      JumperBallTypesMethods::getTimePointMsFromTimePoint(map.timeCreation());
+    const JBTypes::durationMs  diff = now - 
+      JBTypesMethods::getTimePointMsFromTimePoint(map.timeCreation());
 
     
-    const float diffF = JumperBallTypesMethods::getFloatFromDurationMS(diff);
+    const float diffF = JBTypesMethods::getFloatFromDurationMS(diff);
     
     const float distanceX = cameraDistanceNear +
             (cameraDistanceFar-cameraDistanceNear) *
@@ -316,20 +316,20 @@ bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
 {
     bool animationIsFinished;
 
-    const JumperBallTypes::vec3f position  = ball.get3DPosition();
+    const JBTypes::vec3f position  = ball.get3DPosition();
 
     constexpr float distDirPoint = 2.f;
     constexpr float distBehindBall = 1.3f;
     constexpr float distAboveBall = 1.2f;
     //-----------------------
 
-    const JumperBallTypes::timePointMs now =
-                                    JumperBallTypesMethods::getTimePointMSNow();
+    const JBTypes::timePointMs now =
+                                    JBTypesMethods::getTimePointMSNow();
 
-    const JumperBallTypes::durationMs  diff = now -
-      JumperBallTypesMethods::getTimePointMsFromTimePoint(map.timeCreation());
+    const JBTypes::durationMs  diff = now -
+      JBTypesMethods::getTimePointMsFromTimePoint(map.timeCreation());
 
-    const float diffF = JumperBallTypesMethods::getFloatFromDurationMS(diff);
+    const float diffF = JBTypesMethods::getFloatFromDurationMS(diff);
     constexpr float transitionDuration = 2.f;
     float t = diffF / transitionDuration ;
 

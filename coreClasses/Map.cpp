@@ -171,8 +171,8 @@ Map::Map(std::ifstream& file):_id (nbMaps),
             readValue = infoObjects.front();
 
             const unsigned int side = readValue - firstNumberSide; 
-            JumperBallTypes::Direction dir = 
-                    JumperBallTypesMethods::integerAsDirection(side);
+            JBTypes::Dir dir = 
+                    JBTypesMethods::integerAsDirection(side);
 
             Object::CategoryOfObjects category;
             switch (typeOfObject) {
@@ -585,11 +585,11 @@ std::chrono::time_point<std::chrono::system_clock> Map::timeCreation() const {
 }
 
 Map::EffectOnBall Map::interaction(
-        const JumperBallTypes::Direction& ballDir, 
-        const JumperBallTypes::vec3f& posBall) {
+        const JBTypes::Dir& ballDir, 
+        const JBTypes::vec3f& posBall) {
     
     Map::EffectOnBall effect = Map::EffectOnBall::Nothing;
-    auto timeNow = JumperBallTypesMethods::getTimePointMSNow();
+    auto timeNow = JBTypesMethods::getTimePointMSNow();
 
     //Blocks interaction 
     std::array<unsigned int,3> currentBlockPosition;
@@ -640,7 +640,7 @@ std::shared_ptr<Map> Map::loadMap(size_t mapNumber)
     if (!foundFile) {
         std::cerr << "ERROR: Opening " << mapFileToOpenV1 << " impossible .."
                   << std::endl;
-        JumperBallTypesMethods::displayInstallError();
+        JBTypesMethods::displayInstallError();
         exit(EXIT_FAILURE);
     }
     std::cout << "Map " << mapNumber << " loaded" << std::endl;

@@ -13,7 +13,7 @@
  */
 
 SwitchLabel::SwitchLabel(float width, float height, 
-    const JumperBallTypes::vec2f& position,
+    const JBTypes::vec2f& position,
     bool switchButton):
     Label(width,height,position),
     _switch(switchButton)

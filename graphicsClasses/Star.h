@@ -36,7 +36,7 @@ public:
     glm::mat4                     initialTransform()                      const;
     glm::mat4                     transform()                             const;
     glm::vec3                     centralPosition()                       const;
-    const JumperBallTypes::timePointMs&  
+    const JBTypes::timePointMs&  
                                   timeCreation()                          const;
     
 
@@ -50,7 +50,7 @@ private:
     const GLfloat                 _radiusOutside;
     const glm::mat4               _initialTransform;
 
-    const JumperBallTypes::timePointMs
+    const JBTypes::timePointMs
                                   _timeCreation;
     
     

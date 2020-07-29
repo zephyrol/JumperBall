@@ -33,8 +33,8 @@ bool Block::stillExists() const {
     return true;
 }
 
-void Block::detectionEvent(const JumperBallTypes::Direction&,
-        const JumperBallTypes::timePointMs&)
+void Block::detectionEvent(const JBTypes::Dir&,
+        const JBTypes::timePointMs&)
 {
 }
 
@@ -51,26 +51,26 @@ bool Block::burstBall() const {
 
 
 
-void Block::interaction(const JumperBallTypes::Direction&,
-                        const JumperBallTypes::timePointMs&,
-                        const JumperBallTypes::vec3f&,
+void Block::interaction(const JBTypes::Dir&,
+                        const JBTypes::timePointMs&,
+                        const JBTypes::vec3f&,
                         const std::array<unsigned int, 3>&) {
 
 }
 
 void Block::createObject( Object::CategoryOfObjects category, 
-                        JumperBallTypes::Direction dir) {
+                        JBTypes::Dir dir) {
     switch (category) {
         case Object::CategoryOfObjects::Clock : 
-            _objects.at(JumperBallTypesMethods::directionAsInteger(dir)) 
+            _objects.at(JBTypesMethods::directionAsInteger(dir)) 
                     = std::make_shared<Clock>();
             break;
         case Object::CategoryOfObjects::Coin : 
-            _objects.at(JumperBallTypesMethods::directionAsInteger(dir)) 
+            _objects.at(JBTypesMethods::directionAsInteger(dir)) 
                     = std::make_shared<Coin>();
             break;
         case Object::CategoryOfObjects::Key : 
-            _objects.at(JumperBallTypesMethods::directionAsInteger(dir)) 
+            _objects.at(JBTypesMethods::directionAsInteger(dir)) 
                     = std::make_shared<Key>();
             break;
         default :
@@ -82,40 +82,40 @@ const std::array<std::shared_ptr<const Object>,6 >& Block::objects() const {
     return _objects;
 }
 
-JumperBallTypes::vec3f Block::positionObject(
+JBTypes::vec3f Block::positionObject(
                  const std::array<unsigned int, 3>& pos, unsigned int dirUint) {
 
     constexpr float offsetPosition = 1.f; 
     float x = static_cast<float> (pos.at(0)+ 0.5f);
     float y = static_cast<float> (pos.at(1)+ 0.5f);
     float z = static_cast<float> (pos.at(2)+ 0.5f);
-    const JumperBallTypes::Direction direction =
-                  JumperBallTypesMethods::integerAsDirection(dirUint);
+    const JBTypes::Dir direction =
+                  JBTypesMethods::integerAsDirection(dirUint);
 
     switch (direction) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             z -= offsetPosition ;
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             z += offsetPosition ;
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             x += offsetPosition ;
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             x -= offsetPosition ;
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             y += offsetPosition ;
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             y -= offsetPosition ;
             break;
         default :
             break;
     }
 
-    return JumperBallTypes::vec3f{x,y,z};
+    return JBTypes::vec3f{x,y,z};
 
 }
 

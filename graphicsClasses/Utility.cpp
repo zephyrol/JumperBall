@@ -156,29 +156,29 @@ std::vector<glm::vec2> Utility::GLfloatListToGlmVec2(
 
 
 
-glm::mat4 Utility::rotationUpToDir( JumperBallTypes::Direction dir) {
+glm::mat4 Utility::rotationUpToDir( JBTypes::Dir dir) {
 
     glm::mat4 rotationMatrix;
     constexpr float fPI   = static_cast<float>(M_PI);
     constexpr float fPI2  = static_cast<float>(M_PI_2);
 
     switch (dir) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             rotationMatrix = glm::rotate(-fPI2,glm::vec3(1.f,0.f,0.f));
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             rotationMatrix = glm::rotate(+fPI2,glm::vec3(1.f,0.f,0.f));
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             rotationMatrix = glm::rotate(-fPI2,glm::vec3(0.f,0.f,1.f));
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             rotationMatrix = glm::rotate(fPI2,glm::vec3(0.f,0.f,1.f));
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             rotationMatrix = glm::mat4(1.f);
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             rotationMatrix = glm::rotate(fPI,glm::vec3(1.f,0.f,0.f));
             break;
         default :

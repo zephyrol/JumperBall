@@ -47,7 +47,7 @@ bool TextRendering::initFreeTypeAndFont() {
     if (!foundFile) {
         std::cerr << "Error: Impossible to load the font" <<
                      "Cousine-Regular.ttf ... " << std::endl;
-        JumperBallTypesMethods::displayInstallError();
+        JBTypesMethods::displayInstallError();
         FT_Done_FreeType(ftLib);
         return false;
     } else  {
@@ -117,7 +117,7 @@ void TextRendering::render(const Label& label, const glm::vec3& color,
                            float offsetY) const {
     _spFont.use();
 
-    JumperBallTypes::vec2f position = label.position();
+    JBTypes::vec2f position = label.position();
     if (!label.isFixed()) {
         position.y += offsetY;
     }

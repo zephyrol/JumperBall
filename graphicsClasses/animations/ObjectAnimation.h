@@ -23,7 +23,7 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     ObjectAnimation                 ( const Object& object,
                                       const glm::vec3& blockPosition,
-                                      const JumperBallTypes::Direction& dir);
+                                      const JBTypes::Dir& dir);
     virtual ~ObjectAnimation        ()                                = default;
 
 
@@ -36,8 +36,8 @@ private:
 
     //--------ATTRIBUTES-----------//
     const Object&                       _object;
-    JumperBallTypes::timePointMs        _referenceTimePointCreation;
-    const JumperBallTypes::Direction    _direction;
+    JBTypes::timePointMs        _referenceTimePointCreation;
+    const JBTypes::Dir    _direction;
     const glm::mat4                     _translationToBlock;
     const glm::mat4                     _initialRotation;
 

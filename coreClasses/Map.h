@@ -79,8 +79,8 @@ public:
 
     //----------METHODS------------//
     EffectOnBall                          interaction(
-                                      const JumperBallTypes::Direction& ballDir,
-                                      const JumperBallTypes::vec3f& posBall );
+                                      const JBTypes::Dir& ballDir,
+                                      const JBTypes::vec3f& posBall );
     std::shared_ptr<Block>                getBlock(int x, int y, int z);
 
     //--------STATIC METHODS-------//

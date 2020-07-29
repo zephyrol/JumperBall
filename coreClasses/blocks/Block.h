@@ -34,21 +34,21 @@ public:
 
     //----------METHODS-------------//
     virtual void                      interaction(
-                                    const JumperBallTypes::Direction& 
+                                    const JBTypes::Dir& 
                                             ballDir,
-                                    const JumperBallTypes::timePointMs&
+                                    const JBTypes::timePointMs&
                                             currentTime,
-                                    const JumperBallTypes::vec3f& posBall,
+                                    const JBTypes::vec3f& posBall,
                                     const std::array<unsigned int,3>& posBlock);
     virtual void                      detectionEvent(
-                                        const JumperBallTypes::Direction&
+                                        const JBTypes::Dir&
                                                 ballDir,
-                                        const JumperBallTypes::timePointMs&
+                                        const JBTypes::timePointMs&
                                                 currentTime
                                                 );
     virtual void                      createObject(
                                         Object::CategoryOfObjects category, 
-                                        JumperBallTypes::Direction dir);
+                                        JBTypes::Dir dir);
 
 
     //-------CONST METHODS----------//
@@ -62,7 +62,7 @@ public:
                                       objects()                           const; 
 
     //--------STATIC METHODS-------//
-    static JumperBallTypes::vec3f     positionObject
+    static JBTypes::vec3f     positionObject
                                         (const std::array<unsigned int,3>& pos,
                                          unsigned int dirUint);
 

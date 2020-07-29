@@ -47,7 +47,7 @@ void BallAnimation::animationAlive() {
                                             maxCrushing)/2.f + 
                                             maxCrushing/2.f ;
          
-        const JumperBallTypes::vec3f sideDir = _ball.currentSideAsVector();
+        const JBTypes::vec3f sideDir = _ball.currentSideAsVector();
         const glm::vec3 glmSideDir{
                               sideDir.x, sideDir.y, sideDir.z};
         const glm::vec3 deformationVector { fabs(sideDir.x),
@@ -90,8 +90,8 @@ void BallAnimation::animationAlive() {
         const float angleToGetBlock = sizeBlock/_ball.getRadius();
         const float currentAngle = t * angleToGetBlock;
         
-        const JumperBallTypes::vec3f lookDir = _ball.lookTowardsAsVector();
-        const JumperBallTypes::vec3f sideDir = _ball.currentSideAsVector();
+        const JBTypes::vec3f lookDir = _ball.lookTowardsAsVector();
+        const JBTypes::vec3f sideDir = _ball.currentSideAsVector();
         
         const glm::vec3 glmLookDir{lookDir.x, lookDir.y, lookDir.z};
         const glm::vec3 glmSideDir{sideDir.x, sideDir.y, sideDir.z};

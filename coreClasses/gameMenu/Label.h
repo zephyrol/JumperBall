@@ -44,7 +44,7 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Label                   (float width,float height,
-                             const JumperBallTypes::vec2f& position,
+                             const JBTypes::vec2f& position,
                              bool activated = false,
                              const std::shared_ptr<LabelAnswer> action
                                 = nullptr,
@@ -60,7 +60,7 @@ public:
     bool                    isActivated()                                 const;
     const std::shared_ptr<LabelAnswer>& action()                          const;
 
-    JumperBallTypes::vec2f  position()                                    const;
+    JBTypes::vec2f  position()                                    const;
     virtual TypeOfLabel     typeOfLabel()                             const = 0;
     virtual std::string     message()                                     const;
 
@@ -79,7 +79,7 @@ private:
     const float                                       _width;
     const float                                       _height;
     const std::vector<std::shared_ptr<const Label> >  _children;
-    const JumperBallTypes::vec2f                      _position;
+    const JBTypes::vec2f                      _position;
     const bool                                        _fixed;
     bool                                              _activated;
     const std::shared_ptr<LabelAnswer>                _action;

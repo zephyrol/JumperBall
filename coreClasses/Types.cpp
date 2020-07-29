@@ -6,27 +6,27 @@
 
 #include "Types.h"
 
-JumperBallTypes::vec3f JumperBallTypesMethods::directionAsVector (
-                                                JumperBallTypes::Direction dir){
+JBTypes::vec3f JBTypesMethods::directionAsVector (
+                                                JBTypes::Dir dir){
     
-    JumperBallTypes::vec3f dirVec3 {0.f,0.f,0.f};
+    JBTypes::vec3f dirVec3 {0.f,0.f,0.f};
     switch (dir) {
-        case JumperBallTypes::Direction::North:
+        case JBTypes::Dir::North:
             dirVec3.z = -1.f;
             break;
-        case JumperBallTypes::Direction::South:
+        case JBTypes::Dir::South:
             dirVec3.z = 1.f;
             break;
-        case JumperBallTypes::Direction::East:
+        case JBTypes::Dir::East:
             dirVec3.x = 1.f;
             break;
-        case JumperBallTypes::Direction::West:
+        case JBTypes::Dir::West:
             dirVec3.x = -1.f;
             break;
-        case JumperBallTypes::Direction::Up:
+        case JBTypes::Dir::Up:
             dirVec3.y = 1.f;
             break;
-        case JumperBallTypes::Direction::Down:
+        case JBTypes::Dir::Down:
             dirVec3.y = -1.f;
             break;
         default :
@@ -36,31 +36,31 @@ JumperBallTypes::vec3f JumperBallTypesMethods::directionAsVector (
     return dirVec3;
 }
 
-JumperBallTypes::Direction JumperBallTypesMethods::integerAsDirection  
+JBTypes::Dir JBTypesMethods::integerAsDirection  
                                                         (unsigned int number) 
 {
-    JumperBallTypes::Direction dir ; 
+    JBTypes::Dir dir ; 
     switch (number){
         case 0 : 
-            dir = JumperBallTypes::Direction::North;
+            dir = JBTypes::Dir::North;
             break;
         case 1 : 
-            dir = JumperBallTypes::Direction::South;
+            dir = JBTypes::Dir::South;
             break;
         case 2 : 
-            dir = JumperBallTypes::Direction::East;
+            dir = JBTypes::Dir::East;
             break;
         case 3 : 
-            dir = JumperBallTypes::Direction::West;
+            dir = JBTypes::Dir::West;
             break;
         case 4 : 
-            dir = JumperBallTypes::Direction::Up;
+            dir = JBTypes::Dir::Up;
             break;
         case 5 : 
-            dir = JumperBallTypes::Direction::Down;
+            dir = JBTypes::Dir::Down;
             break;
         default:
-            dir = JumperBallTypes::Direction::North;
+            dir = JBTypes::Dir::North;
             break;
     }
     
@@ -68,27 +68,27 @@ JumperBallTypes::Direction JumperBallTypesMethods::integerAsDirection
 }
 
 
-JumperBallTypes::timePointMs JumperBallTypesMethods::getTimePointMSNow() 
+JBTypes::timePointMs JBTypesMethods::getTimePointMSNow() 
                                                                     noexcept {
     return std::chrono::time_point_cast<std::chrono::milliseconds> 
                                     (std::chrono::system_clock::now());
 }
 
-float JumperBallTypesMethods::getTimeSecondsSinceTimePoint(
-                      const JumperBallTypes::timePointMs& timePoint) noexcept{
+float JBTypesMethods::getTimeSecondsSinceTimePoint(
+                      const JBTypes::timePointMs& timePoint) noexcept{
 
-    const JumperBallTypes::timePointMs timeNowMs
-                                              = JumperBallTypesMethods::
+    const JBTypes::timePointMs timeNowMs
+                                              = JBTypesMethods::
                                                             getTimePointMSNow();
-    const JumperBallTypes::durationMs timeNowSinceEpoch   
+    const JBTypes::durationMs timeNowSinceEpoch   
                                               = timeNowMs.time_since_epoch();
     
-    const JumperBallTypes::timePointMs timeActionMs           
+    const JBTypes::timePointMs timeActionMs           
                                               = timePoint; 
-    const JumperBallTypes::durationMs timeActionSinceEpoch    
+    const JBTypes::durationMs timeActionSinceEpoch    
                                               = timeActionMs.time_since_epoch();
     
-    const JumperBallTypes::durationMs difference 
+    const JBTypes::durationMs difference 
                                               = timeNowSinceEpoch - 
                                                           timeActionSinceEpoch;
     const std::chrono::duration<float> durationFloatDifference 
@@ -98,41 +98,41 @@ float JumperBallTypesMethods::getTimeSecondsSinceTimePoint(
     return fDifference;
 }
 
-    float JumperBallTypesMethods::getFloatFromDurationMS(
-                                    const JumperBallTypes::durationMs& dms )
+    float JBTypesMethods::getFloatFromDurationMS(
+                                    const JBTypes::durationMs& dms )
     {
         const std::chrono::duration<float> durationFloatDifference = dms;
         const float fDifference = durationFloatDifference.count();
         return fDifference;
     }
 
-JumperBallTypes::timePointMs JumperBallTypesMethods::getTimePointMsFromTimePoint
+JBTypes::timePointMs JBTypesMethods::getTimePointMsFromTimePoint
 (const std::chrono::time_point<std::chrono::system_clock> & timePoint) noexcept{
 
     return std::chrono::time_point_cast<std::chrono::milliseconds> (timePoint);
 }
 
-unsigned int JumperBallTypesMethods::directionAsInteger(
-                                              JumperBallTypes::Direction dir) {
+unsigned int JBTypesMethods::directionAsInteger(
+                                              JBTypes::Dir dir) {
     
     unsigned int number;
     switch (dir){
-        case JumperBallTypes::Direction::North : 
+        case JBTypes::Dir::North : 
             number = 0;
             break;
-        case JumperBallTypes::Direction::South : 
+        case JBTypes::Dir::South : 
             number = 1;
             break;
-        case JumperBallTypes::Direction::East : 
+        case JBTypes::Dir::East : 
             number = 2;
             break;
-        case JumperBallTypes::Direction::West : 
+        case JBTypes::Dir::West : 
             number = 3;
             break;
-        case JumperBallTypes::Direction::Up: 
+        case JBTypes::Dir::Up: 
             number = 4;
             break;
-        case JumperBallTypes::Direction::Down: 
+        case JBTypes::Dir::Down: 
             number = 5;
             break;
         default:
@@ -142,7 +142,7 @@ unsigned int JumperBallTypesMethods::directionAsInteger(
     return number;
 }
 
-void JumperBallTypesMethods::displayInstallError() {
+void JBTypesMethods::displayInstallError() {
         #ifdef _MSC_VER
         std::cerr << "Did you forget to install the files ?" << std::endl
          << "On Visual Studio, build the INSTALL solution" << std::endl;

@@ -13,7 +13,7 @@
 #include "MessageLabel.h"
 
 MessageLabel::MessageLabel(float width,float height,
-    const JumperBallTypes::vec2f& position,
+    const JBTypes::vec2f& position,
     const std::string& message,
     const std::shared_ptr<LabelAnswer> action,
     bool activated):

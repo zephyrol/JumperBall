@@ -37,7 +37,7 @@ namespace MeshGenerator {
     std::vector<MeshComponent>  genComponents(
                                     const std::shared_ptr<const Object>& obj,
                                     const glm::vec3& position,
-                                    const JumperBallTypes::Direction& dir);
+                                    const JBTypes::Dir& dir);
 
 
     std::vector<MeshComponent>  sortComponents(std::vector<MeshComponent>&

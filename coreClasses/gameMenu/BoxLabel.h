@@ -19,7 +19,7 @@
 class BoxLabel: public Label
 {
 public:
-    BoxLabel(float width,float height,const JumperBallTypes::vec2f& position);
+    BoxLabel(float width,float height,const JBTypes::vec2f& position);
     virtual Label::TypeOfLabel typeOfLabel() const override;
 
 private:

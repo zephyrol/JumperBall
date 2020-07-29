@@ -60,7 +60,7 @@ private:
     bool                          _willComeBack;
     bool                          _isComingBack;
     float                         _cameraAboveWay;
-    JumperBallTypes::timePointMs  _timePointComeBack;
+    JBTypes::timePointMs  _timePointComeBack;
 
 };
 #endif /* CAMERA_H */

@@ -23,22 +23,22 @@ public:
 
     bool                          stillExists()                  const override;
 
-    void                          setFallDirection (JumperBallTypes:: Direction 
+    void                          setFallDirection (JBTypes:: Direction 
                                                              ballDir);
 
     virtual void                  interaction(
-                                    const JumperBallTypes::Direction& 
+                                    const JBTypes::Dir& 
                                             ballDir,
-                                    const JumperBallTypes::timePointMs&
+                                    const JBTypes::timePointMs&
                                             currentTime,
-                                    const JumperBallTypes::vec3f& posBall,
+                                    const JBTypes::vec3f& posBall,
                                     const std::array<unsigned int,3>& posBlock)
                                                                        override;
 
     virtual void                  detectionEvent(
-                                    const JumperBallTypes::Direction& 
+                                    const JBTypes::Dir& 
                                             ballDir,
-                                    const JumperBallTypes::timePointMs&
+                                    const JBTypes::timePointMs&
                                             currentTime)               override;
     
     virtual const std::array<float,9>&       
@@ -47,9 +47,9 @@ public:
 private:
     bool                          _stillThere;
     bool                          _isGoingToBreak;
-    JumperBallTypes::timePointMs  _collisionTime;
-    JumperBallTypes::timePointMs  _timeUpdate;
-    JumperBallTypes::Direction    _fallDirection;
+    JBTypes::timePointMs  _collisionTime;
+    JBTypes::timePointMs  _timeUpdate;
+    JBTypes::Dir    _fallDirection;
 };
 
 #endif /* BRITTLEBLOCK_H */

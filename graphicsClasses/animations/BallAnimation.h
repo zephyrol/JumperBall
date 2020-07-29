@@ -45,8 +45,8 @@ private:
     glm::mat4                     _rotation;
     glm::mat4                     _translation;
 
-    JumperBallTypes::timePointMs  _referenceTimePointAction;
-    JumperBallTypes::timePointMs  _referenceTimePointStateOfLife;
+    JBTypes::timePointMs  _referenceTimePointAction;
+    JBTypes::timePointMs  _referenceTimePointStateOfLife;
 
     Ball::State                   _referenceState;
     Ball::StateOfLife             _referenceStateOfLife;

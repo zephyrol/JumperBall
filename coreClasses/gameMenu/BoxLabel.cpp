@@ -14,7 +14,7 @@
 #include "BoxLabel.h"
 
 BoxLabel::BoxLabel(float width, float height,
-    const JumperBallTypes::vec2f& position):
+    const JBTypes::vec2f& position):
     Label(width,height,position)
 { }
 

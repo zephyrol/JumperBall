@@ -30,13 +30,13 @@ bool SharpBlock::burstBall() const {
 
 
 void SharpBlock::interaction(
-        const JumperBallTypes::Direction&,
-        const JumperBallTypes::timePointMs&,
-        const JumperBallTypes::vec3f& positions,
+        const JBTypes::Dir&,
+        const JBTypes::timePointMs&,
+        const JBTypes::vec3f& positions,
         const std::array<unsigned int,3>& posBlock) {
 
     auto isInSharpZone = [](
-    const JumperBallTypes::vec3f& position,
+    const JBTypes::vec3f& position,
             float x_min, float x_max, 
             float y_min, float y_max,
             float z_min, float z_max ){
@@ -62,11 +62,11 @@ void SharpBlock::interaction(
             float posBlockfZMin = posBlockfZ;
             float posBlockfZMax = posBlockfZ+1;
             
-            JumperBallTypes::Direction dir = 
-                    JumperBallTypesMethods::integerAsDirection(
+            JBTypes::Dir dir = 
+                    JBTypesMethods::integerAsDirection(
                         static_cast<unsigned int>(i));
-            JumperBallTypes::vec3f dirVec = 
-                    JumperBallTypesMethods::directionAsVector(dir);
+            JBTypes::vec3f dirVec = 
+                    JBTypesMethods::directionAsVector(dir);
             
             if ( dirVec.x > EPSILON_F || dirVec.x < -EPSILON_F) {
               posBlockfYMin +=  offsetCenter;

@@ -116,10 +116,10 @@ void Page::update(bool isPressed, float screenPosY) {
     }
 
     constexpr float cancelingThresholdDuration = 1.f;
-    const auto now = JumperBallTypesMethods::getTimePointMSNow();
+    const auto now = JBTypesMethods::getTimePointMSNow();
 
     //We reinit the keyframes if the page are not updated for 1 seconde
-    if (_countingUpdates > 0 && JumperBallTypesMethods::getFloatFromDurationMS(
+    if (_countingUpdates > 0 && JBTypesMethods::getFloatFromDurationMS(
             now - _lastUpdate ) > cancelingThresholdDuration) {
         _countingUpdates = 0;
         _isPressed = false;
@@ -138,7 +138,7 @@ void Page::update(bool isPressed, float screenPosY) {
     if (_isPressed) {
         constexpr float thresholdDeltaT = 0.05f; //50 ms
         const bool thresholdIsCrossed =
-                (JumperBallTypesMethods::getFloatFromDurationMS(
+                (JBTypesMethods::getFloatFromDurationMS(
                      now - _lastSwipeUpdates.at(0).first ) > thresholdDeltaT);
         if (_countingUpdates < 2 ) {
             if ( _countingUpdates == 0 || thresholdIsCrossed ) {
@@ -157,7 +157,7 @@ void Page::update(bool isPressed, float screenPosY) {
     //Release cases
     if (!isPressed && _isPressed) {
         if (_countingUpdates == 2 ) {
-            float deltaT = JumperBallTypesMethods::getFloatFromDurationMS(
+            float deltaT = JBTypesMethods::getFloatFromDurationMS(
                 _lastSwipeUpdates.at(1).first -_lastSwipeUpdates.at(0).first );
 
             // the velocity is the position derivative (pourcentagePage / ms)
@@ -169,7 +169,7 @@ void Page::update(bool isPressed, float screenPosY) {
     }
     if (!_isPressed) {
         if (_countingUpdates == 2) {
-            const float t = JumperBallTypesMethods::getFloatFromDurationMS(
+            const float t = JBTypesMethods::getFloatFromDurationMS(
                         now - _lastSwipeUpdates.at(1).first);
             float deceleration = decelerationCoefficient * powf(t,2.f)/2.f;
 

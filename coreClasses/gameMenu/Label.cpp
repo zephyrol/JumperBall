@@ -17,7 +17,7 @@
 #include <cctype>
 #include "Label.h"
 
-Label::Label(float width, float height, const JumperBallTypes::vec2f& position,
+Label::Label(float width, float height, const JBTypes::vec2f& position,
              bool activated,
              const std::shared_ptr<LabelAnswer> action,
              bool fixed):
@@ -43,7 +43,7 @@ const std::vector<std::shared_ptr<const Label> >& Label::children() const {
     return _children;
 }
 
-JumperBallTypes::vec2f Label::position() const {
+JBTypes::vec2f Label::position() const {
     return _position;
 }
 

@@ -232,7 +232,7 @@ void Rendering::bindCamera(const ShaderProgram& sp) {
                     glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())
                     );
 
-  const JumperBallTypes::vec3f& positionBall = _ball.get3DPosition();
+  const JBTypes::vec3f& positionBall = _ball.get3DPosition();
 
   _uniformVec3["positionBall"]    = glm::vec3( positionBall.x,
                                                positionBall.y,
