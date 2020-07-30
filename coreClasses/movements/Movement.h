@@ -22,20 +22,25 @@ public:
     Movement(Movement&& movement) = delete;
     Movement& operator = (Movement&& movement) = delete;
     
-    virtual ~Movement() = 0;
+    virtual ~Movement() = default;
     
-    const std::function<T(JBTypes::Dir)> _fct;
-    T evaluate(const std::array<JBTypes::Dir,N>& inputs);
+    T evaluate(const std::array<JBTypes::Dir,N>& inputs) const;
+    
+    
+private:
+    
+    const std::function<T(const std::array<JBTypes::Dir,N>)> _fct;
+    //std::map<std::array<JBTypes::Dir,N>, T> _sentValues;
 };
 
 template<typename T, size_t N>
 Movement<T,N>::Movement(const std::function<T
     (const std::array<JBTypes::Dir,N>)>&& fct):
 _fct(fct)
-{ }
+{}
 
 template<typename T, size_t N>
-T Movement<T,N>::evaluate(const std::array<JBTypes::Dir,N>& inputs) {
+T Movement<T,N>::evaluate(const std::array<JBTypes::Dir,N>& inputs) const {
     return _fct(inputs);
 }
 #endif /* Movement_h */

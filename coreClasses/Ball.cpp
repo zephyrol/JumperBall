@@ -41,100 +41,7 @@ Ball::Ball(Map& map):
 
 void Ball::turnLeft() noexcept {
 
-    switch (_currentSide) {
-        case JBTypes::Dir::North:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North: break;
-                case JBTypes::Dir::South: break;
-                case JBTypes::Dir::East: 
-                    _lookTowards =  JBTypes::Dir::Down; break;
-                case JBTypes::Dir::West:
-                    _lookTowards =  JBTypes::Dir::Up; break;
-                case JBTypes::Dir::Up:
-                    _lookTowards =  JBTypes::Dir::East; break;
-                case JBTypes::Dir::Down:
-                    _lookTowards =  JBTypes::Dir::West; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::South:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North: break;
-                case JBTypes::Dir::South: break;
-                case JBTypes::Dir::East: 
-                    _lookTowards =  JBTypes::Dir::Up; break;
-                case JBTypes::Dir::West:
-                    _lookTowards =  JBTypes::Dir::Down; break;
-                case JBTypes::Dir::Up:
-                    _lookTowards =  JBTypes::Dir::West; break;
-                case JBTypes::Dir::Down:
-                    _lookTowards =  JBTypes::Dir::East; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::East:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    _lookTowards =  JBTypes::Dir::Up; break;
-                case JBTypes::Dir::South:
-                    _lookTowards =  JBTypes::Dir::Down; break;
-                case JBTypes::Dir::East: break;
-                case JBTypes::Dir::West: break;
-                case JBTypes::Dir::Up:
-                    _lookTowards =  JBTypes::Dir::South; break;
-                case JBTypes::Dir::Down:
-                    _lookTowards =  JBTypes::Dir::North; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::West:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    _lookTowards =  JBTypes::Dir::Down; break;
-                case JBTypes::Dir::South:
-                    _lookTowards =  JBTypes::Dir::Up; break;
-                case JBTypes::Dir::East: break;
-                case JBTypes::Dir::West: break;
-                case JBTypes::Dir::Up:
-                    _lookTowards =  JBTypes::Dir::North; break;
-                case JBTypes::Dir::Down:
-                    _lookTowards =  JBTypes::Dir::South; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::Up:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    _lookTowards =  JBTypes::Dir::West; break;
-                case JBTypes::Dir::South:
-                    _lookTowards =  JBTypes::Dir::East; break;
-                case JBTypes::Dir::East:
-                    _lookTowards =  JBTypes::Dir::North; break;
-                case JBTypes::Dir::West:
-                    _lookTowards =  JBTypes::Dir::South; break;
-                case JBTypes::Dir::Up: break;
-                case JBTypes::Dir::Down: break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::Down:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    _lookTowards =  JBTypes::Dir::East; break;
-                case JBTypes::Dir::South:
-                    _lookTowards =  JBTypes::Dir::West; break;
-                case JBTypes::Dir::East:
-                    _lookTowards =  JBTypes::Dir::South; break;
-                case JBTypes::Dir::West:
-                    _lookTowards =  JBTypes::Dir::North; break;
-                case JBTypes::Dir::Up: break;
-                case JBTypes::Dir::Down: break;
-                default : break;
-            }
-            break;
-        default :
-            break;
-    }
+    _lookTowards = turnLeftMovement.evaluate({_currentSide,_lookTowards});
     _state = Ball::State::TurningLeft;
     setTimeActionNow();
 }
@@ -1194,3 +1101,6 @@ bool Ball::isOutOfTheMap() const {
     }
     else return false;
 }
+
+
+const TurnLeft Ball::turnLeftMovement;

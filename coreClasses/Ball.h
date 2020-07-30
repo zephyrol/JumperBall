@@ -14,8 +14,8 @@
 #ifndef BALL_H
 #define BALL_H
 #include "Types.h"
-#include "movements/Movement.h"
 #include "ClassicalMechanics.h"
+#include "movements/TurnLeft.h"
 
 class Ball {
 public:
@@ -147,7 +147,10 @@ private:
     void                          die()                                noexcept;
     ClassicalMechanics&           getMechanicsJumping()                noexcept;
     void                          isFallingIntersectionBlock()         noexcept;
-    void                          isGoingStraightAheadIntersectBlock() noexcept; 
+    void                          isGoingStraightAheadIntersectBlock() noexcept;
+    
+    static const TurnLeft turnLeftMovement;
+    
 
 };
 
