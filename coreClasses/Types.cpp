@@ -142,6 +142,48 @@ unsigned int JBTypesMethods::directionAsInteger(
     return number;
 }
 
+JBTypes::vec3f JBTypesMethods::cross (const JBTypes::vec3f& a,
+                                      const JBTypes::vec3f& b){
+    JBTypes::vec3f crossProduct;
+    crossProduct.x = a.y * b.z - a.z * b.y;
+    crossProduct.y = a.z * b.x - a.x * b.z;
+    crossProduct.z = a.x * b.y - a.y * b.x;
+    return crossProduct;
+}
+
+JBTypes::Dir JBTypesMethods::vectorAsDirection( const JBTypes::vec3f& vec) {
+    if( vec.x - 1.f < EPSILON_F && vec.x - 1.f > -EPSILON_F &&
+        vec.y < EPSILON_F && vec.y  > -EPSILON_F &&
+        vec.z < EPSILON_F && vec.z  > -EPSILON_F)
+        return JBTypes::Dir::East;
+    else if( vec.x + 1.f < EPSILON_F && vec.x + 1.f > -EPSILON_F &&
+            vec.y < EPSILON_F && vec.y  > -EPSILON_F &&
+            vec.z < EPSILON_F && vec.z  > -EPSILON_F)
+        return JBTypes::Dir::West;
+    else if( vec.y - 1.f < EPSILON_F && vec.y - 1.f > -EPSILON_F &&
+            vec.x < EPSILON_F && vec.x  > -EPSILON_F &&
+            vec.z < EPSILON_F && vec.z  > -EPSILON_F)
+        return JBTypes::Dir::Up;
+    else if( vec.y + 1.f < EPSILON_F && vec.y + 1.f > -EPSILON_F &&
+            vec.x < EPSILON_F && vec.x  > -EPSILON_F &&
+            vec.z < EPSILON_F && vec.z  > -EPSILON_F)
+        return JBTypes::Dir::Down;
+    else if( vec.z - 1.f < EPSILON_F && vec.z - 1.f > -EPSILON_F &&
+            vec.x < EPSILON_F && vec.x  > -EPSILON_F &&
+            vec.y < EPSILON_F && vec.y  > -EPSILON_F)
+        return JBTypes::Dir::South;
+    else if( vec.z + 1.f < EPSILON_F && vec.z + 1.f > -EPSILON_F &&
+            vec.x < EPSILON_F && vec.x  > -EPSILON_F &&
+            vec.y < EPSILON_F && vec.y  > -EPSILON_F)
+        return JBTypes::Dir::North;
+    else {
+        std::cerr << "Warning : your vector does not mean any direction"
+        << std::endl << "x: " << vec.x << " y: " << vec.y << " z: " << vec.z
+        << " ... return North ... "<< std::endl;
+        return JBTypes::Dir::North;
+    }
+}
+
 void JBTypesMethods::displayInstallError() {
         #ifdef _MSC_VER
         std::cerr << "Did you forget to install the files ?" << std::endl

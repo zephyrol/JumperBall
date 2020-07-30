@@ -58,21 +58,23 @@ namespace JBTypes {
 
 
 namespace JBTypesMethods {
-    JBTypes::vec3f        directionAsVector 
-                                              (JBTypes::Dir dir);
-    JBTypes::Dir    integerAsDirection (unsigned int number);
-    unsigned int                  directionAsInteger (JBTypes::Dir
+    JBTypes::vec3f        directionAsVector (JBTypes::Dir dir);
+    JBTypes::Dir          integerAsDirection (unsigned int number);
+    JBTypes::Dir          vectorAsDirection( const JBTypes::vec3f& vec);
+    unsigned int          directionAsInteger (JBTypes::Dir
                                                       dir);
-    JBTypes::timePointMs  getTimePointMSNow ()                 noexcept;
-    float                         getTimeSecondsSinceTimePoint( 
-                                  const JBTypes::timePointMs& timePoint)
-                                                                       noexcept;
-    float                         getFloatFromDurationMS(
+    JBTypes::timePointMs  getTimePointMSNow ()                         noexcept;
+    float                 getTimeSecondsSinceTimePoint(
+                              const JBTypes::timePointMs& timePoint)   noexcept;
+    float                 getFloatFromDurationMS(
                                     const JBTypes::durationMs& dms );
     JBTypes::timePointMs  getTimePointMsFromTimePoint( const 
        std::chrono::time_point<std::chrono::system_clock> & timePoint) noexcept;
 
-    void                          displayInstallError();
+
+    JBTypes::vec3f        cross (const JBTypes::vec3f& a,
+                                 const JBTypes::vec3f& b);
+    void                  displayInstallError();
 
 }
 
