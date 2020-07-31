@@ -156,7 +156,7 @@ void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
 
     _spBrightPassFilter.bindUniformTexture("frameTexture", 0,
                                            referenceFBO.getRenderTexture());
-    _spBrightPassFilter.bindUniform ("threshold",  5.f);
+    _spBrightPassFilter.bindUniform ("threshold", bloomThreshold);
     _meshQuadFrame.render(_spBrightPassFilter);
 }
 
@@ -311,3 +311,4 @@ const std::string Rendering::fsshaderDepth = "shaders/depthFs.fs";
 const std::vector<float> Rendering::gaussComputedValues =
   Utility::genGaussBuffer(Rendering::blurPatchSize, Rendering::blurSigma);
 
+const float Rendering::bloomThreshold = 4.f;

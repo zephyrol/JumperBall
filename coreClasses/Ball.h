@@ -16,6 +16,8 @@
 #include "Types.h"
 #include "ClassicalMechanics.h"
 #include "movements/TurnLeft.h"
+#include "movements/TurnRight.h"
+#include "movements/TurnBack.h"
 
 class Ball {
 public:
@@ -150,6 +152,8 @@ private:
     void                          isGoingStraightAheadIntersectBlock() noexcept;
     
     static const TurnLeft turnLeftMovement;
+    static const TurnRight turnRightMovement;
+    static const TurnBack turnBackMovement;
     
 
 };

@@ -127,6 +127,7 @@ private:
     static const std::string        fsshaderBloom;
     static const std::string        vsshaderDepth;
     static const std::string        fsshaderDepth;
+    static const float              bloomThreshold;
 
     static const std::vector<float> gaussComputedValues;
 };

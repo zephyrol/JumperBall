@@ -47,7 +47,7 @@ void Ball::turnLeft() noexcept {
 }
 
 void Ball::turnRight() noexcept {
-    switch (_currentSide) {
+    /*switch (_currentSide) {
         case JBTypes::Dir::North:
             switch (_lookTowards) {
                 case JBTypes::Dir::North: break;
@@ -140,7 +140,8 @@ void Ball::turnRight() noexcept {
             break;
         default :
             break;
-    }
+    }*/
+    _lookTowards = turnRightMovement.evaluate({_currentSide,_lookTowards});
     _state = Ball::State::TurningRight;
     setTimeActionNow();
 }
@@ -1104,3 +1105,5 @@ bool Ball::isOutOfTheMap() const {
 
 
 const TurnLeft Ball::turnLeftMovement;
+const TurnRight Ball::turnRightMovement;
+const TurnBack Ball::turnBackMovement;
