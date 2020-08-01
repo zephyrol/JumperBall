@@ -12,21 +12,10 @@ Movement<std::array<int,12>,2>(
     
 [](const std::array<JBTypes::Dir,2>& sideAndLook) -> std::array<int,12> {
     
-    int inFrontOfX = 0;
-    int inFrontOfY = 0;
-    int inFrontOfZ = 0;
-    
-    int leftX = 0;
-    int leftY = 0;
-    int leftZ = 0;
-    
-    int rightX = 0;
-    int rightY = 0;
-    int rightZ = 0;
-    
-    int aboveX = 0;
-    int aboveY = 0;
-    int aboveZ = 0;
+    int inFrontOfX = 0, inFrontOfY = 0, inFrontOfZ = 0;
+    int leftX = 0, leftY = 0, leftZ = 0;
+    int rightX = 0, rightY = 0, rightZ = 0;
+    int aboveX = 0, aboveY = 0, aboveZ = 0;
     
     switch (sideAndLook.at(0)) {
         case JBTypes::Dir::North:
