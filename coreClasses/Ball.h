@@ -61,7 +61,6 @@ public:
 
     JBTypes::Dir                  currentSide()                           const;
     JBTypes::Dir                  lookTowards()                           const;
-    float                         distanceBehindBall()                    const;
     Ball::State                   state()                                 const;
     Ball::StateOfLife             stateOfLife()                           const;
 

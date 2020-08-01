@@ -41,7 +41,6 @@ Ball::Ball(Map& map):
 }
 
 void Ball::turnLeft() noexcept {
-
     _lookTowards = turnLeftMovement.evaluate({_currentSide,_lookTowards});
     _state = Ball::State::TurningLeft;
     setTimeActionNow();
@@ -191,7 +190,6 @@ void Ball::doAction(Ball::ActionRequest action) {
         default :
             break;
     }
-
 }
 
 void Ball::isGoingStraightAheadIntersectBlock()   noexcept {
@@ -277,22 +275,6 @@ void Ball::isFallingIntersectionBlock() noexcept {
     }
 }
 
-//TODO : deprecate it ! that's about graphic part
-float Ball::distanceBehindBall() const
-{
-    constexpr float offsetCenterBlock = 0.5f;
-    const JBTypes::vec3f lookVec =
-        JBTypesMethods::directionAsVector(_lookTowards);
-    
-    float distance = fmod(fabsf(_3DPosX * lookVec.x + _3DPosY * lookVec.y
-                           + _3DPosZ * lookVec.z - offsetCenterBlock), 1.f)
-                            + offsetCenterBlock;
-    //std::cout << "calcule : " << distance << std::endl;
-
-    if (_state== Ball::State::TurningLeft ||_state== Ball::State::TurningRight)
-        distance *= 10;
-    return distance;
-}
 
 std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x, 
                                                               float y, 
@@ -504,45 +486,42 @@ void Ball::movingUpdate() noexcept {
                                        - static_cast<float>(_currentBlockZ) )
                        / timeToGetNextBlock) + position3D.z;
         }
-        else if ( infoTarget.nextLocal == NextBlockLocal::Same ||
-                 infoTarget.nextLocal == NextBlockLocal::Above ) {
-            float distancePerStep;
+        else {
+            _3DPosX     = position3D.x;
+            _3DPosY     = position3D.y;
+            _3DPosZ     = position3D.z;
             
-            if ( infoTarget.nextLocal == NextBlockLocal::Same)
-                distancePerStep = 0.5f + ClassicalMechanics::radiusBall;
-            else
-                distancePerStep = 0.5f - ClassicalMechanics::radiusBall;
-            
-            float timeStep1 = sSinceAction;
-            if (timeStep1 > timeToGetNextBlock/2.f)
-                timeStep1 = timeToGetNextBlock/2.f;
-            
-            float timeStep2 = sSinceAction - timeToGetNextBlock/2.f;
-            if (timeStep2 < 0)
-                timeStep2 = 0;
-            
-            _3DPosX = position3D.x;
-            _3DPosY = position3D.y;
-            _3DPosZ = position3D.z;
-            
-            const JBTypes::vec3f lookVec =
-            JBTypesMethods::directionAsVector(_lookTowards);
-            const JBTypes::vec3f nextLookVec =
-            JBTypesMethods::directionAsVector(infoTarget.nextLook);
-            
-            const float distStep1 = distancePerStep * timeStep1 /
+            if ( infoTarget.nextLocal == NextBlockLocal::Same ||
+                infoTarget.nextLocal == NextBlockLocal::Above ) {
+                float distancePerStep;
+                
+                if ( infoTarget.nextLocal == NextBlockLocal::Same)
+                    distancePerStep = 0.5f + ClassicalMechanics::radiusBall;
+                else
+                    distancePerStep = 0.5f - ClassicalMechanics::radiusBall;
+                
+                float timeStep1 = sSinceAction;
+                if (timeStep1 > timeToGetNextBlock/2.f)
+                    timeStep1 = timeToGetNextBlock/2.f;
+                
+                float timeStep2 = sSinceAction - timeToGetNextBlock/2.f;
+                if (timeStep2 < 0)
+                    timeStep2 = 0;
+
+                const JBTypes::vec3f lookVec =
+                JBTypesMethods::directionAsVector(_lookTowards);
+                const JBTypes::vec3f nextLookVec =
+                JBTypesMethods::directionAsVector(infoTarget.nextLook);
+                
+                const float distStep1 = distancePerStep * timeStep1 /
                 (timeToGetNextBlock/2.f);
-            const float distStep2 = distancePerStep * timeStep2 /
+                const float distStep2 = distancePerStep * timeStep2 /
                 (timeToGetNextBlock/2.f);
-            
-            _3DPosX += lookVec.x * distStep1 + nextLookVec.x * distStep2;
-            _3DPosY += lookVec.y * distStep1 + nextLookVec.y * distStep2;
-            _3DPosZ += lookVec.z * distStep1 + nextLookVec.z * distStep2;
-            
-        } else {
-            _3DPosX = position3D.x;
-            _3DPosY = position3D.y;
-            _3DPosZ = position3D.z;
+                
+                _3DPosX += lookVec.x * distStep1 + nextLookVec.x * distStep2;
+                _3DPosY += lookVec.y * distStep1 + nextLookVec.y * distStep2;
+                _3DPosZ += lookVec.z * distStep1 + nextLookVec.z * distStep2;
+            }
         }
     }
 }
@@ -600,7 +579,6 @@ void Ball::die() noexcept{
 
 bool Ball::isOutOfTheMap() const {
     constexpr float thresholdOut = 5.f;
-    
     if (_3DPosX < -thresholdOut ||
         _3DPosX > (static_cast<float>(_map.boundingBoxXMax()) + thresholdOut) ||
         _3DPosY < -thresholdOut ||

@@ -245,7 +245,7 @@ void Rendering::bindCamera(const ShaderProgram& sp) {
                                   );
 
   _uniformVec3["positionCamera"]  = _camera.pos();
-  _uniformFloat["distanceBehind"] = _ball.distanceBehindBall();
+  _uniformFloat["distanceBehind"] = Camera::distanceBehindBall(_ball);
   sp.bindUniform ("VP",             _uniformMatrix4.at("VP"));
   sp.bindUniform ("VPStar",         _uniformMatrix4.at("VPStar"));
   sp.bindUniform ("positionBall",   _uniformVec3.at("positionBall"));
