@@ -18,6 +18,7 @@
 #include "movements/TurnLeft.h"
 #include "movements/TurnRight.h"
 #include "movements/TurnBack.h"
+#include "movements/NextBlock.h"
 
 class Ball {
 public:
@@ -154,6 +155,7 @@ private:
     static const TurnLeft turnLeftMovement;
     static const TurnRight turnRightMovement;
     static const TurnBack turnBackMovement;
+    static const NextBlock nextBlockGetter;
     
 
 };

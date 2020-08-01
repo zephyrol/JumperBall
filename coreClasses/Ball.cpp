@@ -47,100 +47,6 @@ void Ball::turnLeft() noexcept {
 }
 
 void Ball::turnRight() noexcept {
-    /*switch (_currentSide) {
-        case JBTypes::Dir::North:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North: break;
-                case JBTypes::Dir::South: break;
-                case JBTypes::Dir::East: 
-                    _lookTowards =  JBTypes::Dir::Up; break;
-                case JBTypes::Dir::West:
-                    _lookTowards =  JBTypes::Dir::Down; break;
-                case JBTypes::Dir::Up:
-                    _lookTowards =  JBTypes::Dir::West; break;
-                case JBTypes::Dir::Down:
-                    _lookTowards =  JBTypes::Dir::East; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::South:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North: break;
-                case JBTypes::Dir::South: break;
-                case JBTypes::Dir::East: 
-                    _lookTowards =  JBTypes::Dir::Down; break;
-                case JBTypes::Dir::West:
-                    _lookTowards =  JBTypes::Dir::Up; break;
-                case JBTypes::Dir::Up:
-                    _lookTowards =  JBTypes::Dir::East; break;
-                case JBTypes::Dir::Down:
-                    _lookTowards =  JBTypes::Dir::West; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::East:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    _lookTowards =  JBTypes::Dir::Down; break;
-                case JBTypes::Dir::South:
-                    _lookTowards =  JBTypes::Dir::Up; break;
-                case JBTypes::Dir::East: break;
-                case JBTypes::Dir::West: break;
-                case JBTypes::Dir::Up:
-                    _lookTowards =  JBTypes::Dir::North; break;
-                case JBTypes::Dir::Down:
-                    _lookTowards =  JBTypes::Dir::South; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::West:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    _lookTowards =  JBTypes::Dir::Up; break;
-                case JBTypes::Dir::South:
-                    _lookTowards =  JBTypes::Dir::Down; break;
-                case JBTypes::Dir::East: break;
-                case JBTypes::Dir::West: break;
-                case JBTypes::Dir::Up:
-                    _lookTowards =  JBTypes::Dir::South; break;
-                case JBTypes::Dir::Down:
-                    _lookTowards =  JBTypes::Dir::North; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::Up:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    _lookTowards =  JBTypes::Dir::East; break;
-                case JBTypes::Dir::South:
-                    _lookTowards =  JBTypes::Dir::West; break;
-                case JBTypes::Dir::East:
-                    _lookTowards =  JBTypes::Dir::South; break;
-                case JBTypes::Dir::West:
-                    _lookTowards =  JBTypes::Dir::North; break;
-                case JBTypes::Dir::Up: break;
-                case JBTypes::Dir::Down: break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::Down:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    _lookTowards =  JBTypes::Dir::West; break;
-                case JBTypes::Dir::South:
-                    _lookTowards =  JBTypes::Dir::East; break;
-                case JBTypes::Dir::East:
-                    _lookTowards =  JBTypes::Dir::North; break;
-                case JBTypes::Dir::West:
-                    _lookTowards =  JBTypes::Dir::South; break;
-                case JBTypes::Dir::Up: break;
-                case JBTypes::Dir::Down: break;
-                default : break;
-            }
-            break;
-        default :
-            break;
-    }*/
     _lookTowards = turnRightMovement.evaluate({_currentSide,_lookTowards});
     _state = Ball::State::TurningRight;
     setTimeActionNow();
@@ -154,115 +60,25 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
 
     struct nextBlockInformation nextBlock;
 
-    int inFrontOfX = _currentBlockX;
-    int inFrontOfY = _currentBlockY;
-    int inFrontOfZ = _currentBlockZ;
+    const std::array<int,12> offsetsNextBlocks = nextBlockGetter.evaluate
+        ({_currentSide,_lookTowards});
     
-    int leftX = _currentBlockX;
-    int leftY = _currentBlockY;
-    int leftZ = _currentBlockZ;
+    int inFrontOfX = _currentBlockX + offsetsNextBlocks.at(0);
+    int inFrontOfY = _currentBlockY + offsetsNextBlocks.at(1);
+    int inFrontOfZ = _currentBlockZ + offsetsNextBlocks.at(2);
     
-    int rightX = _currentBlockX;
-    int rightY = _currentBlockY;
-    int rightZ = _currentBlockZ;
+    int leftX = _currentBlockX + offsetsNextBlocks.at(3);
+    int leftY = _currentBlockY + offsetsNextBlocks.at(4);
+    int leftZ = _currentBlockZ + offsetsNextBlocks.at(5);
     
-    int aboveX = _currentBlockX;
-    int aboveY = _currentBlockY;
-    int aboveZ = _currentBlockZ;
+    int rightX = _currentBlockX + offsetsNextBlocks.at(6);
+    int rightY = _currentBlockY + offsetsNextBlocks.at(7);
+    int rightZ = _currentBlockZ + offsetsNextBlocks.at(8);
     
-    switch (_currentSide) {
-        case JBTypes::Dir::North:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North: break;
-                case JBTypes::Dir::South: break;
-                case JBTypes::Dir::East: 
-                    ++inFrontOfX; ++aboveX; --aboveZ; --leftY; ++rightY; break;
-                case JBTypes::Dir::West:
-                    --inFrontOfX; --aboveX; --aboveZ; ++leftY; --rightY; break;
-                case JBTypes::Dir::Up:
-                    ++inFrontOfY; ++aboveY; --aboveZ; ++leftX; --rightX; break;
-                case JBTypes::Dir::Down:
-                    --inFrontOfY; --aboveY; --aboveZ; --leftX; ++rightX; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::South:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North: break;
-                case JBTypes::Dir::South: break;
-                case JBTypes::Dir::East: 
-                    ++inFrontOfX; ++aboveX; ++aboveZ; ++leftY; --rightY; break;
-                case JBTypes::Dir::West:
-                    --inFrontOfX; --aboveX; ++aboveZ; --leftY; ++rightY; break;
-                case JBTypes::Dir::Up:
-                    ++inFrontOfY; ++aboveY; ++aboveZ; --leftX; ++rightX; break;
-                case JBTypes::Dir::Down:
-                    --inFrontOfY; --aboveY; ++aboveZ; ++leftX; --rightX; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::East:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    --inFrontOfZ; --aboveZ; ++aboveX; ++leftY; --rightY; break;
-                case JBTypes::Dir::South:
-                    ++inFrontOfZ; ++aboveZ; ++aboveX; --leftY; ++rightY; break;
-                case JBTypes::Dir::East: break;
-                case JBTypes::Dir::West: break;
-                case JBTypes::Dir::Up:
-                    ++inFrontOfY; ++aboveY; ++aboveX; --leftZ; ++rightZ; break;
-                case JBTypes::Dir::Down:
-                    --inFrontOfY; --aboveY; ++aboveX; ++leftZ; --rightZ; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::West:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    --inFrontOfZ; --aboveZ; --aboveX; --leftY; ++rightY; break;
-                case JBTypes::Dir::South:
-                    ++inFrontOfZ; ++aboveZ; --aboveX; ++leftY; --rightY; break;
-                case JBTypes::Dir::East: break;
-                case JBTypes::Dir::West: break;
-                case JBTypes::Dir::Up:
-                    ++inFrontOfY; ++aboveY; --aboveX; ++leftZ; --rightZ; break;
-                case JBTypes::Dir::Down:
-                    --inFrontOfY; --aboveY; --aboveX; --leftZ; ++rightZ; break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::Up:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    --inFrontOfZ; --aboveZ; ++aboveY; --leftX; ++rightX; break;
-                case JBTypes::Dir::South:
-                    ++inFrontOfZ; ++aboveZ; ++aboveY; ++leftX; --rightX; break;
-                case JBTypes::Dir::East:
-                    ++inFrontOfX; ++aboveX; ++aboveY; --leftZ; ++rightZ; break;
-                case JBTypes::Dir::West:
-                    --inFrontOfX; --aboveX; ++aboveY; ++leftZ; --rightZ; break;
-                case JBTypes::Dir::Up: break;
-                case JBTypes::Dir::Down: break;
-                default : break;
-            }
-            break;
-        case JBTypes::Dir::Down:
-            switch (_lookTowards) {
-                case JBTypes::Dir::North:
-                    --inFrontOfZ; --aboveZ; --aboveY; ++leftX; --rightX; break;
-                case JBTypes::Dir::South:
-                    ++inFrontOfZ; ++aboveZ; --aboveY; --leftX; ++rightX; break;
-                case JBTypes::Dir::East:
-                    ++inFrontOfX; ++aboveX; --aboveY; ++leftZ; --rightZ; break;
-                case JBTypes::Dir::West:
-                    --inFrontOfX; --aboveX; --aboveY; --leftZ; ++rightZ; break;
-                case JBTypes::Dir::Up: break;
-                case JBTypes::Dir::Down: break;
-                default : break;
-            }
-        default :
-            break;
-    }
+    int aboveX = _currentBlockX + offsetsNextBlocks.at(9);
+    int aboveY = _currentBlockY + offsetsNextBlocks.at(10);
+    int aboveZ = _currentBlockZ + offsetsNextBlocks.at(11);
+    
     auto blockAbove = _map.getBlock(aboveX,aboveY,aboveZ);
     auto blockInFrontOf = _map.getBlock(inFrontOfX,inFrontOfY,inFrontOfZ);
     auto blockLeft = _map.getBlock(leftX,leftY,leftZ);
@@ -278,43 +94,18 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
 
         nextBlock.nextLook = _currentSide;
         
-        switch (lookTowardsBeforeMovement) {
-            case JBTypes::Dir::North:
-                nextBlock.nextSide=JBTypes::Dir::South;
-                break;
-            case JBTypes::Dir::South:
-                nextBlock.nextSide=JBTypes::Dir::North;
-                break;
-            case JBTypes::Dir::East:
-                nextBlock.nextSide=JBTypes::Dir::West;
-                break;
-            case JBTypes::Dir::West:
-                nextBlock.nextSide=JBTypes::Dir::East;
-                break;
-            case JBTypes::Dir::Up:
-                nextBlock.nextSide=JBTypes::Dir::Down;
-                break;
-            case JBTypes::Dir::Down:
-                nextBlock.nextSide=JBTypes::Dir::Up;
-                break;
-            default :
-                break;
-        }
-
-    } 
+        nextBlock.nextSide= turnBackMovement.evaluate({lookTowardsBeforeMovement});
+    }
     else if (blockInFrontOf && blockInFrontOf->stillExists()) {
-        
         nextBlock.poxX      = inFrontOfX;
         nextBlock.poxY      = inFrontOfY;
         nextBlock.poxZ      = inFrontOfZ;
         nextBlock.nextLocal = NextBlockLocal::InFrontOf;
         nextBlock.nextLook  = _lookTowards;
         nextBlock.nextSide  = _currentSide;
-        
-    } 
+    }
     else if ((!blockLeft || !blockLeft ->stillExists())
             && (!blockRight || !blockRight ->stillExists())) {
-        
         nextBlock.poxX      = _currentBlockX;
         nextBlock.poxY      = _currentBlockY;
         nextBlock.poxZ      = _currentBlockZ;
@@ -324,31 +115,9 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
 
         nextBlock.nextSide  = _lookTowards;
         
-        switch (sideBeforeMovement) {
-            case JBTypes::Dir::North:
-                nextBlock.nextLook = JBTypes::Dir::South;
-                break;
-            case JBTypes::Dir::South:
-                nextBlock.nextLook = JBTypes::Dir::North;
-                break;
-            case JBTypes::Dir::East:
-                nextBlock.nextLook = JBTypes::Dir::West;
-                break;
-            case JBTypes::Dir::West:
-                nextBlock.nextLook = JBTypes::Dir::East;
-                break;
-            case JBTypes::Dir::Up:
-                nextBlock.nextLook = JBTypes::Dir::Down;
-                break;
-            case JBTypes::Dir::Down:
-                nextBlock.nextLook = JBTypes::Dir::Up;
-                break;
-            default :
-                break;
-        }
+        nextBlock.nextLook = turnBackMovement.evaluate({sideBeforeMovement});
     }
     else {
-
         nextBlock.nextLocal = NextBlockLocal::None;
         nextBlock.nextSide  = _currentSide;
         nextBlock.nextLook  = _lookTowards;
@@ -356,8 +125,6 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
         nextBlock.poxY      = _currentBlockY;
         nextBlock.poxZ      = _currentBlockZ;
     }
-            
-
     return nextBlock;
 }
 
@@ -435,48 +202,21 @@ void Ball::isGoingStraightAheadIntersectBlock()   noexcept {
 
     if ( _state == Ball::State::Jumping ) {
         
-        int aboveNearX =  _currentBlockX;
-        int aboveNearY =  _currentBlockY;
-        int aboveNearZ =  _currentBlockZ;
-        int aboveFarX =   _currentBlockX;
-        int aboveFarY =   _currentBlockY;
-        int aboveFarZ =   _currentBlockZ;
-        int aboveVeryFarX =   _currentBlockX;
-        int aboveVeryFarY =   _currentBlockY;
-        int aboveVeryFarZ =   _currentBlockZ;
+        const JBTypes::vec3f sideVec =
+            JBTypesMethods::directionAsVector(_currentSide);
+        const JBTypes::vec3f lookVec =
+            JBTypesMethods::directionAsVector(_lookTowards);
         
-        switch (_currentSide) {
-            case JBTypes::Dir::North:
-                --aboveNearZ; --aboveFarZ; --aboveVeryFarZ;   break;
-            case JBTypes::Dir::South:
-                ++aboveNearZ; ++aboveFarZ; ++aboveVeryFarZ;  break;
-            case JBTypes::Dir::East: 
-                ++aboveNearX; ++aboveFarX; ++aboveVeryFarX; break;
-            case JBTypes::Dir::West:
-                --aboveNearX; --aboveFarX; --aboveVeryFarX;   break;
-            case JBTypes::Dir::Up:
-                ++aboveNearY; ++aboveFarY; ++aboveVeryFarY;  break;
-            case JBTypes::Dir::Down:
-                --aboveNearY; --aboveFarY; --aboveVeryFarY;   break;
-            default : break;
-        }
-        
-        switch (_lookTowards) {
-            case JBTypes::Dir::North:
-                --aboveNearZ; aboveFarZ -= 2; aboveVeryFarZ -= 3;   break;
-            case JBTypes::Dir::South:
-                ++aboveNearZ; aboveFarZ += 2; aboveVeryFarZ += 3;  break;
-            case JBTypes::Dir::East: 
-                ++aboveNearX; aboveFarX += 2; aboveVeryFarX += 3;  break;
-            case JBTypes::Dir::West:
-                --aboveNearX; aboveFarX -= 2; aboveVeryFarX -= 3;  break;
-            case JBTypes::Dir::Up:
-                ++aboveNearY; aboveFarY += 2; aboveVeryFarY += 3;  break;
-            case JBTypes::Dir::Down:
-                --aboveNearY; aboveFarY -= 2; aboveVeryFarY -= 3;  break;
-            default : break;
-        }
-        
+        int aboveNearX =  _currentBlockX + sideVec.x + lookVec.x;
+        int aboveNearY =  _currentBlockY + sideVec.y + lookVec.y;
+        int aboveNearZ =  _currentBlockZ + sideVec.z + lookVec.z;
+        int aboveFarX =   _currentBlockX + sideVec.x + 2 * lookVec.x;
+        int aboveFarY =   _currentBlockY + sideVec.y + 2 * lookVec.y;
+        int aboveFarZ =   _currentBlockZ + sideVec.z + 2 * lookVec.z;
+        int aboveVeryFarX =   _currentBlockX + sideVec.x + 3 * lookVec.x;
+        int aboveVeryFarY =   _currentBlockY + sideVec.y + 3 * lookVec.y;
+        int aboveVeryFarZ =   _currentBlockZ + sideVec.z + 3 * lookVec.z;
+
         std::shared_ptr<const Block> blockNear  = 
                 _map.getBlock(aboveNearX,aboveNearY,aboveNearZ);
         
@@ -594,39 +334,19 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
     
     std::shared_ptr<const std::vector<int> > blockIntersected = nullptr;
     
+    const JBTypes::vec3f sideVec =
+    JBTypesMethods::directionAsVector(_currentSide);
+
     const float offsetBlockPosition = ClassicalMechanics::radiusBall;
-    float xIntersectionUnder = x;
-    float yIntersectionUnder = y;
-    float zIntersectionUnder = z;
-    int xInteger, yInteger, zInteger;
-    switch (_currentSide) {
-        case JBTypes::Dir::North:
-            zIntersectionUnder += offsetBlockPosition ;
-            break;
-        case JBTypes::Dir::South:
-            zIntersectionUnder -= offsetBlockPosition ;
-            break;
-        case JBTypes::Dir::East:
-            xIntersectionUnder -= offsetBlockPosition ;
-            break;
-        case JBTypes::Dir::West:
-            xIntersectionUnder += offsetBlockPosition ;
-            break;
-        case JBTypes::Dir::Up:
-            yIntersectionUnder -= offsetBlockPosition ;
-            break;
-        case JBTypes::Dir::Down:
-            yIntersectionUnder += offsetBlockPosition ;
-            break;
-        default :
-            break;
-    }
+    const float xIntersectionUnder = x - sideVec.x * offsetBlockPosition;
+    const float yIntersectionUnder = y - sideVec.y * offsetBlockPosition;
+    const float zIntersectionUnder = z - sideVec.z * offsetBlockPosition;
     
-    xInteger = static_cast<int> (xIntersectionUnder);
-    yInteger = static_cast<int> (yIntersectionUnder);
-    zInteger = static_cast<int> (zIntersectionUnder);
+    const int xInteger = static_cast<int> (xIntersectionUnder);
+    const int yInteger = static_cast<int> (yIntersectionUnder);
+    const int zInteger = static_cast<int> (zIntersectionUnder);
     
-    auto block = _map.getBlock(xInteger,yInteger,zInteger);
+    const auto block = _map.getBlock(xInteger,yInteger,zInteger);
     if (block && block->stillExists()) 
         blockIntersected = std::make_shared<const std::vector<int> > (
                 std::initializer_list<int> ({xInteger,yInteger,zInteger}));
@@ -644,61 +364,22 @@ JBTypes::timePointMs Ball::getTimeStateOfLifeMs() const noexcept {
                                                       (_timeStateOfLife);
 }
 
-JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) 
-                                                                           const
+JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const
 {
 
-    float x = static_cast<float> (_currentBlockX + 0.5f);
-    float y = static_cast<float> (_currentBlockY + 0.5f);
-    float z = static_cast<float> (_currentBlockZ + 0.5f);
-
     const float offsetRealPosition = 0.5f + ClassicalMechanics::radiusBall;
+    
+    const JBTypes::vec3f sideVec =
+        JBTypesMethods::directionAsVector(_currentSide);
+    const JBTypes::vec3f lookVec =
+        JBTypesMethods::directionAsVector(_lookTowards);
 
-    switch (_currentSide) {
-        case JBTypes::Dir::North:
-            z -= offsetRealPosition + p2D.y;
-            break;
-        case JBTypes::Dir::South:
-            z += offsetRealPosition + p2D.y;
-            break;
-        case JBTypes::Dir::East:
-            x += offsetRealPosition + p2D.y;
-            break;
-        case JBTypes::Dir::West:
-            x -= offsetRealPosition + p2D.y;
-            break;
-        case JBTypes::Dir::Up:
-            y += offsetRealPosition + p2D.y;
-            break;
-        case JBTypes::Dir::Down:
-            y -= offsetRealPosition + p2D.y;
-            break;
-        default :
-            break;
-    }
-
-    switch (_lookTowards) {
-        case JBTypes::Dir::North:
-            z -=  p2D.x;
-            break;
-        case JBTypes::Dir::South:
-            z += p2D.x;
-            break;
-        case JBTypes::Dir::East:
-            x += p2D.x;
-            break;
-        case JBTypes::Dir::West:
-            x -= p2D.x;
-            break;
-        case JBTypes::Dir::Up:
-            y += p2D.x;
-            break;
-        case JBTypes::Dir::Down:
-            y -= p2D.x;
-            break;
-        default :
-            break;
-    }
+    const float x = static_cast<float> (_currentBlockX) + 0.5f +
+        sideVec.x * (offsetRealPosition + p2D.y) + lookVec.x * p2D.x;
+    const float y = static_cast<float> (_currentBlockY) + 0.5f +
+        sideVec.y * (offsetRealPosition + p2D.y) + lookVec.y * p2D.x;
+    const float z = static_cast<float> (_currentBlockZ) + 0.5f +
+        sideVec.z * (offsetRealPosition + p2D.y) + lookVec.z * p2D.x;
 
     return JBTypes::vec3f {x,y,z};
 }
@@ -1107,3 +788,4 @@ bool Ball::isOutOfTheMap() const {
 const TurnLeft Ball::turnLeftMovement;
 const TurnRight Ball::turnRightMovement;
 const TurnBack Ball::turnBackMovement;
+const NextBlock Ball::nextBlockGetter;
