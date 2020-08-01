@@ -54,23 +54,23 @@ public:
                                   };
 
     //-------CONST METHODS--------//
-    JBTypes::vec3f        get3DPosition()                const noexcept;
+    JBTypes::vec3f                get3DPosition()                const noexcept;
     float                         getRadius()                             const;
-    JBTypes::vec3f        lookTowardsAsVector()                   const;
-    JBTypes::vec3f        currentSideAsVector()                   const;
+    JBTypes::vec3f                lookTowardsAsVector()                   const;
+    JBTypes::vec3f                currentSideAsVector()                   const;
 
-    JBTypes::Dir    currentSide()                           const;
-    JBTypes::Dir    lookTowards()                           const;
+    JBTypes::Dir                  currentSide()                           const;
+    JBTypes::Dir                  lookTowards()                           const;
     float                         distanceBehindBall()                    const;
     Ball::State                   state()                                 const;
     Ball::StateOfLife             stateOfLife()                           const;
 
     float                         getTimeSecondsSinceAction()    const noexcept;
-    JBTypes::timePointMs  getTimeActionMs()              const noexcept;
+    JBTypes::timePointMs          getTimeActionMs()              const noexcept;
 
     float                         getTimeSecondsSinceStateOfLife()    
                                                                  const noexcept;
-    JBTypes::timePointMs  getTimeStateOfLifeMs()         const noexcept;
+    JBTypes::timePointMs          getTimeStateOfLifeMs()         const noexcept;
 
     struct nextBlockInformation   getNextBlockInfo()             const noexcept;
     const ClassicalMechanics&     getMechanicsJumping()          const noexcept;
@@ -82,10 +82,6 @@ public:
     void                          update()                             noexcept;
     void                          doAction ( ActionRequest action);
 
-
-    //--------STATIC METHODS-------//
-    static float                  getTimeNowSecondsFloat()             noexcept;
-    
 private:
     
     //--------ATTRIBUTES-----------//
@@ -97,8 +93,8 @@ private:
     float                         _3DPosY;
     float                         _3DPosZ;
 
-    JBTypes::Dir    _currentSide;
-    JBTypes::Dir    _lookTowards;
+    JBTypes::Dir                  _currentSide;
+    JBTypes::Dir                  _lookTowards;
     Ball::State                   _state;
     Ball::StateOfLife             _stateOfLife;
     Ball::JumpingType             _jumpingType;
@@ -127,12 +123,10 @@ private:
                                   intersectBlock(float x, float y, float z) 
                                                                           const;
 
-    float                         getTimeActionSecondsFloat()    const noexcept;
-
-    JBTypes::vec3f        P2DTo3D(
+    JBTypes::vec3f                P2DTo3D(
                                       ClassicalMechanics::physics2DVector p2D)
                                                                           const;
-    JBTypes::vec3f        get3DPosStayingBall()                   const;
+    JBTypes::vec3f                get3DPosStayingBall()                   const;
     bool                          isOutOfTheMap()                         const;
 
     //----------METHODS------------//
@@ -152,12 +146,10 @@ private:
     void                          isFallingIntersectionBlock()         noexcept;
     void                          isGoingStraightAheadIntersectBlock() noexcept;
     
-    static const TurnLeft turnLeftMovement;
-    static const TurnRight turnRightMovement;
-    static const TurnBack turnBackMovement;
-    static const NextBlock nextBlockGetter;
-    
-
+    static const TurnLeft         turnLeftMovement;
+    static const TurnRight        turnRightMovement;
+    static const TurnBack         turnBackMovement;
+    static const NextBlock        nextBlockGetter;
 };
 
 #endif /* BALL_H */

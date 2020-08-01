@@ -15,7 +15,8 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-            
+#include <math.h>
+
 Ball::Ball(Map& map): 
         _currentBlockX(map.beginX()),
         _currentBlockY(map.beginY()),
@@ -63,26 +64,26 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
     const std::array<int,12> offsetsNextBlocks = nextBlockGetter.evaluate
         ({_currentSide,_lookTowards});
     
-    int inFrontOfX = _currentBlockX + offsetsNextBlocks.at(0);
-    int inFrontOfY = _currentBlockY + offsetsNextBlocks.at(1);
-    int inFrontOfZ = _currentBlockZ + offsetsNextBlocks.at(2);
+    const int inFrontOfX = _currentBlockX + offsetsNextBlocks.at(0);
+    const int inFrontOfY = _currentBlockY + offsetsNextBlocks.at(1);
+    const int inFrontOfZ = _currentBlockZ + offsetsNextBlocks.at(2);
     
-    int leftX = _currentBlockX + offsetsNextBlocks.at(3);
-    int leftY = _currentBlockY + offsetsNextBlocks.at(4);
-    int leftZ = _currentBlockZ + offsetsNextBlocks.at(5);
+    const int leftX = _currentBlockX + offsetsNextBlocks.at(3);
+    const int leftY = _currentBlockY + offsetsNextBlocks.at(4);
+    const int leftZ = _currentBlockZ + offsetsNextBlocks.at(5);
     
-    int rightX = _currentBlockX + offsetsNextBlocks.at(6);
-    int rightY = _currentBlockY + offsetsNextBlocks.at(7);
-    int rightZ = _currentBlockZ + offsetsNextBlocks.at(8);
+    const int rightX = _currentBlockX + offsetsNextBlocks.at(6);
+    const int rightY = _currentBlockY + offsetsNextBlocks.at(7);
+    const int rightZ = _currentBlockZ + offsetsNextBlocks.at(8);
     
-    int aboveX = _currentBlockX + offsetsNextBlocks.at(9);
-    int aboveY = _currentBlockY + offsetsNextBlocks.at(10);
-    int aboveZ = _currentBlockZ + offsetsNextBlocks.at(11);
+    const int aboveX = _currentBlockX + offsetsNextBlocks.at(9);
+    const int aboveY = _currentBlockY + offsetsNextBlocks.at(10);
+    const int aboveZ = _currentBlockZ + offsetsNextBlocks.at(11);
     
-    auto blockAbove = _map.getBlock(aboveX,aboveY,aboveZ);
-    auto blockInFrontOf = _map.getBlock(inFrontOfX,inFrontOfY,inFrontOfZ);
-    auto blockLeft = _map.getBlock(leftX,leftY,leftZ);
-    auto blockRight = _map.getBlock(rightX,rightY,rightZ);
+    const auto blockAbove = _map.getBlock(aboveX,aboveY,aboveZ);
+    const auto blockInFrontOf = _map.getBlock(inFrontOfX,inFrontOfY,inFrontOfZ);
+    const auto blockLeft = _map.getBlock(leftX,leftY,leftZ);
+    const auto blockRight = _map.getBlock(rightX,rightY,rightZ);
 
     if (blockAbove && blockAbove->stillExists()) {
         nextBlock.poxX = aboveX;
@@ -90,10 +91,8 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
         nextBlock.poxZ = aboveZ;
         nextBlock.nextLocal = NextBlockLocal::Above;
 
-        JBTypes::Dir lookTowardsBeforeMovement = _lookTowards;
-
+        const JBTypes::Dir lookTowardsBeforeMovement = _lookTowards;
         nextBlock.nextLook = _currentSide;
-        
         nextBlock.nextSide= turnBackMovement.evaluate({lookTowardsBeforeMovement});
     }
     else if (blockInFrontOf && blockInFrontOf->stillExists()) {
@@ -111,10 +110,8 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
         nextBlock.poxZ      = _currentBlockZ;
         nextBlock.nextLocal = NextBlockLocal::Same;
 
-        JBTypes::Dir sideBeforeMovement = _currentSide;
-
+        const JBTypes::Dir sideBeforeMovement = _currentSide;
         nextBlock.nextSide  = _lookTowards;
-        
         nextBlock.nextLook = turnBackMovement.evaluate({sideBeforeMovement});
     }
     else {
@@ -158,8 +155,7 @@ void Ball::fall() noexcept {
 void Ball::move() noexcept {
     
     struct nextBlockInformation infos = getNextBlockInfo();
-    if (infos.nextLocal != NextBlockLocal::None)
-    {
+    if (infos.nextLocal != NextBlockLocal::None) {
         _state = Ball::State::Moving;
         setTimeActionNow();
     }
@@ -262,15 +258,11 @@ const ClassicalMechanics& Ball::getMechanicsFalling() const noexcept{
 }
 
 void Ball::isFallingIntersectionBlock() noexcept {
-
-
     if ( _state == Ball::State::Jumping  || _state == Ball::State::Falling) {
-        
         float fDifference = getTimeSecondsSinceAction();
 
         if ( _state == Ball::State::Falling || 
                 _mechanicsPatternJumping.getVelocity(fDifference).y < 0 ) {
-            
             auto positionBlockPtr = intersectBlock(_3DPosX,_3DPosY, _3DPosZ);
             if (positionBlockPtr) {
                 getMechanicsJumping().timesShock({});
@@ -286,43 +278,18 @@ void Ball::isFallingIntersectionBlock() noexcept {
     }
 }
 
-float Ball::distanceBehindBall() const 
+//TODO : deprecate it ! that's about graphic part
+float Ball::distanceBehindBall() const
 {
     constexpr float offsetCenterBlock = 0.5f;
-    float distance;
-    switch (_lookTowards) {
-        case JBTypes::Dir::North:
-            distance = _3DPosZ- (static_cast<float>(_currentBlockZ)
-                              + offsetCenterBlock);
-            break;
-        case JBTypes::Dir::South:
-            distance = _3DPosZ- (static_cast<float>(_currentBlockZ)
-                              + offsetCenterBlock);
-            break;
-        case JBTypes::Dir::East:
-            distance = _3DPosX- (static_cast<float>(_currentBlockX)
-                              + offsetCenterBlock);
-            break;
-        case JBTypes::Dir::West:
-            distance = _3DPosX- (static_cast<float>(_currentBlockX)
-                              + offsetCenterBlock);
-            break;
-        case JBTypes::Dir::Up:
-            distance = _3DPosY- (static_cast<float>(_currentBlockY)
-                              + offsetCenterBlock);
-            break;
-        case JBTypes::Dir::Down:
-            distance = _3DPosY- (static_cast<float>(_currentBlockY)
-                              + offsetCenterBlock);
-            break;
-        default :
-            distance = 0.f;
-            break;
-    }
+    const JBTypes::vec3f lookVec =
+        JBTypesMethods::directionAsVector(_lookTowards);
+    
+    float distance = fmod(fabsf(_3DPosX * lookVec.x + _3DPosY * lookVec.y
+                           + _3DPosZ * lookVec.z - offsetCenterBlock), 1.f)
+                            + offsetCenterBlock;
+    //std::cout << "calcule : " << distance << std::endl;
 
-    if (distance < 0 ) distance = -distance;
-
-    distance = offsetCenterBlock + distance ;
     if (_state== Ball::State::TurningLeft ||_state== Ball::State::TurningRight)
         distance *= 10;
     return distance;
@@ -396,64 +363,17 @@ JBTypes::Dir Ball::lookTowards() const {
     return _lookTowards;
 }
 
-float Ball::getTimeActionSecondsFloat() const noexcept {
-
-    const JBTypes::timePointMs timeActionMs        = getTimeActionMs(); 
-    
-    const JBTypes::durationMs timeActionSinceEpoch =
-                                                timeActionMs.time_since_epoch();
-    
-    const std::chrono::duration<float> durationFloat = timeActionSinceEpoch;
-    return durationFloat.count() / 1000.f ;
-}
-
-float Ball::getTimeNowSecondsFloat() noexcept {
-
-    const JBTypes::timePointMs timeNowMs = JBTypesMethods::
-                                                            getTimePointMSNow();
-    
-    const JBTypes::durationMs timeNowSinceEpoch  = 
-                                                  timeNowMs.time_since_epoch();
-    
-    const std::chrono::duration<float> durationFloat = timeNowSinceEpoch;
-    
-   
-    return durationFloat.count() / 1000.f ;
-}
-
 float Ball::getTimeSecondsSinceAction() const noexcept{
-
-    const JBTypes::timePointMs timeNowMs = 
-                                    JBTypesMethods::getTimePointMSNow();
-    const JBTypes::durationMs timeNowSinceEpoch = 
-                                                  timeNowMs.time_since_epoch();
-    const JBTypes::timePointMs timeActionMs = getTimeActionMs(); 
-    const JBTypes::durationMs timeActionSinceEpoch    = 
-                                                timeActionMs.time_since_epoch();
-    const JBTypes::durationMs difference = 
-                                      timeNowSinceEpoch - timeActionSinceEpoch;
-    const std::chrono::duration<float> durationFloatDifference = difference;
-    const float fDifference = durationFloatDifference.count();
-
-    return fDifference;
+    const JBTypes::timePointMs timeNowMs = JBTypesMethods::getTimePointMSNow();
+    const JBTypes::timePointMs timeActionMs= getTimeActionMs();
+    return JBTypesMethods::getFloatFromDurationMS(timeNowMs - timeActionMs);
 }
 
 float Ball::getTimeSecondsSinceStateOfLife() const noexcept{
-
-    const JBTypes::timePointMs timeNowMs = 
-                                    JBTypesMethods::getTimePointMSNow();
-    const JBTypes::durationMs timeNowSinceEpoch = 
-                                                  timeNowMs.time_since_epoch();
-    const JBTypes::timePointMs timeStateOfLifeMs = 
-                                                  getTimeStateOfLifeMs(); 
-    const JBTypes::durationMs timeStateOfLifeSinceEpoch    = 
-                                          timeStateOfLifeMs.time_since_epoch();
-    const JBTypes::durationMs difference = 
-                                  timeNowSinceEpoch - timeStateOfLifeSinceEpoch;
-    const std::chrono::duration<float> durationFloatDifference = difference;
-    const float fDifference = durationFloatDifference.count();
-
-    return fDifference;
+    const JBTypes::timePointMs timeNowMs = JBTypesMethods::getTimePointMSNow();
+    const JBTypes::timePointMs timeStateOfLifeMs= getTimeStateOfLifeMs();
+    return JBTypesMethods::getFloatFromDurationMS(timeNowMs -
+                                                  timeStateOfLifeMs);
 }
 
 JBTypes::vec3f Ball::lookTowardsAsVector() const {
@@ -474,36 +394,17 @@ JBTypes::vec3f Ball::get3DPosStayingBall() const {
 
     constexpr float offsetPosition = 0.5f + ClassicalMechanics::radiusBall;
 
-    float x = static_cast<float> (_currentBlockX + 0.5f);
-    float y = static_cast<float> (_currentBlockY + 0.5f);
-    float z = static_cast<float> (_currentBlockZ + 0.5f);
-        
-    switch (_currentSide) {
-        case JBTypes::Dir::North:
-            z -= offsetPosition ;
-            break;
-        case JBTypes::Dir::South:
-            z += offsetPosition ;
-            break;
-        case JBTypes::Dir::East:
-            x += offsetPosition ;
-            break;
-        case JBTypes::Dir::West:
-            x -= offsetPosition ;
-            break;
-        case JBTypes::Dir::Up:
-            y += offsetPosition ;
-            break;
-        case JBTypes::Dir::Down:
-            y -= offsetPosition ;
-            break;
-        default :
-            break;
-    }
+    const JBTypes::vec3f sideVec =
+        JBTypesMethods::directionAsVector(_currentSide);
+    
+    const float x = static_cast<float> (_currentBlockX) + 0.5f +
+        sideVec.x * offsetPosition;
+    const float y = static_cast<float> (_currentBlockY) + 0.5f +
+        sideVec.y * offsetPosition;
+    const float z = static_cast<float> (_currentBlockZ) + 0.5f +
+        sideVec.z * offsetPosition;
 
-    const JBTypes::vec3f position3D {x,y,z};
-
-    return position3D;
+    return {x,y,z};
 }
 
 void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
@@ -783,7 +684,6 @@ bool Ball::isOutOfTheMap() const {
     }
     else return false;
 }
-
 
 const TurnLeft Ball::turnLeftMovement;
 const TurnRight Ball::turnRightMovement;
