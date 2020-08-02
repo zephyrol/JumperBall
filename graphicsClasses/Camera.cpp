@@ -27,7 +27,7 @@ Camera::Camera() :  _posX(1), _posY(1), _posZ(1),
 
 void Camera::follow(const Ball& ball) noexcept {
     
-    const JBTypes::vec3f position  = ball.get3DPosition();
+    const JBTypes::vec3f& position      = ball.get3DPosition();
     const auto sideBall                 = ball.currentSide();
     const auto lookingDirection         = ball.lookTowards();
 
@@ -38,52 +38,21 @@ void Camera::follow(const Ball& ball) noexcept {
     constexpr float distAboveBall = 1.2f;
 
 
-    glm::mat4 matPosCam     (1.f);
     glm::mat4 matDirCam     (1.f);
     glm::mat4 matRotationCam(1.f);
 
     glm::vec4 posVec(0.f,0.f,0.f,1.f);
     glm::vec4 centerVec(0.f,0.f,0.f,1.f);
-    glm::vec4 upVec (0.f,0.f,0.f,1.f);
 
     glm::mat4 matPosBall =  glm::translate(
             glm::vec3(position.x,position.y,position.z));
 
+    const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(sideBall);
     
-    switch (sideBall) {
-        case JBTypes::Dir::North:
-            upVec.z = -1.f;
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(0.f,0.f,-distAboveBall));
-            break;
-        case JBTypes::Dir::South:
-            upVec.z = 1.f;
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(0.f,0.f,distAboveBall));
-            break;
-        case JBTypes::Dir::East:
-            upVec.x = 1.f;
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(distAboveBall,0.f,0.f));
-            break;
-        case JBTypes::Dir::West:
-            upVec.x = -1.f;
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(-distAboveBall,0.f,0.f));
-            break;
-        case JBTypes::Dir::Up:
-            upVec.y = 1.f;
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(0.f,distAboveBall,0.f));
-            break;
-        case JBTypes::Dir::Down:
-            upVec.y = -1.f;
-            matPosCam = glm::translate(matPosCam,
-                    glm::vec3(0.f,-distAboveBall,0.f));
-            break;
-        default :
-            break;
-    }
+    const glm::vec3 upVec3 {vecDir.x, vecDir.y, vecDir.z};
+    glm::vec4 upVec (upVec3,1.f);
+    glm::mat4 matPosCam (glm::translate( distAboveBall * upVec3));
+    
     
     const JBTypes::vec3f dir =
         JBTypesMethods::directionAsVector(lookingDirection);
@@ -93,28 +62,6 @@ void Camera::follow(const Ball& ball) noexcept {
     matDirCam = glm::translate(matDirCam, 
             -glm::vec3(dir.x * -distDirPoint, dir.y * -distDirPoint,
             dir.z * -distDirPoint));
-
-
-    const auto getAxis = [] (JBTypes::Dir direction) {
-        glm::vec3 axisVector; 
-        switch (direction) {
-            case JBTypes::Dir::North:
-                axisVector = {0.f,0.f,-1.f}; break;
-            case JBTypes::Dir::South:
-                axisVector = {0.f,0.f,1.f}; break;
-            case JBTypes::Dir::East:
-                axisVector = {1.f,0.f,0.f}; break;
-            case JBTypes::Dir::West:
-                axisVector = {-1.f,0.f,0.f}; break;
-            case JBTypes::Dir::Up:
-                axisVector = {0.f,1.f,0.f}; break;
-            case JBTypes::Dir::Down:
-                axisVector = {0.f,-1.f,0.f}; break;
-            default :
-                break;
-        }
-        return axisVector;
-    };
 
     constexpr float durationMoveAbove = 0.2f;
     constexpr float durationMoveComingBack = 0.2f;
@@ -133,9 +80,12 @@ void Camera::follow(const Ball& ball) noexcept {
     }
     if (stateBall == Ball::State::Moving) {
         const auto  infoNext             = ball.getNextBlockInfo();
-
-        const glm::vec3 axisOldLook      = getAxis(lookingDirection);
-        const glm::vec3 axisNewLook      = getAxis(infoNext.nextLook);
+        const JBTypes::vec3f vecLookDir  =
+            JBTypesMethods::directionAsVector(lookingDirection);
+        const JBTypes::vec3f vecNextLook  =
+            JBTypesMethods::directionAsVector(infoNext.nextLook);
+        const glm::vec3 axisOldLook {vecLookDir.x, vecLookDir.y, vecLookDir.z};
+        const glm::vec3 axisNewLook {vecNextLook.x,vecNextLook.y,vecNextLook.z};
         const glm::vec3 axisRotation     = glm::cross(axisOldLook,axisNewLook);
 
         const glm::vec3 eulerAngles = (timeSinceAction* 
@@ -206,7 +156,11 @@ void Camera::follow(const Ball& ball) noexcept {
     }
 
     const glm::vec3 upVector          = glm::vec3(upVec);
-    const glm::vec3 axisView          = getAxis(lookingDirection);
+    
+    const JBTypes::vec3f vecLookDir  =
+    JBTypesMethods::directionAsVector(lookingDirection);
+    const glm::vec3 axisView {vecLookDir.x, vecLookDir.y, vecLookDir.z};
+    
     const glm::vec3 axisRotation      = glm::cross(upVector,axisView);
     glm::vec3 eulerAngles;
     eulerAngles = _cameraAboveWay * static_cast<float>(M_PI/3) * axisRotation;
@@ -274,10 +228,8 @@ void Camera::follow(const Map& map) noexcept{
             ((static_cast<float>(-cos(diffF))+1.f)/2.f);
 
     const glm::mat4 translation = 
-    glm::translate(glm::vec3(distanceX,distanceY,distanceZ));
+        glm::translate(glm::vec3(distanceX,distanceY,distanceZ));
 
-    
-    
     const glm::mat4 rotation = glm::rotate( 1.5f*diffF ,
     glm::vec3(0.f,(1.f+static_cast<float>(sin(diffF/5.f)))/2.f,
               (1.f+static_cast<float>(sin(diffF/3.f)))/2.f));
@@ -376,7 +328,7 @@ bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
 }
 
 
-glm::vec3 Camera::dir() const noexcept{
+glm::vec3 Camera::center() const noexcept{
     return glm::vec3 {_centerX,_centerY,_centerZ};
 }
 

@@ -145,11 +145,11 @@ private:
     void                          isFallingIntersectionBlock()         noexcept;
     void                          isGoingStraightAheadIntersectBlock() noexcept;
     
-    void fallingUpdate() noexcept;
-    void stayingUpdate() noexcept;
-    void movingUpdate() noexcept;
-    void turningUpdate() noexcept;
-    void jumpingUpdate() noexcept;
+    void                          fallingUpdate()                      noexcept;
+    void                          stayingUpdate()                      noexcept;
+    void                          movingUpdate()                       noexcept;
+    void                          turningUpdate()                      noexcept;
+    void                          jumpingUpdate()                      noexcept;
     
     static const TurnLeft         turnLeftMovement;
     static const TurnRight        turnRightMovement;

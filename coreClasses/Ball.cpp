@@ -282,7 +282,7 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
     std::shared_ptr<const std::vector<int> > blockIntersected = nullptr;
     
     const JBTypes::vec3f sideVec =
-    JBTypesMethods::directionAsVector(_currentSide);
+        JBTypesMethods::directionAsVector(_currentSide);
 
     const float offsetBlockPosition = ClassicalMechanics::radiusBall;
     const float xIntersectionUnder = x - sideVec.x * offsetBlockPosition;

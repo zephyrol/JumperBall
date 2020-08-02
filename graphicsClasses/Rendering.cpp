@@ -221,38 +221,46 @@ void Rendering::render() {
 
 void Rendering::bindCamera(const ShaderProgram& sp) {
 
-  _uniformBool["displayBehind"] = _camera.displayBehind();
+    _uniformBool["displayBehind"] = _camera.displayBehind();
 
-  _uniformMatrix4["VP"] =
-          glm::mat4(
-                    glm::perspective( glm::radians(70.f),
-                    static_cast<float>(Utility::windowResolutionX)/
-                    static_cast<float>(Utility::windowResolutionY),
-                    _camera.zNear, _camera.zFar) *
-                    glm::lookAt ( _camera.pos(), _camera.dir(), _camera.up())
-                    );
+    _uniformMatrix4["VP"] =
+            glm::mat4(glm::perspective( glm::radians(70.f),
+                      static_cast<float>(Utility::windowResolutionX)/
+                      static_cast<float>(Utility::windowResolutionY),
+                      _camera.zNear, _camera.zFar) *
+                      glm::lookAt ( _camera.pos(), _camera.center(),
+                                   _camera.up()));
+    
 
-  const JBTypes::vec3f& positionBall = _ball.get3DPosition();
+    const JBTypes::vec3f& positionBall = _ball.get3DPosition();
 
-  _uniformVec3["positionBall"]    = glm::vec3( positionBall.x,
-                                               positionBall.y,
-                                               positionBall.z);
+    _uniformVec3["positionBall"]    = glm::vec3( positionBall.x,
+                                                 positionBall.y,
+                                                 positionBall.z);
 
-  _uniformVec3["lookDirection"]   =
-      glm::normalize( glm::cross  ( _camera.up() ,
-                                    glm::cross( _camera.dir() - _camera.pos(),
-                                                _camera.up()))
-                                  );
+    const glm::vec3 rightVector  = glm::cross(_camera.center() -_camera.pos(),
+                                              _camera.up());
+    
+    const glm::vec3 lookDirection  = glm::normalize(glm::cross (_camera.up(), rightVector));
+    //_uniformMatrix4["viewDirection"] =
+     //   glm::lookAt( _camera.pos(), _camera.pos() + lookDirection,
+                                                   
+    
+    std::cout << "x : " << lookDirection.x <<  " y : " << lookDirection.y
+        << " z " << lookDirection.z;
+    
+    
 
-  _uniformVec3["positionCamera"]  = _camera.pos();
-  _uniformFloat["distanceBehind"] = Camera::distanceBehindBall(_ball);
-  sp.bindUniform ("VP",             _uniformMatrix4.at("VP"));
-  sp.bindUniform ("VPStar",         _uniformMatrix4.at("VPStar"));
-  sp.bindUniform ("positionBall",   _uniformVec3.at("positionBall"));
-  sp.bindUniform ("lookDirection",  _uniformVec3.at("lookDirection"));
-  sp.bindUniform ("distanceBehind", _uniformFloat.at("distanceBehind"));
-  sp.bindUniform ("positionCamera", _uniformVec3.at("positionCamera"));
-  sp.bindUniform ("displayBehind",  _uniformBool.at("displayBehind"));
+    _uniformVec3["positionCamera"]  = _camera.pos();
+    
+ // _uniformFloat["distanceBehind"] = Camera::distanceBehindBall(_ball);
+    sp.bindUniform ("VP",             _uniformMatrix4.at("VP"));
+    sp.bindUniform ("VPStar",         _uniformMatrix4.at("VPStar"));
+    sp.bindUniform ("positionBall",   _uniformVec3.at("positionBall"));
+    //sp.bindUniform ("lookDirection",  _uniformVec3.at("lookDirection"));
+    //sp.bindUniform ("distanceBehind", _uniformFloat.at("distanceBehind"));
+    sp.bindUniform ("positionCamera", _uniformVec3.at("positionCamera"));
+    sp.bindUniform ("displayBehind",  _uniformBool.at("displayBehind"));
 }
 
 void Rendering::bindStarView(const ShaderProgram& sp) {

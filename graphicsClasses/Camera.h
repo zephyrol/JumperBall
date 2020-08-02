@@ -38,7 +38,7 @@ public:
 
     //-------CONST METHODS----------//
     glm::vec3                     pos()                          const noexcept;
-    glm::vec3                     dir()                          const noexcept;
+    glm::vec3                     center()                       const noexcept;
     glm::vec3                     up()                           const noexcept;
     bool                          displayBehind()                const noexcept;
 
