@@ -45,8 +45,8 @@ public:
 
     using shock     =             std::array<unsigned int, 3 > ; 
                                                       
-    struct nextBlockInformation   { JBTypes::Dir  nextSide;
-                                    JBTypes::Dir  nextLook;
+    struct nextBlockInformation   { JBTypes::Dir                nextSide;
+                                    JBTypes::Dir                nextLook;
                                     NextBlockLocal              nextLocal;
                                     unsigned int                poxX;
                                     unsigned int                poxY;

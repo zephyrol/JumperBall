@@ -37,39 +37,36 @@ void Camera::follow(const Ball& ball) noexcept {
     constexpr float distBehindBall = 1.3f;
     constexpr float distAboveBall = 1.2f;
 
-
-    glm::mat4 matDirCam     (1.f);
     glm::mat4 matRotationCam(1.f);
 
-    glm::vec4 posVec(0.f,0.f,0.f,1.f);
-    glm::vec4 centerVec(0.f,0.f,0.f,1.f);
-
-    glm::mat4 matPosBall =  glm::translate(
-            glm::vec3(position.x,position.y,position.z));
+    const glm::mat4 matPosBall =
+        glm::translate( glm::vec3(position.x,position.y,position.z));
 
     const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(sideBall);
     
-    const glm::vec3 upVec3 {vecDir.x, vecDir.y, vecDir.z};
-    glm::vec4 upVec (upVec3,1.f);
-    glm::mat4 matPosCam (glm::translate( distAboveBall * upVec3));
+    const glm::vec3 toSkyVec3 {vecDir.x, vecDir.y, vecDir.z};
+    const glm::vec4 toSky (toSkyVec3,1.f);
     
-    
-    const JBTypes::vec3f dir =
+    const JBTypes::vec3f coreVecLookingDirection =
         JBTypesMethods::directionAsVector(lookingDirection);
-    matPosCam = glm::translate(matPosCam,
-            -glm::vec3(dir.x * distBehindBall,dir.y * distBehindBall,
-              dir.z * distBehindBall));
-    matDirCam = glm::translate(matDirCam, 
-            -glm::vec3(dir.x * -distDirPoint, dir.y * -distDirPoint,
-            dir.z * -distDirPoint));
+    
+    const glm::vec3 vecLookingDirection { coreVecLookingDirection.x,
+        coreVecLookingDirection.y, coreVecLookingDirection.z };
+    
+    const glm::mat4 matPosCam (glm::translate( distAboveBall * toSkyVec3 -
+        distBehindBall * vecLookingDirection));
+    
+    const glm::mat4 matDirCam =
+        glm::translate( -glm::vec3(vecLookingDirection.x * -distDirPoint,
+                                   vecLookingDirection.y * -distDirPoint,
+                                   vecLookingDirection.z * -distDirPoint));
 
     constexpr float durationMoveAbove = 0.2f;
     constexpr float durationMoveComingBack = 0.2f;
 
-    const float timeSinceAction         = ball.getTimeSecondsSinceAction();
+    const float timeSinceAction = ball.getTimeSecondsSinceAction();
     const JBTypes::timePointMs timeAction = ball.getTimeActionMs();
-    const JBTypes::timePointMs now = 
-                                    JBTypesMethods::getTimePointMSNow();
+    const JBTypes::timePointMs now = JBTypesMethods::getTimePointMSNow();
 
     if (stateBall == Ball::State::Staying) {
         if(_willComeBack) {
@@ -85,41 +82,30 @@ void Camera::follow(const Ball& ball) noexcept {
         const JBTypes::vec3f vecNextLook  =
             JBTypesMethods::directionAsVector(infoNext.nextLook);
         const glm::vec3 axisOldLook {vecLookDir.x, vecLookDir.y, vecLookDir.z};
-        const glm::vec3 axisNewLook {vecNextLook.x,vecNextLook.y,vecNextLook.z};
+        const glm::vec3 axisNewLook
+            {vecNextLook.x, vecNextLook.y, vecNextLook.z};
+        
         const glm::vec3 axisRotation     = glm::cross(axisOldLook,axisNewLook);
-
-        const glm::vec3 eulerAngles = (timeSinceAction* 
+        const glm::vec3 eulerAngles = (timeSinceAction*
           (static_cast<float>(M_PI)/2)/ ball.timeToGetNextBlock) * axisRotation;
          
         const glm::quat quaternion (eulerAngles);
         matRotationCam = glm::toMat4(quaternion); 
     }
-    else if (stateBall == Ball::State::TurningLeft) {
-        const glm::vec3 axisRotation     = glm::vec3(upVec);
+    else if (stateBall == Ball::State::TurningLeft ||
+             stateBall == Ball::State::TurningRight) {
+        const glm::vec3& axisRotation     = toSkyVec3;
          
-        const glm::vec3 eulerAngles = 
-        -(static_cast<float>(M_PI)/2) * axisRotation
-        +
-        (timeSinceAction* 
-         (static_cast<float>(M_PI)/2)/ (ball.timeToTurn))
+        glm::vec3 eulerAngles =
+            (static_cast<float>(M_PI)/2) * axisRotation -
+            (timeSinceAction* (static_cast<float>(M_PI)/2)/ (ball.timeToTurn))
             * axisRotation;
+        
+        if (stateBall == Ball::State::TurningLeft)
+            eulerAngles = -eulerAngles;
 
         const glm::quat quaternion (eulerAngles);
-        matRotationCam = glm::toMat4(quaternion); 
-    }
-    else if (stateBall == Ball::State::TurningRight) {
-        const glm::vec3 axisRotation     = glm::vec3(upVec);
-         
-        const glm::vec3 eulerAngles = 
-        (static_cast<float>(M_PI)/2) * axisRotation
-        -
-        (timeSinceAction* 
-         (static_cast<float>(M_PI)/2)/ (ball.timeToTurn))
-            * axisRotation;
-
-        const glm::quat quaternion (eulerAngles);
-        matRotationCam = glm::toMat4(quaternion); 
-         
+        matRotationCam = glm::toMat4(quaternion);
     }
     else if (stateBall == Ball::State::Jumping) {
         constexpr float offsetTimeToBeginCamMoving = 0.2f;
@@ -144,7 +130,7 @@ void Camera::follow(const Ball& ball) noexcept {
     
     if ( _isComingBack) {
         const float durationSinceComeBack = 
-        JBTypesMethods::getFloatFromDurationMS(now- _timePointComeBack);
+            JBTypesMethods::getFloatFromDurationMS(now- _timePointComeBack);
         if (durationSinceComeBack > durationMoveComingBack)
         {
           _isComingBack = false;
@@ -155,26 +141,28 @@ void Camera::follow(const Ball& ball) noexcept {
         }
     }
 
-    const glm::vec3 upVector          = glm::vec3(upVec);
-    
     const JBTypes::vec3f vecLookDir  =
-    JBTypesMethods::directionAsVector(lookingDirection);
+        JBTypesMethods::directionAsVector(lookingDirection);
     const glm::vec3 axisView {vecLookDir.x, vecLookDir.y, vecLookDir.z};
     
-    const glm::vec3 axisRotation      = glm::cross(upVector,axisView);
-    glm::vec3 eulerAngles;
-    eulerAngles = _cameraAboveWay * static_cast<float>(M_PI/3) * axisRotation;
+    const glm::vec3 axisRotation = glm::cross(toSkyVec3,axisView);
+    const glm::vec3 eulerAngles =
+        _cameraAboveWay * static_cast<float>(M_PI/3) * axisRotation;
     
     const glm::quat quaternion (eulerAngles);
+    
     matRotationCam = glm::toMat4(quaternion) * matRotationCam; 
 
-    posVec = matPosBall * matRotationCam * matPosCam * posVec;
-    centerVec = matPosBall * matRotationCam * matDirCam * centerVec;
-    upVec  = matRotationCam * upVec;
+    const glm::vec4 posVec =
+        matPosBall * matRotationCam * matPosCam * glm::vec4{0.f,0.f,0.f,1.f};
+    const glm::vec4 centerVec =
+        matPosBall * matRotationCam * matDirCam * glm::vec4{0.f,0.f,0.f,1.f};
+    
+    const glm::vec4 upVector = matRotationCam * toSky;
 
-    _upX  = upVec.x;
-    _upY  = upVec.y;
-    _upZ  = upVec.z;
+    _upX  = upVector.x;
+    _upY  = upVector.y;
+    _upZ  = upVector.z;
 
     _posX = posVec.x;
     _posY = posVec.y;
