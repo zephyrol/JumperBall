@@ -241,15 +241,10 @@ void Rendering::bindCamera(const ShaderProgram& sp) {
     const glm::vec3 rightVector  = glm::cross(_camera.center() -_camera.pos(),
                                               _camera.up());
     
-    const glm::vec3 lookDirection  = glm::normalize(glm::cross (_camera.up(), rightVector));
+    const glm::vec3 lookDirection  =
+        glm::normalize(glm::cross (_camera.up(), rightVector));
     //_uniformMatrix4["viewDirection"] =
      //   glm::lookAt( _camera.pos(), _camera.pos() + lookDirection,
-                                                   
-    
-    std::cout << "x : " << lookDirection.x <<  " y : " << lookDirection.y
-        << " z " << lookDirection.z;
-    
-    
 
     _uniformVec3["positionCamera"]  = _camera.pos();
     

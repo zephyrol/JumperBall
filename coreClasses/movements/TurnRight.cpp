@@ -6,18 +6,18 @@
 //
 
 #include "TurnRight.h"
-#include "TurnLeft.h"
-#include "TurnBack.h"
 
 TurnRight::TurnRight():
 Movement<JBTypes::Dir,2>(
     
 [](const std::array<JBTypes::Dir,2>& sideAndLook) -> JBTypes::Dir{
     
-    TurnLeft turnLeftMovement;
-    TurnBack turnBackMovement;
-
-    const JBTypes::Dir turnLeftDir = turnLeftMovement.evaluate(sideAndLook);
-    return turnBackMovement.evaluate(std::array<JBTypes::Dir,1> {turnLeftDir});
+    const JBTypes::vec3f side =
+    JBTypesMethods::directionAsVector(sideAndLook.at(0));
+    const JBTypes::vec3f look =
+    JBTypesMethods::directionAsVector(sideAndLook.at(1));
+    
+    return JBTypesMethods::vectorAsDirection(
+            JBTypesMethods::cross(look, side));
 })
 {}

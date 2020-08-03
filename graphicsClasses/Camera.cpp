@@ -13,9 +13,9 @@
 
 #include "Camera.h"
 
-Camera::Camera() :  _posX(1), _posY(1), _posZ(1),
-                    _centerX(0), _centerY(0), _centerZ(0),
-                    _upX(0),  _upY(1),  _upZ(0),
+Camera::Camera() :  _pos(glm::vec3(1.f,0.f,0.f)),
+                    _center(glm::vec3(0.f,0.f,0.f)),
+                    _up(glm::vec3(0.f,1.f,0.f)),
                     _displayBehind(false),
                     _willComeBack(false),
                     _isComingBack(false),
@@ -53,13 +53,12 @@ void Camera::follow(const Ball& ball) noexcept {
     const glm::vec3 vecLookingDirection { coreVecLookingDirection.x,
         coreVecLookingDirection.y, coreVecLookingDirection.z };
     
-    const glm::mat4 matPosCam (glm::translate( distAboveBall * toSkyVec3 -
-        distBehindBall * vecLookingDirection));
-    
-    const glm::mat4 matDirCam =
-        glm::translate( -glm::vec3(vecLookingDirection.x * -distDirPoint,
-                                   vecLookingDirection.y * -distDirPoint,
-                                   vecLookingDirection.z * -distDirPoint));
+    const glm::vec4 initPosCam
+        (distAboveBall * toSkyVec3 - distBehindBall * vecLookingDirection,1.f);
+    const glm::vec4 initCenterCam
+        (-glm::vec3(vecLookingDirection.x * -distDirPoint,
+                    vecLookingDirection.y * -distDirPoint,
+                    vecLookingDirection.z * -distDirPoint), 1.f);
 
     constexpr float durationMoveAbove = 0.2f;
     constexpr float durationMoveComingBack = 0.2f;
@@ -153,27 +152,22 @@ void Camera::follow(const Ball& ball) noexcept {
     
     matRotationCam = glm::toMat4(quaternion) * matRotationCam; 
 
-    const glm::vec4 posVec =
-        matPosBall * matRotationCam * matPosCam * glm::vec4{0.f,0.f,0.f,1.f};
-    const glm::vec4 centerVec =
-        matPosBall * matRotationCam * matDirCam * glm::vec4{0.f,0.f,0.f,1.f};
+    // Up vector computing
+    const glm::vec3 direction = glm::normalize(initCenterCam - initPosCam);
+    const glm::vec3 right = glm::cross(direction, toSkyVec3);
+    const glm::vec3 upVector =
+        matRotationCam * glm::vec4(glm::cross(right,direction),1.f);
+    // -------------------
     
-    const glm::vec4 upVector = matRotationCam * toSky;
+    const glm::vec4 posVec = matPosBall * matRotationCam * initPosCam;
+    const glm::vec4 centerVec = matPosBall * matRotationCam * initCenterCam;
 
-    _upX  = upVector.x;
-    _upY  = upVector.y;
-    _upZ  = upVector.z;
+    _up = upVector;
+    _pos = posVec;
+    _center = centerVec;
 
-    _posX = posVec.x;
-    _posY = posVec.y;
-    _posZ = posVec.z;
-
-    _centerX = centerVec.x;
-    _centerY = centerVec.y;
-    _centerZ = centerVec.z;
 
     _displayBehind = false;
-
 }
 
 void Camera::follow(const Map& map) noexcept{
@@ -183,9 +177,7 @@ void Camera::follow(const Map& map) noexcept{
     const unsigned int zMax = map.boundingBoxZMax();
     
     
-    const float centerX = xMax/2.f;
-    const float centerY = yMax/2.f;
-    const float centerZ = zMax/2.f;
+    const glm::vec3 center {xMax/2.f,yMax/2.f,zMax/2.f};
     
     float distanceMax = static_cast<float>(xMax);
     if ( distanceMax < yMax) distanceMax = static_cast<float>(yMax);
@@ -194,33 +186,28 @@ void Camera::follow(const Map& map) noexcept{
     const float cameraDistanceNear = distanceMax * 0.75f;
     const float cameraDistanceFar =  distanceMax * 1.2f;
     
-    const JBTypes::timePointMs now  = 
-    JBTypesMethods::getTimePointMSNow();
+    const JBTypes::timePointMs now  = JBTypesMethods::getTimePointMSNow();
+    const JBTypes::durationMs  diff = now -
+        JBTypesMethods::getTimePointMsFromTimePoint(map.timeCreation());
 
-    const JBTypes::durationMs  diff = now - 
-      JBTypesMethods::getTimePointMsFromTimePoint(map.timeCreation());
-
-    
     const float diffF = JBTypesMethods::getFloatFromDurationMS(diff);
     
     const float distanceX = cameraDistanceNear +
-            (cameraDistanceFar-cameraDistanceNear) *
-            ((static_cast<float>(-cos(diffF))+1.f)/2.f);
+        (cameraDistanceFar-cameraDistanceNear) *
+        ((static_cast<float>(-cos(diffF))+1.f)/2.f);
 
-    const float distanceY = cameraDistanceNear +
-            (cameraDistanceFar-cameraDistanceNear) *
-            ((static_cast<float>(-cos(diffF))+1.f)/2.f);
-
-    const float distanceZ = cameraDistanceNear +
-            (cameraDistanceFar-cameraDistanceNear) *
-            ((static_cast<float>(-cos(diffF))+1.f)/2.f);
+    const float distanceZ = distanceX;
 
     const glm::mat4 translation = 
-        glm::translate(glm::vec3(distanceX,distanceY,distanceZ));
+        glm::translate(glm::vec3(distanceX,0,distanceZ));
 
-    const glm::mat4 rotation = glm::rotate( 1.5f*diffF ,
-    glm::vec3(0.f,(1.f+static_cast<float>(sin(diffF/5.f)))/2.f,
-              (1.f+static_cast<float>(sin(diffF/3.f)))/2.f));
+    const glm::mat4 rotation =
+        glm::rotate( 1.5f*diffF,
+                    glm::vec3(0.f,
+                              1.f+static_cast<float>(sin(diffF/5.f)),
+                              1.f+static_cast<float>(sin(diffF/3.f))
+                              )
+                    );
     const glm::mat4 transform = rotation * translation;
 
     
@@ -229,25 +216,11 @@ void Camera::follow(const Map& map) noexcept{
                                     positionTransform.y,
                                     positionTransform.z);
 
-    _posX = positionCamera.x;
-    _posY = positionCamera.y;
-    _posZ = positionCamera.z;
-
-
-    _posX = positionCamera.x;
-    _posY = positionCamera.y;
-    _posZ = positionCamera.z;
-
-    _centerX = centerX;
-    _centerY = centerY;
-    _centerZ = centerZ;
-
-    glm::vec4 up(0.f,1.f,0.f,1.f);
-    up = rotation * up;
-
-    _upX  = up.x;
-    _upY  = up.y;
-    _upZ  = up.z;
+    const glm::vec4 up = rotation * glm::vec4(0.f,1.f,0.f,1.f);
+    
+    _pos = positionCamera;
+    _center = center;
+    _up = up;
 
     _displayBehind = true;
 }
@@ -288,27 +261,22 @@ bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
                                   static_cast<float>(M_PI)) + 1.f;
 
     const glm::vec3 directionVector =
-            glm::normalize( glm::vec3{_centerX - _posX, _centerY - _posY,
-                                _centerZ - _posZ });
+            glm::normalize( _center - _pos);
     const glm::mat4 upRotation = glm::rotate( tCos * 2.f *
                                               static_cast<float>(M_PI),
                                               directionVector);
     const glm::vec4 upVector = upRotation * glm::vec4(0.f,1.f,0.f,1.f);
 
-    _posX = tCos *  position.x +
-            (1.f-tCos) * (position.x + distanceXStarting);
-    _posY = t* (position.y + distAboveBall) +
-            (1.f-tCos) * (position.y + distAboveBall + distanceYStarting);
-    _posZ = t* (position.z + distBehindBall) +
-            (1.f-tCos) * (position.z + distBehindBall + distanceZStarting);
-
-    _centerX = position.x;
-    _centerY = position.y;
-    _centerZ = position.z - distDirPoint;
-
-    _upX = upVector.x;
-    _upY = upVector.y;
-    _upZ = upVector.z;
+    _pos =
+        {
+            tCos *  position.x + (1.f-tCos) * (position.x + distanceXStarting),
+            t* (position.y + distAboveBall) +
+            (1.f-tCos) * (position.y + distAboveBall + distanceYStarting),
+            t* (position.z + distBehindBall) +
+            (1.f-tCos) * (position.z + distBehindBall + distanceZStarting)
+        };
+    _center = { position.x, position.y, position.z - distDirPoint};
+    _up = upVector;
 
     _displayBehind = true;
 
@@ -316,16 +284,16 @@ bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
 }
 
 
-glm::vec3 Camera::center() const noexcept{
-    return glm::vec3 {_centerX,_centerY,_centerZ};
+const glm::vec3& Camera::center() const noexcept{
+    return _center;
 }
 
-glm::vec3 Camera::pos() const noexcept{
-    return glm::vec3 {_posX,_posY,_posZ};
+const glm::vec3& Camera::pos() const noexcept{
+    return _pos;
 }
 
-glm::vec3 Camera::up() const noexcept{
-    return glm::vec3 {_upX,_upY,_upZ};
+const glm::vec3& Camera::up() const noexcept{
+    return _up;
 }
 
 bool Camera::displayBehind() const noexcept{

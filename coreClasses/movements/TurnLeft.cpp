@@ -12,7 +12,6 @@ Movement<JBTypes::Dir,2>(
     
 [](const std::array<JBTypes::Dir,2>& sideAndLook) -> JBTypes::Dir{
     
-    
     const JBTypes::vec3f side =
         JBTypesMethods::directionAsVector(sideAndLook.at(0));
     const JBTypes::vec3f look =

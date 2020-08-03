@@ -37,9 +37,9 @@ public:
 
 
     //-------CONST METHODS----------//
-    glm::vec3                     pos()                          const noexcept;
-    glm::vec3                     center()                       const noexcept;
-    glm::vec3                     up()                           const noexcept;
+    const glm::vec3&              pos()                          const noexcept;
+    const glm::vec3&              center()                       const noexcept;
+    const glm::vec3&              up()                           const noexcept;
     bool                          displayBehind()                const noexcept;
 
 
@@ -56,9 +56,9 @@ public:
 private:
 
     //--------ATTRIBUTES-----------//
-    float                         _posX,  _posY,  _posZ;
-    float                         _centerX,  _centerY,  _centerZ;
-    float                         _upX,   _upY,   _upZ;
+    glm::vec3                     _pos;
+    glm::vec3                     _center;
+    glm::vec3                     _up;
     bool                          _displayBehind;
     bool                          _willComeBack;
     bool                          _isComingBack;
