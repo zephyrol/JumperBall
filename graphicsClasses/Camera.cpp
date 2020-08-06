@@ -236,8 +236,7 @@ bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
     constexpr float distAboveBall = 1.2f;
     //-----------------------
 
-    const JBTypes::timePointMs now =
-                                    JBTypesMethods::getTimePointMSNow();
+    const JBTypes::timePointMs now = JBTypesMethods::getTimePointMSNow();
 
     const JBTypes::durationMs  diff = now -
       JBTypesMethods::getTimePointMsFromTimePoint(map.timeCreation());

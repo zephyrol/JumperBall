@@ -193,30 +193,74 @@ std::vector<MeshComponent> MeshGenerator::sortComponents(
 }
 
 
-std::vector<MeshComponent> MeshGenerator::blockManager ( const Block& block, 
-                                              const std::array<unsigned int,3>& 
-                                                            position) {
+std::vector<MeshComponent> MeshGenerator::blockManager (
+    const Map& map, const std::array<unsigned int,3>& position) {
 
     std::vector<MeshComponent> components;
     
     std::shared_ptr<GeometricShape> shape;
-    if (block.getType() == Block::categoryOfBlocksInFile::Ice) {
-        if (commonShapes.find("iceCube") == commonShapes.end()) {
-            commonShapes["iceCube"] = std::make_shared<Cube>
-                (Cube::iceColorsCube);
+    const std::shared_ptr<const Block> block =
+        map.getBlock(position.at(0),position.at(1),position.at(2));
+    
+    std::string strSidesInfo {};
+    std::array<bool,6> boolSidesInfo {};
+    const std::array<std::array<unsigned int, 3>,6 > positions {{
+        {position.at(0),position.at(1),position.at(2) + 1},
+        {position.at(0),position.at(1),position.at(2) - 1},
+        {position.at(0),position.at(1) + 1,position.at(2)},
+        {position.at(0),position.at(1) - 1,position.at(2)},
+        {position.at(0) + 1,position.at(1),position.at(2)},
+        {position.at(0) - 1,position.at(1),position.at(2)}
+    }};
+    
+    for (size_t i = 0; i < 6; ++i) {
+        const std::array<unsigned int, 3> neighbourgPosition = positions.at(i);
+        if (const std::shared_ptr<const Block> neighbourg =
+            map.getBlock(neighbourgPosition.at(0),
+                         neighbourgPosition.at(1),
+                         neighbourgPosition.at(2))) {
+            if (neighbourg->getType() != Block::categoryOfBlocksInFile::Brittle)
+            {
+                strSidesInfo.push_back('0');
+                boolSidesInfo.at(i) = false;
+            } else {
+                strSidesInfo.push_back('1');
+                boolSidesInfo.at(i) = true;
+            }
+        } else {
+            strSidesInfo.push_back('1');
+            boolSidesInfo.at(i) = false;
         }
-        shape = commonShapes.at("iceCube");
-    } else if (block.getType() == Block::categoryOfBlocksInFile::Fire) {
-        if (commonShapes.find("fireCube") == commonShapes.end()) {
-            commonShapes["fireCube"] = std::make_shared<Cube>
-                (Cube::fireColorsCube);
+    }
+
+    if (block->getType() == Block::categoryOfBlocksInFile::Ice) {
+        if (commonShapes.find("iceCube" + strSidesInfo) == commonShapes.end()) {
+            commonShapes["iceCube" + strSidesInfo] = std::make_shared<Cube>
+                (Cube::iceColorsCube,boolSidesInfo);
         }
-        shape = commonShapes.at("fireCube");
-    } else {
-        if (commonShapes.find("basicCube") == commonShapes.end()) {
-            commonShapes["basicCube"] = std::make_shared<Cube>();
+        shape = commonShapes.at("iceCube" + strSidesInfo);
+    } else if (block->getType() == Block::categoryOfBlocksInFile::Fire) {
+        if (commonShapes.find("fireCube" + strSidesInfo) ==
+            commonShapes.end()) {
+            commonShapes["fireCube" + strSidesInfo] = std::make_shared<Cube>
+                (Cube::fireColorsCube,boolSidesInfo);
         }
-        shape = commonShapes.at("basicCube");
+        shape = commonShapes.at("fireCube" + strSidesInfo);
+    } else if (block->getType() == Block::categoryOfBlocksInFile::Brittle) {
+        if (commonShapes.find("britlleCube") ==
+            commonShapes.end()) {
+            commonShapes["brittleCube"] = std::make_shared<Cube>();
+        }
+        shape = commonShapes.at("brittleCube");
+    }
+    else {
+        if (commonShapes.find("basicCube" + strSidesInfo) ==
+            commonShapes.end()) {
+            commonShapes["basicCube" + strSidesInfo] =
+            std::make_shared<Cube>(glm::mat4(1.f),glm::mat4(1.f)
+                                   ,boolSidesInfo);
+        }
+        shape = commonShapes.at("basicCube" + strSidesInfo);
     }
 
     const glm::vec3 glmPosition { position.at(0), position.at(1), 
@@ -227,17 +271,19 @@ std::vector<MeshComponent> MeshGenerator::blockManager ( const Block& block,
         (*shape,transform), nullptr);
     components.push_back(component);
     
-    std::vector<MeshComponent> sharpsComponents = genSharps(block,glmPosition);
+    std::vector<MeshComponent> sharpsComponents = genSharps(*block,glmPosition);
     for(MeshComponent& m : sharpsComponents) {
         components.push_back(std::move(m));
     }
 
-    std::vector<MeshComponent> jumperComponents = genJumpers(block,glmPosition);
+    std::vector<MeshComponent> jumperComponents =
+        genJumpers(*block,glmPosition);
     for(MeshComponent& m : jumperComponents) {
         components.push_back(std::move(m));
     }
     
-    const std::array<std::shared_ptr<const Object>,6> objects = block.objects();
+    const std::array<std::shared_ptr<const Object>,6> objects =
+        block->objects();
 
     for (size_t i = 0; i < objects.size() ; ++i) {
         if ( objects.at(i) ) {
@@ -265,7 +311,7 @@ std::vector<MeshComponent> MeshGenerator::genComponents(const Map& map) {
                 auto block = map.getBlock(x,y,z);
                 if (block) {
                     std::vector<MeshComponent> blockComponents =
-                            blockManager(*block,
+                            blockManager(map,
                               std::array<unsigned int,3> {x,y,z});
 
                     for(MeshComponent& m : blockComponents) {

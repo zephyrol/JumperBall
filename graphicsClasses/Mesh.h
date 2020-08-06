@@ -84,8 +84,7 @@ void Mesh<T>::update(const Ball& base) {
 }
 
 template<typename T>
-void Mesh<T>::update(const Map& base) {
-    (void) base;
+void Mesh<T>::update(const Map&) {
     for(const MeshComponent& component : _components){
         if (component.animation()) {
             component.animation()->updateTrans();
@@ -94,8 +93,7 @@ void Mesh<T>::update(const Map& base) {
 }
 
 template<typename T>
-void Mesh<T>::update(const Quad& base) {
-    (void) base;
+void Mesh<T>::update(const Quad&) {
 }
 
 template<typename T>

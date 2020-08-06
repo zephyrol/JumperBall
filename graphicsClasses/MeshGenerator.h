@@ -43,7 +43,7 @@ namespace MeshGenerator {
     std::vector<MeshComponent>  sortComponents(std::vector<MeshComponent>&
                                                   components);
     
-    std::vector<MeshComponent>  blockManager( const Block& block, 
+    std::vector<MeshComponent>  blockManager( const Map& map, 
                                               const std::array<unsigned int,3>& 
                                                             position);
     std::vector<MeshComponent>  genSharps(  const Block& block, 

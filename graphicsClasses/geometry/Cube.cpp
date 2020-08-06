@@ -14,7 +14,8 @@
 #include "Cube.h"
 
 Cube::Cube( const glm::mat4& modelTransform,
-            const glm::mat4& normalsTransform  
+            const glm::mat4& normalsTransform,
+            const std::array<bool,6>& sides
         ): 
     GeometricShape ( 
         basicPositionsCube,
@@ -27,7 +28,8 @@ Cube::Cube( const glm::mat4& modelTransform,
 
 Cube::Cube( const glm::vec3& customColor,
             const glm::mat4& modelTransform,
-            const glm::mat4& normalsTransform  
+            const glm::mat4& normalsTransform,
+            const std::array<bool,6>& sides
         ): 
     GeometricShape (
         basicPositionsCube,
@@ -42,9 +44,10 @@ Cube::Cube( const glm::vec3& customColor,
 
 
 Cube::Cube( const std::vector<glm::vec3>& customColors,
+            const std::array<bool,6>& sides,
             const glm::mat4& modelTransform,
-            const glm::mat4& normalsTransform  
-        ): 
+            const glm::mat4& normalsTransform
+        ):
     GeometricShape (
         basicPositionsCube,
         basicNormalsCube,
@@ -56,11 +59,37 @@ Cube::Cube( const std::vector<glm::vec3>& customColors,
 }
 
 
-Cube::Cube(const GeometricShape& cube, 
+Cube::Cube(const GeometricShape& cube,
            const glm::mat4& modelTransform,
-           const glm::mat4& normalsTransform ):
+           const glm::mat4& normalsTransform,
+           const std::array<bool,6>& sides
+           ):
     GeometricShape(cube,modelTransform,normalsTransform) {
+    }
+
+const std::vector<glm::vec3> Cube::getBasicPosCube(const std::array<bool, 6> &sides) {
+    std::vector<glm::vec3> positions {};
+    if (sides.at(0))
+        positions.insert(positions.end(), basicPositionsCube.begin(),
+                         basicPositionsCube.begin() + 18);
+    if (sides.at(1))
+        positions.insert(positions.end(), basicPositionsCube.begin() + 18,
+                         basicPositionsCube.begin() + 18*2);
+    if (sides.at(2))
+        positions.insert(positions.end(), basicPositionsCube.begin() + 18*5,
+                         basicPositionsCube.begin() + 18*6);
+    if (sides.at(3))
+        positions.insert(positions.end(), basicPositionsCube.begin() + 18*4,
+                         basicPositionsCube.begin() + 18*5);
+    if (sides.at(4))
+        positions.insert(positions.end(), basicPositionsCube.begin() + 18*3,
+                         basicPositionsCube.begin() + 18*4);
+    if (sides.at(5))
+        positions.insert(positions.end(), basicPositionsCube.begin() + 18*2,
+                         basicPositionsCube.begin() + 18*3);
+    return positions;
 }
+
 
 
 const std::vector<glm::vec3> Cube::basicPositionsCube =

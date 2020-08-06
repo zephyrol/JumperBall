@@ -21,22 +21,28 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Cube( const glm::mat4& modelTransform    = glm::mat4(1.f),
-          const glm::mat4& normalsTransform  = glm::mat4(1.f));
+          const glm::mat4& normalsTransform  = glm::mat4(1.f),
+          const std::array<bool,6>& sides    = {true,true,true,true,true,true});
     Cube( const glm::vec3& customColor,
           const glm::mat4& modelTransform    = glm::mat4(1.f),
-          const glm::mat4& normalsTransform  = glm::mat4(1.f));
+          const glm::mat4& normalsTransform  = glm::mat4(1.f),
+          const std::array<bool,6>& sides    = {true,true,true,true,true,true});
     Cube(const std::vector<glm::vec3> &customColors,
+          const std::array<bool,6>& sides    = {true,true,true,true,true,true},
          const glm::mat4 &modelTransform     = glm::mat4(1.f),
          const glm::mat4 &normalsTransform   = glm::mat4(1.f));
-    Cube( const GeometricShape& cube, 
+    Cube( const GeometricShape& cube,
           const glm::mat4& modelTransform    = glm::mat4(1.f),
-          const glm::mat4& normalsTransform  = glm::mat4(1.f));
+          const glm::mat4& normalsTransform  = glm::mat4(1.f),
+          const std::array<bool,6>& sides    = {true,true,true,true,true,true});
 
     static const std::vector<glm::vec3> iceColorsCube;
     static const std::vector<glm::vec3> fireColorsCube;
-
+    
 private:
 
+    static const std::vector<glm::vec3> getBasicPosCube
+        (const std::array<bool,6>& sides);
     static const std::vector<glm::vec3> basicPositionsCube;
     static const std::vector<glm::vec3> basicNormalsCube;
     static const std::vector<glm::vec2> basicUVCoordsCube;
