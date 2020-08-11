@@ -17,7 +17,6 @@ in vec3   fs_vertexColor;
 in vec3   fs_vertexNormal;
 in vec3   fs_vertexPositionWorld;
 in vec4   fs_vertexDepthMapSpace;
-in float  proximityObjectBehind;
 
 out vec4  pixelColor;
 
@@ -32,7 +31,6 @@ void main() {
                                0.f, 0.f, 0.5f,0.f,
                                0.5f, 0.5f, 0.5f, 1.f);
 
-    if (proximityObjectBehind < epsilon ) discard;
 
     bool inShadow;
     vec4 fragStarSysCoord   = biasMatrix * fs_vertexDepthMapSpace;

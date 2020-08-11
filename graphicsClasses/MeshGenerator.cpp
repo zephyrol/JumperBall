@@ -196,25 +196,27 @@ std::vector<MeshComponent> MeshGenerator::sortComponents(
 std::vector<MeshComponent> MeshGenerator::blockManager (
     const Map& map, const std::array<unsigned int,3>& position) {
 
-    std::vector<MeshComponent> components;
-    
-    std::shared_ptr<GeometricShape> shape;
     const std::shared_ptr<const Block> block =
         map.getBlock(position.at(0),position.at(1),position.at(2));
     
+    if (!block) return {};
+
+    std::vector<MeshComponent> components;
+    std::shared_ptr<GeometricShape> shape;
+
     std::string strSidesInfo {};
-    std::array<bool,6> boolSidesInfo {};
+    std::array<bool,6> boolSidesInfo {}; // true <=> close, false <=> open
     const std::array<std::array<unsigned int, 3>,6 > positions {{
-        {position.at(0),position.at(1),position.at(2) + 1},
         {position.at(0),position.at(1),position.at(2) - 1},
-        {position.at(0),position.at(1) + 1,position.at(2)},
-        {position.at(0),position.at(1) - 1,position.at(2)},
+        {position.at(0),position.at(1),position.at(2) + 1},
         {position.at(0) + 1,position.at(1),position.at(2)},
-        {position.at(0) - 1,position.at(1),position.at(2)}
+        {position.at(0) - 1,position.at(1),position.at(2)},
+        {position.at(0),position.at(1) + 1,position.at(2)},
+        {position.at(0),position.at(1) - 1,position.at(2)}
     }};
     
     for (size_t i = 0; i < 6; ++i) {
-        const std::array<unsigned int, 3> neighbourgPosition = positions.at(i);
+        const std::array<unsigned int, 3>& neighbourgPosition = positions.at(i);
         if (const std::shared_ptr<const Block> neighbourg =
             map.getBlock(neighbourgPosition.at(0),
                          neighbourgPosition.at(1),
@@ -229,7 +231,7 @@ std::vector<MeshComponent> MeshGenerator::blockManager (
             }
         } else {
             strSidesInfo.push_back('1');
-            boolSidesInfo.at(i) = false;
+            boolSidesInfo.at(i) = true;
         }
     }
 
@@ -267,8 +269,8 @@ std::vector<MeshComponent> MeshGenerator::blockManager (
                                   position.at(2)};
     const glm::mat4 transform (glm::translate(glmPosition));
     
-    MeshComponent component (std::make_shared<Cube>
-        (*shape,transform), nullptr);
+    MeshComponent component
+        (std::make_shared<Cube> (*shape,transform), nullptr);
     components.push_back(component);
     
     std::vector<MeshComponent> sharpsComponents = genSharps(*block,glmPosition);
@@ -308,15 +310,11 @@ std::vector<MeshComponent> MeshGenerator::genComponents(const Map& map) {
     for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
         for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
             for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
-                auto block = map.getBlock(x,y,z);
-                if (block) {
-                    std::vector<MeshComponent> blockComponents =
-                            blockManager(map,
-                              std::array<unsigned int,3> {x,y,z});
-
-                    for(MeshComponent& m : blockComponents) {
-                        components.push_back(std::move(m));
-                        }
+                const auto block = map.getBlock(x,y,z);
+                std::vector<MeshComponent> blockComponents =
+                    blockManager(map, std::array<unsigned int,3> {x,y,z});
+                for(MeshComponent& m : blockComponents) {
+                    components.push_back(std::move(m));
                 }
             }
         }
@@ -354,13 +352,10 @@ std::vector<MeshComponent> MeshGenerator::genComponents(const Star& star) {
     return std::vector<MeshComponent> {component};
 }
 
-std::vector<MeshComponent>
-                    MeshGenerator::genComponents(
+std::vector<MeshComponent> MeshGenerator::genComponents(
                                 const std::shared_ptr<const Object>& obj,
                                 const glm::vec3& position,
-                                const JBTypes::Dir& dir)
-{
-
+                                const JBTypes::Dir& dir) {
     std::vector<MeshComponent> components;
     if (obj) {
         switch ( obj->getCategory() ) {
@@ -389,7 +384,6 @@ std::vector<MeshComponent>
                     glm::vec3(-0.025f, -0.175f, -0.025f )
                 };
 
-
                 for (unsigned int i = 0; i < nbGeometriesToCreateAKey; ++i ) {
                     const glm::mat4 scaleMatrix = glm::scale(scales.at(i));
                     const glm::mat4 translationMatrix =
@@ -410,7 +404,6 @@ std::vector<MeshComponent>
                     components.push_back(componentCube); 
                     }
                }
-                
                 break;
             }
             case Object::CategoryOfObjects::Coin: {

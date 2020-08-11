@@ -27,21 +27,27 @@ public:
           const glm::mat4& modelTransform    = glm::mat4(1.f),
           const glm::mat4& normalsTransform  = glm::mat4(1.f),
           const std::array<bool,6>& sides    = {true,true,true,true,true,true});
-    Cube(const std::vector<glm::vec3> &customColors,
+    Cube( const std::vector<glm::vec3> &customColors,
           const std::array<bool,6>& sides    = {true,true,true,true,true,true},
-         const glm::mat4 &modelTransform     = glm::mat4(1.f),
-         const glm::mat4 &normalsTransform   = glm::mat4(1.f));
+          const glm::mat4 &modelTransform     = glm::mat4(1.f),
+          const glm::mat4 &normalsTransform   = glm::mat4(1.f));
     Cube( const GeometricShape& cube,
           const glm::mat4& modelTransform    = glm::mat4(1.f),
-          const glm::mat4& normalsTransform  = glm::mat4(1.f),
-          const std::array<bool,6>& sides    = {true,true,true,true,true,true});
+          const glm::mat4& normalsTransform  = glm::mat4(1.f));
 
     static const std::vector<glm::vec3> iceColorsCube;
     static const std::vector<glm::vec3> fireColorsCube;
     
 private:
 
+    static const std::vector<glm::vec3> getBasicElements
+        (const std::vector<glm::vec3>& basicElements,
+         const std::array<bool, 6> &sides);
     static const std::vector<glm::vec3> getBasicPosCube
+        (const std::array<bool,6>& sides);
+    static const std::vector<glm::vec3> getBasicNormalsCube
+        (const std::array<bool,6>& sides);
+    static const std::vector<glm::vec3> getBasicColorsCube
         (const std::array<bool,6>& sides);
     static const std::vector<glm::vec3> basicPositionsCube;
     static const std::vector<glm::vec3> basicNormalsCube;

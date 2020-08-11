@@ -13,7 +13,7 @@
 
 #ifndef CAMERA_H
 #define CAMERA_H
-#include <Types.h>
+#include <Utility.h>
 #include <Ball.h>
 #include <Map.h>
 #include <glm/glm.hpp>
@@ -40,7 +40,7 @@ public:
     const glm::vec3&              pos()                          const noexcept;
     const glm::vec3&              center()                       const noexcept;
     const glm::vec3&              up()                           const noexcept;
-    bool                          displayBehind()                const noexcept;
+    glm::mat4                     viewProjection()               const noexcept;
 
 
     //----------METHODS-------------//
@@ -56,14 +56,15 @@ public:
 private:
 
     //--------ATTRIBUTES-----------//
+    const float                   _fovy;
+    const float                   _ratio;
     glm::vec3                     _pos;
     glm::vec3                     _center;
     glm::vec3                     _up;
-    bool                          _displayBehind;
     bool                          _willComeBack;
     bool                          _isComingBack;
     float                         _cameraAboveWay;
-    JBTypes::timePointMs  _timePointComeBack;
+    JBTypes::timePointMs          _timePointComeBack;
 
 };
 #endif /* CAMERA_H */

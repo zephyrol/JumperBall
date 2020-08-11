@@ -221,16 +221,7 @@ void Rendering::render() {
 
 void Rendering::bindCamera(const ShaderProgram& sp) {
 
-    _uniformBool["displayBehind"] = _camera.displayBehind();
-
-    _uniformMatrix4["VP"] =
-            glm::mat4(glm::perspective( glm::radians(70.f),
-                      static_cast<float>(Utility::windowResolutionX)/
-                      static_cast<float>(Utility::windowResolutionY),
-                      _camera.zNear, _camera.zFar) *
-                      glm::lookAt ( _camera.pos(), _camera.center(),
-                                   _camera.up()));
-    
+    _uniformMatrix4["VP"] = _camera.viewProjection();
 
     const JBTypes::vec3f& positionBall = _ball.get3DPosition();
 
@@ -238,24 +229,12 @@ void Rendering::bindCamera(const ShaderProgram& sp) {
                                                  positionBall.y,
                                                  positionBall.z);
 
-    const glm::vec3 rightVector  = glm::cross(_camera.center() -_camera.pos(),
-                                              _camera.up());
-    
-    const glm::vec3 lookDirection  =
-        glm::normalize(glm::cross (_camera.up(), rightVector));
-    //_uniformMatrix4["viewDirection"] =
-     //   glm::lookAt( _camera.pos(), _camera.pos() + lookDirection,
-
     _uniformVec3["positionCamera"]  = _camera.pos();
     
- // _uniformFloat["distanceBehind"] = Camera::distanceBehindBall(_ball);
     sp.bindUniform ("VP",             _uniformMatrix4.at("VP"));
     sp.bindUniform ("VPStar",         _uniformMatrix4.at("VPStar"));
     sp.bindUniform ("positionBall",   _uniformVec3.at("positionBall"));
-    //sp.bindUniform ("lookDirection",  _uniformVec3.at("lookDirection"));
-    //sp.bindUniform ("distanceBehind", _uniformFloat.at("distanceBehind"));
     sp.bindUniform ("positionCamera", _uniformVec3.at("positionCamera"));
-    sp.bindUniform ("displayBehind",  _uniformBool.at("displayBehind"));
 }
 
 void Rendering::bindStarView(const ShaderProgram& sp) {

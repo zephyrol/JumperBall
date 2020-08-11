@@ -13,10 +13,12 @@
 
 #include "Camera.h"
 
-Camera::Camera() :  _pos(glm::vec3(1.f,0.f,0.f)),
+Camera::Camera() :  _fovy(glm::radians(70.f)),
+                    _ratio( static_cast<float>(Utility::windowResolutionX)/
+                            static_cast<float>(Utility::windowResolutionY)),
+                    _pos(glm::vec3(1.f,0.f,0.f)),
                     _center(glm::vec3(0.f,0.f,0.f)),
                     _up(glm::vec3(0.f,1.f,0.f)),
-                    _displayBehind(false),
                     _willComeBack(false),
                     _isComingBack(false),
                     _cameraAboveWay(0.f),
@@ -166,8 +168,6 @@ void Camera::follow(const Ball& ball) noexcept {
     _pos = posVec;
     _center = centerVec;
 
-
-    _displayBehind = false;
 }
 
 void Camera::follow(const Map& map) noexcept{
@@ -222,7 +222,6 @@ void Camera::follow(const Map& map) noexcept{
     _center = center;
     _up = up;
 
-    _displayBehind = true;
 }
 
 bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
@@ -277,8 +276,6 @@ bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
     _center = { position.x, position.y, position.z - distDirPoint};
     _up = upVector;
 
-    _displayBehind = true;
-
     return animationIsFinished;
 }
 
@@ -295,10 +292,6 @@ const glm::vec3& Camera::up() const noexcept{
     return _up;
 }
 
-bool Camera::displayBehind() const noexcept{
-    return _displayBehind;
-}
-
 float Camera::distanceBehindBall(const Ball& ball) noexcept {
     constexpr float offsetCenterBlock = 0.5f;
     const JBTypes::vec3f lookVec = ball.lookTowardsAsVector();
@@ -311,3 +304,10 @@ float Camera::distanceBehindBall(const Ball& ball) noexcept {
         distance *= 10;
     return distance;
 }
+
+glm::mat4 Camera::viewProjection() const noexcept {
+    return glm::mat4(glm::perspective (_fovy, _ratio, zNear, zFar) *
+                     glm::lookAt ( _pos, _center, _up));
+}
+
+
