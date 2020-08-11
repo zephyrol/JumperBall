@@ -48,9 +48,6 @@ public:
     void                          follow(const Map& map)               noexcept;
     bool                          transitionEffect(const Ball& ball,
                                                    const Map& map)     noexcept;
-    
-    //--------STATIC METHODS--------//
-    static float                  distanceBehindBall(const Ball& ball) noexcept;
 
 
 private:

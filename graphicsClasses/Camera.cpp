@@ -292,19 +292,6 @@ const glm::vec3& Camera::up() const noexcept{
     return _up;
 }
 
-float Camera::distanceBehindBall(const Ball& ball) noexcept {
-    constexpr float offsetCenterBlock = 0.5f;
-    const JBTypes::vec3f lookVec = ball.lookTowardsAsVector();
-    const auto position = ball.get3DPosition();
-    float distance = fmod(fabsf(position.x * lookVec.x + position.y * lookVec.y
-                                + position.z * lookVec.z
-                                - offsetCenterBlock),1.f) + offsetCenterBlock;
-    
-    if ( ball.state() == Ball::State::TurningLeft || ball.state() == Ball::State::TurningRight)
-        distance *= 10;
-    return distance;
-}
-
 glm::mat4 Camera::viewProjection() const noexcept {
     return glm::mat4(glm::perspective (_fovy, _ratio, zNear, zFar) *
                      glm::lookAt ( _pos, _center, _up));
