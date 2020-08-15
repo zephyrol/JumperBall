@@ -193,7 +193,7 @@ std::vector<MeshComponent> MeshGenerator::sortComponents(
 }
 
 
-std::vector<MeshComponent> MeshGenerator::blockManager (
+std::vector<MeshComponent> MeshGenerator::genBlock(
     const Map& map, const std::array<unsigned int,3>& position) {
 
     const std::shared_ptr<const Block> block =
@@ -269,8 +269,10 @@ std::vector<MeshComponent> MeshGenerator::blockManager (
                                   position.at(2)};
     const glm::mat4 transform (glm::translate(glmPosition));
     
+    std::shared_ptr<BlockAnimation> blockAnim =
+            std::make_shared<BlockAnimation>(*block);
     MeshComponent component
-        (std::make_shared<Cube> (*shape,transform), nullptr);
+        (std::make_shared<Cube> (*shape,transform), blockAnim);
     components.push_back(component);
     
     std::vector<MeshComponent> sharpsComponents = genSharps(*block,glmPosition);
@@ -312,7 +314,7 @@ std::vector<MeshComponent> MeshGenerator::genComponents(const Map& map) {
             for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
                 const auto block = map.getBlock(x,y,z);
                 std::vector<MeshComponent> blockComponents =
-                    blockManager(map, std::array<unsigned int,3> {x,y,z});
+                    genBlock(map, std::array<unsigned int,3> {x,y,z});
                 for(MeshComponent& m : blockComponents) {
                     components.push_back(std::move(m));
                 }

@@ -24,6 +24,7 @@
 #include "geometry/Quad.h"
 #include "animations/BallAnimation.h"
 #include "animations/ObjectAnimation.h"
+#include "animations/BlockAnimation.h"
 #include "FrameBuffer.h"
 #include "MeshComponent.h"
 
@@ -43,8 +44,8 @@ namespace MeshGenerator {
     std::vector<MeshComponent>  sortComponents(std::vector<MeshComponent>&
                                                   components);
     
-    std::vector<MeshComponent>  blockManager( const Map& map, 
-                                              const std::array<unsigned int,3>& 
+    std::vector<MeshComponent>  genBlock( const Map& map,
+                                          const std::array<unsigned int,3>&
                                                             position);
     std::vector<MeshComponent>  genSharps(  const Block& block, 
                                             const glm::vec3& posWorld);

@@ -35,9 +35,9 @@ GLFWwindow* initLibraries() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
 
-    /*_window = glfwCreateWindow(RESOLUTION_X,RESOLUTION_Y,
+    /*window = glfwCreateWindow(RESOLUTION_X,RESOLUTION_Y,
                                 "JumperBall",glfwGetPrimaryMonitor(),
-           nullptr);*/
+                              nullptr);*/
     window = glfwCreateWindow( RESOLUTION_X,RESOLUTION_Y,
                                 "JumperBall",nullptr, nullptr);
 
@@ -64,6 +64,11 @@ GLFWwindow* initLibraries() {
     }
     return window;
 
+}
+
+void cleanLibraries() {
+    glfwTerminate();
+    TextRendering::clearFreeTypeRessources();
 }
 
 int main(int argc, char** argv) {
@@ -107,6 +112,7 @@ int main(int argc, char** argv) {
     
     t.run();
     
+    cleanLibraries();
     return EXIT_SUCCESS;
 }
 

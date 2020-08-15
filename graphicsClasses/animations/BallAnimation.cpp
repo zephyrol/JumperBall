@@ -159,7 +159,7 @@ void BallAnimation::updateTrans() {
     
     if (_ball.getTimeActionMs() > _referenceTimePointAction) {
         _referenceTimePointAction = _ball.getTimeActionMs();
-        if ( _ball.state() == _referenceState) {
+        if (_ball.state() == _referenceState) {
         _scaleBeforeMovement        = glm::vec3(1.f,1.f,1.f);
         _translationBeforeMovement  = glm::vec3(0.f,0.f,0.f);
         }

@@ -82,10 +82,7 @@ void BrittleBlock::setFallDirection(JBTypes::Dir ballDir) {
         default :
             break;
     }
-      
 }
-
-
 
 bool BrittleBlock::stillExists() const {
     return _stillThere;

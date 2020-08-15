@@ -62,7 +62,7 @@ public:
                                       objects()                           const; 
 
     //--------STATIC METHODS-------//
-    static JBTypes::vec3f     positionObject
+    static JBTypes::vec3f             positionObject
                                         (const std::array<unsigned int,3>& pos,
                                          unsigned int dirUint);
 

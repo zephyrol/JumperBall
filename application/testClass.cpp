@@ -166,8 +166,3 @@ void testClass::run()
 	}
 
 }
-
-testClass::~testClass() {
-    glfwTerminate();
-    TextRendering::clearFreeTypeRessources();
-}

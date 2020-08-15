@@ -20,13 +20,14 @@
 #include <Rendering.h>
 #include <graphicMenu/Menu.h>
 #include <Controller.h>
+#define RESOLUTION_X 1024
+#define RESOLUTION_Y 768
 
 class testClass {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     testClass(  GLFWwindow* window );
-    ~testClass();
 
     
     //----------METHODS-------------//
