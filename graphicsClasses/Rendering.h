@@ -94,8 +94,6 @@ private:
     //------------METHODS----------//
     void                            phongEffect(GLuint depthTexture);
     void                            blurEffect(GLuint brightPassTexture) const;
-    //void                            toneMappingEffect(
-                                               //const FrameBuffer& referenceFBO);
     void                            brightPassEffect(GLuint hdrSceneTexture);
     void                            bloomEffect(GLuint hdrSceneTexture,
                                                 GLuint bluredTexture );

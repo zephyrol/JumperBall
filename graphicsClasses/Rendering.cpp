@@ -123,29 +123,6 @@ void Rendering::blurEffect(GLuint brightPassTexture) const {
     _meshQuadFrame.render(_spBlur);
 }
 
-/*void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
-
-    std::pair<float,float> averageLuminanceAndMax {0.f,0.f};
-    //referenceFBO.computeLogAverageLuminanceAndMax();
-
-
-    _spToneMapping.use();
-    _frameBufferSceneSDR.bindFrameBuffer(false);
-
-    _spToneMapping.bindUniformTexture("frameTexture", 0,
-                                      referenceFBO.getRenderTexture());
-    _spToneMapping.bindUniform ( "averageLuminance",
-                  //averageLuminanceAndMax.first,
-                  //referenceFBO.computeLogAverageLuminance(),
-                    1.8f);
-    _spToneMapping.bindUniform ( "whiteLuminance",
-                    averageLuminanceAndMax.second);
-                  //referenceFBO.computeLogAverageLuminance(),
-                  //1.8f,
-
-    _meshQuadFrame.render(_spToneMapping);
-}*/
-
 void Rendering::brightPassEffect(GLuint hdrSceneTexture) {
     constexpr float bloomThreshold = 4.f;
     _spBrightPassFilter.use();

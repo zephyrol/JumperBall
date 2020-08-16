@@ -568,7 +568,6 @@ void Ball::burningUpdate() noexcept
             if (_burnCoefficientCurrent < 0 ) _burnCoefficientCurrent = 0.f;
         }
     }
-    std::cout << _burnCoefficientCurrent << std::endl;
 }
 
 void Ball::update() noexcept{
