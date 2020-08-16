@@ -43,9 +43,6 @@ Rendering::Rendering(const Map&     map,
             Shader (GL_FRAGMENT_SHADER, fsshaderFBO )),
     _spBlur(Shader (GL_VERTEX_SHADER,   vsshaderBlur),
             Shader (GL_FRAGMENT_SHADER, fsshaderBlur)),
-    _spToneMapping
-          ( Shader (GL_VERTEX_SHADER,   vsshaderToneMapping),
-            Shader (GL_FRAGMENT_SHADER, fsshaderToneMapping)),
     _spBrightPassFilter
           ( Shader (GL_VERTEX_SHADER,   vsshaderBrightPassFilter),
             Shader (GL_FRAGMENT_SHADER, fsshaderBrightPassFilter)),
@@ -57,28 +54,27 @@ Rendering::Rendering(const Map&     map,
             Shader (GL_FRAGMENT_SHADER, fsshaderDepth)),
     _frameBufferDepth(FrameBuffer::TextureCaterory::Depth,
                          sizeDepthTexture,sizeDepthTexture),
-    _frameBufferSceneHDR(FrameBuffer::TextureCaterory::HDR),
-    _frameBufferSceneSDR(FrameBuffer::TextureCaterory::SDR,
-                         Utility::windowResolutionX,
-                         Utility::windowResolutionY, false),
-    _frameBufferBloomEffect(FrameBuffer::TextureCaterory::SDR,
+    _frameBufferHDRScene(FrameBuffer::TextureCaterory::HDR),
+    _frameBufferBrightPassEffect(FrameBuffer::TextureCaterory::HDR,
                          Utility::getWidthFromHeight(heightBloomTexture),
                          heightBloomTexture,
                          false),
-    _frameBufferBlurEffect(FrameBuffer::TextureCaterory::SDR,
+    _frameBufferHalfBlurEffect(FrameBuffer::TextureCaterory::HDR,
+                         Utility::getWidthFromHeight(heightBloomTexture),
+                         heightBloomTexture,
+                         false),
+    _frameBufferCompleteBlurEffect(FrameBuffer::TextureCaterory::SDR,
                         Utility::getWidthFromHeight(heightBloomTexture),
                         heightBloomTexture,
                         false)
-{
-}
+{ }
 
-void Rendering::phongEffect( const FrameBuffer& referenceFBO ) {
+void Rendering::phongEffect( GLuint depthTexture) {
 
-    glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
-    _frameBufferSceneHDR.bindFrameBuffer(true);
+    glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.z, 0.0f);
+    _frameBufferHDRScene.bindFrameBuffer(true);
     _spMap.use();
-    _spMap.bindUniformTexture("depthTexture", 0,
-                              referenceFBO.getRenderTexture());
+    _spMap.bindUniformTexture("depthTexture", 0, depthTexture);
 
     // --- Ball and Map ---
     bindCamera (_spMap);
@@ -107,28 +103,27 @@ void Rendering::phongEffect( const FrameBuffer& referenceFBO ) {
 
 }
 
-void Rendering::blurEffect( const FrameBuffer& referenceFBO ) {
+void Rendering::blurEffect(GLuint brightPassTexture) const {
 
     _spBlur.use();
-    _frameBufferBlurEffect.bindFrameBuffer(false);
+    _frameBufferHalfBlurEffect.bindFrameBuffer(false);
 
-    _spBlur.bindUniformTexture("frameTexture", 0,
-                               referenceFBO.getRenderTexture());
+    _spBlur.bindUniformTexture("frameTexture", 0, brightPassTexture);
     _spBlur.bindUniform("patchSize", static_cast<int>(blurPatchSize));
     _spBlur.bindUniform("gaussWeights", gaussComputedValues);
 
     _spBlur.bindUniform("firstPass", true);
     _meshQuadFrame.render(_spBlur);
 
-    _frameBufferBloomEffect.bindFrameBuffer(false);
+    _frameBufferCompleteBlurEffect.bindFrameBuffer(false);
     _spBlur.bindUniformTexture("frameTexture", 0,
-                              _frameBufferBlurEffect.getRenderTexture());
+                              _frameBufferHalfBlurEffect.getRenderTexture());
 
     _spBlur.bindUniform("firstPass", false);
     _meshQuadFrame.render(_spBlur);
 }
 
-void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
+/*void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
 
     std::pair<float,float> averageLuminanceAndMax {0.f,0.f};
     //referenceFBO.computeLogAverageLuminanceAndMax();
@@ -149,28 +144,28 @@ void Rendering::toneMappingEffect( const FrameBuffer& referenceFBO) {
                   //1.8f,
 
     _meshQuadFrame.render(_spToneMapping);
-}
+}*/
 
-void Rendering::brightPassEffect( const FrameBuffer& referenceFBO) {
+void Rendering::brightPassEffect(GLuint hdrSceneTexture) {
+    constexpr float bloomThreshold = 4.f;
     _spBrightPassFilter.use();
-    _frameBufferBloomEffect.bindFrameBuffer(false);
+    _frameBufferBrightPassEffect.bindFrameBuffer(false);
 
-    _spBrightPassFilter.bindUniformTexture("frameTexture", 0,
-                                           referenceFBO.getRenderTexture());
+    _spBrightPassFilter.bindUniformTexture("frameTexture", 0, hdrSceneTexture);
     _spBrightPassFilter.bindUniform ("threshold", bloomThreshold);
     _meshQuadFrame.render(_spBrightPassFilter);
 }
 
-void Rendering::bloomEffect(  const FrameBuffer& fboScene,
-                              const FrameBuffer& fboLight) {
+void Rendering::bloomEffect( GLuint hdrSceneTexture,
+                             GLuint bluredTexture) {
     _spBloom.use();
     FrameBuffer::bindDefaultFrameBuffer();
 
-    _spBloom.bindUniformTexture("frameToneMappingTexture", 0,
-                                fboScene.getRenderTexture());
+    _spBloom.bindUniformTexture("frameSceneHDRTexture", 0, hdrSceneTexture);
+    _spBloom.bindUniformTexture("frameBluredTexture", 1, bluredTexture);
 
-    _spBloom.bindUniformTexture("frameBrightPassFilterTexture", 1,
-                                fboLight.getRenderTexture());
+    _spBloom.bindUniform ( "averageLuminance", 1.8f);
+    _spBloom.bindUniform ( "whiteLuminance", 0.f);
     _meshQuadFrame.render(_spBloom);
 }
 
@@ -194,7 +189,6 @@ void Rendering::render() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //-----
-    glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
     glEnable(GL_CULL_FACE);
 
     _meshMap.update();
@@ -203,19 +197,19 @@ void Rendering::render() {
 
     depthFromStar();
 
-    phongEffect(_frameBufferDepth);
+    phongEffect(_frameBufferDepth.getRenderTexture());
 
-    toneMappingEffect(_frameBufferSceneHDR);
+    brightPassEffect(_frameBufferHDRScene.getRenderTexture());
 
-    brightPassEffect(_frameBufferSceneSDR);
-    blurEffect(_frameBufferBloomEffect);
+    blurEffect(_frameBufferBrightPassEffect.getRenderTexture());
 
-    bloomEffect(_frameBufferSceneSDR,_frameBufferBloomEffect);
+    bloomEffect(_frameBufferHDRScene.getRenderTexture(),
+                _frameBufferCompleteBlurEffect.getRenderTexture());
 
     /*_spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();
     _spFbo.bindUniformTexture("frameTexture", 0,
-                              _frameBufferSceneSDR.getRenderTexture());
+                              _frameBufferHDRScene.getRenderTexture());
     _meshQuadFrame.render(_spFbo);*/
 
 }
@@ -279,9 +273,6 @@ const std::string Rendering::fsshaderFBO = "shaders/basicFboFs.fs";
 const std::string Rendering::vsshaderBlur = "shaders/basicFboVs.vs";
 const std::string Rendering::fsshaderBlur = "shaders/blurFs.fs";
 
-const std::string Rendering::vsshaderToneMapping = "shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderToneMapping = "shaders/toneMappingFs.fs";
-
 const std::string Rendering::vsshaderBrightPassFilter = "shaders/basicFboVs.vs";
 const std::string Rendering::fsshaderBrightPassFilter =
                                                   "shaders/brightPassFilter.fs";
@@ -294,4 +285,4 @@ const std::string Rendering::fsshaderDepth = "shaders/depthFs.fs";
 const std::vector<float> Rendering::gaussComputedValues =
   Utility::genGaussBuffer(Rendering::blurPatchSize, Rendering::blurSigma);
 
-const float Rendering::bloomThreshold = 4.f;
+const glm::vec3 Rendering::backgroundColor {0.f,0.f,.1f};

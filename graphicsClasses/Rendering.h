@@ -81,29 +81,24 @@ private:
     const ShaderProgram             _spFbo;
 
     const ShaderProgram             _spBlur;
-    const ShaderProgram             _spToneMapping;
     const ShaderProgram             _spBrightPassFilter;
     const ShaderProgram             _spBloom;
     const ShaderProgram             _spDepth;
 
     const FrameBuffer               _frameBufferDepth;
-    const FrameBuffer               _frameBufferSceneHDR;
-    const FrameBuffer               _frameBufferSceneSDR;
-    const FrameBuffer               _frameBufferBloomEffect;
-    const FrameBuffer               _frameBufferBlurEffect;
-
+    const FrameBuffer               _frameBufferHDRScene;
+    const FrameBuffer               _frameBufferBrightPassEffect;
+    const FrameBuffer               _frameBufferHalfBlurEffect;
+    const FrameBuffer               _frameBufferCompleteBlurEffect;
 
     //------------METHODS----------//
-    void                            phongEffect(
-                                               const FrameBuffer& referenceFBO);
-    void                            blurEffect(
-                                               const FrameBuffer& referenceFBO);
-    void                            toneMappingEffect(
-                                               const FrameBuffer& referenceFBO);
-    void                            brightPassEffect(
-                                               const FrameBuffer& referenceFBO);
-    void                            bloomEffect(  const FrameBuffer& fboScene,
-                                                  const FrameBuffer& fboLight );
+    void                            phongEffect(GLuint depthTexture);
+    void                            blurEffect(GLuint brightPassTexture) const;
+    //void                            toneMappingEffect(
+                                               //const FrameBuffer& referenceFBO);
+    void                            brightPassEffect(GLuint hdrSceneTexture);
+    void                            bloomEffect(GLuint hdrSceneTexture,
+                                                GLuint bluredTexture );
     void                            depthFromStar();
 
     void                            bindCamera(const ShaderProgram& sp);
@@ -119,17 +114,15 @@ private:
     static const std::string        fsshaderFBO;
     static const std::string        vsshaderBlur;
     static const std::string        fsshaderBlur;
-    static const std::string        vsshaderToneMapping;
-    static const std::string        fsshaderToneMapping;
     static const std::string        vsshaderBrightPassFilter;
     static const std::string        fsshaderBrightPassFilter;
     static const std::string        vsshaderBloom;
     static const std::string        fsshaderBloom;
     static const std::string        vsshaderDepth;
     static const std::string        fsshaderDepth;
-    static const float              bloomThreshold;
 
     static const std::vector<float> gaussComputedValues;
+    static const glm::vec3          backgroundColor;
 };
 
 #endif /* RENDERING_H */

@@ -62,7 +62,8 @@ Cube::Cube(const GeometricShape& cube,
     GeometricShape(cube,modelTransform,normalsTransform) {
     }
 
-const std::vector<glm::vec3> Cube::getBasicPosCube(const std::array<bool, 6> &sides) {
+const std::vector<glm::vec3> Cube::getBasicPosCube
+    (const std::array<bool, 6> &sides) {
     return getBasicElements(basicPositionsCube, sides);
 }
 
@@ -179,46 +180,45 @@ const std::vector<glm::vec3> Cube::iceColorsCube =
 Utility::GLfloatListToGlmVec3({
 
     //Face 1 
-    0.f,0.f,1.0f, 0.f,0.f,1.f, 0.f,0.8f,0.8f,
-    0.f,0.f,1.0f, 0.f,0.8f,0.8f, 0.f,0.f,1.f,
+    0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.f,1.f*1.5f,
+    0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.f,1.f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f,
     //Face 2
-    0.f,0.8f,0.8f, 0.f,0.f,1.f, 0.f,0.f,1.f,
-    0.f,0.f,1.f, 0.f,0.8f,0.8f, 0.f,0.f,1.f,
+    0.f,0.f,1.f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f,
+    0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.f,1.f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f,
     //Face 6
-    0.f,0.8f,0.8f, 0.f,0.f,1.f, 0.f,0.f,1.f,
-    0.f,0.f,1.f, 0.f,0.8f,0.8f, 0.f,0.f,1.f,
+    0.f,0.f,1.f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f,
+    0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.f,1.f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f,
     //Face 5
-    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.8f,0.8f,
-    0.f,0.f,1.f, 0.f,0.8f,0.8f, 0.f,0.f,1.f,
+    0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.f,1.f*1.5f,
+    0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.f,1.f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f,
     //Face 4
-    0.f,0.f,1.f, 0.f,0.f,1.f, 0.f,0.8f,0.8f,
-    0.f,0.f,1.f, 0.f,0.8f,0.8f, 0.f,0.f,1.f,
+    0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.f,1.f*1.5f,
+    0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.f,1.f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f,
     //Face 3
-    0.f,0.8f,0.8f, 0.f,0.f,1.f, 0.f,0.f,1.f,
-    0.f,0.f,1.f, 0.f,0.8f,0.8f, 0.f,0.f,1.f
+    0.f,0.f,1.f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f,
+    0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.f,1.f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f
 });
 
 const std::vector<glm::vec3> Cube::fireColorsCube =
 Utility::GLfloatListToGlmVec3({
-
     //Face 1
-    0.8f,0.8f,0.f, 0.8f,0.8f,0.f, 1.f,0.f,0.f,
-    0.8f,0.8f,0.f, 1.f,0.f,0.f, 0.8f,0.8f,0.f,
+    0.8f*1.5f,0.8f*1.5f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f, 1.f*1.5f,0.f,0.f,
+    0.8f*1.5f,0.8f*1.5f,0.f, 1.f*1.5f,0.f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f,
     //Face 2
-    1.f,0.f,0.f, 0.8f,0.8f,0.f, 0.8f,0.8f,0.f,
-    0.8f,0.8f,0.f, 1.f,0.f,0.f, 0.8f,0.8f,0.f,
+    1.f*1.5f,0.f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f,
+    0.8f*1.5f,0.8f*1.5f,0.f, 1.f*1.5f,0.f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f,
     //Face 6
-    1.f,0.f,0.f, 0.8f,0.8f,0.f, 0.8f,0.8f,0.f,
-    0.8f,0.8f,0.f, 1.f,0.f,0.f, 0.8f,0.8f,0.f,
+    1.f*1.5f,0.f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f,
+    0.8f*1.5f,0.8f*1.5f,0.f, 1.f*1.5f,0.f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f,
     //Face 5
-    0.8f,0.8f,0.f, 0.8f,0.8f,0.f, 1.f,0.f,0.f,
-    0.8f,0.8f,0.f, 1.f,0.f,0.f, 0.8f,0.8f,0.f,
+    0.8f*1.5f,0.8f*1.5f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f, 1.f*1.5f,0.f,0.f,
+    0.8f*1.5f,0.8f*1.5f,0.f, 1.f*1.5f,0.f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f,
     //Face 4
-    0.8f,0.8f,0.f, 0.8f,0.8f,0.f, 1.f,0.f,0.f,
-    0.8f,0.8f,0.f, 1.f,0.f,0.f, 0.8f,0.8f,0.f,
+    0.8f*1.5f,0.8f*1.5f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f, 1.f*1.5f,0.f,0.f,
+    0.8f*1.5f,0.8f*1.5f,0.f, 1.f*1.5f,0.f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f,
     //Face 3
-    1.f,0.f,0.f, 0.8f,0.8f,0.f, 0.8f,0.8f,0.f,
-    0.8f,0.8f,0.f, 1.f,0.f,0.f, 0.8f,0.8f,0.f
+    1.f*1.5f,0.f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f,
+    0.8f*1.5f,0.8f*1.5f,0.f, 1.f*1.5f,0.f,0.f, 0.8f*1.5f,0.8f*1.5f,0.f
 });
 
 const std::vector<glm::vec2> Cube::basicUVCoordsCube =

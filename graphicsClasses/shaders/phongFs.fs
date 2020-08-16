@@ -24,8 +24,6 @@ in vec4   fs_vertexDepthMapSpace;
 out vec4  pixelColor;
 
 
-mat4 VPinverse = inverse(VP);
-
 void main() {
 
     const mat4 biasMatrix   = mat4(0.5f,0.f, 0.f, 0.f,
@@ -44,7 +42,7 @@ void main() {
         inShadow = false;
     }
 
-    const vec3 fireEffet    = vec3(1.f,.2f,0.f);
+    const vec3 fireEffet    = vec3(10.f,.2f,0.f);
     /*vec3 ambientComponent   = (1.f - burningCoeff) * ambientLightIntensity 
                                 + (burningCoeff) * fireEffet;*/
 

@@ -145,5 +145,3 @@ std::pair<float,float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
    return std::pair<float,float>(exp(sumLogLuminance/numberOfPixels),
                                   maxLuminance); 
 }
-
-

@@ -27,7 +27,8 @@ _requestToLeave(false),
 _currentMap(Map::loadMap(_player.levelProgression())),
 _currentBall(std::make_shared<Ball>(*_currentMap)),
 _currentCamera(std::make_shared<Camera>()),
-_currentStar(std::make_shared<Star>(glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f)
+_currentStar(std::make_shared<Star>(glm::vec3(5.f,5.f,5.f),
+                                    glm::vec3(0.f,3.f,3.f)
             ,0.3f,0.5f,50.f,5.f)),
 _renderingEngine( std::make_shared<Rendering>
                   (*_currentMap,*_currentBall,*_currentStar,*_currentCamera))

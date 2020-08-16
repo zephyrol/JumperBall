@@ -224,7 +224,7 @@ glm::vec3 Utility::convertCIExyYToRGB(const glm::vec3& CIExyYColor){
     const float scalar = CIExyYColor.z / CIExyYColor.y;
     const glm::vec3 CIEXYZ {scalar * CIExyYColor.x, 
                             CIExyYColor.z,
-                            scalar* (1-CIExyYColor.x-CIExyYColor.y)};
+                            scalar* (1.f-CIExyYColor.x-CIExyYColor.y)};
     return Utility::XYZToRGB * CIEXYZ;
 }
 
