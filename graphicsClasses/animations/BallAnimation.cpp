@@ -175,7 +175,8 @@ void BallAnimation::updateTrans() {
         else _referenceStateOfLife = _ball.stateOfLife();
     }
 
-    if (_ball.stateOfLife() == Ball::StateOfLife::Normal) {
+    if (_ball.stateOfLife() == Ball::StateOfLife::Normal || _ball.stateOfLife()
+             == Ball::StateOfLife::Burning) {
         animationAlive();
     } else if (_ball.stateOfLife() == Ball::StateOfLife::Bursting) {
         animationBursting();

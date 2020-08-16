@@ -8,10 +8,13 @@ uniform mat4  VPStar;
 
 uniform light {
               vec3  positionLight;
-              vec3  ambiantLightIntensity;
+              vec3  ambientLightIntensity;
               vec3  diffuseLightIntensity;
               vec3  specularLightIntensity;
               };
+
+uniform float burningCoeff;
+
 
 in vec3   fs_vertexColor;
 in vec3   fs_vertexNormal;
@@ -24,7 +27,6 @@ out vec4  pixelColor;
 mat4 VPinverse = inverse(VP);
 
 void main() {
-    const float epsilon     = 0.99999f;
 
     const mat4 biasMatrix   = mat4(0.5f,0.f, 0.f, 0.f,
                                0.f, 0.5f,0.f, 0.f,
@@ -42,8 +44,13 @@ void main() {
         inShadow = false;
     }
 
-    vec3 ambiantComponent   = ambiantLightIntensity;
-    vec3 composition = ambiantComponent * fs_vertexColor;
+    const vec3 fireEffet    = vec3(1.f,.2f,0.f);
+    /*vec3 ambientComponent   = (1.f - burningCoeff) * ambientLightIntensity 
+                                + (burningCoeff) * fireEffet;*/
+
+    vec3 ambientComponent   = ambientLightIntensity;
+    vec3 composition = ambientComponent * 
+        ((1.f - burningCoeff) * fs_vertexColor + (burningCoeff) * fireEffet);
     
     if (!inShadow) {
         vec3 toLight            = normalize(positionLight 

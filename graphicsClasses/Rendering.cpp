@@ -80,19 +80,20 @@ void Rendering::phongEffect( const FrameBuffer& referenceFBO ) {
     _spMap.bindUniformTexture("depthTexture", 0,
                               referenceFBO.getRenderTexture());
 
-    //Ball and Map
+    // --- Ball and Map ---
     bindCamera (_spMap);
-
     _light.positionLight(_star.centralPosition());
-
     _light.bind("light",_spMap);
 
+    // Ball
+    _spMap.bindUniform("burningCoeff", _ball.burnCoefficient());
     _meshBall.render(_spMap);
 
-    //Map
+    // Map
+    _spMap.bindUniform("burningCoeff", 0.f);
     _meshMap.render(_spMap);
 
-    //Star
+    // ------ Star ------
     _spStar.use();
 
     _spStar.bindUniform("radiusInside",  _star.radiusInside());

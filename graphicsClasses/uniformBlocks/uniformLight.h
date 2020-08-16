@@ -22,7 +22,7 @@ public:
 
     UniformLight    (
                       const glm::vec3& positionLight,
-                      const glm::vec3& ambiantLightIntensity,
+                      const glm::vec3& ambientLightIntensity,
                       const glm::vec3& diffuseLightIntensity,
                       const glm::vec3& specularLightIntensity
                     );
@@ -32,7 +32,7 @@ public:
     void            bind( const std::string& name,
                           const ShaderProgram& sp)                     override; 
     void            positionLight         (const glm::vec3& posLight);
-    void            ambiantLightIntensity (const glm::vec3& ambLightIntensity);
+    void            ambientLightIntensity (const glm::vec3& ambLightIntensity);
     void            diffuseLightIntensity (const glm::vec3& diffLightIntensity);
     void            specularLightIntensity(const glm::vec3& specLightIntensity);
 
@@ -40,7 +40,7 @@ private :
 
     //--------ATTRIBUTES-----------//
     glm::vec3       _positionLight;
-    glm::vec3       _ambiantLightIntensity;
+    glm::vec3       _ambientLightIntensity;
     glm::vec3       _diffuseLightIntensity;
     glm::vec3       _specularLightIntensity;
 };

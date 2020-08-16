@@ -36,9 +36,9 @@ public:
     enum class State              { Staying, Moving, Jumping, 
                                     TurningLeft, TurningRight, Falling };
 
-    enum class StateOfLife        { Normal, Bursting, Burning, Dead};
+    enum class StateOfLife        { Normal, Bursting, Burning, Dead };
 
-    enum class JumpingType        { Short,  Long};
+    enum class JumpingType        { Short, Long };
 
     enum class ActionRequest      { GoStraightAhead, TurnLeft, TurnRight, Jump};
     enum class NextBlockLocal     { Above, InFrontOf, Same, None };
@@ -63,6 +63,7 @@ public:
     JBTypes::Dir                  lookTowards()                           const;
     Ball::State                   state()                                 const;
     Ball::StateOfLife             stateOfLife()                           const;
+    float                         burnCoefficient()                       const;
 
     float                         getTimeSecondsSinceAction()    const noexcept;
     JBTypes::timePointMs          getTimeActionMs()              const noexcept;
@@ -97,25 +98,25 @@ private:
     Ball::State                   _state;
     Ball::StateOfLife             _stateOfLife;
     Ball::JumpingType             _jumpingType;
-    //Movement                      _turnLeftFct;
 
     //Through the interactions, a ball may modify a map
     Map&                          _map;
 
     ClassicalMechanics            _mechanicsPatternJumping;
     ClassicalMechanics            _mechanicsPatternLongJumping;
-
     ClassicalMechanics            _mechanicsPatternFalling;
 
 
     std::chrono::time_point<std::chrono::system_clock>  
                                   _timeAction;
-
     std::chrono::time_point<std::chrono::system_clock>  
                                   _timeStateOfLife;
     
     //BurnCoefficient at the last state change
-    float                         _burnCoefficient;
+    float                         _burnCoefficientTrigger;
+
+    //current burnCoefficient
+    float                         _burnCoefficientCurrent;
 
     //-------CONST METHODS--------//
     std::shared_ptr<const std::vector<int> >  
@@ -137,6 +138,7 @@ private:
     void                          move()                               noexcept;
     void                          fall()                               noexcept;
     void                          setTimeActionNow()                   noexcept;
+    void                          setTimeLifeNow()                     noexcept;
     void                          mapInteraction()                     noexcept;
     void                          blockEvent(std::shared_ptr<Block> block)
                                                                        noexcept;
@@ -150,6 +152,7 @@ private:
     void                          movingUpdate()                       noexcept;
     void                          turningUpdate()                      noexcept;
     void                          jumpingUpdate()                      noexcept;
+    void                          burningUpdate()                      noexcept;
     
     static const TurnLeft         turnLeftMovement;
     static const TurnRight        turnRightMovement;

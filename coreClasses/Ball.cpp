@@ -37,7 +37,9 @@ Ball::Ball(Map& map):
         _mechanicsPatternFalling(0.f,0.f,0.f),
         _timeAction(std::chrono::system_clock::now()),
         _timeStateOfLife(std::chrono::system_clock::now()),
-        _burnCoefficient(0.f){
+        _burnCoefficientTrigger(0.f),
+        _burnCoefficientCurrent(0.f)
+{
 }
 
 void Ball::turnLeft() noexcept {
@@ -92,7 +94,8 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
 
         const JBTypes::Dir lookTowardsBeforeMovement = _lookTowards;
         nextBlock.nextLook = _currentSide;
-        nextBlock.nextSide= turnBackMovement.evaluate({lookTowardsBeforeMovement});
+        nextBlock.nextSide =
+            turnBackMovement.evaluate({lookTowardsBeforeMovement});
     }
     else if (blockInFrontOf && blockInFrontOf->stillExists()) {
         nextBlock.poxX      = inFrontOfX;
@@ -161,7 +164,12 @@ void Ball::move() noexcept {
 }
 
 void Ball::setTimeActionNow() noexcept {
-   _timeAction = std::chrono::system_clock::now();
+    _timeAction = std::chrono::system_clock::now();
+}
+
+void Ball::setTimeLifeNow() noexcept
+{
+    _timeStateOfLife = std::chrono::system_clock::now();
 }
 
 void Ball::doAction(Ball::ActionRequest action) {
@@ -205,23 +213,32 @@ void Ball::isGoingStraightAheadIntersectBlock()   noexcept {
         const JBTypes::vec3f lookVec =
             JBTypesMethods::directionAsVector(_lookTowards);
 
-        const int aboveNearX =  _currentBlockX + sideVec.x + lookVec.x;
-        const int aboveNearY =  _currentBlockY + sideVec.y + lookVec.y;
-        const int aboveNearZ =  _currentBlockZ + sideVec.z + lookVec.z;
-        const int aboveFarX =   _currentBlockX + sideVec.x + 2 * lookVec.x;
-        const int aboveFarY =   _currentBlockY + sideVec.y + 2 * lookVec.y;
-        const int aboveFarZ =   _currentBlockZ + sideVec.z + 2 * lookVec.z;
-        const int aboveVeryFarX =   _currentBlockX + sideVec.x + 3 * lookVec.x;
-        const int aboveVeryFarY =   _currentBlockY + sideVec.y + 3 * lookVec.y;
-        const int aboveVeryFarZ =   _currentBlockZ + sideVec.z + 3 * lookVec.z;
+        const int aboveNearX =  _currentBlockX +
+                static_cast<int> (sideVec.x + lookVec.x);
+        const int aboveNearY =  _currentBlockY +
+                static_cast<int> (sideVec.y + lookVec.y);
+        const int aboveNearZ =  _currentBlockZ +
+                static_cast<int> (sideVec.z + lookVec.z);
+        const int aboveFarX =   _currentBlockX +
+                static_cast<int> (sideVec.x + 2.f * lookVec.x);
+        const int aboveFarY =   _currentBlockY +
+                static_cast<int> (sideVec.y + 2.f * lookVec.y);
+        const int aboveFarZ =   _currentBlockZ +
+                static_cast<int> (sideVec.z + 2.f * lookVec.z);
+        const int aboveVeryFarX =   _currentBlockX +
+                static_cast<int> (sideVec.x + 3.f * lookVec.x);
+        const int aboveVeryFarY =   _currentBlockY +
+                static_cast<int> (sideVec.y + 3.f * lookVec.y);
+        const int aboveVeryFarZ =   _currentBlockZ +
+                static_cast<int> (sideVec.z + 3.f * lookVec.z);
 
-        std::shared_ptr<const Block> blockNear  = 
+        const std::shared_ptr<const Block> blockNear  =
                 _map.getBlock(aboveNearX,aboveNearY,aboveNearZ);
         
-        std::shared_ptr<const Block> blockFar   = 
+        const std::shared_ptr<const Block> blockFar   =
                 _map.getBlock(aboveFarX,aboveFarY,aboveFarZ);
 
-        std::shared_ptr<const Block> blockVeryFar   = 
+        const std::shared_ptr<const Block> blockVeryFar   =
                 _map.getBlock(aboveVeryFarX,aboveVeryFarY,aboveVeryFarZ);
         
         ClassicalMechanics& refMechanicsJumping = getMechanicsJumping();
@@ -387,18 +404,23 @@ JBTypes::vec3f Ball::get3DPosStayingBall() const {
 
 void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
     block->detectionEvent(_currentSide,
-            JBTypesMethods::getTimePointMsFromTimePoint(
-            _timeAction));
-    if (block) {
-        if ((block->getType() == Block::categoryOfBlocksInFile::Jump)) {
+            JBTypesMethods::getTimePointMsFromTimePoint( _timeAction));
+    if (_stateOfLife != StateOfLife::Bursting && block) {
+        const Block::categoryOfBlocksInFile type = block->getType();
+        if (type == Block::categoryOfBlocksInFile::Jump) {
             const unsigned int dir =
                 JBTypesMethods::directionAsInteger(_currentSide);
             if (block->faceInfo().at(dir)){
                 _jumpingType = Ball::JumpingType::Long;
                 jump();
             }
-        } else if ((block->getType() == Block::categoryOfBlocksInFile::Fire)) {
-            _burnCoefficient += .2f;
+        } else if (type == Block::categoryOfBlocksInFile::Fire) {
+            _burnCoefficientCurrent += .2f;
+            _burnCoefficientTrigger = _burnCoefficientCurrent;
+            _stateOfLife = StateOfLife::Burning;
+            setTimeLifeNow();
+        } else if (type == Block::categoryOfBlocksInFile::Ice) {
+            _burnCoefficientTrigger = 0.f;
         }
     }
  }
@@ -428,7 +450,8 @@ void Ball::fallingUpdate() noexcept {
 
 void Ball::stayingUpdate() noexcept {
     const JBTypes::vec3f position3D = get3DPosStayingBall();
-    const std::shared_ptr<Block> block =_map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ);
+    const std::shared_ptr<Block> block =
+        _map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ);
     if (block &&  block ->stillExists()) {
         _3DPosX = position3D.x;
         _3DPosY = position3D.y;
@@ -436,14 +459,6 @@ void Ball::stayingUpdate() noexcept {
     } else {
         fall();
         update();
-    }
-    if (block && block->getType() ==
-        Block::categoryOfBlocksInFile::Fire) {
-        const auto now = JBTypesMethods::getTimePointMSNow();
-        const JBTypes::durationMs duration = now - getTimeActionMs();
-        const float time = JBTypesMethods::getFloatFromDurationMS(duration);
-        if( _burnCoefficient + time > timeToBurn  ) {
-        }
     }
 }
 
@@ -526,6 +541,36 @@ void Ball::movingUpdate() noexcept {
     }
 }
 
+void Ball::burningUpdate() noexcept
+{
+    if (_stateOfLife != StateOfLife::Bursting) {
+        const float time = getTimeSecondsSinceStateOfLife();
+        if ( _stateOfLife == StateOfLife::Burning &&
+             (_state == State::Staying || _state == State::TurningLeft ||
+              _state == State::TurningRight)) {
+            // the ball is burning
+            _burnCoefficientCurrent =
+                    _burnCoefficientTrigger + (time/timeToBurn);
+            if( _burnCoefficientCurrent > 1.f ) {
+                _stateOfLife = StateOfLife::Bursting;
+                setTimeLifeNow();
+            }
+        }
+        else {
+            // the ball is cooldown
+            if ( _stateOfLife == StateOfLife::Burning) {
+                _stateOfLife = StateOfLife::Normal;
+                setTimeLifeNow();
+                _burnCoefficientTrigger = _burnCoefficientCurrent;
+            }
+            _burnCoefficientCurrent =
+                    _burnCoefficientTrigger - (time/timeToBurn);
+            if (_burnCoefficientCurrent < 0 ) _burnCoefficientCurrent = 0.f;
+        }
+    }
+    std::cout << _burnCoefficientCurrent << std::endl;
+}
+
 void Ball::update() noexcept{
     switch (_state) {
         case Ball::State::Falling: fallingUpdate(); break;
@@ -537,6 +582,7 @@ void Ball::update() noexcept{
         default: break;
     }
     mapInteraction();
+    burningUpdate();
     if (isOutOfTheMap()) die();
 }
 
@@ -571,6 +617,10 @@ Ball::State Ball::state() const {
 
 Ball::StateOfLife Ball::stateOfLife() const {
     return _stateOfLife;
+}
+
+float Ball::burnCoefficient() const {
+    return _burnCoefficientCurrent;
 }
 
 void Ball::die() noexcept{

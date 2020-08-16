@@ -16,25 +16,25 @@
 #include "uniformLight.h"
 
 UniformLight::UniformLight ():
-              UniformBlock ( { "positionLight","ambiantLightIntensity",
+              UniformBlock ( { "positionLight","ambientLightIntensity",
                               "diffuseLightIntensity","specularLightIntensity" }
                             ),
               _positionLight(),
-              _ambiantLightIntensity(),
+              _ambientLightIntensity(),
               _diffuseLightIntensity(),
               _specularLightIntensity()
 {
 }
 
-UniformLight::UniformLight( const glm::vec3& positionLight, 
-                            const glm::vec3& ambiantLightIntensity, 
-                            const glm::vec3& diffuseLightIntensity, 
+UniformLight::UniformLight(const glm::vec3& positionLight,
+                            const glm::vec3& ambientLightIntensity,
+                            const glm::vec3& diffuseLightIntensity,
                             const glm::vec3& specularLightIntensity) :
-              UniformBlock ( { "positionLight","ambiantLightIntensity",
+              UniformBlock ( { "positionLight","ambientLightIntensity",
                               "diffuseLightIntensity","specularLightIntensity" }
                             ),
               _positionLight(positionLight),
-              _ambiantLightIntensity(ambiantLightIntensity),
+              _ambientLightIntensity(ambientLightIntensity),
               _diffuseLightIntensity(diffuseLightIntensity),
               _specularLightIntensity(specularLightIntensity) {
 
@@ -45,8 +45,8 @@ void UniformLight::positionLight(const glm::vec3& posLight) {
   _positionLight = posLight;
 }
 
-void UniformLight::ambiantLightIntensity(const glm::vec3& ambLightIntensity) {
-    _ambiantLightIntensity = ambLightIntensity;
+void UniformLight::ambientLightIntensity(const glm::vec3& ambLightIntensity) {
+    _ambientLightIntensity = ambLightIntensity;
 }
 
 void UniformLight::diffuseLightIntensity(const glm::vec3& diffLightIntensity) {
@@ -64,7 +64,7 @@ void UniformLight::bind(const std::string& name,const ShaderProgram& sp) {
     memcpy      ( _dataBuffer.data() + variablesOffsets().at(0), 
                   &_positionLight, sizeVec3f) ;
     memcpy      ( _dataBuffer.data() + variablesOffsets().at(1), 
-                  &_ambiantLightIntensity, sizeVec3f) ;
+                  &_ambientLightIntensity, sizeVec3f) ;
     memcpy      ( _dataBuffer.data() + variablesOffsets().at(2), 
                   &_diffuseLightIntensity, sizeVec3f) ;
     memcpy      ( _dataBuffer.data() + variablesOffsets().at(3), 
