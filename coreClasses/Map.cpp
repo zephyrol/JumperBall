@@ -18,31 +18,18 @@
 #include <cctype>
 #include "Map.h"
 
-unsigned int Map::nbMaps = 0;
 
-Map::Map() :  _id     (nbMaps++),
-              _blocks {},
-              _boundingBoxXMax (0),
-              _boundingBoxYMax (0),
-              _boundingBoxZMax (0),
-              _beginX (0),
-              _beginY (0),
-              _beginZ (0),
-              _timeCreation(std::chrono::system_clock::now())
-{
-}
-
-
-Map::Map(std::ifstream& file):_id (nbMaps),        
+Map::Map(std::ifstream& file):_id (nbMaps),
                               _blocks{},
-                              _boundingBoxXMax (0),
-                              _boundingBoxYMax (0),
-                              _boundingBoxZMax (0),
+                              _width (0),
+                              _height (0),
+                              _deep (0),
                               _beginX (0),
                               _beginY (0),
                               _beginZ (0),
                               _timeCreation(std::chrono::system_clock::now())
 {
+
     unsigned int width;
     unsigned int deep;
     unsigned int height;
@@ -51,9 +38,9 @@ Map::Map(std::ifstream& file):_id (nbMaps),
     file >> deep; 
     file >> height;
     
-    _boundingBoxXMax = width;
-    _boundingBoxYMax = height;
-    _boundingBoxZMax = deep;
+    _width = width;
+    _height = height;
+    _deep = deep;
 
     file >> _beginX;
     file >> _beginZ;
@@ -106,10 +93,8 @@ Map::Map(std::ifstream& file):_id (nbMaps),
                         } else {
                             specialParams.at(i) = false;
                         }
-
                     }
                 }
-
                 switch (typeOfBlock) {
                     case 0:
                         break ;
@@ -130,7 +115,7 @@ Map::Map(std::ifstream& file):_id (nbMaps),
                     default :
                         break;
                 }
-                _blocks.push_back(block); 
+                _blocks.push_back(block);
                 counterBuffer.clear();
             }
         }
@@ -197,9 +182,14 @@ Map::Map(std::ifstream& file):_id (nbMaps),
         previousReadValue = readValue;
     }
 
+    for (size_t i = 0; i < _blocks.size(); ++i) {
+        if (_blocks.at(i)) {
+            _validIndicesBlocks.push_back(i);
+        }
+    }
+
     Map::nbMaps++;
 }
-
 
 std::shared_ptr<Block> Map::getBlock(int x, int y, int z){
 
@@ -210,24 +200,36 @@ std::shared_ptr<Block> Map::getBlock(int x, int y, int z){
 
 }
 
+std::shared_ptr<Block> Map::getBlock(size_t index)
+{
+    std::shared_ptr<const Block> constBlock =
+            static_cast<const Map&>(*this).getBlock(index);
+
+    return std::const_pointer_cast<Block> (constBlock);
+}
+
 std::shared_ptr<const Block> Map::getBlock(int x, int y, int z) const {
     std::shared_ptr<const Block> block;
-    if (x >= static_cast<int>(_boundingBoxXMax) ||  
-            y >= static_cast<int>(_boundingBoxYMax) ||
-            z >= static_cast<int>(_boundingBoxZMax) ||
+    if (x >= static_cast<int>(_width) ||
+            y >= static_cast<int>(_height) ||
+            z >= static_cast<int>(_deep) ||
             x < 0 || y < 0 || z < 0 )
         block = nullptr;
     else {
-        size_t index = _boundingBoxXMax * (z + y * _boundingBoxZMax) + x;
+        size_t index = _width * (z + y * _deep) + x;
         block = _blocks.at(index);
     }
     return block;
 }
 
+std::shared_ptr<const Block> Map::getBlock(size_t index) const {
+    return _blocks.at(index);
+}
+
 void Map::printMap() const {
-    for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
-        for ( unsigned int z = 0 ; z < _boundingBoxZMax ; z++ ){
-            for ( unsigned int x = 0 ; x < _boundingBoxXMax ; x++ ){
+    for ( unsigned int y = 0 ; y < _height ; y++ ) {
+        for ( unsigned int z = 0 ; z < _deep ; z++ ){
+            for ( unsigned int x = 0 ; x < _width ; x++ ){
                 const std::shared_ptr<const Block>& block = getBlock(x,y,z);
                 if (block) {
                     std::cout << static_cast<const unsigned int>
@@ -247,15 +249,15 @@ void Map::verificationMap(std::ifstream& input) const
 
     std::ofstream output ("outMapVerification.txt");
 
-    output << boundingBoxXMax() << " " << boundingBoxZMax() << " "
-           << boundingBoxYMax() << std::endl ;
+    output << width() << " " << deep() << " "
+           << height() << std::endl ;
 
     output << beginX() << " " << beginZ() << " " << beginY() << std::endl
            << std::endl;
 
-    for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
-        for ( unsigned int z = 0 ; z < _boundingBoxZMax ; z++ ){
-            for ( unsigned int x = 0 ; x < _boundingBoxXMax ; x++ ){
+    for ( unsigned int y = 0 ; y < _height ; y++ ) {
+        for ( unsigned int z = 0 ; z < _deep ; z++ ){
+            for ( unsigned int x = 0 ; x < _width ; x++ ){
                 const std::shared_ptr<const Block>& block = getBlock(x,y,z);
 
                 unsigned int typeOfBlock = 0;
@@ -278,7 +280,7 @@ void Map::verificationMap(std::ifstream& input) const
                         else output << "a" ;
                     }
                 }
-                if ( x != _boundingBoxXMax - 1 )  output << " ";
+                if ( x != _width - 1 )  output << " ";
             }
             output << std::endl;
         }
@@ -287,9 +289,9 @@ void Map::verificationMap(std::ifstream& input) const
 
     output << std::endl;
 
-    for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
-        for ( unsigned int z = 0 ; z < _boundingBoxZMax ; z++ ){
-            for ( unsigned int x = 0 ; x < _boundingBoxXMax ; x++ ){
+    for ( unsigned int y = 0 ; y < _height ; y++ ) {
+        for ( unsigned int z = 0 ; z < _deep ; z++ ){
+            for ( unsigned int x = 0 ; x < _width ; x++ ){
                 const std::shared_ptr<const Block>& block = getBlock(x,y,z);
                 if (block) {
                     const auto objects = block->objects();
@@ -337,12 +339,12 @@ void Map::verificationMap(std::ifstream& input) const
                                 static_cast<unsigned int> (block->getType());
                         output << static_cast<const unsigned int> (typeOfBlock);
                     }
-                    if (x != _boundingBoxXMax -1 ) output << " ";
+                    if (x != _width -1 ) output << " ";
                 }
                 else {
                     output << static_cast<const unsigned int>
                                (Block::categoryOfBlocksInFile::None);
-                    if (x != _boundingBoxXMax -1 ) output << " ";
+                    if (x != _width -1 ) output << " ";
                 }
             }
             output << std::endl;
@@ -380,16 +382,33 @@ void Map::verificationMap(std::ifstream& input) const
     inputV2.close();
 }
 
-unsigned int Map::boundingBoxXMax() const {
-    return _boundingBoxXMax;
+std::array<unsigned int, 3> Map::getBlockCoords(size_t index) const {
+
+    unsigned int uIntIndex = static_cast<unsigned int> (index);
+    const unsigned int widthDeep = _width * _deep;
+    return { uIntIndex % _width,
+             uIntIndex / widthDeep,
+             (uIntIndex % widthDeep) / _width };
 }
 
-unsigned int Map::boundingBoxYMax() const {
-    return _boundingBoxYMax;
+size_t Map::getIndex(const std::array<unsigned int, 3>& coords) const {
+    return _width * (coords.at(3) + coords .at(2)* _deep) + coords .at(1);
 }
 
-unsigned int Map::boundingBoxZMax() const {
-    return _boundingBoxZMax;
+const std::vector<size_t> &Map::validIndicesBlocks() const {
+    return _validIndicesBlocks;
+}
+
+unsigned int Map::width() const {
+    return _width;
+}
+
+unsigned int Map::height() const {
+    return _height;
+}
+
+unsigned int Map::deep() const {
+    return _deep;
 }
 
 unsigned int Map::beginX() const {
@@ -434,13 +453,11 @@ void Map::substractOffset(std::string& s, int offset) {
     }
  }
 
-
 void Map::applyOffset(std::string& s, int offset) {
     for (char& c : s) {
         c += offset;
     }
  }
-
 
 void Map::compress(std::ifstream& input) {
     std::ofstream output ("outMap.txt");
@@ -469,7 +486,6 @@ void Map::compress(std::ifstream& input) {
     output << beginZ << " ";  
     output << beginY << " ";
     output << std::endl;  
-    
 
     unsigned int counter = 1;
     unsigned int currentType;
@@ -491,7 +507,6 @@ void Map::compress(std::ifstream& input) {
                     applyOffset(stringToWrite, firstNumberOfBlock) ;
                     output << stringToWrite;
                 } 
-                
                 if (counter > 0 ) {
                     output << currentType;
                 }
@@ -524,12 +539,9 @@ void Map::compress(std::ifstream& input) {
         applyOffset(stringToWrite, firstNumberOfBlock) ;
         output << stringToWrite;
     } 
-    output << currentType;
+    output << currentType << std::endl;
 
-    output << std::endl;  
-    
     // OBJECTS PART
-
     std::string readString;
     unsigned int counterWithoutObjects = 0;
 
@@ -573,12 +585,9 @@ void Map::compress(std::ifstream& input) {
                 output << charToWrite;
             }
         }
-        
     }
-
     output.close();
 }
-
 
 std::chrono::time_point<std::chrono::system_clock> Map::timeCreation() const {
     return _timeCreation;
@@ -591,27 +600,17 @@ Map::EffectOnBall Map::interaction(
     Map::EffectOnBall effect = Map::EffectOnBall::Nothing;
     auto timeNow = JBTypesMethods::getTimePointMSNow();
 
-    //Blocks interaction 
-    std::array<unsigned int,3> currentBlockPosition;
-    for ( unsigned int y = 0 ; y < _boundingBoxYMax ; y++ ) {
-        currentBlockPosition.at(1) = y;
-        for ( unsigned int z = 0 ; z < _boundingBoxZMax ; z++ ){
-            currentBlockPosition.at(2) = z;
-            for ( unsigned int x = 0 ; x < _boundingBoxXMax ; x++ ){
-                currentBlockPosition.at(0) = x;
-                const std::shared_ptr<Block>& block = getBlock(x,y,z);
-                if (block) {
-                    block->interaction(
-                        ballDir, timeNow, posBall,currentBlockPosition);
-                    if (block->burstBall()) {
-                        effect = Map::EffectOnBall::Burst;
-                    }
-                }
-            }
-        }
+    //Blocks interaction
+    for (unsigned int i = 0 ; i < _validIndicesBlocks.size(); ++i) {
+         const std::shared_ptr<Block>& block =
+            getBlock(_validIndicesBlocks.at(i));
+         block->interaction(
+                     ballDir, timeNow, posBall,
+                     getBlockCoords(_validIndicesBlocks.at(i)));
+         if (block->burstBall()) {
+             effect = Map::EffectOnBall::Burst;
+         }
     }
-
-    //Objects interaction 
     return effect; 
 }
 
@@ -645,6 +644,7 @@ std::shared_ptr<Map> Map::loadMap(size_t mapNumber)
     }
     std::cout << "Map " << mapNumber << " loaded" << std::endl;
 
-
     return map;
 }
+
+unsigned int Map::nbMaps = 0;

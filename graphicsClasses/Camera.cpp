@@ -172,9 +172,9 @@ void Camera::follow(const Ball& ball) noexcept {
 
 void Camera::follow(const Map& map) noexcept{
 
-    const unsigned int xMax = map.boundingBoxXMax();
-    const unsigned int yMax = map.boundingBoxYMax();
-    const unsigned int zMax = map.boundingBoxZMax();
+    const unsigned int xMax = map.width();
+    const unsigned int yMax = map.height();
+    const unsigned int zMax = map.deep();
     
     
     const glm::vec3 center {xMax/2.f,yMax/2.f,zMax/2.f};

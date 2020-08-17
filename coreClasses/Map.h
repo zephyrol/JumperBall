@@ -30,7 +30,6 @@ class Map {
 public:
 
     //------------TYPES------------//
-    enum class KindOfData   {Raw,Optimized};
     enum class EffectOnBall {Nothing,Burst,Burnt,Slide};
     
     //---------CONSTANTS------------//
@@ -50,10 +49,6 @@ public:
     static constexpr unsigned int         nbOfCharactersWithoutObjects     = 79;
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Map                                   ();
-    Map                                   ( const std::string content, 
-                                            Map::KindOfData kData );
-
     Map                                   ( std::ifstream& file );
 
 
@@ -63,10 +58,11 @@ public:
     unsigned int                          beginZ()                        const;
 
     std::shared_ptr< const Block>         getBlock(int x, int y, int z)   const;
+    std::shared_ptr< const Block>         getBlock(size_t index)          const;
 
-    unsigned int                          boundingBoxXMax()               const;
-    unsigned int                          boundingBoxYMax()               const;
-    unsigned int                          boundingBoxZMax()               const;
+    unsigned int                          width()                         const;
+    unsigned int                          height()                        const;
+    unsigned int                          deep()                          const;
 
 
 
@@ -77,11 +73,17 @@ public:
     void                                  verificationMap(std::ifstream &input)
                                                                           const;
 
+    std::array<unsigned int, 3>           getBlockCoords(size_t index)    const;
+    size_t                                getIndex(
+                               const std::array<unsigned int, 3>& coords) const;
+    const std::vector<size_t>&            validIndicesBlocks()            const;
+
     //----------METHODS------------//
     EffectOnBall                          interaction(
                                       const JBTypes::Dir& ballDir,
                                       const JBTypes::vec3f& posBall );
     std::shared_ptr<Block>                getBlock(int x, int y, int z);
+    std::shared_ptr<Block>                getBlock(size_t index);
 
     //--------STATIC METHODS-------//
     static void                           compress(std::ifstream& input);
@@ -94,17 +96,18 @@ private:
     const unsigned int                    _id;
 
     std::vector<std::shared_ptr<Block> >  _blocks;
-    //std::vector<std::shared_ptr<Object> > _objects;
-    unsigned int                          _boundingBoxXMax;
-    unsigned int                          _boundingBoxYMax;
-    unsigned int                          _boundingBoxZMax;
+    std::vector<size_t>                   _validIndicesBlocks;
+
+    unsigned int                          _width;
+    unsigned int                          _height;
+    unsigned int                          _deep;
 
     unsigned int                          _beginX;
     unsigned int                          _beginY;
     unsigned int                          _beginZ;
     std::chrono::time_point<std::chrono::system_clock>  
                                           _timeCreation;
-    
+
     static unsigned int                   nbMaps;
 
 

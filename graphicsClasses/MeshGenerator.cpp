@@ -193,11 +193,12 @@ std::vector<MeshComponent> MeshGenerator::sortComponents(
 }
 
 
-std::vector<MeshComponent> MeshGenerator::genBlock(
-    const Map& map, const std::array<unsigned int,3>& position) {
+std::vector<MeshComponent> MeshGenerator::genBlock
+    (const Map& map, size_t index) {
 
-    const std::shared_ptr<const Block> block =
-        map.getBlock(position.at(0),position.at(1),position.at(2));
+    const std::array<unsigned int,3> position = map.getBlockCoords(index);
+
+    const std::shared_ptr<const Block> block = map.getBlock(index);
     
     if (!block) return {};
 
@@ -265,7 +266,7 @@ std::vector<MeshComponent> MeshGenerator::genBlock(
         shape = commonShapes.at("basicCube" + strSidesInfo);
     }
 
-    const glm::vec3 glmPosition { position.at(0), position.at(1), 
+    const glm::vec3 glmPosition { position.at(0), position.at(1),
                                   position.at(2)};
     const glm::mat4 transform (glm::translate(glmPosition));
     
@@ -309,16 +310,12 @@ std::vector<MeshComponent> MeshGenerator::genBlock(
 std::vector<MeshComponent> MeshGenerator::genComponents(const Map& map) {
 
     std::vector<MeshComponent> components;
-    for (unsigned int x = 0; x < map.boundingBoxXMax() ; ++x ) {
-        for (unsigned int y = 0; y < map.boundingBoxYMax() ; ++y ) {
-            for (unsigned int z = 0; z < map.boundingBoxZMax() ; ++z ) {
-                const auto block = map.getBlock(x,y,z);
-                std::vector<MeshComponent> blockComponents =
-                    genBlock(map, std::array<unsigned int,3> {x,y,z});
-                for(MeshComponent& m : blockComponents) {
-                    components.push_back(std::move(m));
-                }
-            }
+    const auto indices = map.validIndicesBlocks();
+    for (unsigned int i = 0 ; i < indices.size(); ++i) {
+        std::vector<MeshComponent> blockComponents =
+                genBlock(map, indices.at(i));
+        for(MeshComponent& m : blockComponents) {
+            components.push_back(std::move(m));
         }
     }
 

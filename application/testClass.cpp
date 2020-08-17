@@ -142,15 +142,15 @@ void testClass::run()
 
         _controller.run();
 
-        glfwSwapInterval(1);
-		glfwSwapBuffers(_window);
+        glfwSwapInterval(0);
+        glfwSwapBuffers(_window);
 
-		glfwPollEvents();
+        glfwPollEvents();
 
 		counter++;
 		auto after = JBTypesMethods::getTimePointMSNow();
 		auto diff = after - before;
-		const std::chrono::duration<float> durationFloatDifference= diff;
+        const std::chrono::duration<float> durationFloatDifference= diff;
 		float diffF = durationFloatDifference.count();
 		if (diffF > 1.f) {
 			before = after;

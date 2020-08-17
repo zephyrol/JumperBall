@@ -629,11 +629,11 @@ void Ball::die() noexcept{
 bool Ball::isOutOfTheMap() const {
     constexpr float thresholdOut = 5.f;
     if (_3DPosX < -thresholdOut ||
-        _3DPosX > (static_cast<float>(_map.boundingBoxXMax()) + thresholdOut) ||
+        _3DPosX > (static_cast<float>(_map.width()) + thresholdOut) ||
         _3DPosY < -thresholdOut ||
-        _3DPosY > (static_cast<float>(_map.boundingBoxYMax()) + thresholdOut) ||
+        _3DPosY > (static_cast<float>(_map.height()) + thresholdOut) ||
         _3DPosZ < -thresholdOut ||
-        _3DPosZ > (static_cast<float>(_map.boundingBoxZMax()) + thresholdOut)) {
+        _3DPosZ > (static_cast<float>(_map.deep()) + thresholdOut)) {
         return true;
     }
     else return false;

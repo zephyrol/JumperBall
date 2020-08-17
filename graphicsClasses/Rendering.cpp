@@ -213,15 +213,15 @@ void Rendering::bindStarView(const ShaderProgram& sp) {
 
     const Map& map = _meshMap.base();
 
-    const glm::vec3 center{ map.boundingBoxXMax()/2.f,
-                            map.boundingBoxYMax()/2.f,
-                            map.boundingBoxZMax()/2.f };
+    const glm::vec3 center{ map.width()/2.f,
+                            map.height()/2.f,
+                            map.deep()/2.f };
 
-    float boundingBoxMax = static_cast<float>(map.boundingBoxXMax());
-    if (boundingBoxMax < static_cast<float>(map.boundingBoxYMax()))
-        boundingBoxMax = static_cast<float>(map.boundingBoxYMax());
-    if (boundingBoxMax < static_cast<float>(map.boundingBoxZMax()))
-        boundingBoxMax = static_cast<float>(map.boundingBoxZMax());
+    float boundingBoxMax = static_cast<float>(map.width());
+    if (boundingBoxMax < static_cast<float>(map.height()))
+        boundingBoxMax = static_cast<float>(map.height());
+    if (boundingBoxMax < static_cast<float>(map.deep()))
+        boundingBoxMax = static_cast<float>(map.deep());
 
     constexpr float offsetJumpingBall = 1.f; //size of ball + jump height
     float halfBoundingBoxSize = std::move(boundingBoxMax);

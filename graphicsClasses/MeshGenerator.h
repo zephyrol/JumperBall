@@ -44,9 +44,7 @@ namespace MeshGenerator {
     std::vector<MeshComponent>  sortComponents(std::vector<MeshComponent>&
                                                   components);
     
-    std::vector<MeshComponent>  genBlock( const Map& map,
-                                          const std::array<unsigned int,3>&
-                                                            position);
+    std::vector<MeshComponent>  genBlock( const Map& map, size_t index);
     std::vector<MeshComponent>  genSharps(  const Block& block, 
                                             const glm::vec3& posWorld);
     std::vector<MeshComponent>  genJumpers( const Block& block, 
