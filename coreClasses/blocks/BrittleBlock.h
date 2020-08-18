@@ -26,7 +26,7 @@ public:
     void                          setFallDirection (JBTypes:: Direction 
                                                              ballDir);
 
-    virtual void                  interaction(
+    virtual Block::Effect         interaction(
                                     const JBTypes::Dir& 
                                             ballDir,
                                     const JBTypes::timePointMs&

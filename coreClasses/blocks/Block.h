@@ -21,19 +21,22 @@
 class Block {
 public:
 
+
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Block                             ();
+    Block                             (bool hasInteraction = false);
     Block                             (const std::array<float,9>& 
-                                                                localTransform);
+                                                                localTransform,
+                                       bool hasInteraction = false);
     virtual                           ~Block()                        = default;
 
 
     //------------TYPES------------//
-    enum class categoryOfBlocksInFile {None,Base,Fire,Ice,Sharp,Brittle,Jump};
+    enum class categoryOfBlocksInFile { None,Base,Fire,Ice,Sharp,Brittle,Jump };
+    enum class Effect                 { Nothing,Burst,Burnt,Slide };
 
 
     //----------METHODS-------------//
-    virtual void                      interaction(
+    virtual Effect                    interaction(
                                     const JBTypes::Dir& 
                                             ballDir,
                                     const JBTypes::timePointMs&
@@ -55,11 +58,11 @@ public:
     virtual                           categoryOfBlocksInFile getType() const =0;
     virtual std::array<bool,6>        faceInfo()                          const;
     virtual bool                      stillExists()                       const;
-    virtual bool                      burstBall()                         const;
     virtual const std::array<float,9>&       
                                       localTransform()                    const;
     virtual const std::array<std::shared_ptr<const Object>,6 >&
                                       objects()                           const; 
+    virtual bool                      hasInteraction()                    const;
 
     //--------STATIC METHODS-------//
     static JBTypes::vec3f             positionObject
@@ -71,6 +74,7 @@ protected:
     std::array<float,9>               _localTransform;
     std::array<std::shared_ptr<const Object>,6> 
                                       _objects;
+    const bool                        _hasInteraction;
 };
 
 #endif /* BLOCK_H */

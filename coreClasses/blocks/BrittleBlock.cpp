@@ -14,6 +14,7 @@
 #include "BrittleBlock.h"
 
 BrittleBlock::BrittleBlock():
+  Block(true),
   _stillThere(true),
   _isGoingToBreak(false),
   _collisionTime(),
@@ -28,7 +29,7 @@ Block::categoryOfBlocksInFile BrittleBlock::getType() const {
     return Block::categoryOfBlocksInFile::Brittle;
 }
 
-void BrittleBlock::interaction( const JBTypes::Dir& ,
+Block::Effect BrittleBlock::interaction( const JBTypes::Dir& ,
                                 const JBTypes::timePointMs& currentTime, 
                                 const JBTypes::vec3f& ,
                                 const std::array<unsigned int, 3>& ) {
@@ -55,7 +56,7 @@ void BrittleBlock::interaction( const JBTypes::Dir& ,
        _localTransform.at(1) = dirVec.y * diffF * fallSpeed;
        _localTransform.at(2) = dirVec.z * diffF * fallSpeed;
     }
-
+    return Block::Effect::Nothing;
 }
 
 

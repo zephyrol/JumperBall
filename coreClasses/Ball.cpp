@@ -587,24 +587,24 @@ void Ball::update() noexcept{
 
 void Ball::mapInteraction() noexcept{
 
-    Map::EffectOnBall effect = _map.interaction(_currentSide,get3DPosition());
+    Block::Effect effect = _map.interaction(_currentSide,get3DPosition());
 
     switch ( effect ) {
-        case Map::EffectOnBall::Nothing: 
+        case Block::Effect::Nothing:
             break;
-        case Map::EffectOnBall::Burnt:
+        case Block::Effect::Burnt:
             if(_stateOfLife != StateOfLife::Burning) {
                 _stateOfLife = StateOfLife::Burning;
                 _timeStateOfLife = JBTypesMethods::getTimePointMSNow();
             }
             break;
-        case Map::EffectOnBall::Burst: 
+        case Block::Effect::Burst:
             if(_stateOfLife != StateOfLife::Bursting) {
                 _stateOfLife = StateOfLife::Bursting;
                 _timeStateOfLife = JBTypesMethods::getTimePointMSNow(); 
             }
             break;
-        case Map::EffectOnBall::Slide: 
+        case Block::Effect::Slide:
             break;
         default: break;
     }

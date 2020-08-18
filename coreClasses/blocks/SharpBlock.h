@@ -18,28 +18,24 @@
 class SharpBlock : public Block {
 public:
     //--CONSTRUCTORS & DESTRUCTORS--//
-    SharpBlock                                    (const std::array<bool,6>&
+    SharpBlock                    (const std::array<bool,6>&
                                                       facesSharps);
 
     //-------CONST METHODS----------//
-    Block::categoryOfBlocksInFile                 getType()      const override;
-    std::array<bool,6>                            faceInfo()     const override;
-    bool                                          burstBall()    const override;
+    Block::categoryOfBlocksInFile getType()      const override;
+    std::array<bool,6>            faceInfo()     const override;
 
     //----------METHODS-------------//
-    virtual void                  interaction(
-                                    const JBTypes::Dir& 
-                                            ballDir,
-                                    const JBTypes::timePointMs&
-                                            currentTime,
-                                    const JBTypes::vec3f& posBall,
+    virtual Block::Effect         interaction( const JBTypes::Dir&  ballDir,
+                                               const JBTypes::timePointMs&
+                                                currentTime,
+                                               const JBTypes::vec3f& posBall,
                                     const std::array<unsigned int,3>& posBlock)
                                                                        override;
      
     
 private:
-    const std::array<bool,6>                      _facesSharps;
-    bool                                          _hitBall;
+    const std::array<bool,6>      _facesSharps;
 };
 
 #endif /* SPICYBLOCK_H */

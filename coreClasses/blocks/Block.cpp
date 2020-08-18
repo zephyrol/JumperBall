@@ -13,15 +13,17 @@
 
 #include "Block.h"
 
-Block::Block():
+Block::Block(bool hasInteraction):
   _localTransform {0.f,0.f,0.f,0.f,0.f,0.f,1.f,1.f,1.f},
-  _objects {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr}
+  _objects {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr},
+  _hasInteraction(hasInteraction)
 {
 }
 
-Block::Block(const std::array<float,9>& localTransform):
+Block::Block(const std::array<float,9>& localTransform, bool hasInteraction):
   _localTransform(localTransform),
-  _objects {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr}
+  _objects {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr},
+  _hasInteraction(hasInteraction)
 {
 }
 
@@ -45,17 +47,11 @@ const std::array<float, 9>& Block::localTransform() const {
 
 }
 
-bool Block::burstBall() const {
-    return false;
-}
-
-
-
-void Block::interaction(const JBTypes::Dir&,
+Block::Effect Block::interaction(const JBTypes::Dir&,
                         const JBTypes::timePointMs&,
                         const JBTypes::vec3f&,
                         const std::array<unsigned int, 3>&) {
-
+    return Block::Effect::Nothing;
 }
 
 void Block::createObject( Object::CategoryOfObjects category, 
@@ -80,6 +76,11 @@ void Block::createObject( Object::CategoryOfObjects category,
 
 const std::array<std::shared_ptr<const Object>,6 >& Block::objects() const {
     return _objects;
+}
+
+bool Block::hasInteraction() const
+{
+   return _hasInteraction;
 }
 
 JBTypes::vec3f Block::positionObject(

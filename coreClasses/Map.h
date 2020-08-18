@@ -29,9 +29,6 @@
 class Map {
 public:
 
-    //------------TYPES------------//
-    enum class EffectOnBall {Nothing,Burst,Burnt,Slide};
-    
     //---------CONSTANTS------------//
 
     //Blocks compression
@@ -79,7 +76,7 @@ public:
     const std::vector<size_t>&            validIndicesBlocks()            const;
 
     //----------METHODS------------//
-    EffectOnBall                          interaction(
+    Block::Effect                         interaction(
                                       const JBTypes::Dir& ballDir,
                                       const JBTypes::vec3f& posBall );
     std::shared_ptr<Block>                getBlock(int x, int y, int z);

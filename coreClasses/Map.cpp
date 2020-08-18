@@ -16,6 +16,7 @@
 #include <functional>
 #include <math.h>
 #include <cctype>
+#include <future>
 #include "Map.h"
 
 
@@ -593,25 +594,33 @@ std::chrono::time_point<std::chrono::system_clock> Map::timeCreation() const {
     return _timeCreation;
 }
 
-Map::EffectOnBall Map::interaction(
+Block::Effect Map::interaction(
         const JBTypes::Dir& ballDir, 
         const JBTypes::vec3f& posBall) {
     
-    Map::EffectOnBall effect = Map::EffectOnBall::Nothing;
+    Block::Effect finalEffect = Block::Effect::Nothing;
     auto timeNow = JBTypesMethods::getTimePointMSNow();
+    std::vector<std::future<Block::Effect> > asyncResults {};
 
     //Blocks interaction
     for (unsigned int i = 0 ; i < _validIndicesBlocks.size(); ++i) {
          const std::shared_ptr<Block>& block =
             getBlock(_validIndicesBlocks.at(i));
-         block->interaction(
-                     ballDir, timeNow, posBall,
-                     getBlockCoords(_validIndicesBlocks.at(i)));
-         if (block->burstBall()) {
-             effect = Map::EffectOnBall::Burst;
+         if (block->hasInteraction()) {
+             asyncResults.push_back(std::async( &Block::interaction,
+                                    block, ballDir, timeNow, posBall,
+                                    getBlockCoords(_validIndicesBlocks.at(i))));
          }
     }
-    return effect; 
+
+    for (std::future<Block::Effect>& asyncResult : asyncResults) {
+        asyncResult.wait();
+        Block::Effect effect = asyncResult.get();
+        if (effect != Block::Effect::Nothing) {
+            finalEffect = effect;
+        }
+    }
+    return finalEffect;
 }
 
 std::shared_ptr<Map> Map::loadMap(size_t mapNumber)

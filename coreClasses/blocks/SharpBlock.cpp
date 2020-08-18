@@ -13,9 +13,9 @@
 
 #include "SharpBlock.h"
 
-SharpBlock::SharpBlock(const std::array<bool,6>& facesSharps) : 
-            _facesSharps(facesSharps),
-            _hitBall(false)
+SharpBlock::SharpBlock(const std::array<bool,6>& facesSharps):
+            Block(true),
+            _facesSharps(facesSharps)
 {
 }
 
@@ -24,12 +24,7 @@ Block::categoryOfBlocksInFile SharpBlock::getType() const {
     return Block::categoryOfBlocksInFile::Sharp;
 }
 
-bool SharpBlock::burstBall() const {
-    return _hitBall;
-}
-
-
-void SharpBlock::interaction(
+Block::Effect SharpBlock::interaction(
         const JBTypes::Dir&,
         const JBTypes::timePointMs&,
         const JBTypes::vec3f& positions,
@@ -113,10 +108,12 @@ void SharpBlock::interaction(
                     posBlockfZMin,
                     posBlockfZMax
                     )){
-                _hitBall = true;
+                //_hitBall = true;
+                return Block::Effect::Burst;
             }
         }
     }
+    return Block::Effect::Nothing;
 }
 
 
