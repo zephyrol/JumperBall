@@ -593,15 +593,11 @@ void Ball::mapInteraction() noexcept{
         case Block::Effect::Nothing:
             break;
         case Block::Effect::Burnt:
-            if(_stateOfLife != StateOfLife::Burning) {
-                _stateOfLife = StateOfLife::Burning;
-                _timeStateOfLife = JBTypesMethods::getTimePointMSNow();
-            }
             break;
         case Block::Effect::Burst:
             if(_stateOfLife != StateOfLife::Bursting) {
                 _stateOfLife = StateOfLife::Bursting;
-                _timeStateOfLife = JBTypesMethods::getTimePointMSNow(); 
+                setTimeLifeNow();
             }
             break;
         case Block::Effect::Slide:

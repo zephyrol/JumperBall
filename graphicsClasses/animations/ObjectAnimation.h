@@ -36,8 +36,8 @@ private:
 
     //--------ATTRIBUTES-----------//
     const Object&                       _object;
-    JBTypes::timePointMs        _referenceTimePointCreation;
-    const JBTypes::Dir    _direction;
+    JBTypes::timePointMs                _referenceTimePointCreation;
+    const JBTypes::Dir                  _direction;
     const glm::mat4                     _translationToBlock;
     const glm::mat4                     _initialRotation;
 
