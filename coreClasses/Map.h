@@ -90,8 +90,6 @@ public:
 private:
 
     //--------ATTRIBUTES-----------//
-    const unsigned int                    _id;
-
     std::vector<std::shared_ptr<Block> >  _blocks;
     std::vector<size_t>                   _validIndicesBlocks;
 

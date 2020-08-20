@@ -20,8 +20,7 @@
 #include "Map.h"
 
 
-Map::Map(std::ifstream& file):_id (nbMaps),
-                              _blocks{},
+Map::Map(std::ifstream& file): _blocks{},
                               _width (0),
                               _height (0),
                               _deep (0),

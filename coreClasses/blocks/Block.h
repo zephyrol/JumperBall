@@ -31,7 +31,8 @@ public:
 
 
     //------------TYPES------------//
-    enum class categoryOfBlocksInFile { None,Base,Fire,Ice,Sharp,Brittle,Jump };
+    enum class categoryOfBlocksInFile { None, Base, Fire, Ice, Sharp,
+                                        Brittle, Jump, Ghost };
     enum class Effect                 { Nothing,Burst,Burnt,Slide };
 
 

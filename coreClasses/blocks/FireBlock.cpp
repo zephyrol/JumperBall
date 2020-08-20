@@ -13,8 +13,7 @@
 
 #include "FireBlock.h"
 
-FireBlock::FireBlock():
-  _isBurning(false){
+FireBlock::FireBlock(){
 }
 
 

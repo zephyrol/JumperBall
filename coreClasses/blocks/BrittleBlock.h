@@ -47,9 +47,9 @@ public:
 private:
     bool                          _stillThere;
     bool                          _isGoingToBreak;
-    JBTypes::timePointMs  _collisionTime;
-    JBTypes::timePointMs  _timeUpdate;
-    JBTypes::Dir    _fallDirection;
+    JBTypes::timePointMs          _collisionTime;
+    JBTypes::timePointMs          _timeUpdate;
+    JBTypes::Dir                  _fallDirection;
 };
 
 #endif /* BRITTLEBLOCK_H */

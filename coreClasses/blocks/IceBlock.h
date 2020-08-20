@@ -18,7 +18,6 @@
 class IceBlock : public Block {
 public:
     IceBlock();
-    IceBlock(const IceBlock& orig);
 
     Block::categoryOfBlocksInFile getType() const override;
 

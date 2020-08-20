@@ -48,6 +48,11 @@ void ObjectAnimation::updateTrans() {
 
 }
 
+const Object &ObjectAnimation::object() const {
+    return _object;
+}
+
+
 const glm::mat4 ObjectAnimation::translationOnBlock = 
                           glm::translate(glm::vec3(0.f,0.75f,0.f));
 

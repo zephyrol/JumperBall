@@ -18,12 +18,8 @@
 class FireBlock : public Block {
 public:
     FireBlock();
-    FireBlock(const FireBlock& orig);
-
     Block::categoryOfBlocksInFile getType() const override;
 
-private:
-    bool _isBurning;
 };
 
 #endif /* FIREBLOCK_H */

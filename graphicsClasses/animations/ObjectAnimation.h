@@ -34,6 +34,7 @@ public:
     glm::mat4                           scaleRotation()          const override;
 private:
 
+    const Object&                       object()                          const;
     //--------ATTRIBUTES-----------//
     const Object&                       _object;
     JBTypes::timePointMs                _referenceTimePointCreation;
