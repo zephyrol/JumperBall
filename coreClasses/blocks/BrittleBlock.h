@@ -19,8 +19,6 @@ class BrittleBlock : public Block {
 public:
     BrittleBlock                  ();
 
-    Block::categoryOfBlocksInFile getType()                      const override;
-
     bool                          stillExists()                  const override;
 
     void                          setFallDirection (JBTypes:: Direction 
@@ -35,7 +33,7 @@ public:
                                     const std::array<unsigned int,3>& posBlock)
                                                                        override;
 
-    virtual void                  detectionEvent(
+    virtual Block::Effect         detectionEvent(
                                     const JBTypes::Dir& 
                                             ballDir,
                                     const JBTypes::timePointMs&

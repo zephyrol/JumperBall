@@ -403,23 +403,18 @@ JBTypes::vec3f Ball::get3DPosStayingBall() const {
 }
 
 void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
-    block->detectionEvent(_currentSide,
-            JBTypesMethods::getTimePointMsFromTimePoint( _timeAction));
     if (_stateOfLife != StateOfLife::Bursting && block) {
-        const Block::categoryOfBlocksInFile type = block->getType();
-        if (type == Block::categoryOfBlocksInFile::Jump) {
-            const unsigned int dir =
-                JBTypesMethods::directionAsInteger(_currentSide);
-            if (block->faceInfo().at(dir)){
-                _jumpingType = Ball::JumpingType::Long;
-                jump();
-            }
-        } else if (type == Block::categoryOfBlocksInFile::Fire) {
+        const Block::Effect effect = block->detectionEvent(_currentSide,
+            JBTypesMethods::getTimePointMsFromTimePoint(_timeAction));
+        if (effect == Block::Effect::Jump) {
+            _jumpingType = Ball::JumpingType::Long;
+            jump();
+        } else if (effect == Block::Effect::Burn) {
             _burnCoefficientCurrent += .2f;
             _burnCoefficientTrigger = _burnCoefficientCurrent;
             _stateOfLife = StateOfLife::Burning;
             setTimeLifeNow();
-        } else if (type == Block::categoryOfBlocksInFile::Ice) {
+        } else if (effect == Block::Effect::Slide) {
             _burnCoefficientTrigger = 0.f;
         }
     }
@@ -588,21 +583,12 @@ void Ball::update() noexcept{
 void Ball::mapInteraction() noexcept{
 
     Block::Effect effect = _map.interaction(_currentSide,get3DPosition());
-
-    switch ( effect ) {
-        case Block::Effect::Nothing:
-            break;
-        case Block::Effect::Burnt:
-            break;
-        case Block::Effect::Burst:
-            if(_stateOfLife != StateOfLife::Bursting) {
-                _stateOfLife = StateOfLife::Bursting;
-                setTimeLifeNow();
-            }
-            break;
-        case Block::Effect::Slide:
-            break;
-        default: break;
+    if (effect == Block::Effect::Burst) {
+        if (_stateOfLife != StateOfLife::Bursting)
+        {
+            _stateOfLife = StateOfLife::Bursting;
+            setTimeLifeNow();
+        }
     }
 }
 

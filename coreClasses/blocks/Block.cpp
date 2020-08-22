@@ -35,16 +35,16 @@ bool Block::stillExists() const {
     return true;
 }
 
-void Block::detectionEvent(const JBTypes::Dir&,
+Block::Effect Block::detectionEvent(const JBTypes::Dir&,
         const JBTypes::timePointMs&)
 {
+    return Block::Effect::Nothing;
 }
 
 
 const std::array<float, 9>& Block::localTransform() const {
     // 3 values for the translation, 3 for rotation, 3 for the scale
     return _localTransform;
-
 }
 
 Block::Effect Block::interaction(const JBTypes::Dir&,

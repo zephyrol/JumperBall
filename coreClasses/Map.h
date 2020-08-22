@@ -48,6 +48,12 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     Map                                   ( std::ifstream& file );
 
+    // ----------- TYPES -----------//
+    enum class BlockTypes { None, Base, Fire, Ice, Sharp,
+                             Brittle, Jump, Ghost };
+
+    struct BlockInfo { size_t index; 
+                       BlockTypes type; };
 
     //-------CONST METHODS----------//
     unsigned int                          beginX()                        const;
@@ -66,14 +72,15 @@ public:
 
     std::chrono::time_point<std::chrono::system_clock>
                                           timeCreation()                  const;
-    void                                  printMap()                      const;
     void                                  verificationMap(std::ifstream &input)
                                                                           const;
 
     std::array<unsigned int, 3>           getBlockCoords(size_t index)    const;
     size_t                                getIndex(
                                const std::array<unsigned int, 3>& coords) const;
-    const std::vector<size_t>&            validIndicesBlocks()            const;
+    BlockTypes                            getType (
+                             const std::array<unsigned int, 3>& position) const;
+    const std::vector<BlockInfo>&         blocksInfo()                    const;
 
     //----------METHODS------------//
     Block::Effect                         interaction(
@@ -91,7 +98,7 @@ private:
 
     //--------ATTRIBUTES-----------//
     std::vector<std::shared_ptr<Block> >  _blocks;
-    std::vector<size_t>                   _validIndicesBlocks;
+    std::vector<BlockInfo>                _blocksInfo;
 
     unsigned int                          _width;
     unsigned int                          _height;
@@ -115,6 +122,7 @@ private:
                                                         int offset);
     static void                           substractOffset(std::string& s,
                                                           int offset);
+    static BlockTypes                     uintToBlockType(unsigned int number);
 
 };
 

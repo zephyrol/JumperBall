@@ -46,8 +46,10 @@ namespace MeshGenerator {
     
     std::vector<MeshComponent>  genBlock( const Map& map, size_t index);
     std::vector<MeshComponent>  genSharps(  const Block& block, 
+                                            const Map::BlockTypes& type, 
                                             const glm::vec3& posWorld);
     std::vector<MeshComponent>  genJumpers( const Block& block, 
+                                            const Map::BlockTypes& type, 
                                             const glm::vec3& posWorld);
 
     extern std::map<std::string, std::shared_ptr<GeometricShape> >

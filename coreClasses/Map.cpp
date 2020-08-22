@@ -115,6 +115,10 @@ Map::Map(std::ifstream& file): _blocks{},
                     default :
                         break;
                 }
+                if (block)
+                {
+                    _blocksInfo.push_back({_blocks.size(), uintToBlockType(typeOfBlock) });
+                }
                 _blocks.push_back(block);
                 counterBuffer.clear();
             }
@@ -182,12 +186,6 @@ Map::Map(std::ifstream& file): _blocks{},
         previousReadValue = readValue;
     }
 
-    for (size_t i = 0; i < _blocks.size(); ++i) {
-        if (_blocks.at(i)) {
-            _validIndicesBlocks.push_back(i);
-        }
-    }
-
     Map::nbMaps++;
 }
 
@@ -226,24 +224,6 @@ std::shared_ptr<const Block> Map::getBlock(size_t index) const {
     return _blocks.at(index);
 }
 
-void Map::printMap() const {
-    for ( unsigned int y = 0 ; y < _height ; y++ ) {
-        for ( unsigned int z = 0 ; z < _deep ; z++ ){
-            for ( unsigned int x = 0 ; x < _width ; x++ ){
-                const std::shared_ptr<const Block>& block = getBlock(x,y,z);
-                if (block) {
-                    std::cout << static_cast<const unsigned int>
-                            (block->getType()) << " ";
-                }
-                else std::cout << static_cast<const unsigned int>
-                            (Block::categoryOfBlocksInFile::None) << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << std::endl;
-    }
-}
-
 void Map::verificationMap(std::ifstream& input) const
 {
 
@@ -259,18 +239,15 @@ void Map::verificationMap(std::ifstream& input) const
         for ( unsigned int z = 0 ; z < _deep ; z++ ){
             for ( unsigned int x = 0 ; x < _width ; x++ ){
                 const std::shared_ptr<const Block>& block = getBlock(x,y,z);
-
                 unsigned int typeOfBlock = 0;
 
                 if (block) {
-
-                    typeOfBlock = static_cast<unsigned int> (block->getType());
-
+                    typeOfBlock = static_cast<unsigned int> ( getType({x,y,z}));
                     output << static_cast<const unsigned int> (typeOfBlock) ;
                 }
                 else {
                     output << static_cast<const unsigned int>
-                            (Block::categoryOfBlocksInFile::None);
+                            (Map::BlockTypes::None);
                 }
                 if (typeOfBlock == 4 || typeOfBlock == 6) {
                     output << " ";
@@ -286,9 +263,7 @@ void Map::verificationMap(std::ifstream& input) const
         }
         output << std::endl;
     }
-
     output << std::endl;
-
     for ( unsigned int y = 0 ; y < _height ; y++ ) {
         for ( unsigned int z = 0 ; z < _deep ; z++ ){
             for ( unsigned int x = 0 ; x < _width ; x++ ){
@@ -312,7 +287,6 @@ void Map::verificationMap(std::ifstream& input) const
                                 case 5 : direction = 'D'; break;
                                 default: direction = '?'; break;
                                 }
-
                                 return direction;
                             };
 
@@ -335,15 +309,16 @@ void Map::verificationMap(std::ifstream& input) const
 
                     }
                     if (!found) {
+
                         unsigned int typeOfBlock =
-                                static_cast<unsigned int> (block->getType());
+                                static_cast<unsigned int> (getType({x,y,z}));
                         output << static_cast<const unsigned int> (typeOfBlock);
                     }
                     if (x != _width -1 ) output << " ";
                 }
                 else {
                     output << static_cast<const unsigned int>
-                               (Block::categoryOfBlocksInFile::None);
+                               (Map::BlockTypes::None);
                     if (x != _width -1 ) output << " ";
                 }
             }
@@ -355,10 +330,8 @@ void Map::verificationMap(std::ifstream& input) const
     output.close();
 
     std::ifstream inputV2 ("outMapVerification.txt");
-
     std::string lineV1;
     std::string lineV2;
-
     bool hasDifferences = false;
     unsigned int counterLines = 1;
     while(getline(input, lineV1) && getline(inputV2,lineV2))
@@ -392,12 +365,23 @@ std::array<unsigned int, 3> Map::getBlockCoords(size_t index) const {
 }
 
 size_t Map::getIndex(const std::array<unsigned int, 3>& coords) const {
-    return _width * (coords.at(3) + coords .at(2)* _deep) + coords .at(1);
+    return _width * (coords.at(2) + coords.at(1)* _deep) + coords .at(0);
 }
 
-const std::vector<size_t> &Map::validIndicesBlocks() const {
-    return _validIndicesBlocks;
+Map::BlockTypes Map::getType(const std::array<unsigned int, 3>& position) const{
+    const size_t index = getIndex(position);
+    for (const Map::BlockInfo& blockInfo: _blocksInfo) {
+        if (blockInfo.index == index )
+        return blockInfo.type;
+    }
+    return Map::BlockTypes::None;
 }
+
+const std::vector<Map::BlockInfo>& Map::blocksInfo() const
+{
+   return _blocksInfo; 
+}
+
 
 unsigned int Map::width() const {
     return _width;
@@ -451,6 +435,23 @@ void Map::substractOffset(std::string& s, int offset) {
     for (char& c : s) {
         c -= offset;
     }
+ }
+ 
+ Map::BlockTypes Map::uintToBlockType(unsigned int number) 
+ {
+    Map::BlockTypes type;
+    switch (number) {
+        case 0 : type = BlockTypes::None; break;
+        case 1 : type = BlockTypes::Base; break;
+        case 2 : type = BlockTypes::Fire; break;
+        case 3 : type = BlockTypes::Ice; break;
+        case 4 : type = BlockTypes::Sharp; break;
+        case 5 : type = BlockTypes::Brittle; break;
+        case 6 : type = BlockTypes::Jump; break;
+        case 7 : type = BlockTypes::Ghost; break;
+        default : type = BlockTypes::None; break;
+    }
+    return type;
  }
 
 void Map::applyOffset(std::string& s, int offset) {
@@ -602,13 +603,13 @@ Block::Effect Map::interaction(
     std::vector<std::future<Block::Effect> > asyncResults {};
 
     //Blocks interaction
-    for (unsigned int i = 0 ; i < _validIndicesBlocks.size(); ++i) {
+    for (unsigned int i = 0 ; i < _blocksInfo.size(); ++i) {
          const std::shared_ptr<Block>& block =
-            getBlock(_validIndicesBlocks.at(i));
+            getBlock(_blocksInfo.at(i).index);
          if (block->hasInteraction()) {
              asyncResults.push_back(std::async( &Block::interaction,
                                     block, ballDir, timeNow, posBall,
-                                    getBlockCoords(_validIndicesBlocks.at(i))));
+                                    getBlockCoords(_blocksInfo.at(i).index)));
          }
     }
 

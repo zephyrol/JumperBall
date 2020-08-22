@@ -31,24 +31,18 @@ public:
 
 
     //------------TYPES------------//
-    enum class categoryOfBlocksInFile { None, Base, Fire, Ice, Sharp,
-                                        Brittle, Jump, Ghost };
-    enum class Effect                 { Nothing,Burst,Burnt,Slide };
+    enum class Effect                 { Nothing,Burst,Burn,Slide,Jump};
 
 
     //----------METHODS-------------//
     virtual Effect                    interaction(
-                                    const JBTypes::Dir& 
-                                            ballDir,
-                                    const JBTypes::timePointMs&
-                                            currentTime,
+                                    const JBTypes::Dir& ballDir,
+                                    const JBTypes::timePointMs& currentTime,
                                     const JBTypes::vec3f& posBall,
                                     const std::array<unsigned int,3>& posBlock);
-    virtual void                      detectionEvent(
-                                        const JBTypes::Dir&
-                                                ballDir,
-                                        const JBTypes::timePointMs&
-                                                currentTime
+    virtual Effect                    detectionEvent(
+                                        const JBTypes::Dir& ballDir,
+                                        const JBTypes::timePointMs& currentTime
                                                 );
     virtual void                      createObject(
                                         Object::CategoryOfObjects category, 
@@ -56,7 +50,6 @@ public:
 
 
     //-------CONST METHODS----------//
-    virtual                           categoryOfBlocksInFile getType() const =0;
     virtual std::array<bool,6>        faceInfo()                          const;
     virtual bool                      stillExists()                       const;
     virtual const std::array<float,9>&       

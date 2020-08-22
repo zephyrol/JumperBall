@@ -23,12 +23,6 @@ BrittleBlock::BrittleBlock():
 {
 }
 
-
-Block::categoryOfBlocksInFile BrittleBlock::getType() const {
-
-    return Block::categoryOfBlocksInFile::Brittle;
-}
-
 Block::Effect BrittleBlock::interaction( const JBTypes::Dir& ,
                                 const JBTypes::timePointMs& currentTime, 
                                 const JBTypes::vec3f& ,
@@ -89,7 +83,7 @@ bool BrittleBlock::stillExists() const {
     return _stillThere;
 }
 
-void BrittleBlock::detectionEvent(const JBTypes::Dir& ballDir, 
+Block::Effect BrittleBlock::detectionEvent(const JBTypes::Dir& ballDir, 
         const JBTypes::timePointMs& currentTime) {
 
     if (!_isGoingToBreak) {
@@ -97,6 +91,7 @@ void BrittleBlock::detectionEvent(const JBTypes::Dir& ballDir,
         setFallDirection(ballDir);
         _isGoingToBreak = true;
     }
+    return Effect::Nothing;
 }
 
 const std::array<float, 9>& BrittleBlock::localTransform() const{

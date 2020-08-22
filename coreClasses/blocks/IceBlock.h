@@ -19,10 +19,10 @@ class IceBlock : public Block {
 public:
     IceBlock();
 
-    Block::categoryOfBlocksInFile getType() const override;
-
-private:
-
+    virtual Effect                    detectionEvent(
+                                        const JBTypes::Dir& ballDir,
+                                        const JBTypes::timePointMs& currentTime
+                                                );
 };
 
 #endif /* ICEBLOCK_H */

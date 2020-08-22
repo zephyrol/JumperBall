@@ -19,11 +19,6 @@
 class BaseBlock : public Block {
 public:
     BaseBlock();
-
-    Block::categoryOfBlocksInFile getType() const override;
-
-private:
-
 };
 
 #endif /* BASEBLOCK_H */

@@ -18,8 +18,11 @@
 class FireBlock : public Block {
 public:
     FireBlock();
-    Block::categoryOfBlocksInFile getType() const override;
 
+    virtual Effect                    detectionEvent(
+                                        const JBTypes::Dir& ballDir,
+                                        const JBTypes::timePointMs& currentTime
+                                                );
 };
 
 #endif /* FIREBLOCK_H */

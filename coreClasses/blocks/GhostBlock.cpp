@@ -35,10 +35,3 @@ Block::Effect GhostBlock::interaction( const JBTypes::Dir& ,
     
     return Block::Effect::Nothing;
 }
-
-Block::categoryOfBlocksInFile GhostBlock::getType() const {
-
-    return Block::categoryOfBlocksInFile::Ghost;
-}
-
-

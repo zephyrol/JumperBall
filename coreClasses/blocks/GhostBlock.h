@@ -18,7 +18,6 @@
 class GhostBlock : public Block {
 public:
     GhostBlock(float periodicity);
-    Block::categoryOfBlocksInFile getType() const override;
     bool                          stillExists()                  const override;
     virtual Block::Effect         interaction(
                                               const JBTypes::Dir&

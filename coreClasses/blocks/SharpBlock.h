@@ -22,7 +22,6 @@ public:
                                                       facesSharps);
 
     //-------CONST METHODS----------//
-    Block::categoryOfBlocksInFile getType()      const override;
     std::array<bool,6>            faceInfo()     const override;
 
     //----------METHODS-------------//

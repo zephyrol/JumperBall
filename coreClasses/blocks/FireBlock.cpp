@@ -16,9 +16,8 @@
 FireBlock::FireBlock(){
 }
 
-
-Block::categoryOfBlocksInFile FireBlock::getType() const {
-
-    return Block::categoryOfBlocksInFile::Fire;
+Block::Effect FireBlock::detectionEvent(const JBTypes::Dir&,
+        const JBTypes::timePointMs&)
+{
+    return Block::Effect::Burn;
 }
-

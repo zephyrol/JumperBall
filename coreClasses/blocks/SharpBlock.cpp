@@ -19,11 +19,6 @@ SharpBlock::SharpBlock(const std::array<bool,6>& facesSharps):
 {
 }
 
-
-Block::categoryOfBlocksInFile SharpBlock::getType() const {
-    return Block::categoryOfBlocksInFile::Sharp;
-}
-
 Block::Effect SharpBlock::interaction(
         const JBTypes::Dir&,
         const JBTypes::timePointMs&,

@@ -16,10 +16,8 @@
 IceBlock::IceBlock() {
 }
 
-
-Block::categoryOfBlocksInFile IceBlock::getType() const {
-    
-    return Block::categoryOfBlocksInFile::Ice;
+Block::Effect IceBlock::detectionEvent(const JBTypes::Dir&,
+        const JBTypes::timePointMs&)
+{
+    return Block::Effect::Slide;
 }
-
-

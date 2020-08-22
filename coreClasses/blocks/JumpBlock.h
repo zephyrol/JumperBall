@@ -19,13 +19,18 @@ class JumpBlock : public Block
 {
 public:
     //--CONSTRUCTORS & DESTRUCTORS--//
-    JumpBlock                             (const std::array<bool,6>& 
-                                            facesJumpers);
+    JumpBlock                         (const std::array<bool,6>& 
+                                        facesJumpers);
 
     //-------CONST METHODS----------//
-    Block::categoryOfBlocksInFile         getType()              const override;
-    std::array<bool,6>                    faceInfo()             const override;
+    std::array<bool,6>                faceInfo()                 const override;
 
+
+    //----------METHODS-------------//
+    virtual Effect                    detectionEvent(
+                                        const JBTypes::Dir& ballDir,
+                                        const JBTypes::timePointMs& currentTime
+                                                );
     
 private:
     const std::array<bool,6>              _facesJumpers;

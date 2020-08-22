@@ -19,14 +19,20 @@ FILE(GLOB SOURCE_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/animations/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/geometry/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/uniformBlocks/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.cpp)
+	${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/graphicBodies/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/graphicBodies/graphicBlocks/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/graphicBodies/graphicObjects/*.cpp)
 
 FILE(GLOB HEADER_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/animations/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/geometry/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/uniformBlocks/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.h)
+	${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/graphicBodies/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/graphicBodies/graphicBlocks/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/graphicBodies/graphicObjects/*.h)
 
 INSTALL (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR}/bin)
 

@@ -15,10 +15,3 @@
 
 BaseBlock::BaseBlock() {
 }
-
-
-Block::categoryOfBlocksInFile BaseBlock::getType() const {
-    return Block::categoryOfBlocksInFile::Base;
-}
-
-

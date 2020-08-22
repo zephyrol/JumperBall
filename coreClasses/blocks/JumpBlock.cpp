@@ -18,13 +18,21 @@ JumpBlock::JumpBlock(const std::array<bool,6>& facesJumpers):
 {
 }
 
-
-Block::categoryOfBlocksInFile JumpBlock::getType() const {
-    return Block::categoryOfBlocksInFile::Jump;
-}
-
-
 std::array<bool, 6 > JumpBlock::faceInfo() const {
     return _facesJumpers;
 }
 
+Block::Effect JumpBlock::detectionEvent(const JBTypes::Dir& ballDir,
+        const JBTypes::timePointMs&)
+{
+    Block::Effect effect;
+    const unsigned int dir = JBTypesMethods::directionAsInteger(ballDir);
+    if (faceInfo().at(dir))
+    {
+        effect = Block::Effect::Jump;
+    }
+    else {
+        effect = Block::Effect::Nothing;
+    }
+    return effect;
+}
