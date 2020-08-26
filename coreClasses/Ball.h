@@ -36,7 +36,7 @@ public:
     enum class State              { Staying, Moving, Jumping, 
                                     TurningLeft, TurningRight, Falling };
 
-    enum class StateOfLife        { Normal, Bursting, Burning, Dead };
+    enum class StateOfLife        { Normal, Bursting, Burning, Sliding, Dead };
 
     enum class JumpingType        { Short, Long };
 
@@ -117,6 +117,9 @@ private:
 
     //current burnCoefficient
     float                         _burnCoefficientCurrent;
+
+    bool                          _jumpRequest;
+    JBTypes::timePointMs          _timeJumpRequest;
 
     //-------CONST METHODS--------//
     std::shared_ptr<const std::vector<int> >  

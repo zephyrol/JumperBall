@@ -176,7 +176,8 @@ void BallAnimation::updateTrans() {
     }
 
     if (_ball.stateOfLife() == Ball::StateOfLife::Normal || _ball.stateOfLife()
-             == Ball::StateOfLife::Burning) {
+             == Ball::StateOfLife::Burning || _ball.stateOfLife() == 
+             Ball::StateOfLife::Sliding) {
         animationAlive();
     } else if (_ball.stateOfLife() == Ball::StateOfLife::Bursting) {
         animationBursting();

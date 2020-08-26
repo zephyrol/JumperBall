@@ -38,7 +38,9 @@ Ball::Ball(Map& map):
         _timeAction(std::chrono::system_clock::now()),
         _timeStateOfLife(std::chrono::system_clock::now()),
         _burnCoefficientTrigger(0.f),
-        _burnCoefficientCurrent(0.f)
+        _burnCoefficientCurrent(0.f),
+        _jumpRequest(false),
+        _timeJumpRequest()
 {
 }
 
@@ -105,25 +107,33 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
         nextBlock.nextLook  = _lookTowards;
         nextBlock.nextSide  = _currentSide;
     }
-    else {
-        nextBlock.poxX      = _currentBlockX;
-        nextBlock.poxY      = _currentBlockY;
-        nextBlock.poxZ      = _currentBlockZ;
-        
-        if ((!blockLeft || !blockLeft ->stillExists())
-            && (!blockRight || !blockRight ->stillExists())) {
-            nextBlock.nextLocal = NextBlockLocal::Same;
-            const JBTypes::Dir sideBeforeMovement = _currentSide;
-            nextBlock.nextSide  = _lookTowards;
-            nextBlock.nextLook = turnBackMovement.
-                evaluate({sideBeforeMovement});
-        }
-        else {
-            nextBlock.nextLocal = NextBlockLocal::None;
-            nextBlock.nextSide  = _currentSide;
-            nextBlock.nextLook  = _lookTowards;
-        }
+    else if ((!blockLeft || !blockLeft->stillExists()) && 
+    (!blockRight || !blockRight->stillExists()))
+    {
+        nextBlock.poxX = _currentBlockX;
+        nextBlock.poxY = _currentBlockY;
+        nextBlock.poxZ = _currentBlockZ;
+        nextBlock.nextLocal = NextBlockLocal::Same;
+        const JBTypes::Dir sideBeforeMovement = _currentSide;
+        nextBlock.nextSide = _lookTowards;
+        nextBlock.nextLook = turnBackMovement.evaluate({sideBeforeMovement});
+    } 
+    else if ( _stateOfLife == StateOfLife::Sliding) {
+        nextBlock.poxX      = inFrontOfX;
+        nextBlock.poxY      = inFrontOfY;
+        nextBlock.poxZ      = inFrontOfZ;
+        nextBlock.nextLocal = NextBlockLocal::InFrontOf;
+        nextBlock.nextLook  = _lookTowards;
+        nextBlock.nextSide  = _currentSide;
+    } else {
+        nextBlock.poxX = _currentBlockX;
+        nextBlock.poxY = _currentBlockY;
+        nextBlock.poxZ = _currentBlockZ;
+        nextBlock.nextLocal = NextBlockLocal::None;
+        nextBlock.nextSide = _currentSide;
+        nextBlock.nextLook = _lookTowards;
     }
+
     return nextBlock;
 }
 
@@ -144,8 +154,9 @@ void Ball::jump() noexcept {
 }
 
 void Ball::stay() noexcept {
-    _state = Ball::State::Staying;
     _jumpingType = Ball::JumpingType::Short;
+    _state = Ball::State::Staying;
+
     setTimeActionNow();
 }
 
@@ -193,6 +204,9 @@ void Ball::doAction(Ball::ActionRequest action) {
             if (_state == Ball::State::Staying) {
                 _state = Ball::State::Jumping;
                 jump();
+            } else {
+                _jumpRequest = true;
+                _timeJumpRequest = JBTypesMethods::getTimePointMSNow();
             }
             break;
         default :
@@ -407,6 +421,7 @@ void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
         const Block::Effect effect = block->detectionEvent(_currentSide,
             JBTypesMethods::getTimePointMsFromTimePoint(_timeAction));
         if (effect == Block::Effect::Jump) {
+            _stateOfLife = StateOfLife::Normal;
             _jumpingType = Ball::JumpingType::Long;
             jump();
         } else if (effect == Block::Effect::Burn) {
@@ -416,6 +431,17 @@ void Ball::blockEvent(std::shared_ptr<Block> block) noexcept{
             setTimeLifeNow();
         } else if (effect == Block::Effect::Slide) {
             _burnCoefficientTrigger = 0.f;
+            _stateOfLife = StateOfLife::Sliding;
+            if (_jumpRequest && JBTypesMethods::getTimeSecondsSinceTimePoint(
+                    _timeJumpRequest) < timeToGetNextBlock) {
+                _jumpRequest = false;
+                jump();
+            } else {
+                move();
+            }
+            update();
+        } else {
+            _stateOfLife = StateOfLife::Normal;
         }
     }
  }
@@ -479,9 +505,9 @@ void Ball::movingUpdate() noexcept {
         _3DPosX     = position3D.x;
         _3DPosY     = position3D.y;
         _3DPosZ     = position3D.z;
-        stay();
-        blockEvent(_map.getBlock
-                   (_currentBlockX,_currentBlockY,_currentBlockZ));
+         stay();
+
+        blockEvent(_map.getBlock(_currentBlockX, _currentBlockY, _currentBlockZ));
     }
     else {
         struct nextBlockInformation infoTarget = getNextBlockInfo();

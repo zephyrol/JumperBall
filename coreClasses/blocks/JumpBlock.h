@@ -30,7 +30,7 @@ public:
     virtual Effect                    detectionEvent(
                                         const JBTypes::Dir& ballDir,
                                         const JBTypes::timePointMs& currentTime
-                                                );
+                                                )                      override;
     
 private:
     const std::array<bool,6>              _facesJumpers;
