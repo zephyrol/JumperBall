@@ -74,13 +74,30 @@ void Block::createObject( Object::CategoryOfObjects category,
     }
 }
 
-const std::array<std::shared_ptr<const Object>,6 >& Block::objects() const {
-    return _objects;
+const std::shared_ptr<const Object> Block::object(size_t number) const
+{
+    return _objects.at(number);
 }
 
 bool Block::hasInteraction() const
 {
    return _hasInteraction;
+}
+
+void Block::catchObject( const JBTypes::vec3f& blockPosition,
+                         const JBTypes::vec3f& entityPosition,
+                         float radiusEntity) 
+{
+    for (size_t i = 0 ; i < _objects.size() ; ++i){
+        const std::shared_ptr<Object> object = _objects.at(i);
+        const auto dir = JBTypesMethods::directionAsVector(
+            JBTypesMethods::integerAsDirection(i));;
+        const JBTypes::vec3f objectPosition 
+        {blockPosition.x + dir.x, 
+         blockPosition.y + dir.y,
+         blockPosition.z + dir.z};
+        object->catchingTest(objectPosition, entityPosition, radiusEntity);
+    }
 }
 
 JBTypes::vec3f Block::positionObject(

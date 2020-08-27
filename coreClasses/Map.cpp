@@ -269,11 +269,10 @@ void Map::verificationMap(std::ifstream& input) const
             for ( unsigned int x = 0 ; x < _width ; x++ ){
                 const std::shared_ptr<const Block>& block = getBlock(x,y,z);
                 if (block) {
-                    const auto objects = block->objects();
                     bool found = false;
-                    for ( size_t i = 0 ; i < objects.size(); ++i ) {
-
-                        if (objects.at(i)) {
+                    for ( size_t i = 0 ; i < Block::objectsNumber; ++i ) {
+                        const auto object = block->object(i);
+                        if (object) {
                             const std::function<unsigned char(size_t)>
                                     getDirection = [](size_t face) {
 
@@ -292,15 +291,15 @@ void Map::verificationMap(std::ifstream& input) const
 
                             std::string s;
                             s.push_back(getDirection(i));
-                            if (objects.at(i)->getCategory() ==
+                            if (object->getCategory() ==
                                     Object::CategoryOfObjects::Key) {
                                 output << "K" << s;
                             }
-                            else if (objects.at(i)->getCategory() ==
+                            else if (object->getCategory() ==
                                      Object::CategoryOfObjects::Coin) {
                                 output << "I" << s;
                             }
-                            else if (objects.at(i)->getCategory() ==
+                            else if (object->getCategory() ==
                                      Object::CategoryOfObjects::Clock) {
                                 output << "C" << s;
                             }

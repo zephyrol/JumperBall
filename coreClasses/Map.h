@@ -67,9 +67,6 @@ public:
     unsigned int                          height()                        const;
     unsigned int                          deep()                          const;
 
-
-
-
     std::chrono::time_point<std::chrono::system_clock>
                                           timeCreation()                  const;
     void                                  verificationMap(std::ifstream &input)

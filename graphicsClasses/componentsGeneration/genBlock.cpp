@@ -96,16 +96,15 @@ std::vector<MeshComponent> MeshGenerator::genBlock
         components.push_back(std::move(m));
     }
 
-    const std::array<std::shared_ptr<const Object>,6> objects =
-        block->objects();
 
-    for (size_t i = 0; i < objects.size() ; ++i) {
-        if ( objects.at(i) ) {
+    for (size_t i = 0; i < Block::objectsNumber ; ++i) {
+        std::shared_ptr<const Object> object = block->object(i);
+        if (object) {
             const JBTypes::Dir dir =
                 JBTypesMethods::integerAsDirection(
                     static_cast<unsigned int>(i));
             std::vector<MeshComponent> v =
-                genComponents(objects.at(i),glmPosition,dir);
+                genComponents(object,glmPosition,dir);
             for(MeshComponent& m : v) {
                 components.push_back(std::move(m));
             }

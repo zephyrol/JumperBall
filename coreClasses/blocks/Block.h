@@ -54,19 +54,23 @@ public:
     virtual bool                      stillExists()                       const;
     virtual const std::array<float,9>&       
                                       localTransform()                    const;
-    virtual const std::array<std::shared_ptr<const Object>,6 >&
-                                      objects()                           const; 
+    virtual const std::shared_ptr<const Object> object(size_t number) const;
     virtual bool                      hasInteraction()                    const;
+    virtual void                      catchObject(
+                                const JBTypes::vec3f& blockPosition,
+                                const JBTypes::vec3f& entityPosition,
+                                float radiusEntity);
 
     //--------STATIC METHODS-------//
     static JBTypes::vec3f             positionObject
                                         (const std::array<unsigned int,3>& pos,
                                          unsigned int dirUint);
+    static constexpr size_t           objectsNumber = 6;
 
 protected:
     //--------ATTRIBUTES-----------//
     std::array<float,9>               _localTransform;
-    std::array<std::shared_ptr<const Object>,6> 
+    std::array<std::shared_ptr<Object>,6> 
                                       _objects;
     const bool                        _hasInteraction;
 };
