@@ -80,9 +80,8 @@ public:
     const std::vector<BlockInfo>&         blocksInfo()                    const;
 
     //----------METHODS------------//
-    Block::Effect                         interaction(
-                                      const JBTypes::Dir& ballDir,
-                                      const JBTypes::vec3f& posBall );
+    Block::Effect                         interaction(const JBTypes::Dir& ballDir,
+                                      const JBTypes::vec3f& posBall , float radius);
     std::shared_ptr<Block>                getBlock(int x, int y, int z);
     std::shared_ptr<Block>                getBlock(size_t index);
 

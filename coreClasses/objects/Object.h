@@ -26,6 +26,7 @@ public:
     virtual CategoryOfObjects getCategory() const = 0;
     
     bool isGotten() const;
+    const JBTypes::timePointMs& timeOfObtaining() const;
     void catchingTest( const JBTypes::vec3f& objectPosition, 
                        const JBTypes::vec3f& entityPosition,
                        float radiusEntity);
@@ -33,6 +34,7 @@ public:
     static constexpr float radiusBoundingSphere = 0.15f;
 private:
     bool _gotten;
+    JBTypes::timePointMs _timeOfObtaining;
 };
 
 #endif /* OBJECT_H */

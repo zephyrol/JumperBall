@@ -15,12 +15,17 @@
 #include <math.h>
 
 Object::Object(): 
-_gotten(false)
+_gotten(false),
+_timeOfObtaining()
 {
 }
 
 bool Object::isGotten() const { 
     return _gotten;
+}
+
+const JBTypes::timePointMs& Object::timeOfObtaining() const {
+    return _timeOfObtaining;
 }
 
 void Object::catchingTest(const JBTypes::vec3f& objectPosition, 
@@ -32,6 +37,7 @@ void Object::catchingTest(const JBTypes::vec3f& objectPosition,
         powf(objectPosition.z - entityPosition.z,2.f));
     if (distance < radiusEntity + radiusBoundingSphere) {
     _gotten = true;
+    _timeOfObtaining = JBTypesMethods::getTimePointMSNow();
     }
     
 }

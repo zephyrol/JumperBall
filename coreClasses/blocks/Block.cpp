@@ -16,14 +16,16 @@
 Block::Block(bool hasInteraction):
   _localTransform {0.f,0.f,0.f,0.f,0.f,0.f,1.f,1.f,1.f},
   _objects {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr},
-  _hasInteraction(hasInteraction)
+  _hasInteraction(hasInteraction),
+  _hasObjects(false)
 {
 }
 
 Block::Block(const std::array<float,9>& localTransform, bool hasInteraction):
   _localTransform(localTransform),
   _objects {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr},
-  _hasInteraction(hasInteraction)
+  _hasInteraction(hasInteraction),
+  _hasObjects(false)
 {
 }
 
@@ -56,6 +58,7 @@ Block::Effect Block::interaction(const JBTypes::Dir&,
 
 void Block::createObject( Object::CategoryOfObjects category, 
                         JBTypes::Dir dir) {
+    _hasObjects = true;
     switch (category) {
         case Object::CategoryOfObjects::Clock : 
             _objects.at(JBTypesMethods::directionAsInteger(dir)) 
@@ -81,34 +84,35 @@ const std::shared_ptr<const Object> Block::object(size_t number) const
 
 bool Block::hasInteraction() const
 {
-   return _hasInteraction;
+    return _hasInteraction;
 }
 
-void Block::catchObject( const JBTypes::vec3f& blockPosition,
+bool Block::hasObjects() const
+{
+   return _hasObjects;
+}
+
+void Block::catchObject( const std::array<unsigned int, 3>& blockPosition,
                          const JBTypes::vec3f& entityPosition,
                          float radiusEntity) 
 {
-    for (size_t i = 0 ; i < _objects.size() ; ++i){
+    for (size_t i = 0; i < _objects.size(); ++i){
         const std::shared_ptr<Object> object = _objects.at(i);
-        const auto dir = JBTypesMethods::directionAsVector(
-            JBTypesMethods::integerAsDirection(i));;
-        const JBTypes::vec3f objectPosition 
-        {blockPosition.x + dir.x, 
-         blockPosition.y + dir.y,
-         blockPosition.z + dir.z};
-        object->catchingTest(objectPosition, entityPosition, radiusEntity);
+        if (object && !object->isGotten()) {
+            const JBTypes::vec3f objectPos = objectPosition(blockPosition,i);
+            object->catchingTest(objectPos, entityPosition, radiusEntity);
+        }
     }
 }
 
-JBTypes::vec3f Block::positionObject(
+JBTypes::vec3f Block::objectPosition(
                  const std::array<unsigned int, 3>& pos, unsigned int dirUint) {
 
     constexpr float offsetPosition = 1.f; 
     float x = static_cast<float> (pos.at(0)+ 0.5f);
     float y = static_cast<float> (pos.at(1)+ 0.5f);
     float z = static_cast<float> (pos.at(2)+ 0.5f);
-    const JBTypes::Dir direction =
-                  JBTypesMethods::integerAsDirection(dirUint);
+    const JBTypes::Dir direction = JBTypesMethods::integerAsDirection(dirUint);
 
     switch (direction) {
         case JBTypes::Dir::North:

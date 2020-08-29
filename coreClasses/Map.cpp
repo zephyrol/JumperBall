@@ -593,31 +593,43 @@ std::chrono::time_point<std::chrono::system_clock> Map::timeCreation() const {
     return _timeCreation;
 }
 
-Block::Effect Map::interaction(
-        const JBTypes::Dir& ballDir, 
-        const JBTypes::vec3f& posBall) {
+Block::Effect Map::interaction( const JBTypes::Dir& ballDir,
+                                const JBTypes::vec3f& posBall,
+                                float radius) {
     
     Block::Effect finalEffect = Block::Effect::Nothing;
     auto timeNow = JBTypesMethods::getTimePointMSNow();
-    std::vector<std::future<Block::Effect> > asyncResults {};
+    std::vector<std::future<Block::Effect> > asyncInteractionResults {};
+    std::vector<std::future<void> > asyncObjectsResults {};
 
-    //Blocks interaction
     for (unsigned int i = 0 ; i < _blocksInfo.size(); ++i) {
+        //Blocks interaction
          const std::shared_ptr<Block>& block =
             getBlock(_blocksInfo.at(i).index);
          if (block->hasInteraction()) {
-             asyncResults.push_back(std::async( &Block::interaction,
+             asyncInteractionResults.push_back(std::async( &Block::interaction,
                                     block, ballDir, timeNow, posBall,
                                     getBlockCoords(_blocksInfo.at(i).index)));
          }
+        //Objects interaction
+         if (block->hasObjects()) {
+             asyncObjectsResults.push_back(std::async( &Block::catchObject,
+                block, getBlockCoords(_blocksInfo.at(i).index),posBall,radius));
+         }
     }
 
-    for (std::future<Block::Effect>& asyncResult : asyncResults) {
-        asyncResult.wait();
-        Block::Effect effect = asyncResult.get();
+
+    for (std::future<Block::Effect>& asyncInteractionResult :
+         asyncInteractionResults) {
+        asyncInteractionResult.wait();
+        Block::Effect effect = asyncInteractionResult.get();
         if (effect != Block::Effect::Nothing) {
             finalEffect = effect;
         }
+    }
+    for (std::future<void>& asyncObjectResult:
+         asyncObjectsResults) {
+        asyncObjectResult.wait();
     }
     return finalEffect;
 }

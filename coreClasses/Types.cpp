@@ -6,8 +6,7 @@
 
 #include "Types.h"
 
-JBTypes::vec3f JBTypesMethods::directionAsVector (
-                                                JBTypes::Dir dir){
+JBTypes::vec3f JBTypesMethods::directionAsVector ( JBTypes::Dir dir){
     
     JBTypes::vec3f dirVec3 {0.f,0.f,0.f};
     switch (dir) {
@@ -36,8 +35,7 @@ JBTypes::vec3f JBTypesMethods::directionAsVector (
     return dirVec3;
 }
 
-JBTypes::Dir JBTypesMethods::integerAsDirection  
-                                                        (unsigned int number) 
+JBTypes::Dir JBTypesMethods::integerAsDirection(unsigned int number)
 {
     JBTypes::Dir dir ; 
     switch (number){
@@ -68,8 +66,7 @@ JBTypes::Dir JBTypesMethods::integerAsDirection
 }
 
 
-JBTypes::timePointMs JBTypesMethods::getTimePointMSNow() 
-                                                                    noexcept {
+JBTypes::timePointMs JBTypesMethods::getTimePointMSNow()  noexcept {
     return std::chrono::time_point_cast<std::chrono::milliseconds> 
                                     (std::chrono::system_clock::now());
 }
@@ -112,8 +109,7 @@ JBTypes::timePointMs JBTypesMethods::getTimePointMsFromTimePoint
     return std::chrono::time_point_cast<std::chrono::milliseconds> (timePoint);
 }
 
-unsigned int JBTypesMethods::directionAsInteger(
-                                              JBTypes::Dir dir) {
+unsigned int JBTypesMethods::directionAsInteger( JBTypes::Dir dir) {
     
     unsigned int number;
     switch (dir){

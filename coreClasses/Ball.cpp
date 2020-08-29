@@ -608,7 +608,8 @@ void Ball::update() noexcept{
 
 void Ball::mapInteraction() noexcept{
 
-    Block::Effect effect = _map.interaction(_currentSide,get3DPosition());
+    Block::Effect effect = _map.interaction
+            (_currentSide,get3DPosition(),getRadius());
     if (effect == Block::Effect::Burst) {
         if (_stateOfLife != StateOfLife::Bursting)
         {
@@ -617,6 +618,11 @@ void Ball::mapInteraction() noexcept{
         }
     }
 }
+
+void objectsInteraction() noexcept {
+
+}
+
 
 Ball::State Ball::state() const {
     return _state;

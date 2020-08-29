@@ -29,7 +29,7 @@ glm::mat4 BlockAnimation::model() const
 
 glm::mat4 BlockAnimation::translation() const
 {
-    return glm::mat4(1.f);
+    return _translation;
 }
 
 glm::mat4 BlockAnimation::scaleRotation() const
