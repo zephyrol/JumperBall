@@ -13,6 +13,7 @@
 
 #ifndef MESH_H
 #define MESH_H
+#include <future>
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include <Ball.h>
@@ -29,6 +30,7 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Mesh                    (const T& base);
+    ~Mesh();
     
     //-------CONST METHODS----------//
     const glm::mat4&        world()                                       const;
@@ -47,12 +49,20 @@ private:
                             _components;
     glm::mat4               _world;
 
-
     //----------METHODS-------------//
     void                    update(const Ball& base);
     void                    update(const Map&  base);
     void                    update(const Quad& base);
     void                    update(const Star& base);
+
+    //--------MULTITHREADING--------//
+    bool                    _endOfTasksIsRequested;
+    size_t                  _treatedComponents;
+    std::mutex              _mutexComponentsInProgress;
+    std::mutex              _mutexComponentsDone;
+    std::vector<std::future<void> > _asyncTasksComponent;
+    void                    treatComponent();
+    std::vector<std::future<void> >genAsyncTasks();
 
 };
 
@@ -62,8 +72,32 @@ template<typename T>
 Mesh<T>::Mesh(const T& base):
   _base(base),
   _components(MeshGenerator::genComponents(base)),
-  _world(1.f)
+  _world(1.f),
+  _endOfTasksIsRequested(false),
+  _treatedComponents(0),
+  _mutexComponentsInProgress(),
+  _mutexComponentsDone(),
+  _asyncTasksComponent{}
 {
+    const size_t nbOfThreads = std::thread::hardware_concurrency();
+    for (size_t i = 0; i < nbOfThreads; ++i){
+    _asyncTasksComponent.push_back(
+                std::async(std::launch::async,[this](){ treatComponent();}));
+    }
+    _mutexComponentsDone.lock(); // initialized as locked
+}
+
+template<typename T>
+Mesh<T>::~Mesh()
+{
+    _endOfTasksIsRequested = true;
+    for (std::future<void>& asyncTaskComponent: _asyncTasksComponent) {
+        // Waiting the end of tasks
+        _mutexComponentsInProgress.unlock();
+        //std::cout << "wait first one" << std::endl;
+        asyncTaskComponent.wait();
+    }
+    //std::cout <<"finish"<<std::endl;
 }
 
 
@@ -84,12 +118,52 @@ void Mesh<T>::update(const Ball& base) {
 }
 
 template<typename T>
-void Mesh<T>::update(const Map&) {
-    for(const MeshComponent& component : _components){
+void Mesh<T>::treatComponent() {
+    //std::cout << "thread created!" << std::endl;
+    while(!_endOfTasksIsRequested) {
+        _mutexComponentsInProgress.lock();
+        //std::cout << "inProgress lock!" << std::endl;
+        MeshComponent& component = _components.at(_treatedComponents);
         if (component.animation()) {
             component.animation()->updateTrans();
         }
+        ++_treatedComponents;
+        //std::cout << _treatedComponents << std::endl;
+        if (_treatedComponents < _components.size()) {
+            _mutexComponentsInProgress.unlock();
+        } else {
+            _mutexComponentsDone.unlock();
+        }
     }
+    _mutexComponentsInProgress.unlock();
+}
+
+/*template<typename T>
+std::vector<std::future<void> > Mesh<T>::genAsyncTasks()
+{
+}*/
+
+template<typename T>
+void Mesh<T>::update(const Map&) {
+    std::vector<std::future<void> > asyncUpdateTrans;
+    //unsigned int nthreads = std::thread::hardware_concurrency();
+    /*for(MeshComponent& component : _components){
+        if (component.animation()) {
+            //asyncUpdateTrans.push_back(std::async(&Animation::updateTrans,
+                                                  //component.animation()));
+            component.animation()->updateTrans(); //converge vers 3900
+        }
+    }*/
+    //for (std::future<void>& asyncUpdateResult : asyncUpdateTrans) {
+       //asyncUpdateResult.wait();
+    //}
+
+
+    _treatedComponents = 0;
+    _mutexComponentsInProgress.unlock();
+    //std::cout << "unlock in progress" << std::endl;
+    _mutexComponentsDone.lock();
+    //std::cout << "lock components" << std::endl;
 }
 
 template<typename T>

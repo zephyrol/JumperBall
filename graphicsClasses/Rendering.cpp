@@ -12,6 +12,7 @@
  */
 
 #include "Rendering.h"
+#include <future>
 
 Rendering::Rendering(const Map&     map,
                      const Ball&    ball,
@@ -168,11 +169,22 @@ void Rendering::render() {
     //-----
     glEnable(GL_CULL_FACE);
 
-    _meshMap.update();
-    _meshBall.update();
-    _meshStar.update();
+    //Update meshes
+    std::future<void> asyncMapUpdate = std::async( [this](){
+        _meshMap.update();
+    });
+    std::future<void> asyncBallUpdate = std::async([this](){
+        _meshBall.update();
+    });
+    std::future<void> asyncStarUpdate = std::async([this](){
+        _meshStar.update();
+    });
 
-    depthFromStar();
+    asyncBallUpdate.wait();
+    asyncStarUpdate.wait();
+    asyncMapUpdate.wait();
+
+    /*depthFromStar();
 
     phongEffect(_frameBufferDepth.getRenderTexture());
 
@@ -181,7 +193,7 @@ void Rendering::render() {
     blurEffect(_frameBufferBrightPassEffect.getRenderTexture());
 
     bloomEffect(_frameBufferHDRScene.getRenderTexture(),
-                _frameBufferCompleteBlurEffect.getRenderTexture());
+                _frameBufferCompleteBlurEffect.getRenderTexture());*/
 
     /*_spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();

@@ -25,7 +25,10 @@ public:
 
     //-------CONST METHODS----------//
     const std::shared_ptr<const GeometricShape>&  shape()                 const;
-    const std::shared_ptr<Animation>&             animation()             const; 
+    const std::shared_ptr<const Animation>&       animation()             const;
+
+    //----------METHODS-------------//
+    const std::shared_ptr<Animation>&             animation();
 
 
 private:
@@ -33,6 +36,7 @@ private:
     //--------ATTRIBUTES-----------//
     const std::shared_ptr<const GeometricShape>   _shape;
     const std::shared_ptr<Animation>              _animation; 
+    const std::shared_ptr<const Animation>        _cstAnimation;
 };
 
 #endif /* MESHCOMPONENT_H */
