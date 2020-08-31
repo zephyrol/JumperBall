@@ -20,6 +20,7 @@
 #include <Map.h>
 #include "Star.h"
 #include "MeshGenerator.h"
+#include <ParallelTask.h>
 
 
 template<typename T> class Mesh;
