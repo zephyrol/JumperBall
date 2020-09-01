@@ -12,49 +12,66 @@
  */
 
 #include "ParallelTask.h"
+    #include <unistd.h>
 
-ParallelTask::ParallelTask (std::function<void()>&& taskFunction,
+ParallelTask::ParallelTask (std::function<void(size_t)> &&taskFunction,
                             size_t numberOfTasks) :
     _endOfTasksIsRequested(false),
     _numberOfThreads(getNumberOfThreads(numberOfTasks)),
     _numberOfTasks(numberOfTasks),
-    _treatedTasks(0),
     _mutexInProgress(),
+    _mutexTaskCounter(),
     _mutexDone(),
     _taskFunction(taskFunction),
-    _asyncTasks()
+    _asyncTasks(),
+    _finishedTasksThreads(_numberOfThreads,false)
 {
     _mutexInProgress.lock();
     for (size_t i = 0; i < _numberOfThreads; ++i) {
-        _asyncTasks.push_back( std::async(std::launch::async, [this](){
-            threadFunction(_taskFunction);}));
+        std::cout << _numberOfThreads << " threads are created" << std::endl;
+        _asyncTasks.push_back( std::async(std::launch::async, [this,i](){
+            threadFunction(_taskFunction,i,_numberOfThreads,_numberOfTasks);}));
     }
 }
 
 void ParallelTask::runTasks()
 {
-    _mutexDone.lock();
-    _treatedTasks = 0;
-    _mutexInProgress.unlock();
+    for(size_t i = 0; i < _finishedTasksThreads.size(); ++i){
+        _finishedTasksThreads.at(i) = false;
+        _mutexInProgress.unlock();
+    }
 }
 
 void ParallelTask::waitTasks()
 {
-    _mutexDone.lock();
-    _mutexDone.unlock();
+    bool allfinished;
+    do {
+        _mutexDone.lock();
+        allfinished = true;
+        for ( bool finishedTaskThread : _finishedTasksThreads) {
+            if (finishedTaskThread == false) {
+                allfinished = false;
+            }
+        }
+    } while (allfinished == false);
+
 }
 
-void ParallelTask::threadFunction(const std::function<void()>& task) {
+void ParallelTask::threadFunction(const std::function<void(size_t)> &task,
+                                  size_t threadnumber,
+                                  size_t nbOfThreads,
+                                  size_t nbOfTasks) {
 
     while(!_endOfTasksIsRequested) {
         _mutexInProgress.lock();
-        ++_treatedTasks;
-        if (_treatedTasks < _numberOfTasks) {
-            _mutexInProgress.unlock();
-            task();
-        } else {
-           _mutexDone.unlock();
+        for(size_t i = threadnumber * nbOfTasks / nbOfThreads ;
+            i < (threadnumber+1) * nbOfTasks / nbOfThreads ; ++i){
+            std::cout << "thread " << threadnumber << " does task " << i
+                      << std::endl;
+            task(i);
         }
+        _finishedTasksThreads.at(threadnumber) = true;
+        _mutexDone.unlock();
     }
 }
 
@@ -75,9 +92,7 @@ size_t ParallelTask::getNumberOfThreads(size_t numberOfTasks)
 
 ParallelTask::~ParallelTask() {
     _endOfTasksIsRequested = true;
-    for ( size_t i = 0; i < _numberOfThreads; ++i) {
-        _mutexInProgress.unlock();
-    }
+    _mutexInProgress.unlock();
     for ( size_t i = 0; i < _numberOfThreads; ++i) {
         _asyncTasks.at(i).wait();
     }

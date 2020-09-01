@@ -27,6 +27,7 @@
 #include "Star.h"
 #include "uniformBlocks/uniformLight.h"
 #include "animations/BallAnimation.h"
+#include <ParallelTask.h>
 
 
 class Rendering {
@@ -69,17 +70,19 @@ private:
     Mesh<Star>                      _meshStar;
     Mesh<Quad>                      _meshQuadFrame;
 
+    ParallelTask _meshMapUpdate;
+    ParallelTask _meshBallUpdate;
+    ParallelTask _meshStarUpdate;
+
     const Ball&                     _ball;
     const Star&                     _star;
     const Camera&                   _camera;
 
     UniformLight                    _light;
 
-
     const ShaderProgram             _spMap;
     const ShaderProgram             _spStar;
     const ShaderProgram             _spFbo;
-
     const ShaderProgram             _spBlur;
     const ShaderProgram             _spBrightPassFilter;
     const ShaderProgram             _spBloom;

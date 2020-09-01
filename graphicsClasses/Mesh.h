@@ -19,14 +19,14 @@
 #include <Map.h>
 #include "Star.h"
 #include "MeshGenerator.h"
-
+#include <ParallelTask.h>
 
 template<typename T> class Mesh;
 
 template<typename T>
 class Mesh {
-public:
 
+public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     Mesh                    (const T& base);
 
@@ -38,14 +38,14 @@ public:
     //----------METHODS-------------//
     void                    update();
 
-
 private:
-
     //--------ATTRIBUTES-----------//
     const T&                _base;
     std::vector<MeshComponent>
                             _components;
     glm::mat4               _world;
+
+    ParallelTask            _componentsMapComputing;
 
 
     //----------METHODS-------------//
@@ -56,14 +56,21 @@ private:
 
 };
 
-
-
 template<typename T>
 Mesh<T>::Mesh(const T& base):
-  _base(base),
-  _components(MeshGenerator::genComponents(base)),
-  _world(1.f)
+_base(base),
+_components(MeshGenerator::genComponents(base)),
+_world(1.f),
+_componentsMapComputing( [this](size_t componentNumber) {
+    //std::cout << "Update block " << componentNumber << std::endl;
+    MeshComponent& component = _components.at(componentNumber);
+    if (component.animation()) {
+        component.animation()->updateTrans();
+    }
+    //std::cout << "Block " << componentNumber << " is updated" << std::endl;
+}, _components.size())
 {
+
 }
 
 
@@ -85,11 +92,14 @@ void Mesh<T>::update(const Ball& base) {
 
 template<typename T>
 void Mesh<T>::update(const Map&) {
-    for(MeshComponent& component : _components){
+
+    /*for(MeshComponent& component : _components){
         if (component.animation()) {
             component.animation()->updateTrans();
         }
-    }
+    }*/
+    _componentsMapComputing.runTasks();
+    _componentsMapComputing.waitTasks();
 }
 
 template<typename T>
@@ -101,12 +111,10 @@ void Mesh<T>::update(const Star& base) {
     _world = base.transform();
 }
 
-
 template<typename T>
 const glm::mat4& Mesh<T>::world() const {
     return _world;
 }
-
 
 template<typename T>
 void Mesh<T>::render(const ShaderProgram& sp) const {

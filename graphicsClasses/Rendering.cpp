@@ -29,6 +29,12 @@ Rendering::Rendering(const Map&     map,
     _meshBall(ball),
     _meshStar(star),
     _meshQuadFrame(_quadFrame),
+    _meshMapUpdate([this](size_t) {
+        _meshMap.update(); }),
+    _meshBallUpdate([this](size_t) {
+        _meshBall.update(); }),
+    _meshStarUpdate([this](size_t) {
+        _meshStar.update(); }),
     _ball(ball),
     _star(star),
     _camera(camera),
@@ -170,21 +176,20 @@ void Rendering::render() {
     glEnable(GL_CULL_FACE);
 
     //Update meshes
-    std::future<void> asyncMapUpdate = std::async( [this](){
-        _meshMap.update();
-    });
-    std::future<void> asyncBallUpdate = std::async([this](){
-        _meshBall.update();
-    });
-    std::future<void> asyncStarUpdate = std::async([this](){
-        _meshStar.update();
-    });
+    _meshMap.update();
+    _meshBall.update();
+    _meshStar.update();
 
-    asyncBallUpdate.wait();
-    asyncStarUpdate.wait();
-    asyncMapUpdate.wait();
+    /*_meshMapUpdate.runTasks();
+    _meshStarUpdate.runTasks();
+    _meshBallUpdate.runTasks();
 
-    /*depthFromStar();
+    _meshMapUpdate.waitTasks();
+    _meshStarUpdate.waitTasks();
+    _meshBallUpdate.waitTasks();*/
+
+
+    depthFromStar();
 
     phongEffect(_frameBufferDepth.getRenderTexture());
 
@@ -193,7 +198,7 @@ void Rendering::render() {
     blurEffect(_frameBufferBrightPassEffect.getRenderTexture());
 
     bloomEffect(_frameBufferHDRScene.getRenderTexture(),
-                _frameBufferCompleteBlurEffect.getRenderTexture());*/
+                _frameBufferCompleteBlurEffect.getRenderTexture());
 
     /*_spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();
