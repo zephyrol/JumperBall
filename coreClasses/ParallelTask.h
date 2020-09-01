@@ -12,12 +12,13 @@
 #include <future>
 
 class ParallelTask {
-    ParallelTask (const std::function<bool()>& taskFunction,
+    ParallelTask (std::function<void()>&& taskFunction,
                   size_t numberOfTasks );
     ~ParallelTask();
 
 public:
     void runTasks();
+    void waitTasks();
 
 private:
     //--------ATTRIBUTES-----------//
@@ -27,11 +28,11 @@ private:
     size_t                  _treatedTasks;
     std::mutex              _mutexInProgress;
     std::mutex              _mutexDone;
-    std::function<bool()>   _taskFunction;
+    std::function<void()>   _taskFunction;
     std::vector<std::future<void> > _asyncTasks;
 
     //----------METHODS-------------//
-    void                 threadFunction(const std::function<bool()>& task);
+    void                 threadFunction(const std::function<void()>& task);
     std::vector<std::future<void> >genAsyncTasks();
 
     //------ STATIC METHODS---------//

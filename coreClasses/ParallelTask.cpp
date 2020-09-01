@@ -13,7 +13,7 @@
 
 #include "ParallelTask.h"
 
-ParallelTask::ParallelTask (const std::function<bool()>& taskFunction,
+ParallelTask::ParallelTask (std::function<void()>&& taskFunction,
                             size_t numberOfTasks) :
     _endOfTasksIsRequested(false),
     _numberOfThreads(getNumberOfThreads(numberOfTasks)),
@@ -38,7 +38,13 @@ void ParallelTask::runTasks()
     _mutexInProgress.unlock();
 }
 
-void ParallelTask::threadFunction(const std::function<bool()>& task) {
+void ParallelTask::waitTasks()
+{
+    _mutexDone.lock();
+    _mutexDone.unlock();
+}
+
+void ParallelTask::threadFunction(const std::function<void()>& task) {
 
     while(!_endOfTasksIsRequested) {
         _mutexInProgress.lock();
@@ -46,6 +52,8 @@ void ParallelTask::threadFunction(const std::function<bool()>& task) {
         if (_treatedTasks < _numberOfTasks) {
             _mutexInProgress.unlock();
             task();
+        } else {
+           _mutexDone.unlock();
         }
     }
 }
