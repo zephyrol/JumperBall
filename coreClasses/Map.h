@@ -98,17 +98,23 @@ public:
     std::shared_ptr<Block>                getBlock(int x, int y, int z);
     std::shared_ptr<Block>                getBlock(size_t index);
 
+    std::vector<BlockInfo>                getBlocksWithInteraction()      const;
+    std::vector<BlockInfo>                getBlocksWithObjects()          const;
+
     //--------STATIC METHODS-------//
     static void                           compress(std::ifstream& input);
 
     static std::shared_ptr<Map>           loadMap(size_t mapNumber);
 
     static MapInfo                        createMapInfo(std::ifstream& file);
+
 private:
 
     //--------ATTRIBUTES-----------//
     std::vector<std::shared_ptr<Block> >  _blocks;
     std::vector<BlockInfo>                _blocksInfo;
+    std::vector<BlockInfo>                _blocksWithInteractionInfo;
+    std::vector<BlockInfo>                _blocksWithObjectsInfo;
 
     unsigned int                          _width;
     unsigned int                          _height;

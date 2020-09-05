@@ -22,6 +22,8 @@
 Map::Map(Map::MapInfo&& mapInfo):
     _blocks(std::move(mapInfo.blocks)),
     _blocksInfo(std::move(mapInfo.blocksInfo)),
+    _blocksWithInteractionInfo(getBlocksWithInteraction()),
+    _blocksWithObjectsInfo(getBlocksWithObjects()),
     _width (std::move(mapInfo.width)),
     _height (std::move(mapInfo.height)),
     _deep (std::move(mapInfo.deep)),
@@ -30,28 +32,24 @@ Map::Map(Map::MapInfo&& mapInfo):
     _beginZ (std::move(mapInfo.beginZ)),
     _timeCreation(std::chrono::system_clock::now()),
     _blocksInteractions([this](size_t blockNumber) {
-
          const std::shared_ptr<Block>& block =
-            getBlock(_blocksInfo.at(blockNumber).index);
-         if (block->hasInteraction()) {
-            return block->interaction(
-                    _dirBallInteractions,
-                    _timeInteractions,
-                    _posBallInteractions,
-                    getBlockCoords(_blocksInfo.at(blockNumber).index));
-         }
-         else return Block::Effect::Nothing;
-
-    },_blocksInfo.size()),
+            getBlock(_blocksWithInteractionInfo.at(blockNumber).index);
+         return block->interaction(
+                     _dirBallInteractions,
+                     _timeInteractions,
+                     _posBallInteractions,
+                     getBlockCoords
+                     (_blocksWithInteractionInfo.at(blockNumber).index));
+    },_blocksWithInteractionInfo.size()),
     _objectsInteractions([this](size_t blockNumber) {
          const std::shared_ptr<Block>& block =
-            getBlock(_blocksInfo.at(blockNumber).index);
+            getBlock(_blocksWithObjectsInfo.at(blockNumber).index);
          if (block->hasObjects()) {
             block->catchObject(
-                        getBlockCoords(_blocksInfo.at(blockNumber).index),
-                        _posBallInteractions,_radiusInteractions );
+                getBlockCoords(_blocksWithObjectsInfo.at(blockNumber).index),
+                _posBallInteractions,_radiusInteractions );
          }
-    },_blocksInfo.size()),
+    },_blocksWithObjectsInfo.size()),
     _dirBallInteractions(JBTypes::Dir::North),
     _posBallInteractions({0.f,0.f,0.f}),
     _radiusInteractions(0.f),
@@ -74,6 +72,32 @@ std::shared_ptr<Block> Map::getBlock(size_t index)
             static_cast<const Map&>(*this).getBlock(index);
 
     return std::const_pointer_cast<Block> (constBlock);
+}
+
+std::vector<Map::BlockInfo> Map::getBlocksWithInteraction() const
+{
+    std::vector<Map::BlockInfo> blocksWithInteraction;
+    for (unsigned int i = 0 ; i < _blocksInfo.size(); ++i) {
+        const std::shared_ptr<const Block>& block =
+                getBlock(_blocksInfo.at(i).index);
+        if (block->hasInteraction()) {
+            blocksWithInteraction.push_back(_blocksInfo.at(i));
+        }
+    }
+    return blocksWithInteraction;
+}
+
+std::vector<Map::BlockInfo> Map::getBlocksWithObjects() const
+{
+    std::vector<Map::BlockInfo> blocksWithObjects;
+    for (unsigned int i = 0 ; i < _blocksInfo.size(); ++i) {
+        const std::shared_ptr<const Block>& block =
+                getBlock(_blocksInfo.at(i).index);
+        if (block->hasObjects()) {
+            blocksWithObjects.push_back(_blocksInfo.at(i));
+        }
+    }
+    return blocksWithObjects;
 }
 
 std::shared_ptr<const Block> Map::getBlock(int x, int y, int z) const {
