@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
             Map::compress(file);
             std::ifstream mapFile ("outMap.txt");
             std::ifstream mapFile2 (fileToOpen);
-            Map map (mapFile);
+            Map map (Map::createMapInfo(mapFile));
             map.verificationMap(mapFile2);
         }
         else {

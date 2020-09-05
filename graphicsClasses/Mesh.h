@@ -64,11 +64,10 @@ _base(base),
 _components(MeshGenerator::genComponents(base)),
 _animatedComponents(getAnimatedComponents(_components)),
 _world(1.f),
-_componentsMapComputing( [this](size_t componentNumber) -> int {
+_componentsMapComputing( [this](size_t componentNumber) -> void {
     const MeshComponentSptr& component =
             _animatedComponents.at(componentNumber);
     component->animation()->updateTrans();
-    return 1;
 }, _animatedComponents.size())
 {
 

@@ -16,6 +16,8 @@ class ParallelTask {
 public:
     ParallelTask (std::function<T(size_t)>&& taskFunction,
                   size_t numberOfTasks  = 1);
+    ParallelTask (const ParallelTask& parallelTask)                    = delete;
+    ParallelTask& operator=(const ParallelTask& parallelTask)          = delete;
     ~ParallelTask();
 
     void runTasks();

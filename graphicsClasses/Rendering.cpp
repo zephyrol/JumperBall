@@ -30,11 +30,11 @@ Rendering::Rendering(const Map&     map,
     _meshStar(star),
     _meshQuadFrame(_quadFrame),
     _meshMapUpdate([this](size_t) {
-        _meshMap.update(); return 1;}),
+        _meshMap.update();}),
     _meshBallUpdate([this](size_t) {
-        _meshBall.update(); return 1;}),
+        _meshBall.update();}),
     _meshStarUpdate([this](size_t) {
-        _meshStar.update(); return 1; }),
+        _meshStar.update(); }),
     _ball(ball),
     _star(star),
     _camera(camera),

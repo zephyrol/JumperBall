@@ -70,9 +70,9 @@ private:
     Mesh<Star>                      _meshStar;
     Mesh<Quad>                      _meshQuadFrame;
 
-    ParallelTask<int> _meshMapUpdate;
-    ParallelTask<int> _meshBallUpdate;
-    ParallelTask<int> _meshStarUpdate;
+    ParallelTask<void>              _meshMapUpdate;
+    ParallelTask<void>              _meshBallUpdate;
+    ParallelTask<void>              _meshStarUpdate;
 
     const Ball&                     _ball;
     const Star&                     _star;

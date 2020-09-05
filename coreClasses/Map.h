@@ -24,6 +24,7 @@
 #include "objects/Key.h"
 #include "objects/Coin.h"
 #include "objects/Clock.h"
+#include "ParallelTask.h"
 #include <fstream>
 
 class Map {
@@ -45,8 +46,6 @@ public:
     static constexpr unsigned char        firstNumberWithoutAnyObjects     = 48;
     static constexpr unsigned int         nbOfCharactersWithoutObjects     = 79;
 
-    //--CONSTRUCTORS & DESTRUCTORS--//
-    Map                                   ( std::ifstream& file );
 
     // ----------- TYPES -----------//
     enum class BlockTypes { None, Base, Fire, Ice, Sharp,
@@ -54,6 +53,19 @@ public:
 
     struct BlockInfo { size_t index; 
                        BlockTypes type; };
+
+    struct MapInfo { unsigned int width;
+                     unsigned int height;
+                     unsigned int deep;
+                     unsigned int beginX;
+                     unsigned int beginY;
+                     unsigned int beginZ;
+                     std::vector<std::shared_ptr<Block> > blocks;
+                     std::vector<BlockInfo> blocksInfo;
+                  };
+
+    //--CONSTRUCTORS & DESTRUCTORS--//
+    Map                                   ( MapInfo&& mapInfo );
 
     //-------CONST METHODS----------//
     unsigned int                          beginX()                        const;
@@ -80,8 +92,9 @@ public:
     const std::vector<BlockInfo>&         blocksInfo()                    const;
 
     //----------METHODS------------//
-    Block::Effect                         interaction(const JBTypes::Dir& ballDir,
-                                      const JBTypes::vec3f& posBall , float radius);
+    Block::Effect                         interaction(
+                                  const JBTypes::Dir& ballDir,
+                                  const JBTypes::vec3f& posBall , float radius);
     std::shared_ptr<Block>                getBlock(int x, int y, int z);
     std::shared_ptr<Block>                getBlock(size_t index);
 
@@ -90,6 +103,7 @@ public:
 
     static std::shared_ptr<Map>           loadMap(size_t mapNumber);
 
+    static MapInfo                        createMapInfo(std::ifstream& file);
 private:
 
     //--------ATTRIBUTES-----------//
@@ -105,6 +119,14 @@ private:
     unsigned int                          _beginZ;
     std::chrono::time_point<std::chrono::system_clock>  
                                           _timeCreation;
+    // Multithreading
+    ParallelTask<Block::Effect>           _blocksInteractions;
+    ParallelTask<void>                    _objectsInteractions;
+    JBTypes::Dir                          _dirBallInteractions;
+    JBTypes::vec3f                        _posBallInteractions;
+    float                                 _radiusInteractions;
+    JBTypes::timePointMs                  _timeInteractions;
+    // --------------
 
     static unsigned int                   nbMaps;
 
