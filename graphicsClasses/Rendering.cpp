@@ -30,11 +30,11 @@ Rendering::Rendering(const Map&     map,
     _meshStar(star),
     _meshQuadFrame(_quadFrame),
     _meshMapUpdate([this](size_t) {
-        _meshMap.update(); }),
+        _meshMap.update(); return 1;}),
     _meshBallUpdate([this](size_t) {
-        _meshBall.update(); }),
+        _meshBall.update(); return 1;}),
     _meshStarUpdate([this](size_t) {
-        _meshStar.update(); }),
+        _meshStar.update(); return 1; }),
     _ball(ball),
     _star(star),
     _camera(camera),
@@ -130,7 +130,7 @@ void Rendering::blurEffect(GLuint brightPassTexture) const {
     _meshQuadFrame.render(_spBlur);
 }
 
-void Rendering::brightPassEffect(GLuint hdrSceneTexture) {
+void Rendering::brightPassEffect(GLuint hdrSceneTexture) const {
     constexpr float bloomThreshold = 4.f;
     _spBrightPassFilter.use();
     _frameBufferBrightPassEffect.bindFrameBuffer(false);
@@ -141,7 +141,7 @@ void Rendering::brightPassEffect(GLuint hdrSceneTexture) {
 }
 
 void Rendering::bloomEffect( GLuint hdrSceneTexture,
-                             GLuint bluredTexture) {
+                             GLuint bluredTexture) const{
     _spBloom.use();
     FrameBuffer::bindDefaultFrameBuffer();
 
@@ -176,17 +176,17 @@ void Rendering::render() {
     glEnable(GL_CULL_FACE);
 
     //Update meshes
-    _meshMap.update();
+    /*_meshMap.update();
     _meshBall.update();
-    _meshStar.update();
+    _meshStar.update();*/
 
-    /*_meshMapUpdate.runTasks();
     _meshStarUpdate.runTasks();
     _meshBallUpdate.runTasks();
+    _meshMapUpdate.runTasks();
 
-    _meshMapUpdate.waitTasks();
     _meshStarUpdate.waitTasks();
-    _meshBallUpdate.waitTasks();*/
+    _meshBallUpdate.waitTasks();
+    _meshMapUpdate.waitTasks();
 
 
     depthFromStar();

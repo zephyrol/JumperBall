@@ -70,9 +70,9 @@ private:
     Mesh<Star>                      _meshStar;
     Mesh<Quad>                      _meshQuadFrame;
 
-    ParallelTask _meshMapUpdate;
-    ParallelTask _meshBallUpdate;
-    ParallelTask _meshStarUpdate;
+    ParallelTask<int> _meshMapUpdate;
+    ParallelTask<int> _meshBallUpdate;
+    ParallelTask<int> _meshStarUpdate;
 
     const Ball&                     _ball;
     const Star&                     _star;
@@ -96,10 +96,11 @@ private:
 
     //------------METHODS----------//
     void                            phongEffect(GLuint depthTexture);
-    void                            blurEffect(GLuint brightPassTexture) const;
-    void                            brightPassEffect(GLuint hdrSceneTexture);
+    void                            blurEffect(GLuint brightPassTexture)  const;
+    void                            brightPassEffect(GLuint hdrSceneTexture)
+                                                                          const;
     void                            bloomEffect(GLuint hdrSceneTexture,
-                                                GLuint bluredTexture );
+                                                GLuint bluredTexture )    const;
     void                            depthFromStar();
 
     void                            bindCamera(const ShaderProgram& sp);

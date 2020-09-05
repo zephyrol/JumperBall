@@ -21,7 +21,6 @@
 #include "MeshGenerator.h"
 #include <ParallelTask.h>
 
-template<typename T> class Mesh;
 
 template<typename T>
 class Mesh {
@@ -45,7 +44,7 @@ private:
     VecMeshComponentSptr    _animatedComponents;
     glm::mat4               _world;
 
-    ParallelTask            _componentsMapComputing;
+    ParallelTask<void>      _componentsMapComputing;
 
 
     //----------METHODS-------------//
@@ -65,12 +64,11 @@ _base(base),
 _components(MeshGenerator::genComponents(base)),
 _animatedComponents(getAnimatedComponents(_components)),
 _world(1.f),
-_componentsMapComputing( [this](size_t componentNumber) {
-    //std::cout << "Update block " << componentNumber << std::endl;
+_componentsMapComputing( [this](size_t componentNumber) -> int {
     const MeshComponentSptr& component =
             _animatedComponents.at(componentNumber);
     component->animation()->updateTrans();
-    //std::cout << "Block " << componentNumber << " is updated" << std::endl;
+    return 1;
 }, _animatedComponents.size())
 {
 
@@ -84,7 +82,6 @@ void Mesh<T>::update() {
 
 template<typename T>
 void Mesh<T>::update(const Ball& base) {
-
     const JBTypes::vec3f positionBall = base.get3DPosition();
     _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
                             positionBall.y ,positionBall.z));
