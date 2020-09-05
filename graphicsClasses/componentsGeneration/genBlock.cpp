@@ -6,7 +6,7 @@
  */
 #include "../MeshGenerator.h"
 
-std::vector<MeshComponent> MeshGenerator::genBlock
+VecMeshComponentSptr MeshGenerator::genBlock
     (const Map& map, size_t index) {
 
     const std::array<unsigned int,3> position = map.getBlockCoords(index);
@@ -14,7 +14,7 @@ std::vector<MeshComponent> MeshGenerator::genBlock
 
     const std::shared_ptr<const Block> block = map.getBlock(index);
 
-    std::vector<MeshComponent> components;
+    VecMeshComponentSptr components;
     std::shared_ptr<GeometricShape> shape;
 
     std::string strSidesInfo {};
@@ -80,19 +80,19 @@ std::vector<MeshComponent> MeshGenerator::genBlock
 
     std::shared_ptr<BlockAnimation> blockAnim =
             std::make_shared<BlockAnimation>(*block);
-    MeshComponent component
+    MeshComponentSptr component = std::make_shared<MeshComponent>
         (std::make_shared<Cube> (*shape,transform), blockAnim);
     components.push_back(component);
 
-    std::vector<MeshComponent> sharpsComponents =
+    VecMeshComponentSptr sharpsComponents =
         genSharps(*block,blockType, glmPosition);
-    for(MeshComponent& m : sharpsComponents) {
-        components.push_back(std::move(m));
+    for(MeshComponentSptr sp : sharpsComponents) {
+        components.push_back(std::move(sp));
     }
 
-    std::vector<MeshComponent> jumperComponents =
+    VecMeshComponentSptr jumperComponents =
         genJumpers(*block,blockType,glmPosition);
-    for(MeshComponent& m : jumperComponents) {
+    for(MeshComponentSptr m : jumperComponents) {
         components.push_back(std::move(m));
     }
 
@@ -103,10 +103,9 @@ std::vector<MeshComponent> MeshGenerator::genBlock
             const JBTypes::Dir dir =
                 JBTypesMethods::integerAsDirection(
                     static_cast<unsigned int>(i));
-            std::vector<MeshComponent> v =
-                genComponents(object,glmPosition,dir);
-            for(MeshComponent& m : v) {
-                components.push_back(std::move(m));
+            VecMeshComponentSptr objMCs = genObject(object,glmPosition,dir);
+            for(MeshComponentSptr objMC : objMCs) {
+                components.push_back(std::move(objMC));
             }
         }
     }

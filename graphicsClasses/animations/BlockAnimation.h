@@ -21,15 +21,11 @@ public:
 
     //----------METHODS------------//
     void                          updateTrans()                        override;
-    glm::mat4                     model()                        const override;
-    glm::mat4                     translation()                  const override;
-    glm::mat4                     scaleRotation()                const override;
 
 private:
 
     //--------ATTRIBUTES-----------//
     const Block&                  _block;
-    glm::mat4                     _translation;
 };
 
 

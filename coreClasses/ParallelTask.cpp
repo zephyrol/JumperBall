@@ -17,7 +17,7 @@
 ParallelTask::ParallelTask (std::function<void(size_t)> &&taskFunction,
                             size_t numberOfTasks) :
     _endOfTasksIsRequested(false),
-    _numberOfThreads(getNumberOfThreads(numberOfTasks)-1),
+    _numberOfThreads(getNumberOfThreads(numberOfTasks)),
     _numberOfTasks(numberOfTasks),
     _mutexesStart(_numberOfThreads),
     _mutexesDone(_numberOfThreads),
@@ -64,7 +64,7 @@ void ParallelTask::threadFunction(const std::function<void(size_t)> &task,
             //std::cout<< "I started : " << threadnumber << std::endl;
             for(size_t i = (threadnumber * nbOfTasks / nbOfThreads);
                 i < ((threadnumber+1) * nbOfTasks / nbOfThreads); ++i){
-                for (size_t j = 0 ; j < 10 ; j++)
+                //for (size_t j = 0 ; j < 30 ; j++)
                     task(i);
                 //std::cout << "thread " << threadnumber << " does task " << i
                           //<< std::endl;

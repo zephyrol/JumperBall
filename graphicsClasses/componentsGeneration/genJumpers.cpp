@@ -8,11 +8,11 @@
 #include "MeshGenerator.h"
 
 
-std::vector<MeshComponent> MeshGenerator::genJumpers(
+VecMeshComponentSptr MeshGenerator::genJumpers(
                                         const Block& block,
                                         const Map::BlockTypes& type,
                                         const glm::vec3& posWorld) {
-    std::vector<MeshComponent> components;
+    VecMeshComponentSptr components;
     if (type  == Map::BlockTypes::Jump) {
 
         if (commonShapes.find("jumperCylinder") == commonShapes.end()) {
@@ -54,9 +54,11 @@ std::vector<MeshComponent> MeshGenerator::genJumpers(
                 rotationLocal * scaleLocal ;
                 const glm::mat4 normalsTrans= rotationLocal;
 
-                MeshComponent component ( std::make_shared<Cylinder>
-                (*commonShapes.at("jumperCylinder"),modelTranf,normalsTrans),
-                        nullptr);
+                MeshComponentSptr component = std::make_shared<MeshComponent>
+                    (std::make_shared<Cylinder>
+                        (*commonShapes.at("jumperCylinder"),
+                     modelTranf,normalsTrans),
+                     nullptr);
                 components.push_back(std::move(component));
             }
         }

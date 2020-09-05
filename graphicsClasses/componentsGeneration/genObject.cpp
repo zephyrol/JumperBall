@@ -6,11 +6,11 @@
  */
 #include "../MeshGenerator.h"
 
-std::vector<MeshComponent> MeshGenerator::genComponents(
+VecMeshComponentSptr MeshGenerator::genObject(
                                 const std::shared_ptr<const Object>& obj,
                                 const glm::vec3& position,
                                 const JBTypes::Dir& dir) {
-    std::vector<MeshComponent> components;
+    VecMeshComponentSptr components;
     if (obj) {
         switch ( obj->getCategory() ) {
             case Object::CategoryOfObjects::Key: {
@@ -44,17 +44,19 @@ std::vector<MeshComponent> MeshGenerator::genComponents(
                                         glm::translate(translations.at(i));
                     const glm::mat4 tranform = translationMatrix * scaleMatrix;
                     if (i == 0){
-                    const MeshComponent componentSphere =
-                      {std::make_shared<Sphere>(
+                    MeshComponentSptr componentSphere =
+                      std::make_shared <MeshComponent>
+                      (std::make_shared<Sphere>(
                       *commonShapes.at("goldenSphere"),
                               tranform),
-                        std::make_shared<ObjectAnimation>(*obj,position,dir)};
+                        std::make_shared<ObjectAnimation>(*obj,position,dir));
                     components.push_back(componentSphere);
                     } else {
-                    const MeshComponent componentCube =
-                      {std::make_shared<Cube>(*commonShapes.at("goldenCube"),
+                    MeshComponentSptr componentCube =
+                        std::make_shared<MeshComponent>
+                      (std::make_shared<Cube>(*commonShapes.at("goldenCube"),
                               tranform),
-                        std::make_shared<ObjectAnimation>(*obj,position,dir)};
+                        std::make_shared<ObjectAnimation>(*obj,position,dir));
                     components.push_back(componentCube);
                     }
                }
@@ -83,11 +85,12 @@ std::vector<MeshComponent> MeshGenerator::genComponents(
                   translationMatrix * rotationMatrix * scaleMatrix ;
                 const glm::mat4 tranformNormals = rotationMatrix;
 
-                const MeshComponent componentCube =
-                {std::make_shared<Cylinder>(*commonShapes.at("coinCylinder"),
+                MeshComponentSptr componentCube =
+                std::make_shared<MeshComponent>(
+                std::make_shared<Cylinder>(*commonShapes.at("coinCylinder"),
                         tranformLocal,
                         tranformNormals ),
-                std::make_shared<ObjectAnimation>(*obj,position,dir)};
+                std::make_shared<ObjectAnimation>(*obj,position,dir));
                 components.push_back(componentCube);
                 break;
             }

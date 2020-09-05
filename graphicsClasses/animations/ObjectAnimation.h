@@ -31,10 +31,6 @@ public:
     void                                updateTrans()                  override;
     void                                transBeforeObtaining();
     void                                transAfterObtaining();
-    //--------CONST METHODS--------//
-    glm::mat4                           model()                  const override;
-    glm::mat4                           translation()            const override;
-    glm::mat4                           scaleRotation()          const override;
 private:
 
     const Object&                       object()                          const;

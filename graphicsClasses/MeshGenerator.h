@@ -31,26 +31,23 @@
 
 namespace MeshGenerator {
 
-    std::vector<MeshComponent>  genComponents(const Quad& quad);
-    std::vector<MeshComponent>  genComponents(const Ball& ball);
-    std::vector<MeshComponent>  genComponents(const Map& map);
-    std::vector<MeshComponent>  genComponents(const Star& star);
-    std::vector<MeshComponent>  genComponents(
-                                    const std::shared_ptr<const Object>& obj,
+    VecMeshComponentSptr  genComponents(const Quad& quad);
+    VecMeshComponentSptr  genComponents(const Ball& ball);
+    VecMeshComponentSptr  genComponents(const Map& map);
+    VecMeshComponentSptr  genComponents(const Star& star);
+    VecMeshComponentSptr  sortComponents(VecMeshComponentSptr& components);
+
+    VecMeshComponentSptr  genObject(const std::shared_ptr<const Object>& obj,
                                     const glm::vec3& position,
                                     const JBTypes::Dir& dir);
-
-
-    std::vector<MeshComponent>  sortComponents(std::vector<MeshComponent>&
-                                                  components);
     
-    std::vector<MeshComponent>  genBlock( const Map& map, size_t index);
-    std::vector<MeshComponent>  genSharps(  const Block& block, 
-                                            const Map::BlockTypes& type, 
-                                            const glm::vec3& posWorld);
-    std::vector<MeshComponent>  genJumpers( const Block& block, 
-                                            const Map::BlockTypes& type, 
-                                            const glm::vec3& posWorld);
+    VecMeshComponentSptr  genBlock(const Map& map, size_t index);
+    VecMeshComponentSptr  genSharps(const Block& block,
+                                    const Map::BlockTypes& type,
+                                    const glm::vec3& posWorld);
+    VecMeshComponentSptr  genJumpers(const Block& block,
+                                     const Map::BlockTypes& type,
+                                     const glm::vec3& posWorld);
 
     extern std::map<std::string, std::shared_ptr<GeometricShape> >
                                 commonShapes;

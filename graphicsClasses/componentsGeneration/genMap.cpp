@@ -6,20 +6,20 @@
  */
 #include "../MeshGenerator.h"
 
-std::vector<MeshComponent> MeshGenerator::genComponents(const Map& map) {
+VecMeshComponentSptr MeshGenerator::genComponents(const Map& map) {
 
-    std::vector<MeshComponent> components;
+    VecMeshComponentSptr components;
     const auto blockInfos = map.blocksInfo();
     for (unsigned int i = 0 ; i < blockInfos.size(); ++i) {
-        std::vector<MeshComponent> blockComponents =
+        VecMeshComponentSptr blockComponents =
                 genBlock(map, blockInfos.at(i).index);
-        for(MeshComponent& m : blockComponents) {
+        for(MeshComponentSptr m : blockComponents) {
             components.push_back(std::move(m));
         }
     }
 
     //We have better performances if the components are stored with objects
     //with the same VAO/VBO, we will not have to change the binding later
-    std::vector<MeshComponent> sortedComponents = sortComponents(components);
+    VecMeshComponentSptr sortedComponents = sortComponents(components);
     return sortedComponents;
 }

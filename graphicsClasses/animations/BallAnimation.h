@@ -22,14 +22,11 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     BallAnimation                 (const Ball& ball);
-    virtual ~BallAnimation        ()                                   =default;
+    virtual ~BallAnimation        ()                                  = default;
 
 
     //----------METHODS------------//
     void                          updateTrans()                        override;
-    glm::mat4                     model()                        const override;
-    glm::mat4                     translation()                  const override;
-    glm::mat4                     scaleRotation()                const override;
     void                          animationAlive();
     void                          animationBursting();
 
@@ -43,10 +40,9 @@ private:
 
     glm::mat4                     _scale;
     glm::mat4                     _rotation;
-    glm::mat4                     _translation;
 
-    JBTypes::timePointMs  _referenceTimePointAction;
-    JBTypes::timePointMs  _referenceTimePointStateOfLife;
+    JBTypes::timePointMs          _referenceTimePointAction;
+    JBTypes::timePointMs          _referenceTimePointStateOfLife;
 
     Ball::State                   _referenceState;
     Ball::StateOfLife             _referenceStateOfLife;

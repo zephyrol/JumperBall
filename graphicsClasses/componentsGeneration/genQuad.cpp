@@ -6,7 +6,7 @@
  */
 #include "../MeshGenerator.h"
 
-std::vector<MeshComponent> MeshGenerator::genComponents(const Quad& ) {
+VecMeshComponentSptr MeshGenerator::genComponents(const Quad& ) {
 
     //The quad var is just used to specify that
     //we want to gen a MeshComponent from a Quad
@@ -15,6 +15,7 @@ std::vector<MeshComponent> MeshGenerator::genComponents(const Quad& ) {
         commonShapes["screenQuad"] = std::make_shared<Quad> ();
     }
 
-    MeshComponent component ( commonShapes.at("screenQuad"), nullptr);
-    return std::vector<MeshComponent> {component};
+    MeshComponentSptr component = std::make_shared<MeshComponent>(
+            commonShapes.at("screenQuad"), nullptr);
+    return VecMeshComponentSptr {component};
 }

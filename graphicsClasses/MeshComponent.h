@@ -21,7 +21,7 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     MeshComponent ( const std::shared_ptr<const GeometricShape>& shape,
                     const std::shared_ptr<Animation>& anim);
-    
+
 
     //-------CONST METHODS----------//
     const std::shared_ptr<const GeometricShape>&  shape()                 const;
@@ -38,6 +38,11 @@ private:
     const std::shared_ptr<Animation>              _animation; 
     const std::shared_ptr<const Animation>        _cstAnimation;
 };
+
+//------------TYPES------------//
+using MeshComponentSptr = std::shared_ptr<MeshComponent>;
+using CstMeshComponentSptr = std::shared_ptr<const MeshComponent>;
+using VecMeshComponentSptr = std::vector<MeshComponentSptr>;
 
 #endif /* MESHCOMPONENT_H */
 

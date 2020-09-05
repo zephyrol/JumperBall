@@ -28,26 +28,20 @@ _movingTranslation(1.f)
 {
 }
 
-glm::mat4 ObjectAnimation::model() const {
-    return _translationToBlock * translationCenter *
-            _initialRotation * translationOnBlock  *
-            _movingTranslation *  _movingRotation * _movingScale;
-}
-
-glm::mat4 ObjectAnimation::scaleRotation() const {
-    return _initialRotation * _movingRotation;
-}
-
-glm::mat4 ObjectAnimation::translation() const {
-    return _movingTranslation * _translationToBlock * translationOnBlock;
-}
-
 void ObjectAnimation::updateTrans() {
     if (_object.isGotten()) {
         transAfterObtaining();
     } else {
         transBeforeObtaining();
     }
+
+    _model = _translationToBlock * translationCenter *
+            _initialRotation * translationOnBlock  *
+            _movingTranslation *  _movingRotation * _movingScale;
+    _scaleRotation = _initialRotation * _movingRotation;
+    _translation = _movingTranslation * _translationToBlock *
+        translationOnBlock;
+
 }
 
 void ObjectAnimation::transBeforeObtaining() {
@@ -95,7 +89,6 @@ void ObjectAnimation::transAfterObtaining() {
 const Object &ObjectAnimation::object() const {
     return _object;
 }
-
 
 const glm::mat4 ObjectAnimation::translationOnBlock = 
                           glm::translate(glm::vec3(0.f,0.75f,0.f));

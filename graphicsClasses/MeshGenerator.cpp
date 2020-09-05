@@ -17,9 +17,9 @@
 
 
 
-std::vector<MeshComponent> MeshGenerator::sortComponents(
-                                std::vector<MeshComponent>& components) {
-    std::vector<MeshComponent> sortedComponents;
+VecMeshComponentSptr MeshGenerator::sortComponents(
+                                VecMeshComponentSptr& components) {
+    VecMeshComponentSptr sortedComponents;
     bool hasToSwap = true;
     std::vector<size_t> indices (components.size());
     for (unsigned int i = 0; i < components.size(); ++i) {
@@ -28,10 +28,10 @@ std::vector<MeshComponent> MeshGenerator::sortComponents(
     while(hasToSwap) {
         hasToSwap = false;
         for (size_t i = 0; i < components.size()-1; ++i) {
-            const MeshComponent& c1 = components.at(indices.at(i));
-            const MeshComponent& c2 = components.at(indices.at(i+1));
-            if (*c1.shape()->vertexArrayObject() > 
-                    *c2.shape()->vertexArrayObject() ){
+            CstMeshComponentSptr c1 = components.at(indices.at(i));
+            CstMeshComponentSptr c2 = components.at(indices.at(i+1));
+            if (*c1->shape()->vertexArrayObject() >
+                    *c2->shape()->vertexArrayObject() ){
                 const size_t intermediate = indices.at(i);
                 indices.at(i) = indices.at(i+1);
                 indices.at(i+1) = intermediate;

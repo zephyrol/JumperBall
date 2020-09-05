@@ -23,16 +23,22 @@ class Animation {
 public:
     
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Animation                   ()                                    = default;
+    Animation                   ();
     virtual ~Animation          ()                                    = default;
 
     //-------CONST METHODS----------//
-    virtual glm::mat4           model()                               const = 0;
-    virtual glm::mat4           scaleRotation()                       const = 0;
-    virtual glm::mat4           translation()                         const = 0;
+    glm::mat4           model()                               const;
+    glm::mat4           scaleRotation()                       const;
+    glm::mat4           translation()                         const;
 
     //----------METHODS------------//
-    virtual void                updateTrans()                                =0;
+    virtual void                updateTrans()                               = 0;
+
+    //--------ATTRIBUTES-----------//
+    glm::mat4                   _model;
+    glm::mat4                   _translation;
+    glm::mat4                   _scaleRotation;
+
 
 };
 

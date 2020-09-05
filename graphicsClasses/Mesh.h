@@ -41,8 +41,8 @@ public:
 private:
     //--------ATTRIBUTES-----------//
     const T&                _base;
-    std::vector<MeshComponent>
-                            _components;
+    VecMeshComponentSptr    _components;
+    VecMeshComponentSptr    _animatedComponents;
     glm::mat4               _world;
 
     ParallelTask            _componentsMapComputing;
@@ -53,6 +53,9 @@ private:
     void                    update(const Map&  base);
     void                    update(const Quad& base);
     void                    update(const Star& base);
+    static VecMeshComponentSptr
+                            getAnimatedComponents(
+                                               VecMeshComponentSptr components);
 
 };
 
@@ -60,15 +63,15 @@ template<typename T>
 Mesh<T>::Mesh(const T& base):
 _base(base),
 _components(MeshGenerator::genComponents(base)),
+_animatedComponents(getAnimatedComponents(_components)),
 _world(1.f),
 _componentsMapComputing( [this](size_t componentNumber) {
     //std::cout << "Update block " << componentNumber << std::endl;
-    MeshComponent& component = _components.at(componentNumber);
-    if (component.animation()) {
-        component.animation()->updateTrans();
-    }
+    const MeshComponentSptr& component =
+            _animatedComponents.at(componentNumber);
+    component->animation()->updateTrans();
     //std::cout << "Block " << componentNumber << " is updated" << std::endl;
-}, _components.size())
+}, _animatedComponents.size())
 {
 
 }
@@ -82,22 +85,17 @@ void Mesh<T>::update() {
 template<typename T>
 void Mesh<T>::update(const Ball& base) {
 
-    JBTypes::vec3f positionBall = base.get3DPosition();
+    const JBTypes::vec3f positionBall = base.get3DPosition();
     _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
                             positionBall.y ,positionBall.z));
 
     if (_components.size() > 0)
-        _components.at(0).animation()->updateTrans();
+        _components.at(0)->animation()->updateTrans();
 }
 
 template<typename T>
 void Mesh<T>::update(const Map&) {
 
-    /*for(MeshComponent& component : _components){
-        if (component.animation()) {
-            component.animation()->updateTrans();
-        }
-    }*/
     _componentsMapComputing.runTasks();
     _componentsMapComputing.waitTasks();
 }
@@ -112,6 +110,19 @@ void Mesh<T>::update(const Star& base) {
 }
 
 template<typename T>
+VecMeshComponentSptr Mesh<T>::getAnimatedComponents
+    (VecMeshComponentSptr components)
+{
+    VecMeshComponentSptr animatedComponents;
+    for(const MeshComponentSptr& component : components){
+        if (component->animation()) {
+            animatedComponents.push_back(component);
+        }
+    }
+    return animatedComponents;
+}
+
+template<typename T>
 const glm::mat4& Mesh<T>::world() const {
     return _world;
 }
@@ -121,26 +132,26 @@ void Mesh<T>::render(const ShaderProgram& sp) const {
 
     sp.bindUniform("W",_world);
     GLuint currentVAO = 0;
-    for( const MeshComponent& component : _components) {
+    for( CstMeshComponentSptr component : _components) {
         glm::mat4 modelTransform(1.f);
         glm::mat4 normalsTransform(1.f);
-        if(component.shape()) {
-            modelTransform = component.shape()->modelTransform();
-            normalsTransform = component.shape()->normalsTransform();
+        if(component->shape()) {
+            modelTransform = component->shape()->modelTransform();
+            normalsTransform = component->shape()->normalsTransform();
         }
-        if(component.animation()) {
-            modelTransform = component.animation()->model() * modelTransform;
-            normalsTransform = component.animation()->scaleRotation() *
+        if(component->animation()) {
+            modelTransform = component->animation()->model() * modelTransform;
+            normalsTransform = component->animation()->scaleRotation() *
                     normalsTransform;
         }
         sp.bindUniform("M",modelTransform);
         sp.bindUniform("SR",normalsTransform);
 
-        if(currentVAO != *component.shape()->vertexArrayObject()){
-            component.shape()->bind();
-            currentVAO = *component.shape()->vertexArrayObject();
+        if(currentVAO != *component->shape()->vertexArrayObject()){
+            component->shape()->bind();
+            currentVAO = *component->shape()->vertexArrayObject();
         }
-        component.shape()->draw();
+        component->shape()->draw();
     }
 }
 
