@@ -42,7 +42,8 @@ public:
 
 
     //------------METHODS----------//
-    void                            render() ;
+    void                            update();
+    void                            render()                              const;
 
 private:
 
@@ -73,12 +74,11 @@ private:
     ParallelTask<void>              _meshMapUpdate;
     ParallelTask<void>              _meshBallUpdate;
     ParallelTask<void>              _meshStarUpdate;
+    ParallelTask<void>              _uniformUpdate;
 
     const Ball&                     _ball;
     const Star&                     _star;
     const Camera&                   _camera;
-
-    UniformLight                    _light;
 
     const ShaderProgram             _spMap;
     const ShaderProgram             _spStar;
@@ -88,23 +88,28 @@ private:
     const ShaderProgram             _spBloom;
     const ShaderProgram             _spDepth;
 
+    UniformLight                    _light;
+
     const FrameBuffer               _frameBufferDepth;
     const FrameBuffer               _frameBufferHDRScene;
     const FrameBuffer               _frameBufferBrightPassEffect;
     const FrameBuffer               _frameBufferHalfBlurEffect;
     const FrameBuffer               _frameBufferCompleteBlurEffect;
 
-    //------------METHODS----------//
-    void                            phongEffect(GLuint depthTexture);
+    //---------CONST METHODS--------//
+    void                            phongEffect(GLuint depthTexture)      const;
     void                            blurEffect(GLuint brightPassTexture)  const;
     void                            brightPassEffect(GLuint hdrSceneTexture)
                                                                           const;
     void                            bloomEffect(GLuint hdrSceneTexture,
                                                 GLuint bluredTexture )    const;
-    void                            depthFromStar();
+    void                            depthFromStar()                       const;
 
-    void                            bindCamera(const ShaderProgram& sp);
-    void                            bindStarView(const ShaderProgram& sp);
+    void                            bindCamera(const ShaderProgram& sp)   const;
+    void                            bindStarView(const ShaderProgram& sp) const;
+
+    //------------METHODS----------//
+    void                            updateUniform();
 
 
     //------STATIC ATTRIBUTES------//

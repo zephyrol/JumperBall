@@ -14,78 +14,19 @@
 #include "uniformBlock.h"
 #include <cstring>
 
-UniformBlock::UniformBlock(const std::vector<std::string>& variablesNames) :
-  _dataBuffer(),
+UniformBlock::UniformBlock(const std::string &blockName,
+                           const ShaderProgram& shaderProgram,
+                           const std::vector<std::string> &variablesNames):
+  _shaderProgram(shaderProgram),
+  _blockName(blockName),
+  _blockIndex(createBlockIndex()),
+  _blockSize(createBlockSize()),
+  _uboHandle(createUboHandle()),
   _variablesNames(getStringsStoredLinearly(variablesNames)),
-  _variablesIndices(variablesNames.size()),
-  _variablesOffsets(variablesNames.size()),
-  _blockSize(0),
-  _uboHandle()
+  _variablesIndices(createVariablesIndices()),
+  _variablesOffsets(createVariablesOffsets())
 {
-  glGenBuffers(1, &_uboHandle);
 }
-
-
-UniformBlock::UniformBlock(const UniformBlock& uniformBlock) :
-  _dataBuffer(uniformBlock._dataBuffer),
-  _variablesNames(copyVariablesNamesInfo(uniformBlock._variablesNames)),
-  _variablesIndices(uniformBlock._variablesIndices),
-  _variablesOffsets(uniformBlock._variablesOffsets),
-  _blockSize(uniformBlock.blockSize()),
-  _uboHandle()
-{
-  glGenBuffers(1, &_uboHandle); //The uboHandle is always unique
-}
-
-UniformBlock& UniformBlock::operator=(const UniformBlock& uniformBlock) {
-
-   //We do not change the uboHandle ... it is unique
-  _dataBuffer                       = uniformBlock.dataBuffer();
-  _variablesIndices                 = uniformBlock.variablesIndices();
-  _variablesOffsets                 = uniformBlock.variablesOffsets();
-  _blockSize                        = uniformBlock.blockSize();
-
-  deleteVariablesNamesInfo();
-  std::vector<const char*>& newInfo = 
-                const_cast<std::vector<const char*>&> (_variablesNames);
-  newInfo                           = copyVariablesNamesInfo(
-                                        uniformBlock.variablesNames());
-
-  return *this;
-}
-
-
-void UniformBlock::configureDataBuffer( const ShaderProgram& sp, 
-                                        const std::string& name){
-
-    const GLuint blockIndex =
-                          glGetUniformBlockIndex(sp.getHandle(),name.c_str());
-
-    //Getting the size of the uniform block for the shader program
-    glGetActiveUniformBlockiv ( sp.getHandle(),blockIndex,
-                                GL_UNIFORM_BLOCK_DATA_SIZE, &_blockSize);
-
-    //Getting the indices for each variable
-    glGetUniformIndices       ( sp.getHandle(),
-                                static_cast<GLsizei>(_variablesNames.size()),
-                                _variablesNames.data(),
-                                _variablesIndices.data());
-    //Getting the offset in the buffer for each variable
-    glGetActiveUniformsiv     ( sp.getHandle(),
-                                static_cast<GLsizei>(_variablesIndices.size()), 
-                                _variablesIndices.data(), GL_UNIFORM_OFFSET,
-                                _variablesOffsets.data());
-
-    if (_blockSize >= 0 ) {
-        unsigned int uSize = static_cast<unsigned int> (_blockSize);
-        if (_dataBuffer.size() != uSize) {
-            _dataBuffer.resize(uSize);
-        }
-    }
-
-}
-
-
 
 std::vector<const char*> UniformBlock::getStringsStoredLinearly(
                                                 const std::vector<std::string>&
@@ -134,6 +75,47 @@ std::vector<const char*> UniformBlock::copyVariablesNamesInfo(
     return names;
 }
 
+GLint UniformBlock::createBlockIndex() const{
+   GLuint blockIndex = glGetUniformBlockIndex(_shaderProgram.getHandle(),
+                                              _blockName.c_str());
+   return blockIndex;
+}
+
+GLint UniformBlock::createBlockSize() const{
+    //Getting the size of the uniform block for the shader program
+    GLint blockSize;
+    glGetActiveUniformBlockiv ( _shaderProgram.getHandle(),_blockIndex,
+                                GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
+    return blockSize;
+}
+
+GLuint UniformBlock::createUboHandle() const{
+  GLuint uboHandle;
+  glGenBuffers(1, &uboHandle);
+  return uboHandle;
+}
+
+std::vector<GLuint> UniformBlock::createVariablesIndices() const {
+    std::vector<GLuint> variablesIndices (_variablesNames.size());
+
+    //Getting the indices for each variable
+    glGetUniformIndices       ( _shaderProgram.getHandle(),
+                                static_cast<GLsizei>(_variablesNames.size()),
+                                _variablesNames.data(),
+                                variablesIndices.data());
+    return variablesIndices;
+}
+
+std::vector<GLint> UniformBlock::createVariablesOffsets() const {
+    std::vector<GLint> variablesOffsets (_variablesNames.size());
+
+    //Getting the offset in the buffer for each variable
+    glGetActiveUniformsiv     ( _shaderProgram.getHandle(),
+                                static_cast<GLsizei>(_variablesIndices.size()),
+                                _variablesIndices.data(), GL_UNIFORM_OFFSET,
+                                variablesOffsets.data());
+    return variablesOffsets;
+}
 
 const std::vector<GLuint>& UniformBlock::variablesIndices() const {
     return _variablesIndices;
@@ -145,13 +127,7 @@ const std::vector<const char*>& UniformBlock::variablesNames() const {
 
 const std::vector<GLint>& UniformBlock::variablesOffsets() const {
     return _variablesOffsets;
-
 }
-
-const std::vector<GLchar>& UniformBlock::dataBuffer() const{
-    return _dataBuffer;
-}
-
 
 GLint UniformBlock::blockSize() const {
     return _blockSize;

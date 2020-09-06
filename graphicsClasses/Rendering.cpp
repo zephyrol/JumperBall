@@ -34,14 +34,12 @@ Rendering::Rendering(const Map&     map,
     _meshBallUpdate([this](size_t) {
         _meshBall.update();}),
     _meshStarUpdate([this](size_t) {
-        _meshStar.update(); }),
+        _meshStar.update();}),
+    _uniformUpdate([this](size_t){
+        updateUniform();}),
     _ball(ball),
     _star(star),
     _camera(camera),
-    _light( glm::vec3(0.f,0.f,0.f),
-            glm::vec3(0.7f,0.7f,0.7f),
-            glm::vec3(0.25f,0.25f,0.25f),
-            glm::vec3(0.25f,0.25f,0.25f)),
     _spMap( Shader (GL_VERTEX_SHADER,   vsshaderMap ),
             Shader (GL_FRAGMENT_SHADER, fsshaderMap )),
     _spStar(Shader (GL_VERTEX_SHADER,   vsshaderStar),
@@ -59,6 +57,11 @@ Rendering::Rendering(const Map&     map,
     _spDepth
           ( Shader (GL_VERTEX_SHADER,   vsshaderDepth),
             Shader (GL_FRAGMENT_SHADER, fsshaderDepth)),
+    _light( "light", _spMap,
+            glm::vec3(0.f,0.f,0.f),
+            glm::vec3(0.7f,0.7f,0.7f),
+            glm::vec3(0.25f,0.25f,0.25f),
+            glm::vec3(0.25f,0.25f,0.25f)),
     _frameBufferDepth(FrameBuffer::TextureCaterory::Depth,
                          sizeDepthTexture,sizeDepthTexture),
     _frameBufferHDRScene(FrameBuffer::TextureCaterory::HDR),
@@ -76,7 +79,7 @@ Rendering::Rendering(const Map&     map,
                         false)
 { }
 
-void Rendering::phongEffect( GLuint depthTexture) {
+void Rendering::phongEffect( GLuint depthTexture) const {
 
     glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.z, 0.0f);
     _frameBufferHDRScene.bindFrameBuffer(true);
@@ -85,8 +88,8 @@ void Rendering::phongEffect( GLuint depthTexture) {
 
     // --- Ball and Map ---
     bindCamera (_spMap);
-    _light.positionLight(_star.centralPosition());
-    _light.bind("light",_spMap);
+    //_light.positionLight(_star.centralPosition());
+    //_light.bind("light",_spMap);
 
     // Ball
     _spMap.bindUniform("burningCoeff", _ball.burnCoefficient());
@@ -95,6 +98,9 @@ void Rendering::phongEffect( GLuint depthTexture) {
     // Map
     _spMap.bindUniform("burningCoeff", 0.f);
     _meshMap.render(_spMap);
+
+    // Light
+    _light.bind();
 
     // ------ Star ------
     _spStar.use();
@@ -153,7 +159,7 @@ void Rendering::bloomEffect( GLuint hdrSceneTexture,
     _meshQuadFrame.render(_spBloom);
 }
 
-void Rendering::depthFromStar() {
+void Rendering::depthFromStar() const {
 
     glClearColor(1.f, 1.f, 1.f, 0.0f);
     _frameBufferDepth.bindFrameBuffer(true);
@@ -167,27 +173,71 @@ void Rendering::depthFromStar() {
     //_meshQuadFrame.render(_spDepth);
 }
 
-void Rendering::render() {
+
+void Rendering::bindCamera(const ShaderProgram& sp) const{
+
+    
+    sp.bindUniform ("VP",             _uniformMatrix4.at("VP"));
+    sp.bindUniform ("VPStar",         _uniformMatrix4.at("VPStar"));
+    sp.bindUniform ("positionBall",   _uniformVec3.at("positionBall"));
+    sp.bindUniform ("positionCamera", _uniformVec3.at("positionCamera"));
+}
+
+void Rendering::bindStarView(const ShaderProgram& sp) const{
+    sp.bindUniform ("VPStar", _uniformMatrix4.at("VPStar"));
+}
+
+void Rendering::updateUniform()
+{
+    //uniform for rendering from star
+    const Map& map = _meshMap.base();
+
+    const glm::vec3 center{ map.width()/2.f,
+                            map.height()/2.f,
+                            map.deep()/2.f };
+
+    float boundingBoxMax = static_cast<float>(map.width());
+    if (boundingBoxMax < static_cast<float>(map.height()))
+        boundingBoxMax = static_cast<float>(map.height());
+    if (boundingBoxMax < static_cast<float>(map.deep()))
+        boundingBoxMax = static_cast<float>(map.deep());
+
+    constexpr float offsetJumpingBall = 1.f; //size of ball + jump height
+    float halfBoundingBoxSize = std::move(boundingBoxMax);
+    halfBoundingBoxSize = halfBoundingBoxSize/2.f + offsetJumpingBall;
+
+    _uniformMatrix4["VPStar"] =
+    glm::mat4(glm::ortho(-halfBoundingBoxSize,
+                         halfBoundingBoxSize,
+                        -halfBoundingBoxSize, halfBoundingBoxSize,
+                        _camera.zNear, _camera.zFar) *
+              glm::lookAt ( _star.centralPosition(), center,
+                            glm::vec3(0.f,1.f,0.f) ));
+
+
+    //uniform for rendering from camera
+    _uniformMatrix4["VP"] = _camera.viewProjection();
+
+    const JBTypes::vec3f& positionBall = _ball.get3DPosition();
+
+    _uniformVec3["positionBall"]    = glm::vec3( positionBall.x,
+                                                 positionBall.y,
+                                                 positionBall.z);
+
+    _uniformVec3["positionCamera"]  = _camera.pos();
+    //uniform for Star View Rendering
+
+    _light.positionLight(_star.centralPosition());
+    _light.update();
+}
+
+void Rendering::render() const{
 
     //alpha
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //-----
     glEnable(GL_CULL_FACE);
-
-    //Update meshes
-    /*_meshMap.update();
-    _meshBall.update();
-    _meshStar.update();*/
-
-    _meshStarUpdate.runTasks();
-    _meshBallUpdate.runTasks();
-    _meshMapUpdate.runTasks();
-
-    _meshStarUpdate.waitTasks();
-    _meshBallUpdate.waitTasks();
-    _meshMapUpdate.waitTasks();
-
 
     depthFromStar();
 
@@ -208,51 +258,21 @@ void Rendering::render() {
 
 }
 
-void Rendering::bindCamera(const ShaderProgram& sp) {
 
-    _uniformMatrix4["VP"] = _camera.viewProjection();
+void Rendering::update(){
 
-    const JBTypes::vec3f& positionBall = _ball.get3DPosition();
+    //Update meshes and uniform values using multithreading
+    _meshMapUpdate.runTasks();
+    _meshBallUpdate.runTasks();
+    _uniformUpdate.runTasks();
+    _meshStarUpdate.runTasks();
 
-    _uniformVec3["positionBall"]    = glm::vec3( positionBall.x,
-                                                 positionBall.y,
-                                                 positionBall.z);
+    //Wait the end of updates
+    _meshStarUpdate.waitTasks();
+    _meshBallUpdate.waitTasks();
+    _uniformUpdate.waitTasks();
+    _meshMapUpdate.waitTasks();
 
-    _uniformVec3["positionCamera"]  = _camera.pos();
-    
-    sp.bindUniform ("VP",             _uniformMatrix4.at("VP"));
-    sp.bindUniform ("VPStar",         _uniformMatrix4.at("VPStar"));
-    sp.bindUniform ("positionBall",   _uniformVec3.at("positionBall"));
-    sp.bindUniform ("positionCamera", _uniformVec3.at("positionCamera"));
-}
-
-void Rendering::bindStarView(const ShaderProgram& sp) {
-
-    const Map& map = _meshMap.base();
-
-    const glm::vec3 center{ map.width()/2.f,
-                            map.height()/2.f,
-                            map.deep()/2.f };
-
-    float boundingBoxMax = static_cast<float>(map.width());
-    if (boundingBoxMax < static_cast<float>(map.height()))
-        boundingBoxMax = static_cast<float>(map.height());
-    if (boundingBoxMax < static_cast<float>(map.deep()))
-        boundingBoxMax = static_cast<float>(map.deep());
-
-    constexpr float offsetJumpingBall = 1.f; //size of ball + jump height
-    float halfBoundingBoxSize = std::move(boundingBoxMax);
-    halfBoundingBoxSize = halfBoundingBoxSize/2.f + offsetJumpingBall;
-
-    _uniformMatrix4["VP"] =
-    glm::mat4(glm::ortho(-halfBoundingBoxSize,
-                         halfBoundingBoxSize,
-                        -halfBoundingBoxSize, halfBoundingBoxSize,
-                        _camera.zNear, _camera.zFar) *
-              glm::lookAt ( _star.centralPosition(), center,
-                            glm::vec3(0.f,1.f,0.f) ));
-    _uniformMatrix4["VPStar"] = _uniformMatrix4["VP"];
-    sp.bindUniform ("VP", _uniformMatrix4.at("VP"));
 }
 
 const std::string Rendering::vsshaderMap = "shaders/phongVs.vs";

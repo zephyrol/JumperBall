@@ -85,11 +85,13 @@ void Controller::run()
     _currentBall->update();
     if (_player.statut() == Player::Statut::INMENU) {
         _currentCamera->follow(*_currentMap);
+        _renderingEngine->update();
         _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
         _renderingEngine->render();
         _menu->render();
     } else if (_player.statut() == Player::Statut::INGAME) {
         _currentCamera->follow(*_currentBall);
+        _renderingEngine->update();
         _renderingEngine->render();
         
         if (_currentBall->stateOfLife() == Ball::StateOfLife::Dead) {
@@ -101,6 +103,7 @@ void Controller::run()
         if (_currentCamera->transitionEffect(*_currentBall, *_currentMap)) {
             _player.statut(Player::Statut::INGAME);
         }
+        _renderingEngine->update();
         _renderingEngine->render();
     }
 }
