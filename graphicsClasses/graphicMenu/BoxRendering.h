@@ -25,17 +25,18 @@
 class BoxRendering
 {
 public:
-    BoxRendering                       (const glm::vec3& color1,
-                                        const glm::vec3& color2);
+    BoxRendering             (const glm::vec3& color1, const glm::vec3& color2);
 
-    void                                render(const Label& label) const;
+    void                     render() const;
+    void                     update(const Label& label);
  private:
-    const Quad                          _boxQuad;
+    const Quad               _boxQuad;
 
-    const ShaderProgram                 _spBox;
+    const ShaderProgram      _spBox;
+    glm::mat4                _transformCharacter;
 
-    static const std::string            vsshaderBox;
-    static const std::string            fsshaderBox;
+    static const std::string vsshaderBox;
+    static const std::string fsshaderBox;
 
 };
 

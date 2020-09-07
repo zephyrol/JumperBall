@@ -7,12 +7,12 @@
 
 #include "../MeshGenerator.h"
 
-VecMeshComponentSptr MeshGenerator::genSharps(
+vecMeshComponent_sptr MeshGenerator::genSharps(
                                         const Block& block,
                                         const Map::BlockTypes& type,
                                         const glm::vec3& posWorld) {
 
-    VecMeshComponentSptr components;
+    vecMeshComponent_sptr components;
     if (type == Map::BlockTypes::Sharp) {
 
         if (commonShapes.find("pyramidSharp") == commonShapes.end()) {
@@ -75,7 +75,7 @@ VecMeshComponentSptr MeshGenerator::genSharps(
                             translationOffset;
                     const glm::mat4 normalsTrans= rotationLocal;
 
-                    MeshComponentSptr component =
+                    MeshComponent_sptr component =
                             std::make_shared<MeshComponent>(
                              std::make_shared<Pyramid>
                     (*commonShapes.at("pyramidSharp"),modelTranf,normalsTrans),

@@ -37,8 +37,6 @@ Rendering::Rendering(const Map&     map,
         _meshStar.update();}),
     _uniformUpdate([this](size_t){
         updateUniform();}),
-    _ball(ball),
-    _star(star),
     _camera(camera),
     _spMap( Shader (GL_VERTEX_SHADER,   vsshaderMap ),
             Shader (GL_FRAGMENT_SHADER, fsshaderMap )),
@@ -86,29 +84,30 @@ void Rendering::phongEffect( GLuint depthTexture) const {
     _spMap.use();
     _spMap.bindUniformTexture("depthTexture", 0, depthTexture);
 
-    // --- Ball and Map ---
-    bindCamera (_spMap);
+    // --- Ball Map and Light ---
+    bindCamera(_spMap);
     //_light.positionLight(_star.centralPosition());
     //_light.bind("light",_spMap);
 
+    // Light
+    _light.bind();
+
     // Ball
-    _spMap.bindUniform("burningCoeff", _ball.burnCoefficient());
+    const Ball& ball = _meshBall.base();
+    _spMap.bindUniform("burningCoeff", ball.burnCoefficient());
     _meshBall.render(_spMap);
 
     // Map
     _spMap.bindUniform("burningCoeff", 0.f);
     _meshMap.render(_spMap);
 
-    // Light
-    _light.bind();
-
     // ------ Star ------
+    const Star& star = _meshStar.base();
     _spStar.use();
-
-    _spStar.bindUniform("radiusInside",  _star.radiusInside());
-    _spStar.bindUniform("radiusOutside", _star.radiusOutside());
-    _spStar.bindUniform("colorInside",   _star.colorInside());
-    _spStar.bindUniform("colorOutside",  _star.colorOutside());
+    _spStar.bindUniform("radiusInside",  star.radiusInside());
+    _spStar.bindUniform("radiusOutside", star.radiusOutside());
+    _spStar.bindUniform("colorInside",   star.colorInside());
+    _spStar.bindUniform("colorOutside",  star.colorOutside());
 
     bindCamera(_spStar);
 
@@ -164,8 +163,7 @@ void Rendering::depthFromStar() const {
     glClearColor(1.f, 1.f, 1.f, 0.0f);
     _frameBufferDepth.bindFrameBuffer(true);
     _spDepth.use();
-    bindStarView(_spDepth);
-    //bindCamera(_spDepth);
+    bindCamera(_spDepth);
     //_spDepth.bindUniformTexture("frameTexture", 0);
     //_spDepth.bindUniform ("threshold",  5.f);
     _meshBall.render(_spDepth);
@@ -175,22 +173,19 @@ void Rendering::depthFromStar() const {
 
 
 void Rendering::bindCamera(const ShaderProgram& sp) const{
-
-    
     sp.bindUniform ("VP",             _uniformMatrix4.at("VP"));
     sp.bindUniform ("VPStar",         _uniformMatrix4.at("VPStar"));
     sp.bindUniform ("positionBall",   _uniformVec3.at("positionBall"));
     sp.bindUniform ("positionCamera", _uniformVec3.at("positionCamera"));
 }
 
-void Rendering::bindStarView(const ShaderProgram& sp) const{
-    sp.bindUniform ("VPStar", _uniformMatrix4.at("VPStar"));
-}
-
 void Rendering::updateUniform()
 {
     //uniform for rendering from star
+
     const Map& map = _meshMap.base();
+    const Ball& ball = _meshBall.base();
+    const Star& star = _meshStar.base();
 
     const glm::vec3 center{ map.width()/2.f,
                             map.height()/2.f,
@@ -203,22 +198,27 @@ void Rendering::updateUniform()
         boundingBoxMax = static_cast<float>(map.deep());
 
     constexpr float offsetJumpingBall = 1.f; //size of ball + jump height
-    float halfBoundingBoxSize = std::move(boundingBoxMax);
-    halfBoundingBoxSize = halfBoundingBoxSize/2.f + offsetJumpingBall;
+    //float halfBoundingBoxSize = std::move(boundingBoxMax);
+    //halfBoundingBoxSize = halfBoundingBoxSize/2.f + offsetJumpingBall;
+    const float halfBoundingBoxSize = boundingBoxMax/2.f + offsetJumpingBall;
+
+    // We use a close star position to get a better ZBuffer accuracy
+    const glm::vec3 closeStarPosition = center +
+        glm::normalize((star.centralPosition() - center)) * halfBoundingBoxSize;
+
+    const JBTypes::vec3f& positionBall = ball.get3DPosition();
+    _light.positionLight(star.centralPosition());
 
     _uniformMatrix4["VPStar"] =
     glm::mat4(glm::ortho(-halfBoundingBoxSize,
                          halfBoundingBoxSize,
                         -halfBoundingBoxSize, halfBoundingBoxSize,
                         _camera.zNear, _camera.zFar) *
-              glm::lookAt ( _star.centralPosition(), center,
-                            glm::vec3(0.f,1.f,0.f) ));
-
+              glm::lookAt (closeStarPosition, center, glm::vec3(0.f,1.f,0.f)));
 
     //uniform for rendering from camera
     _uniformMatrix4["VP"] = _camera.viewProjection();
 
-    const JBTypes::vec3f& positionBall = _ball.get3DPosition();
 
     _uniformVec3["positionBall"]    = glm::vec3( positionBall.x,
                                                  positionBall.y,
@@ -227,7 +227,6 @@ void Rendering::updateUniform()
     _uniformVec3["positionCamera"]  = _camera.pos();
     //uniform for Star View Rendering
 
-    _light.positionLight(_star.centralPosition());
     _light.update();
 }
 
@@ -253,7 +252,7 @@ void Rendering::render() const{
     /*_spFbo.use();
     FrameBuffer::bindDefaultFrameBuffer();
     _spFbo.bindUniformTexture("frameTexture", 0,
-                              _frameBufferHDRScene.getRenderTexture());
+                              _frameBufferDepth.getRenderTexture());
     _meshQuadFrame.render(_spFbo);*/
 
 }

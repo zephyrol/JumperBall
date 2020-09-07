@@ -18,20 +18,26 @@ BoxRendering::BoxRendering(const glm::vec3& color1,
                            const glm::vec3& color2):
     _boxQuad(color1, color2),
     _spBox( Shader (GL_VERTEX_SHADER,   vsshaderBox),
-            Shader (GL_FRAGMENT_SHADER, fsshaderBox))
+            Shader (GL_FRAGMENT_SHADER, fsshaderBox)),
+    _transformCharacter(1.f)
 {
 }
 
 
-void BoxRendering::render(const Label& label) const {
+void BoxRendering::render() const {
     _spBox.use();
+    _boxQuad.bind();
+    _spBox.bindUniform("M",_transformCharacter);
+    _boxQuad.draw();
+}
+
+void BoxRendering::update(const Label &label) {
 
     const glm::mat4 biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,
                                              0.f,  1.f, 0.f, 0.f,
                                              0.f,  0.f,  1.f, 0.f,
                                              -1.f, -1.f, 0.f, 1.f} ;
 
-    _boxQuad.bind();
     constexpr float biasScalar = 2.f; //To multiply the translation by 2
     const glm::vec3 scale = glm::vec3{label.width(),label.height(),0.f};
 
@@ -40,11 +46,7 @@ void BoxRendering::render(const Label& label) const {
     const glm::mat4 translate = glm::translate( biasScalar *
                                     glm::vec3{ label.position().x,
                                                label.position().y , 0.f});
-    const glm::mat4 transformCharacter =
-                    biasMatrix * translate * scaleMatrix;
-
-    _spBox.bindUniform("M",transformCharacter);
-    _boxQuad.draw();
+    _transformCharacter = biasMatrix * translate * scaleMatrix;
 }
 
 

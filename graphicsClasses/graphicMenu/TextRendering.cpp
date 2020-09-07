@@ -20,7 +20,8 @@ TextRendering::TextRendering(const std::vector<unsigned char>& characters,
     _fontHeight(height),
     _displayQuad(),
     _spFont(Shader (GL_VERTEX_SHADER,   vsshaderFont),
-            Shader (GL_FRAGMENT_SHADER, fsshaderFont))
+            Shader (GL_FRAGMENT_SHADER, fsshaderFont)),
+    _charactersTransforms{}
 {
 
 }
@@ -113,10 +114,21 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
     return alphabet;
 }
 
-void TextRendering::render(const Label& label, const glm::vec3& color,
-                           float offsetY) const {
+void TextRendering::render(const Label& label, const glm::vec3& color ) const {
     _spFont.use();
+    _displayQuad.bind();
+    for (size_t i = 0; i < label.message().size(); ++i) {
+        const char& c = label.message().at(i);
+        _spFont.bindUniformTexture("characterTexture", 0,
+                                   _alphabet.at(c).texture);
+        _spFont.bindUniform("fontColor",color);
+        _spFont.bindUniform("M",_charactersTransforms.at(i));
+        _displayQuad.draw();
+    }
+}
 
+void TextRendering::update(const Label& label, float offsetY)
+{
     JBTypes::vec2f position = label.position();
     if (!label.isFixed()) {
         position.y += offsetY;
@@ -129,27 +141,25 @@ void TextRendering::render(const Label& label, const glm::vec3& color,
                                              0.f,  0.f,  1.f, 0.f,
                                              -1.f, -1.f, 0.f, 1.f} ;
 
-    _displayQuad.bind();
+    _charactersTransforms.clear();
+    constexpr float biasScalar = 2.f; //To multiply the translation by 2
     for (const char& c : label.message()) {
-        constexpr float biasScalar = 2.f; //To multiply the translation by 2
         const glm::vec3 scale = glm::vec3{pitch * _alphabet.at(c).localScale.x,
-            label.height() * _alphabet.at(c).localScale.y ,0.f};
-        
+                label.height() * _alphabet.at(c).localScale.y ,0.f};
+
         const glm::mat4 scaleMatrix = glm::scale(scale);
 
-        const glm::mat4 translate = glm::translate( biasScalar *
-              glm::vec3{  position.x+ offsetX
-            + _alphabet.at(c).localTranslate.x * scale.x ,
-            position.y - (1.f-_alphabet.at(c).localTranslate.y) * scale.y
-            , 0.f});
-        const glm::mat4 transformCharacter =
-            biasMatrix * translate * scaleMatrix;
+        const glm::mat4 translate =
+           glm::translate( biasScalar *
+               glm::vec3{ position.x+ offsetX +
+                          _alphabet.at(c).localTranslate.x *
+                          scale.x,
+                           position.y -
+                          (1.f-_alphabet.at(c).localTranslate.y) * scale.y,
+                          0.f}
+                         );
+        _charactersTransforms.push_back(biasMatrix * translate * scaleMatrix);
 
-        _spFont.bindUniformTexture("characterTexture", 0,
-                                   _alphabet.at(c).texture);
-        _spFont.bindUniform("fontColor",color);
-        _spFont.bindUniform("M",transformCharacter);
-        _displayQuad.draw();
         offsetX += pitch;
     }
 }

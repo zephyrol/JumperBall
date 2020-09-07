@@ -8,11 +8,11 @@
 #include "MeshGenerator.h"
 
 
-VecMeshComponentSptr MeshGenerator::genJumpers(
+vecMeshComponent_sptr MeshGenerator::genJumpers(
                                         const Block& block,
                                         const Map::BlockTypes& type,
                                         const glm::vec3& posWorld) {
-    VecMeshComponentSptr components;
+    vecMeshComponent_sptr components;
     if (type  == Map::BlockTypes::Jump) {
 
         if (commonShapes.find("jumperCylinder") == commonShapes.end()) {
@@ -54,7 +54,7 @@ VecMeshComponentSptr MeshGenerator::genJumpers(
                 rotationLocal * scaleLocal ;
                 const glm::mat4 normalsTrans= rotationLocal;
 
-                MeshComponentSptr component = std::make_shared<MeshComponent>
+                MeshComponent_sptr component = std::make_shared<MeshComponent>
                     (std::make_shared<Cylinder>
                         (*commonShapes.at("jumperCylinder"),
                      modelTranf,normalsTrans),

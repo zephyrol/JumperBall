@@ -9,8 +9,8 @@
 #define Controller_h
 
 #include <Player.h>
-#include <Rendering.h>
-#include "graphicMenu/Menu.h"
+#include "Rendering.h"
+#include "graphicMenu/MenuRendering.h"
 
 class Controller {
     
@@ -63,23 +63,24 @@ private:
     void            manageValidateMouse ();
 
     //--------ATTRIBUTES-----------//
-    Player                      _player;
-    std::shared_ptr<Menu>       _menu;
-    std::map<Button, Status>    _buttonsStatuts;
+    Player                         _player;
+    std::shared_ptr<Menu>          _menu;
+    std::map<Button, Status>       _buttonsStatuts;
 
     
-    float                       _mouseCurrentXCoord;
-    float                       _mouseCurrentYCoord;
-    float                       _mousePressingXCoord;
-    float                       _mousePressingYCoord;
-    bool                        _mouseIsPressed;
-    bool                        _requestToLeave;
+    float                          _mouseCurrentXCoord;
+    float                          _mouseCurrentYCoord;
+    float                          _mousePressingXCoord;
+    float                          _mousePressingYCoord;
+    bool                           _mouseIsPressed;
+    bool                           _requestToLeave;
 
-    std::shared_ptr<Map>        _currentMap;
-    std::shared_ptr<Ball>       _currentBall;
-    std::shared_ptr<Camera>     _currentCamera;
-    std::shared_ptr<Star>       _currentStar;
-    std::shared_ptr<Rendering>  _renderingEngine;
+    std::shared_ptr<Map>           _currentMap;
+    std::shared_ptr<Ball>          _currentBall;
+    std::shared_ptr<Camera>        _currentCamera;
+    std::shared_ptr<Star>          _currentStar;
+    std::shared_ptr<Rendering>     _renderingEngine;
+    std::shared_ptr<MenuRendering> _menuRendering;
 
 };
 

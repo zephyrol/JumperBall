@@ -36,16 +36,21 @@ _resolutionY(resolutionY)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _renderTexture);
 
-    GLenum dataFormat;
-    if (_textureCategory == FrameBuffer::TextureCaterory::SDR) {
-        dataFormat = GL_RGB8;
-    }
-    else if (_textureCategory == FrameBuffer::TextureCaterory::HDR) {
-        dataFormat = GL_RGB16F;
-    }
-    else { //Depth Map
-        dataFormat = GL_R16F;
-    }
+    const auto getDataFormat = [](
+        const FrameBuffer::TextureCaterory textureCategory) -> GLenum {
+
+        if (textureCategory == FrameBuffer::TextureCaterory::SDR) {
+            return GL_RGB8;
+        }
+        else if (textureCategory == FrameBuffer::TextureCaterory::HDR) {
+            return GL_RGB16F;
+        }
+        else { //Depth Map
+            return GL_R16F;
+        }
+    };
+
+    const GLenum dataFormat= getDataFormat (_textureCategory);
 
     glTexStorage2D(GL_TEXTURE_2D, levelTexture, dataFormat,
                    static_cast<GLsizei>(resolutionX),

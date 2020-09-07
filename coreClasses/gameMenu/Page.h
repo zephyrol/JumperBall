@@ -16,6 +16,12 @@
 #define PAGE_H
 #include "Label.h"
 
+class Page;
+using Page_sptr = std::shared_ptr<Page>;
+using CstPage_sptr = std::shared_ptr<const Page>;
+using vecCstPage_sptr = std::vector<CstPage_sptr>;
+using vecPage_sptr = std::vector<Page_sptr>;
+
 class Page
 {
 public:
@@ -25,34 +31,29 @@ public:
 
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Page( const std::vector<std::shared_ptr<const Label> >& labels,
-          const std::shared_ptr<const Page>& parent = nullptr,
-          bool visibleOnParent = false,
-          float height = 1.f);
+    Page(const CstPage_sptr& parent,
+         std::map<CstLabel_sptr, Page_sptr>&& bridges,
+         float height = 1.f,
+         bool visibleOnParent = false);
 
     
     //-------CONST METHODS--------//
-    const std::vector<std::shared_ptr<const Label> >& labels()            const;
-    const std::map<std::shared_ptr<const Label>, std::shared_ptr<Page> >&
-                                      bridges();
+    //const vecCstLabel_sptr&           labels()                            const;
+    //const std::map<CstLabel_sptr, Page_sptr >& bridges()                  const;
     const std::weak_ptr<const Page> & parent()                            const;
     bool                              visibleOnParent()                   const;
-
-
-    std::shared_ptr<const Page>       child(float x, float y)             const;
-
-    std::shared_ptr<const Label>      matchedLabel(float x, float y)      const;
-
+    CstPage_sptr                      child(float x, float y)             const;
+    CstLabel_sptr                     matchedLabel(float x, float y)      const;
     float                             height()                            const;
     float                             localPosY()                         const;
 
     //----------METHODS-----------//
-    void                              addBridge(
-                                    const std::shared_ptr<const Label> label,
-                                    const std::shared_ptr<Page> page);
-    std::shared_ptr<Page>             child(
-                                    const std::shared_ptr<const Label>& label);
-    void                              updateTimeSlide();
+    //void                              addBridge(const CstLabel_sptr& label,
+                                                //const Page_sptr& page);
+    CstPage_sptr                      child(const CstLabel_sptr& label) const;
+    Page_sptr                         child(const CstLabel_sptr& label);
+    const vecCstLabel_sptr &          labels() const;
+    //const std::map<CstLabel_sptr, const CstPage_sptr& > children
     void                              pressOnPage();
     void                              release();
     void                              update(bool isPressed,
@@ -60,15 +61,16 @@ public:
     
 private:
 
-    //-------CONST METHODS--------//
     //--------ATTRIBUTES-----------//
-
     constexpr static float decelerationCoefficient = 10.f; //    pagePourcentage
                                                           //    / s^2
 
-    const std::vector<std::shared_ptr<const Label> > _labels;
-    std::map<std::shared_ptr<const Label>, std::shared_ptr<Page> >
-                                      _bridges;
+    std::vector<CstLabel_sptr>        createLabels() const;
+    std::vector<Page_sptr>            createChildren() const;
+
+    std::map<CstLabel_sptr, Page_sptr > _bridges;
+    std::vector<CstLabel_sptr>        _labels;
+    std::vector<Page_sptr>            _children;
     const std::weak_ptr<const Page>   _parent;
     const bool                        _visibleOnParent;
     const float                       _height;
@@ -77,7 +79,7 @@ private:
     float                             _localReleasedPosY;
     bool                              _isPressed;
     float                             _pressedScreenPosY;
-    JBTypes::timePointMs      _lastUpdate;
+    JBTypes::timePointMs              _lastUpdate;
     std::array<slideState,2>          _lastSwipeUpdates;
     unsigned int                      _countingUpdates;
     float                             _releaseVelocity;

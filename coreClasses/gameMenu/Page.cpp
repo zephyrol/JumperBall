@@ -15,12 +15,13 @@
  * Created on 28 avril 2020, 18:56
  */
 
-Page::Page(const std::vector<std::shared_ptr<const Label> >& labels,
-    const std::shared_ptr<const Page>& parent,
-    bool visibleOnParent,
-    float height) :
-    _labels(labels),
-    _bridges{},
+Page::Page(const CstPage_sptr& parent,
+           std::map<CstLabel_sptr, Page_sptr> &&bridges,
+           float height,
+           bool visibleOnParent ):
+    _bridges(std::move(bridges)),
+    _labels(createLabels()),
+    _children(createChildren()),
     _parent(parent),
     _visibleOnParent(visibleOnParent),
     _height(height),
@@ -34,14 +35,13 @@ Page::Page(const std::vector<std::shared_ptr<const Label> >& labels,
     _countingUpdates(0)
 {}
 
-const std::vector<std::shared_ptr<const Label> >& Page::labels() const{
+/*const vecCstLabel_sptr& Page::labels() const{
     return _labels;
-}
+}*/
 
-const std::map<std::shared_ptr<const Label>, std::shared_ptr<Page> >&
-Page::bridges() {
+/*const std::map<CstLabel_sptr, Page_sptr >& Page::bridges() const{
     return _bridges;
-}
+}*/
 
 const std::weak_ptr<const Page>& Page::parent() const {
     return _parent;
@@ -55,22 +55,32 @@ bool Page::visibleOnParent() const {
     return _visibleOnParent;
 }
 
-std::shared_ptr<Page> Page::child(
-        const std::shared_ptr<const Label> &label) {
+CstPage_sptr Page::child( const CstLabel_sptr& label) const {
 
     if ( _bridges.find(label) != _bridges.end() ) {
         return _bridges.at(label);
     }
     else {
-       return nullptr;
+        return nullptr;
     }
 
 }
 
-std::shared_ptr<const Page> Page::child(float x, float y) const{
+Page_sptr Page::child(const CstLabel_sptr &label)
+{
+    CstPage_sptr cstPage = static_cast<const Page&>(*this).child(label);
+    return std::const_pointer_cast<Page>(cstPage);
+}
 
-    std::shared_ptr<const Page> childPage = nullptr;
-    if (const std::shared_ptr<const Label> label = matchedLabel(x,y)) {
+const vecCstLabel_sptr& Page::labels() const
+{
+    return _labels;
+}
+
+CstPage_sptr Page::child(float x, float y) const {
+
+    CstPage_sptr childPage = nullptr;
+    if (const CstLabel_sptr label = matchedLabel(x,y)) {
         if ( _bridges.find(label) != _bridges.end() ) {
             childPage = _bridges.at(label);
         }
@@ -82,19 +92,18 @@ float Page::height() const {
     return _height;
 }
 
-void Page::addBridge(const std::shared_ptr<const Label> label,
-                     const std::shared_ptr<Page> page) {
+/*void Page::addBridge(const CstLabel_sptr& label, const Page_sptr& page) {
     if (std::find(_labels.begin(), _labels.end(), label) == _labels.end()) {
         std::cout << "Trying to associate a label that does not exist in the" <<
             "current page ... the operation is skipped ..." << std::endl;
     } else {
         _bridges[label] = page;
     }
-}
+}*/
 
-std::shared_ptr<const Label> Page::matchedLabel(float x, float y) const
+CstLabel_sptr Page::matchedLabel(float x, float y) const
 {
-    for (const std::shared_ptr<const Label>& label : _labels) {
+    for (const CstLabel_sptr& label: _labels) {
         if (x > (label->position().x - label->width()/2.f) &&
                 x < (label->position().x + label->width()/2.f) &&
                 y > (label->position().y + _localPosY - label->height()/2.f) &&
@@ -105,11 +114,7 @@ std::shared_ptr<const Label> Page::matchedLabel(float x, float y) const
     return nullptr;
 }
 
-void Page::updateTimeSlide() {
-}
-
 void Page::update(bool isPressed, float screenPosY) {
-
 
     if (_height - 1.f < EPSILON_F) {
         return;
@@ -167,27 +172,41 @@ void Page::update(bool isPressed, float screenPosY) {
             _isPressed = false;
         }
     }
-    if (!_isPressed) {
-        if (_countingUpdates == 2) {
-            const float t = JBTypesMethods::getFloatFromDurationMS(
-                        now - _lastSwipeUpdates.at(1).first);
-            float deceleration = decelerationCoefficient * powf(t,2.f)/2.f;
+    if (!_isPressed &&_countingUpdates == 2) {
+        const float t = JBTypesMethods::getFloatFromDurationMS(
+                    now - _lastSwipeUpdates.at(1).first);
+        const float deceleration =
+                decelerationCoefficient * powf(t,2.f)/2.f;
 
-            if (_releaseVelocity > 0.f && t < -(_releaseVelocity)/
-                    (2.f *-decelerationCoefficient/2.f) ) {
-                _localPosY = -deceleration +
-                        _releaseVelocity * t + _localReleasedPosY ;
-            }
-            else if (_releaseVelocity < 0.f && t < -(_releaseVelocity)/
-                     (2.f *decelerationCoefficient/2.f) ) {
-                _localPosY = deceleration +
-                        _releaseVelocity * t + _localReleasedPosY ;
-            }
-
-            if (_localPosY < 0.f) _localPosY = 0.f;
-            else if (_localPosY > _height - 1.f) _localPosY = _height - 1.f;
+        if (_releaseVelocity > 0.f && t < -(_releaseVelocity)/
+                (2.f *-decelerationCoefficient/2.f) ) {
+            _localPosY = -deceleration +
+                    _releaseVelocity * t + _localReleasedPosY ;
         }
+        else if (_releaseVelocity < 0.f && t < -(_releaseVelocity)/
+                 (2.f *decelerationCoefficient/2.f) ) {
+            _localPosY = deceleration +
+                    _releaseVelocity * t + _localReleasedPosY ;
+        }
+
+        if (_localPosY < 0.f) _localPosY = 0.f;
+        else if (_localPosY > _height - 1.f) _localPosY = _height - 1.f;
     }
 
 }
 
+std::vector<CstLabel_sptr> Page::createLabels() const {
+    std::vector<CstLabel_sptr> labels;
+    for (const std::pair<CstLabel_sptr, CstPage_sptr>& bridge: _bridges) {
+        labels.push_back(bridge.first);
+    }
+    return labels;
+}
+
+std::vector<Page_sptr> Page::createChildren() const {
+    std::vector<Page_sptr> children;
+    for (const std::pair<CstLabel_sptr, Page_sptr>& bridge: _bridges) {
+        children.push_back(bridge.second);
+    }
+    return children;
+}

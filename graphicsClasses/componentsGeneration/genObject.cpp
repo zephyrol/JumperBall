@@ -6,11 +6,11 @@
  */
 #include "../MeshGenerator.h"
 
-VecMeshComponentSptr MeshGenerator::genObject(
+vecMeshComponent_sptr MeshGenerator::genObject(
                                 const std::shared_ptr<const Object>& obj,
                                 const glm::vec3& position,
                                 const JBTypes::Dir& dir) {
-    VecMeshComponentSptr components;
+    vecMeshComponent_sptr components;
     if (obj) {
         switch ( obj->getCategory() ) {
             case Object::CategoryOfObjects::Key: {
@@ -44,7 +44,7 @@ VecMeshComponentSptr MeshGenerator::genObject(
                                         glm::translate(translations.at(i));
                     const glm::mat4 tranform = translationMatrix * scaleMatrix;
                     if (i == 0){
-                    MeshComponentSptr componentSphere =
+                    MeshComponent_sptr componentSphere =
                       std::make_shared <MeshComponent>
                       (std::make_shared<Sphere>(
                       *commonShapes.at("goldenSphere"),
@@ -52,7 +52,7 @@ VecMeshComponentSptr MeshGenerator::genObject(
                         std::make_shared<ObjectAnimation>(*obj,position,dir));
                     components.push_back(componentSphere);
                     } else {
-                    MeshComponentSptr componentCube =
+                    MeshComponent_sptr componentCube =
                         std::make_shared<MeshComponent>
                       (std::make_shared<Cube>(*commonShapes.at("goldenCube"),
                               tranform),
@@ -85,7 +85,7 @@ VecMeshComponentSptr MeshGenerator::genObject(
                   translationMatrix * rotationMatrix * scaleMatrix ;
                 const glm::mat4 tranformNormals = rotationMatrix;
 
-                MeshComponentSptr componentCube =
+                MeshComponent_sptr componentCube =
                 std::make_shared<MeshComponent>(
                 std::make_shared<Cylinder>(*commonShapes.at("coinCylinder"),
                         tranformLocal,

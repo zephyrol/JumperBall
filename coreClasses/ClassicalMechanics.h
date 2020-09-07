@@ -43,7 +43,7 @@ public:
 
 
     //------------TYPES------------//
-    enum class Fluid                    {Air,Water,IcyWater,Oil};
+    enum class Fluid                    { Air,Water,IcyWater,Oil };
     
     static const std::map<Fluid,float>  listOfViscosities;
 

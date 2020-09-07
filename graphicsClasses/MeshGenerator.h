@@ -31,21 +31,21 @@
 
 namespace MeshGenerator {
 
-    VecMeshComponentSptr  genComponents(const Quad& quad);
-    VecMeshComponentSptr  genComponents(const Ball& ball);
-    VecMeshComponentSptr  genComponents(const Map& map);
-    VecMeshComponentSptr  genComponents(const Star& star);
-    VecMeshComponentSptr  sortComponents(VecMeshComponentSptr& components);
+    vecMeshComponent_sptr  genComponents(const Quad& quad);
+    vecMeshComponent_sptr  genComponents(const Ball& ball);
+    vecMeshComponent_sptr  genComponents(const Map& map);
+    vecMeshComponent_sptr  genComponents(const Star& star);
+    vecMeshComponent_sptr  sortComponents(vecMeshComponent_sptr& components);
 
-    VecMeshComponentSptr  genObject(const std::shared_ptr<const Object>& obj,
+    vecMeshComponent_sptr  genObject(const std::shared_ptr<const Object>& obj,
                                     const glm::vec3& position,
                                     const JBTypes::Dir& dir);
     
-    VecMeshComponentSptr  genBlock(const Map& map, size_t index);
-    VecMeshComponentSptr  genSharps(const Block& block,
+    vecMeshComponent_sptr  genBlock(const Map& map, size_t index);
+    vecMeshComponent_sptr  genSharps(const Block& block,
                                     const Map::BlockTypes& type,
                                     const glm::vec3& posWorld);
-    VecMeshComponentSptr  genJumpers(const Block& block,
+    vecMeshComponent_sptr  genJumpers(const Block& block,
                                      const Map::BlockTypes& type,
                                      const glm::vec3& posWorld);
 

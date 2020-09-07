@@ -49,7 +49,7 @@ public:
 
     // ----------- TYPES -----------//
     enum class BlockTypes { None, Base, Fire, Ice, Sharp,
-                             Brittle, Jump, Ghost };
+                            Brittle, Jump, Ghost };
 
     struct BlockInfo { size_t index; 
                        BlockTypes type; };

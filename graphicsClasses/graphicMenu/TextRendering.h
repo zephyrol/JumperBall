@@ -36,13 +36,14 @@ public:
                                             glm::vec2 localScale;
                                             glm::vec2 localTranslate; };
 
-    void                                render( const Label& label, 
-                                                const glm::vec3& color,
-                                                float offsetY = 0) const;
-    unsigned int                        fontHeight() const;
+    void                                render(const Label& label,
+                                               const glm::vec3& color)    const;
+    void                                update(const Label &label,
+                                               float offsetY);
 
 private:
 
+    unsigned int                        fontHeight() const;
     const std::map<unsigned char, Character>
                                         _alphabet;
     
@@ -55,6 +56,7 @@ private:
                                                           unsigned int height);
     const ShaderProgram                 _spFont;
 
+    std::vector<glm::mat4>              _charactersTransforms;
 
     static FT_Library                   ftLib;
     static FT_Face                      fontFace;

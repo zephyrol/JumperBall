@@ -40,9 +40,10 @@ private:
 };
 
 //------------TYPES------------//
-using MeshComponentSptr = std::shared_ptr<MeshComponent>;
-using CstMeshComponentSptr = std::shared_ptr<const MeshComponent>;
-using VecMeshComponentSptr = std::vector<MeshComponentSptr>;
+using MeshComponent_sptr = std::shared_ptr<MeshComponent>;
+using CstMeshComponent_sptr = std::shared_ptr<const MeshComponent>;
+using vecMeshComponent_sptr = std::vector<MeshComponent_sptr>;
+using vecCstMeshComponent_sptr = std::vector<CstMeshComponent_sptr>;
 
 #endif /* MESHCOMPONENT_H */
 

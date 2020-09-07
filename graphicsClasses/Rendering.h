@@ -76,8 +76,6 @@ private:
     ParallelTask<void>              _meshStarUpdate;
     ParallelTask<void>              _uniformUpdate;
 
-    const Ball&                     _ball;
-    const Star&                     _star;
     const Camera&                   _camera;
 
     const ShaderProgram             _spMap;

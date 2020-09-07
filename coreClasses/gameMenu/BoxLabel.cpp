@@ -16,7 +16,7 @@
 BoxLabel::BoxLabel(float width, float height,
     const JBTypes::vec2f& position):
     Label(width,height,position)
-{ }
+{}
 
 Label::TypeOfLabel BoxLabel::typeOfLabel() const {
     return Label::TypeOfLabel::Box;

@@ -40,8 +40,8 @@ public:
 private:
     //--------ATTRIBUTES-----------//
     const T&                _base;
-    VecMeshComponentSptr    _components;
-    VecMeshComponentSptr    _animatedComponents;
+    vecMeshComponent_sptr    _components;
+    vecMeshComponent_sptr    _animatedComponents;
     glm::mat4               _world;
 
     ParallelTask<void>      _componentsMapComputing;
@@ -52,9 +52,9 @@ private:
     void                    update(const Map&  base);
     void                    update(const Quad& base);
     void                    update(const Star& base);
-    static VecMeshComponentSptr
+    static vecMeshComponent_sptr
                             getAnimatedComponents(
-                                               VecMeshComponentSptr components);
+                                               vecMeshComponent_sptr components);
 
 };
 
@@ -65,7 +65,7 @@ _components(MeshGenerator::genComponents(base)),
 _animatedComponents(getAnimatedComponents(_components)),
 _world(1.f),
 _componentsMapComputing( [this](size_t componentNumber) -> void {
-    const MeshComponentSptr& component =
+    const MeshComponent_sptr& component =
             _animatedComponents.at(componentNumber);
     component->animation()->updateTrans();
 }, _animatedComponents.size())
@@ -106,11 +106,11 @@ void Mesh<T>::update(const Star& base) {
 }
 
 template<typename T>
-VecMeshComponentSptr Mesh<T>::getAnimatedComponents
-    (VecMeshComponentSptr components)
+vecMeshComponent_sptr Mesh<T>::getAnimatedComponents
+    (vecMeshComponent_sptr components)
 {
-    VecMeshComponentSptr animatedComponents;
-    for(const MeshComponentSptr& component : components){
+    vecMeshComponent_sptr animatedComponents;
+    for(const MeshComponent_sptr& component : components){
         if (component->animation()) {
             animatedComponents.push_back(component);
         }
@@ -128,7 +128,7 @@ void Mesh<T>::render(const ShaderProgram& sp) const {
 
     sp.bindUniform("W",_world);
     GLuint currentVAO = 0;
-    for( CstMeshComponentSptr component : _components) {
+    for( CstMeshComponent_sptr component : _components) {
         glm::mat4 modelTransform(1.f);
         glm::mat4 normalsTransform(1.f);
         if(component->shape()) {

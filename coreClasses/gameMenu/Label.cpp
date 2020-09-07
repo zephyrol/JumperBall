@@ -17,7 +17,9 @@
 #include <cctype>
 #include "Label.h"
 
-Label::Label(float width, float height, const JBTypes::vec2f& position,
+Label::Label(float width,
+             float height,
+             const JBTypes::vec2f& position,
              bool activated,
              const std::shared_ptr<LabelAnswer> action,
              bool fixed):
@@ -39,7 +41,7 @@ float Label::height() const {
     return _height;
 }
 
-const std::vector<std::shared_ptr<const Label> >& Label::children() const {
+const vecCstLabel_sptr& Label::children() const {
     return _children;
 }
 
@@ -67,10 +69,7 @@ void Label::deactivate() {
    _activated = false;
 }
 
-
-void Label::updateLabelsLevels(
-        const std::vector<std::shared_ptr<Label> > &labels,
-        size_t end) {
+void Label::updateLabelsLevels(vecLabel_sptr& labels, size_t end) {
     for (size_t i = 0; i < labels.size(); i++) {
         if (i < end) {
             labels.at(i)->activate();

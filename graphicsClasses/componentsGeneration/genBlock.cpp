@@ -6,7 +6,7 @@
  */
 #include "../MeshGenerator.h"
 
-VecMeshComponentSptr MeshGenerator::genBlock
+vecMeshComponent_sptr MeshGenerator::genBlock
     (const Map& map, size_t index) {
 
     const std::array<unsigned int,3> position = map.getBlockCoords(index);
@@ -14,7 +14,7 @@ VecMeshComponentSptr MeshGenerator::genBlock
 
     const std::shared_ptr<const Block> block = map.getBlock(index);
 
-    VecMeshComponentSptr components;
+    vecMeshComponent_sptr components;
     std::shared_ptr<GeometricShape> shape;
 
     std::string strSidesInfo {};
@@ -80,19 +80,19 @@ VecMeshComponentSptr MeshGenerator::genBlock
 
     std::shared_ptr<BlockAnimation> blockAnim =
             std::make_shared<BlockAnimation>(*block);
-    MeshComponentSptr component = std::make_shared<MeshComponent>
+    MeshComponent_sptr component = std::make_shared<MeshComponent>
         (std::make_shared<Cube> (*shape,transform), blockAnim);
     components.push_back(component);
 
-    VecMeshComponentSptr sharpsComponents =
+    vecMeshComponent_sptr sharpsComponents =
         genSharps(*block,blockType, glmPosition);
-    for(MeshComponentSptr sp : sharpsComponents) {
+    for(MeshComponent_sptr sp : sharpsComponents) {
         components.push_back(std::move(sp));
     }
 
-    VecMeshComponentSptr jumperComponents =
+    vecMeshComponent_sptr jumperComponents =
         genJumpers(*block,blockType,glmPosition);
-    for(MeshComponentSptr m : jumperComponents) {
+    for(MeshComponent_sptr m : jumperComponents) {
         components.push_back(std::move(m));
     }
 
@@ -103,8 +103,8 @@ VecMeshComponentSptr MeshGenerator::genBlock
             const JBTypes::Dir dir =
                 JBTypesMethods::integerAsDirection(
                     static_cast<unsigned int>(i));
-            VecMeshComponentSptr objMCs = genObject(object,glmPosition,dir);
-            for(MeshComponentSptr objMC : objMCs) {
+            vecMeshComponent_sptr objMCs = genObject(object,glmPosition,dir);
+            for(MeshComponent_sptr objMC : objMCs) {
                 components.push_back(std::move(objMC));
             }
         }

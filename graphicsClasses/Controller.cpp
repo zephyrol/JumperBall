@@ -31,7 +31,8 @@ _currentStar(std::make_shared<Star>(glm::vec3(5.f,5.f,5.f),
                                     glm::vec3(0.f,3.f,3.f)
             ,0.3f,0.5f,50.f,5.f)),
 _renderingEngine( std::make_shared<Rendering>
-                  (*_currentMap,*_currentBall,*_currentStar,*_currentCamera))
+                  (*_currentMap,*_currentBall,*_currentStar,*_currentCamera)),
+_menuRendering(std::make_shared<MenuRendering>(*_menu))
 {
 }
 
@@ -88,7 +89,7 @@ void Controller::run()
         _renderingEngine->update();
         _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
         _renderingEngine->render();
-        _menu->render();
+        //_menu->render();
     } else if (_player.statut() == Player::Statut::INGAME) {
         _currentCamera->follow(*_currentBall);
         _renderingEngine->update();
@@ -96,7 +97,7 @@ void Controller::run()
         
         if (_currentBall->stateOfLife() == Ball::StateOfLife::Dead) {
             _player.statut(Player::Statut::INMENU);
-            _menu->currentPage(_menu->failurePage());
+            _menu->failurePageAsCurrentPage();
         }
 
     } else if (_player.statut() == Player::Statut::INTRANSITION){
@@ -136,13 +137,12 @@ void Controller::manageValidateMouse()
     }
     else if (_player.statut() == Player::Statut::INMENU ) {
         if(_menu->currentPage()) {
-            const std::shared_ptr<const Label> label =
+            const CstLabel_sptr label =
                 _menu->currentPage()->matchedLabel(
                     _mousePressingXCoord,
                     _mousePressingYCoord);
             if (label) {
-                const std::shared_ptr<Page> newPage =
-                        _menu->currentPage()->child(label);
+                Page_sptr newPage = _menu->currentPage()->child(label);
                 if (newPage) {
                     _menu->currentPage(newPage);
                 } else if  ( const std::shared_ptr< const
@@ -169,7 +169,7 @@ void Controller::manageEscape(const Controller::Status &status) {
     } else if ( _player.statut() == Player::Statut::INGAME ) {
         if (status == Controller::Status::Released &&
             _buttonsStatuts.at(Button::Escape) == Status::Pressed) {
-            _menu->currentPage(_menu->pausePage());
+            _menu->pausePageAsCurrentPage();
             _player.statut(Player::Statut::INMENU);
         }
     }

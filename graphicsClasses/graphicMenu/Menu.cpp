@@ -13,102 +13,79 @@
 
 #include "Menu.h"
 
-Menu::Menu(const std::shared_ptr<Page>& rootPage,
-           const std::shared_ptr<Page>& pausePage,
-           const std::shared_ptr<Page>& successPage,
-           const std::shared_ptr<Page>& failurePage):
+Menu::Menu(const Page_sptr &rootPage,
+           const Page_sptr &pausePage,
+           const Page_sptr &successPage,
+           const Page_sptr &failurePage):
   _rootPage(rootPage),
   _pausePage(pausePage),
   _successPage(successPage),
   _failurePage(failurePage),
-  _textRendering(getCharacters({pausePage,successPage,failurePage}),
-      getNumberOfPixelsHeight(getHeight(rootPage))),
-  _boxRendering(glm::vec3(0.f,0.f,1.f),glm::vec3(0.f,1.f,1.f)),
   _currentPage(rootPage)
 {
 }
 
-void Menu::render() const
-{
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    renderPage(_currentPage);
-}
 
-
-void Menu::renderPage( const std::weak_ptr<const Page>& page) const {
-
-    std::shared_ptr<const Page> spPage = page.lock();
-    if (spPage->parent().lock() && spPage->visibleOnParent()) {
-        renderPage(spPage->parent());
-    }
-
-    for( const std::shared_ptr<const Label>& label : page.lock()->labels()) {
-        if (label->typeOfLabel() == Label::TypeOfLabel::Message){
-            if (label->isActivated()) {
-                _textRendering.render(*label, glm::vec3(0, 1.f, 1.f),
-                                      spPage->localPosY());
-            } else {
-                _textRendering.render(*label, glm::vec3(.2f, .2f, .2f),
-                                      spPage->localPosY());
-            }
-        } else if (label->typeOfLabel() == Label::TypeOfLabel::Box) {
-            _boxRendering.render(*label);
-        }
-    }
-    
-}
-
-const std::shared_ptr<Page>& Menu::currentPage()
-{
+CstPage_sptr Menu::currentPage() const {
     return _currentPage;
 }
 
+Page_sptr Menu::currentPage() {
+    return _currentPage;
+}
 
-void Menu::currentPage(const std::shared_ptr<Page> &page)
-{
+void Menu::currentPage(const Page_sptr &page) {
     _currentPage = page;
 }
 
 void Menu::update(bool isPressed, float screenPosY)
 {
     _currentPage->update(isPressed, screenPosY);
+    //updateRendering(screenPosY);
 }
 
-std::vector<unsigned char> Menu::getCharacters(
-    const std::vector<std::shared_ptr<Page> >& pages)
+void Menu::rootPageAsCurrentPage() {
+    _currentPage = _rootPage;
+}
+
+void Menu::pausePageAsCurrentPage()
 {
-    std::vector<unsigned char> characters;
-
-    for( const std::shared_ptr<Page>& page : pages) {
-        if (page)
-        for( const std::shared_ptr<const Label>& label : page->labels()) {
-            
-            if (page->bridges().find(label) != page->bridges().end()
-                && page->bridges().at(label)) {
-                
-                const std::vector<unsigned char> childCaracters =
-                getCharacters({page->bridges().at(label)});
-                characters.insert(characters.end(), childCaracters.begin(),
-                                  childCaracters.end());
-            }
-            
-            if (label->typeOfLabel() == Label::TypeOfLabel::Message) {
-                for (const char& c : label->message()) {
-                    characters.push_back(c);
-                }
-            }
-        }
-    }
-
-    return characters;
+    _currentPage = _pausePage;
 }
 
-float Menu::getHeight(const std::shared_ptr<Page>& page)
+void Menu::successPageAsCurrentPage()
+{
+    _currentPage = _successPage;
+}
+
+void Menu::failurePageAsCurrentPage()
+{
+    _currentPage = _failurePage;
+}
+
+CstPage_sptr Menu::rootPage() const {
+
+    return _rootPage;
+}
+
+CstPage_sptr Menu::pausePage() const {
+    return _pausePage;
+}
+
+CstPage_sptr Menu::successPage() const {
+    return _successPage;
+}
+
+CstPage_sptr Menu::failurePage() const {
+    return _failurePage;
+}
+
+
+/*float Menu::getHeight(const Page_sptr& page)
 {
     float height = 0.f;
 
-    for( const std::shared_ptr<const Label>& label : page->labels()) {
+    for( const CstLabel_sptr& label : page->labels()) {
 
 		if (page->bridges().find(label) != page->bridges().end()
 			&& page->bridges().at(label)) {
@@ -124,53 +101,49 @@ float Menu::getHeight(const std::shared_ptr<Page>& page)
     }
 
     return height;
-}
-
-unsigned int Menu::getNumberOfPixelsHeight(float height)
-{
-    return static_cast<unsigned int> (Utility::windowResolutionY * height);
-}
+}*/
 
 std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
 {
     //Page 1
-    std::shared_ptr<const MessageLabel> label =
+    std::shared_ptr<const MessageLabel> label1Page1 =
         std::make_shared<const MessageLabel>(
             Utility::xScreenToPortrait(1.f), 0.1f,
             JBTypes::vec2f{0.5f,0.8f},
             "Jumper Ball");
-    std::shared_ptr<const MessageLabel> label2 =
+    std::shared_ptr<const MessageLabel> label2Page1 =
         std::make_shared<const MessageLabel> (
             Utility::xScreenToPortrait(0.4f), 0.05f,
             JBTypes::vec2f{0.5f,0.6f},
             "Play");
-    std::shared_ptr<const MessageLabel> label3 =
+    std::shared_ptr<const MessageLabel> label3Page1 =
         std::make_shared<const MessageLabel> (
             Utility::xScreenToPortrait(0.6f), 0.05f,
             JBTypes::vec2f{0.5f,0.4f},
             "Store");
-    std::shared_ptr<const MessageLabel> label4 =
+    std::shared_ptr<const MessageLabel> label4Page1 =
         std::make_shared<const MessageLabel> (
             Utility::xScreenToPortrait(0.4f), 0.05f,
             JBTypes::vec2f{0.5f,0.2f},
             "Exit");
 
-    const std::vector<std::shared_ptr<const Label> > labelsPage1
-    {label, label2, label3, label4};
+    const vecCstLabel_sptr labelsPage1 {
+        label1Page1, label2Page1, label3Page1, label4Page1
+    };
 
     //Page 2
-    std::vector<std::shared_ptr<const Label> > labelsPage2;
+    vecCstLabel_sptr labelsPage2;
 
     std::shared_ptr<const MessageLabel> labelLevelsTitle =
-    std::make_shared<const MessageLabel>
-    (Utility::xScreenToPortrait(1.  ),
+        std::make_shared<const MessageLabel>
+    (Utility::xScreenToPortrait(1.),
      0.2f, JBTypes::vec2f{0.5f, 1.f - 0.1f},
      "Levels");
     labelsPage2.push_back(labelLevelsTitle);
 
     //constexpr float offsetBox = 0.02f;
 
-    std::vector<std::shared_ptr<Label> > labelLevels;
+   vecLabel_sptr labelLevels;
     for (size_t i = 0; i < 99; ++i) {
 
         std::string sNumber;
@@ -231,7 +204,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
             JBTypes::vec2f{0.5f,0.3f},
             "Exit");
 
-    const std::vector<std::shared_ptr<const Label> > labelsPage3
+    const vecCstLabel_sptr labelsPage3
     {label1Page3, label2Page3, label3Page3};
 
     
@@ -252,49 +225,61 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
             JBTypes::vec2f{0.5f,0.6f},
             "Main menu");
 
-    const std::vector<std::shared_ptr<const Label> > labelsPage4
+    const vecCstLabel_sptr labelsPage4
         {label1Page4, label2Page4};
 
 
-    /*std::map<std::shared_ptr<const Label>,
-        std::shared_ptr<const Page> > bridgesPage1 ;
+    /*std::map<CstLabel_sptr,
+        CstPage_sptr > bridgesPage1 ;
 
-    std::map<std::shared_ptr<const Label>,
-        std::shared_ptr<const Page> > bridgesPage2 ;*/
+    std::map<CstLabel_sptr,
+        CstPage_sptr > bridgesPage2 ;*/
 
-    const std::shared_ptr<Page> page1 =
-        std::make_shared<Page> (labelsPage1, nullptr, false);
+    Page_sptr page1 = nullptr;
+    Page_sptr page2 = nullptr;
+    Page_sptr page3 = nullptr;
+    Page_sptr page4 = nullptr;
 
-    const std::shared_ptr<Page> page2 =
+
+    std::map<CstLabel_sptr, Page_sptr> childrenPage2;
+    for ( CstLabel_sptr label : labelsPage2) {
+        childrenPage2[label] = nullptr;
+    }
+
+    std::map<CstLabel_sptr, Page_sptr> childrenPage1;
+    childrenPage1[labelsPage1.at(0)] = nullptr;
+    childrenPage1[labelsPage1.at(1)] = page2;
+    childrenPage1[labelsPage1.at(2)] = nullptr;
+    childrenPage1[labelsPage1.at(3)] = nullptr;
+
+    std::map<CstLabel_sptr, Page_sptr> childrenPage3;
+    childrenPage1[labelsPage3.at(0)] = nullptr;
+    childrenPage1[labelsPage3.at(1)] = nullptr;
+    childrenPage1[labelsPage3.at(2)] = page1;
+
+    std::map<CstLabel_sptr, Page_sptr> childrenPage4;
+    childrenPage1[labelsPage4.at(0)] = nullptr;
+    childrenPage1[labelsPage4.at(1)] = page1;
+
+    page1 = std::make_shared<Page> (nullptr,std::move(childrenPage1));
+    page2 = std::make_shared<Page> (page1,std::move(childrenPage2),10.f);
+    page3 = std::make_shared<Page> (nullptr,std::move(childrenPage3));
+    page4 = std::make_shared<Page> (nullptr,std::move(childrenPage4));
+
+                                    //} labelsPage1, false);
+
+    /*const Page_sptr page2 =
         std::make_shared<Page> (labelsPage2, page1, false, 10.f);
 
-    const std::shared_ptr<Page> page3 =
+    const Page_sptr page3 =
         std::make_shared<Page> (labelsPage3, nullptr, false);
 
-    const std::shared_ptr<Page> page4 =
+    const Page_sptr page4 =
         std::make_shared<Page> (labelsPage4, nullptr, false);
 
-    page1->addBridge(label2, page2);
+    page1->addBridge(label2Page1, page2);
     page3->addBridge(label3Page3, page1);
-    page4->addBridge(label2Page4, page1);
+    page4->addBridge(label2Page4, page1);*/
 
     return std::make_shared<Menu> (page1,page4,nullptr,page3);
 }
-
-const std::shared_ptr<Page> &Menu::pausePage(){
-    return _pausePage;
-}
-
-const std::shared_ptr<Page> &Menu::failurePage() {
-    return _failurePage;
-}
-
-const std::shared_ptr<Page> &Menu::successPage() {
-    return _successPage;
-}
-
-const std::shared_ptr<Page> &Menu::rootPage() {
-    return _rootPage;
-}
-
-

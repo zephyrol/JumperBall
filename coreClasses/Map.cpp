@@ -68,7 +68,7 @@ std::shared_ptr<Block> Map::getBlock(int x, int y, int z){
 
 std::shared_ptr<Block> Map::getBlock(size_t index)
 {
-    std::shared_ptr<const Block> constBlock =
+    const std::shared_ptr<const Block>& constBlock =
             static_cast<const Map&>(*this).getBlock(index);
 
     return std::const_pointer_cast<Block> (constBlock);
