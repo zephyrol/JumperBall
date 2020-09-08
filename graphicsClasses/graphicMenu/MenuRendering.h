@@ -1,8 +1,8 @@
 #ifndef MENURENDERING_H
 #define MENURENDERING_H
+#include <gameMenu/Menu.h>
 #include "TextRendering.h"
 #include "BoxRendering.h"
-#include "Menu.h"
 
 class MenuRendering
 {

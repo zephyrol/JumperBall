@@ -14,8 +14,9 @@
 #ifndef MENU_H
 #define MENU_H
 #include <gameMenu/Page.h>
-#include "TextRendering.h"
-#include "BoxRendering.h"
+#include <gameMenu/MessageLabel.h>
+#include <gameMenu/ObjectLabel.h>
+#include <gameMenu/BoxLabel.h>
 
 class Menu
 {
@@ -42,7 +43,8 @@ public:
     CstPage_sptr successPage() const;
     CstPage_sptr failurePage() const;
 
-    static std::shared_ptr<Menu> getJumperBallMenu(size_t currentLevel);
+    static std::shared_ptr<Menu> getJumperBallMenu(size_t currentLevel,
+                                                   float factor);
 
 private:
     const Page_sptr _rootPage;

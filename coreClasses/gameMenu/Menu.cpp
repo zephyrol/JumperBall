@@ -103,27 +103,27 @@ CstPage_sptr Menu::failurePage() const {
     return height;
 }*/
 
-std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
+std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
 {
     //Page 1
     std::shared_ptr<const MessageLabel> label1Page1 =
         std::make_shared<const MessageLabel>(
-            Utility::xScreenToPortrait(1.f), 0.1f,
+            factor * 1.f, 0.1f,
             JBTypes::vec2f{0.5f,0.8f},
             "Jumper Ball");
     std::shared_ptr<const MessageLabel> label2Page1 =
         std::make_shared<const MessageLabel> (
-            Utility::xScreenToPortrait(0.4f), 0.05f,
+            factor * 0.4f, 0.05f,
             JBTypes::vec2f{0.5f,0.6f},
             "Play");
     std::shared_ptr<const MessageLabel> label3Page1 =
         std::make_shared<const MessageLabel> (
-            Utility::xScreenToPortrait(0.6f), 0.05f,
+            factor * 0.6f, 0.05f,
             JBTypes::vec2f{0.5f,0.4f},
             "Store");
     std::shared_ptr<const MessageLabel> label4Page1 =
         std::make_shared<const MessageLabel> (
-            Utility::xScreenToPortrait(0.4f), 0.05f,
+            0.4f, 0.05f,
             JBTypes::vec2f{0.5f,0.2f},
             "Exit");
 
@@ -135,10 +135,9 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
     vecCstLabel_sptr labelsPage2;
 
     std::shared_ptr<const MessageLabel> labelLevelsTitle =
-        std::make_shared<const MessageLabel>
-    (Utility::xScreenToPortrait(1.),
-     0.2f, JBTypes::vec2f{0.5f, 1.f - 0.1f},
-     "Levels");
+        std::make_shared<const MessageLabel> (factor * 1., 0.2f,
+                                              JBTypes::vec2f{0.5f, 1.f - 0.1f},
+                                              "Levels");
     labelsPage2.push_back(labelLevelsTitle);
 
     //constexpr float offsetBox = 0.02f;
@@ -167,9 +166,9 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
 
         std::shared_ptr<MessageLabel> labelLevel =
         std::make_shared<MessageLabel> (
-            Utility::xScreenToPortrait(.2f), 0.1f,
-            JBTypes::vec2f{ .5f - Utility::xScreenToPortrait(.5f)
-                + Utility::xScreenToPortrait(.1f + (i%3) * .4f),
+           factor * .2f, 0.1f,
+            JBTypes::vec2f{ .5f - factor * .5f
+                + factor * (.1f + (i%3) * .4f),
                 1.f-(0.3f + i/3 * 0.3f)},
             sNumber,
             std::make_shared<Label::LabelAnswer> (associatedLevel)
@@ -190,17 +189,17 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
 
     std::shared_ptr<const MessageLabel> label1Page3 =
         std::make_shared<const MessageLabel>(
-            Utility::xScreenToPortrait(1.f), 0.1f,
+            factor * 1.f, 0.1f,
             JBTypes::vec2f{0.5f,0.8f},
             "You lost");
     std::shared_ptr<const MessageLabel> label2Page3 =
         std::make_shared<const MessageLabel> (
-            Utility::xScreenToPortrait(0.4f), 0.05f,
+            factor * 0.4f, 0.05f,
             JBTypes::vec2f{0.5f,0.6f},
             "Retry");
     std::shared_ptr<const MessageLabel> label3Page3 =
         std::make_shared<const MessageLabel> (
-            Utility::xScreenToPortrait(0.4f), 0.05f,
+            factor * 0.4f, 0.05f,
             JBTypes::vec2f{0.5f,0.3f},
             "Exit");
 
@@ -215,13 +214,11 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel)
             JBTypes::vec2f{0.5f,0.8f},
             "");*/
     std::shared_ptr<const MessageLabel> label1Page4 =
-        std::make_shared<const MessageLabel> (
-            Utility::xScreenToPortrait(0.4f), 0.05f,
+        std::make_shared<const MessageLabel> ( factor * 0.4f, 0.05f,
             JBTypes::vec2f{0.5f,0.4f},
             "Continue");
     std::shared_ptr<const MessageLabel> label2Page4 =
-        std::make_shared<const MessageLabel> (
-            Utility::xScreenToPortrait(0.7f), 0.05f,
+        std::make_shared<const MessageLabel> ( factor * 0.7f, 0.05f,
             JBTypes::vec2f{0.5f,0.6f},
             "Main menu");
 

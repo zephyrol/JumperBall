@@ -10,7 +10,7 @@
 
 Controller::Controller():
 _player(),
-_menu(Menu::getJumperBallMenu(1)),
+_menu(Menu::getJumperBallMenu(1,1.f)),
 _buttonsStatuts{
     { Controller::Button::Up,       Controller::Status::Released },
     { Controller::Button::Down,     Controller::Status::Released },

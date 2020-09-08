@@ -18,7 +18,7 @@
 #include <Shader.h>
 #include <ShaderProgram.h>
 #include <Rendering.h>
-#include <graphicMenu/Menu.h>
+#include <gameMenu/Menu.h>
 #include <Controller.h>
 #define RESOLUTION_X 1024
 #define RESOLUTION_Y 768
