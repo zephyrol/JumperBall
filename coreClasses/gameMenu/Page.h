@@ -32,7 +32,6 @@ public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Page(const CstPage_sptr& parent,
-         std::map<CstLabel_sptr, Page_sptr>&& bridges,
          float height = 1.f,
          bool visibleOnParent = false);
 
@@ -46,6 +45,8 @@ public:
     CstLabel_sptr                     matchedLabel(float x, float y)      const;
     float                             height()                            const;
     float                             localPosY()                         const;
+    void                              setBridges(
+            std::map<CstLabel_sptr, Page_sptr>&& bridges);
 
     //----------METHODS-----------//
     //void                              addBridge(const CstLabel_sptr& label,

@@ -10,7 +10,10 @@ public:
     MenuRendering(const Menu& menu);
 
     void render() const;
-    void updateRendering(const std::weak_ptr<const Page> &page);
+    void update() ;
+
+private:
+    void updatePage(const std::weak_ptr<const Page> &page);
     void renderPage( const std::weak_ptr<const Page>& page) const;
 
     const Menu& _menu;

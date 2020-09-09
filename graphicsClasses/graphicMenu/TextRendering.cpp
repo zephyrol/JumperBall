@@ -114,38 +114,39 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
     return alphabet;
 }
 
-void TextRendering::render(const Label& label, const glm::vec3& color ) const {
+void TextRendering::render(const CstLabel_sptr& label,
+                           const glm::vec3& color ) const {
     _spFont.use();
     _displayQuad.bind();
-    for (size_t i = 0; i < label.message().size(); ++i) {
-        const char& c = label.message().at(i);
+    for (size_t i = 0; i < label->message().size(); ++i) {
+        const char& c = label->message().at(i);
         _spFont.bindUniformTexture("characterTexture", 0,
                                    _alphabet.at(c).texture);
         _spFont.bindUniform("fontColor",color);
-        _spFont.bindUniform("M",_charactersTransforms.at(i));
+        _spFont.bindUniform("M",_charactersTransforms.at(label).at(i));
         _displayQuad.draw();
     }
 }
 
-void TextRendering::update(const Label& label, float offsetY)
+void TextRendering::update(const CstLabel_sptr&  label, float offsetY)
 {
-    JBTypes::vec2f position = label.position();
-    if (!label.isFixed()) {
+    JBTypes::vec2f position = label->position();
+    if (!label->isFixed()) {
         position.y += offsetY;
     }
 
-    const float pitch = label.width()/label.message().size();
-    float offsetX = -label.width()/2.f + pitch/2.f;
+    const float pitch = label->width()/label->message().size();
+    float offsetX = -label->width()/2.f + pitch/2.f;
     const glm::mat4 biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,
                                              0.f,  1.f, 0.f, 0.f,
                                              0.f,  0.f,  1.f, 0.f,
                                              -1.f, -1.f, 0.f, 1.f} ;
 
-    _charactersTransforms.clear();
+    _charactersTransforms[label].clear();
     constexpr float biasScalar = 2.f; //To multiply the translation by 2
-    for (const char& c : label.message()) {
+    for (const char& c : label->message()) {
         const glm::vec3 scale = glm::vec3{pitch * _alphabet.at(c).localScale.x,
-                label.height() * _alphabet.at(c).localScale.y ,0.f};
+                label->height() * _alphabet.at(c).localScale.y ,0.f};
 
         const glm::mat4 scaleMatrix = glm::scale(scale);
 
@@ -158,7 +159,9 @@ void TextRendering::update(const Label& label, float offsetY)
                           (1.f-_alphabet.at(c).localTranslate.y) * scale.y,
                           0.f}
                          );
-        _charactersTransforms.push_back(biasMatrix * translate * scaleMatrix);
+        _charactersTransforms[label].push_back(
+                    biasMatrix * translate * scaleMatrix
+                    );
 
         offsetX += pitch;
     }

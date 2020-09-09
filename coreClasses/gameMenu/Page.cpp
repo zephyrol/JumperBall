@@ -16,12 +16,11 @@
  */
 
 Page::Page(const CstPage_sptr& parent,
-           std::map<CstLabel_sptr, Page_sptr> &&bridges,
            float height,
            bool visibleOnParent ):
-    _bridges(std::move(bridges)),
-    _labels(createLabels()),
-    _children(createChildren()),
+    _bridges{},
+    _labels{},
+    _children{},
     _parent(parent),
     _visibleOnParent(visibleOnParent),
     _height(height),
@@ -49,6 +48,13 @@ const std::weak_ptr<const Page>& Page::parent() const {
 
 float Page::localPosY() const {
     return _localPosY;
+}
+
+void Page::setBridges(std::map<CstLabel_sptr, Page_sptr> &&bridges)
+{
+    _bridges = std::move(bridges);
+    _labels = createLabels();
+    _children = createChildren();
 }
 
 bool Page::visibleOnParent() const {
@@ -206,7 +212,9 @@ std::vector<CstLabel_sptr> Page::createLabels() const {
 std::vector<Page_sptr> Page::createChildren() const {
     std::vector<Page_sptr> children;
     for (const std::pair<CstLabel_sptr, Page_sptr>& bridge: _bridges) {
-        children.push_back(bridge.second);
+        if (bridge.second) {
+            children.push_back(bridge.second);
+        }
     }
     return children;
 }

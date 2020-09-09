@@ -36,9 +36,9 @@ public:
                                             glm::vec2 localScale;
                                             glm::vec2 localTranslate; };
 
-    void                                render(const Label& label,
+    void                                render(const CstLabel_sptr &label,
                                                const glm::vec3& color)    const;
-    void                                update(const Label &label,
+    void                                update(const CstLabel_sptr &label,
                                                float offsetY);
 
 private:
@@ -56,7 +56,8 @@ private:
                                                           unsigned int height);
     const ShaderProgram                 _spFont;
 
-    std::vector<glm::mat4>              _charactersTransforms;
+    std::map<CstLabel_sptr,std::vector<glm::mat4> >
+                                        _charactersTransforms;
 
     static FT_Library                   ftLib;
     static FT_Face                      fontFace;

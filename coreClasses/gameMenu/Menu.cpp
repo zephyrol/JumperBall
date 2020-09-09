@@ -135,7 +135,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
     vecCstLabel_sptr labelsPage2;
 
     std::shared_ptr<const MessageLabel> labelLevelsTitle =
-        std::make_shared<const MessageLabel> (factor * 1., 0.2f,
+        std::make_shared<const MessageLabel> (factor * 1.f, 0.2f,
                                               JBTypes::vec2f{0.5f, 1.f - 0.1f},
                                               "Levels");
     labelsPage2.push_back(labelLevelsTitle);
@@ -232,14 +232,14 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
     std::map<CstLabel_sptr,
         CstPage_sptr > bridgesPage2 ;*/
 
-    Page_sptr page1 = nullptr;
-    Page_sptr page2 = nullptr;
-    Page_sptr page3 = nullptr;
-    Page_sptr page4 = nullptr;
+    const Page_sptr page1 = std::make_shared<Page> (nullptr);
+    const Page_sptr page2 = std::make_shared<Page> (page1,10.f);
+    const Page_sptr page3 = std::make_shared<Page> (nullptr);
+    const Page_sptr page4 = std::make_shared<Page> (nullptr);
 
 
     std::map<CstLabel_sptr, Page_sptr> childrenPage2;
-    for ( CstLabel_sptr label : labelsPage2) {
+    for ( CstLabel_sptr& label : labelsPage2) {
         childrenPage2[label] = nullptr;
     }
 
@@ -250,18 +250,19 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
     childrenPage1[labelsPage1.at(3)] = nullptr;
 
     std::map<CstLabel_sptr, Page_sptr> childrenPage3;
-    childrenPage1[labelsPage3.at(0)] = nullptr;
-    childrenPage1[labelsPage3.at(1)] = nullptr;
-    childrenPage1[labelsPage3.at(2)] = page1;
+    childrenPage3[labelsPage3.at(0)] = nullptr;
+    childrenPage3[labelsPage3.at(1)] = nullptr;
+    childrenPage3[labelsPage3.at(2)] = page1;
 
     std::map<CstLabel_sptr, Page_sptr> childrenPage4;
-    childrenPage1[labelsPage4.at(0)] = nullptr;
-    childrenPage1[labelsPage4.at(1)] = page1;
+    childrenPage4[labelsPage4.at(0)] = nullptr;
+    childrenPage4[labelsPage4.at(1)] = page1;
 
-    page1 = std::make_shared<Page> (nullptr,std::move(childrenPage1));
-    page2 = std::make_shared<Page> (page1,std::move(childrenPage2),10.f);
-    page3 = std::make_shared<Page> (nullptr,std::move(childrenPage3));
-    page4 = std::make_shared<Page> (nullptr,std::move(childrenPage4));
+    page1->setBridges(std::move(childrenPage1));
+    page2->setBridges(std::move(childrenPage2));
+    page3->setBridges(std::move(childrenPage3));
+    page4->setBridges(std::move(childrenPage4));
+
 
                                     //} labelsPage1, false);
 

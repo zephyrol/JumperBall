@@ -12,19 +12,26 @@ MenuRendering::MenuRendering(const Menu &menu):
 
 }
 
-void MenuRendering::updateRendering(const std::weak_ptr<const Page>& page)
+
+void MenuRendering::update()
+{
+    updatePage(_menu.currentPage());
+}
+
+void MenuRendering::updatePage(const std::weak_ptr<const Page>& page)
 {
     CstPage_sptr spPage = page.lock();
     if (spPage->parent().lock() && spPage->visibleOnParent()) {
-        updateRendering(spPage->parent());
+        updatePage(spPage->parent());
     }
+
 
     for( const CstLabel_sptr& label : page.lock()->labels()) {
         if (label->typeOfLabel() == Label::TypeOfLabel::Message){
             if (label->isActivated()) {
-                _textRendering.update(*label, spPage->localPosY());
+                _textRendering.update(label, spPage->localPosY());
             } else {
-                _textRendering.update(*label, spPage->localPosY());
+                _textRendering.update(label, spPage->localPosY());
             }
         } else if (label->typeOfLabel() == Label::TypeOfLabel::Box) {
             _boxRendering.update(*label);
@@ -43,9 +50,9 @@ void MenuRendering::renderPage( const std::weak_ptr<const Page>& page) const {
     for( const CstLabel_sptr& label : page.lock()->labels()) {
         if (label->typeOfLabel() == Label::TypeOfLabel::Message){
             if (label->isActivated()) {
-                _textRendering.render(*label, glm::vec3(0, 1.f, 1.f));
+                _textRendering.render(label, glm::vec3(0, 1.f, 1.f));
             } else {
-                _textRendering.render(*label, glm::vec3(.2f, .2f, .2f));
+                _textRendering.render(label, glm::vec3(.2f, .2f, .2f));
             }
         } else if (label->typeOfLabel() == Label::TypeOfLabel::Box) {
             _boxRendering.render();
@@ -60,19 +67,20 @@ std::vector<unsigned char> MenuRendering::getCharacters(
         const vecCstPage_sptr& pages) const
 {
     std::vector<unsigned char> characters;
- //
     for( const CstPage_sptr& page : pages) {
-        for( const CstLabel_sptr& label : page->labels()) {
-            if (const CstPage_sptr& childPage = page->child(label)) {
+        if (page){
+            for( const CstLabel_sptr& label : page->labels()) {
+                if (const CstPage_sptr& childPage = page->child(label)) {
 
-                const std::vector<unsigned char> childCharacters =
-                        getCharacters({childPage});
-                characters.insert(characters.end(), childCharacters.begin(),
-                                  childCharacters.end());
-            }
-            if (label->typeOfLabel() == Label::TypeOfLabel::Message) {
-                for (const char& c : label->message()) {
-                    characters.push_back(c);
+                    const std::vector<unsigned char> childCharacters =
+                            getCharacters({childPage});
+                    characters.insert(characters.end(), childCharacters.begin(),
+                                      childCharacters.end());
+                }
+                if (label->typeOfLabel() == Label::TypeOfLabel::Message) {
+                    for (const char& c : label->message()) {
+                        characters.push_back(c);
+                    }
                 }
             }
         }

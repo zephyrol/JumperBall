@@ -72,7 +72,6 @@ ClassicalMechanics::physics2DVector ClassicalMechanics::getAcceleration(
     return {getAccelerationX(t), getAccelerationY(t)};
 }
 
-
 float ClassicalMechanics::evalPositionX(const float t) const {
 
     float posX;

@@ -82,13 +82,14 @@ void Controller::interactionMouse(const Status& status, float posX, float posY){
 
 void Controller::run()
 {
-
     _currentBall->update();
     if (_player.statut() == Player::Statut::INMENU) {
         _currentCamera->follow(*_currentMap);
         _renderingEngine->update();
+        _menuRendering->update();
         _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
         _renderingEngine->render();
+        _menuRendering->render();
         //_menu->render();
     } else if (_player.statut() == Player::Statut::INGAME) {
         _currentCamera->follow(*_currentBall);
