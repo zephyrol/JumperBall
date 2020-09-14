@@ -17,18 +17,21 @@
 #include <freetype2/ft2build.h>
 #include FT_FREETYPE_H
 #include <gameMenu/BoxLabel.h>
+#include "LabelRendering.h"
 #include "Utility.h"
 #include "ShaderProgram.h"
 #include "geometry/Quad.h"
 
 
-class BoxRendering
+class BoxRendering : public LabelRendering
 {
 public:
-    BoxRendering             (const glm::vec3& color1, const glm::vec3& color2);
+    BoxRendering             (const Label& label,
+                              const glm::vec3& color1,
+                              const glm::vec3& color2);
 
     void                     render() const;
-    void                     update(const Label& label);
+    void                     update();
  private:
     const Quad               _boxQuad;
 

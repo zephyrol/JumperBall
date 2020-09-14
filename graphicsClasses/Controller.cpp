@@ -252,7 +252,6 @@ void Controller::pressMouse ( float posX, float posY ) {
 void Controller::updateMouse ( float posX, float posY ) {
     
     constexpr float thresholdMoving = 0.05f;
-    
 
     auto computeDistance = [] ( float x0, float y0, float x1, float y1) {
         return sqrtf(pow(x1 - x0, 2) + pow(y1 - y0, 2)) ;
@@ -286,7 +285,7 @@ void Controller::releaseMouse (float posX, float posY) {
     
     constexpr float thresholdMoving = 0.05f;
     
-    auto computeDistance = [] ( float x0, float y0, float x1, float y1) {
+    auto computeDistance = [] (float x0, float y0, float x1, float y1) {
         return sqrtf(pow(x1 - x0, 2) + pow(y1 - y0, 2)) ;
     };
     

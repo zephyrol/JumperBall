@@ -29,8 +29,6 @@ class Label{
 public:
 
     //------------TYPES------------//
-    enum class TypeOfLabel { Object, Message, Switch, Box};
-
     enum class TypeOfAction { PredefinedAction, GoLevel };
     enum class PredefinedAction { ExitGame, ChooseEnglish, ChooseFrench };
 
@@ -55,7 +53,7 @@ public:
                              const std::shared_ptr<LabelAnswer> action
                                 = nullptr,
                              bool fixed = false);
-    virtual ~Label          ()                                        = default;
+    virtual ~Label          ()                                        = 0;
 
     //-------CONST METHODS----------//
     float                   width()                                       const;
@@ -67,7 +65,6 @@ public:
     const std::shared_ptr<LabelAnswer>& action()                          const;
 
     JBTypes::vec2f          position()                                    const;
-    virtual TypeOfLabel     typeOfLabel()                             const = 0;
     virtual std::string     message()                                     const;
 
     //----------METHODS-------------//

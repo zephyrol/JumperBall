@@ -82,3 +82,7 @@ void Label::updateLabelsLevels(vecLabel_sptr& labels, size_t end) {
 const std::shared_ptr<Label::LabelAnswer>& Label::action() const {
     return _action;
 }
+
+Label::~Label(){
+
+}

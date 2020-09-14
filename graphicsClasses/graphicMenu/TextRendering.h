@@ -17,17 +17,20 @@
 #include <freetype2/ft2build.h>
 #include FT_FREETYPE_H
 #include <gameMenu/MessageLabel.h>
+#include <ParallelTask.h>
 #include "Utility.h"
 #include "ShaderProgram.h"
 #include "geometry/Quad.h"
+#include "LabelRendering.h"
 
 
-class TextRendering
-{
+class TextRendering: public LabelRendering {
 public:
-    TextRendering                       ( const std::vector<unsigned char>& 
+    TextRendering                       ( const Label& label,
+                                          const std::vector<unsigned char>&
                                           characters = {},
                                           unsigned int height = 0);
+    virtual ~TextRendering() = default;
     
     static bool                         initFreeTypeAndFont();
     static void                         clearFreeTypeRessources();
@@ -36,28 +39,28 @@ public:
                                             glm::vec2 localScale;
                                             glm::vec2 localTranslate; };
 
-    void                                render(const CstLabel_sptr &label,
-                                               const glm::vec3& color)    const;
-    void                                update(const CstLabel_sptr &label,
-                                               float offsetY);
+    void                                render()    const override;
+    void                                update() override;
 
 private:
 
-    unsigned int                        fontHeight() const;
     const std::map<unsigned char, Character>
                                         _alphabet;
     
     const unsigned int                  _fontHeight;
     const Quad                          _displayQuad;
 
-    std::map<unsigned char, Character>  initAlphabet(
-                                              const std::vector<unsigned char>& 
-                                                                    characters,  
-                                                          unsigned int height);
     const ShaderProgram                 _spFont;
 
     std::map<CstLabel_sptr,std::vector<glm::mat4> >
                                         _charactersTransforms;
+    ParallelTask<void>                  _transformsComputing;
+
+    unsigned int                        fontHeight() const;
+    std::map<unsigned char, Character>  initAlphabet(
+                                              const std::vector<unsigned char>&
+                                                                    characters,
+                                                          unsigned int height);
 
     static FT_Library                   ftLib;
     static FT_Face                      fontFace;

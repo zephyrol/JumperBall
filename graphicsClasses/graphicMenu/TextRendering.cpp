@@ -14,14 +14,18 @@
 #include "TextRendering.h"
 #include "ShaderProgram.h"
 
-TextRendering::TextRendering(const std::vector<unsigned char>& characters,
+TextRendering::TextRendering(const Label &label, const std::vector<unsigned char>& characters,
                              unsigned int height):
+    LabelRendering(label),
     _alphabet(initAlphabet(characters,height)),
     _fontHeight(height),
     _displayQuad(),
     _spFont(Shader (GL_VERTEX_SHADER,   vsshaderFont),
             Shader (GL_FRAGMENT_SHADER, fsshaderFont)),
-    _charactersTransforms{}
+    _charactersTransforms{},
+    _transformsComputing([this](size_t transformNumber) {
+
+})
 {
 
 }
@@ -114,7 +118,15 @@ std::map<unsigned char, TextRendering::Character> TextRendering::initAlphabet(
     return alphabet;
 }
 
-void TextRendering::render(const CstLabel_sptr& label,
+void TextRendering::render() const {
+
+}
+
+void TextRendering::update() {
+
+}
+
+/*void TextRendering::render(const CstLabel_sptr& label,
                            const glm::vec3& color ) const {
     _spFont.use();
     _displayQuad.bind();
@@ -126,9 +138,9 @@ void TextRendering::render(const CstLabel_sptr& label,
         _spFont.bindUniform("M",_charactersTransforms.at(label).at(i));
         _displayQuad.draw();
     }
-}
+}*/
 
-void TextRendering::update(const CstLabel_sptr&  label, float offsetY)
+/*void TextRendering::update(const CstLabel_sptr&  label, float offsetY)
 {
     JBTypes::vec2f position = label->position();
     if (!label->isFixed()) {
@@ -137,10 +149,6 @@ void TextRendering::update(const CstLabel_sptr&  label, float offsetY)
 
     const float pitch = label->width()/label->message().size();
     float offsetX = -label->width()/2.f + pitch/2.f;
-    const glm::mat4 biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,
-                                             0.f,  1.f, 0.f, 0.f,
-                                             0.f,  0.f,  1.f, 0.f,
-                                             -1.f, -1.f, 0.f, 1.f} ;
 
     _charactersTransforms[label].clear();
     constexpr float biasScalar = 2.f; //To multiply the translation by 2
@@ -165,7 +173,7 @@ void TextRendering::update(const CstLabel_sptr&  label, float offsetY)
 
         offsetX += pitch;
     }
-}
+}*/
 
 unsigned int TextRendering::fontHeight() const {
     return _fontHeight;

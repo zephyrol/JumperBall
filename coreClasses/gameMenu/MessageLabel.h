@@ -25,8 +25,8 @@ public:
         const std::shared_ptr<LabelAnswer> action = nullptr,
         bool activated = true
         );
+    virtual ~MessageLabel() = default;
 
-    virtual Label::TypeOfLabel typeOfLabel() const override;
     std::string message() const override;
 
 

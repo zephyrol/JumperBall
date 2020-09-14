@@ -2,12 +2,14 @@
 
 MenuRendering::MenuRendering(const Menu &menu):
     _menu(menu),
-  _textRendering(getCharacters({
+    _pageRenderings(createPageRenderings())
+  /*_textRendering(getCharacters({
     _menu.pausePage(),
     _menu.successPage(),
     _menu.failurePage()}),
     getNumberOfPixelsHeight(menu.rootPage()->height())),
-  _boxRendering(glm::vec3(0.f,0.f,1.f),glm::vec3(0.f,1.f,1.f))
+  _boxRendering(glm::vec3(0.f,0.f,1.f),glm::vec3(0.f,1.f,1.f)),
+  _transformComputing(createMapComputing())*/
 {
 
 }
@@ -15,10 +17,25 @@ MenuRendering::MenuRendering(const Menu &menu):
 
 void MenuRendering::update()
 {
-    updatePage(_menu.currentPage());
+    //updatePage(_menu.currentPage());
+    _pageRenderings.at(_menu.currentPage())->update();
+
 }
 
-void MenuRendering::updatePage(const std::weak_ptr<const Page>& page)
+std::map<CstPage_sptr, PageRendering_sptr> MenuRendering::createPageRenderings()
+    const
+{
+    std::map<CstPage_sptr, PageRendering_sptr> pageRenderings;
+    for ( const CstPage_sptr& page: _menu.pages()) {
+        PageRendering_sptr pageRendering =
+                std::make_shared<PageRendering>(*page);
+        pageRenderings[page]= pageRendering;
+    }
+
+    return pageRenderings;
+}
+
+/*void MenuRendering::updatePage(const std::weak_ptr<const Page>& page)
 {
     CstPage_sptr spPage = page.lock();
     if (spPage->parent().lock() && spPage->visibleOnParent()) {
@@ -92,12 +109,13 @@ std::vector<unsigned char> MenuRendering::getCharacters(
 unsigned int MenuRendering::getNumberOfPixelsHeight(float height)
 {
     return static_cast<unsigned int> (Utility::windowResolutionY * height);
-}
+}*/
 
 
 void MenuRendering::render() const
 {
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    renderPage(_menu.currentPage());
+    _pageRenderings.at(_menu.currentPage())->render();
+
 }

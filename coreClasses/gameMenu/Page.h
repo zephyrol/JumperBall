@@ -26,8 +26,10 @@ class Page
 {
 public:
     
+    //------------TYPES------------//
     // Slide state => timepoint and yScreenPosition
     using slideState = std::pair<JBTypes::timePointMs, float>;
+    enum class TypeOfLabel { Unknown, Object, Message, Switch, Box};
 
 
     //--CONSTRUCTORS & DESTRUCTORS--//
@@ -47,12 +49,15 @@ public:
     float                             localPosY()                         const;
     void                              setBridges(
             std::map<CstLabel_sptr, Page_sptr>&& bridges);
+    void                              setTypes(
+            std::map<CstLabel_sptr, TypeOfLabel>&& labelsTypes);
 
     //----------METHODS-----------//
     //void                              addBridge(const CstLabel_sptr& label,
                                                 //const Page_sptr& page);
     CstPage_sptr                      child(const CstLabel_sptr& label) const;
     Page_sptr                         child(const CstLabel_sptr& label);
+    TypeOfLabel                       type(const CstLabel_sptr& label) const;
     const vecCstLabel_sptr &          labels() const;
     //const std::map<CstLabel_sptr, const CstPage_sptr& > children
     void                              pressOnPage();
@@ -70,6 +75,7 @@ private:
     std::vector<Page_sptr>            createChildren() const;
 
     std::map<CstLabel_sptr, Page_sptr > _bridges;
+    std::map<CstLabel_sptr, TypeOfLabel> _labelsTypes;
     std::vector<CstLabel_sptr>        _labels;
     std::vector<Page_sptr>            _children;
     const std::weak_ptr<const Page>   _parent;

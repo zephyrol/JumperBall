@@ -22,7 +22,6 @@ public:
         const JBTypes::vec2f& position,
         bool switchButton = false);
 
-    virtual Label::TypeOfLabel typeOfLabel() const override;
     void turnOn();
     void turnOff();
 

@@ -57,6 +57,11 @@ void Page::setBridges(std::map<CstLabel_sptr, Page_sptr> &&bridges)
     _children = createChildren();
 }
 
+void Page::setTypes(std::map<CstLabel_sptr, Page::TypeOfLabel> &&labelsTypes)
+{
+   _labelsTypes = std::move(labelsTypes) ;
+}
+
 bool Page::visibleOnParent() const {
     return _visibleOnParent;
 }
@@ -76,6 +81,15 @@ Page_sptr Page::child(const CstLabel_sptr &label)
 {
     CstPage_sptr cstPage = static_cast<const Page&>(*this).child(label);
     return std::const_pointer_cast<Page>(cstPage);
+}
+
+Page::TypeOfLabel Page::type(const CstLabel_sptr &label) const
+{
+        if ( _labelsTypes.find(label) != _labelsTypes.end() ) {
+            return _labelsTypes.at(label);
+        } else {
+            return TypeOfLabel::Unknown;
+        }
 }
 
 const vecCstLabel_sptr& Page::labels() const
