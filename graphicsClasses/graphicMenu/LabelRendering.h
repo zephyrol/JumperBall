@@ -20,7 +20,7 @@ class LabelRendering
 {
 public:
     LabelRendering(const Label& label);
-    virtual void update() = 0;
+    virtual void update(float offset) = 0;
     virtual void render() const = 0;
 
 protected:

@@ -24,6 +24,8 @@ private:
     ParallelTask<void> _labelRenderingsUpdate;
 
     vecLabelRendering_sptr createLabelRenderings(const Page& page) const;
+
+    static void updateCharactersList(const Page& page);
 };
 
 #endif // PAGERENDERING_H

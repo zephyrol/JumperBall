@@ -26,10 +26,7 @@
 
 class TextRendering: public LabelRendering {
 public:
-    TextRendering                       ( const Label& label,
-                                          const std::vector<unsigned char>&
-                                          characters = {},
-                                          unsigned int height = 0);
+    TextRendering                       ( const Label& label);
     virtual ~TextRendering() = default;
     
     static bool                         initFreeTypeAndFont();
@@ -40,28 +37,29 @@ public:
                                             glm::vec2 localTranslate; };
 
     void                                render()    const override;
-    void                                update() override;
+    void                                update(float offset) override;
 
 private:
 
-    const std::map<unsigned char, Character>
-                                        _alphabet;
     
-    const unsigned int                  _fontHeight;
+    //const unsigned int                  _fontHeight;
     const Quad                          _displayQuad;
 
     const ShaderProgram                 _spFont;
 
-    std::map<CstLabel_sptr,std::vector<glm::mat4> >
+    //std::map<CstLabel_sptr,std::vector<glm::mat4> >
+    std::vector<glm::mat4>
                                         _charactersTransforms;
-    ParallelTask<void>                  _transformsComputing;
 
-    unsigned int                        fontHeight() const;
+    //unsigned int                        fontHeight() const;
     std::map<unsigned char, Character>  initAlphabet(
                                               const std::vector<unsigned char>&
                                                                     characters,
                                                           unsigned int height);
 
+    static std::map<unsigned char, Character> alphabet;
+
+    static void                         updateCharacters(const Label& label);
     static FT_Library                   ftLib;
     static FT_Face                      fontFace;
 

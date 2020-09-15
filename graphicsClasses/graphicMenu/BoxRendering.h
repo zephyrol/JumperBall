@@ -30,8 +30,8 @@ public:
                               const glm::vec3& color1,
                               const glm::vec3& color2);
 
-    void                     render() const;
-    void                     update();
+    void                     render() const override;
+    void                     update(float offset) override;
  private:
     const Quad               _boxQuad;
 

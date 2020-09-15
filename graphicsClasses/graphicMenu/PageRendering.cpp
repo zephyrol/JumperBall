@@ -6,7 +6,7 @@ PageRendering::PageRendering(const Page &page):
 _page(page),
 _labelRenderings(createLabelRenderings(page)),
 _labelRenderingsUpdate( [this](size_t renderingLabelNumber){
-    _labelRenderings.at(renderingLabelNumber)->update();
+    _labelRenderings.at(renderingLabelNumber)->update(_page.localPosY());
 })
 {
 }
@@ -14,7 +14,7 @@ _labelRenderingsUpdate( [this](size_t renderingLabelNumber){
 void PageRendering::update()
 {
     _labelRenderingsUpdate.runTasks();
-    _labelRenderingsUpdate.waitTasks();
+    //_labelRenderingsUpdate.waitTasks();
 }
 
 void PageRendering::render() const
@@ -28,9 +28,7 @@ vecLabelRendering_sptr PageRendering::createLabelRenderings(
         const Page &page) const
 {
     vecLabelRendering_sptr labelRenderings;
-    for (size_t i = 0; page.labels().size(); ++i) {
-    }
-    for ( const CstLabel_sptr& cstLabel : page.labels() ) {
+    for (const CstLabel_sptr& cstLabel : page.labels()) {
         LabelRendering_sptr labelRendering = nullptr;
         switch (page.type(cstLabel)) {
             case Page::TypeOfLabel::Unknown :
@@ -43,9 +41,12 @@ vecLabelRendering_sptr PageRendering::createLabelRenderings(
             case Page::TypeOfLabel::Switch:
             break;
             case Page::TypeOfLabel::Box:
-            labelRendering = std::make_shared<BoxRendering>(*cstLabel,
-                                                            glm::vec3(0.f,0.f,0.f),
-                                                            glm::vec3(0.f,0.f,0.f));
+            labelRendering = std::make_shared<BoxRendering>(
+                        *cstLabel,
+                        glm::vec3(0.f,0.f,0.f),
+                        glm::vec3(0.f,0.f,0.f));
+            break;
+            default :
             break;
         }
 

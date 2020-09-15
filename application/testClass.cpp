@@ -18,8 +18,7 @@
 #include <initializer_list>
 
 
-testClass::testClass(GLFWwindow* window
-        ):
+testClass::testClass(GLFWwindow* window ):
     _window(window),
     _controller()
 {

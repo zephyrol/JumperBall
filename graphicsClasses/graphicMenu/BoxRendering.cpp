@@ -32,7 +32,7 @@ void BoxRendering::render() const {
     _boxQuad.draw();
 }
 
-void BoxRendering::update() {
+void BoxRendering::update(float offset) {
 
     const glm::mat4 biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,
                                              0.f,  1.f, 0.f, 0.f,
