@@ -14,7 +14,7 @@ using vecPageRendering_sptr = std::vector<PageRendering_sptr>;
 class PageRendering
 {
 public:
-    PageRendering(const Page& page);
+    PageRendering(const Page& page, float maxHeight);
     void update();
     void render() const;
 
@@ -23,7 +23,8 @@ private:
     vecLabelRendering_sptr _labelRenderings;
     ParallelTask<void> _labelRenderingsUpdate;
 
-    vecLabelRendering_sptr createLabelRenderings(const Page& page) const;
+    vecLabelRendering_sptr createLabelRenderings(
+            const Page& page, float maxHeight) const;
 
     static void updateCharactersList(const Page& page);
 };

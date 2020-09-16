@@ -17,13 +17,15 @@ Menu::Menu(const Page_sptr &rootPage,
            const Page_sptr &pausePage,
            const Page_sptr &successPage,
            const Page_sptr &failurePage,
-           const vecCstPage_sptr &pages):
+           const vecCstPage_sptr &pages,
+           float maxHeight):
   _rootPage(rootPage),
   _pausePage(pausePage),
   _successPage(successPage),
   _failurePage(failurePage),
   _pages(pages),
-  _currentPage(rootPage)
+  _currentPage(rootPage),
+  _maxHeight(maxHeight)
 {
 }
 
@@ -84,35 +86,18 @@ CstPage_sptr Menu::failurePage() const {
 
 const vecCstPage_sptr &Menu::pages() const
 {
-   return _pages;
+    return _pages;
 }
 
-
-/*float Menu::getHeight(const Page_sptr& page)
+float Menu::maxHeight() const
 {
-    float height = 0.f;
-
-    for( const CstLabel_sptr& label : page->labels()) {
-
-		if (page->bridges().find(label) != page->bridges().end()
-			&& page->bridges().at(label)) {
-
-            if (getHeight(page->bridges().at(label)) > height) {
-                height = getHeight(page->bridges().at(label));
-            }
-		}
-
-        if (label->height() > height) {
-            height = label->height();
-        };
-    }
-
-    return height;
-}*/
+   return _maxHeight;
+}
 
 std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
 {
     //Page 1
+    constexpr float maxHeight = 0.1f;
     std::shared_ptr<const MessageLabel> label1Page1 =
         std::make_shared<const MessageLabel>(
             factor * 1.f, 0.1f,
@@ -289,22 +274,6 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
     page3->setTypes(std::move(typesPage3));
     page4->setTypes(std::move(typesPage4));
 
-
-                                    //} labelsPage1, false);
-
-    /*const Page_sptr page2 =
-        std::make_shared<Page> (labelsPage2, page1, false, 10.f);
-
-    const Page_sptr page3 =
-        std::make_shared<Page> (labelsPage3, nullptr, false);
-
-    const Page_sptr page4 =
-        std::make_shared<Page> (labelsPage4, nullptr, false);
-
-    page1->addBridge(label2Page1, page2);
-    page3->addBridge(label3Page3, page1);
-    page4->addBridge(label2Page4, page1);*/
-
     const vecCstPage_sptr pages {page1,page2,page3,page4};
-    return std::make_shared<Menu> (page1,page4,nullptr,page3,pages);
+    return std::make_shared<Menu> (page1,page4,nullptr,page3,pages,maxHeight);
 }

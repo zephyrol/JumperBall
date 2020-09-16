@@ -14,13 +14,6 @@ public:
     void update() ;
 
 private:
-    //void updatePage(const std::weak_ptr<const Page> &page);
-    //void renderPage( const std::weak_ptr<const Page>& page) const;
-
-    //std::vector<unsigned char> getCharacters
-    //    (const vecCstPage_sptr& pages) const;
-    //std::map<CstPage_sptr, ParallelTask<void> > createMapComputing();
-
     const Menu& _menu;
     const std::map<CstPage_sptr, PageRendering_sptr> _pageRenderings;
 

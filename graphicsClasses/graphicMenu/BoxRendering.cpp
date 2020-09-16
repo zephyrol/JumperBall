@@ -33,7 +33,7 @@ void BoxRendering::render() const {
 }
 
 void BoxRendering::update(float offset) {
-
+    static_cast<void> (offset); // TODO add offset in the computing
     const glm::mat4 biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,
                                              0.f,  1.f, 0.f, 0.f,
                                              0.f,  0.f,  1.f, 0.f,
@@ -49,25 +49,6 @@ void BoxRendering::update(float offset) {
                                                _label.position().y , 0.f});
     _transformCharacter = biasMatrix * translate * scaleMatrix;
 }
-
-/*void BoxRendering::update(const Label &label) {
-
-    const glm::mat4 biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,
-                                             0.f,  1.f, 0.f, 0.f,
-                                             0.f,  0.f,  1.f, 0.f,
-                                             -1.f, -1.f, 0.f, 1.f} ;
-
-    constexpr float biasScalar = 2.f; //To multiply the translation by 2
-    const glm::vec3 scale = glm::vec3{label.width(),label.height(),0.f};
-
-    const glm::mat4 scaleMatrix = glm::scale(scale);
-
-    const glm::mat4 translate = glm::translate( biasScalar *
-                                    glm::vec3{ label.position().x,
-                                               label.position().y , 0.f});
-    _transformCharacter = biasMatrix * translate * scaleMatrix;
-}*/
-
 
 const std::string BoxRendering::vsshaderBox = "shaders/boxVs.vs";
 const std::string BoxRendering::fsshaderBox = "shaders/boxFs.fs";

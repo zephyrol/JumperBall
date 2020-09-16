@@ -26,7 +26,7 @@
 
 class TextRendering: public LabelRendering {
 public:
-    TextRendering                       ( const Label& label);
+    TextRendering                       ( const Label& label, float maxHeight);
     virtual ~TextRendering() = default;
     
     static bool                         initFreeTypeAndFont();
@@ -39,27 +39,14 @@ public:
     void                                render()    const override;
     void                                update(float offset) override;
 
+
 private:
-
-    
-    //const unsigned int                  _fontHeight;
     const Quad                          _displayQuad;
-
     const ShaderProgram                 _spFont;
-
-    //std::map<CstLabel_sptr,std::vector<glm::mat4> >
-    std::vector<glm::mat4>
-                                        _charactersTransforms;
-
-    //unsigned int                        fontHeight() const;
-    std::map<unsigned char, Character>  initAlphabet(
-                                              const std::vector<unsigned char>&
-                                                                    characters,
-                                                          unsigned int height);
-
+    std::vector<glm::mat4> _charactersTransforms;
     static std::map<unsigned char, Character> alphabet;
 
-    static void                         updateCharacters(const Label& label);
+    static void                         updateCharacters(const Label& label, float maxHeight);
     static FT_Library                   ftLib;
     static FT_Face                      fontFace;
 

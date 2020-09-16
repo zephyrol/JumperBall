@@ -18,6 +18,8 @@ public:
                   size_t numberOfTasks  = 1);
     ParallelTask (const ParallelTask& parallelTask)                    = delete;
     ParallelTask& operator=(const ParallelTask& parallelTask)          = delete;
+    ParallelTask (ParallelTask&& parallelTask)                         = delete;
+    ParallelTask& operator=(ParallelTask&& parallelTask)               = delete;
     ~ParallelTask();
 
     void runTasks();

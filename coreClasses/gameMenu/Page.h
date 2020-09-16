@@ -39,8 +39,6 @@ public:
 
     
     //-------CONST METHODS--------//
-    //const vecCstLabel_sptr&           labels()                            const;
-    //const std::map<CstLabel_sptr, Page_sptr >& bridges()                  const;
     const std::weak_ptr<const Page> & parent()                            const;
     bool                              visibleOnParent()                   const;
     CstPage_sptr                      child(float x, float y)             const;
@@ -53,13 +51,10 @@ public:
             std::map<CstLabel_sptr, TypeOfLabel>&& labelsTypes);
 
     //----------METHODS-----------//
-    //void                              addBridge(const CstLabel_sptr& label,
-                                                //const Page_sptr& page);
     CstPage_sptr                      child(const CstLabel_sptr& label) const;
     Page_sptr                         child(const CstLabel_sptr& label);
     TypeOfLabel                       type(const CstLabel_sptr& label) const;
     const vecCstLabel_sptr &          labels() const;
-    //const std::map<CstLabel_sptr, const CstPage_sptr& > children
     void                              pressOnPage();
     void                              release();
     void                              update(bool isPressed,

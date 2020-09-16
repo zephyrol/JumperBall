@@ -34,14 +34,6 @@ Page::Page(const CstPage_sptr& parent,
     _countingUpdates(0)
 {}
 
-/*const vecCstLabel_sptr& Page::labels() const{
-    return _labels;
-}*/
-
-/*const std::map<CstLabel_sptr, Page_sptr >& Page::bridges() const{
-    return _bridges;
-}*/
-
 const std::weak_ptr<const Page>& Page::parent() const {
     return _parent;
 }
@@ -111,15 +103,6 @@ CstPage_sptr Page::child(float x, float y) const {
 float Page::height() const {
     return _height;
 }
-
-/*void Page::addBridge(const CstLabel_sptr& label, const Page_sptr& page) {
-    if (std::find(_labels.begin(), _labels.end(), label) == _labels.end()) {
-        std::cout << "Trying to associate a label that does not exist in the" <<
-            "current page ... the operation is skipped ..." << std::endl;
-    } else {
-        _bridges[label] = page;
-    }
-}*/
 
 CstLabel_sptr Page::matchedLabel(float x, float y) const
 {
