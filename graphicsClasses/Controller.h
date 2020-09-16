@@ -31,7 +31,8 @@ public:
     void            interactionMouse (const Status& status,
                                      float posX, float posY);
 
-    void            run();
+    void            runController();
+    void            waitController();
 
     void            currentMap(const std::shared_ptr<Map>& currentMap);
     const std::shared_ptr<Map> &currentMap() const;
@@ -44,9 +45,15 @@ public:
 
     
 private:
+    //------------TYPES------------//
+    enum class CurrentFrame { None, FrameA, FrameB};
     //-------CONST METHODS--------//
     ScreenDirection nearestDirection(float posX, float posY) const;
-    
+    const std::shared_ptr<Rendering> &currentRenderingEngine() const;
+    const std::shared_ptr<MenuRendering> &currentMenuRendering() const;
+    const std::shared_ptr<Rendering> &otherRenderingEngine() const;
+    const std::shared_ptr<MenuRendering> &otherMenuRendering() const;
+
     //----------METHODS------------//
     void            manageUp (const Status& status);
     void            manageDown (const Status& status);
@@ -55,12 +62,20 @@ private:
     void            manageEscape (const Status& status);
     void            manageValidateButton (const Status& status);
     void            runGame(size_t level);
-    
+    void            updateRenderingEngine();
+    void            updateMenuRendering();
+    void            renderRenderingEngine() const;
+    void            renderMenuRendering() const;
+    void            skipUpdateRenderingEngine();
+    void            skipUpdateMenuRendering();
+
     //Mouse/TouchPad/TouchScreen
     void            pressMouse (float posX, float posY);
     void            updateMouse (float posX, float posY);
     void            releaseMouse (float posX, float posY);
     void            manageValidateMouse ();
+
+    void            switchFrame();
 
     //--------ATTRIBUTES-----------//
     Player                         _player;
@@ -79,8 +94,16 @@ private:
     std::shared_ptr<Ball>          _currentBall;
     std::shared_ptr<Camera>        _currentCamera;
     std::shared_ptr<Star>          _currentStar;
-    std::shared_ptr<Rendering>     _renderingEngine;
-    std::shared_ptr<MenuRendering> _menuRendering;
+
+    std::shared_ptr<Rendering>     _renderingEngineFrameA;
+    std::shared_ptr<Rendering>     _renderingEngineFrameB;
+
+    std::shared_ptr<MenuRendering> _menuRenderingFrameA;
+    std::shared_ptr<MenuRendering> _menuRenderingFrameB;
+
+    CurrentFrame                   _currentFrame;
+    std::future<void>              _updatingRenderingEngine;
+    std::future<void>              _updatingMenuRendering;
 
 };
 

@@ -140,10 +140,12 @@ void testClass::run()
     while (!inputManagement())
     {
 
-        _controller.run();
+        _controller.runController();
 
         glfwSwapBuffers(_window);
         glfwPollEvents();
+
+        _controller.waitController();
 
         counter++;
         auto after = JBTypesMethods::getTimePointMSNow();

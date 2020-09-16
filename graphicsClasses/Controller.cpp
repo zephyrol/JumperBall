@@ -30,9 +30,15 @@ _currentCamera(std::make_shared<Camera>()),
 _currentStar(std::make_shared<Star>(glm::vec3(5.f,5.f,5.f),
                                     glm::vec3(0.f,3.f,3.f)
             ,0.3f,0.5f,50.f,5.f)),
-_renderingEngine( std::make_shared<Rendering>
+_renderingEngineFrameA( std::make_shared<Rendering>
                   (*_currentMap,*_currentBall,*_currentStar,*_currentCamera)),
-_menuRendering(std::make_shared<MenuRendering>(*_menu))
+_renderingEngineFrameB( std::make_shared<Rendering>
+                  (*_currentMap,*_currentBall,*_currentStar,*_currentCamera)),
+_menuRenderingFrameA(std::make_shared<MenuRendering>(*_menu)),
+_menuRenderingFrameB(std::make_shared<MenuRendering>(*_menu)),
+_currentFrame(CurrentFrame::None),
+_updatingRenderingEngine(),
+_updatingMenuRendering()
 {
 }
 
@@ -80,22 +86,23 @@ void Controller::interactionMouse(const Status& status, float posX, float posY){
     }
 }
 
-void Controller::run()
+void Controller::runController()
 {
     _currentBall->update();
     if (_player.statut() == Player::Statut::INMENU) {
         _currentCamera->follow(*_currentMap);
-        _renderingEngine->update();
-        _menuRendering->update();
         _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
-        _renderingEngine->render();
-        _menuRendering->render();
-        //_menu->render();
+
+        updateRenderingEngine();
+        updateMenuRendering();
+        renderRenderingEngine();
+        renderMenuRendering();
     } else if (_player.statut() == Player::Statut::INGAME) {
         _currentCamera->follow(*_currentBall);
-        _renderingEngine->update();
-        _renderingEngine->render();
-        
+        updateRenderingEngine();
+        skipUpdateMenuRendering();
+        renderRenderingEngine();
+
         if (_currentBall->stateOfLife() == Ball::StateOfLife::Dead) {
             _player.statut(Player::Statut::INMENU);
             _menu->failurePageAsCurrentPage();
@@ -105,9 +112,19 @@ void Controller::run()
         if (_currentCamera->transitionEffect(*_currentBall, *_currentMap)) {
             _player.statut(Player::Statut::INGAME);
         }
-        _renderingEngine->update();
-        _renderingEngine->render();
+        updateRenderingEngine();
+        skipUpdateMenuRendering();
+        renderRenderingEngine();
     }
+
+    switchFrame();
+}
+
+void Controller::waitController()
+{
+    _updatingMenuRendering.wait();
+    _updatingRenderingEngine.wait();
+
 }
 
 void Controller::manageValidateButton(const Controller::Status &status) {
@@ -126,9 +143,61 @@ _currentBall = std::make_shared<Ball>(*_currentMap);
 _currentCamera = std::make_shared<Camera>();
 _currentStar = std::make_shared<Star>(
             glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f) ,0.3f,0.5f,50.f,5.f);
-_renderingEngine = std::make_shared<Rendering>
+
+_renderingEngineFrameA = std::make_shared<Rendering>
+        (*_currentMap,*_currentBall,*_currentStar,*_currentCamera);
+_renderingEngineFrameB = std::make_shared<Rendering>
         (*_currentMap,*_currentBall,*_currentStar,*_currentCamera);
 
+//We need to reset the frames
+_currentFrame = CurrentFrame::None;
+}
+
+void Controller::updateRenderingEngine()
+{
+    // If no frame is already computed, we don't use async
+    if (_currentFrame == CurrentFrame::None) {
+        currentRenderingEngine()->update();
+        otherRenderingEngine()->update();
+        std::cout <<"both engine are updated" << std::endl;
+        _updatingRenderingEngine = std::async([](){});
+    } else {
+        _updatingRenderingEngine = std::async(std::launch::async,[this](){
+            currentRenderingEngine()->update();});
+    }
+}
+
+void Controller::updateMenuRendering()
+{
+    if (_currentFrame == CurrentFrame::None) {
+        currentMenuRendering()->update();
+        otherMenuRendering()->update();
+        std::cout <<"both menu are updated" << std::endl;
+        _updatingMenuRendering= std::async([](){});
+    } else {
+        _updatingMenuRendering = std::async(std::launch::async,[this](){
+            currentMenuRendering()->update();});
+    }
+}
+
+void Controller::renderRenderingEngine() const
+{
+    otherRenderingEngine()->render();
+}
+
+void Controller::renderMenuRendering() const
+{
+    otherMenuRendering()->render();
+}
+
+void Controller::skipUpdateRenderingEngine()
+{
+    _updatingRenderingEngine = std::async([](){});
+}
+
+void Controller::skipUpdateMenuRendering()
+{
+    _updatingMenuRendering = std::async([](){});
 }
 
 void Controller::manageValidateMouse()
@@ -157,6 +226,74 @@ void Controller::manageValidateMouse()
                 }
             }
         }
+    }
+}
+
+void Controller::switchFrame()
+{
+    switch (_currentFrame) {
+        case CurrentFrame::None:
+        _currentFrame = CurrentFrame::FrameA;
+        break;
+        case CurrentFrame::FrameB:
+        _currentFrame = CurrentFrame::FrameA;
+        break;
+        case CurrentFrame::FrameA:
+        _currentFrame = CurrentFrame::FrameB;
+        break;
+        default: break;
+    }
+}
+
+const std::shared_ptr<Rendering> &Controller::currentRenderingEngine() const
+{
+    switch (_currentFrame) {
+        case CurrentFrame::None: return _renderingEngineFrameA;
+        break;
+        case CurrentFrame::FrameA: return _renderingEngineFrameA;
+        break;
+        case CurrentFrame::FrameB: return _renderingEngineFrameB;
+        break;
+        default: break;
+    }
+}
+
+const std::shared_ptr<MenuRendering> &Controller::currentMenuRendering() const
+{
+    switch (_currentFrame) {
+        case CurrentFrame::None: return _menuRenderingFrameA;
+        break;
+        case CurrentFrame::FrameA: return _menuRenderingFrameA;
+        break;
+        case CurrentFrame::FrameB: return _menuRenderingFrameB;
+        break;
+        default: break;
+    }
+}
+
+const std::shared_ptr<Rendering> &Controller::otherRenderingEngine() const
+{
+    switch (_currentFrame) {
+        case CurrentFrame::None: return _renderingEngineFrameB;
+        break;
+        case CurrentFrame::FrameA: return _renderingEngineFrameB;
+        break;
+        case CurrentFrame::FrameB: return _renderingEngineFrameA;
+        break;
+        default: break;
+    }
+}
+
+const std::shared_ptr<MenuRendering> &Controller::otherMenuRendering() const
+{
+    switch (_currentFrame) {
+        case CurrentFrame::None: return _menuRenderingFrameB;
+        break;
+        case CurrentFrame::FrameA: return _menuRenderingFrameB;
+        break;
+        case CurrentFrame::FrameB: return _menuRenderingFrameA;
+        break;
+        default: break;
     }
 }
 
