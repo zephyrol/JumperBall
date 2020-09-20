@@ -4,15 +4,14 @@
  *
  * Created on 22 aout 2020, 18h15
  */
-#include "../MeshGenerator.h"
+#include "../scene/mesh/MeshGenerator.h"
 
 vecMeshComponent_sptr MeshGenerator::genObject(
-                                const std::shared_ptr<const Object>& obj,
+                                const GraphicObject& obj,
                                 const glm::vec3& position,
                                 const JBTypes::Dir& dir) {
     vecMeshComponent_sptr components;
-    if (obj) {
-        switch ( obj->getCategory() ) {
+        switch ( obj.getCategory() ) {
             case Object::CategoryOfObjects::Key: {
 
                 constexpr size_t nbGeometriesToCreateAKey = 4;
@@ -49,14 +48,14 @@ vecMeshComponent_sptr MeshGenerator::genObject(
                       (std::make_shared<Sphere>(
                       *commonShapes.at("goldenSphere"),
                               tranform),
-                        std::make_shared<ObjectAnimation>(*obj,position,dir));
+                        std::make_shared<ObjectAnimation>(obj,position,dir));
                     components.push_back(componentSphere);
                     } else {
                     MeshComponent_sptr componentCube =
                         std::make_shared<MeshComponent>
                       (std::make_shared<Cube>(*commonShapes.at("goldenCube"),
                               tranform),
-                        std::make_shared<ObjectAnimation>(*obj,position,dir));
+                        std::make_shared<ObjectAnimation>(obj,position,dir));
                     components.push_back(componentCube);
                     }
                }
@@ -90,7 +89,7 @@ vecMeshComponent_sptr MeshGenerator::genObject(
                 std::make_shared<Cylinder>(*commonShapes.at("coinCylinder"),
                         tranformLocal,
                         tranformNormals ),
-                std::make_shared<ObjectAnimation>(*obj,position,dir));
+                std::make_shared<ObjectAnimation>(obj,position,dir));
                 components.push_back(componentCube);
                 break;
             }
@@ -99,6 +98,5 @@ vecMeshComponent_sptr MeshGenerator::genObject(
             }
             default : break;
         }
-    }
     return components;
 }

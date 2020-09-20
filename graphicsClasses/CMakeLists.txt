@@ -20,6 +20,8 @@ FILE(GLOB SOURCE_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/geometry/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/uniformBlocks/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/mesh/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/componentsGeneration/*.cpp)
 
 
@@ -28,6 +30,8 @@ FILE(GLOB HEADER_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/animations/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/geometry/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/uniformBlocks/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/mesh/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.h)
 
 INSTALL (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR}/bin)

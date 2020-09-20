@@ -15,10 +15,6 @@
 #define TESTCLASS_H
 #include <Types.h>
 #include <Utility.h>
-#include <Shader.h>
-#include <ShaderProgram.h>
-#include <Rendering.h>
-#include <gameMenu/Menu.h>
 #include <Controller.h>
 #define RESOLUTION_X 1024
 #define RESOLUTION_Y 768

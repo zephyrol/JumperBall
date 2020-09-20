@@ -5,7 +5,7 @@
  */
 
 /*
- * File:   Rendering.h
+ * File:   SceneRendering.h
  * Author: Morgenthaler S
  *
  * Created on 6 novembre 2019, 20:38
@@ -17,25 +17,23 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <Map.h>
-#include <Ball.h>
-#include "Shader.h"
-#include "ShaderProgram.h"
 #include "FrameBuffer.h"
-#include "Mesh.h"
+#include "mesh/BallMesh.h"
+#include "mesh/MapMesh.h"
+#include "mesh/StarMesh.h"
+#include "mesh/QuadMesh.h"
 #include "Camera.h"
-#include "Star.h"
 #include "uniformBlocks/uniformLight.h"
 #include "animations/BallAnimation.h"
 #include <ParallelTask.h>
 
 
-class Rendering {
+class SceneRendering {
 
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Rendering                       ( const Map& map,
+    SceneRendering                   (const Map& map,
                                       const Ball& ball,
                                       const Star& star,
                                       const Camera& camera );
@@ -66,10 +64,10 @@ private:
     uniformVariable<bool>           _uniformBool;
 
     const Quad                      _quadFrame;
-    Mesh<Map>                       _meshMap;
-    Mesh<Ball>                      _meshBall;
-    Mesh<Star>                      _meshStar;
-    Mesh<Quad>                      _meshQuadFrame;
+    MapMesh                         _meshMap;
+    BallMesh                        _meshBall;
+    StarMesh                        _meshStar;
+    QuadMesh                        _meshQuadFrame;
 
     ParallelTask<void>              _meshMapUpdate;
     ParallelTask<void>              _meshBallUpdate;
@@ -130,5 +128,5 @@ private:
     static const glm::vec3          backgroundColor;
 };
 
-#endif /* RENDERING_H */
+#endif /* SCENE_RENDERING_H */
 

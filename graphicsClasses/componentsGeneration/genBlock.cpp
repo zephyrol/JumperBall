@@ -4,15 +4,15 @@
  *
  * Created on 22 aout 2020, 18h15
  */
-#include "../MeshGenerator.h"
+#include "../scene/mesh/MeshGenerator.h"
 
 vecMeshComponent_sptr MeshGenerator::genBlock
-    (const Map& map, size_t index) {
+    (const GraphicMap& map, size_t index) {
 
-    const std::array<unsigned int,3> position = map.getBlockCoords(index);
-    const Map::BlockTypes blockType = map.getType(position);
+    const std::array<unsigned int,3> position = map.map().getBlockCoords(index);
+    const Map::BlockTypes blockType = map.map().getType(position);
 
-    const std::shared_ptr<const Block> block = map.getBlock(index);
+    const std::shared_ptr<GraphicBlock> block = map.graphicBlocks().at(index);
 
     vecMeshComponent_sptr components;
     std::shared_ptr<GeometricShape> shape;
@@ -30,7 +30,8 @@ vecMeshComponent_sptr MeshGenerator::genBlock
 
     for (size_t i = 0; i < 6; ++i) {
         const std::array<unsigned int, 3>& neighbourgPosition = positions.at(i);
-        const Map::BlockTypes typeNeighbourg = map.getType(neighbourgPosition);
+        const Map::BlockTypes typeNeighbourg =
+                map.map().getType(neighbourgPosition);
         if (typeNeighbourg != Map::BlockTypes::Brittle &&
                 typeNeighbourg != Map::BlockTypes::None)
         {
@@ -98,12 +99,13 @@ vecMeshComponent_sptr MeshGenerator::genBlock
 
 
     for (size_t i = 0; i < Block::objectsNumber ; ++i) {
-        std::shared_ptr<const Object> object = block->object(i);
+        std::shared_ptr<const GraphicObject> object =
+                block->graphicObjects().at(i);
         if (object) {
             const JBTypes::Dir dir =
                 JBTypesMethods::integerAsDirection(
                     static_cast<unsigned int>(i));
-            vecMeshComponent_sptr objMCs = genObject(object,glmPosition,dir);
+            vecMeshComponent_sptr objMCs = genObject(*object,glmPosition,dir);
             for(MeshComponent_sptr objMC : objMCs) {
                 components.push_back(std::move(objMC));
             }

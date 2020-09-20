@@ -14,11 +14,10 @@
 #include "ObjectAnimation.h"
 #include <math.h>
 
-ObjectAnimation::ObjectAnimation(const Object& object,
+ObjectAnimation::ObjectAnimation(const GraphicObject& object,
                                  const glm::vec3& blockPosition,
                                  const JBTypes::Dir& dir):
 _object(object),
-_referenceTimePointCreation(JBTypesMethods::getTimePointMSNow()),
 _direction(dir),
 _translationToBlock(glm::translate(blockPosition)),
 _initialRotation(Utility::rotationUpToDir(_direction)),
@@ -46,7 +45,7 @@ void ObjectAnimation::updateTrans() {
 
 void ObjectAnimation::transBeforeObtaining() {
     const float seconds = JBTypesMethods::getTimeSecondsSinceTimePoint(
-      _referenceTimePointCreation);
+      _object.timeOfCreation());
 
     constexpr float speedFactor = 5.f;
     _movingRotation = glm::rotate(speedFactor* seconds,rotationAxis);
@@ -86,7 +85,7 @@ void ObjectAnimation::transAfterObtaining() {
     _movingTranslation = glm::translate( translateFactor * rotationAxis);
 }
 
-const Object &ObjectAnimation::object() const {
+const GraphicObject &ObjectAnimation::object() const {
     return _object;
 }
 

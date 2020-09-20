@@ -5,16 +5,16 @@
  */
 
 /*
- * File:   Rendering.cpp
+ * File:   SceneRendering.cpp
  * Author: Morgenthaler S
  *
  * Created on 6 novembre 2019, 20:38
  */
 
-#include "Rendering.h"
+#include "SceneRendering.h"
 #include <future>
 
-Rendering::Rendering(const Map&     map,
+SceneRendering::SceneRendering(const Map&     map,
                      const Ball&    ball,
                      const Star&    star,
                      const Camera&  camera):
@@ -77,7 +77,7 @@ Rendering::Rendering(const Map&     map,
                         false)
 { }
 
-void Rendering::phongEffect( GLuint depthTexture) const {
+void SceneRendering::phongEffect( GLuint depthTexture) const {
 
     glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.z, 0.0f);
     _frameBufferHDRScene.bindFrameBuffer(true);
@@ -93,7 +93,7 @@ void Rendering::phongEffect( GLuint depthTexture) const {
     _light.bind();
 
     // Ball
-    const Ball& ball = _meshBall.base();
+    const GraphicBall& ball = _meshBall.getInstanceFrame();
     _spMap.bindUniform("burningCoeff", ball.burnCoefficient());
     _meshBall.render(_spMap);
 
@@ -102,7 +102,8 @@ void Rendering::phongEffect( GLuint depthTexture) const {
     _meshMap.render(_spMap);
 
     // ------ Star ------
-    const Star& star = _meshStar.base();
+    const GraphicStar& star = _meshStar.getInstanceFrame();
+    //const Star& star = _meshStar.getBase();
     _spStar.use();
     _spStar.bindUniform("radiusInside",  star.radiusInside());
     _spStar.bindUniform("radiusOutside", star.radiusOutside());
@@ -115,7 +116,7 @@ void Rendering::phongEffect( GLuint depthTexture) const {
 
 }
 
-void Rendering::blurEffect(GLuint brightPassTexture) const {
+void SceneRendering::blurEffect(GLuint brightPassTexture) const {
 
     _spBlur.use();
     _frameBufferHalfBlurEffect.bindFrameBuffer(false);
@@ -135,7 +136,7 @@ void Rendering::blurEffect(GLuint brightPassTexture) const {
     _meshQuadFrame.render(_spBlur);
 }
 
-void Rendering::brightPassEffect(GLuint hdrSceneTexture) const {
+void SceneRendering::brightPassEffect(GLuint hdrSceneTexture) const {
     constexpr float bloomThreshold = 4.f;
     _spBrightPassFilter.use();
     _frameBufferBrightPassEffect.bindFrameBuffer(false);
@@ -145,7 +146,7 @@ void Rendering::brightPassEffect(GLuint hdrSceneTexture) const {
     _meshQuadFrame.render(_spBrightPassFilter);
 }
 
-void Rendering::bloomEffect( GLuint hdrSceneTexture,
+void SceneRendering::bloomEffect( GLuint hdrSceneTexture,
                              GLuint bluredTexture) const{
     _spBloom.use();
     FrameBuffer::bindDefaultFrameBuffer();
@@ -158,7 +159,7 @@ void Rendering::bloomEffect( GLuint hdrSceneTexture,
     _meshQuadFrame.render(_spBloom);
 }
 
-void Rendering::depthFromStar() const {
+void SceneRendering::depthFromStar() const {
 
     glClearColor(1.f, 1.f, 1.f, 0.0f);
     _frameBufferDepth.bindFrameBuffer(true);
@@ -172,20 +173,20 @@ void Rendering::depthFromStar() const {
 }
 
 
-void Rendering::bindCamera(const ShaderProgram& sp) const{
+void SceneRendering::bindCamera(const ShaderProgram& sp) const{
     sp.bindUniform ("VP",             _uniformMatrix4.at("VP"));
     sp.bindUniform ("VPStar",         _uniformMatrix4.at("VPStar"));
     sp.bindUniform ("positionBall",   _uniformVec3.at("positionBall"));
     sp.bindUniform ("positionCamera", _uniformVec3.at("positionCamera"));
 }
 
-void Rendering::updateUniform()
+void SceneRendering::updateUniform()
 {
     //uniform for rendering from star
 
-    const Map& map = _meshMap.base();
-    const Ball& ball = _meshBall.base();
-    const Star& star = _meshStar.base();
+    const GraphicMap& map = _meshMap.getInstanceFrame();
+    const GraphicBall& ball = _meshBall.getInstanceFrame();
+    const GraphicStar& star = _meshStar.getInstanceFrame();
 
     const glm::vec3 center{ map.width()/2.f,
                             map.height()/2.f,
@@ -225,12 +226,12 @@ void Rendering::updateUniform()
                                                  positionBall.z);
 
     _uniformVec3["positionCamera"]  = _camera.pos();
-    //uniform for Star View Rendering
+    //uniform for Star View SceneRendering
 
     _light.update();
 }
 
-void Rendering::render() const{
+void SceneRendering::render() const{
 
     //alpha
     glEnable(GL_BLEND);
@@ -258,7 +259,7 @@ void Rendering::render() const{
 }
 
 
-void Rendering::update(){
+void SceneRendering::update(){
 
     //Update meshes and uniform values using multithreading
     _meshMapUpdate.runTasks();
@@ -271,31 +272,36 @@ void Rendering::update(){
     _meshBallUpdate.waitTasks();
     _uniformUpdate.waitTasks();
     _meshMapUpdate.waitTasks();
-
+    /*_meshMap.update();
+    _meshBall.update();
+    updateUniform();
+    _meshStar.update();*/
 }
 
-const std::string Rendering::vsshaderMap = "shaders/phongVs.vs";
-const std::string Rendering::fsshaderMap = "shaders/phongFs.fs";
+const std::string SceneRendering::vsshaderMap = "shaders/phongVs.vs";
+const std::string SceneRendering::fsshaderMap = "shaders/phongFs.fs";
 
-const std::string Rendering::vsshaderStar = "shaders/starVs.vs";
-const std::string Rendering::fsshaderStar = "shaders/starFs.fs";
+const std::string SceneRendering::vsshaderStar = "shaders/starVs.vs";
+const std::string SceneRendering::fsshaderStar = "shaders/starFs.fs";
 
-const std::string Rendering::vsshaderFBO = "shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderFBO = "shaders/basicFboFs.fs";
+const std::string SceneRendering::vsshaderFBO = "shaders/basicFboVs.vs";
+const std::string SceneRendering::fsshaderFBO = "shaders/basicFboFs.fs";
 
-const std::string Rendering::vsshaderBlur = "shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderBlur = "shaders/blurFs.fs";
+const std::string SceneRendering::vsshaderBlur = "shaders/basicFboVs.vs";
+const std::string SceneRendering::fsshaderBlur = "shaders/blurFs.fs";
 
-const std::string Rendering::vsshaderBrightPassFilter = "shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderBrightPassFilter =
+const std::string SceneRendering::vsshaderBrightPassFilter =
+        "shaders/basicFboVs.vs";
+const std::string SceneRendering::fsshaderBrightPassFilter =
                                                   "shaders/brightPassFilter.fs";
 
-const std::string Rendering::vsshaderBloom = "shaders/basicFboVs.vs";
-const std::string Rendering::fsshaderBloom = "shaders/bloomFs.fs";
-const std::string Rendering::vsshaderDepth = "shaders/depthVs.vs";
-const std::string Rendering::fsshaderDepth = "shaders/depthFs.fs";
+const std::string SceneRendering::vsshaderBloom = "shaders/basicFboVs.vs";
+const std::string SceneRendering::fsshaderBloom = "shaders/bloomFs.fs";
+const std::string SceneRendering::vsshaderDepth = "shaders/depthVs.vs";
+const std::string SceneRendering::fsshaderDepth = "shaders/depthFs.fs";
 
-const std::vector<float> Rendering::gaussComputedValues =
-  Utility::genGaussBuffer(Rendering::blurPatchSize, Rendering::blurSigma);
+const std::vector<float> SceneRendering::gaussComputedValues =
+  Utility::genGaussBuffer(
+            SceneRendering::blurPatchSize, SceneRendering::blurSigma);
 
-const glm::vec3 Rendering::backgroundColor {0.f,0.f,.1f};
+const glm::vec3 SceneRendering::backgroundColor {0.f,0.f,.1f};

@@ -5,9 +5,9 @@
  * created on 22 aout 2020, 18h15
  */
 
-#include "../MeshGenerator.h"
+#include "../scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genComponents(const Ball& ball) {
+vecMeshComponent_sptr MeshGenerator::genComponents(const GraphicBall& ball) {
 
     const glm::mat4 scaleMatrix = glm::scale(glm::vec3(ball.getRadius()));
     const Sphere sphere;

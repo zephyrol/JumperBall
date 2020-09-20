@@ -1,6 +1,6 @@
 #ifndef BLOCKANIMATION_H
 #define BLOCKANIMATION_H
-#include <blocks/Block.h>
+#include "scene/GraphicBlock.h"
 #include "../Utility.h"
 #include "Animation.h"
 
@@ -15,7 +15,7 @@ class BlockAnimation : public Animation {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    BlockAnimation                 (const Block& block);
+    BlockAnimation                 (const GraphicBlock& block);
     virtual ~BlockAnimation        ()                                  =default;
 
 
@@ -23,9 +23,8 @@ public:
     void                          updateTrans()                        override;
 
 private:
-
     //--------ATTRIBUTES-----------//
-    const Block&                  _block;
+    const GraphicBlock&                  _block;
 };
 
 

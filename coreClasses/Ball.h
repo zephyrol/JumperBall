@@ -68,15 +68,13 @@ public:
     float                         getTimeSecondsSinceAction()    const noexcept;
     JBTypes::timePointMs          getTimeActionMs()              const noexcept;
 
-    float                         getTimeSecondsSinceStateOfLife()    
+    float                         getTimeSecondsSinceStateOfLife()
                                                                  const noexcept;
     JBTypes::timePointMs          getTimeStateOfLifeMs()         const noexcept;
 
     struct nextBlockInformation   getNextBlockInfo()             const noexcept;
     const ClassicalMechanics&     getMechanicsJumping()          const noexcept;
     const ClassicalMechanics&     getMechanicsFalling()          const noexcept;
-
-    
 
     //----------METHODS------------//
     void                          update()                             noexcept;

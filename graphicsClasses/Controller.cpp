@@ -24,21 +24,42 @@ _mousePressingXCoord(0.f),
 _mousePressingYCoord(0.f),
 _mouseIsPressed(false),
 _requestToLeave(false),
-_currentMap(Map::loadMap(_player.levelProgression())),
-_currentBall(std::make_shared<Ball>(*_currentMap)),
-_currentCamera(std::make_shared<Camera>()),
-_currentStar(std::make_shared<Star>(glm::vec3(5.f,5.f,5.f),
-                                    glm::vec3(0.f,3.f,3.f)
-            ,0.3f,0.5f,50.f,5.f)),
-_renderingEngineFrameA( std::make_shared<Rendering>
-                  (*_currentMap,*_currentBall,*_currentStar,*_currentCamera)),
-_renderingEngineFrameB( std::make_shared<Rendering>
-                  (*_currentMap,*_currentBall,*_currentStar,*_currentCamera)),
-_menuRenderingFrameA(std::make_shared<MenuRendering>(*_menu)),
-_menuRenderingFrameB(std::make_shared<MenuRendering>(*_menu)),
-_currentFrame(CurrentFrame::None),
-_updatingRenderingEngine(),
-_updatingMenuRendering()
+
+_map(Map::loadMap(_player.levelProgression())),
+_ball(std::make_shared<Ball>(*_map)),
+_camera(std::make_shared<Camera>()),
+_star(std::make_shared<Star>(glm::vec3(5.f,5.f,5.f),
+                                    glm::vec3(0.f,3.f,3.f),
+                                    0.3f,0.5f,50.f,5.f)),
+_sceneRendering( std::make_shared<SceneRendering>
+                  (*_map,*_ball,*_star,*_camera)),
+_menuRendering( std::make_shared<MenuRendering>(*_menu)),
+_updatingScene([this](size_t) {
+    _ball->update();
+    if (_player.statut() == Player::Statut::INMENU) {
+        _camera->follow(*_map);
+    } else if (_player.statut() == Player::Statut::INGAME) {
+        _camera->follow(*_ball);
+        if (_ball->stateOfLife() == Ball::StateOfLife::Dead) {
+            _player.statut(Player::Statut::INMENU);
+        }
+
+    } else if (_player.statut() == Player::Statut::INTRANSITION){
+        if (_camera->transitionEffect(*_ball, *_map)) {
+            _player.statut(Player::Statut::INGAME);
+        }
+    }
+}),
+_updatingMenu([this](size_t) {
+    if (_player.statut() == Player::Statut::INMENU) {
+        _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
+    } else if (_player.statut() == Player::Statut::INGAME) {
+        if (_ball->stateOfLife() == Ball::StateOfLife::Dead) {
+            _player.statut(Player::Statut::INMENU);
+            _menu->failurePageAsCurrentPage();
+        }
+    }
+})
 {
 }
 
@@ -88,49 +109,29 @@ void Controller::interactionMouse(const Status& status, float posX, float posY){
 
 void Controller::runController()
 {
-    _currentBall->update();
+    _sceneRendering->update();
     if (_player.statut() == Player::Statut::INMENU) {
-        _currentCamera->follow(*_currentMap);
-        _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
-
-        updateRenderingEngine();
-        updateMenuRendering();
-        renderRenderingEngine();
-        renderMenuRendering();
-    } else if (_player.statut() == Player::Statut::INGAME) {
-        _currentCamera->follow(*_currentBall);
-        updateRenderingEngine();
-        skipUpdateMenuRendering();
-        renderRenderingEngine();
-
-        if (_currentBall->stateOfLife() == Ball::StateOfLife::Dead) {
-            _player.statut(Player::Statut::INMENU);
-            _menu->failurePageAsCurrentPage();
-        }
-
-    } else if (_player.statut() == Player::Statut::INTRANSITION){
-        if (_currentCamera->transitionEffect(*_currentBall, *_currentMap)) {
-            _player.statut(Player::Statut::INGAME);
-        }
-        updateRenderingEngine();
-        skipUpdateMenuRendering();
-        renderRenderingEngine();
+    _menuRendering->update();
     }
+    _updatingScene.runTasks();
+    _updatingMenu.runTasks();
+    _sceneRendering->render();
 
-    switchFrame();
+    if (_player.statut() == Player::Statut::INMENU) {
+    _menuRendering->render();
+    }
 }
 
 void Controller::waitController()
 {
-    _updatingMenuRendering.wait();
-    _updatingRenderingEngine.wait();
-
+    _updatingScene.waitTasks();
+    _updatingMenu.waitTasks();
 }
 
 void Controller::manageValidateButton(const Controller::Status &status) {
     if ( _player.statut() == Player::Statut::INGAME ) {
-        if (status == Controller::Status::Pressed && _currentBall) {
-            _currentBall->doAction(Ball::ActionRequest::Jump);
+        if (status == Controller::Status::Pressed && _ball) {
+            _ball->doAction(Ball::ActionRequest::Jump);
         }
     }
 }
@@ -138,22 +139,19 @@ void Controller::manageValidateButton(const Controller::Status &status) {
 void Controller::runGame(size_t level)
 {
 
-_currentMap = Map::loadMap(level);
-_currentBall = std::make_shared<Ball>(*_currentMap);
-_currentCamera = std::make_shared<Camera>();
-_currentStar = std::make_shared<Star>(
+_map = Map::loadMap(level);
+_ball = std::make_shared<Ball>(*_map);
+_camera = std::make_shared<Camera>();
+_star = std::make_shared<Star>(
             glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f) ,0.3f,0.5f,50.f,5.f);
 
-_renderingEngineFrameA = std::make_shared<Rendering>
-        (*_currentMap,*_currentBall,*_currentStar,*_currentCamera);
-_renderingEngineFrameB = std::make_shared<Rendering>
-        (*_currentMap,*_currentBall,*_currentStar,*_currentCamera);
+_sceneRendering = std::make_shared<SceneRendering>
+        (*_map,*_ball,*_star,*_camera);
 
 //We need to reset the frames
-_currentFrame = CurrentFrame::None;
 }
 
-void Controller::updateRenderingEngine()
+/*void Controller::updateRenderingEngine()
 {
     // If no frame is already computed, we don't use async
     if (_currentFrame == CurrentFrame::None) {
@@ -198,12 +196,12 @@ void Controller::skipUpdateRenderingEngine()
 void Controller::skipUpdateMenuRendering()
 {
     _updatingMenuRendering = std::async([](){});
-}
+}*/
 
 void Controller::manageValidateMouse()
 {
-    if ( _player.statut() == Player::Statut::INGAME && _currentBall) {
-        _currentBall->doAction(Ball::ActionRequest::Jump);
+    if ( _player.statut() == Player::Statut::INGAME && _ball) {
+        _ball->doAction(Ball::ActionRequest::Jump);
     }
     else if (_player.statut() == Player::Statut::INMENU ) {
         if(_menu->currentPage()) {
@@ -229,75 +227,6 @@ void Controller::manageValidateMouse()
     }
 }
 
-void Controller::switchFrame()
-{
-    switch (_currentFrame) {
-        case CurrentFrame::None:
-        _currentFrame = CurrentFrame::FrameA;
-        break;
-        case CurrentFrame::FrameB:
-        _currentFrame = CurrentFrame::FrameA;
-        break;
-        case CurrentFrame::FrameA:
-        _currentFrame = CurrentFrame::FrameB;
-        break;
-        default: break;
-    }
-}
-
-const std::shared_ptr<Rendering> &Controller::currentRenderingEngine() const
-{
-    switch (_currentFrame) {
-        case CurrentFrame::None: return _renderingEngineFrameA;
-        break;
-        case CurrentFrame::FrameA: return _renderingEngineFrameA;
-        break;
-        case CurrentFrame::FrameB: return _renderingEngineFrameB;
-        break;
-        default: break;
-    }
-}
-
-const std::shared_ptr<MenuRendering> &Controller::currentMenuRendering() const
-{
-    switch (_currentFrame) {
-        case CurrentFrame::None: return _menuRenderingFrameA;
-        break;
-        case CurrentFrame::FrameA: return _menuRenderingFrameA;
-        break;
-        case CurrentFrame::FrameB: return _menuRenderingFrameB;
-        break;
-        default: break;
-    }
-}
-
-const std::shared_ptr<Rendering> &Controller::otherRenderingEngine() const
-{
-    switch (_currentFrame) {
-        case CurrentFrame::None: return _renderingEngineFrameB;
-        break;
-        case CurrentFrame::FrameA: return _renderingEngineFrameB;
-        break;
-        case CurrentFrame::FrameB: return _renderingEngineFrameA;
-        break;
-        default: break;
-    }
-}
-
-const std::shared_ptr<MenuRendering> &Controller::otherMenuRendering() const
-{
-    switch (_currentFrame) {
-        case CurrentFrame::None: return _menuRenderingFrameB;
-        break;
-        case CurrentFrame::FrameA: return _menuRenderingFrameB;
-        break;
-        case CurrentFrame::FrameB: return _menuRenderingFrameA;
-        break;
-        default: break;
-    }
-}
-
-
 void Controller::manageEscape(const Controller::Status &status) {
     if ( _player.statut() == Player::Statut::INMENU ) {
         if (status == Controller::Status::Released &&
@@ -316,16 +245,16 @@ void Controller::manageEscape(const Controller::Status &status) {
 void Controller::manageRight(const Controller::Status &status) {
     
     if ( _player.statut() == Player::Statut::INGAME ) {
-        if (status == Controller::Status::Pressed && _currentBall) {
-            _currentBall->doAction(Ball::ActionRequest::TurnRight);
+        if (status == Controller::Status::Pressed && _ball) {
+            _ball->doAction(Ball::ActionRequest::TurnRight);
         }
     }
 }
 
 void Controller::manageLeft(const Status& status) {
     if ( _player.statut() == Player::Statut::INGAME ) {
-        if (status == Controller::Status::Pressed && _currentBall) {
-            _currentBall->doAction(Ball::ActionRequest::TurnLeft);
+        if (status == Controller::Status::Pressed && _ball) {
+            _ball->doAction(Ball::ActionRequest::TurnLeft);
         }
     }
 }
@@ -335,8 +264,8 @@ void Controller::manageDown(const Controller::Status &) {
 
 void Controller::manageUp(const Controller::Status &status) {
     if ( _player.statut() == Player::Statut::INGAME ) {
-        if (status == Controller::Status::Pressed && _currentBall) {
-            _currentBall->doAction(Ball::ActionRequest::GoStraightAhead);
+        if (status == Controller::Status::Pressed && _ball) {
+            _ball->doAction(Ball::ActionRequest::GoStraightAhead);
         }
     }
 }
@@ -440,22 +369,22 @@ const std::shared_ptr<Menu>&  Controller::menu() const {
 
 void Controller::currentMap(const std::shared_ptr<Map> &currentMap)
 {
-    _currentMap = currentMap;
+    _map = currentMap;
 }
 
 const std::shared_ptr<Map> &Controller::currentMap() const
 {
-    return _currentMap;
+    return _map;
 }
 
 void Controller::currentBall(const std::shared_ptr<Ball> &currentBall)
 {
-    _currentBall = currentBall;
+    _ball = currentBall;
 }
 
 const std::shared_ptr<Ball> &Controller::currentBall() const
 {
-    return _currentBall;
+    return _ball;
 }
 
 bool Controller::requestToLeave() const {

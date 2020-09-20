@@ -5,11 +5,10 @@
  * Created on 22 aout 2020, 18h15
  */
 
-#include "MeshGenerator.h"
+#include "../scene/mesh/MeshGenerator.h"
 
 
-vecMeshComponent_sptr MeshGenerator::genJumpers(
-                                        const Block& block,
+vecMeshComponent_sptr MeshGenerator::genJumpers(const GraphicBlock &graphicBlock,
                                         const Map::BlockTypes& type,
                                         const glm::vec3& posWorld) {
     vecMeshComponent_sptr components;
@@ -22,9 +21,9 @@ vecMeshComponent_sptr MeshGenerator::genJumpers(
 
         }
 
-        for(size_t i = 0; i < block.faceInfo().size(); i++) {
+        for(size_t i = 0; i < graphicBlock.block().faceInfo().size(); i++) {
 
-            bool jumperPresent = block.faceInfo().at(i);
+            bool jumperPresent = graphicBlock.block().faceInfo().at(i);
             if (jumperPresent) {
 
                 constexpr float sizeBlock = 1.f;

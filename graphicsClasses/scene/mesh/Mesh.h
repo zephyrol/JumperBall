@@ -22,46 +22,55 @@
 #include <ParallelTask.h>
 
 
-template<typename T>
+// T = instance frame type
+template<typename BaseType, typename FrameType>
 class Mesh {
 
 public:
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Mesh                    (const T& base);
+    Mesh                    (const BaseType& base);
 
     //-------CONST METHODS----------//
     const glm::mat4&        world()                                       const;
     void                    render(const ShaderProgram& sp)               const;
-    const T&                base()                                        const;
+    const FrameType&        getInstanceFrame()                            const;
+    const BaseType&         getBase()                                     const;
+    virtual void            update();
 
     //----------METHODS-------------//
-    void                    update();
+
+
+protected:
+    const BaseType& _base;
+    FrameType   _frame;
+    void setWorld(const glm::mat4& world);
+    virtual void            updateWorld() = 0;
 
 private:
     //--------ATTRIBUTES-----------//
-    const T&                _base;
-    vecMeshComponent_sptr    _components;
-    vecMeshComponent_sptr    _animatedComponents;
+    vecMeshComponent_sptr   _components;
+    vecMeshComponent_sptr   _animatedComponents;
     glm::mat4               _world;
-
     ParallelTask<void>      _componentsMapComputing;
 
-
+    void                    updateComponents();
+    virtual void                    updateFrame();
     //----------METHODS-------------//
-    void                    update(const Ball& base);
-    void                    update(const Map&  base);
-    void                    update(const Quad& base);
-    void                    update(const Star& base);
+    //void                    update(const Ball& base);
+    //void                    update(const Map&  base);
+    //void                    update(const Quad& base);
+    //void                    update(const Star& base);
     static vecMeshComponent_sptr
                             getAnimatedComponents(
-                                               vecMeshComponent_sptr components);
+                                              vecMeshComponent_sptr components);
 
 };
 
-template<typename T>
-Mesh<T>::Mesh(const T& base):
+template<typename BaseType, typename FrameType>
+Mesh<BaseType, FrameType>::Mesh(const BaseType& base):
 _base(base),
-_components(MeshGenerator::genComponents(base)),
+_frame(base),
+_components(MeshGenerator::genComponents(_frame)),
 _animatedComponents(getAnimatedComponents(_components)),
 _world(1.f),
 _componentsMapComputing( [this](size_t componentNumber) -> void {
@@ -73,40 +82,40 @@ _componentsMapComputing( [this](size_t componentNumber) -> void {
 
 }
 
-
-template<typename T>
-void Mesh<T>::update() {
+/*
+template<typename BaseType, typename FrameType>
+void Mesh<BaseType,FrameType>::update() {
     update(_base);
-}
+}*/
 
-template<typename T>
-void Mesh<T>::update(const Ball& base) {
+/*template<typename BaseType, typename FrameType>
+void Mesh<BaseType,FrameType>::update(const Ball& base) {
     const JBTypes::vec3f positionBall = base.get3DPosition();
     _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
                             positionBall.y ,positionBall.z));
 
     if (_components.size() > 0)
         _components.at(0)->animation()->updateTrans();
+}*/
+
+template<typename BaseType, typename FrameType>
+void Mesh<BaseType,FrameType>::update() {
+    updateFrame();
+    updateComponents();
+    updateWorld();
 }
 
-template<typename T>
-void Mesh<T>::update(const Map&) {
+/*template<typename BaseType, typename FrameType>
+void Mesh<BaseType,FrameType>::update(const Quad&) {
+}*/
 
-    _componentsMapComputing.runTasks();
-    _componentsMapComputing.waitTasks();
-}
-
-template<typename T>
-void Mesh<T>::update(const Quad&) {
-}
-
-template<typename T>
-void Mesh<T>::update(const Star& base) {
+/*template<typename BaseType, typename FrameType>
+void Mesh<BaseType,FrameType>::update(const Star& base) {
     _world = base.transform();
-}
+}*/
 
-template<typename T>
-vecMeshComponent_sptr Mesh<T>::getAnimatedComponents
+template<typename BaseType, typename FrameType>
+vecMeshComponent_sptr Mesh<BaseType,FrameType>::getAnimatedComponents
     (vecMeshComponent_sptr components)
 {
     vecMeshComponent_sptr animatedComponents;
@@ -118,13 +127,13 @@ vecMeshComponent_sptr Mesh<T>::getAnimatedComponents
     return animatedComponents;
 }
 
-template<typename T>
-const glm::mat4& Mesh<T>::world() const {
+template<typename BaseType, typename FrameType>
+const glm::mat4& Mesh<BaseType,FrameType>::world() const {
     return _world;
 }
 
-template<typename T>
-void Mesh<T>::render(const ShaderProgram& sp) const {
+template<typename BaseType, typename FrameType>
+void Mesh<BaseType,FrameType>::render(const ShaderProgram& sp) const {
 
     sp.bindUniform("W",_world);
     GLuint currentVAO = 0;
@@ -151,10 +160,41 @@ void Mesh<T>::render(const ShaderProgram& sp) const {
     }
 }
 
-template<typename T>
-inline const T& Mesh<T>::base() const
+template<typename BaseType, typename FrameType>
+const FrameType &Mesh<BaseType,FrameType>::getInstanceFrame() const
+{
+    return _frame;
+}
+
+template<typename BaseType, typename FrameType>
+const BaseType &Mesh<BaseType,FrameType>::getBase() const
 {
     return _base;
 }
+
+template<typename BaseType, typename FrameType>
+void Mesh<BaseType,FrameType>::setWorld(const glm::mat4 &world)
+{
+    _world = world;
+}
+
+template<typename BaseType, typename FrameType>
+void Mesh<BaseType,FrameType>::updateFrame()
+{
+    _frame.update();
+}
+
+template<typename BaseType, typename FrameType>
+void Mesh<BaseType,FrameType>::updateComponents()
+{
+    _componentsMapComputing.runTasks();
+    _componentsMapComputing.waitTasks();
+}
+
+/*template<typename BaseType, typename FrameType>
+inline const T& Mesh<BaseType,FrameType>::base() const
+{
+    return _base;
+}*/
 
 #endif /* MESH_H */

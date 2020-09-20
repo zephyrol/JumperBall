@@ -49,9 +49,7 @@ private:
     const GLfloat                 _radiusInside;
     const GLfloat                 _radiusOutside;
     const glm::mat4               _initialTransform;
-
-    const JBTypes::timePointMs
-                                  _timeCreation;
+    const JBTypes::timePointMs    _timeCreation;
     
     
 };

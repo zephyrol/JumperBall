@@ -5,10 +5,10 @@
  * Created on 22 aout 2020, 18h15
  */
 
-#include "../MeshGenerator.h"
+#include "../scene/mesh/MeshGenerator.h"
 
 vecMeshComponent_sptr MeshGenerator::genSharps(
-                                        const Block& block,
+                                        const GraphicBlock& graphicBlock,
                                         const Map::BlockTypes& type,
                                         const glm::vec3& posWorld) {
 
@@ -28,9 +28,9 @@ vecMeshComponent_sptr MeshGenerator::genSharps(
             glm::vec2(-0.6f,0.6f)
         };
 
-        for(size_t i = 0; i < block.faceInfo().size(); i++) {
+        for(size_t i = 0; i < graphicBlock.block().faceInfo().size(); i++) {
 
-            const bool isSharp = block.faceInfo().at(i);
+            const bool isSharp = graphicBlock.block().faceInfo().at(i);
             if (isSharp) {
 
                 constexpr float sizeBlock = 1.f;

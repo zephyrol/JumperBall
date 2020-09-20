@@ -119,7 +119,6 @@ private:
     unsigned int                          _width;
     unsigned int                          _height;
     unsigned int                          _deep;
-
     unsigned int                          _beginX;
     unsigned int                          _beginY;
     unsigned int                          _beginZ;

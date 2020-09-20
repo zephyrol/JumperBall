@@ -141,5 +141,10 @@ JBTypes::vec3f Block::objectPosition(
 
 }
 
+const std::array<std::shared_ptr<Object>, 6> &Block::objects() const
+{
+    return _objects;
+}
+
 
 

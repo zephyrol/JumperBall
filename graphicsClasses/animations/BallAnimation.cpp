@@ -14,15 +14,15 @@
 #include "BallAnimation.h"
 #include <math.h>
 
-BallAnimation::BallAnimation(const Ball& ball):
+BallAnimation::BallAnimation(const GraphicBall &ball):
     _ball(ball) ,
     _rotationBeforeMovement(1.f),
     _scaleBeforeMovement(1.f),
     _translationBeforeMovement(0.f),
     _scale(1.f),
     _rotation(1.f),
-    _referenceTimePointAction(ball.getTimeActionMs()),
-    _referenceTimePointStateOfLife(ball.getTimeStateOfLifeMs()),
+    //_referenceTimePointAction(ball.getTimeActionMs()),
+    //_referenceTimePointStateOfLife(ball.getTimeStateOfLifeMs()),
     _referenceState(ball.state()),
     _referenceStateOfLife(ball.stateOfLife())
 {
@@ -74,16 +74,12 @@ void BallAnimation::animationAlive() {
             _ball.state() == Ball::State::TurningLeft ||
             _ball.state() == Ball::State::TurningRight )
             t = _ball.getTimeSecondsSinceAction()/
-                    _ball.timeToGetNextBlock;
+                    Ball::timeToGetNextBlock;
         else if (_ball.state() == Ball::State::Jumping) {
-            t = _ball.getMechanicsJumping().getPosition(
-                    _ball.getTimeSecondsSinceAction()
-                    ).x ;
+            t = _ball.jumpingPosX() ;
         }
         else  {
-            t = _ball.getMechanicsFalling().getPosition(
-                    _ball.getTimeSecondsSinceAction()
-                    ).x ;
+            t = _ball.fallingPosX();
         }
         
         const float angleToGetBlock = sizeBlock/_ball.getRadius();
@@ -120,7 +116,6 @@ void BallAnimation::animationAlive() {
 
 void BallAnimation::animationBursting() {
 
-
         constexpr float durationBursting      = 0.07f; 
         constexpr float radiusScalarBursting  = 2.5f;
 
@@ -142,7 +137,7 @@ void BallAnimation::animationBursting() {
 
 void BallAnimation::updateTrans() {
     
-    if (_ball.getTimeActionMs() > _referenceTimePointAction) {
+    /*if (_ball.getTimeActionMs() > _referenceTimePointAction) {
         _referenceTimePointAction = _ball.getTimeActionMs();
         if (_ball.state() == _referenceState) {
         _scaleBeforeMovement        = glm::vec3(1.f,1.f,1.f);
@@ -158,7 +153,7 @@ void BallAnimation::updateTrans() {
         _translationBeforeMovement  = glm::vec3(0.f,0.f,0.f);
         }
         else _referenceStateOfLife = _ball.stateOfLife();
-    }
+    }*/
 
     if (_ball.stateOfLife() == Ball::StateOfLife::Normal || _ball.stateOfLife()
              == Ball::StateOfLife::Burning || _ball.stateOfLife() == 

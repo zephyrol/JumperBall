@@ -4,12 +4,12 @@
  *
  * Created on 22 aout 2020, 18h15
  */
-#include "../MeshGenerator.h"
+#include "../scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genComponents(const Map& map) {
+vecMeshComponent_sptr MeshGenerator::genComponents(const GraphicMap& map) {
 
     vecMeshComponent_sptr components;
-    const auto blockInfos = map.blocksInfo();
+    const auto blockInfos = map.map().blocksInfo();
     for (unsigned int i = 0 ; i < blockInfos.size(); ++i) {
         vecMeshComponent_sptr blockComponents =
                 genBlock(map, blockInfos.at(i).index);

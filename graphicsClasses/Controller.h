@@ -9,7 +9,7 @@
 #define Controller_h
 
 #include <Player.h>
-#include "Rendering.h"
+#include "scene/SceneRendering.h"
 #include "graphicMenu/MenuRendering.h"
 
 class Controller {
@@ -45,14 +45,10 @@ public:
 
     
 private:
-    //------------TYPES------------//
-    enum class CurrentFrame { None, FrameA, FrameB};
     //-------CONST METHODS--------//
     ScreenDirection nearestDirection(float posX, float posY) const;
-    const std::shared_ptr<Rendering> &currentRenderingEngine() const;
-    const std::shared_ptr<MenuRendering> &currentMenuRendering() const;
-    const std::shared_ptr<Rendering> &otherRenderingEngine() const;
-    const std::shared_ptr<MenuRendering> &otherMenuRendering() const;
+    const std::shared_ptr<SceneRendering> &sceneRendering() const;
+    const std::shared_ptr<MenuRendering> &menuRendedering() const;
 
     //----------METHODS------------//
     void            manageUp (const Status& status);
@@ -66,16 +62,12 @@ private:
     void            updateMenuRendering();
     void            renderRenderingEngine() const;
     void            renderMenuRendering() const;
-    void            skipUpdateRenderingEngine();
-    void            skipUpdateMenuRendering();
 
     //Mouse/TouchPad/TouchScreen
     void            pressMouse (float posX, float posY);
     void            updateMouse (float posX, float posY);
     void            releaseMouse (float posX, float posY);
     void            manageValidateMouse ();
-
-    void            switchFrame();
 
     //--------ATTRIBUTES-----------//
     Player                         _player;
@@ -90,20 +82,17 @@ private:
     bool                           _mouseIsPressed;
     bool                           _requestToLeave;
 
-    std::shared_ptr<Map>           _currentMap;
-    std::shared_ptr<Ball>          _currentBall;
-    std::shared_ptr<Camera>        _currentCamera;
-    std::shared_ptr<Star>          _currentStar;
+    std::shared_ptr<Map>           _map;
+    std::shared_ptr<Ball>          _ball;
+    std::shared_ptr<Camera>        _camera;
+    std::shared_ptr<Star>          _star;
 
-    std::shared_ptr<Rendering>     _renderingEngineFrameA;
-    std::shared_ptr<Rendering>     _renderingEngineFrameB;
+    std::shared_ptr<SceneRendering> _sceneRendering;
 
-    std::shared_ptr<MenuRendering> _menuRenderingFrameA;
-    std::shared_ptr<MenuRendering> _menuRenderingFrameB;
+    std::shared_ptr<MenuRendering> _menuRendering;
 
-    CurrentFrame                   _currentFrame;
-    std::future<void>              _updatingRenderingEngine;
-    std::future<void>              _updatingMenuRendering;
+    ParallelTask<void>             _updatingScene;
+    ParallelTask<void>             _updatingMenu;
 
 };
 

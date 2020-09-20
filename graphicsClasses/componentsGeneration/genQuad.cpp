@@ -4,9 +4,9 @@
  *
  * Created on 22 aout 2020, 18h15
  */
-#include "../MeshGenerator.h"
+#include "../scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genComponents(const Quad& ) {
+vecMeshComponent_sptr MeshGenerator::genComponents(const GraphicQuad & ) {
 
     //The quad var is just used to specify that
     //we want to gen a MeshComponent from a Quad

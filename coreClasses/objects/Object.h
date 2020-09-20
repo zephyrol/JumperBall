@@ -27,13 +27,15 @@ public:
     
     bool isGotten() const;
     const JBTypes::timePointMs& timeOfObtaining() const;
-    void catchingTest( const JBTypes::vec3f& objectPosition, 
+    const JBTypes::timePointMs& timeOfCreation() const;
+    void catchingTest( const JBTypes::vec3f& objectPosition,
                        const JBTypes::vec3f& entityPosition,
                        float radiusEntity);
 
     static constexpr float radiusBoundingSphere = 0.15f;
 private:
     bool _gotten;
+    const JBTypes::timePointMs _timeOfCreation;
     JBTypes::timePointMs _timeOfObtaining;
 };
 

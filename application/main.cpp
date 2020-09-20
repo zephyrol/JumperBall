@@ -15,10 +15,7 @@
 #include <iostream>
 #include <fstream>
 #include <Types.h>
-#include <Ball.h>
 #include <Map.h>
-#include <ClassicalMechanics.h>
-#include <Rendering.h>
 #include "testClass.h"
 
 using namespace std;

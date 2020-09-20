@@ -69,6 +69,8 @@ public:
                                          unsigned int dirUint);
     static constexpr size_t           objectsNumber = 6;
 
+    const std::array<std::shared_ptr<Object>,6>& objects() const;
+
 protected:
     //--------ATTRIBUTES-----------//
     std::array<float,9>               _localTransform;
