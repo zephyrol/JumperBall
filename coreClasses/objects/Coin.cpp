@@ -14,11 +14,6 @@
 #include "Coin.h"
 
 Coin::Coin():
-  Bonus(100)
+  Bonus(Object::CategoryOfObjects::Coin,100)
 {
 }
-
-Object::CategoryOfObjects Coin::getCategory() const {
-    return Object::CategoryOfObjects::Coin;
-}
-

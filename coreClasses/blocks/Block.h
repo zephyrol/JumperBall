@@ -23,10 +23,8 @@ public:
 
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Block                             (bool hasInteraction = false);
-    Block                             (const std::array<float,9>& 
-                                                                localTransform,
-                                       bool hasInteraction = false);
+    Block                             (bool hasInteraction = false,
+                                       bool isFixed = true);
     virtual                           ~Block()                        = default;
 
 
@@ -62,6 +60,7 @@ public:
                                     blockPosition,
                                 const JBTypes::vec3f& entityPosition,
                                 float radiusEntity);
+    virtual const bool &isFixed()                           const;
 
     //--------STATIC METHODS-------//
     static JBTypes::vec3f             objectPosition
@@ -78,6 +77,7 @@ protected:
                                       _objects;
     const bool                        _hasInteraction;
     bool                              _hasObjects;
+    const bool                        _isFixed;
 };
 
 #endif /* BLOCK_H */

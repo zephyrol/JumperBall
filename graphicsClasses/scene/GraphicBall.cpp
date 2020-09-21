@@ -14,6 +14,7 @@ GraphicBall::GraphicBall(const Ball& ball):
     _timeSecondsSinceAction(ball.getTimeSecondsSinceAction()),
     _timeSecondsSinceStateOfLife(ball.getTimeSecondsSinceStateOfLife()),
     _state(ball.state()),
+    _stateOfLife(ball.stateOfLife()),
     _radius(ball.getRadius()),
     _jumpingPosX(ball.getMechanicsJumping().getPosition(
                     ball.getTimeSecondsSinceAction()
@@ -34,6 +35,7 @@ void GraphicBall::update()
     _timeSecondsSinceAction = _ball.getTimeSecondsSinceAction();
     _timeSecondsSinceStateOfLife = _ball.getTimeSecondsSinceStateOfLife();
     _state = _ball.state();
+    _stateOfLife = _ball.stateOfLife();
     _radius = _ball.getRadius();
     _jumpingPosX = _ball.getMechanicsJumping().getPosition(
                     _ball.getTimeSecondsSinceAction()
@@ -94,7 +96,6 @@ float GraphicBall::fallingPosX() const
 {
     return _fallingPosX;
 }
-
 
 const JBTypes::vec3f &GraphicBall::lookTowardsAsVector() const
 {

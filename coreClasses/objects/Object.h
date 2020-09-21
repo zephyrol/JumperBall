@@ -17,13 +17,12 @@
 
 class Object {
 public:
-    Object();
-
-    virtual ~Object() = default;
 
     enum class CategoryOfObjects {Key,Coin,Clock};
 
-    virtual CategoryOfObjects getCategory() const = 0;
+    Object(const CategoryOfObjects& category);
+    virtual ~Object() = default;
+    const CategoryOfObjects& getCategory() const ;
     
     bool isGotten() const;
     const JBTypes::timePointMs& timeOfObtaining() const;
@@ -37,6 +36,7 @@ private:
     bool _gotten;
     const JBTypes::timePointMs _timeOfCreation;
     JBTypes::timePointMs _timeOfObtaining;
+    const CategoryOfObjects _category;
 };
 
 #endif /* OBJECT_H */

@@ -33,7 +33,6 @@ void BallAnimation::animationAlive() {
 
 
     if ( _ball.state() == Ball::State::Staying) {
-
         constexpr float durationAnimation = 0.7f; 
         constexpr float maxCrushing       = 0.2f; 
 

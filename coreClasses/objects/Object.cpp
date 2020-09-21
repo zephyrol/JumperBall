@@ -14,14 +14,20 @@
 #include "Object.h"
 #include <math.h>
 
-Object::Object(): 
+Object::Object(const CategoryOfObjects& category):
 _gotten(false),
 _timeOfCreation(JBTypesMethods::getTimePointMSNow()),
-_timeOfObtaining()
+_timeOfObtaining(),
+_category(category)
 {
 }
 
-bool Object::isGotten() const { 
+const Object::CategoryOfObjects &Object::getCategory() const
+{
+   return _category;
+}
+
+bool Object::isGotten() const {
     return _gotten;
 }
 

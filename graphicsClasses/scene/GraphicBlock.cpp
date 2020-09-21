@@ -2,7 +2,9 @@
 
 GraphicBlock::GraphicBlock(const Block& block):
     _block(block),
-    _localTransform(block.localTransform())
+    _localTransform(block.localTransform()),
+    _graphicObjects(createGraphicObjects()),
+    _isFixed(block.isFixed())
 {
 }
 
@@ -30,6 +32,11 @@ const std::array<std::shared_ptr<GraphicObject>, 6> &
 GraphicBlock::graphicObjects() const
 {
     return _graphicObjects;
+}
+
+const bool &GraphicBlock::isFixed() const
+{
+    return _isFixed;
 }
 
 std::array<std::shared_ptr<GraphicObject>, 6>

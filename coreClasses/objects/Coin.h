@@ -18,7 +18,6 @@
 class Coin : public Bonus {
 public:
     Coin();
-    Object::CategoryOfObjects getCategory() const override;
 
 private:
 

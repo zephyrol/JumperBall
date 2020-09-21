@@ -23,9 +23,9 @@ public:
 private:
     const Object& _object;
     bool _isGotten;
-    JBTypes::timePointMs _timeOfCreation;
+    const JBTypes::timePointMs& _timeOfCreation;
     JBTypes::timePointMs _timeOfObtaining;
-    Object::CategoryOfObjects _categoryOfObject;
+    const Object::CategoryOfObjects& _categoryOfObject;
 
 };
 

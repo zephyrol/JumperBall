@@ -13,7 +13,9 @@
 
 #include "Bonus.h"
 
-Bonus::Bonus( unsigned int value): 
+Bonus::Bonus( const Object::CategoryOfObjects& category,
+              unsigned int value):
+Object(category),
 _value(value)
 {
 }

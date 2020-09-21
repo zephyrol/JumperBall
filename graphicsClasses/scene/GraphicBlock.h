@@ -12,11 +12,13 @@ public:
     const std::array<float,9>& localTransform() const;
     const Block& block() const;
     const std::array<std::shared_ptr<GraphicObject>, 6>& graphicObjects() const;
+    const bool& isFixed() const;
 
 private:
     const Block&        _block;
     std::array<float,9> _localTransform;
     std::array<std::shared_ptr<GraphicObject>, 6> _graphicObjects;
+    const bool&         _isFixed;
 
     std::array<std::shared_ptr<GraphicObject>, 6> createGraphicObjects() const;
 };

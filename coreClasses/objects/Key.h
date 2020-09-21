@@ -18,10 +18,8 @@
 class Key : public Object{
 public:
     Key();
-    Object::CategoryOfObjects getCategory() const override;
 
 private:
-
 };
 
 #endif /* KEY_H */

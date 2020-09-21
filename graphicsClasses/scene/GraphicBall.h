@@ -26,7 +26,6 @@ public:
     float                         jumpingPosX()                           const;
     float                         fallingPosX()                           const;
     const JBTypes::vec3f&         lookTowardsAsVector()                   const;
-    const Ball&                   ball() const;
 
 private:
 

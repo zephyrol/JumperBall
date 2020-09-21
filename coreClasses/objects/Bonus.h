@@ -17,7 +17,7 @@
 
 class Bonus : public Object{
 public:
-    Bonus( unsigned int value);
+    Bonus(const CategoryOfObjects &category, unsigned int value);
     
     unsigned int value() const;
 

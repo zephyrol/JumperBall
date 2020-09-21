@@ -14,11 +14,8 @@
 #include "Key.h"
 
 Key::Key( ) :
-Object()
+Object(Object::CategoryOfObjects::Key)
 {
 }
 
-Object::CategoryOfObjects Key::getCategory() const {
-    return Object::CategoryOfObjects::Key;
-}
 

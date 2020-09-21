@@ -13,19 +13,12 @@
 
 #include "Block.h"
 
-Block::Block(bool hasInteraction):
+Block::Block(bool hasInteraction, bool isFixed):
   _localTransform {0.f,0.f,0.f,0.f,0.f,0.f,1.f,1.f,1.f},
   _objects {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr},
   _hasInteraction(hasInteraction),
-  _hasObjects(false)
-{
-}
-
-Block::Block(const std::array<float,9>& localTransform, bool hasInteraction):
-  _localTransform(localTransform),
-  _objects {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr},
-  _hasInteraction(hasInteraction),
-  _hasObjects(false)
+  _hasObjects(false),
+  _isFixed(isFixed)
 {
 }
 
@@ -103,6 +96,11 @@ void Block::catchObject( const std::array<unsigned int, 3>& blockPosition,
             object->catchingTest(objectPos, entityPosition, radiusEntity);
         }
     }
+}
+
+const bool& Block::isFixed() const
+{
+   return _isFixed;
 }
 
 JBTypes::vec3f Block::objectPosition(

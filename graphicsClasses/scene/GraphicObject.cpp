@@ -19,9 +19,7 @@ GraphicObject::GraphicObject(const Object& object):
 void GraphicObject::update()
 {
    _isGotten = _object.isGotten();
-   _timeOfCreation = _object.timeOfCreation();
    _timeOfObtaining = _object.timeOfObtaining();
-   _categoryOfObject = _object.getCategory();
 }
 
 bool GraphicObject::isGotten() const

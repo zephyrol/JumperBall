@@ -14,10 +14,6 @@
 #include "Clock.h"
 
 Clock::Clock() :
-Object () 
+Object ( Object::CategoryOfObjects::Clock)
 {
-}
-
-Object::CategoryOfObjects Clock::getCategory() const{
-    return Object::CategoryOfObjects::Clock;
 }

@@ -79,13 +79,14 @@ vecMeshComponent_sptr MeshGenerator::genBlock
                                   position.at(2)};
     const glm::mat4 transform (glm::translate(glmPosition));
 
-    std::shared_ptr<BlockAnimation> blockAnim =
-            std::make_shared<BlockAnimation>(*block);
-    MeshComponent_sptr component = std::make_shared<MeshComponent>
+    const std::shared_ptr<BlockAnimation> blockAnim = (!block->isFixed())
+            ? std::make_shared<BlockAnimation>(*block)
+            : nullptr;
+    const MeshComponent_sptr component = std::make_shared<MeshComponent>
         (std::make_shared<Cube> (*shape,transform), blockAnim);
     components.push_back(component);
 
-    vecMeshComponent_sptr sharpsComponents =
+    const vecMeshComponent_sptr sharpsComponents =
         genSharps(*block,blockType, glmPosition);
     for(MeshComponent_sptr sp : sharpsComponents) {
         components.push_back(std::move(sp));
@@ -99,7 +100,7 @@ vecMeshComponent_sptr MeshGenerator::genBlock
 
 
     for (size_t i = 0; i < Block::objectsNumber ; ++i) {
-        std::shared_ptr<const GraphicObject> object =
+        const std::shared_ptr<const GraphicObject> object =
                 block->graphicObjects().at(i);
         if (object) {
             const JBTypes::Dir dir =

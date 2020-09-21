@@ -264,18 +264,14 @@ void SceneRendering::update(){
     //Update meshes and uniform values using multithreading
     _meshMapUpdate.runTasks();
     _meshBallUpdate.runTasks();
-    _uniformUpdate.runTasks();
     _meshStarUpdate.runTasks();
+    _uniformUpdate.runTasks();
 
     //Wait the end of updates
     _meshStarUpdate.waitTasks();
     _meshBallUpdate.waitTasks();
-    _uniformUpdate.waitTasks();
     _meshMapUpdate.waitTasks();
-    /*_meshMap.update();
-    _meshBall.update();
-    updateUniform();
-    _meshStar.update();*/
+    _uniformUpdate.waitTasks();
 }
 
 const std::string SceneRendering::vsshaderMap = "shaders/phongVs.vs";

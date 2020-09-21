@@ -14,7 +14,7 @@
 #include "BrittleBlock.h"
 
 BrittleBlock::BrittleBlock():
-  Block(true),
+  Block(true,false),
   _stillThere(true),
   _isGoingToBreak(false),
   _collisionTime(),
