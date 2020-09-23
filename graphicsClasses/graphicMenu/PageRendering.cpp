@@ -13,7 +13,6 @@ _labelRenderingsUpdate( [this](size_t renderingLabelNumber){
     _labelRenderings.at(renderingLabelNumber)->update(_page.localPosY());
 }, _labelRenderings.size())
 {
-    std::cout << "viens de creer les" << _labelRenderings.size() <<" threads pour la page" << std::endl;
 }
 
 void PageRendering::update()

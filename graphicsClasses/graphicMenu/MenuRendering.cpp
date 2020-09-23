@@ -21,7 +21,6 @@ std::map<CstPage_sptr, PageRendering_sptr> MenuRendering::createPageRenderings()
 {
     std::map<CstPage_sptr, PageRendering_sptr> pageRenderings;
     for ( const CstPage_sptr& page: _menu.pages()) {
-        std::cout << "nombre de pages :"  << _menu.pages().size() << std::endl;
         PageRendering_sptr pageRendering =
                 std::make_shared<PageRendering>(*page,_menu.maxHeight(),
                                                 _spFont,_spBox);
