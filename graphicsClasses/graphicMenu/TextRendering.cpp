@@ -14,11 +14,12 @@
 #include "TextRendering.h"
 #include "ShaderProgram.h"
 
-TextRendering::TextRendering(const Label &label , float maxHeight):
+TextRendering::TextRendering(const Label &label,
+                             float maxHeight,
+                             const ShaderProgram &spFont):
     LabelRendering(label),
     _displayQuad(),
-    _spFont(Shader (GL_VERTEX_SHADER,   vsshaderFont),
-            Shader (GL_FRAGMENT_SHADER, fsshaderFont)),
+    _spFont(spFont),
     _charactersTransforms(label.message().size())
 {
     updateCharacters(label,maxHeight);
@@ -172,7 +173,3 @@ FT_Library TextRendering::ftLib;
 FT_Face TextRendering::fontFace;
 
 std::map<unsigned char, TextRendering::Character> TextRendering::alphabet{};
-
-const std::string TextRendering::vsshaderFont = "shaders/fontVs.vs";
-const std::string TextRendering::fsshaderFont = "shaders/fontFs.fs";
-

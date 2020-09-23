@@ -2,8 +2,12 @@
 #include "TextRendering.h"
 #include "BoxRendering.h"
 
-PageRendering::PageRendering(const Page &page, float maxHeight):
+PageRendering::PageRendering(const Page &page, float maxHeight,
+                  const ShaderProgram& spFont,
+                  const ShaderProgram& spBox):
 _page(page),
+_spFont(spFont),
+_spBox(spBox),
 _labelRenderings(createLabelRenderings(page,maxHeight)),
 _labelRenderingsUpdate( [this](size_t renderingLabelNumber){
     _labelRenderings.at(renderingLabelNumber)->update(_page.localPosY());
@@ -37,7 +41,9 @@ vecLabelRendering_sptr PageRendering::createLabelRenderings(
             case Page::TypeOfLabel::Object :
             break;
             case Page::TypeOfLabel::Message:
-            labelRendering = std::make_shared<TextRendering>(*cstLabel, maxHeight);
+            labelRendering = std::make_shared<TextRendering>(*cstLabel,
+                                                             maxHeight,
+                                                             _spFont);
             break;
             case Page::TypeOfLabel::Switch:
             break;
@@ -45,7 +51,8 @@ vecLabelRendering_sptr PageRendering::createLabelRenderings(
             labelRendering = std::make_shared<BoxRendering>(
                         *cstLabel,
                         glm::vec3(0.f,0.f,0.f),
-                        glm::vec3(0.f,0.f,0.f));
+                        glm::vec3(0.f,0.f,0.f),
+                        _spBox);
             break;
             default :
             break;

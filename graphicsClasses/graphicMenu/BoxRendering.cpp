@@ -14,12 +14,13 @@
 #include "BoxRendering.h"
 #include "ShaderProgram.h"
 
-BoxRendering::BoxRendering(const Label &label, const glm::vec3& color1,
-                           const glm::vec3& color2):
+BoxRendering::BoxRendering(const Label &label,
+                           const glm::vec3& color1,
+                           const glm::vec3& color2,
+                           const ShaderProgram& spBox):
     LabelRendering(label),
     _boxQuad(color1, color2),
-    _spBox( Shader (GL_VERTEX_SHADER,   vsshaderBox),
-            Shader (GL_FRAGMENT_SHADER, fsshaderBox)),
+    _spBox(spBox),
     _transformCharacter(1.f)
 {
 }
@@ -50,6 +51,4 @@ void BoxRendering::update(float offset) {
     _transformCharacter = biasMatrix * translate * scaleMatrix;
 }
 
-const std::string BoxRendering::vsshaderBox = "shaders/boxVs.vs";
-const std::string BoxRendering::fsshaderBox = "shaders/boxFs.fs";
 

@@ -8,7 +8,7 @@
 #ifndef LABELRENDERING_H
 #define LABELRENDERING_H
 #include <gameMenu/Label.h>
-#include "Utility.h"
+#include "ShaderProgram.h"
 
 class LabelRendering;
 using LabelRendering_sptr = std::shared_ptr<LabelRendering>;

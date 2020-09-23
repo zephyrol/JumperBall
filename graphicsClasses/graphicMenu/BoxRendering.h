@@ -28,18 +28,16 @@ class BoxRendering : public LabelRendering
 public:
     BoxRendering             (const Label& label,
                               const glm::vec3& color1,
-                              const glm::vec3& color2);
+                              const glm::vec3& color2,
+                              const ShaderProgram& spBox);
 
     void                     render() const override;
     void                     update(float offset) override;
  private:
     const Quad               _boxQuad;
-
-    const ShaderProgram      _spBox;
+    const ShaderProgram& _spBox;
     glm::mat4                _transformCharacter;
 
-    static const std::string vsshaderBox;
-    static const std::string fsshaderBox;
 
 };
 
