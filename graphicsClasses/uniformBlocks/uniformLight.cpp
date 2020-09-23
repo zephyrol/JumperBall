@@ -17,16 +17,16 @@
 
 UniformLight::UniformLight(const std::string& blockName,
                            const ShaderProgram& shaderProgram,
-                           const glm::vec3& positionLight,
+                           const glm::vec3& directionLight,
                            const glm::vec3& ambientLightIntensity,
                            const glm::vec3& diffuseLightIntensity,
                            const glm::vec3& specularLightIntensity) :
               UniformBlock (blockName, shaderProgram,
-                            { "positionLight",
+                            { "directionLight",
                               "ambientLightIntensity",
                               "diffuseLightIntensity",
                               "specularLightIntensity" }),
-              _positionLight(positionLight),
+              _directionLight(directionLight),
               _ambientLightIntensity(ambientLightIntensity),
               _diffuseLightIntensity(diffuseLightIntensity),
               _specularLightIntensity(specularLightIntensity),
@@ -34,8 +34,8 @@ UniformLight::UniformLight(const std::string& blockName,
 {
 }
 
-void UniformLight::positionLight(const glm::vec3& posLight) {
-  _positionLight = posLight;
+void UniformLight::directionLight(const glm::vec3& directionLight) {
+  _directionLight = directionLight;
 }
 
 void UniformLight::ambientLightIntensity(const glm::vec3& ambLightIntensity) {
@@ -58,7 +58,7 @@ const std::vector<GLbyte> &UniformLight::dataBuffer() const
 void UniformLight::fillDataBuffer(std::vector<GLbyte> &dataBuffer) const
 {
     memcpy      ( dataBuffer.data() + variablesOffsets().at(0),
-                  &_positionLight, sizeVec3f) ;
+                  &_directionLight, sizeVec3f) ;
     memcpy      ( dataBuffer.data() + variablesOffsets().at(1),
                   &_ambientLightIntensity, sizeVec3f) ;
     memcpy      ( dataBuffer.data() + variablesOffsets().at(2),

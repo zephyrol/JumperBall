@@ -208,7 +208,7 @@ void SceneRendering::updateUniform()
         glm::normalize((star.centralPosition() - center)) * halfBoundingBoxSize;
 
     const JBTypes::vec3f& positionBall = ball.get3DPosition();
-    _light.positionLight(star.centralPosition());
+    _light.directionLight(glm::normalize(center - star.centralPosition()));
 
     _uniformMatrix4["VPStar"] =
     glm::mat4(glm::ortho(-halfBoundingBoxSize,

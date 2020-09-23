@@ -1,25 +1,21 @@
 #version 330 core
 
-uniform vec3  positionCamera;
 uniform sampler2D depthTexture;
 
 uniform mat4  VP;
 uniform mat4  VPStar;
 
 uniform light {
-              vec3  positionLight;
+              vec3  directionLight; 
               vec3  ambientLightIntensity;
               vec3  diffuseLightIntensity;
               vec3  specularLightIntensity;
               };
 
 uniform float burningCoeff;
-
-
 in vec3   fs_vertexColor;
-in vec3   fs_vertexNormal;
-in vec3   fs_vertexPositionWorld;
 in vec4   fs_vertexDepthMapSpace;
+in vec3   fs_vertexDiffuseSpecular;
 
 out vec4  pixelColor;
 
@@ -51,24 +47,8 @@ void main() {
         ((1.f - burningCoeff) * fs_vertexColor + (burningCoeff) * fireEffet);
     
     if (!inShadow) {
-        vec3 toLight            = normalize(positionLight 
-                                              - fs_vertexPositionWorld);
-        vec3 toCamera           = normalize(positionCamera 
-                                              - fs_vertexPositionWorld);
 
-        vec3 reflection         = -toLight + 2.f * 
-                                  ( dot (toLight, fs_vertexNormal)) 
-                                  * fs_vertexNormal;
-
-        reflection              = normalize(reflection);
-
-        vec3 diffuseComponent   = diffuseLightIntensity *
-                                  max(0.f,dot(toLight,fs_vertexNormal));
-        
-        vec3 specularComponent  = specularLightIntensity *
-                                  pow(max(0.f,dot(reflection,toCamera)),20.f);
-
-        composition             += diffuseComponent + specularComponent;
+        composition             += fs_vertexDiffuseSpecular;
     }
     pixelColor = vec4(composition,1.f);
 

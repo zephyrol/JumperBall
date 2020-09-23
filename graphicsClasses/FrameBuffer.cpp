@@ -62,10 +62,9 @@ _resolutionY(resolutionY)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 
-    GLenum drawBuffer;
     glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,
                             GL_TEXTURE_2D, _renderTexture, mipmapLevel);
-    drawBuffer = GL_COLOR_ATTACHMENT0;
+    const GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
     
     if (hasDepthBuffer){
         glGenRenderbuffers(1,&_depthBuffer);
