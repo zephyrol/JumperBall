@@ -92,7 +92,9 @@ private:
     std::shared_ptr<MenuRendering> _menuRendering;
 
     ParallelTask<void>             _updatingScene;
+    ParallelTask<void>             _updatingSceneRendering;
     ParallelTask<void>             _updatingMenu;
+    ParallelTask<void>             _updatingMenuRendering;
 
 };
 

@@ -115,7 +115,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
             "Store");
     std::shared_ptr<const MessageLabel> label4Page1 =
         std::make_shared<const MessageLabel> (
-            0.4f, 0.05f,
+            factor * 0.4f, 0.05f,
             JBTypes::vec2f{0.5f,0.2f},
             "Exit");
 

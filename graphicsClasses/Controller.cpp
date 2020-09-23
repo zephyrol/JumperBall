@@ -10,7 +10,7 @@
 
 Controller::Controller():
 _player(),
-_menu(Menu::getJumperBallMenu(1,1.f)),
+_menu(Menu::getJumperBallMenu(1,1.f/3.f)),
 _buttonsStatuts{
     { Controller::Button::Up,       Controller::Status::Released },
     { Controller::Button::Down,     Controller::Status::Released },
@@ -50,6 +50,9 @@ _updatingScene([this](size_t) {
         }
     }
 }),
+_updatingSceneRendering([this](size_t) {
+    _sceneRendering->update();
+}),
 _updatingMenu([this](size_t) {
     if (_player.statut() == Player::Statut::INMENU) {
         _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
@@ -59,6 +62,9 @@ _updatingMenu([this](size_t) {
             _menu->failurePageAsCurrentPage();
         }
     }
+}),
+_updatingMenuRendering([this](size_t) {
+    _menuRendering->update();
 })
 {
 }
@@ -109,14 +115,20 @@ void Controller::interactionMouse(const Status& status, float posX, float posY){
 
 void Controller::runController()
 {
-    _sceneRendering->update();
+    // Rendering updating
+    _updatingSceneRendering.runTasks();
     if (_player.statut() == Player::Statut::INMENU) {
-    _menuRendering->update();
+    _updatingMenuRendering.runTasks();
+    _updatingMenuRendering.waitTasks();
     }
+    _updatingSceneRendering.waitTasks();
+
+    // Scene and Menu updating
     _updatingScene.runTasks();
     _updatingMenu.runTasks();
-    _sceneRendering->render();
 
+    // Launch rendering
+    _sceneRendering->render();
     if (_player.statut() == Player::Statut::INMENU) {
     _menuRendering->render();
     }
@@ -147,57 +159,7 @@ _star = std::make_shared<Star>(
 
 _sceneRendering = std::make_shared<SceneRendering>
         (*_map,*_ball,*_star,*_camera);
-
-//We need to reset the frames
 }
-
-/*void Controller::updateRenderingEngine()
-{
-    // If no frame is already computed, we don't use async
-    if (_currentFrame == CurrentFrame::None) {
-        currentRenderingEngine()->update();
-        otherRenderingEngine()->update();
-        std::cout <<"both engine are updated" << std::endl;
-        _updatingRenderingEngine = std::async([](){});
-    } else {
-        _updatingRenderingEngine = std::async(std::launch::async,[this](){
-            currentRenderingEngine()->update();});
-    }
-}
-
-void Controller::updateMenuRendering()
-{
-    if (_currentFrame == CurrentFrame::None) {
-        currentMenuRendering()->update();
-        otherMenuRendering()->update();
-        std::cout <<"both menu are updated" << std::endl;
-        _updatingMenuRendering= std::async([](){});
-    } else {
-        _updatingMenuRendering = std::async(std::launch::async,[this](){
-            currentMenuRendering()->update();});
-    }
-}
-
-void Controller::renderRenderingEngine() const
-{
-    otherRenderingEngine()->render();
-}
-
-void Controller::renderMenuRendering() const
-{
-    otherMenuRendering()->render();
-}
-
-void Controller::skipUpdateRenderingEngine()
-{
-    _updatingRenderingEngine = std::async([](){});
-}
-
-void Controller::skipUpdateMenuRendering()
-{
-    _updatingMenuRendering = std::async([](){});
-}*/
-
 void Controller::manageValidateMouse()
 {
     if ( _player.statut() == Player::Statut::INGAME && _ball) {
