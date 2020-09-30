@@ -56,10 +56,6 @@ private:
     void                    updateComponents();
     virtual void                    updateFrame();
     //----------METHODS-------------//
-    //void                    update(const Ball& base);
-    //void                    update(const Map&  base);
-    //void                    update(const Quad& base);
-    //void                    update(const Star& base);
     static vecMeshComponent_sptr
                             getAnimatedComponents(
                                               vecMeshComponent_sptr components);
@@ -79,24 +75,7 @@ _componentsMapComputing( [this](size_t componentNumber) -> void {
     component->animation()->updateTrans();
 }, _animatedComponents.size())
 {
-
 }
-
-/*
-template<typename BaseType, typename FrameType>
-void Mesh<BaseType,FrameType>::update() {
-    update(_base);
-}*/
-
-/*template<typename BaseType, typename FrameType>
-void Mesh<BaseType,FrameType>::update(const Ball& base) {
-    const JBTypes::vec3f positionBall = base.get3DPosition();
-    _world = glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
-                            positionBall.y ,positionBall.z));
-
-    if (_components.size() > 0)
-        _components.at(0)->animation()->updateTrans();
-}*/
 
 template<typename BaseType, typename FrameType>
 void Mesh<BaseType,FrameType>::update() {
@@ -104,15 +83,6 @@ void Mesh<BaseType,FrameType>::update() {
     updateComponents();
     updateWorld();
 }
-
-/*template<typename BaseType, typename FrameType>
-void Mesh<BaseType,FrameType>::update(const Quad&) {
-}*/
-
-/*template<typename BaseType, typename FrameType>
-void Mesh<BaseType,FrameType>::update(const Star& base) {
-    _world = base.transform();
-}*/
 
 template<typename BaseType, typename FrameType>
 vecMeshComponent_sptr Mesh<BaseType,FrameType>::getAnimatedComponents
@@ -191,10 +161,5 @@ void Mesh<BaseType,FrameType>::updateComponents()
     _componentsMapComputing.waitTasks();
 }
 
-/*template<typename BaseType, typename FrameType>
-inline const T& Mesh<BaseType,FrameType>::base() const
-{
-    return _base;
-}*/
 
 #endif /* MESH_H */

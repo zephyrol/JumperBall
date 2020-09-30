@@ -103,7 +103,6 @@ void SceneRendering::phongEffect( GLuint depthTexture) const {
 
     // ------ Star ------
     const GraphicStar& star = _meshStar.getInstanceFrame();
-    //const Star& star = _meshStar.getBase();
     _spStar.use();
     _spStar.bindUniform("radiusInside",  star.radiusInside());
     _spStar.bindUniform("radiusOutside", star.radiusOutside());
@@ -265,13 +264,12 @@ void SceneRendering::update(){
     _meshMapUpdate.runTasks();
     _meshBallUpdate.runTasks();
     _meshStarUpdate.runTasks();
-    _uniformUpdate.runTasks();
-
     //Wait the end of updates
     _meshStarUpdate.waitTasks();
     _meshBallUpdate.waitTasks();
     _meshMapUpdate.waitTasks();
-    _uniformUpdate.waitTasks();
+    
+    updateUniform();
 }
 
 const std::string SceneRendering::vsshaderMap = "shaders/phongVs.vs";

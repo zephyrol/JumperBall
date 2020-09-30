@@ -116,13 +116,14 @@ void Controller::interactionMouse(const Status& status, float posX, float posY){
 void Controller::runController()
 {
     // Rendering updating
-    _updatingSceneRendering.runTasks();
     if (_player.statut() == Player::Statut::INMENU) {
-    _updatingMenuRendering.runTasks();
-    _updatingMenuRendering.waitTasks();
+        _updatingMenuRendering.runTasks();
     }
-    _updatingSceneRendering.waitTasks();
-
+    _sceneRendering->update();
+    
+    if (_player.statut() == Player::Statut::INMENU) {
+        _updatingMenuRendering.waitTasks();
+    }
     // Scene and Menu updating
     _updatingScene.runTasks();
     _updatingMenu.runTasks();
