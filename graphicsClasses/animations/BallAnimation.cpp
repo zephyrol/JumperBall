@@ -21,25 +21,25 @@ BallAnimation::BallAnimation(const GraphicBall &ball):
     _translationBeforeMovement(0.f),
     _scale(1.f),
     _rotation(1.f),
-    //_referenceTimePointAction(ball.getTimeActionMs()),
-    //_referenceTimePointStateOfLife(ball.getTimeStateOfLifeMs()),
     _referenceState(ball.state()),
-    _referenceStateOfLife(ball.stateOfLife())
+    _referenceTimePointAction(ball.getTimeAction())
 {
-    
 }
 
 void BallAnimation::animationAlive() {
 
 
-    if ( _ball.state() == Ball::State::Staying) {
-        constexpr float durationAnimation = 0.7f; 
-        constexpr float maxCrushing       = 0.2f; 
+    const float timeSecondsSinceAction =
+    JBTypesMethods::getTimeSecondsSinceTimePoint(_referenceTimePointAction);
 
-        const float angleInCosinusFunc    = _ball.getTimeSecondsSinceAction() *
+    if (_ball.state() == Ball::State::Staying) {
+        constexpr float durationAnimation = 0.7f;
+        constexpr float maxCrushing       = 0.2f;
+        
+        const float angleInCosinusFunc    =  timeSecondsSinceAction*
                                         2.f * static_cast<float>(M_PI) /
-                                        durationAnimation; 
-                                       
+                                        durationAnimation;
+
         //-cos(0) = -1; 
         const float crushingCoefficient   = (-cosf(angleInCosinusFunc) * 
                                             maxCrushing)/2.f + 
@@ -65,15 +65,13 @@ void BallAnimation::animationAlive() {
         _translationBeforeMovement  = translationVector;
 
         _rotationBeforeMovement     = _rotation; 
-    }
-    else {
+    } else {
         constexpr float sizeBlock = 1.f;
         float t;
         if (_ball.state() == Ball::State::Moving ||
             _ball.state() == Ball::State::TurningLeft ||
             _ball.state() == Ball::State::TurningRight )
-            t = _ball.getTimeSecondsSinceAction()/
-                    Ball::timeToGetNextBlock;
+            t = timeSecondsSinceAction/ Ball::timeToGetNextBlock;
         else if (_ball.state() == Ball::State::Jumping) {
             t = _ball.jumpingPosX() ;
         }
@@ -98,61 +96,53 @@ void BallAnimation::animationAlive() {
             _ball.state() == Ball::State::TurningRight){
             _rotationBeforeMovement = _rotation; 
         } else {
-            _rotation    = rotationMatrix     * _rotationBeforeMovement;
+            _rotation    = rotationMatrix * _rotationBeforeMovement;
         }
     
         if (t > 1.f ) t = 1.f;
         if (t < 0.f)  t = fabs(t);
         
-        _scale        = glm::scale  ( 
-        _scaleBeforeMovement + t * ( glm::vec3(1.f) - _scaleBeforeMovement)
-                                    );
-        _translation  = glm::translate  ( _translationBeforeMovement * (1.f-t));
-
+        _scale = glm::scale ( _scaleBeforeMovement +
+                             t * ( glm::vec3(1.f) -
+                                  _scaleBeforeMovement));
+        _translation = glm::translate  ( _translationBeforeMovement * (1.f-t));
     }
 
 }
 
 void BallAnimation::animationBursting() {
-
-        constexpr float durationBursting      = 0.07f; 
-        constexpr float radiusScalarBursting  = 2.5f;
-
-        const float t = _ball.getTimeSecondsSinceStateOfLife() / 
-                          durationBursting ;
-
-        float scaleBursting;
-
-        if (t > 1.f) scaleBursting = 0.f;
-        else scaleBursting  = (1.f-t) + radiusScalarBursting * t;
-
-        const glm::vec3 scaleVec3   =  glm::vec3(scaleBursting);
-        const glm::mat4 scaleMatrix = glm::scale(scaleVec3);
-        
-        _scale                      = scaleMatrix;
-        _scaleBeforeMovement        = scaleVec3;
-
+    
+    constexpr float durationBursting      = 0.07f;
+    constexpr float radiusScalarBursting  = 2.5f;
+    const float timeSecondsSinceStateOfLife =
+    JBTypesMethods::getTimeSecondsSinceTimePoint(
+                                                 _ball.getTimeStateOfLife());
+    
+    const float t = timeSecondsSinceStateOfLife /
+    durationBursting ;
+    
+    const float scaleBursting = (t > 1.f)
+    ? 0.f
+    : (1.f-t) + radiusScalarBursting * t;
+    
+    const glm::vec3 scaleVec3   = glm::vec3(scaleBursting);
+    const glm::mat4 scaleMatrix = glm::scale(scaleVec3);
+    
+    _scale                      = scaleMatrix;
+    _scaleBeforeMovement        = scaleVec3;
+    
 }
 
 void BallAnimation::updateTrans() {
     
-    /*if (_ball.getTimeActionMs() > _referenceTimePointAction) {
-        _referenceTimePointAction = _ball.getTimeActionMs();
+    if (_ball.getTimeAction() > _referenceTimePointAction) {
+        _referenceTimePointAction = _ball.getTimeAction();
         if (_ball.state() == _referenceState) {
         _scaleBeforeMovement        = glm::vec3(1.f,1.f,1.f);
         _translationBeforeMovement  = glm::vec3(0.f,0.f,0.f);
         }
         else _referenceState = _ball.state();
     }
-
-    if (_ball.getTimeStateOfLifeMs() > _referenceTimePointStateOfLife) {
-        _referenceTimePointStateOfLife = _ball.getTimeActionMs();
-        if ( _ball.stateOfLife() == _referenceStateOfLife) {
-        _scaleBeforeMovement        = glm::vec3(1.f,1.f,1.f);
-        _translationBeforeMovement  = glm::vec3(0.f,0.f,0.f);
-        }
-        else _referenceStateOfLife = _ball.stateOfLife();
-    }*/
 
     if (_ball.stateOfLife() == Ball::StateOfLife::Normal || _ball.stateOfLife()
              == Ball::StateOfLife::Burning || _ball.stateOfLife() == 

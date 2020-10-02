@@ -24,7 +24,7 @@ public:
     
     //--CONSTRUCTORS & DESTRUCTORS--//
     Animation                   ();
-    virtual ~Animation          ()                                    = default;
+    virtual ~Animation          ()                        = default;
 
     //-------CONST METHODS----------//
     glm::mat4           model()                               const;
@@ -32,7 +32,7 @@ public:
     glm::mat4           translation()                         const;
 
     //----------METHODS------------//
-    virtual void                updateTrans()                               = 0;
+    virtual void                updateTrans()                   = 0;
 
     //--------ATTRIBUTES-----------//
     glm::mat4                   _model;

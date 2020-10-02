@@ -11,8 +11,8 @@ GraphicBall::GraphicBall(const Ball& ball):
     _position(ball.get3DPosition()),
     _burnCoefficient(ball.burnCoefficient()),
     _currentSideAsVector(ball.currentSideAsVector()),
-    _timeSecondsSinceAction(ball.getTimeSecondsSinceAction()),
-    _timeSecondsSinceStateOfLife(ball.getTimeSecondsSinceStateOfLife()),
+    _timeAction(ball.getTimeActionMs()),
+    _timeStateOfLife(ball.getTimeStateOfLifeMs()),
     _state(ball.state()),
     _stateOfLife(ball.stateOfLife()),
     _radius(ball.getRadius()),
@@ -32,8 +32,8 @@ void GraphicBall::update()
     _position = _ball.get3DPosition();
     _burnCoefficient = _ball.burnCoefficient();
     _currentSideAsVector = _ball.currentSideAsVector();
-    _timeSecondsSinceAction = _ball.getTimeSecondsSinceAction();
-    _timeSecondsSinceStateOfLife = _ball.getTimeSecondsSinceStateOfLife();
+    _timeAction = _ball.getTimeActionMs();
+    _timeStateOfLife = _ball.getTimeStateOfLifeMs();
     _state = _ball.state();
     _stateOfLife = _ball.stateOfLife();
     _radius = _ball.getRadius();
@@ -61,14 +61,14 @@ const JBTypes::vec3f &GraphicBall::currentSideAsVector() const
     return _currentSideAsVector;
 }
 
-float GraphicBall::getTimeSecondsSinceStateOfLife() const
+const JBTypes::timePointMs& GraphicBall::getTimeStateOfLife() const
 {
-    return _timeSecondsSinceStateOfLife;
+    return _timeStateOfLife;
 }
 
-float GraphicBall::getTimeSecondsSinceAction() const noexcept
+const JBTypes::timePointMs& GraphicBall::getTimeAction() const noexcept
 {
-    return _timeSecondsSinceAction;
+    return _timeAction;
 }
 
 Ball::State GraphicBall::state() const

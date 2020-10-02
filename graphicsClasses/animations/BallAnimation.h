@@ -41,12 +41,8 @@ private:
     glm::mat4                     _scale;
     glm::mat4                     _rotation;
 
-    //JBTypes::timePointMs          _referenceTimePointAction;
-    //JBTypes::timePointMs          _referenceTimePointStateOfLife;
-
     Ball::State                   _referenceState;
-    Ball::StateOfLife             _referenceStateOfLife;
-
+    JBTypes::timePointMs          _referenceTimePointAction;
 };
 
 #endif /* BALLANIMATION_H */

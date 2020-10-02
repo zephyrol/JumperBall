@@ -18,8 +18,8 @@ public:
     const JBTypes::vec3f&         get3DPosition()                const noexcept;
     float                         burnCoefficient()                       const;
     const JBTypes::vec3f&         currentSideAsVector()                   const;
-    float                         getTimeSecondsSinceStateOfLife()        const;
-    float                         getTimeSecondsSinceAction()    const noexcept;
+    const JBTypes::timePointMs&   getTimeStateOfLife()        const;
+    const JBTypes::timePointMs&   getTimeAction()    const noexcept;
     Ball::State                   state()                                 const;
     Ball::StateOfLife             stateOfLife()                           const;
     float                         getRadius()                             const;
@@ -33,8 +33,8 @@ private:
     JBTypes::vec3f                _position;
     float                         _burnCoefficient;
     JBTypes::vec3f                _currentSideAsVector;
-    float                         _timeSecondsSinceAction;
-    float                         _timeSecondsSinceStateOfLife;
+    JBTypes::timePointMs          _timeAction;
+    JBTypes::timePointMs          _timeStateOfLife;
     Ball::State                   _state;
     Ball::StateOfLife             _stateOfLife;
     float                         _radius;
