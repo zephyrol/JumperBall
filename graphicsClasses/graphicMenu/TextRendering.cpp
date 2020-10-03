@@ -18,11 +18,18 @@ TextRendering::TextRendering(const Label &label,
                              float maxHeight,
                              const ShaderProgram &spFont):
     LabelRendering(label),
-    _displayQuad(),
     _spFont(spFont),
     _charactersTransforms(label.message().size())
 {
+    updateQuad();
     updateCharacters(label,maxHeight);
+}
+
+
+void TextRendering::updateQuad() {
+    if (!displayQuad) {
+        displayQuad = std::make_shared<const Quad>();
+    }
 }
 
 bool TextRendering::initFreeTypeAndFont() {
@@ -63,7 +70,7 @@ void TextRendering::clearFreeTypeRessources() {
 
 void TextRendering::render() const {
     _spFont.use();
-    _displayQuad.bind();
+    displayQuad->bind();
     const glm::vec3 textColor = _label.isActivated()
             ? glm::vec3(0.f,1.f,1.f)
             : glm::vec3(0.5f,0.5f,0.5f);
@@ -73,7 +80,7 @@ void TextRendering::render() const {
                                    alphabet.at(c).texture);
         _spFont.bindUniform("fontColor",textColor);
         _spFont.bindUniform("M",_charactersTransforms.at(i));
-        _displayQuad.draw();
+        displayQuad->draw();
     }
 }
 
@@ -113,7 +120,7 @@ void TextRendering::update(float offset) {
 
 void TextRendering::updateCharacters(const Label& label, float maxHeight)
 {
-    const FT_UInt height = Utility::windowResolutionY / maxHeight;
+    const FT_UInt height = Utility::windowResolutionY * maxHeight;
     FT_Set_Pixel_Sizes(fontFace,0,height);
     for (const char& character : label.message()) {
         if ( alphabet.find(character) == alphabet.end()){
@@ -173,3 +180,5 @@ FT_Library TextRendering::ftLib;
 FT_Face TextRendering::fontFace;
 
 std::map<unsigned char, TextRendering::Character> TextRendering::alphabet{};
+
+std::shared_ptr<const Quad> TextRendering::displayQuad = nullptr;

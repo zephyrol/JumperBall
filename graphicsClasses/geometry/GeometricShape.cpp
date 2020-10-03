@@ -13,8 +13,7 @@
 
 #include "GeometricShape.h"
 
-GeometricShape::GeometricShape(
-                               const std::vector<glm::vec3>& positions,
+GeometricShape::GeometricShape(const std::vector<glm::vec3>& positions,
                                const std::vector<glm::vec3>& normals,
                                const std::vector<glm::vec3>& colors,
                                const std::vector<glm::vec2>& uvCoords,

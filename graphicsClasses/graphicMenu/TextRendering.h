@@ -42,14 +42,15 @@ public:
 
 
 private:
-    const Quad                          _displayQuad;
     const ShaderProgram& _spFont;
     std::vector<glm::mat4> _charactersTransforms;
     static std::map<unsigned char, Character> alphabet;
 
     static void                         updateCharacters(const Label& label, float maxHeight);
+    static void                         updateQuad();
     static FT_Library                   ftLib;
     static FT_Face                      fontFace;
+    static std::shared_ptr<const Quad>  displayQuad;
 
 };
 
