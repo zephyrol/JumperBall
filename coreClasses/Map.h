@@ -127,6 +127,7 @@ private:
     // Multithreading
     ParallelTask<Block::Effect>           _blocksInteractions;
     ParallelTask<void>                    _objectsInteractions;
+
     JBTypes::Dir                          _dirBallInteractions;
     JBTypes::vec3f                        _posBallInteractions;
     float                                 _radiusInteractions;

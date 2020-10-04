@@ -75,7 +75,7 @@ void TextRendering::render() const {
             ? glm::vec3(0.f,1.f,1.f)
             : glm::vec3(0.5f,0.5f,0.5f);
     for (size_t i = 0; i < _label.message().size(); ++i) {
-        const char& c = _label.message().at(i);
+        const char c = _label.message().at(i);
         _spFont.bindUniformTexture("characterTexture", 0,
                                    alphabet.at(c).texture);
         _spFont.bindUniform("fontColor",textColor);
@@ -96,7 +96,7 @@ void TextRendering::update(float offset) {
 
     constexpr float biasScalar = 2.f; //To multiply the translation by 2
     for ( size_t i = 0; i < _label.message().size(); ++i){
-        const char& c = _label.message().at(i);
+        const char c = _label.message().at(i);
         const glm::vec3 scale = glm::vec3{pitch * alphabet.at(c).localScale.x,
                 _label.height() * alphabet.at(c).localScale.y ,0.f};
 

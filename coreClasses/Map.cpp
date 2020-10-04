@@ -241,6 +241,7 @@ Block::Effect Map::interaction( const JBTypes::Dir& ballDir,
     _posBallInteractions = posBall;
     _radiusInteractions = radius;
     _timeInteractions = JBTypesMethods::getTimePointMSNow();
+
     _blocksInteractions.runTasks();
     _objectsInteractions.runTasks();
 
