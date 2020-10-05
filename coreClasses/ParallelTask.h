@@ -197,12 +197,11 @@ template<typename T>
 ParallelTask<T>::~ParallelTask() {
     _endOfTasksIsRequested = true;
     for ( std::mutex& mutexRunningTasks: _mutexesRunningTasks ) {
-        //mutexRunningTasks.unlock();
-        //mutexRunningTasks = std::mutex();
-
+        std::unique_lock<std::mutex> lock(mutexRunningTasks, std::adopt_lock);
+        lock.unlock();
     }
     for ( auto& asyncTask : _asyncTasks) {
-        //asyncTask.wait();
+        asyncTask.wait();
     }
 }
 
