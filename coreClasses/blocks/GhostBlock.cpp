@@ -14,10 +14,16 @@
 #include "GhostBlock.h"
 
 GhostBlock::GhostBlock(float periodicity):
+Block(true,false),
 _periodicity(periodicity),
 _creationTime(JBTypesMethods::getTimePointMSNow()),
 _isThere(true)
 {
+}
+
+bool GhostBlock::stillExists() const
+{
+   return _isThere;
 }
 
 Block::Effect GhostBlock::interaction( const JBTypes::Dir& ,
@@ -26,12 +32,12 @@ Block::Effect GhostBlock::interaction( const JBTypes::Dir& ,
                                         const std::array<unsigned int, 3>& ) {
     const auto passedTime = currentTime - _creationTime;
     const float fPassedTime =
-        JBTypesMethods::getFloatFromDurationMS(passedTime);
+            JBTypesMethods::getFloatFromDurationMS(passedTime);
     if ( static_cast<int>(fPassedTime/_periodicity) % 2 == 0) {
         _isThere = true;
     } else {
         _isThere = false;
     }
-    
+
     return Block::Effect::Nothing;
 }

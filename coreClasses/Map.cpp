@@ -203,40 +203,6 @@ Block::Effect Map::interaction( const JBTypes::Dir& ballDir,
                                 const JBTypes::vec3f& posBall,
                                 float radius) {
     
-    /*Block::Effect finalEffect = Block::Effect::Nothing;
-    auto timeNow = JBTypesMethods::getTimePointMSNow();
-    std::vector<std::future<Block::Effect> > asyncInteractionResults {};
-    std::vector<std::future<void> > asyncObjectsResults {};
-
-    for (unsigned int i = 0 ; i < _blocksInfo.size(); ++i) {
-        //Blocks interaction
-         const std::shared_ptr<Block>& block =
-            getBlock(_blocksInfo.at(i).index);
-         if (block->hasInteraction()) {
-             asyncInteractionResults.push_back(std::async( &Block::interaction,
-                                    block, ballDir, timeNow, posBall,
-                                    getBlockCoords(_blocksInfo.at(i).index)));
-         }
-        //Objects interaction
-         if (block->hasObjects()) {
-             asyncObjectsResults.push_back(std::async( &Block::catchObject,
-                block, getBlockCoords(_blocksInfo.at(i).index),posBall,radius));
-         }
-    }
-
-
-    for (std::future<Block::Effect>& asyncInteractionResult :
-         asyncInteractionResults) {
-        asyncInteractionResult.wait();
-        Block::Effect effect = asyncInteractionResult.get();
-        if (effect != Block::Effect::Nothing) {
-            finalEffect = effect;
-        }
-    }
-    for (std::future<void>& asyncObjectResult: asyncObjectsResults) {
-        asyncObjectResult.wait();
-    }*/
-
     _dirBallInteractions = ballDir;
     _posBallInteractions = posBall;
     _radiusInteractions = radius;
@@ -377,6 +343,8 @@ Map::MapInfo Map::createMapInfo(std::ifstream& file)
                     case 6:
                         block = std::make_shared<JumpBlock>(specialParams);
                         break ;
+                    case 7:
+                        block = std::make_shared<GhostBlock>(); break;
                     default :
                         break;
                 }

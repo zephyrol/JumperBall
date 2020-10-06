@@ -64,6 +64,13 @@ vecMeshComponent_sptr MeshGenerator::genBlock
             commonShapes["brittleCube"] = std::make_shared<Cube>();
         }
         shape = commonShapes.at("brittleCube");
+    } else if (blockType == Map::BlockTypes::Ghost) {
+        if (commonShapes.find("ghostCube") ==
+            commonShapes.end()) {
+            commonShapes["ghostCube"] = std::make_shared<Cube>(
+                        Cube::ghostColorsCube);
+        }
+        shape = commonShapes.at("ghostCube");
     }
     else {
         if (commonShapes.find("basicCube" + strSidesInfo) ==

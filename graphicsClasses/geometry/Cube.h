@@ -37,7 +37,8 @@ public:
 
     static const std::vector<glm::vec3> iceColorsCube;
     static const std::vector<glm::vec3> fireColorsCube;
-    
+    static const std::vector<glm::vec3> ghostColorsCube;
+
 private:
 
     static const std::vector<glm::vec3> getBasicElements

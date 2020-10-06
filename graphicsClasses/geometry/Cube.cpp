@@ -199,6 +199,29 @@ Utility::GLfloatListToGlmVec3({
     0.f,0.8f*1.5f,0.8f*1.5f, 0.f,0.f,1.f*1.5f, 0.f,0.8f*1.5f,0.8f*1.5f
 });
 
+const std::vector<glm::vec3> Cube::ghostColorsCube =
+Utility::GLfloatListToGlmVec3({
+
+    //Face 1
+    0.8f*1.5f,0.f,0.8f*1.5f, 0.8f*1.5f,0.f,0.8f*1.5f, 0.3f,0.f,0.5f,
+    0.8f*1.5f,0.f,0.8f*1.5f, 0.3f,0.f,0.5f, 0.8f*1.5f,0.f,0.8f*1.5f,
+    //Face 2
+    0.3f,0.f,0.5f, 0.8f*1.5f,0.f,0.8f*1.5f, 0.8f*1.5f,0.f,0.8f*1.5f,
+    0.8f*1.5f,0.f,0.8f*1.5f, 0.3f,0.f,0.5f, 0.8f*1.5f,0.f,0.8f*1.5f,
+    //Face 6
+    0.3f,0.f,0.5f, 0.8f*1.5f,0.f,0.8f*1.5f, 0.8f*1.5f,0.f,0.8f*1.5f,
+    0.8f*1.5f,0.f,0.8f*1.5f, 0.3f,0.f,0.5f, 0.8f*1.5f,0.f,0.8f*1.5f,
+    //Face 5
+    0.8f*1.5f,0.f,0.8f*1.5f, 0.8f*1.5f,0.f,0.8f*1.5f, 0.3f,0.f,0.5f,
+    0.8f*1.5f,0.f,0.8f*1.5f, 0.3f,0.f,0.5f, 0.8f*1.5f,0.f,0.8f*1.5f,
+    //Face 4
+    0.8f*1.5f,0.f,0.8f*1.5f, 0.8f*1.5f,0.f,0.8f*1.5f, 0.3f,0.f,0.5f,
+    0.8f*1.5f,0.f,0.8f*1.5f, 0.3f,0.f,0.5f, 0.8f*1.5f,0.f,0.8f*1.5f,
+    //Face 3
+    0.3f,0.f,0.5f, 0.8f*1.5f,0.f,0.8f*1.5f, 0.8f*1.5f,0.f,0.8f*1.5f,
+    0.8f*1.5f,0.f,0.8f*1.5f, 0.3f,0.f,0.5f, 0.8f*1.5f,0.f,0.8f*1.5f
+});
+
 const std::vector<glm::vec3> Cube::fireColorsCube =
 Utility::GLfloatListToGlmVec3({
     //Face 1

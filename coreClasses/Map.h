@@ -21,6 +21,7 @@
 #include "blocks/SharpBlock.h"
 #include "blocks/BrittleBlock.h"
 #include "blocks/JumpBlock.h"
+#include "blocks/GhostBlock.h"
 #include "objects/Key.h"
 #include "objects/Coin.h"
 #include "objects/Clock.h"
