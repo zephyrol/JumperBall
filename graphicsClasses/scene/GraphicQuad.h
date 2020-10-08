@@ -9,7 +9,6 @@ public:
     void update();
 
 private:
-    const Quad& _quad;
 };
 
 #endif // GRAPHICQUAD_H

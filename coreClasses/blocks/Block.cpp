@@ -14,7 +14,7 @@
 #include "Block.h"
 
 Block::Block(bool hasInteraction, bool isFixed):
-  _localTransform {0.f,0.f,0.f,0.f,0.f,0.f,1.f,1.f,1.f},
+  _localTransform {0.f,0.f,0.f,1.f,1.f,1.f},
   _objects {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr},
   _hasInteraction(hasInteraction),
   _hasObjects(false),
@@ -37,7 +37,7 @@ Block::Effect Block::detectionEvent(const JBTypes::Dir&,
 }
 
 
-const std::array<float, 9>& Block::localTransform() const {
+const std::array<float, 6>& Block::localTransform() const {
     // 3 values for the translation, 3 for rotation, 3 for the scale
     return _localTransform;
 }

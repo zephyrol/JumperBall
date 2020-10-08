@@ -18,7 +18,7 @@ void GraphicBlock::update()
     }
 }
 
-const std::array<float, 9> &GraphicBlock::localTransform() const
+const std::array<float, 6> &GraphicBlock::localTransform() const
 {
    return _localTransform;
 }

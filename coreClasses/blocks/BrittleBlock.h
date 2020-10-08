@@ -38,9 +38,6 @@ public:
                                             ballDir,
                                     const JBTypes::timePointMs&
                                             currentTime)               override;
-    
-    virtual const std::array<float,9>&       
-                                  localTransform()               const override;
 
 private:
     bool                          _stillThere;

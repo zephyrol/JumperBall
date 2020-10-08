@@ -1,7 +1,6 @@
 #include "GraphicQuad.h"
 
-GraphicQuad::GraphicQuad(const Quad& quad):
-    _quad(quad)
+GraphicQuad::GraphicQuad(const Quad&)
 {
 
 }

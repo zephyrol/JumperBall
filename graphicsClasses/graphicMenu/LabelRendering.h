@@ -22,6 +22,7 @@ public:
     LabelRendering(const Label& label);
     virtual void update(float offset) = 0;
     virtual void render() const = 0;
+    virtual ~LabelRendering() = default;
 
 protected:
     const Label& _label;
@@ -29,9 +30,6 @@ protected:
 
 private:
     static constexpr float biasScalar = 2.f; //To multiply the translation by 2
-
-    glm::mat4 _transform;
-
 };
 
 #endif // LABELRENDERING_H

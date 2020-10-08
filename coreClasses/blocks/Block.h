@@ -50,7 +50,7 @@ public:
     //-------CONST METHODS----------//
     virtual std::array<bool,6>        faceInfo()                          const;
     virtual bool                      stillExists()                       const;
-    virtual const std::array<float,9>&       
+    virtual const std::array<float,6>&       
                                       localTransform()                    const;
     virtual const std::shared_ptr<const Object> object(size_t number)     const;
     virtual bool                      hasInteraction()                    const;
@@ -72,7 +72,7 @@ public:
 
 protected:
     //--------ATTRIBUTES-----------//
-    std::array<float,9>               _localTransform;
+    std::array<float,6>               _localTransform;
     std::array<std::shared_ptr<Object>,6> 
                                       _objects;
     const bool                        _hasInteraction;

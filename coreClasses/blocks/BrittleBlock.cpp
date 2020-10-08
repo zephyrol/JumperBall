@@ -93,8 +93,3 @@ Block::Effect BrittleBlock::detectionEvent(const JBTypes::Dir& ballDir,
     }
     return Effect::Nothing;
 }
-
-const std::array<float, 9>& BrittleBlock::localTransform() const{
-
-    return _localTransform;
-}

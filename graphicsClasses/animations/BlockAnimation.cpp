@@ -9,15 +9,18 @@
 BlockAnimation::BlockAnimation(const GraphicBlock &block):
     _block(block)
 {
-
 }
 
 void BlockAnimation::updateTrans()
 {
-    const std::array<float,9> transf = _block.localTransform();
+    const std::array<float,6> transf = _block.localTransform();
 
     // we use only translation for now
-    const glm::vec3 transVec { transf.at(0), transf.at(1), transf.at(2) };
+    const glm::vec3 transVec { transf.at(0), transf.at(1),
+        transf.at(2) };
+    const glm::vec3 scaleVec { transf.at(3), transf.at(4),
+        transf.at(5) };
     _translation = glm::translate(transVec);
-    _model = _translation;
+    _scaleRotation = glm::scale(scaleVec);
+    _model = _translation * _scaleRotation;
 }

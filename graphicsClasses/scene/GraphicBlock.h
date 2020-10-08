@@ -9,14 +9,14 @@ public:
     GraphicBlock(const Block& block);
     void update();
 
-    const std::array<float,9>& localTransform() const;
+    const std::array<float,6>& localTransform() const;
     const Block& block() const;
     const std::array<std::shared_ptr<GraphicObject>, 6>& graphicObjects() const;
     const bool& isFixed() const;
 
 private:
     const Block&        _block;
-    std::array<float,9> _localTransform;
+    std::array<float,6> _localTransform;
     std::array<std::shared_ptr<GraphicObject>, 6> _graphicObjects;
     const bool&         _isFixed;
 
