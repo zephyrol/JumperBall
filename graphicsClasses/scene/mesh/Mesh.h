@@ -22,7 +22,6 @@
 #include <ParallelTask.h>
 
 
-// T = instance frame type
 template<typename BaseType, typename FrameType>
 class Mesh {
 

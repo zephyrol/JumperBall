@@ -12,7 +12,8 @@ GraphicMap::GraphicMap(const Map &map):
     _width(map.width()),
     _height(map.height()),
     _deep(map.deep()),
-    _graphicBlocks(genGraphicBlocks())
+    _graphicBlocks(genGraphicBlocks()),
+    _graphicEnemies(genGraphicEnemies())
 {
 }
 
@@ -75,4 +76,10 @@ std::vector<std::shared_ptr<GraphicBlock> > GraphicMap::genGraphicBlocks() const
         //graphicBlocks.push_back(graphicBlock);
     }
    return graphicBlocks;
+}
+
+std::vector<std::shared_ptr<GraphicEnemy> > GraphicMap::genGraphicEnemies() const
+{
+   std::vector<std::shared_ptr<GraphicEnemy> >graphicEnemies;
+    return graphicEnemies;
 }

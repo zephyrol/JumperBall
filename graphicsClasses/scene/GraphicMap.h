@@ -8,6 +8,7 @@
 #define GRAPHICMAP_H
 #include <Map.h>
 #include "GraphicBlock.h"
+#include "GraphicEnemy.h"
 
 class GraphicMap
 {
@@ -28,8 +29,11 @@ private:
     unsigned int                          _deep;
     std::vector<std::shared_ptr<GraphicBlock> >
                                           _graphicBlocks;
+    std::vector<std::shared_ptr<GraphicEnemy> >
+                                          _graphicEnemies;
 
     std::vector<std::shared_ptr<GraphicBlock> >        genGraphicBlocks() const;
+    std::vector<std::shared_ptr<GraphicEnemy> >   genGraphicEnemies() const;
 };
 
 #endif // GRAPHICMAP_H

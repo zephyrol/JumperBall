@@ -9,5 +9,4 @@
 GraphicEnemy::GraphicEnemy(const Enemy& enemy) :
 _enemy(enemy)
 {
-
 }
