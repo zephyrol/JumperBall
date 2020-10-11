@@ -1,3 +1,8 @@
+/*
+ * File:   GraphicBlock.h
+ * Author: Morgenthaler S
+ *
+ */
 #ifndef GRAPHICBLOCK_H
 #define GRAPHICBLOCK_H
 #include <blocks/Block.h>

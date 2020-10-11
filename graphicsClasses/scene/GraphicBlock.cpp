@@ -1,3 +1,8 @@
+/*
+ * File:   GraphicBlock.cpp
+ * Author: Morgenthaler S
+ *
+ */
 #include "GraphicBlock.h"
 
 GraphicBlock::GraphicBlock(const Block& block):

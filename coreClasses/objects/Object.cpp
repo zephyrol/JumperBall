@@ -43,13 +43,11 @@ const JBTypes::timePointMs &Object::timeOfCreation() const
 void Object::catchingTest(const JBTypes::vec3f& objectPosition, 
                        const JBTypes::vec3f& entityPosition,
                        float radiusEntity) {
-    const float distance = sqrtf(
-        powf(objectPosition.x - entityPosition.x,2.f) +
-        powf(objectPosition.y - entityPosition.y,2.f) +
-        powf(objectPosition.z - entityPosition.z,2.f));
+    const float distance = 
+        JBTypesMethods::distance(objectPosition,entityPosition);
     if (distance < radiusEntity + radiusBoundingSphere) {
-    _timeOfObtaining = JBTypesMethods::getTimePointMSNow();
-    _gotten = true;
+        _timeOfObtaining = JBTypesMethods::getTimePointMSNow();
+        _gotten = true;
     }
     
 }

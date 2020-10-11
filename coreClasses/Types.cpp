@@ -147,6 +147,15 @@ JBTypes::vec3f JBTypesMethods::cross (const JBTypes::vec3f& a,
     return crossProduct;
 }
 
+float JBTypesMethods::distance(const JBTypes::vec3f &a,
+                               const JBTypes::vec3f &b)
+{
+    return sqrtf( powf( b.x - a.x ,2.f) + 
+                  powf( b.y - a.y ,2.f) + 
+                  powf( b.z - a.z ,2.f) 
+                );
+}
+
 JBTypes::Dir JBTypesMethods::vectorAsDirection( const JBTypes::vec3f& vec) {
     if( vec.x - 1.f < EPSILON_F && vec.x - 1.f > -EPSILON_F &&
         vec.y < EPSILON_F && vec.y  > -EPSILON_F &&

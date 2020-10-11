@@ -1,4 +1,3 @@
-//
 //  ThornBall.h
 //  JumperBallCore
 //
@@ -11,9 +10,19 @@
 
 class ThornBall : public Enemy{
 public:
-    ThornBall();
+    ThornBall(const Block& tieBlock, 
+             const JBTypes::Dir& dir,
+             const JBTypes::Dir& movementDirection,
+             size_t movementLength);
     virtual ~ThornBall() = default;
     
+private:
+    const JBTypes::Dir _movementDirection;
+    const size_t _movementLenght;
+    static constexpr float thornBallRadius = 0.2f;
+
+    virtual void touchingTest(const JBTypes::vec3f& entityPosition,
+                         float radiusEntity) override; 
 };
 
 #endif /* ThornBall_h */

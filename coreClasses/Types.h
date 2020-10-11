@@ -16,6 +16,7 @@
 #define __STDC_WANT_LIB_EXT1__ 1
 #include <iostream>
 #include <string>
+#include <math.h>
 #include <vector>
 #include <map>
 #include <array>
@@ -75,6 +76,8 @@ namespace JBTypesMethods {
 
     JBTypes::vec3f        cross (const JBTypes::vec3f& a,
                                  const JBTypes::vec3f& b);
+    float                 distance(const JBTypes::vec3f& a,
+                                   const JBTypes::vec3f& b);
     void                  displayInstallError();
 
 }

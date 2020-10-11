@@ -11,9 +11,20 @@
 
 class DarkBall : public Enemy{
 public:
-    DarkBall();
+    DarkBall(const Block& tieBlock, 
+             const JBTypes::Dir& dir,
+             const JBTypes::Dir& movementDirection,
+             size_t nbOfJumps);
+    virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
+                         float radiusEntity) override;
     virtual ~DarkBall() = default;
-    
+
+private:
+    const JBTypes::Dir _movementDirection;
+    const size_t _nbOfJumps;
+    static constexpr float darkBallRadius = 0.2f;
+    virtual void touchingTest(const JBTypes::vec3f& entityPosition,
+                         float radiusEntity) override; 
 };
 
 #endif /* DarkBall_h */
