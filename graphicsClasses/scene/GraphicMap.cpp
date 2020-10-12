@@ -46,9 +46,18 @@ unsigned int GraphicMap::deep() const
 }
 
 
-const Map &GraphicMap::map() const
-{
-    return _map;
+Map::BlockTypes GraphicMap::getType(
+                                    const std::array<unsigned int, 3>& position) const {
+    return _map.getType(position);
+}
+
+
+const std::vector<Map::BlockInfo>& GraphicMap::blocksInfo() const {
+    return _map.blocksInfo();
+}
+
+std::array<unsigned int, 3> GraphicMap::getBlockCoords(size_t index) const {
+    return _map.getBlockCoords(index);
 }
 
 const std::vector<std::shared_ptr<GraphicBlock> > &GraphicMap::graphicBlocks()

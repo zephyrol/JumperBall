@@ -9,7 +9,7 @@
 vecMeshComponent_sptr MeshGenerator::genComponents(const GraphicMap& map) {
 
     vecMeshComponent_sptr components;
-    const auto blockInfos = map.map().blocksInfo();
+    const auto blockInfos = map.blocksInfo();
     for (unsigned int i = 0 ; i < blockInfos.size(); ++i) {
         vecMeshComponent_sptr blockComponents =
                 genBlock(map, blockInfos.at(i).index);

@@ -19,7 +19,10 @@ public:
     unsigned int width() const;
     unsigned int height() const;
     unsigned int deep() const;
-    const Map& map() const;
+    Map::BlockTypes getType( const std::array<unsigned int, 3>& position
+                            ) const;
+    const std::vector<Map::BlockInfo>& blocksInfo() const;
+    std::array<unsigned int, 3> getBlockCoords(size_t index) const;
     const std::vector<std::shared_ptr<GraphicBlock> > &graphicBlocks() const;
 
 private:

@@ -24,6 +24,7 @@
 #include "scene/GraphicMap.h"
 #include "scene/GraphicStar.h"
 #include "scene/GraphicObject.h"
+#include "scene/GraphicEnemy.h"
 #include "animations/BallAnimation.h"
 #include "animations/ObjectAnimation.h"
 #include "animations/BlockAnimation.h"
@@ -50,6 +51,7 @@ namespace MeshGenerator {
     vecMeshComponent_sptr  genJumpers(const GraphicBlock& graphicBlock,
                                      const Map::BlockTypes& type,
                                      const glm::vec3& posWorld);
+    vecMeshComponent_sptr  genEnemy(const GraphicEnemy& enemy);
 
     extern std::map<std::string, std::shared_ptr<GeometricShape> >
                                 commonShapes;

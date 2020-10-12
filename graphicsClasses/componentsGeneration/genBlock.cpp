@@ -9,8 +9,8 @@
 vecMeshComponent_sptr MeshGenerator::genBlock
     (const GraphicMap& map, size_t index) {
 
-    const std::array<unsigned int,3> position = map.map().getBlockCoords(index);
-    const Map::BlockTypes blockType = map.map().getType(position);
+    const std::array<unsigned int,3> position = map.getBlockCoords(index);
+    const Map::BlockTypes blockType = map.getType(position);
 
     const std::shared_ptr<GraphicBlock> block = map.graphicBlocks().at(index);
 
@@ -31,7 +31,7 @@ vecMeshComponent_sptr MeshGenerator::genBlock
     for (size_t i = 0; i < 6; ++i) {
         const std::array<unsigned int, 3>& neighbourgPosition = positions.at(i);
         const Map::BlockTypes typeNeighbourg =
-                map.map().getType(neighbourgPosition);
+                map.getType(neighbourgPosition);
         if (typeNeighbourg != Map::BlockTypes::Brittle &&
                 typeNeighbourg != Map::BlockTypes::None)
         {

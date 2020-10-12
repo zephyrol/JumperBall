@@ -17,6 +17,11 @@ public:
 
 private:
     const Enemy& _enemy;
+    const JBTypes::timePointMs& _creationTime;
+    bool _hasHit;
+    JBTypes::timePointMs _intersectionTime;
+    JBTypes::vec3f _position;
+
 };
 
 #endif // GRAPHICENEMY_H

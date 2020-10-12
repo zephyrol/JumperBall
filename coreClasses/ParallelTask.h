@@ -86,12 +86,6 @@ void ParallelTask<T>::runTasks()
         mutexStart.lock();
         mutexStart.unlock();
     }
-    /*for ( std::mutex& mutexDone : _mutexesDone ) {
-        mutexDone.lock();
-    }
-    for ( std::mutex& mutexStart : _mutexesStart ) {
-        mutexStart.unlock();
-    }*/
 }
 
 template<typename T>

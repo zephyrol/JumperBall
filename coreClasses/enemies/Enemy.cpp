@@ -14,12 +14,21 @@ Enemy::Enemy(const Block& tieBlock, const JBTypes::Dir& direction):
     _tieBlock(tieBlock),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(direction)
-
 {
 }
 
-const JBTypes::timePointMs& Enemy::creationTime() const
-{
+const JBTypes::timePointMs& Enemy::creationTime() const {
    return _creationTime; 
 }
 
+const JBTypes::timePointMs &Enemy::intersectionTime() const {
+    return _intersectionTime;
+}
+
+bool Enemy::hasHit() const {
+    return _hasHit;
+}
+
+const JBTypes::vec3f Enemy::position() const {
+    return _position;
+}

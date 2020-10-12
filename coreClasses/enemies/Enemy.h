@@ -19,6 +19,10 @@ public:
 
     virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) = 0;
+    const JBTypes::timePointMs& creationTime() const;
+    const JBTypes::timePointMs& intersectionTime() const;
+    const JBTypes::vec3f position() const;
+    bool hasHit() const;
     virtual ~Enemy() = default;
 
 protected :
@@ -31,7 +35,6 @@ private:
     const JBTypes::timePointMs _creationTime;
     const JBTypes::Dir _direction;
 
-    const JBTypes::timePointMs& creationTime() const;
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,
                               float radiusEntity) = 0;
 };
