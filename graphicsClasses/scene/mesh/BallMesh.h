@@ -7,7 +7,6 @@
 
 #ifndef BALLMESH_H
 #define BALLMESH_H
-#include <Ball.h>
 #include "../GraphicBall.h"
 #include "Mesh.h"
 
