@@ -17,8 +17,7 @@ public:
 
     Laser(const Color& color, 
           const Block& tieBlock, 
-          const Map& map,
-          const JBTypes::Dir& dir, 
+          const JBTypes::Dir& dir,
           size_t length);
 
     virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
@@ -26,7 +25,6 @@ public:
     virtual ~Laser() = default;
 
 private:
-    const Map& _map;
     const Color _color;
     const size_t _length;
 

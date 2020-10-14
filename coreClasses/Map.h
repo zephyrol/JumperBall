@@ -25,6 +25,9 @@
 #include "objects/Key.h"
 #include "objects/Coin.h"
 #include "objects/Clock.h"
+#include "enemies/DarkBall.h"
+#include "enemies/ThornBall.h"
+#include "enemies/Laser.h"
 #include "ParallelTask.h"
 #include <fstream>
 
@@ -51,9 +54,16 @@ public:
     // ----------- TYPES -----------//
     enum class BlockTypes { None, Base, Fire, Ice, Sharp,
                             Brittle, Jump, Ghost };
+    
+    enum class EnemyTypes { Laser, ThornBall, DarkBall };
 
     struct BlockInfo { size_t index; 
                        BlockTypes type; };
+
+    struct EnemyInfo {
+        std::shared_ptr<Enemy> enemy;
+        EnemyTypes type;
+    };
 
     struct MapInfo { unsigned int width;
                      unsigned int height;
@@ -63,8 +73,9 @@ public:
                      unsigned int beginZ;
                      std::vector<std::shared_ptr<Block> > blocks;
                      std::vector<BlockInfo> blocksInfo;
+                     std::vector<EnemyInfo> enemiesInfo;
                   };
-
+    
     //--CONSTRUCTORS & DESTRUCTORS--//
     Map                                   ( MapInfo&& mapInfo );
 
@@ -101,6 +112,8 @@ public:
 
     std::vector<BlockInfo>                getBlocksWithInteraction()      const;
     std::vector<BlockInfo>                getBlocksWithObjects()          const;
+    
+    const std::vector<EnemyInfo>&         getEnemiesInfo()                const;
 
     //--------STATIC METHODS-------//
     static void                           compress(std::ifstream& input);
@@ -116,7 +129,9 @@ private:
     std::vector<BlockInfo>                _blocksInfo;
     std::vector<BlockInfo>                _blocksWithInteractionInfo;
     std::vector<BlockInfo>                _blocksWithObjectsInfo;
-
+    
+    std::vector<EnemyInfo>                _enemies;
+    
     unsigned int                          _width;
     unsigned int                          _height;
     unsigned int                          _deep;

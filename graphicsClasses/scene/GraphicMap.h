@@ -24,6 +24,7 @@ public:
     const std::vector<Map::BlockInfo>& blocksInfo() const;
     std::array<unsigned int, 3> getBlockCoords(size_t index) const;
     const std::vector<std::shared_ptr<GraphicBlock> > &graphicBlocks() const;
+    const std::vector<std::shared_ptr<GraphicEnemy> > &graphicEnemies() const;
 
 private:
     const Map&                            _map;
@@ -35,7 +36,7 @@ private:
     std::vector<std::shared_ptr<GraphicEnemy> >
                                           _graphicEnemies;
 
-    std::vector<std::shared_ptr<GraphicBlock> >        genGraphicBlocks() const;
+    std::vector<std::shared_ptr<GraphicBlock> >   genGraphicBlocks() const;
     std::vector<std::shared_ptr<GraphicEnemy> >   genGraphicEnemies() const;
 };
 

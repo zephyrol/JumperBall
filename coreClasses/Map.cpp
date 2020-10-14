@@ -24,6 +24,7 @@ Map::Map(Map::MapInfo&& mapInfo):
     _blocksInfo(std::move(mapInfo.blocksInfo)),
     _blocksWithInteractionInfo(getBlocksWithInteraction()),
     _blocksWithObjectsInfo(getBlocksWithObjects()),
+    _enemies(std::move(mapInfo.enemiesInfo)),
     _width (std::move(mapInfo.width)),
     _height (std::move(mapInfo.height)),
     _deep (std::move(mapInfo.deep)),
@@ -714,6 +715,10 @@ void Map::compress(std::ifstream& input) {
         }
     }
     output.close();
+}
+
+const std::vector<Map::EnemyInfo>& Map::getEnemiesInfo() const {
+    return _enemies;
 }
 
 unsigned int Map::nbMaps = 0;

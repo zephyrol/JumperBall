@@ -66,29 +66,35 @@ const
    return _graphicBlocks;
 }
 
+const std::vector<std::shared_ptr<GraphicEnemy> > &GraphicMap::graphicEnemies()
+const {
+    return _graphicEnemies;
+}
+
 std::vector<std::shared_ptr<GraphicBlock> > GraphicMap::genGraphicBlocks() const
 {
    const unsigned int nbBlocks =_map.width() * _map.height() * _map.deep();
    std::vector<std::shared_ptr<GraphicBlock> >graphicBlocks {nbBlocks, nullptr};
 
     for (size_t i = 0 ; i < _map.blocksInfo().size(); ++i) {
-        //std::shared_ptr<const Block> block =
-                //_map.getBlock(_map.blocksInfo().at(i).index);
-
         std::shared_ptr<const Block> block =
                 _map.getBlock(_map.blocksInfo().at(i).index);
         if ( block ) {
             graphicBlocks.at(_map.blocksInfo().at(i).index) =
                     std::make_shared<GraphicBlock>(*block);
         }
-        //GraphicBlock graphicBlock(*_map.getBlock(_map.blocksInfo().at(i).index));
-        //graphicBlocks.push_back(graphicBlock);
     }
    return graphicBlocks;
 }
 
-std::vector<std::shared_ptr<GraphicEnemy> > GraphicMap::genGraphicEnemies() const
+std::vector<std::shared_ptr<GraphicEnemy> > GraphicMap::genGraphicEnemies()
+const
 {
-   std::vector<std::shared_ptr<GraphicEnemy> >graphicEnemies;
+    std::vector<std::shared_ptr<GraphicEnemy> > graphicEnemies;
+    for (const Map::EnemyInfo& enemyInfo : _map.getEnemiesInfo()) {
+        graphicEnemies.push_back(
+            std::make_shared<GraphicEnemy>(*enemyInfo.enemy)
+        );
+    }
     return graphicEnemies;
 }

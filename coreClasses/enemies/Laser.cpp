@@ -9,11 +9,9 @@
 
 Laser::Laser(const Color& color, 
           const Block& tieBlock, 
-          const Map& map,
-          const JBTypes::Dir& dir, 
+          const JBTypes::Dir& dir,
           size_t length):
 Enemy(tieBlock, dir),
-_map(map),
 _color(color),
 _length(length) {
     

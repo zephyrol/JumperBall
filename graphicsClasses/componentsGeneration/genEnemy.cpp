@@ -9,6 +9,6 @@
 vecMeshComponent_sptr MeshGenerator::genEnemy(const GraphicEnemy& enemy) {
     
     vecMeshComponent_sptr components;
-    
+
     return components;
 }
