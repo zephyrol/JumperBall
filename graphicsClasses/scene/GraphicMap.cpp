@@ -93,7 +93,7 @@ const
     std::vector<std::shared_ptr<GraphicEnemy> > graphicEnemies;
     for (const Map::EnemyInfo& enemyInfo : _map.getEnemiesInfo()) {
         graphicEnemies.push_back(
-            std::make_shared<GraphicEnemy>(*enemyInfo.enemy)
+            std::make_shared<GraphicEnemy>(*enemyInfo.enemy, enemyInfo.type)
         );
     }
     return graphicEnemies;

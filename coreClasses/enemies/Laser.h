@@ -13,7 +13,6 @@
 class Laser : public Enemy {
 public:
 
-    enum class Color { Red, Green, Blue, Yellow };
 
     Laser(const Color& color, 
           const Block& tieBlock, 
@@ -22,6 +21,7 @@ public:
 
     virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override;
+    virtual Enemy::Color getColor() const override;
     virtual ~Laser() = default;
 
 private:

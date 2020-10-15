@@ -6,13 +6,25 @@
  */
 #include "GraphicEnemy.h"
 
-GraphicEnemy::GraphicEnemy(const Enemy& enemy) :
+GraphicEnemy::GraphicEnemy(const Enemy& enemy, const Map::EnemyTypes& category):
 _enemy(enemy),
+_category(category),
+_color(enemy.getColor()),
 _creationTime(enemy.creationTime()),
 _hasHit(enemy.hasHit()),
 _intersectionTime(enemy.intersectionTime()),
 _position(enemy.position())
 {
+}
+
+const Enemy::Color& GraphicEnemy::color() const
+{
+   return _color; 
+}
+
+const Map::EnemyTypes& GraphicEnemy::category() const
+{
+   return _category; 
 }
 
 void GraphicEnemy::update() {

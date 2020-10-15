@@ -13,11 +13,13 @@ class Enemy {
 public:
 
     enum class EnemyEffect { Nothing, Destroy };
+    enum class Color { None, Red, Green, Blue, Yellow };
 
     Enemy(const Block& tieBlock, const JBTypes::Dir& direction);
 
     virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) = 0;
+    virtual Color getColor() const;
     const JBTypes::timePointMs& creationTime() const;
     const JBTypes::timePointMs& intersectionTime() const;
     const JBTypes::vec3f position() const;

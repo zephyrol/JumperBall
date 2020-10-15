@@ -25,6 +25,11 @@ Enemy::EnemyEffect Laser::update(const JBTypes::vec3f& entityPosition,
     : Enemy::EnemyEffect::Nothing;
 }
 
+Enemy::Color Laser::getColor() const 
+{
+    return _color;    
+}
+
 void Laser::touchingTest(const JBTypes::vec3f&,
                          float )
 {

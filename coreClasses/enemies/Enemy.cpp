@@ -17,6 +17,10 @@ Enemy::Enemy(const Block& tieBlock, const JBTypes::Dir& direction):
 {
 }
 
+Enemy::Color Enemy::getColor() const {
+    return Enemy::Color::None;
+}
+
 const JBTypes::timePointMs& Enemy::creationTime() const {
    return _creationTime; 
 }
