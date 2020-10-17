@@ -11,6 +11,7 @@ _enemy(enemy),
 _category(category),
 _color(enemy.getColor()),
 _creationTime(enemy.creationTime()),
+_size(enemy.size()),
 _hasHit(enemy.hasHit()),
 _intersectionTime(enemy.intersectionTime()),
 _position(enemy.position()),
@@ -28,6 +29,10 @@ const Map::EnemyTypes& EnemyState::category() const {
 
 const JBTypes::vec3f& EnemyState::position() const {
    return _position; 
+}
+
+const float& EnemyState::size() const {
+   return _size;
 }
 
 const std::array<float,9>& EnemyState::transform() const {

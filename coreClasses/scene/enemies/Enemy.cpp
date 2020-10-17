@@ -10,6 +10,7 @@
 Enemy::Enemy(const Block& tieBlock,
              const std::array<unsigned int,3>& initialPosition,
              const JBTypes::Dir& direction,
+             float size,
              const std::array<float,9>& transform):
     _intersectionTime(),
     _hasHit(false),
@@ -22,7 +23,8 @@ Enemy::Enemy(const Block& tieBlock,
     _transform(transform),
     _tieBlock(tieBlock),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
-    _direction(direction)
+    _direction(direction),
+    _size(size)
 {
 }
 
@@ -40,6 +42,10 @@ const JBTypes::timePointMs &Enemy::intersectionTime() const {
 
 bool Enemy::hasHit() const {
     return _hasHit;
+}
+
+float Enemy::size() const {
+    return _size;
 }
 
 const std::array<unsigned int,3>& Enemy::initialPosition() const {

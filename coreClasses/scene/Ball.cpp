@@ -139,7 +139,7 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
 
 void Ball::goStraightAhead() noexcept {
     
-    struct nextBlockInformation nextBlock = getNextBlockInfo(); 
+    const struct nextBlockInformation nextBlock = getNextBlockInfo(); 
     _currentBlockX  = nextBlock.poxX;
     _currentBlockY  = nextBlock.poxY;
     _currentBlockZ  = nextBlock.poxZ;
@@ -618,11 +618,6 @@ void Ball::mapInteraction() noexcept{
         }
     }
 }
-
-void objectsInteraction() noexcept {
-
-}
-
 
 Ball::State Ball::state() const {
     return _state;

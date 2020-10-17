@@ -14,7 +14,8 @@ Laser::Laser(const Color& color,
              size_t length):
 Enemy(tieBlock, 
       initialPosition,
-      dir, 
+      dir,
+      length,
       { static_cast<float>(initialPosition.at(0)), 
         static_cast<float>(initialPosition.at(1)), 
         static_cast<float>(initialPosition.at(2)), 
@@ -25,9 +26,8 @@ Enemy(tieBlock,
         1.f,
         1.f }
      ),
-_color(color),
-_length(length){
-
+_color(color)
+{
 }
 
 Enemy::EnemyEffect Laser::update(const JBTypes::vec3f& entityPosition,

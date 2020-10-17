@@ -41,6 +41,7 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState& enemy) {
         }
         const JBTypes::vec3f& position = enemy.position();
         const glm::vec3 glmPosition { position.x, position.y, position.z };
+        const glm::vec3 scale { 0.2f, enemy.size(), 0.f};
     }
     else if (enemy.category() == Map::EnemyTypes::ThornBall)
     {

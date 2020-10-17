@@ -27,7 +27,6 @@ public:
 
 private:
     const Color _color;
-    const size_t _length;
 
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override; 

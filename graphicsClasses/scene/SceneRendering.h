@@ -105,7 +105,6 @@ private:
     //------------METHODS----------//
     void                            updateUniform();
 
-
     //------STATIC ATTRIBUTES------//
     static const std::string        vsshaderMap;
     static const std::string        fsshaderMap;
