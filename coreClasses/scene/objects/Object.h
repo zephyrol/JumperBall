@@ -13,7 +13,7 @@
 
 #ifndef OBJECT_H
 #define OBJECT_H
-#include "../Types.h"
+#include "system/Types.h"
 
 class Object {
 public:

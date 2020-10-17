@@ -6,7 +6,7 @@
  */
 #ifndef QUADMESH_H
 #define QUADMESH_H
-#include "../GraphicQuad.h"
+#include "scene/GraphicQuad.h"
 #include "Mesh.h"
 
 class QuadMesh: public Mesh<Quad,GraphicQuad>

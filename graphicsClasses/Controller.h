@@ -8,7 +8,7 @@
 #ifndef Controller_h
 #define Controller_h
 
-#include <Player.h>
+#include <player/Player.h>
 #include "scene/SceneRendering.h"
 #include "graphicMenu/MenuRendering.h"
 

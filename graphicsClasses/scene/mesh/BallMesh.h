@@ -7,7 +7,7 @@
 
 #ifndef BALLMESH_H
 #define BALLMESH_H
-#include "../GraphicBall.h"
+#include "scene/GraphicBall.h"
 #include "Mesh.h"
 
 class BallMesh : public Mesh<Ball,GraphicBall>

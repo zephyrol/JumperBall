@@ -8,7 +8,7 @@
 #ifndef Movement_h
 #define Movement_h
 #include <functional>
-#include "Map.h"
+#include "scene/Map.h"
 
 template<typename T, size_t N>
 class Movement {

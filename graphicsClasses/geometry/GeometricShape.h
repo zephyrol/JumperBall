@@ -13,8 +13,8 @@
 
 #ifndef GEOMETRICSHAPE_H
 #define GEOMETRICSHAPE_H
-#include "../Shader.h"
-#include "../Utility.h"
+#include "Shader.h"
+#include "Utility.h"
 
 class GeometricShape {
 public:

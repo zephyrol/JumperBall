@@ -6,7 +6,7 @@
  */
 #ifndef STARMESH_H
 #define STARMESH_H
-#include "../GraphicStar.h"
+#include "scene/GraphicStar.h"
 #include "Mesh.h"
 
 class StarMesh: public Mesh<Star,GraphicStar>

@@ -13,10 +13,10 @@
 
 #ifndef BLOCK_H
 #define BLOCK_H
-#include "../Types.h"
-#include "../objects/Clock.h"
-#include "../objects/Coin.h"
-#include "../objects/Key.h"
+#include "system/Types.h"
+#include "scene/objects/Clock.h"
+#include "scene/objects/Coin.h"
+#include "scene/objects/Key.h"
 
 class Block {
 public:

@@ -6,7 +6,7 @@
  */
 #ifndef GRAPHICMAP_H
 #define GRAPHICMAP_H
-#include <Map.h>
+#include <scene/Map.h>
 #include "GraphicBlock.h"
 #include "GraphicEnemy.h"
 

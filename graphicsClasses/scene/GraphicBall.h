@@ -6,7 +6,7 @@
  */
 #ifndef GRAPHICBALL_H
 #define GRAPHICBALL_H
-#include <Ball.h>
+#include <scene/Ball.h>
 
 
 class GraphicBall

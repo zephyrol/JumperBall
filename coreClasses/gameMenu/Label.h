@@ -13,10 +13,10 @@
 
 #ifndef LABEL_H
 #define LABEL_H
-#include "../Types.h"
-#include "../objects/Key.h"
-#include "../objects/Coin.h"
-#include "../objects/Clock.h"
+#include "system/Types.h"
+#include "scene/objects/Key.h"
+#include "scene/objects/Coin.h"
+#include "scene/objects/Clock.h"
 #include <fstream>
 
 class Label;

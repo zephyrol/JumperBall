@@ -13,7 +13,7 @@
 
 #ifndef TESTCLASS_H
 #define TESTCLASS_H
-#include <Types.h>
+#include <system/Types.h>
 #include <Utility.h>
 #include <Controller.h>
 #define RESOLUTION_X 1024

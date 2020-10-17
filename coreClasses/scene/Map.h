@@ -13,7 +13,6 @@
 
 #ifndef MAP_H
 #define MAP_H
-#include "Types.h"
 #include "blocks/Block.h"
 #include "blocks/BaseBlock.h"
 #include "blocks/FireBlock.h"
@@ -28,7 +27,7 @@
 #include "enemies/DarkBall.h"
 #include "enemies/ThornBall.h"
 #include "enemies/Laser.h"
-#include "ParallelTask.h"
+#include "system/ParallelTask.h"
 #include <fstream>
 
 class Map {

@@ -14,8 +14,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include <Types.h>
-#include <Map.h>
+#include <scene/Map.h>
 #include "testClass.h"
 
 using namespace std;

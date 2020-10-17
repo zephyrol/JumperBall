@@ -6,7 +6,7 @@
  */
 #ifndef GRAPHICOBJECT_H
 #define GRAPHICOBJECT_H
-#include <objects/Object.h>
+#include <scene/objects/Object.h>
 
 
 class GraphicObject

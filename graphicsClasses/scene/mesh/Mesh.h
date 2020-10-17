@@ -15,11 +15,11 @@
 #define MESH_H
 #include "Shader.h"
 #include "ShaderProgram.h"
-#include <Ball.h>
-#include <Map.h>
+#include <system/ParallelTask.h>
+#include <scene/Ball.h>
+#include <scene/Map.h>
 #include "Star.h"
 #include "MeshGenerator.h"
-#include <ParallelTask.h>
 
 
 template<typename BaseType, typename FrameType>

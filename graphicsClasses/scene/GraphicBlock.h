@@ -5,7 +5,7 @@
  */
 #ifndef GRAPHICBLOCK_H
 #define GRAPHICBLOCK_H
-#include <blocks/Block.h>
+#include <scene/blocks/Block.h>
 #include "GraphicObject.h"
 
 class GraphicBlock

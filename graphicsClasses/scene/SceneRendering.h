@@ -13,7 +13,6 @@
 
 #ifndef RENDERING_H
 #define RENDERING_H
-#include <Types.h>
 #include <iostream>
 #include <map>
 #include <vector>
@@ -25,7 +24,6 @@
 #include "Camera.h"
 #include "uniformBlocks/uniformLight.h"
 #include "animations/BallAnimation.h"
-#include <ParallelTask.h>
 
 
 class SceneRendering {

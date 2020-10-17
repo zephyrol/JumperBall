@@ -8,7 +8,7 @@
 #ifndef Laser_h
 #define Laser_h
 #include "Enemy.h"
-#include "Map.h"
+#include "scene/Map.h"
 
 class Laser : public Enemy {
 public:

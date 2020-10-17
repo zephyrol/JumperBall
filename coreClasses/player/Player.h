@@ -13,7 +13,7 @@
 
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "Ball.h"
+#include "scene/Ball.h"
 #include "gameMenu/Page.h"
 
 class Player

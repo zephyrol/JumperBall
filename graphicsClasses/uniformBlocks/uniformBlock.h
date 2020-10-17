@@ -13,12 +13,11 @@
 
 #ifndef UNIFORMBLOCK_H
 #define UNIFORMBLOCK_H
-#include <Types.h>
 #include <iostream>
 #include <map>
 #include <vector>
-#include "../Shader.h"
-#include "../ShaderProgram.h"
+#include "Shader.h"
+#include "ShaderProgram.h"
 
 class UniformBlock {
 public:

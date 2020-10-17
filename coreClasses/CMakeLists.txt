@@ -8,19 +8,23 @@ set (CMAKE_CXX_EXTENSIONS OFF)
 
 
 FILE(GLOB SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/blocks/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/objects/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/blocks/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/objects/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/enemies/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/player/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/system/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/gameMenu/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/enemies/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/movements/*.cpp)
 
 FILE(GLOB HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/blocks/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/objects/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/blocks/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/objects/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/enemies/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/player/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/system/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/gameMenu/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/enemies/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/movements/*.h)
 
 

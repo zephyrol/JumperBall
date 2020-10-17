@@ -14,7 +14,7 @@
 #ifndef STAR_H
 #define STAR_H
 #include "Utility.h"
-#include <Ball.h>
+#include <scene/Ball.h>
 #include "uniformBlocks/uniformLight.h"
 
 class Star {

@@ -8,7 +8,6 @@
 #ifndef PARALLEL_TASK_H 
 #define PARALLEL_TASK_H  
 #include "Types.h"
-#include "ClassicalMechanics.h"
 #include <future>
 
 template<typename T>

@@ -6,8 +6,8 @@
 //
 #ifndef Enemy_hpp
 #define Enemy_hpp
-#include "../Types.h"
-#include "../blocks/Block.h"
+#include "system/Types.h"
+#include "scene/blocks/Block.h"
 
 class Enemy {
 public:

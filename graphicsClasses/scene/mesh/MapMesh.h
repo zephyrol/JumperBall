@@ -6,8 +6,8 @@
  */
 #ifndef MAPMESH_H
 #define MAPMESH_H
-#include <Map.h>
-#include "../GraphicMap.h"
+#include <scene/Map.h>
+#include "scene/GraphicMap.h"
 #include "Mesh.h"
 
 

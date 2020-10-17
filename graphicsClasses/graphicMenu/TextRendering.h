@@ -17,7 +17,7 @@
 #include <freetype2/ft2build.h>
 #include FT_FREETYPE_H
 #include <gameMenu/MessageLabel.h>
-#include <ParallelTask.h>
+#include <system/ParallelTask.h>
 #include "Utility.h"
 #include "ShaderProgram.h"
 #include "geometry/Quad.h"

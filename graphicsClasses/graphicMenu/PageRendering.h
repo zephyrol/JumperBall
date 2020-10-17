@@ -1,7 +1,7 @@
 #ifndef PAGERENDERING_H
 #define PAGERENDERING_H
 #include <gameMenu/Page.h>
-#include <ParallelTask.h>
+#include <system/ParallelTask.h>
 #include "LabelRendering.h"
 #include "Utility.h"
 

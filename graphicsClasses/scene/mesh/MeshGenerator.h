@@ -14,7 +14,7 @@
 #ifndef MESHGENERATOR_H
 #define MESHGENERATOR_H
 #include "Utility.h"
-#include <objects/Object.h>
+#include <scene/objects/Object.h>
 #include "geometry/Cylinder.h"
 #include "geometry/Pyramid.h"
 #include "geometry/Sphere.h"

@@ -13,7 +13,6 @@
 
 #ifndef BALL_H
 #define BALL_H
-#include "Types.h"
 #include "ClassicalMechanics.h"
 #include "movements/TurnLeft.h"
 #include "movements/TurnRight.h"

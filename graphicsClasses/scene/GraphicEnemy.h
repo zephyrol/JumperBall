@@ -6,8 +6,8 @@
  */
 #ifndef GRAPHICENEMY_H
 #define GRAPHICENEMY_H
-#include <enemies/Enemy.h>
-#include <Map.h>
+#include <scene/enemies/Enemy.h>
+#include <scene/Map.h>
 
 
 class GraphicEnemy
