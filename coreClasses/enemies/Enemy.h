@@ -15,21 +15,28 @@ public:
     enum class EnemyEffect { Nothing, Destroy };
     enum class Color { None, Red, Green, Blue, Yellow };
 
-    Enemy(const Block& tieBlock, const JBTypes::Dir& direction);
+    Enemy(const Block& tieBlock,
+          const std::array<unsigned int,3>& initialPosition,
+          const JBTypes::Dir& direction,
+          const std::array<float,9>& transform);
 
     virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) = 0;
     virtual Color getColor() const;
     const JBTypes::timePointMs& creationTime() const;
     const JBTypes::timePointMs& intersectionTime() const;
-    const JBTypes::vec3f position() const;
+    const std::array<unsigned int,3>& initialPosition() const;
+    const JBTypes::vec3f& position() const;
+    const std::array<float,9>& transform() const;
     bool hasHit() const;
     virtual ~Enemy() = default;
 
 protected :
     JBTypes::timePointMs _intersectionTime;
     bool _hasHit;
+    const std::array<unsigned int, 3> _initialPosition;
     JBTypes::vec3f _position;
+    std::array<float,9> _transform;
 
 private:
     const Block& _tieBlock;

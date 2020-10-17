@@ -8,11 +8,23 @@
 #include "DarkBall.h"
 
 DarkBall::DarkBall(const Block &tieBlock,
+                   const std::array<unsigned int,3>& initialPosition,
                    const JBTypes::Dir &dir,
                    const JBTypes::Dir &movementDirection,
-                   size_t nbOfJumps) : Enemy(tieBlock, dir),
-                                       _movementDirection(movementDirection),
-                                       _nbOfJumps(nbOfJumps)
+                   size_t nbOfJumps) : 
+Enemy(tieBlock, initialPosition, dir,
+      { static_cast<float>(initialPosition.at(0)), 
+        static_cast<float>(initialPosition.at(1)), 
+        static_cast<float>(initialPosition.at(2)), 
+        0.f,
+        0.f,
+        0.f,
+        1.f,
+        1.f,
+        1.f }
+),
+_movementDirection(movementDirection),
+_nbOfJumps(nbOfJumps)
 {
 }
 

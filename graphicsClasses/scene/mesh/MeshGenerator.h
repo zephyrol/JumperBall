@@ -51,8 +51,7 @@ namespace MeshGenerator {
     vecMeshComponent_sptr  genJumpers(const GraphicBlock& graphicBlock,
                                      const Map::BlockTypes& type,
                                      const glm::vec3& posWorld);
-    vecMeshComponent_sptr  genEnemy(const GraphicEnemy& enemy,
-                                    const Map::EnemyTypes& category);
+    vecMeshComponent_sptr  genEnemy(const GraphicEnemy& enemy);
 
     extern std::map<std::string, std::shared_ptr<GeometricShape> >
                                 commonShapes;

@@ -11,9 +11,10 @@
 class ThornBall : public Enemy{
 public:
     ThornBall(const Block& tieBlock, 
-             const JBTypes::Dir& dir,
-             const JBTypes::Dir& movementDirection,
-             size_t movementLength);
+              const std::array<unsigned int,3>& initialPosition,
+              const JBTypes::Dir& dir,
+              const JBTypes::Dir& movementDirection,
+              size_t movementLength);
     virtual ~ThornBall() = default;
     
 private:

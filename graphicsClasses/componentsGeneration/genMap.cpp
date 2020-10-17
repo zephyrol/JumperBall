@@ -17,10 +17,11 @@ vecMeshComponent_sptr MeshGenerator::genComponents(const GraphicMap& map) {
             components.push_back(std::move(m));
         }
     }
-    
+
     for ( const std::shared_ptr<GraphicEnemy>& graphicEnemy :
             map.graphicEnemies()) {
-        vecMeshComponent_sptr enemyComponents = genEnemy(*graphicEnemy,graphicEnemy->category());
+        vecMeshComponent_sptr enemyComponents = 
+            genEnemy(*graphicEnemy);
         for(MeshComponent_sptr m : enemyComponents) {
             components.push_back(std::move(m));
         }

@@ -8,10 +8,21 @@
 #include "ThornBall.h"
 
 ThornBall::ThornBall(const Block& tieBlock, 
+             const std::array<unsigned int,3>& initialPosition,
              const JBTypes::Dir& dir,
              const JBTypes::Dir& movementDirection,
              size_t movementLength):
-Enemy(tieBlock,dir),
+Enemy(tieBlock,initialPosition,dir,
+      { static_cast<float>(initialPosition.at(0)),
+        static_cast<float>(initialPosition.at(1)),
+        static_cast<float>(initialPosition.at(2)),
+        0.f,
+        0.f,
+        0.f,
+        1.f,
+        1.f,
+        1.f }
+),
 _movementDirection(movementDirection),
 _movementLenght(movementLength)
 {

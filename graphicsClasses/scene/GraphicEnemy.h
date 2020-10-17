@@ -16,6 +16,8 @@ public:
     GraphicEnemy(const Enemy& enemy, const Map::EnemyTypes& category);
     const Enemy::Color& color() const;
     const Map::EnemyTypes& category() const;
+    const JBTypes::vec3f& position() const;
+    const std::array<float,9>& transform() const;
     void update();
 
 private:
@@ -26,6 +28,7 @@ private:
     bool _hasHit;
     JBTypes::timePointMs _intersectionTime;
     JBTypes::vec3f _position;
+    std::array<float,9> _transform;
 
 };
 

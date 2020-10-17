@@ -24,7 +24,7 @@ public:
 
 private:
     //--------ATTRIBUTES-----------//
-    const GraphicBlock&                  _block;
+    const GraphicBlock&           _block;
 };
 
 
