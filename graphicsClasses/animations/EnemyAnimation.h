@@ -1,7 +1,7 @@
 #ifndef ENEMYANIMATION_H
 #define ENEMYANIMATION_H
-#include "scene/GraphicEnemy.h"
-#include "../Utility.h"
+#include <scene/enemies/EnemyState.h>
+#include "Utility.h"
 #include "Animation.h"
 
 /*
@@ -15,7 +15,7 @@ class EnemyAnimation : public Animation {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    EnemyAnimation                 (const GraphicEnemy& enemy);
+    EnemyAnimation                 (const EnemyState& enemy);
     virtual ~EnemyAnimation        ()                                  =default;
 
     //----------METHODS------------//
@@ -23,7 +23,7 @@ public:
 
 private:
     //--------ATTRIBUTES-----------//
-    const GraphicEnemy&           _enemy;
+    const EnemyState&           _enemy;
 };
 
 

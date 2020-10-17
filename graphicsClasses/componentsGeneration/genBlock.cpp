@@ -7,12 +7,12 @@
 #include "scene/mesh/MeshGenerator.h"
 
 vecMeshComponent_sptr MeshGenerator::genBlock
-    (const GraphicMap& map, size_t index) {
+    (const MapState& map, size_t index) {
 
     const std::array<unsigned int,3> position = map.getBlockCoords(index);
     const Map::BlockTypes blockType = map.getType(position);
 
-    const std::shared_ptr<GraphicBlock> block = map.graphicBlocks().at(index);
+    const std::shared_ptr<BlockState> block = map.BlockStates().at(index);
 
     vecMeshComponent_sptr components;
     std::shared_ptr<GeometricShape> shape;
@@ -107,8 +107,8 @@ vecMeshComponent_sptr MeshGenerator::genBlock
 
 
     for (size_t i = 0; i < Block::objectsNumber ; ++i) {
-        const std::shared_ptr<const GraphicObject> object =
-                block->graphicObjects().at(i);
+        const std::shared_ptr<const ObjectState> object =
+                block->objectStates().at(i);
         if (object) {
             const JBTypes::Dir dir =
                 JBTypesMethods::integerAsDirection(

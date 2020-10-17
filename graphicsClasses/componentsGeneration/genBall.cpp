@@ -7,7 +7,7 @@
 
 #include "scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genComponents(const GraphicBall& ball) {
+vecMeshComponent_sptr MeshGenerator::genComponents(const BallState& ball) {
 
     const glm::mat4 scaleMatrix = glm::scale(glm::vec3(ball.getRadius()));
     const Sphere sphere;

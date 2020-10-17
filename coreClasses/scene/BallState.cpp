@@ -1,12 +1,12 @@
 /*
- * File:   GraphicBall.h
+ * File:   BallState.h
  * Author: Morgenthaler S
  *
  * Created on 19 septembre 2020, 07h50
  */
-#include "GraphicBall.h"
+#include "BallState.h"
 
-GraphicBall::GraphicBall(const Ball& ball):
+BallState::BallState(const Ball& ball):
     _ball(ball),
     _position(ball.get3DPosition()),
     _burnCoefficient(ball.burnCoefficient()),
@@ -27,7 +27,7 @@ GraphicBall::GraphicBall(const Ball& ball):
 
 }
 
-void GraphicBall::update()
+void BallState::update()
 {
     _position = _ball.get3DPosition();
     _burnCoefficient = _ball.burnCoefficient();
@@ -46,58 +46,58 @@ void GraphicBall::update()
     _lookTowardsAsVector = _ball.lookTowardsAsVector();
 }
 
-const JBTypes::vec3f &GraphicBall::get3DPosition() const noexcept
+const JBTypes::vec3f &BallState::get3DPosition() const noexcept
 {
     return _position;
 }
 
-float GraphicBall::burnCoefficient() const
+float BallState::burnCoefficient() const
 {
     return _burnCoefficient;
 }
 
-const JBTypes::vec3f &GraphicBall::currentSideAsVector() const
+const JBTypes::vec3f &BallState::currentSideAsVector() const
 {
     return _currentSideAsVector;
 }
 
-const JBTypes::timePointMs& GraphicBall::getTimeStateOfLife() const
+const JBTypes::timePointMs& BallState::getTimeStateOfLife() const
 {
     return _timeStateOfLife;
 }
 
-const JBTypes::timePointMs& GraphicBall::getTimeAction() const noexcept
+const JBTypes::timePointMs& BallState::getTimeAction() const noexcept
 {
     return _timeAction;
 }
 
-Ball::State GraphicBall::state() const
+Ball::State BallState::state() const
 {
     return _state;
 }
 
-Ball::StateOfLife GraphicBall::stateOfLife() const
+Ball::StateOfLife BallState::stateOfLife() const
 {
     return _stateOfLife;
 }
 
 
-float GraphicBall::getRadius() const
+float BallState::getRadius() const
 {
     return _radius;
 }
 
-float GraphicBall::jumpingPosX() const
+float BallState::jumpingPosX() const
 {
     return _jumpingPosX;
 }
 
-float GraphicBall::fallingPosX() const
+float BallState::fallingPosX() const
 {
     return _fallingPosX;
 }
 
-const JBTypes::vec3f &GraphicBall::lookTowardsAsVector() const
+const JBTypes::vec3f &BallState::lookTowardsAsVector() const
 {
     return _lookTowardsAsVector;
 }

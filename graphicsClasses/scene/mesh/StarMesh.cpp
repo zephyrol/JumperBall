@@ -7,7 +7,7 @@
 #include "StarMesh.h"
 
 StarMesh::StarMesh(const Star& star):
-    Mesh<Star,GraphicStar>(star)
+    Mesh<Star,StarState>(star)
 {
 
 }

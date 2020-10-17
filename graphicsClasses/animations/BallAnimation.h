@@ -13,7 +13,7 @@
 
 #ifndef BALLANIMATION_H
 #define BALLANIMATION_H
-#include "scene/GraphicBall.h"
+#include "scene/BallState.h"
 #include "Animation.h"
 #include "../Utility.h"
 
@@ -21,7 +21,7 @@ class BallAnimation : public Animation {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    BallAnimation                 (const GraphicBall& ball);
+    BallAnimation                 (const BallState& ball);
     virtual ~BallAnimation        ()                                  = default;
 
 
@@ -33,7 +33,7 @@ public:
 private:
 
     //--------ATTRIBUTES-----------//
-    const GraphicBall&            _ball;
+    const BallState&              _ball;
     glm::mat4                     _rotationBeforeMovement;
     glm::vec3                     _scaleBeforeMovement;
     glm::vec3                     _translationBeforeMovement;

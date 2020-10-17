@@ -7,7 +7,7 @@
 #include "BallMesh.h"
 
 BallMesh::BallMesh(const Ball& ball):
-    Mesh<Ball,GraphicBall>(ball)
+    Mesh<Ball,BallState>(ball)
 {
 
 }

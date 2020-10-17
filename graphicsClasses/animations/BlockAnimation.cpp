@@ -6,7 +6,7 @@
  */
 #include "BlockAnimation.h"
 
-BlockAnimation::BlockAnimation(const GraphicBlock &block):
+BlockAnimation::BlockAnimation(const BlockState &block):
     _block(block)
 {
 }

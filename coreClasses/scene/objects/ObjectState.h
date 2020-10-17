@@ -1,18 +1,18 @@
 /*
- * File:   GraphicObject.h
+ * File:   ObjectState.h
  * Author: Morgenthaler S
  *
  * Created on 19 septembre 2020, 07h50
  */
-#ifndef GRAPHICOBJECT_H
-#define GRAPHICOBJECT_H
+#ifndef OBJECTSTATE_H
+#define OBJECTSTATE_H
 #include <scene/objects/Object.h>
 
 
-class GraphicObject
+class ObjectState
 {
 public:
-    GraphicObject(const Object& object);
+    ObjectState(const Object& object);
     void update();
 
     bool isGotten() const;
@@ -29,4 +29,4 @@ private:
 
 };
 
-#endif // GRAPHICOBJECT_H
+#endif // OBJECTSTATE_H

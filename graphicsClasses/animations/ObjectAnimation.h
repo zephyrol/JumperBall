@@ -13,7 +13,7 @@
 
 #ifndef OBJECTANIMATION_H
 #define OBJECTANIMATION_H
-#include "scene/GraphicObject.h"
+#include <scene/objects/ObjectState.h>
 #include "Animation.h"
 #include "../Utility.h"
 
@@ -21,7 +21,7 @@ class ObjectAnimation : public Animation {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    ObjectAnimation                 ( const GraphicObject& object,
+    ObjectAnimation                 ( const ObjectState& object,
                                       const glm::vec3& blockPosition,
                                       const JBTypes::Dir& dir);
     virtual ~ObjectAnimation        ()                                = default;
@@ -33,9 +33,9 @@ public:
     void                                transAfterObtaining();
 private:
 
-    const GraphicObject&                object()                          const;
+    const ObjectState&                object()                          const;
     //--------ATTRIBUTES-----------//
-    const GraphicObject&                _object;
+    const ObjectState&                _object;
     const JBTypes::Dir                  _direction;
     const glm::mat4                     _translationToBlock;
     const glm::mat4                     _initialRotation;

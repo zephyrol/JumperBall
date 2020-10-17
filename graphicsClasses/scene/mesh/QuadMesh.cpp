@@ -7,7 +7,7 @@
 #include "QuadMesh.h"
 
 QuadMesh::QuadMesh(const Quad &quad):
-    Mesh<Quad,GraphicQuad>(quad)
+    Mesh<Quad,QuadState>(quad)
 {
 }
 

@@ -7,10 +7,10 @@
 
 #ifndef BALLMESH_H
 #define BALLMESH_H
-#include "scene/GraphicBall.h"
+#include "scene/BallState.h"
 #include "Mesh.h"
 
-class BallMesh : public Mesh<Ball,GraphicBall>
+class BallMesh : public Mesh<Ball,BallState>
 {
 public:
     BallMesh(const Ball& ball);

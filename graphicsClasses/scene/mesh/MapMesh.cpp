@@ -7,7 +7,7 @@
 #include "MapMesh.h"
 
 MapMesh::MapMesh(const Map &map):
-    Mesh<Map,GraphicMap>(map) {
+    Mesh<Map,MapState>(map) {
 
 }
 

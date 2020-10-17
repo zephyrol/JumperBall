@@ -1,19 +1,19 @@
 /*
- * File:   GraphicEnemy.h
+ * File:   EnemyState.h
  * Author: Morgenthaler S
  *
  * Created on 11 octobre 2020, 10h33
  */
-#ifndef GRAPHICENEMY_H
-#define GRAPHICENEMY_H
+#ifndef ENEMYSTATE_H
+#define ENEMYSTATE_H
 #include <scene/enemies/Enemy.h>
 #include <scene/Map.h>
 
 
-class GraphicEnemy
+class EnemyState
 {
 public:
-    GraphicEnemy(const Enemy& enemy, const Map::EnemyTypes& category);
+    EnemyState(const Enemy& enemy, const Map::EnemyTypes& category);
     const Enemy::Color& color() const;
     const Map::EnemyTypes& category() const;
     const JBTypes::vec3f& position() const;
@@ -32,4 +32,4 @@ private:
 
 };
 
-#endif // GRAPHICENEMY_H
+#endif // ENEMYSTATE_H

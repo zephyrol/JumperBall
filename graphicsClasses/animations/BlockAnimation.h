@@ -1,6 +1,6 @@
 #ifndef BLOCKANIMATION_H
 #define BLOCKANIMATION_H
-#include "scene/GraphicBlock.h"
+#include <scene/blocks/BlockState.h>
 #include "../Utility.h"
 #include "Animation.h"
 
@@ -15,7 +15,7 @@ class BlockAnimation : public Animation {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    BlockAnimation                 (const GraphicBlock& block);
+    BlockAnimation                 (const BlockState& block);
     virtual ~BlockAnimation        ()                                  =default;
 
 
@@ -24,7 +24,7 @@ public:
 
 private:
     //--------ATTRIBUTES-----------//
-    const GraphicBlock&           _block;
+    const BlockState&           _block;
 };
 
 

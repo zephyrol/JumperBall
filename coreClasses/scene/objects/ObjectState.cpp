@@ -1,12 +1,12 @@
 /*
- * File:   GraphicObject.cpp
+ * File:   ObjectState.cpp
  * Author: Morgenthaler S
  *
  * Created on 19 septembre 2020, 07h50
  */
-#include "GraphicObject.h"
+#include "ObjectState.h"
 
-GraphicObject::GraphicObject(const Object& object):
+ObjectState::ObjectState(const Object& object):
    _object(object),
    _isGotten(object.isGotten()),
    _timeOfCreation(object.timeOfCreation()),
@@ -16,28 +16,28 @@ GraphicObject::GraphicObject(const Object& object):
 
 }
 
-void GraphicObject::update()
+void ObjectState::update()
 {
    _isGotten = _object.isGotten();
    _timeOfObtaining = _object.timeOfObtaining();
 }
 
-bool GraphicObject::isGotten() const
+bool ObjectState::isGotten() const
 {
     return _isGotten;
 }
 
-const JBTypes::timePointMs &GraphicObject::timeOfCreation() const
+const JBTypes::timePointMs &ObjectState::timeOfCreation() const
 {
     return _timeOfCreation;
 }
 
-const JBTypes::timePointMs &GraphicObject::timeOfObtaining() const
+const JBTypes::timePointMs &ObjectState::timeOfObtaining() const
 {
     return _timeOfObtaining;
 }
 
-const Object::CategoryOfObjects &GraphicObject::getCategory() const
+const Object::CategoryOfObjects &ObjectState::getCategory() const
 {
     return _categoryOfObject;
 }

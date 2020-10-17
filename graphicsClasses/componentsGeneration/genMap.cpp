@@ -6,7 +6,7 @@
  */
 #include "scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genComponents(const GraphicMap& map) {
+vecMeshComponent_sptr MeshGenerator::genComponents(const MapState& map) {
 
     vecMeshComponent_sptr components;
     const auto blockInfos = map.blocksInfo();
@@ -18,10 +18,10 @@ vecMeshComponent_sptr MeshGenerator::genComponents(const GraphicMap& map) {
         }
     }
 
-    for ( const std::shared_ptr<GraphicEnemy>& graphicEnemy :
-            map.graphicEnemies()) {
+    for ( const std::shared_ptr<EnemyState>& EnemyState :
+            map.enemiesStates()) {
         vecMeshComponent_sptr enemyComponents = 
-            genEnemy(*graphicEnemy);
+            genEnemy(*EnemyState);
         for(MeshComponent_sptr m : enemyComponents) {
             components.push_back(std::move(m));
         }

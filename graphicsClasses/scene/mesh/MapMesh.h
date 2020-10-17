@@ -7,11 +7,11 @@
 #ifndef MAPMESH_H
 #define MAPMESH_H
 #include <scene/Map.h>
-#include "scene/GraphicMap.h"
+#include "scene/MapState.h"
 #include "Mesh.h"
 
 
-class MapMesh : public Mesh<Map,GraphicMap>
+class MapMesh : public Mesh<Map,MapState>
 {
 public:
     MapMesh(const Map& map);

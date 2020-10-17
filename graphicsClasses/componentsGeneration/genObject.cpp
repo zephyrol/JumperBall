@@ -7,7 +7,7 @@
 #include "scene/mesh/MeshGenerator.h"
 
 vecMeshComponent_sptr MeshGenerator::genObject(
-                                const GraphicObject& obj,
+                                const ObjectState& obj,
                                 const glm::vec3& position,
                                 const JBTypes::Dir& dir) {
     vecMeshComponent_sptr components;

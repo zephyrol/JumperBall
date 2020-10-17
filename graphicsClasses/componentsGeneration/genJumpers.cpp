@@ -8,7 +8,7 @@
 #include "scene/mesh/MeshGenerator.h"
 
 
-vecMeshComponent_sptr MeshGenerator::genJumpers(const GraphicBlock &graphicBlock,
+vecMeshComponent_sptr MeshGenerator::genJumpers(const BlockState &BlockState,
                                         const Map::BlockTypes& type,
                                         const glm::vec3& posWorld) {
     vecMeshComponent_sptr components;
@@ -21,9 +21,9 @@ vecMeshComponent_sptr MeshGenerator::genJumpers(const GraphicBlock &graphicBlock
 
         }
 
-        for(size_t i = 0; i < graphicBlock.block().faceInfo().size(); i++) {
+        for(size_t i = 0; i < BlockState.block().faceInfo().size(); i++) {
 
-            bool jumperPresent = graphicBlock.block().faceInfo().at(i);
+            bool jumperPresent = BlockState.block().faceInfo().at(i);
             if (jumperPresent) {
 
                 constexpr float sizeBlock = 1.f;

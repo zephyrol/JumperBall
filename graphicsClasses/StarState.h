@@ -1,18 +1,18 @@
 /*
- * File:   GraphicStar.h
+ * File:   StarState.h
  * Author: Morgenthaler S
  *
  * Created on 19 septembre 2020, 07h50
  */
-#ifndef GRAPHICSTAR_H
-#define GRAPHICSTAR_H
+#ifndef STARSTATE_H
+#define STARSTATE_H
 #include "Star.h"
 
 
-class GraphicStar
+class StarState
 {
 public:
-    GraphicStar(const Star& star);
+    StarState(const Star& star);
 
     void update();
     const glm::mat4&                     transform()                      const;
@@ -35,4 +35,4 @@ private:
 };
 
 
-#endif // GRAPHICSTAR_H
+#endif // STARSTATE_H

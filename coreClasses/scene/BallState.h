@@ -1,18 +1,18 @@
 /*
- * File:   GraphicBall.cpp
+ * File:   BallState.cpp
  * Author: Morgenthaler S
  *
  * Created on 19 septembre 2020, 07h50
  */
-#ifndef GRAPHICBALL_H
-#define GRAPHICBALL_H
+#ifndef BALLSTATE_H
+#define BALLSTATE_H
 #include <scene/Ball.h>
 
 
-class GraphicBall
+class BallState
 {
 public:
-    GraphicBall(const Ball& ball);
+    BallState(const Ball& ball);
 
     void update();
     const JBTypes::vec3f&         get3DPosition()                const noexcept;
@@ -43,4 +43,4 @@ private:
     JBTypes::vec3f                _lookTowardsAsVector;
 };
 
-#endif // GRAPHICBALL_H
+#endif // BALLSTATE_H 

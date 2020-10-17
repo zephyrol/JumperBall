@@ -6,7 +6,7 @@
  */
 #include "EnemyAnimation.h"
 
-EnemyAnimation::EnemyAnimation(const GraphicEnemy &enemy):
+EnemyAnimation::EnemyAnimation(const EnemyState &enemy):
     _enemy(enemy)
 {
 }

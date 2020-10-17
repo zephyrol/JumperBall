@@ -6,7 +6,7 @@
  */
 #include "scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genEnemy(const GraphicEnemy& enemy) {
+vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState& enemy) {
 
     vecMeshComponent_sptr components;
     if (enemy.category() == Map::EnemyTypes::Laser)

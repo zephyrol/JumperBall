@@ -14,7 +14,7 @@
 #include "BallAnimation.h"
 #include <math.h>
 
-BallAnimation::BallAnimation(const GraphicBall &ball):
+BallAnimation::BallAnimation(const BallState &ball):
     _ball(ball) ,
     _rotationBeforeMovement(1.f),
     _scaleBeforeMovement(1.f),

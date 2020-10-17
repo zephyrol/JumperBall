@@ -14,7 +14,7 @@
 #include "ObjectAnimation.h"
 #include <math.h>
 
-ObjectAnimation::ObjectAnimation(const GraphicObject& object,
+ObjectAnimation::ObjectAnimation(const ObjectState& object,
                                  const glm::vec3& blockPosition,
                                  const JBTypes::Dir& dir):
 _object(object),
@@ -85,7 +85,7 @@ void ObjectAnimation::transAfterObtaining() {
     _movingTranslation = glm::translate( translateFactor * rotationAxis);
 }
 
-const GraphicObject &ObjectAnimation::object() const {
+const ObjectState &ObjectAnimation::object() const {
     return _object;
 }
 

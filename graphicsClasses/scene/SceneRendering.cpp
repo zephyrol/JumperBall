@@ -93,7 +93,7 @@ void SceneRendering::phongEffect( GLuint depthTexture) const {
     _light.bind();
 
     // Ball
-    const GraphicBall& ball = _meshBall.getInstanceFrame();
+    const BallState& ball = _meshBall.getInstanceFrame();
     _spMap.bindUniform("burningCoeff", ball.burnCoefficient());
     _meshBall.render(_spMap);
 
@@ -102,7 +102,7 @@ void SceneRendering::phongEffect( GLuint depthTexture) const {
     _meshMap.render(_spMap);
 
     // ------ Star ------
-    const GraphicStar& star = _meshStar.getInstanceFrame();
+    const StarState& star = _meshStar.getInstanceFrame();
     _spStar.use();
     _spStar.bindUniform("radiusInside",  star.radiusInside());
     _spStar.bindUniform("radiusOutside", star.radiusOutside());
@@ -183,9 +183,9 @@ void SceneRendering::updateUniform()
 {
     //uniform for rendering from star
 
-    const GraphicMap& map = _meshMap.getInstanceFrame();
-    const GraphicBall& ball = _meshBall.getInstanceFrame();
-    const GraphicStar& star = _meshStar.getInstanceFrame();
+    const MapState& map = _meshMap.getInstanceFrame();
+    const BallState& ball = _meshBall.getInstanceFrame();
+    const StarState& star = _meshStar.getInstanceFrame();
 
     const glm::vec3 center{ map.width()/2.f,
                             map.height()/2.f,

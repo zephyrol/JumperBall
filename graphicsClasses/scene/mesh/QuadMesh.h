@@ -6,10 +6,10 @@
  */
 #ifndef QUADMESH_H
 #define QUADMESH_H
-#include "scene/GraphicQuad.h"
+#include "geometry/QuadState.h"
 #include "Mesh.h"
 
-class QuadMesh: public Mesh<Quad,GraphicQuad>
+class QuadMesh: public Mesh<Quad,QuadState>
 {
 public:
     QuadMesh(const Quad& quad);

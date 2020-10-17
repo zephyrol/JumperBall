@@ -1,12 +1,12 @@
 /*
- * File:   GraphicStar.cpp
+ * File:   StarState.cpp
  * Author: Morgenthaler S
  *
  * Created on 19 septembre 2020, 07h50
  */
-#include "GraphicStar.h"
+#include "StarState.h"
 
-GraphicStar::GraphicStar(const Star &star):
+StarState::StarState(const Star &star):
     _star(star),
     _transform(star.transform()),
     _centralPosition(star.centralPosition()),
@@ -19,7 +19,7 @@ GraphicStar::GraphicStar(const Star &star):
 
 }
 
-void GraphicStar::update()
+void StarState::update()
 {
     _transform = _star.transform();
     _centralPosition = _star.centralPosition();
@@ -29,37 +29,37 @@ void GraphicStar::update()
     _radiusOutside = _star.radiusOutside();
 }
 
-const glm::mat4& GraphicStar::transform() const
+const glm::mat4& StarState::transform() const
 {
     return _transform;
 }
 
-const glm::vec3& GraphicStar::centralPosition() const
+const glm::vec3& StarState::centralPosition() const
 {
     return _centralPosition;
 }
 
-GLfloat GraphicStar::radiusInside() const
+GLfloat StarState::radiusInside() const
 {
    return _radiusInside;
 }
 
-GLfloat GraphicStar::radiusOutside() const
+GLfloat StarState::radiusOutside() const
 {
   return _radiusOutside;
 }
 
-const glm::vec3 &GraphicStar::colorInside() const
+const glm::vec3 &StarState::colorInside() const
 {
    return _colorInside;
 }
 
-const glm::vec3 &GraphicStar::colorOutside() const
+const glm::vec3 &StarState::colorOutside() const
 {
     return _colorOutside;
 }
 
-const glm::mat4 &GraphicStar::initialTransform() const
+const glm::mat4 &StarState::initialTransform() const
 {
    return _initialTransform;
 }
