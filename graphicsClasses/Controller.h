@@ -96,6 +96,7 @@ private:
 
     ParallelTask<void>             _updatingScene;
     ParallelTask<void>             _updatingMenu;
+    ParallelTask<void>             _updating;
 
 };
 

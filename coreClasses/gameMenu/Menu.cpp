@@ -44,7 +44,9 @@ void Menu::currentPage(const Page_sptr &page) {
 
 void Menu::update(bool isPressed, float screenPosY)
 {
-    _currentPage->update(isPressed, screenPosY);
+    if (_currentPage) {
+        _currentPage->update(isPressed, screenPosY);
+    }
     //updateRendering(screenPosY);
 }
 

@@ -24,7 +24,6 @@ _mousePressingXCoord(0.f),
 _mousePressingYCoord(0.f),
 _mouseIsPressed(false),
 _requestToLeave(false),
-
 _map(Map::loadMap(_player.levelProgression())),
 _ball(std::make_shared<Ball>(*_map)),
 _camera(std::make_shared<Camera>()),
@@ -59,6 +58,7 @@ _updatingScene([this](size_t) {
         ? _sceneRenderingFrameA
         : _sceneRenderingFrameB;
     currentSceneRendering->update();
+    //std::cout << "end update scene ! " << std::endl;
 }),
 _updatingMenu([this](size_t) {
     if (_player.statut() == Player::Statut::INMENU) {
@@ -74,6 +74,13 @@ _updatingMenu([this](size_t) {
         ? _menuRenderingFrameA
         : _menuRenderingFrameB;
     currentMenuRendering->update();
+    //std::cout << "end update menu! " << std::endl;
+}),
+_updating([this](size_t) {
+    _updatingScene.runTasks();
+    _updatingMenu.runTasks();
+    _updatingMenu.waitTasks();
+    _updatingScene.waitTasks();
 })
 {
 }
@@ -124,34 +131,23 @@ void Controller::interactionMouse(const Status& status, float posX, float posY){
 
 void Controller::runController()
 {
-    /*// Rendering updating
-    if (_player.statut() == Player::Statut::INMENU) {
-        _updatingMenuRendering.runTasks();
-    }
-    _sceneRendering->update();
-    
-    if (_player.statut() == Player::Statut::INMENU) {
-        _updatingMenuRendering.waitTasks();
-    }*/
     // Scene and Menu updating
-    _updatingScene.runTasks();
-    _updatingMenu.runTasks();
+    //std::cout << "run tasks !" << std::endl;
+    _updating.runTasks();
 
     // Launch rendering
     _currentFrame == Controller::CurrentFrame::FrameA
-        ? _sceneRenderingFrameA->render()
-        : _sceneRenderingFrameB->render();
-    if (_player.statut() == Player::Statut::INMENU) {
-        _currentFrame == Controller::CurrentFrame::FrameA
-            ? _menuRenderingFrameA->render()
-            : _menuRenderingFrameB->render();
-    }
+        ? _sceneRenderingFrameB->render()
+        : _sceneRenderingFrameA->render();
+    _currentFrame == Controller::CurrentFrame::FrameA
+        ? _menuRenderingFrameB->render()
+        : _menuRenderingFrameA->render();
 }
 
 void Controller::waitController()
 {
-    _updatingScene.waitTasks();
-    _updatingMenu.waitTasks();
+    //std::cout << "wait tasks !" << std::endl;
+    _updating.waitTasks();
     _currentFrame = _currentFrame == Controller::CurrentFrame::FrameA
         ? Controller::CurrentFrame::FrameB
         : Controller::CurrentFrame::FrameA;
@@ -177,6 +173,7 @@ _sceneRenderingFrameA = std::make_shared<SceneRendering>
 _sceneRenderingFrameB = std::make_shared<SceneRendering>
         (*_map,*_ball,*_star,*_camera);
 }
+
 void Controller::manageValidateMouse()
 {
     if ( _player.statut() == Player::Statut::INGAME && _ball) {
@@ -198,6 +195,7 @@ void Controller::manageValidateMouse()
 
                     //New level case
                     if (_player.statut() == Player::Statut::INTRANSITION ) {
+                        _menu->noPageAsCurrentPage();
                         runGame(action->chooseLevel+1);
                     }
                 }

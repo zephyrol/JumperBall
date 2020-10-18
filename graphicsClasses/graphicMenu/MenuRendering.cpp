@@ -14,7 +14,9 @@ MenuRendering::MenuRendering(const Menu &menu):
 
 void MenuRendering::update()
 {
-    _pageRenderings.at(_menu.currentPage())->update();
+    if (_menu.currentPage()){
+        _pageRenderings.at(_menu.currentPage())->update();
+    }
 }
 
 std::map<CstPage_sptr, PageRendering_sptr> MenuRendering::createPageRenderings()

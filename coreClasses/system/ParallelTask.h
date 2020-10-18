@@ -102,15 +102,6 @@ const std::shared_ptr<std::vector<T> >& ParallelTask<T>::waitTasks()
         _mutexesDone.at(i).unlock();
     }
 
-    for ( std::mutex& mutexDone : _mutexesDone ) {
-        mutexDone.lock();
-        mutexDone.unlock();
-    }
-
-    for ( std::mutex& mutexDone : _mutexesDone ) {
-        mutexDone.lock();
-        mutexDone.unlock();
-    }
     return _returnValues;
 }
 
