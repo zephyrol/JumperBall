@@ -135,7 +135,7 @@ void testClass::run()
 {
     auto before = JBTypesMethods::getTimePointMSNow();
     unsigned int counter = 0;
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
     while (!inputManagement())
     {
         _controller.runController();

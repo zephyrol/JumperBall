@@ -20,6 +20,7 @@ public:
     enum class Status {Pressed,Released};
     enum class Button {Up, Down, Left, Right, Escape, Validate};
     enum class ScreenDirection {North, South, East, West};
+    enum class CurrentFrame { FrameA, FrameB };
     
     
     //--CONSTRUCTORS & DESTRUCTORS--//
@@ -87,14 +88,14 @@ private:
     std::shared_ptr<Camera>        _camera;
     std::shared_ptr<Star>          _star;
 
-    std::shared_ptr<SceneRendering> _sceneRendering;
-
-    std::shared_ptr<MenuRendering> _menuRendering;
+    CurrentFrame _currentFrame;
+    std::shared_ptr<SceneRendering> _sceneRenderingFrameA;
+    std::shared_ptr<SceneRendering> _sceneRenderingFrameB;
+    std::shared_ptr<MenuRendering> _menuRenderingFrameA;
+    std::shared_ptr<MenuRendering> _menuRenderingFrameB;
 
     ParallelTask<void>             _updatingScene;
-    ParallelTask<void>             _updatingSceneRendering;
     ParallelTask<void>             _updatingMenu;
-    ParallelTask<void>             _updatingMenuRendering;
 
 };
 

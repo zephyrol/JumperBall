@@ -11,7 +11,7 @@ public:
     MenuRendering(const Menu& menu);
 
     void render() const;
-    void update() ;
+    void update();
 
 private:
     const Menu& _menu;

@@ -75,7 +75,9 @@ SceneRendering::SceneRendering(const Map&     map,
                         Utility::getWidthFromHeight(heightBloomTexture),
                         heightBloomTexture,
                         false)
-{ }
+{ 
+    update();
+}
 
 void SceneRendering::phongEffect( GLuint depthTexture) const {
 

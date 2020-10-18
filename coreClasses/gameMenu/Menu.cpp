@@ -67,6 +67,11 @@ void Menu::failurePageAsCurrentPage()
     _currentPage = _failurePage;
 }
 
+void Menu::noPageAsCurrentPage() 
+{
+    _currentPage = nullptr; 
+}
+
 CstPage_sptr Menu::rootPage() const {
 
     return _rootPage;

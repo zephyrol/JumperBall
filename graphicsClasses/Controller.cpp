@@ -31,9 +31,13 @@ _camera(std::make_shared<Camera>()),
 _star(std::make_shared<Star>(glm::vec3(5.f,5.f,5.f),
                                     glm::vec3(0.f,3.f,3.f),
                                     0.3f,0.5f,50.f,5.f)),
-_sceneRendering( std::make_shared<SceneRendering>
+_currentFrame(Controller::CurrentFrame::FrameA),
+_sceneRenderingFrameA( std::make_shared<SceneRendering>
                   (*_map,*_ball,*_star,*_camera)),
-_menuRendering( std::make_shared<MenuRendering>(*_menu)),
+_sceneRenderingFrameB( std::make_shared<SceneRendering>
+                  (*_map,*_ball,*_star,*_camera)),
+_menuRenderingFrameA( std::make_shared<MenuRendering>(*_menu)),
+_menuRenderingFrameB( std::make_shared<MenuRendering>(*_menu)),
 _updatingScene([this](size_t) {
     _ball->update();
     if (_player.statut() == Player::Statut::INMENU) {
@@ -49,9 +53,12 @@ _updatingScene([this](size_t) {
             _player.statut(Player::Statut::INGAME);
         }
     }
-}),
-_updatingSceneRendering([this](size_t) {
-    _sceneRendering->update();
+
+    const std::shared_ptr<SceneRendering> currentSceneRendering = 
+        _currentFrame == Controller::CurrentFrame::FrameA 
+        ? _sceneRenderingFrameA
+        : _sceneRenderingFrameB;
+    currentSceneRendering->update();
 }),
 _updatingMenu([this](size_t) {
     if (_player.statut() == Player::Statut::INMENU) {
@@ -62,9 +69,11 @@ _updatingMenu([this](size_t) {
             _menu->failurePageAsCurrentPage();
         }
     }
-}),
-_updatingMenuRendering([this](size_t) {
-    _menuRendering->update();
+    const std::shared_ptr<MenuRendering> currentMenuRendering = 
+        _currentFrame == Controller::CurrentFrame::FrameA 
+        ? _menuRenderingFrameA
+        : _menuRenderingFrameB;
+    currentMenuRendering->update();
 })
 {
 }
@@ -115,7 +124,7 @@ void Controller::interactionMouse(const Status& status, float posX, float posY){
 
 void Controller::runController()
 {
-    // Rendering updating
+    /*// Rendering updating
     if (_player.statut() == Player::Statut::INMENU) {
         _updatingMenuRendering.runTasks();
     }
@@ -123,15 +132,19 @@ void Controller::runController()
     
     if (_player.statut() == Player::Statut::INMENU) {
         _updatingMenuRendering.waitTasks();
-    }
+    }*/
     // Scene and Menu updating
     _updatingScene.runTasks();
     _updatingMenu.runTasks();
 
     // Launch rendering
-    _sceneRendering->render();
+    _currentFrame == Controller::CurrentFrame::FrameA
+        ? _sceneRenderingFrameA->render()
+        : _sceneRenderingFrameB->render();
     if (_player.statut() == Player::Statut::INMENU) {
-    _menuRendering->render();
+        _currentFrame == Controller::CurrentFrame::FrameA
+            ? _menuRenderingFrameA->render()
+            : _menuRenderingFrameB->render();
     }
 }
 
@@ -139,6 +152,9 @@ void Controller::waitController()
 {
     _updatingScene.waitTasks();
     _updatingMenu.waitTasks();
+    _currentFrame = _currentFrame == Controller::CurrentFrame::FrameA
+        ? Controller::CurrentFrame::FrameB
+        : Controller::CurrentFrame::FrameA;
 }
 
 void Controller::manageValidateButton(const Controller::Status &status) {
@@ -156,7 +172,9 @@ _ball = std::make_shared<Ball>(*_map);
 _camera = std::make_shared<Camera>();
 _star = std::make_shared<Star>(
             glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f) ,0.3f,0.5f,50.f,5.f);
-_sceneRendering = std::make_shared<SceneRendering>
+_sceneRenderingFrameA = std::make_shared<SceneRendering>
+        (*_map,*_ball,*_star,*_camera);
+_sceneRenderingFrameB = std::make_shared<SceneRendering>
         (*_map,*_ball,*_star,*_camera);
 }
 void Controller::manageValidateMouse()

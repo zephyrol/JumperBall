@@ -38,6 +38,7 @@ public:
     void pausePageAsCurrentPage();
     void successPageAsCurrentPage();
     void failurePageAsCurrentPage();
+    void noPageAsCurrentPage();
 
     CstPage_sptr rootPage() const;
     CstPage_sptr pausePage() const;

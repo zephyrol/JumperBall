@@ -8,6 +8,7 @@ MenuRendering::MenuRendering(const Menu &menu):
     _spFont(Shader (GL_VERTEX_SHADER,   vsshaderFont),
             Shader (GL_FRAGMENT_SHADER, fsshaderFont))
 {
+    update();
 }
 
 
@@ -32,10 +33,11 @@ std::map<CstPage_sptr, PageRendering_sptr> MenuRendering::createPageRenderings()
 
 void MenuRendering::render() const
 {
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    _pageRenderings.at(_menu.currentPage())->render();
-
+    if (_menu.currentPage()) {
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        _pageRenderings.at(_menu.currentPage())->render();
+    }
 }
 
 const std::string MenuRendering::vsshaderBox = "shaders/boxVs.vs";
