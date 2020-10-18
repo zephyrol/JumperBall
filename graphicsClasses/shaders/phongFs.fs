@@ -5,6 +5,7 @@ uniform sampler2D depthTexture;
 uniform mat4  VP;
 uniform mat4  VPStar;
 
+uniform vec3 positionCamera;
 uniform light {
               vec3  directionLight; 
               vec3  ambientLightIntensity;
@@ -15,7 +16,8 @@ uniform light {
 uniform float burningCoeff;
 in vec3   fs_vertexColor;
 in vec4   fs_vertexDepthMapSpace;
-in vec3   fs_vertexDiffuseSpecular;
+in vec3   fs_vertexNormal;
+in vec3   fs_vertexPositionWorld;
 
 out vec4  pixelColor;
 
@@ -48,7 +50,14 @@ void main() {
     
     if (!inShadow) {
 
-        composition             += fs_vertexDiffuseSpecular;
+        vec3 toLight            = -directionLight;
+        vec3 toCamera           = normalize(positionCamera - fs_vertexPositionWorld);
+        vec3 reflection         = normalize(-toLight + 2.f * ( dot (toLight, fs_vertexNormal)) * fs_vertexNormal);
+        vec3 diffuseComponent   = diffuseLightIntensity * max(0.f,dot(toLight,fs_vertexNormal));
+
+        vec3 specularComponent  = specularLightIntensity * pow(max(0.f,dot(reflection,toCamera)),20.f);
+
+        composition  += diffuseComponent + specularComponent;
     }
     pixelColor = vec4(composition,1.f);
 

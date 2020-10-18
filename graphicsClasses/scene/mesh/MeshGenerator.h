@@ -28,6 +28,7 @@
 #include "animations/BallAnimation.h"
 #include "animations/ObjectAnimation.h"
 #include "animations/BlockAnimation.h"
+#include "animations/EnemyAnimation.h"
 #include "FrameBuffer.h"
 #include "MeshComponent.h"
 

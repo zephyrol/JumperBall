@@ -31,7 +31,6 @@ private:
     JBTypes::timePointMs _intersectionTime;
     JBTypes::vec3f _position;
     std::array<float,9> _transform;
-
 };
 
 #endif // ENEMYSTATE_H

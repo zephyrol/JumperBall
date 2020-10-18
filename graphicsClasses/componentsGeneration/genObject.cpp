@@ -70,9 +70,7 @@ vecMeshComponent_sptr MeshGenerator::genObject(
                 }
 
                 const glm::vec3 scale {0.3f, 0.05f, 0.3f};
-
                 const glm::vec3 translation {0.f, 0.f, -0.025f };
-
 
                 const glm::mat4 scaleMatrix = glm::scale(scale);
                 const glm::mat4 translationMatrix = glm::translate(translation);
@@ -84,12 +82,13 @@ vecMeshComponent_sptr MeshGenerator::genObject(
                   translationMatrix * rotationMatrix * scaleMatrix ;
                 const glm::mat4 tranformNormals = rotationMatrix;
 
-                MeshComponent_sptr componentCube =
-                std::make_shared<MeshComponent>(
-                std::make_shared<Cylinder>(*commonShapes.at("coinCylinder"),
-                        tranformLocal,
-                        tranformNormals ),
-                std::make_shared<ObjectAnimation>(obj,position,dir));
+                const MeshComponent_sptr componentCube =
+                    std::make_shared<MeshComponent>(
+                        std::make_shared<Cylinder>(
+                            *commonShapes.at("coinCylinder"),
+                            tranformLocal,
+                            tranformNormals),
+                        std::make_shared<ObjectAnimation>(obj, position, dir));
                 components.push_back(componentCube);
                 break;
             }

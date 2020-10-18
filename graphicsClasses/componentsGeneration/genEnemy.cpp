@@ -12,26 +12,31 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState& enemy) {
     if (enemy.category() == Map::EnemyTypes::Laser)
     {
         const Enemy::Color color = enemy.color();
+        std::string laserName;
         switch (color)
         {
         case Enemy::Color::Blue:
-            if (commonShapes.find("blueLaser") == commonShapes.end())
-                commonShapes["blueLaser"] = std::make_shared<Cylinder>(
+            laserName = "blueLaser";
+            if (commonShapes.find(laserName) == commonShapes.end())
+                commonShapes[laserName] = std::make_shared<Cylinder>(
                     glm::vec3(0.f, 0.f, 1.f));
             break;
         case Enemy::Color::Red:
-            if (commonShapes.find("redLaser") == commonShapes.end())
-                commonShapes["redLaser"] = std::make_shared<Cylinder>(
+            laserName = "redLaser";
+            if (commonShapes.find(laserName) == commonShapes.end())
+                commonShapes[laserName] = std::make_shared<Cylinder>(
                     glm::vec3(1.f, 0.f, 0.f));
             break;
         case Enemy::Color::Green:
-            if (commonShapes.find("greenLaser") == commonShapes.end())
-                commonShapes["greenLaser"] = std::make_shared<Cylinder>(
+            laserName = "greenLaser";
+            if (commonShapes.find(laserName) == commonShapes.end())
+                commonShapes[laserName] = std::make_shared<Cylinder>(
                     glm::vec3(0.f, 1.f, 0.f));
             break;
         case Enemy::Color::Yellow:
-            if (commonShapes.find("yellowLaser") == commonShapes.end())
-                commonShapes["yellowLaser"] = std::make_shared<Cylinder>(
+            laserName = "yellowLaser";
+            if (commonShapes.find(laserName) == commonShapes.end())
+                commonShapes[laserName] = std::make_shared<Cylinder>(
                     glm::vec3(1.f, 1.f, 0.f));
             break;
         case Enemy::Color::None:
@@ -41,14 +46,27 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState& enemy) {
         }
         const JBTypes::vec3f& position = enemy.position();
         const glm::vec3 glmPosition { position.x, position.y, position.z };
-        const glm::vec3 scale { 0.2f, enemy.size(), 0.f};
+        const glm::vec3 scale { 0.1f, enemy.size(), 0.1f};
+
+        const glm::mat4 translationMatrix = glm::translate(glmPosition);
+        const glm::mat4 scaleMatrix = glm::scale(scale);
+        const glm::mat4 tranformLocal =
+            translationMatrix * scaleMatrix;
+
+        const MeshComponent_sptr componentCube =
+            std::make_shared<MeshComponent>(
+                std::make_shared<Cylinder>(
+                    *commonShapes.at(laserName),
+                    tranformLocal),
+                std::make_shared<EnemyAnimation>(enemy));
+        components.push_back(componentCube);
     }
     else if (enemy.category() == Map::EnemyTypes::ThornBall)
     {
     }
-else if (enemy.category() == Map::EnemyTypes::DarkBall)
-{
-}
+    else if (enemy.category() == Map::EnemyTypes::DarkBall)
+    {
+    }
 
     return components;
 }
