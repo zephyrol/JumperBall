@@ -30,8 +30,7 @@ vecMeshComponent_sptr MeshGenerator::sortComponents(
         for (size_t i = 0; i < components.size()-1; ++i) {
             const CstMeshComponent_sptr c1 = components.at(indices.at(i));
             const CstMeshComponent_sptr c2 = components.at(indices.at(i+1));
-            if (*c1->shape()->vertexArrayObject() >
-                    *c2->shape()->vertexArrayObject() ){
+            if (*c1->getShapeVAO() > *c2->getShapeVAO() ){
                 const size_t intermediate = indices.at(i);
                 indices.at(i) = indices.at(i+1);
                 indices.at(i+1) = intermediate;

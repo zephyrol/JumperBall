@@ -88,8 +88,6 @@ void SceneRendering::phongEffect( GLuint depthTexture) const {
 
     // --- Ball Map and Light ---
     bindCamera(_spMap);
-    //_light.positionLight(_star.centralPosition());
-    //_light.bind("light",_spMap);
 
     // Light
     _light.bind();
@@ -166,8 +164,6 @@ void SceneRendering::depthFromStar() const {
     _frameBufferDepth.bindFrameBuffer(true);
     _spDepth.use();
     bindCamera(_spDepth);
-    //_spDepth.bindUniformTexture("frameTexture", 0);
-    //_spDepth.bindUniform ("threshold",  5.f);
     _meshBall.render(_spDepth);
     _meshMap.render(_spDepth);
     //_meshQuadFrame.render(_spDepth);

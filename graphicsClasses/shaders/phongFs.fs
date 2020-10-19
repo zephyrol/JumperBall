@@ -41,8 +41,6 @@ void main() {
     }
 
     const vec3 fireEffet    = vec3(10.f,.2f,0.f);
-    /*vec3 ambientComponent   = (1.f - burningCoeff) * ambientLightIntensity 
-                                + (burningCoeff) * fireEffet;*/
 
     vec3 ambientComponent   = ambientLightIntensity;
     vec3 composition = ambientComponent * 
@@ -61,6 +59,4 @@ void main() {
     }
     pixelColor = vec4(composition,1.f);
 
-    //pixelColor = texture(depthTexture, fragStarSysCoord.xy);
-                  
 }

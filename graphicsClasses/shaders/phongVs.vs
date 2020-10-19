@@ -1,9 +1,8 @@
 #version 330 core
 
-uniform mat4  M;
-uniform mat4  SR;
+uniform mat4  MW;
+uniform mat4  N;
 
-uniform mat4  W;
 uniform mat4  VP;
 uniform mat4  VPStar;
 
@@ -20,10 +19,10 @@ void main() {
   const float w               = 1.f;
   vec4 vertexPositionVec4     = vec4(vs_vertexPosition,w);
 
-  vec4 vertexPositionWorldSpace = W * M * vertexPositionVec4;
+  vec4 vertexPositionWorldSpace = MW * vertexPositionVec4;
 
   fs_vertexColor              = vs_vertexColor;
-  fs_vertexNormal             = normalize((SR * vec4(vs_vertexNormal,1.f)).xyz);
+  fs_vertexNormal             = normalize((N * vec4(vs_vertexNormal,1.f)).xyz);
   fs_vertexPositionWorld      = vertexPositionWorldSpace.xyz;
   fs_vertexDepthMapSpace      = VPStar * vertexPositionWorldSpace;
 
