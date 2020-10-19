@@ -18,7 +18,6 @@ SET( LIST_LIBRARIES
 INCLUDE(ExternalProject)
 ExternalProject_Add( _GLFW_
   URL 		"https://github.com/glfw/glfw/archive/3.3.2.tar.gz"
-  #SOURCE_DIR 	"${CMAKE_SOURCE_DIR}/libs/glfw-3.3.2"
   PREFIX 	GLFW_library	
   INSTALL_DIR	${CMAKE_INSTALL_PREFIX}
   CMAKE_ARGS 	-DGLFW_BUILD_DOCS=OFF 
@@ -56,8 +55,7 @@ ExternalProject_Add( _GLFW_
   set( GLFW_LIBRARIES ${LIST_LIBRARIES} CACHE STRING "") 
   
 ExternalProject_Add( _GLM_
-  URL 		"https://github.com/g-truc/glm/archive/0.9.9.0.tar.gz"
-  #SOURCE_DIR 	"${CMAKE_SOURCE_DIR}/libs/glm-0.9.9.0"
+  URL 		"https://github.com/g-truc/glm/archive/0.9.9.5.tar.gz"
   PREFIX 	GLM_library
   CMAKE_ARGS 	-DGLM_TEST_ENABLE=OFF
   		-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}

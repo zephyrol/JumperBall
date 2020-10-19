@@ -200,7 +200,7 @@ void Page::update(bool isPressed, float screenPosY) {
 
 std::vector<CstLabel_sptr> Page::createLabels() const {
     std::vector<CstLabel_sptr> labels;
-    for (const std::pair<CstLabel_sptr, CstPage_sptr>& bridge: _bridges) {
+    for (const auto& bridge: _bridges) {
         labels.push_back(bridge.first);
     }
     return labels;
@@ -208,7 +208,7 @@ std::vector<CstLabel_sptr> Page::createLabels() const {
 
 std::vector<Page_sptr> Page::createChildren() const {
     std::vector<Page_sptr> children;
-    for (const std::pair<CstLabel_sptr, Page_sptr>& bridge: _bridges) {
+    for (const auto& bridge: _bridges) {
         if (bridge.second) {
             children.push_back(bridge.second);
         }
