@@ -18,9 +18,6 @@
 #include FT_FREETYPE_H
 #include <gameMenu/MessageLabel.h>
 #include <system/ParallelTask.h>
-#include "Utility.h"
-#include "ShaderProgram.h"
-#include "geometry/Quad.h"
 #include "LabelRendering.h"
 
 
@@ -37,9 +34,11 @@ public:
                                             glm::vec2 localScale;
                                             glm::vec2 localTranslate; };
 
-    void                                render()    const override;
+    void                                render() const override;
     void                                update(float offset) override;
-
+    const ShaderProgram&                getShaderProgram() const override;
+    GLuint                              getQuadVAO() const override;
+    const Quad&                         getDisplayQuad() const override;
 
 private:
     const ShaderProgram& _spFont;
@@ -51,7 +50,8 @@ private:
     static FT_Library                   ftLib;
     static FT_Face                      fontFace;
     static std::shared_ptr<const Quad>  displayQuad;
-
+    static const glm::vec3              enabledLetterColor;
+    static const glm::vec3              disabledLetterColor;
 };
 
 #endif // TEXTRENDERING_H

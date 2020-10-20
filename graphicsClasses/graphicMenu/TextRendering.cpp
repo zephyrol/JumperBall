@@ -69,16 +69,14 @@ void TextRendering::clearFreeTypeRessources() {
 }
 
 void TextRendering::render() const {
-    _spFont.use();
-    displayQuad->bind();
-    const glm::vec3 textColor = _label.isActivated()
-            ? glm::vec3(0.f,1.f,1.f)
-            : glm::vec3(0.5f,0.5f,0.5f);
+    const glm::vec3& textColor = _label.isActivated() 
+        ? enabledLetterColor
+        : disabledLetterColor;
+    _spFont.bindUniform("fontColor",textColor);
     for (size_t i = 0; i < _label.message().size(); ++i) {
         const char c = _label.message().at(i);
         _spFont.bindUniformTexture("characterTexture", 0,
                                    alphabet.at(c).texture);
-        _spFont.bindUniform("fontColor",textColor);
         _spFont.bindUniform("M",_charactersTransforms.at(i));
         displayQuad->draw();
     }
@@ -115,6 +113,26 @@ void TextRendering::update(float offset) {
 
         offsetX += pitch;
     }
+}
+
+const ShaderProgram& TextRendering::getShaderProgram() const {
+    return _spFont;
+}
+
+GLuint TextRendering::getQuadVAO() const 
+{
+    // displayQuad can not be null because the pointer is allocated in the
+    // constructor
+    // displayQuad->vertexArrayObject() can not be null because the pointer is
+    // allocated in the GeometryShape constructor
+    return *displayQuad->vertexArrayObject() ;
+}
+
+const Quad& TextRendering::getDisplayQuad() const 
+{
+    // displayQuad can not be null because the pointer is allocated in the
+    // constructor
+    return *displayQuad;
 }
 
 
@@ -182,3 +200,7 @@ FT_Face TextRendering::fontFace;
 std::map<unsigned char, TextRendering::Character> TextRendering::alphabet{};
 
 std::shared_ptr<const Quad> TextRendering::displayQuad = nullptr;
+const glm::vec3 TextRendering::enabledLetterColor = 
+    glm::vec3(0.f,1.f,1.f);
+const glm::vec3 TextRendering::disabledLetterColor = 
+    glm::vec3(0.5f,0.5f,0.5f);

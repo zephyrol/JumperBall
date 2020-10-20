@@ -23,7 +23,19 @@ void PageRendering::update()
 
 void PageRendering::render() const
 {
+    GLuint currentShaderProgram = 0;
+    GLuint currentQuadVao = 0;
     for ( const LabelRendering_sptr& labelRendering : _labelRenderings) {
+        const ShaderProgram& sp = labelRendering->getShaderProgram();
+        if (currentShaderProgram != sp.getHandle()) {
+            currentShaderProgram = sp.getHandle();
+            sp.use();
+        }
+        if (currentQuadVao != labelRendering->getQuadVAO()) {
+            const Quad& displayQuad = labelRendering->getDisplayQuad();
+            displayQuad.bind();
+            currentQuadVao = labelRendering->getQuadVAO();
+        } 
         labelRendering->render();
     }
 }

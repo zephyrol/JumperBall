@@ -18,9 +18,6 @@
 #include FT_FREETYPE_H
 #include <gameMenu/BoxLabel.h>
 #include "LabelRendering.h"
-#include "Utility.h"
-#include "ShaderProgram.h"
-#include "geometry/Quad.h"
 
 
 class BoxRendering : public LabelRendering
@@ -34,9 +31,12 @@ public:
 
     void                     render() const override;
     void                     update(float offset) override;
+    const ShaderProgram&     getShaderProgram() const override;
+    GLuint                   getQuadVAO() const override;
+    const Quad&              getDisplayQuad() const override;
  private:
     const Quad               _boxQuad;
-    const ShaderProgram& _spBox;
+    const ShaderProgram&     _spBox;
     glm::mat4                _transformCharacter;
 
 

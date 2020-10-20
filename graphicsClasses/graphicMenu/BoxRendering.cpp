@@ -27,8 +27,6 @@ BoxRendering::BoxRendering(const Label &label,
 
 
 void BoxRendering::render() const {
-    _spBox.use();
-    _boxQuad.bind();
     _spBox.bindUniform("M",_transformCharacter);
     _boxQuad.draw();
 }
@@ -49,6 +47,21 @@ void BoxRendering::update(float offset) {
                                     glm::vec3{ _label.position().x,
                                                _label.position().y , 0.f});
     _transformCharacter = biasMatrix * translate * scaleMatrix;
+}
+
+const ShaderProgram& BoxRendering::getShaderProgram() const {
+    return _spBox;
+}
+
+GLuint BoxRendering::getQuadVAO() const {
+    // _boxQuad.vertexArrayObject() can not be null because the pointer is
+    // allocated in the GeometryShape constructor
+    return *_boxQuad.vertexArrayObject() ;
+    
+}
+
+const Quad& BoxRendering::getDisplayQuad() const {
+    return _boxQuad; 
 }
 
 
