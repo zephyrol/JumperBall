@@ -75,20 +75,22 @@ _world(1.f),
 _modelWorldTransforms(_components.size(),glm::mat4(1.f)),
 _normalsTransforms(_components.size(),glm::mat4(1.f)),
 _componentsMapComputing( [this](size_t componentNumber) -> void {
-
-    const MeshComponent_sptr& component = _animatedComponents.at(componentNumber);
+    
+    const MeshComponent_sptr& component =
+        _animatedComponents.at(componentNumber);
     component->animation()->updateTrans();
 }, _animatedComponents.size()),
 _componentsTransformsComputing( [this](size_t componentNumber) -> void {
-
+    
     const MeshComponent_sptr& component = _components.at(componentNumber);
-    glm::mat4 modelTransform = component->getShapeModelTransform();
-    glm::mat4 normalsTransform = component->getShapeNormalsTransform();
-    if(component->animation()) {
-        modelTransform = component->getAnimationModel() * modelTransform;
-        normalsTransform = component->getAnimationScaleRotation() *
-            normalsTransform;
-    }
+    const glm::mat4 modelTransform = component->animation()
+        ? component->getAnimationModel() * component->getShapeModelTransform()
+        : component->getShapeModelTransform();
+    const glm::mat4 normalsTransform = component->animation()
+        ? component->getAnimationScaleRotation() *
+            component->getShapeNormalsTransform()
+        : component->getShapeNormalsTransform();
+
     _modelWorldTransforms.at(componentNumber) = _world * modelTransform;
     _normalsTransforms.at(componentNumber) = normalsTransform;
 }, _components.size())
