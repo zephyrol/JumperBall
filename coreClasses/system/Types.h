@@ -76,6 +76,10 @@ namespace JBTypesMethods {
 
     JBTypes::vec3f        cross (const JBTypes::vec3f& a,
                                  const JBTypes::vec3f& b);
+    JBTypes::vec3f        add   (const JBTypes::vec3f& a,
+                                 const JBTypes::vec3f& b);
+    JBTypes::vec3f        scalarApplication (float scalar,
+                                             const JBTypes::vec3f& vec);
     float                 distance(const JBTypes::vec3f& a,
                                    const JBTypes::vec3f& b);
     void                  displayInstallError();

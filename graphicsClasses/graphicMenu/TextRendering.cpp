@@ -39,8 +39,8 @@ bool TextRendering::initFreeTypeAndFont() {
         return false;
     }
 
-    std::string fontFileToOpenV1 = "fonts/Cousine-Regular.ttf";
-    std::string fontFileToOpenV2 = "bin/fonts/Cousine-Regular.ttf";
+    const std::string fontFileToOpenV1 = "fonts/Cousine-Regular.ttf";
+    const std::string fontFileToOpenV2 = "bin/fonts/Cousine-Regular.ttf";
     const std::vector<std::string> fileNames {
         std::move(fontFileToOpenV1), std::move(fontFileToOpenV2)};
 
@@ -90,10 +90,11 @@ void TextRendering::update(float offset) {
     }
 
     const float pitch = _label.width()/_label.message().size();
-    float offsetX = -_label.width()/2.f + pitch/2.f;
 
     constexpr float biasScalar = 2.f; //To multiply the translation by 2
+    const float initialOffsetX = -_label.width()/2.f + pitch/2.f;
     for ( size_t i = 0; i < _label.message().size(); ++i){
+        const float offsetX =  initialOffsetX + i * pitch;
         const char c = _label.message().at(i);
         const glm::vec3 scale = glm::vec3{pitch * alphabet.at(c).localScale.x,
                 _label.height() * alphabet.at(c).localScale.y ,0.f};
@@ -102,7 +103,7 @@ void TextRendering::update(float offset) {
 
         const glm::mat4 translate =
            glm::translate( biasScalar *
-               glm::vec3{ position.x+ offsetX +
+               glm::vec3{ position.x + offsetX +
                           alphabet.at(c).localTranslate.x *
                           scale.x,
                            position.y -
@@ -111,7 +112,6 @@ void TextRendering::update(float offset) {
                          );
         _charactersTransforms.at(i) = biasMatrix * translate * scaleMatrix;
 
-        offsetX += pitch;
     }
 }
 

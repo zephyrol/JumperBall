@@ -26,7 +26,7 @@ ClassicalMechanics::listOfViscosities  {
 
 ClassicalMechanics::ClassicalMechanics():
     _gravitationalAcceleration          {gravitationalAccelerationEarth},
-    _distanceJump                       {distanceJumpBasic},
+    _jumpDistance                       {basicJumpDistance},
     _timeToGetDestinationX              (timeToStopWindBasic),
     _weightSphere                       (0.010f),
     _v0                                 {getV0xToRespectDistanceAndTime(),3.f},
@@ -37,11 +37,11 @@ ClassicalMechanics::ClassicalMechanics():
     fillEulerMethodBuffer();
 }
 
-ClassicalMechanics::ClassicalMechanics( float distanceJump, 
+ClassicalMechanics::ClassicalMechanics( float jumpDistance, 
                                         float timeToGetDestination, 
                                         float v0y):
     _gravitationalAcceleration          {gravitationalAccelerationEarth},
-    _distanceJump                       {distanceJump},
+    _jumpDistance                       {jumpDistance},
     _timeToGetDestinationX              (timeToGetDestination),
     _weightSphere                       (0.010f),
     _v0                                 (ClassicalMechanics::physics2DVector
@@ -51,6 +51,10 @@ ClassicalMechanics::ClassicalMechanics( float distanceJump,
     _timesShock                         {}
 {
     fillEulerMethodBuffer();
+}
+
+float ClassicalMechanics::getJumpDistance() const {
+    return _jumpDistance;
 }
 
 float ClassicalMechanics::getGravitationalAcceleration() const {
@@ -80,7 +84,7 @@ float ClassicalMechanics::evalPositionX(const float t) const {
                 static_cast<float> (pow(t,2)) / 2.f ;
     }
     else 
-        posX = _distanceJump;
+        posX = _jumpDistance;
     return posX;
 }
 
@@ -348,7 +352,7 @@ void ClassicalMechanics::printEulerBuffer() const {
 
 float ClassicalMechanics::getV0xToRespectDistanceAndTime() const {
     
-    return 2.f*_distanceJump/ static_cast<float>(pow(_timeToGetDestinationX,2));
+    return 2.f*_jumpDistance/ static_cast<float>(pow(_timeToGetDestinationX,2));
 
 }
 

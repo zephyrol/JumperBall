@@ -199,3 +199,14 @@ void JBTypesMethods::displayInstallError() {
             "or \"make install\"" << std::endl;
         #endif
 }
+
+JBTypes::vec3f JBTypesMethods::add(const JBTypes::vec3f &a,
+                   const JBTypes::vec3f &b) {
+    return JBTypes::vec3f {a.x + b.x, a.y + b.y, a.z + b.z};
+}
+
+JBTypes::vec3f JBTypesMethods::scalarApplication(float scalar,
+                                 const JBTypes::vec3f &vec)
+{
+    return JBTypes::vec3f {scalar * vec.x, scalar * vec.y, scalar * vec.z };
+}

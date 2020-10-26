@@ -27,14 +27,14 @@ public:
     //--CONSTRUCTORS & DESTRUCTORS--//
     ClassicalMechanics                  ();
 
-    ClassicalMechanics                  ( float distanceJump,
+    ClassicalMechanics                  ( float ,
                                           float timeToGetDestination,
                                           float v0y );
 
   
     //---------CONSTANTS------------//
     static constexpr float              gravitationalAccelerationEarth = 9.81f;
-    static constexpr float              distanceJumpBasic              = 2.f;
+    static constexpr float              basicJumpDistance              = 2.f;
     static constexpr float              timeToStopWindBasic            = 0.7f;
 
     static constexpr size_t             sizeSampleEuler                = 32768;
@@ -61,6 +61,7 @@ public:
 
 
     //-------CONST METHODS--------//
+    float                               getJumpDistance()                 const; 
     float                               getGravitationalAcceleration()    const; 
     physics2DVector                     getAcceleration(const float t)    const;
     physics2DVector                     getVelocity(const float t)        const;
@@ -89,7 +90,7 @@ private:
 
     //--------ATTRIBUTES-----------//
     float                               _gravitationalAcceleration;
-    float                               _distanceJump;
+    float                               _jumpDistance;
     float                               _timeToGetDestinationX;
 
     float                               _weightSphere;
@@ -105,7 +106,6 @@ private:
     //-------CONST METHODS--------//
     float                               getVelocityX(const float t)       const;
     float                               getVelocityY(const float t)       const;
-     
 
     float                               getIntervalX(float tBegin, float tEnd)
                                                                           const;

@@ -75,6 +75,8 @@ public:
     const ClassicalMechanics&     getMechanicsJumping()          const noexcept;
     const ClassicalMechanics&     getMechanicsFalling()          const noexcept;
 
+    JBTypes::vec3f                coveredRotation()              const noexcept;
+
     //----------METHODS------------//
     void                          update()                             noexcept;
     void                          doAction ( ActionRequest action);
@@ -118,6 +120,8 @@ private:
     bool                          _jumpRequest;
     JBTypes::timePointMs          _timeJumpRequest;
 
+    JBTypes::vec3f                _currentCoveredRotation;
+
     //-------CONST METHODS--------//
     std::shared_ptr<const std::vector<int> >  
                                   intersectBlock(float x, float y, float z) 
@@ -128,6 +132,7 @@ private:
                                                                           const;
     JBTypes::vec3f                get3DPosStayingBall()                   const;
     bool                          isOutOfTheMap()                         const;
+    JBTypes::vec3f                getRotationAxis()              const noexcept;
 
     //----------METHODS------------//
     void                          turnLeft()                           noexcept;
@@ -140,8 +145,8 @@ private:
     void                          setTimeActionNow()                   noexcept;
     void                          setTimeLifeNow()                     noexcept;
     void                          mapInteraction()                     noexcept;
-    void                          blockEvent(std::shared_ptr<Block> block)
-                                                                       noexcept;
+    void                          blockEvent(
+                                  const std::shared_ptr<Block> &block) noexcept;
     void                          die()                                noexcept;
     ClassicalMechanics&           getMechanicsJumping()                noexcept;
     void                          isFallingIntersectionBlock()         noexcept;
