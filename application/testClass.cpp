@@ -24,8 +24,6 @@ testClass::testClass(GLFWwindow* window ):
 {
 }
 
-
-
 bool testClass::inputManagement() {
 
     bool exit = false;
@@ -130,12 +128,11 @@ bool testClass::inputManagement() {
 }
 
 
-
 void testClass::run()
 {
     auto before = JBTypesMethods::getTimePointMSNow();
     unsigned int counter = 0;
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
     while (!inputManagement())
     {
         _controller.runController();

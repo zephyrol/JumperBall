@@ -18,18 +18,23 @@ public:
     const JBTypes::vec3f&         get3DPosition()                const noexcept;
     float                         burnCoefficient()                       const;
     const JBTypes::vec3f&         currentSideAsVector()                   const;
-    const JBTypes::timePointMs&   getTimeStateOfLife()        const;
-    const JBTypes::timePointMs&   getTimeAction()    const noexcept;
+    const JBTypes::timePointMs&   getTimeStateOfLife()                    const;
+    const JBTypes::timePointMs&   getTimeAction()                const noexcept;
     Ball::State                   state()                                 const;
     Ball::StateOfLife             stateOfLife()                           const;
     float                         getRadius()                             const;
     float                         jumpingPosX()                           const;
     float                         fallingPosX()                           const;
     const JBTypes::vec3f&         lookTowardsAsVector()                   const;
+    const JBTypes::vec3f&         currentMovementRotation()               const;
+    const std::vector<JBTypes::Dir>&
+                                  coveredRotation()              const noexcept;
+    float                         crushingCoeff()                const noexcept;
 
 private:
-
     const Ball&                   _ball;
+    const std::vector<JBTypes::Dir>&
+                                  _coveredRotation;
     JBTypes::vec3f                _position;
     float                         _burnCoefficient;
     JBTypes::vec3f                _currentSideAsVector;
@@ -38,9 +43,9 @@ private:
     Ball::State                   _state;
     Ball::StateOfLife             _stateOfLife;
     float                         _radius;
-    float                         _jumpingPosX;
-    float                         _fallingPosX;
     JBTypes::vec3f                _lookTowardsAsVector;
+    JBTypes::vec3f                _currentMovementRotation;
+    float                         _crushingCoeff;
 };
 
 #endif // BALLSTATE_H 

@@ -210,3 +210,14 @@ JBTypes::vec3f JBTypesMethods::scalarApplication(float scalar,
 {
     return JBTypes::vec3f {scalar * vec.x, scalar * vec.y, scalar * vec.z };
 }
+
+float JBTypesMethods::length(const JBTypes::vec3f &vec)
+{
+    return sqrtf(powf(vec.x, 2.f) + powf(vec.y, 2.f) + powf(vec.z, 2.f));
+}
+
+JBTypes::vec3f JBTypesMethods::normalize(const JBTypes::vec3f &vec)
+{
+    const float vecLength = JBTypesMethods::length(vec);
+    return { vec.x / vecLength, vec.y / vecLength, vec.z / vecLength };
+}

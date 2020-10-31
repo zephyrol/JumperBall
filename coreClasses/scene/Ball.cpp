@@ -41,7 +41,8 @@ Ball::Ball(Map& map):
         _burnCoefficientCurrent(0.f),
         _jumpRequest(false),
         _timeJumpRequest(),
-        _currentCoveredRotation{0.f,0.f,0.f}
+        _currentCoveredRotation{},
+        _currentCrushing(0.f)
 {
 }
 
@@ -151,10 +152,8 @@ void Ball::goStraightAhead() noexcept {
     _currentBlockZ  = nextBlock.poxZ;
     _currentSide    = nextBlock.nextSide;
     _lookTowards    = nextBlock.nextLook; 
-
-    const JBTypes::vec3f rotation = getRotationAxis();
-    _currentCoveredRotation = JBTypesMethods::add(
-        _currentCoveredRotation, rotation);
+    _currentCoveredRotation.push_back(
+        JBTypesMethods::vectorAsDirection(getRotationAxis()));
 }
 
 void Ball::jump() noexcept {
@@ -166,7 +165,6 @@ void Ball::jump() noexcept {
 void Ball::stay() noexcept {
     _jumpingType = Ball::JumpingType::Short;
     _state = Ball::State::Staying;
-
     setTimeActionNow();
 }
 
@@ -266,16 +264,16 @@ void Ball::isGoingStraightAheadIntersectBlock()   noexcept {
         ClassicalMechanics& refMechanicsJumping = getMechanicsJumping();
         if (blockNear && blockNear->stillExists()) {
             refMechanicsJumping.addShockFromPosition
-            (distanceNear-sizeBlock/2.f -getRadius());
+                (distanceNear-sizeBlock/2.f -getRadius());
         }
         else if (blockFar && blockFar->stillExists()) {
             refMechanicsJumping.addShockFromPosition
-            (distanceFar-sizeBlock/2.f -getRadius());
+                (distanceFar-sizeBlock/2.f -getRadius());
         }
         else if (_jumpingType == Ball::JumpingType::Long && blockVeryFar && 
                 blockVeryFar->stillExists()) {
             refMechanicsJumping.addShockFromPosition
-            (distanceVeryFar-sizeBlock/2.f -getRadius());
+                (distanceVeryFar-sizeBlock/2.f -getRadius());
         }
         else {
             refMechanicsJumping.timesShock({});
@@ -295,37 +293,94 @@ const ClassicalMechanics& Ball::getMechanicsFalling() const noexcept{
     return _mechanicsPatternFalling;
 }
 
-JBTypes::vec3f Ball::coveredRotation() const noexcept {
-   return _currentCoveredRotation; 
+const std::vector<JBTypes::Dir>& Ball::getCurrentCoveredRotation() const noexcept {
+    return _currentCoveredRotation;
 }
 
+JBTypes::vec3f Ball::movementRotation() const noexcept {
+
+    const std::function<float()> getCoveredDistance = [this]() -> float {
+        if (_state == Ball::State::Moving ) {
+            const float timeSecondsSinceAction = getTimeSecondsSinceAction();
+            return timeSecondsSinceAction / Ball::timeToGetNextBlock;
+        } else if (_state == Ball::State::Jumping) {
+            return getJumpingPosX();
+        } else if (_state == Ball::State::Falling) {
+            return getFallingPosX();
+        } else {
+            return 0.f;
+        }
+    };
+
+    const float coveredDistance = getCoveredDistance();
+    return JBTypesMethods::scalarApplication(coveredDistance,getRotationAxis());
+}
+
+float Ball::getCrushingCoefficient() const noexcept {
+     
+    constexpr float durationWaitingCrushing = 0.7f;
+
+    const std::function<float()> stayCrushingCoeff = [this]() -> float {
+        const float angleInCosinusFunc = getTimeSecondsSinceAction() *
+                                         2.f * static_cast<float>(M_PI) /
+                                         durationWaitingCrushing;
+        //-cos(0) = -1;
+        //cos(0) = 1;
+        return 0.5f - cosf(angleInCosinusFunc)/2.f;
+    };
+
+    const std::function<float(float)> movementCrushingCoeff = 
+        [this](float timeToDoMovement) -> float {
+            const float t = getTimeSecondsSinceAction() / 
+                timeToDoMovement > 1.f 
+                ? 1.f
+                : getTimeSecondsSinceAction() / timeToDoMovement;
+            return (1.f-t) * _currentCrushing;
+    };
+
+    if (_state == Ball::State::Staying ) {
+        return stayCrushingCoeff();
+    } else if (_state == Ball::State::Moving ||
+               _state == Ball::State::Jumping ) {
+        return movementCrushingCoeff(timeToGetNextBlock);
+    } else if (_state == Ball::State::TurningLeft ||
+               _state == Ball::State::TurningRight) {
+        return movementCrushingCoeff(timeToTurn);
+    } else {
+        return 0.f;
+    }
+}
 
 void Ball::isFallingIntersectionBlock() noexcept {
-    if ( _state == Ball::State::Jumping  || _state == Ball::State::Falling) {
-        const float fDifference = getTimeSecondsSinceAction();
+    const float fDifference = getTimeSecondsSinceAction();
+    const bool descendingJumpPhase = _state == Ball::State::Jumping &&
+        _mechanicsPatternJumping.getVelocity(fDifference).y < 0;
+    const auto positionBlockPtr =
+        intersectBlock(_3DPosX, _3DPosY, _3DPosZ);
+    if ( positionBlockPtr && 
+        (descendingJumpPhase || _state == Ball::State::Falling)) {
+        if (descendingJumpPhase) {
+            const float coveredDistance = getMechanicsJumping().getPosition(
+                getMechanicsJumping().getTimeToGetDestination()).x;
+            const JBTypes::vec3f targetVector = 
+                JBTypesMethods::scalarApplication(
+                    coveredDistance, getRotationAxis());
+            const JBTypes::vec3f movementVector =
+                JBTypesMethods::normalize(targetVector);
 
-        if ( _state == Ball::State::Falling || 
-                _mechanicsPatternJumping.getVelocity(fDifference).y < 0 ) {
-            const auto positionBlockPtr = intersectBlock(_3DPosX,_3DPosY, _3DPosZ);
-            if (positionBlockPtr) {
-                getMechanicsJumping().timesShock({});
-                _currentBlockX      = positionBlockPtr->at(0) ;
-                _currentBlockY      = positionBlockPtr->at(1) ;
-                _currentBlockZ      = positionBlockPtr->at(2) ;
-                stay();
-                const float jumpDistance = _mechanicsPatternJumping.getJumpDistance();
-                const JBTypes::vec3f rotationAxis = getRotationAxis();
-                const JBTypes::vec3f rotation = JBTypesMethods::scalarApplication(
-                    jumpDistance, rotationAxis
-                );
-                _currentCoveredRotation = JBTypesMethods::add(
-                    _currentCoveredRotation, rotation 
-                );
-                blockEvent(_map.getBlock(
-                        _currentBlockX,_currentBlockY,_currentBlockZ));
-                update();
+            for (size_t i = 0; i < JBTypesMethods::length(targetVector); ++i) {
+                _currentCoveredRotation.push_back(
+                    JBTypesMethods::vectorAsDirection(movementVector));
             }
         }
+        getMechanicsJumping().timesShock({});
+        _currentBlockX = positionBlockPtr->at(0);
+        _currentBlockY = positionBlockPtr->at(1);
+        _currentBlockZ = positionBlockPtr->at(2);
+        stay();
+        blockEvent(_map.getBlock(
+            _currentBlockX, _currentBlockY, _currentBlockZ));
+        update();
     }
 }
 
@@ -366,7 +421,6 @@ JBTypes::timePointMs Ball::getTimeStateOfLifeMs() const noexcept {
 
 JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const
 {
-
     const float offsetRealPosition = 0.5f + ClassicalMechanics::radiusBall;
     
     const JBTypes::vec3f sideVec =
@@ -396,7 +450,7 @@ JBTypes::Dir Ball::lookTowards() const {
     return _lookTowards;
 }
 
-float Ball::getTimeSecondsSinceAction() const noexcept{
+float Ball::getTimeSecondsSinceAction() const noexcept {
     const JBTypes::timePointMs timeNowMs = JBTypesMethods::getTimePointMSNow();
     const JBTypes::timePointMs timeActionMs= getTimeActionMs();
     return JBTypesMethods::getFloatFromDurationMS(timeNowMs - timeActionMs);
@@ -492,6 +546,7 @@ void Ball::fallingUpdate() noexcept {
 }
 
 void Ball::stayingUpdate() noexcept {
+    _currentCrushing = getCrushingCoefficient();
     const JBTypes::vec3f position3D = get3DPosStayingBall();
     const std::shared_ptr<Block> block =
         _map.getBlock(_currentBlockX,_currentBlockY,_currentBlockZ);
@@ -527,8 +582,8 @@ void Ball::movingUpdate() noexcept {
         _3DPosY = position3D.y;
         _3DPosZ = position3D.z;
         stay();
-
         blockEvent(_map.getBlock(_currentBlockX, _currentBlockY, _currentBlockZ));
+        update();
     }
     else {
         const JBTypes::vec3f position3D = get3DPosStayingBall();
@@ -621,6 +676,14 @@ JBTypes::vec3f Ball::getRotationAxis() const noexcept
     return JBTypesMethods::cross(
         JBTypesMethods::directionAsVector(_currentSide),
         JBTypesMethods::directionAsVector(_lookTowards));
+}
+
+float Ball::getJumpingPosX() const noexcept {
+    return getMechanicsJumping().getPosition(getTimeSecondsSinceAction()).x;
+}
+
+float Ball::getFallingPosX() const noexcept {
+    return getMechanicsFalling().getPosition(getTimeSecondsSinceAction()).x ;
 }
 
 void Ball::update() noexcept{

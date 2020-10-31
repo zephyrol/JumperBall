@@ -82,6 +82,8 @@ namespace JBTypesMethods {
                                              const JBTypes::vec3f& vec);
     float                 distance(const JBTypes::vec3f& a,
                                    const JBTypes::vec3f& b);
+    float                 length(const JBTypes::vec3f& vec);
+    JBTypes::vec3f        normalize(const JBTypes::vec3f& vec);
     void                  displayInstallError();
 
 }

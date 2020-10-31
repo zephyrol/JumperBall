@@ -75,11 +75,14 @@ public:
     const ClassicalMechanics&     getMechanicsJumping()          const noexcept;
     const ClassicalMechanics&     getMechanicsFalling()          const noexcept;
 
-    JBTypes::vec3f                coveredRotation()              const noexcept;
+    const std::vector<JBTypes::Dir>&
+                                  getCurrentCoveredRotation()    const noexcept;
+    JBTypes::vec3f                movementRotation()             const noexcept;
+    float                         getCrushingCoefficient()       const noexcept;
 
     //----------METHODS------------//
     void                          update()                             noexcept;
-    void                          doAction ( ActionRequest action);
+    void                          doAction(ActionRequest action);
 
 private:
     
@@ -120,7 +123,8 @@ private:
     bool                          _jumpRequest;
     JBTypes::timePointMs          _timeJumpRequest;
 
-    JBTypes::vec3f                _currentCoveredRotation;
+    std::vector<JBTypes::Dir>     _currentCoveredRotation;
+    float                         _currentCrushing;
 
     //-------CONST METHODS--------//
     std::shared_ptr<const std::vector<int> >  
@@ -133,6 +137,8 @@ private:
     JBTypes::vec3f                get3DPosStayingBall()                   const;
     bool                          isOutOfTheMap()                         const;
     JBTypes::vec3f                getRotationAxis()              const noexcept;
+    float                         getJumpingPosX()               const noexcept;
+    float                         getFallingPosX()               const noexcept;
 
     //----------METHODS------------//
     void                          turnLeft()                           noexcept;
