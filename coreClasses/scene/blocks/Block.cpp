@@ -92,7 +92,8 @@ void Block::catchObject( const std::array<unsigned int, 3>& blockPosition,
     for (size_t i = 0; i < _objects.size(); ++i){
         const std::shared_ptr<Object> object = _objects.at(i);
         if (object && !object->isGotten()) {
-            const JBTypes::vec3f objectPos = objectPosition(blockPosition,i);
+            const JBTypes::vec3f objectPos =
+                objectPosition(blockPosition,static_cast<unsigned int>(i));
             object->catchingTest(objectPos, entityPosition, radiusEntity);
         }
     }
