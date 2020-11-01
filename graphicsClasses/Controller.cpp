@@ -58,7 +58,6 @@ _updatingScene([this](size_t) {
         ? _sceneRenderingFrameA
         : _sceneRenderingFrameB;
     currentSceneRendering->update();
-    //std::cout << "end update scene ! " << std::endl;
 }),
 _updatingMenu([this](size_t) {
     if (_player.statut() == Player::Statut::INMENU) {
@@ -74,14 +73,13 @@ _updatingMenu([this](size_t) {
         ? _menuRenderingFrameA
         : _menuRenderingFrameB;
     currentMenuRendering->update();
-    //std::cout << "end update menu! " << std::endl;
 }),
 _updating([this](size_t) {
     _updatingScene.runTasks();
     _updatingMenu.runTasks();
     _updatingMenu.waitTasks();
     _updatingScene.waitTasks();
-})
+},1,true)
 {
 }
 

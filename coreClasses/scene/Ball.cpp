@@ -318,9 +318,9 @@ JBTypes::vec3f Ball::movementRotation() const noexcept {
 
 float Ball::getCrushingCoefficient() const noexcept {
      
-    constexpr float durationWaitingCrushing = 0.7f;
 
     const std::function<float()> stayCrushingCoeff = [this]() -> float {
+        constexpr float durationWaitingCrushing = 0.7f;
         const float angleInCosinusFunc = getTimeSecondsSinceAction() *
                                          2.f * static_cast<float>(M_PI) /
                                          durationWaitingCrushing;

@@ -12,6 +12,7 @@
  */
 
 #include "GhostBlock.h"
+#include <functional>
 
 GhostBlock::GhostBlock(float periodicity):
 Block(true,false),
