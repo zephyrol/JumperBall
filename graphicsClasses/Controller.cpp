@@ -24,7 +24,7 @@ _mousePressingXCoord(0.f),
 _mousePressingYCoord(0.f),
 _mouseIsPressed(false),
 _requestToLeave(false),
-_map(Map::loadMap(_player.levelProgression())),
+_map(MapGenerator::loadMap(_player.levelProgression())),
 _ball(std::make_shared<Ball>(*_map)),
 _camera(std::make_shared<Camera>()),
 _star(std::make_shared<Star>(glm::vec3(5.f,5.f,5.f),
@@ -161,7 +161,7 @@ void Controller::manageValidateButton(const Controller::Status &status) {
 
 void Controller::runGame(size_t level)
 {
-_map = Map::loadMap(level);
+_map = MapGenerator::loadMap(level);
 _ball = std::make_shared<Ball>(*_map);
 _camera = std::make_shared<Camera>();
 _star = std::make_shared<Star>(

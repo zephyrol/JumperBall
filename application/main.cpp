@@ -14,7 +14,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include <scene/Map.h>
+#include <scene/MapGenerator.h>
 #include "testClass.h"
 
 using namespace std;
@@ -69,17 +69,12 @@ void cleanLibraries() {
 
 int main(int argc, char** argv) {
     
-    
     if (argc == 3) {
 
         ifstream file;
-        std::string fileToOpen;
-        if (argc > 1) {
-            fileToOpen = argv[1];
-        }
-        else {
-            fileToOpen = "maps/map1.txt";
-        }
+        const std::string fileToOpen = argc > 1
+        ?  argv[1]
+        :  "maps/map1.txt";
         file.open(fileToOpen);  //Opening file to read
         if (!file) {
             std::cerr << "ERROR: Opening " << fileToOpen << " impossible .."
@@ -89,11 +84,11 @@ int main(int argc, char** argv) {
         }
         const std::string arg (argv[2]);
         if (arg == "-compress") {
-            Map::compress(file);
+            MapGenerator::compress(file);
             std::ifstream mapFile ("outMap.txt");
             std::ifstream mapFile2 (fileToOpen);
-            Map map (Map::createMapInfo(mapFile));
-            map.verificationMap(mapFile2);
+            Map map (MapGenerator::createMapInfo(mapFile));
+            MapGenerator::verificationMap(mapFile2,map);
         }
         else {
             std::cerr << "ERROR: Unknown option" << std::endl;

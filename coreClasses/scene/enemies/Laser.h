@@ -13,7 +13,6 @@
 class Laser : public Enemy {
 public:
 
-
     Laser(const Color& color, 
           const Block& tieBlock, 
           const std::array<unsigned int,3>& initialPosition,

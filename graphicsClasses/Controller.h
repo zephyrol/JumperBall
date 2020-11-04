@@ -9,6 +9,7 @@
 #define Controller_h
 
 #include <player/Player.h>
+#include <scene/MapGenerator.h>
 #include "scene/SceneRendering.h"
 #include "graphicMenu/MenuRendering.h"
 

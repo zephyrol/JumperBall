@@ -33,22 +33,6 @@
 class Map {
 public:
 
-    //---------CONSTANTS------------//
-
-    //Blocks compression
-    static constexpr unsigned char        firstKindOfBlock                 = 48;
-    static constexpr unsigned char        firstNumberOfBlock               = 58;
-    static constexpr unsigned int         nbOfCharactersUsedForNumbers     = 69;
-
-    static constexpr unsigned int         firstNumberParams                = 33;
-
-    //Objects compression
-    static constexpr unsigned char        nextBlockAction                  = 33;
-    static constexpr unsigned char        firstNumberType                  = 34;
-    static constexpr unsigned char        firstNumberSide                  = 42;
-    static constexpr unsigned char        firstNumberWithoutAnyObjects     = 48;
-    static constexpr unsigned int         nbOfCharactersWithoutObjects     = 79;
-
 
     // ----------- TYPES -----------//
     enum class BlockTypes { None, Base, Fire, Ice, Sharp,
@@ -92,8 +76,6 @@ public:
 
     std::chrono::time_point<std::chrono::system_clock>
                                           timeCreation()                  const;
-    void                                  verificationMap(std::ifstream &input)
-                                                                          const;
 
     std::array<unsigned int, 3>           getBlockCoords(size_t index)    const;
     size_t                                getIndex(
@@ -115,11 +97,9 @@ public:
     const std::vector<EnemyInfo>&         getEnemiesInfo()                const;
 
     //--------STATIC METHODS-------//
-    static void                           compress(std::ifstream& input);
-
-    static std::shared_ptr<Map>           loadMap(size_t mapNumber);
-
-    static MapInfo                        createMapInfo(std::ifstream& file);
+    static std::array<unsigned int, 3>    getBlockCoords(size_t index,
+                                                         unsigned int width,
+                                                         unsigned int deep);
 
 private:
 
@@ -153,15 +133,6 @@ private:
 
 
     //--------STATIC METHODS-------//
-    static std::string                    convertToBase (unsigned int number,
-                                                          unsigned char base);
-    static unsigned int                   convertToBase10(std::string& s,
-                                                            unsigned int base);
-    static void                           applyOffset (std::string& s,
-                                                        int offset);
-    static void                           substractOffset(std::string& s,
-                                                          int offset);
-    static BlockTypes                     uintToBlockType(unsigned int number);
 
 };
 

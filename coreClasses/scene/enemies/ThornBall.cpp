@@ -28,6 +28,15 @@ _movementLenght(movementLength)
 {
 }
 
+Enemy::EnemyEffect ThornBall::update(const JBTypes::vec3f& entityPosition,
+                               float radiusEntity) 
+{
+   touchingTest(entityPosition,radiusEntity);
+   return _hasHit 
+    ? Enemy::EnemyEffect::Destroy
+    : Enemy::EnemyEffect::Nothing;
+}
+
 void ThornBall::touchingTest(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) 
 {
