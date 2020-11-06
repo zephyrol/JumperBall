@@ -11,6 +11,11 @@
  * Created on 2 novembre 2020, 22:38
  */
 #include "MapGenerator.h"
+#include <algorithm>
+#include <math.h>
+#include <cctype>
+#include <future>
+#include <functional>
 
 std::shared_ptr<Map> MapGenerator::loadMap(size_t mapNumber)
 {
@@ -69,6 +74,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
     std::string infoMap;
     std::string counterBuffer;
 
+    std::cout << "decompress blocks" << std::endl;
     char readValue;
     file >> infoMap;
     while (!infoMap.empty()) {
@@ -88,7 +94,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             }
             const unsigned int typeOfBlock = readValue - firstKindOfBlock;
             for (unsigned int i = 0 ; i < nbBlocksTowrite ; ++i) {
-                std::shared_ptr <Block> block = nullptr ;
+                std::shared_ptr <Block> block = nullptr;
                 const std::vector<unsigned int> blockWithSpecialParams {4,6};
                 std::array<bool,6> specialParams
                 {false,false,false,false,false,false};
@@ -146,6 +152,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
     }
 
     // OBJECTS PART
+    std::cout << "decompress objects" << std::endl;
     std::string infoObjects;
     std::string counterWithoutObjectsBuffer;
     unsigned int currentIndex = 0;
@@ -206,6 +213,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
         previousReadValue = readValue;
     }
 
+    std::cout << "decompress enemies" << std::endl;
     // ENEMIES PART
     std::string infoEnemies;
     std::string counterWithoutEnemiesBuffer;
@@ -217,11 +225,11 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
 
         readValue = infoEnemies.front();
         if (readValue == nextBlockAction){
-            infoObjects.erase(infoObjects.begin());
+            infoEnemies.erase(infoEnemies.begin());
             ++currentIndex;//We increment the cursor to the next block
         } else if (readValue >= firstNumberWithoutAnyObjects) {
             counterWithoutObjectsBuffer.push_back(readValue);
-            infoObjects.erase(infoObjects.begin());
+            infoEnemies.erase(infoEnemies.begin());
 
             if (previousReadValue < firstNumberWithoutAnyObjects &&
                 previousReadValue >= firstNumberType) {
@@ -240,35 +248,35 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                     JBTypesMethods::integerAsDirection(side);
 
             // enemy type
-            infoObjects.erase(infoObjects.begin());
-            readValue = infoObjects.front();
+            infoEnemies.erase(infoEnemies.begin());
+            readValue = infoEnemies.front();
             const unsigned int typeOfEnemy = readValue - firstNumberType;
 
             // enemy movement dir
-            infoObjects.erase(infoObjects.begin());
-            readValue = infoObjects.front();
+            infoEnemies.erase(infoEnemies.begin());
+            readValue = infoEnemies.front();
 
             const unsigned int movementSide = readValue - firstNumberSide;
             const JBTypes::Dir movementDir =
                     JBTypesMethods::integerAsDirection(movementSide);
 
             // Length
-            infoObjects.erase(infoObjects.begin());
-            readValue = infoObjects.front();
+            infoEnemies.erase(infoEnemies.begin());
+            readValue = infoEnemies.front();
             const size_t length = readValue - firstNumberLength;
 
             // Color
-            infoObjects.erase(infoObjects.begin());
-            readValue = infoObjects.front();
+            infoEnemies.erase(infoEnemies.begin());
+            readValue = infoEnemies.front();
             const unsigned int charColor = readValue - firstNumberColor;
             const Enemy::Color color = static_cast<Enemy::Color>(charColor);
 
-            Map::EnemyTypes category;
+            //Map::EnemyTypes category;
             std::shared_ptr<Enemy> enemy;
             const auto& blockPtr = mapInfo.blocks.at(currentIndex);
             switch (typeOfEnemy) {
                 case 0:
-                    category = Map::EnemyTypes::Laser;
+                    //category = Map::EnemyTypes::Laser;
                     enemy = std::make_shared<Laser>(
                         color,
                         *blockPtr,
@@ -278,7 +286,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                     );
                     break;
                 case 1:
-                    category = Map::EnemyTypes::ThornBall;
+                    //category = Map::EnemyTypes::ThornBall;
                     enemy = std::make_shared<ThornBall>(
                         *blockPtr,
                         Map::getBlockCoords(currentIndex,width,deep),
@@ -288,7 +296,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                     );
                     break;
                 case 2:
-                    category = Map::EnemyTypes::ThornBall;
+                    //category = Map::EnemyTypes::ThornBall;
                     enemy = std::make_shared<ThornBall>(
                         *blockPtr,
                         Map::getBlockCoords(currentIndex,width,deep),
@@ -297,7 +305,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                         length
                     );
                     break;
-                    category = Map::EnemyTypes::DarkBall;
+                    //category = Map::EnemyTypes::DarkBall;
                     enemy = std::make_shared<DarkBall>(
                         *blockPtr,
                         Map::getBlockCoords(currentIndex,width,deep),
@@ -307,7 +315,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                     );
                     break;
                 default :
-                    category = Map::EnemyTypes::Laser;
+                    //category = Map::EnemyTypes::Laser;
                     enemy = std::make_shared<Laser>(
                         color,
                         *blockPtr,
@@ -317,9 +325,12 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                     );
                     break;
             }
-            mapInfo.enemiesInfo.push_back({enemy,category});
+            Map::EnemyInfo enemyInfo;
+            enemyInfo.enemy = enemy;
+            enemyInfo.index = static_cast<size_t>(currentIndex);
+            mapInfo.enemiesInfo.push_back(enemyInfo);
             counterWithoutObjectsBuffer.clear();
-            infoObjects.erase(infoObjects.begin(), infoObjects.begin()+1);
+            infoEnemies.erase(infoEnemies.begin(), infoEnemies.begin()+1);
         }
         previousReadValue= readValue;
     }
@@ -390,7 +401,11 @@ void MapGenerator::compress(std::ifstream& input) {
     unsigned int counter = 1;
     unsigned int currentType;
 
+    std::string trash;
+
     // BLOCKS PART
+    std::cout << "compress blocks" << std::endl;
+    input >> trash;
     input >> currentType;
 
     const std::vector<unsigned int> blockWithSpecialParams {4,6};
@@ -400,14 +415,12 @@ void MapGenerator::compress(std::ifstream& input) {
         input >> readValue;
 
         if (readValue != currentType){
-                if (counter > 1 )
-                {
+                if (counter > 1 ) {
                     std::string stringToWrite = convertToBase(
                             counter, nbOfCharactersUsedForNumbers);
                     applyOffset(stringToWrite, firstNumberOfBlock) ;
                     output << stringToWrite;
-                }
-                if (counter > 0 ) {
+                } if (counter > 0 ) {
                     output << currentType;
                 }
                 currentType = readValue;
@@ -442,6 +455,8 @@ void MapGenerator::compress(std::ifstream& input) {
     output << currentType << std::endl;
 
     // OBJECTS PART
+    std::cout << "compress objects" << std::endl;
+    input >> trash;
     std::string readString;
     unsigned int counterWithoutObjects = 0;
 
@@ -486,10 +501,19 @@ void MapGenerator::compress(std::ifstream& input) {
             }
         }
     }
+    if (counterWithoutObjects > 0) {
+        std::string stringToWrite = convertToBase(
+            counterWithoutObjects, nbOfCharactersWithoutObjects);
+        applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+        output << stringToWrite;
+        counterWithoutObjects = 0;
+    }
 
+    output << std::endl;
     // ENEMIES PART
+    std::cout << "compress enemies" << std::endl;
+    input >> trash;
     readString.clear();
-    counterWithoutObjects = 0;
 
     for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
         input >> readString;
@@ -501,6 +525,7 @@ void MapGenerator::compress(std::ifstream& input) {
                 std::string stringToWrite = convertToBase(
                         counterWithoutObjects, nbOfCharactersWithoutObjects);
                 applyOffset(stringToWrite, firstNumberWithoutAnyObjects) ;
+                std::cout << "write " << stringToWrite << std::endl;
                 output << stringToWrite;
                 counterWithoutObjects = 0;
             } else if (i > 0 ) {
@@ -568,6 +593,14 @@ void MapGenerator::compress(std::ifstream& input) {
             output << readString.at(4) - AtoFirstNumberColor;
         }
     }
+    if (counterWithoutObjects > 0) {
+        std::string stringToWrite = convertToBase(
+            counterWithoutObjects, nbOfCharactersWithoutObjects);
+        applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+        std::cout << "write " << stringToWrite << std::endl;
+        output << stringToWrite;
+        counterWithoutObjects = 0;
+    }
     output.close();
 }
 
@@ -602,7 +635,7 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
            << map.height() << std::endl ;
 
     output << map.beginX() << " " << map.beginZ() << " " 
-        << map.beginY() << std::endl << std::endl;
+        << map.beginY() << std::endl << std::endl << "BLOCKS" << std::endl;
 
     const std::function<unsigned char(size_t)>
         getDirection = [](size_t face) {
@@ -620,6 +653,7 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
             return direction;
         };
 
+    std::cout << "Verification Blocks..." << std::endl;
     for ( unsigned int y = 0 ; y < map.height() ; y++ ) {
         for ( unsigned int z = 0 ; z < map.deep() ; z++ ){
             for ( unsigned int x = 0 ; x < map.width() ; x++ ){
@@ -650,7 +684,8 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
         }
         output << std::endl;
     }
-    output << std::endl;
+    output << "OBJECTS" << std::endl;
+    std::cout << "Verification Objects..." << std::endl;
     for ( unsigned int y = 0 ; y < map.height() ; y++ ) {
         for ( unsigned int z = 0 ; z < map.deep() ; z++ ){
             for ( unsigned int x = 0 ; x < map.width() ; x++ ){
@@ -701,14 +736,16 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
     }
 
     //Enemies verification
-    output << std::endl;
-    const std::vector<Map::EnemyInfo>& enemiesInfo = map.getEnemiesInfo();
+    output << "ENEMIES" << std::endl;
+    std::cout << "Verification Enemies..." << std::endl;
+    //const std::vector<Map::EnemyInfo>& enemiesInfo = map.getEnemiesInfo();
     size_t currentInfo = 0;
     size_t currentIndex = 0;
     for (unsigned int y = 0; y < map.height(); y++) {
         for (unsigned int z = 0; z < map.deep(); z++) {
             for (unsigned int x = 0; x < map.width(); x++) {
-                if (currentIndex < map.getEnemiesInfo().at(currentInfo).index) {
+                if (currentInfo <= map.getEnemiesInfo().size() || 
+                    currentIndex < map.getEnemiesInfo().at(currentInfo).index) {
                     output << static_cast<const unsigned int>
                                (Map::BlockTypes::None);
                 } else {
@@ -722,62 +759,17 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
                         map.getEnemiesInfo().at(currentInfo).enemy->size();
                     const auto color = 
                         map.getEnemiesInfo().at(currentInfo).enemy->getColor();
-                    output << getDirection(static_cast<unsigned int>(dir))
-                        << typeOfEnemy
+                    output << getDirection(static_cast<size_t>(dir))
+                        << static_cast<char>(
+                            static_cast<unsigned int>(typeOfEnemy) + 
+                            firstNumberType) 
                         << getDirection(static_cast<unsigned int>(moveDir))
-                        << static_cast<char(length + firstNumberLength)
-                        << static_cast<char(color);
+                        << static_cast<char>(length + firstNumberLength)
+                        << static_cast<char>(color);
                     ++currentInfo;
                 }
                 if (x != map.width() -1 ) output << " ";
                 ++currentIndex;
-            }
-            output << std::endl;
-        }
-        output << std::endl;
-    }
-
-    for ( unsigned int y = 0 ; y < map.height() ; y++ ) {
-        for ( unsigned int z = 0 ; z < map.deep() ; z++ ){
-            for ( unsigned int x = 0 ; x < map.width() ; x++ ){
-                const std::shared_ptr<const Block>& block = 
-                    map.getBlock(x,y,z);
-                if (block) {
-                    bool found = false;
-                    for ( size_t i = 0 ; i < Block::objectsNumber; ++i ) {
-                        const auto object = block->object(i);
-                        if (object) {
-                            std::string s;
-                            s.push_back(getDirection(i));
-                            if (object->getCategory() ==
-                                    Object::CategoryOfObjects::Key) {
-                                output << "K" << s;
-                            }
-                            else if (object->getCategory() ==
-                                     Object::CategoryOfObjects::Coin) {
-                                output << "I" << s;
-                            }
-                            else if (object->getCategory() ==
-                                     Object::CategoryOfObjects::Clock) {
-                                output << "C" << s;
-                            }
-                            found = true;
-                        }
-
-                    }
-                    if (!found) {
-                        unsigned int typeOfBlock =
-                                static_cast<unsigned int> (
-                                    map.getType({x,y,z}));
-                        output << static_cast<const unsigned int> (typeOfBlock);
-                    }
-                    if (x != map.width() -1 ) output << " ";
-                }
-                else {
-                    output << static_cast<const unsigned int>
-                               (Map::BlockTypes::None);
-                    if (x != map.width() -1 ) output << " ";
-                }
             }
             output << std::endl;
         }

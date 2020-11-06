@@ -73,7 +73,7 @@ ENDIF()
 
 
 ExternalProject_Add( _FREETYPE_
-  URL 		"https://download.savannah.gnu.org/releases/freetype/freetype-2.10.0.tar.gz"
+  URL 		"https://github.com/freetype/freetype2/archive/VER-2-10-2.tar.gz"
   PREFIX 	FREETYPE_library
   CMAKE_ARGS 	-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
   		-DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE
