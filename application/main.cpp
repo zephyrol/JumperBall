@@ -89,8 +89,7 @@ int main(int argc, char** argv) {
             std::ifstream mapFile2 (fileToOpen);
             Map map (MapGenerator::createMapInfo(mapFile));
             MapGenerator::verificationMap(mapFile2,map);
-        }
-        else {
+        } else {
             std::cerr << "ERROR: Unknown option" << std::endl;
             return EXIT_FAILURE;
         }

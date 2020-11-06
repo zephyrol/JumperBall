@@ -29,6 +29,8 @@ public:
     const std::array<unsigned int,3>& initialPosition() const;
     const JBTypes::vec3f& position() const;
     const std::array<float,9>& transform() const;
+    const JBTypes::Dir& direction() const;
+    const JBTypes::Dir& movementDirection() const;
     bool hasHit() const;
     float size() const;
     virtual ~Enemy() = default;

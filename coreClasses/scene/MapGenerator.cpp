@@ -252,12 +252,12 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             const JBTypes::Dir movementDir =
                     JBTypesMethods::integerAsDirection(movementSide);
 
-            //Length
+            // Length
             infoObjects.erase(infoObjects.begin());
             readValue = infoObjects.front();
             const size_t length = readValue - firstNumberLength;
 
-            //Color
+            // Color
             infoObjects.erase(infoObjects.begin());
             readValue = infoObjects.front();
             const unsigned int charColor = readValue - firstNumberColor;
@@ -604,6 +604,22 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
     output << map.beginX() << " " << map.beginZ() << " " 
         << map.beginY() << std::endl << std::endl;
 
+    const std::function<unsigned char(size_t)>
+        getDirection = [](size_t face) {
+            unsigned char direction;
+            switch (face)
+            {
+            case 0: direction = 'N'; break;
+            case 1: direction = 'S'; break;
+            case 2: direction = 'E'; break;
+            case 3: direction = 'W'; break;
+            case 4: direction = 'U'; break;
+            case 5: direction = 'D'; break;
+            default: direction = '?'; break;
+            }
+            return direction;
+        };
+
     for ( unsigned int y = 0 ; y < map.height() ; y++ ) {
         for ( unsigned int z = 0 ; z < map.deep() ; z++ ){
             for ( unsigned int x = 0 ; x < map.width() ; x++ ){
@@ -645,21 +661,6 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
                     for ( size_t i = 0 ; i < Block::objectsNumber; ++i ) {
                         const auto object = block->object(i);
                         if (object) {
-                            const std::function<unsigned char(size_t)>
-                                    getDirection = [](size_t face) {
-
-                                unsigned char direction;
-                                switch(face) {
-                                case 0 : direction = 'N'; break;
-                                case 1 : direction = 'S'; break;
-                                case 2 : direction = 'E'; break;
-                                case 3 : direction = 'W'; break;
-                                case 4 : direction = 'U'; break;
-                                case 5 : direction = 'D'; break;
-                                default: direction = '?'; break;
-                                }
-                                return direction;
-                            };
 
                             std::string s;
                             s.push_back(getDirection(i));
@@ -681,6 +682,90 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
                     }
                     if (!found) {
 
+                        unsigned int typeOfBlock =
+                                static_cast<unsigned int> (
+                                    map.getType({x,y,z}));
+                        output << static_cast<const unsigned int> (typeOfBlock);
+                    }
+                    if (x != map.width() -1 ) output << " ";
+                }
+                else {
+                    output << static_cast<const unsigned int>
+                               (Map::BlockTypes::None);
+                    if (x != map.width() -1 ) output << " ";
+                }
+            }
+            output << std::endl;
+        }
+        output << std::endl;
+    }
+
+    //Enemies verification
+    output << std::endl;
+    const std::vector<Map::EnemyInfo>& enemiesInfo = map.getEnemiesInfo();
+    size_t currentInfo = 0;
+    size_t currentIndex = 0;
+    for (unsigned int y = 0; y < map.height(); y++) {
+        for (unsigned int z = 0; z < map.deep(); z++) {
+            for (unsigned int x = 0; x < map.width(); x++) {
+                if (currentIndex < map.getEnemiesInfo().at(currentInfo).index) {
+                    output << static_cast<const unsigned int>
+                               (Map::BlockTypes::None);
+                } else {
+                    const JBTypes::Dir& dir = 
+                        map.getEnemiesInfo().at(currentInfo).enemy->direction();
+                    const auto typeOfEnemy = 
+                        map.getEnemiesInfo().at(currentInfo).type;
+                    const JBTypes::Dir moveDir = map.getEnemiesInfo().
+                        at(currentInfo).enemy->movementDirection();
+                    const float length = 
+                        map.getEnemiesInfo().at(currentInfo).enemy->size();
+                    const auto color = 
+                        map.getEnemiesInfo().at(currentInfo).enemy->getColor();
+                    output << getDirection(static_cast<unsigned int>(dir))
+                        << typeOfEnemy
+                        << getDirection(static_cast<unsigned int>(moveDir))
+                        << static_cast<char(length + firstNumberLength)
+                        << static_cast<char(color);
+                    ++currentInfo;
+                }
+                if (x != map.width() -1 ) output << " ";
+                ++currentIndex;
+            }
+            output << std::endl;
+        }
+        output << std::endl;
+    }
+
+    for ( unsigned int y = 0 ; y < map.height() ; y++ ) {
+        for ( unsigned int z = 0 ; z < map.deep() ; z++ ){
+            for ( unsigned int x = 0 ; x < map.width() ; x++ ){
+                const std::shared_ptr<const Block>& block = 
+                    map.getBlock(x,y,z);
+                if (block) {
+                    bool found = false;
+                    for ( size_t i = 0 ; i < Block::objectsNumber; ++i ) {
+                        const auto object = block->object(i);
+                        if (object) {
+                            std::string s;
+                            s.push_back(getDirection(i));
+                            if (object->getCategory() ==
+                                    Object::CategoryOfObjects::Key) {
+                                output << "K" << s;
+                            }
+                            else if (object->getCategory() ==
+                                     Object::CategoryOfObjects::Coin) {
+                                output << "I" << s;
+                            }
+                            else if (object->getCategory() ==
+                                     Object::CategoryOfObjects::Clock) {
+                                output << "C" << s;
+                            }
+                            found = true;
+                        }
+
+                    }
+                    if (!found) {
                         unsigned int typeOfBlock =
                                 static_cast<unsigned int> (
                                     map.getType({x,y,z}));

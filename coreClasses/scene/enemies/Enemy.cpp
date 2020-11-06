@@ -59,3 +59,11 @@ const JBTypes::vec3f& Enemy::position() const {
 const std::array<float,9>& Enemy::transform() const {
     return _transform;
 }
+
+const JBTypes::Dir& Enemy::direction() const {
+    return _direction; 
+}
+
+const JBTypes::Dir& Enemy::movementDirection() const {
+    return _direction;
+}

@@ -44,6 +44,7 @@ public:
                        BlockTypes type; };
 
     struct EnemyInfo {
+        size_t index;
         std::shared_ptr<Enemy> enemy;
         EnemyTypes type;
     };
