@@ -19,7 +19,7 @@ _transform{0.f,0.f,0.f,0.f,0.f,0.f,1.f,1.f,1.f}
 {
 }
 
-const Enemy::Color& EnemyState::color() const {
+const JBTypes::Color& EnemyState::color() const {
    return _color; 
 }
 

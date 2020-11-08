@@ -28,8 +28,8 @@ Enemy::Enemy(const Block& tieBlock,
 {
 }
 
-Enemy::Color Enemy::getColor() const {
-    return Enemy::Color::None;
+JBTypes::Color Enemy::getColor() const {
+    return JBTypes::Color::None;
 }
 
 const JBTypes::timePointMs& Enemy::creationTime() const {

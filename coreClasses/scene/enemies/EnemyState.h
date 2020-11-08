@@ -14,7 +14,7 @@ class EnemyState
 {
 public:
     EnemyState(const Enemy& enemy, const Map::EnemyTypes& category);
-    const Enemy::Color& color() const;
+    const JBTypes::Color& color() const;
     const Map::EnemyTypes& category() const;
     const JBTypes::vec3f& position() const;
     const float& size() const;
@@ -24,7 +24,7 @@ public:
 private:
     const Enemy& _enemy;
     const Map::EnemyTypes& _category;
-    const Enemy::Color _color;
+    const JBTypes::Color _color;
     const JBTypes::timePointMs& _creationTime;
     const float _size;
     bool _hasHit;

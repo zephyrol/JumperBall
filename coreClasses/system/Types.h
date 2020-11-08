@@ -43,6 +43,8 @@ namespace JBTypes {
         Down 
     };
 
+    enum class Color { None, Red, Green, Blue, Yellow };
+
     using Dir = Direction;
 
     struct vec3f {float x; float y; float z;};

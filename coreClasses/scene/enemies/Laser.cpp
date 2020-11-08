@@ -7,7 +7,7 @@
 
 #include "Laser.h"
 
-Laser::Laser(const Color& color, 
+Laser::Laser(const JBTypes::Color& color, 
              const Block& tieBlock, 
              const std::array<unsigned int,3>& initialPosition,
              const JBTypes::Dir& dir,
@@ -38,7 +38,7 @@ Enemy::EnemyEffect Laser::update(const JBTypes::vec3f& entityPosition,
     : Enemy::EnemyEffect::Nothing;
 }
 
-Enemy::Color Laser::getColor() const 
+JBTypes::Color Laser::getColor() const 
 {
     return _color;    
 }

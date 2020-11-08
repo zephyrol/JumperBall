@@ -11,35 +11,35 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState& enemy) {
     vecMeshComponent_sptr components;
     if (enemy.category() == Map::EnemyTypes::Laser)
     {
-        const Enemy::Color color = enemy.color();
+        const JBTypes::Color color = enemy.color();
         std::string laserName;
         switch (color)
         {
-        case Enemy::Color::Blue:
+        case JBTypes::Color::Blue:
             laserName = "blueLaser";
             if (commonShapes.find(laserName) == commonShapes.end())
                 commonShapes[laserName] = std::make_shared<Cylinder>(
                     glm::vec3(0.f, 0.f, 1.f));
             break;
-        case Enemy::Color::Red:
+        case JBTypes::Color::Red:
             laserName = "redLaser";
             if (commonShapes.find(laserName) == commonShapes.end())
                 commonShapes[laserName] = std::make_shared<Cylinder>(
                     glm::vec3(1.f, 0.f, 0.f));
             break;
-        case Enemy::Color::Green:
+        case JBTypes::Color::Green:
             laserName = "greenLaser";
             if (commonShapes.find(laserName) == commonShapes.end())
                 commonShapes[laserName] = std::make_shared<Cylinder>(
                     glm::vec3(0.f, 1.f, 0.f));
             break;
-        case Enemy::Color::Yellow:
+        case JBTypes::Color::Yellow:
             laserName = "yellowLaser";
             if (commonShapes.find(laserName) == commonShapes.end())
                 commonShapes[laserName] = std::make_shared<Cylinder>(
                     glm::vec3(1.f, 1.f, 0.f));
             break;
-        case Enemy::Color::None:
+        case JBTypes::Color::None:
             break;
         default:
             break;

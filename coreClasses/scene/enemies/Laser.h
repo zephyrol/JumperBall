@@ -13,7 +13,7 @@
 class Laser : public Enemy {
 public:
 
-    Laser(const Color& color, 
+    Laser(const JBTypes::Color& color, 
           const Block& tieBlock, 
           const std::array<unsigned int,3>& initialPosition,
           const JBTypes::Dir& dir,
@@ -21,11 +21,11 @@ public:
 
     virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override;
-    virtual Enemy::Color getColor() const override;
+    virtual JBTypes::Color getColor() const override;
     virtual ~Laser() = default;
 
 private:
-    const Color _color;
+    const JBTypes::Color _color;
 
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override; 

@@ -6,14 +6,12 @@
 //
 #ifndef Enemy_hpp
 #define Enemy_hpp
-#include "system/Types.h"
 #include "scene/blocks/Block.h"
 
 class Enemy {
 public:
 
     enum class EnemyEffect { Nothing, Destroy };
-    enum class Color { None, Red, Green, Blue, Yellow };
 
     Enemy(const Block& tieBlock,
           const std::array<unsigned int,3>& initialPosition,
@@ -23,7 +21,7 @@ public:
 
     virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) = 0;
-    virtual Color getColor() const;
+    virtual JBTypes::Color getColor() const;
     const JBTypes::timePointMs& creationTime() const;
     const JBTypes::timePointMs& intersectionTime() const;
     const std::array<unsigned int,3>& initialPosition() const;

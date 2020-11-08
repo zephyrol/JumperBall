@@ -269,7 +269,8 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             infoEnemies.erase(infoEnemies.begin());
             readValue = infoEnemies.front();
             const unsigned int charColor = readValue - firstNumberColor;
-            const Enemy::Color color = static_cast<Enemy::Color>(charColor);
+            const JBTypes::Color color = 
+                static_cast<JBTypes::Color>(charColor);
 
             //Map::EnemyTypes category;
             std::shared_ptr<Enemy> enemy;
@@ -367,8 +368,6 @@ void MapGenerator::substractOffset(std::string& s, int offset) {
         c -= offset;
     }
  }
-
-
 
 void MapGenerator::compress(std::ifstream& input) {
     std::ofstream output ("outMap.txt");
@@ -547,6 +546,8 @@ void MapGenerator::compress(std::ifstream& input) {
             case 'S': charToWrite = firstNumberSide + 1; break;
             case 'E': charToWrite = firstNumberSide + 2; break;
             case 'W': charToWrite = firstNumberSide + 3; break;
+            case 'U' : charToWrite = firstNumberSide+4; break;
+            case 'D' : charToWrite = firstNumberSide+5; break;
             default:
                 std::cerr << "Unknown side character: "
                           << readString.at(0) << std::endl;
@@ -576,6 +577,8 @@ void MapGenerator::compress(std::ifstream& input) {
             case 'S': charToWrite = firstNumberSide + 1; break;
             case 'E': charToWrite = firstNumberSide + 2; break;
             case 'W': charToWrite = firstNumberSide + 3; break;
+            case 'U': charToWrite = firstNumberSide + 4; break;
+            case 'D': charToWrite = firstNumberSide + 5; break;
             default:
                 std::cerr << "Unknown side character: "
                           << readString.at(2) << std::endl;
@@ -591,6 +594,83 @@ void MapGenerator::compress(std::ifstream& input) {
             //Color
             constexpr char AtoFirstNumberColor = 65 - 33;
             output << readString.at(4) - AtoFirstNumberColor;
+        }
+    }
+    if (counterWithoutObjects > 0) {
+        std::string stringToWrite = convertToBase(
+            counterWithoutObjects, nbOfCharactersWithoutObjects);
+        applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+        std::cout << "write " << stringToWrite << std::endl;
+        output << stringToWrite;
+        counterWithoutObjects = 0;
+    }
+
+    output << std::endl;
+    // SPECIALS PART
+    std::cout << "compress specials" << std::endl;
+    input >> trash;
+    readString.clear();
+
+    for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
+        input >> readString;
+        std::cout << "Read string : " << readString << std::endl;
+        if (std::isdigit(readString.at(0)) != 0) {
+            ++counterWithoutObjects;
+        } else {
+            if (counterWithoutObjects > 0) {
+                std::string stringToWrite = convertToBase(
+                        counterWithoutObjects, nbOfCharactersWithoutObjects);
+                applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+                std::cout << "write " << stringToWrite << std::endl;
+                output << stringToWrite;
+                counterWithoutObjects = 0;
+            } else if (i > 0) {
+                // we need to differentiate this block and the future block
+                // if two blocks with objects are side-by-side
+                // and we do not apply this separator character if it's the
+                // the FIRST block
+                output << nextBlockAction;
+            }
+
+            if (readString.length() != 2) {
+                std::cerr << "A special is represent by 2 chars" << std::endl;
+            }
+            // side of enemy
+            unsigned char charToWrite;
+            switch (readString.at(0))
+            {
+            case 'N': charToWrite = firstNumberSide; break;
+            case 'S': charToWrite = firstNumberSide + 1; break;
+            case 'E': charToWrite = firstNumberSide + 2; break;
+            case 'W': charToWrite = firstNumberSide + 3; break;
+            case 'U': charToWrite = firstNumberSide + 4; break;
+            case 'D': charToWrite = firstNumberSide + 5; break;
+            default:
+                std::cerr << "Unknown side character: "
+                          << readString.at(0) << std::endl;
+                charToWrite = 0;
+                break;
+            }
+            output << charToWrite;
+
+            // type of enemy
+            switch (readString.at(1))
+            {
+            case 'A': charToWrite = firstNumberType; break;
+            case 'B': charToWrite = firstNumberType + 1; break;
+            case 'C': charToWrite = firstNumberType + 2; break;
+            case 'D': charToWrite = firstNumberType; break;
+            case 'E': charToWrite = firstNumberType + 1; break;
+            case 'F': charToWrite = firstNumberType + 2; break;
+            case 'G': charToWrite = firstNumberType + 2; break;
+            case 'H': charToWrite = firstNumberType + 2; break;
+            default:
+                std::cerr << "Unknown type character: "
+                          << readString.at(1) << std::endl;
+                charToWrite = 0;
+                break;
+            }
+            output << charToWrite;
         }
     }
     if (counterWithoutObjects > 0) {
@@ -738,9 +818,48 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
     //Enemies verification
     output << "ENEMIES" << std::endl;
     std::cout << "Verification Enemies..." << std::endl;
-    //const std::vector<Map::EnemyInfo>& enemiesInfo = map.getEnemiesInfo();
     size_t currentInfo = 0;
     size_t currentIndex = 0;
+    for (unsigned int y = 0; y < map.height(); y++) {
+        for (unsigned int z = 0; z < map.deep(); z++) {
+            for (unsigned int x = 0; x < map.width(); x++) {
+                if (currentInfo <= map.getEnemiesInfo().size() || 
+                    currentIndex < map.getEnemiesInfo().at(currentInfo).index) {
+                    output << static_cast<const unsigned int>
+                               (Map::BlockTypes::None);
+                } else {
+                    const JBTypes::Dir& dir = 
+                        map.getEnemiesInfo().at(currentInfo).enemy->direction();
+                    const auto typeOfEnemy = 
+                        map.getEnemiesInfo().at(currentInfo).type;
+                    const JBTypes::Dir moveDir = map.getEnemiesInfo().
+                        at(currentInfo).enemy->movementDirection();
+                    const float length = 
+                        map.getEnemiesInfo().at(currentInfo).enemy->size();
+                    const auto color = 
+                        map.getEnemiesInfo().at(currentInfo).enemy->getColor();
+                    output << getDirection(static_cast<size_t>(dir))
+                        << static_cast<char>(
+                            static_cast<unsigned int>(typeOfEnemy) + 
+                            firstNumberType) 
+                        << getDirection(static_cast<unsigned int>(moveDir))
+                        << static_cast<char>(length + firstNumberLength)
+                        << static_cast<char>(color);
+                    ++currentInfo;
+                }
+                if (x != map.width() -1 ) output << " ";
+                ++currentIndex;
+            }
+            output << std::endl;
+        }
+        output << std::endl;
+    }
+
+    //Enemies verification
+    output << "SPECIALS" << std::endl;
+    std::cout << "Verification Specials..." << std::endl;
+    currentInfo = 0;
+    currentIndex = 0;
     for (unsigned int y = 0; y < map.height(); y++) {
         for (unsigned int z = 0; z < map.deep(); z++) {
             for (unsigned int x = 0; x < map.width(); x++) {

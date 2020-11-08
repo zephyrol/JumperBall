@@ -27,12 +27,13 @@
 #include "enemies/DarkBall.h"
 #include "enemies/ThornBall.h"
 #include "enemies/Laser.h"
+#include "special/SwitchButton.h"
+#include "special/Teleporter.h"
 #include "system/ParallelTask.h"
 #include <fstream>
 
 class Map {
 public:
-
 
     // ----------- TYPES -----------//
     enum class BlockTypes { None, Base, Fire, Ice, Sharp,
@@ -47,6 +48,11 @@ public:
         size_t index;
         std::shared_ptr<Enemy> enemy;
         EnemyTypes type;
+    };
+
+    struct SpecialInfo {
+        size_t index;
+        std::shared_ptr<Special> special;
     };
 
     struct MapInfo { unsigned int width;
