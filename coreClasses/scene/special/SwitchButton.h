@@ -21,7 +21,7 @@ public:
         const Block &tieBlock,
         const JBTypes::Dir &dir);
 
-    virtual SpecialEffect interaction() const override;
+    virtual Special::SpecialEffect interaction() const override;
     
 };
 

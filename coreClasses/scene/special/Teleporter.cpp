@@ -19,7 +19,7 @@
  {
  }
  
- SpecialEffect Teleporter::interaction() const 
+ Special::SpecialEffect Teleporter::interaction() const 
  {
      return SpecialEffect::Teleportation;
  }

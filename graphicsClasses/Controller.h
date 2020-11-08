@@ -51,6 +51,8 @@ private:
     ScreenDirection nearestDirection(float posX, float posY) const;
     const std::shared_ptr<SceneRendering> &sceneRendering() const;
     const std::shared_ptr<MenuRendering> &menuRendedering() const;
+    void            renderRenderingEngine() const;
+    void            renderMenuRendering() const;
 
     //----------METHODS------------//
     void            manageUp (const Status& status);
@@ -62,8 +64,7 @@ private:
     void            runGame(size_t level);
     void            updateRenderingEngine();
     void            updateMenuRendering();
-    void            renderRenderingEngine() const;
-    void            renderMenuRendering() const;
+    void            switchFrame();
 
     //Mouse/TouchPad/TouchScreen
     void            pressMouse (float posX, float posY);

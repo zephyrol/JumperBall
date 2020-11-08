@@ -64,7 +64,8 @@ Block::Effect GhostBlock::interaction( const JBTypes::Dir& ,
             return t * begin + (1-t) * end;
     };
     
-    const float scale = getScale(t,beginScale,endScale);
+    //const float scale = getScale(t,beginScale,endScale);
+    const float scale = _isThere ? 1.f : 0.f;
     _localTransform.at(3) = scale;
     _localTransform.at(4) = scale;
     _localTransform.at(5) = scale;

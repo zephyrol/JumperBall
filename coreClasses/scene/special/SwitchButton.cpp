@@ -19,7 +19,7 @@
  {
  }
  
- SpecialEffect SwitchButton::interaction() const 
+ Special::SpecialEffect SwitchButton::interaction() const 
  {
      return SpecialEffect::Switch;
  }

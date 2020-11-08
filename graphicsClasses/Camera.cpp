@@ -183,8 +183,8 @@ void Camera::follow(const Map& map) noexcept{
     if ( distanceMax < yMax) distanceMax = static_cast<float>(yMax);
     if ( distanceMax < zMax) distanceMax = static_cast<float>(zMax);
     
-    const float cameraDistanceNear = distanceMax * 0.75f;
-    const float cameraDistanceFar =  distanceMax * 1.2f;
+    const float cameraDistanceNear = distanceMax * 1.f;
+    const float cameraDistanceFar =  distanceMax * 1.3f;
     
     const JBTypes::timePointMs now  = JBTypesMethods::getTimePointMSNow();
     const JBTypes::durationMs  diff = now -

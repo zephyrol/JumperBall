@@ -94,7 +94,7 @@ public:
     //----------METHODS------------//
     Block::Effect                         interaction(
                                   const JBTypes::Dir& ballDir,
-                                  const JBTypes::vec3f& posBall , float radius);
+                                  const JBTypes::vec3f& posBall, float radius);
     std::shared_ptr<Block>                getBlock(int x, int y, int z);
     std::shared_ptr<Block>                getBlock(size_t index);
 

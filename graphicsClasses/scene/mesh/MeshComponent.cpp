@@ -42,6 +42,10 @@ glm::mat4 MeshComponent::getAnimationScaleRotation() const {
     return _animation->scaleRotation();
 }
 
+glm::mat4 MeshComponent::getAnimationTranslation() const {
+    return _animation->translation();
+}
+
 const std::shared_ptr<GLuint>& MeshComponent::getShapeVAO() const {
     return _shape->vertexArrayObject();
 }

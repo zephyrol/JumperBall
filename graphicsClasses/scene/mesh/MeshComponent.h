@@ -34,6 +34,8 @@ public:
     const glm::mat4&                              getShapeNormalsTransform()
                                                                           const;
     glm::mat4                                     getAnimationModel()     const;
+    glm::mat4                                     getAnimationTranslation() 
+                                                                          const;
     glm::mat4                                     getAnimationScaleRotation()     
                                                                           const;
 

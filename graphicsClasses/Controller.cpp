@@ -81,6 +81,9 @@ _updating([this](size_t) {
     _updatingScene.waitTasks();
 },1,true)
 {
+    _updating.runTasks();
+    _updating.waitTasks();
+    switchFrame();
 }
 
 void Controller::interactionButtons(const Controller::Button& button,
@@ -146,9 +149,7 @@ void Controller::waitController()
 {
     //std::cout << "wait tasks !" << std::endl;
     _updating.waitTasks();
-    _currentFrame = _currentFrame == Controller::CurrentFrame::FrameA
-        ? Controller::CurrentFrame::FrameB
-        : Controller::CurrentFrame::FrameA;
+    switchFrame();
 }
 
 void Controller::manageValidateButton(const Controller::Status &status) {
@@ -161,15 +162,26 @@ void Controller::manageValidateButton(const Controller::Status &status) {
 
 void Controller::runGame(size_t level)
 {
-_map = MapGenerator::loadMap(level);
-_ball = std::make_shared<Ball>(*_map);
-_camera = std::make_shared<Camera>();
-_star = std::make_shared<Star>(
-            glm::vec3(1.f,1.f,1.f),glm::vec3(0.f,1.f,1.f) ,0.3f,0.5f,50.f,5.f);
-_sceneRenderingFrameA = std::make_shared<SceneRendering>
-        (*_map,*_ball,*_star,*_camera);
-_sceneRenderingFrameB = std::make_shared<SceneRendering>
-        (*_map,*_ball,*_star,*_camera);
+    _map = MapGenerator::loadMap(level);
+    _ball = std::make_shared<Ball>(*_map);
+    _camera = std::make_shared<Camera>();
+    _star = std::make_shared<Star>(
+        glm::vec3(1.f, 1.f, 1.f),
+        glm::vec3(0.f, 1.f, 1.f),
+        0.3f, 0.5f, 50.f, 5.f);
+    _sceneRenderingFrameA = 
+        std::make_shared<SceneRendering>(*_map, *_ball, *_star, *_camera);
+    _sceneRenderingFrameB = 
+        std::make_shared<SceneRendering>(*_map, *_ball, *_star, *_camera);
+    _updating.runTasks();
+    _updating.waitTasks();
+    switchFrame();
+}
+
+void Controller::switchFrame() {
+    _currentFrame = _currentFrame == Controller::CurrentFrame::FrameA
+                        ? Controller::CurrentFrame::FrameB
+                        : Controller::CurrentFrame::FrameA;
 }
 
 void Controller::manageValidateMouse()
