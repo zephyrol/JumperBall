@@ -196,7 +196,7 @@ void Controller::manageValidateMouse()
                     _mousePressingXCoord,
                     _mousePressingYCoord);
             if (label) {
-                Page_sptr newPage = _menu->currentPage()->child(label);
+                const Page_sptr newPage = _menu->currentPage()->child(label);
                 if (newPage) {
                     _menu->currentPage(newPage);
                 } else if  ( const std::shared_ptr< const
@@ -260,7 +260,7 @@ void Controller::manageUp(const Controller::Status &status) {
 Controller::ScreenDirection Controller::nearestDirection
                                             (float posX, float posY) const {
     
-    auto computeDistance = [] ( float x0, float y0, float x1, float y1) {
+    const auto computeDistance = [] ( float x0, float y0, float x1, float y1) {
         return sqrtf(pow(x1 - x0, 2) + pow(y1 - y0, 2)) ;
     };
     
@@ -273,21 +273,21 @@ Controller::ScreenDirection Controller::nearestDirection
                                             _mousePressingYCoord - 1.f,
                                             posX, posY))
                                             <  nearestDistance ){
-        nearestDistance= computedDistance;
+        nearestDistance = computedDistance;
         nearestDir = Controller::ScreenDirection::South;
     }
     if ((computedDistance = computeDistance(_mousePressingXCoord + 1.f,
                                                   _mousePressingYCoord,
                                                   posX, posY))
                                                   <  nearestDistance ){
-        nearestDistance= computedDistance;
+        nearestDistance = computedDistance;
         nearestDir = Controller::ScreenDirection::East;
     }
     if ((computedDistance = computeDistance(_mousePressingXCoord - 1.f,
                                                  _mousePressingYCoord,
                                                  posX, posY))
                                                  <  nearestDistance ){
-        nearestDistance= computedDistance;
+        nearestDistance = computedDistance;
         nearestDir = Controller::ScreenDirection::West;
     }
                             
@@ -338,7 +338,7 @@ void Controller::releaseMouse (float posX, float posY) {
     
     constexpr float thresholdMoving = 0.05f;
     
-    auto computeDistance = [] (float x0, float y0, float x1, float y1) {
+    const auto computeDistance = [] (float x0, float y0, float x1, float y1) {
         return sqrtf(pow(x1 - x0, 2) + pow(y1 - y0, 2)) ;
     };
     

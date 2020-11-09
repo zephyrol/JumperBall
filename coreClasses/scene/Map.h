@@ -41,6 +41,8 @@ public:
     
     enum class EnemyTypes { Laser, ThornBall, DarkBall };
 
+    enum class SpecialTypes { SwitchButton , Teleporter };
+
     struct BlockInfo { size_t index; 
                        BlockTypes type; };
 
@@ -53,6 +55,7 @@ public:
     struct SpecialInfo {
         size_t index;
         std::shared_ptr<Special> special;
+        SpecialTypes type ;
     };
 
     struct MapInfo { unsigned int width;
@@ -64,6 +67,7 @@ public:
                      std::vector<std::shared_ptr<Block> > blocks;
                      std::vector<BlockInfo> blocksInfo;
                      std::vector<EnemyInfo> enemiesInfo;
+                     std::vector<SpecialInfo> specialInfo;
                   };
     
     //--CONSTRUCTORS & DESTRUCTORS--//
@@ -102,6 +106,7 @@ public:
     std::vector<BlockInfo>                getBlocksWithObjects()          const;
     
     const std::vector<EnemyInfo>&         getEnemiesInfo()                const;
+    const std::vector<SpecialInfo>&       getSpecialInfo()                const;
 
     //--------STATIC METHODS-------//
     static std::array<unsigned int, 3>    getBlockCoords(size_t index,
@@ -117,6 +122,7 @@ private:
     std::vector<BlockInfo>                _blocksWithObjectsInfo;
     
     std::vector<EnemyInfo>                _enemies;
+    std::vector<SpecialInfo>              _special;
     
     unsigned int                          _width;
     unsigned int                          _height;

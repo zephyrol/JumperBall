@@ -12,7 +12,7 @@ DarkBall::DarkBall(const Block &tieBlock,
                    const JBTypes::Dir &dir,
                    const JBTypes::Dir &movementDirection,
                    size_t nbOfJumps) : 
-Enemy(tieBlock, initialPosition, dir, darkBallRadius,
+Enemy(tieBlock, initialPosition, dir, darkBallRadius, 1.f,
       { static_cast<float>(initialPosition.at(0)), 
         static_cast<float>(initialPosition.at(1)), 
         static_cast<float>(initialPosition.at(2)), 

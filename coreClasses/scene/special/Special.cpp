@@ -12,6 +12,17 @@
  */
 #include "Special.h"
 
+Special::Special(const JBTypes::Color &color,
+        const Block &tieBlock,
+        const JBTypes::Dir &dir):
+        _tieBlock(tieBlock),
+        _creationTime(JBTypesMethods::getTimePointMSNow()),
+        _direction(dir),
+        _color(color)
+{
+    
+}
+
 const JBTypes::Color& Special::getColor() const {
     return _color;
 }

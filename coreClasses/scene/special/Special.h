@@ -24,6 +24,8 @@ public:
         const Block &tieBlock,
         const JBTypes::Dir &dir);
 
+    virtual ~Special() = default;
+
     const JBTypes::Color& getColor() const;
     const JBTypes::timePointMs &creationTime() const;
     const JBTypes::Dir &direction() const;

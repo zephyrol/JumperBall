@@ -12,7 +12,7 @@ ThornBall::ThornBall(const Block& tieBlock,
              const JBTypes::Dir& dir,
              const JBTypes::Dir& movementDirection,
              size_t movementLength):
-Enemy(tieBlock,initialPosition,dir, thornBallRadius,
+Enemy(tieBlock,initialPosition,dir, thornBallRadius, 1.f,
       { static_cast<float>(initialPosition.at(0)),
         static_cast<float>(initialPosition.at(1)),
         static_cast<float>(initialPosition.at(2)),

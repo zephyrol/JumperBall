@@ -25,6 +25,7 @@ Map::Map(Map::MapInfo&& mapInfo):
     _blocksWithInteractionInfo(getBlocksWithInteraction()),
     _blocksWithObjectsInfo(getBlocksWithObjects()),
     _enemies(std::move(mapInfo.enemiesInfo)),
+    _special(std::move(mapInfo.specialInfo)),
     _width (std::move(mapInfo.width)),
     _height (std::move(mapInfo.height)),
     _deep (std::move(mapInfo.deep)),
@@ -210,6 +211,10 @@ std::array<unsigned int, 3> Map::getBlockCoords(size_t index,
 
 const std::vector<Map::EnemyInfo>& Map::getEnemiesInfo() const {
     return _enemies;
+}
+
+const std::vector<Map::SpecialInfo>& Map::getSpecialInfo() const {
+    return _special; 
 }
 
 unsigned int Map::nbMaps = 0;

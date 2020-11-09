@@ -16,7 +16,8 @@ public:
     Enemy(const Block& tieBlock,
           const std::array<unsigned int,3>& initialPosition,
           const JBTypes::Dir& direction,
-          const float size,
+          float size,
+          float length,
           const std::array<float,9>& transform);
 
     virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
@@ -31,6 +32,7 @@ public:
     const JBTypes::Dir& movementDirection() const;
     bool hasHit() const;
     float size() const;
+    float length() const;
     virtual ~Enemy() = default;
 
 protected :
@@ -45,6 +47,7 @@ private:
     const JBTypes::timePointMs _creationTime;
     const JBTypes::Dir _direction;
     const float _size;
+    const float _length;
 
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,
                               float radiusEntity) = 0;

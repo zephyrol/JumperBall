@@ -228,7 +228,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             infoEnemies.erase(infoEnemies.begin());
             ++currentIndex;//We increment the cursor to the next block
         } else if (readValue >= firstNumberWithoutAnyObjects) {
-            counterWithoutObjectsBuffer.push_back(readValue);
+            counterWithoutEnemiesBuffer.push_back(readValue);
             infoEnemies.erase(infoEnemies.begin());
 
             if (previousReadValue < firstNumberWithoutAnyObjects &&
@@ -236,10 +236,10 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                 ++currentIndex; //We increment the cursor to the next block
             }
         } else {
-            if (!counterWithoutObjectsBuffer.empty()){
-                substractOffset(counterWithoutObjectsBuffer,
+            if (!counterWithoutEnemiesBuffer.empty()){
+                substractOffset(counterWithoutEnemiesBuffer,
                                 firstNumberWithoutAnyObjects);
-                currentIndex += convertToBase10(counterWithoutObjectsBuffer,
+                currentIndex += convertToBase10(counterWithoutEnemiesBuffer,
                                                 nbOfCharactersWithoutObjects);
             }
             // direction
@@ -264,7 +264,6 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             infoEnemies.erase(infoEnemies.begin());
             readValue = infoEnemies.front();
             const size_t length = readValue - firstNumberLength;
-
             // Color
             infoEnemies.erase(infoEnemies.begin());
             readValue = infoEnemies.front();
@@ -298,7 +297,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                     break;
                 case 2:
                     //category = Map::EnemyTypes::ThornBall;
-                    enemy = std::make_shared<ThornBall>(
+                    enemy = std::make_shared<DarkBall>(
                         *blockPtr,
                         Map::getBlockCoords(currentIndex,width,deep),
                         dir,
@@ -329,9 +328,112 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             Map::EnemyInfo enemyInfo;
             enemyInfo.enemy = enemy;
             enemyInfo.index = static_cast<size_t>(currentIndex);
+            enemyInfo.type = static_cast<Map::EnemyTypes>(typeOfEnemy);
             mapInfo.enemiesInfo.push_back(enemyInfo);
-            counterWithoutObjectsBuffer.clear();
-            infoEnemies.erase(infoEnemies.begin(), infoEnemies.begin()+1);
+            counterWithoutEnemiesBuffer.clear();
+        }
+        previousReadValue= readValue;
+    }
+
+    // SPECIAL PART
+    std::cout << "decompress special" << std::endl;
+    std::string infoSpecial;
+    std::string counterWithoutSpecialBuffer;
+    currentIndex = 0;
+    previousReadValue = 0;
+
+    file >> infoSpecial;
+    while (!infoSpecial.empty()) {
+
+        readValue = infoSpecial.front();
+        if (readValue == nextBlockAction){
+            infoSpecial.erase(infoSpecial.begin());
+            ++currentIndex;//We increment the cursor to the next block
+        } else if (readValue >= firstNumberWithoutAnyObjects) {
+            counterWithoutSpecialBuffer.push_back(readValue);
+            infoSpecial.erase(infoSpecial.begin());
+
+            if (previousReadValue < firstNumberWithoutAnyObjects &&
+                previousReadValue >= firstNumberType) {
+                ++currentIndex; //We increment the cursor to the next block
+            }
+        } else {
+            if (!counterWithoutSpecialBuffer.empty()){
+                substractOffset(counterWithoutSpecialBuffer,
+                                firstNumberWithoutAnyObjects);
+                currentIndex += convertToBase10(counterWithoutSpecialBuffer,
+                                                nbOfCharactersWithoutObjects);
+            }
+            // direction
+            const unsigned int side = readValue - firstNumberSide;
+            const JBTypes::Dir dir =
+                    JBTypesMethods::integerAsDirection(side);
+
+            // special type
+            infoSpecial.erase(infoSpecial.begin());
+            readValue = infoSpecial.front();
+            const unsigned int typeOfSpecial = readValue - firstNumberType;
+
+            std::shared_ptr<Special> special;
+            const auto& blockPtr = mapInfo.blocks.at(currentIndex);
+            switch (typeOfSpecial) {
+                case 0:
+                    special = std::make_shared<SwitchButton>(
+                        JBTypes::Color::Red,
+                        *blockPtr,
+                        dir);
+                    break;
+                case 1:
+                    special = std::make_shared<SwitchButton>(
+                        JBTypes::Color::Green,
+                        *blockPtr,
+                        dir);
+                    break;
+                case 2:
+                    special = std::make_shared<SwitchButton>(
+                        JBTypes::Color::Blue,
+                        *blockPtr,
+                        dir);
+                    break;
+                case 3:
+                    special = std::make_shared<SwitchButton>(
+                        JBTypes::Color::Yellow,
+                        *blockPtr,
+                        dir);
+                    break;
+                case 4:
+                    special = std::make_shared<Teleporter>(
+                        JBTypes::Color::Red,
+                        *blockPtr,
+                        dir);
+                    break;
+                case 5:
+                    special = std::make_shared<Teleporter>(
+                        JBTypes::Color::Green,
+                        *blockPtr,
+                        dir);
+                    break;
+                case 6:
+                    special = std::make_shared<Teleporter>(
+                        JBTypes::Color::Blue,
+                        *blockPtr,
+                        dir);
+                    break;
+                case 7:
+                    special = std::make_shared<Teleporter>(
+                        JBTypes::Color::Yellow,
+                        *blockPtr,
+                        dir);
+                    break;
+                default :
+                    break;
+            }
+            Map::SpecialInfo specialInfo;
+            specialInfo.special = special;
+            specialInfo.index = static_cast<size_t>(currentIndex);
+            mapInfo.specialInfo.push_back(specialInfo);
+            counterWithoutSpecialBuffer.clear();
+            std::cout << "8" << std::endl;
         }
         previousReadValue= readValue;
     }
@@ -461,7 +563,6 @@ void MapGenerator::compress(std::ifstream& input) {
 
     for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
         input >> readString;
-        std::cout << "Read string : " << readString << std::endl;
         if (std::isdigit(readString.at(0)) != 0) {
             ++counterWithoutObjects;
         } else {
@@ -516,7 +617,6 @@ void MapGenerator::compress(std::ifstream& input) {
 
     for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
         input >> readString;
-        std::cout << "Read string : " << readString << std::endl;
         if (std::isdigit(readString.at(0)) != 0) {
             ++counterWithoutObjects;
         } else {
@@ -524,7 +624,6 @@ void MapGenerator::compress(std::ifstream& input) {
                 std::string stringToWrite = convertToBase(
                         counterWithoutObjects, nbOfCharactersWithoutObjects);
                 applyOffset(stringToWrite, firstNumberWithoutAnyObjects) ;
-                std::cout << "write " << stringToWrite << std::endl;
                 output << stringToWrite;
                 counterWithoutObjects = 0;
             } else if (i > 0 ) {
@@ -588,19 +687,19 @@ void MapGenerator::compress(std::ifstream& input) {
             output << charToWrite;
 
             //Length
-            constexpr char AtoFirstNumberLength = 65 - 33;
-            output << readString.at(3) - AtoFirstNumberLength;
+            constexpr char AtoFirstNumberLength = 33 - 65 + 1; //A=1, not 0
+            const char outputLenght = readString.at(3) + AtoFirstNumberLength;
+            output << outputLenght;
 
             //Color
-            constexpr char AtoFirstNumberColor = 65 - 33;
-            output << readString.at(4) - AtoFirstNumberColor;
+            constexpr char AtoFirstNumberColor = 33 - 65; //A=1, not 0
+            output << readString.at(4) + AtoFirstNumberColor;
         }
     }
     if (counterWithoutObjects > 0) {
         std::string stringToWrite = convertToBase(
             counterWithoutObjects, nbOfCharactersWithoutObjects);
         applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
-        std::cout << "write " << stringToWrite << std::endl;
         output << stringToWrite;
         counterWithoutObjects = 0;
     }
@@ -613,7 +712,6 @@ void MapGenerator::compress(std::ifstream& input) {
 
     for (unsigned int i = 0 ; i < width * deep * height ; ++i) {
         input >> readString;
-        std::cout << "Read string : " << readString << std::endl;
         if (std::isdigit(readString.at(0)) != 0) {
             ++counterWithoutObjects;
         } else {
@@ -621,7 +719,6 @@ void MapGenerator::compress(std::ifstream& input) {
                 std::string stringToWrite = convertToBase(
                         counterWithoutObjects, nbOfCharactersWithoutObjects);
                 applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
-                std::cout << "write " << stringToWrite << std::endl;
                 output << stringToWrite;
                 counterWithoutObjects = 0;
             } else if (i > 0) {
@@ -677,7 +774,6 @@ void MapGenerator::compress(std::ifstream& input) {
         std::string stringToWrite = convertToBase(
             counterWithoutObjects, nbOfCharactersWithoutObjects);
         applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
-        std::cout << "write " << stringToWrite << std::endl;
         output << stringToWrite;
         counterWithoutObjects = 0;
     }
@@ -823,7 +919,7 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
     for (unsigned int y = 0; y < map.height(); y++) {
         for (unsigned int z = 0; z < map.deep(); z++) {
             for (unsigned int x = 0; x < map.width(); x++) {
-                if (currentInfo <= map.getEnemiesInfo().size() || 
+                if (currentInfo >= map.getEnemiesInfo().size() ||
                     currentIndex < map.getEnemiesInfo().at(currentInfo).index) {
                     output << static_cast<const unsigned int>
                                (Map::BlockTypes::None);
@@ -835,16 +931,40 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
                     const JBTypes::Dir moveDir = map.getEnemiesInfo().
                         at(currentInfo).enemy->movementDirection();
                     const float length = 
-                        map.getEnemiesInfo().at(currentInfo).enemy->size();
+                        map.getEnemiesInfo().at(currentInfo).enemy->length();
                     const auto color = 
                         map.getEnemiesInfo().at(currentInfo).enemy->getColor();
+
+                    unsigned int uintTypeOfEnemy = 
+                        static_cast<unsigned int>(typeOfEnemy);
+                    unsigned char charToWriteType;
+                    switch (uintTypeOfEnemy)
+                    {
+                    case 0:
+                        charToWriteType = 'L';
+                        break;
+                    case 1:
+                        charToWriteType = 'T';
+                        break;
+                    case 2:
+                        charToWriteType = 'B';
+                        break;
+                    default:
+                        std::cerr << "Unknown value: "
+                                  << uintTypeOfEnemy << std::endl;
+                        charToWriteType = 0;
+                        break;
+                    }
+                    const unsigned char charToWriteLength = 
+                        static_cast<char>(length) + 'A' - 1; // A = 1 not 0
+                    const unsigned char charToWriteColor = 
+                        static_cast<char>(color) + 'A';
+
                     output << getDirection(static_cast<size_t>(dir))
-                        << static_cast<char>(
-                            static_cast<unsigned int>(typeOfEnemy) + 
-                            firstNumberType) 
+                        << charToWriteType
                         << getDirection(static_cast<unsigned int>(moveDir))
-                        << static_cast<char>(length + firstNumberLength)
-                        << static_cast<char>(color);
+                        << charToWriteLength 
+                        << charToWriteColor;
                     ++currentInfo;
                 }
                 if (x != map.width() -1 ) output << " ";
@@ -863,27 +983,28 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
     for (unsigned int y = 0; y < map.height(); y++) {
         for (unsigned int z = 0; z < map.deep(); z++) {
             for (unsigned int x = 0; x < map.width(); x++) {
-                if (currentInfo <= map.getEnemiesInfo().size() || 
-                    currentIndex < map.getEnemiesInfo().at(currentInfo).index) {
+                if (currentInfo >= map.getSpecialInfo().size() || 
+                    currentIndex < map.getSpecialInfo().at(currentInfo).index) {
                     output << static_cast<const unsigned int>
                                (Map::BlockTypes::None);
                 } else {
                     const JBTypes::Dir& dir = 
-                        map.getEnemiesInfo().at(currentInfo).enemy->direction();
-                    const auto typeOfEnemy = 
-                        map.getEnemiesInfo().at(currentInfo).type;
-                    const JBTypes::Dir moveDir = map.getEnemiesInfo().
-                        at(currentInfo).enemy->movementDirection();
-                    const float length = 
-                        map.getEnemiesInfo().at(currentInfo).enemy->size();
+                        map.getSpecialInfo().at(currentInfo).special->direction();
+                    const auto typeOfSpecial = 
+                        map.getSpecialInfo().at(currentInfo).type;
                     const auto color = 
-                        map.getEnemiesInfo().at(currentInfo).enemy->getColor();
+                        map.getSpecialInfo().at(currentInfo).special->getColor();
+
+                    const unsigned int offsetType =
+                        typeOfSpecial == Map::SpecialTypes::Teleporter
+                            ? 4
+                            : 0;
+                    // -1 to count None in the Color type
                     output << getDirection(static_cast<size_t>(dir))
                         << static_cast<char>(
-                            static_cast<unsigned int>(typeOfEnemy) + 
-                            firstNumberType) 
-                        << getDirection(static_cast<unsigned int>(moveDir))
-                        << static_cast<char>(length + firstNumberLength)
+                            static_cast<unsigned int>(color) - 1 +
+                            offsetType
+                            + firstNumberType) 
                         << static_cast<char>(color);
                     ++currentInfo;
                 }

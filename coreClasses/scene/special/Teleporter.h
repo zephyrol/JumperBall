@@ -15,7 +15,7 @@
 #include "Special.h"
 
 class Teleporter : public Special {
-
+public:
     Teleporter(
         const JBTypes::Color &color,
         const Block &tieBlock,
