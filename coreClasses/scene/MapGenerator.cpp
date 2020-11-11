@@ -373,57 +373,66 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             infoSpecial.erase(infoSpecial.begin());
             readValue = infoSpecial.front();
             const unsigned int typeOfSpecial = readValue - firstNumberType;
-
+            infoSpecial.erase(infoSpecial.begin());
             std::shared_ptr<Special> special;
             const auto& blockPtr = mapInfo.blocks.at(currentIndex);
+            Map::SpecialTypes specialType = Map::SpecialTypes::SwitchButton;
             switch (typeOfSpecial) {
                 case 0:
                     special = std::make_shared<SwitchButton>(
                         JBTypes::Color::Red,
                         *blockPtr,
                         dir);
+                    specialType = Map::SpecialTypes::SwitchButton;
                     break;
                 case 1:
                     special = std::make_shared<SwitchButton>(
                         JBTypes::Color::Green,
                         *blockPtr,
                         dir);
+                    specialType = Map::SpecialTypes::SwitchButton;
                     break;
                 case 2:
                     special = std::make_shared<SwitchButton>(
                         JBTypes::Color::Blue,
                         *blockPtr,
                         dir);
+                    specialType = Map::SpecialTypes::SwitchButton;
                     break;
                 case 3:
                     special = std::make_shared<SwitchButton>(
                         JBTypes::Color::Yellow,
                         *blockPtr,
                         dir);
+                    specialType = Map::SpecialTypes::SwitchButton;
                     break;
                 case 4:
                     special = std::make_shared<Teleporter>(
                         JBTypes::Color::Red,
                         *blockPtr,
                         dir);
+                    specialType = Map::SpecialTypes::Teleporter;
                     break;
                 case 5:
                     special = std::make_shared<Teleporter>(
                         JBTypes::Color::Green,
                         *blockPtr,
                         dir);
+                    specialType = Map::SpecialTypes::Teleporter;
                     break;
                 case 6:
                     special = std::make_shared<Teleporter>(
                         JBTypes::Color::Blue,
                         *blockPtr,
                         dir);
+                    specialType = Map::SpecialTypes::Teleporter;
                     break;
                 case 7:
                     special = std::make_shared<Teleporter>(
                         JBTypes::Color::Yellow,
                         *blockPtr,
                         dir);
+                    specialType = Map::SpecialTypes::Teleporter;
                     break;
                 default :
                     break;
@@ -431,9 +440,9 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             Map::SpecialInfo specialInfo;
             specialInfo.special = special;
             specialInfo.index = static_cast<size_t>(currentIndex);
+            specialInfo.type = specialType;
             mapInfo.specialInfo.push_back(specialInfo);
             counterWithoutSpecialBuffer.clear();
-            std::cout << "8" << std::endl;
         }
         previousReadValue= readValue;
     }
@@ -732,7 +741,7 @@ void MapGenerator::compress(std::ifstream& input) {
             if (readString.length() != 2) {
                 std::cerr << "A special is represent by 2 chars" << std::endl;
             }
-            // side of enemy
+            // side of special
             unsigned char charToWrite;
             switch (readString.at(0))
             {
@@ -750,17 +759,17 @@ void MapGenerator::compress(std::ifstream& input) {
             }
             output << charToWrite;
 
-            // type of enemy
+            // type of special
             switch (readString.at(1))
             {
             case 'A': charToWrite = firstNumberType; break;
             case 'B': charToWrite = firstNumberType + 1; break;
             case 'C': charToWrite = firstNumberType + 2; break;
-            case 'D': charToWrite = firstNumberType; break;
-            case 'E': charToWrite = firstNumberType + 1; break;
-            case 'F': charToWrite = firstNumberType + 2; break;
-            case 'G': charToWrite = firstNumberType + 2; break;
-            case 'H': charToWrite = firstNumberType + 2; break;
+            case 'D': charToWrite = firstNumberType + 3; break;
+            case 'E': charToWrite = firstNumberType + 4; break;
+            case 'F': charToWrite = firstNumberType + 5; break;
+            case 'G': charToWrite = firstNumberType + 6; break;
+            case 'H': charToWrite = firstNumberType + 7; break;
             default:
                 std::cerr << "Unknown type character: "
                           << readString.at(1) << std::endl;
@@ -975,7 +984,7 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
         output << std::endl;
     }
 
-    //Enemies verification
+    //Specials verification
     output << "SPECIALS" << std::endl;
     std::cout << "Verification Specials..." << std::endl;
     currentInfo = 0;
@@ -990,7 +999,7 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
                 } else {
                     const JBTypes::Dir& dir = 
                         map.getSpecialInfo().at(currentInfo).special->direction();
-                    const auto typeOfSpecial = 
+                    const auto typeOfSpecial =
                         map.getSpecialInfo().at(currentInfo).type;
                     const auto color = 
                         map.getSpecialInfo().at(currentInfo).special->getColor();
@@ -1000,13 +1009,15 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
                             ? 4
                             : 0;
                     // -1 to count None in the Color type
+                    const char charToWriteType =
+                    static_cast<unsigned int>(typeOfSpecial)
+                            * offsetType
+                            + static_cast<unsigned int>(color) - 1
+                            + 'A';
                     output << getDirection(static_cast<size_t>(dir))
-                        << static_cast<char>(
-                            static_cast<unsigned int>(color) - 1 +
-                            offsetType
-                            + firstNumberType) 
-                        << static_cast<char>(color);
+                        << charToWriteType;
                     ++currentInfo;
+                    std::cout <<" end fucking" << std::endl;
                 }
                 if (x != map.width() -1 ) output << " ";
                 ++currentIndex;
