@@ -2,7 +2,8 @@
 #define PAGERENDERING_H
 #include <gameMenu/Page.h>
 #include <system/ParallelTask.h>
-#include "LabelRendering.h"
+#include "TextRendering.h"
+#include "BoxRendering.h"
 #include "Utility.h"
 
 class PageRendering;
@@ -23,16 +24,30 @@ public:
     void render() const;
 
 private:
-    const Page& _page;
-    const ShaderProgram& _spFont;
-    const ShaderProgram& _spBox;
-    vecLabelRendering_sptr _labelRenderings;
-    ParallelTask<void> _labelRenderingsUpdate;
 
-    vecLabelRendering_sptr createLabelRenderings(
+
+    struct LettersLookupTable { CstTextRendering_sptr textRendering;
+                                std::vector<size_t> indices; };
+
+    const Page&             _page;
+    const ShaderProgram&    _spFont;
+    const ShaderProgram&    _spBox;
+
+    vecTextRendering_sptr   _textRenderings;
+    vecBoxRendering_sptr    _boxRenderings;
+    vecLabelRendering_sptr  _labelRenderings;
+    ParallelTask<void>      _labelRenderingsUpdate;
+
+    const std::map<GLuint, std::vector<LettersLookupTable> >
+                            _charactersLookUpTable;
+
+    vecTextRendering_sptr createTextRenderings(
             const Page& page, float maxHeight) const;
+    vecBoxRendering_sptr createBoxRenderings( const Page& page) const;
+    vecLabelRendering_sptr createLabelRenderings() const;
+    std::map<GLuint, std::vector<LettersLookupTable> >
+                            createCharactersLookUpTable() const;
 
-    static void updateCharactersList(const Page& page);
 };
 
 #endif // PAGERENDERING_H

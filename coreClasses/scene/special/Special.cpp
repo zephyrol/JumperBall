@@ -20,7 +20,6 @@ Special::Special(const JBTypes::Color &color,
         _direction(dir),
         _color(color)
 {
-    
 }
 
 const JBTypes::Color& Special::getColor() const {

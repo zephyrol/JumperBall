@@ -15,8 +15,7 @@ _size(enemy.size()),
 _hasHit(enemy.hasHit()),
 _intersectionTime(enemy.intersectionTime()),
 _position(enemy.position()),
-_transform{0.f,0.f,0.f,0.f,0.f,0.f,1.f,1.f,1.f}
-{
+_transform(enemy.transform()){
 }
 
 const JBTypes::Color& EnemyState::color() const {

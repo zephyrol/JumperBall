@@ -9,6 +9,7 @@
 #include "scene/Map.h"
 #include "scene/blocks/BlockState.h"
 #include "scene/enemies/EnemyState.h"
+#include "scene/special/SpecialState.h"
 
 class MapState
 {
@@ -23,21 +24,24 @@ public:
                             ) const;
     const std::vector<Map::BlockInfo>& blocksInfo() const;
     std::array<unsigned int, 3> getBlockCoords(size_t index) const;
-    const std::vector<std::shared_ptr<BlockState> > &BlockStates() const;
+    const std::vector<std::shared_ptr<BlockState> > &blockStates() const;
     const std::vector<std::shared_ptr<EnemyState> > &enemiesStates() const;
 
 private:
     const Map&                            _map;
-    unsigned int                          _width;
-    unsigned int                          _height;
-    unsigned int                          _deep;
-    std::vector<std::shared_ptr<BlockState> >
-                                          _BlockStates;
-    std::vector<std::shared_ptr<EnemyState> >
+    const unsigned int                    _width;
+    const unsigned int                    _height;
+    const unsigned int                    _deep;
+    const std::vector<std::shared_ptr<BlockState> >
+                                          _blockStates;
+    const std::vector<std::shared_ptr<EnemyState> >
                                           _enemiesStates;
+    const std::vector<std::shared_ptr<SpecialState> >
+                                          _specialsStates;
 
     std::vector<std::shared_ptr<BlockState> >   genBlockStates() const;
-    std::vector<std::shared_ptr<EnemyState> >  genenemiesStates() const;
+    std::vector<std::shared_ptr<EnemyState> >   genEnemiesStates() const;
+    std::vector<std::shared_ptr<SpecialState> > genSpecialsStates() const;
 };
 
 #endif // MAPSTATE

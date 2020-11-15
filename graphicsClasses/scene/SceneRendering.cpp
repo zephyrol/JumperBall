@@ -185,9 +185,9 @@ void SceneRendering::updateUniform()
     const BallState& ball = _meshBall.getInstanceFrame();
     const StarState& star = _meshStar.getInstanceFrame();
 
-    const glm::vec3 center{ map.width()/2.f,
-                            map.height()/2.f,
-                            map.deep()/2.f };
+    const glm::vec3 center { map.width()/2.f,
+                             map.height()/2.f,
+                             map.deep()/2.f };
 
     float boundingBoxMax = static_cast<float>(map.width());
     if (boundingBoxMax < static_cast<float>(map.height()))

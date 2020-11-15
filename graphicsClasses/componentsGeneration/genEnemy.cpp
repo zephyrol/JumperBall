@@ -61,11 +61,19 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState& enemy) {
                 std::make_shared<EnemyAnimation>(enemy));
         components.push_back(componentCube);
     }
-    else if (enemy.category() == Map::EnemyTypes::ThornBall)
-    {
-    }
-    else if (enemy.category() == Map::EnemyTypes::DarkBall)
-    {
+    else if (enemy.category() == Map::EnemyTypes::ThornBall ||
+             enemy.category() == Map::EnemyTypes::DarkBall) {
+        const float radius = enemy.category() == Map::EnemyTypes::ThornBall 
+            ? ThornBall::thornBallRadius
+            : DarkBall::darkBallRadius;
+
+        const glm::mat4 scaleMatrix = 
+            glm::scale(glm::vec3(radius));
+        const Sphere sphere;
+        MeshComponent_sptr component = std::make_shared<MeshComponent>
+                (std::make_shared<Sphere>(sphere,scaleMatrix),
+                 std::make_shared<EnemyAnimation>(enemy));
+        return vecMeshComponent_sptr {component};
     }
 
     return components;

@@ -50,8 +50,7 @@ float Enemy::size() const {
     return _size;
 }
 
-float Enemy::length() const
-{
+float Enemy::length() const {
     return _length;
 }
 

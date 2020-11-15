@@ -19,11 +19,11 @@ public:
     virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) override;
     virtual ~DarkBall() = default;
+    static constexpr float darkBallRadius = 0.2f;
 
 private:
     const JBTypes::Dir _movementDirection;
     const size_t _nbOfJumps;
-    static constexpr float darkBallRadius = 0.2f;
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override; 
 };

@@ -12,8 +12,8 @@
 
 template<typename T, size_t N>
 class Movement {
+
 public:
-    
     Movement(const std::function<T(const std::array<JBTypes::Dir,N>)>&& fct);
     
     Movement(const Movement& movement) = delete;
@@ -26,11 +26,9 @@ public:
     
     T evaluate(const std::array<JBTypes::Dir,N>& inputs) const;
     
-    
+
 private:
-    
     const std::function<T(const std::array<JBTypes::Dir,N>)> _fct;
-    //std::map<std::array<JBTypes::Dir,N>, T> _sentValues;
 };
 
 template<typename T, size_t N>

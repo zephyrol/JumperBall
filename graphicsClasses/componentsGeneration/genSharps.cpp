@@ -40,7 +40,7 @@ vecMeshComponent_sptr MeshGenerator::genSharps(
                         JBTypesMethods::integerAsDirection(
                             static_cast<unsigned int>(i));
                 const JBTypes::vec3f vecDir =
-                    JBTypesMethods:: directionAsVector(currentDir);
+                        JBTypesMethods:: directionAsVector(currentDir);
 
                 const glm::mat4 translationOffset = glm::translate(
                         glm::vec3( -offset, 0 , -offset ));

@@ -12,7 +12,7 @@ vecMeshComponent_sptr MeshGenerator::genBlock
     const std::array<unsigned int,3> position = map.getBlockCoords(index);
     const Map::BlockTypes blockType = map.getType(position);
 
-    const std::shared_ptr<BlockState> block = map.BlockStates().at(index);
+    const std::shared_ptr<BlockState> block = map.blockStates().at(index);
 
     vecMeshComponent_sptr components;
     std::shared_ptr<GeometricShape> shape;

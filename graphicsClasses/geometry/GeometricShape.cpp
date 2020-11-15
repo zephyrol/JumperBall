@@ -193,7 +193,6 @@ void GeometricShape::bind() const {
     glBindVertexArray(*_vertexArrayObject);
 }
 
-
 void GeometricShape::draw() const {
 
     if (_elementBufferObject && _indices) {

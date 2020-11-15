@@ -20,19 +20,20 @@
 #include <system/ParallelTask.h>
 #include "LabelRendering.h"
 
+class TextRendering;
+using TextRendering_sptr = std::shared_ptr<TextRendering>;
+using CstTextRendering_sptr = std::shared_ptr<const TextRendering>;
+using vecCstTextRendering_sptr = std::vector<CstTextRendering_sptr>;
+using vecTextRendering_sptr = std::vector<TextRendering_sptr>;
 
 class TextRendering: public LabelRendering {
 public:
     TextRendering                       ( const Label& label, float maxHeight,
                                           const ShaderProgram& spFont);
     virtual ~TextRendering() = default;
-    
-    static bool                         initFreeTypeAndFont();
-    static void                         clearFreeTypeRessources();
-
-    struct Character                    {   GLuint texture;
-                                            glm::vec2 localScale;
-                                            glm::vec2 localTranslate; };
+    struct Character                    { GLuint texture;
+                                          glm::vec2 localScale;
+                                          glm::vec2 localTranslate; };
 
     void                                render() const override;
     void                                update(float offset) override;
@@ -40,12 +41,26 @@ public:
     GLuint                              getQuadVAO() const override;
     const Quad&                         getDisplayQuad() const override;
 
-private:
-    const ShaderProgram& _spFont;
-    std::vector<glm::mat4> _charactersTransforms;
-    static std::map<unsigned char, Character> alphabet;
+    void                                render(size_t index) const;
+    std::vector<size_t>                 getIndicesWithID(GLuint characterId) const;
+    const glm::vec3&                    getTextColor() const;
+    
+    static bool                         initFreeTypeAndFont();
+    static void                         clearFreeTypeRessources();
+    static const std::vector<GLuint>&   getAlphabetCharactersIds();
 
-    static void                         updateCharacters(const Label& label, float maxHeight);
+
+private:
+    const ShaderProgram&                _spFont;
+    std::vector<glm::mat4>              _charactersTransforms;
+    std::vector<GLuint>                 _charactersTextureIDs;
+    void                                fillTextureIDs();
+
+    static std::map<unsigned char, Character> alphabet;
+    static std::vector<GLuint>                alphabetCharactersIds;
+    static void                         updateAlphabet(const Label& label, 
+                                                       float maxHeight);
+    static void                         updateAlphabetCharactersIds();
     static void                         updateQuad();
     static FT_Library                   ftLib;
     static FT_Face                      fontFace;

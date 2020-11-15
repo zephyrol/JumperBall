@@ -20,6 +20,12 @@
 #include "LabelRendering.h"
 
 
+class BoxRendering;
+using BoxRendering_sptr = std::shared_ptr<BoxRendering>;
+using CstBoxRendering_sptr = std::shared_ptr<const BoxRendering>;
+using vecCstBoxRendering_sptr = std::vector<CstBoxRendering_sptr>;
+using vecBoxRendering_sptr = std::vector<BoxRendering_sptr>;
+
 class BoxRendering : public LabelRendering
 {
 public:
@@ -28,7 +34,6 @@ public:
                               const glm::vec3& color2,
                               const ShaderProgram& spBox);
     
-
     void                     render() const override;
     void                     update(float offset) override;
     const ShaderProgram&     getShaderProgram() const override;

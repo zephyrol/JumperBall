@@ -10,7 +10,6 @@
 LabelRendering::LabelRendering(const Label &label):
     _label(label)
 {
-
 }
 
 const glm::mat4 LabelRendering::biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,

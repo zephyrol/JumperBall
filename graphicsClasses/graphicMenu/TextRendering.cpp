@@ -13,16 +13,20 @@
 
 #include "TextRendering.h"
 #include "ShaderProgram.h"
+#include <iterator>
 
 TextRendering::TextRendering(const Label &label,
                              float maxHeight,
                              const ShaderProgram &spFont):
     LabelRendering(label),
     _spFont(spFont),
-    _charactersTransforms(label.message().size())
+    _charactersTransforms(label.message().size()),
+    _charactersTextureIDs()
 {
     updateQuad();
-    updateCharacters(label,maxHeight);
+    updateAlphabet(label,maxHeight);
+    updateAlphabetCharactersIds();
+    fillTextureIDs();
 }
 
 
@@ -68,28 +72,61 @@ void TextRendering::clearFreeTypeRessources() {
     FT_Done_FreeType(ftLib);
 }
 
+const std::vector<GLuint>& TextRendering::getAlphabetCharactersIds() {
+    return alphabetCharactersIds;
+}
+
+void TextRendering::fillTextureIDs() {
+   for (const char c : _label.message()){
+      _charactersTextureIDs.push_back(alphabet.at(c).texture);
+   }
+}
+
 void TextRendering::render() const {
-    const glm::vec3& textColor = _label.isActivated() 
-        ? enabledLetterColor
-        : disabledLetterColor;
+    const glm::vec3& textColor = getTextColor();
     _spFont.bindUniform("fontColor",textColor);
     for (size_t i = 0; i < _label.message().size(); ++i) {
-        const char c = _label.message().at(i);
         _spFont.bindUniformTexture("characterTexture", 0,
-                                   alphabet.at(c).texture);
+                                   _charactersTextureIDs.at(i));
         _spFont.bindUniform("M",_charactersTransforms.at(i));
         displayQuad->draw();
     }
 }
 
-void TextRendering::update(float offset) {
+void TextRendering::render(size_t index) const {
+    _spFont.bindUniform("M", _charactersTransforms.at(index));
+    displayQuad->draw();
+}
 
-    JBTypes::vec2f position = _label.position();
-    if (!_label.isFixed()) {
-        position.y += offset;
+std::vector<size_t> TextRendering::getIndicesWithID(GLuint characterId) const {
+    std::vector<size_t> indicesWithID;
+
+    for ( size_t i = 0 ; i < _charactersTextureIDs.size(); ++i) {
+        if (characterId == _charactersTextureIDs.at(i)) {
+            indicesWithID.push_back(i);
+        }
     }
+    return indicesWithID;
+}
 
-    const float pitch = _label.width()/_label.message().size();
+const glm::vec3& TextRendering::getTextColor() const
+{
+    return  _label.isActivated() 
+            ? enabledLetterColor
+            : disabledLetterColor;
+}
+
+void TextRendering::update(float offset) {
+    const auto getPosition = [this](float offset) {
+        JBTypes::vec2f position = _label.position();
+        if (!_label.isFixed()) {
+            position.y += offset;
+        }
+        return position;
+    };
+
+    const JBTypes::vec2f position = getPosition(offset);
+    const float pitch = _label.width() / _label.message().size();
 
     constexpr float biasScalar = 2.f; //To multiply the translation by 2
     const float initialOffsetX = -_label.width()/2.f + pitch/2.f;
@@ -135,10 +172,9 @@ const Quad& TextRendering::getDisplayQuad() const
     return *displayQuad;
 }
 
-
-void TextRendering::updateCharacters(const Label& label, float maxHeight)
+void TextRendering::updateAlphabet(const Label& label, float maxHeight)
 {
-    const FT_UInt height = Utility::windowResolutionY * maxHeight;
+    const FT_UInt height = (Utility::windowResolutionY * maxHeight) + 1;
     FT_Set_Pixel_Sizes(fontFace,0,height);
     for (const char& character : label.message()) {
         if ( alphabet.find(character) == alphabet.end()){
@@ -194,10 +230,22 @@ void TextRendering::updateCharacters(const Label& label, float maxHeight)
     }
 }
 
+void TextRendering::updateAlphabetCharactersIds() {
+    alphabetCharactersIds.clear();
+    for (std::map<unsigned char, Character>::const_iterator it = alphabet.begin(); 
+        it != alphabet.end(); 
+        ++it) {
+            const Character& character = it->second;
+            alphabetCharactersIds.push_back(character.texture);
+        }
+
+}
+
 FT_Library TextRendering::ftLib;
 FT_Face TextRendering::fontFace;
 
 std::map<unsigned char, TextRendering::Character> TextRendering::alphabet{};
+std::vector<GLuint> TextRendering::alphabetCharactersIds{};
 
 std::shared_ptr<const Quad> TextRendering::displayQuad = nullptr;
 const glm::vec3 TextRendering::enabledLetterColor = 

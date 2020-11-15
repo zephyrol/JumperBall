@@ -18,11 +18,11 @@ public:
     virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) override;
     virtual ~ThornBall() = default;
+    static constexpr float thornBallRadius = 0.1f;
     
 private:
     const JBTypes::Dir _movementDirection;
     const size_t _movementLenght;
-    static constexpr float thornBallRadius = 0.2f;
 
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override; 

@@ -15,7 +15,7 @@
 #include <iostream>
 #include <fstream>
 #include <scene/MapGenerator.h>
-#include "testClass.h"
+#include "Window.h"
 
 using namespace std;
 
@@ -96,11 +96,11 @@ int main(int argc, char** argv) {
         return EXIT_SUCCESS;
     }
 
-    GLFWwindow* window = initLibraries();
+    GLFWwindow* glfwWindow = initLibraries();
     
-    testClass t(window);
+    Window window(glfwWindow);
     
-    t.run();
+    window.run();
     
     cleanLibraries();
     return EXIT_SUCCESS;
