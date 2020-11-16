@@ -133,20 +133,18 @@ void TextRendering::update(float offset) {
     for ( size_t i = 0; i < _label.message().size(); ++i){
         const float offsetX =  initialOffsetX + i * pitch;
         const char c = _label.message().at(i);
-        const glm::vec3 scale = glm::vec3{pitch * alphabet.at(c).localScale.x,
-                _label.height() * alphabet.at(c).localScale.y ,0.f};
+        
+        const float scaleX = pitch * alphabet.at(c).localScale.x;
+        const float scaleY = _label.height() * alphabet.at(c).localScale.y;
+        const glm::vec3 scale = glm::vec3{ scaleX, scaleY, 0.f };
 
         const glm::mat4 scaleMatrix = glm::scale(scale);
+        const float translateX = position.x + offsetX;
+        const float translateY = 
+            position.y + alphabet.at(c).localTranslate.y * _label.height();
+        const glm::vec3 translateVec {translateX, translateY, 0.f};
 
-        const glm::mat4 translate =
-           glm::translate( biasScalar *
-               glm::vec3{ position.x + offsetX +
-                          alphabet.at(c).localTranslate.x *
-                          scale.x,
-                           position.y -
-                          (1.f-alphabet.at(c).localTranslate.y) * scale.y,
-                          0.f}
-                         );
+        const glm::mat4 translate = glm::translate( biasScalar * translateVec );
         _charactersTransforms.at(i) = biasMatrix * translate * scaleMatrix;
 
     }
@@ -172,10 +170,32 @@ const Quad& TextRendering::getDisplayQuad() const
     return *displayQuad;
 }
 
-void TextRendering::updateAlphabet(const Label& label, float maxHeight)
+void TextRendering::updateAlphabet(const Label& label, float height)
 {
-    const FT_UInt height = (Utility::windowResolutionY * maxHeight) + 1;
-    FT_Set_Pixel_Sizes(fontFace,0,height);
+    const FT_UInt heightPixels =
+        (Utility::windowResolutionY * height);
+    FT_Set_Pixel_Sizes(fontFace,0,heightPixels);
+
+    const auto& glyph = fontFace->glyph;
+    const auto& metrics = glyph->metrics;
+    const auto& bitmap = glyph->bitmap;
+
+    const auto getMinHeight = [](const std::string& message,
+                                 const FT_Face& fontFace) -> FT_Pos {
+
+        FT_Load_Char(fontFace, message.at(0), FT_LOAD_RENDER);
+        FT_Pos minHeight = fontFace->glyph->metrics.height;
+        for (const char character : message) {
+            FT_Load_Char(fontFace,character,FT_LOAD_RENDER);
+            const FT_Pos characterHeight = fontFace->glyph->metrics.height;
+            if ( minHeight > characterHeight && characterHeight > 0) {
+                minHeight = characterHeight;
+            }
+        }
+        return minHeight;
+    };
+    const FT_Pos minHeight = getMinHeight(label.message(), fontFace);
+
     for (const char& character : label.message()) {
         if ( alphabet.find(character) == alphabet.end()){
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
@@ -187,10 +207,10 @@ void TextRendering::updateAlphabet(const Label& label, float maxHeight)
 
                 constexpr GLint levelOfDetail = 0;
                 glTexImage2D(GL_TEXTURE_2D, levelOfDetail, GL_RED,
-                             fontFace->glyph->bitmap.width,
-                             fontFace->glyph->bitmap.rows, 0, GL_RED,
+                             bitmap.width,
+                             bitmap.rows, 0, GL_RED,
                              GL_UNSIGNED_BYTE,
-                             fontFace->glyph->bitmap.buffer);
+                             bitmap.buffer);
 
                 glTexParameteri(GL_TEXTURE_2D,
                                 GL_TEXTURE_MIN_FILTER,
@@ -205,20 +225,22 @@ void TextRendering::updateAlphabet(const Label& label, float maxHeight)
                                 GL_TEXTURE_WRAP_T,
                                 GL_CLAMP_TO_EDGE);
 
-                float width;
-                if (character == ' ') {
-                    width = static_cast<float>(height);
-                } else {
-                    width = static_cast<float>(height) *
-                            fontFace->glyph->bitmap.width /
-                            fontFace->glyph->bitmap.rows;
-                }
+                const float metricsWidth= static_cast<float>(metrics.width);
+                const float bearingX = static_cast<float>(metrics.horiBearingX);
+                const float scaleX = 1.f / (1.f + (bearingX / metricsWidth));
+
+                const float metricsHeight = static_cast<float>(metrics.height);
+                const float bearingY = static_cast<float>(metrics.horiBearingY);
+                const float fMinHeight = static_cast<float>(minHeight);
+
+                const float scaleY = metricsHeight / fMinHeight;
+                const float translationY = 
+                    (bearingY - metricsHeight / 2.f) / fMinHeight - 1.f/2.f;
+
                 const TextRendering::Character graphicChar {
                     textureID,
-                    {fontFace->glyph->bitmap.width/width,
-                     fontFace->glyph->bitmap.rows/static_cast<float>(height)},
-                    {fontFace->glyph->bitmap_left/width,
-                     fontFace->glyph->bitmap_top/static_cast<float>(height)}
+                    { scaleX, scaleY },
+                    { 0 , translationY }
                 };
                 alphabet[character] = graphicChar;
             }

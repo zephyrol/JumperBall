@@ -59,7 +59,7 @@ private:
     static std::map<unsigned char, Character> alphabet;
     static std::vector<GLuint>                alphabetCharactersIds;
     static void                         updateAlphabet(const Label& label, 
-                                                       float maxHeight);
+                                                       float height);
     static void                         updateAlphabetCharactersIds();
     static void                         updateQuad();
     static FT_Library                   ftLib;

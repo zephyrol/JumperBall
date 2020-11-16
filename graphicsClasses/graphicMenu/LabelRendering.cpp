@@ -12,7 +12,8 @@ LabelRendering::LabelRendering(const Label &label):
 {
 }
 
-const glm::mat4 LabelRendering::biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,
+const glm::mat4 LabelRendering::biasMatrix  = glm::mat4{ 
+                                             1.f, 0.f,  0.f, 0.f,
                                              0.f,  1.f, 0.f, 0.f,
                                              0.f,  0.f,  1.f, 0.f,
                                              -1.f, -1.f, 0.f, 1.f} ;
