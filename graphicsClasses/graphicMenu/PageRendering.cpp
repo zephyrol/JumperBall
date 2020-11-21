@@ -2,13 +2,13 @@
 #include "TextRendering.h"
 #include "BoxRendering.h"
 
-PageRendering::PageRendering(const Page &page, float maxHeight,
+PageRendering::PageRendering(const Page &page,
                   const ShaderProgram& spFont,
                   const ShaderProgram& spBox):
 _page(page),
 _spFont(spFont),
 _spBox(spBox),
-_textRenderings(createTextRenderings(page,maxHeight)),
+_textRenderings(createTextRenderings(page)),
 _boxRenderings(createBoxRenderings(page)),
 _labelRenderings(createLabelRenderings()),
 _labelRenderingsUpdate( [this](size_t renderingLabelNumber){
@@ -69,14 +69,13 @@ void PageRendering::render() const
     }
 }
 
-vecTextRendering_sptr PageRendering::createTextRenderings(
-    const Page& page, float maxHeight
-) const {
+vecTextRendering_sptr PageRendering::createTextRenderings(const Page& page)
+const {
     vecTextRendering_sptr textRenderings;
     for (const CstLabel_sptr& cstLabel : page.labels()) {
         if (page.type(cstLabel) == Page::TypeOfLabel::Message) {
             textRenderings.push_back(
-                std::make_shared<TextRendering>(*cstLabel, maxHeight, _spFont));
+                std::make_shared<TextRendering>(*cstLabel, _spFont));
         }
     }
     return textRenderings;

@@ -17,15 +17,13 @@ Menu::Menu(const Page_sptr &rootPage,
            const Page_sptr &pausePage,
            const Page_sptr &successPage,
            const Page_sptr &failurePage,
-           const vecCstPage_sptr &pages,
-           float maxHeight):
+           const vecCstPage_sptr &pages):
   _rootPage(rootPage),
   _pausePage(pausePage),
   _successPage(successPage),
   _failurePage(failurePage),
   _pages(pages),
-  _currentPage(rootPage),
-  _maxHeight(maxHeight)
+  _currentPage(rootPage)
 {
 }
 
@@ -96,15 +94,9 @@ const vecCstPage_sptr &Menu::pages() const
     return _pages;
 }
 
-float Menu::maxHeight() const
-{
-   return _maxHeight;
-}
-
 std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
 {
     //Page 1
-    constexpr float maxHeight = 0.1f;
     std::shared_ptr<const MessageLabel> label1Page1 =
         std::make_shared<const MessageLabel>(
             factor * 1.f, 0.1f,
@@ -282,5 +274,5 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
     page4->setTypes(std::move(typesPage4));
 
     const vecCstPage_sptr pages {page1,page2,page3,page4};
-    return std::make_shared<Menu> (page1,page4,nullptr,page3,pages,maxHeight);
+    return std::make_shared<Menu> (page1,page4,nullptr,page3,pages);
 }

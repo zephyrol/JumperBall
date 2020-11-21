@@ -25,8 +25,7 @@ public:
          const Page_sptr& pausePage,
          const Page_sptr& successPage,
          const Page_sptr& failurePage,
-         const vecCstPage_sptr &pages,
-         float maxHeight);
+         const vecCstPage_sptr &pages);
 
     Page_sptr currentPage();
     CstPage_sptr currentPage() const;
@@ -45,7 +44,6 @@ public:
     CstPage_sptr successPage() const;
     CstPage_sptr failurePage() const;
     const vecCstPage_sptr& pages() const;
-    float maxHeight() const;
 
     static std::shared_ptr<Menu> getJumperBallMenu(size_t currentLevel,
                                                    float factor);
@@ -58,7 +56,6 @@ private:
     const vecCstPage_sptr _pages;
     
     Page_sptr _currentPage;
-    float _maxHeight;
 
 };
 

@@ -15,8 +15,7 @@
 #include "ShaderProgram.h"
 #include <iterator>
 
-TextRendering::TextRendering(const Label &label,
-                             float maxHeight,
+TextRendering::TextRendering(const Label &label, 
                              const ShaderProgram &spFont):
     LabelRendering(label),
     _spFont(spFont),
@@ -24,7 +23,7 @@ TextRendering::TextRendering(const Label &label,
     _charactersTextureIDs()
 {
     updateQuad();
-    updateAlphabet(label,maxHeight);
+    updateAlphabets(label);
     updateAlphabetCharactersIds();
     fillTextureIDs();
 }
@@ -77,9 +76,23 @@ const std::vector<GLuint>& TextRendering::getAlphabetCharactersIds() {
 }
 
 void TextRendering::fillTextureIDs() {
-   for (const char c : _label.message()){
-      _charactersTextureIDs.push_back(alphabet.at(c).texture);
-   }
+    for (const char c : _label.message()) {
+        const TextRendering::AlphabetTextureKey alphabetTextureKey 
+        {c, getHeightInPixels()};
+        _charactersTextureIDs.push_back(
+            alphabetTextures.at(alphabetTextureKey));
+    }
+}
+
+FT_UInt TextRendering::getHeightInPixels() const {
+    return getHeightInPixels(_label);
+}
+
+FT_UInt TextRendering::getHeightInPixels(const Label& label) 
+{
+    const FT_UInt heightPixels =
+        (Utility::windowResolutionY * label.height());
+    return heightPixels;
 }
 
 void TextRendering::render() const {
@@ -109,8 +122,7 @@ std::vector<size_t> TextRendering::getIndicesWithID(GLuint characterId) const {
     return indicesWithID;
 }
 
-const glm::vec3& TextRendering::getTextColor() const
-{
+const glm::vec3& TextRendering::getTextColor() const {
     return  _label.isActivated() 
             ? enabledLetterColor
             : disabledLetterColor;
@@ -133,15 +145,16 @@ void TextRendering::update(float offset) {
     for ( size_t i = 0; i < _label.message().size(); ++i){
         const float offsetX =  initialOffsetX + i * pitch;
         const char c = _label.message().at(i);
+        const CharacterTransform& localTransform = alphabetTransforms.at(c);
         
-        const float scaleX = pitch * alphabet.at(c).localScale.x;
-        const float scaleY = _label.height() * alphabet.at(c).localScale.y;
+        const float scaleX = pitch * localTransform.localScale.x;
+        const float scaleY = _label.height() * localTransform.localScale.y;
         const glm::vec3 scale = glm::vec3{ scaleX, scaleY, 0.f };
 
         const glm::mat4 scaleMatrix = glm::scale(scale);
         const float translateX = position.x + offsetX;
-        const float translateY = 
-            position.y + alphabet.at(c).localTranslate.y * _label.height();
+        const float translateY = position.y + 
+            localTransform.localTranslate.y * _label.height();
         const glm::vec3 translateVec {translateX, translateY, 0.f};
 
         const glm::mat4 translate = glm::translate( biasScalar * translateVec );
@@ -170,23 +183,29 @@ const Quad& TextRendering::getDisplayQuad() const
     return *displayQuad;
 }
 
-void TextRendering::updateAlphabet(const Label& label, float height)
+void TextRendering::updateAlphabets(const Label& label)
 {
-    const FT_UInt heightPixels =
-        (Utility::windowResolutionY * height);
-    FT_Set_Pixel_Sizes(fontFace,0,heightPixels);
-
-    const auto& glyph = fontFace->glyph;
-    const auto& metrics = glyph->metrics;
-    const auto& bitmap = glyph->bitmap;
-
-    const auto getMinHeight = [](const std::string& message,
+    const auto setPixelSizes= [](FT_UInt heightPixels) -> void {
+        FT_Set_Pixel_Sizes(fontFace,0,heightPixels);
+    };
+    const auto loadCharacter = [](unsigned char character) -> void {
+        if (const auto callback = 
+                FT_Load_Char(fontFace, character, FT_LOAD_RENDER)){
+            std::cerr << "Error " << callback 
+                      << ": Impossible to load glyph " << character
+                      << std::endl;
+        }
+    };
+    const auto getMinHeight = [&loadCharacter](const std::string& message,
                                  const FT_Face& fontFace) -> FT_Pos {
-
-        FT_Load_Char(fontFace, message.at(0), FT_LOAD_RENDER);
+        if (message.size() > 0) {
+            loadCharacter(message.at(0));
+        } else {
+            return 0;
+        }
         FT_Pos minHeight = fontFace->glyph->metrics.height;
         for (const char character : message) {
-            FT_Load_Char(fontFace,character,FT_LOAD_RENDER);
+            loadCharacter(character);
             const FT_Pos characterHeight = fontFace->glyph->metrics.height;
             if ( minHeight > characterHeight && characterHeight > 0) {
                 minHeight = characterHeight;
@@ -194,80 +213,94 @@ void TextRendering::updateAlphabet(const Label& label, float height)
         }
         return minHeight;
     };
+
+    const auto& glyph = fontFace->glyph;
+    const auto& metrics = glyph->metrics;
+    const auto& bitmap = glyph->bitmap;
+
+    const FT_UInt heightPixels = getHeightInPixels(label);
+    setPixelSizes(heightPixels);
     const FT_Pos minHeight = getMinHeight(label.message(), fontFace);
 
-    for (const char& character : label.message()) {
-        if ( alphabet.find(character) == alphabet.end()){
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
-            if (!FT_Load_Char(fontFace,character,FT_LOAD_RENDER)) {
+    for (const char character : label.message()) {
+        // Transform
+        if ( alphabetTransforms.find(character) == alphabetTransforms.end()) {
+            loadCharacter(character);
+            const float metricsWidth = static_cast<float>(metrics.width);
+            const float bearingX = static_cast<float>(metrics.horiBearingX);
+            const float scaleX = 1.f / (1.f + (bearingX / metricsWidth));
 
-                GLuint textureID;
-                glGenTextures(1,&textureID);
-                glBindTexture(GL_TEXTURE_2D,textureID);
+            const float metricsHeight = static_cast<float>(metrics.height);
+            const float bearingY = static_cast<float>(metrics.horiBearingY);
+            const float fMinHeight = static_cast<float>(minHeight);
 
-                constexpr GLint levelOfDetail = 0;
-                glTexImage2D(GL_TEXTURE_2D, levelOfDetail, GL_RED,
-                             bitmap.width,
-                             bitmap.rows, 0, GL_RED,
-                             GL_UNSIGNED_BYTE,
-                             bitmap.buffer);
+            const float scaleY = metricsHeight / fMinHeight;
+            const float translationY =
+                (bearingY - metricsHeight / 2.f) / fMinHeight - 1.f / 2.f;
 
-                glTexParameteri(GL_TEXTURE_2D,
-                                GL_TEXTURE_MIN_FILTER,
-                                GL_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D,
-                                GL_TEXTURE_MAG_FILTER,
-                                GL_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D,
-                                GL_TEXTURE_WRAP_S,
-                                GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_2D,
-                                GL_TEXTURE_WRAP_T,
-                                GL_CLAMP_TO_EDGE);
+            const TextRendering::CharacterTransform charTransform{
+                {scaleX, scaleY},
+                {0, translationY}};
 
-                const float metricsWidth= static_cast<float>(metrics.width);
-                const float bearingX = static_cast<float>(metrics.horiBearingX);
-                const float scaleX = 1.f / (1.f + (bearingX / metricsWidth));
+            alphabetTransforms[character] = charTransform;
+        }
 
-                const float metricsHeight = static_cast<float>(metrics.height);
-                const float bearingY = static_cast<float>(metrics.horiBearingY);
-                const float fMinHeight = static_cast<float>(minHeight);
+        // Texture 
+        const TextRendering::AlphabetTextureKey keyAlphaTex 
+            {character,heightPixels};
+        if ( alphabetTextures.find(keyAlphaTex) == alphabetTextures.end()){
 
-                const float scaleY = metricsHeight / fMinHeight;
-                const float translationY = 
-                    (bearingY - metricsHeight / 2.f) / fMinHeight - 1.f/2.f;
+            // disable byte-alignment restriction
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
+            loadCharacter(character);
 
-                const TextRendering::Character graphicChar {
-                    textureID,
-                    { scaleX, scaleY },
-                    { 0 , translationY }
-                };
-                alphabet[character] = graphicChar;
-            }
-            else {
-                std::cerr << "Error... Impossible to load glyph " << character
-                          << std::endl;
-            }
+            GLuint textureID;
+            glGenTextures(1, &textureID);
+            glBindTexture(GL_TEXTURE_2D, textureID);
+
+            constexpr GLint levelOfDetail = 0;
+            glTexImage2D(GL_TEXTURE_2D, levelOfDetail, GL_RED,
+                         bitmap.width,
+                         bitmap.rows, 0, GL_RED,
+                         GL_UNSIGNED_BYTE,
+                         bitmap.buffer);
+
+            glTexParameteri(GL_TEXTURE_2D,
+                            GL_TEXTURE_MIN_FILTER,
+                            GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D,
+                            GL_TEXTURE_MAG_FILTER,
+                            GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D,
+                            GL_TEXTURE_WRAP_S,
+                            GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D,
+                            GL_TEXTURE_WRAP_T,
+                            GL_CLAMP_TO_EDGE);
+
+            alphabetTextures[keyAlphaTex] = textureID;
         }
     }
 }
 
-void TextRendering::updateAlphabetCharactersIds() {
+void TextRendering::updateAlphabetCharactersIds()
+{
     alphabetCharactersIds.clear();
-    for (std::map<unsigned char, Character>::const_iterator it = alphabet.begin(); 
-        it != alphabet.end(); 
-        ++it) {
-            const Character& character = it->second;
-            alphabetCharactersIds.push_back(character.texture);
-        }
-
+    for (TextRendering::AlphabetTextures::const_iterator itAlphabet =
+             TextRendering::alphabetTextures.begin();
+         itAlphabet != alphabetTextures.end();
+         ++itAlphabet)
+    {
+        alphabetCharactersIds.push_back(itAlphabet->second);
+    }
 }
 
 FT_Library TextRendering::ftLib;
 FT_Face TextRendering::fontFace;
 
-std::map<unsigned char, TextRendering::Character> TextRendering::alphabet{};
-std::vector<GLuint> TextRendering::alphabetCharactersIds{};
+TextRendering::AlphabetTextures TextRendering::alphabetTextures{};
+TextRendering::AlphabetTransforms TextRendering::alphabetTransforms{};
+std::vector<GLuint> TextRendering::alphabetCharactersIds;
 
 std::shared_ptr<const Quad> TextRendering::displayQuad = nullptr;
 const glm::vec3 TextRendering::enabledLetterColor = 

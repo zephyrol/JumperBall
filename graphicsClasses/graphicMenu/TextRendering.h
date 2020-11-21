@@ -28,12 +28,16 @@ using vecTextRendering_sptr = std::vector<TextRendering_sptr>;
 
 class TextRendering: public LabelRendering {
 public:
-    TextRendering                       ( const Label& label, float maxHeight,
+    TextRendering                       ( const Label& label,
                                           const ShaderProgram& spFont);
     virtual ~TextRendering() = default;
-    struct Character                    { GLuint texture;
-                                          glm::vec2 localScale;
+    struct CharacterTransform           { glm::vec2 localScale;
                                           glm::vec2 localTranslate; };
+
+    using AlphabetTransforms = std::map<unsigned char, CharacterTransform>;
+    using AlphabetTextureKey = std::pair<unsigned char, FT_UInt>;
+    using AlphabetTextures = 
+        std::map< AlphabetTextureKey, GLuint>;
 
     void                                render() const override;
     void                                update(float offset) override;
@@ -42,7 +46,8 @@ public:
     const Quad&                         getDisplayQuad() const override;
 
     void                                render(size_t index) const;
-    std::vector<size_t>                 getIndicesWithID(GLuint characterId) const;
+    std::vector<size_t>                 getIndicesWithID(GLuint characterId) 
+                                                                          const;
     const glm::vec3&                    getTextColor() const;
     
     static bool                         initFreeTypeAndFont();
@@ -56,10 +61,12 @@ private:
     std::vector<GLuint>                 _charactersTextureIDs;
     void                                fillTextureIDs();
 
-    static std::map<unsigned char, Character> alphabet;
-    static std::vector<GLuint>                alphabetCharactersIds;
-    static void                         updateAlphabet(const Label& label, 
-                                                       float height);
+    FT_UInt                             getHeightInPixels() const;
+    static FT_UInt                      getHeightInPixels(const Label& label);
+    static AlphabetTextures             alphabetTextures;
+    static AlphabetTransforms           alphabetTransforms;
+    static std::vector<GLuint>          alphabetCharactersIds;
+    static void                         updateAlphabets(const Label& label);
     static void                         updateAlphabetCharactersIds();
     static void                         updateQuad();
     static FT_Library                   ftLib;

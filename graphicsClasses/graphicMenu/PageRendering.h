@@ -16,7 +16,6 @@ class PageRendering
 {
 public:
     PageRendering(const Page& page,
-                  float maxHeight,
                   const ShaderProgram& spFont,
                   const ShaderProgram& spBox
                   );
@@ -41,8 +40,7 @@ private:
     const std::map<GLuint, std::vector<LettersLookupTable> >
                             _charactersLookUpTable;
 
-    vecTextRendering_sptr createTextRenderings(
-            const Page& page, float maxHeight) const;
+    vecTextRendering_sptr createTextRenderings( const Page& page) const;
     vecBoxRendering_sptr createBoxRenderings( const Page& page) const;
     vecLabelRendering_sptr createLabelRenderings() const;
     std::map<GLuint, std::vector<LettersLookupTable> >

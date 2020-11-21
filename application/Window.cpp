@@ -95,7 +95,7 @@ bool Window::inputManagement() {
 
 
 void Window::run() {
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
     glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
 
     auto before = JBTypesMethods::getTimePointMSNow();
