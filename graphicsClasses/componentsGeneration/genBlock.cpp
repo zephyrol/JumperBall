@@ -6,8 +6,9 @@
  */
 #include "scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genBlock
-    (const MapState& map, size_t index) {
+vecMeshComponent_sptr MeshGenerator::genBlock (
+    const MapState& map, size_t index
+    ) {
 
     const std::array<unsigned int,3> position = map.getBlockCoords(index);
     const Map::BlockTypes blockType = map.getType(position);
@@ -17,9 +18,11 @@ vecMeshComponent_sptr MeshGenerator::genBlock
     vecMeshComponent_sptr components;
     std::shared_ptr<GeometricShape> shape;
 
+    constexpr size_t numberOfFaces = 6;
+
     std::string strSidesInfo {};
-    std::array<bool,6> boolSidesInfo {}; // true <=> close, false <=> open
-    const std::array<std::array<unsigned int, 3>,6 > positions {{
+    std::array<bool,numberOfFaces> boolSidesInfo {}; // true <=> close, false <=> open
+    const std::array<std::array<unsigned int, 3>,numberOfFaces > positions {{
         {position.at(0),position.at(1),position.at(2) - 1},
         {position.at(0),position.at(1),position.at(2) + 1},
         {position.at(0) + 1,position.at(1),position.at(2)},
@@ -28,7 +31,7 @@ vecMeshComponent_sptr MeshGenerator::genBlock
         {position.at(0),position.at(1) - 1,position.at(2)}
     }};
 
-    for (size_t i = 0; i < 6; ++i) {
+    for (size_t i = 0; i < numberOfFaces; ++i) {
         const std::array<unsigned int, 3>& neighbourgPosition = positions.at(i);
         const Map::BlockTypes typeNeighbourg =
                 map.getType(neighbourgPosition);

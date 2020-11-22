@@ -186,7 +186,8 @@ const Quad& TextRendering::getDisplayQuad() const
 void TextRendering::updateAlphabets(const Label& label)
 {
     const auto setPixelSizes= [](FT_UInt heightPixels) -> void {
-        FT_Set_Pixel_Sizes(fontFace,0,heightPixels);
+        constexpr FT_UInt scalarQuality = 2;
+        FT_Set_Pixel_Sizes(fontFace, 0, scalarQuality * heightPixels);
     };
     const auto loadCharacter = [](unsigned char character) -> void {
         if (const auto callback = 
@@ -250,12 +251,17 @@ void TextRendering::updateAlphabets(const Label& label)
             {character,heightPixels};
         if ( alphabetTextures.find(keyAlphaTex) == alphabetTextures.end()){
 
+            const std::function<GLuint()> genTexture = []() -> GLuint {
+                GLuint texture;
+                glGenTextures(1, &texture);
+                return texture;
+            };
+
             // disable byte-alignment restriction
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
             loadCharacter(character);
 
-            GLuint textureID;
-            glGenTextures(1, &textureID);
+            const GLuint textureID = genTexture();
             glBindTexture(GL_TEXTURE_2D, textureID);
 
             constexpr GLint levelOfDetail = 0;
@@ -265,18 +271,10 @@ void TextRendering::updateAlphabets(const Label& label)
                          GL_UNSIGNED_BYTE,
                          bitmap.buffer);
 
-            glTexParameteri(GL_TEXTURE_2D,
-                            GL_TEXTURE_MIN_FILTER,
-                            GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D,
-                            GL_TEXTURE_MAG_FILTER,
-                            GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D,
-                            GL_TEXTURE_WRAP_S,
-                            GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D,
-                            GL_TEXTURE_WRAP_T,
-                            GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
             alphabetTextures[keyAlphaTex] = textureID;
         }

@@ -92,7 +92,7 @@ const std::vector<glm::vec3> Cube::getBasicElements
     } else {
         isValid = true;
     }
-    std::vector<glm::vec3> elements{};
+    std::vector<glm::vec3> elements {};
     for (unsigned int i = 0; i < sides.size(); ++i) {
         if(sides.at(i) && isValid) {
             elements.insert(elements.end(),

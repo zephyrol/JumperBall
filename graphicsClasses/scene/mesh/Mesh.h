@@ -69,7 +69,9 @@ template<typename BaseType, typename FrameType>
 Mesh<BaseType, FrameType>::Mesh(const BaseType& base):
 _base(base),
 _frame(base),
-_components(MeshGenerator::genComponents(_frame)),
+_components(
+    MeshGenerator::sortComponents(MeshGenerator::genComponents(_frame))
+    ),
 _animatedComponents(getAnimatedComponents(_components)),
 _world(1.f),
 _modelWorldTransforms(_components.size(),glm::mat4(1.f)),

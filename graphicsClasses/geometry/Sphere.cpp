@@ -55,7 +55,7 @@ Sphere::InfoSphere Sphere::computeBasicInfoSphere() {
     constexpr float         r           = 1.f;
     
     // Create a sphere ---------------------------------------------------------
-    GLuint iVertexCount = iParaCount * iMeriCount;
+    constexpr GLuint iVertexCount = iParaCount * iMeriCount;
     
     constexpr float a1 = ( 180.0f / static_cast<float>( iParaCount - 1 ) ) * 
         static_cast<float>(M_PI) / 180.0f;

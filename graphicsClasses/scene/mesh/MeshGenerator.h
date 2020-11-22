@@ -39,7 +39,6 @@ namespace MeshGenerator {
     vecMeshComponent_sptr  genComponents(const BallState& ball);
     vecMeshComponent_sptr  genComponents(const MapState& map);
     vecMeshComponent_sptr  genComponents(const StarState& star);
-    vecMeshComponent_sptr  sortComponents(vecMeshComponent_sptr& components);
 
     vecMeshComponent_sptr  genObject(const ObjectState& obj,
                                     const glm::vec3& position,
@@ -54,6 +53,8 @@ namespace MeshGenerator {
                                      const glm::vec3& posWorld);
     vecMeshComponent_sptr  genEnemy(const EnemyState& enemy);
 
+    vecMeshComponent_sptr  sortComponents(
+                                const vecMeshComponent_sptr& components);
     extern std::map<std::string, std::shared_ptr<GeometricShape> >
                                 commonShapes;
 }

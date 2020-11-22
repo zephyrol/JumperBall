@@ -50,30 +50,26 @@ vecMeshComponent_sptr MeshGenerator::genSharps(
 
 
                 for (size_t j = 0 ; j < scales.size() ; j++) {
-
                     const glm::mat4 scaleLocal =
                             glm::scale(glm::vec3(scales.at(j),0.5f,
                             scales.at(j)));
 
-
                     const glm::mat4 translationLocal =
-                            glm::translate( glm::vec3(
+                        glm::translate(glm::vec3(
                             posWorld.x + offset + vecDir.x * offset,
                             posWorld.y + offset + vecDir.y * offset,
-                            posWorld.z + offset + vecDir.z * offset
-                            ));
+                            posWorld.z + offset + vecDir.z * offset));
 
                     const glm::mat4 translationFloor = glm::translate(
-                            glm::vec3(
+                        glm::vec3(
                             offset * translationFloorFactor.at(j).x,
                             0.f,
-                            offset * translationFloorFactor.at(j).y
-                            ));
+                            offset * translationFloorFactor.at(j).y));
 
-                    const glm::mat4 modelTranf= translationLocal *
+                    const glm::mat4 modelTranf = translationLocal *
                             rotationLocal * translationFloor * scaleLocal *
                             translationOffset;
-                    const glm::mat4 normalsTrans= rotationLocal;
+                    const glm::mat4 normalsTrans = rotationLocal;
 
                     MeshComponent_sptr component =
                             std::make_shared<MeshComponent>(

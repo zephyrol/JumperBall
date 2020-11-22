@@ -16,6 +16,6 @@ vecMeshComponent_sptr MeshGenerator::genComponents(const QuadState & ) {
     }
 
     MeshComponent_sptr component = std::make_shared<MeshComponent>(
-            commonShapes.at("screenQuad"), nullptr);
-    return vecMeshComponent_sptr {component};
+        commonShapes.at("screenQuad"), nullptr);
+    return vecMeshComponent_sptr {std::move(component)};
 }

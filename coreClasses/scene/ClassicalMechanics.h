@@ -76,8 +76,7 @@ public:
       const std::function<float(const std::vector<float>&)>& computingFunction,
       const std::vector<float>& params);
 
-    static void                         solveQuadraticEquation (
-                                              std::pair<float,float>& solutions, 
+    static std::pair<float,float>       solveQuadraticEquation (
                                               float a, float b, float c);
                                                               
 
@@ -118,12 +117,11 @@ private:
     float                               getAccelerationX(const float t)   const;
     float                               getAccelerationY(const float t)   const;
 
-
     void                                fillEulerMethodBuffer()           const;
+    float                               getIndexEulerBuffer(float t)      const;
 
     float                               getV0xToRespectDistanceAndTime()  const;
 
 };
 
 #endif /* CLASSICALMECHANICS_H */
-

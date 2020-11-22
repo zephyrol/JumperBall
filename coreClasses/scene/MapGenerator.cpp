@@ -88,7 +88,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             if (counterBuffer.empty()){
                 nbBlocksTowrite = 1;
             } else {
-                substractOffset(counterBuffer,firstNumberOfBlock);
+                counterBuffer = substractOffset(counterBuffer,firstNumberOfBlock);
                 nbBlocksTowrite = convertToBase10(counterBuffer,
                                               nbOfCharactersUsedForNumbers);
             }
@@ -175,7 +175,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             }
         } else {
             if (!counterWithoutObjectsBuffer.empty()){
-                substractOffset(counterWithoutObjectsBuffer,
+                counterWithoutObjectsBuffer = substractOffset(counterWithoutObjectsBuffer,
                                 firstNumberWithoutAnyObjects);
                 currentIndex += convertToBase10(counterWithoutObjectsBuffer,
                                                 nbOfCharactersWithoutObjects);
@@ -237,7 +237,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             }
         } else {
             if (!counterWithoutEnemiesBuffer.empty()){
-                substractOffset(counterWithoutEnemiesBuffer,
+                counterWithoutEnemiesBuffer = substractOffset(counterWithoutEnemiesBuffer,
                                 firstNumberWithoutAnyObjects);
                 currentIndex += convertToBase10(counterWithoutEnemiesBuffer,
                                                 nbOfCharactersWithoutObjects);
@@ -359,7 +359,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             }
         } else {
             if (!counterWithoutSpecialBuffer.empty()){
-                substractOffset(counterWithoutSpecialBuffer,
+                counterWithoutSpecialBuffer = substractOffset(counterWithoutSpecialBuffer,
                                 firstNumberWithoutAnyObjects);
                 currentIndex += convertToBase10(counterWithoutSpecialBuffer,
                                                 nbOfCharactersWithoutObjects);
@@ -464,105 +464,130 @@ std::string MapGenerator::convertToBase(unsigned int number, unsigned char base)
     return convertedNumber;
 }
 
-unsigned int MapGenerator::convertToBase10(std::string& s, unsigned int base) {
+unsigned int MapGenerator::convertToBase10(const std::string& s,                                            
+                                           unsigned int base) {
     unsigned int value = 0;
-    while (s.length() > 0 ) {
-        const unsigned int number = static_cast<unsigned int> (s.front());
-        value += number * static_cast<unsigned int> (pow(base,s.length()-1));
-        s.erase(s.begin());
+    std::string copyS = s;
+    while (copyS.length() > 0 ) {
+        const unsigned int number = static_cast<unsigned int> (copyS.front());
+        value += 
+            number * static_cast<unsigned int> (pow(base, copyS.length() - 1));
+        copyS.erase(copyS.begin());
     }
     return value;
 }
 
-void MapGenerator::substractOffset(std::string& s, int offset) {
-    for (char& c : s) {
+std::string MapGenerator::substractOffset(const std::string& s, int offset) {
+    std::string offsetString = s;
+    for (char& c : offsetString) {
         c -= offset;
     }
+    return offsetString;
  }
 
 void MapGenerator::compress(std::ifstream& input) {
     std::ofstream output ("outMap.txt");
 
-    unsigned int width;
-    unsigned int deep;
-    unsigned int height;
-    unsigned int beginX;
-    unsigned int beginY;
-    unsigned int beginZ;
+    const unsigned int width = readUnsignedInt(input);
+    const unsigned int deep = readUnsignedInt(input);
+    const unsigned int height = readUnsignedInt(input);
+    const unsigned int beginX = readUnsignedInt(input);
+    const unsigned int beginZ = readUnsignedInt(input);
+    const unsigned int beginY = readUnsignedInt(input);
 
-    input >> width;
-    input >> deep;
-    input >> height;
+    writeUnsignedInt(output, width);
+    writeSeparator(output);
 
-    output << width << " ";
-    output << deep << " ";
-    output << height << " ";
-    output << std::endl;
+    writeUnsignedInt(output, deep);
+    writeSeparator(output);
 
-    input >> beginX;
-    input >> beginZ;
-    input >> beginY;
+    writeUnsignedInt(output, height);
+    writeSeparator(output);
 
-    output << beginX << " ";
-    output << beginZ << " ";
-    output << beginY << " ";
-    output << std::endl;
+    writeEndLine(output);
+
+    writeUnsignedInt(output, beginX);
+    writeSeparator(output);
+
+    writeUnsignedInt(output, beginZ);
+    writeSeparator(output);
+
+    writeUnsignedInt(output, beginY);
+    writeSeparator(output);
+
+    writeEndLine(output);
 
     unsigned int counter = 1;
     unsigned int currentType;
 
     std::string trash;
 
-    // BLOCKS PART
-    std::cout << "compress blocks" << std::endl;
-    input >> trash;
-    input >> currentType;
+    const auto getBlocksString = [&input](unsigned int width,
+                                          unsigned int height,
+                                          unsigned int deep) -> std::string {
+        std::cout << "compress blocks" << std::endl;
+        readingString(input);
 
-    const std::vector<unsigned int> blockWithSpecialParams {4,6};
-    for (unsigned int i = 1 ; i < width * deep * height ; ++i) {
+        unsigned int currentType = readUnsignedInt(input);
+        unsigned int counter = 1;
+        std::string blocksString;
+        const std::vector<unsigned int> blockWithSpecialParams{4, 6};
+        for (unsigned int i = 1; i < width * deep * height; ++i)
+        {
+            const unsigned int readValue = readUnsignedInt(input);
 
-        unsigned int readValue ;
-        input >> readValue;
-
-        if (readValue != currentType){
-                if (counter > 1 ) {
+            if (readValue != currentType)
+            {
+                if (counter > 1)
+                {
                     std::string stringToWrite = convertToBase(
-                            counter, nbOfCharactersUsedForNumbers);
-                    applyOffset(stringToWrite, firstNumberOfBlock) ;
-                    output << stringToWrite;
-                } if (counter > 0 ) {
-                    output << currentType;
+                        counter, nbOfCharactersUsedForNumbers);
+                    stringToWrite = 
+                        applyOffset(stringToWrite, firstNumberOfBlock);
+                    blocksString.append(stringToWrite);
+                }
+                if (counter > 0)
+                {
+                    blocksString.append(std::to_string(currentType));
                 }
                 currentType = readValue;
-                counter = 1;
-        }
-        else {
+                counter = 0;
+            }
             counter++;
+            if (std::find(blockWithSpecialParams.begin(),
+                          blockWithSpecialParams.end(), readValue) !=
+                blockWithSpecialParams.end())
+            {
+                currentType = readValue;
+                blocksString.append(std::to_string(currentType));
+                const std::string blockParams = readingString(input);
+                const std::string blockParamsWithOffset = substractOffset(
+                    blockParams, static_cast<unsigned int>('a'));
+                const unsigned int numberBase10 = 
+                    convertToBase10(blockParamsWithOffset, 2);
+                std::string numberBase64 = 
+                    convertToBase(numberBase10, 64);
+                numberBase64 = applyOffset(numberBase64, firstNumberParams);
+                blocksString.append(numberBase64);
+                counter = 0;
+            }
         }
-        if( std::find( blockWithSpecialParams.begin(),
-                blockWithSpecialParams.end(), readValue ) !=
-                blockWithSpecialParams.end()) {
-            currentType = readValue;
-            output << currentType;
-            std::string blockParams;
-            input >> blockParams;
-            substractOffset(blockParams, static_cast<unsigned int>('a'));
-            const unsigned int numberBase10= convertToBase10(blockParams,2);
-            std::string numberBase64 = convertToBase(numberBase10,64);
-            applyOffset(numberBase64,firstNumberParams);
-            output << numberBase64;
-            counter = 0;
-        }
-
-    }
-    if (counter > 1 )
-    {
-        std::string stringToWrite = convertToBase(
+        if (counter > 1)
+        {
+            std::string stringToWrite = convertToBase(
                 counter, nbOfCharactersUsedForNumbers);
-        applyOffset(stringToWrite, firstNumberOfBlock) ;
-        output << stringToWrite;
-    }
-    output << currentType << std::endl;
+            stringToWrite = applyOffset(stringToWrite, firstNumberOfBlock);
+            blocksString.append(stringToWrite);
+        }
+        blocksString.append(std::to_string(currentType));
+        return blocksString;
+    };
+
+    // BLOCKS PART
+    std::cout << "compress blocks" << std::endl;
+    const std::string blocksString =getBlocksString(width,height,deep);
+    writeString(output,blocksString);
+    writeEndLine(output);
 
     // OBJECTS PART
     std::cout << "compress objects" << std::endl;
@@ -578,7 +603,8 @@ void MapGenerator::compress(std::ifstream& input) {
             if (counterWithoutObjects > 0) {
                 std::string stringToWrite = convertToBase(
                         counterWithoutObjects, nbOfCharactersWithoutObjects);
-                applyOffset(stringToWrite, firstNumberWithoutAnyObjects) ;
+                stringToWrite = 
+                    applyOffset(stringToWrite, firstNumberWithoutAnyObjects) ;
                 output << stringToWrite;
                 counterWithoutObjects = 0;
             } else if (i > 0 ) {
@@ -613,7 +639,7 @@ void MapGenerator::compress(std::ifstream& input) {
     if (counterWithoutObjects > 0) {
         std::string stringToWrite = convertToBase(
             counterWithoutObjects, nbOfCharactersWithoutObjects);
-        applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+        stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
         output << stringToWrite;
         counterWithoutObjects = 0;
     }
@@ -632,7 +658,7 @@ void MapGenerator::compress(std::ifstream& input) {
             if (counterWithoutObjects > 0) {
                 std::string stringToWrite = convertToBase(
                         counterWithoutObjects, nbOfCharactersWithoutObjects);
-                applyOffset(stringToWrite, firstNumberWithoutAnyObjects) ;
+                stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyObjects) ;
                 output << stringToWrite;
                 counterWithoutObjects = 0;
             } else if (i > 0 ) {
@@ -708,7 +734,7 @@ void MapGenerator::compress(std::ifstream& input) {
     if (counterWithoutObjects > 0) {
         std::string stringToWrite = convertToBase(
             counterWithoutObjects, nbOfCharactersWithoutObjects);
-        applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+        stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
         output << stringToWrite;
         counterWithoutObjects = 0;
     }
@@ -727,7 +753,7 @@ void MapGenerator::compress(std::ifstream& input) {
             if (counterWithoutObjects > 0) {
                 std::string stringToWrite = convertToBase(
                         counterWithoutObjects, nbOfCharactersWithoutObjects);
-                applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+                stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
                 output << stringToWrite;
                 counterWithoutObjects = 0;
             } else if (i > 0) {
@@ -782,7 +808,7 @@ void MapGenerator::compress(std::ifstream& input) {
     if (counterWithoutObjects > 0) {
         std::string stringToWrite = convertToBase(
             counterWithoutObjects, nbOfCharactersWithoutObjects);
-        applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+        stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
         output << stringToWrite;
         counterWithoutObjects = 0;
     }
@@ -806,10 +832,12 @@ void MapGenerator::compress(std::ifstream& input) {
     return type;
  }
 
-void MapGenerator::applyOffset(std::string& s, int offset) {
-    for (char& c : s) {
+std::string MapGenerator::applyOffset(const std::string& s, int offset) {
+    std::string offsetString = s;
+    for (char& c : offsetString) {
         c += offset;
     }
+    return offsetString;
  }
 
 void MapGenerator::verificationMap(std::ifstream& input, const Map& map) 
@@ -998,11 +1026,11 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
                                (Map::BlockTypes::None);
                 } else {
                     const JBTypes::Dir& dir = 
-                        map.getSpecialInfo().at(currentInfo).special->direction();
+                      map.getSpecialInfo().at(currentInfo).special->direction();
                     const auto typeOfSpecial =
-                        map.getSpecialInfo().at(currentInfo).type;
+                      map.getSpecialInfo().at(currentInfo).type;
                     const auto color = 
-                        map.getSpecialInfo().at(currentInfo).special->getColor();
+                      map.getSpecialInfo().at(currentInfo).special->getColor();
 
                     const unsigned int offsetType =
                         typeOfSpecial == Map::SpecialTypes::Teleporter
@@ -1017,7 +1045,6 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
                     output << getDirection(static_cast<size_t>(dir))
                         << charToWriteType;
                     ++currentInfo;
-                    std::cout <<" end fucking" << std::endl;
                 }
                 if (x != map.width() -1 ) output << " ";
                 ++currentIndex;
@@ -1053,4 +1080,34 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
     }
     input.close();
     inputV2.close();
+}
+
+unsigned int MapGenerator::readUnsignedInt(std::ifstream &input) {
+    unsigned int readValue;
+    input >> readValue;
+    return readValue;
+}
+
+std::string MapGenerator::readingString(std::ifstream &input) {
+    std::string readValue;
+    input >> readValue;
+    return readValue;
+}
+
+void MapGenerator::writeSeparator(std::ofstream &output) {
+    output << " ";
+}
+
+void MapGenerator::writeEndLine(std::ofstream &output) {
+    output << std::endl;
+}
+
+void MapGenerator::writeUnsignedInt(std::ofstream &output,
+                                    unsigned int unsignedInt) {
+    output << unsignedInt;
+}
+
+void MapGenerator::writeString(std::ofstream &output,
+                 const std::string &string) {
+    output << string;
 }

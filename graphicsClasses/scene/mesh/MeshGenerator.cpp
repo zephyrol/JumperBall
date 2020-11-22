@@ -14,10 +14,8 @@
 #include "MeshGenerator.h"
 #include <algorithm>
 
-
-
 vecMeshComponent_sptr MeshGenerator::sortComponents(
-                                vecMeshComponent_sptr& components) {
+                                const vecMeshComponent_sptr& components) {
     vecMeshComponent_sptr sortedComponents;
     bool hasToSwap = true;
     std::vector<size_t> indices (components.size());

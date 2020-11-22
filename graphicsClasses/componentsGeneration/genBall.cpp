@@ -15,5 +15,5 @@ vecMeshComponent_sptr MeshGenerator::genComponents(const BallState& ball) {
     MeshComponent_sptr component = std::make_shared<MeshComponent>
             (std::make_shared<Sphere>(sphere,scaleMatrix),
              std::make_shared<BallAnimation>(ball));
-    return vecMeshComponent_sptr {component};
+    return vecMeshComponent_sptr {std::move(component)};
 }

@@ -77,70 +77,65 @@ ClassicalMechanics::physics2DVector ClassicalMechanics::getAcceleration(
 }
 
 float ClassicalMechanics::evalPositionX(const float t) const {
-
-    float posX;
-    if ( t < _timeToGetDestinationX) {
-        posX = _v0.x * _timeToGetDestinationX * t - _v0.x * 
-                static_cast<float> (pow(t,2)) / 2.f ;
-    }
-    else 
-        posX = _jumpDistance;
+    const float posX = t < _timeToGetDestinationX
+        ? _v0.x * _timeToGetDestinationX * t - _v0.x * 
+            static_cast<float> (pow(t,2)) / 2.f
+        :_jumpDistance;
     return posX;
 }
 
 float ClassicalMechanics::evalTimeFromPosX(const float x) const {
+    const std::pair<float, float> solutions =
+        solveQuadraticEquation(-_v0.x / 2.f,
+                               _v0.x * _timeToGetDestinationX,
+                               -x);
 
-    float t;
-    
-    std::pair<float,float> solutions; 
+    const auto getTime = [](const std::pair<float, float> &solutions) -> float {
+        float t;
+        if (solutions.first >= 0.f) {
+            t = solutions.first;
+        }
+        else if (solutions.second >= 0.f) {
+            t = solutions.second;
+        }
+        else {
+            std::cerr << " Error : negative value found about the time ... "
+                      << " 0 is return ... "
+                      << std::endl;
+            t = 0.f;
+        }
 
-    solveQuadraticEquation( solutions,
-                            -_v0.x/2.f ,
-                            _v0.x*_timeToGetDestinationX,
-                            -x);
+        return t;
+    };
 
-    if (solutions.first >= 0.f ) t = solutions.first;
-    else if (solutions.second >= 0.f) t = solutions.second;
-    else {
-              std::cerr << " Error : negative value found about the time ... "
-                        << " 0 is return ... " 
-                        << std::endl;
-              t = 0.f;
-    }
-
-    return t;
+    const float time = getTime(solutions);
+    return time;
 }
-
 
 float ClassicalMechanics::getIntervalX(float tBegin, float tEnd) const {
     return evalPositionX(tEnd) - evalPositionX(tBegin);
 }
 
-
 float ClassicalMechanics::getPositionX( const float t ) const {
-    
     float posX;
      
     if (_timesShock.empty()){
       posX = evalPositionX(t) ;
-      
-    }
-    else {
+    } else {
         std::vector<float> intervalsTimes { 0.f };
       
         for ( float time : _timesShock) {
-            if ( t > time) {
-            const float t1 = time;
-            const float t2 = evalTimeFromPosX(evalPositionX(t1) +
-                                              2.f * radiusBall);
-            intervalsTimes.push_back(t1);
-            intervalsTimes.push_back(t2);
-            intervalsTimes.push_back(t2+(t-t1));
+            if (t > time) {
+                const float t1 = time;
+                const float t2 = evalTimeFromPosX(evalPositionX(t1) +
+                                                  2.f * radiusBall);
+                intervalsTimes.push_back(t1);
+                intervalsTimes.push_back(t2);
+                intervalsTimes.push_back(t2 + (t - t1));
+            } else {
+                intervalsTimes.push_back(t);
             }
-            else 
-            intervalsTimes.push_back(t);
         }
-        
         
         posX = 0;
         float sign = 1.f;
@@ -160,61 +155,38 @@ float ClassicalMechanics::getPositionX( const float t ) const {
 }
 
 float ClassicalMechanics::getPositionY(const float t) const {
-    unsigned int index ;
     fillEulerMethodBuffer();
 
-    if (t < durationStudy)
-      index = static_cast<unsigned int> (t * sizeSampleEuler / durationStudy);
-    else index = static_cast<unsigned int> (durationStudy-1);
-
-    return _EulerMethodBuffer.pBuffer.at(index);
+    return _EulerMethodBuffer.pBuffer.at(getIndexEulerBuffer(t));
 }
 
-
 float ClassicalMechanics::getVelocityX(const float t) const {
-    float velocityX;
-    if ( t < _timeToGetDestinationX)
-    velocityX = _v0.x * ( _timeToGetDestinationX - t );
-    else velocityX = 0.f;
+    const float velocityX = t < _timeToGetDestinationX
+        ? _v0.x * ( _timeToGetDestinationX - t )
+        : 0.f;
     return velocityX;
 }
 
 float ClassicalMechanics::getVelocityY(const float t) const {
-    unsigned int index ;
     fillEulerMethodBuffer();
-
-    if (t < durationStudy)
-      index = static_cast<unsigned int> (t * sizeSampleEuler / durationStudy);
-    else index = static_cast<unsigned int>(durationStudy-1);
-
-    return _EulerMethodBuffer.vBuffer.at(index);
+    return _EulerMethodBuffer.vBuffer.at(getIndexEulerBuffer(t));
 }
 
 float ClassicalMechanics::getAccelerationX(const float t) const {
-    float accelerationX;
-    if ( t < _timeToGetDestinationX)
-        accelerationX =  -_v0.x;
-    else
-        accelerationX = 0.f;
-
+    const float accelerationX = t < _timeToGetDestinationX 
+        ? -_v0.x
+        : 0.f;
     return accelerationX;
 }
 
 float ClassicalMechanics::getAccelerationY(const float t) const {
-    unsigned int index ;
     fillEulerMethodBuffer();
-
-    if (t < durationStudy)
-        index = static_cast<unsigned int> (t * sizeSampleEuler / durationStudy);
-    else index = static_cast<unsigned int> (durationStudy - 1);
-
-    return _EulerMethodBuffer.aBuffer.at(index);
+    return _EulerMethodBuffer.aBuffer.at(getIndexEulerBuffer(t));
 }
 
 float ClassicalMechanics::getTimeToGetDestination() const {
     return _timeToGetDestinationX;
  }
-
 
 void ClassicalMechanics::fillEulerMethodBuffer() const {
 
@@ -222,7 +194,7 @@ void ClassicalMechanics::fillEulerMethodBuffer() const {
        _EulerMethodBuffer.deltaT - durationStudy/sizeSampleEuler > EPSILON_F ||
        _EulerMethodBuffer.fluid != _fluid) {
 
-      const float newDeltaT= durationStudy / sizeSampleEuler;
+      const float newDeltaT = durationStudy / sizeSampleEuler;
 
       std::vector<float> newTBuffer (sizeSampleEuler);
       std::vector<float> newPBuffer (sizeSampleEuler);
@@ -300,43 +272,48 @@ void ClassicalMechanics::fillEulerMethodBuffer() const {
                                       newTBuffer, newABuffer, newVBuffer,
                                       newPBuffer };
 
-      _EulerMethodBuffer = newEulerTab; 
+      _EulerMethodBuffer = std::move(newEulerTab); 
   }
 }
 
+float ClassicalMechanics::getIndexEulerBuffer(float t) const {
+  
+    const unsigned int index = t < durationStudy
+        ? static_cast<unsigned int> (t * sizeSampleEuler / durationStudy)
+        : static_cast<unsigned int>(durationStudy-1);
+
+    return index;
+}
 
 void ClassicalMechanics::solveDifferentialEquation(
       float& derivative, 
       const std::function<float(const std::vector<float>&)>& computingFunction,
       const std::vector<float>& params)
 {
-    derivative = computingFunction ( params );
+    derivative = computingFunction(params);
 }
 
-void ClassicalMechanics::solveQuadraticEquation(
-      std::pair<float, float>& solutions, float a, float b, float c) 
+ std::pair<float, float> ClassicalMechanics::solveQuadraticEquation(
+    float a, float b, float c) 
 {
     if ( a < EPSILON_F && a > -EPSILON_F) {
         std::cerr << "Error: Trying to divide by 0 ... " << 
                 "solutions cropped to 0... " 
                 << std::endl ;
-        solutions.first   = 0.f;
-        solutions.second  = 0.f;
+        return { 0.f , 0.f };
     }
     const float delta = static_cast<float> (pow(b, 2.)) - 4.f * a * c;
     if (delta < 0.f) {
         std::cerr << "Error: Non-real solutions ... : cropped to 0... " 
                 << std::endl ;
-        solutions.first   = 0.f;
-        solutions.second  = 0.f;
-    }
-    else {
-        solutions.first   = (-b + sqrtf(delta))/(2.f*a);
-        solutions.second  = (-b - sqrtf(delta))/(2.f*a);
+        return { 0.f , 0.f };
+    } else {
+        return {
+            (-b + sqrtf(delta)) / (2.f * a),
+            (-b - sqrtf(delta)) / (2.f * a)
+            };
     }
 }
-
-
 
 void ClassicalMechanics::printEulerBuffer() const {
 
@@ -351,9 +328,7 @@ void ClassicalMechanics::printEulerBuffer() const {
 }
 
 float ClassicalMechanics::getV0xToRespectDistanceAndTime() const {
-    
     return 2.f*_jumpDistance/ static_cast<float>(pow(_timeToGetDestinationX,2));
-
 }
 
 const std::vector<float>& ClassicalMechanics::timesShock() {
@@ -367,6 +342,3 @@ void ClassicalMechanics::timesShock(const std::vector<float>& v) {
 void ClassicalMechanics::addShockFromPosition(float pos) {
     _timesShock.push_back(evalTimeFromPosX(pos));
 }
-
-
-

@@ -20,8 +20,7 @@ vecMeshComponent_sptr MeshGenerator::genComponents(const MapState& map) {
 
     for ( const std::shared_ptr<EnemyState>& EnemyState :
             map.enemiesStates()) {
-        vecMeshComponent_sptr enemyComponents = 
-            genEnemy(*EnemyState);
+        vecMeshComponent_sptr enemyComponents = genEnemy(*EnemyState);
         for(MeshComponent_sptr m : enemyComponents) {
             components.push_back(std::move(m));
         }

@@ -39,16 +39,29 @@ namespace MapGenerator {
     void compress(std::ifstream &input);
     std::shared_ptr<Map> loadMap(size_t mapNumber);
     Map::MapInfo createMapInfo(std::ifstream &file);
-    std::string                    convertToBase (unsigned int number,
+    std::string                     convertToBase (unsigned int number,
                                                   unsigned char base);
-    unsigned int                   convertToBase10(std::string& s,
+    unsigned int                    convertToBase10(const std::string& s,
                                                    unsigned int base);
-    void                           applyOffset (std::string& s,
+    std::string                     applyOffset (const std::string& s,
                                                 int offset);
-    void                           substractOffset(std::string& s,
+    std::string                     substractOffset(const std::string& s,
                                                    int offset);
-    Map::BlockTypes                uintToBlockType(unsigned int number);
-    void                           verificationMap(std::ifstream &input,
+    Map::BlockTypes                 uintToBlockType(unsigned int number);
+
+    // Reading functions
+    unsigned int                    readUnsignedInt(std::ifstream& input);
+    std::string                     readingString(std::ifstream& input);
+
+    // Writing functions
+    void                            writeSeparator(std::ofstream& output);
+    void                            writeEndLine(std::ofstream& output);
+    void                            writeUnsignedInt( std::ofstream& output,
+                                                      unsigned int unsignedInt);
+    void                            writeString( std::ofstream& output,
+                                                 const std::string& string);
+
+    void                            verificationMap(std::ifstream &input,
                                                    const Map& map);
 }
 

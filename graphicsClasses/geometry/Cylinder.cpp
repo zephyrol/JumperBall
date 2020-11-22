@@ -75,23 +75,15 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder() {
     constexpr float a2 = ( 360.0f / static_cast<float>( iMeriCount - 1 ) ) * 
         static_cast<float>(M_PI)/ 180.0f;
     
-    infoCylinder.positions.push_back(
-    glm::vec3(0.f,0.f,0.f));
-    infoCylinder.normals.push_back(
-    glm::vec3(0.f,-1.f,0.f));
-    infoCylinder.colors.push_back(
-    glm::vec3(1.f,0.f,0.f));
-    infoCylinder.uvCoords.push_back(
-    glm::vec2(0.f,0.f));
+    infoCylinder.positions.push_back( glm::vec3(0.f,0.f,0.f));
+    infoCylinder.normals.push_back( glm::vec3(0.f,-1.f,0.f));
+    infoCylinder.colors.push_back( glm::vec3(1.f,0.f,0.f));
+    infoCylinder.uvCoords.push_back( glm::vec2(0.f,0.f));
     
-    infoCylinder.positions.push_back(
-    glm::vec3(0.f,1.f,0.f));
-    infoCylinder.normals.push_back(
-    glm::vec3(0.f,1.f,0.f));
-    infoCylinder.colors.push_back(
-    glm::vec3(0.f,1.f,0.f));
-    infoCylinder.uvCoords.push_back(
-    glm::vec2(0.f,0.f));
+    infoCylinder.positions.push_back( glm::vec3(0.f,1.f,0.f));
+    infoCylinder.normals.push_back( glm::vec3(0.f,1.f,0.f));
+    infoCylinder.colors.push_back( glm::vec3(0.f,1.f,0.f));
+    infoCylinder.uvCoords.push_back( glm::vec2(0.f,0.f));
     
     
     const glm::vec3 initialPositionBase (r,0.f,0.f);
@@ -124,33 +116,31 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder() {
     
     for( unsigned int i = 1 ; i < iMeriCount; ++i )
     {
-        const glm::mat4 rotation = 
-        glm::rotate(a2 * i,   glm::vec3(0.f,1.f,0.f));
+        const glm::mat4 rotation = glm::rotate(a2 * i, glm::vec3(0.f,1.f,0.f));
         
-        const glm::vec3 positionBase
-        (rotation * glm::vec4(r,0.f,0.f,1.f));
+        const glm::vec3 positionBase(rotation * glm::vec4(r,0.f,0.f,1.f));
         const glm::vec3 positionTop (positionBase.x,1.f,positionBase.z);
-        
-        for (unsigned int j = 0 ; j < 2 ; j++){
+
+        for (unsigned int j = 0; j < 2; j++)
+        {
             infoCylinder.positions.push_back(positionBase);
             infoCylinder.positions.push_back(positionTop);
-            
-            infoCylinder.colors.push_back(glm::vec3(1.f,0.f,0.f));
-            infoCylinder.colors.push_back(glm::vec3(0.f,1.f,0.f));
-            
+
+            infoCylinder.colors.push_back(glm::vec3(1.f, 0.f, 0.f));
+            infoCylinder.colors.push_back(glm::vec3(0.f, 1.f, 0.f));
+
             infoCylinder.uvCoords.push_back(
-            glm::vec2( positionBase.x, positionBase.z));
+                glm::vec2(positionBase.x, positionBase.z));
             infoCylinder.uvCoords.push_back(
-            glm::vec2( positionTop.x, positionTop.z));
+                glm::vec2(positionTop.x, positionTop.z));
         }
-        
+
         infoCylinder.normals.push_back(glm::normalize(positionBase));
         infoCylinder.normals.push_back(glm::normalize(positionBase));
-        infoCylinder.normals.push_back(glm::vec3(0.f,-1.f,0.f));
-        infoCylinder.normals.push_back(glm::vec3(0.f,1.f,0.f));
-        
+        infoCylinder.normals.push_back(glm::vec3(0.f, -1.f, 0.f));
+        infoCylinder.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
     }
-    
+
     for( unsigned int i = 0; i < ( iMeriCount - 1 ); ++i )
     {
         infoCylinder.indices.push_back(0);
