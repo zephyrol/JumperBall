@@ -26,10 +26,6 @@ Enemy(tieBlock,initialPosition,dir, thornBallRadius, 1.f,
 _movementDirection(movementDirection),
 _movementLenght(movementLength)
 {
-   std::cout  <<  static_cast<float>(initialPosition.at(0)) <<
-        static_cast<float>(initialPosition.at(1)) << 
-        static_cast<float>(initialPosition.at(2)) << std::endl;
-
 }
 
 Enemy::EnemyEffect ThornBall::update(const JBTypes::vec3f& entityPosition,

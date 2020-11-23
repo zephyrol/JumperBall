@@ -517,9 +517,6 @@ void MapGenerator::compress(std::ifstream& input) {
 
     writeEndLine(output);
 
-    unsigned int counter = 1;
-    unsigned int currentType;
-
     std::string trash;
 
     const auto getBlocksString = [&input](unsigned int width,
