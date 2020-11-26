@@ -11,7 +11,7 @@
 class Enemy {
 public:
 
-    enum class EnemyEffect { Nothing, Destroy };
+    enum class Effect { Nothing, Burst };
 
     Enemy(const Block& tieBlock,
           const std::array<unsigned int,3>& initialPosition,
@@ -20,7 +20,7 @@ public:
           float length,
           const std::array<float,9>& transform);
 
-    virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
+    virtual Effect update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) = 0;
     virtual JBTypes::Color getColor() const;
     const JBTypes::timePointMs& creationTime() const;

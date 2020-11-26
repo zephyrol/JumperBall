@@ -19,7 +19,7 @@ public:
           const JBTypes::Dir& dir,
           size_t length);
 
-    virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
+    virtual Effect update(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override;
     virtual JBTypes::Color getColor() const override;
     virtual ~Laser() = default;

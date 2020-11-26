@@ -34,9 +34,9 @@ Map::Map(Map::MapInfo&& mapInfo):
     _beginZ (std::move(mapInfo.beginZ)),
     _timeCreation(std::chrono::system_clock::now()),
     _blocksInteractions([this](size_t blockNumber) {
-         const std::shared_ptr<Block>& block =
+        const std::shared_ptr<Block>& block =
             getBlock(_blocksWithInteractionInfo.at(blockNumber).index);
-         return block->interaction(
+        return block->interaction(
                      _dirBallInteractions,
                      _timeInteractions,
                      _posBallInteractions,
@@ -44,14 +44,19 @@ Map::Map(Map::MapInfo&& mapInfo):
                      (_blocksWithInteractionInfo.at(blockNumber).index));
     },_blocksWithInteractionInfo.size()),
     _objectsInteractions([this](size_t blockNumber) {
-         const std::shared_ptr<Block>& block =
+        const std::shared_ptr<Block>& block =
             getBlock(_blocksWithObjectsInfo.at(blockNumber).index);
-         if (block->hasObjects()) {
+        if (block->hasObjects()) {
             block->catchObject(
                 getBlockCoords(_blocksWithObjectsInfo.at(blockNumber).index),
                 _posBallInteractions,_radiusInteractions );
-         }
+        }
     },_blocksWithObjectsInfo.size()),
+    _enemiesInteractions([this](size_t enemyNumber) {
+        const Map::EnemyInfo enemyInfo = _enemies.at(enemyNumber);
+        const std::shared_ptr<Enemy> enemy = enemyInfo.enemy;
+        return enemy->update(_posBallInteractions, _radiusInteractions);
+    },_enemies.size()),
     _dirBallInteractions(JBTypes::Dir::North),
     _posBallInteractions({0.f,0.f,0.f}),
     _radiusInteractions(0.f),
@@ -172,7 +177,7 @@ std::chrono::time_point<std::chrono::system_clock> Map::timeCreation() const {
     return _timeCreation;
 }
 
-Block::Effect Map::interaction( const JBTypes::Dir& ballDir,
+Map::Effect Map::interaction( const JBTypes::Dir& ballDir,
                                 const JBTypes::vec3f& posBall,
                                 float radius) {
     
@@ -183,17 +188,41 @@ Block::Effect Map::interaction( const JBTypes::Dir& ballDir,
 
     _blocksInteractions.runTasks();
     _objectsInteractions.runTasks();
+    _enemiesInteractions.runTasks();
 
-    std::shared_ptr<std::vector<Block::Effect> > effects =
+    std::shared_ptr<std::vector<Block::Effect> > blocksEffects =
         _blocksInteractions.waitTasks();
-    Block::Effect finalEffect = Block::Effect::Nothing;
-    for (Block::Effect& effect : *effects) {
-        if (effect != Block::Effect::Nothing){
-            finalEffect = effect;
+    Block::Effect finalBlockEffect = Block::Effect::Nothing;
+    for (Block::Effect& blockEffect : *blocksEffects) {
+        if (blockEffect != Block::Effect::Nothing){
+            finalBlockEffect = blockEffect;
+        }
+    }
+
+    std::shared_ptr<std::vector<Enemy::Effect> > enemiesEffects =
+        _enemiesInteractions.waitTasks();
+    Enemy::Effect finalEnemyEffect = Enemy::Effect::Nothing;
+    for (Enemy::Effect& enemyEffect : *enemiesEffects) {
+        if (enemyEffect != Enemy::Effect::Nothing){
+            finalEnemyEffect = enemyEffect;
         }
     }
     _objectsInteractions.waitTasks();
-    return finalEffect;
+
+    if (finalBlockEffect == Block::Effect::Burst ||
+               finalEnemyEffect == Enemy::Effect::Burst) {
+        return Map::Effect::Burst;
+    } else if (finalBlockEffect == Block::Effect::Jump) {
+        return Map::Effect::Jump;
+    } else if (finalBlockEffect == Block::Effect::Slide) {
+        return Map::Effect::Slide;
+    } else if (finalBlockEffect == Block::Effect::Burn) {
+        return Map::Effect::Burn;
+    } else if (finalBlockEffect == Block::Effect::Nothing ||
+        finalEnemyEffect == Enemy::Effect::Nothing) {
+        return Map::Effect::Nothing;
+    } 
+    return Map::Effect::Nothing;
 }
 
 

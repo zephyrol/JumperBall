@@ -66,15 +66,15 @@ vecMeshComponent_sptr MeshGenerator::genSharps(
                             0.f,
                             offset * translationFloorFactor.at(j).y));
 
-                    const glm::mat4 modelTranf = translationLocal *
+                    const glm::mat4 modelTransf = translationLocal *
                             rotationLocal * translationFloor * scaleLocal *
                             translationOffset;
-                    const glm::mat4 normalsTrans = rotationLocal;
+                    const glm::mat4 normalsTransf = rotationLocal;
 
                     MeshComponent_sptr component =
                             std::make_shared<MeshComponent>(
                              std::make_shared<Pyramid>
-                    (*commonShapes.at("pyramidSharp"),modelTranf,normalsTrans),
+                    (*commonShapes.at("pyramidSharp"),modelTransf,normalsTransf),
                             nullptr);
                     components.push_back(std::move(component));
                 }

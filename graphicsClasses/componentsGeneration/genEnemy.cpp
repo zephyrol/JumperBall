@@ -6,7 +6,8 @@
  */
 #include "scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState& enemy) {
+vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState &enemy)
+{
 
     vecMeshComponent_sptr components;
     if (enemy.category() == Map::EnemyTypes::Laser)
@@ -44,9 +45,9 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState& enemy) {
         default:
             break;
         }
-        const JBTypes::vec3f& position = enemy.position();
-        const glm::vec3 glmPosition { position.x, position.y, position.z };
-        const glm::vec3 scale { 0.1f, enemy.size(), 0.1f };
+        const JBTypes::vec3f &position = enemy.position();
+        const glm::vec3 glmPosition{position.x, position.y, position.z};
+        const glm::vec3 scale{0.1f, enemy.size(), 0.1f};
 
         const glm::mat4 translationMatrix = glm::translate(glmPosition);
         const glm::mat4 scaleMatrix = glm::scale(scale);
@@ -61,16 +62,43 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState& enemy) {
         components.push_back(componentCylinder);
     }
     else if (enemy.category() == Map::EnemyTypes::ThornBall ||
-             enemy.category() == Map::EnemyTypes::DarkBall) {
-        const float radius = enemy.category() == Map::EnemyTypes::ThornBall 
-            ? ThornBall::thornBallRadius
-            : DarkBall::darkBallRadius;
+             enemy.category() == Map::EnemyTypes::DarkBall)
+    {
+        const float radius = enemy.category() == Map::EnemyTypes::ThornBall
+                                 ? ThornBall::thornBallRadius
+                                 : DarkBall::darkBallRadius;
+
+        constexpr float sizeBlock = 1.f;
+        constexpr float offset = sizeBlock / 2.f;
+
+        const JBTypes::Dir &currentDir = enemy.direction();
+        const JBTypes::vec3f vecDir =
+            JBTypesMethods::directionAsVector(currentDir);
+
+        const glm::mat4 rotationLocal =
+            Utility::rotationUpToDir(currentDir);
+
+        const JBTypes::vec3f &posWorld = enemy.position();
+
+        const glm::mat4 scaleLocal = glm::scale(glm::vec3(radius));
+
+        const glm::mat4 translationLocal =
+            glm::translate(glm::vec3(
+                posWorld.x + offset + vecDir.x * (offset + radius),
+                posWorld.y + offset + vecDir.y * (offset + radius),
+                posWorld.z + offset + vecDir.z * (offset + radius)));
+
+        const glm::mat4 modelTransf = translationLocal * rotationLocal * scaleLocal;
+        const glm::mat4 normalsTransf = rotationLocal;
 
         const glm::mat4 scaleMatrix = glm::scale(glm::vec3(radius));
+
         const Sphere sphere;
-        const MeshComponent_sptr component = std::make_shared<MeshComponent>
-                (std::make_shared<Sphere>(sphere,scaleMatrix),
-                 std::make_shared<EnemyAnimation>(enemy));
+        const MeshComponent_sptr component =
+            std::make_shared<MeshComponent>(std::make_shared<Sphere>(
+                                                sphere, modelTransf, normalsTransf),
+                                            std::make_shared<EnemyAnimation>(enemy)
+            );
         components.push_back(component);
     }
 

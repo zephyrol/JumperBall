@@ -17,6 +17,7 @@ public:
     const JBTypes::Color& color() const;
     const Map::EnemyTypes& category() const;
     const JBTypes::vec3f& position() const;
+    const JBTypes::Direction& direction() const;
     const float& size() const;
     const std::array<float,9>& transform() const;
     void update();
@@ -26,6 +27,7 @@ private:
     const Map::EnemyTypes& _category;
     const JBTypes::Color _color;
     const JBTypes::timePointMs& _creationTime;
+    const JBTypes::Direction& _direction;
     const float _size;
     bool _hasHit;
     JBTypes::timePointMs _intersectionTime;

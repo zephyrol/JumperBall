@@ -15,7 +15,7 @@ public:
               const JBTypes::Dir& dir,
               const JBTypes::Dir& movementDirection,
               size_t movementLength);
-    virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
+    virtual Effect update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) override;
     virtual ~ThornBall() = default;
     static constexpr float thornBallRadius = 0.1f;

@@ -43,6 +43,8 @@ public:
 
     enum class SpecialTypes { SwitchButton , Teleporter };
 
+    enum class Effect { Nothing, Burst, Burn, Slide, Jump };
+
     struct BlockInfo { size_t index; 
                        BlockTypes type; };
 
@@ -96,7 +98,7 @@ public:
     const std::vector<BlockInfo>&         blocksInfo()                    const;
 
     //----------METHODS------------//
-    Block::Effect                         interaction(
+    Map::Effect                           interaction(
                                   const JBTypes::Dir& ballDir,
                                   const JBTypes::vec3f& posBall, float radius);
     std::shared_ptr<Block>                getBlock(int x, int y, int z);
@@ -135,6 +137,7 @@ private:
     // Multithreading
     ParallelTask<Block::Effect>           _blocksInteractions;
     ParallelTask<void>                    _objectsInteractions;
+    ParallelTask<Enemy::Effect>           _enemiesInteractions;
 
     JBTypes::Dir                          _dirBallInteractions;
     JBTypes::vec3f                        _posBallInteractions;

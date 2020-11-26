@@ -16,7 +16,7 @@ public:
              const JBTypes::Dir& dir,
              const JBTypes::Dir& movementDirection,
              size_t nbOfJumps);
-    virtual EnemyEffect update(const JBTypes::vec3f& entityPosition,
+    virtual Effect update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) override;
     virtual ~DarkBall() = default;
     static constexpr float darkBallRadius = 0.2f;

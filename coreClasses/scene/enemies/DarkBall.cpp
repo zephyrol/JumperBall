@@ -28,21 +28,20 @@ _nbOfJumps(nbOfJumps)
 {
 }
 
-Enemy::EnemyEffect DarkBall::update(const JBTypes::vec3f& entityPosition,
+Enemy::Effect DarkBall::update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) 
 {
-   touchingTest(entityPosition,radiusEntity);
-   return _hasHit 
-    ? Enemy::EnemyEffect::Destroy
-    : Enemy::EnemyEffect::Nothing;
+    touchingTest(entityPosition,radiusEntity);
+    return _hasHit 
+        ? Enemy::Effect::Burst
+        : Enemy::Effect::Nothing;
 }
 
 void DarkBall::touchingTest(const JBTypes::vec3f& entityPosition,
                          float radiusEntity)
 {
     if (JBTypesMethods::distance(entityPosition, _position) <
-        (radiusEntity + darkBallRadius))
-    {
+        (radiusEntity + darkBallRadius)) {
         _intersectionTime = JBTypesMethods::getTimePointMSNow();
         _hasHit = true;
     }

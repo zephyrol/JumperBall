@@ -582,7 +582,9 @@ void Ball::movingUpdate() noexcept {
         _3DPosY = position3D.y;
         _3DPosZ = position3D.z;
         stay();
-        blockEvent(_map.getBlock(_currentBlockX, _currentBlockY, _currentBlockZ));
+        blockEvent(
+            _map.getBlock(_currentBlockX, _currentBlockY, _currentBlockZ)
+            );
         update();
     }
     else {
@@ -703,9 +705,9 @@ void Ball::update() noexcept{
 
 void Ball::mapInteraction() noexcept{
 
-    const Block::Effect effect = _map.interaction
+    const Map::Effect effect = _map.interaction
             (_currentSide,get3DPosition(),getRadius());
-    if (effect == Block::Effect::Burst) {
+    if (effect == Map::Effect::Burst) {
         if (_stateOfLife != StateOfLife::Bursting) {
             _stateOfLife = StateOfLife::Bursting;
             setTimeLifeNow();

@@ -31,12 +31,12 @@ _color(color)
 {
 }
 
-Enemy::EnemyEffect Laser::update(const JBTypes::vec3f& entityPosition,
+Enemy::Effect Laser::update(const JBTypes::vec3f& entityPosition,
                                  float radiusEntity) {
     touchingTest(entityPosition,radiusEntity);
     return _hasHit 
-    ? Enemy::EnemyEffect::Destroy
-    : Enemy::EnemyEffect::Nothing;
+    ? Enemy::Effect::Burst
+    : Enemy::Effect::Nothing;
 }
 
 JBTypes::Color Laser::getColor() const 
