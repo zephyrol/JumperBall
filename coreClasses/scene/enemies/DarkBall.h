@@ -18,12 +18,12 @@ public:
              size_t nbOfJumps);
     virtual Effect update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) override;
+    virtual const JBTypes::Dir& movementDirection() const override;
     virtual ~DarkBall() = default;
     static constexpr float darkBallRadius = 0.2f;
 
 private:
     const JBTypes::Dir _movementDirection;
-    const size_t _nbOfJumps;
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override; 
 };

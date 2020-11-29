@@ -16,7 +16,7 @@ Enemy(tieBlock,
       initialPosition,
       dir,
       thornBallRadius,
-      1.f,
+      movementLength,
       { 0.f,
         0.f,
         0.f,
@@ -27,29 +27,40 @@ Enemy(tieBlock,
         1.f,
         1.f }
 ),
-_movementDirection(movementDirection),
-_movementLenght(movementLength)
+_movementDirection(movementDirection)
 {
 }
 
 Enemy::Effect ThornBall::update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) 
 {
-    constexpr float movementDuration = 1.f;
+    constexpr float movementDuration = 2.f;
     const float timeSinceCreation = 
         JBTypesMethods::getTimeSecondsSinceTimePoint(creationTime());
-    
+
     const JBTypes::vec3f vecDir = 
-        JBTypesMethods::directionAsVector(direction());
-    const float movementPosition = 
-        M_PI -cos(2.f * M_PI * (timeSinceCreation / movementDuration)) / 2.f;
+        JBTypesMethods::directionAsVector(_movementDirection);
+
+    const float movementLength = static_cast<float>(length());
+    const float localMovement = (1.f - cosf( 2.f * static_cast<float>(M_PI) * 
+        (timeSinceCreation / movementDuration))) / 2.f;
+    const float movementPosition = localMovement * movementLength;
+
     _transform.at(0) = vecDir.x * movementPosition;
     _transform.at(1) = vecDir.y * movementPosition;
     _transform.at(2) = vecDir.z * movementPosition;
+
+    _position.x = _initialPosition.x + _transform.at(0);
+    _position.y = _initialPosition.y + _transform.at(1);
+    _position.z = _initialPosition.z + _transform.at(2);
     touchingTest(entityPosition, radiusEntity);
     return _hasHit
         ? Enemy::Effect::Burst
         : Enemy::Effect::Nothing;
+}
+
+const JBTypes::Dir& ThornBall::movementDirection() const {
+   return _movementDirection; 
 }
 
 void ThornBall::touchingTest(const JBTypes::vec3f& entityPosition,

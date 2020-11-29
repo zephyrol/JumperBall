@@ -11,22 +11,18 @@ Enemy::Enemy(const Block& tieBlock,
              const std::array<unsigned int,3>& initialPosition,
              const JBTypes::Dir& direction,
              float size,
-             float length,
+             size_t length,
              const std::array<float,9>& transform):
-    _intersectionTime(),
-    _hasHit(false),
-    _initialPosition(initialPosition),
-    _position{ 
-               static_cast<float>(initialPosition.at(0)),
-               static_cast<float>(initialPosition.at(1)), 
-               static_cast<float>(initialPosition.at(2))
-             },
-    _transform(transform),
     _tieBlock(tieBlock),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(direction),
     _size(size),
-    _length(length)
+    _length(length),
+    _intersectionTime(),
+    _hasHit(false),
+    _initialPosition(initPosition(initialPosition)),
+    _position(_initialPosition),
+    _transform(transform)
 {
 }
 
@@ -50,11 +46,34 @@ float Enemy::size() const {
     return _size;
 }
 
-float Enemy::length() const {
+size_t Enemy::length() const {
     return _length;
 }
 
-const std::array<unsigned int,3>& Enemy::initialPosition() const {
+JBTypes::vec3f Enemy::initPosition(const std::array<unsigned int,3>& position)
+                                                                         const {
+    constexpr float sizeBlock = 1.f;
+    constexpr float offset = sizeBlock / 2.f;
+
+    const JBTypes::Dir &currentDir = _direction;
+    const JBTypes::vec3f vecDir =
+        JBTypesMethods::directionAsVector(currentDir);
+
+    const JBTypes::vec3f posWorld = 
+        { static_cast<float>(position.at(0)),
+          static_cast<float>(position.at(1)),
+          static_cast<float>(position.at(2)) };
+
+    const float& radius = _size;
+
+    return {
+        posWorld.x + offset + vecDir.x * (offset + radius),
+        posWorld.y + offset + vecDir.y * (offset + radius),
+        posWorld.z + offset + vecDir.z * (offset + radius)
+        };
+}
+
+const JBTypes::vec3f& Enemy::initialPosition() const {
     return _initialPosition;
 }
 

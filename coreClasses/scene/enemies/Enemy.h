@@ -17,7 +17,7 @@ public:
           const std::array<unsigned int,3>& initialPosition,
           const JBTypes::Dir& direction,
           float size,
-          float length,
+          size_t length,
           const std::array<float,9>& transform);
 
     virtual Effect update(const JBTypes::vec3f& entityPosition,
@@ -25,29 +25,34 @@ public:
     virtual JBTypes::Color getColor() const;
     const JBTypes::timePointMs& creationTime() const;
     const JBTypes::timePointMs& intersectionTime() const;
-    const std::array<unsigned int,3>& initialPosition() const;
+    const JBTypes::vec3f& initialPosition() const;
     const JBTypes::vec3f& position() const;
     const std::array<float,9>& transform() const;
     const JBTypes::Dir& direction() const;
-    const JBTypes::Dir& movementDirection() const;
+    virtual const JBTypes::Dir& movementDirection() const;
     bool hasHit() const;
     float size() const;
-    float length() const;
+    size_t length() const;
     virtual ~Enemy() = default;
-
-protected :
-    JBTypes::timePointMs _intersectionTime;
-    bool _hasHit;
-    const std::array<unsigned int, 3> _initialPosition;
-    JBTypes::vec3f _position;
-    std::array<float,9> _transform;
 
 private:
     const Block& _tieBlock;
     const JBTypes::timePointMs _creationTime;
     const JBTypes::Dir _direction;
     const float _size;
-    const float _length;
+    const size_t _length;
+
+protected:
+    JBTypes::timePointMs _intersectionTime;
+    bool _hasHit;
+    const JBTypes::vec3f _initialPosition;
+    JBTypes::vec3f _position;
+    std::array<float,9> _transform;
+
+
+private: 
+    JBTypes::vec3f initPosition(const std::array<unsigned int,3>& position)
+                                                                          const;
 
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,
                               float radiusEntity) = 0;

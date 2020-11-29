@@ -12,7 +12,11 @@ DarkBall::DarkBall(const Block &tieBlock,
                    const JBTypes::Dir &dir,
                    const JBTypes::Dir &movementDirection,
                    size_t nbOfJumps) : 
-Enemy(tieBlock, initialPosition, dir, darkBallRadius, 1.f,
+Enemy(tieBlock,
+      initialPosition,
+      dir,
+      darkBallRadius,
+      nbOfJumps,
       { static_cast<float>(initialPosition.at(0)), 
         static_cast<float>(initialPosition.at(1)), 
         static_cast<float>(initialPosition.at(2)), 
@@ -23,8 +27,7 @@ Enemy(tieBlock, initialPosition, dir, darkBallRadius, 1.f,
         1.f,
         1.f }
 ),
-_movementDirection(movementDirection),
-_nbOfJumps(nbOfJumps)
+_movementDirection(movementDirection)
 {
 }
 
@@ -35,6 +38,10 @@ Enemy::Effect DarkBall::update(const JBTypes::vec3f& entityPosition,
     return _hasHit 
         ? Enemy::Effect::Burst
         : Enemy::Effect::Nothing;
+}
+
+const JBTypes::Dir& DarkBall::movementDirection() const {
+    return _movementDirection;
 }
 
 void DarkBall::touchingTest(const JBTypes::vec3f& entityPosition,

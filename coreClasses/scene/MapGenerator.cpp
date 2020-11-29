@@ -996,7 +996,7 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
 
                     output << getDirection(static_cast<size_t>(dir))
                         << charToWriteType
-                        << getDirection(static_cast<unsigned int>(moveDir))
+                        << getDirection(static_cast<size_t>(moveDir))
                         << charToWriteLength 
                         << charToWriteColor;
                     ++currentInfo;

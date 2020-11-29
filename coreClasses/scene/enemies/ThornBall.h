@@ -17,12 +17,12 @@ public:
               size_t movementLength);
     virtual Effect update(const JBTypes::vec3f& entityPosition,
                                float radiusEntity) override;
+    virtual const JBTypes::Dir& movementDirection() const override;
     virtual ~ThornBall() = default;
     static constexpr float thornBallRadius = 0.1f;
     
 private:
     const JBTypes::Dir _movementDirection;
-    const size_t _movementLenght;
 
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override; 

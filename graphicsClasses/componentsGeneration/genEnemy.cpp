@@ -64,34 +64,20 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState &enemy)
     else if (enemy.category() == Map::EnemyTypes::ThornBall ||
              enemy.category() == Map::EnemyTypes::DarkBall)
     {
-        const float radius = enemy.category() == Map::EnemyTypes::ThornBall
-                                 ? ThornBall::thornBallRadius
-                                 : DarkBall::darkBallRadius;
-
-        constexpr float sizeBlock = 1.f;
-        constexpr float offset = sizeBlock / 2.f;
 
         const JBTypes::Dir &currentDir = enemy.direction();
-        const JBTypes::vec3f vecDir =
-            JBTypesMethods::directionAsVector(currentDir);
-
         const glm::mat4 rotationLocal =
             Utility::rotationUpToDir(currentDir);
 
         const JBTypes::vec3f &posWorld = enemy.position();
 
-        const glm::mat4 scaleLocal = glm::scale(glm::vec3(radius));
+        const glm::mat4 scaleLocal = glm::scale(glm::vec3(enemy.size()));
 
         const glm::mat4 translationLocal =
-            glm::translate(glm::vec3(
-                posWorld.x + offset + vecDir.x * (offset + radius),
-                posWorld.y + offset + vecDir.y * (offset + radius),
-                posWorld.z + offset + vecDir.z * (offset + radius)));
+            glm::translate(glm::vec3( posWorld.x, posWorld.y, posWorld.z));
 
         const glm::mat4 modelTransf = translationLocal * rotationLocal * scaleLocal;
         const glm::mat4 normalsTransf = rotationLocal;
-
-        const glm::mat4 scaleMatrix = glm::scale(glm::vec3(radius));
 
         const Sphere sphere;
         const MeshComponent_sptr component =
