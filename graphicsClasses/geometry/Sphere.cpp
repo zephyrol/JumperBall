@@ -39,6 +39,21 @@ Sphere::Sphere( const glm::vec3& customColor,
                               Sphere::basicInfoSphere.indices) {
 }
 
+Sphere::Sphere( const glm::vec3& customColor,
+                const glm::vec3& customColor2,
+                const glm::mat4& modelTransform,
+                const glm::mat4& normalsTransform): GeometricShape ( 
+                              Sphere::basicInfoSphere.positions,
+                              Sphere::basicInfoSphere.normals,
+                              computeBasicInfoSphere(true,
+                                                     customColor,
+                                                     customColor2
+                                                    ).colors,
+                              Sphere::basicInfoSphere.uvCoords,
+                              modelTransform,
+                              normalsTransform,
+                              Sphere::basicInfoSphere.indices) {
+}
 
 Sphere::Sphere( const GeometricShape& sphere, 
                 const glm::mat4& modelTransform,
@@ -46,7 +61,11 @@ Sphere::Sphere( const GeometricShape& sphere,
     GeometricShape(sphere,modelTransform,normalsTransform) {
 }
 
-Sphere::InfoSphere Sphere::computeBasicInfoSphere() {
+Sphere::InfoSphere Sphere::computeBasicInfoSphere(
+    bool useCustomColors,
+    const glm::vec3& firstColor,
+    const glm::vec3& secondColor 
+) {
 
     Sphere::InfoSphere infoSphere;
 
@@ -78,10 +97,17 @@ Sphere::InfoSphere Sphere::computeBasicInfoSphere() {
             infoSphere.uvCoords.push_back(
             glm::vec2( static_cast<float>(j)/ iMeriCount, 
                     static_cast<float>(iParaCount - i ) / iParaCount ));
-            infoSphere.colors.push_back(
-                          glm::vec3(static_cast<float>(i)/iParaCount,
-                                        (j < iMeriCount/2) ? 1.f : 0.f,
-                                        0.5f));
+            if (!useCustomColors)
+            {
+                infoSphere.colors.push_back(
+                    glm::vec3(static_cast<float>(i) / iParaCount,
+                              (j < iMeriCount / 2) ? 1.f : 0.f,
+                              0.5f));
+            } else {
+                infoSphere.colors.push_back(
+                    (j < iMeriCount / 2) ? firstColor : secondColor
+                );
+            }
         }
     }
     // compute normals ---------------------------------------------------------

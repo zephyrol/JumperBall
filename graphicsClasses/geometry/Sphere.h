@@ -25,6 +25,10 @@ public:
     Sphere( const glm::vec3& customColor,
             const glm::mat4& modelTransform    = glm::mat4(1.f),
             const glm::mat4& normalsTransform  = glm::mat4(1.f));
+    Sphere( const glm::vec3& customColor,
+            const glm::vec3& customColor2,
+            const glm::mat4& modelTransform    = glm::mat4(1.f),
+            const glm::mat4& normalsTransform  = glm::mat4(1.f));
     Sphere( const GeometricShape& sphere, 
             const glm::mat4& modelTransform    = glm::mat4(1.f),
             const glm::mat4& normalsTransform  = glm::mat4(1.f));
@@ -45,8 +49,11 @@ private:
     static const InfoSphere basicInfoSphere;
 
     //--------STATIC METHODS-------//
-    static InfoSphere computeBasicInfoSphere();
-
+    static InfoSphere computeBasicInfoSphere(
+        bool useCustomColors = false,
+        const glm::vec3 &firstColor = glm::vec3(0.f),
+        const glm::vec3 &secondColor = glm::vec3(0.f)
+        );
 };
 
 #endif /* SPHERE_H */
