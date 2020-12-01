@@ -84,7 +84,7 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState &enemy)
         const std::string sphereName("darkSphere");
         if (commonShapes.find(sphereName) == commonShapes.end())
             commonShapes[sphereName] = std::make_shared<Sphere>(
-                    glm::vec3(0.f,0.f,0.3f), glm::vec3(0.f,0.2f,0.2f)
+                    glm::vec3(114.f/255.f,47.f/255.f,55.f/255.f)
                 );
         const MeshComponent_sptr component =
             std::make_shared<MeshComponent>(std::make_shared<Sphere>(
