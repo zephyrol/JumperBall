@@ -80,12 +80,17 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState &enemy)
             translationLocal * rotationLocal * scaleLocal;
         const glm::mat4 normalsTransf = rotationLocal;
 
-        const Sphere sphere;
-        const std::string sphereName("darkSphere");
-        if (commonShapes.find(sphereName) == commonShapes.end())
-            commonShapes[sphereName] = std::make_shared<Sphere>(
-                    glm::vec3(114.f/255.f,47.f/255.f,55.f/255.f)
-                );
+        const std::string sphereName =
+            enemy.category() == Map::EnemyTypes::ThornBall
+            ? "thornSphere"
+            : "darkSphere";
+        if (commonShapes.find(sphereName) == commonShapes.end()) {
+            const glm::vec3 sphereColor =
+                enemy.category() == Map::EnemyTypes::ThornBall
+                ? glm::vec3(114.f/255.f,47.f/255.f,55.f/255.f)
+                : glm::vec3(0.f,0.f,0.5f);
+            commonShapes[sphereName] = std::make_shared<Sphere>(sphereColor);
+        }
         const MeshComponent_sptr component =
             std::make_shared<MeshComponent>(std::make_shared<Sphere>(
                                                 *commonShapes.at(sphereName), 
