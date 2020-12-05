@@ -28,8 +28,9 @@ public:
 
     //---------CONSTANTS------------//
     static constexpr float        timeToGetNextBlock                    = 0.25f;
-    static constexpr float        timeToTurn                             = 0.3f;
-    static constexpr float        timeToBurn                              = 2.f;
+    static constexpr float        timeToTurn                            = 0.3f;
+    static constexpr float        timeToBurn                            = 2.f;
+    static constexpr float        basicRadius                           = 0.2f;
 
     //------------TYPES------------//
     enum class State              { Staying, Moving, Jumping, 

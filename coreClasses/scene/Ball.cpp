@@ -30,11 +30,11 @@ Ball::Ball(Map& map):
         _stateOfLife(Ball::StateOfLife::Normal),
         _jumpingType(Ball::JumpingType::Short),
         _map(map),
-        _mechanicsPatternJumping(),
-        _mechanicsPatternLongJumping( 3.f,
-                                      ClassicalMechanics::timeToStopWindBasic,
+        _mechanicsPatternJumping(getRadius()),
+        _mechanicsPatternLongJumping( getRadius(),
+                                      3.f,
                                       4.2f),
-        _mechanicsPatternFalling(0.f,0.f,0.f),
+        _mechanicsPatternFalling(getRadius(),0.f,0.f),
         _timeAction(std::chrono::system_clock::now()),
         _timeStateOfLife(std::chrono::system_clock::now()),
         _burnCoefficientTrigger(0.f),
@@ -391,7 +391,7 @@ std::shared_ptr<const std::vector<int> > Ball::intersectBlock(float x,
     const JBTypes::vec3f sideVec =
         JBTypesMethods::directionAsVector(_currentSide);
 
-    const float offsetBlockPosition = ClassicalMechanics::radiusBall;
+    const float offsetBlockPosition = getRadius();
     const float xIntersectionUnder = x - sideVec.x * offsetBlockPosition;
     const float yIntersectionUnder = y - sideVec.y * offsetBlockPosition;
     const float zIntersectionUnder = z - sideVec.z * offsetBlockPosition;
@@ -421,7 +421,7 @@ JBTypes::timePointMs Ball::getTimeStateOfLifeMs() const noexcept {
 
 JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const
 {
-    const float offsetRealPosition = 0.5f + ClassicalMechanics::radiusBall;
+    const float offsetRealPosition = 0.5f + getRadius();
     
     const JBTypes::vec3f sideVec =
         JBTypesMethods::directionAsVector(_currentSide);
@@ -439,7 +439,7 @@ JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const
 }
 
 float Ball::getRadius() const {
-    return ClassicalMechanics::radiusBall;
+    return Ball::basicRadius;
 }
 
 JBTypes::Dir Ball::currentSide() const {
@@ -478,7 +478,7 @@ ClassicalMechanics& Ball::getMechanicsJumping() noexcept {
 }
 
 JBTypes::vec3f Ball::get3DPosStayingBall() const {
-    constexpr float offsetPosition = 0.5f + ClassicalMechanics::radiusBall;
+    const float offsetPosition = 0.5f + getRadius();
     
     const JBTypes::vec3f sideVec =
         JBTypesMethods::directionAsVector(_currentSide);
@@ -606,8 +606,8 @@ void Ball::movingUpdate() noexcept {
 
             const float distancePerStep =
                 infoTarget.nextLocal == NextBlockLocal::Same
-                    ? 0.5f + ClassicalMechanics::radiusBall
-                    : 0.5f - ClassicalMechanics::radiusBall;
+                    ? 0.5f + getRadius()
+                    : 0.5f - getRadius();
 
             const float halfTimeToGetNextBlock = timeToGetNextBlock / 2.f;
 

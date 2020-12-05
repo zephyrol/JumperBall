@@ -7,6 +7,7 @@
 
 #ifndef DarkBall_h
 #define DarkBall_h
+#include "scene/ClassicalMechanics.h"
 #include "Enemy.h"
 
 class DarkBall : public Enemy{
@@ -26,6 +27,7 @@ private:
     const JBTypes::Dir _movementDirection;
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override; 
+    static const ClassicalMechanics darkBallClassicalMechanics;
 };
 
 #endif /* DarkBall_h */
