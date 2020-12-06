@@ -144,17 +144,17 @@ void Page::update(bool isPressed, float screenPosY) {
     }
 
     if (_isPressed) {
-        constexpr float thresholdDeltaT = 0.05f; //50 ms
+        constexpr float thresholdDeltaT = 0.1f; //100 ms
         const bool thresholdIsCrossed =
                 (JBTypesMethods::getFloatFromDurationMS(
                      now - _lastSwipeUpdates.at(0).first ) > thresholdDeltaT);
-        if (_countingUpdates < 2 ) {
-            if ( _countingUpdates == 0 || thresholdIsCrossed ) {
+        if (_countingUpdates < 2) {
+            if (_countingUpdates == 0 || thresholdIsCrossed) {
                 _lastSwipeUpdates.at(_countingUpdates).first = now;
                 _lastSwipeUpdates.at(_countingUpdates).second = screenPosY;
                 ++_countingUpdates;
             }
-        } else if ( thresholdIsCrossed  ){
+        } else if (thresholdIsCrossed) {
             _lastSwipeUpdates.at(0) = std::move(_lastSwipeUpdates.at(1));
             _lastSwipeUpdates.at(1).first = now;
             _lastSwipeUpdates.at(1).second = screenPosY;
@@ -181,12 +181,12 @@ void Page::update(bool isPressed, float screenPosY) {
         const float deceleration =
                 decelerationCoefficient * powf(t,2.f)/2.f;
 
-        if (_releaseVelocity > 0.f && t < -(_releaseVelocity)/
+        if (_releaseVelocity > 0.f && t < -(_releaseVelocity) /
                 (2.f *-decelerationCoefficient/2.f) ) {
             _localPosY = -deceleration +
                     _releaseVelocity * t + _localReleasedPosY ;
         }
-        else if (_releaseVelocity < 0.f && t < -(_releaseVelocity)/
+        else if (_releaseVelocity < 0.f && t < -(_releaseVelocity) /
                  (2.f *decelerationCoefficient/2.f) ) {
             _localPosY = deceleration +
                     _releaseVelocity * t + _localReleasedPosY ;

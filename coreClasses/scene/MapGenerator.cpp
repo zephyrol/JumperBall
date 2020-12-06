@@ -237,8 +237,10 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             }
         } else {
             if (!counterWithoutEnemiesBuffer.empty()){
-                counterWithoutEnemiesBuffer = substractOffset(counterWithoutEnemiesBuffer,
+                counterWithoutEnemiesBuffer = substractOffset(
+                                counterWithoutEnemiesBuffer,
                                 firstNumberWithoutAnyObjects);
+
                 currentIndex += convertToBase10(counterWithoutEnemiesBuffer,
                                                 nbOfCharactersWithoutObjects);
             }
@@ -271,12 +273,10 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             const JBTypes::Color color = 
                 static_cast<JBTypes::Color>(charColor);
 
-            //Map::EnemyTypes category;
             std::shared_ptr<Enemy> enemy;
             const auto& blockPtr = mapInfo.blocks.at(currentIndex);
             switch (typeOfEnemy) {
                 case 0:
-                    //category = Map::EnemyTypes::Laser;
                     enemy = std::make_shared<Laser>(
                         color,
                         *blockPtr,
@@ -286,7 +286,6 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                     );
                     break;
                 case 1:
-                    //category = Map::EnemyTypes::ThornBall;
                     enemy = std::make_shared<ThornBall>(
                         *blockPtr,
                         Map::getBlockCoords(currentIndex,width,deep),
@@ -296,7 +295,6 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                     );
                     break;
                 case 2:
-                    //category = Map::EnemyTypes::ThornBall;
                     enemy = std::make_shared<DarkBall>(
                         *blockPtr,
                         Map::getBlockCoords(currentIndex,width,deep),
@@ -305,7 +303,6 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                         length
                     );
                     break;
-                    //category = Map::EnemyTypes::DarkBall;
                     enemy = std::make_shared<DarkBall>(
                         *blockPtr,
                         Map::getBlockCoords(currentIndex,width,deep),
@@ -315,7 +312,6 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                     );
                     break;
                 default :
-                    //category = Map::EnemyTypes::Laser;
                     enemy = std::make_shared<Laser>(
                         color,
                         *blockPtr,
@@ -724,8 +720,9 @@ void MapGenerator::compress(std::ifstream& input) {
             output << outputLenght;
 
             //Color
-            constexpr char AtoFirstNumberColor = 33 - 65; //A=1, not 0
-            output << readString.at(4) + AtoFirstNumberColor;
+            constexpr char AtoFirstNumberColor = 33 - 65;
+            const char outputColor = readString.at(4) + AtoFirstNumberColor;
+            output << outputColor;
         }
     }
     if (counterWithoutObjects > 0) {

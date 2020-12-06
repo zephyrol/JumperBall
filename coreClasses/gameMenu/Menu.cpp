@@ -45,7 +45,6 @@ void Menu::update(bool isPressed, float screenPosY)
     if (_currentPage) {
         _currentPage->update(isPressed, screenPosY);
     }
-    //updateRendering(screenPosY);
 }
 
 void Menu::rootPageAsCurrentPage() {

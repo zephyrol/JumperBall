@@ -32,7 +32,6 @@ void Camera::follow(const Ball& ball) noexcept {
     const JBTypes::vec3f& position      = ball.get3DPosition();
     const auto sideBall                 = ball.currentSide();
     const auto lookingDirection         = ball.lookTowards();
-
     const auto stateBall                = ball.state();
 
     constexpr float distDirPoint = 2.f;
@@ -80,14 +79,14 @@ void Camera::follow(const Ball& ball) noexcept {
         const auto  infoNext             = ball.getNextBlockInfo();
         const JBTypes::vec3f vecLookDir  =
             JBTypesMethods::directionAsVector(lookingDirection);
-        const JBTypes::vec3f vecNextLook  =
+        const JBTypes::vec3f vecNextLook =
             JBTypesMethods::directionAsVector(infoNext.nextLook);
         const glm::vec3 axisOldLook {vecLookDir.x, vecLookDir.y, vecLookDir.z};
         const glm::vec3 axisNewLook
             {vecNextLook.x, vecNextLook.y, vecNextLook.z};
         
         const glm::vec3 axisRotation     = glm::cross(axisOldLook,axisNewLook);
-        const glm::vec3 eulerAngles = (timeSinceAction*
+        const glm::vec3 eulerAngles      = (timeSinceAction*
           (static_cast<float>(M_PI)/2)/ ball.timeToGetNextBlock) * axisRotation;
          
         const glm::quat quaternion (eulerAngles);
@@ -109,7 +108,7 @@ void Camera::follow(const Ball& ball) noexcept {
         matRotationCam = glm::toMat4(quaternion);
     }
     else if (stateBall == Ball::State::Jumping) {
-        constexpr float offsetTimeToBeginCamMoving = 0.2f;
+        constexpr float offsetTimeToBeginCamMoving = 0.4f;
         const float timeSinceBeginningMoving =
           JBTypesMethods::getFloatFromDurationMS(now-timeAction);
         if (timeSinceBeginningMoving > 
@@ -259,7 +258,7 @@ bool Camera::transitionEffect(const Ball &ball, const Map &map) noexcept
                                   static_cast<float>(M_PI)) + 1.f;
 
     const glm::vec3 directionVector =
-            glm::normalize( _center - _pos);
+            glm::normalize(_center - _pos);
     const glm::mat4 upRotation = glm::rotate( tCos * 2.f *
                                               static_cast<float>(M_PI),
                                               directionVector);

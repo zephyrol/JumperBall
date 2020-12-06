@@ -334,7 +334,7 @@ void Controller::updateMouse ( float posX, float posY ) {
     
 }
 
-void Controller::releaseMouse (float posX, float posY) {
+void Controller::releaseMouse(float posX, float posY) {
     
     constexpr float thresholdMoving = 0.05f;
     
@@ -354,23 +354,19 @@ const std::shared_ptr<Menu>&  Controller::menu() const {
     return _menu;
 }
 
-void Controller::currentMap(const std::shared_ptr<Map> &currentMap)
-{
+void Controller::currentMap(const std::shared_ptr<Map> &currentMap) {
     _map = currentMap;
 }
 
-const std::shared_ptr<Map> &Controller::currentMap() const
-{
+const std::shared_ptr<Map> &Controller::currentMap() const {
     return _map;
 }
 
-void Controller::currentBall(const std::shared_ptr<Ball> &currentBall)
-{
+void Controller::currentBall(const std::shared_ptr<Ball> &currentBall) {
     _ball = currentBall;
 }
 
-const std::shared_ptr<Ball> &Controller::currentBall() const
-{
+const std::shared_ptr<Ball> &Controller::currentBall() const {
     return _ball;
 }
 

@@ -53,7 +53,7 @@ ParallelTask<T>::ParallelTask(std::function<T(size_t)>&& taskFunction,
     _forceAsync(forceAsync),
     _numberOfThreads(getNumberOfThreads(numberOfTasks)),
     _numberOfTasks(numberOfTasks),
-    _taskFunction(taskFunction),
+    _taskFunction(std::move(taskFunction)),
     _asyncTasks(),
     _returnValues(allocateReturnValues())
 {
@@ -64,13 +64,15 @@ void ParallelTask<T>::runTasks()
 {
     _asyncTasks.clear();
     for (size_t i = 0; i < _numberOfThreads; ++i) {
-        if (_forceAsync) {
-            _asyncTasks.push_back( std::async(std::launch::async,[this,i](){
-                threadFunction(_taskFunction,i,_numberOfThreads,_numberOfTasks);}));
-        } else {
-            _asyncTasks.push_back( std::async([this,i](){
-                threadFunction(_taskFunction,i,_numberOfThreads,_numberOfTasks);}));
-        }
+        _asyncTasks.push_back(
+            _forceAsync 
+            ? std::async(std::launch::async,[this,i](){
+                threadFunction(_taskFunction,i,_numberOfThreads,_numberOfTasks);
+                })
+            : std::async([this,i](){
+                threadFunction(_taskFunction,i,_numberOfThreads,_numberOfTasks);
+                })
+        );
     }
 }
 
@@ -90,8 +92,7 @@ void ParallelTask<T>::threadFunction(const std::function<T(size_t)> &task,
                                      size_t nbOfTasks) {
 
     for (size_t i = (threadnumber * nbOfTasks / nbOfThreads);
-         i < ((threadnumber + 1) * nbOfTasks / nbOfThreads); ++i)
-    {
+         i < ((threadnumber + 1) * nbOfTasks / nbOfThreads); ++i) {
         runTask(task, i);
     }
 }
