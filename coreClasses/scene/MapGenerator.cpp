@@ -272,6 +272,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             const unsigned int charColor = readValue - firstNumberColor;
             const JBTypes::Color color = 
                 static_cast<JBTypes::Color>(charColor);
+            infoEnemies.erase(infoEnemies.begin());
 
             std::shared_ptr<Enemy> enemy;
             const auto& blockPtr = mapInfo.blocks.at(currentIndex);
@@ -295,14 +296,6 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                     );
                     break;
                 case 2:
-                    enemy = std::make_shared<DarkBall>(
-                        *blockPtr,
-                        Map::getBlockCoords(currentIndex,width,deep),
-                        dir,
-                        movementDir,
-                        length
-                    );
-                    break;
                     enemy = std::make_shared<DarkBall>(
                         *blockPtr,
                         Map::getBlockCoords(currentIndex,width,deep),
@@ -665,6 +658,7 @@ void MapGenerator::compress(std::ifstream& input) {
             if (readString.length() != 5) {
                 std::cerr << "An enemy is represent by 5 chars" << std::endl;
             }
+
             // side of enemy
             unsigned char charToWrite;
             switch (readString.at(0))
@@ -715,12 +709,12 @@ void MapGenerator::compress(std::ifstream& input) {
             output << charToWrite;
 
             //Length
-            constexpr char AtoFirstNumberLength = 33 - 65 + 1; //A=1, not 0
+            constexpr char AtoFirstNumberLength = 33 - 65 + 1; // A=1, not 0
             const char outputLenght = readString.at(3) + AtoFirstNumberLength;
             output << outputLenght;
 
             //Color
-            constexpr char AtoFirstNumberColor = 33 - 65;
+            constexpr char AtoFirstNumberColor = 33 - 65; // A = None
             const char outputColor = readString.at(4) + AtoFirstNumberColor;
             output << outputColor;
         }
