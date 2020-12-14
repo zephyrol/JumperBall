@@ -26,6 +26,7 @@ public:
 
 private:
     const JBTypes::Color _color;
+    static constexpr float laserRadius = 0.05f;
 
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override; 

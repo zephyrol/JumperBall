@@ -13,10 +13,12 @@ _color(enemy.getColor()),
 _creationTime(enemy.creationTime()),
 _direction(enemy.direction()),
 _size(enemy.size()),
+_length(enemy.length()),
 _hasHit(enemy.hasHit()),
 _intersectionTime(enemy.intersectionTime()),
 _position(enemy.position()),
-_transform(enemy.transform()){
+_transform(enemy.transform())
+{
 }
 
 const JBTypes::Color& EnemyState::color() const {
@@ -37,6 +39,10 @@ const JBTypes::Direction& EnemyState::direction() const {
 
 const float& EnemyState::size() const {
    return _size;
+}
+
+const size_t& EnemyState::length() const {
+   return _length;
 }
 
 const std::array<float,9>& EnemyState::transform() const {

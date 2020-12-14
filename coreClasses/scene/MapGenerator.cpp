@@ -320,6 +320,7 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             enemyInfo.type = static_cast<Map::EnemyTypes>(typeOfEnemy);
             mapInfo.enemiesInfo.push_back(enemyInfo);
             counterWithoutEnemiesBuffer.clear();
+            ++currentIndex; //hack
         }
         previousReadValue= readValue;
     }

@@ -15,11 +15,11 @@ Laser::Laser(const JBTypes::Color& color,
 Enemy(tieBlock, 
       initialPosition,
       dir,
+      laserRadius,
       length,
-      length,
-      { static_cast<float>(initialPosition.at(0)), 
-        static_cast<float>(initialPosition.at(1)), 
-        static_cast<float>(initialPosition.at(2)), 
+      { 0.f,
+        0.f,
+        0.f,
         0.f,
         0.f,
         0.f,
@@ -48,5 +48,5 @@ void Laser::touchingTest(const JBTypes::vec3f&,
                          float )
 {
     _intersectionTime = JBTypesMethods::getTimePointMSNow();
-    _hasHit = true;
+    _hasHit = false;
 }
