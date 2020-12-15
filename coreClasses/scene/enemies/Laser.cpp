@@ -44,9 +44,42 @@ JBTypes::Color Laser::getColor() const
     return _color;    
 }
 
-void Laser::touchingTest(const JBTypes::vec3f&,
-                         float )
+void Laser::touchingTest(const JBTypes::vec3f& entityPosition,
+                         float radiusEntity)
 {
-    _intersectionTime = JBTypesMethods::getTimePointMSNow();
-    _hasHit = false;
+    constexpr float offsetLaser = 0.5f;
+
+    const float entityMinX = entityPosition.x - radiusEntity;
+    const float entityMaxX = entityPosition.x + radiusEntity;
+    const float entityMinY = entityPosition.y - radiusEntity;
+    const float entityMaxY = entityPosition.y + radiusEntity;
+    const float entityMinZ = entityPosition.z - radiusEntity;
+    const float entityMaxZ = entityPosition.z + radiusEntity;
+
+    const float fLength = static_cast<float>(length());
+    const float laserMinX = direction() == JBTypes::Dir::West
+        ? _position.x - offsetLaser - fLength
+        : _position.x - offsetLaser;
+    const float laserMaxX = direction() == JBTypes::Dir::East
+        ? _position.x + offsetLaser + fLength
+        : _position.x + offsetLaser;
+    const float laserMinY = direction() == JBTypes::Dir::Down
+        ? _position.y - offsetLaser - fLength
+        : _position.y - offsetLaser;
+    const float laserMaxY = direction() == JBTypes::Dir::Up
+        ? _position.y + offsetLaser + fLength
+        : _position.y + offsetLaser;
+    const float laserMinZ = direction() == JBTypes::Dir::South
+        ? _position.z - offsetLaser - fLength
+        : _position.z - offsetLaser;
+    const float laserMaxZ = direction() == JBTypes::Dir::North
+        ? _position.z + offsetLaser + fLength
+        : _position.z + offsetLaser;
+
+    if ((entityMinX < laserMaxX && entityMaxX > laserMinX) &&
+       (entityMinY < laserMaxY && entityMaxY > laserMinY) &&
+       (entityMinZ < laserMaxZ && entityMaxZ > laserMinZ)) {
+        _intersectionTime = JBTypesMethods::getTimePointMSNow();
+        _hasHit = true;
+    }
 }
