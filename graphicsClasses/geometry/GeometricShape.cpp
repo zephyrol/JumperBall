@@ -158,6 +158,10 @@ const glm::mat4& GeometricShape::normalsTransform() const {
     return _normalsTransform;
 }
 
+size_t GeometricShape::levelOfDetail() const {
+    return 0; 
+}
+
 
 std::vector<glm::vec3> GeometricShape::createCustomColorBuffer(
                                           const glm::vec3& customColor,

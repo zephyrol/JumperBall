@@ -14,8 +14,9 @@
 
  SwitchButton::SwitchButton(const JBTypes::Color &color,
          const Block &tieBlock,
-         const JBTypes::Dir &dir)
-         : Special(color,tieBlock,dir)
+         const JBTypes::Dir &dir,
+         const std::array<unsigned int,3>& position
+         ) : Special(color,tieBlock,dir,position)
  {
  }
  

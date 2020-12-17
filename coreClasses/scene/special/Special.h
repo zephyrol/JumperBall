@@ -22,13 +22,16 @@ public:
     Special(
         const JBTypes::Color &color,
         const Block &tieBlock,
-        const JBTypes::Dir &dir);
+        const JBTypes::Dir &dir,
+        const std::array<unsigned int,3>& position
+        );
 
     virtual ~Special() = default;
 
     const JBTypes::Color& getColor() const;
     const JBTypes::timePointMs &creationTime() const;
     const JBTypes::Dir &direction() const;
+    const JBTypes::vec3f& position() const;
     virtual SpecialEffect interaction() const = 0;
 
 private:
@@ -36,7 +39,10 @@ private:
     const JBTypes::timePointMs _creationTime;
     const JBTypes::Dir _direction;
     const JBTypes::Color _color;
+    const JBTypes::vec3f _position;
 
+    JBTypes::vec3f initPosition(const std::array<unsigned int,3>& position)
+                                                                          const;
 };
 
 

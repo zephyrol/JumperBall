@@ -11,7 +11,8 @@ _special(special),
 _category(category),
 _color(special.getColor()),
 _creationTime(special.creationTime()),
-_position({0.f,0.f,0.f}), // TODO : feel it !
+_direction(special.direction()),
+_position(special.position()),
 _transform({0.f,0.f,0.f,0.f,0.f,0.f,1.f,1.f,1.f}) // TODO: feel it !
 {}
 
@@ -21,6 +22,10 @@ const JBTypes::Color& SpecialState::color() const {
 
 const Map::SpecialTypes& SpecialState::category() const {
    return _category; 
+}
+
+const JBTypes::Dir& SpecialState::direction() const {
+   return _direction;
 }
 
 const JBTypes::vec3f& SpecialState::position() const {

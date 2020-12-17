@@ -48,7 +48,8 @@ public:
     struct BlockInfo { size_t index; 
                        BlockTypes type; };
 
-    struct EnemyInfo {
+    struct EnemyInfo
+    {
         size_t index;
         std::shared_ptr<Enemy> enemy;
         EnemyTypes type;

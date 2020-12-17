@@ -26,6 +26,7 @@ public:
     std::array<unsigned int, 3> getBlockCoords(size_t index) const;
     const std::vector<std::shared_ptr<BlockState> > &blockStates() const;
     const std::vector<std::shared_ptr<EnemyState> > &enemiesStates() const;
+    const std::vector<std::shared_ptr<SpecialState> > &specialStates() const;
 
 private:
     const Map&                            _map;

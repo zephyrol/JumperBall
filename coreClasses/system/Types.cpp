@@ -221,3 +221,16 @@ JBTypes::vec3f JBTypesMethods::normalize(const JBTypes::vec3f &vec)
     const float vecLength = JBTypesMethods::length(vec);
     return { vec.x / vecLength, vec.y / vecLength, vec.z / vecLength };
 }
+
+std::string JBTypesMethods::colorToString(const JBTypes::Color color)
+{
+    switch(color) {
+        case JBTypes::Color::Blue : return "Blue";
+        case JBTypes::Color::Red: return "Red";
+        case JBTypes::Color::Yellow: return "Yellow";
+        case JBTypes::Color::Green: return "Green";
+        case JBTypes::Color::None: return "None";
+        default: return "None";
+    }
+    return "None";
+}

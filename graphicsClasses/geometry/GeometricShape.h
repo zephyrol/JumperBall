@@ -48,29 +48,32 @@ public:
 
 
     //-------CONST METHODS------ --//
-    void                                                   setVerticesData() 
+    void                                                  setVerticesData()
                                                                           const;
 
-    void                                                   bind()         const;
-    void                                                   draw()         const;
+    void                                                  bind()          const;
+    void                                                  draw()          const;
 
 
-    const std::shared_ptr<const std::vector<glm::vec3> >&  positions()    const;
-    const std::shared_ptr<const std::vector<glm::vec3> >&  normals()      const;
-    const std::shared_ptr<const std::vector<glm::vec3> >&  colors()       const;
-    const std::shared_ptr<const std::vector<glm::vec2> >&  uvCoords()     const;
+    const std::shared_ptr<const std::vector<glm::vec3> >& positions()     const;
+    const std::shared_ptr<const std::vector<glm::vec3> >& normals()       const;
+    const std::shared_ptr<const std::vector<glm::vec3> >& colors()        const;
+    const std::shared_ptr<const std::vector<glm::vec2> >& uvCoords()      const;
 
-    const std::shared_ptr<GLuint>&                         vertexArrayObject()  
+    const std::shared_ptr<GLuint>&                        vertexArrayObject()
                                                                           const;
-    const std::shared_ptr<std::array<GLuint,4> >&          vertexBufferObjects() 
+    const std::shared_ptr<std::array<GLuint,4> >&         vertexBufferObjects()
                                                                           const;
-    const std::shared_ptr<GLuint>&                         elementBufferObject()
+    const std::shared_ptr<GLuint>&                        elementBufferObject()
                                                                           const;
-    const std::shared_ptr<const std::vector<GLushort> >&   indices()      const;
+    const std::shared_ptr<const std::vector<GLushort> >&  indices()       const;
 
-    const glm::mat4&                                       modelTransform()  
+    const glm::mat4&                                      modelTransform()
                                                                           const;
-    const glm::mat4&                                       normalsTransform()                                                                               const;
+    const glm::mat4&                                      normalsTransform()
+                                                                          const;
+    virtual size_t                                        levelOfDetail() const;
+
     //--------STATIC METHODS-------//
     static std::vector<glm::vec3>   createCustomColorBuffer(
                                           const glm::vec3& customColor,

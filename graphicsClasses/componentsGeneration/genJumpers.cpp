@@ -41,21 +41,22 @@ vecMeshComponent_sptr MeshGenerator::genJumpers(const BlockState &BlockState,
                     glm::scale(glm::vec3(0.7f, 0.05f, 0.7f));
 
                 const glm::mat4 translationLocal =
-                    glm::translate( glm::vec3(
-                posWorld.x + offset + vecDir.x * offset,
+                    glm::translate(glm::vec3(
+                        posWorld.x + offset + vecDir.x * offset,
                         posWorld.y + offset + vecDir.y * offset,
                         posWorld.z + offset + vecDir.z * offset
-                ));
+                    ));
 
                 const glm::mat4 modelTranf= translationLocal *
                     rotationLocal * scaleLocal ;
                 const glm::mat4 normalsTrans= rotationLocal;
 
-                MeshComponent_sptr component = std::make_shared<MeshComponent>
-                    (std::make_shared<Cylinder>
+                MeshComponent_sptr component = std::make_shared<MeshComponent> (
+                    std::make_shared<Cylinder>
                         (*commonShapes.at("jumperCylinder"),
-                     modelTranf,normalsTrans),
-                     nullptr);
+                    modelTranf,normalsTrans),
+                    nullptr
+                );
                 components.push_back(std::move(component));
             }
         }

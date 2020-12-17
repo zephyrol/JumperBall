@@ -26,6 +26,15 @@ vecMeshComponent_sptr MeshGenerator::genComponents(const MapState& map) {
         }
     }
 
+    std::cout << "trying to gen this bitch" << std::endl;
+    for ( const std::shared_ptr<SpecialState>& SpecialState:
+            map.specialStates()) {
+        vecMeshComponent_sptr specialComponents = genSpecial(*SpecialState);
+        for(MeshComponent_sptr m : specialComponents) {
+            components.push_back(std::move(m));
+        }
+    }
+
     //We have better performances if the components are stored with objects
     //with the same VAO/VBO, we will not have to change the binding later
     vecMeshComponent_sptr sortedComponents = sortComponents(components);

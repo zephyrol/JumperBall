@@ -372,56 +372,72 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
                     special = std::make_shared<SwitchButton>(
                         JBTypes::Color::Red,
                         *blockPtr,
-                        dir);
+                        dir,
+                        Map::getBlockCoords(currentIndex,width,deep)
+                        );
                     specialType = Map::SpecialTypes::SwitchButton;
                     break;
                 case 1:
                     special = std::make_shared<SwitchButton>(
                         JBTypes::Color::Green,
                         *blockPtr,
-                        dir);
+                        dir,
+                        Map::getBlockCoords(currentIndex,width,deep)
+                        );
                     specialType = Map::SpecialTypes::SwitchButton;
                     break;
                 case 2:
                     special = std::make_shared<SwitchButton>(
                         JBTypes::Color::Blue,
                         *blockPtr,
-                        dir);
+                        dir,
+                        Map::getBlockCoords(currentIndex,width,deep)
+                        );
                     specialType = Map::SpecialTypes::SwitchButton;
                     break;
                 case 3:
                     special = std::make_shared<SwitchButton>(
                         JBTypes::Color::Yellow,
                         *blockPtr,
-                        dir);
+                        dir,
+                        Map::getBlockCoords(currentIndex,width,deep)
+                        );
                     specialType = Map::SpecialTypes::SwitchButton;
                     break;
                 case 4:
                     special = std::make_shared<Teleporter>(
                         JBTypes::Color::Red,
                         *blockPtr,
-                        dir);
+                        dir,
+                        Map::getBlockCoords(currentIndex,width,deep)
+                        );
                     specialType = Map::SpecialTypes::Teleporter;
                     break;
                 case 5:
                     special = std::make_shared<Teleporter>(
                         JBTypes::Color::Green,
                         *blockPtr,
-                        dir);
+                        dir,
+                        Map::getBlockCoords(currentIndex,width,deep)
+                        );
                     specialType = Map::SpecialTypes::Teleporter;
                     break;
                 case 6:
                     special = std::make_shared<Teleporter>(
                         JBTypes::Color::Blue,
                         *blockPtr,
-                        dir);
+                        dir,
+                        Map::getBlockCoords(currentIndex,width,deep)
+                        );
                     specialType = Map::SpecialTypes::Teleporter;
                     break;
                 case 7:
                     special = std::make_shared<Teleporter>(
                         JBTypes::Color::Yellow,
                         *blockPtr,
-                        dir);
+                        dir,
+                        Map::getBlockCoords(currentIndex,width,deep)
+                        );
                     specialType = Map::SpecialTypes::Teleporter;
                     break;
                 default :

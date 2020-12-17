@@ -76,6 +76,11 @@ const {
     return _enemiesStates;
 }
 
+const std::vector<std::shared_ptr<SpecialState> > & MapState::specialStates()
+const {
+    return _specialsStates; 
+}
+
 std::vector<std::shared_ptr<BlockState> > MapState::genBlockStates() const
 {
    const unsigned int nbBlocks =_map.width() * _map.height() * _map.deep();

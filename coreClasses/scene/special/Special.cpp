@@ -14,11 +14,14 @@
 
 Special::Special(const JBTypes::Color &color,
         const Block &tieBlock,
-        const JBTypes::Dir &dir):
+        const JBTypes::Dir &dir,
+        const std::array<unsigned int,3>& position
+        ):
         _tieBlock(tieBlock),
         _creationTime(JBTypesMethods::getTimePointMSNow()),
         _direction(dir),
-        _color(color)
+        _color(color),
+        _position(initPosition(position))
 {
 }
 
@@ -32,4 +35,29 @@ const JBTypes::timePointMs &Special::creationTime() const {
 
 const JBTypes::Dir &Special::direction() const {
     return _direction;
+}
+
+const JBTypes::vec3f& Special::position() const {
+    return _position; 
+}
+
+JBTypes::vec3f Special::initPosition(const std::array<unsigned int,3>& position)
+                                                                         const {
+    constexpr float sizeBlock = 1.f;
+    constexpr float offset = sizeBlock / 2.f;
+
+    const JBTypes::Dir &currentDir = _direction;
+    const JBTypes::vec3f vecDir =
+        JBTypesMethods::directionAsVector(currentDir);
+
+    const JBTypes::vec3f posWorld = 
+        { static_cast<float>(position.at(0)),
+          static_cast<float>(position.at(1)),
+          static_cast<float>(position.at(2)) };
+
+    return {
+        posWorld.x + offset + vecDir.x * offset,
+        posWorld.y + offset + vecDir.y * offset,
+        posWorld.z + offset + vecDir.z * offset 
+        };
 }

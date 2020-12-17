@@ -88,6 +88,8 @@ namespace JBTypesMethods {
     JBTypes::vec3f        normalize(const JBTypes::vec3f& vec);
     void                  displayInstallError();
 
+    std::string           colorToString(const JBTypes::Color color);
+
 }
 
 #endif /* TYPES_H */
