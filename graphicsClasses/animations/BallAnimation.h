@@ -35,15 +35,11 @@ private:
     //--------ATTRIBUTES-----------//
     const BallState&              _ball;
     size_t                        _computedRotations;
-    //glm::mat4                     _rotationBeforeMovement;
-    //glm::vec3                     _scaleBeforeMovement;
-    //glm::vec3                     _translationBeforeMovement;
 
     glm::mat4                     _scale;
     glm::mat4                     _rotation;
     glm::mat4                     _coveredRotation;
 
-    Ball::State                   _referenceState;
     JBTypes::timePointMs          _referenceTimePointAction;
 };
 

@@ -19,21 +19,14 @@
 BallAnimation::BallAnimation(const BallState &ball):
     _ball(ball) ,
     _computedRotations(0),
-    //_rotationBeforeMovement(1.f),
-    //_scaleBeforeMovement(1.f),
-    //_translationBeforeMovement(0.f),
     _scale(1.f),
     _rotation(1.f),
     _coveredRotation(1.f),
-    _referenceState(ball.state()),
     _referenceTimePointAction(ball.getTimeAction())
 {
 }
 
 void BallAnimation::animationAlive() {
-
-    //const float timeSecondsSinceAction =
-    //JBTypesMethods::getTimeSecondsSinceTimePoint(_referenceTimePointAction);
 
     // rotation
     constexpr float sizeBlock = 1.f; // TODO: use a member in Block or map class
@@ -85,35 +78,27 @@ void BallAnimation::animationBursting() {
     constexpr float durationBursting      = 0.07f;
     constexpr float radiusScalarBursting  = 2.5f;
     const float timeSecondsSinceStateOfLife =
-    JBTypesMethods::getTimeSecondsSinceTimePoint(
-                                                 _ball.getTimeStateOfLife());
+        JBTypesMethods::getTimeSecondsSinceTimePoint(
+            _ball.getTimeStateOfLife()
+        );
     
-    const float t = timeSecondsSinceStateOfLife /
-    durationBursting ;
+    const float t = timeSecondsSinceStateOfLife / durationBursting;
     
     const float scaleBursting = (t > 1.f)
-    ? 0.f
-    : (1.f-t) + radiusScalarBursting * t;
+        ? 0.f
+        : (1.f-t) + radiusScalarBursting * t;
     
     const glm::vec3 scaleVec3   = glm::vec3(scaleBursting);
     const glm::mat4 scaleMatrix = glm::scale(scaleVec3);
     
     _scale                      = scaleMatrix;
-    //_scaleBeforeMovement        = scaleVec3;
-    
 }
 
 void BallAnimation::updateTrans() {
     
     if (_ball.getTimeAction() > _referenceTimePointAction) {
         _referenceTimePointAction = _ball.getTimeAction();
-        if (_ball.state() == _referenceState) {
-        //_scaleBeforeMovement        = glm::vec3(1.f,1.f,1.f);
-        //_translationBeforeMovement  = glm::vec3(0.f,0.f,0.f);
-        }
-        else _referenceState = _ball.state();
     }
-
     if (_ball.stateOfLife() == Ball::StateOfLife::Normal || _ball.stateOfLife()
              == Ball::StateOfLife::Burning || _ball.stateOfLife() == 
              Ball::StateOfLife::Sliding) {

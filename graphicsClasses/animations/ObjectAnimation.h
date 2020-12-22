@@ -33,12 +33,14 @@ public:
     void                                transAfterObtaining();
 private:
 
-    const ObjectState&                object()                          const;
+    const ObjectState&                  object()                          const;
     //--------ATTRIBUTES-----------//
-    const ObjectState&                _object;
+    const ObjectState&                  _object;
     const JBTypes::Dir                  _direction;
     const glm::mat4                     _translationToBlock;
     const glm::mat4                     _initialRotation;
+    const glm::mat4                     _tToBlockTCenterInitRotTOnBlock;
+    const glm::mat4                     _tToBlockTOnBlock;
 
     glm::mat4                           _movingRotation;
     glm::mat4                           _movingScale;

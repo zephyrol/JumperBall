@@ -5,6 +5,7 @@
  * Created on 22 aout 2020, 18h15
  */
 #include "scene/mesh/MeshGenerator.h"
+#include "animations/EnemyAnimation.h"
 
 vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState &enemy)
 {
@@ -112,8 +113,7 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState &enemy)
         }
     }
     else if (enemy.category() == Map::EnemyTypes::ThornBall ||
-             enemy.category() == Map::EnemyTypes::DarkBall)
-    {
+             enemy.category() == Map::EnemyTypes::DarkBall) {
 
         const JBTypes::Dir &currentDir = enemy.direction();
         const glm::mat4 rotationLocal =

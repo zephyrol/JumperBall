@@ -5,6 +5,7 @@
  * Created on 22 aout 2020, 18h15
  */
 #include "scene/mesh/MeshGenerator.h"
+#include "animations/BlockAnimation.h"
 
 vecMeshComponent_sptr MeshGenerator::genBlock (
     const MapState& map, size_t index
@@ -107,7 +108,6 @@ vecMeshComponent_sptr MeshGenerator::genBlock (
     for(MeshComponent_sptr m : jumperComponents) {
         components.push_back(std::move(m));
     }
-
 
     for (size_t i = 0; i < Block::objectsNumber ; ++i) {
         const std::shared_ptr<const ObjectState> object =

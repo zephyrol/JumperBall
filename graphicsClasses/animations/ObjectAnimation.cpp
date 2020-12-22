@@ -21,6 +21,9 @@ _object(object),
 _direction(dir),
 _translationToBlock(glm::translate(blockPosition)),
 _initialRotation(Utility::rotationUpToDir(_direction)),
+_tToBlockTCenterInitRotTOnBlock(_translationToBlock * translationCenter *
+        _initialRotation * translationOnBlock),
+_tToBlockTOnBlock(_translationToBlock * translationOnBlock),
 _movingRotation(1.f),
 _movingScale(1.f),
 _movingTranslation(1.f)
@@ -34,13 +37,10 @@ void ObjectAnimation::updateTrans() {
         transBeforeObtaining();
     }
 
-    _model = _translationToBlock * translationCenter *
-            _initialRotation * translationOnBlock  *
-            _movingTranslation *  _movingRotation * _movingScale;
+    _model = _tToBlockTCenterInitRotTOnBlock * _movingTranslation * 
+        _movingRotation * _movingScale;
     _scaleRotation = _initialRotation * _movingRotation;
-    _translation = _movingTranslation * _translationToBlock *
-        translationOnBlock;
-
+    _translation = _movingTranslation * _tToBlockTOnBlock;
 }
 
 void ObjectAnimation::transBeforeObtaining() {
@@ -61,9 +61,9 @@ void ObjectAnimation::transAfterObtaining() {
 
     const float seconds = JBTypesMethods::getTimeSecondsSinceTimePoint(
         _object.timeOfObtaining());
+
     float scaleFactor;
     float translateFactor;
-
     if (seconds < thresholdSecondStep) {
         translateFactor = seconds/thresholdSecondStep;
         scaleFactor = 1.f;

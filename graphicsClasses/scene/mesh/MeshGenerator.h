@@ -14,7 +14,7 @@
 #ifndef MESHGENERATOR_H
 #define MESHGENERATOR_H
 #include "Utility.h"
-#include <scene/objects/Object.h>
+#include <scene/BallState.h>
 #include <scene/MapState.h>
 #include <scene/objects/ObjectState.h>
 #include <scene/enemies/EnemyState.h>
@@ -25,10 +25,6 @@
 #include "geometry/Quad.h"
 #include "geometry/QuadState.h"
 #include "StarState.h"
-#include "animations/BallAnimation.h"
-#include "animations/ObjectAnimation.h"
-#include "animations/BlockAnimation.h"
-#include "animations/EnemyAnimation.h"
 #include "FrameBuffer.h"
 #include "MeshComponent.h"
 
@@ -43,7 +39,7 @@ namespace MeshGenerator {
     vecMeshComponent_sptr  genObject(const ObjectState& obj,
                                     const glm::vec3& position,
                                     const JBTypes::Dir& dir);
-    
+
     vecMeshComponent_sptr  genBlock(const MapState &map, size_t index);
     vecMeshComponent_sptr  genSharps(const BlockState& BlockState,
                                     const Map::BlockTypes& type,

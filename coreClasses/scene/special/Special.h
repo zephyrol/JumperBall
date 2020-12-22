@@ -23,7 +23,8 @@ public:
         const JBTypes::Color &color,
         const Block &tieBlock,
         const JBTypes::Dir &dir,
-        const std::array<unsigned int,3>& position
+        const std::array<unsigned int,3>& position,
+        bool isActivated = true
         );
 
     virtual ~Special() = default;
@@ -40,6 +41,7 @@ private:
     const JBTypes::Dir _direction;
     const JBTypes::Color _color;
     const JBTypes::vec3f _position;
+    bool _isActivated;
 
     JBTypes::vec3f initPosition(const std::array<unsigned int,3>& position)
                                                                           const;

@@ -12,8 +12,7 @@ _category(category),
 _color(special.getColor()),
 _creationTime(special.creationTime()),
 _direction(special.direction()),
-_position(special.position()),
-_transform({0.f,0.f,0.f,0.f,0.f,0.f,1.f,1.f,1.f}) // TODO: feel it !
+_position(special.position())
 {}
 
 const JBTypes::Color& SpecialState::color() const {
@@ -32,10 +31,11 @@ const JBTypes::vec3f& SpecialState::position() const {
    return _position; 
 }
 
-const std::array<float,9>& SpecialState::transform() const {
-    return _transform;
+const JBTypes::timePointMs& SpecialState::creationTime() const {
+   return _creationTime;
 }
 
-void SpecialState::update() 
-{}
+void SpecialState::update() {
+
+}
 

@@ -6,6 +6,7 @@
  */
 
 #include "scene/mesh/MeshGenerator.h"
+#include "animations/BallAnimation.h"
 
 vecMeshComponent_sptr MeshGenerator::genComponents(const BallState& ball) {
 

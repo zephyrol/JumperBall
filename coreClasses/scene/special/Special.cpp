@@ -15,13 +15,15 @@
 Special::Special(const JBTypes::Color &color,
         const Block &tieBlock,
         const JBTypes::Dir &dir,
-        const std::array<unsigned int,3>& position
+        const std::array<unsigned int,3>& position,
+        bool isActivated
         ):
         _tieBlock(tieBlock),
         _creationTime(JBTypesMethods::getTimePointMSNow()),
         _direction(dir),
         _color(color),
-        _position(initPosition(position))
+        _position(initPosition(position)),
+        _isActivated(isActivated)
 {
 }
 

@@ -5,6 +5,7 @@
  * Created on 22 aout 2020, 18h15
  */
 #include "scene/mesh/MeshGenerator.h"
+#include "animations/ObjectAnimation.h"
 
 vecMeshComponent_sptr MeshGenerator::genObject(
                                 const ObjectState& obj,

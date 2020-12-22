@@ -9,7 +9,6 @@
 #include "Special.h"
 #include <scene/Map.h>
 
-
 class SpecialState
 {
 public:
@@ -18,7 +17,7 @@ public:
     const Map::SpecialTypes& category() const;
     const JBTypes::Dir& direction() const;
     const JBTypes::vec3f& position() const;
-    const std::array<float,9>& transform() const;
+    const JBTypes::timePointMs& creationTime() const;
     void update();
 
 private:
@@ -28,7 +27,6 @@ private:
     const JBTypes::timePointMs& _creationTime;
     const JBTypes::Dir& _direction;
     JBTypes::vec3f _position;
-    std::array<float,9> _transform;
 };
 
 #endif // SPECIALSTATE_H
