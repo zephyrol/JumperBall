@@ -16,7 +16,7 @@ public:
     const JBTypes::Color& color() const;
     const Map::SpecialTypes& category() const;
     const JBTypes::Dir& direction() const;
-    const JBTypes::vec3f& position() const;
+    const JBTypes::vec3f& position3D() const;
     const JBTypes::timePointMs& creationTime() const;
     void update();
 
@@ -26,7 +26,7 @@ private:
     const JBTypes::Color _color;
     const JBTypes::timePointMs& _creationTime;
     const JBTypes::Dir& _direction;
-    JBTypes::vec3f _position;
+    JBTypes::vec3f _position3D;
 };
 
 #endif // SPECIALSTATE_H

@@ -30,7 +30,7 @@ bool GhostBlock::stillExists() const
 Block::Effect GhostBlock::interaction( const JBTypes::Dir& ,
                                         const JBTypes::timePointMs& currentTime,
                                         const JBTypes::vec3f& ,
-                                        const std::array<unsigned int, 3>& ) {
+                                        const JBTypes::vec3ui& ) {
     const auto passedTime = currentTime - _creationTime;
     const float fPassedTime =
             JBTypesMethods::getFloatFromDurationMS(passedTime);

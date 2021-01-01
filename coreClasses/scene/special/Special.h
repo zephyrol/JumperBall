@@ -23,7 +23,7 @@ public:
         const JBTypes::Color &color,
         const Block &tieBlock,
         const JBTypes::Dir &dir,
-        const std::array<unsigned int,3>& position,
+        const JBTypes::vec3ui& position,
         bool isActivated = true
         );
 
@@ -32,18 +32,20 @@ public:
     const JBTypes::Color& getColor() const;
     const JBTypes::timePointMs &creationTime() const;
     const JBTypes::Dir &direction() const;
-    const JBTypes::vec3f& position() const;
-    virtual SpecialEffect interaction() const = 0;
+    const JBTypes::vec3f& position3D() const;
+    const JBTypes::vec3ui& position() const;
+    virtual SpecialEffect getEffect() const = 0;
 
 private:
     const Block& _tieBlock;
     const JBTypes::timePointMs _creationTime;
     const JBTypes::Dir _direction;
     const JBTypes::Color _color;
-    const JBTypes::vec3f _position;
+    const JBTypes::vec3ui _position;
+    const JBTypes::vec3f _position3D;
     bool _isActivated;
 
-    JBTypes::vec3f initPosition(const std::array<unsigned int,3>& position)
+    JBTypes::vec3f initPosition(const JBTypes::vec3ui& position)
                                                                           const;
 };
 

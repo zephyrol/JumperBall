@@ -39,6 +39,8 @@ Ball::Ball(Map& map):
         _timeStateOfLife(std::chrono::system_clock::now()),
         _burnCoefficientTrigger(0.f),
         _burnCoefficientCurrent(0.f),
+        _teleportationCoefficient(0.f),
+        _teleportationBlockDestination(0),
         _jumpRequest(false),
         _timeJumpRequest(),
         _currentCoveredRotation{},
@@ -170,6 +172,29 @@ void Ball::stay() noexcept {
 
 void Ball::fall() noexcept {
     _state = Ball::State::Falling;
+    setTimeActionNow();
+}
+
+void Ball::teleport(const JBTypes::Color& col) noexcept
+{
+    switch (col) {
+        case JBTypes::Color::None:
+            break;
+        case JBTypes::Color::Red:
+            _state = Ball::State::RedTeleporting;
+            break;
+        case JBTypes::Color::Green:
+            _state = Ball::State::GreenTeleporting;
+            break;
+        case JBTypes::Color::Blue:
+            _state = Ball::State::BlueTeleporting;
+            break;
+        case JBTypes::Color::Yellow:
+            _state = Ball::State::YellowTeleporting;
+            break;
+        default :
+            break;
+    }
     setTimeActionNow();
 }
 
@@ -351,6 +376,22 @@ float Ball::getCrushingCoefficient() const noexcept {
     }
 }
 
+float Ball::getTeleportationCoefficient() const noexcept {
+    return _teleportationCoefficient; 
+}
+
+JBTypes::Color Ball::getTeleportationColor() const noexcept {
+    if (_state == Ball::State::RedTeleporting ) {
+        return JBTypes::Color::Red;
+    } else if (_state == Ball::State::GreenTeleporting ) {
+        return JBTypes::Color::Green;
+    } else if (_state == Ball::State::BlueTeleporting ) {
+        return JBTypes::Color::Blue;
+    } else if (_state == Ball::State::YellowTeleporting ) {
+        return JBTypes::Color::Yellow;
+    } else return JBTypes::Color::None;
+}
+
 void Ball::isFallingIntersectionBlock() noexcept {
     const float fDifference = getTimeSecondsSinceAction();
     const bool descendingJumpPhase = _state == Ball::State::Jumping &&
@@ -378,8 +419,7 @@ void Ball::isFallingIntersectionBlock() noexcept {
         _currentBlockY = positionBlockPtr->at(1);
         _currentBlockZ = positionBlockPtr->at(2);
         stay();
-        blockEvent(_map.getBlock(
-            _currentBlockX, _currentBlockY, _currentBlockZ));
+        blockEvent({_currentBlockX, _currentBlockY, _currentBlockZ});
         update();
     }
 }
@@ -492,7 +532,16 @@ JBTypes::vec3f Ball::get3DPosStayingBall() const {
     return {x,y,z};
 }
 
-void Ball::blockEvent(const std::shared_ptr<Block>& block) noexcept {
+
+void Ball::blockEvent(const JBTypes::vec3ui& blockPos) noexcept
+{
+
+    const auto& block = 
+        _map.getBlock(blockPos.at(0),blockPos.at(1),blockPos.at(2));
+    if (!block) {
+        return;
+    }
+
     if (_stateOfLife != StateOfLife::Bursting && block) {
         const Block::Effect effect = block->detectionEvent(_currentSide,
             JBTypesMethods::getTimePointMsFromTimePoint(_timeAction));
@@ -519,9 +568,22 @@ void Ball::blockEvent(const std::shared_ptr<Block>& block) noexcept {
         } else {
             _stateOfLife = StateOfLife::Normal;
         }
-    }
-}
 
+        //Specials
+        for (const Map::SpecialInfo &specialInfo : _map.getSpecialInfo()) {
+            const std::shared_ptr<const Special> &special = specialInfo.special;
+            if (special && blockPos == special->position() &&
+                _currentSide == special->direction()) {
+                if (specialInfo.type == Map::SpecialTypes::Teleporter) {
+                    teleport(special->getColor());
+                } else { // Switch Button
+                    _map.switchColor(special->getColor());
+                }
+            }
+        }
+    }
+
+}
 
 void Ball::jumpingUpdate() noexcept {
     const ClassicalMechanics::physics2DVector pos2D =
@@ -582,9 +644,7 @@ void Ball::movingUpdate() noexcept {
         _3DPosY = position3D.y;
         _3DPosZ = position3D.z;
         stay();
-        blockEvent(
-            _map.getBlock(_currentBlockX, _currentBlockY, _currentBlockZ)
-            );
+        blockEvent({_currentBlockX, _currentBlockY, _currentBlockZ});
         update();
     }
     else {
@@ -643,8 +703,7 @@ void Ball::movingUpdate() noexcept {
     }
 }
 
-void Ball::burningUpdate() noexcept
-{
+void Ball::burningUpdate() noexcept {
     if (_stateOfLife != StateOfLife::Bursting) {
         const float time = getTimeSecondsSinceStateOfLife();
         if ( _stateOfLife == StateOfLife::Burning &&
@@ -673,8 +732,33 @@ void Ball::burningUpdate() noexcept
     }
 }
 
-JBTypes::vec3f Ball::getRotationAxis() const noexcept
-{
+void Ball::teleportingUpdate(const JBTypes::Color&) noexcept {
+
+    /*const size_t blockIndex = 
+        _map.getIndex({_currentBlockX,_currentBlockY,_currentBlockZ});
+
+    const auto& blockTeleporter = _map.getBlocksTeleporters();
+    std::pair<size_t,size_t> indices = blockTeleporter.at(color);
+    if (blockIndex == indices.first) { 
+    } else if (blockIndex == indices.second) {
+    } else {
+    } */
+    constexpr float animationDuration = 1.f;
+
+    const float timeSinceAction = getTimeSecondsSinceAction();
+
+    if (timeSinceAction > animationDuration) {
+        _teleportationCoefficient = 0.f;
+        stay();
+    } else if (timeSinceAction > (animationDuration / 2.f)){
+        const float timeStep2 = timeSinceAction - (animationDuration / 2.f);
+        _teleportationCoefficient = 1.f - (timeStep2 / (animationDuration / 2.f));
+    } else {
+        _teleportationCoefficient = timeSinceAction  / (animationDuration / 2.f);
+    }
+}
+
+JBTypes::vec3f Ball::getRotationAxis() const noexcept {
     return JBTypesMethods::cross(
         JBTypesMethods::directionAsVector(_currentSide),
         JBTypesMethods::directionAsVector(_lookTowards));
@@ -696,6 +780,14 @@ void Ball::update() noexcept{
         case Ball::State::TurningRight: turningUpdate(); break;
         case Ball::State::Staying: stayingUpdate(); break;
         case Ball::State::Moving: movingUpdate(); break;
+        case Ball::State::RedTeleporting:
+            teleportingUpdate(JBTypes::Color::Red); break;
+        case Ball::State::GreenTeleporting:
+            teleportingUpdate(JBTypes::Color::Green); break;
+        case Ball::State::BlueTeleporting:
+            teleportingUpdate(JBTypes::Color::Blue); break;
+        case Ball::State::YellowTeleporting:
+            teleportingUpdate(JBTypes::Color::Yellow); break;
         default: break;
     }
     mapInteraction();

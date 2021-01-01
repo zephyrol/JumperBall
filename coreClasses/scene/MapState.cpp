@@ -52,7 +52,7 @@ unsigned int MapState::deep() const
     return _deep;
 }
 
-Map::BlockTypes MapState::getType(const std::array<unsigned int, 3>& position)
+Map::BlockTypes MapState::getType(const JBTypes::vec3ui& position)
 const {
     return _map.getType(position);
 }
@@ -61,7 +61,7 @@ const std::vector<Map::BlockInfo>& MapState::blocksInfo() const {
     return _map.blocksInfo();
 }
 
-std::array<unsigned int, 3> MapState::getBlockCoords(size_t index) const {
+JBTypes::vec3ui MapState::getBlockCoords(size_t index) const {
     return _map.getBlockCoords(index);
 }
 

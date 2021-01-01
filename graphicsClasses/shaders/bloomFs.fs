@@ -6,6 +6,9 @@ uniform sampler2D frameBluredTexture;
 uniform float     averageLuminance;
 uniform float     whiteLuminance;
 
+uniform float     teleportationCoefficient;
+uniform vec3      flashColor;
+
 in      vec2      fs_vertexUVs;
 out     vec4      pixelColor;
 
@@ -57,7 +60,8 @@ vec3 toneMappingOperator(vec3 xyYColor) {
 void main() {
     vec4 baseRGBColor = texture(frameSceneHDRTexture,fs_vertexUVs);
     vec3 basexyYColor = convertRBGToCIExyY(baseRGBColor.xyz); 
-    vec3 toneMappedRGBColor = toneMappingOperator (basexyYColor);
-    pixelColor = vec4(toneMappedRGBColor,baseRGBColor.a) + 
+    vec3 toneMappedRGBColor = toneMappingOperator(basexyYColor);
+    pixelColor = vec4(toneMappedRGBColor, baseRGBColor.a) + 
         texture(frameBluredTexture, fs_vertexUVs);
+    pixelColor = mix(pixelColor, vec4(flashColor, 1.f), teleportationCoefficient);
 }

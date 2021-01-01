@@ -26,6 +26,8 @@ namespace Utility {
     glm::vec3                         convertCIExyYToRGB(const glm::vec3&
                                                             CIExyYColor);
 
+    glm::vec3                         colorAsVec3(const JBTypes::Color& color);
+
     float                             getLuminance(const glm::vec3& rgbColor);
     std::vector<GLfloat>              uniColorsCube (const glm::vec3& color);
 

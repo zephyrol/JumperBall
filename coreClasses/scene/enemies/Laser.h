@@ -15,7 +15,7 @@ public:
 
     Laser(const JBTypes::Color& color, 
           const Block& tieBlock, 
-          const std::array<unsigned int,3>& initialPosition,
+          const JBTypes::vec3ui& initialPosition,
           const JBTypes::Dir& dir,
           size_t length);
 

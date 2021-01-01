@@ -37,7 +37,7 @@ public:
                                     const JBTypes::Dir& ballDir,
                                     const JBTypes::timePointMs& currentTime,
                                     const JBTypes::vec3f& posBall,
-                                    const std::array<unsigned int,3>& posBlock);
+                                    const JBTypes::vec3ui& posBlock);
     virtual Effect                    detectionEvent(
                                         const JBTypes::Dir& ballDir,
                                         const JBTypes::timePointMs& currentTime
@@ -56,7 +56,7 @@ public:
     virtual bool                      hasInteraction()                    const;
     virtual bool                      hasObjects()                        const;
     virtual void                      catchObject(
-                                const std::array<unsigned int, 3>&
+                                const JBTypes::vec3ui&
                                     blockPosition,
                                 const JBTypes::vec3f& entityPosition,
                                 float radiusEntity);
@@ -64,7 +64,7 @@ public:
 
     //--------STATIC METHODS-------//
     static JBTypes::vec3f             objectPosition
-                                        (const std::array<unsigned int,3>& pos,
+                                        (const JBTypes::vec3ui& pos,
                                          unsigned int dirUint);
     static constexpr size_t           objectsNumber = 6;
 

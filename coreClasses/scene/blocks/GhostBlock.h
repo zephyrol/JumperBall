@@ -25,7 +25,7 @@ public:
                                               const JBTypes::timePointMs&
                                               currentTime,
                                               const JBTypes::vec3f& posBall,
-                                              const std::array<unsigned int,3>& posBlock)
+                                              const JBTypes::vec3ui& posBlock)
     override;
 
 private:

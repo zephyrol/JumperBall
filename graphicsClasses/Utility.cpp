@@ -51,10 +51,6 @@ std::string Utility::readFileSrc(const std::string& filePath) {
             shaderFile.close();
         }
     }
-
-
-
-
     if (!foundFile) {
         std::cerr << "Could not open file " << filePath << std::endl;
     }
@@ -260,4 +256,17 @@ GLsizei Utility::getWidthFromHeight(unsigned int resolutionY) {
     return static_cast<GLsizei> ( static_cast<float>(resolutionY) *
                                   static_cast<float>(windowResolutionX) /
                                   static_cast<float>(windowResolutionY));
+}
+
+glm::vec3 Utility::colorAsVec3(const JBTypes::Color &color)
+{
+    switch(color) {
+        case JBTypes::Color::Red: return glm::vec3(1.f,0.f,0.f); break;
+        case JBTypes::Color::Green: return glm::vec3(0.f,1.f,0.f); break;
+        case JBTypes::Color::Blue: return glm::vec3(0.f,0.f,1.f); break;
+        case JBTypes::Color::Yellow: return glm::vec3(1.f,1.f,0.f); break;
+        case JBTypes::Color::None : return glm::vec3(0.f,0.f,0.f); break;
+        default: return glm::vec3(0.f,0.f,0.f); break;
+    }
+    return glm::vec3(0.f,0.f,0.f);
 }

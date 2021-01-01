@@ -11,7 +11,7 @@ vecMeshComponent_sptr MeshGenerator::genBlock (
     const MapState& map, size_t index
     ) {
 
-    const std::array<unsigned int,3> position = map.getBlockCoords(index);
+    const JBTypes::vec3ui position = map.getBlockCoords(index);
     const Map::BlockTypes blockType = map.getType(position);
 
     const std::shared_ptr<BlockState> block = map.blockStates().at(index);
@@ -23,7 +23,7 @@ vecMeshComponent_sptr MeshGenerator::genBlock (
 
     std::string strSidesInfo {};
     std::array<bool,numberOfFaces> boolSidesInfo {}; // true <=> close, false <=> open
-    const std::array<std::array<unsigned int, 3>,numberOfFaces > positions {{
+    const std::array<JBTypes::vec3ui,numberOfFaces > positions {{
         {position.at(0),position.at(1),position.at(2) - 1},
         {position.at(0),position.at(1),position.at(2) + 1},
         {position.at(0) + 1,position.at(1),position.at(2)},
@@ -33,7 +33,7 @@ vecMeshComponent_sptr MeshGenerator::genBlock (
     }};
 
     for (size_t i = 0; i < numberOfFaces; ++i) {
-        const std::array<unsigned int, 3>& neighbourgPosition = positions.at(i);
+        const JBTypes::vec3ui& neighbourgPosition = positions.at(i);
         const Map::BlockTypes typeNeighbourg =
                 map.getType(neighbourgPosition);
         if (typeNeighbourg != Map::BlockTypes::Brittle &&

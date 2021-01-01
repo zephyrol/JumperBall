@@ -155,6 +155,14 @@ void SceneRendering::bloomEffect( GLuint hdrSceneTexture,
 
     _spBloom.bindUniform ( "averageLuminance", 1.8f);
     _spBloom.bindUniform ( "whiteLuminance", 0.f);
+
+    // Post process effects
+    const BallState& ball = _meshBall.getInstanceFrame();
+    _spBloom.bindUniform("teleportationCoefficient", ball.teleportationCoeff());
+    _spBloom.bindUniform(
+        "flashColor", Utility::colorAsVec3(ball.teleportationColor())
+    );
+
     _meshQuadFrame.render(_spBloom);
 }
 
@@ -224,7 +232,6 @@ void SceneRendering::updateUniform()
 
     _uniformVec3["positionCamera"]  = _camera.pos();
     //uniform for Star View SceneRendering
-
     _light.update();
 }
 

@@ -45,7 +45,7 @@ const std::array<float, 6>& Block::localTransform() const {
 Block::Effect Block::interaction(const JBTypes::Dir&,
                         const JBTypes::timePointMs&,
                         const JBTypes::vec3f&,
-                        const std::array<unsigned int, 3>&) {
+                        const JBTypes::vec3ui&) {
     return Block::Effect::Nothing;
 }
 
@@ -85,7 +85,7 @@ bool Block::hasObjects() const
    return _hasObjects;
 }
 
-void Block::catchObject( const std::array<unsigned int, 3>& blockPosition,
+void Block::catchObject( const JBTypes::vec3ui& blockPosition,
                          const JBTypes::vec3f& entityPosition,
                          float radiusEntity) 
 {
@@ -105,7 +105,7 @@ const bool& Block::isFixed() const
 }
 
 JBTypes::vec3f Block::objectPosition(
-                 const std::array<unsigned int, 3>& pos, unsigned int dirUint) {
+                 const JBTypes::vec3ui& pos, unsigned int dirUint) {
 
     constexpr float offsetPosition = 1.f; 
     float x = static_cast<float> (pos.at(0)+ 0.5f);

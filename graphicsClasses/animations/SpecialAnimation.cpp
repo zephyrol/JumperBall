@@ -36,14 +36,14 @@ void SpecialAnimation::updateTrans()
     } else {
         transSwitch();
     }
-    _model =  _movingTranslation * _initialTranslationRotation *  
+    _model = _movingTranslation * _initialTranslationRotation *  
         _movingRotation * _movingScale;
-    _scaleRotation =   _initialRotation * _movingRotation;
-    _translation =  _movingTranslation * _initialTranslation;
+    _scaleRotation = _initialRotation * _movingRotation;
+    _translation = _movingTranslation * _initialTranslation;
 }
 
 glm::mat4 SpecialAnimation::initInitialTranslation() const {
-    const JBTypes::vec3f& position = _special.position();
+    const JBTypes::vec3f& position = _special.position3D();
     return glm::translate(glm::vec3(position.x, position.y, position.z));
 }
 

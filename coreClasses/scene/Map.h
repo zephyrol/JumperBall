@@ -91,28 +91,36 @@ public:
     std::chrono::time_point<std::chrono::system_clock>
                                           timeCreation()                  const;
 
-    std::array<unsigned int, 3>           getBlockCoords(size_t index)    const;
+    JBTypes::vec3ui                       getBlockCoords(size_t index)    const;
     size_t                                getIndex(
-                               const std::array<unsigned int, 3>& coords) const;
+                                           const JBTypes::vec3ui& coords) const;
     BlockTypes                            getType (
-                             const std::array<unsigned int, 3>& position) const;
+                                         const JBTypes::vec3ui& position) const;
     const std::vector<BlockInfo>&         blocksInfo()                    const;
+
+    std::vector<BlockInfo>                getBlocksWithInteraction()      const;
+    std::vector<size_t>                   getBlocksWithObjects()          const;
+    std::vector<size_t>                   getBlocksWithSpecials()         const;
+    std::map<JBTypes::Color, std::pair<size_t,size_t> > 
+                                          getBlocksTeleporters()          const;
+    std::map<JBTypes::Color, bool>        getSpecialStates()              const;
+
+    
+    const std::vector<EnemyInfo>&         getEnemiesInfo()                const;
+    const std::vector<SpecialInfo>&       getSpecialInfo()                const;
 
     //----------METHODS------------//
     Map::Effect                           interaction(
                                   const JBTypes::Dir& ballDir,
                                   const JBTypes::vec3f& posBall, float radius);
+
+    void                                  switchColor(
+                                                   const JBTypes::Color& color);
     std::shared_ptr<Block>                getBlock(int x, int y, int z);
     std::shared_ptr<Block>                getBlock(size_t index);
 
-    std::vector<BlockInfo>                getBlocksWithInteraction()      const;
-    std::vector<BlockInfo>                getBlocksWithObjects()          const;
-    
-    const std::vector<EnemyInfo>&         getEnemiesInfo()                const;
-    const std::vector<SpecialInfo>&       getSpecialInfo()                const;
-
     //--------STATIC METHODS-------//
-    static std::array<unsigned int, 3>    getBlockCoords(size_t index,
+    static JBTypes::vec3ui                getBlockCoords(size_t index,
                                                          unsigned int width,
                                                          unsigned int deep);
 
@@ -122,10 +130,14 @@ private:
     std::vector<std::shared_ptr<Block> >  _blocks;
     std::vector<BlockInfo>                _blocksInfo;
     std::vector<BlockInfo>                _blocksWithInteractionInfo;
-    std::vector<BlockInfo>                _blocksWithObjectsInfo;
+    std::vector<size_t>                   _blocksWithObjectsIndices;
     
     std::vector<EnemyInfo>                _enemies;
-    std::vector<SpecialInfo>              _special;
+
+    std::vector<SpecialInfo>              _specials;
+    std::map<JBTypes::Color, std::pair<size_t,size_t> > 
+                                          _blocksTeleporters;
+    std::map<JBTypes::Color, bool>        _specialsState;
     
     unsigned int                          _width;
     unsigned int                          _height;

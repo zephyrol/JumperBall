@@ -14,7 +14,7 @@ public:
     enum class Effect { Nothing, Burst };
 
     Enemy(const Block& tieBlock,
-          const std::array<unsigned int,3>& initialPosition,
+          const JBTypes::vec3ui& initialPosition,
           const JBTypes::Dir& direction,
           float size,
           size_t length,
@@ -51,7 +51,7 @@ protected:
 
 
 private: 
-    JBTypes::vec3f initPosition(const std::array<unsigned int,3>& position)
+    JBTypes::vec3f initPosition(const JBTypes::vec3ui& position)
                                                                           const;
 
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,

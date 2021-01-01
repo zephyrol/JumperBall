@@ -34,13 +34,15 @@ public:
 
     //------------TYPES------------//
     enum class State              { Staying, Moving, Jumping, 
-                                    TurningLeft, TurningRight, Falling };
+                                    TurningLeft, TurningRight, Falling,
+                                    RedTeleporting, GreenTeleporting,
+                                    BlueTeleporting, YellowTeleporting};
 
     enum class StateOfLife        { Normal, Bursting, Burning, Sliding, Dead };
 
     enum class JumpingType        { Short, Long };
 
-    enum class ActionRequest      { GoStraightAhead, TurnLeft, TurnRight, Jump};
+    enum class ActionRequest      { GoStraightAhead, TurnLeft, TurnRight, Jump };
     enum class NextBlockLocal     { Above, InFrontOf, Same, None };
 
     using shock     =             std::array<unsigned int, 3 > ; 
@@ -80,6 +82,8 @@ public:
                                   getCurrentCoveredRotation()    const noexcept;
     JBTypes::vec3f                movementRotation()             const noexcept;
     float                         getCrushingCoefficient()       const noexcept;
+    float                         getTeleportationCoefficient()  const noexcept;
+    JBTypes::Color                getTeleportationColor()        const noexcept;
 
     //----------METHODS------------//
     void                          update()                             noexcept;
@@ -105,10 +109,9 @@ private:
     //Through the interactions, a ball may modify a map
     Map&                          _map;
 
-    ClassicalMechanics            _mechanicsPatternJumping;
-    ClassicalMechanics            _mechanicsPatternLongJumping;
-    ClassicalMechanics            _mechanicsPatternFalling;
-
+    const ClassicalMechanics      _mechanicsPatternJumping;
+    const ClassicalMechanics      _mechanicsPatternLongJumping;
+    const ClassicalMechanics      _mechanicsPatternFalling;
 
     std::chrono::time_point<std::chrono::system_clock>  
                                   _timeAction;
@@ -120,6 +123,9 @@ private:
 
     //current burnCoefficient
     float                         _burnCoefficientCurrent;
+
+    float                         _teleportationCoefficient;
+    size_t                        _teleportationBlockDestination;
 
     bool                          _jumpRequest;
     JBTypes::timePointMs          _timeJumpRequest;
@@ -149,11 +155,12 @@ private:
     void                          jump()                               noexcept;
     void                          move()                               noexcept;
     void                          fall()                               noexcept;
+    void                          teleport(const JBTypes::Color& col)  noexcept;
     void                          setTimeActionNow()                   noexcept;
     void                          setTimeLifeNow()                     noexcept;
     void                          mapInteraction()                     noexcept;
     void                          blockEvent(
-                                  const std::shared_ptr<Block> &block) noexcept;
+                                      const JBTypes::vec3ui& blockPos) noexcept;
     void                          die()                                noexcept;
     ClassicalMechanics&           getMechanicsJumping()                noexcept;
     void                          isFallingIntersectionBlock()         noexcept;
@@ -165,6 +172,8 @@ private:
     void                          turningUpdate()                      noexcept;
     void                          jumpingUpdate()                      noexcept;
     void                          burningUpdate()                      noexcept;
+    void                          teleportingUpdate(const JBTypes::Color& color)
+                                                                       noexcept;
     
     static const TurnLeft         turnLeftMovement;
     static const TurnRight        turnRightMovement;

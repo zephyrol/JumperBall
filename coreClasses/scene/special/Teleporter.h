@@ -20,10 +20,10 @@ public:
         const JBTypes::Color &color,
         const Block &tieBlock,
         const JBTypes::Dir &dir,
-        const std::array<unsigned int,3>& position
+        const JBTypes::vec3ui& position
         );
 
-    virtual Special::SpecialEffect interaction() const override;
+    virtual Special::SpecialEffect getEffect() const override;
     
 };
 

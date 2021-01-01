@@ -12,7 +12,7 @@ _category(category),
 _color(special.getColor()),
 _creationTime(special.creationTime()),
 _direction(special.direction()),
-_position(special.position())
+_position3D(special.position3D())
 {}
 
 const JBTypes::Color& SpecialState::color() const {
@@ -27,8 +27,8 @@ const JBTypes::Dir& SpecialState::direction() const {
    return _direction;
 }
 
-const JBTypes::vec3f& SpecialState::position() const {
-   return _position; 
+const JBTypes::vec3f& SpecialState::position3D() const {
+   return _position3D; 
 }
 
 const JBTypes::timePointMs& SpecialState::creationTime() const {

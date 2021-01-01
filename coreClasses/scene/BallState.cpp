@@ -19,7 +19,9 @@ BallState::BallState(const Ball& ball):
     _radius(ball.getRadius()),
     _lookTowardsAsVector(ball.lookTowardsAsVector()),
     _currentMovementRotation(ball.movementRotation()),
-    _crushingCoeff(ball.getCrushingCoefficient())
+    _crushingCoeff(ball.getCrushingCoefficient()),
+    _teleportationCoeff(ball.getTeleportationCoefficient()),
+    _teleportationColor(ball.getTeleportationColor())
 {
 }
 
@@ -36,6 +38,8 @@ void BallState::update()
     _lookTowardsAsVector = _ball.lookTowardsAsVector();
     _currentMovementRotation = _ball.movementRotation();
     _crushingCoeff = _ball.getCrushingCoefficient();
+    _teleportationCoeff = _ball.getTeleportationCoefficient();
+    _teleportationColor = _ball.getTeleportationColor();
 }
 
 const JBTypes::vec3f &BallState::get3DPosition() const noexcept {
@@ -84,4 +88,12 @@ const std::vector<JBTypes::Dir>& BallState::coveredRotation() const noexcept {
 
 float BallState::crushingCoeff() const noexcept {
     return _crushingCoeff; 
+}
+
+float BallState::teleportationCoeff() const {
+    return _teleportationCoeff; 
+}
+
+const JBTypes::Color& BallState::teleportationColor() const {
+    return _teleportationColor; 
 }

@@ -23,7 +23,7 @@ Block::Effect SharpBlock::interaction(
         const JBTypes::Dir&,
         const JBTypes::timePointMs&,
         const JBTypes::vec3f& positions,
-        const std::array<unsigned int,3>& posBlock) {
+        const JBTypes::vec3ui& posBlock) {
 
     auto isInSharpZone = [](
     const JBTypes::vec3f& position,

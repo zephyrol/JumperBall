@@ -15,13 +15,13 @@
  Teleporter::Teleporter(const JBTypes::Color &color,
         const Block &tieBlock,
         const JBTypes::Dir &dir,
-        const std::array<unsigned int,3>& position
+        const JBTypes::vec3ui& position
         )
         : Special(color,tieBlock,dir,position)
  {
  }
  
- Special::SpecialEffect Teleporter::interaction() const 
+ Special::SpecialEffect Teleporter::getEffect() const 
  {
      return SpecialEffect::Teleportation;
  }

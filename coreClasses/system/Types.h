@@ -47,9 +47,10 @@ namespace JBTypes {
 
     using Dir = Direction;
 
-    struct vec3f {float x; float y; float z;};
-    struct vec2f {float x; float y;};
+    struct vec3f { float x; float y; float z; };
+    struct vec2f { float x; float y; };
 
+    using vec3ui = std::array<unsigned int, 3>;
     using timePointMs =         std::chrono::time_point <
                                     std::chrono::system_clock,
                                     std::chrono::duration <

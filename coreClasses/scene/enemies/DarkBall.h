@@ -13,7 +13,7 @@
 class DarkBall : public Enemy{
 public:
     DarkBall(const Block& tieBlock, 
-             const std::array<unsigned int,3>& initialPosition,
+             const JBTypes::vec3ui& initialPosition,
              const JBTypes::Dir& dir,
              const JBTypes::Dir& movementDirection,
              size_t nbOfJumps);

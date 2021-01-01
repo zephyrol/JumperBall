@@ -26,7 +26,7 @@ BrittleBlock::BrittleBlock():
 Block::Effect BrittleBlock::interaction( const JBTypes::Dir& ,
                                 const JBTypes::timePointMs& currentTime, 
                                 const JBTypes::vec3f& ,
-                                const std::array<unsigned int, 3>& ) {
+                                const JBTypes::vec3ui& ) {
 
     constexpr float timeToFall = 1.f;
     _timeUpdate = currentTime;

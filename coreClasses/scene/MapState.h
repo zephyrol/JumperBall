@@ -20,10 +20,10 @@ public:
     unsigned int width() const;
     unsigned int height() const;
     unsigned int deep() const;
-    Map::BlockTypes getType( const std::array<unsigned int, 3>& position
+    Map::BlockTypes getType( const JBTypes::vec3ui& position
                             ) const;
     const std::vector<Map::BlockInfo>& blocksInfo() const;
-    std::array<unsigned int, 3> getBlockCoords(size_t index) const;
+    JBTypes::vec3ui getBlockCoords(size_t index) const;
     const std::vector<std::shared_ptr<BlockState> > &blockStates() const;
     const std::vector<std::shared_ptr<EnemyState> > &enemiesStates() const;
     const std::vector<std::shared_ptr<SpecialState> > &specialStates() const;

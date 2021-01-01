@@ -8,7 +8,7 @@
 #include "Enemy.h"
 
 Enemy::Enemy(const Block& tieBlock,
-             const std::array<unsigned int,3>& initialPosition,
+             const JBTypes::vec3ui& initialPosition,
              const JBTypes::Dir& direction,
              float size,
              size_t length,
@@ -50,7 +50,7 @@ size_t Enemy::length() const {
     return _length;
 }
 
-JBTypes::vec3f Enemy::initPosition(const std::array<unsigned int,3>& position)
+JBTypes::vec3f Enemy::initPosition(const JBTypes::vec3ui& position)
                                                                          const {
     constexpr float sizeBlock = 1.f;
     constexpr float offset = sizeBlock / 2.f;

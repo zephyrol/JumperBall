@@ -23,9 +23,11 @@ Map::Map(Map::MapInfo&& mapInfo):
     _blocks(std::move(mapInfo.blocks)),
     _blocksInfo(std::move(mapInfo.blocksInfo)),
     _blocksWithInteractionInfo(getBlocksWithInteraction()),
-    _blocksWithObjectsInfo(getBlocksWithObjects()),
+    _blocksWithObjectsIndices(getBlocksWithObjects()),
     _enemies(std::move(mapInfo.enemiesInfo)),
-    _special(std::move(mapInfo.specialInfo)),
+    _specials(std::move(mapInfo.specialInfo)),
+    _blocksTeleporters(getBlocksTeleporters()),
+    _specialsState(getSpecialStates()),
     _width (std::move(mapInfo.width)),
     _height (std::move(mapInfo.height)),
     _deep (std::move(mapInfo.deep)),
@@ -45,26 +47,25 @@ Map::Map(Map::MapInfo&& mapInfo):
     },_blocksWithInteractionInfo.size()),
     _objectsInteractions([this](size_t blockNumber) {
         const std::shared_ptr<Block>& block =
-            getBlock(_blocksWithObjectsInfo.at(blockNumber).index);
+            getBlock(_blocksWithObjectsIndices.at(blockNumber));
         if (block->hasObjects()) {
             block->catchObject(
-                getBlockCoords(_blocksWithObjectsInfo.at(blockNumber).index),
-                _posBallInteractions,_radiusInteractions );
+                getBlockCoords(_blocksWithObjectsIndices.at(blockNumber)),
+                _posBallInteractions,_radiusInteractions);
         }
-    },_blocksWithObjectsInfo.size()),
+    },_blocksWithObjectsIndices.size()),
     _enemiesInteractions([this](size_t enemyNumber) {
         const Map::EnemyInfo enemyInfo = _enemies.at(enemyNumber);
         const std::shared_ptr<Enemy> enemy = enemyInfo.enemy;
         return enemy->update(_posBallInteractions, _radiusInteractions);
     },_enemies.size()),
     _dirBallInteractions(JBTypes::Dir::North),
-    _posBallInteractions({0.f,0.f,0.f}),
+    _posBallInteractions({ 0.f, 0.f, 0.f }),
     _radiusInteractions(0.f),
     _timeInteractions() {
 }
 
-
-std::shared_ptr<Block> Map::getBlock(int x, int y, int z){
+std::shared_ptr<Block> Map::getBlock(int x, int y, int z) {
     std::shared_ptr<const Block> constBlock =
             static_cast<const Map&>(*this).getBlock(x,y,z);
 
@@ -79,8 +80,7 @@ std::shared_ptr<Block> Map::getBlock(size_t index)
     return std::const_pointer_cast<Block> (constBlock);
 }
 
-std::vector<Map::BlockInfo> Map::getBlocksWithInteraction() const
-{
+std::vector<Map::BlockInfo> Map::getBlocksWithInteraction() const {
     std::vector<Map::BlockInfo> blocksWithInteraction;
     for (unsigned int i = 0 ; i < _blocksInfo.size(); ++i) {
         const std::shared_ptr<const Block>& block =
@@ -92,17 +92,61 @@ std::vector<Map::BlockInfo> Map::getBlocksWithInteraction() const
     return blocksWithInteraction;
 }
 
-std::vector<Map::BlockInfo> Map::getBlocksWithObjects() const
-{
-    std::vector<Map::BlockInfo> blocksWithObjects;
+std::vector<size_t> Map::getBlocksWithObjects() const {
+    std::vector<size_t> blocksWithObjectsIndices;
     for (unsigned int i = 0 ; i < _blocksInfo.size(); ++i) {
+        const size_t index = _blocksInfo.at(i).index;
         const std::shared_ptr<const Block>& block =
-                getBlock(_blocksInfo.at(i).index);
+                getBlock(index);
         if (block->hasObjects()) {
-            blocksWithObjects.push_back(_blocksInfo.at(i));
+            blocksWithObjectsIndices.push_back(index);
         }
     }
-    return blocksWithObjects;
+    return blocksWithObjectsIndices;
+}
+
+std::map<JBTypes::Color, std::pair<size_t,size_t> > Map::getBlocksTeleporters()
+const {
+    std::map<JBTypes::Color, std::pair<size_t,size_t> > blocksTeleporters;
+    for (unsigned int colorInt = static_cast<unsigned int>(JBTypes::Color::Red);
+        colorInt < static_cast<unsigned int>(JBTypes::Color::Yellow);
+        ++colorInt) {
+        const JBTypes::Color color = static_cast<JBTypes::Color>(colorInt);
+        size_t counterTeleporter = 0;
+        size_t indexFirstTeleporter;
+        size_t indexSecondTeleporter;
+        for (const Map::SpecialInfo& specialInfo : _specials) {
+            if (specialInfo.type == Map::SpecialTypes::Teleporter &&
+                specialInfo.special->getColor() == color) {
+                if (counterTeleporter == 0) {
+                    indexFirstTeleporter = specialInfo.index;
+                } else {
+                    indexSecondTeleporter = specialInfo.index;
+                }
+                ++counterTeleporter;
+            }
+        }
+        if (counterTeleporter == 2) {
+            blocksTeleporters[color] = 
+                { indexFirstTeleporter, indexSecondTeleporter };
+        } else if (counterTeleporter != 0 ) {
+            std::cerr << "Error: The map contains an invalid number of" <<
+                "for a specific color : " << counterTeleporter << std::endl;
+        }
+    }
+    return blocksTeleporters;
+}
+
+std::map<JBTypes::Color, bool> Map::getSpecialStates() const {
+    const bool defaultStateValue = true;
+    return {
+        {
+           {JBTypes::Color::Red, defaultStateValue},
+           {JBTypes::Color::Green, defaultStateValue},
+           {JBTypes::Color::Blue, defaultStateValue},
+           {JBTypes::Color::Yellow, defaultStateValue}
+        }
+    };
 }
 
 std::shared_ptr<const Block> Map::getBlock(int x, int y, int z) const {
@@ -123,20 +167,16 @@ std::shared_ptr<const Block> Map::getBlock(size_t index) const {
     return _blocks.at(index);
 }
 
-std::array<unsigned int, 3> Map::getBlockCoords(size_t index) const {
+JBTypes::vec3ui Map::getBlockCoords(size_t index) const {
     return getBlockCoords(index, _width, _deep);
-    /*unsigned int uIntIndex = static_cast<unsigned int> (index);
-    const unsigned int widthDeep = _width * _deep;
-    return { uIntIndex % _width,
-             uIntIndex / widthDeep,
-             (uIntIndex % widthDeep) / _width };*/
 }
 
-size_t Map::getIndex(const std::array<unsigned int, 3>& coords) const {
+size_t Map::getIndex(const JBTypes::vec3ui& coords) const {
     return _width * (coords.at(2) + coords.at(1)* _deep) + coords .at(0);
 }
 
-Map::BlockTypes Map::getType(const std::array<unsigned int, 3>& position) const{
+Map::BlockTypes Map::getType(const JBTypes::vec3ui& position) const
+{
     const size_t index = getIndex(position);
     for (const Map::BlockInfo& blockInfo: _blocksInfo) {
         if (blockInfo.index == index )
@@ -225,11 +265,17 @@ Map::Effect Map::interaction( const JBTypes::Dir& ballDir,
     return Map::Effect::Nothing;
 }
 
+void Map::switchColor(const JBTypes::Color& color) {
+   if ( _specialsState.find(color) != _specialsState.end()) {
+        _specialsState[color] = false;
+    } else {
+        _specialsState.at(color) = !_specialsState.at(color);
+    }
+}
 
-std::array<unsigned int, 3> Map::getBlockCoords(size_t index,
-                                                unsigned int width,
-                                                unsigned int deep) 
-{
+JBTypes::vec3ui Map::getBlockCoords(size_t index,
+                                    unsigned int width,
+                                    unsigned int deep) {
     unsigned int uIntIndex = static_cast<unsigned int> (index);
     const unsigned int widthDeep = width * deep;
     return { uIntIndex % width,
@@ -237,13 +283,12 @@ std::array<unsigned int, 3> Map::getBlockCoords(size_t index,
              (uIntIndex % widthDeep) / width };
 }
 
-
 const std::vector<Map::EnemyInfo>& Map::getEnemiesInfo() const {
     return _enemies;
 }
 
 const std::vector<Map::SpecialInfo>& Map::getSpecialInfo() const {
-    return _special; 
+    return _specials; 
 }
 
 unsigned int Map::nbMaps = 0;

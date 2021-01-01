@@ -30,6 +30,8 @@ public:
     const std::vector<JBTypes::Dir>&
                                   coveredRotation()              const noexcept;
     float                         crushingCoeff()                const noexcept;
+    float                         teleportationCoeff()                    const;
+    const JBTypes::Color&         teleportationColor()                    const;
 
 private:
     const Ball&                   _ball;
@@ -46,6 +48,8 @@ private:
     JBTypes::vec3f                _lookTowardsAsVector;
     JBTypes::vec3f                _currentMovementRotation;
     float                         _crushingCoeff;
+    float                         _teleportationCoeff;
+    JBTypes::Color                _teleportationColor;
 };
 
 #endif // BALLSTATE_H 
