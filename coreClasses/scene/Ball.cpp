@@ -39,6 +39,7 @@ Ball::Ball(Map& map):
         _timeStateOfLife(std::chrono::system_clock::now()),
         _burnCoefficientTrigger(0.f),
         _burnCoefficientCurrent(0.f),
+        _teleportationColor(JBTypes::Color::None),
         _teleportationCoefficient(0.f),
         _teleportationBlockDestination(0),
         _jumpRequest(false),
@@ -177,24 +178,14 @@ void Ball::fall() noexcept {
 
 void Ball::teleport(const JBTypes::Color& col) noexcept
 {
-    switch (col) {
-        case JBTypes::Color::None:
-            break;
-        case JBTypes::Color::Red:
-            _state = Ball::State::RedTeleporting;
-            break;
-        case JBTypes::Color::Green:
-            _state = Ball::State::GreenTeleporting;
-            break;
-        case JBTypes::Color::Blue:
-            _state = Ball::State::BlueTeleporting;
-            break;
-        case JBTypes::Color::Yellow:
-            _state = Ball::State::YellowTeleporting;
-            break;
-        default :
-            break;
-    }
+    _state = Ball::State::Teleporting;
+    _teleportationColor = col;
+    setTimeActionNow();
+}
+
+void Ball::deteleport() noexcept
+{
+    _state = Ball::State::Deteleporting;
     setTimeActionNow();
 }
 
@@ -380,16 +371,8 @@ float Ball::getTeleportationCoefficient() const noexcept {
     return _teleportationCoefficient; 
 }
 
-JBTypes::Color Ball::getTeleportationColor() const noexcept {
-    if (_state == Ball::State::RedTeleporting ) {
-        return JBTypes::Color::Red;
-    } else if (_state == Ball::State::GreenTeleporting ) {
-        return JBTypes::Color::Green;
-    } else if (_state == Ball::State::BlueTeleporting ) {
-        return JBTypes::Color::Blue;
-    } else if (_state == Ball::State::YellowTeleporting ) {
-        return JBTypes::Color::Yellow;
-    } else return JBTypes::Color::None;
+const JBTypes::Color& Ball::getTeleportationColor() const noexcept {
+    return _teleportationColor;
 }
 
 void Ball::isFallingIntersectionBlock() noexcept {
@@ -732,29 +715,71 @@ void Ball::burningUpdate() noexcept {
     }
 }
 
-void Ball::teleportingUpdate(const JBTypes::Color&) noexcept {
-
-    /*const size_t blockIndex = 
-        _map.getIndex({_currentBlockX,_currentBlockY,_currentBlockZ});
-
-    const auto& blockTeleporter = _map.getBlocksTeleporters();
-    std::pair<size_t,size_t> indices = blockTeleporter.at(color);
-    if (blockIndex == indices.first) { 
-    } else if (blockIndex == indices.second) {
-    } else {
-    } */
-    constexpr float animationDuration = 1.f;
+void Ball::teleportingUpdate() noexcept {
 
     const float timeSinceAction = getTimeSecondsSinceAction();
+    if (timeSinceAction > Ball::halfTimeTeleportationDuration) {
+        const size_t blockIndex =
+            _map.getIndex({_currentBlockX, _currentBlockY, _currentBlockZ});
 
-    if (timeSinceAction > animationDuration) {
-        _teleportationCoefficient = 0.f;
+        const auto &blockTeleporter = _map.getBlocksTeleporters();
+        const Map::TeleportersInfo teleporterInfo =
+            blockTeleporter.at(_teleportationColor);
+
+        const size_t firstTeleporterIndex =
+            teleporterInfo.coupleIndices.first;
+        const size_t secondTeleporterIndex =
+            teleporterInfo.coupleIndices.second;
+
+        const JBTypes::Dir firstTeleporterDir =
+            teleporterInfo.coupleDirections.first;
+        const JBTypes::Dir secondTeleporterDir =
+            teleporterInfo.coupleDirections.second;
+
+        const size_t destinationIndex = blockIndex == firstTeleporterIndex
+            ? secondTeleporterIndex
+            : firstTeleporterIndex;
+
+        const JBTypes::Dir destinationDir = blockIndex == firstTeleporterIndex
+            ? secondTeleporterDir
+            : firstTeleporterDir;
+
+        const JBTypes::vec3ui& destinationPosition =
+            _map.getBlockCoords(destinationIndex);
+
+        const JBTypes::vec3f vecDir =
+            JBTypesMethods::directionAsVector(destinationDir);
+
+        _currentBlockX = destinationPosition.at(0);
+        _currentBlockY = destinationPosition.at(1);
+        _currentBlockZ = destinationPosition.at(2);
+        _currentSide = destinationDir;
+        _lookTowards = JBTypesMethods::vectorAsDirection(
+            JBTypesMethods::cross(vecDir, { vecDir.y, -vecDir.x, 0.f })
+        );
+        _teleportationCoefficient = 1.f;
+
         stay();
-    } else if (timeSinceAction > (animationDuration / 2.f)){
-        const float timeStep2 = timeSinceAction - (animationDuration / 2.f);
-        _teleportationCoefficient = 1.f - (timeStep2 / (animationDuration / 2.f));
+        update();
+        deteleport();
+        update();
     } else {
-        _teleportationCoefficient = timeSinceAction  / (animationDuration / 2.f);
+        _teleportationCoefficient =
+            timeSinceAction  / Ball::halfTimeTeleportationDuration;
+    }
+}
+
+void Ball::deteleportingUpdate() noexcept {
+
+    const float timeSinceAction = getTimeSecondsSinceAction();
+    if (timeSinceAction > Ball::halfTimeTeleportationDuration) {
+        _teleportationCoefficient = 0.f;
+        _teleportationColor = JBTypes::Color::None;
+        stay();
+        update();
+    } else {
+        _teleportationCoefficient =
+            1.f - (timeSinceAction / halfTimeTeleportationDuration);
     }
 }
 
@@ -780,14 +805,8 @@ void Ball::update() noexcept{
         case Ball::State::TurningRight: turningUpdate(); break;
         case Ball::State::Staying: stayingUpdate(); break;
         case Ball::State::Moving: movingUpdate(); break;
-        case Ball::State::RedTeleporting:
-            teleportingUpdate(JBTypes::Color::Red); break;
-        case Ball::State::GreenTeleporting:
-            teleportingUpdate(JBTypes::Color::Green); break;
-        case Ball::State::BlueTeleporting:
-            teleportingUpdate(JBTypes::Color::Blue); break;
-        case Ball::State::YellowTeleporting:
-            teleportingUpdate(JBTypes::Color::Yellow); break;
+        case Ball::State::Teleporting: teleportingUpdate(); break;
+        case Ball::State::Deteleporting: deteleportingUpdate(); break;
         default: break;
     }
     mapInteraction();

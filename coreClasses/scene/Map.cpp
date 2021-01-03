@@ -26,7 +26,7 @@ Map::Map(Map::MapInfo&& mapInfo):
     _blocksWithObjectsIndices(getBlocksWithObjects()),
     _enemies(std::move(mapInfo.enemiesInfo)),
     _specials(std::move(mapInfo.specialInfo)),
-    _blocksTeleporters(getBlocksTeleporters()),
+    _blocksTeleporters(createBlocksTeleporters()),
     _specialsState(getSpecialStates()),
     _width (std::move(mapInfo.width)),
     _height (std::move(mapInfo.height)),
@@ -105,9 +105,14 @@ std::vector<size_t> Map::getBlocksWithObjects() const {
     return blocksWithObjectsIndices;
 }
 
-std::map<JBTypes::Color, std::pair<size_t,size_t> > Map::getBlocksTeleporters()
+const std::map<JBTypes::Color, Map::TeleportersInfo>&
+Map::getBlocksTeleporters() const {
+    return _blocksTeleporters;
+}
+
+std::map<JBTypes::Color, Map::TeleportersInfo > Map::createBlocksTeleporters()
 const {
-    std::map<JBTypes::Color, std::pair<size_t,size_t> > blocksTeleporters;
+    std::map<JBTypes::Color, Map::TeleportersInfo > blocksTeleporters;
     for (unsigned int colorInt = static_cast<unsigned int>(JBTypes::Color::Red);
         colorInt < static_cast<unsigned int>(JBTypes::Color::Yellow);
         ++colorInt) {
@@ -115,20 +120,28 @@ const {
         size_t counterTeleporter = 0;
         size_t indexFirstTeleporter;
         size_t indexSecondTeleporter;
+        JBTypes::Dir directionFirstTeleporter;
+        JBTypes::Dir directionSecondTeleporter;
         for (const Map::SpecialInfo& specialInfo : _specials) {
             if (specialInfo.type == Map::SpecialTypes::Teleporter &&
                 specialInfo.special->getColor() == color) {
                 if (counterTeleporter == 0) {
                     indexFirstTeleporter = specialInfo.index;
+                    directionFirstTeleporter = specialInfo.special->direction();
                 } else {
                     indexSecondTeleporter = specialInfo.index;
+                    directionSecondTeleporter = specialInfo.special->direction();
                 }
                 ++counterTeleporter;
             }
         }
         if (counterTeleporter == 2) {
-            blocksTeleporters[color] = 
-                { indexFirstTeleporter, indexSecondTeleporter };
+            Map::TeleportersInfo teleporterInfo;
+            teleporterInfo.coupleIndices =
+                { indexFirstTeleporter, indexSecondTeleporter};
+            teleporterInfo.coupleDirections =
+                { directionFirstTeleporter, directionSecondTeleporter};
+            blocksTeleporters[color] = teleporterInfo;
         } else if (counterTeleporter != 0 ) {
             std::cerr << "Error: The map contains an invalid number of" <<
                 "for a specific color : " << counterTeleporter << std::endl;
@@ -200,7 +213,6 @@ unsigned int Map::height() const {
 unsigned int Map::deep() const {
     return _deep;
 }
-
 unsigned int Map::beginX() const {
     return _beginX;
 }

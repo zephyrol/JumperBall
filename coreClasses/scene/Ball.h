@@ -31,12 +31,15 @@ public:
     static constexpr float        timeToTurn                            = 0.3f;
     static constexpr float        timeToBurn                            = 2.f;
     static constexpr float        basicRadius                           = 0.2f;
+    static constexpr float        teleportationDuration                 = 1.f;
+    static constexpr float        halfTimeTeleportationDuration
+                                                  = teleportationDuration / 2.f;
 
     //------------TYPES------------//
     enum class State              { Staying, Moving, Jumping, 
                                     TurningLeft, TurningRight, Falling,
-                                    RedTeleporting, GreenTeleporting,
-                                    BlueTeleporting, YellowTeleporting};
+                                    Teleporting, Deteleporting
+                                  };
 
     enum class StateOfLife        { Normal, Bursting, Burning, Sliding, Dead };
 
@@ -83,7 +86,7 @@ public:
     JBTypes::vec3f                movementRotation()             const noexcept;
     float                         getCrushingCoefficient()       const noexcept;
     float                         getTeleportationCoefficient()  const noexcept;
-    JBTypes::Color                getTeleportationColor()        const noexcept;
+    const JBTypes::Color&         getTeleportationColor()        const noexcept;
 
     //----------METHODS------------//
     void                          update()                             noexcept;
@@ -124,6 +127,7 @@ private:
     //current burnCoefficient
     float                         _burnCoefficientCurrent;
 
+    JBTypes::Color                _teleportationColor;
     float                         _teleportationCoefficient;
     size_t                        _teleportationBlockDestination;
 
@@ -156,6 +160,7 @@ private:
     void                          move()                               noexcept;
     void                          fall()                               noexcept;
     void                          teleport(const JBTypes::Color& col)  noexcept;
+    void                          deteleport()                         noexcept;
     void                          setTimeActionNow()                   noexcept;
     void                          setTimeLifeNow()                     noexcept;
     void                          mapInteraction()                     noexcept;
@@ -172,8 +177,8 @@ private:
     void                          turningUpdate()                      noexcept;
     void                          jumpingUpdate()                      noexcept;
     void                          burningUpdate()                      noexcept;
-    void                          teleportingUpdate(const JBTypes::Color& color)
-                                                                       noexcept;
+    void                          teleportingUpdate()                  noexcept;
+    void                          deteleportingUpdate()                noexcept;
     
     static const TurnLeft         turnLeftMovement;
     static const TurnRight        turnRightMovement;

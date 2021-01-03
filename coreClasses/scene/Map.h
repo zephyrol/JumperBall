@@ -45,7 +45,7 @@ public:
 
     enum class Effect { Nothing, Burst, Burn, Slide, Jump };
 
-    struct BlockInfo { size_t index; 
+    struct BlockInfo { size_t index;
                        BlockTypes type; };
 
     struct EnemyInfo
@@ -59,6 +59,11 @@ public:
         size_t index;
         std::shared_ptr<Special> special;
         SpecialTypes type ;
+    };
+
+    struct TeleportersInfo {
+        std::pair<size_t,size_t> coupleIndices;
+        std::pair<JBTypes::Dir,JBTypes::Dir> coupleDirections;
     };
 
     struct MapInfo { unsigned int width;
@@ -100,9 +105,9 @@ public:
 
     std::vector<BlockInfo>                getBlocksWithInteraction()      const;
     std::vector<size_t>                   getBlocksWithObjects()          const;
-    std::vector<size_t>                   getBlocksWithSpecials()         const;
-    std::map<JBTypes::Color, std::pair<size_t,size_t> > 
+    const std::map<JBTypes::Color, Map::TeleportersInfo> &
                                           getBlocksTeleporters()          const;
+
     std::map<JBTypes::Color, bool>        getSpecialStates()              const;
 
     
@@ -135,7 +140,7 @@ private:
     std::vector<EnemyInfo>                _enemies;
 
     std::vector<SpecialInfo>              _specials;
-    std::map<JBTypes::Color, std::pair<size_t,size_t> > 
+    std::map<JBTypes::Color, TeleportersInfo >
                                           _blocksTeleporters;
     std::map<JBTypes::Color, bool>        _specialsState;
     
@@ -161,7 +166,9 @@ private:
     static unsigned int                   nbMaps;
 
 
-    //--------STATIC METHODS-------//
+    //--------CONST METHODS-------//
+    std::map<JBTypes::Color, Map::TeleportersInfo>
+                                          createBlocksTeleporters()       const;
 
 };
 
