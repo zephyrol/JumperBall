@@ -48,6 +48,14 @@ const JBTypes::vec3ui& Special::position() const {
     return _position;    
 }
 
+bool Special::isActivated() const {
+    return _isActivated;
+}
+
+void Special::switchOnOff() {
+    _isActivated = !_isActivated;
+}
+
 JBTypes::vec3f Special::initPosition(const JBTypes::vec3ui& position)
                                                                          const {
     constexpr float sizeBlock = 1.f;

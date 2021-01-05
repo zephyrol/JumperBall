@@ -12,7 +12,8 @@ _category(category),
 _color(special.getColor()),
 _creationTime(special.creationTime()),
 _direction(special.direction()),
-_position3D(special.position3D())
+_position3D(special.position3D()),
+_isActivated(special.isActivated())
 {}
 
 const JBTypes::Color& SpecialState::color() const {
@@ -35,7 +36,11 @@ const JBTypes::timePointMs& SpecialState::creationTime() const {
    return _creationTime;
 }
 
-void SpecialState::update() {
+bool SpecialState::isActivated() const {
+   return _isActivated;
+}
 
+void SpecialState::update() {
+   _isActivated = _special.isActivated();
 }
 

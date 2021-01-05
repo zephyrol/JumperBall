@@ -557,10 +557,13 @@ void Ball::blockEvent(const JBTypes::vec3ui& blockPos) noexcept
             const std::shared_ptr<const Special> &special = specialInfo.special;
             if (special && blockPos == special->position() &&
                 _currentSide == special->direction()) {
+                const JBTypes::Color& color = special->getColor();
                 if (specialInfo.type == Map::SpecialTypes::Teleporter) {
-                    teleport(special->getColor());
+                    if (_map.getSpecialStates().at(color)) {
+                        teleport(color);
+                    }
                 } else { // Switch Button
-                    _map.switchColor(special->getColor());
+                    _map.switchColor(color);
                 }
             }
         }
@@ -708,7 +711,7 @@ void Ball::burningUpdate() noexcept {
             }
             _burnCoefficientCurrent =
                     _burnCoefficientTrigger - (time/timeToBurn);
-            if (_burnCoefficientCurrent < 0 ) {
+            if (_burnCoefficientCurrent < 0.f) {
                 _burnCoefficientCurrent = 0.f;
             }
         }
@@ -747,16 +750,17 @@ void Ball::teleportingUpdate() noexcept {
         const JBTypes::vec3ui& destinationPosition =
             _map.getBlockCoords(destinationIndex);
 
-        const JBTypes::vec3f vecDir =
-            JBTypesMethods::directionAsVector(destinationDir);
 
         _currentBlockX = destinationPosition.at(0);
         _currentBlockY = destinationPosition.at(1);
         _currentBlockZ = destinationPosition.at(2);
+        if (_currentSide != destinationDir) {
+            const JBTypes::vec3f vecDir =
+                JBTypesMethods::directionAsVector(destinationDir);
+            _lookTowards = JBTypesMethods::vectorAsDirection(
+                JBTypesMethods::cross(vecDir, {vecDir.y, -vecDir.x, 0.f}));
+        }
         _currentSide = destinationDir;
-        _lookTowards = JBTypesMethods::vectorAsDirection(
-            JBTypesMethods::cross(vecDir, { vecDir.y, -vecDir.x, 0.f })
-        );
         _teleportationCoefficient = 1.f;
 
         stay();

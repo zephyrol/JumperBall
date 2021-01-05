@@ -27,7 +27,7 @@ Map::Map(Map::MapInfo&& mapInfo):
     _enemies(std::move(mapInfo.enemiesInfo)),
     _specials(std::move(mapInfo.specialInfo)),
     _blocksTeleporters(createBlocksTeleporters()),
-    _specialsState(getSpecialStates()),
+    _specialsState(createSpecialStates()),
     _width (std::move(mapInfo.width)),
     _height (std::move(mapInfo.height)),
     _deep (std::move(mapInfo.deep)),
@@ -143,15 +143,16 @@ const {
                 { directionFirstTeleporter, directionSecondTeleporter};
             blocksTeleporters[color] = teleporterInfo;
         } else if (counterTeleporter != 0 ) {
-            std::cerr << "Error: The map contains an invalid number of" <<
-                "for a specific color : " << counterTeleporter << std::endl;
+            std::cerr << "Error: The map contains an invalid number of " <<
+                " teleporters for a specific color : " << counterTeleporter 
+                << std::endl;
         }
     }
     return blocksTeleporters;
 }
 
-std::map<JBTypes::Color, bool> Map::getSpecialStates() const {
-    const bool defaultStateValue = true;
+std::map<JBTypes::Color, bool> Map::createSpecialStates() const {
+    constexpr bool defaultStateValue = true;
     return {
         {
            {JBTypes::Color::Red, defaultStateValue},
@@ -160,6 +161,10 @@ std::map<JBTypes::Color, bool> Map::getSpecialStates() const {
            {JBTypes::Color::Yellow, defaultStateValue}
         }
     };
+}
+
+const std::map<JBTypes::Color, bool>& Map::getSpecialStates() const {
+    return _specialsState;
 }
 
 std::shared_ptr<const Block> Map::getBlock(int x, int y, int z) const {
@@ -188,8 +193,7 @@ size_t Map::getIndex(const JBTypes::vec3ui& coords) const {
     return _width * (coords.at(2) + coords.at(1)* _deep) + coords .at(0);
 }
 
-Map::BlockTypes Map::getType(const JBTypes::vec3ui& position) const
-{
+Map::BlockTypes Map::getType(const JBTypes::vec3ui& position) const {
     const size_t index = getIndex(position);
     for (const Map::BlockInfo& blockInfo: _blocksInfo) {
         if (blockInfo.index == index )
@@ -278,10 +282,24 @@ Map::Effect Map::interaction( const JBTypes::Dir& ballDir,
 }
 
 void Map::switchColor(const JBTypes::Color& color) {
-   if ( _specialsState.find(color) != _specialsState.end()) {
+   if ( _specialsState.find(color) == _specialsState.end()) {
         _specialsState[color] = false;
     } else {
         _specialsState.at(color) = !_specialsState.at(color);
+    }
+
+    for (SpecialInfo& specialInfo: _specials) {
+        const std::shared_ptr<Special> special = specialInfo.special;
+        if ( special && special->getColor() == color) {
+           special->switchOnOff();
+        }
+    }
+
+    for (EnemyInfo& enemyInfo: _enemies) {
+        const std::shared_ptr<Enemy> enemy = enemyInfo.enemy;
+        if (enemy && enemy->getColor() == color) {
+           enemy->switchOnOff();
+        }
     }
 }
 

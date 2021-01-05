@@ -50,6 +50,9 @@ size_t Enemy::length() const {
     return _length;
 }
 
+void Enemy::switchOnOff() {
+}
+
 JBTypes::vec3f Enemy::initPosition(const JBTypes::vec3ui& position)
                                                                          const {
     constexpr float sizeBlock = 1.f;

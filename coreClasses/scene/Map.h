@@ -108,7 +108,8 @@ public:
     const std::map<JBTypes::Color, Map::TeleportersInfo> &
                                           getBlocksTeleporters()          const;
 
-    std::map<JBTypes::Color, bool>        getSpecialStates()              const;
+    std::map<JBTypes::Color, bool>        createSpecialStates()           const;
+    const std::map<JBTypes::Color, bool>& getSpecialStates()              const;
 
     
     const std::vector<EnemyInfo>&         getEnemiesInfo()                const;

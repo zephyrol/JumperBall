@@ -34,7 +34,10 @@ public:
     const JBTypes::Dir &direction() const;
     const JBTypes::vec3f& position3D() const;
     const JBTypes::vec3ui& position() const;
+    bool isActivated() const;
     virtual SpecialEffect getEffect() const = 0;
+
+    void switchOnOff();
 
 private:
     const Block& _tieBlock;

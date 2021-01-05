@@ -27,13 +27,24 @@ Enemy(tieBlock,
         1.f,
         1.f }
      ),
-_color(color)
+_color(color),
+_isActivated(true)
 {
 }
 
 Enemy::Effect Laser::update(const JBTypes::vec3f& entityPosition,
                                  float radiusEntity) {
     touchingTest(entityPosition,radiusEntity);
+
+    if (_isActivated ) {
+        _transform.at(6) = 1.f;
+        _transform.at(7) = 1.f;
+        _transform.at(8) = 1.f;
+    } else {
+        _transform.at(6) = 0.f;
+        _transform.at(7) = 0.f;
+        _transform.at(8) = 0.f;
+    }
     return _hasHit 
     ? Enemy::Effect::Burst
     : Enemy::Effect::Nothing;
@@ -44,9 +55,16 @@ JBTypes::Color Laser::getColor() const
     return _color;    
 }
 
+void Laser::switchOnOff() {
+    _isActivated = !_isActivated; 
+}
+
 void Laser::touchingTest(const JBTypes::vec3f& entityPosition,
                          float radiusEntity)
 {
+    if (!_isActivated) {
+        return;
+    }
     constexpr float offsetLaser = 0.5f;
 
     const float entityMinX = entityPosition.x - radiusEntity;

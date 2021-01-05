@@ -18,15 +18,23 @@ SpecialAnimation::SpecialAnimation(const SpecialState &special):
 }
 
 void SpecialAnimation::transTeleporter() {
-    const float seconds = JBTypesMethods::getTimeSecondsSinceTimePoint(
-      _special.creationTime());
+    if (_special.isActivated()) {
+        const float seconds = JBTypesMethods::getTimeSecondsSinceTimePoint(
+            _special.creationTime());
 
-    constexpr float speedFactor = 6.f;
-    _movingRotation = glm::rotate(speedFactor* seconds,rotationAxis);
+        constexpr float speedFactor = 6.f;
+        _movingRotation = glm::rotate(speedFactor * seconds, rotationAxis);
+    } else {
+        _movingRotation = glm::mat4(1.f);
+    }
 }
 
 void SpecialAnimation::transSwitch() {
-
+    if (_special.isActivated()) {
+        _movingScale = glm::scale(glm::vec3(1.f,0.1f,1.f));
+    } else {
+        _movingScale = glm::scale(glm::vec3(1.f,1.f,1.f));
+    }
 }
 
 void SpecialAnimation::updateTrans()

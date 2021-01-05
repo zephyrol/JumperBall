@@ -22,10 +22,12 @@ public:
     virtual Effect update(const JBTypes::vec3f& entityPosition,
                          float radiusEntity) override;
     virtual JBTypes::Color getColor() const override;
+    virtual void switchOnOff() override;
     virtual ~Laser() = default;
 
 private:
     const JBTypes::Color _color;
+    bool _isActivated;
     static constexpr float laserRadius = 0.05f;
 
     virtual void touchingTest(const JBTypes::vec3f& entityPosition,

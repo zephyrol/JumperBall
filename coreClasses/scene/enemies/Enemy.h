@@ -33,6 +33,8 @@ public:
     bool hasHit() const;
     float size() const;
     size_t length() const;
+
+    virtual void switchOnOff();
     virtual ~Enemy() = default;
 
 private:
