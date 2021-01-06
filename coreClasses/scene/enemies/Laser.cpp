@@ -46,8 +46,8 @@ Enemy::Effect Laser::update(const JBTypes::vec3f& entityPosition,
         _transform.at(8) = 0.f;
     }
     return _hasHit 
-    ? Enemy::Effect::Burst
-    : Enemy::Effect::Nothing;
+        ? Enemy::Effect::Burst
+        : Enemy::Effect::Nothing;
 }
 
 JBTypes::Color Laser::getColor() const 

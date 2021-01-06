@@ -14,6 +14,7 @@
 
 #ifndef PAGE_H
 #define PAGE_H
+#include <list>
 #include "Label.h"
 
 class Page;
@@ -82,8 +83,7 @@ private:
     bool                              _isPressed;
     float                             _pressedScreenPosY;
     JBTypes::timePointMs              _lastUpdate;
-    std::array<slideState,2>          _lastSwipeUpdates;
-    unsigned int                      _countingUpdates;
+    std::list<slideState>             _lastSwipeUpdates;
     float                             _releaseVelocity;
 };
 

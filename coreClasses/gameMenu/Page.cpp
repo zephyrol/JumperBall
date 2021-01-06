@@ -30,8 +30,7 @@ Page::Page(const CstPage_sptr& parent,
     _isPressed(false),
     _pressedScreenPosY(0.f),
     _lastUpdate{},
-    _lastSwipeUpdates{},
-    _countingUpdates(0)
+    _lastSwipeUpdates{}
 {}
 
 const std::weak_ptr<const Page>& Page::parent() const {
@@ -123,61 +122,50 @@ void Page::update(bool isPressed, float screenPosY) {
         return;
     }
 
-    constexpr float cancelingThresholdDuration = 1.f;
     const auto now = JBTypesMethods::getTimePointMSNow();
-
-    //We reinit the keyframes if the page are not updated for 1 seconde
-    if (_countingUpdates > 0 && JBTypesMethods::getFloatFromDurationMS(
-            now - _lastUpdate ) > cancelingThresholdDuration) {
-        _countingUpdates = 0;
-        _isPressed = false;
-    }
-
     _lastUpdate = now;
 
     //Press cases
     if (isPressed && !_isPressed) {
-        _countingUpdates = 0;
+        //_countingUpdates = 0;
         _pressedScreenPosY = screenPosY;
         _localPressedPosY = _localPosY;
         _isPressed = true;
+        _lastSwipeUpdates.clear();
     }
 
     if (_isPressed) {
         constexpr float thresholdDeltaT = 0.1f; //100 ms
-        const bool thresholdIsCrossed =
-                (JBTypesMethods::getFloatFromDurationMS(
-                     now - _lastSwipeUpdates.at(0).first ) > thresholdDeltaT);
-        if (_countingUpdates < 2) {
-            if (_countingUpdates == 0 || thresholdIsCrossed) {
-                _lastSwipeUpdates.at(_countingUpdates).first = now;
-                _lastSwipeUpdates.at(_countingUpdates).second = screenPosY;
-                ++_countingUpdates;
-            }
-        } else if (thresholdIsCrossed) {
-            _lastSwipeUpdates.at(0) = std::move(_lastSwipeUpdates.at(1));
-            _lastSwipeUpdates.at(1).first = now;
-            _lastSwipeUpdates.at(1).second = screenPosY;
+        std::list<slideState>::iterator it;
+        for (it = _lastSwipeUpdates.begin();
+             it != _lastSwipeUpdates.end() &&
+             JBTypesMethods::getFloatFromDurationMS(now - it->first) < thresholdDeltaT;
+             ++it)
+        {
         }
+        
+        _lastSwipeUpdates.erase(it, _lastSwipeUpdates.end());
+        _lastSwipeUpdates.push_front({now, screenPosY});
         _localPosY = _localPressedPosY + (screenPosY - _pressedScreenPosY);
     }
 
+    const slideState &lastSlideState = _lastSwipeUpdates.front();
+    const slideState &olderSlideState = _lastSwipeUpdates.back();
     //Release cases
     if (!isPressed && _isPressed) {
-        if (_countingUpdates == 2 ) {
-            float deltaT = JBTypesMethods::getFloatFromDurationMS(
-                _lastSwipeUpdates.at(1).first -_lastSwipeUpdates.at(0).first );
+        float deltaT = JBTypesMethods::getFloatFromDurationMS(
+            lastSlideState.first - olderSlideState.first);
 
-            // the velocity is the position derivative (pourcentagePage / ms)
-            _releaseVelocity =  (_lastSwipeUpdates.at(1).second -
-                _lastSwipeUpdates.at(0).second) / std::move(deltaT);
-            _localReleasedPosY = _localPosY;
-            _isPressed = false;
-        }
+        // the velocity is the position derivative (pourcentagePage / ms)
+        _releaseVelocity = (lastSlideState.second - olderSlideState.second) 
+            / deltaT;
+
+        _localReleasedPosY = _localPosY;
+        _isPressed = false;
     }
-    if (!_isPressed &&_countingUpdates == 2) {
+    if (!_isPressed) {
         const float t = JBTypesMethods::getFloatFromDurationMS(
-                    now - _lastSwipeUpdates.at(1).first);
+                    now - lastSlideState.first);
         const float deceleration =
                 decelerationCoefficient * powf(t,2.f)/2.f;
 
