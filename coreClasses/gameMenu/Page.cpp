@@ -30,7 +30,8 @@ Page::Page(const CstPage_sptr& parent,
     _isPressed(false),
     _pressedScreenPosY(0.f),
     _lastUpdate{},
-    _lastSwipeUpdates{}
+    _lastSwipeUpdates{},
+    _releaseVelocity(0.f)
 {}
 
 const std::weak_ptr<const Page>& Page::parent() const {
@@ -149,10 +150,10 @@ void Page::update(bool isPressed, float screenPosY) {
         _localPosY = _localPressedPosY + (screenPosY - _pressedScreenPosY);
     }
 
-    const slideState &lastSlideState = _lastSwipeUpdates.front();
-    const slideState &olderSlideState = _lastSwipeUpdates.back();
     //Release cases
-    if (!isPressed && _isPressed) {
+    if (!isPressed && _isPressed && !_lastSwipeUpdates.empty()) {
+        const slideState& lastSlideState = _lastSwipeUpdates.front();
+        const slideState& olderSlideState = _lastSwipeUpdates.back();
         float deltaT = JBTypesMethods::getFloatFromDurationMS(
             lastSlideState.first - olderSlideState.first);
 
@@ -163,11 +164,12 @@ void Page::update(bool isPressed, float screenPosY) {
         _localReleasedPosY = _localPosY;
         _isPressed = false;
     }
-    if (!_isPressed) {
+    if (!_isPressed && !_lastSwipeUpdates.empty()) {
+        const slideState& lastSlideState = _lastSwipeUpdates.front();
         const float t = JBTypesMethods::getFloatFromDurationMS(
-                    now - lastSlideState.first);
+            now - lastSlideState.first);
         const float deceleration =
-                decelerationCoefficient * powf(t,2.f)/2.f;
+            decelerationCoefficient * powf(t,2.f)/2.f;
 
         if (_releaseVelocity > 0.f && t < -(_releaseVelocity) /
                 (2.f *-decelerationCoefficient/2.f) ) {

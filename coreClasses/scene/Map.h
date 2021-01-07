@@ -50,15 +50,15 @@ public:
 
     struct EnemyInfo
     {
-        size_t index;
-        std::shared_ptr<Enemy> enemy;
-        EnemyTypes type;
+        size_t index = 0;
+        std::shared_ptr<Enemy> enemy = nullptr;
+        EnemyTypes type = EnemyTypes::Laser;
     };
 
     struct SpecialInfo {
-        size_t index;
-        std::shared_ptr<Special> special;
-        SpecialTypes type ;
+        size_t index = 0;
+        std::shared_ptr<Special> special = nullptr;
+        SpecialTypes type = SpecialTypes::SwitchButton;
     };
 
     struct TeleportersInfo {

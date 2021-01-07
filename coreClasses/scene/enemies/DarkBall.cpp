@@ -43,8 +43,8 @@ Enemy::Effect DarkBall::update(const JBTypes::vec3f& entityPosition,
     const JBTypes::vec3f vecDirSide =
         JBTypesMethods::directionAsVector(direction());
 
-    const size_t nbOfJumpsDone = timeSinceCreation /
-        mechanics.getTimeToGetDestination();
+    const size_t nbOfJumpsDone = static_cast<size_t>(timeSinceCreation /
+        mechanics.getTimeToGetDestination());
 
     const float distanceAlreadyTravelled = nbOfJumpsDone *
         mechanics.getJumpDistance();

@@ -265,7 +265,8 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             // Length
             infoEnemies.erase(infoEnemies.begin());
             readValue = infoEnemies.front();
-            const size_t length = readValue - firstNumberLength;
+            const size_t length = static_cast<size_t>(readValue) -
+                static_cast<size_t>(firstNumberLength);
             // Color
             infoEnemies.erase(infoEnemies.begin());
             readValue = infoEnemies.front();
@@ -972,7 +973,7 @@ void MapGenerator::verificationMap(std::ifstream& input, const Map& map)
                         map.getEnemiesInfo().at(currentInfo).type;
                     const JBTypes::Dir moveDir = map.getEnemiesInfo().
                         at(currentInfo).enemy->movementDirection();
-                    const float length = 
+                    const size_t length =
                         map.getEnemiesInfo().at(currentInfo).enemy->length();
                     const auto color = 
                         map.getEnemiesInfo().at(currentInfo).enemy->getColor();

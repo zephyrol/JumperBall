@@ -42,8 +42,8 @@ bool TextRendering::initFreeTypeAndFont() {
         return false;
     }
 
-    const std::string fontFileToOpenV1 = "fonts/Cousine-Regular.ttf";
-    const std::string fontFileToOpenV2 = "bin/fonts/Cousine-Regular.ttf";
+    std::string fontFileToOpenV1 = "fonts/Cousine-Regular.ttf";
+    std::string fontFileToOpenV2 = "bin/fonts/Cousine-Regular.ttf";
     const std::vector<std::string> fileNames {
         std::move(fontFileToOpenV1), std::move(fontFileToOpenV2)};
 
@@ -90,7 +90,7 @@ FT_UInt TextRendering::getHeightInPixels() const {
 
 FT_UInt TextRendering::getHeightInPixels(const Label& label) 
 {
-    const FT_UInt heightPixels =
+    const FT_UInt heightPixels = static_cast<FT_UInt>
         (Utility::windowResolutionY * label.height());
     return heightPixels;
 }

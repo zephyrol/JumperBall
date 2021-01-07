@@ -442,8 +442,7 @@ JBTypes::timePointMs Ball::getTimeStateOfLifeMs() const noexcept {
                                                       (_timeStateOfLife);
 }
 
-JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const
-{
+JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const {
     const float offsetRealPosition = 0.5f + getRadius();
     
     const JBTypes::vec3f sideVec =

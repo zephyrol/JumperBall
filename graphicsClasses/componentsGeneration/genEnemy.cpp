@@ -17,9 +17,9 @@ vecMeshComponent_sptr MeshGenerator::genEnemy(const EnemyState &enemy)
         constexpr float laserIntensity = 1.5f;
         // Lasers create the bloom effect, but we would like that
         // all laser colors have the same brightness;
-        const float redConeSensibilityCoeff = 0.3;
-        const float greenConeSensibilityCoeff = 0.59;
-        const float blueConeSensibilityCoeff = 0.11;
+        const float redConeSensibilityCoeff = 0.3f;
+        const float greenConeSensibilityCoeff = 0.59f;
+        const float blueConeSensibilityCoeff = 0.11f;
 
         const JBTypes::Color color = enemy.color();
         std::string laserName;
