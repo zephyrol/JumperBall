@@ -13,7 +13,10 @@
 
 #include "BoxLabel.h"
 
-BoxLabel::BoxLabel(float width, float height,
+BoxLabel::BoxLabel(
+    const Label::WidthUnit& widthUnit,
+    float width,
+    float height,
     const JBTypes::vec2f& position):
-    Label(width,height,position)
+    Label(widthUnit, width, height, position)
 {}

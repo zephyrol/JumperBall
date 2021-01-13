@@ -44,25 +44,25 @@ bool Window::inputManagement() {
 
     // VALIDATE
     const Controller::Status validateStatus = 
-        getButtonStatus({GLFW_KEY_ENTER,GLFW_KEY_SPACE});
+        getButtonStatus({ GLFW_KEY_ENTER, GLFW_KEY_SPACE });
     _controller.interactionButtons(Controller::Button::Validate,
                                    validateStatus);
                             
     // RIGHT
     const Controller::Status rightStatus = 
-        getButtonStatus({GLFW_KEY_RIGHT,GLFW_KEY_L});
+        getButtonStatus({ GLFW_KEY_RIGHT, GLFW_KEY_L });
     _controller.interactionButtons(Controller::Button::Right,
                                    rightStatus);
 
     // LEFT 
     const Controller::Status leftStatus = 
-        getButtonStatus({GLFW_KEY_LEFT,GLFW_KEY_H});
+        getButtonStatus({ GLFW_KEY_LEFT, GLFW_KEY_H });
     _controller.interactionButtons(Controller::Button::Left,
                                    leftStatus);
 
     // UP 
     const Controller::Status upStatus = 
-        getButtonStatus({GLFW_KEY_UP,GLFW_KEY_K});
+        getButtonStatus({ GLFW_KEY_UP, GLFW_KEY_K });
     _controller.interactionButtons(Controller::Button::Up,
                                    upStatus);
 
@@ -96,7 +96,7 @@ bool Window::inputManagement() {
 
 void Window::run() {
     glfwSwapInterval(0);
-    glfwSetInputMode(_window,GLFW_STICKY_KEYS,GL_TRUE) ;
+    glfwSetInputMode(_window, GLFW_STICKY_KEYS,GL_TRUE) ;
 
     auto before = JBTypesMethods::getTimePointMSNow();
     unsigned int counter = 0;
@@ -104,8 +104,6 @@ void Window::run() {
     {
         _controller.runController();
         glfwSwapBuffers(_window);
-        _controller.waitController();
-
         glfwPollEvents();
 
         ++counter;
@@ -118,6 +116,8 @@ void Window::run() {
             std::cout << counter << " FPS"  << std::endl;
             counter = 0;
         }
+
+        _controller.waitController();
     }
 
 }

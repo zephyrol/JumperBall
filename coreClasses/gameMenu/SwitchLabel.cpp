@@ -1,30 +1,33 @@
-#include "SwitchLabel.h"
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
- */
+*/
 
 /*
  * File:   SwitchLabel.cpp
  * Author: Morgenthaler S
  *
- * Created on 28 avril 2020, 19:43
- */
+ * Created on 29 avril 2020, 19:43
+*/
 
-SwitchLabel::SwitchLabel(float width, float height, 
-    const JBTypes::vec2f& position,
+#include "SwitchLabel.h"
+
+SwitchLabel::SwitchLabel(
+    const Label::WidthUnit &widthUnit,
+    float width,
+    float height,
+    const JBTypes::vec2f &position,
     bool switchButton):
-    Label(width,height,position),
+    Label(widthUnit, width, height, position),
     _switch(switchButton)
-{ }
+    {}
 
-void SwitchLabel::turnOn() { 
+void SwitchLabel::turnOn()
+{
     _switch = true;
 }
-
-void SwitchLabel::turnOff() {
+void SwitchLabel::turnOff()
+{
     _switch = false;
-
 }
-

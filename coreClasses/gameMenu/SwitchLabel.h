@@ -18,7 +18,10 @@
 class SwitchLabel: public Label
 {
 public:
-    SwitchLabel(float width,float height,
+    SwitchLabel(
+        const Label::WidthUnit& widthUnit,
+        float width,
+        float height,
         const JBTypes::vec2f& position,
         bool switchButton = false);
 

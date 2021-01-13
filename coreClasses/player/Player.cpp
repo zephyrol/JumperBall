@@ -76,10 +76,11 @@ void Player::statut(const Player::Statut& s) {
 
 void Player::treatAction(const Label::LabelAnswer& action)
 {
-
-    switch(action.typeOfAction) {
-    default : break;
-    case Label::TypeOfAction::PredefinedAction :
+    switch (action.typeOfAction)
+    {
+    default:
+        break;
+    case Label::TypeOfAction::PredefinedAction:
         break;
     case Label::TypeOfAction::GoLevel:
         _statut = Player::Statut::INTRANSITION;

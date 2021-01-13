@@ -19,8 +19,13 @@
 class ObjectLabel: public Label
 {
 public:
-    ObjectLabel(float width,float height,const JBTypes::vec2f& position,
-                const std::shared_ptr<Object>& object);
+    ObjectLabel(
+        const Label::WidthUnit& widthUnit,
+        float width,
+        float height,
+        const JBTypes::vec2f& position,
+        const std::shared_ptr<Object>& object
+    );
 
 private:
     const std::shared_ptr<Object>_object;

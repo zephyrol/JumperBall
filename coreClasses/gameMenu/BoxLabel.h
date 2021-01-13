@@ -19,7 +19,11 @@
 class BoxLabel: public Label
 {
 public:
-    BoxLabel(float width,float height,const JBTypes::vec2f& position);
+    BoxLabel(
+        const Label::WidthUnit& widthUnit,
+        float width,
+        float height,
+        const JBTypes::vec2f& position);
     virtual ~BoxLabel() = default;
 
 private:

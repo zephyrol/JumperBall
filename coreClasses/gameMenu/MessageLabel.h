@@ -19,7 +19,10 @@
 class MessageLabel : public Label
 {
 public:
-    MessageLabel(float width,float height,
+    MessageLabel(
+        const Label::WidthUnit& widthUnit,
+        float width,
+        float height,
         const JBTypes::vec2f& position,
         const std::string& message,
         const std::shared_ptr<LabelAnswer> action = nullptr,

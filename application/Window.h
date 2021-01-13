@@ -23,12 +23,10 @@ class Window {
 public:
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Window(  GLFWwindow* glfwWindow );
+    Window(GLFWwindow* glfwWindow);
 
-    
     //----------METHODS-------------//
     void          run();
-
 
 private:
 

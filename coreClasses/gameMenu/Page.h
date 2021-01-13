@@ -30,20 +30,21 @@ public:
     //------------TYPES------------//
     // Slide state => timepoint and yScreenPosition
     using slideState = std::pair<JBTypes::timePointMs, float>;
-    enum class TypeOfLabel { Unknown, Object, Message, Switch, Box};
-
+    enum class TypeOfLabel { Unknown, Object, Message, Switch, Box };
+    enum class PageFormat { Full, Scroll };
 
     //--CONSTRUCTORS & DESTRUCTORS--//
     Page(const CstPage_sptr& parent,
+         const Page::PageFormat& pageFormat,
          float height = 1.f,
          bool visibleOnParent = false);
 
-    
+
     //-------CONST METHODS--------//
     const std::weak_ptr<const Page> & parent()                            const;
     bool                              visibleOnParent()                   const;
-    CstPage_sptr                      child(float x, float y)             const;
-    CstLabel_sptr                     matchedLabel(float x, float y)      const;
+    //CstPage_sptr                      child(float x, float y)           const;
+    CstLabel_sptr                     matchedLabel( float x, float y )    const;
     float                             height()                            const;
     float                             localPosY()                         const;
     void                              setBridges(
@@ -65,11 +66,12 @@ private:
 
     //--------ATTRIBUTES-----------//
     constexpr static float decelerationCoefficient = 10.f; //    pagePourcentage
-                                                          //    / s^2
+                                                          //     /s^2
 
     std::vector<CstLabel_sptr>        createLabels() const;
     std::vector<Page_sptr>            createChildren() const;
 
+    const PageFormat                  _pageFormat;
     std::map<CstLabel_sptr, Page_sptr > _bridges;
     std::map<CstLabel_sptr, TypeOfLabel> _labelsTypes;
     std::vector<CstLabel_sptr>        _labels;

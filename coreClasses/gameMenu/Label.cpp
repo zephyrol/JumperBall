@@ -17,12 +17,15 @@
 #include <cctype>
 #include "Label.h"
 
-Label::Label(float width,
-             float height,
-             const JBTypes::vec2f& position,
-             bool activated,
-             const std::shared_ptr<LabelAnswer> action,
-             bool fixed):
+Label::Label(
+    const Label::WidthUnit& widthUnit,
+    float width,
+    float height,
+    const JBTypes::vec2f& position,
+    bool activated,
+    const std::shared_ptr<LabelAnswer> action,
+    bool fixed):
+    _widthUnit(widthUnit),
     _width(width),
     _height(height),
     _children{},
@@ -83,6 +86,9 @@ const std::shared_ptr<Label::LabelAnswer>& Label::action() const {
     return _action;
 }
 
-Label::~Label(){
+const Label::WidthUnit& Label::widthUnit() const {
+    return _widthUnit;
+}
 
+Label::~Label(){
 }

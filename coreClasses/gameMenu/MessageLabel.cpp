@@ -12,12 +12,15 @@
  */
 #include "MessageLabel.h"
 
-MessageLabel::MessageLabel(float width,float height,
+MessageLabel::MessageLabel(
+    const Label::WidthUnit& widthUnit,
+    float width,
+    float height,
     const JBTypes::vec2f& position,
     const std::string& message,
     const std::shared_ptr<LabelAnswer> action,
     bool activated):
-    Label(width,height,position,activated,action),
+    Label(widthUnit, width, height, position, activated, action),
     _message(message)
 {
 }

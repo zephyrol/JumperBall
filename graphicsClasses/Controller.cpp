@@ -10,7 +10,11 @@
 
 Controller::Controller():
 _player(),
-_menu(Menu::getJumperBallMenu(1,1.f/3.f)),
+_menu(Menu::getJumperBallMenu(
+  _player,
+  1,
+  Utility::windowResolutionX,
+  Utility::windowResolutionY)),
 _buttonsStatuts{
     { Controller::Button::Up,       Controller::Status::Released },
     { Controller::Button::Down,     Controller::Status::Released },
@@ -53,8 +57,8 @@ _updatingScene([this](size_t) {
         }
     }
 
-    const std::shared_ptr<SceneRendering> currentSceneRendering = 
-        _currentFrame == Controller::CurrentFrame::FrameA 
+    const std::shared_ptr<SceneRendering> currentSceneRendering =
+        _currentFrame == Controller::CurrentFrame::FrameA
         ? _sceneRenderingFrameA
         : _sceneRenderingFrameB;
     currentSceneRendering->update();
@@ -68,7 +72,7 @@ _updatingMenu([this](size_t) {
             _menu->failurePageAsCurrentPage();
         }
     }
-    const std::shared_ptr<MenuRendering> currentMenuRendering = 
+    const std::shared_ptr<MenuRendering> currentMenuRendering =
         _currentFrame == Controller::CurrentFrame::FrameA 
         ? _menuRenderingFrameA
         : _menuRenderingFrameB;
@@ -190,26 +194,11 @@ void Controller::manageValidateMouse()
         _ball->doAction(Ball::ActionRequest::Jump);
     }
     else if (_player.statut() == Player::Statut::INMENU ) {
-        if(_menu->currentPage()) {
-            const CstLabel_sptr label =
-                _menu->currentPage()->matchedLabel(
-                    _mousePressingXCoord,
-                    _mousePressingYCoord);
-            if (label) {
-                const Page_sptr newPage = _menu->currentPage()->child(label);
-                if (newPage) {
-                    _menu->currentPage(newPage);
-                } else if  ( const std::shared_ptr< const
-                        Label::LabelAnswer>& action = label->action()) {
-                    _player.treatAction(*action);
+        const Menu::Event event =
+            _menu->mouseClick(_mousePressingXCoord, _mousePressingYCoord);
 
-                    //New level case
-                    if (_player.statut() == Player::Statut::INTRANSITION ) {
-                        _menu->noPageAsCurrentPage();
-                        runGame(action->chooseLevel+1);
-                    }
-                }
-            }
+        if (event.newLevel > 0) {
+           runGame(event.newLevel);
         }
     }
 }
@@ -230,7 +219,6 @@ void Controller::manageEscape(const Controller::Status &status) {
 }
 
 void Controller::manageRight(const Controller::Status &status) {
-    
     if ( _player.statut() == Player::Statut::INGAME ) {
         if (status == Controller::Status::Pressed && _ball) {
             _ball->doAction(Ball::ActionRequest::TurnRight);
@@ -290,12 +278,10 @@ Controller::ScreenDirection Controller::nearestDirection
         nearestDistance = computedDistance;
         nearestDir = Controller::ScreenDirection::West;
     }
-                            
     return nearestDir;
 }
 
 void Controller::pressMouse ( float posX, float posY ) {
-    
     _mousePressingXCoord = posX;
     _mousePressingYCoord = posY;
     _mouseCurrentXCoord = posX;
@@ -327,11 +313,9 @@ void Controller::updateMouse ( float posX, float posY ) {
         else if (sDir == Controller::ScreenDirection::West) {
             manageLeft(Controller::Status::Pressed);
         }
-
         _mouseCurrentXCoord = posX;
         _mouseCurrentYCoord = posY;
     }
-    
 }
 
 void Controller::releaseMouse(float posX, float posY) {

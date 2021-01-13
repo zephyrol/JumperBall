@@ -292,8 +292,16 @@ const glm::vec3& Camera::up() const noexcept{
 }
 
 glm::mat4 Camera::viewProjection() const noexcept {
-    return glm::mat4(glm::perspective (_fovy, _ratio, zNear, zFar) *
-                     glm::lookAt ( _pos, _center, _up));
+    const glm::mat4 viewMatrix = glm::lookAt(_pos, _center, _up);
+    const glm::mat4 perspectiveMatrix =
+        Utility::windowResolutionX > Utility::windowResolutionY
+            ? glm::perspective (_fovy, _ratio, zNear, zFar)
+            : glm::perspective (
+                2.f * atanf((1.f / _ratio) * tanf(_fovy / 2.f)),
+                 _ratio,
+                 zNear,
+                 zFar
+            );
+    return perspectiveMatrix * viewMatrix;
 }
-
 

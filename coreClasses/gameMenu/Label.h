@@ -42,27 +42,31 @@ public:
         };
     };
 
+    enum class WidthUnit { ScreenWidth, ShortestSide };
 
     //---------CONSTANTS------------//
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Label                   (float width,
-                             float height,
-                             const JBTypes::vec2f& position,
-                             bool activated = false,
-                             const std::shared_ptr<LabelAnswer> action
+    Label                   (
+                            const Label::WidthUnit& widthUnit,
+                            float width,
+                            float height,
+                            const JBTypes::vec2f& position,
+                            bool activated = false,
+                            const std::shared_ptr<LabelAnswer> action
                                 = nullptr,
-                             bool fixed = false);
+                            bool fixed = false);
     virtual ~Label          ()                                        = 0;
 
     //-------CONST METHODS----------//
     float                   width()                                       const;
     float                   height()                                      const;
     
-    const vecCstLabel_sptr& children()          const;
+    const vecCstLabel_sptr& children()                                    const;
     bool                    isFixed()                                     const;
     bool                    isActivated()                                 const;
     const std::shared_ptr<LabelAnswer>& action()                          const;
+    const Label::WidthUnit& widthUnit()                                   const;
 
     JBTypes::vec2f          position()                                    const;
     virtual std::string     message()                                     const;
@@ -78,6 +82,7 @@ public:
 private:
     
     //--------ATTRIBUTES-----------//
+    const Label::WidthUnit             _widthUnit;
     const float                        _width;
     const float                        _height;
     const vecCstLabel_sptr             _children;

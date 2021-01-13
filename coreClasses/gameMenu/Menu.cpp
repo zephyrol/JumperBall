@@ -13,17 +13,20 @@
 
 #include "Menu.h"
 
-Menu::Menu(const Page_sptr &rootPage,
+Menu::Menu(
+           Player& player,
+           const Page_sptr &rootPage,
            const Page_sptr &pausePage,
            const Page_sptr &successPage,
            const Page_sptr &failurePage,
            const vecCstPage_sptr &pages):
-  _rootPage(rootPage),
-  _pausePage(pausePage),
-  _successPage(successPage),
-  _failurePage(failurePage),
-  _pages(pages),
-  _currentPage(rootPage)
+    _player(player),
+    _rootPage(rootPage),
+    _pausePage(pausePage),
+    _successPage(successPage),
+    _failurePage(failurePage),
+    _pages(pages),
+    _currentPage(rootPage)
 {
 }
 
@@ -40,8 +43,7 @@ void Menu::currentPage(const Page_sptr &page) {
     _currentPage = page;
 }
 
-void Menu::update(bool isPressed, float screenPosY)
-{
+void Menu::update(bool isPressed, float screenPosY) {
     if (_currentPage) {
         _currentPage->update(isPressed, screenPosY);
     }
@@ -51,28 +53,48 @@ void Menu::rootPageAsCurrentPage() {
     _currentPage = _rootPage;
 }
 
-void Menu::pausePageAsCurrentPage()
-{
+void Menu::pausePageAsCurrentPage() {
     _currentPage = _pausePage;
 }
 
-void Menu::successPageAsCurrentPage()
-{
+void Menu::successPageAsCurrentPage() {
     _currentPage = _successPage;
 }
 
-void Menu::failurePageAsCurrentPage()
-{
+void Menu::failurePageAsCurrentPage() {
     _currentPage = _failurePage;
 }
 
-void Menu::noPageAsCurrentPage() 
-{
+void Menu::noPageAsCurrentPage() {
     _currentPage = nullptr; 
 }
 
-CstPage_sptr Menu::rootPage() const {
+Menu::Event Menu::mouseClick(float mouseX, float mouseY) {
+    Menu::Event event;
+    if (_currentPage) {
+        const CstLabel_sptr label =
+            _currentPage->matchedLabel(mouseX, mouseY);
+        if (label) {
+            const Page_sptr newPage = _currentPage->child(label);
+            if (newPage) {
+                _currentPage = newPage;
+            }
+            else if (const std::shared_ptr<const Label::LabelAnswer> &action =
+                label->action()) {
+                _player.treatAction(*action);
+                //New level case
+                if (_player.statut() == Player::Statut::INTRANSITION) {
+                    noPageAsCurrentPage();
+                    _currentPage = nullptr;
+                    event.newLevel = action->chooseLevel + 1;
+                }
+            }
+        }
+    }
+    return event;
+}
 
+CstPage_sptr Menu::rootPage() const {
     return _rootPage;
 }
 
@@ -88,32 +110,64 @@ CstPage_sptr Menu::failurePage() const {
     return _failurePage;
 }
 
-const vecCstPage_sptr &Menu::pages() const
-{
+const vecCstPage_sptr &Menu::pages() const {
     return _pages;
 }
 
-std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
+std::shared_ptr<Menu> Menu::getJumperBallMenu(
+    Player& player,
+    size_t currentLevel,
+    unsigned int sizeX,
+    unsigned int sizeY)
 {
+
+
+    const bool isSmartPhoneFormat = sizeX < sizeY;
+    const float ratioX = static_cast<float>(sizeX) / static_cast<float>(sizeY);
+    const float ratioY = 1.f / ratioX;
+    const float ratio = ratioX < ratioY
+      ? ratioX
+      : ratioY;
+    std::cout <<(ratio) << std::endl;
     //Page 1
+    const float factor = isSmartPhoneFormat
+      ? 1.f
+      : ratioY;
+
+    const float label1Page1Width = factor * 0.9f;
+    const float label2Page1Width = factor * 0.4f;
+    const float label3Page1Width = factor * 0.6f;
+    const float label4Page1Width = factor * 0.4f;
+
+    const float label1Page1HeightDivide = 9.f;
+    const float label234Page1HeightDivide = 8.f;
+
+    const float label1Page1Height =
+      label1Page1Width * ratioX / label1Page1HeightDivide;
+    const float label234Page1Height =
+      label2Page1Width * ratioX / label234Page1HeightDivide;
     std::shared_ptr<const MessageLabel> label1Page1 =
         std::make_shared<const MessageLabel>(
-            factor * 1.f, 0.1f,
+            Label::WidthUnit::ShortestSide,
+            label1Page1Width, label1Page1Height,
             JBTypes::vec2f{0.5f,0.8f},
             "Jumper Ball");
     std::shared_ptr<const MessageLabel> label2Page1 =
         std::make_shared<const MessageLabel> (
-            factor * 0.4f, 0.05f,
+            Label::WidthUnit::ShortestSide,
+            label2Page1Width, label234Page1Height,
             JBTypes::vec2f{0.5f,0.6f},
             "Play");
     std::shared_ptr<const MessageLabel> label3Page1 =
         std::make_shared<const MessageLabel> (
-            factor * 0.6f, 0.05f,
+            Label::WidthUnit::ShortestSide,
+            label3Page1Width, label234Page1Height,
             JBTypes::vec2f{0.5f,0.4f},
             "Store");
     std::shared_ptr<const MessageLabel> label4Page1 =
         std::make_shared<const MessageLabel> (
-            factor * 0.4f, 0.05f,
+            Label::WidthUnit::ShortestSide,
+            label4Page1Width, label234Page1Height,
             JBTypes::vec2f{0.5f,0.2f},
             "Exit");
 
@@ -124,10 +178,13 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
     //Page 2
     vecCstLabel_sptr labelsPage2;
 
+    const float label1Page2Width = factor * 0.7f;
     std::shared_ptr<const MessageLabel> labelLevelsTitle =
-        std::make_shared<const MessageLabel> (factor * 1.f, 0.2f,
-                                              JBTypes::vec2f{0.5f, 1.f - 0.1f},
-                                              "Levels");
+        std::make_shared<const MessageLabel> (
+            Label::WidthUnit::ShortestSide,
+            label1Page2Width, label1Page1Height, 
+            JBTypes::vec2f{0.5f, 1.f - 0.1f}, "Levels"
+        );
     labelsPage2.push_back(labelLevelsTitle);
 
     //constexpr float offsetBox = 0.02f;
@@ -135,9 +192,16 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
    vecLabel_sptr labelLevels;
     for (size_t i = 0; i < 99; ++i) {
 
-        std::string sNumber;
-        if( i <= 10 ) {
-            sNumber.append("0");
+
+      const float labelNumberWidth = factor * 0.1f;
+
+      const float labelNumberHeight =
+          labelNumberWidth * ratioX;
+
+      std::string sNumber;
+      if (i < 10)
+      {
+        sNumber.append("0");
         }
         sNumber.append(std::to_string(i+1));
 
@@ -155,10 +219,11 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
 
 
         std::shared_ptr<MessageLabel> labelLevel =
-        std::make_shared<MessageLabel> (
-           factor * .2f, 0.1f,
-            JBTypes::vec2f{ .5f - factor * .5f
-                + factor * (.1f + (i%3) * .4f),
+        std::make_shared<MessageLabel>(
+            Label::WidthUnit::ShortestSide,
+            labelNumberWidth, labelNumberHeight,
+            JBTypes::vec2f{ .5f - label1Page1Width * .5f
+                + label1Page1Width* (.1f + (i%3) * .4f),
                 1.f-(0.3f + i/3 * 0.3f)},
             sNumber,
             std::make_shared<Label::LabelAnswer> (associatedLevel)
@@ -170,26 +235,30 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
     Label::updateLabelsLevels(labelLevels, currentLevel
                               /*_player.levelProgression()*/);
 
-    std::shared_ptr<const BoxLabel> labelBox =
+    /*std::shared_ptr<const BoxLabel> labelBox =
     std::make_shared<const BoxLabel>(0.5f, 0.1f,
-                                     JBTypes::vec2f{0.5f,0.8f} );
+                                     JBTypes::vec2f{0.5f,0.8f} );*/
 
 
     //Page 3 (Failure page)
 
+    const float label1Page3Width = factor * 0.6f;
     std::shared_ptr<const MessageLabel> label1Page3 =
         std::make_shared<const MessageLabel>(
-            factor * 1.f, 0.1f,
+            Label::WidthUnit::ShortestSide,
+            label1Page3Width, label1Page1Height,
             JBTypes::vec2f{0.5f,0.8f},
             "You lost");
     std::shared_ptr<const MessageLabel> label2Page3 =
         std::make_shared<const MessageLabel> (
-            factor * 0.4f, 0.05f,
+            Label::WidthUnit::ShortestSide,
+            label3Page1Width, label234Page1Height,
             JBTypes::vec2f{0.5f,0.6f},
             "Retry");
     std::shared_ptr<const MessageLabel> label3Page3 =
         std::make_shared<const MessageLabel> (
-            factor * 0.4f, 0.05f,
+            Label::WidthUnit::ShortestSide,
+            label4Page1Width, label234Page1Height,
             JBTypes::vec2f{0.5f,0.3f},
             "Exit");
 
@@ -198,35 +267,33 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
 
     
     //Page 4 (Pause page)
-    /*std::shared_ptr<const MessageLabel> label1Page3 =
-        std::make_shared<const MessageLabel>(
-            Utility::xScreenToPortrait(1.f), 0.1f,
-            JBTypes::vec2f{0.5f,0.8f},
-            "");*/
     std::shared_ptr<const MessageLabel> label1Page4 =
-        std::make_shared<const MessageLabel> ( factor * 0.4f, 0.05f,
+        std::make_shared<const MessageLabel> (
+            Label::WidthUnit::ShortestSide,
+            label2Page1Width, label234Page1Height,
             JBTypes::vec2f{0.5f,0.4f},
             "Continue");
     std::shared_ptr<const MessageLabel> label2Page4 =
-        std::make_shared<const MessageLabel> ( factor * 0.7f, 0.05f,
+        std::make_shared<const MessageLabel> (
+            Label::WidthUnit::ShortestSide,
+            label3Page1Width, label234Page1Height,
             JBTypes::vec2f{0.5f,0.6f},
             "Main menu");
 
-    const vecCstLabel_sptr labelsPage4
-        {label1Page4, label2Page4};
+    const vecCstLabel_sptr labelsPage4 { label1Page4, label2Page4 };
 
-
-    /*std::map<CstLabel_sptr,
-        CstPage_sptr > bridgesPage1 ;
-
-    std::map<CstLabel_sptr,
-        CstPage_sptr > bridgesPage2 ;*/
-
-    const Page_sptr page1 = std::make_shared<Page> (nullptr);
-    const Page_sptr page2 = std::make_shared<Page> (page1,10.f);
-    const Page_sptr page3 = std::make_shared<Page> (nullptr);
-    const Page_sptr page4 = std::make_shared<Page> (nullptr);
-
+    const Page_sptr page1 = std::make_shared<Page> (
+        nullptr, Page::PageFormat::Full
+    );
+    const Page_sptr page2 = std::make_shared<Page> (
+        page1, Page::PageFormat::Scroll, 10.f
+    );
+    const Page_sptr page3 = std::make_shared<Page> (
+        nullptr, Page::PageFormat::Full
+    );
+    const Page_sptr page4 = std::make_shared<Page> (
+        nullptr, Page::PageFormat::Full
+    );
 
     std::map<CstLabel_sptr, Page::TypeOfLabel> typesPage2;
     std::map<CstLabel_sptr, Page_sptr> childrenPage2;
@@ -245,7 +312,6 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
     typesPage1[labelsPage1.at(1)] = Page::TypeOfLabel::Message;
     typesPage1[labelsPage1.at(2)] = Page::TypeOfLabel::Message;
     typesPage1[labelsPage1.at(3)] = Page::TypeOfLabel::Message;
-
 
     std::map<CstLabel_sptr, Page_sptr> childrenPage3;
     std::map<CstLabel_sptr, Page::TypeOfLabel> typesPage3;
@@ -272,6 +338,6 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(size_t currentLevel, float factor)
     page3->setTypes(std::move(typesPage3));
     page4->setTypes(std::move(typesPage4));
 
-    const vecCstPage_sptr pages {page1,page2,page3,page4};
-    return std::make_shared<Menu> (page1,page4,nullptr,page3,pages);
+    const vecCstPage_sptr pages { page1,page2,page3,page4 };
+    return std::make_shared<Menu> (player,page1,page4,nullptr,page3,pages);
 }

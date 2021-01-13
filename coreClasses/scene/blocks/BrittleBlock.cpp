@@ -39,16 +39,15 @@ Block::Effect BrittleBlock::interaction( const JBTypes::Dir& ,
     }
 
     constexpr float fallSpeed = 20.f;
-    
     if (!_stillThere)  {
         const JBTypes::vec3f dirVec =
             JBTypesMethods::directionAsVector(_fallDirection);
-        const JBTypes::durationMs diff= currentTime - _collisionTime;
-        const float diffF= JBTypesMethods::getFloatFromDurationMS(diff)
-                            - timeToFall;
-       _localTransform.at(0) = dirVec.x * diffF * fallSpeed;
-       _localTransform.at(1) = dirVec.y * diffF * fallSpeed;
-       _localTransform.at(2) = dirVec.z * diffF * fallSpeed;
+        const JBTypes::durationMs diff = currentTime - _collisionTime;
+        const float diffF = JBTypesMethods::getFloatFromDurationMS(diff)
+            - timeToFall;
+        _localTransform.at(0) = dirVec.x * diffF * fallSpeed;
+        _localTransform.at(1) = dirVec.y * diffF * fallSpeed;
+        _localTransform.at(2) = dirVec.z * diffF * fallSpeed;
     }
     return Block::Effect::Nothing;
 }

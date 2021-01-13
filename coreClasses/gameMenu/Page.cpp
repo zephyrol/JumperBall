@@ -16,8 +16,10 @@
  */
 
 Page::Page(const CstPage_sptr& parent,
+           const Page::PageFormat& pageFormat,
            float height,
-           bool visibleOnParent ):
+           bool visibleOnParent):
+    _pageFormat(pageFormat),
     _bridges{},
     _labels{},
     _children{},
@@ -58,7 +60,7 @@ bool Page::visibleOnParent() const {
     return _visibleOnParent;
 }
 
-CstPage_sptr Page::child( const CstLabel_sptr& label) const {
+CstPage_sptr Page::child(const CstLabel_sptr& label) const {
 
     if ( _bridges.find(label) != _bridges.end() ) {
         return _bridges.at(label);
@@ -84,12 +86,11 @@ Page::TypeOfLabel Page::type(const CstLabel_sptr &label) const
         }
 }
 
-const vecCstLabel_sptr& Page::labels() const
-{
+const vecCstLabel_sptr& Page::labels() const {
     return _labels;
 }
 
-CstPage_sptr Page::child(float x, float y) const {
+/*CstPage_sptr Page::child(float x, float y) const {
 
     CstPage_sptr childPage = nullptr;
     if (const CstLabel_sptr label = matchedLabel(x,y)) {
@@ -98,15 +99,21 @@ CstPage_sptr Page::child(float x, float y) const {
         }
     }
     return childPage;
-}
+}*/
 
 float Page::height() const {
     return _height;
 }
 
-CstLabel_sptr Page::matchedLabel(float x, float y) const
+CstLabel_sptr Page::matchedLabel(
+    float x,
+    float y
+) const
 {
     for (const CstLabel_sptr& label: _labels) {
+        /*if (label->widthUnit() == Label::WidthUnit::ShortestSide) {
+            x = 0.5f + (x - 0.5f) * longestOnShortestSide;
+        }*/
         if (x > (label->position().x - label->width()/2.f) &&
                 x < (label->position().x + label->width()/2.f) &&
                 y > (label->position().y + _localPosY - label->height()/2.f) &&
