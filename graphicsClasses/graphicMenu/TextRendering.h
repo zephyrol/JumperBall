@@ -42,8 +42,8 @@ public:
     void                                render() const override;
     void                                update(float offset) override;
     const ShaderProgram&                getShaderProgram() const override;
-    GLuint                              getQuadVAO() const override;
-    const Quad&                         getDisplayQuad() const override;
+    GLuint                              getQuadVAO() const;
+    const Quad&                         getDisplayQuad() const;
 
     void                                render(size_t index) const;
     std::vector<size_t>                 getIndicesWithID(GLuint characterId) 

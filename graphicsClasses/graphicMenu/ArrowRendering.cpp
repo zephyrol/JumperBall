@@ -17,9 +17,10 @@
 
 ArrowRendering::ArrowRendering(const Label &label,
                              const ShaderProgram &spArrow):
-    _spArrow(spArrow),
     LabelRendering(label),
-    _charactersTransforms(label.message().size())
+    _spArrow(spArrow),
+    _transformQuad(1.f),
+    _transformTriangle(1.f)
 {
     updateGeometry();
 }
@@ -35,6 +36,12 @@ void ArrowRendering::updateGeometry() {
 }
 
 void ArrowRendering::render() const {
+    _spArrow.bindUniform("M",_transformQuad);
+    displayQuad->bind();
+    displayQuad->draw();
+    _spArrow.bindUniform("M",_transformTriangle);
+    displayTriangle->bind();
+    displayTriangle->draw();
 }
 
 const glm::vec3& ArrowRendering::getArrowColor() const {
@@ -44,29 +51,30 @@ const glm::vec3& ArrowRendering::getArrowColor() const {
 }
 
 void ArrowRendering::update(float offset) {
+    static_cast<void> (offset); // TODO add offset in the computing
+    const glm::mat4 biasMatrix  = glm::mat4{ 1.f, 0.f,  0.f, 0.f,
+                                             0.f,  1.f, 0.f, 0.f,
+                                             0.f,  0.f,  1.f, 0.f,
+                                             -1.f, -1.f, 0.f, 1.f} ;
+
+    constexpr float biasScalar = 2.f; //To multiply the translation by 2
+    const glm::vec3 scale = glm::vec3{_label.width(),_label.height(),0.f};
+
+    const glm::mat4 scaleMatrix = glm::scale(scale);
+
+    const glm::mat4 translate = glm::translate( biasScalar *
+                                    glm::vec3{ _label.position().x,
+                                               _label.position().y , 0.f});
+    _transformTriangle = biasMatrix * translate * scaleMatrix;
+    _transformQuad = biasMatrix * translate * scaleMatrix;
 }
 
 const ShaderProgram& ArrowRendering::getShaderProgram() const {
     return _spArrow;
 }
 
-GLuint ArrowRendering::getQuadVAO() const
-{
-    // displayQuad can not be null because the pointer is allocated in the
-    // constructor
-    // displayQuad->vertexArrayObject() can not be null because the pointer is
-    // allocated in the GeometryShape constructor
-    return *displayQuad->vertexArrayObject();
-}
-
-const Quad& ArrowRendering::getDisplayQuad() const
-{
-    // displayQuad can not be null because the pointer is allocated in the
-    // constructor
-    return *displayQuad;
-}
-
 std::shared_ptr<const Quad> ArrowRendering::displayQuad = nullptr;
+std::shared_ptr<const Triangle> ArrowRendering::displayTriangle = nullptr;
 const glm::vec3 ArrowRendering::enabledLetterColor =
     glm::vec3(0.f,1.f,1.f);
 const glm::vec3 ArrowRendering::disabledLetterColor =

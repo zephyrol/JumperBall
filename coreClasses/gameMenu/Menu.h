@@ -16,6 +16,7 @@
 #include <gameMenu/Page.h>
 #include <gameMenu/MessageLabel.h>
 #include <gameMenu/ObjectLabel.h>
+#include <gameMenu/ArrowLabel.h>
 #include <gameMenu/BoxLabel.h>
 #include <player/Player.h>
 

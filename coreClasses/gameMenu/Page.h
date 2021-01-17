@@ -30,7 +30,7 @@ public:
     //------------TYPES------------//
     // Slide state => timepoint and yScreenPosition
     using slideState = std::pair<JBTypes::timePointMs, float>;
-    enum class TypeOfLabel { Unknown, Object, Message, Switch, Box };
+    enum class TypeOfLabel { Unknown, Object, Message, Switch, Box, Arrow };
     enum class PageFormat { Full, Scroll };
     enum class EscapeAnswer { QuitGame, GoToParent, GoToPause};
 

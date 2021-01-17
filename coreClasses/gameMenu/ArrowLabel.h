@@ -23,16 +23,12 @@ public:
         float width,
         float height,
         const JBTypes::vec2f& position,
-        const std::string& message,
         const std::shared_ptr<LabelAnswer> action = nullptr,
         bool activated = true
         );
     virtual ~ArrowLabel() = default;
 
-    std::string message() const override;
-
 private:
-    const std::string _message;
 };
 
 #endif // ARROWLABEL_H

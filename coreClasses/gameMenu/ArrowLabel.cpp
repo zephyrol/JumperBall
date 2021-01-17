@@ -17,15 +17,8 @@ ArrowLabel::ArrowLabel(
     float width,
     float height,
     const JBTypes::vec2f& position,
-    const std::string& message,
     const std::shared_ptr<LabelAnswer> action,
     bool activated):
-    Label(widthUnit, width, height, position, activated, action),
-    _message(message)
+    Label(widthUnit, width, height, position, activated, action)
 {
-}
-
-std::string ArrowLabel::message() const
-{
-    return _message;
 }

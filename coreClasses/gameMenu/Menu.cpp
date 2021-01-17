@@ -134,9 +134,6 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
     const bool isSmartPhoneFormat = sizeX < sizeY;
     const float ratioX = static_cast<float>(sizeX) / static_cast<float>(sizeY);
     const float ratioY = 1.f / ratioX;
-    const float ratio = ratioX < ratioY
-      ? ratioX
-      : ratioY;
     //Page 1
     const float factor = isSmartPhoneFormat
       ? 1.f
@@ -186,14 +183,26 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
     //Page 2
     vecCstLabel_sptr labelsPage2;
 
-    const float label1Page2Width = factor * 0.7f;
+    const float label1Page2Width = factor * 0.6f;
     std::shared_ptr<const MessageLabel> labelLevelsTitle =
         std::make_shared<const MessageLabel> (
             Label::WidthUnit::ShortestSide,
             label1Page2Width, label1Page1Height, 
-            JBTypes::vec2f{0.5f, 1.f - 0.1f}, "Levels"
+            JBTypes::vec2f{ .5f - label1Page1Width * .5f
+                + label1Page1Width* (0.6f)
+              , 1.f - 0.1f}, "Levels"
         );
+    /*std::shared_ptr<const ArrowLabel> labelLevelsArrowBack=
+        std::make_shared<const ArrowLabel> (
+            Label::WidthUnit::ShortestSide,
+            label1Page2Width, label1Page1Height, 
+            JBTypes::vec2f{ .5f - label1Page1Width * .5f
+                + label1Page1Width* (0.6f)
+              , 1.f - 0.1f}
+        );*/
+
     labelsPage2.push_back(labelLevelsTitle);
+    //labelsPage2.push_back(labelLevelsArrowBack);
 
     //constexpr float offsetBox = 0.02f;
 

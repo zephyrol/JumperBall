@@ -27,7 +27,7 @@ using vecArrowRendering_sptr = std::vector<ArrowRendering_sptr>;
 
 class ArrowRendering: public LabelRendering {
 public:
-    ArrowRendering                       ( const Label& label,
+    ArrowRendering                       (const Label& label,
                                           const ShaderProgram& spArrow);
     virtual ~ArrowRendering() = default;
     struct CharacterTransform           { glm::vec2 localScale;
@@ -36,8 +36,6 @@ public:
     void                                render() const override;
     void                                update(float offset) override;
     const ShaderProgram&                getShaderProgram() const override;
-    GLuint                              getQuadVAO() const override;
-    const Quad&                         getDisplayQuad() const override;
 
     std::vector<size_t>                 getIndicesWithID(GLuint characterId)
                                                                           const;
@@ -45,7 +43,8 @@ public:
     
 private:
     const ShaderProgram&                _spArrow;
-    std::vector<glm::mat4>              _charactersTransforms;
+    glm::mat4                           _transformQuad;
+    glm::mat4                           _transformTriangle;
     
     void                                fillArrowureIDs();
     static void                         updateGeometry();

@@ -10,6 +10,7 @@ _spFont(spFont),
 _spBox(spBox),
 _textRenderings(createTextRenderings(page)),
 _boxRenderings(createBoxRenderings(page)),
+_arrowRenderings(createArrowRenderings(page)),
 _labelRenderings(createLabelRenderings()),
 _labelRenderingsUpdate( [this](size_t renderingLabelNumber){
     _labelRenderings.at(renderingLabelNumber)->update(_page.localPosY());
@@ -27,14 +28,6 @@ void PageRendering::update()
 void PageRendering::render() const
 {
     GLuint currentQuadVao = 0;
-    const auto updateQuadVao = [&currentQuadVao]
-                               (const CstLabelRendering_sptr &labelRendering) {
-        if (currentQuadVao != labelRendering->getQuadVAO()) {
-            const Quad &displayQuad = labelRendering->getDisplayQuad();
-            displayQuad.bind();
-            currentQuadVao = labelRendering->getQuadVAO();
-        }
-    };
 
     _spFont.use();
     for (std::map<GLuint, std::vector<LettersLookupTable>>::const_iterator
@@ -52,7 +45,14 @@ void PageRendering::render() const
         {
             const CstTextRendering_sptr& textRendering = 
                 lookupTable.textRendering;
-            updateQuadVao(textRendering);
+
+            if (currentQuadVao != textRendering->getQuadVAO())
+            {
+              const Quad &displayQuad = textRendering->getDisplayQuad();
+              displayQuad.bind();
+              currentQuadVao = textRendering->getQuadVAO();
+            }
+
             _spFont.bindUniform("fontColor", textRendering->getTextColor());
             const std::vector<size_t>& indices = lookupTable.indices;
             for (const size_t& index : indices ) {
@@ -62,10 +62,11 @@ void PageRendering::render() const
     }
 
     _spBox.use();
-    for (const BoxRendering_sptr& boxRendering : _boxRenderings)
-    {
-        updateQuadVao(boxRendering);
+    for (const BoxRendering_sptr& boxRendering : _boxRenderings) {
         boxRendering->render();
+    }
+    for (const ArrowRendering_sptr& arrowRendering : _arrowRenderings) {
+        arrowRendering->render();
     }
 }
 
@@ -96,6 +97,18 @@ const {
         }
     }
     return boxRenderings;
+}
+
+vecArrowRendering_sptr PageRendering::createArrowRenderings(const Page& page)
+const {
+    vecArrowRendering_sptr arrowRenderings;
+    for (const CstLabel_sptr& cstLabel : page.labels()) {
+        if (page.type(cstLabel) == Page::TypeOfLabel::Arrow) {
+            arrowRenderings.push_back(
+                std::make_shared<ArrowRendering>(*cstLabel, _spBox));
+        }
+    }
+    return arrowRenderings;
 }
 
 vecLabelRendering_sptr PageRendering::createLabelRenderings() const
