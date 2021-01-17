@@ -15,8 +15,9 @@
  * Created on 28 avril 2020, 18:56
  */
 
-Page::Page(const CstPage_sptr& parent,
+Page::Page(const Page_sptr& parent,
            const Page::PageFormat& pageFormat,
+           const Page::EscapeAnswer& escapeAnswer,
            float height,
            bool visibleOnParent):
     _pageFormat(pageFormat),
@@ -26,6 +27,7 @@ Page::Page(const CstPage_sptr& parent,
     _parent(parent),
     _visibleOnParent(visibleOnParent),
     _height(height),
+    _escapeAnswer(escapeAnswer),
     _localPosY(0.f),
     _localPressedPosY(0.f),
     _localReleasedPosY(0.f),
@@ -36,7 +38,11 @@ Page::Page(const CstPage_sptr& parent,
     _releaseVelocity(0.f)
 {}
 
-const std::weak_ptr<const Page>& Page::parent() const {
+std::weak_ptr<const Page> Page::parent() const {
+    return _parent;
+}
+
+std::weak_ptr<Page> Page::parent() {
     return _parent;
 }
 
@@ -44,8 +50,7 @@ float Page::localPosY() const {
     return _localPosY;
 }
 
-void Page::setBridges(std::map<CstLabel_sptr, Page_sptr> &&bridges)
-{
+void Page::setBridges(std::map<CstLabel_sptr, Page_sptr> &&bridges) {
     _bridges = std::move(bridges);
     _labels = createLabels();
     _children = createChildren();
@@ -61,14 +66,12 @@ bool Page::visibleOnParent() const {
 }
 
 CstPage_sptr Page::child(const CstLabel_sptr& label) const {
-
     if ( _bridges.find(label) != _bridges.end() ) {
         return _bridges.at(label);
     }
     else {
         return nullptr;
     }
-
 }
 
 Page_sptr Page::child(const CstLabel_sptr &label)
@@ -79,11 +82,11 @@ Page_sptr Page::child(const CstLabel_sptr &label)
 
 Page::TypeOfLabel Page::type(const CstLabel_sptr &label) const
 {
-        if ( _labelsTypes.find(label) != _labelsTypes.end() ) {
-            return _labelsTypes.at(label);
-        } else {
-            return TypeOfLabel::Unknown;
-        }
+    if (_labelsTypes.find(label) != _labelsTypes.end()) {
+        return _labelsTypes.at(label);
+    } else {
+        return TypeOfLabel::Unknown;
+    }
 }
 
 const vecCstLabel_sptr& Page::labels() const {
@@ -201,6 +204,10 @@ std::vector<CstLabel_sptr> Page::createLabels() const {
         labels.push_back(bridge.first);
     }
     return labels;
+}
+
+const Page::EscapeAnswer& Page::getEscapeAnswer() const {
+    return _escapeAnswer;
 }
 
 std::vector<Page_sptr> Page::createChildren() const {

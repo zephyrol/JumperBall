@@ -30,7 +30,12 @@ public:
 
     //------------TYPES------------//
     enum class TypeOfAction { PredefinedAction, GoLevel };
-    enum class PredefinedAction { ExitGame, ChooseEnglish, ChooseFrench };
+    enum class PredefinedAction {
+        ExitGame,
+        RetryLevel,
+        RunNextLevel,
+        ChooseEnglish,
+        ChooseFrench };
 
     struct LabelAnswer {
         Label::TypeOfAction typeOfAction;
@@ -93,6 +98,4 @@ private:
 
 };
 
-
 #endif /* LABEL_H */
-

@@ -5,21 +5,20 @@
  */
 
 /*
- * File:   MessageLabel.h
+ * File:   ArrowLabel.h
  * Author: Morgenthaler S
  *
- * Created on 28 avril 2020, 19:43
+ * Created on 16 janvier 2021, 21:42
  */
 
-
-#ifndef MESSAGELABEL_H
-#define MESSAGELABEL_H
+#ifndef ARROWLABEL_H
+#define ARROWLABEL_H
 #include "Label.h"
 
-class MessageLabel : public Label
+class ArrowLabel : public Label
 {
 public:
-    MessageLabel(
+    ArrowLabel(
         const Label::WidthUnit& widthUnit,
         float width,
         float height,
@@ -28,13 +27,12 @@ public:
         const std::shared_ptr<LabelAnswer> action = nullptr,
         bool activated = true
         );
-    virtual ~MessageLabel() = default;
+    virtual ~ArrowLabel() = default;
 
     std::string message() const override;
 
 private:
     const std::string _message;
-    
 };
 
-#endif // MESSAGELABEL_H
+#endif // ARROWLABEL_H

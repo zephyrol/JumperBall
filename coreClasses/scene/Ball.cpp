@@ -206,6 +206,9 @@ void Ball::setTimeLifeNow() noexcept {
 }
 
 void Ball::doAction(Ball::ActionRequest action) {
+    if ( _stateOfLife == Ball::StateOfLife::Bursting ){
+        return;
+    }
     switch (action) {
         case Ball::ActionRequest::GoStraightAhead:
             if (_state == Ball::State::Staying) {
@@ -801,6 +804,9 @@ float Ball::getFallingPosX() const noexcept {
 }
 
 void Ball::update() noexcept{
+    if (_stateOfLife == Ball::StateOfLife::Dead) {
+        return;
+    }
     switch (_state) {
         case Ball::State::Falling: fallingUpdate(); break;
         case Ball::State::Jumping: jumpingUpdate(); break;
@@ -814,11 +820,17 @@ void Ball::update() noexcept{
     }
     mapInteraction();
     burningUpdate();
-    if (isOutOfTheMap()) die();
+    if (isOutOfTheMap() || isBurstingFinished()) {
+        die();
+    }
+}
+
+bool Ball::isBurstingFinished() const {
+    return (_stateOfLife == Ball::StateOfLife::Bursting) &&
+        (getTimeSecondsSinceStateOfLife() > timeToBurst);
 }
 
 void Ball::mapInteraction() noexcept{
-
     const Map::Effect effect = _map.interaction
             (_currentSide,get3DPosition(),getRadius());
     if (effect == Map::Effect::Burst) {

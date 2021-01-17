@@ -26,6 +26,9 @@ public:
     struct Event {
        size_t newLevel = 0; 
     };
+    
+    enum class MenuAnswer { None, QuitGame };
+    
     Menu(
         Player& player,
         const Page_sptr& rootPage,
@@ -46,6 +49,8 @@ public:
     void successPageAsCurrentPage();
     void failurePageAsCurrentPage();
     void noPageAsCurrentPage();
+    bool parentPageAsCurrentPage();
+    Menu::MenuAnswer escapeAction();
 
     Menu::Event mouseClick(float mouseX, float mouseY);
 

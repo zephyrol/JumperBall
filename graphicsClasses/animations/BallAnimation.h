@@ -29,6 +29,7 @@ public:
     void                          updateTrans()                        override;
     void                          animationAlive();
     void                          animationBursting();
+    void                          animationDead();
 
 private:
 

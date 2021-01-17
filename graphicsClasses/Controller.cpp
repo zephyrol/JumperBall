@@ -47,16 +47,11 @@ _updatingScene([this](size_t) {
         _camera->follow(*_map);
     } else if (_player.statut() == Player::Statut::INGAME) {
         _camera->follow(*_ball);
-        if (_ball->stateOfLife() == Ball::StateOfLife::Dead) {
-            _player.statut(Player::Statut::INMENU);
-        }
-
     } else if (_player.statut() == Player::Statut::INTRANSITION){
         if (_camera->transitionEffect(*_ball, *_map)) {
             _player.statut(Player::Statut::INGAME);
         }
     }
-
     const std::shared_ptr<SceneRendering> currentSceneRendering =
         _currentFrame == Controller::CurrentFrame::FrameA
         ? _sceneRenderingFrameA
@@ -188,8 +183,7 @@ void Controller::switchFrame() {
                         : Controller::CurrentFrame::FrameA;
 }
 
-void Controller::manageValidateMouse()
-{
+void Controller::manageValidateMouse() {
     if ( _player.statut() == Player::Statut::INGAME && _ball) {
         _ball->doAction(Ball::ActionRequest::Jump);
     }
@@ -207,7 +201,9 @@ void Controller::manageEscape(const Controller::Status &status) {
     if ( _player.statut() == Player::Statut::INMENU ) {
         if (status == Controller::Status::Released &&
             _buttonsStatuts.at(Button::Escape) == Status::Pressed) {
-            _requestToLeave = true;
+            if ( _menu->escapeAction() == Menu::MenuAnswer::QuitGame) {
+                _requestToLeave = true;
+            }
         }
     } else if ( _player.statut() == Player::Statut::INGAME ) {
         if (status == Controller::Status::Released &&

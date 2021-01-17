@@ -26,7 +26,6 @@ vecMeshComponent_sptr MeshGenerator::genComponents(const MapState& map) {
         }
     }
 
-    std::cout << "trying to gen this bitch" << std::endl;
     for ( const std::shared_ptr<SpecialState>& SpecialState:
             map.specialStates()) {
         vecMeshComponent_sptr specialComponents = genSpecial(*SpecialState);

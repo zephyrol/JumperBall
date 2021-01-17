@@ -88,7 +88,8 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             if (counterBuffer.empty()){
                 nbBlocksTowrite = 1;
             } else {
-                counterBuffer = substractOffset(counterBuffer,firstNumberOfBlock);
+                counterBuffer =
+                    substractOffset(counterBuffer,firstNumberOfBlock);
                 nbBlocksTowrite = convertToBase10(counterBuffer,
                                               nbOfCharactersUsedForNumbers);
             }
@@ -175,8 +176,9 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             }
         } else {
             if (!counterWithoutObjectsBuffer.empty()){
-                counterWithoutObjectsBuffer = substractOffset(counterWithoutObjectsBuffer,
-                                firstNumberWithoutAnyObjects);
+                counterWithoutObjectsBuffer =
+                    substractOffset(counterWithoutObjectsBuffer,
+                                    firstNumberWithoutAnyObjects);
                 currentIndex += convertToBase10(counterWithoutObjectsBuffer,
                                                 nbOfCharactersWithoutObjects);
             }
@@ -350,7 +352,8 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
             }
         } else {
             if (!counterWithoutSpecialBuffer.empty()){
-                counterWithoutSpecialBuffer = substractOffset(counterWithoutSpecialBuffer,
+                counterWithoutSpecialBuffer =
+                    substractOffset(counterWithoutSpecialBuffer,
                                 firstNumberWithoutAnyObjects);
                 currentIndex += convertToBase10(counterWithoutSpecialBuffer,
                                                 nbOfCharactersWithoutObjects);
@@ -457,7 +460,8 @@ Map::MapInfo MapGenerator::createMapInfo(std::ifstream& file)
     return mapInfo;
 }
 
-std::string MapGenerator::convertToBase(unsigned int number, unsigned char base) {
+std::string MapGenerator::convertToBase(unsigned int number, unsigned char base)
+{
     std::string convertedNumber;
 
     while (number > 0 ) {
@@ -643,7 +647,7 @@ void MapGenerator::compress(std::ifstream& input) {
     if (counterWithoutObjects > 0) {
         std::string stringToWrite = convertToBase(
             counterWithoutObjects, nbOfCharactersWithoutObjects);
-        stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+        stringToWrite = applyOffset(stringToWrite,firstNumberWithoutAnyObjects);
         output << stringToWrite;
         counterWithoutObjects = 0;
     }
@@ -662,7 +666,8 @@ void MapGenerator::compress(std::ifstream& input) {
             if (counterWithoutObjects > 0) {
                 std::string stringToWrite = convertToBase(
                         counterWithoutObjects, nbOfCharactersWithoutObjects);
-                stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyObjects) ;
+                stringToWrite =
+                    applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
                 output << stringToWrite;
                 counterWithoutObjects = 0;
             } else if (i > 0 ) {
@@ -740,7 +745,8 @@ void MapGenerator::compress(std::ifstream& input) {
     if (counterWithoutObjects > 0) {
         std::string stringToWrite = convertToBase(
             counterWithoutObjects, nbOfCharactersWithoutObjects);
-        stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+        stringToWrite =
+            applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
         output << stringToWrite;
         counterWithoutObjects = 0;
     }
@@ -759,7 +765,8 @@ void MapGenerator::compress(std::ifstream& input) {
             if (counterWithoutObjects > 0) {
                 std::string stringToWrite = convertToBase(
                         counterWithoutObjects, nbOfCharactersWithoutObjects);
-                stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+                stringToWrite = applyOffset(stringToWrite,
+                                            firstNumberWithoutAnyObjects);
                 output << stringToWrite;
                 counterWithoutObjects = 0;
             } else if (i > 0) {
@@ -814,7 +821,8 @@ void MapGenerator::compress(std::ifstream& input) {
     if (counterWithoutObjects > 0) {
         std::string stringToWrite = convertToBase(
             counterWithoutObjects, nbOfCharactersWithoutObjects);
-        stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+        stringToWrite =
+            applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
         output << stringToWrite;
         counterWithoutObjects = 0;
     }

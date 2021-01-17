@@ -32,16 +32,19 @@ public:
     using slideState = std::pair<JBTypes::timePointMs, float>;
     enum class TypeOfLabel { Unknown, Object, Message, Switch, Box };
     enum class PageFormat { Full, Scroll };
+    enum class EscapeAnswer { QuitGame, GoToParent, GoToPause};
 
     //--CONSTRUCTORS & DESTRUCTORS--//
-    Page(const CstPage_sptr& parent,
+    Page(const Page_sptr& parent,
          const Page::PageFormat& pageFormat,
+         const Page::EscapeAnswer& escapeAnswer,
          float height = 1.f,
          bool visibleOnParent = false);
 
 
     //-------CONST METHODS--------//
-    const std::weak_ptr<const Page> & parent()                            const;
+    std::weak_ptr<const Page>         parent()                            const;
+    std::weak_ptr<Page>               parent();
     bool                              visibleOnParent()                   const;
     //CstPage_sptr                      child(float x, float y)           const;
     CstLabel_sptr                     matchedLabel( float x, float y )    const;
@@ -51,6 +54,7 @@ public:
             std::map<CstLabel_sptr, Page_sptr>&& bridges);
     void                              setTypes(
             std::map<CstLabel_sptr, TypeOfLabel>&& labelsTypes);
+    const Page::EscapeAnswer&         getEscapeAnswer() const;
 
     //----------METHODS-----------//
     CstPage_sptr                      child(const CstLabel_sptr& label) const;
@@ -76,9 +80,10 @@ private:
     std::map<CstLabel_sptr, TypeOfLabel> _labelsTypes;
     std::vector<CstLabel_sptr>        _labels;
     std::vector<Page_sptr>            _children;
-    const std::weak_ptr<const Page>   _parent;
+    const std::weak_ptr<Page>         _parent;
     const bool                        _visibleOnParent;
     const float                       _height;
+    const Page::EscapeAnswer          _escapeAnswer;
     float                             _localPosY; // Page position
     float                             _localPressedPosY;
     float                             _localReleasedPosY;

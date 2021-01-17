@@ -30,6 +30,7 @@ public:
     static constexpr float        timeToGetNextBlock                    = 0.25f;
     static constexpr float        timeToTurn                            = 0.3f;
     static constexpr float        timeToBurn                            = 2.f;
+    static constexpr float        timeToBurst                           = 0.8f;
     static constexpr float        basicRadius                           = 0.2f;
     static constexpr float        teleportationDuration                 = 1.f;
     static constexpr float        halfTimeTeleportationDuration
@@ -147,6 +148,7 @@ private:
                                                                           const;
     JBTypes::vec3f                get3DPosStayingBall()                   const;
     bool                          isOutOfTheMap()                         const;
+    bool                          isBurstingFinished()                    const;
     JBTypes::vec3f                getRotationAxis()              const noexcept;
     float                         getJumpingPosX()               const noexcept;
     float                         getFallingPosX()               const noexcept;

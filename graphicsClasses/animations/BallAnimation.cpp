@@ -94,6 +94,10 @@ void BallAnimation::animationBursting() {
     _scale                      = scaleMatrix;
 }
 
+void BallAnimation::animationDead() {
+    _scale = glm::mat4(0.f);
+}
+
 void BallAnimation::updateTrans() {
     
     if (_ball.getTimeAction() > _referenceTimePointAction) {
@@ -105,6 +109,8 @@ void BallAnimation::updateTrans() {
         animationAlive();
     } else if (_ball.stateOfLife() == Ball::StateOfLife::Bursting) {
         animationBursting();
+    } else if (_ball.stateOfLife() == Ball::StateOfLife::Dead) {
+        animationDead();
     }
 
     //For our animations, we apply the scale after the rotation
