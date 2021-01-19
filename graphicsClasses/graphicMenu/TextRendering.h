@@ -28,8 +28,7 @@ using vecTextRendering_sptr = std::vector<TextRendering_sptr>;
 
 class TextRendering: public LabelRendering {
 public:
-    TextRendering                       ( const Label& label,
-                                          const ShaderProgram& spFont);
+    TextRendering                       (const Label& label);
     virtual ~TextRendering() = default;
     struct CharacterTransform           { glm::vec2 localScale;
                                           glm::vec2 localTranslate; };
@@ -41,7 +40,6 @@ public:
 
     void                                render() const override;
     void                                update(float offset) override;
-    const ShaderProgram&                getShaderProgram() const override;
     GLuint                              getQuadVAO() const;
     const Quad&                         getDisplayQuad() const;
 
@@ -53,10 +51,10 @@ public:
     static bool                         initFreeTypeAndFont();
     static void                         clearFreeTypeRessources();
     static const std::vector<GLuint>&   getAlphabetCharactersIds();
+    static const std::shared_ptr<const ShaderProgram>& getShaderProgram();
 
 
 private:
-    const ShaderProgram&                _spFont;
     std::vector<glm::mat4>              _charactersTransforms;
     std::vector<GLuint>                 _charactersTextureIDs;
     void                                fillTextureIDs();
@@ -69,11 +67,16 @@ private:
     static void                         updateAlphabets(const Label& label);
     static void                         updateAlphabetCharactersIds();
     static void                         updateQuad();
+    static void                         createShader();
     static FT_Library                   ftLib;
     static FT_Face                      fontFace;
     static std::shared_ptr<const Quad>  displayQuad;
     static const glm::vec3              enabledLetterColor;
     static const glm::vec3              disabledLetterColor;
+
+    static const std::string            vsshaderFont;
+    static const std::string            fsshaderFont;
+    static std::shared_ptr<const ShaderProgram> spFont;
 };
 
 #endif // TEXTRENDERING_H

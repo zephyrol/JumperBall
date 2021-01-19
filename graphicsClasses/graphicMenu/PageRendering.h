@@ -16,10 +16,7 @@ using vecPageRendering_sptr = std::vector<PageRendering_sptr>;
 class PageRendering
 {
 public:
-    PageRendering(const Page& page,
-                  const ShaderProgram& spFont,
-                  const ShaderProgram& spBox
-                  );
+    PageRendering(const Page& page);
     void update();
     void render() const;
 
@@ -30,8 +27,6 @@ private:
                                 std::vector<size_t> indices; };
 
     const Page&             _page;
-    const ShaderProgram&    _spFont;
-    const ShaderProgram&    _spBox;
 
     vecTextRendering_sptr   _textRenderings;
     vecBoxRendering_sptr    _boxRenderings;

@@ -16,18 +16,22 @@
 
 BoxRendering::BoxRendering(const Label &label,
                            const glm::vec3& color1,
-                           const glm::vec3& color2,
-                           const ShaderProgram& spBox):
+                           const glm::vec3& color2):
     LabelRendering(label),
     _boxQuad(color1, color2),
-    _spBox(spBox),
     _transform(1.f)
 {
+    if(!spBox) {
+        spBox = std::make_shared<ShaderProgram> (
+            Shader (GL_VERTEX_SHADER,   vsshaderBox),
+            Shader (GL_FRAGMENT_SHADER, fsshaderBox)
+        );
+    }
 }
 
 
 void BoxRendering::render() const {
-    _spBox.bindUniform("M",_transform);
+    spBox->bindUniform("M",_transform);
     _boxQuad.bind();
     _boxQuad.draw();
 }
@@ -50,6 +54,6 @@ void BoxRendering::update(float offset) {
     _transform = biasMatrix * translate * scaleMatrix;
 }
 
-const ShaderProgram& BoxRendering::getShaderProgram() const {
-    return _spBox;
-}
+const std::string BoxRendering::vsshaderBox = "shaders/boxVs.vs";
+const std::string BoxRendering::fsshaderBox = "shaders/boxFs.fs";
+std::shared_ptr<const ShaderProgram> BoxRendering::spBox = nullptr;

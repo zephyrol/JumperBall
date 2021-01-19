@@ -15,14 +15,13 @@
 #include "ShaderProgram.h"
 #include <iterator>
 
-ArrowRendering::ArrowRendering(const Label &label,
-                             const ShaderProgram &spArrow):
+ArrowRendering::ArrowRendering(const Label &label):
     LabelRendering(label),
-    _spArrow(spArrow),
-    _transformQuad(1.f),
-    _transformTriangle(1.f)
+    _transformQuad(0.f),
+    _transformTriangle(0.f)
 {
     updateGeometry();
+    update(0.f);
 }
 
 
@@ -33,21 +32,30 @@ void ArrowRendering::updateGeometry() {
     if (!displayTriangle) {
         displayTriangle = std::make_shared<const Triangle>();
     }
+    if(!spArrow) {
+        spArrow = std::make_shared<ShaderProgram> (
+            Shader (GL_VERTEX_SHADER,   vsshaderArrow),
+            Shader (GL_FRAGMENT_SHADER, fsshaderArrow)
+        );
+    }
 }
 
 void ArrowRendering::render() const {
-    _spArrow.bindUniform("M",_transformQuad);
-    displayQuad->bind();
-    displayQuad->draw();
-    _spArrow.bindUniform("M",_transformTriangle);
-    displayTriangle->bind();
-    displayTriangle->draw();
+    //spArrow->use();
+    //spArrow->bindUniform("arrowColor",arrowColor);
+    //spArrow->bindUniform("M",_transformQuad);
+    //displayQuad->bind();
+    //displayQuad->draw();
+    //_spArrow.bindUniform("M",_transformTriangle);
+    //displayTriangle->bind();
+    //displayTriangle->draw();
 }
 
-const glm::vec3& ArrowRendering::getArrowColor() const {
-    return  _label.isActivated() 
-            ? enabledLetterColor
-            : disabledLetterColor;
+const glm::vec4& ArrowRendering::getArrowColor() const {
+    //return  _label.isActivated() 
+    //        ? enabledLetterColor
+    //        : disabledLetterColor;
+    return arrowColor;
 }
 
 void ArrowRendering::update(float offset) {
@@ -69,13 +77,10 @@ void ArrowRendering::update(float offset) {
     _transformQuad = biasMatrix * translate * scaleMatrix;
 }
 
-const ShaderProgram& ArrowRendering::getShaderProgram() const {
-    return _spArrow;
-}
+const std::string ArrowRendering::vsshaderArrow = "shaders/arrowVs.vs";
+const std::string ArrowRendering::fsshaderArrow = "shaders/arrowFs.fs";
+std::shared_ptr<const ShaderProgram> ArrowRendering::spArrow = nullptr;
 
 std::shared_ptr<const Quad> ArrowRendering::displayQuad = nullptr;
 std::shared_ptr<const Triangle> ArrowRendering::displayTriangle = nullptr;
-const glm::vec3 ArrowRendering::enabledLetterColor =
-    glm::vec3(0.f,1.f,1.f);
-const glm::vec3 ArrowRendering::disabledLetterColor =
-    glm::vec3(0.5f,0.5f,0.5f);
+const glm::vec4 ArrowRendering::arrowColor = glm::vec4(1.f,0.f,1.f,1.f);

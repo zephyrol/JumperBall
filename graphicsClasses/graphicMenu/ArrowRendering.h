@@ -27,31 +27,28 @@ using vecArrowRendering_sptr = std::vector<ArrowRendering_sptr>;
 
 class ArrowRendering: public LabelRendering {
 public:
-    ArrowRendering                       (const Label& label,
-                                          const ShaderProgram& spArrow);
+    ArrowRendering                       (const Label& label);
     virtual ~ArrowRendering() = default;
     struct CharacterTransform           { glm::vec2 localScale;
                                           glm::vec2 localTranslate; };
 
     void                                render() const override;
     void                                update(float offset) override;
-    const ShaderProgram&                getShaderProgram() const override;
-
-    std::vector<size_t>                 getIndicesWithID(GLuint characterId)
-                                                                          const;
-    const glm::vec3&                    getArrowColor() const;
+    const glm::vec4&                    getArrowColor() const;
     
 private:
-    const ShaderProgram&                _spArrow;
     glm::mat4                           _transformQuad;
     glm::mat4                           _transformTriangle;
     
-    void                                fillArrowureIDs();
     static void                         updateGeometry();
+
     static std::shared_ptr<const Quad>  displayQuad;
     static std::shared_ptr<const Triangle> displayTriangle;
-    static const glm::vec3              enabledLetterColor;
-    static const glm::vec3              disabledLetterColor;
+    static const glm::vec4              arrowColor;
+
+    static const std::string vsshaderArrow;
+    static const std::string fsshaderArrow;
+    static std::shared_ptr<const ShaderProgram> spArrow;
 };
 
 #endif // ARROWRENDERING_H

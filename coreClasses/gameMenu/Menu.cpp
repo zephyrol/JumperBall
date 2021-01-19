@@ -192,17 +192,17 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
                 + label1Page1Width* (0.6f)
               , 1.f - 0.1f}, "Levels"
         );
-    /*std::shared_ptr<const ArrowLabel> labelLevelsArrowBack=
+    std::shared_ptr<const ArrowLabel> labelLevelsArrowBack=
         std::make_shared<const ArrowLabel> (
             Label::WidthUnit::ShortestSide,
             label1Page2Width, label1Page1Height, 
             JBTypes::vec2f{ .5f - label1Page1Width * .5f
                 + label1Page1Width* (0.6f)
               , 1.f - 0.1f}
-        );*/
+        );
 
     labelsPage2.push_back(labelLevelsTitle);
-    //labelsPage2.push_back(labelLevelsArrowBack);
+    labelsPage2.push_back(labelLevelsArrowBack);
 
     //constexpr float offsetBox = 0.02f;
 
@@ -343,6 +343,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
         typesPage2[label] = Page::TypeOfLabel::Message;
         childrenPage2[label] = nullptr;
     }
+    typesPage2[labelLevelsArrowBack] = Page::TypeOfLabel::Arrow;
 
     std::map<CstLabel_sptr, Page_sptr> childrenPage1;
     std::map<CstLabel_sptr, Page::TypeOfLabel> typesPage1;

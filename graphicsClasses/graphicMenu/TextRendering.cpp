@@ -15,10 +15,8 @@
 #include "ShaderProgram.h"
 #include <iterator>
 
-TextRendering::TextRendering(const Label &label, 
-                             const ShaderProgram &spFont):
+TextRendering::TextRendering(const Label &label):
     LabelRendering(label),
-    _spFont(spFont),
     _charactersTransforms(label.message().size()),
     _charactersTextureIDs()
 {
@@ -26,12 +24,21 @@ TextRendering::TextRendering(const Label &label,
     updateAlphabets(label);
     updateAlphabetCharactersIds();
     fillTextureIDs();
+    createShader();
 }
 
 
 void TextRendering::updateQuad() {
     if (!displayQuad) {
         displayQuad = std::make_shared<const Quad>();
+    }
+}
+
+void TextRendering::createShader() {
+    if(!spFont) {
+      spFont = std::make_shared<const ShaderProgram>(
+          Shader(GL_VERTEX_SHADER, vsshaderFont),
+          Shader(GL_FRAGMENT_SHADER, fsshaderFont));
     }
 }
 
@@ -97,17 +104,17 @@ FT_UInt TextRendering::getHeightInPixels(const Label& label)
 
 void TextRendering::render() const {
     const glm::vec3& textColor = getTextColor();
-    _spFont.bindUniform("fontColor",textColor);
+    spFont->bindUniform("fontColor",textColor);
     for (size_t i = 0; i < _label.message().size(); ++i) {
-        _spFont.bindUniformTexture("characterTexture", 0,
+        spFont->bindUniformTexture("characterTexture", 0,
                                    _charactersTextureIDs.at(i));
-        _spFont.bindUniform("M",_charactersTransforms.at(i));
+        spFont->bindUniform("M",_charactersTransforms.at(i));
         displayQuad->draw();
     }
 }
 
 void TextRendering::render(size_t index) const {
-    _spFont.bindUniform("M", _charactersTransforms.at(index));
+    spFont->bindUniform("M", _charactersTransforms.at(index));
     displayQuad->draw();
 }
 
@@ -163,8 +170,8 @@ void TextRendering::update(float offset) {
     }
 }
 
-const ShaderProgram& TextRendering::getShaderProgram() const {
-    return _spFont;
+const std::shared_ptr<const ShaderProgram>& TextRendering::getShaderProgram() {
+    return spFont;
 }
 
 GLuint TextRendering::getQuadVAO() const 
@@ -305,3 +312,8 @@ const glm::vec3 TextRendering::enabledLetterColor =
     glm::vec3(0.f,1.f,1.f);
 const glm::vec3 TextRendering::disabledLetterColor = 
     glm::vec3(0.5f,0.5f,0.5f);
+
+const std::string TextRendering::vsshaderFont = "shaders/fontVs.vs";
+const std::string TextRendering::fsshaderFont = "shaders/fontFs.fs";
+
+std::shared_ptr<const ShaderProgram> TextRendering::spFont = nullptr;
