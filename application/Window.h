@@ -17,7 +17,7 @@
 #include <Utility.h>
 #include <Controller.h>
 #define RESOLUTION_X 1024
-#define RESOLUTION_Y 768
+#define RESOLUTION_Y 768 
 
 class Window {
 public:

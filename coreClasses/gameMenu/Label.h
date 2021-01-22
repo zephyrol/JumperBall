@@ -34,6 +34,7 @@ public:
         ExitGame,
         RetryLevel,
         RunNextLevel,
+        GoBack,
         ChooseEnglish,
         ChooseFrench };
 

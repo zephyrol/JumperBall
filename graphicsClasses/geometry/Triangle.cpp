@@ -58,24 +58,20 @@ std::vector<glm::vec3> Triangle::createCustomColors(
 
 const std::vector<glm::vec3> Triangle::basicPositionsTriangle =
 Utility::GLfloatListToGlmVec3({
-    -1.f,1.f,0.f, -1.f,-1.f,0.f,  1.f,-1.f,0.f,  
-    -1.f,1.f,0.f,  1.f,-1.f,0.f,   1.f,1.f,0.f
+    0.f,1.f,0.f, -1.f,-1.f,0.f,  1.f,-1.f,0.f
 });
 
 const std::vector<glm::vec3> Triangle::basicNormalsTriangle =
 Utility::GLfloatListToGlmVec3({
-    0.f,0.f,-1.f, 0.f,0.f,-1.f,  0.f,0.f,-1.f,
     0.f,0.f,-1.f, 0.f,0.f,-1.f,  0.f,0.f,-1.f
 });
 
 const std::vector<glm::vec3> Triangle::basicColorsTriangle =
 Utility::GLfloatListToGlmVec3({
-    1.f,1.f,1.f, 1.f,1.f,1.f,  1.f,1.f,1.f,
     1.f,1.f,1.f, 1.f,1.f,1.f,  1.f,1.f,1.f
 });
 
 const std::vector<glm::vec2> Triangle::basicUVCoordsTriangle =
 Utility::GLfloatListToGlmVec2({
-    0.f,1.f, 0.f,0.f, 1.f,0.f,  
-    0.f,1.f, 1.f,0.f, 1.f,1.f
+    0.f,1.f, 0.f,0.f, 0.f,0.f
 });

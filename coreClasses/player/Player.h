@@ -14,7 +14,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "scene/Ball.h"
-#include "gameMenu/Page.h"
 
 class Player
 {
@@ -44,8 +43,6 @@ public:
 
     Statut statut() const;
     void statut(const Statut& s);
-
-    void treatAction(const Label::LabelAnswer& action);
 
 private:
    

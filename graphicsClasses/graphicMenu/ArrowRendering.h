@@ -49,6 +49,10 @@ private:
     static const std::string vsshaderArrow;
     static const std::string fsshaderArrow;
     static std::shared_ptr<const ShaderProgram> spArrow;
+    static const glm::mat4 leftTriangleTransform;
+    static const glm::mat4 rightTriangleTransform;
+    static const glm::mat4 leftQuadTransform;
+    static const glm::mat4 rightQuadTransform;
 };
 
 #endif // ARROWRENDERING_H

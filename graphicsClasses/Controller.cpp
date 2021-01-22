@@ -188,12 +188,12 @@ void Controller::manageValidateMouse() {
         _ball->doAction(Ball::ActionRequest::Jump);
     }
     else if (_player.statut() == Player::Statut::INMENU ) {
-        const Menu::Event event =
+        const Menu::MenuAnswer menuAnswer =
             _menu->mouseClick(_mousePressingXCoord, _mousePressingYCoord);
 
-        if (event.newLevel > 0) {
-           runGame(event.newLevel);
-        }
+        if (menuAnswer.action == Menu::Action::GoLevel) {
+           runGame(menuAnswer.newLevel);
+        } 
     }
 }
 
@@ -201,7 +201,7 @@ void Controller::manageEscape(const Controller::Status &status) {
     if ( _player.statut() == Player::Statut::INMENU ) {
         if (status == Controller::Status::Released &&
             _buttonsStatuts.at(Button::Escape) == Status::Pressed) {
-            if ( _menu->escapeAction() == Menu::MenuAnswer::QuitGame) {
+            if ( _menu->escapeAction().action == Menu::Action::QuitGame) {
                 _requestToLeave = true;
             }
         }

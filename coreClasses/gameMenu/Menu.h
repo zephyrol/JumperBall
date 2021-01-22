@@ -24,11 +24,11 @@ class Menu
 {
 public:
 
-    struct Event {
-       size_t newLevel = 0; 
+    enum class Action { None, QuitGame, GoBack , GoLevel };
+    struct MenuAnswer {
+        Menu::Action action = Menu::Action::None;
+        size_t newLevel = 0; 
     };
-    
-    enum class MenuAnswer { None, QuitGame };
     
     Menu(
         Player& player,
@@ -53,7 +53,7 @@ public:
     bool parentPageAsCurrentPage();
     Menu::MenuAnswer escapeAction();
 
-    Menu::Event mouseClick(float mouseX, float mouseY);
+    Menu::MenuAnswer mouseClick(float mouseX, float mouseY);
 
     CstPage_sptr rootPage() const;
     CstPage_sptr pausePage() const;

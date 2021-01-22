@@ -80,8 +80,8 @@ void Menu::noPageAsCurrentPage() {
     _currentPage = nullptr; 
 }
 
-Menu::Event Menu::mouseClick(float mouseX, float mouseY) {
-    Menu::Event event;
+Menu::MenuAnswer Menu::mouseClick(float mouseX, float mouseY) {
+    Menu::MenuAnswer menuAnswer;
     if (_currentPage) {
         const CstLabel_sptr label =
             _currentPage->matchedLabel(mouseX, mouseY);
@@ -89,20 +89,29 @@ Menu::Event Menu::mouseClick(float mouseX, float mouseY) {
             const Page_sptr newPage = _currentPage->child(label);
             if (newPage) {
                 _currentPage = newPage;
-            }
-            else if (const std::shared_ptr<const Label::LabelAnswer> &action =
+            } else if (const std::shared_ptr<const Label::LabelAnswer> &action =
                 label->action()) {
-                _player.treatAction(*action);
-                //New level case
-                if (_player.statut() == Player::Statut::INTRANSITION) {
+                if (action->typeOfAction == Label::TypeOfAction::GoLevel){
                     noPageAsCurrentPage();
                     _currentPage = nullptr;
-                    event.newLevel = action->chooseLevel + 1;
+                    menuAnswer.action = Menu::Action::GoLevel;
+                    menuAnswer.newLevel = action->chooseLevel + 1;
+                    _player.statut(Player::Statut::INTRANSITION);
+                }
+                else if (
+                    action->typeOfAction == Label::TypeOfAction::PredefinedAction)
+                {
+                  if (
+                      action->predefinedAction == Label::PredefinedAction::GoBack)
+                  {
+                    parentPageAsCurrentPage();
+                    menuAnswer.action = Menu::Action::GoBack;
+                  }
                 }
             }
         }
     }
-    return event;
+    return menuAnswer;
 }
 
 CstPage_sptr Menu::rootPage() const {
@@ -192,13 +201,19 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
                 + label1Page1Width* (0.6f)
               , 1.f - 0.1f}, "Levels"
         );
+
+    Label::LabelAnswer arrowAction;
+    arrowAction.typeOfAction = Label::TypeOfAction::PredefinedAction;
+    arrowAction.predefinedAction = Label::PredefinedAction::GoBack;
+    const float arrowBackWidth = factor * 0.15f;
     std::shared_ptr<const ArrowLabel> labelLevelsArrowBack=
         std::make_shared<const ArrowLabel> (
             Label::WidthUnit::ShortestSide,
-            label1Page2Width, label1Page1Height, 
+            arrowBackWidth, label1Page1Height, 
             JBTypes::vec2f{ .5f - label1Page1Width * .5f
-                + label1Page1Width* (0.6f)
-              , 1.f - 0.1f}
+                + label1Page1Width * (0.1f)
+              , 1.f - 0.1f},
+            std::make_shared<Label::LabelAnswer> (arrowAction)
         );
 
     labelsPage2.push_back(labelLevelsTitle);
@@ -396,11 +411,15 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
 
 Menu::MenuAnswer Menu::escapeAction() {
     const Page::EscapeAnswer& escapeAnswer = _currentPage->getEscapeAnswer();
+    Menu::MenuAnswer menuAnswer;
     if ( escapeAnswer == Page::EscapeAnswer::QuitGame) {
-        return Menu::MenuAnswer::QuitGame;
+        menuAnswer.action = Menu::Action::QuitGame;
     } else if (escapeAnswer == Page::EscapeAnswer::GoToParent) {
+        menuAnswer.action = Menu::Action::GoBack;
         parentPageAsCurrentPage();
+    } else {
+        menuAnswer.action = Menu::Action::None;
     }
-    return Menu::MenuAnswer::None;
+    return menuAnswer;
 }
 
