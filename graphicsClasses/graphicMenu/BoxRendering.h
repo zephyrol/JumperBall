@@ -30,8 +30,8 @@ class BoxRendering : public LabelRendering
 {
 public:
     BoxRendering             (const Label& label,
-                              const glm::vec3& color1,
-                              const glm::vec3& color2);
+                              const glm::vec3& color1 = glm::vec3(0.f, 0.f, 0.f),
+                              const glm::vec3& color2 = glm::vec3(0.f, 0.f, 0.f));
     
     void                     render() const override;
     void                     update(float offset) override;

@@ -5,6 +5,7 @@
 #include "TextRendering.h"
 #include "BoxRendering.h"
 #include "ArrowRendering.h"
+#include "ObjectRendering.h"
 #include "Utility.h"
 
 class PageRendering;
@@ -31,6 +32,7 @@ private:
     vecTextRendering_sptr   _textRenderings;
     vecBoxRendering_sptr    _boxRenderings;
     vecArrowRendering_sptr  _arrowRenderings;
+    vecObjectRendering_sptr  _objectRenderings;
     vecLabelRendering_sptr  _labelRenderings;
     ParallelTask<void>      _labelRenderingsUpdate;
 
@@ -40,6 +42,7 @@ private:
     vecTextRendering_sptr createTextRenderings( const Page& page) const;
     vecBoxRendering_sptr createBoxRenderings( const Page& page) const;
     vecArrowRendering_sptr createArrowRenderings( const Page& page) const;
+    vecObjectRendering_sptr createObjectRenderings( const Page& page) const;
     vecLabelRendering_sptr createLabelRenderings() const;
     std::map<GLuint, std::vector<LettersLookupTable> >
                             createCharactersLookUpTable() const;

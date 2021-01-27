@@ -18,9 +18,10 @@ ObjectLabel::ObjectLabel(
     float width,
     float height,
     const JBTypes::vec2f& position,
-    const std::shared_ptr<Object>& object): 
+    const Object::CategoryOfObjects& categoryOfObject
+  ): 
     Label(widthUnit, width, height, position),
-    _object(object)
+    _categoryOfObjects(categoryOfObject)
 {
 
 }

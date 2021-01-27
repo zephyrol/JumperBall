@@ -7,6 +7,7 @@ _page(page),
 _textRenderings(createTextRenderings(page)),
 _boxRenderings(createBoxRenderings(page)),
 _arrowRenderings(createArrowRenderings(page)),
+_objectRenderings(createObjectRenderings(page)),
 _labelRenderings(createLabelRenderings()),
 _labelRenderingsUpdate( [this](size_t renderingLabelNumber){
     _labelRenderings.at(renderingLabelNumber)->update(_page.localPosY());
@@ -104,6 +105,18 @@ const {
         }
     }
     return arrowRenderings;
+}
+
+vecObjectRendering_sptr PageRendering::createObjectRenderings(const Page& page) 
+const {
+    vecObjectRendering_sptr objectRenderings;
+    for (const CstLabel_sptr& cstLabel : page.labels()) {
+        if (page.type(cstLabel) == Page::TypeOfLabel::Object) {
+            objectRenderings.push_back(
+                std::make_shared<ObjectRendering>(*cstLabel));
+        }
+    }
+    return objectRenderings;
 }
 
 vecLabelRendering_sptr PageRendering::createLabelRenderings() const

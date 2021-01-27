@@ -24,11 +24,11 @@ public:
         float width,
         float height,
         const JBTypes::vec2f& position,
-        const std::shared_ptr<Object>& object
+        const Object::CategoryOfObjects& categoryOfObject
     );
 
 private:
-    const std::shared_ptr<Object>_object;
+    const Object::CategoryOfObjects _categoryOfObjects;
 };
 
 #endif // OBJECTLABEL_H
