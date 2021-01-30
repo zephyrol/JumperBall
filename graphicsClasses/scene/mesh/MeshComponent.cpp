@@ -1,19 +1,17 @@
-
-/* 
- * File:   MeshComponent.cpp
- * Author: Morgenthaler S 
- * 
+/*
+ * File: MeshComponent.cpp
+ * Author: Morgenthaler S
+ *
  * Created on 31 mars 2020, 00:35
  */
 
 #include "MeshComponent.h"
 
-MeshComponent::MeshComponent(const std::shared_ptr<const GeometricShape>& elem, 
-                             const std::shared_ptr<Animation>& anim):
+MeshComponent::MeshComponent(const std::shared_ptr <const GeometricShape>& elem,
+                             const std::shared_ptr <Animation>& anim):
     _shape(elem),
     _animation(anim),
-    _cstAnimation(std::const_pointer_cast<const Animation>(_animation))
-{
+    _cstAnimation(std::const_pointer_cast <const Animation>(_animation)) {
 
 }
 
@@ -41,7 +39,7 @@ glm::mat4 MeshComponent::getAnimationTranslation() const {
     return _animation->translation();
 }
 
-const std::shared_ptr<GLuint>& MeshComponent::getShapeVAO() const {
+const std::shared_ptr <GLuint>& MeshComponent::getShapeVAO() const {
     return _shape->vertexArrayObject();
 }
 
@@ -49,11 +47,10 @@ void MeshComponent::drawShape() const {
     _shape->draw();
 }
 
-const std::shared_ptr<Animation>& MeshComponent::animation() {
+const std::shared_ptr <Animation>& MeshComponent::animation() {
     return _animation;
 }
 
-const std::shared_ptr<const Animation>& MeshComponent::animation() const {
+const std::shared_ptr <const Animation>& MeshComponent::animation() const {
     return _cstAnimation;
 }
-

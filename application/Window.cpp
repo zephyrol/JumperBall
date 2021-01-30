@@ -1,6 +1,5 @@
-
 /*
- * File:   Window.cpp
+ * File: Window.cpp
  * Author: Morgenthaler S
  *
  * Created on 2 novembre 2019, 11:17
@@ -13,50 +12,49 @@
 #include <initializer_list>
 
 
-Window::Window(GLFWwindow* glfwWindow):
+Window::Window(GLFWwindow*glfwWindow):
     _window(glfwWindow),
-    _controller()
-{
+    _controller() {
 }
 
 bool Window::inputManagement() {
 
-    const std::function<Controller::Status(const std::vector<unsigned int>&&)>
-        getButtonStatus = [this](const std::vector<unsigned int>&& keys)
-            -> Controller::Status {
-                for ( unsigned int key : keys ) {
-                    if (glfwGetKey(_window, key) == GLFW_PRESS) {
-                        return Controller::Status::Pressed;
-                    }
-                }
-                return Controller::Status::Released;
-        };
+    const std::function <Controller::Status(const std::vector <unsigned int> &&)>
+    getButtonStatus = [this] (const std::vector <unsigned int>&& keys)
+                      ->Controller::Status {
+                          for (unsigned int key : keys) {
+                              if (glfwGetKey(_window, key) == GLFW_PRESS) {
+                                  return Controller::Status::Pressed;
+                              }
+                          }
+                          return Controller::Status::Released;
+                      };
 
     // ESCAPE
-    const Controller::Status escapeStatus = getButtonStatus({GLFW_KEY_ESCAPE});
+    const Controller::Status escapeStatus = getButtonStatus({ GLFW_KEY_ESCAPE });
     _controller.interactionButtons(Controller::Button::Escape,
                                    escapeStatus);
 
     // VALIDATE
-    const Controller::Status validateStatus = 
+    const Controller::Status validateStatus =
         getButtonStatus({ GLFW_KEY_ENTER, GLFW_KEY_SPACE });
     _controller.interactionButtons(Controller::Button::Validate,
                                    validateStatus);
-                            
+
     // RIGHT
-    const Controller::Status rightStatus = 
+    const Controller::Status rightStatus =
         getButtonStatus({ GLFW_KEY_RIGHT, GLFW_KEY_L });
     _controller.interactionButtons(Controller::Button::Right,
                                    rightStatus);
 
-    // LEFT 
-    const Controller::Status leftStatus = 
+    // LEFT
+    const Controller::Status leftStatus =
         getButtonStatus({ GLFW_KEY_LEFT, GLFW_KEY_H });
     _controller.interactionButtons(Controller::Button::Left,
                                    leftStatus);
 
-    // UP 
-    const Controller::Status upStatus = 
+    // UP
+    const Controller::Status upStatus =
         getButtonStatus({ GLFW_KEY_UP, GLFW_KEY_K });
     _controller.interactionButtons(Controller::Button::Up,
                                    upStatus);
@@ -64,26 +62,26 @@ bool Window::inputManagement() {
     // MOUSE BUTTON 1;
     const Controller::Status mouseButton1Status =
         glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS
-            ? Controller::Status::Pressed
-            : Controller::Status::Released;
+        ? Controller::Status::Pressed
+        : Controller::Status::Released;
 
-    const auto getPosXY = [this]() -> std::pair<float, float> {
-        double posX, posY;
-        glfwGetCursorPos(_window, &posX, &posY);
-        return {static_cast<float>(posX), static_cast<float>(posY)};
-    };
-    const std::pair<float, float> posXY = getPosXY();
+    const auto getPosXY = [this] ()->std::pair <float, float> {
+                              double posX, posY;
+                              glfwGetCursorPos(_window, &posX, &posY);
+                              return { static_cast <float>(posX), static_cast <float>(posY) };
+                          };
+    const std::pair <float, float> posXY = getPosXY();
 
-    const float posX = posXY.first / static_cast<float>(RESOLUTION_X);
+    const float posX = posXY.first / static_cast <float>(RESOLUTION_X);
     const float posY =
-        1.f - posXY.second / static_cast<float>(RESOLUTION_Y);
+        1.f - posXY.second / static_cast <float>(RESOLUTION_Y);
     // GLFW defines y=0 as the top
     _controller.interactionMouse(mouseButton1Status,
                                  posX,
                                  posY);
 
     const bool exit = glfwWindowShouldClose(_window) != 0 ||
-        _controller.requestToLeave();
+                      _controller.requestToLeave();
 
     return exit;
 }
@@ -91,12 +89,11 @@ bool Window::inputManagement() {
 
 void Window::run() {
     glfwSwapInterval(1);
-    glfwSetInputMode(_window, GLFW_STICKY_KEYS,GL_TRUE) ;
+    glfwSetInputMode(_window, GLFW_STICKY_KEYS, GL_TRUE);
 
     auto before = JBTypesMethods::getTimePointMSNow();
     unsigned int counter = 0;
-    while (!inputManagement())
-    {
+    while (!inputManagement()) {
         _controller.runController();
         glfwSwapBuffers(_window);
         glfwPollEvents();
@@ -104,11 +101,11 @@ void Window::run() {
         ++counter;
         const auto after = JBTypesMethods::getTimePointMSNow();
         auto diff = after - before;
-        const std::chrono::duration<float> durationFloatDifference= diff;
+        const std::chrono::duration <float> durationFloatDifference = diff;
         const float diffF = durationFloatDifference.count();
         if (diffF > 1.f) {
             before = after;
-            std::cout << counter << " FPS"  << std::endl;
+            std::cout << counter << " FPS" << std::endl;
             counter = 0;
         }
 

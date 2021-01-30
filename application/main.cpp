@@ -1,6 +1,5 @@
-
-/* 
- * File:   main.cpp
+/*
+ * File: main.cpp
  * Author: Morgenthaler S
  *
  * Created on 30 septembre 2019, 20:52
@@ -14,34 +13,33 @@
 
 using namespace std;
 
-GLFWwindow* initLibraries() {
-    GLFWwindow* window;
-    if( !glfwInit() )
-    {
-      std::cerr << "Failed to init glfw" << std::endl;
+GLFWwindow*initLibraries() {
+    GLFWwindow*window;
+    if (!glfwInit()) {
+        std::cerr << "Failed to init glfw" << std::endl;
     }
     glfwWindowHint(GLFW_RESIZABLE, false);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /*window = glfwCreateWindow(RESOLUTION_X,RESOLUTION_Y,
-                                "JumperBall",glfwGetPrimaryMonitor(),
-                              nullptr);*/
-    window = glfwCreateWindow( RESOLUTION_X,RESOLUTION_Y,
-                                "JumperBall",nullptr, nullptr);
+       "JumperBall",glfwGetPrimaryMonitor(),
+       nullptr);*/
+    window = glfwCreateWindow(RESOLUTION_X, RESOLUTION_Y,
+                              "JumperBall", nullptr, nullptr);
 
     int widthWindow;
     int heightWindow;
-    glfwGetFramebufferSize(window ,&widthWindow ,&heightWindow);
+    glfwGetFramebufferSize(window, &widthWindow, &heightWindow);
 
     Utility::windowResolutionX = widthWindow;
     Utility::windowResolutionY = heightWindow;
 
-    if( window == nullptr ){
-    std::cerr << "Failed to open GLFW window" << std::endl;
-    glfwTerminate();
+    if (window == nullptr) {
+        std::cerr << "Failed to open GLFW window" << std::endl;
+        glfwTerminate();
     }
 
     glfwMakeContextCurrent(window);
@@ -62,28 +60,28 @@ void cleanLibraries() {
     TextRendering::clearFreeTypeRessources();
 }
 
-int main(int argc, char** argv) {
-    
+int main (int argc, char**argv) {
+
     if (argc == 3) {
 
         ifstream file;
         const std::string fileToOpen = argc > 1
-        ?  argv[1]
-        :  "maps/map1.txt";
-        file.open(fileToOpen);  //Opening file to read
+                                       ? argv[1]
+                                       : "maps/map1.txt";
+        file.open(fileToOpen); // Opening file to read
         if (!file) {
             std::cerr << "ERROR: Opening " << fileToOpen << " impossible .."
                       << std::endl;
             JBTypesMethods::displayInstallError();
             return EXIT_FAILURE;
         }
-        const std::string arg (argv[2]);
+        const std::string arg(argv[2]);
         if (arg == "-compress") {
             MapGenerator::compress(file);
-            std::ifstream mapFile ("outMap.txt");
-            std::ifstream mapFile2 (fileToOpen);
-            Map map (MapGenerator::createMapInfo(mapFile));
-            MapGenerator::verificationMap(mapFile2,map);
+            std::ifstream mapFile("outMap.txt");
+            std::ifstream mapFile2(fileToOpen);
+            Map map(MapGenerator::createMapInfo(mapFile));
+            MapGenerator::verificationMap(mapFile2, map);
         } else {
             std::cerr << "ERROR: Unknown option" << std::endl;
             return EXIT_FAILURE;
@@ -91,13 +89,12 @@ int main(int argc, char** argv) {
         return EXIT_SUCCESS;
     }
 
-    GLFWwindow* glfwWindow = initLibraries();
-    
+    GLFWwindow*glfwWindow = initLibraries();
+
     Window window(glfwWindow);
-    
+
     window.run();
-    
+
     cleanLibraries();
     return EXIT_SUCCESS;
 }
-

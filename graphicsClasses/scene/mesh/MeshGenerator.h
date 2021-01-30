@@ -1,7 +1,6 @@
-
-/* 
- * File:   MeshGenerator.h
- * Author: Morgenthaler S 
+/*
+ * File: MeshGenerator.h
+ * Author: Morgenthaler S
  *
  * Created on 12 avril 2020, 19:24
  */
@@ -26,30 +25,29 @@
 
 namespace MeshGenerator {
 
-    vecMeshComponent_sptr  genComponents(const QuadState& quad);
-    vecMeshComponent_sptr  genComponents(const BallState& ball);
-    vecMeshComponent_sptr  genComponents(const MapState& map);
-    vecMeshComponent_sptr  genComponents(const StarState& star);
+vecMeshComponent_sptr genComponents(const QuadState& quad);
+vecMeshComponent_sptr genComponents(const BallState& ball);
+vecMeshComponent_sptr genComponents(const MapState& map);
+vecMeshComponent_sptr genComponents(const StarState& star);
 
-    vecMeshComponent_sptr  genObject(const ObjectState& obj,
-                                    const glm::vec3& position,
-                                    const JBTypes::Dir& dir);
+vecMeshComponent_sptr genObject(const ObjectState& obj,
+                                const glm::vec3& position,
+                                const JBTypes::Dir& dir);
 
-    vecMeshComponent_sptr  genBlock(const MapState &map, size_t index);
-    vecMeshComponent_sptr  genSharps(const BlockState& BlockState,
-                                    const Map::BlockTypes& type,
-                                    const glm::vec3& posWorld);
-    vecMeshComponent_sptr  genJumpers(const BlockState& BlockState,
-                                     const Map::BlockTypes& type,
-                                     const glm::vec3& posWorld);
-    vecMeshComponent_sptr  genEnemy(const EnemyState& enemy);
-    vecMeshComponent_sptr  genSpecial(const SpecialState& special);
+vecMeshComponent_sptr genBlock(const MapState& map, size_t index);
+vecMeshComponent_sptr genSharps(const BlockState& BlockState,
+                                const Map::BlockTypes& type,
+                                const glm::vec3& posWorld);
+vecMeshComponent_sptr genJumpers(const BlockState& BlockState,
+                                 const Map::BlockTypes& type,
+                                 const glm::vec3& posWorld);
+vecMeshComponent_sptr genEnemy(const EnemyState& enemy);
+vecMeshComponent_sptr genSpecial(const SpecialState& special);
 
-    vecMeshComponent_sptr  sortComponents(
-                                const vecMeshComponent_sptr& components);
-    extern std::map<std::string, std::shared_ptr<GeometricShape> >
-                                commonShapes;
+vecMeshComponent_sptr sortComponents(
+    const vecMeshComponent_sptr& components);
+extern std::map <std::string, std::shared_ptr <GeometricShape> >
+commonShapes;
 }
 
 #endif /* MESHGENERATOR_H */
-

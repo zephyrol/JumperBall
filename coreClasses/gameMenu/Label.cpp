@@ -1,8 +1,7 @@
-
-/* 
- * File:   Map.cpp
+/*
+ * File: Map.cpp
  * Author: Morgenthaler S
- * 
+ *
  * Created on 28 avril 2020, 17:44
  */
 
@@ -18,7 +17,7 @@ Label::Label(
     float height,
     const JBTypes::vec2f& position,
     bool activated,
-    const std::shared_ptr<LabelAnswer> action,
+    const std::shared_ptr <LabelAnswer> action,
     bool fixed):
     _widthUnit(widthUnit),
     _width(width),
@@ -27,8 +26,7 @@ Label::Label(
     _position(position),
     _fixed(fixed),
     _activated(activated),
-    _action(action)
-{
+    _action(action) {
 }
 
 float Label::width() const {
@@ -60,14 +58,14 @@ bool Label::isActivated() const {
 }
 
 void Label::activate() {
-   _activated = true;
+    _activated = true;
 }
 
 void Label::deactivate() {
-   _activated = false;
+    _activated = false;
 }
 
-void Label::updateLabelsLevels(vecLabel_sptr& labels, size_t end) {
+void Label::updateLabelsLevels (vecLabel_sptr& labels, size_t end) {
     for (size_t i = 0; i < labels.size(); i++) {
         if (i < end) {
             labels.at(i)->activate();
@@ -77,7 +75,7 @@ void Label::updateLabelsLevels(vecLabel_sptr& labels, size_t end) {
     }
 }
 
-const std::shared_ptr<Label::LabelAnswer>& Label::action() const {
+const std::shared_ptr <Label::LabelAnswer>& Label::action() const {
     return _action;
 }
 
@@ -85,5 +83,5 @@ const Label::WidthUnit& Label::widthUnit() const {
     return _widthUnit;
 }
 
-Label::~Label(){
+Label::~Label() {
 }

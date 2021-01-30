@@ -1,11 +1,9 @@
 #include "QuadState.h"
 
-QuadState::QuadState(const Quad&)
-{
+QuadState::QuadState(const Quad&) {
 
 }
 
-void QuadState::update()
-{
+void QuadState::update() {
 
 }

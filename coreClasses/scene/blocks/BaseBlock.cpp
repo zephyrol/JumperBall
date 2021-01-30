@@ -1,8 +1,7 @@
-
-/* 
- * File:   BaseBlock.cpp
+/*
+ * File: BaseBlock.cpp
  * Author: Morgenthaler S
- * 
+ *
  * Created on 5 octobre 2019, 12:53
  */
 

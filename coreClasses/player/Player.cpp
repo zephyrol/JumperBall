@@ -1,13 +1,12 @@
-﻿
-/*
- * File:   Player.cpp
- * Author: Morgenthaler S 
- * 
+﻿/*
+ * File: Player.cpp
+ * Author: Morgenthaler S
+ *
  * Created on 10 mai 2020, 11:40
  */
 #include "Player.h"
 
-Player::Player() :
+Player::Player():
     _statut(Player::Statut::INMENU),
     _levelProgression(1),
     _money(0),
@@ -18,8 +17,8 @@ Player::Player() :
     _fireResistanceLevel(1),
     _timeLevel(1),
     _clockItemLevel(1),
-    _bonusLevel(1)
-{ }
+    _bonusLevel(1) {
+}
 
 size_t Player::levelProgression() const {
     return _levelProgression;
@@ -29,8 +28,8 @@ void Player::unlockNewLevel() {
     ++_levelProgression;
 }
 
-void Player::decreaseMoney(unsigned int value) {
-    if ( _money < value ) {
+void Player::decreaseMoney (unsigned int value) {
+    if (_money < value) {
         std::cerr << "Error ... negative value ! ... Cropped to 0";
         _money = 0;
     } else {
@@ -38,8 +37,8 @@ void Player::decreaseMoney(unsigned int value) {
     }
 }
 
-void Player::decreaseDiamonds(unsigned int value) {
-    if ( _diamondsCounter < value ) {
+void Player::decreaseDiamonds (unsigned int value) {
+    if (_diamondsCounter < value) {
         std::cerr << "Error ... negative value ! ... Cropped to 0";
         _diamondsCounter = 0;
     } else {
@@ -51,7 +50,7 @@ void Player::addDiamond() {
     _diamondsCounter++;
 }
 
-void Player::increaseMoney(unsigned int value) {
+void Player::increaseMoney (unsigned int value) {
     _money += value;
 }
 
@@ -63,7 +62,7 @@ Player::Statut Player::statut() const {
     return _statut;
 }
 
-void Player::statut(const Player::Statut& s) {
+void Player::statut (const Player::Statut& s) {
     _statut = s;
 }
 

@@ -1,5 +1,5 @@
-/* 
- * File:   Player.h
+/*
+ * File: Player.h
  * Author: Morgenthaler S
  *
  * Created on 10 mai 2020, 11:40
@@ -9,54 +9,52 @@
 #define PLAYER_H
 #include "scene/Ball.h"
 
-class Player
-{
+class Player {
 public:
-    Player();
+Player();
 
-    enum class Statut { INGAME, INMENU, INTRANSITION };
+enum class Statut { INGAME, INMENU, INTRANSITION };
 
-    size_t levelProgression() const;
-    unsigned int getMoney() const;
+size_t levelProgression() const;
+unsigned int getMoney() const;
 
-    void unlockNewLevel();
-    
-    void increaseMoney(unsigned int value);
-    void decreaseMoney(unsigned int value);
-    
-    void decreaseDiamonds(unsigned int value);
-    void addDiamond();
-    
-    void speedLevelUp();
-    void gravityLevelUp();
-    void fireResistanceLevelUp();
+void unlockNewLevel();
 
-    void timeLevelUp();
-    void clockItemLevelUp();
-    void bonusLevelUp();
+void increaseMoney(unsigned int value);
+void decreaseMoney(unsigned int value);
 
-    Statut statut() const;
-    void statut(const Statut& s);
+void decreaseDiamonds(unsigned int value);
+void addDiamond();
+
+void speedLevelUp();
+void gravityLevelUp();
+void fireResistanceLevelUp();
+
+void timeLevelUp();
+void clockItemLevelUp();
+void bonusLevelUp();
+
+Statut statut() const;
+void statut(const Statut& s);
 
 private:
-   
-    Statut _statut;
-    size_t _levelProgression;
 
-    unsigned int _money;
-    std::vector<bool> _diamonds;
+Statut _statut;
+size_t _levelProgression;
 
-    unsigned int _diamondsCounter;
+unsigned int _money;
+std::vector <bool> _diamonds;
 
-    unsigned int _speedLevel;
-    unsigned int _gravityLevel;
-    unsigned int _fireResistanceLevel;
+unsigned int _diamondsCounter;
 
-    unsigned int _timeLevel;
-    unsigned int _clockItemLevel;
-    unsigned int _bonusLevel;
+unsigned int _speedLevel;
+unsigned int _gravityLevel;
+unsigned int _fireResistanceLevel;
+
+unsigned int _timeLevel;
+unsigned int _clockItemLevel;
+unsigned int _bonusLevel;
 
 };
 
 #endif /* PLAYER_H */
-

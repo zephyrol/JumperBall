@@ -1,6 +1,5 @@
-
 /*
- * File:   ObjectLabel.cpp
+ * File: ObjectLabel.cpp
  * Author: Morgenthaler S
  *
  * Created on 13 juin 2020
@@ -11,15 +10,14 @@
 #include "Label.h"
 
 
-class BoxLabel: public Label
-{
+class BoxLabel:public Label {
 public:
-    BoxLabel(
-        const Label::WidthUnit& widthUnit,
-        float width,
-        float height,
-        const JBTypes::vec2f& position);
-    virtual ~BoxLabel() = default;
+BoxLabel(
+    const Label::WidthUnit& widthUnit,
+    float width,
+    float height,
+    const JBTypes::vec2f& position);
+virtual ~BoxLabel() = default;
 
 private:
 };

@@ -1,6 +1,5 @@
-
 /*
- * File:   ArrowLabel.cpp
+ * File: ArrowLabel.cpp
  * Author: Morgenthaler S
  *
  * Created on 16 janvier 2021, 21:42
@@ -12,8 +11,7 @@ ArrowLabel::ArrowLabel(
     float width,
     float height,
     const JBTypes::vec2f& position,
-    const std::shared_ptr<LabelAnswer> action,
+    const std::shared_ptr <LabelAnswer> action,
     bool activated):
-    Label(widthUnit, width, height, position, activated, action)
-{
+    Label(widthUnit, width, height, position, activated, action) {
 }

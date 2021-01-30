@@ -1,6 +1,5 @@
-
 /*
- * File:   SwitchLabel.h
+ * File: SwitchLabel.h
  * Author: Morgenthaler S
  *
  * Created on 28 avril 2020, 19:43
@@ -10,21 +9,20 @@
 #define SWITCHLABEL_H
 #include "Label.h"
 
-class SwitchLabel: public Label
-{
+class SwitchLabel:public Label {
 public:
-    SwitchLabel(
-        const Label::WidthUnit& widthUnit,
-        float width,
-        float height,
-        const JBTypes::vec2f& position,
-        bool switchButton = false);
+SwitchLabel(
+    const Label::WidthUnit& widthUnit,
+    float width,
+    float height,
+    const JBTypes::vec2f& position,
+    bool switchButton = false);
 
-    void turnOn();
-    void turnOff();
+void turnOn();
+void turnOff();
 
 private:
-    bool _switch;
+bool _switch;
 };
 
 #endif // SWITCHLABEL_H

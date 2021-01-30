@@ -1,8 +1,7 @@
-
-/* 
- * File:   GhostBlock.cpp
+/*
+ * File: GhostBlock.cpp
  * Author: Morgenthaler S
- * 
+ *
  * Created on 20 aout 2020, 21:33
  */
 
@@ -10,27 +9,25 @@
 #include <functional>
 
 GhostBlock::GhostBlock(float periodicity):
-Block(true,false),
-_periodicity(periodicity),
-_creationTime(JBTypesMethods::getTimePointMSNow()),
-_isThere(true)
-{
+    Block(true, false),
+    _periodicity(periodicity),
+    _creationTime(JBTypesMethods::getTimePointMSNow()),
+    _isThere(true) {
 }
 
-bool GhostBlock::stillExists() const
-{
-   return _isThere;
+bool GhostBlock::stillExists() const {
+    return _isThere;
 }
 
-Block::Effect GhostBlock::interaction( const JBTypes::Dir& ,
-                                        const JBTypes::timePointMs& currentTime,
-                                        const JBTypes::vec3f& ,
-                                        const JBTypes::vec3ui& ) {
+Block::Effect GhostBlock::interaction (const JBTypes::Dir&,
+                                       const JBTypes::timePointMs& currentTime,
+                                       const JBTypes::vec3f&,
+                                       const JBTypes::vec3ui&) {
     const auto passedTime = currentTime - _creationTime;
     const float fPassedTime =
-            JBTypesMethods::getFloatFromDurationMS(passedTime);
+        JBTypesMethods::getFloatFromDurationMS(passedTime);
     const unsigned int nbOfSwitching =
-        static_cast<unsigned int>(fPassedTime/_periodicity);
+        static_cast <unsigned int>(fPassedTime / _periodicity);
     if (nbOfSwitching % 2 == 0) {
         _isThere = true;
     } else {
@@ -38,32 +35,32 @@ Block::Effect GhostBlock::interaction( const JBTypes::Dir& ,
     }
 
     /*const float passedTimeSinceSwitching =
-        fPassedTime - _periodicity * static_cast<float>(nbOfSwitching);
-    
-    constexpr float animationTime = 0.2f;
-    const float coeffPeriod = (passedTimeSinceSwitching /
-                               animationTime);
-    const float t = coeffPeriod > 1.f
-    ? 1.f
-    : coeffPeriod ;
+       fPassedTime - _periodicity * static_cast<float>(nbOfSwitching);
 
-    const float beginScale = _isThere
-        ? 0.f
-        : 1.f;
-    const float endScale = _isThere
-        ? 1.f
-        : 0.f;
-    
-    const std::function<float(float,float,float)> getScale =
-        [](float t, float begin, float end){
-            return t * begin + (1-t) * end;
-    };
-    
-    const float scale = getScale(t,beginScale,endScale);*/
+       constexpr float animationTime = 0.2f;
+       const float coeffPeriod = (passedTimeSinceSwitching /
+       animationTime);
+       const float t = coeffPeriod > 1.f
+       ? 1.f
+       : coeffPeriod ;
+
+       const float beginScale = _isThere
+       ? 0.f
+       : 1.f;
+       const float endScale = _isThere
+       ? 1.f
+       : 0.f;
+
+       const std::function<float(float,float,float)> getScale =
+       [](float t, float begin, float end){
+       return t * begin + (1-t) * end;
+       };
+
+       const float scale = getScale(t,beginScale,endScale);*/
     const float scale = _isThere ? 1.f : 0.f;
     _localTransform.at(3) = scale;
     _localTransform.at(4) = scale;
     _localTransform.at(5) = scale;
-    
+
     return Block::Effect::Nothing;
 }

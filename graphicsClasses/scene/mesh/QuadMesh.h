@@ -1,5 +1,5 @@
 /*
- * File:   QuadMesh.h
+ * File: QuadMesh.h
  * Author: Morgenthaler S
  *
  * Created on 20 septembre 2020, 11h20
@@ -9,13 +9,12 @@
 #include "geometry/QuadState.h"
 #include "Mesh.h"
 
-class QuadMesh: public Mesh<Quad,QuadState>
-{
+class QuadMesh:public Mesh <Quad, QuadState> {
 public:
-    QuadMesh(const Quad& quad);
+QuadMesh(const Quad& quad);
 
 private:
-    virtual void updateWorld() override;
+virtual void updateWorld() override;
 };
 
 #endif // QUADMESH_H

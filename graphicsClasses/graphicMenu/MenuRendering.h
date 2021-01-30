@@ -5,21 +5,20 @@
 #include "TextRendering.h"
 #include "BoxRendering.h"
 
-class MenuRendering
-{
+class MenuRendering {
 public:
-    MenuRendering(const Menu& menu);
+MenuRendering(const Menu& menu);
 
-    void render() const;
-    void update();
+void render() const;
+void update();
 
 private:
-    const Menu& _menu;
-    const std::map<CstPage_sptr, PageRendering_sptr> _pageRenderings;
+const Menu& _menu;
+const std::map <CstPage_sptr, PageRendering_sptr> _pageRenderings;
 
-    std::map<CstPage_sptr, PageRendering_sptr> createPageRenderings() const;
+std::map <CstPage_sptr, PageRendering_sptr> createPageRenderings() const;
 
-    static unsigned int getNumberOfPixelsHeight(float height);
+static unsigned int getNumberOfPixelsHeight(float height);
 };
 
 #endif // MENURENDERING_H

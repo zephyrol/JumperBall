@@ -5,26 +5,26 @@
 #include "Animation.h"
 
 /*
- * File:   EnemyAnimation.h
+ * File: EnemyAnimation.h
  * Author: Morgenthaler S
  *
  * Created on 15 aout 2020, 11h00
  */
 
-class EnemyAnimation : public Animation {
+class EnemyAnimation:public Animation {
 public:
 
-    //--CONSTRUCTORS & DESTRUCTORS--//
-    EnemyAnimation                 (const EnemyState& enemy);
-    virtual ~EnemyAnimation        ()                                  =default;
+// --CONSTRUCTORS & DESTRUCTORS--//
+EnemyAnimation(const EnemyState& enemy);
+virtual ~EnemyAnimation() = default;
 
-    //----------METHODS------------//
-    void                          updateTrans()                        override;
+// ----------METHODS------------//
+void updateTrans() override;
 
 private:
-    //--------ATTRIBUTES-----------//
-    const EnemyState&           _enemy;
+// --------ATTRIBUTES-----------//
+const EnemyState& _enemy;
 };
 
 
-#endif // ENEMYANIMATION_H 
+#endif // ENEMYANIMATION_H

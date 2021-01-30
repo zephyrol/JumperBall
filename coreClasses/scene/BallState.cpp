@@ -1,5 +1,5 @@
 /*
- * File:   BallState.h
+ * File: BallState.h
  * Author: Morgenthaler S
  *
  * Created on 19 septembre 2020, 07h50
@@ -21,12 +21,10 @@ BallState::BallState(const Ball& ball):
     _currentMovementRotation(ball.movementRotation()),
     _crushingCoeff(ball.getCrushingCoefficient()),
     _teleportationCoeff(ball.getTeleportationCoefficient()),
-    _teleportationColor(ball.getTeleportationColor())
-{
+    _teleportationColor(ball.getTeleportationColor()) {
 }
 
-void BallState::update()
-{
+void BallState::update() {
     _position = _ball.get3DPosition();
     _burnCoefficient = _ball.burnCoefficient();
     _currentSideAsVector = _ball.currentSideAsVector();
@@ -42,7 +40,7 @@ void BallState::update()
     _teleportationColor = _ball.getTeleportationColor();
 }
 
-const JBTypes::vec3f &BallState::get3DPosition() const noexcept {
+const JBTypes::vec3f& BallState::get3DPosition() const noexcept{
     return _position;
 }
 
@@ -50,7 +48,7 @@ float BallState::burnCoefficient() const {
     return _burnCoefficient;
 }
 
-const JBTypes::vec3f &BallState::currentSideAsVector() const {
+const JBTypes::vec3f& BallState::currentSideAsVector() const {
     return _currentSideAsVector;
 }
 
@@ -58,7 +56,7 @@ const JBTypes::timePointMs& BallState::getTimeStateOfLife() const {
     return _timeStateOfLife;
 }
 
-const JBTypes::timePointMs& BallState::getTimeAction() const noexcept {
+const JBTypes::timePointMs& BallState::getTimeAction() const noexcept{
     return _timeAction;
 }
 
@@ -74,7 +72,7 @@ float BallState::getRadius() const {
     return _radius;
 }
 
-const JBTypes::vec3f &BallState::lookTowardsAsVector() const {
+const JBTypes::vec3f& BallState::lookTowardsAsVector() const {
     return _lookTowardsAsVector;
 }
 
@@ -82,18 +80,18 @@ const JBTypes::vec3f& BallState::currentMovementRotation() const {
     return _currentMovementRotation;
 }
 
-const std::vector<JBTypes::Dir>& BallState::coveredRotation() const noexcept {
+const std::vector <JBTypes::Dir>& BallState::coveredRotation() const noexcept{
     return _coveredRotation;
 }
 
-float BallState::crushingCoeff() const noexcept {
-    return _crushingCoeff; 
+float BallState::crushingCoeff() const noexcept{
+    return _crushingCoeff;
 }
 
 float BallState::teleportationCoeff() const {
-    return _teleportationCoeff; 
+    return _teleportationCoeff;
 }
 
 const JBTypes::Color& BallState::teleportationColor() const {
-    return _teleportationColor; 
+    return _teleportationColor;
 }

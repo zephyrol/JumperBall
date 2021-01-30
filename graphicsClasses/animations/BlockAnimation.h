@@ -5,26 +5,26 @@
 #include "Animation.h"
 
 /*
- * File:   BlockAnimation.h
+ * File: BlockAnimation.h
  * Author: Morgenthaler S
  *
  * Created on 15 aout 2020, 11h00
  */
 
-class BlockAnimation : public Animation {
+class BlockAnimation:public Animation {
 public:
 
-    //--CONSTRUCTORS & DESTRUCTORS--//
-    BlockAnimation                 (const BlockState& block);
-    virtual ~BlockAnimation        ()                                  =default;
+// --CONSTRUCTORS & DESTRUCTORS--//
+BlockAnimation(const BlockState& block);
+virtual ~BlockAnimation() = default;
 
 
-    //----------METHODS------------//
-    void                          updateTrans()                        override;
+// ----------METHODS------------//
+void updateTrans() override;
 
 private:
-    //--------ATTRIBUTES-----------//
-    const BlockState&           _block;
+// --------ATTRIBUTES-----------//
+const BlockState& _block;
 };
 
 

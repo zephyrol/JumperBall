@@ -1,8 +1,7 @@
-
-/* 
- * File:   BoxRendering.cpp
+/*
+ * File: BoxRendering.cpp
  * Author: Morgenthaler S
- * 
+ *
  * Created on 14 juin 2020
  */
 
@@ -16,28 +15,27 @@
 
 
 class BoxRendering;
-using BoxRendering_sptr = std::shared_ptr<BoxRendering>;
-using CstBoxRendering_sptr = std::shared_ptr<const BoxRendering>;
-using vecCstBoxRendering_sptr = std::vector<CstBoxRendering_sptr>;
-using vecBoxRendering_sptr = std::vector<BoxRendering_sptr>;
+using BoxRendering_sptr = std::shared_ptr <BoxRendering>;
+using CstBoxRendering_sptr = std::shared_ptr <const BoxRendering>;
+using vecCstBoxRendering_sptr = std::vector <CstBoxRendering_sptr>;
+using vecBoxRendering_sptr = std::vector <BoxRendering_sptr>;
 
-class BoxRendering : public LabelRendering
-{
+class BoxRendering:public LabelRendering {
 public:
-    BoxRendering             (const Label& label,
-                              const glm::vec3& color1 = glm::vec3(0.f, 0.f, 0.f),
-                              const glm::vec3& color2 = glm::vec3(0.f, 0.f, 0.f));
-    
-    void                     render() const override;
-    void                     update(float offset) override;
+BoxRendering(const Label& label,
+             const glm::vec3& color1 = glm::vec3(0.f, 0.f, 0.f),
+             const glm::vec3& color2 = glm::vec3(0.f, 0.f, 0.f));
 
- private:
-    const Quad               _boxQuad;
-    glm::mat4                _transform;
+void render() const override;
+void update(float offset) override;
 
-    static const std::string vsshaderBox;
-    static const std::string fsshaderBox;
-    static std::shared_ptr<const ShaderProgram> spBox;
+private:
+const Quad _boxQuad;
+glm::mat4 _transform;
+
+static const std::string vsshaderBox;
+static const std::string fsshaderBox;
+static std::shared_ptr <const ShaderProgram> spBox;
 };
 
 #endif // BOXRENDERING_H

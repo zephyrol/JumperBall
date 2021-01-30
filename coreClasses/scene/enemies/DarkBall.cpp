@@ -1,38 +1,36 @@
 //
-//  DarkBall.cpp
-//  JumperBallCore
+// DarkBall.cpp
+// JumperBallCore
 //
-//  Created by S Morgenthaler on 08/10/2020.
+// Created by S Morgenthaler on 08/10/2020.
 //
 
 #include "DarkBall.h"
 
-DarkBall::DarkBall(const Block &tieBlock,
+DarkBall::DarkBall(const Block& tieBlock,
                    const JBTypes::vec3ui& initialPosition,
-                   const JBTypes::Dir &dir,
-                   const JBTypes::Dir &movementDirection,
-                   size_t nbOfJumps) : 
-Enemy(tieBlock,
-      initialPosition,
-      dir,
-      darkBallRadius,
-      nbOfJumps,
-      { 0.f, 
-        0.f, 
-        0.f, 
-        0.f,
-        0.f,
-        0.f,
-        1.f,
-        1.f,
-        1.f }
-),
-_movementDirection(movementDirection)
-{
+                   const JBTypes::Dir& dir,
+                   const JBTypes::Dir& movementDirection,
+                   size_t nbOfJumps):
+    Enemy(tieBlock,
+          initialPosition,
+          dir,
+          darkBallRadius,
+          nbOfJumps,
+          { 0.f,
+            0.f,
+            0.f,
+            0.f,
+            0.f,
+            0.f,
+            1.f,
+            1.f,
+            1.f }),
+    _movementDirection(movementDirection) {
 }
 
-Enemy::Effect DarkBall::update(const JBTypes::vec3f& entityPosition,
-                               float radiusEntity) {
+Enemy::Effect DarkBall::update (const JBTypes::vec3f& entityPosition,
+                                float radiusEntity) {
     const ClassicalMechanics& mechanics = darkBallClassicalMechanics;
     const float timeSinceCreation =
         JBTypesMethods::getTimeSecondsSinceTimePoint(creationTime());
@@ -43,18 +41,18 @@ Enemy::Effect DarkBall::update(const JBTypes::vec3f& entityPosition,
     const JBTypes::vec3f vecDirSide =
         JBTypesMethods::directionAsVector(direction());
 
-    const size_t nbOfJumpsDone = static_cast<size_t>(timeSinceCreation /
-        mechanics.getTimeToGetDestination());
+    const size_t nbOfJumpsDone = static_cast <size_t>(timeSinceCreation /
+                                                      mechanics.getTimeToGetDestination());
 
     const float distanceAlreadyTravelled = nbOfJumpsDone *
-        mechanics.getJumpDistance();
+                                           mechanics.getJumpDistance();
 
-    const std::function<float(float, float)> getRemainder =
-        [](float dividend, float divisor)
-        -> float {
-        const size_t quotient = static_cast<size_t>(dividend / divisor);
-        return dividend - ( divisor * static_cast<float>(quotient));
-    };
+    const std::function <float(float, float)> getRemainder =
+        [] (float dividend, float divisor)
+        ->float {
+            const size_t quotient = static_cast <size_t>(dividend / divisor);
+            return dividend - (divisor * static_cast <float>(quotient));
+        };
 
     const float timeCurrentJump = getRemainder(
         timeSinceCreation,
@@ -71,22 +69,22 @@ Enemy::Effect DarkBall::update(const JBTypes::vec3f& entityPosition,
     std::function <float(float, float, size_t)> getMovementPosition =
         [&getRemainder] (float distanceTravelled,
                          float jumpDistance,
-                         size_t length) -> float {
-        const unsigned int nbOfjumps =
-            static_cast<size_t>(distanceTravelled / jumpDistance);
-        const float reminder = getRemainder(distanceTravelled, jumpDistance);
+                         size_t length)->float {
+            const unsigned int nbOfjumps =
+                static_cast <size_t>(distanceTravelled / jumpDistance);
+            const float reminder = getRemainder(distanceTravelled, jumpDistance);
 
-        return ((nbOfjumps / length) % 2) == 0
-            ? (nbOfjumps % length) * jumpDistance + reminder
-            :  length * jumpDistance -
-                ((nbOfjumps % length) * jumpDistance + reminder);
-    };
+            return ((nbOfjumps / length) % 2) == 0
+                   ? (nbOfjumps % length) * jumpDistance + reminder
+                   : length*jumpDistance -
+                   ((nbOfjumps % length) * jumpDistance + reminder);
+        };
 
     const float movementPosition = getMovementPosition(
         distanceTravelled,
         mechanics.getJumpDistance(),
         length()
-    );
+        );
     _transform.at(0) =
         vecDirMovement.x * movementPosition + vecDirSide.x * sidePosition;
     _transform.at(1) =
@@ -99,20 +97,22 @@ Enemy::Effect DarkBall::update(const JBTypes::vec3f& entityPosition,
     _position.y = _initialPosition.y + _transform.at(1);
     _position.z = _initialPosition.z + _transform.at(2);
 
-    touchingTest(entityPosition,radiusEntity);
-    return _hasHit 
-        ? Enemy::Effect::Burst
-        : Enemy::Effect::Nothing;
+    touchingTest(entityPosition, radiusEntity);
+    return _hasHit
+           ? Enemy::Effect::Burst
+           : Enemy::Effect::Nothing;
 }
 
 const JBTypes::Dir& DarkBall::movementDirection() const {
     return _movementDirection;
 }
 
-void DarkBall::touchingTest(const JBTypes::vec3f& entityPosition,
-                         float radiusEntity) {
-    if (JBTypesMethods::distance(entityPosition, _position) <
-        (radiusEntity + darkBallRadius)) {
+void DarkBall::touchingTest (const JBTypes::vec3f& entityPosition,
+                             float radiusEntity) {
+    if (
+        JBTypesMethods::distance(entityPosition, _position) <
+        (radiusEntity + darkBallRadius)
+        ) {
         _intersectionTime = JBTypesMethods::getTimePointMSNow();
         _hasHit = true;
     }

@@ -1,6 +1,5 @@
-
-/* 
- * File:   FireBlock.h
+/*
+ * File: FireBlock.h
  * Author: Morgenthaler S
  *
  * Created on 5 octobre 2019, 12:50
@@ -10,14 +9,14 @@
 #define FIREBLOCK_H
 #include "Block.h"
 
-class FireBlock : public Block {
+class FireBlock:public Block {
 public:
-    FireBlock();
+FireBlock();
 
-    virtual Effect                    detectionEvent(
-                                        const JBTypes::Dir& ballDir,
-                                        const JBTypes::timePointMs& currentTime
-                                                );
+virtual Effect detectionEvent(
+    const JBTypes::Dir& ballDir,
+    const JBTypes::timePointMs& currentTime
+    );
 };
 
 #endif /* FIREBLOCK_H */

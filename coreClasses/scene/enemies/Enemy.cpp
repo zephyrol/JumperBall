@@ -1,8 +1,8 @@
 //
-//  Enemy.cpp
-//  JumperBallCore
+// Enemy.cpp
+// JumperBallCore
 //
-//  Created by S Morgenthaler on 08/10/2020.
+// Created by S Morgenthaler on 08/10/2020.
 //
 
 #include "Enemy.h"
@@ -12,7 +12,7 @@ Enemy::Enemy(const Block& tieBlock,
              const JBTypes::Dir& direction,
              float size,
              size_t length,
-             const std::array<float,9>& transform):
+             const std::array <float, 9>& transform):
     _tieBlock(tieBlock),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(direction),
@@ -22,8 +22,7 @@ Enemy::Enemy(const Block& tieBlock,
     _hasHit(false),
     _initialPosition(initPosition(initialPosition)),
     _position(_initialPosition),
-    _transform(transform)
-{
+    _transform(transform) {
 }
 
 JBTypes::Color Enemy::getColor() const {
@@ -31,10 +30,10 @@ JBTypes::Color Enemy::getColor() const {
 }
 
 const JBTypes::timePointMs& Enemy::creationTime() const {
-   return _creationTime; 
+    return _creationTime;
 }
 
-const JBTypes::timePointMs &Enemy::intersectionTime() const {
+const JBTypes::timePointMs& Enemy::intersectionTime() const {
     return _intersectionTime;
 }
 
@@ -53,19 +52,19 @@ size_t Enemy::length() const {
 void Enemy::switchOnOff() {
 }
 
-JBTypes::vec3f Enemy::initPosition(const JBTypes::vec3ui& position)
-                                                                         const {
+JBTypes::vec3f Enemy::initPosition (const JBTypes::vec3ui& position)
+const {
     constexpr float sizeBlock = 1.f;
     constexpr float offset = sizeBlock / 2.f;
 
-    const JBTypes::Dir &currentDir = _direction;
+    const JBTypes::Dir& currentDir = _direction;
     const JBTypes::vec3f vecDir =
         JBTypesMethods::directionAsVector(currentDir);
 
-    const JBTypes::vec3f posWorld = 
-        { static_cast<float>(position.at(0)),
-          static_cast<float>(position.at(1)),
-          static_cast<float>(position.at(2)) };
+    const JBTypes::vec3f posWorld =
+    { static_cast <float>(position.at(0)),
+      static_cast <float>(position.at(1)),
+      static_cast <float>(position.at(2)) };
 
     const float& radius = _size;
 
@@ -73,7 +72,7 @@ JBTypes::vec3f Enemy::initPosition(const JBTypes::vec3ui& position)
         posWorld.x + offset + vecDir.x * (offset + radius),
         posWorld.y + offset + vecDir.y * (offset + radius),
         posWorld.z + offset + vecDir.z * (offset + radius)
-        };
+    };
 }
 
 const JBTypes::vec3f& Enemy::initialPosition() const {
@@ -81,15 +80,15 @@ const JBTypes::vec3f& Enemy::initialPosition() const {
 }
 
 const JBTypes::vec3f& Enemy::position() const {
-    return _position; 
+    return _position;
 }
 
-const std::array<float,9>& Enemy::transform() const {
+const std::array <float, 9>& Enemy::transform() const {
     return _transform;
 }
 
 const JBTypes::Dir& Enemy::direction() const {
-    return _direction; 
+    return _direction;
 }
 
 const JBTypes::Dir& Enemy::movementDirection() const {

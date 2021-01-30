@@ -1,6 +1,5 @@
-
-/* 
- * File:   Label.h
+/*
+ * File: Label.h
  * Author: Morgenthaler S
  *
  * Created on 28 avril 2020, 17:44
@@ -15,82 +14,83 @@
 #include <fstream>
 
 class Label;
-using Label_sptr = std::shared_ptr<Label>;
-using CstLabel_sptr = std::shared_ptr<const Label>;
-using vecCstLabel_sptr = std::vector<CstLabel_sptr>;
-using vecLabel_sptr = std::vector<Label_sptr>;
+using Label_sptr = std::shared_ptr <Label>;
+using CstLabel_sptr = std::shared_ptr <const Label>;
+using vecCstLabel_sptr = std::vector <CstLabel_sptr>;
+using vecLabel_sptr = std::vector <Label_sptr>;
 
-class Label{
+class Label {
 public:
 
-    //------------TYPES------------//
-    enum class TypeOfAction { PredefinedAction, GoLevel };
-    enum class PredefinedAction {
-        ExitGame,
-        RetryLevel,
-        RunNextLevel,
-        GoBack,
-        ChooseEnglish,
-        ChooseFrench };
+// ------------TYPES------------//
+enum class TypeOfAction { PredefinedAction, GoLevel };
+enum class PredefinedAction {
+    ExitGame,
+    RetryLevel,
+    RunNextLevel,
+    GoBack,
+    ChooseEnglish,
+    ChooseFrench
+};
 
-    struct LabelAnswer {
-        Label::TypeOfAction typeOfAction;
-        union {
-            size_t chooseLevel;
-            //bool switchMusic;
-            //bool switchSound;
-            PredefinedAction predefinedAction;
-        };
+struct LabelAnswer {
+    Label::TypeOfAction typeOfAction;
+    union {
+        size_t chooseLevel;
+        // bool switchMusic;
+        // bool switchSound;
+        PredefinedAction predefinedAction;
     };
+};
 
-    enum class WidthUnit { ScreenWidth, ShortestSide };
+enum class WidthUnit { ScreenWidth, ShortestSide };
 
-    //---------CONSTANTS------------//
+// ---------CONSTANTS------------//
 
-    //--CONSTRUCTORS & DESTRUCTORS--//
-    Label                   (
-                            const Label::WidthUnit& widthUnit,
-                            float width,
-                            float height,
-                            const JBTypes::vec2f& position,
-                            bool activated = false,
-                            const std::shared_ptr<LabelAnswer> action
-                                = nullptr,
-                            bool fixed = false);
-    virtual ~Label          ()                                        = 0;
+// --CONSTRUCTORS & DESTRUCTORS--//
+Label(
+    const Label::WidthUnit& widthUnit,
+    float width,
+    float height,
+    const JBTypes::vec2f& position,
+    bool activated = false,
+    const std::shared_ptr <LabelAnswer> action
+    = nullptr,
+    bool fixed = false);
+virtual ~Label() = 0;
 
-    //-------CONST METHODS----------//
-    float                   width()                                       const;
-    float                   height()                                      const;
-    
-    const vecCstLabel_sptr& children()                                    const;
-    bool                    isFixed()                                     const;
-    bool                    isActivated()                                 const;
-    const std::shared_ptr<LabelAnswer>& action()                          const;
-    const Label::WidthUnit& widthUnit()                                   const;
+// -------CONST METHODS----------//
+float width() const;
+float height() const;
 
-    JBTypes::vec2f          position()                                    const;
-    virtual std::string     message()                                     const;
+const vecCstLabel_sptr& children() const;
+bool isFixed() const;
+bool isActivated() const;
+const std::shared_ptr <LabelAnswer>& action() const;
+const Label::WidthUnit& widthUnit() const;
 
-    //----------METHODS-------------//
-    void                    activate();
-    void                    deactivate();
+JBTypes::vec2f position() const;
+virtual std::string message() const;
 
-    //--------STATIC METHODS-------//
-    static void             updateLabelsLevels(vecLabel_sptr& labels,
-                                               size_t end);
+// ----------METHODS-------------//
+void activate();
+void deactivate();
+
+// --------STATIC METHODS-------//
+static void updateLabelsLevels(vecLabel_sptr& labels,
+                               size_t end);
 
 private:
-    
-    //--------ATTRIBUTES-----------//
-    const Label::WidthUnit             _widthUnit;
-    const float                        _width;
-    const float                        _height;
-    const vecCstLabel_sptr             _children;
-    const JBTypes::vec2f               _position;
-    const bool                         _fixed;
-    bool                               _activated;
-    const std::shared_ptr<LabelAnswer> _action;
+
+// --------ATTRIBUTES-----------//
+const Label::WidthUnit _widthUnit;
+const float _width;
+const float _height;
+const vecCstLabel_sptr _children;
+const JBTypes::vec2f _position;
+const bool _fixed;
+bool _activated;
+const std::shared_ptr <LabelAnswer> _action;
 
 };
 

@@ -1,5 +1,5 @@
 /*
- * File:   BallMesh.h
+ * File: BallMesh.h
  * Author: Morgenthaler S
  *
  * Created on 20 septembre 2020, 11h20
@@ -10,13 +10,12 @@
 #include "scene/BallState.h"
 #include "Mesh.h"
 
-class BallMesh : public Mesh<Ball,BallState>
-{
+class BallMesh:public Mesh <Ball, BallState> {
 public:
-    BallMesh(const Ball& ball);
+BallMesh(const Ball& ball);
 
 private:
-    virtual void updateWorld() override;
+virtual void updateWorld() override;
 
 };
 

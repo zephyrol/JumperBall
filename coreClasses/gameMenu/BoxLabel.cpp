@@ -1,6 +1,5 @@
-
 /*
- * File:   BoxLabel.h
+ * File: BoxLabel.h
  * Author: Morgenthaler S
  *
  * Created on 13 juin 2020
@@ -13,5 +12,5 @@ BoxLabel::BoxLabel(
     float width,
     float height,
     const JBTypes::vec2f& position):
-    Label(widthUnit, width, height, position)
-{}
+    Label(widthUnit, width, height, position) {
+}

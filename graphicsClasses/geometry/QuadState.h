@@ -2,11 +2,10 @@
 #define QUADSTATE_H
 #include "geometry/Quad.h"
 
-class QuadState
-{
+class QuadState {
 public:
-    QuadState(const Quad & quad);
-    void update();
+QuadState(const Quad& quad);
+void update();
 
 private:
 };

@@ -1,5 +1,5 @@
 /*
- * File:   MapMesh.h
+ * File: MapMesh.h
  * Author: Morgenthaler S
  *
  * Created on 20 septembre 2020, 11h20
@@ -11,13 +11,12 @@
 #include "Mesh.h"
 
 
-class MapMesh : public Mesh<Map,MapState>
-{
+class MapMesh:public Mesh <Map, MapState> {
 public:
-    MapMesh(const Map& map);
+MapMesh(const Map& map);
 
 private:
-    virtual void updateWorld() override;
+virtual void updateWorld() override;
 };
 
 #endif // MAPMESH_H

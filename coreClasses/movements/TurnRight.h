@@ -1,8 +1,8 @@
 //
-//  TurnRight.h
-//  JumperBallApplication
+// TurnRight.h
+// JumperBallApplication
 //
-//  Created by Sebastien Morgenthaler on 31/07/2020.
+// Created by Sebastien Morgenthaler on 31/07/2020.
 //
 
 #ifndef TurnRight_h
@@ -10,10 +10,10 @@
 #include "Movement.h"
 
 
-class TurnRight : public Movement<JBTypes::Dir,2> {
-public :
-    TurnRight();
-    ~TurnRight() = default;
+class TurnRight:public Movement <JBTypes::Dir, 2> {
+public:
+TurnRight();
+~TurnRight() = default;
 };
 
 

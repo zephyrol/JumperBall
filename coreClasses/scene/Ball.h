@@ -1,6 +1,5 @@
-
-/* 
- * File:   Ball.h
+/*
+ * File: Ball.h
  * Author: Morgenthaler S
  *
  * Created on 1 octobre 2019, 21:17
@@ -17,171 +16,168 @@
 class Ball {
 public:
 
-    //--CONSTRUCTORS & DESTRUCTORS--//
-    Ball                          (Map& map);
+// --CONSTRUCTORS & DESTRUCTORS--//
+Ball(Map& map);
 
 
-    //---------CONSTANTS------------//
-    static constexpr float        timeToGetNextBlock                    = 0.25f;
-    static constexpr float        timeToTurn                            = 0.3f;
-    static constexpr float        timeToBurn                            = 2.f;
-    static constexpr float        timeToBurst                           = 0.8f;
-    static constexpr float        basicRadius                           = 0.2f;
-    static constexpr float        teleportationDuration                 = 1.f;
-    static constexpr float        halfTimeTeleportationDuration
-                                                  = teleportationDuration / 2.f;
+// ---------CONSTANTS------------//
+static constexpr float timeToGetNextBlock = 0.25f;
+static constexpr float timeToTurn = 0.3f;
+static constexpr float timeToBurn = 2.f;
+static constexpr float timeToBurst = 0.8f;
+static constexpr float basicRadius = 0.2f;
+static constexpr float teleportationDuration = 1.f;
+static constexpr float halfTimeTeleportationDuration
+    = teleportationDuration / 2.f;
 
-    //------------TYPES------------//
-    enum class State              { Staying, Moving, Jumping, 
-                                    TurningLeft, TurningRight, Falling,
-                                    Teleporting, Deteleporting
-                                  };
+// ------------TYPES------------//
+enum class State { Staying, Moving, Jumping,
+                   TurningLeft, TurningRight, Falling,
+                   Teleporting, Deteleporting };
 
-    enum class StateOfLife        { Normal, Bursting, Burning, Sliding, Dead };
+enum class StateOfLife { Normal, Bursting, Burning, Sliding, Dead };
 
-    enum class JumpingType        { Short, Long };
+enum class JumpingType { Short, Long };
 
-    enum class ActionRequest      { GoStraightAhead, TurnLeft, TurnRight, Jump };
-    enum class NextBlockLocal     { Above, InFrontOf, Same, None };
+enum class ActionRequest { GoStraightAhead, TurnLeft, TurnRight, Jump };
+enum class NextBlockLocal { Above, InFrontOf, Same, None };
 
-    using shock     =             std::array<unsigned int, 3 > ; 
-                                                      
-    struct nextBlockInformation   { JBTypes::Dir                nextSide;
-                                    JBTypes::Dir                nextLook;
-                                    NextBlockLocal              nextLocal;
-                                    unsigned int                poxX;
-                                    unsigned int                poxY;
-                                    unsigned int                poxZ;
-                                  };
+using shock = std::array <unsigned int, 3>;
 
-    //-------CONST METHODS--------//
-    JBTypes::vec3f                get3DPosition()                const noexcept;
-    float                         getRadius()                             const;
-    JBTypes::vec3f                lookTowardsAsVector()                   const;
-    JBTypes::vec3f                currentSideAsVector()                   const;
+struct nextBlockInformation { JBTypes::Dir nextSide;
+                              JBTypes::Dir nextLook;
+                              NextBlockLocal nextLocal;
+                              unsigned int poxX;
+                              unsigned int poxY;
+                              unsigned int poxZ; };
 
-    JBTypes::Dir                  currentSide()                           const;
-    JBTypes::Dir                  lookTowards()                           const;
-    Ball::State                   state()                                 const;
-    Ball::StateOfLife             stateOfLife()                           const;
-    float                         burnCoefficient()                       const;
+// -------CONST METHODS--------//
+JBTypes::vec3f get3DPosition() const noexcept;
+float getRadius() const;
+JBTypes::vec3f lookTowardsAsVector() const;
+JBTypes::vec3f currentSideAsVector() const;
 
-    float                         getTimeSecondsSinceAction()    const noexcept;
-    JBTypes::timePointMs          getTimeActionMs()              const noexcept;
+JBTypes::Dir currentSide() const;
+JBTypes::Dir lookTowards() const;
+Ball::State state() const;
+Ball::StateOfLife stateOfLife() const;
+float burnCoefficient() const;
 
-    float                         getTimeSecondsSinceStateOfLife()
-                                                                 const noexcept;
-    JBTypes::timePointMs          getTimeStateOfLifeMs()         const noexcept;
+float getTimeSecondsSinceAction() const noexcept;
+JBTypes::timePointMs getTimeActionMs() const noexcept;
 
-    struct nextBlockInformation   getNextBlockInfo()             const noexcept;
-    const ClassicalMechanics&     getMechanicsJumping()          const noexcept;
-    const ClassicalMechanics&     getMechanicsFalling()          const noexcept;
+float getTimeSecondsSinceStateOfLife()
+const noexcept;
+JBTypes::timePointMs getTimeStateOfLifeMs() const noexcept;
 
-    const std::vector<JBTypes::Dir>&
-                                  getCurrentCoveredRotation()    const noexcept;
-    JBTypes::vec3f                movementRotation()             const noexcept;
-    float                         getCrushingCoefficient()       const noexcept;
-    float                         getTeleportationCoefficient()  const noexcept;
-    const JBTypes::Color&         getTeleportationColor()        const noexcept;
+struct nextBlockInformation getNextBlockInfo () const noexcept;
+const ClassicalMechanics& getMechanicsJumping() const noexcept;
+const ClassicalMechanics& getMechanicsFalling() const noexcept;
 
-    //----------METHODS------------//
-    void                          update()                             noexcept;
-    void                          doAction(ActionRequest action);
+const std::vector <JBTypes::Dir>&
+getCurrentCoveredRotation() const noexcept;
+JBTypes::vec3f movementRotation() const noexcept;
+float getCrushingCoefficient() const noexcept;
+float getTeleportationCoefficient() const noexcept;
+const JBTypes::Color& getTeleportationColor() const noexcept;
+
+// ----------METHODS------------//
+void update() noexcept;
+void doAction(ActionRequest action);
 
 private:
-    
-    //--------ATTRIBUTES-----------//
-    unsigned int                  _currentBlockX;
-    unsigned int                  _currentBlockY;
-    unsigned int                  _currentBlockZ;
-    
-    float                         _3DPosX;
-    float                         _3DPosY;
-    float                         _3DPosZ;
 
-    JBTypes::Dir                  _currentSide;
-    JBTypes::Dir                  _lookTowards;
-    Ball::State                   _state;
-    Ball::StateOfLife             _stateOfLife;
-    Ball::JumpingType             _jumpingType;
+// --------ATTRIBUTES-----------//
+unsigned int _currentBlockX;
+unsigned int _currentBlockY;
+unsigned int _currentBlockZ;
 
-    //Through the interactions, a ball may modify a map
-    Map&                          _map;
+float _3DPosX;
+float _3DPosY;
+float _3DPosZ;
 
-    const ClassicalMechanics      _mechanicsPatternJumping;
-    const ClassicalMechanics      _mechanicsPatternLongJumping;
-    const ClassicalMechanics      _mechanicsPatternFalling;
+JBTypes::Dir _currentSide;
+JBTypes::Dir _lookTowards;
+Ball::State _state;
+Ball::StateOfLife _stateOfLife;
+Ball::JumpingType _jumpingType;
 
-    std::chrono::time_point<std::chrono::system_clock>  
-                                  _timeAction;
-    std::chrono::time_point<std::chrono::system_clock>  
-                                  _timeStateOfLife;
-    
-    //BurnCoefficient at the last state change
-    float                         _burnCoefficientTrigger;
+// Through the interactions, a ball may modify a map
+Map& _map;
 
-    //current burnCoefficient
-    float                         _burnCoefficientCurrent;
+const ClassicalMechanics _mechanicsPatternJumping;
+const ClassicalMechanics _mechanicsPatternLongJumping;
+const ClassicalMechanics _mechanicsPatternFalling;
 
-    JBTypes::Color                _teleportationColor;
-    float                         _teleportationCoefficient;
-    size_t                        _teleportationBlockDestination;
+std::chrono::time_point <std::chrono::system_clock>
+_timeAction;
+std::chrono::time_point <std::chrono::system_clock>
+_timeStateOfLife;
 
-    bool                          _jumpRequest;
-    JBTypes::timePointMs          _timeJumpRequest;
+// BurnCoefficient at the last state change
+float _burnCoefficientTrigger;
 
-    std::vector<JBTypes::Dir>     _currentCoveredRotation;
-    float                         _currentCrushing;
+// current burnCoefficient
+float _burnCoefficientCurrent;
 
-    //-------CONST METHODS--------//
-    std::shared_ptr<const std::vector<int> >  
-                                  intersectBlock(float x, float y, float z) 
-                                                                          const;
+JBTypes::Color _teleportationColor;
+float _teleportationCoefficient;
+size_t _teleportationBlockDestination;
 
-    JBTypes::vec3f                P2DTo3D(
-                                      ClassicalMechanics::physics2DVector p2D)
-                                                                          const;
-    JBTypes::vec3f                get3DPosStayingBall()                   const;
-    bool                          isOutOfTheMap()                         const;
-    bool                          isBurstingFinished()                    const;
-    JBTypes::vec3f                getRotationAxis()              const noexcept;
-    float                         getJumpingPosX()               const noexcept;
-    float                         getFallingPosX()               const noexcept;
+bool _jumpRequest;
+JBTypes::timePointMs _timeJumpRequest;
 
-    //----------METHODS------------//
-    void                          turnLeft()                           noexcept;
-    void                          turnRight()                          noexcept;
-    void                          goStraightAhead()                    noexcept;
-    void                          stay()                               noexcept;
-    void                          jump()                               noexcept;
-    void                          move()                               noexcept;
-    void                          fall()                               noexcept;
-    void                          teleport(const JBTypes::Color& col)  noexcept;
-    void                          deteleport()                         noexcept;
-    void                          setTimeActionNow()                   noexcept;
-    void                          setTimeLifeNow()                     noexcept;
-    void                          mapInteraction()                     noexcept;
-    void                          blockEvent(
-                                      const JBTypes::vec3ui& blockPos) noexcept;
-    void                          die()                                noexcept;
-    ClassicalMechanics&           getMechanicsJumping()                noexcept;
-    void                          isFallingIntersectionBlock()         noexcept;
-    void                          isGoingStraightAheadIntersectBlock() noexcept;
-    
-    void                          fallingUpdate()                      noexcept;
-    void                          stayingUpdate()                      noexcept;
-    void                          movingUpdate()                       noexcept;
-    void                          turningUpdate()                      noexcept;
-    void                          jumpingUpdate()                      noexcept;
-    void                          burningUpdate()                      noexcept;
-    void                          teleportingUpdate()                  noexcept;
-    void                          deteleportingUpdate()                noexcept;
-    
-    static const TurnLeft         turnLeftMovement;
-    static const TurnRight        turnRightMovement;
-    static const TurnBack         turnBackMovement;
-    static const NextBlock        nextBlockGetter;
+std::vector <JBTypes::Dir> _currentCoveredRotation;
+float _currentCrushing;
+
+// -------CONST METHODS--------//
+std::shared_ptr <const std::vector <int> >
+intersectBlock(float x, float y, float z)
+const;
+
+JBTypes::vec3f P2DTo3D(
+    ClassicalMechanics::physics2DVector p2D)
+const;
+JBTypes::vec3f get3DPosStayingBall() const;
+bool isOutOfTheMap() const;
+bool isBurstingFinished() const;
+JBTypes::vec3f getRotationAxis() const noexcept;
+float getJumpingPosX() const noexcept;
+float getFallingPosX() const noexcept;
+
+// ----------METHODS------------//
+void turnLeft() noexcept;
+void turnRight() noexcept;
+void goStraightAhead() noexcept;
+void stay() noexcept;
+void jump() noexcept;
+void move() noexcept;
+void fall() noexcept;
+void teleport(const JBTypes::Color& col) noexcept;
+void deteleport() noexcept;
+void setTimeActionNow() noexcept;
+void setTimeLifeNow() noexcept;
+void mapInteraction() noexcept;
+void blockEvent(
+    const JBTypes::vec3ui& blockPos) noexcept;
+void die() noexcept;
+ClassicalMechanics& getMechanicsJumping() noexcept;
+void isFallingIntersectionBlock() noexcept;
+void isGoingStraightAheadIntersectBlock() noexcept;
+
+void fallingUpdate() noexcept;
+void stayingUpdate() noexcept;
+void movingUpdate() noexcept;
+void turningUpdate() noexcept;
+void jumpingUpdate() noexcept;
+void burningUpdate() noexcept;
+void teleportingUpdate() noexcept;
+void deteleportingUpdate() noexcept;
+
+static const TurnLeft turnLeftMovement;
+static const TurnRight turnRightMovement;
+static const TurnBack turnBackMovement;
+static const NextBlock nextBlockGetter;
 };
 
 #endif /* BALL_H */
-

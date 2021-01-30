@@ -1,6 +1,5 @@
-
-/* 
- * File:   Animation.h
+/*
+ * File: Animation.h
  * Author: Morgenthaler S
  *
  * Created on 5 janvier 2020, 11:19
@@ -16,26 +15,25 @@
 
 class Animation {
 public:
-    
-    //--CONSTRUCTORS & DESTRUCTORS--//
-    Animation                   ();
-    virtual ~Animation          ()                        = default;
 
-    //-------CONST METHODS----------//
-    glm::mat4           model()                               const;
-    glm::mat4           scaleRotation()                       const;
-    glm::mat4           translation()                         const;
+// --CONSTRUCTORS & DESTRUCTORS--//
+Animation();
+virtual ~Animation() = default;
 
-    //----------METHODS------------//
-    virtual void                updateTrans()                   = 0;
+// -------CONST METHODS----------//
+glm::mat4 model() const;
+glm::mat4 scaleRotation() const;
+glm::mat4 translation() const;
 
-    //--------ATTRIBUTES-----------//
-    glm::mat4                   _model;
-    glm::mat4                   _translation;
-    glm::mat4                   _scaleRotation;
+// ----------METHODS------------//
+virtual void updateTrans() = 0;
+
+// --------ATTRIBUTES-----------//
+glm::mat4 _model;
+glm::mat4 _translation;
+glm::mat4 _scaleRotation;
 
 
 };
 
 #endif /* ANIMATION_H */
-

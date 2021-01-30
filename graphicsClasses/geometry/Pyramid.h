@@ -1,7 +1,6 @@
-
-/* 
- * File:   Pyramid.h
- * Author: Morgenthaler S 
+/*
+ * File: Pyramid.h
+ * Author: Morgenthaler S
  *
  * Created on 29 mars 2020, 09:19
  */
@@ -11,25 +10,24 @@
 
 #include "GeometricShape.h"
 
-class Pyramid: public GeometricShape {
+class Pyramid:public GeometricShape {
 public:
 
-    //--CONSTRUCTORS & DESTRUCTORS--//
-    Pyramid(  const glm::mat4& modelTransform    = glm::mat4(1.f),
-              const glm::mat4& normalsTransform  = glm::mat4(1.f));
-    Pyramid(  const glm::vec3& customColor,
-              const glm::mat4& modelTransform    = glm::mat4(1.f),
-              const glm::mat4& normalsTransform  = glm::mat4(1.f));
-    Pyramid(  const GeometricShape& pyramid, 
-              const glm::mat4& modelTransform    = glm::mat4(1.f),
-              const glm::mat4& normalsTransform  = glm::mat4(1.f));
+// --CONSTRUCTORS & DESTRUCTORS--//
+Pyramid(const glm::mat4& modelTransform = glm::mat4(1.f),
+        const glm::mat4& normalsTransform = glm::mat4(1.f));
+Pyramid(const glm::vec3& customColor,
+        const glm::mat4& modelTransform = glm::mat4(1.f),
+        const glm::mat4& normalsTransform = glm::mat4(1.f));
+Pyramid(const GeometricShape& pyramid,
+        const glm::mat4& modelTransform = glm::mat4(1.f),
+        const glm::mat4& normalsTransform = glm::mat4(1.f));
 
 private:
 
-    static const std::vector<glm::vec3> basicPositionsPyramid;
-    static const std::vector<glm::vec3> basicColorsPyramid;
-    static const std::vector<glm::vec3> basicNormalsPyramid;
-    static const std::vector<glm::vec2> basicUVCoordsPyramid;
+static const std::vector <glm::vec3> basicPositionsPyramid;
+static const std::vector <glm::vec3> basicColorsPyramid;
+static const std::vector <glm::vec3> basicNormalsPyramid;
+static const std::vector <glm::vec2> basicUVCoordsPyramid;
 };
 #endif /* PYRAMID_H */
-

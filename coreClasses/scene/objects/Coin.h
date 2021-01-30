@@ -1,6 +1,5 @@
-
-/* 
- * File:   Coin.h
+/*
+ * File: Coin.h
  * Author: Morgenthaler S
  *
  * Created on 27 mars 2020, 20:49
@@ -10,13 +9,12 @@
 #define COIN_H
 #include "Bonus.h"
 
-class Coin : public Bonus {
+class Coin:public Bonus {
 public:
-    Coin();
+Coin();
 
 private:
 
 };
 
 #endif /* COIN_H */
-

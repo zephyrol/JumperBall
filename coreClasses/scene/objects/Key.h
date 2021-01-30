@@ -1,6 +1,5 @@
-
-/* 
- * File:   Key.h
+/*
+ * File: Key.h
  * Author: Morgenthaler S
  *
  * Created on 27 mars 2020, 20:45
@@ -10,12 +9,11 @@
 #define KEY_H
 #include "Object.h"
 
-class Key : public Object{
+class Key:public Object {
 public:
-    Key();
+Key();
 
 private:
 };
 
 #endif /* KEY_H */
-

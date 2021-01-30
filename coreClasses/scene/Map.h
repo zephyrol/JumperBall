@@ -1,6 +1,5 @@
-
-/* 
- * File:   Map.h
+/*
+ * File: Map.h
  * Author: Morgenthaler S
  *
  * Created on 1 octobre 2019, 21:18
@@ -30,143 +29,140 @@
 class Map {
 public:
 
-    // ----------- TYPES -----------//
-    enum class BlockTypes { None, Base, Fire, Ice, Sharp,
-                            Brittle, Jump, Ghost };
-    
-    enum class EnemyTypes { Laser, ThornBall, DarkBall };
+// ----------- TYPES -----------//
+enum class BlockTypes { None, Base, Fire, Ice, Sharp,
+                        Brittle, Jump, Ghost };
 
-    enum class SpecialTypes { SwitchButton , Teleporter };
+enum class EnemyTypes { Laser, ThornBall, DarkBall };
 
-    enum class Effect { Nothing, Burst, Burn, Slide, Jump };
+enum class SpecialTypes { SwitchButton, Teleporter };
 
-    struct BlockInfo { size_t index;
-                       BlockTypes type; };
+enum class Effect { Nothing, Burst, Burn, Slide, Jump };
 
-    struct EnemyInfo
-    {
-        size_t index = 0;
-        std::shared_ptr<Enemy> enemy = nullptr;
-        EnemyTypes type = EnemyTypes::Laser;
-    };
+struct BlockInfo { size_t index;
+                   BlockTypes type; };
 
-    struct SpecialInfo {
-        size_t index = 0;
-        std::shared_ptr<Special> special = nullptr;
-        SpecialTypes type = SpecialTypes::SwitchButton;
-    };
+struct EnemyInfo {
+    size_t index = 0;
+    std::shared_ptr <Enemy> enemy = nullptr;
+    EnemyTypes type = EnemyTypes::Laser;
+};
 
-    struct TeleportersInfo {
-        std::pair<size_t,size_t> coupleIndices;
-        std::pair<JBTypes::Dir,JBTypes::Dir> coupleDirections;
-    };
+struct SpecialInfo {
+    size_t index = 0;
+    std::shared_ptr <Special> special = nullptr;
+    SpecialTypes type = SpecialTypes::SwitchButton;
+};
 
-    struct MapInfo { unsigned int width;
-                     unsigned int height;
-                     unsigned int deep;
-                     unsigned int beginX;
-                     unsigned int beginY;
-                     unsigned int beginZ;
-                     std::vector<std::shared_ptr<Block> > blocks;
-                     std::vector<BlockInfo> blocksInfo;
-                     std::vector<EnemyInfo> enemiesInfo;
-                     std::vector<SpecialInfo> specialInfo;
-                  };
-    
-    //--CONSTRUCTORS & DESTRUCTORS--//
-    Map                                   ( MapInfo&& mapInfo );
+struct TeleportersInfo {
+    std::pair <size_t, size_t> coupleIndices;
+    std::pair <JBTypes::Dir, JBTypes::Dir> coupleDirections;
+};
 
-    //-------CONST METHODS----------//
-    unsigned int                          beginX()                        const;
-    unsigned int                          beginY()                        const;
-    unsigned int                          beginZ()                        const;
+struct MapInfo { unsigned int width;
+                 unsigned int height;
+                 unsigned int deep;
+                 unsigned int beginX;
+                 unsigned int beginY;
+                 unsigned int beginZ;
+                 std::vector <std::shared_ptr <Block> > blocks;
+                 std::vector <BlockInfo> blocksInfo;
+                 std::vector <EnemyInfo> enemiesInfo;
+                 std::vector <SpecialInfo> specialInfo; };
 
-    std::shared_ptr< const Block>         getBlock(int x, int y, int z)   const;
-    std::shared_ptr< const Block>         getBlock(size_t index)          const;
+// --CONSTRUCTORS & DESTRUCTORS--//
+Map(MapInfo&& mapInfo);
 
-    unsigned int                          width()                         const;
-    unsigned int                          height()                        const;
-    unsigned int                          deep()                          const;
+// -------CONST METHODS----------//
+unsigned int beginX() const;
+unsigned int beginY() const;
+unsigned int beginZ() const;
 
-    std::chrono::time_point<std::chrono::system_clock>
-                                          timeCreation()                  const;
+std::shared_ptr <const Block> getBlock(int x, int y, int z) const;
+std::shared_ptr <const Block> getBlock(size_t index) const;
 
-    JBTypes::vec3ui                       getBlockCoords(size_t index)    const;
-    size_t                                getIndex(
-                                           const JBTypes::vec3ui& coords) const;
-    BlockTypes                            getType (
-                                         const JBTypes::vec3ui& position) const;
-    const std::vector<BlockInfo>&         blocksInfo()                    const;
+unsigned int width() const;
+unsigned int height() const;
+unsigned int deep() const;
 
-    std::vector<BlockInfo>                getBlocksWithInteraction()      const;
-    std::vector<size_t>                   getBlocksWithObjects()          const;
-    const std::map<JBTypes::Color, Map::TeleportersInfo> &
-                                          getBlocksTeleporters()          const;
+std::chrono::time_point <std::chrono::system_clock>
+timeCreation() const;
 
-    std::map<JBTypes::Color, bool>        createSpecialStates()           const;
-    const std::map<JBTypes::Color, bool>& getSpecialStates()              const;
+JBTypes::vec3ui getBlockCoords(size_t index) const;
+size_t getIndex(
+    const JBTypes::vec3ui& coords) const;
+BlockTypes getType(
+    const JBTypes::vec3ui& position) const;
+const std::vector <BlockInfo>& blocksInfo() const;
 
-    
-    const std::vector<EnemyInfo>&         getEnemiesInfo()                const;
-    const std::vector<SpecialInfo>&       getSpecialInfo()                const;
+std::vector <BlockInfo> getBlocksWithInteraction() const;
+std::vector <size_t> getBlocksWithObjects() const;
+const std::map <JBTypes::Color, Map::TeleportersInfo>&
+getBlocksTeleporters() const;
 
-    //----------METHODS------------//
-    Map::Effect                           interaction(
-                                  const JBTypes::Dir& ballDir,
-                                  const JBTypes::vec3f& posBall, float radius);
+std::map <JBTypes::Color, bool> createSpecialStates() const;
+const std::map <JBTypes::Color, bool>& getSpecialStates() const;
 
-    void                                  switchColor(
-                                                   const JBTypes::Color& color);
-    std::shared_ptr<Block>                getBlock(int x, int y, int z);
-    std::shared_ptr<Block>                getBlock(size_t index);
 
-    //--------STATIC METHODS-------//
-    static JBTypes::vec3ui                getBlockCoords(size_t index,
-                                                         unsigned int width,
-                                                         unsigned int deep);
+const std::vector <EnemyInfo>& getEnemiesInfo() const;
+const std::vector <SpecialInfo>& getSpecialInfo() const;
+
+// ----------METHODS------------//
+Map::Effect interaction(
+    const JBTypes::Dir& ballDir,
+    const JBTypes::vec3f& posBall, float radius);
+
+void switchColor(
+    const JBTypes::Color& color);
+std::shared_ptr <Block> getBlock(int x, int y, int z);
+std::shared_ptr <Block> getBlock(size_t index);
+
+// --------STATIC METHODS-------//
+static JBTypes::vec3ui getBlockCoords(size_t index,
+                                      unsigned int width,
+                                      unsigned int deep);
 
 private:
 
-    //--------ATTRIBUTES-----------//
-    std::vector<std::shared_ptr<Block> >  _blocks;
-    std::vector<BlockInfo>                _blocksInfo;
-    std::vector<BlockInfo>                _blocksWithInteractionInfo;
-    std::vector<size_t>                   _blocksWithObjectsIndices;
-    
-    std::vector<EnemyInfo>                _enemies;
+// --------ATTRIBUTES-----------//
+std::vector <std::shared_ptr <Block> > _blocks;
+std::vector <BlockInfo> _blocksInfo;
+std::vector <BlockInfo> _blocksWithInteractionInfo;
+std::vector <size_t> _blocksWithObjectsIndices;
 
-    std::vector<SpecialInfo>              _specials;
-    std::map<JBTypes::Color, TeleportersInfo >
-                                          _blocksTeleporters;
-    std::map<JBTypes::Color, bool>        _specialsState;
-    
-    unsigned int                          _width;
-    unsigned int                          _height;
-    unsigned int                          _deep;
-    unsigned int                          _beginX;
-    unsigned int                          _beginY;
-    unsigned int                          _beginZ;
-    std::chrono::time_point<std::chrono::system_clock>  
-                                          _timeCreation;
-    // Multithreading
-    ParallelTask<Block::Effect>           _blocksInteractions;
-    ParallelTask<void>                    _objectsInteractions;
-    ParallelTask<Enemy::Effect>           _enemiesInteractions;
+std::vector <EnemyInfo> _enemies;
 
-    JBTypes::Dir                          _dirBallInteractions;
-    JBTypes::vec3f                        _posBallInteractions;
-    float                                 _radiusInteractions;
-    JBTypes::timePointMs                  _timeInteractions;
-    // --------------
+std::vector <SpecialInfo> _specials;
+std::map <JBTypes::Color, TeleportersInfo>
+_blocksTeleporters;
+std::map <JBTypes::Color, bool> _specialsState;
 
-    static unsigned int                   nbMaps;
+unsigned int _width;
+unsigned int _height;
+unsigned int _deep;
+unsigned int _beginX;
+unsigned int _beginY;
+unsigned int _beginZ;
+std::chrono::time_point <std::chrono::system_clock>
+_timeCreation;
+// Multithreading
+ParallelTask <Block::Effect> _blocksInteractions;
+ParallelTask <void> _objectsInteractions;
+ParallelTask <Enemy::Effect> _enemiesInteractions;
+
+JBTypes::Dir _dirBallInteractions;
+JBTypes::vec3f _posBallInteractions;
+float _radiusInteractions;
+JBTypes::timePointMs _timeInteractions;
+// --------------
+
+static unsigned int nbMaps;
 
 
-    //--------CONST METHODS-------//
-    std::map<JBTypes::Color, Map::TeleportersInfo>
-                                          createBlocksTeleporters()       const;
+// --------CONST METHODS-------//
+std::map <JBTypes::Color, Map::TeleportersInfo>
+createBlocksTeleporters() const;
 
 };
 
 #endif /* MAP_H */
-

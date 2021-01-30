@@ -1,6 +1,5 @@
-
-/* 
- * File:   Clock.h
+/*
+ * File: Clock.h
  * Author: Morgenthaler S
  *
  * Created on 27 mars 2020, 20:48
@@ -10,13 +9,12 @@
 #define CLOCK_H
 #include "Object.h"
 
-class Clock : public Object{
+class Clock:public Object {
 public:
-    Clock();
-    
+Clock();
+
 private:
 
 };
 
 #endif /* CLOCK_H */
-

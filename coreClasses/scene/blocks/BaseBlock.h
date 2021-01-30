@@ -1,6 +1,5 @@
-
-/* 
- * File:   BaseBlock.h
+/*
+ * File: BaseBlock.h
  * Author: Morgenthaler S
  *
  * Created on 5 octobre 2019, 12:53
@@ -11,10 +10,9 @@
 #include "Block.h"
 
 
-class BaseBlock : public Block {
+class BaseBlock:public Block {
 public:
-    BaseBlock();
+BaseBlock();
 };
 
 #endif /* BASEBLOCK_H */
-

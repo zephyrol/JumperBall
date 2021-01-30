@@ -1,6 +1,5 @@
-
-/* 
- * File:   Object.h
+/*
+ * File: Object.h
  * Author: Morgenthaler S
  *
  * Created on 27 mars 2020, 19:40
@@ -13,26 +12,25 @@
 class Object {
 public:
 
-    enum class CategoryOfObjects {Key,Coin,Clock};
+enum class CategoryOfObjects { Key, Coin, Clock };
 
-    Object(const CategoryOfObjects& category);
-    virtual ~Object() = default;
-    const CategoryOfObjects& getCategory() const ;
-    
-    bool isGotten() const;
-    const JBTypes::timePointMs& timeOfObtaining() const;
-    const JBTypes::timePointMs& timeOfCreation() const;
-    void catchingTest( const JBTypes::vec3f& objectPosition,
-                       const JBTypes::vec3f& entityPosition,
-                       float radiusEntity);
+Object(const CategoryOfObjects& category);
+virtual ~Object() = default;
+const CategoryOfObjects& getCategory() const;
 
-    static constexpr float radiusBoundingSphere = 0.15f;
+bool isGotten() const;
+const JBTypes::timePointMs& timeOfObtaining() const;
+const JBTypes::timePointMs& timeOfCreation() const;
+void catchingTest(const JBTypes::vec3f& objectPosition,
+                  const JBTypes::vec3f& entityPosition,
+                  float radiusEntity);
+
+static constexpr float radiusBoundingSphere = 0.15f;
 private:
-    bool _gotten;
-    const JBTypes::timePointMs _timeOfCreation;
-    JBTypes::timePointMs _timeOfObtaining;
-    const CategoryOfObjects _category;
+bool _gotten;
+const JBTypes::timePointMs _timeOfCreation;
+JBTypes::timePointMs _timeOfObtaining;
+const CategoryOfObjects _category;
 };
 
 #endif /* OBJECT_H */
-
