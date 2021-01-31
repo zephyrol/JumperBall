@@ -7,11 +7,12 @@
 #define BLOCKSTATE_H
 #include <scene/blocks/Block.h>
 #include "scene/objects/ObjectState.h"
+#include <scene/State.h>
 
-class BlockState {
+class BlockState:State {
 public:
 BlockState(const Block& block);
-void update();
+virtual void update() override;
 
 const std::array <float, 6>& localTransform() const;
 const Block& block() const;

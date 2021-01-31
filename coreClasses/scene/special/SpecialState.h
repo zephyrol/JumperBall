@@ -8,8 +8,9 @@
 #define SPECIALSTATE_H
 #include "Special.h"
 #include <scene/Map.h>
+#include <scene/State.h>
 
-class SpecialState {
+class SpecialState:State {
 public:
 SpecialState(const Special& special, const Map::SpecialTypes& category);
 const JBTypes::Color& color() const;
@@ -18,7 +19,7 @@ const JBTypes::Dir& direction() const;
 const JBTypes::vec3f& position3D() const;
 const JBTypes::timePointMs& creationTime() const;
 bool isActivated() const;
-void update();
+virtual void update() override;
 
 private:
 const Special& _special;

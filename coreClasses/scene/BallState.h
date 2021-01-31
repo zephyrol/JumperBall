@@ -7,13 +7,14 @@
 #ifndef BALLSTATE_H
 #define BALLSTATE_H
 #include <scene/Ball.h>
+#include "State.h"
 
 
-class BallState {
+class BallState:public State {
 public:
 BallState(const Ball& ball);
 
-void update();
+virtual void update() override;
 const JBTypes::vec3f& get3DPosition() const noexcept;
 float burnCoefficient() const;
 const JBTypes::vec3f& currentSideAsVector() const;

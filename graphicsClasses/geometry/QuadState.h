@@ -1,11 +1,12 @@
 #ifndef QUADSTATE_H
 #define QUADSTATE_H
 #include "geometry/Quad.h"
+#include <scene/State.h>
 
-class QuadState {
+class QuadState:State {
 public:
 QuadState(const Quad& quad);
-void update();
+virtual void update() override;
 
 private:
 };

@@ -7,17 +7,18 @@
 #ifndef OBJECTSTATE_H
 #define OBJECTSTATE_H
 #include <scene/objects/Object.h>
+#include <scene/State.h>
 
 
-class ObjectState {
+class ObjectState:State {
 public:
 ObjectState(const Object& object);
-void update();
 
 bool isGotten() const;
 const JBTypes::timePointMs& timeOfCreation() const;
 const JBTypes::timePointMs& timeOfObtaining() const;
 const Object::CategoryOfObjects& getCategory() const;
+virtual void update() override;
 
 private:
 const Object& _object;

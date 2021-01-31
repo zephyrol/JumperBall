@@ -10,11 +10,12 @@
 #include "scene/blocks/BlockState.h"
 #include "scene/enemies/EnemyState.h"
 #include "scene/special/SpecialState.h"
+#include "State.h"
 
-class MapState {
+class MapState:State {
 public:
 MapState(const Map& map);
-void update();
+virtual void update() override;
 
 unsigned int width() const;
 unsigned int height() const;

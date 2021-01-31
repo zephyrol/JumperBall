@@ -39,54 +39,31 @@ GeometricShape(const GeometricShape& geometricShape,
 
 virtual ~GeometricShape() = default;
 
-
-// -------CONST METHODS------ --//
-void setVerticesData()
-const;
-
-void bind() const;
-void draw() const;
-
-
 const std::shared_ptr <const std::vector <glm::vec3> >& positions() const;
 const std::shared_ptr <const std::vector <glm::vec3> >& normals() const;
 const std::shared_ptr <const std::vector <glm::vec3> >& colors() const;
 const std::shared_ptr <const std::vector <glm::vec2> >& uvCoords() const;
-
-const std::shared_ptr <GLuint>& vertexArrayObject()
-const;
-const std::shared_ptr <std::array <GLuint, 4> >& vertexBufferObjects()
-const;
-const std::shared_ptr <GLuint>& elementBufferObject()
-const;
 const std::shared_ptr <const std::vector <GLushort> >& indices() const;
-
-const glm::mat4& modelTransform()
-const;
-const glm::mat4& normalsTransform()
-const;
 virtual size_t levelOfDetail() const;
 
 // --------STATIC METHODS-------//
 static std::vector <glm::vec3> createCustomColorBuffer(
     const glm::vec3& customColor,
     size_t size);
+
 private:
 
 // --------ATTRIBUTES-----------//
-std::shared_ptr <const std::vector <glm::vec3> > _positions;
-std::shared_ptr <const std::vector <glm::vec3> > _normals;
-std::shared_ptr <const std::vector <glm::vec3> > _colors;
-std::shared_ptr <const std::vector <glm::vec2> > _uvCoords;
+const std::shared_ptr <const std::vector <glm::vec3> > _positions;
+const std::shared_ptr <const std::vector <glm::vec3> > _normals;
+const std::shared_ptr <const std::vector <glm::vec3> > _colors;
+const std::shared_ptr <const std::vector <glm::vec2> > _uvCoords;
+const std::shared_ptr <const std::vector <GLushort> > _indices;
 
-std::shared_ptr <GLuint> _vertexArrayObject;
-std::shared_ptr <std::array <GLuint, 4> > _vertexBufferObjects;
-
-std::shared_ptr <GLuint> _elementBufferObject;
-std::shared_ptr <const std::vector <GLushort> > _indices;
-
-glm::mat4 _modelTransform;
-glm::mat4 _normalsTransform;
+std::shared_ptr <const std::vector <glm::vec3> > computePositions(
+    const std::vector <glm::vec3>& positions, const glm::mat4& modelTransform) const;
+std::shared_ptr <const std::vector <glm::vec3> > computeNormals(
+    const std::vector <glm::vec3>& normals, const glm::mat4& normalsTransform) const;
 
 };
 
