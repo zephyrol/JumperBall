@@ -4,7 +4,7 @@
  *
  * Created on 31 janvier 2021, 18:45
  */
-#include <State.h>
+#include "State.h"
 
 
 State::State() {
@@ -34,7 +34,7 @@ std::vector <unsigned char> State::getDynamicBytes() const {
     return {};
 }
 
-std::vector <uint> State::getDynamicUInt() const {
+std::vector <unsigned int> State::getDynamicUInt() const {
     return {};
 }
 

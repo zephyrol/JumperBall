@@ -33,12 +33,10 @@ const Map& _map;
 const unsigned int _width;
 const unsigned int _height;
 const unsigned int _deep;
-const std::vector <std::shared_ptr <BlockState> >
-_blockStates;
-const std::vector <std::shared_ptr <EnemyState> >
-_enemiesStates;
-const std::vector <std::shared_ptr <SpecialState> >
-_specialsStates;
+const std::vector <std::shared_ptr <BlockState> > _blockStates;
+const std::vector <std::shared_ptr <EnemyState> > _enemiesStates;
+const std::vector <std::shared_ptr <SpecialState> > _specialsStates;
+const std::vector <std::shared_ptr <State> > _states;
 
 std::vector <std::shared_ptr <BlockState> > genBlockStates() const;
 std::vector <std::shared_ptr <EnemyState> > genEnemiesStates() const;

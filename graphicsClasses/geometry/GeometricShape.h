@@ -10,6 +10,12 @@
 #include "Shader.h"
 #include "Utility.h"
 
+class GeometricShape;
+using GeometricShape_sptr = std::shared_ptr <GeometricShape>;
+using CstGeometricShape_sptr = std::shared_ptr <const GeometricShape>;
+using vecCstGeometricShape_sptr = std::vector <GeometricShape_sptr>;
+using vecGeometricShape_sptr = std::vector <GeometricShape_sptr>;
+
 class GeometricShape {
 public:
 

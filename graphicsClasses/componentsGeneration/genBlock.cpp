@@ -17,7 +17,7 @@ vecMeshComponent_sptr MeshGenerator::genBlock (
     const std::shared_ptr <BlockState> block = map.blockStates().at(index);
 
     vecMeshComponent_sptr components;
-    std::shared_ptr <GeometricShape> shape;
+    GeometricShape_sptr shape;
 
     constexpr size_t numberOfFaces = 6;
 

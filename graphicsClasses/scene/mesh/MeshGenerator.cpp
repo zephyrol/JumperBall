@@ -36,5 +36,5 @@ vecMeshComponent_sptr MeshGenerator::sortComponents (
     }
     return sortedComponents;
 }
-std::map <std::string, std::shared_ptr <GeometricShape> >
+std::map <std::string, GeometricShape_sptr>
 MeshGenerator::commonShapes;

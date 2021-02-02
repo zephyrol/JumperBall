@@ -47,8 +47,7 @@ unsigned int MapState::deep() const {
     return _deep;
 }
 
-Map::BlockTypes MapState::getType (const JBTypes::vec3ui& position)
-const {
+Map::BlockTypes MapState::getType (const JBTypes::vec3ui& position) const {
     return _map.getType(position);
 }
 
@@ -60,18 +59,15 @@ JBTypes::vec3ui MapState::getBlockCoords (size_t index) const {
     return _map.getBlockCoords(index);
 }
 
-const std::vector <std::shared_ptr <BlockState> >& MapState::blockStates()
-const {
+const std::vector <std::shared_ptr <BlockState> >& MapState::blockStates() const {
     return _blockStates;
 }
 
-const std::vector <std::shared_ptr <EnemyState> >& MapState::enemiesStates()
-const {
+const std::vector <std::shared_ptr <EnemyState> >& MapState::enemiesStates() const {
     return _enemiesStates;
 }
 
-const std::vector <std::shared_ptr <SpecialState> >& MapState::specialStates()
-const {
+const std::vector <std::shared_ptr <SpecialState> >& MapState::specialStates() const {
     return _specialsStates;
 }
 
@@ -90,8 +86,7 @@ std::vector <std::shared_ptr <BlockState> > MapState::genBlockStates() const {
     return BlockStates;
 }
 
-std::vector <std::shared_ptr <EnemyState> > MapState::genEnemiesStates()
-const {
+std::vector <std::shared_ptr <EnemyState> > MapState::genEnemiesStates() const {
     std::vector <std::shared_ptr <EnemyState> > enemiesStates;
     for (const Map::EnemyInfo& enemyInfo : _map.getEnemiesInfo()) {
         enemiesStates.push_back(
@@ -101,8 +96,7 @@ const {
     return enemiesStates;
 }
 
-std::vector <std::shared_ptr <SpecialState> > MapState::genSpecialsStates()
-const {
+std::vector <std::shared_ptr <SpecialState> > MapState::genSpecialsStates() const {
     std::vector <std::shared_ptr <SpecialState> > specialsStates;
     for (const Map::SpecialInfo& specialInfo : _map.getSpecialInfo()) {
         specialsStates.push_back(

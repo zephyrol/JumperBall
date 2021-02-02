@@ -11,9 +11,6 @@
 
 #include "system/Types.h"
 #include <functional>
-#include <map>
-#include <array>
-#include <vector>
 
 class ClassicalMechanics {
 public:

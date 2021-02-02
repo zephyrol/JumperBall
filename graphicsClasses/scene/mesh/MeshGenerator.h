@@ -46,8 +46,7 @@ vecMeshComponent_sptr genSpecial(const SpecialState& special);
 
 vecMeshComponent_sptr sortComponents(
     const vecMeshComponent_sptr& components);
-extern std::map <std::string, std::shared_ptr <GeometricShape> >
-commonShapes;
+extern std::map <std::string, GeometricShape_sptr> commonShapes;
 }
 
 #endif /* MESHGENERATOR_H */
