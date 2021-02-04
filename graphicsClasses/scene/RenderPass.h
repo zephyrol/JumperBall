@@ -32,7 +32,6 @@ template<typename T> void upsertVertexAttribute(size_t number, const std::vector
 
 void render() const;
 
-
 enum class StaticAttributeType { Positions, Normals, Colors, UvCoords, Indices };
 
 void update();
@@ -49,6 +48,9 @@ GLuint genVertexArrayObject() const;
 GLuint genBufferObject() const;
 Mesh::StaticAttributes createStaticAttributes() const;
 std::map <StaticAttributeType, GLuint> createVertexBufferObjects() const;
+
+template<typename T>
+void initializeVBO(const GLuint& vbo, size_t sizeOfElement, const std::vector<T> bufferData) const;
 
 const ShaderProgram& _shaderProgram;
 const GLuint _vertexArrayObject;

@@ -17,6 +17,7 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr
                              RenderPass::StaticAttributeType::Indices) == _vertexBufferObjects.end()
                          ? genBufferObject()
                          : 0),
+    // Use smartpointer, when the uniform is changed outside this class, every renderpass will be updated
     _uniformMatrix4{},
     _uniformVec4{},
     _uniformVec3{},
@@ -80,22 +81,43 @@ Mesh::StaticAttributes RenderPass::createStaticAttributes() const {
 
 std::map <RenderPass::StaticAttributeType, GLuint> RenderPass::createVertexBufferObjects() const {
 
+
     // TODO take setverticesdate from geometricshape.cpp and use hashmap for the sizes and accesses
     std::map <RenderPass::StaticAttributeType, GLuint> vertexBufferObjects;
-    if (!_staticAttributes.positions.empty()) {
+    const std::vector<glm::vec3>& positions = _staticAttributes.positions;
+    if (!positions.empty()) {
         vertexBufferObjects[RenderPass::StaticAttributeType::Positions] = genBufferObject();
+        initializeVBO(vertexBufferObjects[RenderPass::StaticAttributeType::Positions], 3 * sizeof(GLfloat), positions);
     }
-    if (!_staticAttributes.normals.empty()) {
+
+    const std::vector<glm::vec3>& normals = _staticAttributes.normals;
+    if (!normals.empty()) {
         vertexBufferObjects[RenderPass::StaticAttributeType::Normals] = genBufferObject();
+        initializeVBO(vertexBufferObjects[RenderPass::StaticAttributeType::Normals], 3 * sizeof(GLfloat), normals);
     }
-    if (!_staticAttributes.colors.empty()) {
+
+    const std::vector<glm::vec3>& colors = _staticAttributes.colors;
+    if (!colors.empty()) {
         vertexBufferObjects[RenderPass::StaticAttributeType::Colors] = genBufferObject();
+        initializeVBO(vertexBufferObjects[RenderPass::StaticAttributeType::Colors], 3 * sizeof(GLfloat), colors);
     }
-    if (!_staticAttributes.uvCoords.empty()) {
+
+    const std::vector<glm::vec2>& uvCoords= _staticAttributes.uvCoords;
+    if (!uvCoords.empty()) {
         vertexBufferObjects[RenderPass::StaticAttributeType::UvCoords] = genBufferObject();
+        initializeVBO(vertexBufferObjects[RenderPass::StaticAttributeType::UvCoords], 2 * sizeof(GLfloat), uvCoords);
     }
-    if (!_staticAttributes.indices.empty()) {
-        vertexBufferObjects[RenderPass::StaticAttributeType::Indices] = genBufferObject();
-    }
+
     return vertexBufferObjects;
+}
+
+template<typename T>
+void RenderPass::initializeVBO(const GLuint& vbo, size_t sizeOfElement, const std::vector<T> bufferData) const
+{
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER,
+               bufferData.size() * sizeOfElement,
+               bufferData.data(),
+               GL_STATIC_DRAW
+               );
 }
