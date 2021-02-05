@@ -30,22 +30,22 @@ std::map <std::string, JBTypes::vec3f> State::getStaticVec3fValues() const {
     return {};
 }
 
-std::vector <unsigned char> State::getDynamicBytes() const {
+std::vector <unsigned char> State::getDynamicUChars() const {
     return {};
 }
 
-std::vector <unsigned int> State::getDynamicUInt() const {
+std::vector <unsigned int> State::getDynamicUInts() const {
     return {};
 }
 
-std::vector <float> State::getDynamicFloat() const {
+std::vector <float> State::getDynamicFloats() const {
     return {};
 }
 
-std::vector <JBTypes::vec2f> State::getDynamicVec2f() const {
+std::vector <JBTypes::vec2f> State::getDynamicVec2fs() const {
     return {};
 }
 
-std::vector <JBTypes::vec3f> State::getDynamicVec3f() const {
+std::vector <JBTypes::vec3f> State::getDynamicVec3fs() const {
     return {};
 }

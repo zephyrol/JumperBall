@@ -40,7 +40,6 @@ void upsertUniform(const std::string& name, const glm::mat4& value);
 void upsertUniform(const std::string& name, const glm::vec4& value);
 void upsertUniform(const std::string& name, const glm::vec3& value);
 void upsertUniform(const std::string& name, const glm::vec2& value);
-void upsertUniform(const std::string& name, const bool& value);
 void upsertUniformTexture(const std::string& name, const GLuint value);
 
 private:
@@ -49,8 +48,7 @@ GLuint genBufferObject() const;
 Mesh::StaticAttributes createStaticAttributes() const;
 std::map <StaticAttributeType, GLuint> createVertexBufferObjects() const;
 
-template<typename T>
-void initializeVBO(const GLuint& vbo, size_t sizeOfElement, const std::vector<T> bufferData) const;
+template<typename T> std::shared_ptr <GLuint> initializeVBO(const std::vector <T> staticAttributeData) const;
 
 const ShaderProgram& _shaderProgram;
 const GLuint _vertexArrayObject;
@@ -65,7 +63,6 @@ uniformVariable <glm::vec4> _uniformVec4;
 uniformVariable <glm::vec3> _uniformVec3;
 uniformVariable <glm::vec2> _uniformVec2;
 uniformVariable <GLfloat> _uniformFloat;
-uniformVariable <bool> _uniformBool;
 uniformVariable <GLuint> _uniformTextures;
 
 };

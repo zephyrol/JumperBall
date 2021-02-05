@@ -13,9 +13,7 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr
     _meshes(meshes),
     _staticAttributes(createStaticAttributes()),
     _vertexBufferObjects(createVertexBufferObjects()),
-    _elementBufferObject(_vertexBufferObjects.find(
-                             RenderPass::StaticAttributeType::Indices) == _vertexBufferObjects.end()
-                         ? genBufferObject()
+    _elementBufferObject((!_staticAttributes.indices.empty()) ? genBufferObject()
                          : 0),
     // Use smartpointer, when the uniform is changed outside this class, every renderpass will be updated
     _uniformMatrix4{},
@@ -23,7 +21,6 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr
     _uniformVec3{},
     _uniformVec2{},
     _uniformFloat{},
-    _uniformBool{},
     _uniformTextures{} {
 }
 
@@ -59,10 +56,6 @@ void RenderPass::upsertUniform (const std::string& name, const glm::vec2& value)
     _uniformVec2[name] = value;
 }
 
-void RenderPass::upsertUniform (const std::string& name, const bool& value) {
-    _uniformBool[name] = value;
-}
-
 void RenderPass::upsertUniformTexture (const std::string& name, const GLuint value) {
     _uniformTextures[name] = value;
 }
@@ -79,45 +72,41 @@ Mesh::StaticAttributes RenderPass::createStaticAttributes() const {
     return staticAttributes;
 }
 
+
 std::map <RenderPass::StaticAttributeType, GLuint> RenderPass::createVertexBufferObjects() const {
 
-
-    // TODO take setverticesdate from geometricshape.cpp and use hashmap for the sizes and accesses
     std::map <RenderPass::StaticAttributeType, GLuint> vertexBufferObjects;
-    const std::vector<glm::vec3>& positions = _staticAttributes.positions;
-    if (!positions.empty()) {
-        vertexBufferObjects[RenderPass::StaticAttributeType::Positions] = genBufferObject();
-        initializeVBO(vertexBufferObjects[RenderPass::StaticAttributeType::Positions], 3 * sizeof(GLfloat), positions);
-    }
 
-    const std::vector<glm::vec3>& normals = _staticAttributes.normals;
-    if (!normals.empty()) {
-        vertexBufferObjects[RenderPass::StaticAttributeType::Normals] = genBufferObject();
-        initializeVBO(vertexBufferObjects[RenderPass::StaticAttributeType::Normals], 3 * sizeof(GLfloat), normals);
-    }
+    const auto fillVertexBufferObject =
+        [&vertexBufferObjects] (const RenderPass::StaticAttributeType& type,
+                                const std::shared_ptr <GLuint>& vertexBufferObject) {
+            if (vertexBufferObject) {
+                vertexBufferObjects[type] = *vertexBufferObject;
+            }
+        };
 
-    const std::vector<glm::vec3>& colors = _staticAttributes.colors;
-    if (!colors.empty()) {
-        vertexBufferObjects[RenderPass::StaticAttributeType::Colors] = genBufferObject();
-        initializeVBO(vertexBufferObjects[RenderPass::StaticAttributeType::Colors], 3 * sizeof(GLfloat), colors);
-    }
-
-    const std::vector<glm::vec2>& uvCoords= _staticAttributes.uvCoords;
-    if (!uvCoords.empty()) {
-        vertexBufferObjects[RenderPass::StaticAttributeType::UvCoords] = genBufferObject();
-        initializeVBO(vertexBufferObjects[RenderPass::StaticAttributeType::UvCoords], 2 * sizeof(GLfloat), uvCoords);
-    }
+    fillVertexBufferObject(RenderPass::StaticAttributeType::Positions,
+                           initializeVBO(_staticAttributes.positions));
+    fillVertexBufferObject(RenderPass::StaticAttributeType::Normals,
+                           initializeVBO(_staticAttributes.normals));
+    fillVertexBufferObject(RenderPass::StaticAttributeType::Colors,
+                           initializeVBO(_staticAttributes.colors));
+    fillVertexBufferObject(RenderPass::StaticAttributeType::UvCoords,
+                           initializeVBO(_staticAttributes.uvCoords));
 
     return vertexBufferObjects;
 }
 
-template<typename T>
-void RenderPass::initializeVBO(const GLuint& vbo, size_t sizeOfElement, const std::vector<T> bufferData) const
-{
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER,
-               bufferData.size() * sizeOfElement,
-               bufferData.data(),
-               GL_STATIC_DRAW
-               );
+template<typename T> std::shared_ptr <GLuint> RenderPass::initializeVBO (
+    const std::vector <T> staticAttributeData) const {
+    std::shared_ptr <GLuint> vbo = nullptr;
+    if (!staticAttributeData.empty()) {
+        const std::shared_ptr <GLuint> vbo = std::make_shared <GLuint>(genBufferObject());
+        glBindBuffer(GL_ARRAY_BUFFER, *vbo);
+        glBufferData(GL_ARRAY_BUFFER,
+                     staticAttributeData.size() * sizeof(T),
+                     staticAttributeData.data(),
+                     GL_STATIC_DRAW);
+    }
+    return vbo;
 }

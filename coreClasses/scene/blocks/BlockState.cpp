@@ -49,12 +49,12 @@ std::array <std::shared_ptr <ObjectState>, 6> BlockState::createObjectStates() c
     return objectStates;
 }
 
-std::vector <float> BlockState::getDynamicFloat() const {
+std::vector <float> BlockState::getDynamicFloats() const {
     const float scale = _localTransform.at(4);
     return { scale };
 }
 
-std::vector <JBTypes::vec3f> BlockState::getDynamicVec3f() const {
+std::vector <JBTypes::vec3f> BlockState::getDynamicVec3fs() const {
     const JBTypes::vec3f translation =
     { _localTransform.at(0), _localTransform.at(1), _localTransform.at(2) };
     return { translation };

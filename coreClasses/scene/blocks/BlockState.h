@@ -17,8 +17,8 @@ virtual void update() override;
 const std::array <float, 6>& localTransform() const;
 const Block& block() const;
 const std::array <std::shared_ptr <ObjectState>, 6>& objectStates() const;
-std::vector <float> getDynamicFloat() const override;
-std::vector <JBTypes::vec3f> getDynamicVec3f() const override;
+std::vector <float> getDynamicFloats() const override;
+std::vector <JBTypes::vec3f> getDynamicVec3fs() const override;
 
 const bool& isFixed() const;
 

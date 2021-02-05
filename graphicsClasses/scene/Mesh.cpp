@@ -6,15 +6,27 @@
  */
 #include "Mesh.h"
 
-Mesh::Mesh(const State& state, const vecCstGeometricShape_sptr& shapes) :
-  _state(state),
-  _shapes(shapes)
-{
+Mesh::Mesh(const State& state, const vecCstGeometricShape_sptr& shapes):
+    _state(state),
+    _shapes(shapes) {
+}
+
+void Mesh::update() {
+  
 }
 
 template<typename T> void Mesh::concatShapeData (std::vector <T>& current,
                                                  const std::vector <T>& dataShape) {
     current.insert(current.end(), dataShape.begin(), dataShape.end());
+}
+
+template<typename Raw, typename OpenGL>
+void Mesh::convertVectorToOpenGLFormat(const std::vector<Raw>& rawValues, std::vector<OpenGL>& openGLValues) 
+{
+  for (const Raw& rawValue : rawValues) {
+    const OpenGL openGLValue = Utility::convertToOpenGLFormat(rawValue);
+    openGLValues.push_back(openGLValue);
+  }
 }
 
 Mesh::StaticAttributes Mesh::concatStaticAttributes (const Mesh::StaticAttributes& current,
@@ -29,7 +41,7 @@ Mesh::StaticAttributes Mesh::concatStaticAttributes (const Mesh::StaticAttribute
     for (GLushort& newIndice : newIndices) {
         newIndice += static_cast <GLushort>(staticAttributes.positions.size());
     }
-    concatShapeData(staticAttributes.indices, other.indices);
+    concatShapeData(staticAttributes.indices, newIndices);
     return staticAttributes;
 }
 
@@ -45,6 +57,18 @@ Mesh::StaticAttributes Mesh::genStaticAttributes() const {
     return staticAttributes;
 }
 
-std::vector <std::vector <GLfloat> > Mesh::genDynamicAttributes() const {
-    return {};
+Mesh::DynamicAttributes Mesh::genDynamicAttributes() const {
+  Mesh::DynamicAttributes dynamicAttributes;
+    for (const CstGeometricShape_sptr& shape : _shapes) {
+        //const std::vector<Glubyte> a = _state.getDynamicUChars();
+        std::vector<glm::vec3> glmVec3s {};
+        convertVectorToOpenGLFormat( _state.getDynamicVec3fs(), glmVec3s);
+        //const std::vector<Glfloat> c = _state.getDynamicVec2fs();
+        //const std::vector<Glfloat> c = _state.getDynamicVec2fs();
+        //concatShapeData(dynamicAttributes.dynamicUbytes, convertVectorToOpenGLFormat(_state.getDynamicUChars()));
+        //concatShapeData(dynamicAttributes.dynamicFloats, convertVectorToOpenGLFormat(b));
+        //concatShapeData(dynamicAttributes.dynamicsVec2s, convertVectorToOpenGLFormat(_state.getDynamicVec2fs()));
+        //concatShapeData(dynamicAttributes.dynamicsVec3s, convertVectorToOpenGLFormat(_state.getDynamicVec3fs()));
+    }
+    return dynamicAttributes;
 }

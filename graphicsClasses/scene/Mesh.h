@@ -33,21 +33,32 @@ struct StaticAttributes {
 };
 
 struct DynamicAttributes {
-    std::vector <glm::vec3> positions;
-    std::vector <glm::vec3> normals;
-    std::vector <glm::vec3> colors;
-    std::vector <glm::vec2> uvCoords;
-    std::vector <GLushort> indices;
+    std::vector<GLubyte> dynamicUbytes;
+    std::vector<GLfloat> dynamicFloats;
+    std::vector <glm::vec3> dynamicsVec3s;
+    std::vector <glm::vec2> dynamicsVec2s;
 };
 
+struct UniformValues {
+    std::map<std::string, GLuint> uniformUints;
+    std::map<std::string, GLfloat> uniformFloats;
+    std::map<std::string, glm::vec3> uniformVec3s;
+    std::map<std::string, glm::vec2> uniformVec2s;
+};
+
+void update();
+
 StaticAttributes genStaticAttributes() const;
-std::vector <std::vector <GLfloat> > genDynamicAttributes() const;
+DynamicAttributes genDynamicAttributes() const;
 static Mesh::StaticAttributes concatStaticAttributes(const Mesh::StaticAttributes& current,
                                                      const Mesh::StaticAttributes& staticAttributes);
 
 private:
 
 template<typename T> static void concatShapeData(std::vector <T>& current, const std::vector <T>& dataShape);
+
+template<typename Raw, typename OpenGL > 
+static void convertVectorToOpenGLFormat (const std::vector<Raw>& rawValues, std::vector<OpenGL>& openGLValues);
 
 const State& _state;
 const vecCstGeometricShape_sptr _shapes;
