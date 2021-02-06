@@ -95,8 +95,8 @@ GeometricShape::GeometricShape(const std::vector <glm::vec3>& positions,
 GeometricShape::GeometricShape(const GeometricShape& geometricShape,
                                const glm::mat4& modelTransform,
                                const glm::mat4& normalsTransform):
-    _positions(geometricShape.positions()),
-    _normals(geometricShape.normals()),
+    _positions(computePositions(*geometricShape.positions(), modelTransform)),
+    _normals(computeNormals(*geometricShape.normals(), normalsTransform)),
     _colors(geometricShape.colors()),
     _uvCoords(geometricShape.uvCoords()),
     _indices(geometricShape.indices()),
@@ -152,7 +152,7 @@ std::shared_ptr <const std::vector <glm::vec3> > GeometricShape::computePosition
         computedPositions.push_back(modelTransform * glm::vec4(position, 1.f));
     }
 
-    std::make_shared <std::vector <glm::vec3> >(computedPositions);
+    return std::make_shared <std::vector <glm::vec3> >(computedPositions);
 }
 
 std::shared_ptr <const std::vector <glm::vec3> > GeometricShape::computeNormals (
@@ -163,7 +163,7 @@ std::shared_ptr <const std::vector <glm::vec3> > GeometricShape::computeNormals 
         computedNormals.push_back(normalsTransform * glm::vec4(normal, 1.f));
     }
 
-    std::make_shared <std::vector <glm::vec3> >(computedNormals);
+    return std::make_shared <std::vector <glm::vec3> >(computedNormals);
 }
 
 

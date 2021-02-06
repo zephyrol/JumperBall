@@ -26,7 +26,7 @@ RenderPass& operator= (const RenderPass& renderPass) = delete;
 RenderPass(RenderPass&& renderPass) = default;
 RenderPass& operator= (RenderPass&& renderPass) = default;
 
-template<typename T> using uniformVariable = std::map <std::string, T>;
+template<typename T> using UniformVariable = std::map <std::string, T>;
 
 template<typename T> void upsertVertexAttribute(size_t number, const std::vector <T>& data);
 
@@ -53,6 +53,9 @@ Mesh::DynamicAttributes createDynamicAttributes() const;
 
 size_t computeNumberOfVertices() const;
 
+void bindUniforms() const;
+template<typename T> void bindUniforms(UniformVariable<T> uniforms) const;
+
 template<typename T> std::vector <GLuint> createDynamicAttributesBufferObject(
     const std::vector <std::vector <T> >& attributes) const;
 std::vector <GLuint> createVertexDynamicBufferObjects() const;
@@ -71,12 +74,12 @@ const std::map <StaticAttributeType, GLuint> _vertexStaticBufferObjects;
 const std::vector <GLuint> _vertexDynamicBufferObjects;
 
 GLuint _elementBufferObject;
-uniformVariable <glm::mat4> _uniformMatrix4;
-uniformVariable <glm::vec4> _uniformVec4;
-uniformVariable <glm::vec3> _uniformVec3;
-uniformVariable <glm::vec2> _uniformVec2;
-uniformVariable <GLfloat> _uniformFloat;
-uniformVariable <GLuint> _uniformTextures;
+UniformVariable <glm::mat4> _uniformMatrix4;
+UniformVariable <glm::vec4> _uniformVec4;
+UniformVariable <glm::vec3> _uniformVec3;
+UniformVariable <glm::vec2> _uniformVec2;
+UniformVariable <GLfloat> _uniformFloat;
+UniformVariable <GLuint> _uniformTextures;
 
 };
 

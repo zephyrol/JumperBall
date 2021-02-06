@@ -9,7 +9,7 @@
 #include "scene/objects/ObjectState.h"
 #include <scene/State.h>
 
-class BlockState:State {
+class BlockState: public State {
 public:
 BlockState(const Block& block);
 virtual void update() override;

@@ -11,13 +11,12 @@
 #include <map>
 #include <vector>
 #include "FrameBuffer.h"
-#include "mesh/BallMesh.h"
-#include "mesh/MapMesh.h"
-#include "mesh/StarMesh.h"
-#include "mesh/QuadMesh.h"
 #include "Camera.h"
+#include "Star.h"
 #include "uniformBlocks/uniformLight.h"
 #include "animations/BallAnimation.h"
+#include "scene/mesh/MeshGenerator.h"
+#include "RenderPass.h"
 
 
 class SceneRendering {
@@ -54,7 +53,9 @@ uniformVariable <glm::vec2> _uniformVec2;
 uniformVariable <GLfloat> _uniformFloat;
 uniformVariable <bool> _uniformBool;
 
-const Quad _quadFrame;
+
+
+//const Quad _quadFrame;
 // MapMesh _meshMap;
 // BallMesh _meshBall;
 // StarMesh _meshStar;
@@ -83,6 +84,10 @@ const FrameBuffer _frameBufferBrightPassEffect;
 const FrameBuffer _frameBufferHalfBlurEffect;
 const FrameBuffer _frameBufferCompleteBlurEffect;
 
+MapState _mapState;
+const vecCstMesh_sptr _meshesMap;
+RenderPass _renderPass;
+
 // ---------CONST METHODS--------//
 void phongEffect(GLuint depthTexture) const;
 void blurEffect(GLuint brightPassTexture) const;
@@ -97,6 +102,7 @@ void bindStarView(const ShaderProgram& sp) const;
 
 // ------------METHODS----------//
 void updateUniform();
+void updateCamera(RenderPass& renderPass);
 
 // ------STATIC ATTRIBUTES------//
 static const std::string vsshaderMap;

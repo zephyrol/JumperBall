@@ -9,12 +9,12 @@
 #include "StarState.h"
 #include "Mesh.h"
 
-class StarMesh:public Mesh <Star, StarState> {
+/*class StarMesh:public Mesh <Star, StarState> {
 public:
 StarMesh(const Star& star);
 
 private:
 virtual void updateWorld() override;
-};
+};*/
 
 #endif // STARMESH_H

@@ -8,7 +8,7 @@
 #include "scene/mesh/MeshGenerator.h"
 #include "animations/BallAnimation.h"
 
-vecMeshComponent_sptr MeshGenerator::genComponents (const BallState& ball) {
+/*vecMeshComponent_sptr MeshGenerator::genComponents (const BallState& ball) {
 
     const glm::mat4 scaleMatrix = glm::scale(glm::vec3(ball.getRadius()));
     const Sphere sphere;
@@ -17,4 +17,4 @@ vecMeshComponent_sptr MeshGenerator::genComponents (const BallState& ball) {
                                        (std::make_shared <Sphere>(sphere, scaleMatrix),
                                        std::make_shared <BallAnimation>(ball));
     return vecMeshComponent_sptr { std::move(component) };
-}
+}*/

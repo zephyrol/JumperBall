@@ -11,12 +11,12 @@
 #include "Mesh.h"
 
 
-class MapMesh:public Mesh <Map, MapState> {
+/*class MapMesh:public Mesh <Map, MapState> {
 public:
 MapMesh(const Map& map);
 
 private:
 virtual void updateWorld() override;
-};
+};*/
 
 #endif // MAPMESH_H

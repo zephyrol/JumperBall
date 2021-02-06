@@ -7,7 +7,7 @@
 
 #include "scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genComponents (const StarState& star) {
+/*vecMeshComponent_sptr MeshGenerator::genComponents (const StarState& star) {
 
     if (commonShapes.find("starQuad") == commonShapes.end()) {
         commonShapes["starQuad"] = std::make_shared <Quad>();
@@ -17,4 +17,4 @@ vecMeshComponent_sptr MeshGenerator::genComponents (const StarState& star) {
                                                                       star.initialTransform()),
                                              nullptr);
     return vecMeshComponent_sptr { component };
-}
+}*/

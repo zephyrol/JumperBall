@@ -10,7 +10,7 @@
 #include <scene/Map.h>
 #include <scene/State.h>
 
-class SpecialState:State {
+class SpecialState: public State {
 public:
 SpecialState(const Special& special, const Map::SpecialTypes& category);
 const JBTypes::Color& color() const;

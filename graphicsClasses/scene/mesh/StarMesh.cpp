@@ -6,6 +6,7 @@
  */
 #include "StarMesh.h"
 
+/*
 StarMesh::StarMesh(const Star& star):
     Mesh <Star, StarState>(star) {
 
@@ -14,3 +15,4 @@ StarMesh::StarMesh(const Star& star):
 void StarMesh::updateWorld() {
     setWorld(_frame.transform());
 }
+*/

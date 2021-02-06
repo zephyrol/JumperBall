@@ -10,10 +10,8 @@
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include <system/ParallelTask.h>
-#include <scene/Ball.h>
-#include <scene/Map.h>
-#include "Star.h"
-#include "mesh/MeshGenerator.h"
+#include <geometry/GeometricShape.h>
+#include <scene/State.h>
 
 class Mesh;
 using Mesh_sptr = std::shared_ptr <Mesh>;

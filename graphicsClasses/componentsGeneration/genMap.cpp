@@ -6,21 +6,19 @@
  */
 #include "scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genComponents (const MapState& map) {
+vecMesh_sptr MeshGenerator::genMap(const MapState& map) {
 
-    vecMeshComponent_sptr components;
+    vecMesh_sptr meshes;
     const auto blockInfos = map.blocksInfo();
     for (size_t i = 0; i < blockInfos.size(); ++i) {
-        vecMeshComponent_sptr blockComponents =
-            genBlock(map, blockInfos.at(i).index);
-        for (MeshComponent_sptr m : blockComponents) {
-            components.push_back(std::move(m));
+        vecMesh_sptr blockMeshes = genBlock(map, blockInfos.at(i).index);
+        for (Mesh_sptr m : blockMeshes) {
+            meshes.push_back(std::move(m));
         }
     }
 
-    for (
-        const std::shared_ptr <EnemyState>& EnemyState :
-        map.enemiesStates()
+    /*for (
+        const std::shared_ptr <EnemyState>& EnemyState : map.enemiesStates()
         ) {
         vecMeshComponent_sptr enemyComponents = genEnemy(*EnemyState);
         for (MeshComponent_sptr m : enemyComponents) {
@@ -29,8 +27,7 @@ vecMeshComponent_sptr MeshGenerator::genComponents (const MapState& map) {
     }
 
     for (
-        const std::shared_ptr <SpecialState>& SpecialState :
-        map.specialStates()
+        const std::shared_ptr <SpecialState>& SpecialState : map.specialStates()
         ) {
         vecMeshComponent_sptr specialComponents = genSpecial(*SpecialState);
         for (MeshComponent_sptr m : specialComponents) {
@@ -40,6 +37,8 @@ vecMeshComponent_sptr MeshGenerator::genComponents (const MapState& map) {
 
     // We have better performances if the components are stored with objects
     // with the same VAO/VBO, we will not have to change the binding later
-    vecMeshComponent_sptr sortedComponents = sortComponents(components);
-    return sortedComponents;
+    vecMeshComponent_sptr sortedComponents = sortComponents(components);*/
+    //return sortedComponents;
+
+    return meshes;
 }

@@ -7,7 +7,7 @@
 
 #include "scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genSharps (
+/*vecMeshComponent_sptr MeshGenerator::genSharps (
     const BlockState& BlockState,
     const Map::BlockTypes& type,
     const glm::vec3& posWorld) {
@@ -82,4 +82,4 @@ vecMeshComponent_sptr MeshGenerator::genSharps (
         }
     }
     return components;
-}
+}*/

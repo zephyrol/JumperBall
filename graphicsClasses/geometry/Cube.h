@@ -35,15 +35,11 @@ static const std::vector <glm::vec3> ghostColorsCube;
 
 private:
 
-static const std::vector <glm::vec3> getBasicElements
-    (const std::vector <glm::vec3>& basicElements,
+static const std::vector <glm::vec3> getBasicElements (const std::vector <glm::vec3>& basicElements,
     const std::array <bool, 6>& sides);
-static const std::vector <glm::vec3> getBasicPosCube
-    (const std::array <bool, 6>& sides);
-static const std::vector <glm::vec3> getBasicNormalsCube
-    (const std::array <bool, 6>& sides);
-static const std::vector <glm::vec3> getBasicColorsCube
-    (const std::array <bool, 6>& sides);
+static const std::vector <glm::vec3> getBasicPosCube (const std::array <bool, 6>& sides);
+static const std::vector <glm::vec3> getBasicNormalsCube (const std::array <bool, 6>& sides);
+static const std::vector <glm::vec3> getBasicColorsCube (const std::array <bool, 6>& sides);
 static const std::vector <glm::vec3> basicPositionsCube;
 static const std::vector <glm::vec3> basicNormalsCube;
 static const std::vector <glm::vec2> basicUVCoordsCube;

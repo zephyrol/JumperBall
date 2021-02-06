@@ -6,7 +6,7 @@
  */
 #include "scene/mesh/MeshGenerator.h"
 
-vecMeshComponent_sptr MeshGenerator::genComponents (const QuadState&) {
+/*vecMeshComponent_sptr MeshGenerator::genComponents (const QuadState&) {
 
     // The quad var is just used to specify that
     // we want to gen a MeshComponent from a Quad
@@ -19,3 +19,4 @@ vecMeshComponent_sptr MeshGenerator::genComponents (const QuadState&) {
         commonShapes.at("screenQuad"), nullptr);
     return vecMeshComponent_sptr { std::move(component) };
 }
+*/

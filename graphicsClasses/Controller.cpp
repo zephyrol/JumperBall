@@ -39,8 +39,8 @@ Controller::Controller():
                               (*_map, *_ball, *_star, *_camera)),
     _sceneRenderingFrameB(std::make_shared <SceneRendering>
                               (*_map, *_ball, *_star, *_camera)),
-    _menuRenderingFrameA(std::make_shared <MenuRendering>(*_menu)),
-    _menuRenderingFrameB(std::make_shared <MenuRendering>(*_menu)),
+    //_menuRenderingFrameA(std::make_shared <MenuRendering>(*_menu)),
+    //_menuRenderingFrameB(std::make_shared <MenuRendering>(*_menu)),
     _updatingScene([this] (size_t) {
                        _ball->update();
                        if (_player.statut() == Player::Statut::INMENU) {
@@ -59,7 +59,7 @@ Controller::Controller():
                        currentSceneRendering->update();
                    }),
     _updatingMenu([this] (size_t) {
-                      if (_player.statut() == Player::Statut::INMENU) {
+                      /*if (_player.statut() == Player::Statut::INMENU) {
                           _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
                       } else if (_player.statut() == Player::Statut::INGAME) {
                           if (_ball->stateOfLife() == Ball::StateOfLife::Dead) {
@@ -71,7 +71,7 @@ Controller::Controller():
                           _currentFrame == Controller::CurrentFrame::FrameA
                           ? _menuRenderingFrameA
                           : _menuRenderingFrameB;
-                      currentMenuRendering->update();
+                      currentMenuRendering->update();*/
                   }),
     _updating([this] (size_t) {
                   _updatingScene.runTasks();
@@ -137,9 +137,9 @@ void Controller::runController() {
     _currentFrame == Controller::CurrentFrame::FrameA
     ? _sceneRenderingFrameB->render()
     : _sceneRenderingFrameA->render();
-    _currentFrame == Controller::CurrentFrame::FrameA
+    /*_currentFrame == Controller::CurrentFrame::FrameA
     ? _menuRenderingFrameB->render()
-    : _menuRenderingFrameA->render();
+    : _menuRenderingFrameA->render();*/
 }
 
 void Controller::waitController() {

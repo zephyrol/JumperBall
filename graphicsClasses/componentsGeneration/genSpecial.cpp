@@ -8,7 +8,7 @@
 #include "scene/mesh/MeshGenerator.h"
 #include "animations/SpecialAnimation.h"
 
-vecMeshComponent_sptr MeshGenerator::genSpecial (const SpecialState& special) {
+/*vecMeshComponent_sptr MeshGenerator::genSpecial (const SpecialState& special) {
     vecMeshComponent_sptr components;
 
     const std::function <std::pair <glm::vec3, glm::vec3>(const JBTypes::Color&)>
@@ -76,4 +76,4 @@ vecMeshComponent_sptr MeshGenerator::genSpecial (const SpecialState& special) {
     components.push_back(std::move(component));
 
     return components;
-}
+}*/

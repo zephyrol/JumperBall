@@ -8,7 +8,7 @@
 #include "scene/mesh/MeshGenerator.h"
 
 
-vecMeshComponent_sptr MeshGenerator::genJumpers (const BlockState& BlockState,
+/*vecMeshComponent_sptr MeshGenerator::genJumpers (const BlockState& BlockState,
                                                  const Map::BlockTypes& type,
                                                  const glm::vec3& posWorld) {
     vecMeshComponent_sptr components;
@@ -64,3 +64,4 @@ vecMeshComponent_sptr MeshGenerator::genJumpers (const BlockState& BlockState,
     return components;
 
 }
+*/

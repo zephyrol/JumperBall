@@ -10,7 +10,7 @@
 #include <scene/State.h>
 
 
-class ObjectState:State {
+class ObjectState: public State {
 public:
 ObjectState(const Object& object);
 

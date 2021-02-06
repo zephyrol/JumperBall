@@ -33,7 +33,7 @@ glm::mat4 _transformObject;
 static const std::string vsshaderObject;
 static const std::string fsshaderObject;
 static std::shared_ptr <const ShaderProgram> spObject;
-vecMeshComponent_sptr _components;
+//vecMeshComponent_sptr _components;
 };
 
 #endif // OBJECTRENDERING_H

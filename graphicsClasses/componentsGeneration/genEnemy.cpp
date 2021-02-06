@@ -7,7 +7,7 @@
 #include "scene/mesh/MeshGenerator.h"
 #include "animations/EnemyAnimation.h"
 
-vecMeshComponent_sptr MeshGenerator::genEnemy (const EnemyState& enemy) {
+/*vecMeshComponent_sptr MeshGenerator::genEnemy (const EnemyState& enemy) {
 
     vecMeshComponent_sptr components;
     if (enemy.category() == Map::EnemyTypes::Laser) {
@@ -151,4 +151,4 @@ vecMeshComponent_sptr MeshGenerator::genEnemy (const EnemyState& enemy) {
     }
 
     return components;
-}
+}*/

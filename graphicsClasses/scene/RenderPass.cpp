@@ -80,8 +80,16 @@ void RenderPass::upsertUniformTexture (const std::string& name, const GLuint val
     _uniformTextures[name] = value;
 }
 
+void RenderPass::bindUniforms() const {
+    bindUniforms(_uniformFloat);
+    bindUniforms(_uniformVec2);
+    bindUniforms(_uniformVec3);
+    bindUniforms(_uniformMatrix4);
+}
+
 void RenderPass::render() const {
     glBindVertexArray(_vertexArrayObject);
+    bindUniforms();
 }
 
 template<typename T> void RenderPass::createAttributes (T& attributes) const {
@@ -108,6 +116,13 @@ size_t RenderPass::computeNumberOfVertices() const {
         numberOfVertices += mesh->numberOfVertices();
     }
     return numberOfVertices;
+}
+
+template<typename T>
+void RenderPass::bindUniforms(UniformVariable<T> uniforms) const {
+  for (const auto& uniform : uniforms) {
+    _shaderProgram.bindUniform(uniform.first, uniform.second);
+  }
 }
 
 template<typename T> std::vector <GLuint> RenderPass::createDynamicAttributesBufferObject (

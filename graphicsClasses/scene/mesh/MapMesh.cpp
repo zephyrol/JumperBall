@@ -6,10 +6,10 @@
  */
 #include "MapMesh.h"
 
-MapMesh::MapMesh(const Map& map):
+/*MapMesh::MapMesh(const Map& map):
     Mesh <Map, MapState>(map) {
 
 }
 
 void MapMesh::updateWorld() {
-}
+}*/

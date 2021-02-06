@@ -7,7 +7,7 @@
 #include "scene/mesh/MeshGenerator.h"
 #include "animations/ObjectAnimation.h"
 
-vecMeshComponent_sptr MeshGenerator::genObject (
+/*vecMeshComponent_sptr MeshGenerator::genObject (
     const ObjectState& obj,
     const glm::vec3& position,
     const JBTypes::Dir& dir) {
@@ -99,4 +99,4 @@ vecMeshComponent_sptr MeshGenerator::genObject (
     default: break;
     }
     return components;
-}
+}*/

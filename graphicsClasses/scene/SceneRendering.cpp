@@ -18,7 +18,7 @@ SceneRendering::SceneRendering(const Map& map,
     _uniformVec2(),
     _uniformFloat(),
     _uniformBool(),
-    _quadFrame(),
+    //_quadFrame(),
     /*_meshMap(map),
        _meshBall(ball),
        _meshStar(star),
@@ -72,7 +72,11 @@ SceneRendering::SceneRendering(const Map& map,
     _frameBufferCompleteBlurEffect(FrameBuffer::TextureCaterory::SDR,
                                    Utility::getWidthFromHeight(heightBloomTexture),
                                    heightBloomTexture,
-                                   false) {
+                                   false),
+    _mapState(map),
+    _meshesMap(MeshGenerator::genMap(_mapState)),
+    _renderPass(_spMap, _meshesMap)
+{
     update();
 }
 
@@ -176,10 +180,10 @@ void SceneRendering::depthFromStar() const {
 
 
 void SceneRendering::bindCamera (const ShaderProgram& sp) const {
-    sp.bindUniform("VP", _uniformMatrix4.at("VP"));
-    sp.bindUniform("VPStar", _uniformMatrix4.at("VPStar"));
-    sp.bindUniform("positionBall", _uniformVec3.at("positionBall"));
-    sp.bindUniform("positionCamera", _uniformVec3.at("positionCamera"));
+    //sp.bindUniform("VP", _uniformMatrix4.at("VP"));
+    //sp.bindUniform("VPStar", _uniformMatrix4.at("VPStar"));
+    //sp.bindUniform("positionBall", _uniformVec3.at("positionBall"));
+    //sp.bindUniform("positionCamera", _uniformVec3.at("positionCamera"));
 }
 
 void SceneRendering::updateUniform() {
@@ -232,6 +236,13 @@ void SceneRendering::updateUniform() {
     _light.update();
 }
 
+void SceneRendering::updateCamera(RenderPass& renderPass) {
+    renderPass.upsertUniform("VP", _uniformMatrix4.at("VP"));
+    renderPass.upsertUniform("VPStar", _uniformMatrix4.at("VPStar"));
+    renderPass.upsertUniform("positionBall", _uniformVec3.at("positionBall"));
+    renderPass.upsertUniform("positionCamera", _uniformVec3.at("positionCamera"));
+}
+
 void SceneRendering::render() const {
 
     // alpha
@@ -262,6 +273,8 @@ void SceneRendering::render() const {
 
 void SceneRendering::update() {
 
+    _mapState.update();
+    _renderPass.update();
     // Update meshes and uniform values using multithreading
     // _meshMapUpdate.runTasks();
     // _meshBallUpdate.runTasks();
@@ -271,7 +284,7 @@ void SceneRendering::update() {
     // _meshBallUpdate.waitTasks();
     // _meshMapUpdate.waitTasks();
 
-    updateUniform();
+    // updateUniform();
 }
 
 const std::string SceneRendering::vsshaderMap = "shaders/phongVs.vs";

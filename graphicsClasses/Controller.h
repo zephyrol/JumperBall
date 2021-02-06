@@ -93,8 +93,8 @@ std::shared_ptr <Star> _star;
 CurrentFrame _currentFrame;
 std::shared_ptr <SceneRendering> _sceneRenderingFrameA;
 std::shared_ptr <SceneRendering> _sceneRenderingFrameB;
-std::shared_ptr <MenuRendering> _menuRenderingFrameA;
-std::shared_ptr <MenuRendering> _menuRenderingFrameB;
+//std::shared_ptr <MenuRendering> _menuRenderingFrameA;
+//std::shared_ptr <MenuRendering> _menuRenderingFrameB;
 
 ParallelTask <void> _updatingScene;
 ParallelTask <void> _updatingMenu;
