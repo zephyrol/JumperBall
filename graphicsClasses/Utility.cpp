@@ -264,19 +264,18 @@ glm::vec3 Utility::colorAsVec3 (const JBTypes::Color& color) {
     return glm::vec3(0.f, 0.f, 0.f);
 }
 
-glm::vec3 Utility::convertToOpenGLFormat(const JBTypes::vec3f& vec3f) 
-{
-  return glm::vec3(vec3f.x, vec3f.y, vec3f.z);
+glm::vec3 Utility::convertToOpenGLFormat (const JBTypes::vec3f& vec3f) {
+    return glm::vec3(vec3f.x, vec3f.y, vec3f.z);
 }
 
-GLfloat Utility::convertToOpenGLFormat(const float& f) {
-  return static_cast<GLfloat>(f);
+GLfloat Utility::convertToOpenGLFormat (const float& f) {
+    return static_cast <GLfloat>(f);
 }
 
-glm::vec2 Utility::convertToOpenGLFormat(const JBTypes::vec2f &vec2f) {
-  return glm::vec2(vec2f.x, vec2f.y);
+glm::vec2 Utility::convertToOpenGLFormat (const JBTypes::vec2f& vec2f) {
+    return glm::vec2(vec2f.x, vec2f.y);
 }
 
 GLubyte Utility::convertToOpenGLFormat (unsigned char uChar) {
-  return static_cast<GLubyte>(uChar);
+    return static_cast <GLubyte>(uChar);
 }

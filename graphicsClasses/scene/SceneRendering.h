@@ -55,14 +55,14 @@ uniformVariable <GLfloat> _uniformFloat;
 uniformVariable <bool> _uniformBool;
 
 const Quad _quadFrame;
-MapMesh _meshMap;
-BallMesh _meshBall;
-StarMesh _meshStar;
-QuadMesh _meshQuadFrame;
+// MapMesh _meshMap;
+// BallMesh _meshBall;
+// StarMesh _meshStar;
+// QuadMesh _meshQuadFrame;
 
-ParallelTask <void> _meshMapUpdate;
-ParallelTask <void> _meshBallUpdate;
-ParallelTask <void> _meshStarUpdate;
+// ParallelTask <void> _meshMapUpdate;
+// ParallelTask <void> _meshBallUpdate;
+// ParallelTask <void> _meshStarUpdate;
 ParallelTask <void> _uniformUpdate;
 
 const Camera& _camera;

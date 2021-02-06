@@ -33,36 +33,48 @@ struct StaticAttributes {
 };
 
 struct DynamicAttributes {
-    std::vector<GLubyte> dynamicUbytes;
-    std::vector<GLfloat> dynamicFloats;
-    std::vector <glm::vec3> dynamicsVec3s;
-    std::vector <glm::vec2> dynamicsVec2s;
+    std::vector <std::vector <GLubyte> > dynamicUbytes;
+    std::vector <std::vector <GLfloat> > dynamicFloats;
+    std::vector <std::vector <glm::vec3> > dynamicsVec3s;
+    std::vector <std::vector <glm::vec2> > dynamicsVec2s;
 };
 
-struct UniformValues {
-    std::map<std::string, GLuint> uniformUints;
-    std::map<std::string, GLfloat> uniformFloats;
-    std::map<std::string, glm::vec3> uniformVec3s;
-    std::map<std::string, glm::vec2> uniformVec2s;
+struct Uniforms {
+    std::map <std::string, GLuint> uniformUints;
+    std::map <std::string, GLfloat> uniformFloats;
+    std::map <std::string, glm::vec3> uniformVec3s;
+    std::map <std::string, glm::vec2> uniformVec2s;
 };
 
 void update();
 
-StaticAttributes genStaticAttributes() const;
-DynamicAttributes genDynamicAttributes() const;
-static Mesh::StaticAttributes concatStaticAttributes(const Mesh::StaticAttributes& current,
-                                                     const Mesh::StaticAttributes& staticAttributes);
+size_t numberOfVertices() const;
+template<typename Attributes> Attributes genAttributes() const;
+// StaticAttributes genStaticAttributes() const;
+// DynamicAttributes genDynamicAttributes() const;
+Uniforms genUniformsValues() const;
+static StaticAttributes concatAttributes(const Mesh::StaticAttributes& current,
+                                         const Mesh::StaticAttributes& other);
+
+static DynamicAttributes concatAttributes(const Mesh::DynamicAttributes& current,
+                                          const Mesh::DynamicAttributes& other);
 
 private:
+size_t computeNumberOfVertices() const;
+template<typename T> static void concatVector(std::vector <T>& current, const std::vector <T>& data);
 
-template<typename T> static void concatShapeData(std::vector <T>& current, const std::vector <T>& dataShape);
+template<typename T> void duplicateDynamicAttribute(std::vector <std::vector <T> >& attributes,
+                                                    const std::vector <T>& values) const;
 
-template<typename Raw, typename OpenGL > 
-static void convertVectorToOpenGLFormat (const std::vector<Raw>& rawValues, std::vector<OpenGL>& openGLValues);
+template<typename RawType, typename OpenGLType> static void convertAttributesToOpenGLFormat(
+    const std::vector <RawType>& rawValues, std::vector <OpenGLType>& openGLValues);
+
+template<typename RawType, typename OpenGLType> static void convertUniformsToOpenGLFormat(
+    const std::map <std::string, RawType>& rawValues, std::map <std::string, OpenGLType>& openGLValues);
 
 const State& _state;
 const vecCstGeometricShape_sptr _shapes;
-
+const size_t _numberOfVertices;
 };
 
 #endif // MESH_H

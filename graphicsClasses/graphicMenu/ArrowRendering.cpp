@@ -37,11 +37,11 @@ void ArrowRendering::render() const {
     spArrow->use();
     spArrow->bindUniform("arrowColor", arrowColor);
     spArrow->bindUniform("M", _transformQuad);
-    displayQuad->bind();
-    displayQuad->draw();
+    // displayQuad->bind();
+    // displayQuad->draw();
     spArrow->bindUniform("M", _transformTriangle);
-    displayTriangle->bind();
-    displayTriangle->draw();
+    // displayTriangle->bind();
+    // displayTriangle->draw();
 }
 
 const glm::vec4& ArrowRendering::getArrowColor() const {

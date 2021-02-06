@@ -21,17 +21,17 @@ MeshComponent(const std::shared_ptr <const GeometricShape>& shape,
 const std::shared_ptr <const GeometricShape>& shape() const;
 const std::shared_ptr <const Animation>& animation() const;
 void drawShape() const;
-void bindShape() const;
+// void bindShape() const;
 const std::shared_ptr <GLuint>& getShapeVAO() const;
-const glm::mat4& getShapeModelTransform()
-const;
-const glm::mat4& getShapeNormalsTransform()
-const;
-glm::mat4 getAnimationModel() const;
-glm::mat4 getAnimationTranslation()
-const;
-glm::mat4 getAnimationScaleRotation()
-const;
+/*const glm::mat4& getShapeModelTransform()
+   const;
+   const glm::mat4& getShapeNormalsTransform()
+   const;
+   glm::mat4 getAnimationModel() const;
+   glm::mat4 getAnimationTranslation()
+   const;
+   glm::mat4 getAnimationScaleRotation()
+   const;*/
 
 // ----------METHODS-------------//
 const std::shared_ptr <Animation>& animation();

@@ -25,8 +25,8 @@ BoxRendering::BoxRendering(const Label& label,
 
 void BoxRendering::render() const {
     spBox->bindUniform("M", _transform);
-    _boxQuad.bind();
-    _boxQuad.draw();
+    // _boxQuad.bind();
+    // _boxQuad.draw();
 }
 
 void BoxRendering::update (float offset) {

@@ -103,13 +103,13 @@ void TextRendering::render() const {
         spFont->bindUniformTexture("characterTexture", 0,
                                    _charactersTextureIDs.at(i));
         spFont->bindUniform("M", _charactersTransforms.at(i));
-        displayQuad->draw();
+        // deprecated displayQuad->draw();
     }
 }
 
 void TextRendering::render (size_t index) const {
     spFont->bindUniform("M", _charactersTransforms.at(index));
-    displayQuad->draw();
+    // deprecated displayQuad->draw();
 }
 
 std::vector <size_t> TextRendering::getIndicesWithID (GLuint characterId) const {
@@ -173,7 +173,7 @@ GLuint TextRendering::getQuadVAO() const {
     // constructor
     // displayQuad->vertexArrayObject() can not be null because the pointer is
     // allocated in the GeometryShape constructor
-    return *displayQuad->vertexArrayObject();
+    return 0; // deprecated return *displayQuad->vertexArrayObject();
 }
 
 const Quad& TextRendering::getDisplayQuad() const {

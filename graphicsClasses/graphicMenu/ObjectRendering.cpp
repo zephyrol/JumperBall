@@ -27,14 +27,14 @@ void ObjectRendering::render() const {
     spObject->bindUniform("isActivated", _label.isActivated());
     spObject->bindUniform("M", _transformObject);
 
-    GLuint currentVAO = 0;
-    for (const MeshComponent_sptr& component : _components) {
-        if (currentVAO != *component->getShapeVAO()) {
-            component->bindShape();
-            currentVAO = *component->getShapeVAO();
-        }
-        component->drawShape();
-    }
+    // GLuint currentVAO = 0;
+    // for (const MeshComponent_sptr& component : _components) {
+    /*if (currentVAO != *component->getShapeVAO()) {
+       // deprecated component->bindShape();
+       currentVAO = *component->getShapeVAO();
+       }
+       component->drawShape();*/
+    // }
 }
 
 void ObjectRendering::update (float offset) {

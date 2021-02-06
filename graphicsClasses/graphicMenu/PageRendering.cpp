@@ -45,7 +45,7 @@ void PageRendering::render() const {
 
             if (currentQuadVao != textRendering->getQuadVAO()) {
                 const Quad& displayQuad = textRendering->getDisplayQuad();
-                displayQuad.bind();
+                // displayQuad.bind();
                 currentQuadVao = textRendering->getQuadVAO();
             }
 

@@ -40,24 +40,37 @@ void upsertUniform(const std::string& name, const glm::mat4& value);
 void upsertUniform(const std::string& name, const glm::vec4& value);
 void upsertUniform(const std::string& name, const glm::vec3& value);
 void upsertUniform(const std::string& name, const glm::vec2& value);
+void upsertUniform(const std::string& name, const GLfloat& value);
 void upsertUniformTexture(const std::string& name, const GLuint value);
 
 private:
 GLuint genVertexArrayObject() const;
 GLuint genBufferObject() const;
-Mesh::StaticAttributes createStaticAttributes() const;
-std::map <StaticAttributeType, GLuint> createVertexBufferObjects() const;
 
-template<typename T> std::shared_ptr <GLuint> initializeVBO(const std::vector <T> staticAttributeData) const;
+template<typename T> void createAttributes(T& attributes) const;
+Mesh::StaticAttributes createStaticAttributes() const;
+Mesh::DynamicAttributes createDynamicAttributes() const;
+
+size_t computeNumberOfVertices() const;
+
+template<typename T> std::vector <GLuint> createDynamicAttributesBufferObject(
+    const std::vector <std::vector <T> >& attributes) const;
+std::vector <GLuint> createVertexDynamicBufferObjects() const;
+std::map <StaticAttributeType, GLuint> createVertexStaticBufferObjects() const;
+
+template<typename T> std::shared_ptr <GLuint> initializeVBO(const std::vector <T> attributeData) const;
+template<typename T> void upsertUniforms(const std::map <std::string, T> uniformsData);
 
 const ShaderProgram& _shaderProgram;
 const GLuint _vertexArrayObject;
 const vecCstMesh_sptr _meshes;
+const size_t _numberOfVertices;
 const Mesh::StaticAttributes _staticAttributes;
-const std::map <StaticAttributeType, GLuint> _vertexBufferObjects;
+Mesh::DynamicAttributes _dynamicAttributes;
+const std::map <StaticAttributeType, GLuint> _vertexStaticBufferObjects;
+const std::vector <GLuint> _vertexDynamicBufferObjects;
 
 GLuint _elementBufferObject;
-
 uniformVariable <glm::mat4> _uniformMatrix4;
 uniformVariable <glm::vec4> _uniformVec4;
 uniformVariable <glm::vec3> _uniformVec3;

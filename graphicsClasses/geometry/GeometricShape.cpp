@@ -31,7 +31,8 @@ GeometricShape::GeometricShape(const std::vector <glm::vec3>& positions,
               : std::make_shared <std::vector <glm::vec2> >(uvCoords)),
     _indices(!indices.empty()
              ? std::make_shared <std::vector <GLushort> >(indices)
-             : nullptr) {
+             : nullptr),
+    _numberOfVertices(_positions ? _positions->size() / 3 : 0) {
     /*glGenVertexArrays(1, _vertexArrayObject.get());
        glBindVertexArray(*_vertexArrayObject);
        glGenBuffers(4, _vertexBufferObjects->data());
@@ -98,7 +99,8 @@ GeometricShape::GeometricShape(const GeometricShape& geometricShape,
     _normals(geometricShape.normals()),
     _colors(geometricShape.colors()),
     _uvCoords(geometricShape.uvCoords()),
-    _indices(geometricShape.indices()) {
+    _indices(geometricShape.indices()),
+    _numberOfVertices(_positions ? _positions->size() / 3 : 0) {
 
 }
 
@@ -120,6 +122,10 @@ const std::shared_ptr <const std::vector <glm::vec2> >& GeometricShape::uvCoords
 
 const std::shared_ptr <const std::vector <GLushort> >& GeometricShape::indices() const {
     return _indices;
+}
+
+size_t GeometricShape::numberOfVertices() const {
+    return _numberOfVertices;
 }
 
 

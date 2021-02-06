@@ -15,37 +15,37 @@ MeshComponent::MeshComponent(const std::shared_ptr <const GeometricShape>& elem,
 
 }
 
-void MeshComponent::bindShape() const {
-    _shape->bind();
-}
+/*void MeshComponent::bindShape() const {
+   _shape->bind();
+   }
 
-const glm::mat4& MeshComponent::getShapeModelTransform() const {
-    return _shape->modelTransform();
-}
+   const glm::mat4& MeshComponent::getShapeModelTransform() const {
+   return _shape->modelTransform();
+   }
 
-const glm::mat4& MeshComponent::getShapeNormalsTransform() const {
-    return _shape->normalsTransform();
-}
+   const glm::mat4& MeshComponent::getShapeNormalsTransform() const {
+   return _shape->normalsTransform();
+   }*/
 
-glm::mat4 MeshComponent::getAnimationModel() const {
-    return _animation->model();
-}
+/*glm::mat4 MeshComponent::getAnimationModel() const {
+   return _animation->model();
+   }
 
-glm::mat4 MeshComponent::getAnimationScaleRotation() const {
-    return _animation->scaleRotation();
-}
+   glm::mat4 MeshComponent::getAnimationScaleRotation() const {
+   return _animation->scaleRotation();
+   }
 
-glm::mat4 MeshComponent::getAnimationTranslation() const {
-    return _animation->translation();
-}
+   glm::mat4 MeshComponent::getAnimationTranslation() const {
+   return _animation->translation();
+   }
 
-const std::shared_ptr <GLuint>& MeshComponent::getShapeVAO() const {
-    return _shape->vertexArrayObject();
-}
+   const std::shared_ptr <GLuint>& MeshComponent::getShapeVAO() const {
+   return _shape->vertexArrayObject();
+   }
 
-void MeshComponent::drawShape() const {
-    _shape->draw();
-}
+   void MeshComponent::drawShape() const {
+   _shape->draw();
+   }*/
 
 const std::shared_ptr <Animation>& MeshComponent::animation() {
     return _animation;

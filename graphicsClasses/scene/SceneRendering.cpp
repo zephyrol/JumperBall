@@ -19,19 +19,19 @@ SceneRendering::SceneRendering(const Map& map,
     _uniformFloat(),
     _uniformBool(),
     _quadFrame(),
-    _meshMap(map),
-    _meshBall(ball),
-    _meshStar(star),
-    _meshQuadFrame(_quadFrame),
-    _meshMapUpdate([this] (size_t) {
-                       _meshMap.update();
-                   }),
-    _meshBallUpdate([this] (size_t) {
-                        _meshBall.update();
-                    }),
-    _meshStarUpdate([this] (size_t) {
-                        _meshStar.update();
-                    }),
+    /*_meshMap(map),
+       _meshBall(ball),
+       _meshStar(star),
+       _meshQuadFrame(_quadFrame),
+       _meshMapUpdate([this] (size_t) {
+       _meshMap.update();
+       }),
+       _meshBallUpdate([this] (size_t) {
+       _meshBall.update();
+       }),
+       _meshStarUpdate([this] (size_t) {
+       _meshStar.update();
+       }),*/
     _uniformUpdate([this] (size_t) {
                        updateUniform();
                    }),
@@ -90,25 +90,25 @@ void SceneRendering::phongEffect (GLuint depthTexture) const {
     _light.bind();
 
     // Ball
-    const BallState& ball = _meshBall.getInstanceFrame();
-    _spMap.bindUniform("burningCoeff", ball.burnCoefficient());
-    _meshBall.render(_spMap);
+    // const BallState& ball = _meshBall.getInstanceFrame();
+    // _spMap.bindUniform("burningCoeff", ball.burnCoefficient());
+    // _meshBall.render(_spMap);
 
     // Map
     _spMap.bindUniform("burningCoeff", 0.f);
-    _meshMap.render(_spMap);
+    // deprecated _meshMap.render(_spMap);
 
     // ------ Star ------
-    const StarState& star = _meshStar.getInstanceFrame();
-    _spStar.use();
-    _spStar.bindUniform("radiusInside", star.radiusInside());
-    _spStar.bindUniform("radiusOutside", star.radiusOutside());
-    _spStar.bindUniform("colorInside", star.colorInside());
-    _spStar.bindUniform("colorOutside", star.colorOutside());
+    // const StarState& star = _meshStar.getInstanceFrame();
+    /*_spStar.use();
+       _spStar.bindUniform("radiusInside", star.radiusInside());
+       _spStar.bindUniform("radiusOutside", star.radiusOutside());
+       _spStar.bindUniform("colorInside", star.colorInside());
+       _spStar.bindUniform("colorOutside", star.colorOutside());*/
 
     bindCamera(_spStar);
 
-    _meshStar.render(_spStar);
+    // _meshStar.render(_spStar);
 
 }
 
@@ -122,14 +122,14 @@ void SceneRendering::blurEffect (GLuint brightPassTexture) const {
     _spBlur.bindUniform("gaussWeights", gaussComputedValues);
 
     _spBlur.bindUniform("firstPass", true);
-    _meshQuadFrame.render(_spBlur);
+    // deprecated _meshQuadFrame.render(_spBlur);
 
     _frameBufferCompleteBlurEffect.bindFrameBuffer(false);
     _spBlur.bindUniformTexture("frameTexture", 0,
                                _frameBufferHalfBlurEffect.getRenderTexture());
 
     _spBlur.bindUniform("firstPass", false);
-    _meshQuadFrame.render(_spBlur);
+    // _meshQuadFrame.render(_spBlur);
 }
 
 void SceneRendering::brightPassEffect (GLuint hdrSceneTexture) const {
@@ -139,7 +139,7 @@ void SceneRendering::brightPassEffect (GLuint hdrSceneTexture) const {
 
     _spBrightPassFilter.bindUniformTexture("frameTexture", 0, hdrSceneTexture);
     _spBrightPassFilter.bindUniform("threshold", bloomThreshold);
-    _meshQuadFrame.render(_spBrightPassFilter);
+    // deprecated _meshQuadFrame.render(_spBrightPassFilter);
 }
 
 void SceneRendering::bloomEffect (GLuint hdrSceneTexture,
@@ -154,13 +154,13 @@ void SceneRendering::bloomEffect (GLuint hdrSceneTexture,
     _spBloom.bindUniform("whiteLuminance", 0.f);
 
     // Post process effects
-    const BallState& ball = _meshBall.getInstanceFrame();
-    _spBloom.bindUniform("teleportationCoefficient", ball.teleportationCoeff());
-    _spBloom.bindUniform(
-        "flashColor", Utility::colorAsVec3(ball.teleportationColor())
-        );
+    // const BallState& ball = _meshBall.getInstanceFrame();
+    // _spBloom.bindUniform("teleportationCoefficient", ball.teleportationCoeff());
+    // _spBloom.bindUniform(
+    // "flashColor", Utility::colorAsVec3(ball.teleportationColor())
+    // );
 
-    _meshQuadFrame.render(_spBloom);
+    // deprecated _meshQuadFrame.render(_spBloom);
 }
 
 void SceneRendering::depthFromStar() const {
@@ -169,8 +169,8 @@ void SceneRendering::depthFromStar() const {
     _frameBufferDepth.bindFrameBuffer(true);
     _spDepth.use();
     bindCamera(_spDepth);
-    _meshBall.render(_spDepth);
-    _meshMap.render(_spDepth);
+    // depc _meshBall.render(_spDepth);
+    // dpec _meshMap.render(_spDepth);
     // _meshQuadFrame.render(_spDepth);
 }
 
@@ -185,49 +185,49 @@ void SceneRendering::bindCamera (const ShaderProgram& sp) const {
 void SceneRendering::updateUniform() {
     // uniform for rendering from star
 
-    const MapState& map = _meshMap.getInstanceFrame();
-    const BallState& ball = _meshBall.getInstanceFrame();
-    const StarState& star = _meshStar.getInstanceFrame();
+    /*const MapState& map = _meshMap.getInstanceFrame();
+       const BallState& ball = _meshBall.getInstanceFrame();
+       const StarState& star = _meshStar.getInstanceFrame();*/
 
-    const glm::vec3 center { map.width() / 2.f,
-                             map.height() / 2.f,
-                             map.deep() / 2.f };
+    /*const glm::vec3 center { map.width() / 2.f,
+       map.height() / 2.f,
+       map.deep() / 2.f };
 
-    float boundingBoxMax = static_cast <float>(map.width());
-    if (boundingBoxMax < static_cast <float>(map.height()))
-        boundingBoxMax = static_cast <float>(map.height());
-    if (boundingBoxMax < static_cast <float>(map.deep()))
-        boundingBoxMax = static_cast <float>(map.deep());
+       float boundingBoxMax = static_cast <float>(map.width());
+       if (boundingBoxMax < static_cast <float>(map.height()))
+       boundingBoxMax = static_cast <float>(map.height());
+       if (boundingBoxMax < static_cast <float>(map.deep()))
+       boundingBoxMax = static_cast <float>(map.deep());
 
-    constexpr float offsetJumpingBall = 1.f; // size of ball + jump height
-    // float halfBoundingBoxSize = std::move(boundingBoxMax);
-    // halfBoundingBoxSize = halfBoundingBoxSize/2.f + offsetJumpingBall;
-    const float halfBoundingBoxSize = boundingBoxMax / 2.f + offsetJumpingBall;
+       constexpr float offsetJumpingBall = 1.f; // size of ball + jump height
+       // float halfBoundingBoxSize = std::move(boundingBoxMax);
+       // halfBoundingBoxSize = halfBoundingBoxSize/2.f + offsetJumpingBall;
+       const float halfBoundingBoxSize = boundingBoxMax / 2.f + offsetJumpingBall;
 
-    // We use a close star position to get a better ZBuffer accuracy
-    const glm::vec3 closeStarPosition = center +
-                                        glm::normalize((star.centralPosition() - center)) *
-                                        halfBoundingBoxSize;
+       // We use a close star position to get a better ZBuffer accuracy
+       const glm::vec3 closeStarPosition = center +
+       glm::normalize((star.centralPosition() - center)) *
+       halfBoundingBoxSize;
 
-    const JBTypes::vec3f& positionBall = ball.get3DPosition();
-    _light.directionLight(glm::normalize(center - star.centralPosition()));
+       const JBTypes::vec3f& positionBall = ball.get3DPosition();
+       _light.directionLight(glm::normalize(center - star.centralPosition()));
 
-    _uniformMatrix4["VPStar"] =
-        glm::mat4(glm::ortho(-halfBoundingBoxSize,
-                             halfBoundingBoxSize,
-                             -halfBoundingBoxSize, halfBoundingBoxSize,
-                             _camera.zNear, _camera.zFar) *
-                  glm::lookAt(closeStarPosition, center, glm::vec3(0.f, 1.f, 0.f)));
+       _uniformMatrix4["VPStar"] =
+       glm::mat4(glm::ortho(-halfBoundingBoxSize,
+       halfBoundingBoxSize,
+       -halfBoundingBoxSize, halfBoundingBoxSize,
+       _camera.zNear, _camera.zFar) *
+       glm::lookAt(closeStarPosition, center, glm::vec3(0.f, 1.f, 0.f)));
 
-    // uniform for rendering from camera
-    _uniformMatrix4["VP"] = _camera.viewProjection();
+       // uniform for rendering from camera
+       _uniformMatrix4["VP"] = _camera.viewProjection();
 
 
-    _uniformVec3["positionBall"] = glm::vec3(positionBall.x,
-                                             positionBall.y,
-                                             positionBall.z);
+       _uniformVec3["positionBall"] = glm::vec3(positionBall.x,
+       positionBall.y,
+       positionBall.z);
 
-    _uniformVec3["positionCamera"] = _camera.pos();
+       _uniformVec3["positionCamera"] = _camera.pos();*/
     // uniform for Star View SceneRendering
     _light.update();
 }
@@ -263,13 +263,13 @@ void SceneRendering::render() const {
 void SceneRendering::update() {
 
     // Update meshes and uniform values using multithreading
-    _meshMapUpdate.runTasks();
-    _meshBallUpdate.runTasks();
-    _meshStarUpdate.runTasks();
+    // _meshMapUpdate.runTasks();
+    // _meshBallUpdate.runTasks();
+    // _meshStarUpdate.runTasks();
     // Wait the end of updates
-    _meshStarUpdate.waitTasks();
-    _meshBallUpdate.waitTasks();
-    _meshMapUpdate.waitTasks();
+    // _meshStarUpdate.waitTasks();
+    // _meshBallUpdate.waitTasks();
+    // _meshMapUpdate.waitTasks();
 
     updateUniform();
 }

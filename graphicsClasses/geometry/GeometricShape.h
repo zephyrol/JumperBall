@@ -50,6 +50,8 @@ const std::shared_ptr <const std::vector <glm::vec3> >& normals() const;
 const std::shared_ptr <const std::vector <glm::vec3> >& colors() const;
 const std::shared_ptr <const std::vector <glm::vec2> >& uvCoords() const;
 const std::shared_ptr <const std::vector <GLushort> >& indices() const;
+
+size_t numberOfVertices() const;
 virtual size_t levelOfDetail() const;
 
 // --------STATIC METHODS-------//
@@ -65,6 +67,7 @@ const std::shared_ptr <const std::vector <glm::vec3> > _normals;
 const std::shared_ptr <const std::vector <glm::vec3> > _colors;
 const std::shared_ptr <const std::vector <glm::vec2> > _uvCoords;
 const std::shared_ptr <const std::vector <GLushort> > _indices;
+const size_t _numberOfVertices;
 
 std::shared_ptr <const std::vector <glm::vec3> > computePositions(
     const std::vector <glm::vec3>& positions, const glm::mat4& modelTransform) const;

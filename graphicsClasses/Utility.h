@@ -31,14 +31,14 @@ glm::vec3 colorAsVec3(const JBTypes::Color& color);
 float getLuminance(const glm::vec3& rgbColor);
 std::vector <GLfloat> uniColorsCube(const glm::vec3& color);
 
-std::vector <glm::vec3> GLfloatListToGlmVec3( const std::vector <GLfloat>& list);
+std::vector <glm::vec3> GLfloatListToGlmVec3(const std::vector <GLfloat>& list);
 
-std::vector <glm::vec2> GLfloatListToGlmVec2( const std::vector <GLfloat>& list);
+std::vector <glm::vec2> GLfloatListToGlmVec2(const std::vector <GLfloat>& list);
 
-glm::vec3 convertToOpenGLFormat( const JBTypes::vec3f& vec3f); 
-glm::vec2 convertToOpenGLFormat( const JBTypes::vec2f& vec2f); 
-GLfloat convertToOpenGLFormat(const float& f); 
-GLubyte convertToOpenGLFormat(unsigned char uChar); 
+glm::vec3 convertToOpenGLFormat(const JBTypes::vec3f& vec3f);
+glm::vec2 convertToOpenGLFormat(const JBTypes::vec2f& vec2f);
+GLfloat convertToOpenGLFormat(const float& f);
+GLubyte convertToOpenGLFormat(unsigned char uChar);
 
 
 float xScreenToPortrait(float x);
