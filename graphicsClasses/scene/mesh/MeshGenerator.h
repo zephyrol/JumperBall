@@ -25,25 +25,26 @@
 
 namespace MeshGenerator {
 
-//vecMeshComponent_sptr genComponents(const QuadState& quad);
-//vecMeshComponent_sptr genComponents(const BallState& ball);
+// vecMeshComponent_sptr genComponents(const QuadState& quad);
+// vecMeshComponent_sptr genComponents(const BallState& ball);
 vecMesh_sptr genMap(const MapState& map);
-//vecMeshComponent_sptr genComponents(const StarState& star);
+// vecMeshComponent_sptr genComponents(const StarState& star);
 
-//vecMeshComponent_sptr genObject(const ObjectState& obj, const glm::vec3& position, const JBTypes::Dir& dir);
+// vecMeshComponent_sptr genObject(const ObjectState& obj, const glm::vec3& position, const JBTypes::Dir& dir);
 
 vecMesh_sptr genBlock(const MapState& map, size_t index);
 
-/*vecMeshComponent_sptr genSharps(const BlockState& BlockState,
-                                const Map::BlockTypes& type,
-                                const glm::vec3& posWorld);
-vecMeshComponent_sptr genJumpers(const BlockState& BlockState,
+vecMesh_sptr genSharps(const std::shared_ptr<BlockState> &blockState,
+                       const Map::BlockTypes &type,
+                       const glm::vec3 &posWorld);
+
+/*vecMeshComponent_sptr genJumpers(const BlockState& BlockState,
                                  const Map::BlockTypes& type,
                                  const glm::vec3& posWorld);
-vecMeshComponent_sptr genEnemy(const EnemyState& enemy);
-vecMeshComponent_sptr genSpecial(const SpecialState& special);
+   vecMeshComponent_sptr genEnemy(const EnemyState& enemy);
+   vecMeshComponent_sptr genSpecial(const SpecialState& special);
 
-vecMeshComponent_sptr sortComponents( const vecMeshComponent_sptr& components);*/
+   vecMeshComponent_sptr sortComponents( const vecMeshComponent_sptr& components);*/
 extern std::map <std::string, GeometricShape_sptr> commonShapes;
 }
 

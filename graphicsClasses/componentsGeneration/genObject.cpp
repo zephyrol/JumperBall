@@ -47,7 +47,7 @@
                 MeshComponent_sptr componentSphere =
                     std::make_shared <MeshComponent>
                         (std::make_shared <Sphere>(
-                            *commonShapes.at("goldenSphere"),
+ * commonShapes.at("goldenSphere"),
                             tranform),
                         std::make_shared <ObjectAnimation>(obj, position, dir));
                 components.push_back(componentSphere);
@@ -86,7 +86,7 @@
         const MeshComponent_sptr componentCube =
             std::make_shared <MeshComponent>(
                 std::make_shared <Cylinder>(
-                    *commonShapes.at("coinCylinder"),
+ * commonShapes.at("coinCylinder"),
                     tranformLocal,
                     tranformNormals),
                 std::make_shared <ObjectAnimation>(obj, position, dir));
@@ -99,4 +99,4 @@
     default: break;
     }
     return components;
-}*/
+   }*/

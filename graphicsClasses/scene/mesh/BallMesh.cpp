@@ -6,14 +6,14 @@
  */
 #include "BallMesh.h"
 /*
-BallMesh::BallMesh(const Ball& ball):
+   BallMesh::BallMesh(const Ball& ball):
     Mesh <Ball, BallState>(ball) {
 
-}
+   }
 
-void BallMesh::updateWorld() {
+   void BallMesh::updateWorld() {
     const JBTypes::vec3f& positionBall = _frame.get3DPosition();
     setWorld(glm::translate(glm::mat4(1.f), glm::vec3(positionBall.x,
                                                       positionBall.y, positionBall.z)));
-}
-*/
+   }
+ */

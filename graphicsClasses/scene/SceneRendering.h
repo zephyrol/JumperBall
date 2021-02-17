@@ -53,9 +53,7 @@ uniformVariable <glm::vec2> _uniformVec2;
 uniformVariable <GLfloat> _uniformFloat;
 uniformVariable <bool> _uniformBool;
 
-
-
-//const Quad _quadFrame;
+// const Quad _quadFrame;
 // MapMesh _meshMap;
 // BallMesh _meshBall;
 // StarMesh _meshStar;
@@ -91,8 +89,7 @@ RenderPass _renderPass;
 // ---------CONST METHODS--------//
 void phongEffect(GLuint depthTexture) const;
 void blurEffect(GLuint brightPassTexture) const;
-void brightPassEffect(GLuint hdrSceneTexture)
-const;
+void brightPassEffect(GLuint hdrSceneTexture) const;
 void bloomEffect(GLuint hdrSceneTexture,
                  GLuint bluredTexture) const;
 void depthFromStar() const;

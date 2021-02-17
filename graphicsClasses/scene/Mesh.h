@@ -58,8 +58,12 @@ static DynamicAttributes concatAttributes(const Mesh::DynamicAttributes& current
                                           const Mesh::DynamicAttributes& other);
 
 private:
+
 size_t computeNumberOfVertices() const;
+
 template<typename T> static void concatVector(std::vector <T>& current, const std::vector <T>& data);
+template<typename T> static void concatStaticAttribute(std::vector <T>& staticAttributeData,
+                                                       const std::shared_ptr <const std::vector <T> >& shapeData);
 
 template<typename T> void duplicateDynamicAttribute(std::vector <std::vector <T> >& attributes,
                                                     const std::vector <T>& values) const;

@@ -7,12 +7,12 @@
 #include "StarMesh.h"
 
 /*
-StarMesh::StarMesh(const Star& star):
+   StarMesh::StarMesh(const Star& star):
     Mesh <Star, StarState>(star) {
 
-}
+   }
 
-void StarMesh::updateWorld() {
+   void StarMesh::updateWorld() {
     setWorld(_frame.transform());
-}
-*/
+   }
+ */

@@ -11,7 +11,7 @@
 #include <scene/State.h>
 
 
-class EnemyState: public State {
+class EnemyState:public State {
 public:
 EnemyState(const Enemy& enemy, const Map::EnemyTypes& category);
 const JBTypes::Color& color() const;

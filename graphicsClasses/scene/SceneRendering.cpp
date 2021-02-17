@@ -18,7 +18,7 @@ SceneRendering::SceneRendering(const Map& map,
     _uniformVec2(),
     _uniformFloat(),
     _uniformBool(),
-    //_quadFrame(),
+    // _quadFrame(),
     /*_meshMap(map),
        _meshBall(ball),
        _meshStar(star),
@@ -75,15 +75,15 @@ SceneRendering::SceneRendering(const Map& map,
                                    false),
     _mapState(map),
     _meshesMap(MeshGenerator::genMap(_mapState)),
-    _renderPass(_spMap, _meshesMap)
-{
+    _renderPass(_spMap, _meshesMap) {
     update();
 }
 
 void SceneRendering::phongEffect (GLuint depthTexture) const {
 
     glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.z, 0.0f);
-    _frameBufferHDRScene.bindFrameBuffer(true);
+    //_frameBufferHDRScene.bindFrameBuffer(true);
+    FrameBuffer::cleanCurrentFrameBuffer(true);
     _spMap.use();
     _spMap.bindUniformTexture("depthTexture", 0, depthTexture);
 
@@ -111,6 +111,8 @@ void SceneRendering::phongEffect (GLuint depthTexture) const {
        _spStar.bindUniform("colorOutside", star.colorOutside());*/
 
     bindCamera(_spStar);
+
+    _renderPass.render();
 
     // _meshStar.render(_spStar);
 
@@ -180,10 +182,10 @@ void SceneRendering::depthFromStar() const {
 
 
 void SceneRendering::bindCamera (const ShaderProgram& sp) const {
-    //sp.bindUniform("VP", _uniformMatrix4.at("VP"));
-    //sp.bindUniform("VPStar", _uniformMatrix4.at("VPStar"));
-    //sp.bindUniform("positionBall", _uniformVec3.at("positionBall"));
-    //sp.bindUniform("positionCamera", _uniformVec3.at("positionCamera"));
+    // sp.bindUniform("VP", _uniformMatrix4.at("VP"));
+    // sp.bindUniform("VPStar", _uniformMatrix4.at("VPStar"));
+    // sp.bindUniform("positionBall", _uniformVec3.at("positionBall"));
+    // sp.bindUniform("positionCamera", _uniformVec3.at("positionCamera"));
 }
 
 void SceneRendering::updateUniform() {
@@ -233,14 +235,15 @@ void SceneRendering::updateUniform() {
 
        _uniformVec3["positionCamera"] = _camera.pos();*/
     // uniform for Star View SceneRendering
-    _light.update();
+    // _light.update();
 }
 
-void SceneRendering::updateCamera(RenderPass& renderPass) {
-    renderPass.upsertUniform("VP", _uniformMatrix4.at("VP"));
-    renderPass.upsertUniform("VPStar", _uniformMatrix4.at("VPStar"));
-    renderPass.upsertUniform("positionBall", _uniformVec3.at("positionBall"));
-    renderPass.upsertUniform("positionCamera", _uniformVec3.at("positionCamera"));
+void SceneRendering::updateCamera (RenderPass& renderPass) {
+    //renderPass.upsertUniform("VP", _uniformMatrix4.at("VP"));
+    renderPass.upsertUniform("VP", _camera.viewProjection());
+    //renderPass.upsertUniform("VPStar", _uniformMatrix4.at("VPStar"));
+    //renderPass.upsertUniform("positionBall", _uniformVec3.at("positionBall"));
+    renderPass.upsertUniform("positionCamera", _camera.pos());
 }
 
 void SceneRendering::render() const {
@@ -251,16 +254,16 @@ void SceneRendering::render() const {
     // -----
     glEnable(GL_CULL_FACE);
 
-    depthFromStar();
+    // depthFromStar();
 
     phongEffect(_frameBufferDepth.getRenderTexture());
 
-    brightPassEffect(_frameBufferHDRScene.getRenderTexture());
+    // brightPassEffect(_frameBufferHDRScene.getRenderTexture());
 
-    blurEffect(_frameBufferBrightPassEffect.getRenderTexture());
+    // blurEffect(_frameBufferBrightPassEffect.getRenderTexture());
 
-    bloomEffect(_frameBufferHDRScene.getRenderTexture(),
-                _frameBufferCompleteBlurEffect.getRenderTexture());
+    // bloomEffect(_frameBufferHDRScene.getRenderTexture(),
+    //            _frameBufferCompleteBlurEffect.getRenderTexture());
 
     /*_spFbo.use();
        FrameBuffer::bindDefaultFrameBuffer();
@@ -275,6 +278,7 @@ void SceneRendering::update() {
 
     _mapState.update();
     _renderPass.update();
+    updateCamera(_renderPass);
     // Update meshes and uniform values using multithreading
     // _meshMapUpdate.runTasks();
     // _meshBallUpdate.runTasks();
@@ -287,8 +291,8 @@ void SceneRendering::update() {
     // updateUniform();
 }
 
-const std::string SceneRendering::vsshaderMap = "shaders/phongVs.vs";
-const std::string SceneRendering::fsshaderMap = "shaders/phongFs.fs";
+const std::string SceneRendering::vsshaderMap = "shaders/blocksVs.vs";
+const std::string SceneRendering::fsshaderMap = "shaders/blocksFs.fs";
 
 const std::string SceneRendering::vsshaderStar = "shaders/starVs.vs";
 const std::string SceneRendering::fsshaderStar = "shaders/starFs.fs";

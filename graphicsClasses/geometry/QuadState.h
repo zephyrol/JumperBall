@@ -3,7 +3,7 @@
 #include "geometry/Quad.h"
 #include <scene/State.h>
 
-class QuadState: public State {
+class QuadState:public State {
 public:
 QuadState(const Quad& quad);
 virtual void update() override;

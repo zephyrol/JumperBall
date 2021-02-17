@@ -11,12 +11,12 @@
 #include "Mesh.h"
 
 /*class BallMesh:public Mesh <Ball, BallState> {
-public:
-BallMesh(const Ball& ball);
+   public:
+   BallMesh(const Ball& ball);
 
-private:
-virtual void updateWorld() override;
+   private:
+   virtual void updateWorld() override;
 
-};*/
+   };*/
 
 #endif // BALLMESH_H

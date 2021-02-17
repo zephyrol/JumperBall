@@ -81,13 +81,13 @@
             glm::translate(glm::vec3(-offsetLaserSide, 0.f, offsetLaserSide));
 
         const glm::mat4 modelTransfLaserOne = translationMatrix * rotationMatrix
-                                              * translationOffsetLaserA * scaleMatrix;
+ * translationOffsetLaserA * scaleMatrix;
         const glm::mat4 modelTransfLaserTwo = translationMatrix * rotationMatrix
-                                              * translationOffsetLaserB * scaleMatrix;
+ * translationOffsetLaserB * scaleMatrix;
         const glm::mat4 modelTransfLaserThree = translationMatrix * rotationMatrix
-                                                * translationOffsetLaserC * scaleMatrix;
+ * translationOffsetLaserC * scaleMatrix;
         const glm::mat4 modelTransfLaserFour = translationMatrix * rotationMatrix
-                                               * translationOffsetLaserD * scaleMatrix;
+ * translationOffsetLaserD * scaleMatrix;
 
         const std::array <glm::mat4, 4> lasersTransf {
             modelTransfLaserOne,
@@ -102,7 +102,7 @@
             const MeshComponent_sptr componentCylinder =
                 std::make_shared <MeshComponent>(
                     std::make_shared <Cylinder>(
-                        *commonShapes.at(laserName),
+ * commonShapes.at(laserName),
                         laserTransf,
                         normalsTransf),
                     std::make_shared <EnemyAnimation>(enemy));
@@ -141,7 +141,7 @@
         }
         const MeshComponent_sptr component =
             std::make_shared <MeshComponent>(std::make_shared <Sphere>(
-                                                 *commonShapes.at(sphereName),
+ * commonShapes.at(sphereName),
                                                  modelTransf,
                                                  normalsTransf),
                                              std::make_shared <EnemyAnimation>(
@@ -151,4 +151,4 @@
     }
 
     return components;
-}*/
+   }*/

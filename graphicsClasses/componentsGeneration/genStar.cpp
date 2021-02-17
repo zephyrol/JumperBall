@@ -17,4 +17,4 @@
                                                                       star.initialTransform()),
                                              nullptr);
     return vecMeshComponent_sptr { component };
-}*/
+   }*/

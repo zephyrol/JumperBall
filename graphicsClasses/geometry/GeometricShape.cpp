@@ -44,7 +44,7 @@ GeometricShape::GeometricShape(const std::vector <glm::vec3>& positions,
        }
        setVerticesData();*/
 
-    /*glEnableVertexAttribArray(0);
+    /* glEnableVertexAttribArray(0);
        glEnableVertexAttribArray(1);
        glEnableVertexAttribArray(2);
        glEnableVertexAttribArray(3);

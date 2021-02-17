@@ -24,6 +24,14 @@ template<typename T> void Mesh::concatVector (std::vector <T>& current, const st
     current.insert(current.end(), data.begin(), data.end());
 }
 
+template<typename T> void Mesh::concatStaticAttribute (std::vector <T>& staticAttributeData,
+                                                       const std::shared_ptr <const std::vector <T> >& shapeData)
+{
+    if (shapeData) {
+        concatVector(staticAttributeData, *shapeData);
+    }
+}
+
 template<typename T> void Mesh::duplicateDynamicAttribute (std::vector <std::vector <T> >& attributes,
                                                            const std::vector <T>& values) const {
     for (const T& value : values) {
@@ -86,11 +94,11 @@ size_t Mesh::computeNumberOfVertices() const {
 template<> Mesh::StaticAttributes Mesh::genAttributes <Mesh::StaticAttributes>() const {
     Mesh::StaticAttributes staticAttributes;
     for (const CstGeometricShape_sptr& shape : _shapes) {
-        concatVector(staticAttributes.positions, *shape->positions());
-        concatVector(staticAttributes.normals, *shape->normals());
-        concatVector(staticAttributes.colors, *shape->colors());
-        concatVector(staticAttributes.uvCoords, *shape->uvCoords());
-        concatVector(staticAttributes.indices, *shape->indices());
+        concatStaticAttribute(staticAttributes.positions, shape->positions());
+        concatStaticAttribute(staticAttributes.normals, shape->normals());
+        concatStaticAttribute(staticAttributes.colors, shape->colors());
+        concatStaticAttribute(staticAttributes.uvCoords, shape->uvCoords());
+        concatStaticAttribute(staticAttributes.indices, shape->indices());
     }
     return staticAttributes;
 }

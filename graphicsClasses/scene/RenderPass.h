@@ -54,7 +54,7 @@ Mesh::DynamicAttributes createDynamicAttributes() const;
 size_t computeNumberOfVertices() const;
 
 void bindUniforms() const;
-template<typename T> void bindUniforms(UniformVariable<T> uniforms) const;
+template<typename T> void bindUniforms(UniformVariable <T> uniforms) const;
 
 template<typename T> std::vector <GLuint> createDynamicAttributesBufferObject(
     const std::vector <std::vector <T> >& attributes) const;

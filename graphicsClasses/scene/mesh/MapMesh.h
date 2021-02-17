@@ -12,11 +12,11 @@
 
 
 /*class MapMesh:public Mesh <Map, MapState> {
-public:
-MapMesh(const Map& map);
+   public:
+   MapMesh(const Map& map);
 
-private:
-virtual void updateWorld() override;
-};*/
+   private:
+   virtual void updateWorld() override;
+   };*/
 
 #endif // MAPMESH_H
