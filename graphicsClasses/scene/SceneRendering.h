@@ -66,7 +66,7 @@ ParallelTask <void> _uniformUpdate;
 
 const Camera& _camera;
 
-const ShaderProgram _spMap;
+const ShaderProgram _spBlocks;
 const ShaderProgram _spStar;
 const ShaderProgram _spFbo;
 const ShaderProgram _spBlur;
@@ -83,8 +83,10 @@ const FrameBuffer _frameBufferHalfBlurEffect;
 const FrameBuffer _frameBufferCompleteBlurEffect;
 
 MapState _mapState;
-const vecCstMesh_sptr _meshesMap;
-RenderPass _renderPass;
+RenderPass _renderPassBlocks;
+
+StarState _starState;
+RenderPass _renderPassStar;
 
 // ---------CONST METHODS--------//
 void phongEffect(GLuint depthTexture) const;
@@ -102,8 +104,8 @@ void updateUniform();
 void updateCamera(RenderPass& renderPass);
 
 // ------STATIC ATTRIBUTES------//
-static const std::string vsshaderMap;
-static const std::string fsshaderMap;
+static const std::string vsshaderBlocks;
+static const std::string fsshaderBlocks;
 static const std::string vsshaderStar;
 static const std::string fsshaderStar;
 static const std::string vsshaderFBO;

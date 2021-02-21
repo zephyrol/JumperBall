@@ -6,10 +6,11 @@
  */
 #ifndef STARSTATE_H
 #define STARSTATE_H
+#include <scene/State.h>
 #include "Star.h"
 
 
-class StarState {
+class StarState : public State {
 public:
 StarState(const Star& star);
 

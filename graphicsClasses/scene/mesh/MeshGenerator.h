@@ -28,7 +28,7 @@ namespace MeshGenerator {
 // vecMeshComponent_sptr genComponents(const QuadState& quad);
 // vecMeshComponent_sptr genComponents(const BallState& ball);
 vecMesh_sptr genMap(const MapState& map);
-// vecMeshComponent_sptr genComponents(const StarState& star);
+vecMesh_sptr genStar(const StarState& star);
 
 // vecMeshComponent_sptr genObject(const ObjectState& obj, const glm::vec3& position, const JBTypes::Dir& dir);
 

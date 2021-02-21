@@ -12,8 +12,8 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr
     _vertexArrayObject(genVertexArrayObject()),
     _meshes(meshes),
     _numberOfVertices(computeNumberOfVertices()),
-    _staticAttributes(createStaticAttributes()),
-    _dynamicAttributes(createDynamicAttributes()),
+    _shapeVertexAttributes(createShapeVertexAttributes()),
+    _stateVertexAttributes(createStateVertexAttributes()),
     _vertexStaticBufferObjects(createVertexStaticBufferObjects()),
     _vertexDynamicBufferObjects(createVertexDynamicBufferObjects()),
     // Use smartpointer, when the uniform is changed outside this class, every renderpass will be updated
@@ -28,7 +28,7 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr
   glEnableVertexAttribArray(2);
   glEnableVertexAttribArray(3);
 
-  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::StaticAttributeType::Positions));
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Positions));
 
   glVertexAttribPointer(
       0,
@@ -38,7 +38,7 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr
       0,
       nullptr);
 
-  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::StaticAttributeType::Normals));
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Colors));
   glVertexAttribPointer(
       1,
       3, // 3 GL_FLOAT per vertex
@@ -47,7 +47,7 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr
       0,
       nullptr);
 
-  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::StaticAttributeType::Colors));
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Normals));
   glVertexAttribPointer(
       2,
       3, // 3 GL_FLOAT per vertex
@@ -56,7 +56,7 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr
       0,
       nullptr);
 
-  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::StaticAttributeType::UvCoords));
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::UvCoords));
   glVertexAttribPointer(
       3,
       2, // 2 GL_FLOAT per vertex
@@ -85,7 +85,7 @@ void RenderPass::update() {
         upsertUniforms(uniforms.uniformFloats);
         upsertUniforms(uniforms.uniformVec2s);
         upsertUniforms(uniforms.uniformVec3s);
-        // _dynamicAttributes = createDynamicAttributes();
+        // _stateVertexAttributes = createStateVertexAttributes();
     }
 }
 
@@ -136,33 +136,27 @@ void RenderPass::render() const {
     _shaderProgram.use();
     glBindVertexArray(_vertexArrayObject);
     bindUniforms();
-    if (_staticAttributes.indices.empty()) {
-      constexpr int offset = 0;
-      glDrawArrays(GL_TRIANGLES, offset,
-                   static_cast<GLsizei>(_staticAttributes.positions.size()));
-    } else {
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vertexStaticBufferObjects.at(StaticAttributeType::Indices));
-      glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(_staticAttributes.indices.size()),
-                     GL_UNSIGNED_SHORT, nullptr);
-    }
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vertexStaticBufferObjects.at(ShapeVertexAttributeType::Indices));
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(_shapeVertexAttributes.indices.size()),
+                   GL_UNSIGNED_SHORT, nullptr);
 }
 
 template<typename T> void RenderPass::createAttributes (T& attributes) const {
-    for (const CstMesh_sptr& mesh : _meshes) {
-        attributes = Mesh::concatAttributes(attributes, mesh->genAttributes <T>());
+    for (const CstMesh_sptr &mesh : _meshes) {
+      attributes = Mesh::concatAttributes(attributes, mesh->genAttributes<T>());
     }
 }
 
-Mesh::StaticAttributes RenderPass::createStaticAttributes() const {
-    Mesh::StaticAttributes staticAttributes;
-    createAttributes(staticAttributes);
-    return staticAttributes;
+Mesh::ShapeVertexAttributes RenderPass::createShapeVertexAttributes() const {
+    Mesh::ShapeVertexAttributes shapeVertexAttributes;
+    createAttributes(shapeVertexAttributes);
+    return shapeVertexAttributes;
 }
 
-Mesh::DynamicAttributes RenderPass::createDynamicAttributes() const {
-    Mesh::DynamicAttributes dynamicAttributes;
-    createAttributes(dynamicAttributes);
-    return dynamicAttributes;
+Mesh::StateVertexAttributes RenderPass::createStateVertexAttributes() const {
+    Mesh::StateVertexAttributes StateVertexAttributes;
+    createAttributes(StateVertexAttributes);
+    return StateVertexAttributes;
 }
 
 size_t RenderPass::computeNumberOfVertices() const {
@@ -179,11 +173,11 @@ template<typename T> void RenderPass::bindUniforms (UniformVariable <T> uniforms
     }
 }
 
-template<typename T> std::vector <GLuint> RenderPass::createDynamicAttributesBufferObject (
+template<typename T> std::vector <GLuint> RenderPass::createStateVertexAttributesBufferObject (
     const std::vector <std::vector <T> >& attributes) const {
     std::vector <GLuint> vertexBufferObjects;
-    for (const auto& dynamicAttribute : attributes) {
-        const auto vertexBuffer = initializeVBO(dynamicAttribute);
+    for (const auto& StateVertexAttribute : attributes) {
+        const auto vertexBuffer = initializeVBO(StateVertexAttribute);
         if (vertexBuffer) {
             vertexBufferObjects.push_back(*vertexBuffer);
         }
@@ -194,14 +188,14 @@ template<typename T> std::vector <GLuint> RenderPass::createDynamicAttributesBuf
 std::vector <GLuint> RenderPass::createVertexDynamicBufferObjects() const {
 
     std::vector <GLuint> vertexBufferObjects;
-    const std::vector <GLuint> vbosFloatsAttributes = createDynamicAttributesBufferObject(
-        _dynamicAttributes.dynamicFloats);
-    const std::vector <GLuint> vbosVec2sAttributes = createDynamicAttributesBufferObject(
-        _dynamicAttributes.dynamicsVec2s);
-    const std::vector <GLuint> vbosVec3sAttributes = createDynamicAttributesBufferObject(
-        _dynamicAttributes.dynamicsVec3s);
-    const std::vector <GLuint> vbosUbytesAttributes = createDynamicAttributesBufferObject(
-        _dynamicAttributes.dynamicUbytes);
+    const std::vector <GLuint> vbosFloatsAttributes = createStateVertexAttributesBufferObject(
+        _stateVertexAttributes.dynamicFloats);
+    const std::vector <GLuint> vbosVec2sAttributes = createStateVertexAttributesBufferObject(
+        _stateVertexAttributes.dynamicsVec2s);
+    const std::vector <GLuint> vbosVec3sAttributes = createStateVertexAttributesBufferObject(
+        _stateVertexAttributes.dynamicsVec3s);
+    const std::vector <GLuint> vbosUbytesAttributes = createStateVertexAttributesBufferObject(
+        _stateVertexAttributes.dynamicUbytes);
     vertexBufferObjects.insert(vertexBufferObjects.begin(),
                                vbosFloatsAttributes.begin(), vbosFloatsAttributes.end());
     vertexBufferObjects.insert(vertexBufferObjects.begin(),
@@ -213,26 +207,26 @@ std::vector <GLuint> RenderPass::createVertexDynamicBufferObjects() const {
     return vertexBufferObjects;
 }
 
-std::map <RenderPass::StaticAttributeType, GLuint> RenderPass::createVertexStaticBufferObjects() const {
+std::map <RenderPass::ShapeVertexAttributeType, GLuint> RenderPass::createVertexStaticBufferObjects() const {
 
-    std::map <RenderPass::StaticAttributeType, GLuint> vertexBufferObjects;
+    std::map <RenderPass::ShapeVertexAttributeType, GLuint> vertexBufferObjects;
     const auto fillVertexBufferObject =
-        [&vertexBufferObjects] (const RenderPass::StaticAttributeType& type,
+        [&vertexBufferObjects] (const RenderPass::ShapeVertexAttributeType& type,
                                 const std::shared_ptr <GLuint>& vertexBufferObject) {
             if (vertexBufferObject) {
                 vertexBufferObjects[type] = *vertexBufferObject;
             } 
         };
-    fillVertexBufferObject(RenderPass::StaticAttributeType::Positions,
-                           initializeVBO(_staticAttributes.positions));
-    fillVertexBufferObject(RenderPass::StaticAttributeType::Normals,
-                           initializeVBO(_staticAttributes.normals));
-    fillVertexBufferObject(RenderPass::StaticAttributeType::Colors,
-                           initializeVBO(_staticAttributes.colors));
-    fillVertexBufferObject(RenderPass::StaticAttributeType::UvCoords,
-                           initializeVBO(_staticAttributes.uvCoords));
-    fillVertexBufferObject(RenderPass::StaticAttributeType::Indices,
-                           initializeEBO(_staticAttributes.indices));
+    fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::Positions,
+                           initializeVBO(_shapeVertexAttributes.positions));
+    fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::Normals,
+                           initializeVBO(_shapeVertexAttributes.normals));
+    fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::Colors,
+                           initializeVBO(_shapeVertexAttributes.colors));
+    fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::UvCoords,
+                           initializeVBO(_shapeVertexAttributes.uvCoords));
+    fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::Indices,
+                           initializeEBO(_shapeVertexAttributes.indices));
 
     return vertexBufferObjects;
 }

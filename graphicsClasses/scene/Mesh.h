@@ -22,7 +22,7 @@ using vecMesh_sptr = std::vector <Mesh_sptr>;
 class Mesh {
 public:
 Mesh(const State& state, const vecCstGeometricShape_sptr& shapes);
-struct StaticAttributes {
+struct ShapeVertexAttributes {
     std::vector <glm::vec3> positions;
     std::vector <glm::vec3> normals;
     std::vector <glm::vec3> colors;
@@ -30,7 +30,7 @@ struct StaticAttributes {
     std::vector <GLushort> indices;
 };
 
-struct DynamicAttributes {
+struct StateVertexAttributes {
     std::vector <std::vector <GLubyte> > dynamicUbytes;
     std::vector <std::vector <GLfloat> > dynamicFloats;
     std::vector <std::vector <glm::vec3> > dynamicsVec3s;
@@ -48,14 +48,14 @@ void update();
 
 size_t numberOfVertices() const;
 template<typename Attributes> Attributes genAttributes() const;
-// StaticAttributes genStaticAttributes() const;
-// DynamicAttributes genDynamicAttributes() const;
+// ShapeVertexAttributes genShapeVertexAttributes() const;
+// StateVertexAttributes genStateVertexAttributes() const;
 Uniforms genUniformsValues() const;
-static StaticAttributes concatAttributes(const Mesh::StaticAttributes& current,
-                                         const Mesh::StaticAttributes& other);
+static ShapeVertexAttributes concatAttributes(const Mesh::ShapeVertexAttributes& current,
+                                         const Mesh::ShapeVertexAttributes& other);
 
-static DynamicAttributes concatAttributes(const Mesh::DynamicAttributes& current,
-                                          const Mesh::DynamicAttributes& other);
+static StateVertexAttributes concatAttributes(const Mesh::StateVertexAttributes& current,
+                                          const Mesh::StateVertexAttributes& other);
 
 private:
 
@@ -68,13 +68,13 @@ static void concatIndices(
   size_t offset
 );
 
-template<typename T> static void concatIndependantStaticAttribute(std::vector <T>& staticAttributeData,
+template<typename T> static void concatIndependantShapeVertexAttribute(std::vector <T>& staticAttributeData,
                                                        const std::shared_ptr <const std::vector <T> >& shapeData);
-static void concatIndicesStaticAttribute(std::vector <GLushort>& staticAttributeData,
+static void concatIndicesShapeVertexAttribute(std::vector <GLushort>& staticAttributeData,
                                                        const std::shared_ptr <const std::vector <GLushort> >& shapeData,
                                                        size_t offset);
 
-template<typename T> void duplicateDynamicAttribute(std::vector <std::vector <T> >& attributes,
+template<typename T> void duplicateStateVertexAttribute(std::vector <std::vector <T> >& attributes,
                                                     const std::vector <T>& values) const;
 
 template<typename RawType, typename OpenGLType> static void convertAttributesToOpenGLFormat(

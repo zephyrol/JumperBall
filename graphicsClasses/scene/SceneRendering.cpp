@@ -36,8 +36,8 @@ SceneRendering::SceneRendering(const Map& map,
                        updateUniform();
                    }),
     _camera(camera),
-    _spMap(Shader(GL_VERTEX_SHADER, vsshaderMap),
-           Shader(GL_FRAGMENT_SHADER, fsshaderMap)),
+    _spBlocks(Shader(GL_VERTEX_SHADER, vsshaderBlocks),
+           Shader(GL_FRAGMENT_SHADER, fsshaderBlocks)),
     _spStar(Shader(GL_VERTEX_SHADER, vsshaderStar),
             Shader(GL_FRAGMENT_SHADER, fsshaderStar)),
     _spFbo(Shader(GL_VERTEX_SHADER, vsshaderFBO),
@@ -53,7 +53,7 @@ SceneRendering::SceneRendering(const Map& map,
     _spDepth
         (Shader(GL_VERTEX_SHADER, vsshaderDepth),
         Shader(GL_FRAGMENT_SHADER, fsshaderDepth)),
-    _light("light", _spMap,
+    _light("light", _spBlocks,
            glm::vec3(0.f, 0.f, 0.f),
            glm::vec3(0.7f, 0.7f, 0.7f),
            glm::vec3(0.25f, 0.25f, 0.25f),
@@ -74,8 +74,9 @@ SceneRendering::SceneRendering(const Map& map,
                                    heightBloomTexture,
                                    false),
     _mapState(map),
-    _meshesMap(MeshGenerator::genMap(_mapState)),
-    _renderPass(_spMap, _meshesMap) {
+    _renderPassBlocks(_spBlocks, MeshGenerator::genMap(_mapState)),
+    _starState(star),
+    _renderPassStar(_spStar, MeshGenerator::genStar(_starState)) {
     update();
 }
 
@@ -84,35 +85,36 @@ void SceneRendering::phongEffect (GLuint depthTexture) const {
     glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.z, 0.0f);
     //_frameBufferHDRScene.bindFrameBuffer(true);
     FrameBuffer::cleanCurrentFrameBuffer(true);
-    _spMap.use();
-    _spMap.bindUniformTexture("depthTexture", 0, depthTexture);
+    _spBlocks.use();
+    _spBlocks.bindUniformTexture("depthTexture", 0, depthTexture);
 
     // --- Ball Map and Light ---
-    bindCamera(_spMap);
+    bindCamera(_spBlocks);
 
     // Light
     _light.bind();
 
     // Ball
     // const BallState& ball = _meshBall.getInstanceFrame();
-    // _spMap.bindUniform("burningCoeff", ball.burnCoefficient());
-    // _meshBall.render(_spMap);
+    // _spBlocks.bindUniform("burningCoeff", ball.burnCoefficient());
+    // _meshBall.render(_spBlocks);
 
     // Map
-    _spMap.bindUniform("burningCoeff", 0.f);
-    // deprecated _meshMap.render(_spMap);
+    _spBlocks.bindUniform("burningCoeff", 0.f);
+    // deprecated _meshMap.render(_spBlocks);
 
     // ------ Star ------
     // const StarState& star = _meshStar.getInstanceFrame();
-    /*_spStar.use();
-       _spStar.bindUniform("radiusInside", star.radiusInside());
-       _spStar.bindUniform("radiusOutside", star.radiusOutside());
-       _spStar.bindUniform("colorInside", star.colorInside());
-       _spStar.bindUniform("colorOutside", star.colorOutside());*/
+    _spStar.use();
+    _spStar.bindUniform("radiusInside", _starState.radiusInside());
+    _spStar.bindUniform("radiusOutside", _starState.radiusOutside());
+    _spStar.bindUniform("colorInside", _starState.colorInside());
+    _spStar.bindUniform("colorOutside", _starState.colorOutside());
 
     bindCamera(_spStar);
 
-    _renderPass.render();
+    _renderPassBlocks.render();
+    _renderPassStar.render();
 
     // _meshStar.render(_spStar);
 
@@ -277,8 +279,10 @@ void SceneRendering::render() const {
 void SceneRendering::update() {
 
     _mapState.update();
-    _renderPass.update();
-    updateCamera(_renderPass);
+    _renderPassBlocks.update();
+    _renderPassStar.update();
+    updateCamera(_renderPassBlocks);
+    updateCamera(_renderPassStar);
     // Update meshes and uniform values using multithreading
     // _meshMapUpdate.runTasks();
     // _meshBallUpdate.runTasks();
@@ -291,8 +295,8 @@ void SceneRendering::update() {
     // updateUniform();
 }
 
-const std::string SceneRendering::vsshaderMap = "shaders/blocksVs.vs";
-const std::string SceneRendering::fsshaderMap = "shaders/blocksFs.fs";
+const std::string SceneRendering::vsshaderBlocks = "shaders/blocksVs.vs";
+const std::string SceneRendering::fsshaderBlocks = "shaders/blocksFs.fs";
 
 const std::string SceneRendering::vsshaderStar = "shaders/starVs.vs";
 const std::string SceneRendering::fsshaderStar = "shaders/starFs.fs";

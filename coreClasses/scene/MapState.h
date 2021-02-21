@@ -12,7 +12,7 @@
 #include "scene/special/SpecialState.h"
 #include "State.h"
 
-class MapState:public State {
+class MapState: public State {
 public:
 MapState(const Map& map);
 virtual void update() override;

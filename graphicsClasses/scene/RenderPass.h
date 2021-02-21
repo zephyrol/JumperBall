@@ -28,14 +28,13 @@ RenderPass& operator= (RenderPass&& renderPass) = default;
 
 template<typename T> using UniformVariable = std::map <std::string, T>;
 
-template<typename T> void upsertVertexAttribute(size_t number, const std::vector <T>& data);
 
 void render() const;
 
-enum class StaticAttributeType { Positions, Normals, Colors, UvCoords, Indices };
+enum class ShapeVertexAttributeType { Positions, Normals, Colors, UvCoords, Indices };
 
 void update();
-
+//template<typename T> void upsertVertexAttribute(size_t number, const std::vector <T>& data);
 void upsertUniform(const std::string& name, const glm::mat4& value);
 void upsertUniform(const std::string& name, const glm::vec4& value);
 void upsertUniform(const std::string& name, const glm::vec3& value);
@@ -48,18 +47,18 @@ GLuint genVertexArrayObject() const;
 GLuint genBufferObject() const;
 
 template<typename T> void createAttributes(T& attributes) const;
-Mesh::StaticAttributes createStaticAttributes() const;
-Mesh::DynamicAttributes createDynamicAttributes() const;
+Mesh::ShapeVertexAttributes createShapeVertexAttributes() const;
+Mesh::StateVertexAttributes createStateVertexAttributes() const;
 
 size_t computeNumberOfVertices() const;
 
 void bindUniforms() const;
 template<typename T> void bindUniforms(UniformVariable <T> uniforms) const;
 
-template<typename T> std::vector <GLuint> createDynamicAttributesBufferObject(
+template<typename T> std::vector <GLuint> createStateVertexAttributesBufferObject(
     const std::vector <std::vector <T> >& attributes) const;
 std::vector <GLuint> createVertexDynamicBufferObjects() const;
-std::map <StaticAttributeType, GLuint> createVertexStaticBufferObjects() const;
+std::map <ShapeVertexAttributeType, GLuint> createVertexStaticBufferObjects() const;
 
 template<typename T> std::shared_ptr <GLuint> initializeBO(
   const std::vector <T>& attributeData,
@@ -74,9 +73,9 @@ const ShaderProgram& _shaderProgram;
 const GLuint _vertexArrayObject;
 const vecCstMesh_sptr _meshes;
 const size_t _numberOfVertices;
-const Mesh::StaticAttributes _staticAttributes;
-Mesh::DynamicAttributes _dynamicAttributes;
-const std::map <StaticAttributeType, GLuint> _vertexStaticBufferObjects;
+const Mesh::ShapeVertexAttributes _shapeVertexAttributes;
+Mesh::StateVertexAttributes _stateVertexAttributes;
+const std::map <ShapeVertexAttributeType, GLuint> _vertexStaticBufferObjects;
 const std::vector <GLuint> _vertexDynamicBufferObjects;
 
 UniformVariable <glm::mat4> _uniformMatrix4;

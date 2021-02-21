@@ -34,64 +34,6 @@ GeometricShape::GeometricShape(const std::vector <glm::vec3>& positions,
              ? genIndices()
              : std::make_shared <std::vector <GLushort> >(indices)) 
 {
-                // TODO : fill it in all cases  with auto gen!
-    /*glGenVertexArrays(1, _vertexArrayObject.get());
-       glBindVertexArray(*_vertexArrayObject);
-       glGenBuffers(4, _vertexBufferObjects->data());
-       if (_elementBufferObject && _indices) {
-       glGenBuffers(1, _elementBufferObject.get());
-       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *_elementBufferObject);
-       glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices->size() * sizeof(GLushort),
-       _indices->data(), GL_STATIC_DRAW);
-       }
-       setVerticesData();*/
-
-    /* glEnableVertexAttribArray(0);
-       glEnableVertexAttribArray(1);
-       glEnableVertexAttribArray(2);
-       glEnableVertexAttribArray(3);
-
-       glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(0));
-
-       glVertexAttribPointer(
-       0,
-       3, // 3 GL_FLOAT per vertex
-       GL_FLOAT,
-       GL_FALSE,
-       0,
-       nullptr
-       );
-
-       glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(1));
-       glVertexAttribPointer(
-       1,
-       3, // 3 GL_FLOAT per vertex
-       GL_FLOAT,
-       GL_FALSE,
-       0,
-       nullptr
-       );
-
-       glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(2));
-       glVertexAttribPointer(
-       2,
-       3, // 3 GL_FLOAT per vertex
-       GL_FLOAT,
-       GL_FALSE,
-       0,
-       nullptr
-       );
-
-       glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(3));
-       glVertexAttribPointer(
-       3,
-       2, // 2 GL_FLOAT per vertex
-       GL_FLOAT,
-       GL_FALSE,
-       0,
-       nullptr
-       );*/
-
 }
 
 GeometricShape::GeometricShape(const GeometricShape& geometricShape,

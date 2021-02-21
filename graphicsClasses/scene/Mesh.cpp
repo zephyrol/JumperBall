@@ -36,24 +36,24 @@ void Mesh::concatIndices(
     concatVector(currentIndices, newIndices);
 }
 
-template<typename T> void Mesh::concatIndependantStaticAttribute (std::vector <T>& staticAttributeData,
+template<typename T> void Mesh::concatIndependantShapeVertexAttribute (std::vector <T>& ShapeVertexAttributeData,
                                                        const std::shared_ptr <const std::vector <T> >& shapeData)
 {
     if (shapeData) {
-        concatVector(staticAttributeData, *shapeData);
+        concatVector(ShapeVertexAttributeData, *shapeData);
     }
 }
 
-void Mesh::concatIndicesStaticAttribute (std::vector <GLushort>& staticAttributeIndices,
+void Mesh::concatIndicesShapeVertexAttribute (std::vector <GLushort>& ShapeVertexAttributeIndices,
                                                        const std::shared_ptr <const std::vector <GLushort> >& shapeIndices,
                                                        size_t offset)
 {
     if (shapeIndices) {
-        concatIndices(staticAttributeIndices, *shapeIndices, offset);
+        concatIndices(ShapeVertexAttributeIndices, *shapeIndices, offset);
     }
 }
 
-template<typename T> void Mesh::duplicateDynamicAttribute (std::vector <std::vector <T> >& attributes,
+template<typename T> void Mesh::duplicateStateVertexAttribute (std::vector <std::vector <T> >& attributes,
                                                            const std::vector <T>& values) const {
     for (const T& value : values) {
         attributes.push_back(std::vector <T>(_numberOfVertices, value));
@@ -78,27 +78,27 @@ template<typename RawType, typename OpenGLType> void Mesh::convertUniformsToOpen
     }
 }
 
-Mesh::StaticAttributes Mesh::concatAttributes (const Mesh::StaticAttributes& current,
-                                               const Mesh::StaticAttributes& other) {
-    Mesh::StaticAttributes staticAttributes = current;
+Mesh::ShapeVertexAttributes Mesh::concatAttributes (const Mesh::ShapeVertexAttributes& current,
+                                               const Mesh::ShapeVertexAttributes& other) {
+    Mesh::ShapeVertexAttributes ShapeVertexAttributes = current;
 
-    concatIndices(staticAttributes.indices, other.indices, staticAttributes.positions.size());
-    concatVector(staticAttributes.positions, other.positions);
-    concatVector(staticAttributes.normals, other.normals);
-    concatVector(staticAttributes.colors, other.colors);
-    concatVector(staticAttributes.uvCoords, other.uvCoords);
+    concatIndices(ShapeVertexAttributes.indices, other.indices, ShapeVertexAttributes.positions.size());
+    concatVector(ShapeVertexAttributes.positions, other.positions);
+    concatVector(ShapeVertexAttributes.normals, other.normals);
+    concatVector(ShapeVertexAttributes.colors, other.colors);
+    concatVector(ShapeVertexAttributes.uvCoords, other.uvCoords);
 
-    return staticAttributes;
+    return ShapeVertexAttributes;
 }
 
-Mesh::DynamicAttributes Mesh::concatAttributes (const Mesh::DynamicAttributes& current,
-                                                const Mesh::DynamicAttributes& other) {
-    Mesh::DynamicAttributes dynamicAttributes = current;
-    concatVector(dynamicAttributes.dynamicFloats, other.dynamicFloats);
-    concatVector(dynamicAttributes.dynamicsVec2s, other.dynamicsVec2s);
-    concatVector(dynamicAttributes.dynamicsVec3s, other.dynamicsVec3s);
-    concatVector(dynamicAttributes.dynamicUbytes, other.dynamicUbytes);
-    return dynamicAttributes;
+Mesh::StateVertexAttributes Mesh::concatAttributes (const Mesh::StateVertexAttributes& current,
+                                                const Mesh::StateVertexAttributes& other) {
+    Mesh::StateVertexAttributes StateVertexAttributes = current;
+    concatVector(StateVertexAttributes.dynamicFloats, other.dynamicFloats);
+    concatVector(StateVertexAttributes.dynamicsVec2s, other.dynamicsVec2s);
+    concatVector(StateVertexAttributes.dynamicsVec3s, other.dynamicsVec3s);
+    concatVector(StateVertexAttributes.dynamicUbytes, other.dynamicUbytes);
+    return StateVertexAttributes;
 }
 
 size_t Mesh::computeNumberOfVertices() const {
@@ -109,31 +109,31 @@ size_t Mesh::computeNumberOfVertices() const {
     return numberOfVertices;
 }
 
-template<> Mesh::StaticAttributes Mesh::genAttributes <Mesh::StaticAttributes>() const {
-    Mesh::StaticAttributes staticAttributes;
+template<> Mesh::ShapeVertexAttributes Mesh::genAttributes <Mesh::ShapeVertexAttributes>() const {
+    Mesh::ShapeVertexAttributes ShapeVertexAttributes;
     for (const CstGeometricShape_sptr& shape : _shapes) {
-        concatIndicesStaticAttribute(staticAttributes.indices, shape->indices(), staticAttributes.positions.size());
-        concatIndependantStaticAttribute(staticAttributes.indices, shape->indices());
-        concatIndependantStaticAttribute(staticAttributes.positions, shape->positions());
-        concatIndependantStaticAttribute(staticAttributes.normals, shape->normals());
-        concatIndependantStaticAttribute(staticAttributes.colors, shape->colors());
-        concatIndependantStaticAttribute(staticAttributes.uvCoords, shape->uvCoords());
+        concatIndicesShapeVertexAttribute(ShapeVertexAttributes.indices, shape->indices(), ShapeVertexAttributes.positions.size());
+        concatIndependantShapeVertexAttribute(ShapeVertexAttributes.indices, shape->indices());
+        concatIndependantShapeVertexAttribute(ShapeVertexAttributes.positions, shape->positions());
+        concatIndependantShapeVertexAttribute(ShapeVertexAttributes.normals, shape->normals());
+        concatIndependantShapeVertexAttribute(ShapeVertexAttributes.colors, shape->colors());
+        concatIndependantShapeVertexAttribute(ShapeVertexAttributes.uvCoords, shape->uvCoords());
     }
-    return staticAttributes;
+    return ShapeVertexAttributes;
 }
 
-template<> Mesh::DynamicAttributes Mesh::genAttributes <Mesh::DynamicAttributes>() const {
-    Mesh::DynamicAttributes dynamicAttributes;
+template<> Mesh::StateVertexAttributes Mesh::genAttributes <Mesh::StateVertexAttributes>() const {
+    Mesh::StateVertexAttributes StateVertexAttributes;
     std::vector <glm::vec3> glmVec3s {};
     std::vector <glm::vec2> glmVec2s {};
     std::vector <GLfloat> glFloats {};
     convertAttributesToOpenGLFormat(_state.getDynamicFloats(), glFloats);
     convertAttributesToOpenGLFormat(_state.getDynamicVec2fs(), glmVec2s);
     convertAttributesToOpenGLFormat(_state.getDynamicVec3fs(), glmVec3s);
-    duplicateDynamicAttribute(dynamicAttributes.dynamicFloats, glFloats);
-    duplicateDynamicAttribute(dynamicAttributes.dynamicsVec2s, glmVec2s);
-    duplicateDynamicAttribute(dynamicAttributes.dynamicsVec3s, glmVec3s);
-    return dynamicAttributes;
+    duplicateStateVertexAttribute(StateVertexAttributes.dynamicFloats, glFloats);
+    duplicateStateVertexAttribute(StateVertexAttributes.dynamicsVec2s, glmVec2s);
+    duplicateStateVertexAttribute(StateVertexAttributes.dynamicsVec3s, glmVec3s);
+    return StateVertexAttributes;
 }
 
 Mesh::Uniforms Mesh::genUniformsValues() const {
