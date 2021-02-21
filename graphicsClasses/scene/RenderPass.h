@@ -61,8 +61,14 @@ template<typename T> std::vector <GLuint> createDynamicAttributesBufferObject(
 std::vector <GLuint> createVertexDynamicBufferObjects() const;
 std::map <StaticAttributeType, GLuint> createVertexStaticBufferObjects() const;
 
-template<typename T> std::shared_ptr <GLuint> initializeVBO(const std::vector <T> attributeData) const;
-template<typename T> void upsertUniforms(const std::map <std::string, T> uniformsData);
+template<typename T> std::shared_ptr <GLuint> initializeBO(
+  const std::vector <T>& attributeData,
+  GLenum target
+  ) const;
+template<typename T> std::shared_ptr <GLuint> initializeVBO(const std::vector <T>& attributeData) const;
+std::shared_ptr <GLuint> initializeEBO(const std::vector <GLushort>& indicesData) const;
+
+template<typename T> void upsertUniforms(const std::map <std::string, T>& uniformsData);
 
 const ShaderProgram& _shaderProgram;
 const GLuint _vertexArrayObject;
@@ -73,7 +79,6 @@ Mesh::DynamicAttributes _dynamicAttributes;
 const std::map <StaticAttributeType, GLuint> _vertexStaticBufferObjects;
 const std::vector <GLuint> _vertexDynamicBufferObjects;
 
-GLuint _elementBufferObject;
 UniformVariable <glm::mat4> _uniformMatrix4;
 UniformVariable <glm::vec4> _uniformVec4;
 UniformVariable <glm::vec3> _uniformVec3;

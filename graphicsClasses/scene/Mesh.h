@@ -61,9 +61,18 @@ private:
 
 size_t computeNumberOfVertices() const;
 
-template<typename T> static void concatVector(std::vector <T>& current, const std::vector <T>& data);
-template<typename T> static void concatStaticAttribute(std::vector <T>& staticAttributeData,
+template<typename T> static void concatVector(std::vector <T>& current, const std::vector <T>& other);
+static void concatIndices(
+  std::vector <GLushort>& currentIndices,
+  const std::vector <GLushort>& otherIndices,
+  size_t offset
+);
+
+template<typename T> static void concatIndependantStaticAttribute(std::vector <T>& staticAttributeData,
                                                        const std::shared_ptr <const std::vector <T> >& shapeData);
+static void concatIndicesStaticAttribute(std::vector <GLushort>& staticAttributeData,
+                                                       const std::shared_ptr <const std::vector <GLushort> >& shapeData,
+                                                       size_t offset);
 
 template<typename T> void duplicateDynamicAttribute(std::vector <std::vector <T> >& attributes,
                                                     const std::vector <T>& values) const;
@@ -73,6 +82,7 @@ template<typename RawType, typename OpenGLType> static void convertAttributesToO
 
 template<typename RawType, typename OpenGLType> static void convertUniformsToOpenGLFormat(
     const std::map <std::string, RawType>& rawValues, std::map <std::string, OpenGLType>& openGLValues);
+
 
 const State& _state;
 const vecCstGeometricShape_sptr _shapes;

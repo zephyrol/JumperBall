@@ -20,15 +20,36 @@ size_t Mesh::numberOfVertices() const {
     return _numberOfVertices;
 }
 
-template<typename T> void Mesh::concatVector (std::vector <T>& current, const std::vector <T>& data) {
-    current.insert(current.end(), data.begin(), data.end());
+template<typename T> void Mesh::concatVector (std::vector <T>& current, const std::vector <T>& other) {
+    current.insert(current.end(), other.begin(), other.end());
 }
 
-template<typename T> void Mesh::concatStaticAttribute (std::vector <T>& staticAttributeData,
+void Mesh::concatIndices(
+  std::vector <GLushort>& currentIndices,
+  const std::vector <GLushort>& otherIndices,
+  size_t offset
+  ) {
+    std::vector <GLushort> newIndices = otherIndices;
+    for (GLushort& newIndice : newIndices) {
+        newIndice += static_cast <GLushort>(offset);
+    }
+    concatVector(currentIndices, newIndices);
+}
+
+template<typename T> void Mesh::concatIndependantStaticAttribute (std::vector <T>& staticAttributeData,
                                                        const std::shared_ptr <const std::vector <T> >& shapeData)
 {
     if (shapeData) {
         concatVector(staticAttributeData, *shapeData);
+    }
+}
+
+void Mesh::concatIndicesStaticAttribute (std::vector <GLushort>& staticAttributeIndices,
+                                                       const std::shared_ptr <const std::vector <GLushort> >& shapeIndices,
+                                                       size_t offset)
+{
+    if (shapeIndices) {
+        concatIndices(staticAttributeIndices, *shapeIndices, offset);
     }
 }
 
@@ -60,16 +81,13 @@ template<typename RawType, typename OpenGLType> void Mesh::convertUniformsToOpen
 Mesh::StaticAttributes Mesh::concatAttributes (const Mesh::StaticAttributes& current,
                                                const Mesh::StaticAttributes& other) {
     Mesh::StaticAttributes staticAttributes = current;
+
+    concatIndices(staticAttributes.indices, other.indices, staticAttributes.positions.size());
     concatVector(staticAttributes.positions, other.positions);
     concatVector(staticAttributes.normals, other.normals);
     concatVector(staticAttributes.colors, other.colors);
     concatVector(staticAttributes.uvCoords, other.uvCoords);
 
-    std::vector <GLushort> newIndices = other.indices;
-    for (GLushort& newIndice : newIndices) {
-        newIndice += static_cast <GLushort>(staticAttributes.positions.size());
-    }
-    concatVector(staticAttributes.indices, newIndices);
     return staticAttributes;
 }
 
@@ -84,21 +102,22 @@ Mesh::DynamicAttributes Mesh::concatAttributes (const Mesh::DynamicAttributes& c
 }
 
 size_t Mesh::computeNumberOfVertices() const {
-    size_t _numberOfVertices = 0;
+    size_t numberOfVertices = 0;
     for (const auto& shape : _shapes) {
-        _numberOfVertices += shape->numberOfVertices();
+        numberOfVertices += shape->numberOfVertices();
     }
-    return _numberOfVertices;
+    return numberOfVertices;
 }
 
 template<> Mesh::StaticAttributes Mesh::genAttributes <Mesh::StaticAttributes>() const {
     Mesh::StaticAttributes staticAttributes;
     for (const CstGeometricShape_sptr& shape : _shapes) {
-        concatStaticAttribute(staticAttributes.positions, shape->positions());
-        concatStaticAttribute(staticAttributes.normals, shape->normals());
-        concatStaticAttribute(staticAttributes.colors, shape->colors());
-        concatStaticAttribute(staticAttributes.uvCoords, shape->uvCoords());
-        concatStaticAttribute(staticAttributes.indices, shape->indices());
+        concatIndicesStaticAttribute(staticAttributes.indices, shape->indices(), staticAttributes.positions.size());
+        concatIndependantStaticAttribute(staticAttributes.indices, shape->indices());
+        concatIndependantStaticAttribute(staticAttributes.positions, shape->positions());
+        concatIndependantStaticAttribute(staticAttributes.normals, shape->normals());
+        concatIndependantStaticAttribute(staticAttributes.colors, shape->colors());
+        concatIndependantStaticAttribute(staticAttributes.uvCoords, shape->uvCoords());
     }
     return staticAttributes;
 }

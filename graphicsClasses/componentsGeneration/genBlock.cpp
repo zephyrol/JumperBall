@@ -180,24 +180,11 @@ vecMesh_sptr MeshGenerator::genBlock (const MapState& map, size_t index) {
         shape = std::make_shared <Cube>(translation, glm::mat4(1.f), boolSidesInfo);
     }
 
-    /*const glm::vec3 glmPosition { position.at(0), position.at(1),
-                                  position.at(2) };
-       const glm::mat4 transform(glm::translate(glmPosition));
 
-       const std::shared_ptr <BlockAnimation> blockAnim = (!block->isFixed())
-                                                       ? std::make_shared <BlockAnimation>(*block)
-                                                       : nullptr;
-       const MeshComponent_sptr component = std::make_shared <MeshComponent>
-                                             (std::make_shared <Cube>(*shape, transform), blockAnim);
-       components.push_back(component);
+     const vecMesh_sptr sharpsMeshes = genSharps(block, blockType, glmPosition);
+     const vecMesh_sptr jumpersMeshes = genJumpers(block, blockType, glmPosition);
 
-       const vecMeshComponent_sptr sharpsComponents =
-        genSharps(*block, blockType, glmPosition);
-       for (MeshComponent_sptr sp : sharpsComponents) {
-        components.push_back(std::move(sp));
-       }
-
-       vecMeshComponent_sptr jumperComponents =
+     /*vecMeshComponent_sptr jumperComponents =
         genJumpers(*block, blockType, glmPosition);
        for (MeshComponent_sptr m : jumperComponents) {
         components.push_back(std::move(m));
@@ -220,5 +207,9 @@ vecMesh_sptr MeshGenerator::genBlock (const MapState& map, size_t index) {
     // return components;
     vecCstGeometricShape_sptr geometricShapes { shape };
     Mesh_sptr meshSptr = std::make_shared <Mesh>(*block, geometricShapes);
-    return { meshSptr };
+
+    vecMesh_sptr meshes { meshSptr };
+    meshes.insert(meshes.end(), sharpsMeshes.begin(), sharpsMeshes.end());
+    meshes.insert(meshes.end(), jumpersMeshes.begin(), jumpersMeshes.end());
+    return meshes;
 }

@@ -29,10 +29,12 @@ GeometricShape::GeometricShape(const std::vector <glm::vec3>& positions,
     _uvCoords(uvCoords.empty()
               ? nullptr
               : std::make_shared <std::vector <glm::vec2> >(uvCoords)),
-    _indices(!indices.empty()
-             ? std::make_shared <std::vector <GLushort> >(indices)
-             : nullptr),
-    _numberOfVertices(_positions ? _positions->size() / 3 : 0) {
+    _numberOfVertices(_positions ? _positions->size() : 0),
+    _indices(indices.empty()
+             ? genIndices()
+             : std::make_shared <std::vector <GLushort> >(indices)) 
+{
+                // TODO : fill it in all cases  with auto gen!
     /*glGenVertexArrays(1, _vertexArrayObject.get());
        glBindVertexArray(*_vertexArrayObject);
        glGenBuffers(4, _vertexBufferObjects->data());
@@ -99,8 +101,8 @@ GeometricShape::GeometricShape(const GeometricShape& geometricShape,
     _normals(computeNormals(*geometricShape.normals(), normalsTransform)),
     _colors(geometricShape.colors()),
     _uvCoords(geometricShape.uvCoords()),
-    _indices(geometricShape.indices()),
-    _numberOfVertices(_positions ? _positions->size() / 3 : 0) {
+    _numberOfVertices(_positions ? _positions->size() : 0),
+    _indices(geometricShape.indices()) {
 
 }
 
@@ -128,11 +130,9 @@ size_t GeometricShape::numberOfVertices() const {
     return _numberOfVertices;
 }
 
-
 size_t GeometricShape::levelOfDetail() const {
     return 0;
 }
-
 
 std::vector <glm::vec3> GeometricShape::createCustomColorBuffer (
     const glm::vec3& customColor,
@@ -152,7 +152,7 @@ std::shared_ptr <const std::vector <glm::vec3> > GeometricShape::computePosition
         computedPositions.push_back(modelTransform * glm::vec4(position, 1.f));
     }
 
-    return std::make_shared <std::vector <glm::vec3> >(computedPositions);
+    return std::make_shared <std::vector <glm::vec3> >(std::move(computedPositions));
 }
 
 std::shared_ptr <const std::vector <glm::vec3> > GeometricShape::computeNormals (
@@ -163,7 +163,15 @@ std::shared_ptr <const std::vector <glm::vec3> > GeometricShape::computeNormals 
         computedNormals.push_back(normalsTransform * glm::vec4(normal, 1.f));
     }
 
-    return std::make_shared <std::vector <glm::vec3> >(computedNormals);
+    return std::make_shared <std::vector <glm::vec3> >(std::move(computedNormals));
+}
+
+std::shared_ptr <const std::vector <GLushort> > GeometricShape::genIndices() const {
+  std::vector<GLushort> indices (_numberOfVertices);
+  for (size_t i = 0; i < _numberOfVertices; ++i){
+    indices.at(i) = i;
+  }
+  return std::make_shared <std::vector<GLushort> >(std::move(indices));
 }
 
 

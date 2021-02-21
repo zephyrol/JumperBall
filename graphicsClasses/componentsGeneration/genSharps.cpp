@@ -23,7 +23,6 @@ vecMesh_sptr MeshGenerator::genSharps(
     commonShapes["pyramidSharp"] = std::make_shared<Pyramid>();
   }*/
 
-  vecMesh_sptr meshes{};
   vecCstGeometricShape_sptr geometricShapes {};
   const std::array<float, 7> scales{.2f, .1f, .05f, .1f, .075f, .15f, .175f};
 
@@ -81,7 +80,7 @@ vecMesh_sptr MeshGenerator::genSharps(
     }
   }
 
-  return { std::make_shared<Mesh>(*blockState, geometricShapes)};
+  return { std::make_shared<Mesh>(*blockState, geometricShapes) };
 }
 
   /*vecMeshComponent_sptr MeshGenerator::genSharps (

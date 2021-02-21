@@ -16,8 +16,6 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr
     _dynamicAttributes(createDynamicAttributes()),
     _vertexStaticBufferObjects(createVertexStaticBufferObjects()),
     _vertexDynamicBufferObjects(createVertexDynamicBufferObjects()),
-    _elementBufferObject((!_staticAttributes.indices.empty()) ? genBufferObject()
-                                                              : 0),
     // Use smartpointer, when the uniform is changed outside this class, every renderpass will be updated
     _uniformMatrix4{},
     _uniformVec4{},
@@ -91,8 +89,7 @@ void RenderPass::update() {
     }
 }
 
-template<typename T> void RenderPass::upsertUniforms (const std::map <std::string,
-                                                                      T> uniformsData) {
+template<typename T> void RenderPass::upsertUniforms (const std::map <std::string, T>& uniformsData) {
     for (const auto& uniform : uniformsData) {
         upsertUniform(uniform.first, uniform.second);
     }
@@ -139,9 +136,15 @@ void RenderPass::render() const {
     _shaderProgram.use();
     glBindVertexArray(_vertexArrayObject);
     bindUniforms();
-    constexpr int offset = 0;
-    glDrawArrays(GL_TRIANGLES, offset,
-                 static_cast<GLsizei>(_staticAttributes.positions.size()));
+    if (_staticAttributes.indices.empty()) {
+      constexpr int offset = 0;
+      glDrawArrays(GL_TRIANGLES, offset,
+                   static_cast<GLsizei>(_staticAttributes.positions.size()));
+    } else {
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vertexStaticBufferObjects.at(StaticAttributeType::Indices));
+      glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(_staticAttributes.indices.size()),
+                     GL_UNSIGNED_SHORT, nullptr);
+    }
 }
 
 template<typename T> void RenderPass::createAttributes (T& attributes) const {
@@ -228,22 +231,37 @@ std::map <RenderPass::StaticAttributeType, GLuint> RenderPass::createVertexStati
                            initializeVBO(_staticAttributes.colors));
     fillVertexBufferObject(RenderPass::StaticAttributeType::UvCoords,
                            initializeVBO(_staticAttributes.uvCoords));
+    fillVertexBufferObject(RenderPass::StaticAttributeType::Indices,
+                           initializeEBO(_staticAttributes.indices));
 
     return vertexBufferObjects;
 }
 
-template<typename T> std::shared_ptr <GLuint> RenderPass::initializeVBO (
-    const std::vector <T> attributeData) const {
-    std::shared_ptr <GLuint> vbo = nullptr;
+
+template<typename T> std::shared_ptr <GLuint> RenderPass::initializeBO (
+const std::vector <T>& attributeData,
+GLenum target
+) const {
+    std::shared_ptr <GLuint> bo = nullptr;
     if (!attributeData.empty()) {
-        vbo = std::make_shared <GLuint>(genBufferObject());
-        std::cout << "size" << sizeof(T) << std::endl;
-        glBindBuffer(GL_ARRAY_BUFFER, *vbo);
-        glBufferData(GL_ARRAY_BUFFER,
+        bo = std::make_shared <GLuint>(genBufferObject());
+        glBindBuffer(target, *bo);
+        glBufferData(target,
                      attributeData.size() * sizeof(T),
                      attributeData.data(),
                      GL_STATIC_DRAW);
     }
+    return bo;
+}
 
-    return vbo;
+
+template<typename T> std::shared_ptr <GLuint> RenderPass::initializeVBO (
+const std::vector <T>& attributeData
+) const {
+    return initializeBO(attributeData, GL_ARRAY_BUFFER);
+}
+
+std::shared_ptr<GLuint> RenderPass::initializeEBO(const std::vector <GLushort>& indicesData) const
+{
+  return initializeBO(indicesData, GL_ELEMENT_ARRAY_BUFFER);
 }
