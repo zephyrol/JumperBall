@@ -7,9 +7,10 @@
 
 #include "scene/mesh/MeshGenerator.h"
 
-vecMesh_sptr MeshGenerator::genStar (const StarState& star) {
+vecMesh_sptr MeshGenerator::genMeshes (const Star& star) {
     GeometricShape_sptr shape = std::make_shared <Quad>(star.initialTransform());
     vecCstGeometricShape_sptr geometricShapes { shape };
-    Mesh_sptr meshSptr = std::make_shared <Mesh>(star, geometricShapes);
+    std::unique_ptr<State> state_ptr (new StarState(star));
+    Mesh_sptr meshSptr = std::make_shared <Mesh>(std::move(state_ptr), geometricShapes);
     return { meshSptr };
 }

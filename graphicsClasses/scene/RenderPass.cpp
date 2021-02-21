@@ -85,6 +85,7 @@ GLuint RenderPass::genBufferObject() const {
 
 void RenderPass::update() {
     for (const auto& mesh : _meshes) {
+        mesh->update();
         const Mesh::Uniforms uniforms = mesh->genUniformsValues();
         upsertUniforms(uniforms.uniformFloats);
         upsertUniforms(uniforms.uniformVec2s);
@@ -158,9 +159,9 @@ Mesh::ShapeVertexAttributes RenderPass::createShapeVertexAttributes() const {
 }
 
 Mesh::StateVertexAttributes RenderPass::createStateVertexAttributes() const {
-    Mesh::StateVertexAttributes StateVertexAttributes;
-    createAttributes(StateVertexAttributes);
-    return StateVertexAttributes;
+    Mesh::StateVertexAttributes stateVertexAttributes;
+    createAttributes(stateVertexAttributes);
+    return stateVertexAttributes;
 }
 
 size_t RenderPass::computeNumberOfVertices() const {
@@ -180,8 +181,8 @@ template<typename T> void RenderPass::bindUniforms (UniformVariable <T> uniforms
 template<typename T> std::vector <GLuint> RenderPass::createStateVertexAttributesBufferObject (
     const std::vector <std::vector <T> >& attributes) const {
     std::vector <GLuint> vertexBufferObjects;
-    for (const auto& StateVertexAttribute : attributes) {
-        const auto vertexBuffer = initializeVBO(StateVertexAttribute);
+    for (const auto& stateVertexAttribute : attributes) {
+        const auto vertexBuffer = initializeVBO(stateVertexAttribute);
         if (vertexBuffer) {
             vertexBufferObjects.push_back(*vertexBuffer);
         }

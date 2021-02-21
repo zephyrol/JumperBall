@@ -6,18 +6,13 @@
  */
 #include "scene/mesh/MeshGenerator.h"
 
-vecMesh_sptr MeshGenerator::genMap (const MapState& map) {
+vecMesh_sptr MeshGenerator::genMeshes(const Map& map) {
 
     vecMesh_sptr meshes;
     const auto blockInfos = map.blocksInfo();
     for (size_t i = 0; i < blockInfos.size(); ++i) {
-        vecMesh_sptr blockMeshes = genBlock(map, blockInfos.at(i).index);
-        for (Mesh_sptr m : blockMeshes) {
-            meshes.push_back(std::move(m));
-        }
+        meshes.push_back(genBlock(map, blockInfos.at(i).index));
     }
-
-
 
     /*for (
         const std::shared_ptr <EnemyState>& EnemyState : map.enemiesStates()

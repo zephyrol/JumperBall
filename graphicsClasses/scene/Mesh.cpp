@@ -6,14 +6,14 @@
  */
 #include "Mesh.h"
 
-Mesh::Mesh(const State& state, const vecCstGeometricShape_sptr& shapes):
-    _state(state),
+Mesh::Mesh(std::unique_ptr<State>&& state, const vecCstGeometricShape_sptr& shapes):
+    _state(std::move(state)),
     _shapes(shapes),
     _numberOfVertices(computeNumberOfVertices()) {
 }
 
 void Mesh::update() {
-
+  _state->update();
 }
 
 size_t Mesh::numberOfVertices() const {
@@ -79,15 +79,15 @@ template<typename RawType, typename OpenGLType> void Mesh::convertUniformsToOpen
 
 Mesh::ShapeVertexAttributes Mesh::concatAttributes (const Mesh::ShapeVertexAttributes& current,
                                                     const Mesh::ShapeVertexAttributes& other) {
-    Mesh::ShapeVertexAttributes ShapeVertexAttributes = current;
+    Mesh::ShapeVertexAttributes shapeVertexAttributes = current;
 
-    concatIndices(ShapeVertexAttributes.indices, other.indices, ShapeVertexAttributes.positions.size());
-    concatVector(ShapeVertexAttributes.positions, other.positions);
-    concatVector(ShapeVertexAttributes.normals, other.normals);
-    concatVector(ShapeVertexAttributes.colors, other.colors);
-    concatVector(ShapeVertexAttributes.uvCoords, other.uvCoords);
+    concatIndices(shapeVertexAttributes.indices, other.indices, shapeVertexAttributes.positions.size());
+    concatVector(shapeVertexAttributes.positions, other.positions);
+    concatVector(shapeVertexAttributes.normals, other.normals);
+    concatVector(shapeVertexAttributes.colors, other.colors);
+    concatVector(shapeVertexAttributes.uvCoords, other.uvCoords);
 
-    return ShapeVertexAttributes;
+    return shapeVertexAttributes;
 }
 
 Mesh::StateVertexAttributes Mesh::concatAttributes (const Mesh::StateVertexAttributes& current,
@@ -105,6 +105,7 @@ size_t Mesh::computeNumberOfVertices() const {
     for (const auto& shape : _shapes) {
         numberOfVertices += shape->numberOfVertices();
     }
+    std::cout << "number of vertices" << numberOfVertices << std::endl;
     return numberOfVertices;
 }
 
@@ -127,9 +128,9 @@ template<> Mesh::StateVertexAttributes Mesh::genAttributes <Mesh::StateVertexAtt
     std::vector <glm::vec3> glmVec3s {};
     std::vector <glm::vec2> glmVec2s {};
     std::vector <GLfloat> glFloats {};
-    convertAttributesToOpenGLFormat(_state.getDynamicFloats(), glFloats);
-    convertAttributesToOpenGLFormat(_state.getDynamicVec2fs(), glmVec2s);
-    convertAttributesToOpenGLFormat(_state.getDynamicVec3fs(), glmVec3s);
+    convertAttributesToOpenGLFormat(_state->getDynamicFloats(), glFloats);
+    convertAttributesToOpenGLFormat(_state->getDynamicVec2fs(), glmVec2s);
+    convertAttributesToOpenGLFormat(_state->getDynamicVec3fs(), glmVec3s);
     duplicateStateVertexAttribute(StateVertexAttributes.dynamicFloats, glFloats);
     duplicateStateVertexAttribute(StateVertexAttributes.dynamicsVec2s, glmVec2s);
     duplicateStateVertexAttribute(StateVertexAttributes.dynamicsVec3s, glmVec3s);
@@ -141,9 +142,9 @@ Mesh::Uniforms Mesh::genUniformsValues() const {
     std::map <std::string, glm::vec3> glmVec3s {};
     std::map <std::string, glm::vec2> glmVec2s {};
     std::map <std::string, GLfloat> glFloats {};
-    convertUniformsToOpenGLFormat(_state.getStaticFloatValues(), glFloats);
-    convertUniformsToOpenGLFormat(_state.getStaticVec2fValues(), glmVec2s);
-    convertUniformsToOpenGLFormat(_state.getStaticVec3fValues(), glmVec3s);
+    convertUniformsToOpenGLFormat(_state->getStaticFloatValues(), glFloats);
+    convertUniformsToOpenGLFormat(_state->getStaticVec2fValues(), glmVec2s);
+    convertUniformsToOpenGLFormat(_state->getStaticVec3fValues(), glmVec3s);
     uniforms.uniformFloats = glFloats;
     uniforms.uniformVec2s = glmVec2s;
     uniforms.uniformVec3s = glmVec3s;

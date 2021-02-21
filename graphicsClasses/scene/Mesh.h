@@ -21,7 +21,7 @@ using vecMesh_sptr = std::vector <Mesh_sptr>;
 
 class Mesh {
 public:
-Mesh(const State& state, const vecCstGeometricShape_sptr& shapes);
+Mesh(std::unique_ptr<State>&& state, const vecCstGeometricShape_sptr& shapes);
 struct ShapeVertexAttributes {
     std::vector <glm::vec3> positions;
     std::vector <glm::vec3> normals;
@@ -84,7 +84,7 @@ template<typename RawType, typename OpenGLType> static void convertUniformsToOpe
     const std::map <std::string, RawType>& rawValues, std::map <std::string, OpenGLType>& openGLValues);
 
 
-const State& _state;
+const std::unique_ptr<State> _state;
 const vecCstGeometricShape_sptr _shapes;
 const size_t _numberOfVertices;
 };

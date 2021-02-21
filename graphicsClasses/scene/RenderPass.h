@@ -34,7 +34,6 @@ void render() const;
 enum class ShapeVertexAttributeType { Positions, Normals, Colors, UvCoords, Indices };
 
 void update();
-// template<typename T> void upsertVertexAttribute(size_t number, const std::vector <T>& data);
 void upsertUniform(const std::string& name, const glm::mat4& value);
 void upsertUniform(const std::string& name, const glm::vec4& value);
 void upsertUniform(const std::string& name, const glm::vec3& value);

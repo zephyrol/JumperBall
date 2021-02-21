@@ -131,16 +131,15 @@
    }*/
 
 
-vecMesh_sptr MeshGenerator::genBlock (const MapState& map, size_t index) {
-
+Mesh_sptr MeshGenerator::genBlock (const Map& map, size_t index) {
     const JBTypes::vec3ui position = map.getBlockCoords(index);
     const glm::vec3 glmPosition { position.at(0), position.at(1), position.at(2) };
     const glm::mat4 translation = glm::translate(glmPosition);
     const Map::BlockTypes blockType = map.getType(position);
 
-    const std::shared_ptr <BlockState> block = map.blockStates().at(index);
+    const std::shared_ptr <const Block> block = map.getBlock(index);
 
-    GeometricShape_sptr shape;
+    GeometricShape_sptr blockShape;
 
     constexpr size_t numberOfFaces = 6;
 
@@ -169,20 +168,20 @@ vecMesh_sptr MeshGenerator::genBlock (const MapState& map, size_t index) {
     }
 
     if (blockType == Map::BlockTypes::Ice) {
-        shape = std::make_shared <Cube>(Cube::iceColorsCube, boolSidesInfo, translation);
+        blockShape = std::make_shared <Cube>(Cube::iceColorsCube, boolSidesInfo, translation);
     } else if (blockType == Map::BlockTypes::Fire) {
-        shape = std::make_shared <Cube>(Cube::fireColorsCube, boolSidesInfo, translation);
+        blockShape = std::make_shared <Cube>(Cube::fireColorsCube, boolSidesInfo, translation);
     } else if (blockType == Map::BlockTypes::Brittle) {
-        shape = std::make_shared <Cube>(translation);
+        blockShape = std::make_shared <Cube>(translation);
     } else if (blockType == Map::BlockTypes::Ghost) {
-        shape = std::make_shared <Cube>(Cube::ghostColorsCube, boolClosedSides, translation);
+        blockShape = std::make_shared <Cube>(Cube::ghostColorsCube, boolClosedSides, translation);
     } else {
-        shape = std::make_shared <Cube>(translation, glm::mat4(1.f), boolSidesInfo);
+        blockShape = std::make_shared <Cube>(translation, glm::mat4(1.f), boolSidesInfo);
     }
 
 
-    const vecMesh_sptr sharpsMeshes = genSharps(block, blockType, glmPosition);
-    const vecMesh_sptr jumpersMeshes = genJumpers(block, blockType, glmPosition);
+    const vecCstGeometricShape_sptr sharpsShapes = genSharps(*block, blockType, glmPosition);
+    const vecCstGeometricShape_sptr jumpersShapes = genJumpers(*block, blockType, glmPosition);
 
     /*vecMeshComponent_sptr jumperComponents =
        genJumpers(*block, blockType, glmPosition);
@@ -205,11 +204,9 @@ vecMesh_sptr MeshGenerator::genBlock (const MapState& map, size_t index) {
        }*/
 
     // return components;
-    vecCstGeometricShape_sptr geometricShapes { shape };
-    Mesh_sptr meshSptr = std::make_shared <Mesh>(*block, geometricShapes);
-
-    vecMesh_sptr meshes { meshSptr };
-    meshes.insert(meshes.end(), sharpsMeshes.begin(), sharpsMeshes.end());
-    meshes.insert(meshes.end(), jumpersMeshes.begin(), jumpersMeshes.end());
-    return meshes;
+    vecCstGeometricShape_sptr geometricShapes {};
+    geometricShapes.push_back(blockShape);
+    geometricShapes.insert(geometricShapes.end(), jumpersShapes.begin(), jumpersShapes.end());
+    geometricShapes.insert(geometricShapes.end(), sharpsShapes.begin(), sharpsShapes.end());
+    return { std::make_shared <Mesh>(std::unique_ptr<State>(new BlockState(*block)), geometricShapes) };
 }

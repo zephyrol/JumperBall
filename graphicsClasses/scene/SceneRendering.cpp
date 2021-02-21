@@ -74,9 +74,9 @@ SceneRendering::SceneRendering(const Map& map,
                                    heightBloomTexture,
                                    false),
     _mapState(map),
-    _renderPassBlocks(_spBlocks, MeshGenerator::genMap(_mapState)),
+    _renderPassBlocks(_spBlocks, MeshGenerator::genMeshes(map)),
     _starState(star),
-    _renderPassStar(_spStar, MeshGenerator::genStar(_starState)) {
+    _renderPassStar(_spStar, MeshGenerator::genMeshes(star)) {
     update();
 }
 
@@ -278,7 +278,6 @@ void SceneRendering::render() const {
 
 void SceneRendering::update() {
 
-    _mapState.update();
     _renderPassBlocks.update();
     _renderPassStar.update();
     updateCamera(_renderPassBlocks);

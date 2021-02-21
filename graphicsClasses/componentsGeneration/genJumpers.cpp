@@ -8,7 +8,7 @@
 #include "scene/mesh/MeshGenerator.h"
 
 
-vecMesh_sptr MeshGenerator::genJumpers (const std::shared_ptr <BlockState>& blockState,
+ vecCstGeometricShape_sptr MeshGenerator::genJumpers (const Block& block,
                                         const Map::BlockTypes& type,
                                         const glm::vec3& posWorld) {
     if (type != Map::BlockTypes::Jump) {
@@ -21,8 +21,8 @@ vecMesh_sptr MeshGenerator::genJumpers (const std::shared_ptr <BlockState>& bloc
                 glm::vec3(1.f, 150.f / 255.f, 0.f));
         }*/
 
-    for (size_t i = 0; i < blockState->block().faceInfo().size(); i++) {
-        const bool jumperPresent = blockState->block().faceInfo().at(i);
+    for (size_t i = 0; i < block.faceInfo().size(); i++) {
+        const bool jumperPresent = block.faceInfo().at(i);
 
         if (jumperPresent) {
             constexpr float sizeBlock = 1.f;
@@ -54,7 +54,7 @@ vecMesh_sptr MeshGenerator::genJumpers (const std::shared_ptr <BlockState>& bloc
                                           ));
         }
     }
-    return { std::make_shared <Mesh>(*blockState, geometricShapes) };
+    return geometricShapes;
 }
 
 /*vecMeshComponent_sptr MeshGenerator::genJumpers (const BlockState& BlockState,

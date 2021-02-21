@@ -7,8 +7,8 @@
 
 #include "scene/mesh/MeshGenerator.h"
 
-vecMesh_sptr MeshGenerator::genSharps (
-    const std::shared_ptr <BlockState>& blockState,
+vecCstGeometricShape_sptr MeshGenerator::genSharps (
+    const Block& block,
     const Map::BlockTypes& type,
     const glm::vec3& posWorld) {
     if (type != Map::BlockTypes::Sharp) {
@@ -29,9 +29,9 @@ vecMesh_sptr MeshGenerator::genSharps (
         glm::vec2(0.2f, 0.6f), glm::vec2(-0.2f, -0.6f), glm::vec2(0.6f, 0.6f),
         glm::vec2(-0.6f, 0.6f) };
 
-    for (size_t i = 0; i < blockState->block().faceInfo().size(); i++) {
+    for (size_t i = 0; i < block.faceInfo().size(); i++) {
 
-        const bool isSharp = blockState->block().faceInfo().at(i);
+        const bool isSharp = block.faceInfo().at(i);
         if (isSharp) {
             constexpr float sizeBlock = 1.f;
             constexpr float offset = sizeBlock / 2.f;
@@ -74,8 +74,7 @@ vecMesh_sptr MeshGenerator::genSharps (
             }
         }
     }
-
-    return { std::make_shared <Mesh>(*blockState, geometricShapes) };
+    return geometricShapes;
 }
 
 /*vecMeshComponent_sptr MeshGenerator::genSharps (
