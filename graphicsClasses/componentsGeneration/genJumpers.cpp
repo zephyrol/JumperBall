@@ -8,55 +8,53 @@
 #include "scene/mesh/MeshGenerator.h"
 
 
-vecMesh_sptr MeshGenerator::genJumpers (const std::shared_ptr<BlockState>& blockState,
-                                                 const Map::BlockTypes& type,
-                                                 const glm::vec3& posWorld) {
+vecMesh_sptr MeshGenerator::genJumpers (const std::shared_ptr <BlockState>& blockState,
+                                        const Map::BlockTypes& type,
+                                        const glm::vec3& posWorld) {
     if (type != Map::BlockTypes::Jump) {
-      return {};
+        return {};
     }
-    vecCstGeometricShape_sptr geometricShapes{};
+    vecCstGeometricShape_sptr geometricShapes {};
     /*if (commonShapes.find("jumperCylinder") == commonShapes.end()) {
             commonShapes["jumperCylinder"] = std::make_shared <Cylinder>(
                 glm::vec3(1.f, 1.f, 0.f),
                 glm::vec3(1.f, 150.f / 255.f, 0.f));
         }*/
 
-    for (size_t i = 0; i < blockState->block().faceInfo().size(); i++)
-    {
-      const bool jumperPresent = blockState->block().faceInfo().at(i);
+    for (size_t i = 0; i < blockState->block().faceInfo().size(); i++) {
+        const bool jumperPresent = blockState->block().faceInfo().at(i);
 
-      if (jumperPresent)
-      {
-        constexpr float sizeBlock = 1.f;
-        constexpr float offset = sizeBlock / 2.f;
+        if (jumperPresent) {
+            constexpr float sizeBlock = 1.f;
+            constexpr float offset = sizeBlock / 2.f;
 
-        const JBTypes::Dir currentDir = JBTypesMethods::integerAsDirection( static_cast<unsigned int>(i));
+            const JBTypes::Dir currentDir = JBTypesMethods::integerAsDirection(static_cast <unsigned int>(i));
 
-        const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
+            const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
 
-        const glm::mat4 rotationLocal = Utility::rotationUpToDir(currentDir);
+            const glm::mat4 rotationLocal = Utility::rotationUpToDir(currentDir);
 
-        const glm::mat4 scaleLocal = glm::scale(glm::vec3(0.7f, 0.05f, 0.7f));
+            const glm::mat4 scaleLocal = glm::scale(glm::vec3(0.7f, 0.05f, 0.7f));
 
-        const glm::mat4 translationLocal =
-            glm::translate(glm::vec3(
-                posWorld.x + offset + vecDir.x * offset,
-                posWorld.y + offset + vecDir.y * offset,
-                posWorld.z + offset + vecDir.z * offset));
+            const glm::mat4 translationLocal =
+                glm::translate(glm::vec3(
+                                   posWorld.x + offset + vecDir.x * offset,
+                                   posWorld.y + offset + vecDir.y * offset,
+                                   posWorld.z + offset + vecDir.z * offset));
 
-        const glm::mat4 modelTranf = translationLocal * rotationLocal * scaleLocal;
-        const glm::mat4 normalsTrans = rotationLocal;
+            const glm::mat4 modelTranf = translationLocal * rotationLocal * scaleLocal;
+            const glm::mat4 normalsTrans = rotationLocal;
 
-        geometricShapes.push_back(std::make_shared<Cylinder>(
-          glm::vec3(1.f, 1.f, 0.f),
-          glm::vec3(1.f, 150.f / 255.f, 0.f),
-          60,
-          modelTranf,
-          normalsTrans
-        ));
-      }
+            geometricShapes.push_back(std::make_shared <Cylinder>(
+                                          glm::vec3(1.f, 1.f, 0.f),
+                                          glm::vec3(1.f, 150.f / 255.f, 0.f),
+                                          60,
+                                          modelTranf,
+                                          normalsTrans
+                                          ));
+        }
     }
-    return { std::make_shared<Mesh>(*blockState, geometricShapes)};
+    return { std::make_shared <Mesh>(*blockState, geometricShapes) };
 }
 
 /*vecMeshComponent_sptr MeshGenerator::genJumpers (const BlockState& BlockState,

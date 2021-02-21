@@ -10,7 +10,7 @@
 #include "Star.h"
 
 
-class StarState : public State {
+class StarState:public State {
 public:
 StarState(const Star& star);
 

@@ -24,11 +24,11 @@ template<typename T> void Mesh::concatVector (std::vector <T>& current, const st
     current.insert(current.end(), other.begin(), other.end());
 }
 
-void Mesh::concatIndices(
-  std::vector <GLushort>& currentIndices,
-  const std::vector <GLushort>& otherIndices,
-  size_t offset
-  ) {
+void Mesh::concatIndices (
+    std::vector <GLushort>& currentIndices,
+    const std::vector <GLushort>& otherIndices,
+    size_t offset
+    ) {
     std::vector <GLushort> newIndices = otherIndices;
     for (GLushort& newIndice : newIndices) {
         newIndice += static_cast <GLushort>(offset);
@@ -36,25 +36,24 @@ void Mesh::concatIndices(
     concatVector(currentIndices, newIndices);
 }
 
-template<typename T> void Mesh::concatIndependantShapeVertexAttribute (std::vector <T>& ShapeVertexAttributeData,
-                                                       const std::shared_ptr <const std::vector <T> >& shapeData)
-{
+template<typename T> void Mesh::concatIndependantShapeVertexAttribute (
+    std::vector <T>& ShapeVertexAttributeData,
+    const std::shared_ptr <const std::vector <T> >& shapeData) {
     if (shapeData) {
         concatVector(ShapeVertexAttributeData, *shapeData);
     }
 }
 
 void Mesh::concatIndicesShapeVertexAttribute (std::vector <GLushort>& ShapeVertexAttributeIndices,
-                                                       const std::shared_ptr <const std::vector <GLushort> >& shapeIndices,
-                                                       size_t offset)
-{
+                                              const std::shared_ptr <const std::vector <GLushort> >& shapeIndices,
+                                              size_t offset) {
     if (shapeIndices) {
         concatIndices(ShapeVertexAttributeIndices, *shapeIndices, offset);
     }
 }
 
 template<typename T> void Mesh::duplicateStateVertexAttribute (std::vector <std::vector <T> >& attributes,
-                                                           const std::vector <T>& values) const {
+                                                               const std::vector <T>& values) const {
     for (const T& value : values) {
         attributes.push_back(std::vector <T>(_numberOfVertices, value));
     }
@@ -79,7 +78,7 @@ template<typename RawType, typename OpenGLType> void Mesh::convertUniformsToOpen
 }
 
 Mesh::ShapeVertexAttributes Mesh::concatAttributes (const Mesh::ShapeVertexAttributes& current,
-                                               const Mesh::ShapeVertexAttributes& other) {
+                                                    const Mesh::ShapeVertexAttributes& other) {
     Mesh::ShapeVertexAttributes ShapeVertexAttributes = current;
 
     concatIndices(ShapeVertexAttributes.indices, other.indices, ShapeVertexAttributes.positions.size());
@@ -92,7 +91,7 @@ Mesh::ShapeVertexAttributes Mesh::concatAttributes (const Mesh::ShapeVertexAttri
 }
 
 Mesh::StateVertexAttributes Mesh::concatAttributes (const Mesh::StateVertexAttributes& current,
-                                                const Mesh::StateVertexAttributes& other) {
+                                                    const Mesh::StateVertexAttributes& other) {
     Mesh::StateVertexAttributes StateVertexAttributes = current;
     concatVector(StateVertexAttributes.dynamicFloats, other.dynamicFloats);
     concatVector(StateVertexAttributes.dynamicsVec2s, other.dynamicsVec2s);
@@ -112,7 +111,8 @@ size_t Mesh::computeNumberOfVertices() const {
 template<> Mesh::ShapeVertexAttributes Mesh::genAttributes <Mesh::ShapeVertexAttributes>() const {
     Mesh::ShapeVertexAttributes ShapeVertexAttributes;
     for (const CstGeometricShape_sptr& shape : _shapes) {
-        concatIndicesShapeVertexAttribute(ShapeVertexAttributes.indices, shape->indices(), ShapeVertexAttributes.positions.size());
+        concatIndicesShapeVertexAttribute(ShapeVertexAttributes.indices,
+                                          shape->indices(), ShapeVertexAttributes.positions.size());
         concatIndependantShapeVertexAttribute(ShapeVertexAttributes.indices, shape->indices());
         concatIndependantShapeVertexAttribute(ShapeVertexAttributes.positions, shape->positions());
         concatIndependantShapeVertexAttribute(ShapeVertexAttributes.normals, shape->normals());

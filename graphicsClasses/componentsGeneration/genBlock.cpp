@@ -181,27 +181,27 @@ vecMesh_sptr MeshGenerator::genBlock (const MapState& map, size_t index) {
     }
 
 
-     const vecMesh_sptr sharpsMeshes = genSharps(block, blockType, glmPosition);
-     const vecMesh_sptr jumpersMeshes = genJumpers(block, blockType, glmPosition);
+    const vecMesh_sptr sharpsMeshes = genSharps(block, blockType, glmPosition);
+    const vecMesh_sptr jumpersMeshes = genJumpers(block, blockType, glmPosition);
 
-     /*vecMeshComponent_sptr jumperComponents =
-        genJumpers(*block, blockType, glmPosition);
+    /*vecMeshComponent_sptr jumperComponents =
+       genJumpers(*block, blockType, glmPosition);
        for (MeshComponent_sptr m : jumperComponents) {
-        components.push_back(std::move(m));
+       components.push_back(std::move(m));
        }
 
        for (size_t i = 0; i < Block::objectsNumber; ++i) {
-        const std::shared_ptr <const ObjectState> object =
-            block->objectStates().at(i);
-        if (object) {
-            const JBTypes::Dir dir =
-                JBTypesMethods::integerAsDirection(
-                    static_cast <unsigned int>(i));
-            vecMeshComponent_sptr objMCs = genObject(*object, glmPosition, dir);
-            for (MeshComponent_sptr objMC : objMCs) {
-                components.push_back(std::move(objMC));
-            }
-        }
+       const std::shared_ptr <const ObjectState> object =
+           block->objectStates().at(i);
+       if (object) {
+           const JBTypes::Dir dir =
+               JBTypesMethods::integerAsDirection(
+                   static_cast <unsigned int>(i));
+           vecMeshComponent_sptr objMCs = genObject(*object, glmPosition, dir);
+           for (MeshComponent_sptr objMC : objMCs) {
+               components.push_back(std::move(objMC));
+           }
+       }
        }*/
 
     // return components;

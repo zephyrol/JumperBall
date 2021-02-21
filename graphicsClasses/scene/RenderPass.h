@@ -34,7 +34,7 @@ void render() const;
 enum class ShapeVertexAttributeType { Positions, Normals, Colors, UvCoords, Indices };
 
 void update();
-//template<typename T> void upsertVertexAttribute(size_t number, const std::vector <T>& data);
+// template<typename T> void upsertVertexAttribute(size_t number, const std::vector <T>& data);
 void upsertUniform(const std::string& name, const glm::mat4& value);
 void upsertUniform(const std::string& name, const glm::vec4& value);
 void upsertUniform(const std::string& name, const glm::vec3& value);
@@ -61,9 +61,9 @@ std::vector <GLuint> createVertexDynamicBufferObjects() const;
 std::map <ShapeVertexAttributeType, GLuint> createVertexStaticBufferObjects() const;
 
 template<typename T> std::shared_ptr <GLuint> initializeBO(
-  const std::vector <T>& attributeData,
-  GLenum target
-  ) const;
+    const std::vector <T>& attributeData,
+    GLenum target
+    ) const;
 template<typename T> std::shared_ptr <GLuint> initializeVBO(const std::vector <T>& attributeData) const;
 std::shared_ptr <GLuint> initializeEBO(const std::vector <GLushort>& indicesData) const;
 

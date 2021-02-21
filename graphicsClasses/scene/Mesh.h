@@ -52,10 +52,10 @@ template<typename Attributes> Attributes genAttributes() const;
 // StateVertexAttributes genStateVertexAttributes() const;
 Uniforms genUniformsValues() const;
 static ShapeVertexAttributes concatAttributes(const Mesh::ShapeVertexAttributes& current,
-                                         const Mesh::ShapeVertexAttributes& other);
+                                              const Mesh::ShapeVertexAttributes& other);
 
 static StateVertexAttributes concatAttributes(const Mesh::StateVertexAttributes& current,
-                                          const Mesh::StateVertexAttributes& other);
+                                              const Mesh::StateVertexAttributes& other);
 
 private:
 
@@ -63,19 +63,19 @@ size_t computeNumberOfVertices() const;
 
 template<typename T> static void concatVector(std::vector <T>& current, const std::vector <T>& other);
 static void concatIndices(
-  std::vector <GLushort>& currentIndices,
-  const std::vector <GLushort>& otherIndices,
-  size_t offset
-);
+    std::vector <GLushort>& currentIndices,
+    const std::vector <GLushort>& otherIndices,
+    size_t offset
+    );
 
 template<typename T> static void concatIndependantShapeVertexAttribute(std::vector <T>& staticAttributeData,
-                                                       const std::shared_ptr <const std::vector <T> >& shapeData);
+                                                                       const std::shared_ptr <const std::vector <T> >& shapeData);
 static void concatIndicesShapeVertexAttribute(std::vector <GLushort>& staticAttributeData,
-                                                       const std::shared_ptr <const std::vector <GLushort> >& shapeData,
-                                                       size_t offset);
+                                              const std::shared_ptr <const std::vector <GLushort> >& shapeData,
+                                              size_t offset);
 
 template<typename T> void duplicateStateVertexAttribute(std::vector <std::vector <T> >& attributes,
-                                                    const std::vector <T>& values) const;
+                                                        const std::vector <T>& values) const;
 
 template<typename RawType, typename OpenGLType> static void convertAttributesToOpenGLFormat(
     const std::vector <RawType>& rawValues, std::vector <OpenGLType>& openGLValues);

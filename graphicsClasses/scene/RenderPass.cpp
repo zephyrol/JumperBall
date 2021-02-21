@@ -23,47 +23,51 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr
     _uniformVec2{},
     _uniformFloat{},
     _uniformTextures{} {
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
-  glEnableVertexAttribArray(2);
-  glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
 
-  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Positions));
+    glBindBuffer(GL_ARRAY_BUFFER,
+                 _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Positions));
 
-  glVertexAttribPointer(
-      0,
-      3, // 3 GL_FLOAT per vertex
-      GL_FLOAT,
-      GL_FALSE,
-      0,
-      nullptr);
+    glVertexAttribPointer(
+        0,
+        3, // 3 GL_FLOAT per vertex
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        nullptr);
 
-  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Colors));
-  glVertexAttribPointer(
-      1,
-      3, // 3 GL_FLOAT per vertex
-      GL_FLOAT,
-      GL_FALSE,
-      0,
-      nullptr);
+    glBindBuffer(GL_ARRAY_BUFFER,
+                 _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Colors));
+    glVertexAttribPointer(
+        1,
+        3, // 3 GL_FLOAT per vertex
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        nullptr);
 
-  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Normals));
-  glVertexAttribPointer(
-      2,
-      3, // 3 GL_FLOAT per vertex
-      GL_FLOAT,
-      GL_FALSE,
-      0,
-      nullptr);
+    glBindBuffer(GL_ARRAY_BUFFER,
+                 _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Normals));
+    glVertexAttribPointer(
+        2,
+        3, // 3 GL_FLOAT per vertex
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        nullptr);
 
-  glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::UvCoords));
-  glVertexAttribPointer(
-      3,
-      2, // 2 GL_FLOAT per vertex
-      GL_FLOAT,
-      GL_FALSE,
-      0,
-      nullptr);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(
+                     RenderPass::ShapeVertexAttributeType::UvCoords));
+    glVertexAttribPointer(
+        3,
+        2, // 2 GL_FLOAT per vertex
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        nullptr);
 }
 
 GLuint RenderPass::genVertexArrayObject() const {
@@ -137,13 +141,13 @@ void RenderPass::render() const {
     glBindVertexArray(_vertexArrayObject);
     bindUniforms();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vertexStaticBufferObjects.at(ShapeVertexAttributeType::Indices));
-    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(_shapeVertexAttributes.indices.size()),
+    glDrawElements(GL_TRIANGLES, static_cast <GLsizei>(_shapeVertexAttributes.indices.size()),
                    GL_UNSIGNED_SHORT, nullptr);
 }
 
 template<typename T> void RenderPass::createAttributes (T& attributes) const {
-    for (const CstMesh_sptr &mesh : _meshes) {
-      attributes = Mesh::concatAttributes(attributes, mesh->genAttributes<T>());
+    for (const CstMesh_sptr& mesh : _meshes) {
+        attributes = Mesh::concatAttributes(attributes, mesh->genAttributes <T>());
     }
 }
 
@@ -215,7 +219,7 @@ std::map <RenderPass::ShapeVertexAttributeType, GLuint> RenderPass::createVertex
                                 const std::shared_ptr <GLuint>& vertexBufferObject) {
             if (vertexBufferObject) {
                 vertexBufferObjects[type] = *vertexBufferObject;
-            } 
+            }
         };
     fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::Positions,
                            initializeVBO(_shapeVertexAttributes.positions));
@@ -233,9 +237,9 @@ std::map <RenderPass::ShapeVertexAttributeType, GLuint> RenderPass::createVertex
 
 
 template<typename T> std::shared_ptr <GLuint> RenderPass::initializeBO (
-const std::vector <T>& attributeData,
-GLenum target
-) const {
+    const std::vector <T>& attributeData,
+    GLenum target
+    ) const {
     std::shared_ptr <GLuint> bo = nullptr;
     if (!attributeData.empty()) {
         bo = std::make_shared <GLuint>(genBufferObject());
@@ -250,12 +254,11 @@ GLenum target
 
 
 template<typename T> std::shared_ptr <GLuint> RenderPass::initializeVBO (
-const std::vector <T>& attributeData
-) const {
+    const std::vector <T>& attributeData
+    ) const {
     return initializeBO(attributeData, GL_ARRAY_BUFFER);
 }
 
-std::shared_ptr<GLuint> RenderPass::initializeEBO(const std::vector <GLushort>& indicesData) const
-{
-  return initializeBO(indicesData, GL_ELEMENT_ARRAY_BUFFER);
+std::shared_ptr <GLuint> RenderPass::initializeEBO (const std::vector <GLushort>& indicesData) const {
+    return initializeBO(indicesData, GL_ELEMENT_ARRAY_BUFFER);
 }

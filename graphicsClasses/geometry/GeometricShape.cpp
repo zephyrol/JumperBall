@@ -32,8 +32,7 @@ GeometricShape::GeometricShape(const std::vector <glm::vec3>& positions,
     _numberOfVertices(_positions ? _positions->size() : 0),
     _indices(indices.empty()
              ? genIndices()
-             : std::make_shared <std::vector <GLushort> >(indices)) 
-{
+             : std::make_shared <std::vector <GLushort> >(indices)) {
 }
 
 GeometricShape::GeometricShape(const GeometricShape& geometricShape,
@@ -109,11 +108,11 @@ std::shared_ptr <const std::vector <glm::vec3> > GeometricShape::computeNormals 
 }
 
 std::shared_ptr <const std::vector <GLushort> > GeometricShape::genIndices() const {
-  std::vector<GLushort> indices (_numberOfVertices);
-  for (size_t i = 0; i < _numberOfVertices; ++i){
-    indices.at(i) = i;
-  }
-  return std::make_shared <std::vector<GLushort> >(std::move(indices));
+    std::vector <GLushort> indices(_numberOfVertices);
+    for (size_t i = 0; i < _numberOfVertices; ++i) {
+        indices.at(i) = i;
+    }
+    return std::make_shared <std::vector <GLushort> >(std::move(indices));
 }
 
 

@@ -37,7 +37,7 @@ SceneRendering::SceneRendering(const Map& map,
                    }),
     _camera(camera),
     _spBlocks(Shader(GL_VERTEX_SHADER, vsshaderBlocks),
-           Shader(GL_FRAGMENT_SHADER, fsshaderBlocks)),
+              Shader(GL_FRAGMENT_SHADER, fsshaderBlocks)),
     _spStar(Shader(GL_VERTEX_SHADER, vsshaderStar),
             Shader(GL_FRAGMENT_SHADER, fsshaderStar)),
     _spFbo(Shader(GL_VERTEX_SHADER, vsshaderFBO),
@@ -83,7 +83,7 @@ SceneRendering::SceneRendering(const Map& map,
 void SceneRendering::phongEffect (GLuint depthTexture) const {
 
     glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.z, 0.0f);
-    //_frameBufferHDRScene.bindFrameBuffer(true);
+    // _frameBufferHDRScene.bindFrameBuffer(true);
     FrameBuffer::cleanCurrentFrameBuffer(true);
     _spBlocks.use();
     _spBlocks.bindUniformTexture("depthTexture", 0, depthTexture);
@@ -241,10 +241,10 @@ void SceneRendering::updateUniform() {
 }
 
 void SceneRendering::updateCamera (RenderPass& renderPass) {
-    //renderPass.upsertUniform("VP", _uniformMatrix4.at("VP"));
+    // renderPass.upsertUniform("VP", _uniformMatrix4.at("VP"));
     renderPass.upsertUniform("VP", _camera.viewProjection());
-    //renderPass.upsertUniform("VPStar", _uniformMatrix4.at("VPStar"));
-    //renderPass.upsertUniform("positionBall", _uniformVec3.at("positionBall"));
+    // renderPass.upsertUniform("VPStar", _uniformMatrix4.at("VPStar"));
+    // renderPass.upsertUniform("positionBall", _uniformVec3.at("positionBall"));
     renderPass.upsertUniform("positionCamera", _camera.pos());
 }
 

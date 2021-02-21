@@ -17,7 +17,7 @@ vecMesh_sptr MeshGenerator::genMap (const MapState& map) {
         }
     }
 
-  
+
 
     /*for (
         const std::shared_ptr <EnemyState>& EnemyState : map.enemiesStates()

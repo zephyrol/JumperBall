@@ -38,10 +38,10 @@ vecMesh_sptr genSharps(const std::shared_ptr <BlockState>& blockState,
                        const Map::BlockTypes& type,
                        const glm::vec3& posWorld);
 
-vecMesh_sptr genJumpers(const std::shared_ptr<BlockState>& blockState,
+vecMesh_sptr genJumpers(const std::shared_ptr <BlockState>& blockState,
                         const Map::BlockTypes& type,
                         const glm::vec3& posWorld);
-   /*vecMeshComponent_sptr genEnemy(const EnemyState& enemy);
+/*vecMeshComponent_sptr genEnemy(const EnemyState& enemy);
    vecMeshComponent_sptr genSpecial(const SpecialState& special);
 
    vecMeshComponent_sptr sortComponents( const vecMeshComponent_sptr& components);*/
