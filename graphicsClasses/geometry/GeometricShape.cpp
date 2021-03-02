@@ -7,7 +7,17 @@
 
 #include "GeometricShape.h"
 
-GeometricShape::GeometricShape(const std::vector <glm::vec3>& positions,
+GeometricShape::GeometricShape(const glm::mat4& modelTransform,
+                               const glm::mat4& normalsTransform,
+                               std::vector <glm::vec3>&& customColors
+                               ):
+    _modelTransform(modelTransform),
+    _normalsTransform(normalsTransform),
+    _customColors(std::move(customColors)) {
+
+}
+
+/*GeometricShape::GeometricShape(const std::vector <glm::vec3>& positions,
                                const std::vector <glm::vec3>& normals,
                                const std::vector <glm::vec3>& colors,
                                const std::vector <glm::vec2>& uvCoords,
@@ -33,9 +43,9 @@ GeometricShape::GeometricShape(const std::vector <glm::vec3>& positions,
     _indices(indices.empty()
              ? genIndices()
              : std::make_shared <std::vector <GLushort> >(indices)) {
-}
+   }
 
-GeometricShape::GeometricShape(const GeometricShape& geometricShape,
+   GeometricShape::GeometricShape(const GeometricShape& geometricShape,
                                const glm::mat4& modelTransform,
                                const glm::mat4& normalsTransform):
     _positions(computePositions(*geometricShape.positions(), modelTransform)),
@@ -45,30 +55,43 @@ GeometricShape::GeometricShape(const GeometricShape& geometricShape,
     _numberOfVertices(_positions ? _positions->size() : 0),
     _indices(geometricShape.indices()) {
 
-}
+   }*/
 
-const std::shared_ptr <const std::vector <glm::vec3> >& GeometricShape::positions() const {
-    return _positions;
-}
+GeometricShape::ShapeVertexAttributes GeometricShape::genVertexAttributes() const {
+    const auto computePositions =
+        [this] ()->std::vector <glm::vec3> {
+            std::vector <glm::vec3> computedPositions;
 
-const std::shared_ptr <const std::vector <glm::vec3> >& GeometricShape::normals() const {
-    return _normals;
-}
+            const std::vector <glm::vec3> positions = genPositions();
+            for (const glm::vec3& position : positions) {
+                computedPositions.push_back(_modelTransform *
+                                            glm::vec4(position, 1.f));
+            }
+            return computedPositions;
+        };
 
-const std::shared_ptr <const std::vector <glm::vec3> >& GeometricShape::colors() const {
-    return _colors;
-}
+    const auto computeNormals =
+        [this] ()->std::vector <glm::vec3> {
+            std::vector <glm::vec3> computedNormals;
 
-const std::shared_ptr <const std::vector <glm::vec2> >& GeometricShape::uvCoords() const {
-    return _uvCoords;
-}
+            const std::vector <glm::vec3> normals = genNormals();
+            for (const glm::vec3& normal : normals) {
+                computedNormals.push_back(_normalsTransform * glm::vec4(normal, 1.f));
+            }
+            return computedNormals;
+        };
 
-const std::shared_ptr <const std::vector <GLushort> >& GeometricShape::indices() const {
-    return _indices;
+    GeometricShape::ShapeVertexAttributes shapeVertexAttributes;
+    shapeVertexAttributes.positions = computePositions();
+    shapeVertexAttributes.colors = genColors(_customColors);
+    shapeVertexAttributes.normals = computeNormals();
+    shapeVertexAttributes.uvCoords = genUvCoords();
+    shapeVertexAttributes.indices = genIndices();
+    return shapeVertexAttributes;
 }
 
 size_t GeometricShape::numberOfVertices() const {
-    return _numberOfVertices;
+    return genPositions().size();
 }
 
 size_t GeometricShape::levelOfDetail() const {
@@ -85,72 +108,35 @@ std::vector <glm::vec3> GeometricShape::createCustomColorBuffer (
     return customColorCube;
 }
 
-std::shared_ptr <const std::vector <glm::vec3> > GeometricShape::computePositions (
-    const std::vector <glm::vec3>& positions, const glm::mat4& modelTransform) const {
-
-    std::vector <glm::vec3> computedPositions;
-    for (const glm::vec3& position : positions) {
-        computedPositions.push_back(modelTransform * glm::vec4(position, 1.f));
-    }
-
-    return std::make_shared <std::vector <glm::vec3> >(std::move(computedPositions));
-}
-
-std::shared_ptr <const std::vector <glm::vec3> > GeometricShape::computeNormals (
-    const std::vector <glm::vec3>& normals, const glm::mat4& normalsTransform) const {
-
-    std::vector <glm::vec3> computedNormals;
-    for (const glm::vec3& normal : normals) {
-        computedNormals.push_back(normalsTransform * glm::vec4(normal, 1.f));
-    }
-
-    return std::make_shared <std::vector <glm::vec3> >(std::move(computedNormals));
-}
-
-std::shared_ptr <const std::vector <GLushort> > GeometricShape::genIndices() const {
-    std::vector <GLushort> indices(_numberOfVertices);
-    for (size_t i = 0; i < _numberOfVertices; ++i) {
+std::vector <GLushort> GeometricShape::genIndices() const {
+    const size_t nbOfVertices = numberOfVertices();
+    std::vector <GLushort> indices(nbOfVertices);
+    for (size_t i = 0; i < nbOfVertices; ++i) {
         indices.at(i) = i;
     }
-    return std::make_shared <std::vector <GLushort> >(std::move(indices));
+    return indices;
 }
 
+void GeometricShape::concatIndices (
+    std::vector <GLushort>& currentIndices,
+    const std::vector <GLushort>& otherIndices,
+    size_t offset
+    ) {
+    std::vector <GLushort> newIndices = otherIndices;
+    for (GLushort& newIndice : newIndices) {
+        newIndice += static_cast <GLushort>(offset);
+    }
+    Utility::concatVector(currentIndices, newIndices);
+}
 
-/*void GeometricShape::setVerticesData() const {
-
-   glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(0));
-   glBufferData(GL_ARRAY_BUFFER, _positions->size() * 3 * sizeof(GLfloat),
-   _positions->data(), GL_STATIC_DRAW);
-
-   glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(1));
-   glBufferData(GL_ARRAY_BUFFER, _colors->size() * 3 * sizeof(GLfloat),
-   _colors->data(), GL_STATIC_DRAW);
-
-   glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(2));
-   glBufferData(GL_ARRAY_BUFFER, _normals->size() * 3 * sizeof(GLfloat),
-   _normals->data(), GL_STATIC_DRAW);
-
-   glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObjects->at(3));
-   glBufferData(GL_ARRAY_BUFFER, _uvCoords->size() * 2 * sizeof(GLfloat),
-   _uvCoords->data(), GL_STATIC_DRAW);
-
-   }
-
-   void GeometricShape::bind() const {
-   glBindVertexArray(*_vertexArrayObject);
-   }
-
-   void GeometricShape::draw() const {
-
-   if (_elementBufferObject && _indices) {
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *_elementBufferObject);
-   glDrawElements(GL_TRIANGLES, static_cast <GLsizei>(_indices->size()),
-   GL_UNSIGNED_SHORT, nullptr);
-   } else {
-   constexpr int offset = 0;
-   glDrawArrays(GL_TRIANGLES, offset,
-   static_cast <GLsizei>(_positions->size()));
-   }
-
-
-   }*/
+GeometricShape::ShapeVertexAttributes GeometricShape::concatAttributes (
+    const GeometricShape::ShapeVertexAttributes& current,
+    const GeometricShape::ShapeVertexAttributes& other) {
+    GeometricShape::ShapeVertexAttributes shapeVertexAttributes = current;
+    concatIndices(shapeVertexAttributes.indices, other.indices, shapeVertexAttributes.positions.size());
+    Utility::concatVector(shapeVertexAttributes.positions, other.positions);
+    Utility::concatVector(shapeVertexAttributes.normals, other.normals);
+    Utility::concatVector(shapeVertexAttributes.colors, other.colors);
+    Utility::concatVector(shapeVertexAttributes.uvCoords, other.uvCoords);
+    return shapeVertexAttributes;
+}

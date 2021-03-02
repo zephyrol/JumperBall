@@ -7,8 +7,27 @@
 
 #include "Sphere.h"
 
-
 Sphere::Sphere(const glm::mat4& modelTransform,
+               const glm::mat4& normalsTransform):
+    GeometricShape(modelTransform, normalsTransform, {}) {
+}
+
+Sphere::Sphere(const glm::vec3& customColor,
+               const glm::mat4& modelTransform,
+               const glm::mat4& normalsTransform):
+    GeometricShape(modelTransform, normalsTransform, { customColor }) {
+
+}
+
+Sphere::Sphere(const glm::vec3& customColor,
+               const glm::vec3& customColor2,
+               const glm::mat4& modelTransform,
+               const glm::mat4& normalsTransform):
+    GeometricShape(modelTransform, normalsTransform, { customColor, customColor2 }) {
+
+}
+
+/*Sphere::Sphere(const glm::mat4& modelTransform,
                const glm::mat4& normalsTransform):GeometricShape(
         Sphere::basicInfoSphere.positions,
         Sphere::basicInfoSphere.normals,
@@ -17,9 +36,9 @@ Sphere::Sphere(const glm::mat4& modelTransform,
         modelTransform,
         normalsTransform,
         Sphere::basicInfoSphere.indices) {
-}
+   }
 
-Sphere::Sphere(const glm::vec3& customColor,
+   Sphere::Sphere(const glm::vec3& customColor,
                const glm::mat4& modelTransform,
                const glm::mat4& normalsTransform):GeometricShape(
         Sphere::basicInfoSphere.positions,
@@ -31,9 +50,9 @@ Sphere::Sphere(const glm::vec3& customColor,
         modelTransform,
         normalsTransform,
         Sphere::basicInfoSphere.indices) {
-}
+   }
 
-Sphere::Sphere(const glm::vec3& customColor,
+   Sphere::Sphere(const glm::vec3& customColor,
                const glm::vec3& customColor2,
                const glm::mat4& modelTransform,
                const glm::mat4& normalsTransform):GeometricShape(
@@ -47,21 +66,21 @@ Sphere::Sphere(const glm::vec3& customColor,
         modelTransform,
         normalsTransform,
         Sphere::basicInfoSphere.indices) {
-}
+   }
 
-Sphere::Sphere(const GeometricShape& sphere,
+   Sphere::Sphere(const GeometricShape& sphere,
                const glm::mat4& modelTransform,
                const glm::mat4& normalsTransform):
     GeometricShape(sphere, modelTransform, normalsTransform) {
-}
+   }*/
 
-Sphere::InfoSphere Sphere::computeBasicInfoSphere (
+GeometricShape::ShapeVertexAttributes Sphere::computeBasicInfoSphere (
     bool useCustomColors,
     const glm::vec3& firstColor,
     const glm::vec3& secondColor
     ) {
 
-    Sphere::InfoSphere infoSphere;
+    GeometricShape::ShapeVertexAttributes infoSphere;
 
     constexpr unsigned int iParaCount = 40;
     constexpr unsigned int iMeriCount = 60;
@@ -127,4 +146,33 @@ Sphere::InfoSphere Sphere::computeBasicInfoSphere (
 }
 
 
-const Sphere::InfoSphere Sphere::basicInfoSphere = computeBasicInfoSphere();
+
+std::vector <glm::vec3> Sphere::genColors (const std::vector <glm::vec3>& colors) const {
+    if (colors.size() == 2) {
+        return computeBasicInfoSphere(true, colors.at(0), colors.at(1)).colors;
+    }
+    if (colors.size() == 1) {
+        return GeometricShape::createCustomColorBuffer(colors.at(0), // customColor
+                                                       basicInfoSphere.colors.size());
+    }
+    return basicInfoSphere.colors;
+}
+
+std::vector <glm::vec2> Sphere::genUvCoords() const {
+    return basicInfoSphere.uvCoords;
+}
+
+std::vector <GLushort> Sphere::genIndices() const {
+    return Sphere::basicInfoSphere.indices;
+}
+
+std::vector <glm::vec3> Sphere::genNormals() const {
+    return basicInfoSphere.normals;
+}
+
+std::vector <glm::vec3> Sphere::genPositions() const {
+    return basicInfoSphere.positions;
+}
+
+
+const GeometricShape::ShapeVertexAttributes Sphere::basicInfoSphere = computeBasicInfoSphere();

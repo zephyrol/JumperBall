@@ -21,13 +21,18 @@ Cube(const glm::vec3& customColor,
      const glm::mat4& modelTransform = glm::mat4(1.f),
      const glm::mat4& normalsTransform = glm::mat4(1.f),
      const std::array <bool, 6>& sides = { true, true, true, true, true, true });
-Cube(const std::vector <glm::vec3>& customColors,
-     const std::array <bool, 6>& sides = { true, true, true, true, true, true },
+Cube(std::vector <glm::vec3>&& customColors,
      const glm::mat4& modelTransform = glm::mat4(1.f),
-     const glm::mat4& normalsTransform = glm::mat4(1.f));
-Cube(const GeometricShape& cube,
+     const glm::mat4& normalsTransform = glm::mat4(1.f),
+     const std::array <bool, 6>& sides = { true, true, true, true, true, true });
+/*Cube(const GeometricShape& cube,
      const glm::mat4& modelTransform = glm::mat4(1.f),
-     const glm::mat4& normalsTransform = glm::mat4(1.f));
+     const glm::mat4& normalsTransform = glm::mat4(1.f));*/
+
+virtual std::vector <glm::vec3> genPositions() const override;
+virtual std::vector <glm::vec3> genNormals() const override;
+virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const override;
+virtual std::vector <glm::vec2> genUvCoords() const override;
 
 static const std::vector <glm::vec3> iceColorsCube;
 static const std::vector <glm::vec3> fireColorsCube;
@@ -35,11 +40,14 @@ static const std::vector <glm::vec3> ghostColorsCube;
 
 private:
 
-static const std::vector <glm::vec3> getBasicElements(const std::vector <glm::vec3>& basicElements,
-                                                      const std::array <bool, 6>& sides);
-static const std::vector <glm::vec3> getBasicPosCube(const std::array <bool, 6>& sides);
-static const std::vector <glm::vec3> getBasicNormalsCube(const std::array <bool, 6>& sides);
-static const std::vector <glm::vec3> getBasicColorsCube(const std::array <bool, 6>& sides);
+const std::array <bool, 6> _sides;
+
+template<typename T> static std::vector <T> getBasicElements(const std::vector <T>& basicElements,
+                                                             const std::array <bool, 6>& sides);
+static std::vector <glm::vec3> getBasicPosCube(const std::array <bool, 6>& sides);
+static std::vector <glm::vec3> getBasicNormalsCube(const std::array <bool, 6>& sides);
+static std::vector <glm::vec3> getBasicColorsCube(const std::array <bool, 6>& sides);
+static std::vector <glm::vec2> getBasicUVCoordsCube(const std::array <bool, 6>& sides);
 static const std::vector <glm::vec3> basicPositionsCube;
 static const std::vector <glm::vec3> basicNormalsCube;
 static const std::vector <glm::vec2> basicUVCoordsCube;

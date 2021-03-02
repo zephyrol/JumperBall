@@ -23,28 +23,19 @@ Sphere(const glm::vec3& customColor,
        const glm::vec3& customColor2,
        const glm::mat4& modelTransform = glm::mat4(1.f),
        const glm::mat4& normalsTransform = glm::mat4(1.f));
-Sphere(const GeometricShape& sphere,
-       const glm::mat4& modelTransform = glm::mat4(1.f),
-       const glm::mat4& normalsTransform = glm::mat4(1.f));
 
-
-// ------------TYPES------------//
-struct InfoSphere {
-    InfoSphere():positions{}, normals{}, colors{}, uvCoords{}, indices{} {
-    }
-    std::vector <glm::vec3> positions;
-    std::vector <glm::vec3> normals;
-    std::vector <glm::vec3> colors;
-    std::vector <glm::vec2> uvCoords;
-    std::vector <GLushort> indices;
-};
+virtual std::vector <glm::vec3> genPositions() const override;
+virtual std::vector <glm::vec3> genNormals() const override;
+virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const override;
+virtual std::vector <glm::vec2> genUvCoords() const override;
+virtual std::vector <GLushort> genIndices() const override;
 
 private:
 
-static const InfoSphere basicInfoSphere;
+static const GeometricShape::ShapeVertexAttributes basicInfoSphere;
 
 // --------STATIC METHODS-------//
-static InfoSphere computeBasicInfoSphere(
+static GeometricShape::ShapeVertexAttributes computeBasicInfoSphere(
     bool useCustomColors = false,
     const glm::vec3& firstColor = glm::vec3(0.f),
     const glm::vec3& secondColor = glm::vec3(0.f)

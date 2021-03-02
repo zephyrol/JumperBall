@@ -6,7 +6,7 @@
  */
 #include "scene/mesh/MeshGenerator.h"
 
-vecMesh_sptr MeshGenerator::genMeshes(const Map& map) {
+vecMesh_sptr MeshGenerator::genMeshes (const Map& map) {
 
     vecMesh_sptr meshes;
     const auto blockInfos = map.blocksInfo();

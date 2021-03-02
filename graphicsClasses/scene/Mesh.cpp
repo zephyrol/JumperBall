@@ -6,51 +6,20 @@
  */
 #include "Mesh.h"
 
-Mesh::Mesh(std::unique_ptr<State>&& state, const vecCstGeometricShape_sptr& shapes):
+Mesh::Mesh(std::unique_ptr <State>&& state, const vecCstGeometricShape_sptr& shapes):
     _state(std::move(state)),
     _shapes(shapes),
     _numberOfVertices(computeNumberOfVertices()) {
 }
 
 void Mesh::update() {
-  _state->update();
+    _state->update();
 }
 
 size_t Mesh::numberOfVertices() const {
     return _numberOfVertices;
 }
 
-template<typename T> void Mesh::concatVector (std::vector <T>& current, const std::vector <T>& other) {
-    current.insert(current.end(), other.begin(), other.end());
-}
-
-void Mesh::concatIndices (
-    std::vector <GLushort>& currentIndices,
-    const std::vector <GLushort>& otherIndices,
-    size_t offset
-    ) {
-    std::vector <GLushort> newIndices = otherIndices;
-    for (GLushort& newIndice : newIndices) {
-        newIndice += static_cast <GLushort>(offset);
-    }
-    concatVector(currentIndices, newIndices);
-}
-
-template<typename T> void Mesh::concatIndependantShapeVertexAttribute (
-    std::vector <T>& ShapeVertexAttributeData,
-    const std::shared_ptr <const std::vector <T> >& shapeData) {
-    if (shapeData) {
-        concatVector(ShapeVertexAttributeData, *shapeData);
-    }
-}
-
-void Mesh::concatIndicesShapeVertexAttribute (std::vector <GLushort>& ShapeVertexAttributeIndices,
-                                              const std::shared_ptr <const std::vector <GLushort> >& shapeIndices,
-                                              size_t offset) {
-    if (shapeIndices) {
-        concatIndices(ShapeVertexAttributeIndices, *shapeIndices, offset);
-    }
-}
 
 template<typename T> void Mesh::duplicateStateVertexAttribute (std::vector <std::vector <T> >& attributes,
                                                                const std::vector <T>& values) const {
@@ -77,27 +46,20 @@ template<typename RawType, typename OpenGLType> void Mesh::convertUniformsToOpen
     }
 }
 
-Mesh::ShapeVertexAttributes Mesh::concatAttributes (const Mesh::ShapeVertexAttributes& current,
-                                                    const Mesh::ShapeVertexAttributes& other) {
-    Mesh::ShapeVertexAttributes shapeVertexAttributes = current;
-
-    concatIndices(shapeVertexAttributes.indices, other.indices, shapeVertexAttributes.positions.size());
-    concatVector(shapeVertexAttributes.positions, other.positions);
-    concatVector(shapeVertexAttributes.normals, other.normals);
-    concatVector(shapeVertexAttributes.colors, other.colors);
-    concatVector(shapeVertexAttributes.uvCoords, other.uvCoords);
-
-    return shapeVertexAttributes;
-}
-
 Mesh::StateVertexAttributes Mesh::concatAttributes (const Mesh::StateVertexAttributes& current,
                                                     const Mesh::StateVertexAttributes& other) {
     Mesh::StateVertexAttributes StateVertexAttributes = current;
-    concatVector(StateVertexAttributes.dynamicFloats, other.dynamicFloats);
-    concatVector(StateVertexAttributes.dynamicsVec2s, other.dynamicsVec2s);
-    concatVector(StateVertexAttributes.dynamicsVec3s, other.dynamicsVec3s);
-    concatVector(StateVertexAttributes.dynamicUbytes, other.dynamicUbytes);
+    Utility::concatVector(StateVertexAttributes.dynamicFloats, other.dynamicFloats);
+    Utility::concatVector(StateVertexAttributes.dynamicsVec2s, other.dynamicsVec2s);
+    Utility::concatVector(StateVertexAttributes.dynamicsVec3s, other.dynamicsVec3s);
+    Utility::concatVector(StateVertexAttributes.dynamicUbytes, other.dynamicUbytes);
     return StateVertexAttributes;
+}
+
+GeometricShape::ShapeVertexAttributes Mesh::concatAttributes (
+    const GeometricShape::ShapeVertexAttributes& current,
+    const GeometricShape::ShapeVertexAttributes& other) {
+    return GeometricShape::concatAttributes(current, other);
 }
 
 size_t Mesh::computeNumberOfVertices() const {
@@ -105,22 +67,19 @@ size_t Mesh::computeNumberOfVertices() const {
     for (const auto& shape : _shapes) {
         numberOfVertices += shape->numberOfVertices();
     }
-    std::cout << "number of vertices" << numberOfVertices << std::endl;
     return numberOfVertices;
 }
 
-template<> Mesh::ShapeVertexAttributes Mesh::genAttributes <Mesh::ShapeVertexAttributes>() const {
-    Mesh::ShapeVertexAttributes ShapeVertexAttributes;
+template<> GeometricShape::ShapeVertexAttributes Mesh::genAttributes <GeometricShape::ShapeVertexAttributes>()
+const {
+    GeometricShape::ShapeVertexAttributes gatheredShapeVertexAttributes;
     for (const CstGeometricShape_sptr& shape : _shapes) {
-        concatIndicesShapeVertexAttribute(ShapeVertexAttributes.indices,
-                                          shape->indices(), ShapeVertexAttributes.positions.size());
-        concatIndependantShapeVertexAttribute(ShapeVertexAttributes.indices, shape->indices());
-        concatIndependantShapeVertexAttribute(ShapeVertexAttributes.positions, shape->positions());
-        concatIndependantShapeVertexAttribute(ShapeVertexAttributes.normals, shape->normals());
-        concatIndependantShapeVertexAttribute(ShapeVertexAttributes.colors, shape->colors());
-        concatIndependantShapeVertexAttribute(ShapeVertexAttributes.uvCoords, shape->uvCoords());
+        gatheredShapeVertexAttributes = GeometricShape::concatAttributes(
+            gatheredShapeVertexAttributes,
+            shape->genVertexAttributes()
+            );
     }
-    return ShapeVertexAttributes;
+    return gatheredShapeVertexAttributes;
 }
 
 template<> Mesh::StateVertexAttributes Mesh::genAttributes <Mesh::StateVertexAttributes>() const {

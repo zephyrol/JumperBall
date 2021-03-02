@@ -9,6 +9,19 @@
 
 Triangle::Triangle(const glm::mat4& modelTransform,
                    const glm::mat4& normalsTransform):
+    GeometricShape(modelTransform, normalsTransform, {}) {
+
+}
+
+Triangle::Triangle(const glm::vec3& customColor,
+                   const glm::mat4& modelTransform,
+                   const glm::mat4& normalsTransform):
+    GeometricShape(modelTransform, normalsTransform, { customColor }) {
+
+}
+
+/*Triangle::Triangle(const glm::mat4& modelTransform,
+                   const glm::mat4& normalsTransform):
     GeometricShape(
         basicPositionsTriangle,
         basicNormalsTriangle,
@@ -16,27 +29,27 @@ Triangle::Triangle(const glm::mat4& modelTransform,
         basicUVCoordsTriangle,
         modelTransform,
         normalsTransform) {
-}
+   }
 
-Triangle::Triangle(const glm::vec3& customColor,
+   Triangle::Triangle(const glm::vec3& customColor,
                    const glm::mat4& modelTransform,
                    const glm::mat4& normalsTransform):
     GeometricShape(
         basicPositionsTriangle,
         basicNormalsTriangle,
-        GeometricShape::createCustomColorBuffer(customColor,
+   b       GeometricShape::createCustomColorBuffer(customColor,
                                                 basicPositionsTriangle.size()
                                                 ),
         basicUVCoordsTriangle,
         modelTransform,
         normalsTransform) {
-}
+   }
 
-Triangle::Triangle(const GeometricShape& triangle,
+   Triangle::Triangle(const GeometricShape& triangle,
                    const glm::mat4& modelTransform,
                    const glm::mat4& normalsTransform):
     GeometricShape(triangle, modelTransform, normalsTransform) {
-}
+   }*/
 
 std::vector <glm::vec3> Triangle::createCustomColors (
     const glm::vec3& customColor
@@ -47,7 +60,6 @@ std::vector <glm::vec3> Triangle::createCustomColors (
         customColor.r, customColor.g, customColor.b,
     });
 }
-
 
 const std::vector <glm::vec3> Triangle::basicPositionsTriangle =
     Utility::GLfloatListToGlmVec3({
@@ -68,3 +80,24 @@ const std::vector <glm::vec2> Triangle::basicUVCoordsTriangle =
     Utility::GLfloatListToGlmVec2({
     0.f, 1.f, 0.f, 0.f, 0.f, 0.f
 });
+
+std::vector <glm::vec3> Triangle::genPositions() const {
+    return basicPositionsTriangle;
+}
+
+std::vector <glm::vec3> Triangle::genNormals() const {
+    return basicNormalsTriangle;
+}
+
+std::vector <glm::vec3> Triangle::genColors (const std::vector <glm::vec3>& colors) const {
+    if (colors.size() > 0) {
+
+    }
+    return colors.size() > 0
+           ? GeometricShape::createCustomColorBuffer(colors.at(0), basicPositionsTriangle.size())
+           : basicColorsTriangle;
+}
+
+std::vector <glm::vec2> Triangle::genUvCoords() const {
+    return basicUVCoordsTriangle;
+}

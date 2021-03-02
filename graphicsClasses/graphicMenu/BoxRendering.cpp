@@ -12,7 +12,7 @@ BoxRendering::BoxRendering(const Label& label,
                            const glm::vec3& color1,
                            const glm::vec3& color2):
     LabelRendering(label),
-    _boxQuad(color1, color2),
+    // _boxQuad(color1, color2),
     _transform(1.f) {
     if (!spBox) {
         spBox = std::make_shared <ShaderProgram>(

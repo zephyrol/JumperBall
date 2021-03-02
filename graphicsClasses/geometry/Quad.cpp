@@ -9,6 +9,27 @@
 
 Quad::Quad(const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform):
+    GeometricShape(modelTransform, normalsTransform, {}) {
+
+}
+
+Quad::Quad(const glm::vec3& customColor,
+           const glm::mat4& modelTransform,
+           const glm::mat4& normalsTransform):
+    GeometricShape(modelTransform, normalsTransform, { customColor }) {
+
+}
+
+Quad::Quad(const glm::vec3& customColor1,
+           const glm::vec3& customColor2,
+           const glm::mat4& modelTransform,
+           const glm::mat4& normalsTransform):
+    GeometricShape(modelTransform, normalsTransform, { customColor1, customColor2 }) {
+
+}
+
+/*Quad::Quad(const glm::mat4& modelTransform,
+           const glm::mat4& normalsTransform):
     GeometricShape(
         basicPositionsQuad,
         basicNormalsQuad,
@@ -16,9 +37,9 @@ Quad::Quad(const glm::mat4& modelTransform,
         basicUVCoordsQuad,
         modelTransform,
         normalsTransform) {
-}
+   }
 
-Quad::Quad(const glm::vec3& customColor,
+   Quad::Quad(const glm::vec3& customColor,
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform):
     GeometricShape(
@@ -29,9 +50,9 @@ Quad::Quad(const glm::vec3& customColor,
         basicUVCoordsQuad,
         modelTransform,
         normalsTransform) {
-}
+   }
 
-Quad::Quad(const glm::vec3& customColor1,
+   Quad::Quad(const glm::vec3& customColor1,
            const glm::vec3& customColor2,
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform):
@@ -42,14 +63,14 @@ Quad::Quad(const glm::vec3& customColor1,
         basicUVCoordsQuad,
         modelTransform,
         normalsTransform) {
-}
+   }*/
 
 
-Quad::Quad(const GeometricShape& quad,
+/*Quad::Quad(const GeometricShape& quad,
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform):
     GeometricShape(quad, modelTransform, normalsTransform) {
-}
+   }*/
 
 std::vector <glm::vec3> Quad::createCustomDoubleColors (
     const glm::vec3& customColor1, const glm::vec3& customColor2) {
@@ -88,3 +109,25 @@ const std::vector <glm::vec2> Quad::basicUVCoordsQuad =
     0.f, 1.f, 0.f, 0.f, 1.f, 0.f,
     0.f, 1.f, 1.f, 0.f, 1.f, 1.f
 });
+
+std::vector <glm::vec3> Quad::genPositions() const {
+    return basicPositionsQuad;
+}
+
+std::vector <glm::vec3> Quad::genNormals() const {
+    return basicNormalsQuad;
+}
+
+std::vector <glm::vec3> Quad::genColors (const std::vector <glm::vec3>& colors) const {
+    if (colors.size() == 2) {
+        return createCustomDoubleColors(colors.at(0), colors.at(1));
+    }
+    if (colors.size() == 1) {
+        return GeometricShape::createCustomColorBuffer(colors.at(0), basicPositionsQuad.size());
+    }
+    return basicColorsQuad;
+}
+
+std::vector <glm::vec2> Quad::genUvCoords() const {
+    return basicUVCoordsQuad;
+}

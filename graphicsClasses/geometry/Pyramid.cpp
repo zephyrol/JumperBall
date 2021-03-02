@@ -7,8 +7,20 @@
 
 #include "Pyramid.h"
 
-
 Pyramid::Pyramid(const glm::mat4& modelTransform,
+                 const glm::mat4& normalsTransform)
+    :GeometricShape(modelTransform, normalsTransform, {}) {
+
+}
+
+Pyramid::Pyramid(const glm::vec3& customColor,
+                 const glm::mat4& modelTransform,
+                 const glm::mat4& normalsTransform)
+    :GeometricShape(modelTransform, normalsTransform, { customColor }) {
+
+}
+
+/*Pyramid::Pyramid(const glm::mat4& modelTransform,
                  const glm::mat4& normalsTransform
                  ):
     GeometricShape(
@@ -18,9 +30,9 @@ Pyramid::Pyramid(const glm::mat4& modelTransform,
         basicUVCoordsPyramid,
         modelTransform,
         normalsTransform) {
-}
+   }
 
-Pyramid::Pyramid(const glm::vec3& customColor,
+   Pyramid::Pyramid(const glm::vec3& customColor,
                  const glm::mat4& modelTransform,
                  const glm::mat4& normalsTransform
                  ):
@@ -32,13 +44,13 @@ Pyramid::Pyramid(const glm::vec3& customColor,
         basicUVCoordsPyramid,
         modelTransform,
         normalsTransform) {
-}
+   }
 
-Pyramid::Pyramid(const GeometricShape& pyramid,
+   Pyramid::Pyramid(const GeometricShape& pyramid,
                  const glm::mat4& modelTransform,
                  const glm::mat4& normalsTransform):
     GeometricShape(pyramid, modelTransform, normalsTransform) {
-}
+   }*/
 
 
 const std::vector <glm::vec3> Pyramid::basicPositionsPyramid =
@@ -117,3 +129,21 @@ const std::vector <glm::vec2> Pyramid::basicUVCoordsPyramid =
     1.f, 0.f, 1.f, 0.f, 0.5f, 1.f,
     1.f, 0.f, 1.f, 0.f, 0.5f, 1.f
 });
+
+std::vector <glm::vec3> Pyramid::genPositions() const {
+    return basicPositionsPyramid;
+}
+
+std::vector <glm::vec3> Pyramid::genNormals() const {
+    return basicNormalsPyramid;
+}
+
+std::vector <glm::vec3> Pyramid::genColors (const std::vector <glm::vec3>& colors) const {
+    return colors.size() == 1
+           ? GeometricShape::createCustomColorBuffer(colors.at(0), basicPositionsPyramid.size())
+           : basicColorsPyramid;
+}
+
+std::vector <glm::vec2> Pyramid::genUvCoords() const {
+    return basicUVCoordsPyramid;
+}

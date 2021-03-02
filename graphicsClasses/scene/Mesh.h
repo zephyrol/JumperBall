@@ -21,14 +21,7 @@ using vecMesh_sptr = std::vector <Mesh_sptr>;
 
 class Mesh {
 public:
-Mesh(std::unique_ptr<State>&& state, const vecCstGeometricShape_sptr& shapes);
-struct ShapeVertexAttributes {
-    std::vector <glm::vec3> positions;
-    std::vector <glm::vec3> normals;
-    std::vector <glm::vec3> colors;
-    std::vector <glm::vec2> uvCoords;
-    std::vector <GLushort> indices;
-};
+Mesh(std::unique_ptr <State>&& state, const vecCstGeometricShape_sptr& shapes);
 
 struct StateVertexAttributes {
     std::vector <std::vector <GLubyte> > dynamicUbytes;
@@ -51,29 +44,17 @@ template<typename Attributes> Attributes genAttributes() const;
 // ShapeVertexAttributes genShapeVertexAttributes() const;
 // StateVertexAttributes genStateVertexAttributes() const;
 Uniforms genUniformsValues() const;
-static ShapeVertexAttributes concatAttributes(const Mesh::ShapeVertexAttributes& current,
-                                              const Mesh::ShapeVertexAttributes& other);
 
 static StateVertexAttributes concatAttributes(const Mesh::StateVertexAttributes& current,
                                               const Mesh::StateVertexAttributes& other);
+static GeometricShape::ShapeVertexAttributes concatAttributes(
+    const GeometricShape::ShapeVertexAttributes& current,
+    const GeometricShape::ShapeVertexAttributes& other
+    );
 
 private:
 
 size_t computeNumberOfVertices() const;
-
-template<typename T> static void concatVector(std::vector <T>& current, const std::vector <T>& other);
-static void concatIndices(
-    std::vector <GLushort>& currentIndices,
-    const std::vector <GLushort>& otherIndices,
-    size_t offset
-    );
-
-template<typename T> static void concatIndependantShapeVertexAttribute(std::vector <T>& staticAttributeData,
-                                                                       const std::shared_ptr <const std::vector <T> >& shapeData);
-static void concatIndicesShapeVertexAttribute(std::vector <GLushort>& staticAttributeData,
-                                              const std::shared_ptr <const std::vector <GLushort> >& shapeData,
-                                              size_t offset);
-
 template<typename T> void duplicateStateVertexAttribute(std::vector <std::vector <T> >& attributes,
                                                         const std::vector <T>& values) const;
 
@@ -84,7 +65,7 @@ template<typename RawType, typename OpenGLType> static void convertUniformsToOpe
     const std::map <std::string, RawType>& rawValues, std::map <std::string, OpenGLType>& openGLValues);
 
 
-const std::unique_ptr<State> _state;
+const std::unique_ptr <State> _state;
 const vecCstGeometricShape_sptr _shapes;
 const size_t _numberOfVertices;
 };

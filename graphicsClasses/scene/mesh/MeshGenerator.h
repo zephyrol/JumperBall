@@ -35,12 +35,12 @@ vecMesh_sptr genMeshes(const Star& star);
 Mesh_sptr genBlock(const Map& map, size_t index);
 
 vecCstGeometricShape_sptr genSharps(const Block& block,
-                       const Map::BlockTypes& type,
-                       const glm::vec3& posWorld);
+                                    const Map::BlockTypes& type,
+                                    const glm::vec3& posWorld);
 
 vecCstGeometricShape_sptr genJumpers(const Block& block,
-                        const Map::BlockTypes& type,
-                        const glm::vec3& posWorld);
+                                     const Map::BlockTypes& type,
+                                     const glm::vec3& posWorld);
 /*vecMeshComponent_sptr genEnemy(const EnemyState& enemy);
    vecMeshComponent_sptr genSpecial(const SpecialState& special);
 

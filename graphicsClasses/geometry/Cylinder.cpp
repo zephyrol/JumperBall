@@ -7,7 +7,7 @@
 
 #include "Cylinder.h"
 
-Cylinder::Cylinder(
+/*Cylinder::Cylinder(
     size_t meriCount,
     const glm::mat4& modelTransform,
     const glm::mat4& normalsTransform):GeometricShape(
@@ -19,9 +19,9 @@ Cylinder::Cylinder(
         normalsTransform,
         computeBasicInfoCylinder(meriCount).indices),
     _meriCount(meriCount) {
-}
+   }*/
 
-Cylinder::Cylinder(
+/*Cylinder::Cylinder(
     const glm::vec3& customColor,
     size_t meriCount,
     const glm::mat4& modelTransform,
@@ -36,9 +36,9 @@ Cylinder::Cylinder(
         normalsTransform,
         computeBasicInfoCylinder(meriCount).indices),
     _meriCount(meriCount) {
-}
+   }
 
-Cylinder::Cylinder(const glm::vec3& customColorCenter,
+   Cylinder::Cylinder(const glm::vec3& customColorCenter,
                    const glm::vec3& customColorEdge,
                    size_t meriCount,
                    const glm::mat4& modelTransform,
@@ -55,20 +55,37 @@ Cylinder::Cylinder(const glm::vec3& customColorCenter,
         computeBasicInfoCylinder(meriCount).indices),
     _meriCount(meriCount) {
 
+   }*/
+
+Cylinder::Cylinder(
+    size_t meriCount,
+    const glm::mat4& modelTransform,
+    const glm::mat4& normalsTransform):
+    GeometricShape(modelTransform, normalsTransform, {}),
+    _meriCount(meriCount) {
 }
 
+Cylinder::Cylinder(
+    const glm::vec3& customColor,
+    size_t meriCount,
+    const glm::mat4& modelTransform,
+    const glm::mat4& normalsTransform):
+    GeometricShape(modelTransform, normalsTransform, { customColor }),
+    _meriCount(meriCount) {
+}
 
-
-Cylinder::Cylinder(const GeometricShape& cylinder,
+Cylinder::Cylinder(const glm::vec3& customColorCenter,
+                   const glm::vec3& customColorEdge,
+                   size_t meriCount,
                    const glm::mat4& modelTransform,
                    const glm::mat4& normalsTransform):
-    GeometricShape(cylinder, modelTransform, normalsTransform),
-    _meriCount(cylinder.levelOfDetail()) {
+    GeometricShape(modelTransform, normalsTransform, { customColorCenter, customColorEdge }),
+    _meriCount(meriCount) {
 }
 
-Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder (size_t meriCount) {
+GeometricShape::ShapeVertexAttributes Cylinder::computeBasicInfoCylinder (size_t meriCount) {
 
-    Cylinder::InfoCylinder infoCylinder;
+    GeometricShape::ShapeVertexAttributes infoCylinder;
 
     constexpr float r = 0.5f;
     // Create a Cylinder --------------------------------------------------------
@@ -160,7 +177,7 @@ Cylinder::InfoCylinder Cylinder::computeBasicInfoCylinder (size_t meriCount) {
 }
 
 
-const Cylinder::InfoCylinder Cylinder::basicInfoCylinder =
+const GeometricShape::ShapeVertexAttributes Cylinder::basicInfoCylinder =
     computeBasicInfoCylinder();
 
 std::vector <glm::vec3> Cylinder::createCenterAndEdgeColorBuffer (
@@ -179,4 +196,37 @@ std::vector <glm::vec3> Cylinder::createCenterAndEdgeColorBuffer (
 
 size_t Cylinder::levelOfDetail() const {
     return _meriCount;
+}
+
+std::vector <glm::vec3> Cylinder::genColors (const std::vector <glm::vec3>& colors) const {
+    if (colors.size() == 2) {
+        return createCenterAndEdgeColorBuffer(
+            colors.at(0),    // customColorCenter
+            colors.at(1),    // customColorEdge
+            computeBasicInfoCylinder(_meriCount).colors.size()
+            );
+    }
+    if (colors.size() == 1) {
+        GeometricShape::createCustomColorBuffer(
+            colors.at(0), // customColor
+            computeBasicInfoCylinder(_meriCount).colors.size()
+            );
+    }
+    return computeBasicInfoCylinder(_meriCount).colors;
+}
+
+std::vector <glm::vec2> Cylinder::genUvCoords() const {
+    return computeBasicInfoCylinder(_meriCount).uvCoords;
+}
+
+std::vector <GLushort> Cylinder::genIndices() const {
+    return computeBasicInfoCylinder(_meriCount).indices;
+}
+
+std::vector <glm::vec3> Cylinder::genNormals() const {
+    return computeBasicInfoCylinder(_meriCount).normals;
+}
+
+std::vector <glm::vec3> Cylinder::genPositions() const {
+    return computeBasicInfoCylinder(_meriCount).positions;
 }

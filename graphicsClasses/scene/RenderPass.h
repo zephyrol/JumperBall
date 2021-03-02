@@ -46,7 +46,7 @@ GLuint genVertexArrayObject() const;
 GLuint genBufferObject() const;
 
 template<typename T> void createAttributes(T& attributes) const;
-Mesh::ShapeVertexAttributes createShapeVertexAttributes() const;
+GeometricShape::ShapeVertexAttributes createShapeVertexAttributes() const;
 Mesh::StateVertexAttributes createStateVertexAttributes() const;
 
 size_t computeNumberOfVertices() const;
@@ -72,7 +72,7 @@ const ShaderProgram& _shaderProgram;
 const GLuint _vertexArrayObject;
 const vecCstMesh_sptr _meshes;
 const size_t _numberOfVertices;
-const Mesh::ShapeVertexAttributes _shapeVertexAttributes;
+const GeometricShape::ShapeVertexAttributes _shapeVertexAttributes;
 Mesh::StateVertexAttributes _stateVertexAttributes;
 const std::map <ShapeVertexAttributeType, GLuint> _vertexStaticBufferObjects;
 const std::vector <GLuint> _vertexDynamicBufferObjects;

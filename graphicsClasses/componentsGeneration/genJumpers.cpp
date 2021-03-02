@@ -8,9 +8,9 @@
 #include "scene/mesh/MeshGenerator.h"
 
 
- vecCstGeometricShape_sptr MeshGenerator::genJumpers (const Block& block,
-                                        const Map::BlockTypes& type,
-                                        const glm::vec3& posWorld) {
+vecCstGeometricShape_sptr MeshGenerator::genJumpers (const Block& block,
+                                                     const Map::BlockTypes& type,
+                                                     const glm::vec3& posWorld) {
     if (type != Map::BlockTypes::Jump) {
         return {};
     }
@@ -45,7 +45,7 @@
             const glm::mat4 modelTranf = translationLocal * rotationLocal * scaleLocal;
             const glm::mat4 normalsTrans = rotationLocal;
 
-            geometricShapes.push_back(std::make_shared <Cylinder>(
+            geometricShapes.push_back(std::make_shared <const Cylinder>(
                                           glm::vec3(1.f, 1.f, 0.f),
                                           glm::vec3(1.f, 150.f / 255.f, 0.f),
                                           60,

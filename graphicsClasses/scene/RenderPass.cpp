@@ -152,8 +152,8 @@ template<typename T> void RenderPass::createAttributes (T& attributes) const {
     }
 }
 
-Mesh::ShapeVertexAttributes RenderPass::createShapeVertexAttributes() const {
-    Mesh::ShapeVertexAttributes shapeVertexAttributes;
+GeometricShape::ShapeVertexAttributes RenderPass::createShapeVertexAttributes() const {
+    GeometricShape::ShapeVertexAttributes shapeVertexAttributes;
     createAttributes(shapeVertexAttributes);
     return shapeVertexAttributes;
 }

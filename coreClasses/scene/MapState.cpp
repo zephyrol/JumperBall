@@ -11,8 +11,7 @@ MapState::MapState(const Map& map):
     _map(map),
     _width(map.width()),
     _height(map.height()),
-    _deep(map.deep())
-{
+    _deep(map.deep()) {
 }
 
 void MapState::update() {

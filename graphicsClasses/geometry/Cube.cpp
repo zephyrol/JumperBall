@@ -10,93 +10,126 @@
 Cube::Cube(const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform,
            const std::array <bool, 6>& sides):
-    GeometricShape(
+    GeometricShape(modelTransform, normalsTransform, {}),
+    _sides(sides) {
+    /*GeometricShape(
         getBasicPosCube(sides),
         getBasicNormalsCube(sides),
         getBasicColorsCube(sides),
         basicUVCoordsCube,
         modelTransform,
-        normalsTransform) {
+        normalsTransform) */
 }
 
 Cube::Cube(const glm::vec3& customColor,
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform,
            const std::array <bool, 6>& sides):
-    GeometricShape(
+    GeometricShape(modelTransform, normalsTransform, { customColor }),
+    _sides(sides) {
+    /*GeometricShape(
         getBasicPosCube(sides),
         getBasicNormalsCube(sides),
         getBasicElements(GeometricShape::createCustomColorBuffer
                              (customColor, basicPositionsCube.size()), sides),
         basicUVCoordsCube,
         modelTransform,
-        normalsTransform) {
+        normalsTransform)*/
 }
 
 
-Cube::Cube(const std::vector <glm::vec3>& customColors,
-           const std::array <bool, 6>& sides,
+Cube::Cube(std::vector <glm::vec3>&& customColors,
            const glm::mat4& modelTransform,
-           const glm::mat4& normalsTransform):
-    GeometricShape(
+           const glm::mat4& normalsTransform,
+           const std::array <bool, 6>& sides
+           ):
+    GeometricShape(modelTransform, normalsTransform, std::move(customColors)),
+    _sides(sides) {
+    /*GeometricShape(
         getBasicPosCube(sides),
         getBasicNormalsCube(sides),
         getBasicElements(customColors, sides),
         basicUVCoordsCube,
         modelTransform,
-        normalsTransform) {
+        normalsTransform)*/
 }
 
-
-Cube::Cube(const GeometricShape& cube,
+/*Cube::Cube(const GeometricShape& cube,
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform):
-    GeometricShape(cube, modelTransform, normalsTransform) {
-}
+           iam
 
-const std::vector <glm::vec3> Cube::getBasicPosCube
-    (const std::array <bool, 6>& sides) {
+    GeometricShape(cube, modelTransform, normalsTransform) {
+   }*/
+
+std::vector <glm::vec3> Cube::getBasicPosCube (const std::array <bool, 6>& sides) {
     return getBasicElements(basicPositionsCube, sides);
 }
 
-const std::vector <glm::vec3> Cube::getBasicNormalsCube
-    (const std::array <bool, 6>& sides) {
+std::vector <glm::vec3> Cube::getBasicNormalsCube (const std::array <bool, 6>& sides) {
     return getBasicElements(basicNormalsCube, sides);
 }
 
-const std::vector <glm::vec3> Cube::getBasicColorsCube
-    (const std::array <bool, 6>& sides) {
+std::vector <glm::vec3> Cube::getBasicColorsCube (const std::array <bool, 6>& sides) {
     return getBasicElements(basicColorsCube, sides);
 }
 
-const std::vector <glm::vec3> Cube::getBasicElements
-    (const std::vector <glm::vec3>& basicElements,
+std::vector <glm::vec2> Cube::getBasicUVCoordsCube (const std::array <bool, 6>& sides) {
+    return getBasicElements(basicUVCoordsCube, sides);
+}
+
+template<typename T> std::vector <T> Cube::getBasicElements
+    (const std::vector <T>& basicElements,
     const std::array <bool, 6>& sides) {
-    constexpr size_t vec3PerFace = 6;
+    constexpr size_t vecsPerFace = 6;
     constexpr size_t nbFaces = 6;
     bool isValid;
-    if (basicElements.size() != vec3PerFace * nbFaces) {
+    if (basicElements.size() != vecsPerFace * nbFaces) {
         std::cerr << "Error: your buffer containing cube information " <<
             "not the good size (yours : " << basicElements.size() <<
-            " vec3, required : " << vec3PerFace * nbFaces << std::endl <<
+            " vecs, required : " << vecsPerFace * nbFaces << std::endl <<
             "returns vector of 0.f ..." << std::endl;
         isValid = false;
     } else {
         isValid = true;
     }
-    std::vector <glm::vec3> elements {};
+    std::vector <T> elements {};
     for (unsigned int i = 0; i < sides.size(); ++i) {
         if (sides.at(i) && isValid) {
             elements.insert(elements.end(),
-                            basicElements.begin() + vec3PerFace * i,
-                            basicElements.begin() + vec3PerFace * (i + 1));
+                            basicElements.begin() + vecsPerFace * i,
+                            basicElements.begin() + vecsPerFace * (i + 1));
         } else if (sides.at(i) && !isValid) {
-            for (unsigned int i = 0; i < vec3PerFace; ++i) {
-                elements.push_back(glm::vec3(0.f, 0.f, 0.f));
+            for (unsigned int i = 0; i < vecsPerFace; ++i) {
+                elements.push_back(T(0.f));
             }
         }
     }
     return elements;
+}
+
+std::vector <glm::vec3> Cube::genPositions() const {
+    return getBasicPosCube(_sides);
+}
+
+std::vector <glm::vec3> Cube::genNormals() const {
+    return getBasicNormalsCube(_sides);
+}
+
+std::vector <glm::vec3> Cube::genColors (const std::vector <glm::vec3>& colors) const {
+    if (colors.size() == 2) {
+        return getBasicElements(colors, _sides);
+    }
+    if (colors.size() == 1) {
+        return getBasicElements(
+            GeometricShape::createCustomColorBuffer(colors.at(0), basicPositionsCube.size()), _sides
+            );
+    }
+    return getBasicColorsCube(_sides);
+}
+
+std::vector <glm::vec2> Cube::genUvCoords() const {
+    return getBasicUVCoordsCube(_sides);
 }
 
 // order : 1 2 6 5 4 3

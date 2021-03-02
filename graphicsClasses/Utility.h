@@ -46,13 +46,14 @@ float xScreenToPortrait(float x);
 float getWindowRatio();
 
 GLsizei getWidthFromHeight(unsigned int resolutionY);
+template<typename T> void concatVector (std::vector <T>& current, const std::vector <T>& other) {
+    current.insert(current.end(), other.begin(), other.end());
+}
 
 extern const glm::mat3 XYZToRGB;
 extern const glm::mat3 RGBToXYZ;
 extern unsigned int windowResolutionX;
 extern unsigned int windowResolutionY;
-
-
 
 }
 

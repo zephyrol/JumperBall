@@ -30,7 +30,7 @@ void render() const override;
 void update(float offset) override;
 
 private:
-const Quad _boxQuad;
+// const Quad _boxQuad; // TODO fix it boxquad is not possible
 glm::mat4 _transform;
 
 static const std::string vsshaderBox;

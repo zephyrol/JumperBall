@@ -13,21 +13,26 @@
 class GeometricShape;
 using GeometricShape_sptr = std::shared_ptr <GeometricShape>;
 using CstGeometricShape_sptr = std::shared_ptr <const GeometricShape>;
-using vecCstGeometricShape_sptr = std::vector <GeometricShape_sptr>;
+using vecCstGeometricShape_sptr = std::vector <CstGeometricShape_sptr>;
 using vecGeometricShape_sptr = std::vector <GeometricShape_sptr>;
 
 class GeometricShape {
 public:
 
+struct ShapeVertexAttributes {
+    std::vector <glm::vec3> positions = {};
+    std::vector <glm::vec3> normals = {};
+    std::vector <glm::vec3> colors = {};
+    std::vector <glm::vec2> uvCoords {};
+    std::vector <GLushort> indices = {};
+};
+
 // --CONSTRUCTORS & DESTRUCTORS--//
 GeometricShape(
-    const std::vector <glm::vec3>& positions,
-    const std::vector <glm::vec3>& normals,
-    const std::vector <glm::vec3>& colors,
-    const std::vector <glm::vec2>& uvCoords,
-    const glm::mat4& modelTransform = glm::mat4(1.f),
-    const glm::mat4& normalsTransform = glm::mat4(1.f),
-    const std::vector <GLushort>& indices = {});
+    const glm::mat4& modelTransform,
+    const glm::mat4& normalsTransform,
+    std::vector <glm::vec3>&& customColors
+    );
 
 // It's useless to have a copy of a shape with exactly the same transform
 // and vertices, every attributes are const...
@@ -36,44 +41,39 @@ GeometricShape& operator= (const GeometricShape& geometricShape) = delete;
 
 GeometricShape(GeometricShape&& geometricShape) = default;
 GeometricShape& operator= (GeometricShape&& geometricShape) = default;
-
-
-// Use this constructor to make a copy with a different transform
-GeometricShape(const GeometricShape& geometricShape,
-               const glm::mat4& modelTransform,
-               const glm::mat4& normalsTransform);
-
 virtual ~GeometricShape() = default;
 
-const std::shared_ptr <const std::vector <glm::vec3> >& positions() const;
-const std::shared_ptr <const std::vector <glm::vec3> >& normals() const;
-const std::shared_ptr <const std::vector <glm::vec3> >& colors() const;
-const std::shared_ptr <const std::vector <glm::vec2> >& uvCoords() const;
-const std::shared_ptr <const std::vector <GLushort> >& indices() const;
+ShapeVertexAttributes genVertexAttributes() const;
+virtual size_t numberOfVertices() const;
 
-size_t numberOfVertices() const;
 virtual size_t levelOfDetail() const;
 
-// --------STATIC METHODS-------//
+static ShapeVertexAttributes concatAttributes(const ShapeVertexAttributes& current,
+                                              const ShapeVertexAttributes& other);
+
+
+protected:
+
 static std::vector <glm::vec3> createCustomColorBuffer(
     const glm::vec3& customColor,
     size_t size);
 
 private:
 
-// --------ATTRIBUTES-----------//
-const std::shared_ptr <const std::vector <glm::vec3> > _positions;
-const std::shared_ptr <const std::vector <glm::vec3> > _normals;
-const std::shared_ptr <const std::vector <glm::vec3> > _colors;
-const std::shared_ptr <const std::vector <glm::vec2> > _uvCoords;
-const size_t _numberOfVertices;
-const std::shared_ptr <const std::vector <GLushort> > _indices;
+static void concatIndices(
+    std::vector <GLushort>& currentIndices,
+    const std::vector <GLushort>& otherIndices,
+    size_t offset
+    );
 
-std::shared_ptr <const std::vector <glm::vec3> > computePositions(
-    const std::vector <glm::vec3>& positions, const glm::mat4& modelTransform) const;
-std::shared_ptr <const std::vector <glm::vec3> > computeNormals(
-    const std::vector <glm::vec3>& normals, const glm::mat4& normalsTransform) const;
-std::shared_ptr <const std::vector <GLushort> > genIndices() const;
+const glm::mat4 _modelTransform;
+const glm::mat4 _normalsTransform;
+const std::vector <glm::vec3> _customColors;
+virtual std::vector <GLushort> genIndices() const;
+virtual std::vector <glm::vec3> genPositions() const = 0;
+virtual std::vector <glm::vec3> genNormals() const = 0;
+virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const = 0;
+virtual std::vector <glm::vec2> genUvCoords() const = 0;
 
 };
 
