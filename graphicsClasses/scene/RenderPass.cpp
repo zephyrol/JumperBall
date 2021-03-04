@@ -7,7 +7,7 @@
 
 #include "RenderPass.h"
 
-RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr& meshes):
+RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecMesh_sptr& meshes):
     _shaderProgram(shaderProgram),
     _vertexArrayObject(genVertexArrayObject()),
     _meshes(meshes),

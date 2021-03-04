@@ -16,12 +16,12 @@
 class Mesh;
 using Mesh_sptr = std::shared_ptr <Mesh>;
 using CstMesh_sptr = std::shared_ptr <const Mesh>;
-using vecCstMesh_sptr = std::vector <Mesh_sptr>;
+using vecCstMesh_sptr = std::vector <CstMesh_sptr>;
 using vecMesh_sptr = std::vector <Mesh_sptr>;
 
 class Mesh {
 public:
-Mesh(std::unique_ptr <State>&& state, const vecCstGeometricShape_sptr& shapes);
+Mesh(std::unique_ptr <State>&& state, vecCstGeometricShape_sptr&& shapes);
 
 struct StateVertexAttributes {
     std::vector <std::vector <GLubyte> > dynamicUbytes;

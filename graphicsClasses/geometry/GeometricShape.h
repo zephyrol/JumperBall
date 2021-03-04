@@ -27,7 +27,6 @@ struct ShapeVertexAttributes {
     std::vector <GLushort> indices = {};
 };
 
-// --CONSTRUCTORS & DESTRUCTORS--//
 GeometricShape(
     const glm::mat4& modelTransform,
     const glm::mat4& normalsTransform,

@@ -27,13 +27,13 @@ const bool& BlockState::isFixed() const {
     return _isFixed;
 }
 
-std::vector <float> BlockState::getDynamicFloats() const {
+std::map <std::string, float> BlockState::getDynamicFloats() const {
     const float scale = _localTransform.at(4);
-    return { scale };
+    return {{ "scale", scale }};
 }
 
-std::vector <JBTypes::vec3f> BlockState::getDynamicVec3fs() const {
+std::map <std::string, JBTypes::vec3f> BlockState::getDynamicVec3fs() const {
     const JBTypes::vec3f translation =
     { _localTransform.at(0), _localTransform.at(1), _localTransform.at(2) };
-    return { translation };
+    return {{ "translation", translation }};
 }

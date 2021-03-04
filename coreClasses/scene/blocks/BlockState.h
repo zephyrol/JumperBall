@@ -16,8 +16,8 @@ virtual void update() override;
 
 const std::array <float, 6>& localTransform() const;
 const Block& block() const;
-std::vector <float> getDynamicFloats() const override;
-std::vector <JBTypes::vec3f> getDynamicVec3fs() const override;
+std::map <std::string, float> getDynamicFloats() const override;
+std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const override;
 
 const bool& isFixed() const;
 

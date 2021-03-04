@@ -20,14 +20,13 @@ class RenderPass {
 
 public:
 
-RenderPass(const ShaderProgram& shaderProgram, const vecCstMesh_sptr& meshes);
+RenderPass(const ShaderProgram& shaderProgram, const vecMesh_sptr& meshes);
 RenderPass(const RenderPass& renderPass) = delete;
 RenderPass& operator= (const RenderPass& renderPass) = delete;
 RenderPass(RenderPass&& renderPass) = default;
 RenderPass& operator= (RenderPass&& renderPass) = default;
 
 template<typename T> using UniformVariable = std::map <std::string, T>;
-
 
 void render() const;
 
@@ -70,7 +69,7 @@ template<typename T> void upsertUniforms(const std::map <std::string, T>& unifor
 
 const ShaderProgram& _shaderProgram;
 const GLuint _vertexArrayObject;
-const vecCstMesh_sptr _meshes;
+const vecMesh_sptr _meshes;
 const size_t _numberOfVertices;
 const GeometricShape::ShapeVertexAttributes _shapeVertexAttributes;
 Mesh::StateVertexAttributes _stateVertexAttributes;

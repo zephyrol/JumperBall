@@ -6,9 +6,9 @@
  */
 #include "Mesh.h"
 
-Mesh::Mesh(std::unique_ptr <State>&& state, const vecCstGeometricShape_sptr& shapes):
+Mesh::Mesh(std::unique_ptr <State>&& state, vecCstGeometricShape_sptr&& shapes):
     _state(std::move(state)),
-    _shapes(shapes),
+    _shapes(std::move(shapes)),
     _numberOfVertices(computeNumberOfVertices()) {
 }
 
@@ -19,7 +19,6 @@ void Mesh::update() {
 size_t Mesh::numberOfVertices() const {
     return _numberOfVertices;
 }
-
 
 template<typename T> void Mesh::duplicateStateVertexAttribute (std::vector <std::vector <T> >& attributes,
                                                                const std::vector <T>& values) const {
@@ -87,9 +86,9 @@ template<> Mesh::StateVertexAttributes Mesh::genAttributes <Mesh::StateVertexAtt
     std::vector <glm::vec3> glmVec3s {};
     std::vector <glm::vec2> glmVec2s {};
     std::vector <GLfloat> glFloats {};
-    convertAttributesToOpenGLFormat(_state->getDynamicFloats(), glFloats);
-    convertAttributesToOpenGLFormat(_state->getDynamicVec2fs(), glmVec2s);
-    convertAttributesToOpenGLFormat(_state->getDynamicVec3fs(), glmVec3s);
+    convertAttributesToOpenGLFormat(_state->getStaticFloatValues(), glFloats);
+    convertAttributesToOpenGLFormat(_state->getStaticVec2fValues(), glmVec2s);
+    convertAttributesToOpenGLFormat(_state->getStaticVec3fValues(), glmVec3s);
     duplicateStateVertexAttribute(StateVertexAttributes.dynamicFloats, glFloats);
     duplicateStateVertexAttribute(StateVertexAttributes.dynamicsVec2s, glmVec2s);
     duplicateStateVertexAttribute(StateVertexAttributes.dynamicsVec3s, glmVec3s);
@@ -101,9 +100,9 @@ Mesh::Uniforms Mesh::genUniformsValues() const {
     std::map <std::string, glm::vec3> glmVec3s {};
     std::map <std::string, glm::vec2> glmVec2s {};
     std::map <std::string, GLfloat> glFloats {};
-    convertUniformsToOpenGLFormat(_state->getStaticFloatValues(), glFloats);
-    convertUniformsToOpenGLFormat(_state->getStaticVec2fValues(), glmVec2s);
-    convertUniformsToOpenGLFormat(_state->getStaticVec3fValues(), glmVec3s);
+    convertUniformsToOpenGLFormat(_state->getDynamicFloats(), glFloats);
+    convertUniformsToOpenGLFormat(_state->getDynamicVec2fs(), glmVec2s);
+    convertUniformsToOpenGLFormat(_state->getDynamicVec3fs(), glmVec3s);
     uniforms.uniformFloats = glFloats;
     uniforms.uniformVec2s = glmVec2s;
     uniforms.uniformVec3s = glmVec3s;

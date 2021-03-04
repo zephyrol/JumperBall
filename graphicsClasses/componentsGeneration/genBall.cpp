@@ -8,13 +8,15 @@
 #include "scene/mesh/MeshGenerator.h"
 #include "animations/BallAnimation.h"
 
-/*vecMeshComponent_sptr MeshGenerator::genComponents (const BallState& ball) {
+vecMesh_sptr MeshGenerator::genMeshes (const Ball& ball) {
 
-    const glm::mat4 scaleMatrix = glm::scale(glm::vec3(ball.getRadius()));
-    const Sphere sphere;
+    // const glm::mat4 scaleMatrix = glm::scale(glm::vec3(ball.getRadius()));
 
-    MeshComponent_sptr component = std::make_shared <MeshComponent>
-                                       (std::make_shared <Sphere>(sphere, scaleMatrix),
-                                       std::make_shared <BallAnimation>(ball));
-    return vecMeshComponent_sptr { std::move(component) };
-   }*/
+    const CstGeometricShape_sptr sphere = std::make_shared <const Sphere>();
+    vecCstGeometricShape_sptr geometricShapes { sphere };
+    Mesh_sptr sphereMesh = std::make_shared <Mesh>(
+        std::unique_ptr <State>(new BallState(ball)),
+        std::move(geometricShapes)
+        );
+    return { sphereMesh };
+}

@@ -38,8 +38,7 @@ GLuint getQuadVAO() const;
 const Quad& getDisplayQuad() const;
 
 void render(size_t index) const;
-std::vector <size_t> getIndicesWithID(GLuint characterId)
-const;
+std::vector <size_t> getIndicesWithID(GLuint characterId) const;
 const glm::vec3& getTextColor() const;
 
 static bool initFreeTypeAndFont();
