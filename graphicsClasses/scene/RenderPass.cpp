@@ -11,11 +11,8 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecMesh_sptr& m
     _shaderProgram(shaderProgram),
     _vertexArrayObject(genVertexArrayObject()),
     _meshes(meshes),
-    _numberOfVertices(computeNumberOfVertices()),
-    _shapeVertexAttributes(createShapeVertexAttributes()),
-    _stateVertexAttributes(createStateVertexAttributes()),
-    _shapeVertexBufferObjects(createVertexStaticBufferObjects()),
-    _stateVertexBufferObjects(createVertexDynamicBufferObjects()),
+    _meshesVerticesInfo(createMeshesVerticesInfo()),
+    _bufferObjects(createBufferObjects()),
     // Use smartpointer, when the uniform is changed outside this class, every renderpass will be updated
     _uniformMatrix4{},
     _uniformVec4{},
@@ -36,6 +33,14 @@ GLuint RenderPass::genBufferObject() const {
     GLuint bo;
     glGenBuffers(1, &bo);
     return bo;
+}
+
+Mesh::MeshVerticesInfo RenderPass::createMeshesVerticesInfo() const {
+    Mesh::MeshVerticesInfo meshesVerticesInfo;
+    for (const CstMesh_sptr& mesh : _meshes) {
+        Mesh::concatMeshVerticesInfo(meshesVerticesInfo, mesh->genMeshVerticesInfo());
+    }
+    return meshesVerticesInfo;
 }
 
 void RenderPass::update() {
@@ -96,35 +101,10 @@ void RenderPass::render() const {
     _shaderProgram.use();
     glBindVertexArray(_vertexArrayObject);
     bindUniforms();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _shapeVertexBufferObjects.at(ShapeVertexAttributeType::Indices));
-    glDrawElements(GL_TRIANGLES, static_cast <GLsizei>(_shapeVertexAttributes.indices.size()),
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _bufferObjects.elementBufferObject);
+
+    glDrawElements(GL_TRIANGLES, static_cast <GLsizei>(_meshesVerticesInfo.shapeVerticesInfo.indices.size()),
                    GL_UNSIGNED_SHORT, nullptr);
-}
-
-template<typename T> void RenderPass::createAttributes (T& attributes) const {
-    for (const CstMesh_sptr& mesh : _meshes) {
-        attributes = Mesh::concatAttributes(attributes, mesh->genAttributes <T>());
-    }
-}
-
-GeometricShape::ShapeVertexAttributes RenderPass::createShapeVertexAttributes() const {
-    GeometricShape::ShapeVertexAttributes shapeVertexAttributes;
-    createAttributes(shapeVertexAttributes);
-    return shapeVertexAttributes;
-}
-
-Mesh::StateVertexAttributes RenderPass::createStateVertexAttributes() const {
-    Mesh::StateVertexAttributes stateVertexAttributes;
-    createAttributes(stateVertexAttributes);
-    return stateVertexAttributes;
-}
-
-size_t RenderPass::computeNumberOfVertices() const {
-    size_t numberOfVertices = 0;
-    for (const auto& mesh : _meshes) {
-        numberOfVertices += mesh->numberOfVertices();
-    }
-    return numberOfVertices;
 }
 
 template<typename T> void RenderPass::bindUniforms (UniformVariable <T> uniforms) const {
@@ -145,93 +125,48 @@ template<typename T> std::vector <GLuint> RenderPass::createStateVertexAttribute
     return vertexBufferObjects;
 }
 
-std::vector <GLuint> RenderPass::createVertexDynamicBufferObjects() const {
+template<typename T> void RenderPass::fillVBOsList (
+    std::vector <GLuint>& vboList,
+    const std::vector <T>& attributeData,
+    size_t attributesOffset
+    ) const {
+    const std::shared_ptr <GLuint> vertexBufferObject = initializeVBO(attributeData);
+    if (vertexBufferObject) {
+        const size_t attributeNumber = vboList.size() + attributesOffset;
+        const size_t numberOfGLfloats = sizeof(T) / sizeof(GLfloat);
 
-    std::vector <GLuint> vertexBufferObjects;
-    const std::vector <GLuint> vbosFloatsAttributes = createStateVertexAttributesBufferObject(
-        _stateVertexAttributes.dynamicFloats);
-    const std::vector <GLuint> vbosVec2sAttributes = createStateVertexAttributesBufferObject(
-        _stateVertexAttributes.dynamicsVec2s);
-    const std::vector <GLuint> vbosVec3sAttributes = createStateVertexAttributesBufferObject(
-        _stateVertexAttributes.dynamicsVec3s);
-    const std::vector <GLuint> vbosUbytesAttributes = createStateVertexAttributesBufferObject(
-        _stateVertexAttributes.dynamicUbytes);
-    vertexBufferObjects.insert(vertexBufferObjects.begin(),
-                               vbosFloatsAttributes.begin(), vbosFloatsAttributes.end());
-    vertexBufferObjects.insert(vertexBufferObjects.begin(),
-                               vbosVec2sAttributes.begin(), vbosVec2sAttributes.end());
-    vertexBufferObjects.insert(vertexBufferObjects.begin(),
-                               vbosVec3sAttributes.begin(), vbosVec3sAttributes.end());
-    vertexBufferObjects.insert(vertexBufferObjects.begin(),
-                               vbosUbytesAttributes.begin(), vbosUbytesAttributes.end());
-    size_t offset = _shapeVertexBufferObjects.size() - 1; // -1 because indices are not included as attribute
-    for (size_t i = 0; i < vbosFloatsAttributes.size(); ++i) {
-        const size_t offsetPlusIndex = offset + i;
-        glEnableVertexAttribArray(offsetPlusIndex);
-        glBindBuffer(GL_ARRAY_BUFFER, vbosFloatsAttributes.at(i));
-        glVertexAttribPointer(offsetPlusIndex, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+        glEnableVertexAttribArray(attributeNumber);
+        glBindBuffer(GL_ARRAY_BUFFER, *vertexBufferObject);
+        glVertexAttribPointer(attributeNumber, numberOfGLfloats, GL_FLOAT, GL_FALSE, 0, nullptr);
+        vboList.push_back(*vertexBufferObject);
     }
-
-    offset += vbosFloatsAttributes.size();
-    for (size_t i = 0; i < vbosVec2sAttributes.size(); ++i) {
-        const size_t offsetPlusIndex = offset + i;
-        glEnableVertexAttribArray(offsetPlusIndex);
-        glBindBuffer(GL_ARRAY_BUFFER, vbosVec2sAttributes.at(i));
-        glVertexAttribPointer(offsetPlusIndex, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-    }
-
-    offset += vbosVec2sAttributes.size();
-    for (size_t i = 0; i < vbosVec3sAttributes.size(); ++i) {
-        const size_t offsetPlusIndex = offset + i;
-        glEnableVertexAttribArray(offsetPlusIndex);
-        glBindBuffer(GL_ARRAY_BUFFER, vbosVec3sAttributes.at(i));
-        glVertexAttribPointer(offsetPlusIndex, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    }
-
-
-    return vertexBufferObjects;
 }
 
-std::map <RenderPass::ShapeVertexAttributeType, GLuint> RenderPass::createVertexStaticBufferObjects() const {
+RenderPass::BufferObjects RenderPass::createBufferObjects() const {
+    RenderPass::BufferObjects bufferObjects;
 
-    std::map <RenderPass::ShapeVertexAttributeType, GLuint> vertexBufferObjects;
-    const auto fillVertexBufferObject =
-        [&vertexBufferObjects] (const RenderPass::ShapeVertexAttributeType& type,
-                                const std::shared_ptr <GLuint>& vertexBufferObject) {
-            if (vertexBufferObject) {
-                vertexBufferObjects[type] = *vertexBufferObject;
-            }
-        };
-    fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::Positions,
-                           initializeVBO(_shapeVertexAttributes.positions));
-    fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::Normals,
-                           initializeVBO(_shapeVertexAttributes.normals));
-    fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::Colors,
-                           initializeVBO(_shapeVertexAttributes.colors));
-    fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::UvCoords,
-                           initializeVBO(_shapeVertexAttributes.uvCoords));
-    fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::Indices,
-                           initializeEBO(_shapeVertexAttributes.indices));
+    std::vector <GLuint>& shapeVBOs = bufferObjects.shapeVertexBufferObjects;
+    const auto& shapeVerticesInfo = _meshesVerticesInfo.shapeVerticesInfo;
+    const auto& shapeVertexAttributes = shapeVerticesInfo.shapeVertexAttributes;
+    fillVBOsList(shapeVBOs, shapeVertexAttributes.positions);
+    fillVBOsList(shapeVBOs, shapeVertexAttributes.colors);
+    fillVBOsList(shapeVBOs, shapeVertexAttributes.normals);
+    fillVBOsList(shapeVBOs, shapeVertexAttributes.uvCoords);
 
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjects.at(RenderPass::ShapeVertexAttributeType::Positions));
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    const size_t offsetAttributes = shapeVBOs.size();
+    std::vector <GLuint>& stateVBOs = bufferObjects.stateVertexBufferObjects;
+    const auto& stateVertexAttributes = _meshesVerticesInfo.stateVertexAttributes;
+    fillVBOsList(stateVBOs, stateVertexAttributes.dynamicFloats, offsetAttributes);
+    fillVBOsList(stateVBOs, stateVertexAttributes.dynamicsVec2s, offsetAttributes);
+    fillVBOsList(stateVBOs, stateVertexAttributes.dynamicsVec3s, offsetAttributes);
 
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjects.at(RenderPass::ShapeVertexAttributeType::Colors));
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    const auto ebo = initializeEBO(shapeVerticesInfo.indices);
+    bufferObjects.elementBufferObject = ebo
+                                        ? *ebo
+                                        : 0;
 
-    glEnableVertexAttribArray(2);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjects.at(RenderPass::ShapeVertexAttributeType::Normals));
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-    glEnableVertexAttribArray(3);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjects.at(RenderPass::ShapeVertexAttributeType::UvCoords));
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-    return vertexBufferObjects;
+    return bufferObjects;
 }
-
 
 template<typename T> std::shared_ptr <GLuint> RenderPass::initializeBO (
     const std::vector <T>& attributeData,
@@ -241,14 +176,10 @@ template<typename T> std::shared_ptr <GLuint> RenderPass::initializeBO (
     if (!attributeData.empty()) {
         bo = std::make_shared <GLuint>(genBufferObject());
         glBindBuffer(target, *bo);
-        glBufferData(target,
-                     attributeData.size() * sizeof(T),
-                     attributeData.data(),
-                     GL_STATIC_DRAW);
+        glBufferData(target, attributeData.size() * sizeof(T), attributeData.data(), GL_STATIC_DRAW);
     }
     return bo;
 }
-
 
 template<typename T> std::shared_ptr <GLuint> RenderPass::initializeVBO (
     const std::vector <T>& attributeData

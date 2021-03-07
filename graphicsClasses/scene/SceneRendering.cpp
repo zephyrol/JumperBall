@@ -117,7 +117,7 @@ void SceneRendering::phongEffect (GLuint depthTexture) const {
     bindCamera(_spStar);
 
     _renderPassBlocks.render();
-    _renderPassObjects.render();
+    // _renderPassObjects.render();
     _renderPassStar.render();
 
     // _meshStar.render(_spStar);

@@ -30,6 +30,11 @@ struct StateVertexAttributes {
     std::vector <std::vector <glm::vec2> > dynamicsVec2s;
 };
 
+struct MeshVerticesInfo {
+    GeometricShape::ShapeVerticesInfo shapeVerticesInfo;
+    Mesh::StateVertexAttributes stateVertexAttributes;
+};
+
 struct Uniforms {
     std::map <std::string, GLuint> uniformUints;
     std::map <std::string, GLfloat> uniformFloats;
@@ -40,17 +45,10 @@ struct Uniforms {
 void update();
 
 size_t numberOfVertices() const;
-template<typename Attributes> Attributes genAttributes() const;
-// ShapeVertexAttributes genShapeVertexAttributes() const;
-// StateVertexAttributes genStateVertexAttributes() const;
 Uniforms genUniformsValues() const;
 
-static StateVertexAttributes concatAttributes(const Mesh::StateVertexAttributes& current,
-                                              const Mesh::StateVertexAttributes& other);
-static GeometricShape::ShapeVertexAttributes concatAttributes(
-    const GeometricShape::ShapeVertexAttributes& current,
-    const GeometricShape::ShapeVertexAttributes& other
-    );
+MeshVerticesInfo genMeshVerticesInfo() const;
+static void concatMeshVerticesInfo(MeshVerticesInfo& current, const MeshVerticesInfo& other);
 
 private:
 

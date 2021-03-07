@@ -32,10 +32,10 @@ virtual std::vector <GLushort> genIndices() const override;
 
 private:
 
-static const GeometricShape::ShapeVertexAttributes basicInfoSphere;
+static const GeometricShape::ShapeVerticesInfo basicInfoSphere;
 
 // --------STATIC METHODS-------//
-static GeometricShape::ShapeVertexAttributes computeBasicInfoSphere(
+static GeometricShape::ShapeVerticesInfo computeBasicInfoSphere(
     bool useCustomColors = false,
     const glm::vec3& firstColor = glm::vec3(0.f),
     const glm::vec3& secondColor = glm::vec3(0.f)

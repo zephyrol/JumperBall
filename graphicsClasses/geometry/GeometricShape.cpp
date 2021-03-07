@@ -64,8 +64,7 @@ GeometricShape::ShapeVertexAttributes GeometricShape::genVertexAttributes() cons
 
             const std::vector <glm::vec3> positions = genPositions();
             for (const glm::vec3& position : positions) {
-                computedPositions.push_back(_modelTransform *
-                                            glm::vec4(position, 1.f));
+                computedPositions.push_back(_modelTransform * glm::vec4(position, 1.f));
             }
             return computedPositions;
         };
@@ -86,7 +85,6 @@ GeometricShape::ShapeVertexAttributes GeometricShape::genVertexAttributes() cons
     shapeVertexAttributes.colors = genColors(_customColors);
     shapeVertexAttributes.normals = computeNormals();
     shapeVertexAttributes.uvCoords = genUvCoords();
-    shapeVertexAttributes.indices = genIndices();
     return shapeVertexAttributes;
 }
 
@@ -96,6 +94,21 @@ size_t GeometricShape::numberOfVertices() const {
 
 size_t GeometricShape::levelOfDetail() const {
     return 0;
+}
+
+GeometricShape::ShapeVerticesInfo GeometricShape::genShapeVerticesInfo() const {
+    GeometricShape::ShapeVerticesInfo shapeVerticesInfo;
+    shapeVerticesInfo.shapeVertexAttributes = genVertexAttributes();
+    shapeVerticesInfo.indices = genIndices();
+    return shapeVerticesInfo;
+}
+
+void GeometricShape::concatShapeVerticesInfo (
+    GeometricShape::ShapeVerticesInfo& current,
+    const GeometricShape::ShapeVerticesInfo& other) {
+    GeometricShape::ShapeVertexAttributes& currentShapeVertexAttributes = current.shapeVertexAttributes;
+    concatIndices(current.indices, other.indices, currentShapeVertexAttributes.positions.size());
+    concatAttributes(currentShapeVertexAttributes, other.shapeVertexAttributes);
 }
 
 std::vector <glm::vec3> GeometricShape::createCustomColorBuffer (
@@ -118,25 +131,22 @@ std::vector <GLushort> GeometricShape::genIndices() const {
 }
 
 void GeometricShape::concatIndices (
-    std::vector <GLushort>& currentIndices,
-    const std::vector <GLushort>& otherIndices,
+    IndicesBuffer& currentIndices,
+    const IndicesBuffer& otherIndices,
     size_t offset
     ) {
-    std::vector <GLushort> newIndices = otherIndices;
+    IndicesBuffer newIndices = otherIndices;
     for (GLushort& newIndice : newIndices) {
         newIndice += static_cast <GLushort>(offset);
     }
     Utility::concatVector(currentIndices, newIndices);
 }
 
-GeometricShape::ShapeVertexAttributes GeometricShape::concatAttributes (
-    const GeometricShape::ShapeVertexAttributes& current,
+void GeometricShape::concatAttributes (
+    GeometricShape::ShapeVertexAttributes& current,
     const GeometricShape::ShapeVertexAttributes& other) {
-    GeometricShape::ShapeVertexAttributes shapeVertexAttributes = current;
-    concatIndices(shapeVertexAttributes.indices, other.indices, shapeVertexAttributes.positions.size());
-    Utility::concatVector(shapeVertexAttributes.positions, other.positions);
-    Utility::concatVector(shapeVertexAttributes.normals, other.normals);
-    Utility::concatVector(shapeVertexAttributes.colors, other.colors);
-    Utility::concatVector(shapeVertexAttributes.uvCoords, other.uvCoords);
-    return shapeVertexAttributes;
+    Utility::concatVector(current.positions, other.positions);
+    Utility::concatVector(current.normals, other.normals);
+    Utility::concatVector(current.colors, other.colors);
+    Utility::concatVector(current.uvCoords, other.uvCoords);
 }

@@ -24,7 +24,13 @@ struct ShapeVertexAttributes {
     std::vector <glm::vec3> normals = {};
     std::vector <glm::vec3> colors = {};
     std::vector <glm::vec2> uvCoords {};
-    std::vector <GLushort> indices = {};
+};
+
+using IndicesBuffer = std::vector <GLushort>;
+
+struct ShapeVerticesInfo {
+    ShapeVertexAttributes shapeVertexAttributes;
+    IndicesBuffer indices = {};
 };
 
 GeometricShape(
@@ -42,14 +48,15 @@ GeometricShape(GeometricShape&& geometricShape) = default;
 GeometricShape& operator= (GeometricShape&& geometricShape) = default;
 virtual ~GeometricShape() = default;
 
-ShapeVertexAttributes genVertexAttributes() const;
 virtual size_t numberOfVertices() const;
 
 virtual size_t levelOfDetail() const;
 
-static ShapeVertexAttributes concatAttributes(const ShapeVertexAttributes& current,
-                                              const ShapeVertexAttributes& other);
-
+ShapeVerticesInfo genShapeVerticesInfo() const;
+static void concatShapeVerticesInfo(
+    ShapeVerticesInfo& current,
+    const ShapeVerticesInfo& other
+    );
 
 protected:
 
@@ -59,16 +66,20 @@ static std::vector <glm::vec3> createCustomColorBuffer(
 
 private:
 
+ShapeVertexAttributes genVertexAttributes() const;
+virtual std::vector <GLushort> genIndices() const;
+
+static void concatAttributes(ShapeVertexAttributes& current, const ShapeVertexAttributes& other);
 static void concatIndices(
-    std::vector <GLushort>& currentIndices,
-    const std::vector <GLushort>& otherIndices,
+    IndicesBuffer& currentIndices,
+    const IndicesBuffer& otherIndices,
     size_t offset
     );
+
 
 const glm::mat4 _modelTransform;
 const glm::mat4 _normalsTransform;
 const std::vector <glm::vec3> _customColors;
-virtual std::vector <GLushort> genIndices() const;
 virtual std::vector <glm::vec3> genPositions() const = 0;
 virtual std::vector <glm::vec3> genNormals() const = 0;
 virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const = 0;

@@ -45,54 +45,12 @@ template<typename RawType, typename OpenGLType> void Mesh::convertUniformsToOpen
     }
 }
 
-Mesh::StateVertexAttributes Mesh::concatAttributes (const Mesh::StateVertexAttributes& current,
-                                                    const Mesh::StateVertexAttributes& other) {
-    Mesh::StateVertexAttributes StateVertexAttributes = current;
-    Utility::concatVector(StateVertexAttributes.dynamicFloats, other.dynamicFloats);
-    Utility::concatVector(StateVertexAttributes.dynamicsVec2s, other.dynamicsVec2s);
-    Utility::concatVector(StateVertexAttributes.dynamicsVec3s, other.dynamicsVec3s);
-    Utility::concatVector(StateVertexAttributes.dynamicUbytes, other.dynamicUbytes);
-    return StateVertexAttributes;
-}
-
-GeometricShape::ShapeVertexAttributes Mesh::concatAttributes (
-    const GeometricShape::ShapeVertexAttributes& current,
-    const GeometricShape::ShapeVertexAttributes& other) {
-    return GeometricShape::concatAttributes(current, other);
-}
-
 size_t Mesh::computeNumberOfVertices() const {
     size_t numberOfVertices = 0;
     for (const auto& shape : _shapes) {
         numberOfVertices += shape->numberOfVertices();
     }
     return numberOfVertices;
-}
-
-template<> GeometricShape::ShapeVertexAttributes Mesh::genAttributes <GeometricShape::ShapeVertexAttributes>()
-const {
-    GeometricShape::ShapeVertexAttributes gatheredShapeVertexAttributes;
-    for (const CstGeometricShape_sptr& shape : _shapes) {
-        gatheredShapeVertexAttributes = GeometricShape::concatAttributes(
-            gatheredShapeVertexAttributes,
-            shape->genVertexAttributes()
-            );
-    }
-    return gatheredShapeVertexAttributes;
-}
-
-template<> Mesh::StateVertexAttributes Mesh::genAttributes <Mesh::StateVertexAttributes>() const {
-    Mesh::StateVertexAttributes StateVertexAttributes;
-    std::vector <glm::vec3> glmVec3s {};
-    std::vector <glm::vec2> glmVec2s {};
-    std::vector <GLfloat> glFloats {};
-    convertAttributesToOpenGLFormat(_state->getStaticFloatValues(), glFloats);
-    convertAttributesToOpenGLFormat(_state->getStaticVec2fValues(), glmVec2s);
-    convertAttributesToOpenGLFormat(_state->getStaticVec3fValues(), glmVec3s);
-    duplicateStateVertexAttribute(StateVertexAttributes.dynamicFloats, glFloats);
-    duplicateStateVertexAttribute(StateVertexAttributes.dynamicsVec2s, glmVec2s);
-    duplicateStateVertexAttribute(StateVertexAttributes.dynamicsVec3s, glmVec3s);
-    return StateVertexAttributes;
 }
 
 Mesh::Uniforms Mesh::genUniformsValues() const {
@@ -107,4 +65,42 @@ Mesh::Uniforms Mesh::genUniformsValues() const {
     uniforms.uniformVec2s = glmVec2s;
     uniforms.uniformVec3s = glmVec3s;
     return uniforms;
+}
+
+Mesh::MeshVerticesInfo Mesh::genMeshVerticesInfo() const {
+
+    GeometricShape::ShapeVerticesInfo gatheredShapeVerticesInfo;
+    for (const CstGeometricShape_sptr& shape : _shapes) {
+        GeometricShape::concatShapeVerticesInfo(gatheredShapeVerticesInfo, shape->genShapeVerticesInfo());
+    }
+
+    Mesh::StateVertexAttributes stateVertexAttributes;
+    std::vector <glm::vec3> glmVec3s {};
+    std::vector <glm::vec2> glmVec2s {};
+    std::vector <GLfloat> glFloats {};
+    convertAttributesToOpenGLFormat(_state->getStaticFloatValues(), glFloats);
+    convertAttributesToOpenGLFormat(_state->getStaticVec2fValues(), glmVec2s);
+    convertAttributesToOpenGLFormat(_state->getStaticVec3fValues(), glmVec3s);
+    duplicateStateVertexAttribute(stateVertexAttributes.dynamicFloats, glFloats);
+    duplicateStateVertexAttribute(stateVertexAttributes.dynamicsVec2s, glmVec2s);
+    duplicateStateVertexAttribute(stateVertexAttributes.dynamicsVec3s, glmVec3s);
+
+    Mesh::MeshVerticesInfo meshVerticesInfo;
+    meshVerticesInfo.shapeVerticesInfo = gatheredShapeVerticesInfo;
+    meshVerticesInfo.stateVertexAttributes = stateVertexAttributes;
+    return meshVerticesInfo;
+}
+
+void Mesh::concatMeshVerticesInfo (Mesh::MeshVerticesInfo& current,
+                                   const Mesh::MeshVerticesInfo& other) {
+    GeometricShape::concatShapeVerticesInfo(current.shapeVerticesInfo, other.shapeVerticesInfo);
+
+    Mesh::StateVertexAttributes& currentStateVAttri = current.stateVertexAttributes;
+    const Mesh::StateVertexAttributes& otherStateVAttri = other.stateVertexAttributes;
+
+    Utility::concatVector(currentStateVAttri.dynamicFloats, otherStateVAttri.dynamicFloats);
+    Utility::concatVector(currentStateVAttri.dynamicsVec2s, otherStateVAttri.dynamicsVec2s);
+    Utility::concatVector(currentStateVAttri.dynamicsVec3s, otherStateVAttri.dynamicsVec3s);
+    Utility::concatVector(currentStateVAttri.dynamicUbytes, otherStateVAttri.dynamicUbytes);
+
 }

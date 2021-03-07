@@ -74,13 +74,14 @@ Sphere::Sphere(const glm::vec3& customColor,
     GeometricShape(sphere, modelTransform, normalsTransform) {
    }*/
 
-GeometricShape::ShapeVertexAttributes Sphere::computeBasicInfoSphere (
+GeometricShape::ShapeVerticesInfo Sphere::computeBasicInfoSphere (
     bool useCustomColors,
     const glm::vec3& firstColor,
     const glm::vec3& secondColor
     ) {
 
-    GeometricShape::ShapeVertexAttributes infoSphere;
+    GeometricShape::ShapeVertexAttributes infoAttributesSphere;
+    GeometricShape::IndicesBuffer indices;
 
     constexpr unsigned int iParaCount = 40;
     constexpr unsigned int iMeriCount = 60;
@@ -101,20 +102,20 @@ GeometricShape::ShapeVertexAttributes Sphere::computeBasicInfoSphere (
         const float fRadius = r * static_cast <float>(cos(fAngle));
 
         for (unsigned int j = 0; j < iMeriCount; ++j) {
-            infoSphere.positions.push_back(glm::vec3(
-                                               fRadius * static_cast <float>(cos(a2 * j)),
-                                               fRadius * static_cast <float>(sin(a2 * j)),
-                                               z));
-            infoSphere.uvCoords.push_back(
+            infoAttributesSphere.positions.push_back(glm::vec3(
+                                                         fRadius * static_cast <float>(cos(a2 * j)),
+                                                         fRadius * static_cast <float>(sin(a2 * j)),
+                                                         z));
+            infoAttributesSphere.uvCoords.push_back(
                 glm::vec2(static_cast <float>(j) / iMeriCount,
                           static_cast <float>(iParaCount - i) / iParaCount));
             if (!useCustomColors) {
-                infoSphere.colors.push_back(
+                infoAttributesSphere.colors.push_back(
                     glm::vec3(static_cast <float>(i) / iParaCount,
                               (j < iMeriCount / 2) ? 1.f : 0.f,
                               0.5f));
             } else {
-                infoSphere.colors.push_back(
+                infoAttributesSphere.colors.push_back(
                     (j < iMeriCount / 2) ? firstColor : secondColor
                     );
             }
@@ -122,57 +123,59 @@ GeometricShape::ShapeVertexAttributes Sphere::computeBasicInfoSphere (
     }
     // compute normals ---------------------------------------------------------
     // on a 0 centered sphere : you just need to normalise the position!
-    infoSphere.normals.reserve(iVertexCount);
+    infoAttributesSphere.normals.reserve(iVertexCount);
 
     for (unsigned int i = 0; i < iVertexCount; ++i) {
-        infoSphere.normals.push_back(glm::normalize(
-                                         infoSphere.positions[i]));
+        infoAttributesSphere.normals.push_back(glm::normalize(
+                                                   infoAttributesSphere.positions[i]));
     }
 
     // for quads split in 2
 
     for (unsigned int i = 0; i < (iParaCount - 1); ++i) {
         for (unsigned int j = 0; j < (iMeriCount - 1); ++j) {
-            infoSphere.indices.push_back(iMeriCount * i + j);
-            infoSphere.indices.push_back(iMeriCount * i + (j + 1));
-            infoSphere.indices.push_back(iMeriCount * (i + 1) + (j + 1));
-            infoSphere.indices.push_back(iMeriCount * (i + 1) + (j + 1));
-            infoSphere.indices.push_back(iMeriCount * (i + 1) + j);
-            infoSphere.indices.push_back(iMeriCount * i + j);
+            indices.push_back(iMeriCount * i + j);
+            indices.push_back(iMeriCount * i + (j + 1));
+            indices.push_back(iMeriCount * (i + 1) + (j + 1));
+            indices.push_back(iMeriCount * (i + 1) + (j + 1));
+            indices.push_back(iMeriCount * (i + 1) + j);
+            indices.push_back(iMeriCount * i + j);
         }
     }
-
-    return infoSphere;
+    GeometricShape::ShapeVerticesInfo verticesInfo;
+    verticesInfo.shapeVertexAttributes = infoAttributesSphere;
+    verticesInfo.indices = indices;
+    return verticesInfo;
 }
 
 
 
 std::vector <glm::vec3> Sphere::genColors (const std::vector <glm::vec3>& colors) const {
     if (colors.size() == 2) {
-        return computeBasicInfoSphere(true, colors.at(0), colors.at(1)).colors;
+        return computeBasicInfoSphere(true, colors.at(0), colors.at(1)).shapeVertexAttributes.colors;
     }
     if (colors.size() == 1) {
         return GeometricShape::createCustomColorBuffer(colors.at(0), // customColor
-                                                       basicInfoSphere.colors.size());
+                                                       basicInfoSphere.shapeVertexAttributes.colors.size());
     }
-    return basicInfoSphere.colors;
+    return basicInfoSphere.shapeVertexAttributes.colors;
 }
 
 std::vector <glm::vec2> Sphere::genUvCoords() const {
-    return basicInfoSphere.uvCoords;
+    return basicInfoSphere.shapeVertexAttributes.uvCoords;
 }
 
 std::vector <GLushort> Sphere::genIndices() const {
-    return Sphere::basicInfoSphere.indices;
+    return basicInfoSphere.indices;
 }
 
 std::vector <glm::vec3> Sphere::genNormals() const {
-    return basicInfoSphere.normals;
+    return basicInfoSphere.shapeVertexAttributes.normals;
 }
 
 std::vector <glm::vec3> Sphere::genPositions() const {
-    return basicInfoSphere.positions;
+    return basicInfoSphere.shapeVertexAttributes.positions;
 }
 
 
-const GeometricShape::ShapeVertexAttributes Sphere::basicInfoSphere = computeBasicInfoSphere();
+const GeometricShape::ShapeVerticesInfo Sphere::basicInfoSphere = computeBasicInfoSphere();
