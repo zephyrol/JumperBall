@@ -11,7 +11,7 @@
 
 class IceBlock:public Block {
 public:
-IceBlock();
+IceBlock(const JBTypes::vec3ui& position);
 
 virtual Effect detectionEvent(
     const JBTypes::Dir& ballDir,

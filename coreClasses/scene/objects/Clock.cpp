@@ -7,6 +7,6 @@
 
 #include "Clock.h"
 
-Clock::Clock():
-    Object(Object::CategoryOfObjects::Clock) {
+Clock::Clock(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
+    Object(position, direction, Object::CategoryOfObjects::Clock) {
 }

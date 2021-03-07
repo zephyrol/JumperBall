@@ -11,7 +11,7 @@
 
 class FireBlock:public Block {
 public:
-FireBlock();
+FireBlock(const JBTypes::vec3ui& position);
 
 virtual Effect detectionEvent(
     const JBTypes::Dir& ballDir,

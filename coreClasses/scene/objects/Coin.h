@@ -11,7 +11,7 @@
 
 class Coin:public Bonus {
 public:
-Coin();
+Coin(const JBTypes::vec3ui& position, const JBTypes::Dir& direction);
 
 private:
 

@@ -67,6 +67,7 @@ ParallelTask <void> _uniformUpdate;
 const Camera& _camera;
 
 const ShaderProgram _spBlocks;
+const ShaderProgram _spObjects;
 const ShaderProgram _spStar;
 const ShaderProgram _spFbo;
 const ShaderProgram _spBlur;
@@ -84,6 +85,7 @@ const FrameBuffer _frameBufferCompleteBlurEffect;
 
 MapState _mapState;
 RenderPass _renderPassBlocks;
+RenderPass _renderPassObjects;
 
 StarState _starState;
 RenderPass _renderPassStar;
@@ -106,6 +108,8 @@ void updateCamera(RenderPass& renderPass);
 // ------STATIC ATTRIBUTES------//
 static const std::string vsshaderBlocks;
 static const std::string fsshaderBlocks;
+static const std::string vsshaderObjects;
+static const std::string fsshaderObjects;
 static const std::string vsshaderStar;
 static const std::string fsshaderStar;
 static const std::string vsshaderFBO;

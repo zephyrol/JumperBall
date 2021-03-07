@@ -7,9 +7,7 @@
 #include "scene/mesh/MeshGenerator.h"
 #include "animations/ObjectAnimation.h"
 
-Mesh_sptr MeshGenerator::genObjects (const Object& object,
-                                     const glm::vec3& position,
-                                     const JBTypes::Dir& dir) {
+Mesh_sptr MeshGenerator::genObject (const Object& object) {
 
     vecCstGeometricShape_sptr geometricShapes;
     switch (object.getCategory()) {
@@ -64,7 +62,7 @@ Mesh_sptr MeshGenerator::genObjects (const Object& object,
         geometricShapes.push_back(
             std::make_shared <const Cylinder>(glm::vec3(1.f, 215.f / 255.f, 0.f),
                                               glm::vec3(150.f / 255.f, 75.f / 255.f, 0.f),
-                                              Cylinder::defaultMeriCount,
+                                              60,
                                               transformLocal,
                                               transformNormals)
             );

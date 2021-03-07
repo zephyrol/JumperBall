@@ -26,9 +26,10 @@
 namespace MeshGenerator {
 
 // vecMeshComponent_sptr genComponents(const QuadState& quad);
-vecMesh_sptr genMeshes(const Ball& ball);
-vecMesh_sptr genMeshes(const Map& map);
-vecMesh_sptr genMeshes(const Star& star);
+vecMesh_sptr genBall(const Ball& ball);
+vecMesh_sptr genBlocks(const Map& map);
+vecMesh_sptr genObjects(const Map& map);
+vecMesh_sptr genStar(const Star& star);
 
 // vecMeshComponent_sptr genObject(const ObjectState& obj, const glm::vec3& position, const JBTypes::Dir& dir);
 
@@ -42,9 +43,7 @@ vecCstGeometricShape_sptr genJumpers(const Block& block,
                                      const Map::BlockTypes& type,
                                      const glm::vec3& posWorld);
 
-Mesh_sptr genObjects(const Object& object,
-                     const glm::vec3& position,
-                     const JBTypes::Dir& dir);
+Mesh_sptr genObject(const Object& object);
 Mesh_sptr genEnemy(const Enemy& enemy, const Map::EnemyTypes& category);
 Mesh_sptr genSpecial(const Special& special, const Map::SpecialTypes& category);
 /*vecMeshComponent_sptr genEnemy(const EnemyState& enemy);

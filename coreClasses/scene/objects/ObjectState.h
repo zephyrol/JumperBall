@@ -15,17 +15,16 @@ public:
 ObjectState(const Object& object);
 
 bool isGotten() const;
-const JBTypes::timePointMs& timeOfCreation() const;
 const JBTypes::timePointMs& timeOfObtaining() const;
-const Object::CategoryOfObjects& getCategory() const;
-virtual void update() override;
+std::vector <float> getStaticFloatValues() const override;
+std::vector <JBTypes::vec3f> getStaticVec3fValues() const override;
+std::map <std::string, float> getDynamicFloats() const override;
+void update() override;
 
 private:
 const Object& _object;
 bool _isGotten;
-const JBTypes::timePointMs& _timeOfCreation;
 JBTypes::timePointMs _timeOfObtaining;
-const Object::CategoryOfObjects& _categoryOfObject;
 
 };
 

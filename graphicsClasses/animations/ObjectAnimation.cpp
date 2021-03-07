@@ -37,11 +37,11 @@ void ObjectAnimation::updateTrans() {
 }
 
 void ObjectAnimation::transBeforeObtaining() {
-    const float seconds = JBTypesMethods::getTimeSecondsSinceTimePoint(
+    /*const float seconds = JBTypesMethods::getTimeSecondsSinceTimePoint(
         _object.timeOfCreation());
 
-    constexpr float speedFactor = 5.f;
-    _movingRotation = glm::rotate(speedFactor * seconds, rotationAxis);
+       constexpr float speedFactor = 5.f;
+       _movingRotation = glm::rotate(speedFactor * seconds, rotationAxis);*/
 }
 
 void ObjectAnimation::transAfterObtaining() {

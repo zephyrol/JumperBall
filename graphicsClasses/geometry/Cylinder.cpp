@@ -121,14 +121,10 @@ GeometricShape::ShapeVertexAttributes Cylinder::computeBasicInfoCylinder (size_t
     infoCylinder.normals.push_back(glm::vec3(0.f, -1.f, 0.f));
     infoCylinder.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
 
-    infoCylinder.uvCoords.push_back(
-        glm::vec2(initialPositionBase.x, initialPositionBase.z));
-    infoCylinder.uvCoords.push_back(
-        glm::vec2(initialPositionTop.x, initialPositionTop.z));
-    infoCylinder.uvCoords.push_back(
-        glm::vec2(initialPositionBase.x, initialPositionBase.z));
-    infoCylinder.uvCoords.push_back(
-        glm::vec2(initialPositionTop.x, initialPositionTop.z));
+    infoCylinder.uvCoords.push_back(glm::vec2(initialPositionBase.x, initialPositionBase.z));
+    infoCylinder.uvCoords.push_back(glm::vec2(initialPositionTop.x, initialPositionTop.z));
+    infoCylinder.uvCoords.push_back(glm::vec2(initialPositionBase.x, initialPositionBase.z));
+    infoCylinder.uvCoords.push_back(glm::vec2(initialPositionTop.x, initialPositionTop.z));
 
     for (unsigned int i = 1; i < meriCount; ++i) {
         const glm::mat4 rotation = glm::rotate(a2 * i, glm::vec3(0.f, 1.f, 0.f));

@@ -12,8 +12,7 @@
 class JumpBlock:public Block {
 public:
 // --CONSTRUCTORS & DESTRUCTORS--//
-JumpBlock(const std::array <bool, 6>&
-          facesJumpers);
+JumpBlock(const JBTypes::vec3ui& position, const std::array <bool, 6>& facesJumpers);
 
 // -------CONST METHODS----------//
 std::array <bool, 6> faceInfo() const override;

@@ -7,9 +7,10 @@
 
 #include "Block.h"
 
-Block::Block(bool hasInteraction, bool isFixed):
+Block::Block(const JBTypes::vec3ui& position, bool hasInteraction, bool isFixed):
     _localTransform{0.f, 0.f, 0.f, 1.f, 1.f, 1.f},
     _objects{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+    _position(position),
     _hasInteraction(hasInteraction),
     _hasObjects(false),
     _isFixed(isFixed) {
@@ -46,16 +47,13 @@ void Block::createObject (Object::CategoryOfObjects category,
     _hasObjects = true;
     switch (category) {
     case Object::CategoryOfObjects::Clock:
-        _objects.at(JBTypesMethods::directionAsInteger(dir))
-            = std::make_shared <Clock>();
+        _objects.at(JBTypesMethods::directionAsInteger(dir)) = std::make_shared <Clock>(_position, dir);
         break;
     case Object::CategoryOfObjects::Coin:
-        _objects.at(JBTypesMethods::directionAsInteger(dir))
-            = std::make_shared <Coin>();
+        _objects.at(JBTypesMethods::directionAsInteger(dir)) = std::make_shared <Coin>(_position, dir);
         break;
     case Object::CategoryOfObjects::Key:
-        _objects.at(JBTypesMethods::directionAsInteger(dir))
-            = std::make_shared <Key>();
+        _objects.at(JBTypesMethods::directionAsInteger(dir)) = std::make_shared <Key>(_position, dir);
         break;
     default:
         break;
@@ -129,4 +127,8 @@ JBTypes::vec3f Block::objectPosition (
 
 const std::array <std::shared_ptr <Object>, 6>& Block::objects() const {
     return _objects;
+}
+
+const JBTypes::vec3ui& Block::position() const {
+    return _position;
 }

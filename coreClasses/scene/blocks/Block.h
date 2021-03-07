@@ -17,7 +17,8 @@ public:
 
 
 // --CONSTRUCTORS & DESTRUCTORS--//
-Block(bool hasInteraction = false,
+Block(const JBTypes::vec3ui& position,
+      bool hasInteraction = false,
       bool isFixed = true);
 virtual ~Block() = default;
 
@@ -40,12 +41,11 @@ virtual void createObject(
     Object::CategoryOfObjects category,
     JBTypes::Dir dir);
 
+static constexpr size_t objectsNumber = 6;
 
-// -------CONST METHODS----------//
 virtual std::array <bool, 6> faceInfo() const;
 virtual bool stillExists() const;
-virtual const std::array <float, 6>&
-localTransform() const;
+virtual const std::array <float, 6>& localTransform() const;
 virtual const std::shared_ptr <const Object> object(size_t number) const;
 virtual bool hasInteraction() const;
 virtual bool hasObjects() const;
@@ -55,20 +55,17 @@ virtual void catchObject(
     const JBTypes::vec3f& entityPosition,
     float radiusEntity);
 virtual const bool& isFixed() const;
-
-// --------STATIC METHODS-------//
-static JBTypes::vec3f objectPosition
-    (const JBTypes::vec3ui& pos,
-    unsigned int dirUint);
-static constexpr size_t objectsNumber = 6;
-
 const std::array <std::shared_ptr <Object>, 6>& objects() const;
+const JBTypes::vec3ui& position() const;
+
+static JBTypes::vec3f objectPosition(const JBTypes::vec3ui& pos, unsigned int dirUint);
+
 
 protected:
 // --------ATTRIBUTES-----------//
 std::array <float, 6> _localTransform;
-std::array <std::shared_ptr <Object>, 6>
-_objects;
+std::array <std::shared_ptr <Object>, 6> _objects;
+const JBTypes::vec3ui _position;
 const bool _hasInteraction;
 bool _hasObjects;
 const bool _isFixed;

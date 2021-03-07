@@ -11,7 +11,12 @@
 
 class Bonus:public Object {
 public:
-Bonus(const CategoryOfObjects& category, unsigned int value);
+Bonus(
+    const JBTypes::vec3ui& position,
+    const JBTypes::Dir& direction,
+    const CategoryOfObjects& category,
+    unsigned int value
+    );
 
 unsigned int value() const;
 

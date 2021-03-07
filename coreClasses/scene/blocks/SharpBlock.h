@@ -12,8 +12,7 @@
 class SharpBlock:public Block {
 public:
 // --CONSTRUCTORS & DESTRUCTORS--//
-SharpBlock(const std::array <bool, 6>&
-           facesSharps);
+SharpBlock(const JBTypes::vec3ui& position, const std::array <bool, 6>& facesSharps);
 
 // -------CONST METHODS----------//
 std::array <bool, 6> faceInfo() const override;

@@ -6,7 +6,7 @@
  */
 #include "scene/mesh/MeshGenerator.h"
 
-vecMesh_sptr MeshGenerator::genMeshes (const Map& map) {
+vecMesh_sptr MeshGenerator::genBlocks (const Map& map) {
 
     vecMesh_sptr meshes;
     const auto blockInfos = map.blocksInfo();
@@ -37,5 +37,22 @@ vecMesh_sptr MeshGenerator::genMeshes (const Map& map) {
        vecMeshComponent_sptr sortedComponents = sortComponents(components);*/
     // return sortedComponents;
 
+    return meshes;
+}
+
+vecMesh_sptr MeshGenerator::genObjects (const Map& map) {
+
+    vecMesh_sptr meshes;
+    const auto blockInfos = map.blocksInfo();
+    for (size_t i = 0; i < blockInfos.size(); ++i) {
+        const size_t index = blockInfos.at(i).index;
+        for (size_t j = 0; j < Block::objectsNumber; ++j) {
+            const std::shared_ptr <const Block> block = map.getBlock(index);
+            const std::shared_ptr <const Object> object = block->objects().at(j);
+            if (object) {
+                meshes.push_back(genObject(*object));
+            }
+        }
+    }
     return meshes;
 }

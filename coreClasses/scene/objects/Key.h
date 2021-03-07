@@ -11,7 +11,10 @@
 
 class Key:public Object {
 public:
-Key();
+Key(
+    const JBTypes::vec3ui& position,
+    const JBTypes::Dir& direction
+    );
 
 private:
 };

@@ -11,7 +11,7 @@
 
 class Clock:public Object {
 public:
-Clock();
+Clock(const JBTypes::vec3ui& position, const JBTypes::Dir& direction);
 
 private:
 

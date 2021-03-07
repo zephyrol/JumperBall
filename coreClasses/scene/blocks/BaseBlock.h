@@ -12,7 +12,7 @@
 
 class BaseBlock:public Block {
 public:
-BaseBlock();
+BaseBlock(const JBTypes::vec3ui& position);
 };
 
 #endif /* BASEBLOCK_H */

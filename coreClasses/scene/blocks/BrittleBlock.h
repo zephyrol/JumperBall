@@ -11,7 +11,7 @@
 
 class BrittleBlock:public Block {
 public:
-BrittleBlock();
+BrittleBlock(const JBTypes::vec3ui& position);
 
 bool stillExists() const override;
 

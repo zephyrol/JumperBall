@@ -7,6 +7,6 @@
 
 #include "Key.h"
 
-Key::Key():
-    Object(Object::CategoryOfObjects::Key) {
+Key::Key(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
+    Object(position, direction, Object::CategoryOfObjects::Key) {
 }

@@ -7,8 +7,8 @@
 
 #include "BrittleBlock.h"
 
-BrittleBlock::BrittleBlock():
-    Block(true, false),
+BrittleBlock::BrittleBlock(const JBTypes::vec3ui& position):
+    Block(position, true, false),
     _stillThere(true),
     _isGoingToBreak(false),
     _collisionTime(),

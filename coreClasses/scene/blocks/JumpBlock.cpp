@@ -7,7 +7,8 @@
 
 #include "JumpBlock.h"
 
-JumpBlock::JumpBlock(const std::array <bool, 6>& facesJumpers):
+JumpBlock::JumpBlock(const JBTypes::vec3ui& position, const std::array <bool, 6>& facesJumpers):
+    Block(position),
     _facesJumpers(facesJumpers) {
 }
 

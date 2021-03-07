@@ -34,7 +34,6 @@ virtual std::vector <glm::vec2> genUvCoords() const override;
 virtual std::vector <GLushort> genIndices() const override;
 
 private:
-
 const size_t _meriCount;
 const std::vector <glm::vec3> _customColors;
 static const ShapeVertexAttributes basicInfoCylinder;

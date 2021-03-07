@@ -7,7 +7,7 @@
 
 #include "IceBlock.h"
 
-IceBlock::IceBlock() {
+IceBlock::IceBlock(const JBTypes::vec3ui& position):Block(position) {
 }
 
 Block::Effect IceBlock::detectionEvent (const JBTypes::Dir&,

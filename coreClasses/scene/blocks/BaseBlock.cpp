@@ -7,5 +7,5 @@
 
 #include "BaseBlock.h"
 
-BaseBlock::BaseBlock() {
+BaseBlock::BaseBlock(const JBTypes::vec3ui& position):Block(position) {
 }

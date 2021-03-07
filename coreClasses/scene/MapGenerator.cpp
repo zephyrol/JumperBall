@@ -114,31 +114,29 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                         }
                     }
                 }
+                const auto blockPos = Map::getBlockCoords(mapInfo.blocks.size(), mapInfo.width, mapInfo.deep);
                 switch (typeOfBlock) {
                 case 0:
                     break;
                 case 1:
-                    block = std::make_shared <BaseBlock>(); break;
+                    block = std::make_shared <BaseBlock>(blockPos); break;
                 case 2:
-                    block = std::make_shared <FireBlock>(); break;
+                    block = std::make_shared <FireBlock>(blockPos); break;
                 case 3:
-                    block = std::make_shared <IceBlock>(); break;
+                    block = std::make_shared <IceBlock>(blockPos); break;
                 case 4:
-                    block = std::make_shared <SharpBlock>(specialParams);
-                    break;
+                    block = std::make_shared <SharpBlock>(blockPos, specialParams); break;
                 case 5:
-                    block = std::make_shared <BrittleBlock>(); break;
+                    block = std::make_shared <BrittleBlock>(blockPos); break;
                 case 6:
-                    block = std::make_shared <JumpBlock>(specialParams);
-                    break;
+                    block = std::make_shared <JumpBlock>(blockPos, specialParams); break;
                 case 7:
-                    block = std::make_shared <GhostBlock>(); break;
+                    block = std::make_shared <GhostBlock>(blockPos); break;
                 default:
                     break;
                 }
                 if (block) {
-                    mapInfo.blocksInfo.push_back(
-                        { mapInfo.blocks.size(), uintToBlockType(typeOfBlock) });
+                    mapInfo.blocksInfo.push_back({ mapInfo.blocks.size(), uintToBlockType(typeOfBlock) });
                 }
                 mapInfo.blocks.push_back(block);
                 counterBuffer.clear();

@@ -11,7 +11,7 @@
 
 class GhostBlock:public Block {
 public:
-GhostBlock(float periodicity = 1.f);
+GhostBlock(const JBTypes::vec3ui& position, float periodicity = 1.f);
 bool stillExists() const override;
 virtual Block::Effect interaction(
     const JBTypes::Dir&

@@ -33,14 +33,10 @@ static constexpr unsigned char firstNumberColor = 33;
 void compress(std::ifstream& input);
 std::shared_ptr <Map> loadMap(size_t mapNumber);
 Map::MapInfo createMapInfo(std::ifstream& file);
-std::string convertToBase(unsigned int number,
-                          unsigned char base);
-unsigned int convertToBase10(const std::string& s,
-                             unsigned int base);
-std::string applyOffset(const std::string& s,
-                        int offset);
-std::string substractOffset(const std::string& s,
-                            int offset);
+std::string convertToBase(unsigned int number, unsigned char base);
+unsigned int convertToBase10(const std::string& s, unsigned int base);
+std::string applyOffset(const std::string& s, int offset);
+std::string substractOffset(const std::string& s, int offset);
 Map::BlockTypes uintToBlockType(unsigned int number);
 
 // Reading functions
@@ -50,13 +46,10 @@ std::string readingString(std::ifstream& input);
 // Writing functions
 void writeSeparator(std::ofstream& output);
 void writeEndLine(std::ofstream& output);
-void writeUnsignedInt(std::ofstream& output,
-                      unsigned int unsignedInt);
-void writeString(std::ofstream& output,
-                 const std::string& string);
+void writeUnsignedInt(std::ofstream& output, unsigned int unsignedInt);
+void writeString(std::ofstream& output, const std::string& string);
 
-void verificationMap(std::ifstream& input,
-                     const Map& map);
+void verificationMap(std::ifstream& input, const Map& map);
 }
 
 #endif

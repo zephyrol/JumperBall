@@ -7,6 +7,6 @@
 
 #include "Coin.h"
 
-Coin::Coin():
-    Bonus(Object::CategoryOfObjects::Coin, 100) {
+Coin::Coin(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
+    Bonus(position, direction, Object::CategoryOfObjects::Coin, 100) {
 }

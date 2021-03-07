@@ -64,7 +64,6 @@ template<typename RawType, typename OpenGLType> static void convertAttributesToO
 template<typename RawType, typename OpenGLType> static void convertUniformsToOpenGLFormat(
     const std::map <std::string, RawType>& rawValues, std::map <std::string, OpenGLType>& openGLValues);
 
-
 const std::unique_ptr <State> _state;
 const vecCstGeometricShape_sptr _shapes;
 const size_t _numberOfVertices;

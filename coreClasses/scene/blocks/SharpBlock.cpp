@@ -7,8 +7,8 @@
 
 #include "SharpBlock.h"
 
-SharpBlock::SharpBlock(const std::array <bool, 6>& facesSharps):
-    Block(true),
+SharpBlock::SharpBlock(const JBTypes::vec3ui& position, const std::array <bool, 6>& facesSharps):
+    Block(position, true),
     _facesSharps(facesSharps) {
 }
 

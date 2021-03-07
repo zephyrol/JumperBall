@@ -71,10 +71,12 @@ const ShaderProgram& _shaderProgram;
 const GLuint _vertexArrayObject;
 const vecMesh_sptr _meshes;
 const size_t _numberOfVertices;
+
 const GeometricShape::ShapeVertexAttributes _shapeVertexAttributes;
-Mesh::StateVertexAttributes _stateVertexAttributes;
-const std::map <ShapeVertexAttributeType, GLuint> _vertexStaticBufferObjects;
-const std::vector <GLuint> _vertexDynamicBufferObjects;
+const Mesh::StateVertexAttributes _stateVertexAttributes;
+
+const std::map <ShapeVertexAttributeType, GLuint> _shapeVertexBufferObjects;
+const std::vector <GLuint> _stateVertexBufferObjects;
 
 UniformVariable <glm::mat4> _uniformMatrix4;
 UniformVariable <glm::vec4> _uniformVec4;

@@ -7,9 +7,12 @@
 
 #include "Bonus.h"
 
-Bonus::Bonus(const Object::CategoryOfObjects& category,
-             unsigned int value):
-    Object(category),
+Bonus::Bonus(
+    const JBTypes::vec3ui& position,
+    const JBTypes::Dir& direction,
+    const Object::CategoryOfObjects& category,
+    unsigned int value):
+    Object(position, direction,  category),
     _value(value) {
 }
 

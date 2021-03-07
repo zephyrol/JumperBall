@@ -14,8 +14,8 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecMesh_sptr& m
     _numberOfVertices(computeNumberOfVertices()),
     _shapeVertexAttributes(createShapeVertexAttributes()),
     _stateVertexAttributes(createStateVertexAttributes()),
-    _vertexStaticBufferObjects(createVertexStaticBufferObjects()),
-    _vertexDynamicBufferObjects(createVertexDynamicBufferObjects()),
+    _shapeVertexBufferObjects(createVertexStaticBufferObjects()),
+    _stateVertexBufferObjects(createVertexDynamicBufferObjects()),
     // Use smartpointer, when the uniform is changed outside this class, every renderpass will be updated
     _uniformMatrix4{},
     _uniformVec4{},
@@ -23,51 +23,6 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecMesh_sptr& m
     _uniformVec2{},
     _uniformFloat{},
     _uniformTextures{} {
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-
-    glBindBuffer(GL_ARRAY_BUFFER,
-                 _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Positions));
-
-    glVertexAttribPointer(
-        0,
-        3, // 3 GL_FLOAT per vertex
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        nullptr);
-
-    glBindBuffer(GL_ARRAY_BUFFER,
-                 _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Colors));
-    glVertexAttribPointer(
-        1,
-        3, // 3 GL_FLOAT per vertex
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        nullptr);
-
-    glBindBuffer(GL_ARRAY_BUFFER,
-                 _vertexStaticBufferObjects.at(RenderPass::ShapeVertexAttributeType::Normals));
-    glVertexAttribPointer(
-        2,
-        3, // 3 GL_FLOAT per vertex
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        nullptr);
-
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexStaticBufferObjects.at(
-                     RenderPass::ShapeVertexAttributeType::UvCoords));
-    glVertexAttribPointer(
-        3,
-        2, // 2 GL_FLOAT per vertex
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        nullptr);
 }
 
 GLuint RenderPass::genVertexArrayObject() const {
@@ -141,7 +96,7 @@ void RenderPass::render() const {
     _shaderProgram.use();
     glBindVertexArray(_vertexArrayObject);
     bindUniforms();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vertexStaticBufferObjects.at(ShapeVertexAttributeType::Indices));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _shapeVertexBufferObjects.at(ShapeVertexAttributeType::Indices));
     glDrawElements(GL_TRIANGLES, static_cast <GLsizei>(_shapeVertexAttributes.indices.size()),
                    GL_UNSIGNED_SHORT, nullptr);
 }
@@ -209,6 +164,31 @@ std::vector <GLuint> RenderPass::createVertexDynamicBufferObjects() const {
                                vbosVec3sAttributes.begin(), vbosVec3sAttributes.end());
     vertexBufferObjects.insert(vertexBufferObjects.begin(),
                                vbosUbytesAttributes.begin(), vbosUbytesAttributes.end());
+    size_t offset = _shapeVertexBufferObjects.size() - 1; // -1 because indices are not included as attribute
+    for (size_t i = 0; i < vbosFloatsAttributes.size(); ++i) {
+        const size_t offsetPlusIndex = offset + i;
+        glEnableVertexAttribArray(offsetPlusIndex);
+        glBindBuffer(GL_ARRAY_BUFFER, vbosFloatsAttributes.at(i));
+        glVertexAttribPointer(offsetPlusIndex, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    }
+
+    offset += vbosFloatsAttributes.size();
+    for (size_t i = 0; i < vbosVec2sAttributes.size(); ++i) {
+        const size_t offsetPlusIndex = offset + i;
+        glEnableVertexAttribArray(offsetPlusIndex);
+        glBindBuffer(GL_ARRAY_BUFFER, vbosVec2sAttributes.at(i));
+        glVertexAttribPointer(offsetPlusIndex, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    }
+
+    offset += vbosVec2sAttributes.size();
+    for (size_t i = 0; i < vbosVec3sAttributes.size(); ++i) {
+        const size_t offsetPlusIndex = offset + i;
+        glEnableVertexAttribArray(offsetPlusIndex);
+        glBindBuffer(GL_ARRAY_BUFFER, vbosVec3sAttributes.at(i));
+        glVertexAttribPointer(offsetPlusIndex, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    }
+
+
     return vertexBufferObjects;
 }
 
@@ -232,6 +212,22 @@ std::map <RenderPass::ShapeVertexAttributeType, GLuint> RenderPass::createVertex
                            initializeVBO(_shapeVertexAttributes.uvCoords));
     fillVertexBufferObject(RenderPass::ShapeVertexAttributeType::Indices,
                            initializeEBO(_shapeVertexAttributes.indices));
+
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjects.at(RenderPass::ShapeVertexAttributeType::Positions));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjects.at(RenderPass::ShapeVertexAttributeType::Colors));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjects.at(RenderPass::ShapeVertexAttributeType::Normals));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    glEnableVertexAttribArray(3);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjects.at(RenderPass::ShapeVertexAttributeType::UvCoords));
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     return vertexBufferObjects;
 }

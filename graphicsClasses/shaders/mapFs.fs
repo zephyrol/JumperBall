@@ -7,6 +7,6 @@ in float proximityObjectBehind;
 
 void main() {
     const float epsilon = 0.999f;
-    if (proximityObjectBehind < epsilon ) discard;
-    pixelColor = vec4(fs_vertexColor,1.f);
+    if (proximityObjectBehind < epsilon) discard;
+    pixelColor = vec4(fs_vertexColor, 1.f);
 }

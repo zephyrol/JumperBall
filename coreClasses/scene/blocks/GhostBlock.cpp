@@ -8,8 +8,8 @@
 #include "GhostBlock.h"
 #include <functional>
 
-GhostBlock::GhostBlock(float periodicity):
-    Block(true, false),
+GhostBlock::GhostBlock(const JBTypes::vec3ui& position, float periodicity):
+    Block(position, true, false),
     _periodicity(periodicity),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _isThere(true) {
