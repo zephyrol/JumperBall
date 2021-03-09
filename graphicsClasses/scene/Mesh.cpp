@@ -81,26 +81,43 @@ Mesh::MeshVerticesInfo Mesh::genMeshVerticesInfo() const {
     convertAttributesToOpenGLFormat(_state->getStaticFloatValues(), glFloats);
     convertAttributesToOpenGLFormat(_state->getStaticVec2fValues(), glmVec2s);
     convertAttributesToOpenGLFormat(_state->getStaticVec3fValues(), glmVec3s);
-    duplicateStateVertexAttribute(stateVertexAttributes.dynamicFloats, glFloats);
-    duplicateStateVertexAttribute(stateVertexAttributes.dynamicsVec2s, glmVec2s);
-    duplicateStateVertexAttribute(stateVertexAttributes.dynamicsVec3s, glmVec3s);
+    duplicateStateVertexAttribute(stateVertexAttributes.staticFloats, glFloats);
+    duplicateStateVertexAttribute(stateVertexAttributes.staticVec2s, glmVec2s);
+    duplicateStateVertexAttribute(stateVertexAttributes.staticVec3s, glmVec3s);
 
     Mesh::MeshVerticesInfo meshVerticesInfo;
     meshVerticesInfo.shapeVerticesInfo = gatheredShapeVerticesInfo;
     meshVerticesInfo.stateVertexAttributes = stateVertexAttributes;
+
     return meshVerticesInfo;
+}
+
+
+template<typename T> void Mesh::concatStateVertexAttribute (std::vector <std::vector <T> >& current,
+                                                            const std::vector <std::vector <T> >& other) {
+    for (size_t i = 0; i < other.size(); ++i) {
+        if (i >= current.size()) {
+            current.push_back({});
+        }
+        Utility::concatVector(current.at(i), other.at(i));
+    }
+}
+
+void Mesh::concatStateVertexAttributes (StateVertexAttributes& current, const StateVertexAttributes& other) {
+    concatStateVertexAttribute(current.staticFloats, other.staticFloats);
+    concatStateVertexAttribute(current.staticVec2s, other.staticVec2s);
+    concatStateVertexAttribute(current.staticVec3s, other.staticVec3s);
 }
 
 void Mesh::concatMeshVerticesInfo (Mesh::MeshVerticesInfo& current,
                                    const Mesh::MeshVerticesInfo& other) {
     GeometricShape::concatShapeVerticesInfo(current.shapeVerticesInfo, other.shapeVerticesInfo);
 
-    Mesh::StateVertexAttributes& currentStateVAttri = current.stateVertexAttributes;
-    const Mesh::StateVertexAttributes& otherStateVAttri = other.stateVertexAttributes;
+    Mesh::StateVertexAttributes& currentStateVertexAttributes = current.stateVertexAttributes;
+    const Mesh::StateVertexAttributes& otherStateVertexAttributes = other.stateVertexAttributes;
+    concatStateVertexAttributes(currentStateVertexAttributes, otherStateVertexAttributes);
 
-    Utility::concatVector(currentStateVAttri.dynamicFloats, otherStateVAttri.dynamicFloats);
-    Utility::concatVector(currentStateVAttri.dynamicsVec2s, otherStateVAttri.dynamicsVec2s);
-    Utility::concatVector(currentStateVAttri.dynamicsVec3s, otherStateVAttri.dynamicsVec3s);
-    Utility::concatVector(currentStateVAttri.dynamicUbytes, otherStateVAttri.dynamicUbytes);
-
+    // Utility::concatVector(currentStateVertexAttributes.staticFloats, otherStateVertexAttributes.staticFloats);
+    // Utility::concatVector(currentStateVertexAttributes.staticVec2s,  otherStateVertexAttributes.staticVec2s);
+    // Utility::concatVector(currentStateVertexAttributes.staticVec3s,  otherStateVertexAttributes.staticVec3s);
 }

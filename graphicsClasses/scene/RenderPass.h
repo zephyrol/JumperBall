@@ -73,6 +73,12 @@ template<typename T> void fillVBOsList(
     size_t attributesOffset = 0
     ) const;
 
+template<typename T> void fillStateVertexAttributesVBOsList(
+    std::vector <GLuint>& vboList,
+    const std::vector <std::vector <T> >& stateVertexAttributes,
+    size_t attributesOffset
+    ) const;
+
 const ShaderProgram& _shaderProgram;
 const GLuint _vertexArrayObject;
 const vecMesh_sptr _meshes;

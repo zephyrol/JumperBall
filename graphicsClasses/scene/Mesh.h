@@ -24,10 +24,9 @@ public:
 Mesh(std::unique_ptr <State>&& state, vecCstGeometricShape_sptr&& shapes);
 
 struct StateVertexAttributes {
-    std::vector <std::vector <GLubyte> > dynamicUbytes;
-    std::vector <std::vector <GLfloat> > dynamicFloats;
-    std::vector <std::vector <glm::vec3> > dynamicsVec3s;
-    std::vector <std::vector <glm::vec2> > dynamicsVec2s;
+    std::vector <std::vector <GLfloat> > staticFloats;
+    std::vector <std::vector <glm::vec3> > staticVec3s;
+    std::vector <std::vector <glm::vec2> > staticVec2s;
 };
 
 struct MeshVerticesInfo {
@@ -36,7 +35,6 @@ struct MeshVerticesInfo {
 };
 
 struct Uniforms {
-    std::map <std::string, GLuint> uniformUints;
     std::map <std::string, GLfloat> uniformFloats;
     std::map <std::string, glm::vec3> uniformVec3s;
     std::map <std::string, glm::vec2> uniformVec2s;
@@ -48,6 +46,7 @@ size_t numberOfVertices() const;
 Uniforms genUniformsValues() const;
 
 MeshVerticesInfo genMeshVerticesInfo() const;
+
 static void concatMeshVerticesInfo(MeshVerticesInfo& current, const MeshVerticesInfo& other);
 
 private:
@@ -61,6 +60,12 @@ template<typename RawType, typename OpenGLType> static void convertAttributesToO
 
 template<typename RawType, typename OpenGLType> static void convertUniformsToOpenGLFormat(
     const std::map <std::string, RawType>& rawValues, std::map <std::string, OpenGLType>& openGLValues);
+
+template<typename T> static void concatStateVertexAttribute(
+    std::vector <std::vector <T> >& current,
+    const std::vector <std::vector <T> >& other
+    );
+static void concatStateVertexAttributes(StateVertexAttributes& current, const StateVertexAttributes& other);
 
 const std::unique_ptr <State> _state;
 const vecCstGeometricShape_sptr _shapes;

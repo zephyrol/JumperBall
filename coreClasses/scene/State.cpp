@@ -11,14 +11,6 @@ State::State():
     _globalState(State::GlobalState::Alive) {
 }
 
-std::vector <unsigned char> State::getStaticBytesValues() const {
-    return {};
-}
-
-std::vector <unsigned int> State::getStaticUIntValues() const {
-    return {};
-}
-
 std::vector <float> State::getStaticFloatValues() const {
     return {};
 }
@@ -28,14 +20,6 @@ std::vector <JBTypes::vec2f> State::getStaticVec2fValues() const {
 }
 
 std::vector <JBTypes::vec3f> State::getStaticVec3fValues() const {
-    return {};
-}
-
-std::map <std::string, unsigned char> State::getDynamicUChars() const {
-    return {};
-}
-
-std::map <std::string, unsigned int> State::getDynamicUInts() const {
     return {};
 }
 

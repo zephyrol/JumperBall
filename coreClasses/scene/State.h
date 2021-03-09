@@ -17,14 +17,10 @@ State();
 virtual void update() = 0;
 virtual ~State() = default;
 
-virtual std::vector <unsigned char> getStaticBytesValues() const;
-virtual std::vector <unsigned int> getStaticUIntValues() const;
 virtual std::vector <float> getStaticFloatValues() const;
 virtual std::vector <JBTypes::vec2f> getStaticVec2fValues() const;
 virtual std::vector <JBTypes::vec3f> getStaticVec3fValues() const;
 
-virtual std::map <std::string, unsigned char> getDynamicUChars() const;
-virtual std::map <std::string, unsigned int> getDynamicUInts() const;
 virtual std::map <std::string, float> getDynamicFloats() const;
 virtual std::map <std::string, JBTypes::vec2f> getDynamicVec2fs() const;
 virtual std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const;

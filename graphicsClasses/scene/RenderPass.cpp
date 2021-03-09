@@ -25,7 +25,6 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecMesh_sptr& m
 GLuint RenderPass::genVertexArrayObject() const {
     GLuint vao;
     glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
     return vao;
 }
 
@@ -142,7 +141,17 @@ template<typename T> void RenderPass::fillVBOsList (
     }
 }
 
+template<typename T> void RenderPass::fillStateVertexAttributesVBOsList (std::vector <GLuint>& vboList,
+                                                                         const std::vector <std::vector <T> >& stateVertexAttributes,
+                                                                         size_t attributesOffset) const {
+    for (const std::vector <T>& stateVertexAttribute : stateVertexAttributes) {
+        fillVBOsList(vboList, stateVertexAttribute, attributesOffset);
+    }
+}
+
 RenderPass::BufferObjects RenderPass::createBufferObjects() const {
+
+    glBindVertexArray(_vertexArrayObject);
     RenderPass::BufferObjects bufferObjects;
 
     std::vector <GLuint>& shapeVBOs = bufferObjects.shapeVertexBufferObjects;
@@ -153,12 +162,13 @@ RenderPass::BufferObjects RenderPass::createBufferObjects() const {
     fillVBOsList(shapeVBOs, shapeVertexAttributes.normals);
     fillVBOsList(shapeVBOs, shapeVertexAttributes.uvCoords);
 
-    const size_t offsetAttributes = shapeVBOs.size();
+    const size_t attributesOffset = shapeVBOs.size();
     std::vector <GLuint>& stateVBOs = bufferObjects.stateVertexBufferObjects;
     const auto& stateVertexAttributes = _meshesVerticesInfo.stateVertexAttributes;
-    fillVBOsList(stateVBOs, stateVertexAttributes.dynamicFloats, offsetAttributes);
-    fillVBOsList(stateVBOs, stateVertexAttributes.dynamicsVec2s, offsetAttributes);
-    fillVBOsList(stateVBOs, stateVertexAttributes.dynamicsVec3s, offsetAttributes);
+
+    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticFloats, attributesOffset);
+    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticVec2s, attributesOffset);
+    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticVec3s, attributesOffset);
 
     const auto ebo = initializeEBO(shapeVerticesInfo.indices);
     bufferObjects.elementBufferObject = ebo

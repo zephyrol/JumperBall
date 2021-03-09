@@ -41,8 +41,9 @@ std::vector <JBTypes::vec3f> ObjectState::getStaticVec3fValues() const {
 }
 
 std::map <std::string, float> ObjectState::getDynamicFloats() const {
-    return {
+    return {};
+    /*return {
         { "creationTime", JBTypesMethods::getTimeSecondsSinceTimePoint(_object.timeOfCreation()) },
         { "obtainingTime", JBTypesMethods::getTimeSecondsSinceTimePoint(_timeOfObtaining) }
-    };
+       };*/
 }
