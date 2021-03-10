@@ -18,35 +18,35 @@ out vec3 fs_vertexNormal;
 out vec3 fs_vertexPositionWorld;
 
 mat4 translate (vec3 translation) {
-    return mat4(1.0, 0.0, 0.0, translation.x,
-                0.0, 1.0, 0.0, translation.y,
-                0.0, 0.0, 1.0, translation.z,
-                0.0, 0.0, 0.0, 1.0);
+    return mat4(1.0, 0.0, 0.0, 0.0,
+                0.0, 1.0, 0.0, 0.0,
+                0.0, 0.0, 1.0, 0.0,
+                translation.x, translation.y, translation.z, 1.0);
 }
 
 mat4 rotationX (float angle) {
     float cosAngle = cos(angle);
     float sinAngle = sin(angle);
     return mat4(1.0, 0.0, 0.0, 0.0,
-                0.0, cosAngle, -sinAngle, 0.0,
-                0.0, sinAngle, cosAngle, 0.0,
+                0.0, cosAngle, sinAngle, 0.0,
+                0.0, -sinAngle, cosAngle, 0.0,
                 0.0, 0.0, 0.0, 1.0);
 }
 
 mat4 rotationY (float angle) {
     float cosAngle = cos(angle);
     float sinAngle = sin(angle);
-    return mat4(cosAngle, 0.0, sinAngle, 0.0,
+    return mat4(cosAngle, 0.0, -sinAngle, 0.0,
                 0.0, 1.0, 0.0, 0.0,
-                -sinAngle, 0.0, cosAngle, 0.0,
+                sinAngle, 0.0, cosAngle, 0.0,
                 0.0, 0.0, 0.0, 1.0);
 }
 
 mat4 rotationZ (float angle) {
     float cosAngle = cos(angle);
     float sinAngle = sin(angle);
-    return mat4(cosAngle, -sinAngle, 0.0, 0.0,
-                sinAngle, cosAngle, 0.0, 0.0,
+    return mat4(cosAngle, sinAngle, 0.0, 0.0,
+                -sinAngle, cosAngle, 0.0, 0.0,
                 0.0, 0.0, 1.0, 0.0,
                 0.0, 0.0, 0.0, 1.0);
 }
@@ -88,8 +88,6 @@ mat4 rotationUpToDir (float direction) {
     return upToUp;
 }
 
-mat4 translationOnBlock = translate(vec3(0.0, 0.75, 0.0));
-mat4 translationCenter = translate(vec3(0.5, 0.5, 0.5));
 
 const float thresholdSecondStep = 1.0;
 const float thresholdThirdStep = 1.5;
@@ -138,12 +136,16 @@ mat4 objectTranslation() {
 
 void main() {
 
+    mat4 translationOnBlock = translate(vec3(0.0, 0.75, 0.0));
+
     mat4 translationToBlock = translate(vs_objectPosition);
     mat4 initialRotation = rotationUpToDir(vs_objectDirection);
 
     mat4 rotation = objectRotation();
-    mat4 modelTransform = translationToBlock * translationCenter * initialRotation * translationOnBlock *
-                          objectTranslation() * rotation * objectScale();
+    mat4 translation = objectTranslation();
+    mat4 scale = objectScale();
+    mat4 modelTransform = translationToBlock * initialRotation * translationOnBlock *
+                          translation * rotation * scale;
     mat4 normalTransform = initialRotation * rotation; // TODO: apply scale on normal
 
     const float w = 1.f;

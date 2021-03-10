@@ -141,9 +141,10 @@ template<typename T> void RenderPass::fillVBOsList (
     }
 }
 
-template<typename T> void RenderPass::fillStateVertexAttributesVBOsList (std::vector <GLuint>& vboList,
-                                                                         const std::vector <std::vector <T> >& stateVertexAttributes,
-                                                                         size_t attributesOffset) const {
+template<typename T> void RenderPass::fillStateVertexAttributesVBOsList (
+    std::vector <GLuint>& vboList,
+    const std::vector <std::vector <T> >& stateVertexAttributes,
+    size_t attributesOffset) const {
     for (const std::vector <T>& stateVertexAttribute : stateVertexAttributes) {
         fillVBOsList(vboList, stateVertexAttribute, attributesOffset);
     }

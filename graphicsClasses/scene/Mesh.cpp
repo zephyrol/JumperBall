@@ -116,8 +116,4 @@ void Mesh::concatMeshVerticesInfo (Mesh::MeshVerticesInfo& current,
     Mesh::StateVertexAttributes& currentStateVertexAttributes = current.stateVertexAttributes;
     const Mesh::StateVertexAttributes& otherStateVertexAttributes = other.stateVertexAttributes;
     concatStateVertexAttributes(currentStateVertexAttributes, otherStateVertexAttributes);
-
-    // Utility::concatVector(currentStateVertexAttributes.staticFloats, otherStateVertexAttributes.staticFloats);
-    // Utility::concatVector(currentStateVertexAttributes.staticVec2s,  otherStateVertexAttributes.staticVec2s);
-    // Utility::concatVector(currentStateVertexAttributes.staticVec3s,  otherStateVertexAttributes.staticVec3s);
 }
