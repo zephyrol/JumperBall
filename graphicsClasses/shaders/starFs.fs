@@ -2,26 +2,22 @@
 
 out vec4 pixelColor;
 
-in vec3 fs_colorInside;
-in vec3 fs_colorOutside;
-
-in float fs_radiusInside;
-in float fs_radiusOutside;
+uniform float radiusInside;
+uniform float radiusOutside;
 
 in vec2 fs_vertexPosition;
 
 void main() {
+    const vec4 colorInside = vec4(1.0, 1.0, 1.0, 1.0);
+    const vec4 colorOutside = vec4(0.0, 1.0, 1.0, 0.0);
 
     // Star center at the position 0.f,0.f
-    float dx          = fs_vertexPosition.x;
-    float dy          = fs_vertexPosition.y;
+    float dx = fs_vertexPosition.x;
+    float dy = fs_vertexPosition.y;
 
-    float dist        = sqrt(dx * dx + dy * dy);
-    float coefficient = smoothstep(fs_radiusInside,
-                                   fs_radiusOutside,
-                                   dist);
+    float dist = sqrt(dx * dx + dy * dy);
+    float coefficient = smoothstep(radiusInside, radiusOutside, dist);
 
-    pixelColor        = mix(vec4(fs_colorInside, 1.f),
-                            vec4(fs_colorOutside, 0.f),
-                            coefficient);
+    pixelColor = mix(colorInside, colorOutside, coefficient);
+    // pixelColor = vec4(1.0,1.0,1.0,1.0);
 }

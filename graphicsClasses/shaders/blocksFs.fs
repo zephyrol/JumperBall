@@ -41,6 +41,7 @@ void main() {
     else {
         inShadow = false;
     }
+    inShadow = false;
 
     const vec3 fireEffet    = vec3(10.f, .2f, 0.f);
 

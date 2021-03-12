@@ -30,16 +30,15 @@ private:
 const std::function <T(const std::array <JBTypes::Dir, N>)> _fct;
 };
 
-template<typename T, size_t N> Movement <T, N>::Movement(const std::function <T
-                                                                              (
-                                                                                  const std::array <JBTypes::Dir,
-                                                                                                    N>)>&& fct)
-    :
+template<typename T, size_t N> Movement <T, N>::Movement(
+    const std::function <T(const std::array <JBTypes::Dir, N>)>&& fct
+    ):
     _fct(fct) {
 }
 
-template<typename T, size_t N> T Movement <T,
-                                           N>::evaluate (const std::array <JBTypes::Dir, N>& inputs) const {
+template<typename T, size_t N> T Movement <T, N>::evaluate (
+    const std::array <JBTypes::Dir, N>& inputs
+    ) const {
     return _fct(inputs);
 }
 #endif /* Movement_h */

@@ -12,7 +12,6 @@
 #include <vector>
 #include "FrameBuffer.h"
 #include "Camera.h"
-#include "Star.h"
 #include "uniformBlocks/uniformLight.h"
 #include "animations/BallAnimation.h"
 #include "scene/mesh/MeshGenerator.h"

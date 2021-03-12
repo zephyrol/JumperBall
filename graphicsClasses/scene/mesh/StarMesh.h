@@ -6,7 +6,6 @@
  */
 #ifndef STARMESH_H
 #define STARMESH_H
-#include "StarState.h"
 #include "Mesh.h"
 
 /*class StarMesh:public Mesh <Star, StarState> {

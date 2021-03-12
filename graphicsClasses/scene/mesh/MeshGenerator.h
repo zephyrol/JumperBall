@@ -12,13 +12,13 @@
 #include <scene/MapState.h>
 #include <scene/objects/ObjectState.h>
 #include <scene/enemies/EnemyState.h>
+#include <scene/StarState.h>
 #include "geometry/Cylinder.h"
 #include "geometry/Pyramid.h"
 #include "geometry/Sphere.h"
 #include "geometry/Cube.h"
 #include "geometry/Quad.h"
 #include "geometry/QuadState.h"
-#include "StarState.h"
 #include "FrameBuffer.h"
 #include <scene/Mesh.h>
 

@@ -70,10 +70,8 @@ struct MapInfo { unsigned int width;
                  std::vector <EnemyInfo> enemiesInfo;
                  std::vector <SpecialInfo> specialInfo; };
 
-// --CONSTRUCTORS & DESTRUCTORS--//
 Map(MapInfo&& mapInfo);
 
-// -------CONST METHODS----------//
 unsigned int beginX() const;
 unsigned int beginY() const;
 unsigned int beginZ() const;
@@ -84,21 +82,18 @@ std::shared_ptr <const Block> getBlock(size_t index) const;
 unsigned int width() const;
 unsigned int height() const;
 unsigned int deep() const;
+JBTypes::vec3f getCenterMap() const;
 
-std::chrono::time_point <std::chrono::system_clock>
-timeCreation() const;
+std::chrono::time_point <std::chrono::system_clock> timeCreation() const;
 
 JBTypes::vec3ui getBlockCoords(size_t index) const;
-size_t getIndex(
-    const JBTypes::vec3ui& coords) const;
-BlockTypes getType(
-    const JBTypes::vec3ui& position) const;
+size_t getIndex(const JBTypes::vec3ui& coords) const;
+BlockTypes getType(const JBTypes::vec3ui& position) const;
 const std::vector <BlockInfo>& blocksInfo() const;
 
 std::vector <BlockInfo> getBlocksWithInteraction() const;
 std::vector <size_t> getBlocksWithObjects() const;
-const std::map <JBTypes::Color, Map::TeleportersInfo>&
-getBlocksTeleporters() const;
+const std::map <JBTypes::Color, Map::TeleportersInfo>& getBlocksTeleporters() const;
 
 std::map <JBTypes::Color, bool> createSpecialStates() const;
 const std::map <JBTypes::Color, bool>& getSpecialStates() const;
@@ -107,22 +102,18 @@ const std::map <JBTypes::Color, bool>& getSpecialStates() const;
 const std::vector <EnemyInfo>& getEnemiesInfo() const;
 const std::vector <SpecialInfo>& getSpecialInfo() const;
 
-// ----------METHODS------------//
-Map::Effect interaction(
-    const JBTypes::Dir& ballDir,
-    const JBTypes::vec3f& posBall, float radius);
+Map::Effect interaction(const JBTypes::Dir& ballDir, const JBTypes::vec3f& posBall, float radius);
 
-void switchColor(
-    const JBTypes::Color& color);
+void switchColor(const JBTypes::Color& color);
 std::shared_ptr <Block> getBlock(int x, int y, int z);
 std::shared_ptr <Block> getBlock(size_t index);
 
-// --------STATIC METHODS-------//
 static JBTypes::vec3ui getBlockCoords(size_t index,
                                       unsigned int width,
                                       unsigned int deep);
 
 private:
+std::map <JBTypes::Color, Map::TeleportersInfo> createBlocksTeleporters() const;
 
 // --------ATTRIBUTES-----------//
 std::vector <std::shared_ptr <Block> > _blocks;
@@ -143,8 +134,8 @@ unsigned int _deep;
 unsigned int _beginX;
 unsigned int _beginY;
 unsigned int _beginZ;
-std::chrono::time_point <std::chrono::system_clock>
-_timeCreation;
+std::chrono::time_point <std::chrono::system_clock> _timeCreation;
+
 // Multithreading
 ParallelTask <Block::Effect> _blocksInteractions;
 ParallelTask <void> _objectsInteractions;
@@ -158,10 +149,6 @@ JBTypes::timePointMs _timeInteractions;
 
 static unsigned int nbMaps;
 
-
-// --------CONST METHODS-------//
-std::map <JBTypes::Color, Map::TeleportersInfo>
-createBlocksTeleporters() const;
 
 };
 

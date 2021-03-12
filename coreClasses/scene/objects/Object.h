@@ -21,8 +21,8 @@ const JBTypes::vec3ui& position() const;
 const JBTypes::Dir& direction() const;
 
 bool isGotten() const;
-const JBTypes::timePointMs& timeOfObtaining() const;
-const JBTypes::timePointMs& timeOfCreation() const;
+float getTimeSinceObtaining() const;
+float getTimeSinceCreation() const;
 void catchingTest(const JBTypes::vec3f& objectPosition,
                   const JBTypes::vec3f& entityPosition,
                   float radiusEntity);
@@ -33,8 +33,8 @@ private:
 const JBTypes::vec3ui _position;
 const JBTypes::Dir _direction;
 bool _gotten;
-const JBTypes::timePointMs _timeOfCreation;
-JBTypes::timePointMs _timeOfObtaining;
+const JBTypes::timePointMs _creationTime;
+JBTypes::timePointMs _obtainingTime;
 const CategoryOfObjects _category;
 };
 

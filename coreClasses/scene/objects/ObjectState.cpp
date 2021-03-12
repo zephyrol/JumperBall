@@ -8,21 +8,13 @@
 
 ObjectState::ObjectState(const Object& object):
     _object(object),
-    _isGotten(object.isGotten()),
-    _timeOfObtaining(object.timeOfObtaining()) {
+    _timeSinceCreation(object.getTimeSinceCreation()),
+    _timeSinceObtaining(object.getTimeSinceObtaining()) {
 }
 
 void ObjectState::update() {
-    _isGotten = _object.isGotten();
-    _timeOfObtaining = _object.timeOfObtaining();
-}
-
-bool ObjectState::isGotten() const {
-    return _isGotten;
-}
-
-const JBTypes::timePointMs& ObjectState::timeOfObtaining() const {
-    return _timeOfObtaining;
+    _timeSinceCreation = _object.getTimeSinceCreation();
+    _timeSinceObtaining = _object.getTimeSinceObtaining();
 }
 
 std::vector <float> ObjectState::getStaticFloatValues() const {
@@ -42,10 +34,7 @@ std::vector <JBTypes::vec3f> ObjectState::getStaticVec3fValues() const {
 
 std::map <std::string, float> ObjectState::getDynamicFloats() const {
     return {
-        { "creationTime", JBTypesMethods::getTimeSecondsSinceTimePoint(_object.timeOfCreation()) },
-        { "obtainingTime", _isGotten
-          ? JBTypesMethods::getTimeSecondsSinceTimePoint(_timeOfObtaining)
-          : 0.f
-        }
+        { "creationTime", _timeSinceCreation },
+        { "obtainingTime", _timeSinceObtaining }
     };
 }

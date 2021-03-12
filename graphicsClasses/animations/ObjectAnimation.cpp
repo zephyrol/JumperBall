@@ -24,16 +24,16 @@ ObjectAnimation::ObjectAnimation(const ObjectState& object,
 }
 
 void ObjectAnimation::updateTrans() {
-    if (_object.isGotten()) {
+    /*if (_object.isGotten()) {
         transAfterObtaining();
-    } else {
+       } else {
         transBeforeObtaining();
-    }
+       }
 
-    _model = _tToBlockTCenterInitRotTOnBlock * _movingTranslation *
+       _model = _tToBlockTCenterInitRotTOnBlock * _movingTranslation *
              _movingRotation * _movingScale;
-    _scaleRotation = _initialRotation * _movingRotation;
-    _translation = _movingTranslation * _tToBlockTOnBlock;
+       _scaleRotation = _initialRotation * _movingRotation;
+       _translation = _movingTranslation * _tToBlockTOnBlock;*/
 }
 
 void ObjectAnimation::transBeforeObtaining() {
@@ -45,37 +45,37 @@ void ObjectAnimation::transBeforeObtaining() {
 }
 
 void ObjectAnimation::transAfterObtaining() {
-    constexpr float speedPow = 5.f;
-    constexpr float thresholdSecondStep = 1.f;
-    constexpr float thresholdThirdStep = 1.5f;
-    constexpr float durationSecondStep =
+    /*constexpr float speedPow = 5.f;
+       constexpr float thresholdSecondStep = 1.f;
+       constexpr float thresholdThirdStep = 1.5f;
+       constexpr float durationSecondStep =
         thresholdThirdStep - thresholdSecondStep;
-    constexpr float durationThirdStep = 0.2f;
+       constexpr float durationThirdStep = 0.2f;
 
-    const float seconds = JBTypesMethods::getTimeSecondsSinceTimePoint(
+       const float seconds = JBTypesMethods::getTimeSecondsSinceTimePoint(
         _object.timeOfObtaining());
 
-    float scaleFactor;
-    float translateFactor;
-    if (seconds < thresholdSecondStep) {
+       float scaleFactor;
+       float translateFactor;
+       if (seconds < thresholdSecondStep) {
         translateFactor = seconds / thresholdSecondStep;
         scaleFactor = 1.f;
-    } else if (seconds < thresholdThirdStep) {
+       } else if (seconds < thresholdThirdStep) {
         translateFactor = 1.f;
         scaleFactor = 1.f +
                       ((seconds - thresholdSecondStep) / durationSecondStep);
-    } else if (seconds < thresholdThirdStep + durationThirdStep) {
+       } else if (seconds < thresholdThirdStep + durationThirdStep) {
         translateFactor = 1.f;
         scaleFactor = 2.f *
                       (1.f - ((seconds - thresholdThirdStep) / durationThirdStep));
-    } else {
+       } else {
         translateFactor = 1.f;
         scaleFactor = 0.f;
-    }
+       }
 
-    _movingScale = glm::scale(scaleFactor * glm::vec3(1.f, 1.f, 1.f));
-    _movingRotation = glm::rotate(powf(seconds + 1.f, speedPow), rotationAxis);
-    _movingTranslation = glm::translate(translateFactor * rotationAxis);
+       _movingScale = glm::scale(scaleFactor * glm::vec3(1.f, 1.f, 1.f));
+       _movingRotation = glm::rotate(powf(seconds + 1.f, speedPow), rotationAxis);
+       _movingTranslation = glm::translate(translateFactor * rotationAxis);*/
 }
 
 const ObjectState& ObjectAnimation::object() const {

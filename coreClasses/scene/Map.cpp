@@ -216,6 +216,15 @@ unsigned int Map::height() const {
 unsigned int Map::deep() const {
     return _deep;
 }
+
+JBTypes::vec3f Map::getCenterMap() const {
+    return {
+        static_cast <float>(_width / 2.f),
+        static_cast <float>(_height / 2.f),
+        static_cast <float>(_deep / 2.f)
+    };
+}
+
 unsigned int Map::beginX() const {
     return _beginX;
 }

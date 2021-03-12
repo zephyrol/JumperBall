@@ -109,10 +109,10 @@ void SceneRendering::phongEffect (GLuint depthTexture) const {
     // ------ Star ------
     // const StarState& star = _meshStar.getInstanceFrame();
     _spStar.use();
-    _spStar.bindUniform("radiusInside", _starState.radiusInside());
-    _spStar.bindUniform("radiusOutside", _starState.radiusOutside());
-    _spStar.bindUniform("colorInside", _starState.colorInside());
-    _spStar.bindUniform("colorOutside", _starState.colorOutside());
+    /*_spStar.bindUniform("radiusInside", _starState.radiusInside());
+       _spStar.bindUniform("radiusOutside", _starState.radiusOutside());
+       _spStar.bindUniform("colorInside", _starState.colorInside());
+       _spStar.bindUniform("colorOutside", _starState.colorOutside());*/
 
     bindCamera(_spStar);
 
@@ -219,9 +219,9 @@ void SceneRendering::updateUniform() {
        // We use a close star position to get a better ZBuffer accuracy
        const glm::vec3 closeStarPosition = center +
        glm::normalize((star.centralPosition() - center)) *
-       halfBoundingBoxSize;
+       halfBoundingBoxSize;*/
 
-       const JBTypes::vec3f& positionBall = ball.get3DPosition();
+    /*const JBTypes::vec3f& positionBall = ball.get3DPosition();
        _light.directionLight(glm::normalize(center - star.centralPosition()));
 
        _uniformMatrix4["VPStar"] =
@@ -229,10 +229,10 @@ void SceneRendering::updateUniform() {
        halfBoundingBoxSize,
        -halfBoundingBoxSize, halfBoundingBoxSize,
        _camera.zNear, _camera.zFar) *
-       glm::lookAt(closeStarPosition, center, glm::vec3(0.f, 1.f, 0.f)));
+       glm::lookAt(closeStarPosition, center, glm::vec3(0.f, 1.f, 0.f)));*/
 
-       // uniform for rendering from camera
-       _uniformMatrix4["VP"] = _camera.viewProjection();
+    // uniform for rendering from camera
+    /*_uniformMatrix4["VP"] = _camera.viewProjection();
 
 
        _uniformVec3["positionBall"] = glm::vec3(positionBall.x,
@@ -297,7 +297,7 @@ void SceneRendering::update() {
     // _meshBallUpdate.waitTasks();
     // _meshMapUpdate.waitTasks();
 
-    // updateUniform();
+    updateUniform();
 }
 
 const std::string SceneRendering::vsshaderBlocks = "shaders/blocksVs.vs";

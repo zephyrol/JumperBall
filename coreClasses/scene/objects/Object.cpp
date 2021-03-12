@@ -16,8 +16,8 @@ Object::Object(
     _position(position),
     _direction(direction),
     _gotten(false),
-    _timeOfCreation(JBTypesMethods::getTimePointMSNow()),
-    _timeOfObtaining(),
+    _creationTime(JBTypesMethods::getTimePointMSNow()),
+    _obtainingTime(),
     _category(category) {
 }
 
@@ -37,12 +37,14 @@ bool Object::isGotten() const {
     return _gotten;
 }
 
-const JBTypes::timePointMs& Object::timeOfObtaining() const {
-    return _timeOfObtaining;
+float Object::getTimeSinceObtaining() const {
+    return _gotten
+           ? JBTypesMethods::getTimeSecondsSinceTimePoint(_obtainingTime)
+           : 0;
 }
 
-const JBTypes::timePointMs& Object::timeOfCreation() const {
-    return _timeOfCreation;
+float Object::getTimeSinceCreation() const {
+    return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
 
 void Object::catchingTest (const JBTypes::vec3f& objectPosition,
@@ -51,7 +53,7 @@ void Object::catchingTest (const JBTypes::vec3f& objectPosition,
     const float distance =
         JBTypesMethods::distance(objectPosition, entityPosition);
     if (distance < radiusEntity + radiusBoundingSphere) {
-        _timeOfObtaining = JBTypesMethods::getTimePointMSNow();
+        _obtainingTime = JBTypesMethods::getTimePointMSNow();
         _gotten = true;
     }
 

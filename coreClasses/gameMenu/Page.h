@@ -42,10 +42,8 @@ bool visibleOnParent() const;
 CstLabel_sptr matchedLabel(float x, float y) const;
 float height() const;
 float localPosY() const;
-void setBridges(
-    std::map <CstLabel_sptr, Page_sptr>&& bridges);
-void setTypes(
-    std::map <CstLabel_sptr, TypeOfLabel>&& labelsTypes);
+void setBridges(std::map <CstLabel_sptr, Page_sptr>&& bridges);
+void setTypes(std::map <CstLabel_sptr, TypeOfLabel>&& labelsTypes);
 const Page::EscapeAnswer& getEscapeAnswer() const;
 
 // ----------METHODS-----------//
@@ -55,14 +53,12 @@ TypeOfLabel type(const CstLabel_sptr& label) const;
 const vecCstLabel_sptr& labels() const;
 void pressOnPage();
 void release();
-void update(bool isPressed,
-            float screenPosY = 0.f);
+void update(bool isPressed, float screenPosY = 0.f);
 
 private:
 
 // --------ATTRIBUTES-----------//
-constexpr static float decelerationCoefficient = 10.f; // pagePourcentage
-// /s^2
+constexpr static float decelerationCoefficient = 10.f; // pagePourcentage /s^2
 
 std::vector <CstLabel_sptr> createLabels() const;
 std::vector <Page_sptr> createChildren() const;

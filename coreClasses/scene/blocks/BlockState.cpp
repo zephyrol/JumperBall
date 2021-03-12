@@ -7,24 +7,11 @@
 
 BlockState::BlockState(const Block& block):
     _block(block),
-    _localTransform(block.localTransform()),
-    _isFixed(block.isFixed()) {
+    _localTransform(block.localTransform()) {
 }
 
 void BlockState::update() {
     _localTransform = _block.localTransform();
-}
-
-const std::array <float, 6>& BlockState::localTransform() const {
-    return _localTransform;
-}
-
-const Block& BlockState::block() const {
-    return _block;
-}
-
-const bool& BlockState::isFixed() const {
-    return _isFixed;
 }
 
 std::map <std::string, float> BlockState::getDynamicFloats() const {
