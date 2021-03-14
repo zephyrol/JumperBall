@@ -95,3 +95,34 @@ float BallState::teleportationCoeff() const {
 const JBTypes::Color& BallState::teleportationColor() const {
     return _teleportationColor;
 }
+
+std::map <std::string, float> BallState::getDynamicFloats() const {
+    // TODO: do that in the update function
+    const auto getStatus = [this] ()->float {
+                               if (
+                                   _stateOfLife == Ball::StateOfLife::Normal ||
+                                   _stateOfLife == Ball::StateOfLife::Burning ||
+                                   _stateOfLife == Ball::StateOfLife::Sliding
+                                   ) {
+                                   return 0.f;
+                               }
+                               if (_ball.stateOfLife() == Ball::StateOfLife::Bursting) {
+                                   return 1.f;
+                               }
+                               return 2.f;
+                           };
+    return {
+        { "ballRadius", _radius },
+        { "crushingCoeff", _crushingCoeff },
+        { "status", getStatus() },
+        { "timeStateOfLife", JBTypesMethods::getTimeSecondsSinceTimePoint(_timeStateOfLife) }
+        // TODO: use directly ball method
+    };
+}
+
+std::map <std::string, JBTypes::vec3f> BallState::getDynamicVec3fs() const {
+    return {
+        { "sideDir", _currentSideAsVector },
+        { "position", _position }
+    };
+}

@@ -42,6 +42,8 @@ SceneRendering::SceneRendering(const Map& map,
                Shader(GL_FRAGMENT_SHADER, fsshaderObjects)),
     _spStar(Shader(GL_VERTEX_SHADER, vsshaderStar),
             Shader(GL_FRAGMENT_SHADER, fsshaderStar)),
+    _spBall(Shader(GL_VERTEX_SHADER, vsshaderBall),
+            Shader(GL_FRAGMENT_SHADER, fsshaderBall)),
     _spFbo(Shader(GL_VERTEX_SHADER, vsshaderFBO),
            Shader(GL_FRAGMENT_SHADER, fsshaderFBO)),
     _spBlur(Shader(GL_VERTEX_SHADER, vsshaderBlur),
@@ -79,7 +81,8 @@ SceneRendering::SceneRendering(const Map& map,
     _renderPassBlocks(_spBlocks, MeshGenerator::genBlocks(map)),
     _renderPassObjects(_spObjects, MeshGenerator::genObjects(map)),
     _starState(star),
-    _renderPassStar(_spStar, MeshGenerator::genStar(star)) {
+    _renderPassStar(_spStar, MeshGenerator::genStar(star)),
+    _renderPassBall(_spBall, MeshGenerator::genBall(ball)) {
     update();
 }
 
@@ -119,6 +122,7 @@ void SceneRendering::phongEffect (GLuint depthTexture) const {
     _renderPassBlocks.render();
     _renderPassObjects.render();
     _renderPassStar.render();
+    _renderPassBall.render();
 
     // _meshStar.render(_spStar);
 
@@ -285,9 +289,11 @@ void SceneRendering::update() {
     _renderPassBlocks.update();
     _renderPassObjects.update();
     _renderPassStar.update();
+    _renderPassBall.update();
     updateCamera(_renderPassBlocks);
     updateCamera(_renderPassObjects);
     updateCamera(_renderPassStar);
+    updateCamera(_renderPassBall);
     // Update meshes and uniform values using multithreading
     // _meshMapUpdate.runTasks();
     // _meshBallUpdate.runTasks();
@@ -305,6 +311,9 @@ const std::string SceneRendering::fsshaderBlocks = "shaders/blocksFs.fs";
 
 const std::string SceneRendering::vsshaderObjects = "shaders/objectsMapVs.vs";
 const std::string SceneRendering::fsshaderObjects = "shaders/blocksFs.fs";
+
+const std::string SceneRendering::vsshaderBall = "shaders/ballVs.vs";
+const std::string SceneRendering::fsshaderBall = "shaders/blocksFs.fs";
 
 const std::string SceneRendering::vsshaderStar = "shaders/starVs.vs";
 const std::string SceneRendering::fsshaderStar = "shaders/starFs.fs";

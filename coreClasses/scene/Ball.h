@@ -27,8 +27,7 @@ static constexpr float timeToBurn = 2.f;
 static constexpr float timeToBurst = 0.8f;
 static constexpr float basicRadius = 0.2f;
 static constexpr float teleportationDuration = 1.f;
-static constexpr float halfTimeTeleportationDuration
-    = teleportationDuration / 2.f;
+static constexpr float halfTimeTeleportationDuration = teleportationDuration / 2.f;
 
 // ------------TYPES------------//
 enum class State { Staying, Moving, Jumping,
@@ -66,8 +65,7 @@ float burnCoefficient() const;
 float getTimeSecondsSinceAction() const noexcept;
 JBTypes::timePointMs getTimeActionMs() const noexcept;
 
-float getTimeSecondsSinceStateOfLife()
-const noexcept;
+float getTimeSecondsSinceStateOfLife() const noexcept;
 JBTypes::timePointMs getTimeStateOfLifeMs() const noexcept;
 
 struct nextBlockInformation getNextBlockInfo () const noexcept;
@@ -109,10 +107,8 @@ const ClassicalMechanics _mechanicsPatternJumping;
 const ClassicalMechanics _mechanicsPatternLongJumping;
 const ClassicalMechanics _mechanicsPatternFalling;
 
-std::chrono::time_point <std::chrono::system_clock>
-_timeAction;
-std::chrono::time_point <std::chrono::system_clock>
-_timeStateOfLife;
+std::chrono::time_point <std::chrono::system_clock> _timeAction;
+std::chrono::time_point <std::chrono::system_clock> _timeStateOfLife;
 
 // BurnCoefficient at the last state change
 float _burnCoefficientTrigger;
@@ -132,12 +128,8 @@ float _currentCrushing;
 
 // -------CONST METHODS--------//
 std::shared_ptr <const std::vector <int> >
-intersectBlock(float x, float y, float z)
-const;
-
-JBTypes::vec3f P2DTo3D(
-    ClassicalMechanics::physics2DVector p2D)
-const;
+intersectBlock(float x, float y, float z) const;
+JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 JBTypes::vec3f get3DPosStayingBall() const;
 bool isOutOfTheMap() const;
 bool isBurstingFinished() const;
@@ -158,8 +150,7 @@ void deteleport() noexcept;
 void setTimeActionNow() noexcept;
 void setTimeLifeNow() noexcept;
 void mapInteraction() noexcept;
-void blockEvent(
-    const JBTypes::vec3ui& blockPos) noexcept;
+void blockEvent(const JBTypes::vec3ui& blockPos) noexcept;
 void die() noexcept;
 ClassicalMechanics& getMechanicsJumping() noexcept;
 void isFallingIntersectionBlock() noexcept;

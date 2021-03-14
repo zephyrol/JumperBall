@@ -27,16 +27,17 @@ float jumpingPosX() const;
 float fallingPosX() const;
 const JBTypes::vec3f& lookTowardsAsVector() const;
 const JBTypes::vec3f& currentMovementRotation() const;
-const std::vector <JBTypes::Dir>&
-coveredRotation() const noexcept;
+const std::vector <JBTypes::Dir>& coveredRotation() const noexcept;
 float crushingCoeff() const noexcept;
 float teleportationCoeff() const;
 const JBTypes::Color& teleportationColor() const;
 
+std::map <std::string, float> getDynamicFloats() const override;
+std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const override;
+
 private:
 const Ball& _ball;
-const std::vector <JBTypes::Dir>&
-_coveredRotation;
+const std::vector <JBTypes::Dir>& _coveredRotation;
 JBTypes::vec3f _position;
 float _burnCoefficient;
 JBTypes::vec3f _currentSideAsVector;
@@ -50,6 +51,7 @@ JBTypes::vec3f _currentMovementRotation;
 float _crushingCoeff;
 float _teleportationCoeff;
 JBTypes::Color _teleportationColor;
+
 };
 
 #endif // BALLSTATE_H

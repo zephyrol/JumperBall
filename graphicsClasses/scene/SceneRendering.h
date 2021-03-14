@@ -22,29 +22,19 @@ class SceneRendering {
 
 public:
 
-// --CONSTRUCTORS & DESTRUCTORS--//
-SceneRendering(const Map& map,
-               const Ball& ball,
-               const Star& star,
-               const Camera& camera);
+SceneRendering(const Map& map, const Ball& ball, const Star& star, const Camera& camera);
 
-
-// ------------METHODS----------//
 void update();
 void render() const;
 
 private:
-
-// ------------TYPES------------//
 template<typename T> using uniformVariable = std::map <std::string, T>;
 
-// ---------CONSTANTS------------//
 static constexpr float blurSigma = 4.f;
 static constexpr size_t blurPatchSize = 25;
 static constexpr size_t heightBloomTexture = 192;
 static constexpr size_t sizeDepthTexture = 1024;
 
-// --------ATTRIBUTES-----------//
 uniformVariable <glm::mat4> _uniformMatrix4;
 uniformVariable <glm::vec4> _uniformVec4;
 uniformVariable <glm::vec3> _uniformVec3;
@@ -68,6 +58,7 @@ const Camera& _camera;
 const ShaderProgram _spBlocks;
 const ShaderProgram _spObjects;
 const ShaderProgram _spStar;
+const ShaderProgram _spBall;
 const ShaderProgram _spFbo;
 const ShaderProgram _spBlur;
 const ShaderProgram _spBrightPassFilter;
@@ -89,12 +80,13 @@ RenderPass _renderPassObjects;
 StarState _starState;
 RenderPass _renderPassStar;
 
+RenderPass _renderPassBall;
+
 // ---------CONST METHODS--------//
 void phongEffect(GLuint depthTexture) const;
 void blurEffect(GLuint brightPassTexture) const;
 void brightPassEffect(GLuint hdrSceneTexture) const;
-void bloomEffect(GLuint hdrSceneTexture,
-                 GLuint bluredTexture) const;
+void bloomEffect(GLuint hdrSceneTexture, GLuint bluredTexture) const;
 void depthFromStar() const;
 
 void bindCamera(const ShaderProgram& sp) const;
@@ -109,6 +101,8 @@ static const std::string vsshaderBlocks;
 static const std::string fsshaderBlocks;
 static const std::string vsshaderObjects;
 static const std::string fsshaderObjects;
+static const std::string vsshaderBall;
+static const std::string fsshaderBall;
 static const std::string vsshaderStar;
 static const std::string fsshaderStar;
 static const std::string vsshaderFBO;
