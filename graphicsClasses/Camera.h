@@ -7,8 +7,8 @@
 
 #ifndef CAMERA_H
 #define CAMERA_H
-#include <scene/Ball.h>
-#include <scene/Map.h>
+#include <scene/BallState.h>
+#include <scene/MapState.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -35,10 +35,10 @@ glm::mat4 viewProjection() const noexcept;
 
 
 // ----------METHODS-------------//
-void follow(const Ball& ball) noexcept;
-void follow(const Map& map) noexcept;
-bool transitionEffect(const Ball& ball,
-                      const Map& map) noexcept;
+void follow(const BallState& ballState) noexcept;
+void follow(const MapState& mapState) noexcept;
+bool transitionEffect(const BallState& ball,
+                      const MapState& map) noexcept;
 
 
 private:

@@ -84,7 +84,8 @@ unsigned int height() const;
 unsigned int deep() const;
 JBTypes::vec3f getCenterMap() const;
 
-std::chrono::time_point <std::chrono::system_clock> timeCreation() const;
+float getTimeSinceCreation() const;
+
 
 JBTypes::vec3ui getBlockCoords(size_t index) const;
 size_t getIndex(const JBTypes::vec3ui& coords) const;
@@ -108,9 +109,7 @@ void switchColor(const JBTypes::Color& color);
 std::shared_ptr <Block> getBlock(int x, int y, int z);
 std::shared_ptr <Block> getBlock(size_t index);
 
-static JBTypes::vec3ui getBlockCoords(size_t index,
-                                      unsigned int width,
-                                      unsigned int deep);
+static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int deep);
 
 private:
 std::map <JBTypes::Color, Map::TeleportersInfo> createBlocksTeleporters() const;
@@ -134,7 +133,7 @@ unsigned int _deep;
 unsigned int _beginX;
 unsigned int _beginY;
 unsigned int _beginZ;
-std::chrono::time_point <std::chrono::system_clock> _timeCreation;
+const JBTypes::timePointMs _creationTime;
 
 // Multithreading
 ParallelTask <Block::Effect> _blocksInteractions;

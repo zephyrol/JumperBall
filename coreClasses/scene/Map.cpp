@@ -28,7 +28,7 @@ Map::Map(Map::MapInfo&& mapInfo):
     _beginX(std::move(mapInfo.beginX)),
     _beginY(std::move(mapInfo.beginY)),
     _beginZ(std::move(mapInfo.beginZ)),
-    _timeCreation(std::chrono::system_clock::now()),
+    _creationTime(JBTypesMethods::getTimePointMSNow()),
     _blocksInteractions([this] (size_t blockNumber) {
                             const std::shared_ptr <Block>& block =
                                 getBlock(_blocksWithInteractionInfo.at(blockNumber).index);
@@ -225,6 +225,10 @@ JBTypes::vec3f Map::getCenterMap() const {
     };
 }
 
+float Map::getTimeSinceCreation() const {
+    return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
+}
+
 unsigned int Map::beginX() const {
     return _beginX;
 }
@@ -235,10 +239,6 @@ unsigned int Map::beginY() const {
 
 unsigned int Map::beginZ() const {
     return _beginZ;
-}
-
-std::chrono::time_point <std::chrono::system_clock> Map::timeCreation() const {
-    return _timeCreation;
 }
 
 Map::Effect Map::interaction (const JBTypes::Dir& ballDir,

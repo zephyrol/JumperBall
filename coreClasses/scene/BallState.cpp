@@ -12,8 +12,6 @@ BallState::BallState(const Ball& ball):
     _position(ball.get3DPosition()),
     _burnCoefficient(ball.burnCoefficient()),
     _currentSideAsVector(ball.currentSideAsVector()),
-    _timeAction(ball.getTimeActionMs()),
-    _timeStateOfLife(ball.getTimeStateOfLifeMs()),
     _state(ball.state()),
     _stateOfLife(ball.stateOfLife()),
     _radius(ball.getRadius()),
@@ -21,15 +19,16 @@ BallState::BallState(const Ball& ball):
     _currentMovementRotation(ball.movementRotation()),
     _crushingCoeff(ball.getCrushingCoefficient()),
     _teleportationCoeff(ball.getTeleportationCoefficient()),
-    _teleportationColor(ball.getTeleportationColor()) {
+    _teleportationColor(ball.getTeleportationColor()),
+    _timeSecondsSinceAction(ball.getTimeSecondsSinceAction()),
+    _timeSecondsSinceStateOfLife(ball.getTimeSecondsSinceStateOfLife()),
+    _nextLook(JBTypesMethods::directionAsVector(ball.getNextBlockInfo().nextLook)) {
 }
 
 void BallState::update() {
     _position = _ball.get3DPosition();
     _burnCoefficient = _ball.burnCoefficient();
     _currentSideAsVector = _ball.currentSideAsVector();
-    _timeAction = _ball.getTimeActionMs();
-    _timeStateOfLife = _ball.getTimeStateOfLifeMs();
     _state = _ball.state();
     _stateOfLife = _ball.stateOfLife();
     _radius = _ball.getRadius();
@@ -38,6 +37,9 @@ void BallState::update() {
     _crushingCoeff = _ball.getCrushingCoefficient();
     _teleportationCoeff = _ball.getTeleportationCoefficient();
     _teleportationColor = _ball.getTeleportationColor();
+    _timeSecondsSinceAction = _ball.getTimeSecondsSinceAction();
+    _timeSecondsSinceStateOfLife = _ball.getTimeSecondsSinceStateOfLife();
+    _nextLook = JBTypesMethods::directionAsVector(_ball.getNextBlockInfo().nextLook);
 }
 
 const JBTypes::vec3f& BallState::get3DPosition() const noexcept{
@@ -52,12 +54,8 @@ const JBTypes::vec3f& BallState::currentSideAsVector() const {
     return _currentSideAsVector;
 }
 
-const JBTypes::timePointMs& BallState::getTimeStateOfLife() const {
-    return _timeStateOfLife;
-}
-
-const JBTypes::timePointMs& BallState::getTimeAction() const noexcept{
-    return _timeAction;
+float BallState::getTimeSecondsSinceAction() const {
+    return _timeSecondsSinceAction;
 }
 
 Ball::State BallState::state() const {
@@ -92,8 +90,16 @@ float BallState::teleportationCoeff() const {
     return _teleportationCoeff;
 }
 
+const ClassicalMechanics& BallState::getMechanicsJumping() const noexcept{
+    return _ball.getMechanicsJumping();
+}
+
 const JBTypes::Color& BallState::teleportationColor() const {
     return _teleportationColor;
+}
+
+const JBTypes::vec3f& BallState::nextLook() const {
+    return _nextLook;
 }
 
 std::map <std::string, float> BallState::getDynamicFloats() const {
@@ -115,7 +121,7 @@ std::map <std::string, float> BallState::getDynamicFloats() const {
         { "ballRadius", _radius },
         { "crushingCoeff", _crushingCoeff },
         { "status", getStatus() },
-        { "timeStateOfLife", JBTypesMethods::getTimeSecondsSinceTimePoint(_timeStateOfLife) }
+        { "timeStateOfLife", _timeSecondsSinceStateOfLife }
         // TODO: use directly ball method
     };
 }

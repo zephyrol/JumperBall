@@ -23,12 +23,14 @@ unsigned int deep() const;
 Map::BlockTypes getType(const JBTypes::vec3ui& position
                         ) const;
 const std::vector <Map::BlockInfo>& blocksInfo() const;
+float getTimeSinceCreation() const;
 
 private:
 const Map& _map;
 const unsigned int _width;
 const unsigned int _height;
 const unsigned int _deep;
+float _timeSinceCreation;
 };
 
 #endif // MAPSTATE

@@ -35,7 +35,7 @@ glm::mat4 _scale;
 glm::mat4 _rotation;
 glm::mat4 _coveredRotation;
 
-JBTypes::timePointMs _referenceTimePointAction;
+// JBTypes::timePointMs _referenceTimePointAction;
 };
 
 #endif /* BALLANIMATION_H */

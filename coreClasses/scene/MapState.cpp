@@ -11,10 +11,12 @@ MapState::MapState(const Map& map):
     _map(map),
     _width(map.width()),
     _height(map.height()),
-    _deep(map.deep()) {
+    _deep(map.deep()),
+    _timeSinceCreation(map.getTimeSinceCreation()) {
 }
 
 void MapState::update() {
+    _timeSinceCreation = _map.getTimeSinceCreation();
 }
 
 unsigned int MapState::width() const {
@@ -35,4 +37,8 @@ Map::BlockTypes MapState::getType (const JBTypes::vec3ui& position) const {
 
 const std::vector <Map::BlockInfo>& MapState::blocksInfo() const {
     return _map.blocksInfo();
+}
+
+float MapState::getTimeSinceCreation() const {
+    return _timeSinceCreation;
 }

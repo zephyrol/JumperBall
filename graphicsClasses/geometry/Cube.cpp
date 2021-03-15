@@ -117,7 +117,7 @@ std::vector <glm::vec3> Cube::genNormals() const {
 }
 
 std::vector <glm::vec3> Cube::genColors (const std::vector <glm::vec3>& colors) const {
-    if (colors.size() == 2) {
+    if (colors.size() > 1) {
         return getBasicElements(colors, _sides);
     }
     if (colors.size() == 1) {
