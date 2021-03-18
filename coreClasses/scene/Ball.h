@@ -72,9 +72,7 @@ struct nextBlockInformation getNextBlockInfo () const noexcept;
 const ClassicalMechanics& getMechanicsJumping() const noexcept;
 const ClassicalMechanics& getMechanicsFalling() const noexcept;
 
-const std::vector <JBTypes::Dir>&
-getCurrentCoveredRotation() const noexcept;
-JBTypes::vec3f movementRotation() const noexcept;
+JBTypes::Quaternion getCoveredRotation() const noexcept;
 float getCrushingCoefficient() const noexcept;
 float getTeleportationCoefficient() const noexcept;
 const JBTypes::Color& getTeleportationColor() const noexcept;
@@ -123,7 +121,7 @@ size_t _teleportationBlockDestination;
 bool _jumpRequest;
 JBTypes::timePointMs _timeJumpRequest;
 
-std::vector <JBTypes::Dir> _currentCoveredRotation;
+JBTypes::Quaternion _currentCoveredRotation;
 float _currentCrushing;
 
 // -------CONST METHODS--------//
@@ -164,6 +162,8 @@ void jumpingUpdate() noexcept;
 void burningUpdate() noexcept;
 void teleportingUpdate() noexcept;
 void deteleportingUpdate() noexcept;
+
+void applyRotation();
 
 static const TurnLeft turnLeftMovement;
 static const TurnRight turnRightMovement;

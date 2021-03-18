@@ -55,15 +55,18 @@ size_t Mesh::computeNumberOfVertices() const {
 
 Mesh::Uniforms Mesh::genUniformsValues() const {
     Mesh::Uniforms uniforms;
+    std::map <std::string, glm::vec4> glmVec4s {};
     std::map <std::string, glm::vec3> glmVec3s {};
     std::map <std::string, glm::vec2> glmVec2s {};
     std::map <std::string, GLfloat> glFloats {};
     convertUniformsToOpenGLFormat(_state->getDynamicFloats(), glFloats);
     convertUniformsToOpenGLFormat(_state->getDynamicVec2fs(), glmVec2s);
     convertUniformsToOpenGLFormat(_state->getDynamicVec3fs(), glmVec3s);
+    convertUniformsToOpenGLFormat(_state->getDynamicQuaternions(), glmVec4s);
     uniforms.uniformFloats = glFloats;
     uniforms.uniformVec2s = glmVec2s;
     uniforms.uniformVec3s = glmVec3s;
+    uniforms.uniformVec4s = glmVec4s;
     return uniforms;
 }
 

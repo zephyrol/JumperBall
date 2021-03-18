@@ -130,13 +130,16 @@ unsigned int JBTypesMethods::directionAsInteger (JBTypes::Dir dir) {
     return number;
 }
 
-JBTypes::vec3f JBTypesMethods::cross (const JBTypes::vec3f& a,
-                                      const JBTypes::vec3f& b) {
+JBTypes::vec3f JBTypesMethods::cross (const JBTypes::vec3f& a, const JBTypes::vec3f& b) {
     JBTypes::vec3f crossProduct;
     crossProduct.x = a.y * b.z - a.z * b.y;
     crossProduct.y = a.z * b.x - a.x * b.z;
     crossProduct.z = a.x * b.y - a.y * b.x;
     return crossProduct;
+}
+
+float JBTypesMethods::dot (const JBTypes::vec3f& a, const JBTypes::vec3f& b) {
+    return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 float JBTypesMethods::distance (const JBTypes::vec3f& a,
@@ -232,4 +235,53 @@ std::string JBTypesMethods::colorToString (const JBTypes::Color color) {
     default: return "None";
     }
     return "None";
+}
+
+JBTypes::Quaternion JBTypesMethods::multiply (const JBTypes::Quaternion& q1, const JBTypes::Quaternion& q2) {
+    const JBTypes::vec3f v1xv2 = JBTypesMethods::cross(q1.v, q2.v);
+    const float v1dotv2 = JBTypesMethods::dot(q1.v, q2.v);
+    const JBTypes::vec3f s1v2 = JBTypesMethods::scalarApplication(q1.w, q2.v);
+    const JBTypes::vec3f s2v1 = JBTypesMethods::scalarApplication(q2.w, q1.v);
+    const float s1s2 = q1.w * q2.w;
+
+    return JBTypesMethods::createQuaternion(
+        JBTypesMethods::add(JBTypesMethods::add(v1xv2, s1v2), s2v1),
+        s1s2 - v1dotv2
+        );
+}
+
+JBTypes::Quaternion JBTypesMethods::q2q1 (
+    const JBTypes::Quaternion& q1q2,
+    const JBTypes::Quaternion& q1,
+    const JBTypes::Quaternion& q2
+    ) {
+    const JBTypes::vec3f v1xv2 = JBTypesMethods::cross(q1.v, q2.v);
+    return JBTypesMethods::createQuaternion(
+        JBTypesMethods::add(q1q2.v, JBTypesMethods::scalarApplication(-2.f, v1xv2)),
+        q1q2.w
+        );
+}
+
+JBTypes::Quaternion JBTypesMethods::inverse (const JBTypes::Quaternion& q) {
+    const JBTypes::vec3f& v = q.v;
+    const float v2PlusS2 = v.x * v.x + v.y * v.y + v.z * v.z + q.w * q.w;
+
+    return JBTypesMethods::createQuaternion(
+        { -v.x / v2PlusS2, -v.y / v2PlusS2, -v.z / v2PlusS2 },
+        q.w / v2PlusS2
+        );
+}
+
+JBTypes::Quaternion JBTypesMethods::createQuaternion (const JBTypes::vec3f& v, float w) {
+    JBTypes::Quaternion q;
+    q.v = v;
+    q.w = w;
+    return q;
+}
+
+JBTypes::Quaternion JBTypesMethods::createRotationQuaternion (const JBTypes::vec3f& axis, float angle) {
+    return JBTypesMethods::createQuaternion(
+        JBTypesMethods::scalarApplication(sinf(angle / 2.f), axis),
+        cosf(angle / 2.f)
+        );
 }

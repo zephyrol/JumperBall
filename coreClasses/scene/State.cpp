@@ -35,6 +35,10 @@ std::map <std::string, JBTypes::vec3f> State::getDynamicVec3fs() const {
     return {};
 }
 
+std::map <std::string, JBTypes::Quaternion> State::getDynamicQuaternions() const {
+    return {};
+}
+
 const State::GlobalState& State::getGlobalState() const {
     return _globalState;
 }

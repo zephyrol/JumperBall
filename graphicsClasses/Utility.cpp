@@ -268,6 +268,10 @@ glm::vec3 Utility::convertToOpenGLFormat (const JBTypes::vec3f& vec3f) {
     return glm::vec3(vec3f.x, vec3f.y, vec3f.z);
 }
 
+glm::vec4 Utility::convertToOpenGLFormat (const JBTypes::Quaternion& q) {
+    return glm::vec4(Utility::convertToOpenGLFormat(q.v), q.w);
+}
+
 GLfloat Utility::convertToOpenGLFormat (const float& f) {
     return static_cast <GLfloat>(f);
 }

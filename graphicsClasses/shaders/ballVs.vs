@@ -12,6 +12,7 @@ uniform float status;
 uniform float timeStateOfLife;
 uniform vec3 sideDir;
 uniform vec3 position;
+uniform vec4 quaternion;
 
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
@@ -143,30 +144,21 @@ mat4 ballTranslation() {
 
 mat4 ballRotation() {
 
-    // rotation
-    /*const float sizeBlock = 1.0;
-       const float angleToGetBlock = sizeBlock / ballRadius;
-
-       for (
-        size_t i = _computedRotations;
-        i < _ball.coveredRotation().size();
-     ++i
-        ) {
-        const JBTypes::Dir rotationDirection = _ball.coveredRotation().at(i);
-        const JBTypes::vec3f rotationVector =
-            JBTypesMethods::directionAsVector(rotationDirection);
-        const glm::vec3 glmRotationVector
-        { rotationVector.x, rotationVector.y, rotationVector.z };
-        const glm::quat quaternion(angleToGetBlock*glmRotationVector);
-        _coveredRotation = glm::toMat4(quaternion) * _coveredRotation;
-       }
-       _computedRotations = _ball.coveredRotation().size();
-
-       const JBTypes::vec3f& currentRotationVec = _ball.currentMovementRotation();
-       const glm::vec3 currentGlmRotationVector
-       { currentRotationVec.x, currentRotationVec.y, currentRotationVec.z };
-       const glm::quat quaternion(angleToGetBlock*currentGlmRotationVector);*/
-    return mat4(1.0);
+    float x2 = quaternion.x * quaternion.x;
+    float y2 = quaternion.y * quaternion.y;
+    float z2 = quaternion.z * quaternion.z;
+    float xy = quaternion.x * quaternion.y;
+    float xz = quaternion.x * quaternion.z;
+    float yz = quaternion.y * quaternion.z;
+    float wx = quaternion.w * quaternion.x;
+    float wy = quaternion.w * quaternion.y;
+    float wz = quaternion.w * quaternion.z;
+    return mat4(
+        1.0 - 2.0 * (y2 + z2), 2.0 * (xy + wz), 2.0 * (xz - wy), 0.0,
+        2.0 * (xy - wz), 1.0 - 2.0 * (x2 + z2), 2.0 * (yz + wx), 0.0,
+        2.0 * (xz + wy), 2.0 * (yz - wx), 1.0 - 2.0 * (x2 + y2), 0.0,
+        0.0, 0.0, 0.0, 1.0
+        );
 }
 
 void main() {

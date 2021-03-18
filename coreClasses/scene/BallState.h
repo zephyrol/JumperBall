@@ -21,39 +21,38 @@ const JBTypes::vec3f& currentSideAsVector() const;
 float getTimeSecondsSinceAction() const;
 float getTimeSecondsSinceStateOfLife() const;
 Ball::State state() const;
-Ball::StateOfLife stateOfLife() const;
 float getRadius() const;
-float jumpingPosX() const;
-float fallingPosX() const;
 const JBTypes::vec3f& lookTowardsAsVector() const;
-const JBTypes::vec3f& currentMovementRotation() const;
-const std::vector <JBTypes::Dir>& coveredRotation() const noexcept;
 float crushingCoeff() const noexcept;
 float teleportationCoeff() const;
-const ClassicalMechanics& getMechanicsJumping() const noexcept;
+float timeToGetDestination() const;
 const JBTypes::Color& teleportationColor() const;
 const JBTypes::vec3f& nextLook() const;
 
+
 std::map <std::string, float> getDynamicFloats() const override;
 std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const override;
+std::map <std::string, JBTypes::Quaternion> getDynamicQuaternions() const override;
 
 private:
 const Ball& _ball;
-const std::vector <JBTypes::Dir>& _coveredRotation;
+JBTypes::Quaternion _coveredRotation;
 JBTypes::vec3f _position;
 float _burnCoefficient;
 JBTypes::vec3f _currentSideAsVector;
 Ball::State _state;
-Ball::StateOfLife _stateOfLife;
+float _stateOfLifeStatus;
 float _radius;
+float _timeToGetDestination;
 JBTypes::vec3f _lookTowardsAsVector;
-JBTypes::vec3f _currentMovementRotation;
 float _crushingCoeff;
 float _teleportationCoeff;
 JBTypes::Color _teleportationColor;
 float _timeSecondsSinceAction;
 float _timeSecondsSinceStateOfLife;
 JBTypes::vec3f _nextLook;
+
+float getStateOfLifeStatus() const;
 
 };
 

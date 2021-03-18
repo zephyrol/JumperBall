@@ -22,7 +22,7 @@ BallAnimation::BallAnimation(const BallState& ball):
 void BallAnimation::animationAlive() {
 
     // rotation
-    /*constexpr float sizeBlock = 1.f; // TODO: use a member in Block or map class
+    /* constexpr float sizeBlock = 1.f; // TODO: use a member in Block or map class
        const float angleToGetBlock = sizeBlock / _ball.getRadius();
 
        for (

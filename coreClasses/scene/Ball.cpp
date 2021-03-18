@@ -38,7 +38,7 @@ Ball::Ball(Map& map):
     _teleportationBlockDestination(0),
     _jumpRequest(false),
     _timeJumpRequest(),
-    _currentCoveredRotation{},
+    _currentCoveredRotation(JBTypesMethods::createQuaternion({ 0.f, 0.f, 0.f }, 1.f)),
     _currentCrushing(0.f) {
 }
 
@@ -79,17 +79,13 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
     const int aboveY = _currentBlockY + offsetsNextBlocks.at(10);
     const int aboveZ = _currentBlockZ + offsetsNextBlocks.at(11);
 
-    const std::shared_ptr <const Block>& blockAbove =
-        _map.getBlock(aboveX, aboveY, aboveZ);
+    const std::shared_ptr <const Block>& blockAbove = _map.getBlock(aboveX, aboveY, aboveZ);
 
-    const std::shared_ptr <const Block>& blockInFrontOf =
-        _map.getBlock(inFrontOfX, inFrontOfY, inFrontOfZ);
+    const std::shared_ptr <const Block>& blockInFrontOf = _map.getBlock(inFrontOfX, inFrontOfY, inFrontOfZ);
 
-    const std::shared_ptr <const Block>& blockLeft =
-        _map.getBlock(leftX, leftY, leftZ);
+    const std::shared_ptr <const Block>& blockLeft = _map.getBlock(leftX, leftY, leftZ);
 
-    const std::shared_ptr <const Block>& blockRight =
-        _map.getBlock(rightX, rightY, rightZ);
+    const std::shared_ptr <const Block>& blockRight = _map.getBlock(rightX, rightY, rightZ);
 
     Ball::nextBlockInformation nextBlock;
     if (blockAbove && blockAbove->stillExists()) {
@@ -147,8 +143,9 @@ void Ball::goStraightAhead() noexcept{
     _currentBlockZ = nextBlock.poxZ;
     _currentSide = nextBlock.nextSide;
     _lookTowards = nextBlock.nextLook;
-    _currentCoveredRotation.push_back(
-        JBTypesMethods::vectorAsDirection(getRotationAxis()));
+
+    applyRotation();
+
 }
 
 void Ball::jump() noexcept{
@@ -301,45 +298,46 @@ const ClassicalMechanics& Ball::getMechanicsFalling() const noexcept{
     return _mechanicsPatternFalling;
 }
 
-const std::vector <JBTypes::Dir>& Ball::getCurrentCoveredRotation() const noexcept{
-    return _currentCoveredRotation;
-}
+JBTypes::Quaternion Ball::getCoveredRotation() const noexcept{
 
-JBTypes::vec3f Ball::movementRotation() const noexcept{
+    constexpr float sizeBlock = 1.f; // TODO: use a member in Block or map class
 
-    const std::function <float()> getCoveredDistance = [this] ()->float {
-                                                           if (_state == Ball::State::Moving) {
-                                                               const float timeSecondsSinceAction =
-                                                                   getTimeSecondsSinceAction();
-                                                               return timeSecondsSinceAction /
-                                                                      Ball::timeToGetNextBlock;
-                                                           } else if (_state == Ball::State::Jumping) {
-                                                               return getJumpingPosX();
-                                                           } else if (_state == Ball::State::Falling) {
-                                                               return getFallingPosX();
-                                                           } else {
-                                                               return 0.f;
-                                                           }
-                                                       };
+    const std::function <float()> getCoveredDistance =
+        [this] ()->float {
+            if (_state == Ball::State::Moving) {
+                const float timeSecondsSinceAction = getTimeSecondsSinceAction();
+                return timeSecondsSinceAction / Ball::timeToGetNextBlock;
+            } else if (_state == Ball::State::Jumping) {
+                return getJumpingPosX();
+            } else if (_state == Ball::State::Falling) {
+                return getFallingPosX();
+            } else {
+                return 0.f;
+            }
+        };
 
     const float coveredDistance = getCoveredDistance();
-    return JBTypesMethods::scalarApplication(coveredDistance, getRotationAxis());
+    const float angle = sizeBlock * coveredDistance / getRadius();
+
+    const JBTypes::Quaternion movementRotation = JBTypesMethods::createRotationQuaternion(
+        getRotationAxis(),
+        angle
+        );
+    return JBTypesMethods::multiply(movementRotation, _currentCoveredRotation);
 }
 
 float Ball::getCrushingCoefficient() const noexcept{
 
 
-    const std::function <float()> stayCrushingCoeff = [this] ()->float {
-                                                          constexpr float durationWaitingCrushing = 0.7f;
-                                                          const float angleInCosinusFunc =
-                                                              getTimeSecondsSinceAction() *
-                                                              2.f *
-                                                              static_cast <float>(M_PI) /
-                                                              durationWaitingCrushing;
-                                                          // -cos(0) = -1;
-                                                          // cos(0) = 1;
-                                                          return 0.5f - cosf(angleInCosinusFunc) / 2.f;
-                                                      };
+    const std::function <float()> stayCrushingCoeff =
+        [this] ()->float {
+            constexpr float durationWaitingCrushing = 0.7f;
+            const float angleInCosinusFunc = getTimeSecondsSinceAction() * 2.f *
+                                             static_cast <float>(M_PI) / durationWaitingCrushing;
+            // -cos(0) = -1;
+            // cos(0) = 1;
+            return 0.5f - cosf(angleInCosinusFunc) / 2.f;
+        };
 
     const std::function <float(float)> movementCrushingCoeff =
         [this] (float timeToDoMovement)->float {
@@ -387,16 +385,10 @@ void Ball::isFallingIntersectionBlock() noexcept{
         ) {
         if (descendingJumpPhase) {
             const float coveredDistance = getMechanicsJumping().getPosition(
-                getMechanicsJumping().getTimeToGetDestination()).x;
-            const JBTypes::vec3f targetVector =
-                JBTypesMethods::scalarApplication(
-                    coveredDistance, getRotationAxis());
-            const JBTypes::vec3f movementVector =
-                JBTypesMethods::normalize(targetVector);
-
-            for (size_t i = 0; i < JBTypesMethods::length(targetVector); ++i) {
-                _currentCoveredRotation.push_back(
-                    JBTypesMethods::vectorAsDirection(movementVector));
+                getMechanicsJumping().getTimeToGetDestination()
+                ).x;
+            for (size_t i = 0; i < coveredDistance; ++i) {
+                applyRotation();
             }
         }
         getMechanicsJumping().timesShock({});
@@ -410,9 +402,7 @@ void Ball::isFallingIntersectionBlock() noexcept{
 }
 
 
-std::shared_ptr <const std::vector <int> > Ball::intersectBlock (float x,
-                                                                 float y,
-                                                                 float z) const {
+std::shared_ptr <const std::vector <int> > Ball::intersectBlock (float x, float y, float z) const {
     const JBTypes::vec3f sideVec =
         JBTypesMethods::directionAsVector(_currentSide);
 
@@ -762,10 +752,10 @@ void Ball::teleportingUpdate() noexcept{
         _currentBlockY = destinationPosition.at(1);
         _currentBlockZ = destinationPosition.at(2);
         if (_currentSide != destinationDir) {
-            const JBTypes::vec3f vecDir =
-                JBTypesMethods::directionAsVector(destinationDir);
+            const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(destinationDir);
             _lookTowards = JBTypesMethods::vectorAsDirection(
-                JBTypesMethods::cross(vecDir, { vecDir.y, -vecDir.x, 0.f }));
+                JBTypesMethods::cross(vecDir, { vecDir.y, -vecDir.x, 0.f })
+                );
         }
         _currentSide = destinationDir;
         _teleportationCoefficient = 1.f;
@@ -792,6 +782,17 @@ void Ball::deteleportingUpdate() noexcept{
         _teleportationCoefficient =
             1.f - (timeSinceAction / halfTimeTeleportationDuration);
     }
+}
+
+void Ball::applyRotation() {
+
+    constexpr float sizeBlock = 1.f; // TODO: use a member in Block or map class
+    const float angleToGetBlock = sizeBlock / getRadius();
+
+    _currentCoveredRotation = JBTypesMethods::multiply(
+        JBTypesMethods::createRotationQuaternion(getRotationAxis(), angleToGetBlock),
+        _currentCoveredRotation
+        );
 }
 
 JBTypes::vec3f Ball::getRotationAxis() const noexcept{

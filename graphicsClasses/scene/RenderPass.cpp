@@ -49,6 +49,7 @@ void RenderPass::update() {
         upsertUniforms(uniforms.uniformFloats);
         upsertUniforms(uniforms.uniformVec2s);
         upsertUniforms(uniforms.uniformVec3s);
+        upsertUniforms(uniforms.uniformVec4s);
         // _stateVertexAttributes = createStateVertexAttributes();
     }
 }
@@ -93,6 +94,7 @@ void RenderPass::bindUniforms() const {
     bindUniforms(_uniformFloat);
     bindUniforms(_uniformVec2);
     bindUniforms(_uniformVec3);
+    bindUniforms(_uniformVec4);
     bindUniforms(_uniformMatrix4);
 }
 

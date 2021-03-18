@@ -36,6 +36,7 @@ struct MeshVerticesInfo {
 
 struct Uniforms {
     std::map <std::string, GLfloat> uniformFloats;
+    std::map <std::string, glm::vec4> uniformVec4s;
     std::map <std::string, glm::vec3> uniformVec3s;
     std::map <std::string, glm::vec2> uniformVec2s;
 };

@@ -28,14 +28,7 @@
 
 namespace JBTypes {
 
-enum class Direction {
-    North,
-    South,
-    East,
-    West,
-    Up,
-    Down
-};
+enum class Direction { North, South, East, West, Up, Down };
 
 enum class Color { None, Red, Green, Blue, Yellow };
 
@@ -53,6 +46,7 @@ using timePointMs = std::chrono::time_point <
     >;
 using durationMs = std::chrono::duration <long int,
                                           std::ratio <1, 1000> >;
+struct Quaternion { JBTypes::vec3f v; float w; };
 }
 
 
@@ -67,21 +61,29 @@ float getTimeSecondsSinceTimePoint(
     const JBTypes::timePointMs& timePoint) noexcept;
 float getFloatFromDurationMS(
     const JBTypes::durationMs& dms);
-JBTypes::timePointMs getTimePointMsFromTimePoint(const
-                                                 std::chrono::time_point <std::chrono::system_clock>& timePoint)
-noexcept;
+JBTypes::timePointMs getTimePointMsFromTimePoint(
+    const std::chrono::time_point <std::chrono::system_clock>& timePoint
+    ) noexcept;
 
 
-JBTypes::vec3f cross(const JBTypes::vec3f& a,
-                     const JBTypes::vec3f& b);
-JBTypes::vec3f add(const JBTypes::vec3f& a,
-                   const JBTypes::vec3f& b);
-JBTypes::vec3f scalarApplication(float scalar,
-                                 const JBTypes::vec3f& vec);
-float distance(const JBTypes::vec3f& a,
-               const JBTypes::vec3f& b);
+float dot(const JBTypes::vec3f& a, const JBTypes::vec3f& b);
+JBTypes::vec3f cross(const JBTypes::vec3f& a, const JBTypes::vec3f& b);
+JBTypes::vec3f add(const JBTypes::vec3f& a, const JBTypes::vec3f& b);
+JBTypes::vec3f scalarApplication(float scalar, const JBTypes::vec3f& vec);
+float distance(const JBTypes::vec3f& a, const JBTypes::vec3f& b);
 float length(const JBTypes::vec3f& vec);
 JBTypes::vec3f normalize(const JBTypes::vec3f& vec);
+
+JBTypes::Quaternion createQuaternion(const JBTypes::vec3f& v, float w);
+JBTypes::Quaternion multiply(const JBTypes::Quaternion& q1, const JBTypes::Quaternion& q2);
+JBTypes::Quaternion q2q1(
+    const JBTypes::Quaternion& q1q2,
+    const JBTypes::Quaternion& q1,
+    const JBTypes::Quaternion& q2
+    );
+JBTypes::Quaternion inverse(const JBTypes::Quaternion& q);
+JBTypes::Quaternion createRotationQuaternion(const JBTypes::vec3f& axis, float angle);
+
 void displayInstallError();
 
 std::string colorToString(const JBTypes::Color color);

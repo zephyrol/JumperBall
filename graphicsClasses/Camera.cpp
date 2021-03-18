@@ -91,7 +91,7 @@ void Camera::follow (const BallState& ballState) noexcept{
     } else if (stateBall == Ball::State::Jumping) {
         constexpr float offsetTimeToBeginCamMoving = 0.4f;
         const float timeSinceBeginningMoving = ballState.getTimeSecondsSinceAction();
-        const float getTimeToGetDestination = ballState.getMechanicsJumping().getTimeToGetDestination();
+        const float getTimeToGetDestination = ballState.timeToGetDestination();
         if (timeSinceBeginningMoving > (getTimeToGetDestination + offsetTimeToBeginCamMoving)) {
 
             float timeSinceBeginningCameraMoving = timeSinceBeginningMoving - (getTimeToGetDestination

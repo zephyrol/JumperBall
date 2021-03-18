@@ -24,6 +24,7 @@ virtual std::vector <JBTypes::vec3f> getStaticVec3fValues() const;
 virtual std::map <std::string, float> getDynamicFloats() const;
 virtual std::map <std::string, JBTypes::vec2f> getDynamicVec2fs() const;
 virtual std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const;
+virtual std::map <std::string, JBTypes::Quaternion> getDynamicQuaternions() const;
 
 const GlobalState& getGlobalState() const;
 
