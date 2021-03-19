@@ -66,6 +66,11 @@ static std::vector <glm::vec3> createCustomColorBuffer(
 
 private:
 
+const glm::mat4 _modelTransform;
+const glm::mat4 _normalsTransform;
+const std::vector <glm::vec3> _customColors;
+
+
 ShapeVertexAttributes genVertexAttributes() const;
 virtual std::vector <GLushort> genIndices() const;
 
@@ -76,14 +81,12 @@ static void concatIndices(
     size_t offset
     );
 
-
-const glm::mat4 _modelTransform;
-const glm::mat4 _normalsTransform;
-const std::vector <glm::vec3> _customColors;
+// Positions are required
 virtual std::vector <glm::vec3> genPositions() const = 0;
-virtual std::vector <glm::vec3> genNormals() const = 0;
-virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const = 0;
-virtual std::vector <glm::vec2> genUvCoords() const = 0;
+
+virtual std::vector <glm::vec3> genNormals() const;
+virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const;
+virtual std::vector <glm::vec2> genUvCoords() const;
 
 };
 

@@ -103,9 +103,8 @@ void RenderPass::render() const {
     glBindVertexArray(_vertexArrayObject);
     bindUniforms();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _bufferObjects.elementBufferObject);
-
-    glDrawElements(GL_TRIANGLES, static_cast <GLsizei>(_meshesVerticesInfo.shapeVerticesInfo.indices.size()),
-                   GL_UNSIGNED_SHORT, nullptr);
+    const GLsizei numberOfIndices = _meshesVerticesInfo.shapeVerticesInfo.indices.size();
+    glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, nullptr);
 }
 
 template<typename T> void RenderPass::bindUniforms (UniformVariable <T> uniforms) const {
@@ -177,7 +176,6 @@ RenderPass::BufferObjects RenderPass::createBufferObjects() const {
     bufferObjects.elementBufferObject = ebo
                                         ? *ebo
                                         : 0;
-
     return bufferObjects;
 }
 

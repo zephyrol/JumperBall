@@ -143,7 +143,3 @@ std::vector <glm::vec3> Pyramid::genColors (const std::vector <glm::vec3>& color
            ? GeometricShape::createCustomColorBuffer(colors.at(0), basicPositionsPyramid.size())
            : basicColorsPyramid;
 }
-
-std::vector <glm::vec2> Pyramid::genUvCoords() const {
-    return basicUVCoordsPyramid;
-}

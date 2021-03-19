@@ -142,6 +142,18 @@ void GeometricShape::concatIndices (
     Utility::concatVector(currentIndices, newIndices);
 }
 
+std::vector<glm::vec3> GeometricShape::genNormals() const {
+    return {};
+}
+
+std::vector<glm::vec3> GeometricShape::genColors(const std::vector <glm::vec3>& colors) const {
+    return {};
+}
+
+std::vector<glm::vec2> GeometricShape::genUvCoords() const {
+    return {};
+}
+
 void GeometricShape::concatAttributes (
     GeometricShape::ShapeVertexAttributes& current,
     const GeometricShape::ShapeVertexAttributes& other) {

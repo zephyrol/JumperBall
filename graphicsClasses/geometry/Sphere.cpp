@@ -161,10 +161,6 @@ std::vector <glm::vec3> Sphere::genColors (const std::vector <glm::vec3>& colors
     return basicInfoSphere.shapeVertexAttributes.colors;
 }
 
-std::vector <glm::vec2> Sphere::genUvCoords() const {
-    return basicInfoSphere.shapeVertexAttributes.uvCoords;
-}
-
 std::vector <GLushort> Sphere::genIndices() const {
     return basicInfoSphere.indices;
 }

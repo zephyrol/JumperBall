@@ -214,10 +214,6 @@ std::vector <glm::vec3> Cylinder::genColors (const std::vector <glm::vec3>& colo
     return computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.colors;
 }
 
-std::vector <glm::vec2> Cylinder::genUvCoords() const {
-    return computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.uvCoords;
-}
-
 std::vector <GLushort> Cylinder::genIndices() const {
     return computeBasicInfoCylinder(_meriCount).indices;
 }

@@ -128,10 +128,6 @@ std::vector <glm::vec3> Cube::genColors (const std::vector <glm::vec3>& colors) 
     return getBasicColorsCube(_sides);
 }
 
-std::vector <glm::vec2> Cube::genUvCoords() const {
-    return getBasicUVCoordsCube(_sides);
-}
-
 // order : 1 2 6 5 4 3
 
 const std::vector <glm::vec3> Cube::basicPositionsCube =

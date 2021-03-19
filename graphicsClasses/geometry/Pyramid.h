@@ -24,7 +24,6 @@ Pyramid(const glm::vec3& customColor,
 virtual std::vector <glm::vec3> genPositions() const override;
 virtual std::vector <glm::vec3> genNormals() const override;
 virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const override;
-virtual std::vector <glm::vec2> genUvCoords() const override;
 
 private:
 

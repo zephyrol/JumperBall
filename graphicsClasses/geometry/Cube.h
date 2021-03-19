@@ -32,7 +32,6 @@ Cube(std::vector <glm::vec3>&& customColors,
 virtual std::vector <glm::vec3> genPositions() const override;
 virtual std::vector <glm::vec3> genNormals() const override;
 virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const override;
-virtual std::vector <glm::vec2> genUvCoords() const override;
 
 static const std::vector <glm::vec3> iceColorsCube;
 static const std::vector <glm::vec3> fireColorsCube;
