@@ -25,7 +25,7 @@ std::map <std::string, float> StarState::getDynamicFloats() const {
     return {
         { "distance", _star.distance() },
         { "radius", _star.radius() },
-        { "rotationCenter", _timeSinceCreation },
+        { "creationTime", _timeSinceCreation },
         { "radiusInside", _star.radiusInside() },
         { "radiusOutside", _star.radiusOutside() },
     };
