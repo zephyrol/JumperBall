@@ -24,11 +24,9 @@ bool Block::stillExists() const {
     return true;
 }
 
-Block::Effect Block::detectionEvent (const JBTypes::Dir&,
-                                     const JBTypes::timePointMs&) {
+Block::Effect Block::detectionEvent (const JBTypes::Dir&, const JBTypes::timePointMs&) {
     return Block::Effect::Nothing;
 }
-
 
 const std::array <float, 6>& Block::localTransform() const {
     // 3 values for the translation, 3 for rotation, 3 for the scale
@@ -78,8 +76,7 @@ void Block::catchObject (const JBTypes::vec3ui& blockPosition,
     for (size_t i = 0; i < _objects.size(); ++i) {
         const std::shared_ptr <Object> object = _objects.at(i);
         if (object && !object->isGotten()) {
-            const JBTypes::vec3f objectPos =
-                objectPosition(blockPosition, static_cast <unsigned int>(i));
+            const JBTypes::vec3f objectPos = objectPosition(blockPosition, static_cast <unsigned int>(i));
             object->catchingTest(objectPos, entityPosition, radiusEntity);
         }
     }
@@ -89,8 +86,7 @@ const bool& Block::isFixed() const {
     return _isFixed;
 }
 
-JBTypes::vec3f Block::objectPosition (
-    const JBTypes::vec3ui& pos, unsigned int dirUint) {
+JBTypes::vec3f Block::objectPosition (const JBTypes::vec3ui& pos, unsigned int dirUint) {
 
     constexpr float offsetPosition = 1.f;
     float x = static_cast <float>(pos.at(0) + 0.5f);

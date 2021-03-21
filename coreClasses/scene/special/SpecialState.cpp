@@ -40,6 +40,7 @@ bool SpecialState::isActivated() const {
     return _isActivated;
 }
 
-void SpecialState::update() {
+State::GlobalState SpecialState::update() {
     _isActivated = _special.isActivated();
+    return GlobalState::United;
 }

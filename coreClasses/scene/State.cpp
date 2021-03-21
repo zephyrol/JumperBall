@@ -7,8 +7,7 @@
 #include "State.h"
 
 
-State::State():
-    _globalState(State::GlobalState::Alive) {
+State::State() {
 }
 
 std::vector <float> State::getStaticFloatValues() const {
@@ -37,8 +36,4 @@ std::map <std::string, JBTypes::vec3f> State::getDynamicVec3fs() const {
 
 std::map <std::string, JBTypes::Quaternion> State::getDynamicQuaternions() const {
     return {};
-}
-
-const State::GlobalState& State::getGlobalState() const {
-    return _globalState;
 }

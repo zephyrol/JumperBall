@@ -21,7 +21,7 @@ const JBTypes::Direction& direction() const;
 const float& size() const;
 const size_t& length() const;
 const std::array <float, 9>& transform() const;
-virtual void update() override;
+virtual State::GlobalState update() override;
 
 private:
 const Enemy& _enemy;

@@ -14,7 +14,7 @@ class BallState:public State {
 public:
 BallState(const Ball& ball);
 
-virtual void update() override;
+virtual State::GlobalState update() override;
 const JBTypes::vec3f& get3DPosition() const noexcept;
 float burnCoefficient() const;
 const JBTypes::vec3f& currentSideAsVector() const;

@@ -14,7 +14,7 @@ class StarState:public State {
 public:
 StarState(const Star& star);
 
-void update() override;
+State::GlobalState update() override;
 const JBTypes::vec3f& lightDirection() const;
 std::map <std::string, float> getDynamicFloats() const override;
 std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const override;

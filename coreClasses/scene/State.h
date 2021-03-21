@@ -12,9 +12,9 @@ class State {
 
 public:
 
-enum class GlobalState { Alive, Zomby, Dead };
+enum class GlobalState { United, Separate, Dead };
 State();
-virtual void update() = 0;
+virtual GlobalState update() = 0;
 virtual ~State() = default;
 
 virtual std::vector <float> getStaticFloatValues() const;
@@ -25,11 +25,6 @@ virtual std::map <std::string, float> getDynamicFloats() const;
 virtual std::map <std::string, JBTypes::vec2f> getDynamicVec2fs() const;
 virtual std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const;
 virtual std::map <std::string, JBTypes::Quaternion> getDynamicQuaternions() const;
-
-const GlobalState& getGlobalState() const;
-
-private:
-GlobalState _globalState;
 };
 
 #endif // STATE_H

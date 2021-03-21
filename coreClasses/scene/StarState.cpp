@@ -12,9 +12,10 @@ StarState::StarState(const Star& star):
     _lightDirection(star.lightDirection()) {
 }
 
-void StarState::update() {
+State::GlobalState StarState::update() {
     _lightDirection = _star.lightDirection();
     _timeSinceCreation = _star.getTimeSinceCreation();
+    return State::GlobalState::United;
 }
 
 const JBTypes::vec3f& StarState::lightDirection() const {

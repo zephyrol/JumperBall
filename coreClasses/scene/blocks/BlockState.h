@@ -12,7 +12,7 @@
 class BlockState:public State {
 public:
 BlockState(const Block& block);
-virtual void update() override;
+virtual State::GlobalState update() override;
 
 std::map <std::string, float> getDynamicFloats() const override;
 std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const override;

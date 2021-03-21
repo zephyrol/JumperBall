@@ -48,9 +48,10 @@ const std::array <float, 9>& EnemyState::transform() const {
     return _transform;
 }
 
-void EnemyState::update() {
+State::GlobalState EnemyState::update() {
     _hasHit = _enemy.hasHit();
     _intersectionTime = _enemy.intersectionTime();
     _position = _enemy.position();
     _transform = _enemy.transform();
+    return State::GlobalState::United;
 }

@@ -24,9 +24,9 @@ public:
 Mesh(std::unique_ptr <State>&& state, vecCstGeometricShape_sptr&& shapes);
 
 struct StateVertexAttributes {
-    std::vector <std::vector <GLfloat> > staticFloats;
-    std::vector <std::vector <glm::vec3> > staticVec3s;
-    std::vector <std::vector <glm::vec2> > staticVec2s;
+    std::vector <std::vector <GLfloat> > staticFloats = {};
+    std::vector <std::vector <glm::vec3> > staticVec3s = {};
+    std::vector <std::vector <glm::vec2> > staticVec2s = {};
 };
 
 struct MeshVerticesInfo {
@@ -34,14 +34,17 @@ struct MeshVerticesInfo {
     Mesh::StateVertexAttributes stateVertexAttributes;
 };
 
+template<typename T> using UniformVariable = std::map <std::string, T>;
 struct Uniforms {
-    std::map <std::string, GLfloat> uniformFloats;
-    std::map <std::string, glm::vec4> uniformVec4s;
-    std::map <std::string, glm::vec3> uniformVec3s;
-    std::map <std::string, glm::vec2> uniformVec2s;
+    UniformVariable <GLfloat> uniformFloats = {};
+    UniformVariable <glm::vec2> uniformVec2s = {};
+    UniformVariable <glm::vec3> uniformVec3s = {};
+    UniformVariable <glm::vec4> uniformVec4s = {};
+    UniformVariable <glm::mat4> uniformMat4s = {};
+    UniformVariable <GLuint> uniformTextures = {};
 };
 
-void update();
+State::GlobalState update();
 
 size_t numberOfVertices() const;
 Uniforms genUniformsValues() const;
@@ -60,7 +63,7 @@ template<typename RawType, typename OpenGLType> static void convertAttributesToO
     const std::vector <RawType>& rawValues, std::vector <OpenGLType>& openGLValues);
 
 template<typename RawType, typename OpenGLType> static void convertUniformsToOpenGLFormat(
-    const std::map <std::string, RawType>& rawValues, std::map <std::string, OpenGLType>& openGLValues);
+    const std::map <std::string, RawType>& rawValues, Mesh::UniformVariable <OpenGLType>& openGLValues);
 
 template<typename T> static void concatStateVertexAttribute(
     std::vector <std::vector <T> >& current,

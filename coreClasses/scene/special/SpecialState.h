@@ -19,7 +19,7 @@ const JBTypes::Dir& direction() const;
 const JBTypes::vec3f& position3D() const;
 const JBTypes::timePointMs& creationTime() const;
 bool isActivated() const;
-virtual void update() override;
+virtual State::GlobalState update() override;
 
 private:
 const Special& _special;

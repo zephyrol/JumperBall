@@ -1,9 +1,8 @@
 #include "QuadState.h"
 
 QuadState::QuadState(const Quad&) {
-
 }
 
-void QuadState::update() {
-
+State::GlobalState QuadState::update() {
+    return State::GlobalState::United;
 }

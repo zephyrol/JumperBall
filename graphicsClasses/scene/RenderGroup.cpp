@@ -1,0 +1,287 @@
+/*
+ * File: RenderGroup.cpp
+ * Author: Morgenthaler S
+ *
+ * Created on 20 mars 2021, 16:30
+ */
+#include "RenderGroup.h"
+
+RenderGroup::RenderGroup(const vecMesh_sptr& meshes, const State::GlobalState& globalState):
+    _globalState(globalState),
+    _meshes(meshes),
+    _meshesVerticesInfo(createMeshesVerticesInfo()),
+    _vertexArrayObject(genVertexArrayObject()),
+    _bufferObjects(createBufferObjects()),
+    _needBuffersRebinding(false) {
+}
+
+RenderGroup::RenderGroup(const RenderGroup& renderGroup, const State::GlobalState& globalState):
+    _globalState(globalState),
+    _meshes{},
+    _meshesVerticesInfo(),
+    _vertexArrayObject(genVertexArrayObject()),
+    _bufferObjects(createBufferObjects(renderGroup)),
+    _needBuffersRebinding(false) {
+}
+
+CstMesh_sptr RenderGroup::getHeadMesh() const {
+    return _meshes.size() > 0
+           ? _meshes.at(0)
+           : nullptr;
+}
+
+vecMesh_sptr RenderGroup::update (const vecMesh_sptr& meshesToAdd) {
+    vecMesh_sptr rejectedMeshes;
+    bool needBuffersRebinding = false;
+
+    for (vecMesh_sptr::iterator it = _meshes.begin(); it != _meshes.end(); ) {
+        const Mesh_sptr& mesh = *it;
+        const State::GlobalState meshState = mesh->update();
+        if (meshState != _globalState) {
+            if (meshState != State::GlobalState::Dead) {
+                rejectedMeshes.push_back(mesh);
+            }
+            _meshes.erase(it);
+            needBuffersRebinding = true;
+        } else {
+            ++it;
+        }
+    }
+    if (!meshesToAdd.empty()) {
+        _meshes.insert(_meshes.end(), meshesToAdd.begin(), meshesToAdd.end());
+        needBuffersRebinding = true;
+    }
+
+    if (needBuffersRebinding) {
+        _meshesVerticesInfo = createMeshesVerticesInfo();
+    }
+    _needBuffersRebinding = needBuffersRebinding;
+    return rejectedMeshes;
+}
+
+GLuint RenderGroup::genVertexArrayObject() const {
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    return vao;
+}
+
+GLuint RenderGroup::genBufferObject() const {
+    GLuint bo;
+    glGenBuffers(1, &bo);
+    return bo;
+}
+
+Mesh::MeshVerticesInfo RenderGroup::createMeshesVerticesInfo() const {
+    Mesh::MeshVerticesInfo meshesVerticesInfo;
+    for (const CstMesh_sptr& mesh : _meshes) {
+        Mesh::concatMeshVerticesInfo(meshesVerticesInfo, mesh->genMeshVerticesInfo());
+    }
+    return meshesVerticesInfo;
+}
+
+const RenderGroup::BufferObjects& RenderGroup::bufferObjects() const {
+    return _bufferObjects;
+}
+
+template<typename T> std::vector <GLuint> RenderGroup::createStateVertexAttributesBufferObject (
+    const std::vector <std::vector <T> >& attributes) const {
+    std::vector <GLuint> vertexBufferObjects;
+    for (const auto& stateVertexAttribute : attributes) {
+        const auto vertexBuffer = initializeVBO(stateVertexAttribute);
+        if (vertexBuffer) {
+            vertexBufferObjects.push_back(*vertexBuffer);
+        }
+    }
+    return vertexBufferObjects;
+}
+
+template<typename T> void RenderGroup::fillVBOsList (
+    std::vector <GLuint>& vboList,
+    const std::vector <T>& attributeData,
+    size_t attributesOffset
+    ) const {
+    const std::shared_ptr <GLuint> vertexBufferObject = initializeVBO(attributeData);
+    if (vertexBufferObject) {
+        const size_t attributeNumber = vboList.size() + attributesOffset;
+        const size_t numberOfGLfloats = sizeof(T) / sizeof(GLfloat);
+
+        glEnableVertexAttribArray(attributeNumber);
+        glBindBuffer(GL_ARRAY_BUFFER, *vertexBufferObject);
+        glVertexAttribPointer(attributeNumber, numberOfGLfloats, GL_FLOAT, GL_FALSE, 0, nullptr);
+        vboList.push_back(*vertexBufferObject);
+    }
+}
+
+template<typename T> void RenderGroup::fillStateVertexAttributesVBOsList (
+    std::vector <GLuint>& vboList,
+    const std::vector <std::vector <T> >& stateVertexAttributes,
+    size_t attributesOffset) const {
+    for (const std::vector <T>& stateVertexAttribute : stateVertexAttributes) {
+        fillVBOsList(vboList, stateVertexAttribute, attributesOffset);
+    }
+}
+
+RenderGroup::BufferObjects RenderGroup::createBufferObjects() const {
+
+    glBindVertexArray(_vertexArrayObject);
+    RenderGroup::BufferObjects bufferObjects;
+
+    std::vector <GLuint>& shapeVBOs = bufferObjects.shapeVertexBufferObjects;
+    const auto& shapeVerticesInfo = _meshesVerticesInfo.shapeVerticesInfo;
+    const auto& shapeVertexAttributes = shapeVerticesInfo.shapeVertexAttributes;
+    fillVBOsList(shapeVBOs, shapeVertexAttributes.positions);
+    fillVBOsList(shapeVBOs, shapeVertexAttributes.colors);
+    fillVBOsList(shapeVBOs, shapeVertexAttributes.normals);
+    fillVBOsList(shapeVBOs, shapeVertexAttributes.uvCoords);
+
+    const size_t attributesOffset = shapeVBOs.size();
+    std::vector <GLuint>& stateVBOs = bufferObjects.stateVertexBufferObjects;
+    const auto& stateVertexAttributes = _meshesVerticesInfo.stateVertexAttributes;
+
+    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticFloats, attributesOffset);
+    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticVec2s, attributesOffset);
+    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticVec3s, attributesOffset);
+
+    const auto ebo = initializeEBO(shapeVerticesInfo.indices);
+    bufferObjects.elementBufferObject = ebo
+                                        ? *ebo
+                                        : 0;
+    return bufferObjects;
+}
+
+RenderGroup::BufferObjects RenderGroup::createBufferObjects (const RenderGroup& renderGroup) const {
+    RenderGroup::BufferObjects bufferObjects;
+    const RenderGroup::BufferObjects& renderGroupBufferObjects = renderGroup.bufferObjects();
+    size_t nbOfShapeVBOs = renderGroupBufferObjects.shapeVertexBufferObjects.size();
+    size_t nbOfStateVBOs = renderGroupBufferObjects.stateVertexBufferObjects.size();
+
+    const auto fillVBOs =
+        [this] (size_t nbOfVBOs) {
+            std::vector <GLuint> vbos;
+            for (size_t i = 0; i < nbOfVBOs; ++i) {
+                vbos.push_back(genBufferObject());
+            }
+            return vbos;
+        };
+    bufferObjects.shapeVertexBufferObjects = fillVBOs(nbOfShapeVBOs);
+    bufferObjects.stateVertexBufferObjects = fillVBOs(nbOfStateVBOs);
+    bufferObjects.elementBufferObject = genBufferObject();
+
+    return bufferObjects;
+}
+
+template<typename T> size_t RenderGroup::updateBufferObjectData (
+    GLuint bo,
+    const std::vector <T>& bufferObjectData,
+    GLenum target
+    ) const {
+    if (!bufferObjectData.empty()) {
+        fillBufferObjectData(bo, bufferObjectData, target);
+        return 1;
+    }
+    return 0;
+}
+
+template<typename T> size_t RenderGroup::updateStateVBOsData (
+    const std::vector <GLuint>& vbosList,
+    const std::vector <std::vector <T> >& bufferObjectsData,
+    size_t attributesOffset
+    ) const {
+    size_t vbosDataUpdated = 0;
+    for (size_t i = 0; i < bufferObjectsData.size(); ++i) {
+        const auto& bufferObjectData = bufferObjectsData.at(i);
+
+        const size_t stateVboNumber = i + attributesOffset;
+        const auto& vbo = vbosList.at(stateVboNumber);
+
+        vbosDataUpdated += updateBufferObjectData(vbo, bufferObjectData, GL_ARRAY_BUFFER);
+    }
+    return vbosDataUpdated;
+}
+
+void RenderGroup::updateBufferObjectsData() const {
+    const auto& shapeVBOs = _bufferObjects.shapeVertexBufferObjects;
+    const auto& stateVBOs = _bufferObjects.stateVertexBufferObjects;
+    const auto& ebo = _bufferObjects.elementBufferObject;
+
+    const auto& shapeVerticesInfo = _meshesVerticesInfo.shapeVerticesInfo;
+
+    const auto& shapeVertexAttributes = shapeVerticesInfo.shapeVertexAttributes;
+    const auto& positions = shapeVertexAttributes.positions;
+    const auto& colors = shapeVertexAttributes.colors;
+    const auto& normals = shapeVertexAttributes.normals;
+    const auto& uvCoords = shapeVertexAttributes.uvCoords;
+
+    size_t vbosCounter = 0;
+
+    constexpr GLenum vboTarget = GL_ARRAY_BUFFER;
+    if (vbosCounter < shapeVBOs.size()) {
+        vbosCounter += updateBufferObjectData(shapeVBOs.at(vbosCounter), positions, vboTarget);
+    }
+    if (vbosCounter < shapeVBOs.size()) {
+        vbosCounter += updateBufferObjectData(shapeVBOs.at(vbosCounter), colors, vboTarget);
+    }
+    if (vbosCounter < shapeVBOs.size()) {
+        vbosCounter += updateBufferObjectData(shapeVBOs.at(vbosCounter), normals, vboTarget);
+    }
+    if (vbosCounter < shapeVBOs.size()) {
+        vbosCounter += updateBufferObjectData(shapeVBOs.at(vbosCounter), uvCoords, vboTarget);
+    }
+
+    vbosCounter = 0;
+    const auto& stateVertexAttributes = _meshesVerticesInfo.stateVertexAttributes;
+
+    vbosCounter += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticFloats, vbosCounter);
+    vbosCounter += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticVec2s, vbosCounter);
+    vbosCounter += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticVec3s, vbosCounter);
+
+
+    const auto& indices = shapeVerticesInfo.indices;
+    updateBufferObjectData(ebo, indices, GL_ELEMENT_ARRAY_BUFFER);
+}
+
+template<typename T> void RenderGroup::fillBufferObjectData (GLuint bo,
+                                                             const std::vector <T>& bufferObjectData,
+                                                             GLenum target) const {
+    glBindBuffer(target, bo);
+    glBufferData(target, bufferObjectData.size() * sizeof(T), bufferObjectData.data(), GL_STATIC_DRAW);
+}
+
+template<typename T> std::shared_ptr <GLuint> RenderGroup::initializeBO (
+    const std::vector <T>& bufferObjectData,
+    GLenum target
+    ) const {
+    std::shared_ptr <GLuint> bo = nullptr;
+    if (!bufferObjectData.empty()) {
+        bo = std::make_shared <GLuint>(genBufferObject());
+        fillBufferObjectData(*bo, bufferObjectData, target);
+    }
+    return bo;
+}
+
+
+template<typename T> std::shared_ptr <GLuint> RenderGroup::initializeVBO (
+    const std::vector <T>& attributeData
+    ) const {
+    return initializeBO(attributeData, GL_ARRAY_BUFFER);
+}
+
+std::shared_ptr <GLuint> RenderGroup::initializeEBO (const std::vector <GLushort>& indicesData) const {
+    return initializeBO(indicesData, GL_ELEMENT_ARRAY_BUFFER);
+}
+
+
+void RenderGroup::render() const {
+    if (_meshes.empty()) {
+        return;
+    }
+    glBindVertexArray(_vertexArrayObject);
+    if (_needBuffersRebinding) {
+        updateBufferObjectsData();
+    }
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _bufferObjects.elementBufferObject);
+    const GLsizei numberOfIndices = _meshesVerticesInfo.shapeVerticesInfo.indices.size();
+    // std::cout << "render " << numberOfIndices << std::endl;
+    glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, nullptr);
+}

@@ -10,8 +10,9 @@ BlockState::BlockState(const Block& block):
     _localTransform(block.localTransform()) {
 }
 
-void BlockState::update() {
+State::GlobalState BlockState::update() {
     _localTransform = _block.localTransform();
+    return State::GlobalState::United;
 }
 
 std::map <std::string, float> BlockState::getDynamicFloats() const {

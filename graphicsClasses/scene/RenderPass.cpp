@@ -9,49 +9,45 @@
 
 RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecMesh_sptr& meshes):
     _shaderProgram(shaderProgram),
-    _vertexArrayObject(genVertexArrayObject()),
     _meshes(meshes),
-    _meshesVerticesInfo(createMeshesVerticesInfo()),
-    _bufferObjects(createBufferObjects()),
-    // Use smartpointer, when the uniform is changed outside this class, every renderpass will be updated
-    _uniformMatrix4{},
-    _uniformVec4{},
-    _uniformVec3{},
-    _uniformVec2{},
-    _uniformFloat{},
-    _uniformTextures{} {
-}
-
-GLuint RenderPass::genVertexArrayObject() const {
-    GLuint vao;
-    glGenVertexArrays(1, &vao);
-    return vao;
-}
-
-GLuint RenderPass::genBufferObject() const {
-    GLuint bo;
-    glGenBuffers(1, &bo);
-    return bo;
-}
-
-Mesh::MeshVerticesInfo RenderPass::createMeshesVerticesInfo() const {
-    Mesh::MeshVerticesInfo meshesVerticesInfo;
-    for (const CstMesh_sptr& mesh : _meshes) {
-        Mesh::concatMeshVerticesInfo(meshesVerticesInfo, mesh->genMeshVerticesInfo());
-    }
-    return meshesVerticesInfo;
+    _unitedMeshesGroup(std::make_shared <RenderGroup>(meshes, State::GlobalState::United)),
+    _separateMeshGroups(createSeparateMeshGroups(meshes)),
+    _renderGroupsUniforms{},
+    _renderPassUniforms() {
 }
 
 void RenderPass::update() {
-    for (const auto& mesh : _meshes) {
-        mesh->update();
-        const Mesh::Uniforms uniforms = mesh->genUniformsValues();
-        upsertUniforms(uniforms.uniformFloats);
-        upsertUniforms(uniforms.uniformVec2s);
-        upsertUniforms(uniforms.uniformVec3s);
-        upsertUniforms(uniforms.uniformVec4s);
-        // _stateVertexAttributes = createStateVertexAttributes();
+
+    const auto updateRenderGroupUniforms =
+        [this] (const std::shared_ptr <RenderGroup>& renderGroup) {
+            const CstMesh_sptr headMesh = renderGroup->getHeadMesh();
+            if (headMesh) {
+                _renderGroupsUniforms[renderGroup] =
+                    headMesh->genUniformsValues();
+            }
+        };
+
+    vecMesh_sptr rejectedMeshes = _unitedMeshesGroup->update();
+    updateRenderGroupUniforms(_unitedMeshesGroup);
+
+    for (const auto& separateMeshGroup : _separateMeshGroups) {
+        const Mesh_sptr& separateMesh = separateMeshGroup.first;
+        const std::shared_ptr <RenderGroup>& separateRenderGroup = separateMeshGroup.second;
+
+        bool foundRejectedMesh = false;
+        for (const Mesh_sptr& rejectedMesh : rejectedMeshes) {
+            if (rejectedMesh.get() == separateMesh.get()) {
+                foundRejectedMesh = true;
+            }
+        }
+        if (foundRejectedMesh) {
+            separateRenderGroup->update({ separateMesh });
+        } else {
+            separateRenderGroup->update();
+        }
+        updateRenderGroupUniforms(separateRenderGroup);
     }
+
 }
 
 template<typename T> void RenderPass::upsertUniforms (const std::map <std::string, T>& uniformsData) {
@@ -60,144 +56,68 @@ template<typename T> void RenderPass::upsertUniforms (const std::map <std::strin
     }
 }
 
+std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > RenderPass::createSeparateMeshGroups (
+    const vecMesh_sptr& meshes) const {
+    std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > separateMeshGroups;
+    for (const Mesh_sptr& mesh : meshes) {
+        separateMeshGroups[mesh] = std::make_shared <RenderGroup>(
+            *_unitedMeshesGroup,
+            State::GlobalState::Separate
+            );
+    }
+    return separateMeshGroups;
+}
+
 void RenderPass::upsertUniform (const std::string& name, const glm::mat4& value) {
-    _uniformMatrix4[name] = value;
+    _renderPassUniforms.uniformMat4s[name] = value;
 }
 
 void RenderPass::upsertUniform (const std::string& name, const glm::vec4& value) {
-    _uniformVec4[name] = value;
+    _renderPassUniforms.uniformVec4s[name] = value;
 }
 
 void RenderPass::upsertUniform (const std::string& name, const glm::vec3& value) {
-    _uniformVec3[name] = value;
+    _renderPassUniforms.uniformVec3s[name] = value;
 }
 
 void RenderPass::upsertUniform (const std::string& name, const glm::vec2& value) {
-    _uniformVec2[name] = value;
+    _renderPassUniforms.uniformVec2s[name] = value;
 }
 
 void RenderPass::upsertUniform (const std::string& name, const GLfloat& value) {
-    _uniformFloat[name] = value;
+    _renderPassUniforms.uniformFloats[name] = value;
 }
 
 void RenderPass::upsertUniformTexture (const std::string& name, const GLuint value) {
-    _uniformTextures[name] = value;
+    _renderPassUniforms.uniformTextures[name] = value;
 }
 
-void RenderPass::bindUniforms() const {
+void RenderPass::bindUniforms (const Mesh::Uniforms& uniforms) const {
+
+    bindUniforms(uniforms.uniformFloats);
+    bindUniforms(uniforms.uniformVec2s);
+    bindUniforms(uniforms.uniformVec3s);
+    bindUniforms(uniforms.uniformVec4s);
+    bindUniforms(uniforms.uniformMat4s);
 
     int textureNumber = 0;
-    for (const auto& uniformTexture : _uniformTextures) {
+    for (const auto& uniformTexture : uniforms.uniformTextures) {
         _shaderProgram.bindUniformTexture(uniformTexture.first, textureNumber, uniformTexture.second);
         ++textureNumber;
     }
-    bindUniforms(_uniformFloat);
-    bindUniforms(_uniformVec2);
-    bindUniforms(_uniformVec3);
-    bindUniforms(_uniformVec4);
-    bindUniforms(_uniformMatrix4);
 }
 
 void RenderPass::render() const {
     _shaderProgram.use();
-    glBindVertexArray(_vertexArrayObject);
-    bindUniforms();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _bufferObjects.elementBufferObject);
-    const GLsizei numberOfIndices = _meshesVerticesInfo.shapeVerticesInfo.indices.size();
-    glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, nullptr);
+    bindUniforms(_renderPassUniforms);
+    for (const auto& renderGroupUniforms : _renderGroupsUniforms) {
+        bindUniforms(renderGroupUniforms.second);
+        renderGroupUniforms.first->render();
+    }
 }
 
-template<typename T> void RenderPass::bindUniforms (UniformVariable <T> uniforms) const {
+template<typename T> void RenderPass::bindUniforms (Mesh::UniformVariable <T> uniforms) const {
     for (const auto& uniform : uniforms) {
         _shaderProgram.bindUniform(uniform.first, uniform.second);
     }
-}
-
-template<typename T> std::vector <GLuint> RenderPass::createStateVertexAttributesBufferObject (
-    const std::vector <std::vector <T> >& attributes) const {
-    std::vector <GLuint> vertexBufferObjects;
-    for (const auto& stateVertexAttribute : attributes) {
-        const auto vertexBuffer = initializeVBO(stateVertexAttribute);
-        if (vertexBuffer) {
-            vertexBufferObjects.push_back(*vertexBuffer);
-        }
-    }
-    return vertexBufferObjects;
-}
-
-template<typename T> void RenderPass::fillVBOsList (
-    std::vector <GLuint>& vboList,
-    const std::vector <T>& attributeData,
-    size_t attributesOffset
-    ) const {
-    const std::shared_ptr <GLuint> vertexBufferObject = initializeVBO(attributeData);
-    if (vertexBufferObject) {
-        const size_t attributeNumber = vboList.size() + attributesOffset;
-        const size_t numberOfGLfloats = sizeof(T) / sizeof(GLfloat);
-
-        glEnableVertexAttribArray(attributeNumber);
-        glBindBuffer(GL_ARRAY_BUFFER, *vertexBufferObject);
-        glVertexAttribPointer(attributeNumber, numberOfGLfloats, GL_FLOAT, GL_FALSE, 0, nullptr);
-        vboList.push_back(*vertexBufferObject);
-    }
-}
-
-template<typename T> void RenderPass::fillStateVertexAttributesVBOsList (
-    std::vector <GLuint>& vboList,
-    const std::vector <std::vector <T> >& stateVertexAttributes,
-    size_t attributesOffset) const {
-    for (const std::vector <T>& stateVertexAttribute : stateVertexAttributes) {
-        fillVBOsList(vboList, stateVertexAttribute, attributesOffset);
-    }
-}
-
-RenderPass::BufferObjects RenderPass::createBufferObjects() const {
-
-    glBindVertexArray(_vertexArrayObject);
-    RenderPass::BufferObjects bufferObjects;
-
-    std::vector <GLuint>& shapeVBOs = bufferObjects.shapeVertexBufferObjects;
-    const auto& shapeVerticesInfo = _meshesVerticesInfo.shapeVerticesInfo;
-    const auto& shapeVertexAttributes = shapeVerticesInfo.shapeVertexAttributes;
-    fillVBOsList(shapeVBOs, shapeVertexAttributes.positions);
-    fillVBOsList(shapeVBOs, shapeVertexAttributes.colors);
-    fillVBOsList(shapeVBOs, shapeVertexAttributes.normals);
-    fillVBOsList(shapeVBOs, shapeVertexAttributes.uvCoords);
-
-    const size_t attributesOffset = shapeVBOs.size();
-    std::vector <GLuint>& stateVBOs = bufferObjects.stateVertexBufferObjects;
-    const auto& stateVertexAttributes = _meshesVerticesInfo.stateVertexAttributes;
-
-    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticFloats, attributesOffset);
-    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticVec2s, attributesOffset);
-    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticVec3s, attributesOffset);
-
-    const auto ebo = initializeEBO(shapeVerticesInfo.indices);
-    bufferObjects.elementBufferObject = ebo
-                                        ? *ebo
-                                        : 0;
-    return bufferObjects;
-}
-
-template<typename T> std::shared_ptr <GLuint> RenderPass::initializeBO (
-    const std::vector <T>& attributeData,
-    GLenum target
-    ) const {
-    std::shared_ptr <GLuint> bo = nullptr;
-    if (!attributeData.empty()) {
-        bo = std::make_shared <GLuint>(genBufferObject());
-        glBindBuffer(target, *bo);
-        glBufferData(target, attributeData.size() * sizeof(T), attributeData.data(), GL_STATIC_DRAW);
-    }
-    return bo;
-}
-
-template<typename T> std::shared_ptr <GLuint> RenderPass::initializeVBO (
-    const std::vector <T>& attributeData
-    ) const {
-    return initializeBO(attributeData, GL_ARRAY_BUFFER);
-}
-
-std::shared_ptr <GLuint> RenderPass::initializeEBO (const std::vector <GLushort>& indicesData) const {
-    return initializeBO(indicesData, GL_ELEMENT_ARRAY_BUFFER);
 }

@@ -6,7 +6,7 @@
 class QuadState:public State {
 public:
 QuadState(const Quad& quad);
-virtual void update() override;
+virtual State::GlobalState update() override;
 
 private:
 };

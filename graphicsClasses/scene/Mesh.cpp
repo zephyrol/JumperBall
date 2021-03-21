@@ -12,8 +12,8 @@ Mesh::Mesh(std::unique_ptr <State>&& state, vecCstGeometricShape_sptr&& shapes):
     _numberOfVertices(computeNumberOfVertices()) {
 }
 
-void Mesh::update() {
-    _state->update();
+State::GlobalState Mesh::update() {
+    return _state->update();
 }
 
 size_t Mesh::numberOfVertices() const {
@@ -38,7 +38,7 @@ template<typename RawType, typename OpenGLType> void Mesh::convertAttributesToOp
 
 template<typename RawType, typename OpenGLType> void Mesh::convertUniformsToOpenGLFormat (
     const std::map <std::string, RawType>& rawValues,
-    std::map <std::string, OpenGLType>& openGLValues) {
+    Mesh::UniformVariable <OpenGLType>& openGLValues) {
     for (const auto& rawValue : rawValues) {
         const OpenGLType openGLValue = Utility::convertToOpenGLFormat(rawValue.second);
         openGLValues[rawValue.first] = openGLValue;
@@ -55,18 +55,10 @@ size_t Mesh::computeNumberOfVertices() const {
 
 Mesh::Uniforms Mesh::genUniformsValues() const {
     Mesh::Uniforms uniforms;
-    std::map <std::string, glm::vec4> glmVec4s {};
-    std::map <std::string, glm::vec3> glmVec3s {};
-    std::map <std::string, glm::vec2> glmVec2s {};
-    std::map <std::string, GLfloat> glFloats {};
-    convertUniformsToOpenGLFormat(_state->getDynamicFloats(), glFloats);
-    convertUniformsToOpenGLFormat(_state->getDynamicVec2fs(), glmVec2s);
-    convertUniformsToOpenGLFormat(_state->getDynamicVec3fs(), glmVec3s);
-    convertUniformsToOpenGLFormat(_state->getDynamicQuaternions(), glmVec4s);
-    uniforms.uniformFloats = glFloats;
-    uniforms.uniformVec2s = glmVec2s;
-    uniforms.uniformVec3s = glmVec3s;
-    uniforms.uniformVec4s = glmVec4s;
+    convertUniformsToOpenGLFormat(_state->getDynamicFloats(), uniforms.uniformFloats);
+    convertUniformsToOpenGLFormat(_state->getDynamicVec2fs(), uniforms.uniformVec2s);
+    convertUniformsToOpenGLFormat(_state->getDynamicVec3fs(), uniforms.uniformVec3s);
+    convertUniformsToOpenGLFormat(_state->getDynamicQuaternions(), uniforms.uniformVec4s);
     return uniforms;
 }
 

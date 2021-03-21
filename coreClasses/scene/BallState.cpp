@@ -25,7 +25,7 @@ BallState::BallState(const Ball& ball):
     _nextLook(JBTypesMethods::directionAsVector(ball.getNextBlockInfo().nextLook)) {
 }
 
-void BallState::update() {
+State::GlobalState BallState::update() {
     _coveredRotation = _ball.getCoveredRotation();
     _position = _ball.get3DPosition();
     _burnCoefficient = _ball.burnCoefficient();
@@ -41,6 +41,15 @@ void BallState::update() {
     _timeSecondsSinceAction = _ball.getTimeSecondsSinceAction();
     _timeSecondsSinceStateOfLife = _ball.getTimeSecondsSinceStateOfLife();
     _nextLook = JBTypesMethods::directionAsVector(_ball.getNextBlockInfo().nextLook);
+
+    const Ball::StateOfLife stateOfLife = _ball.stateOfLife();
+    if (stateOfLife == Ball::StateOfLife::Bursting) {
+        return State::GlobalState::Separate;
+    }
+    if (stateOfLife == Ball::StateOfLife::Dead) {
+        return State::GlobalState::Dead;
+    }
+    return State::GlobalState::United;
 }
 
 const JBTypes::vec3f& BallState::get3DPosition() const noexcept{

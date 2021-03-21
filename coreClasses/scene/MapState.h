@@ -12,16 +12,15 @@
 #include "scene/special/SpecialState.h"
 #include "State.h"
 
-class MapState:public State {
+class MapState {
 public:
 MapState(const Map& map);
-virtual void update() override;
+virtual void update();
 
 unsigned int width() const;
 unsigned int height() const;
 unsigned int deep() const;
-Map::BlockTypes getType(const JBTypes::vec3ui& position
-                        ) const;
+Map::BlockTypes getType(const JBTypes::vec3ui& position) const;
 const std::vector <Map::BlockInfo>& blocksInfo() const;
 float getTimeSinceCreation() const;
 

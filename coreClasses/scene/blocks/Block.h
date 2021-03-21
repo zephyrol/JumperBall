@@ -22,10 +22,8 @@ Block(const JBTypes::vec3ui& position,
       bool isFixed = true);
 virtual ~Block() = default;
 
-
 // ------------TYPES------------//
 enum class Effect { Nothing, Burst, Burn, Slide, Jump };
-
 
 // ----------METHODS-------------//
 virtual Effect interaction(
@@ -33,13 +31,8 @@ virtual Effect interaction(
     const JBTypes::timePointMs& currentTime,
     const JBTypes::vec3f& posBall,
     const JBTypes::vec3ui& posBlock);
-virtual Effect detectionEvent(
-    const JBTypes::Dir& ballDir,
-    const JBTypes::timePointMs& currentTime
-    );
-virtual void createObject(
-    Object::CategoryOfObjects category,
-    JBTypes::Dir dir);
+virtual Effect detectionEvent(const JBTypes::Dir& ballDir, const JBTypes::timePointMs& currentTime);
+virtual void createObject(Object::CategoryOfObjects category, JBTypes::Dir dir);
 
 static constexpr size_t objectsNumber = 6;
 
@@ -59,7 +52,6 @@ const std::array <std::shared_ptr <Object>, 6>& objects() const;
 const JBTypes::vec3ui& position() const;
 
 static JBTypes::vec3f objectPosition(const JBTypes::vec3ui& pos, unsigned int dirUint);
-
 
 protected:
 // --------ATTRIBUTES-----------//
