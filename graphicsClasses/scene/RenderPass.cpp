@@ -22,8 +22,7 @@ void RenderPass::update() {
         [this] (const std::shared_ptr <RenderGroup>& renderGroup) {
             const CstMesh_sptr headMesh = renderGroup->getHeadMesh();
             if (headMesh) {
-                _renderGroupsUniforms[renderGroup] =
-                    headMesh->genUniformsValues();
+              _renderGroupsUniforms[renderGroup] = headMesh->genUniformsValues();
             }
         };
 
@@ -110,6 +109,7 @@ void RenderPass::bindUniforms (const Mesh::Uniforms& uniforms) const {
 void RenderPass::render() const {
     _shaderProgram.use();
     bindUniforms(_renderPassUniforms);
+    int i = 0;
     for (const auto& renderGroupUniforms : _renderGroupsUniforms) {
         bindUniforms(renderGroupUniforms.second);
         renderGroupUniforms.first->render();

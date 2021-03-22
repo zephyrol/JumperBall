@@ -103,11 +103,7 @@ template<typename T> void RenderGroup::fillVBOsList (
     const std::shared_ptr <GLuint> vertexBufferObject = initializeVBO(attributeData);
     if (vertexBufferObject) {
         const size_t attributeNumber = vboList.size() + attributesOffset;
-        const size_t numberOfGLfloats = sizeof(T) / sizeof(GLfloat);
-
-        glEnableVertexAttribArray(attributeNumber);
-        glBindBuffer(GL_ARRAY_BUFFER, *vertexBufferObject);
-        glVertexAttribPointer(attributeNumber, numberOfGLfloats, GL_FLOAT, GL_FALSE, 0, nullptr);
+        activateVertexAttribute(attributeData, attributeNumber);
         vboList.push_back(*vertexBufferObject);
     }
 }
@@ -170,6 +166,14 @@ RenderGroup::BufferObjects RenderGroup::createBufferObjects (const RenderGroup& 
     return bufferObjects;
 }
 
+template<typename T>
+void RenderGroup::activateVertexAttribute(const std::vector <T>&,
+  GLuint attributeNumber) const {
+  const size_t numberOfGLfloats = sizeof(T) / sizeof(GLfloat);
+  glEnableVertexAttribArray(attributeNumber);
+  glVertexAttribPointer(attributeNumber, numberOfGLfloats, GL_FLOAT, GL_FALSE, 0, nullptr);
+}
+
 template<typename T> size_t RenderGroup::updateBufferObjectData (
     GLuint bo,
     const std::vector <T>& bufferObjectData,
@@ -185,6 +189,7 @@ template<typename T> size_t RenderGroup::updateBufferObjectData (
 template<typename T> size_t RenderGroup::updateStateVBOsData (
     const std::vector <GLuint>& vbosList,
     const std::vector <std::vector <T> >& bufferObjectsData,
+    size_t nbOfShapeVbos,
     size_t attributesOffset
     ) const {
     size_t vbosDataUpdated = 0;
@@ -194,9 +199,28 @@ template<typename T> size_t RenderGroup::updateStateVBOsData (
         const size_t stateVboNumber = i + attributesOffset;
         const auto& vbo = vbosList.at(stateVboNumber);
 
-        vbosDataUpdated += updateBufferObjectData(vbo, bufferObjectData, GL_ARRAY_BUFFER);
+        if (updateBufferObjectData(vbo, bufferObjectData, GL_ARRAY_BUFFER)) {
+          const GLuint vertexAttributeNumber = nbOfShapeVbos + attributesOffset + vbosDataUpdated;
+          activateVertexAttribute(bufferObjectData, vertexAttributeNumber);
+          ++vbosDataUpdated;
+        }
     }
     return vbosDataUpdated;
+}
+
+template<typename T>
+size_t RenderGroup::updateShapeVBOsData(const std::vector <GLuint>& vbosList,
+    const std::vector <T>& bufferObjectsData,
+    size_t attributesOffset) const {
+  if (attributesOffset < vbosList.size())
+  {
+    const GLuint vbo = vbosList.at(attributesOffset);
+    if (updateBufferObjectData(vbo, bufferObjectsData, GL_ARRAY_BUFFER)) {
+      activateVertexAttribute(bufferObjectsData,attributesOffset);
+      return 1;
+    }
+  }
+    return 0;
 }
 
 void RenderGroup::updateBufferObjectsData() const {
@@ -211,29 +235,17 @@ void RenderGroup::updateBufferObjectsData() const {
     const auto& colors = shapeVertexAttributes.colors;
     const auto& normals = shapeVertexAttributes.normals;
     const auto& uvCoords = shapeVertexAttributes.uvCoords;
+    size_t nbOfShapes = 0;
+    nbOfShapes += updateShapeVBOsData(shapeVBOs, positions, nbOfShapes );
+    nbOfShapes += updateShapeVBOsData(shapeVBOs, colors, nbOfShapes );
+    nbOfShapes += updateShapeVBOsData(shapeVBOs, normals,nbOfShapes );
+    nbOfShapes += updateShapeVBOsData(shapeVBOs, uvCoords, nbOfShapes );
 
-    size_t vbosCounter = 0;
-
-    constexpr GLenum vboTarget = GL_ARRAY_BUFFER;
-    if (vbosCounter < shapeVBOs.size()) {
-        vbosCounter += updateBufferObjectData(shapeVBOs.at(vbosCounter), positions, vboTarget);
-    }
-    if (vbosCounter < shapeVBOs.size()) {
-        vbosCounter += updateBufferObjectData(shapeVBOs.at(vbosCounter), colors, vboTarget);
-    }
-    if (vbosCounter < shapeVBOs.size()) {
-        vbosCounter += updateBufferObjectData(shapeVBOs.at(vbosCounter), normals, vboTarget);
-    }
-    if (vbosCounter < shapeVBOs.size()) {
-        vbosCounter += updateBufferObjectData(shapeVBOs.at(vbosCounter), uvCoords, vboTarget);
-    }
-
-    vbosCounter = 0;
     const auto& stateVertexAttributes = _meshesVerticesInfo.stateVertexAttributes;
-
-    vbosCounter += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticFloats, vbosCounter);
-    vbosCounter += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticVec2s, vbosCounter);
-    vbosCounter += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticVec3s, vbosCounter);
+    size_t nbOfStates = 0;
+    nbOfStates += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticFloats, nbOfShapes, nbOfStates);
+    nbOfStates += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticVec2s, nbOfShapes, nbOfStates);
+    nbOfStates += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticVec3s, nbOfShapes, nbOfStates);
 
 
     const auto& indices = shapeVerticesInfo.indices;
@@ -259,7 +271,6 @@ template<typename T> std::shared_ptr <GLuint> RenderGroup::initializeBO (
     return bo;
 }
 
-
 template<typename T> std::shared_ptr <GLuint> RenderGroup::initializeVBO (
     const std::vector <T>& attributeData
     ) const {
@@ -269,7 +280,6 @@ template<typename T> std::shared_ptr <GLuint> RenderGroup::initializeVBO (
 std::shared_ptr <GLuint> RenderGroup::initializeEBO (const std::vector <GLushort>& indicesData) const {
     return initializeBO(indicesData, GL_ELEMENT_ARRAY_BUFFER);
 }
-
 
 void RenderGroup::render() const {
     if (_meshes.empty()) {
@@ -282,6 +292,5 @@ void RenderGroup::render() const {
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _bufferObjects.elementBufferObject);
     const GLsizei numberOfIndices = _meshesVerticesInfo.shapeVerticesInfo.indices.size();
-    // std::cout << "render " << numberOfIndices << std::endl;
     glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, nullptr);
 }

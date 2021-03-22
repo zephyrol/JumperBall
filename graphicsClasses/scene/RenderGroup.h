@@ -23,6 +23,7 @@ RenderGroup& operator= (RenderGroup&& renderGroup) = default;
 CstMesh_sptr getHeadMesh() const;
 vecMesh_sptr update(const vecMesh_sptr& meshesToAdd = {});
 void render() const;
+State::GlobalState _globalState;
 
 private:
 
@@ -64,6 +65,21 @@ template<typename T> void fillStateVertexAttributesVBOsList(
 BufferObjects createBufferObjects() const;
 BufferObjects createBufferObjects(const RenderGroup& renderGroup) const;
 
+template<typename T> void activateVertexAttribute(
+  const std::vector <T>& attributeData,
+  GLuint attributeNumber) const;
+
+template<typename T> size_t updateStateVBOsData(
+    const std::vector <GLuint>& vbosList,
+    const std::vector <std::vector <T> >& bufferObjectsData,
+    size_t nbOfShapeVbos,
+    size_t attributesOffset
+    ) const;
+template<typename T> size_t updateShapeVBOsData(
+    const std::vector <GLuint>& vbosList,
+    const std::vector <T>& bufferObjectsData,
+    size_t attributesOffset
+    ) const;
 
 template<typename T> size_t updateBufferObjectData(
     GLuint bo,
@@ -71,11 +87,8 @@ template<typename T> size_t updateBufferObjectData(
     GLenum target
     ) const;
 
-template<typename T> size_t updateStateVBOsData(
-    const std::vector <GLuint>& vbosList,
-    const std::vector <std::vector <T> >& bufferObjectsData,
-    size_t attributesOffset
-    ) const;
+  
+
 
 void updateBufferObjectsData() const;
 
@@ -84,9 +97,9 @@ GLuint genBufferObject() const;
 Mesh::MeshVerticesInfo createMeshesVerticesInfo() const;
 const BufferObjects& bufferObjects() const;
 
-State::GlobalState _globalState;
 vecMesh_sptr _meshes;
 Mesh::MeshVerticesInfo _meshesVerticesInfo;
+public:
 const GLuint _vertexArrayObject;
 const BufferObjects _bufferObjects;
 bool _needBuffersRebinding;
