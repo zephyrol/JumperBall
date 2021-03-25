@@ -105,7 +105,6 @@ std::vector <GLfloat> Utility::computeNormals (const std::vector <GLfloat>&
 
         glm::normalize(normal);
         for (unsigned int j = 0; j < pointsPerTriangles; j++) {
-
             normals.push_back(normal.x);
             normals.push_back(normal.y);
             normals.push_back(normal.z);

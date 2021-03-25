@@ -87,9 +87,6 @@ template<typename T> size_t updateBufferObjectData(
     GLenum target
     ) const;
 
-
-
-
 void updateBufferObjectsData() const;
 
 GLuint genVertexArrayObject() const;

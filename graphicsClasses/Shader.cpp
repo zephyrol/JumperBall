@@ -23,7 +23,6 @@ Shader::Shader(const GLenum& shaderType, const std::string& shaderFilename):
     glShaderSource(_shaderHandle, numberOfStrings, &glCode, nullptr);
     glCompileShader(_shaderHandle);
     verifyCompileStatus();
-
 }
 
 void Shader::verifyCompileStatus() const {
@@ -32,8 +31,7 @@ void Shader::verifyCompileStatus() const {
     glGetShaderiv(_shaderHandle, GL_COMPILE_STATUS, &status);
 
     if (status == GL_FALSE) {
-        std::cerr << "Shader compilation failed : " << _shaderFilename
-                  << std::endl;
+        std::cerr << "Shader compilation failed : " << _shaderFilename << std::endl;
         GLint logLength;
         glGetShaderiv(_shaderHandle, GL_INFO_LOG_LENGTH, &logLength);
         if (logLength > 0) {
@@ -43,8 +41,7 @@ void Shader::verifyCompileStatus() const {
             std::cerr << "Error log : " << std::endl << log;
         }
     } else {
-        std::cout << "Shader successfully compiled: " << _shaderFilename
-                  << std::endl;
+        std::cout << "Shader successfully compiled: " << _shaderFilename << std::endl;
     }
 }
 

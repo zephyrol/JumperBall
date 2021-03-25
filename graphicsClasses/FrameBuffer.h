@@ -22,6 +22,14 @@ FrameBuffer(TextureCaterory category = TextureCaterory::SDR,
             GLsizei resolutionY = Utility::windowResolutionY,
             bool hasDepthBuffer = true);
 
+FrameBuffer(const FrameBuffer &frameBuffer) = delete;
+FrameBuffer &operator=(const FrameBuffer &) = delete;
+
+FrameBuffer(FrameBuffer &&frameBuffer) = default;
+FrameBuffer &operator=(FrameBuffer &&) = default;
+
+~FrameBuffer() = default;
+
 // ---------CONSTANTS------------//
 static constexpr float luminanceKey = 0.4f;
 
@@ -42,13 +50,13 @@ private:
 GLuint _fboHandle;
 
 GLuint _renderTexture;
-const TextureCaterory _textureCategory;
+TextureCaterory _textureCategory;
 
-const bool _hasDepthBuffer;
+bool _hasDepthBuffer;
 GLuint _depthBuffer;
 
-const GLsizei _resolutionX;
-const GLsizei _resolutionY;
+GLsizei _resolutionX;
+GLsizei _resolutionY;
 };
 
 #endif /* FRAMEBUFFER_H */

@@ -14,6 +14,12 @@
 #include "RenderGroup.h"
 #include "uniformBlocks/uniformBlock.h"
 
+class RenderPass;
+using RenderPass_sptr = std::shared_ptr <RenderPass>;
+using CstRenderPass_sptr = std::shared_ptr <const RenderPass>;
+using vecCstRenderPass_sptr = std::vector <CstRenderPass_sptr>;
+using vecRenderPass_sptr = std::vector <RenderPass_sptr>;
+
 class RenderPass {
 
 public:

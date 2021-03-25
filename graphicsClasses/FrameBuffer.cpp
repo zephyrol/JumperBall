@@ -68,7 +68,6 @@ FrameBuffer::FrameBuffer(FrameBuffer::TextureCaterory category,
                                   GL_RENDERBUFFER, _depthBuffer);
     }
     glDrawBuffers(1, &drawBuffer);
-
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -78,7 +77,6 @@ void FrameBuffer::bindFrameBuffer (bool clean) const {
     if (clean) {
         cleanCurrentFrameBuffer(_hasDepthBuffer);
     }
-
     glViewport(0, 0, _resolutionX, _resolutionY);
 }
 
@@ -114,21 +112,17 @@ std::pair <float, float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
     constexpr float epsilon = 0.001f;
     constexpr unsigned int levelOfDetail = 0; // 0 is the base image level
     constexpr unsigned int numberOfComponents = 3; // RGB
-    const size_t numberOfPixels =
-        Utility::windowResolutionX * Utility::windowResolutionY;
-    std::vector <GLfloat> textureData(numberOfPixels*
-                                      numberOfComponents);
+    const size_t numberOfPixels = Utility::windowResolutionX * Utility::windowResolutionY;
+    std::vector <GLfloat> textureData(numberOfPixels* numberOfComponents);
 
     // bindRenderTexture(); TODO: update with new architecture if you use it
-
     glGetTexImage(GL_TEXTURE_2D, levelOfDetail,
                   GL_RGB, GL_FLOAT, textureData.data());
 
     float sumLogLuminance = 0.f;
     float maxLuminance = 0.f;
     for (size_t i = 0; i < numberOfPixels; ++i) {
-        const float luminance =
-            Utility::getLuminance(epsilon + glm::vec3(textureData.at(i),
+        const float luminance = Utility::getLuminance(epsilon + glm::vec3(textureData.at(i),
                                                       textureData.at(i + 1),
                                                       textureData.at(i + 2)
                                                       ));
@@ -136,6 +130,5 @@ std::pair <float, float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
         if (luminance > maxLuminance) maxLuminance = luminance;
     }
 
-    return std::pair <float, float>(exp(sumLogLuminance / numberOfPixels),
-                                    maxLuminance);
+    return std::pair <float, float>(exp(sumLogLuminance / numberOfPixels), maxLuminance);
 }
