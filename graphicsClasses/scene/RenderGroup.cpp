@@ -166,12 +166,11 @@ RenderGroup::BufferObjects RenderGroup::createBufferObjects (const RenderGroup& 
     return bufferObjects;
 }
 
-template<typename T>
-void RenderGroup::activateVertexAttribute(const std::vector <T>&,
-  GLuint attributeNumber) const {
-  const size_t numberOfGLfloats = sizeof(T) / sizeof(GLfloat);
-  glEnableVertexAttribArray(attributeNumber);
-  glVertexAttribPointer(attributeNumber, numberOfGLfloats, GL_FLOAT, GL_FALSE, 0, nullptr);
+template<typename T> void RenderGroup::activateVertexAttribute (const std::vector <T>&,
+                                                                GLuint attributeNumber) const {
+    const size_t numberOfGLfloats = sizeof(T) / sizeof(GLfloat);
+    glEnableVertexAttribArray(attributeNumber);
+    glVertexAttribPointer(attributeNumber, numberOfGLfloats, GL_FLOAT, GL_FALSE, 0, nullptr);
 }
 
 template<typename T> size_t RenderGroup::updateBufferObjectData (
@@ -200,26 +199,24 @@ template<typename T> size_t RenderGroup::updateStateVBOsData (
         const auto& vbo = vbosList.at(stateVboNumber);
 
         if (updateBufferObjectData(vbo, bufferObjectData, GL_ARRAY_BUFFER)) {
-          const GLuint vertexAttributeNumber = nbOfShapeVbos + attributesOffset + vbosDataUpdated;
-          activateVertexAttribute(bufferObjectData, vertexAttributeNumber);
-          ++vbosDataUpdated;
+            const GLuint vertexAttributeNumber = nbOfShapeVbos + attributesOffset + vbosDataUpdated;
+            activateVertexAttribute(bufferObjectData, vertexAttributeNumber);
+            ++vbosDataUpdated;
         }
     }
     return vbosDataUpdated;
 }
 
-template<typename T>
-size_t RenderGroup::updateShapeVBOsData(const std::vector <GLuint>& vbosList,
-    const std::vector <T>& bufferObjectsData,
-    size_t attributesOffset) const {
-  if (attributesOffset < vbosList.size())
-  {
-    const GLuint vbo = vbosList.at(attributesOffset);
-    if (updateBufferObjectData(vbo, bufferObjectsData, GL_ARRAY_BUFFER)) {
-      activateVertexAttribute(bufferObjectsData,attributesOffset);
-      return 1;
+template<typename T> size_t RenderGroup::updateShapeVBOsData (const std::vector <GLuint>& vbosList,
+                                                              const std::vector <T>& bufferObjectsData,
+                                                              size_t attributesOffset) const {
+    if (attributesOffset < vbosList.size()) {
+        const GLuint vbo = vbosList.at(attributesOffset);
+        if (updateBufferObjectData(vbo, bufferObjectsData, GL_ARRAY_BUFFER)) {
+            activateVertexAttribute(bufferObjectsData, attributesOffset);
+            return 1;
+        }
     }
-  }
     return 0;
 }
 
@@ -236,10 +233,10 @@ void RenderGroup::updateBufferObjectsData() const {
     const auto& normals = shapeVertexAttributes.normals;
     const auto& uvCoords = shapeVertexAttributes.uvCoords;
     size_t nbOfShapes = 0;
-    nbOfShapes += updateShapeVBOsData(shapeVBOs, positions, nbOfShapes );
-    nbOfShapes += updateShapeVBOsData(shapeVBOs, colors, nbOfShapes );
-    nbOfShapes += updateShapeVBOsData(shapeVBOs, normals,nbOfShapes );
-    nbOfShapes += updateShapeVBOsData(shapeVBOs, uvCoords, nbOfShapes );
+    nbOfShapes += updateShapeVBOsData(shapeVBOs, positions, nbOfShapes);
+    nbOfShapes += updateShapeVBOsData(shapeVBOs, colors, nbOfShapes);
+    nbOfShapes += updateShapeVBOsData(shapeVBOs, normals, nbOfShapes);
+    nbOfShapes += updateShapeVBOsData(shapeVBOs, uvCoords, nbOfShapes);
 
     const auto& stateVertexAttributes = _meshesVerticesInfo.stateVertexAttributes;
     size_t nbOfStates = 0;

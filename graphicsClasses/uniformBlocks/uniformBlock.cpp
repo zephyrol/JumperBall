@@ -21,9 +21,7 @@ UniformBlock::UniformBlock(const std::string& blockName,
     _variablesOffsets(createVariablesOffsets()) {
 }
 
-std::vector <const char*> UniformBlock::getStringsStoredLinearly (
-    const std::vector <std::string>&
-    strNames) {
+std::vector <const char*> UniformBlock::getStringsStoredLinearly (const std::vector <std::string>& strNames) {
 
     std::vector <const char*> names(strNames.size());
 
@@ -46,7 +44,8 @@ std::vector <const char*> UniformBlock::getStringsStoredLinearly (
 }
 
 std::vector <const char*> UniformBlock::copyVariablesNamesInfo (
-    const std::vector <const char*>& varNamesInfo) {
+    const std::vector <const char*>& varNamesInfo
+    ) {
 
     std::vector <const char*> names(varNamesInfo.size());
 
@@ -131,7 +130,6 @@ GLuint UniformBlock::uboHandle() const {
 }
 
 void UniformBlock::deleteVariablesNamesInfo() {
-
     for (size_t i = 0; i < _variablesNames.size(); ++i) {
         delete[]_variablesNames[i];
     }

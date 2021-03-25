@@ -65,7 +65,7 @@ const ShaderProgram _spBrightPassFilter;
 const ShaderProgram _spBloom;
 const ShaderProgram _spDepth;
 
-UniformLight _light;
+const std::shared_ptr <UniformLight> _light;
 
 const FrameBuffer _frameBufferDepth;
 const FrameBuffer _frameBufferHDRScene;

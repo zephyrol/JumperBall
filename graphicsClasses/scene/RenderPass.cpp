@@ -13,7 +13,8 @@ RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecMesh_sptr& m
     _unitedMeshesGroup(std::make_shared <RenderGroup>(meshes, State::GlobalState::United)),
     _separateMeshGroups(createSeparateMeshGroups(meshes)),
     _renderGroupsUniforms{},
-    _renderPassUniforms() {
+    _renderPassUniforms(),
+    _renderPassUniformBlocks{} {
 }
 
 void RenderPass::update() {
@@ -22,7 +23,7 @@ void RenderPass::update() {
         [this] (const std::shared_ptr <RenderGroup>& renderGroup) {
             const CstMesh_sptr headMesh = renderGroup->getHeadMesh();
             if (headMesh) {
-              _renderGroupsUniforms[renderGroup] = headMesh->genUniformsValues();
+                _renderGroupsUniforms[renderGroup] = headMesh->genUniformsValues();
             }
         };
 
@@ -46,7 +47,12 @@ void RenderPass::update() {
         }
         updateRenderGroupUniforms(separateRenderGroup);
     }
+}
 
+void RenderPass::cleanUniforms() {
+    _renderGroupsUniforms = {};
+    _renderPassUniformBlocks = {};
+    _renderPassUniforms = {};
 }
 
 template<typename T> void RenderPass::upsertUniforms (const std::map <std::string, T>& uniformsData) {
@@ -91,6 +97,13 @@ void RenderPass::upsertUniformTexture (const std::string& name, const GLuint val
     _renderPassUniforms.uniformTextures[name] = value;
 }
 
+void RenderPass::upsertUniform (
+    const std::string& name,
+    const std::shared_ptr <const UniformBlock>& uniformBlock
+    ) {
+    _renderPassUniformBlocks[name] = uniformBlock;
+}
+
 void RenderPass::bindUniforms (const Mesh::Uniforms& uniforms) const {
 
     bindUniforms(uniforms.uniformFloats);
@@ -108,8 +121,10 @@ void RenderPass::bindUniforms (const Mesh::Uniforms& uniforms) const {
 
 void RenderPass::render() const {
     _shaderProgram.use();
+    for (const auto& uniformBlock : _renderPassUniformBlocks) {
+        uniformBlock.second->bind();
+    }
     bindUniforms(_renderPassUniforms);
-    int i = 0;
     for (const auto& renderGroupUniforms : _renderGroupsUniforms) {
         bindUniforms(renderGroupUniforms.second);
         renderGroupUniforms.first->render();

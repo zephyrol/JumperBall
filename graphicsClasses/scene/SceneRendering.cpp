@@ -57,11 +57,11 @@ SceneRendering::SceneRendering(const Map& map,
     _spDepth
         (Shader(GL_VERTEX_SHADER, vsshaderDepth),
         Shader(GL_FRAGMENT_SHADER, fsshaderDepth)),
-    _light("light", _spBlocks,
-           glm::vec3(0.f, 0.f, 0.f),
-           glm::vec3(0.7f, 0.7f, 0.7f),
-           glm::vec3(0.25f, 0.25f, 0.25f),
-           glm::vec3(0.25f, 0.25f, 0.25f)),
+    _light(std::make_shared <UniformLight>("light", _spBlocks,
+                                           glm::vec3(0.f, 0.f, 0.f),
+                                           glm::vec3(0.7f, 0.7f, 0.7f),
+                                           glm::vec3(0.25f, 0.25f, 0.25f),
+                                           glm::vec3(0.25f, 0.25f, 0.25f))),
     _frameBufferDepth(FrameBuffer::TextureCaterory::Depth,
                       sizeDepthTexture, sizeDepthTexture),
     _frameBufferHDRScene(FrameBuffer::TextureCaterory::HDR),
@@ -98,7 +98,7 @@ void SceneRendering::phongEffect (GLuint depthTexture) const {
     bindCamera(_spBlocks);
 
     // Light
-    _light.bind();
+    // _light.bind();
 
     // Ball
     // const BallState& ball = _meshBall.getInstanceFrame();
@@ -254,6 +254,11 @@ void SceneRendering::updateCamera (RenderPass& renderPass) {
     // renderPass.upsertUniform("VPStar", _uniformMatrix4.at("VPStar"));
     // renderPass.upsertUniform("positionBall", _uniformVec3.at("positionBall"));
     renderPass.upsertUniform("positionCamera", _camera.pos());
+
+    _starState.update();
+    _light->directionLight(Utility::convertToOpenGLFormat(_starState.lightDirection()));
+    _light->update();
+    renderPass.upsertUniform("light", _light);
 }
 
 void SceneRendering::render() const {

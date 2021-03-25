@@ -11,7 +11,6 @@
 
 class UniformLight:public UniformBlock {
 public:
-// --CONSTRUCTORS & DESTRUCTORS--//
 UniformLight(const std::string& blockName,
              const ShaderProgram& shaderProgram,
              const glm::vec3& directionLight,
@@ -20,10 +19,8 @@ UniformLight(const std::string& blockName,
              const glm::vec3& specularLightIntensity);
 ~UniformLight() override = default;
 
-// -------CONST METHODS----------//
 void bind() const override;
 
-// ----------METHODS------------//
 void update() override;
 void directionLight(const glm::vec3& directionLight);
 void ambientLightIntensity(const glm::vec3& ambLightIntensity);
@@ -32,14 +29,10 @@ void specularLightIntensity(const glm::vec3& specLightIntensity);
 
 private:
 
-// -------CONST METHODS----------//
 virtual const std::vector <GLbyte>& dataBuffer() const override;
 virtual std::vector <GLbyte> createDataBuffer() const override;
-virtual void fillDataBuffer(
-    std::vector <GLbyte>& dataBuffer)
-const override;
+virtual void fillDataBuffer(std::vector <GLbyte>& dataBuffer) const override;
 
-// --------ATTRIBUTES-----------//
 glm::vec3 _directionLight;
 glm::vec3 _ambientLightIntensity;
 glm::vec3 _diffuseLightIntensity;

@@ -66,8 +66,8 @@ BufferObjects createBufferObjects() const;
 BufferObjects createBufferObjects(const RenderGroup& renderGroup) const;
 
 template<typename T> void activateVertexAttribute(
-  const std::vector <T>& attributeData,
-  GLuint attributeNumber) const;
+    const std::vector <T>& attributeData,
+    GLuint attributeNumber) const;
 
 template<typename T> size_t updateStateVBOsData(
     const std::vector <GLuint>& vbosList,
@@ -87,7 +87,7 @@ template<typename T> size_t updateBufferObjectData(
     GLenum target
     ) const;
 
-  
+
 
 
 void updateBufferObjectsData() const;
