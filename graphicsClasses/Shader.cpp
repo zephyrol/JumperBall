@@ -52,3 +52,11 @@ GLuint Shader::getHandle() const {
 GLenum Shader::getShaderType() const {
     return _shaderType;
 }
+
+const std::string Shader::shadersDir = "shaders/";
+CstShader_uptr Shader::createVertexShader (const std::string& shaderName) {
+    return std::unique_ptr <const Shader>(new Shader(GL_VERTEX_SHADER, shadersDir + shaderName));
+}
+CstShader_uptr Shader::createFragmentShader (const std::string& shaderName) {
+    return std::unique_ptr <const Shader>(new Shader(GL_FRAGMENT_SHADER, shadersDir + shaderName));
+}

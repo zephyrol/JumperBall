@@ -27,8 +27,8 @@ void ArrowRendering::updateGeometry() {
     }
     if (!spArrow) {
         spArrow = std::make_shared <ShaderProgram>(
-            Shader(GL_VERTEX_SHADER, vsshaderArrow),
-            Shader(GL_FRAGMENT_SHADER, fsshaderArrow)
+            std::unique_ptr <Shader>(new Shader(GL_VERTEX_SHADER, vsshaderArrow)),
+            std::unique_ptr <Shader>(new Shader(GL_FRAGMENT_SHADER, fsshaderArrow))
             );
     }
 }

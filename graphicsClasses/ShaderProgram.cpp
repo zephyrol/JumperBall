@@ -7,8 +7,9 @@
 
 #include "ShaderProgram.h"
 
-ShaderProgram::ShaderProgram(Shader&& vertexShader,
-                             Shader&& fragmentShader):
+ShaderProgram::ShaderProgram(CstShader_uptr&& vertexShader,
+                             CstShader_uptr&& fragmentShader
+                             ):
     _shaderProgramHandle(glCreateProgram()),
     _vertexShader(std::move(vertexShader)),
     _fragmentShader(std::move(fragmentShader)) {
@@ -18,17 +19,17 @@ ShaderProgram::ShaderProgram(Shader&& vertexShader,
         exit(EXIT_FAILURE);
     }
 
-    glAttachShader(_shaderProgramHandle, _vertexShader.getHandle());
-    glAttachShader(_shaderProgramHandle, _fragmentShader.getHandle());
+    glAttachShader(_shaderProgramHandle, _vertexShader->getHandle());
+    glAttachShader(_shaderProgramHandle, _fragmentShader->getHandle());
 
     glLinkProgram(_shaderProgramHandle);
 
     verifyLinkStatus();
 
-    glDetachShader(_shaderProgramHandle, _vertexShader.getHandle());
-    glDetachShader(_shaderProgramHandle, _fragmentShader.getHandle());
-    glDeleteShader(_vertexShader.getHandle());
-    glDeleteShader(_fragmentShader.getHandle());
+    glDetachShader(_shaderProgramHandle, _vertexShader->getHandle());
+    glDetachShader(_shaderProgramHandle, _fragmentShader->getHandle());
+    glDeleteShader(_vertexShader->getHandle());
+    glDeleteShader(_fragmentShader->getHandle());
 
 
 }

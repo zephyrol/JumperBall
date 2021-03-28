@@ -11,22 +11,24 @@
 class RenderProcess {
 
 public:
-    RenderProcess(
-      ShaderProgram&& shaderProgram,
-      FrameBuffer&& frameBuffer,
-      const vecRenderPass_sptr& renderPasses
-    );
-    RenderProcess(const RenderProcess& renderProcess) = delete;
-    RenderProcess& operator=(const RenderProcess&) = delete;
 
-    RenderProcess(RenderProcess&& renderProcess) = default;
-    RenderProcess& operator=(RenderProcess&&) = default;
+using UniformUpdatingFct = std::function <void (const RenderPass_sptr&)>;
+RenderProcess(
+    const vecRenderPass_sptr& renderPasses,
+    std::map <RenderPass_sptr, CstShaderProgram_uptr>&& shaderPrograms,
+    std::map <RenderPass_sptr, UniformUpdatingFct>&& externalUniformsTreating,
+    FrameBuffer_uptr&& frameBuffer);
+RenderProcess(const RenderProcess& renderProcess) = delete;
+RenderProcess& operator= (const RenderProcess&) = delete;
 
-    ~RenderProcess() = default; 
+~RenderProcess() = default;
+
+void updateUniforms();
+void render() const;
 
 private:
-    const ShaderProgram _shaderProgram;
-    const FrameBuffer _frameBuffer;
-    const vecRenderPass_sptr _renderPasses;
-
+const vecRenderPass_sptr _renderPasses;
+const std::map <RenderPass_sptr, CstShaderProgram_uptr> _shaderPrograms;
+const std::map <RenderPass_sptr, UniformUpdatingFct> _externalUniformsTreating;
+const FrameBuffer_uptr _frameBuffer;
 };

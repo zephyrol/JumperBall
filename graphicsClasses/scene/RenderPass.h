@@ -24,14 +24,14 @@ class RenderPass {
 
 public:
 
-RenderPass(const ShaderProgram& shaderProgram, const vecMesh_sptr& meshes);
+RenderPass(const vecMesh_sptr& meshes);
 RenderPass(const RenderPass& renderPass) = delete;
 RenderPass& operator= (const RenderPass& renderPass) = delete;
 RenderPass(RenderPass&& renderPass) = default;
 RenderPass& operator= (RenderPass&& renderPass) = default;
 
 
-void render() const;
+void render(const CstShaderProgram_uptr& shaderProgram) const;
 void update();
 void cleanUniforms();
 void upsertUniform(const std::string& name, const glm::mat4& value);
@@ -44,14 +44,18 @@ void upsertUniform(const std::string& name, const std::shared_ptr <const Uniform
 
 private:
 
-void bindUniforms(const Mesh::Uniforms& uniforms) const;
-template<typename T> void bindUniforms(Mesh::UniformVariable <T> uniforms) const;
+void bindUniforms(const Mesh::Uniforms& uniforms, const CstShaderProgram_uptr& shaderProgram) const;
+
+template<typename T> void bindUniforms(
+    Mesh::UniformVariable <T> uniforms,
+    const CstShaderProgram_uptr& shaderProgram
+    ) const;
 template<typename T> void upsertUniforms(const std::map <std::string, T>& uniformsData);
+
 std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > createSeparateMeshGroups(
     const vecMesh_sptr& meshes
     ) const;
 
-const ShaderProgram& _shaderProgram;
 const vecMesh_sptr _meshes;
 const std::shared_ptr <RenderGroup> _unitedMeshesGroup;
 std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > _separateMeshGroups;

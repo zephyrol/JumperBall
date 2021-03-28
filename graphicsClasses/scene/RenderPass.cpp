@@ -7,8 +7,7 @@
 
 #include "RenderPass.h"
 
-RenderPass::RenderPass(const ShaderProgram& shaderProgram, const vecMesh_sptr& meshes):
-    _shaderProgram(shaderProgram),
+RenderPass::RenderPass(const vecMesh_sptr& meshes):
     _meshes(meshes),
     _unitedMeshesGroup(std::make_shared <RenderGroup>(meshes, State::GlobalState::United)),
     _separateMeshGroups(createSeparateMeshGroups(meshes)),
@@ -104,35 +103,40 @@ void RenderPass::upsertUniform (
     _renderPassUniformBlocks[name] = uniformBlock;
 }
 
-void RenderPass::bindUniforms (const Mesh::Uniforms& uniforms) const {
+void RenderPass::bindUniforms (
+    const Mesh::Uniforms& uniforms,
+    const CstShaderProgram_uptr& shaderProgram
+    ) const {
 
-    bindUniforms(uniforms.uniformFloats);
-    bindUniforms(uniforms.uniformVec2s);
-    bindUniforms(uniforms.uniformVec3s);
-    bindUniforms(uniforms.uniformVec4s);
-    bindUniforms(uniforms.uniformMat4s);
+    bindUniforms(uniforms.uniformFloats, shaderProgram);
+    bindUniforms(uniforms.uniformVec2s, shaderProgram);
+    bindUniforms(uniforms.uniformVec3s, shaderProgram);
+    bindUniforms(uniforms.uniformVec4s, shaderProgram);
+    bindUniforms(uniforms.uniformMat4s, shaderProgram);
 
     int textureNumber = 0;
     for (const auto& uniformTexture : uniforms.uniformTextures) {
-        _shaderProgram.bindUniformTexture(uniformTexture.first, textureNumber, uniformTexture.second);
+        shaderProgram->bindUniformTexture(uniformTexture.first, textureNumber, uniformTexture.second);
         ++textureNumber;
     }
 }
 
-void RenderPass::render() const {
-    _shaderProgram.use();
+void RenderPass::render (const CstShaderProgram_uptr& shaderProgram) const {
     for (const auto& uniformBlock : _renderPassUniformBlocks) {
-        uniformBlock.second->bind();
+        uniformBlock.second->bind(shaderProgram);
     }
-    bindUniforms(_renderPassUniforms);
+    bindUniforms(_renderPassUniforms, shaderProgram);
     for (const auto& renderGroupUniforms : _renderGroupsUniforms) {
-        bindUniforms(renderGroupUniforms.second);
+        bindUniforms(renderGroupUniforms.second, shaderProgram);
         renderGroupUniforms.first->render();
     }
 }
 
-template<typename T> void RenderPass::bindUniforms (Mesh::UniformVariable <T> uniforms) const {
+template<typename T> void RenderPass::bindUniforms (
+    Mesh::UniformVariable <T> uniforms,
+    const CstShaderProgram_uptr& shaderProgram
+    ) const {
     for (const auto& uniform : uniforms) {
-        _shaderProgram.bindUniform(uniform.first, uniform.second);
+        shaderProgram->bindUniform(uniform.first, uniform.second);
     }
 }

@@ -9,6 +9,10 @@
 #define SHADER_H
 #include "Utility.h"
 
+class Shader;
+using Shader_uptr = std::unique_ptr <Shader>;
+using CstShader_uptr = std::unique_ptr <const Shader>;
+
 class Shader {
 
 public:
@@ -20,22 +24,24 @@ Shader(const GLenum& shaderType,
 Shader(const Shader& shader) = delete;
 Shader& operator= (const Shader& shader) = delete;
 
-Shader(Shader&& shader) = default;
-Shader& operator= (Shader&& shader) = default;
-
 ~Shader() = default;
 
 // -------CONST METHODS--------//
 GLuint getHandle() const;
 GLenum getShaderType() const;
 
+static CstShader_uptr createVertexShader(const std::string& shaderName);
+static CstShader_uptr createFragmentShader(const std::string& shaderName);
+
+static const std::string shadersDir;
+
 private:
 
 // --------ATTRIBUTES-----------//
-GLuint _shaderHandle;
-GLenum _shaderType;
-std::string _shaderFilename;
-std::string _shaderCode;
+const GLuint _shaderHandle;
+const GLenum _shaderType;
+const std::string _shaderFilename;
+const std::string _shaderCode;
 
 // -------CONST METHODS--------//
 void verifyCompileStatus() const;

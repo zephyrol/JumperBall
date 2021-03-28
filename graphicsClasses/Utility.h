@@ -43,7 +43,6 @@ GLubyte convertToOpenGLFormat(unsigned char uChar);
 
 
 float xScreenToPortrait(float x);
-
 float getWindowRatio();
 
 GLsizei getWidthFromHeight(unsigned int resolutionY);

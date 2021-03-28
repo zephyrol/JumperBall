@@ -32,162 +32,223 @@ SceneRendering::SceneRendering(const Map& map,
        _meshStarUpdate([this] (size_t) {
        _meshStar.update();
        }),*/
-    _uniformUpdate([this] (size_t) {
+    /*_uniformUpdate([this] (size_t) {
                        updateUniform();
-                   }),
+                   }),*/
     _camera(camera),
-    _spBlocks(Shader(GL_VERTEX_SHADER, vsshaderBlocks),
+    /*_spBlocks(Shader(GL_VERTEX_SHADER, vsshaderBlocks),
               Shader(GL_FRAGMENT_SHADER, fsshaderBlocks)),
-    _spObjects(Shader(GL_VERTEX_SHADER, vsshaderObjects),
+       _spObjects(Shader(GL_VERTEX_SHADER, vsshaderObjects),
                Shader(GL_FRAGMENT_SHADER, fsshaderObjects)),
-    _spStar(Shader(GL_VERTEX_SHADER, vsshaderStar),
+       _spStar(Shader(GL_VERTEX_SHADER, vsshaderStar),
             Shader(GL_FRAGMENT_SHADER, fsshaderStar)),
-    _spBall(Shader(GL_VERTEX_SHADER, vsshaderBall),
+       _spBall(Shader(GL_VERTEX_SHADER, vsshaderBall),
             Shader(GL_FRAGMENT_SHADER, fsshaderBall)),
-    _spFbo(Shader(GL_VERTEX_SHADER, vsshaderFBO),
+       _spFbo(Shader(GL_VERTEX_SHADER, vsshaderFBO),
            Shader(GL_FRAGMENT_SHADER, fsshaderFBO)),
-    _spBlur(Shader(GL_VERTEX_SHADER, vsshaderBlur),
+       _spBlur(Shader(GL_VERTEX_SHADER, vsshaderBlur),
             Shader(GL_FRAGMENT_SHADER, fsshaderBlur)),
-    _spBrightPassFilter
+       _spBrightPassFilter
         (Shader(GL_VERTEX_SHADER, vsshaderBrightPassFilter),
         Shader(GL_FRAGMENT_SHADER, fsshaderBrightPassFilter)),
-    _spBloom
+       _spBloom
         (Shader(GL_VERTEX_SHADER, vsshaderBloom),
         Shader(GL_FRAGMENT_SHADER, fsshaderBloom)),
-    _spDepth
+       _spDepth
         (Shader(GL_VERTEX_SHADER, vsshaderDepth),
-        Shader(GL_FRAGMENT_SHADER, fsshaderDepth)),
-    _light(std::make_shared <UniformLight>("light", _spBlocks,
+        Shader(GL_FRAGMENT_SHADER, fsshaderDepth)),*/
+    _light(std::make_shared <UniformLight>("light",
                                            glm::vec3(0.f, 0.f, 0.f),
                                            glm::vec3(0.7f, 0.7f, 0.7f),
                                            glm::vec3(0.25f, 0.25f, 0.25f),
                                            glm::vec3(0.25f, 0.25f, 0.25f))),
-    _frameBufferDepth(FrameBuffer::TextureCaterory::Depth,
+    /*_frameBufferDepth(FrameBuffer::TextureCaterory::Depth,
                       sizeDepthTexture, sizeDepthTexture),
-    _frameBufferHDRScene(FrameBuffer::TextureCaterory::HDR),
-    _frameBufferBrightPassEffect(FrameBuffer::TextureCaterory::HDR,
+       _frameBufferHDRScene(FrameBuffer::TextureCaterory::HDR),
+       _frameBufferBrightPassEffect(FrameBuffer::TextureCaterory::HDR,
                                  Utility::getWidthFromHeight(heightBloomTexture),
                                  heightBloomTexture,
                                  false),
-    _frameBufferHalfBlurEffect(FrameBuffer::TextureCaterory::HDR,
+       _frameBufferHalfBlurEffect(FrameBuffer::TextureCaterory::HDR,
                                Utility::getWidthFromHeight(heightBloomTexture),
                                heightBloomTexture,
                                false),
-    _frameBufferCompleteBlurEffect(FrameBuffer::TextureCaterory::SDR,
+       _frameBufferCompleteBlurEffect(FrameBuffer::TextureCaterory::SDR,
                                    Utility::getWidthFromHeight(heightBloomTexture),
                                    heightBloomTexture,
-                                   false),
-    _mapState(map),
-    _renderPassBlocks(_spBlocks, MeshGenerator::genBlocks(map)),
-    _renderPassObjects(_spObjects, MeshGenerator::genObjects(map)),
+                                   false),*/
+    // _mapState(map),
+    // _renderPassBlocks(_spBlocks, MeshGenerator::genBlocks(map)),
+    // _renderPassObjects(_spObjects, MeshGenerator::genObjects(map)),
+    _renderPasses{
+                  std::make_shared <RenderPass>(MeshGenerator::genBlocks(map)),
+                  std::make_shared <RenderPass>(MeshGenerator::genObjects(map)),
+                  std::make_shared <RenderPass>(MeshGenerator::genStar(star)),
+                  std::make_shared <RenderPass>(MeshGenerator::genBall(ball))
+                  },
     _starState(star),
-    _renderPassStar(_spStar, MeshGenerator::genStar(star)),
-    _renderPassBall(_spBall, MeshGenerator::genBall(ball)) {
+    _sceneRenderingProcess(
+        _renderPasses,
+        createSceneRenderingShaders(),
+        createSceneRenderingUniforms(),
+        nullptr
+        ) {
+    // _renderPassStar(_spStar, MeshGenerator::genStar(star)),
+    // _renderPassBall(_spBall, MeshGenerator::genBall(ball))
     update();
 }
 
+std::map <RenderPass_sptr, CstShaderProgram_uptr> SceneRendering::createSceneRenderingShaders() const {
+
+    std::map <RenderPass_sptr, CstShaderProgram_uptr> sceneRenderingShaders;
+    const auto fillSceneRenderingShader =
+        [this, &sceneRenderingShaders] ( const RenderPass_sptr& renderPass,
+                                         const std::string& vertexShader,
+                                         const std::string& fragmentShader,
+                                         bool useLight)->void {
+            CstShaderProgram_uptr shaderProgram = CstShaderProgram_uptr(
+                new ShaderProgram(
+                    Shader::createVertexShader(vertexShader),
+                    Shader::createFragmentShader(fragmentShader)));
+            if (useLight) {
+                _light->registerShader(shaderProgram);
+            }
+            sceneRenderingShaders[renderPass] = std::move(shaderProgram);
+        };
+
+    std::cout << "fist" << std::endl;
+    fillSceneRenderingShader(_renderPasses.at(0), "blocksVs.vs", "blocksFs.fs", true);
+    std::cout << "second" << std::endl;
+    fillSceneRenderingShader(_renderPasses.at(1), "objectsMapVs.vs", "blocksFs.fs", true);
+    std::cout << "third" << std::endl;
+    fillSceneRenderingShader(_renderPasses.at(2), "starVs.vs", "starFs.fs", false);
+    std::cout << "fourth" << std::endl;
+    fillSceneRenderingShader(_renderPasses.at(3), "ballVs.vs", "blocksFs.fs", true);
+
+    return sceneRenderingShaders;
+}
+
+std::map <RenderPass_sptr,
+          RenderProcess::UniformUpdatingFct> SceneRendering::createSceneRenderingUniforms() const {
+
+    std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> uniformUpdatingFcts;
+    const auto updateCam = [this] (const RenderPass_sptr& renderPass)->void {
+                               this->updateCameraUniforms(renderPass);
+                           };
+    const auto updateCamStar = [this] (const RenderPass_sptr& renderPass)->void {
+                                   this->updateCameraUniformsStar(renderPass);
+                               };
+    uniformUpdatingFcts[_renderPasses.at(0)] = updateCam;
+    uniformUpdatingFcts[_renderPasses.at(1)] = updateCam;
+    uniformUpdatingFcts[_renderPasses.at(2)] = updateCamStar;
+    uniformUpdatingFcts[_renderPasses.at(3)] = updateCam;
+    return uniformUpdatingFcts;
+}
+
+
+
 void SceneRendering::phongEffect (GLuint depthTexture) const {
 
-    glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.z, 0.0f);
-    // _frameBufferHDRScene.bindFrameBuffer(true);
-    FrameBuffer::cleanCurrentFrameBuffer(true);
-    _spBlocks.use();
-    _spBlocks.bindUniformTexture("depthTexture", 0, depthTexture);
-
-    // --- Ball Map and Light ---
-    bindCamera(_spBlocks);
-
-    // Light
-    // _light.bind();
-
-    // Ball
-    // const BallState& ball = _meshBall.getInstanceFrame();
-    // _spBlocks.bindUniform("burningCoeff", ball.burnCoefficient());
-    // _meshBall.render(_spBlocks);
-
-    // Map
-    _spBlocks.bindUniform("burningCoeff", 0.f);
-    // deprecated _meshMap.render(_spBlocks);
-
-    // ------ Star ------
-    // const StarState& star = _meshStar.getInstanceFrame();
-    _spStar.use();
-    /*_spStar.bindUniform("radiusInside", _starState.radiusInside());
-       _spStar.bindUniform("radiusOutside", _starState.radiusOutside());
-       _spStar.bindUniform("colorInside", _starState.colorInside());
-       _spStar.bindUniform("colorOutside", _starState.colorOutside());*/
-
-    bindCamera(_spStar);
-
-    _renderPassBlocks.render();
-    _renderPassObjects.render();
-    _renderPassStar.render();
-    _renderPassBall.render();
-
-    // _meshStar.render(_spStar);
+    //    glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.z, 0.0f);
+    //    // _frameBufferHDRScene.bindFrameBuffer(true);
+    //    FrameBuffer::cleanCurrentFrameBuffer(true);
+    //    _spBlocks.use();
+    //    _spBlocks.bindUniformTexture("depthTexture", 0, depthTexture);
+    //
+    //    // --- Ball Map and Light ---
+    //    bindCamera(_spBlocks);
+    //
+    //    // Light
+    //    // _light.bind();
+    //
+    //    // Ball
+    //    // const BallState& ball = _meshBall.getInstanceFrame();
+    //    // _spBlocks.bindUniform("burningCoeff", ball.burnCoefficient());
+    //    // _meshBall.render(_spBlocks);
+    //
+    //    // Map
+    //    _spBlocks.bindUniform("burningCoeff", 0.f);
+    //    // deprecated _meshMap.render(_spBlocks);
+    //
+    //    // ------ Star ------
+    //    // const StarState& star = _meshStar.getInstanceFrame();
+    //    _spStar.use();
+    //    /*_spStar.bindUniform("radiusInside", _starState.radiusInside());
+    //       _spStar.bindUniform("radiusOutside", _starState.radiusOutside());
+    //       _spStar.bindUniform("colorInside", _starState.colorInside());
+    //       _spStar.bindUniform("colorOutside", _starState.colorOutside());*/
+    //
+    //    bindCamera(_spStar);
+    //
+    //    _renderPassBlocks.render();
+    //    _renderPassObjects.render();
+    //    _renderPassStar.render();
+    //    _renderPassBall.render();
+    //
+    //    // _meshStar.render(_spStar);
 
 }
 
 void SceneRendering::blurEffect (GLuint brightPassTexture) const {
 
-    _spBlur.use();
-    _frameBufferHalfBlurEffect.bindFrameBuffer(false);
-
-    _spBlur.bindUniformTexture("frameTexture", 0, brightPassTexture);
-    _spBlur.bindUniform("patchSize", static_cast <int>(blurPatchSize));
-    _spBlur.bindUniform("gaussWeights", gaussComputedValues);
-
-    _spBlur.bindUniform("firstPass", true);
-    // deprecated _meshQuadFrame.render(_spBlur);
-
-    _frameBufferCompleteBlurEffect.bindFrameBuffer(false);
-    _spBlur.bindUniformTexture("frameTexture", 0,
-                               _frameBufferHalfBlurEffect.getRenderTexture());
-
-    _spBlur.bindUniform("firstPass", false);
-    // _meshQuadFrame.render(_spBlur);
+    //    _spBlur.use();
+    //    _frameBufferHalfBlurEffect.bindFrameBuffer(false);
+    //
+    //    _spBlur.bindUniformTexture("frameTexture", 0, brightPassTexture);
+    //    _spBlur.bindUniform("patchSize", static_cast <int>(blurPatchSize));
+    //    _spBlur.bindUniform("gaussWeights", gaussComputedValues);
+    //
+    //    _spBlur.bindUniform("firstPass", true);
+    //    // deprecated _meshQuadFrame.render(_spBlur);
+    //
+    //    _frameBufferCompleteBlurEffect.bindFrameBuffer(false);
+    //    _spBlur.bindUniformTexture("frameTexture", 0,
+    //                               _frameBufferHalfBlurEffect.getRenderTexture());
+    //
+    //    _spBlur.bindUniform("firstPass", false);
+    //    // _meshQuadFrame.render(_spBlur);
 }
 
 void SceneRendering::brightPassEffect (GLuint hdrSceneTexture) const {
-    constexpr float bloomThreshold = 4.f;
-    _spBrightPassFilter.use();
-    _frameBufferBrightPassEffect.bindFrameBuffer(false);
-
-    _spBrightPassFilter.bindUniformTexture("frameTexture", 0, hdrSceneTexture);
-    _spBrightPassFilter.bindUniform("threshold", bloomThreshold);
-    // deprecated _meshQuadFrame.render(_spBrightPassFilter);
+    //    constexpr float bloomThreshold = 4.f;
+    //    _spBrightPassFilter.use();
+    //    _frameBufferBrightPassEffect.bindFrameBuffer(false);
+    //
+    //    _spBrightPassFilter.bindUniformTexture("frameTexture", 0, hdrSceneTexture);
+    //    _spBrightPassFilter.bindUniform("threshold", bloomThreshold);
+    //    // deprecated _meshQuadFrame.render(_spBrightPassFilter);
 }
 
 void SceneRendering::bloomEffect (GLuint hdrSceneTexture,
                                   GLuint bluredTexture) const {
-    _spBloom.use();
-    FrameBuffer::bindDefaultFrameBuffer();
-
-    _spBloom.bindUniformTexture("frameSceneHDRTexture", 0, hdrSceneTexture);
-    _spBloom.bindUniformTexture("frameBluredTexture", 1, bluredTexture);
-
-    _spBloom.bindUniform("averageLuminance", 1.8f);
-    _spBloom.bindUniform("whiteLuminance", 0.f);
-
-    // Post process effects
-    // const BallState& ball = _meshBall.getInstanceFrame();
-    // _spBloom.bindUniform("teleportationCoefficient", ball.teleportationCoeff());
-    // _spBloom.bindUniform(
-    // "flashColor", Utility::colorAsVec3(ball.teleportationColor())
-    // );
-
-    // deprecated _meshQuadFrame.render(_spBloom);
+    //    _spBloom.use();
+    //    FrameBuffer::bindDefaultFrameBuffer();
+    //
+    //    _spBloom.bindUniformTexture("frameSceneHDRTexture", 0, hdrSceneTexture);
+    //    _spBloom.bindUniformTexture("frameBluredTexture", 1, bluredTexture);
+    //
+    //    _spBloom.bindUniform("averageLuminance", 1.8f);
+    //    _spBloom.bindUniform("whiteLuminance", 0.f);
+    //
+    //    // Post process effects
+    //    // const BallState& ball = _meshBall.getInstanceFrame();
+    //    // _spBloom.bindUniform("teleportationCoefficient", ball.teleportationCoeff());
+    //    // _spBloom.bindUniform(
+    //    // "flashColor", Utility::colorAsVec3(ball.teleportationColor())
+    //    // );
+    //
+    //    // deprecated _meshQuadFrame.render(_spBloom);
 }
 
 void SceneRendering::depthFromStar() const {
-
-    glClearColor(1.f, 1.f, 1.f, 0.0f);
-    _frameBufferDepth.bindFrameBuffer(true);
-    _spDepth.use();
-    bindCamera(_spDepth);
-    // depc _meshBall.render(_spDepth);
-    // dpec _meshMap.render(_spDepth);
-    // _meshQuadFrame.render(_spDepth);
+    //
+    //    glClearColor(1.f, 1.f, 1.f, 0.0f);
+    //    _frameBufferDepth.bindFrameBuffer(true);
+    //    _spDepth.use();
+    //    bindCamera(_spDepth);
+    //    // depc _meshBall.render(_spDepth);
+    //    // dpec _meshMap.render(_spDepth);
+    //    // _meshQuadFrame.render(_spDepth);
 }
 
 
@@ -248,18 +309,22 @@ void SceneRendering::updateUniform() {
     // _light.update();
 }
 
-void SceneRendering::updateCamera (RenderPass& renderPass) {
+void SceneRendering::updateCameraUniforms (const RenderPass_sptr& renderPass) const {
     // renderPass.upsertUniform("VP", _uniformMatrix4.at("VP"));
-    renderPass.upsertUniform("VP", _camera.viewProjection());
+    renderPass->upsertUniform("VP", _camera.viewProjection());
     // renderPass.upsertUniform("VPStar", _uniformMatrix4.at("VPStar"));
     // renderPass.upsertUniform("positionBall", _uniformVec3.at("positionBall"));
-    renderPass.upsertUniform("positionCamera", _camera.pos());
+    renderPass->upsertUniform("positionCamera", _camera.pos());
 
-    _starState.update();
-    _light->directionLight(Utility::convertToOpenGLFormat(_starState.lightDirection()));
-    _light->update();
-    renderPass.upsertUniform("light", _light);
+    renderPass->upsertUniform(_light->name(), _light);
+    // TODO first update uniform block to decomente it
 }
+
+void SceneRendering::updateCameraUniformsStar (const RenderPass_sptr& renderPass) const {
+    renderPass->upsertUniform("VP", _camera.viewProjection());
+    renderPass->upsertUniform("positionCamera", _camera.pos());
+}
+
 
 void SceneRendering::render() const {
 
@@ -268,10 +333,12 @@ void SceneRendering::render() const {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // -----
     glEnable(GL_CULL_FACE);
+    glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.z, 0.0f);
+    _sceneRenderingProcess.render();
 
     // depthFromStar();
 
-    phongEffect(_frameBufferDepth.getRenderTexture());
+    // phongEffect(_frameBufferDepth.getRenderTexture());
 
     // brightPassEffect(_frameBufferHDRScene.getRenderTexture());
 
@@ -291,56 +358,65 @@ void SceneRendering::render() const {
 
 void SceneRendering::update() {
 
-    _renderPassBlocks.update();
-    _renderPassObjects.update();
-    _renderPassStar.update();
-    _renderPassBall.update();
-    updateCamera(_renderPassBlocks);
-    updateCamera(_renderPassObjects);
-    updateCamera(_renderPassStar);
-    updateCamera(_renderPassBall);
-    // Update meshes and uniform values using multithreading
-    // _meshMapUpdate.runTasks();
-    // _meshBallUpdate.runTasks();
-    // _meshStarUpdate.runTasks();
-    // Wait the end of updates
-    // _meshStarUpdate.waitTasks();
-    // _meshBallUpdate.waitTasks();
-    // _meshMapUpdate.waitTasks();
+    _starState.update();
+    _light->directionLight(Utility::convertToOpenGLFormat(_starState.lightDirection()));
+    _light->update();
 
-    updateUniform();
+    for (auto& renderPass : _renderPasses) {
+        renderPass->update();
+    }
+    _sceneRenderingProcess.updateUniforms();
+
+    //    _renderPassBlocks.update();
+    //    _renderPassObjects.update();
+    //    _renderPassStar.update();
+    //    _renderPassBall.update();
+    //    updateCamera(_renderPassBlocks);
+    //    updateCamera(_renderPassObjects);
+    //    updateCamera(_renderPassStar);
+    //    updateCamera(_renderPassBall);
+    //    // Update meshes and uniform values using multithreading
+    //    // _meshMapUpdate.runTasks();
+    //    // _meshBallUpdate.runTasks();
+    //    // _meshStarUpdate.runTasks();
+    //    // Wait the end of updates
+    //    // _meshStarUpdate.waitTasks();
+    //    // _meshBallUpdate.waitTasks();
+    //    // _meshMapUpdate.waitTasks();
+
+    //    updateUniform();
 }
 
-const std::string SceneRendering::vsshaderBlocks = "shaders/blocksVs.vs";
-const std::string SceneRendering::fsshaderBlocks = "shaders/blocksFs.fs";
+/*const std::string SceneRendering::vsshaderBlocks = "shaders/blocksVs.vs";
+   const std::string SceneRendering::fsshaderBlocks = "shaders/blocksFs.fs";
 
-const std::string SceneRendering::vsshaderObjects = "shaders/objectsMapVs.vs";
-const std::string SceneRendering::fsshaderObjects = "shaders/blocksFs.fs";
+   const std::string SceneRendering::vsshaderObjects = "shaders/objectsMapVs.vs";
+   const std::string SceneRendering::fsshaderObjects = "shaders/blocksFs.fs";
 
-const std::string SceneRendering::vsshaderBall = "shaders/ballVs.vs";
-const std::string SceneRendering::fsshaderBall = "shaders/blocksFs.fs";
+   const std::string SceneRendering::vsshaderBall = "shaders/ballVs.vs";
+   const std::string SceneRendering::fsshaderBall = "shaders/blocksFs.fs";
 
-const std::string SceneRendering::vsshaderStar = "shaders/starVs.vs";
-const std::string SceneRendering::fsshaderStar = "shaders/starFs.fs";
+   const std::string SceneRendering::vsshaderStar = "shaders/starVs.vs";
+   const std::string SceneRendering::fsshaderStar = "shaders/starFs.fs";
 
-const std::string SceneRendering::vsshaderFBO = "shaders/basicFboVs.vs";
-const std::string SceneRendering::fsshaderFBO = "shaders/basicFboFs.fs";
+   const std::string SceneRendering::vsshaderFBO = "shaders/basicFboVs.vs";
+   const std::string SceneRendering::fsshaderFBO = "shaders/basicFboFs.fs";
 
-const std::string SceneRendering::vsshaderBlur = "shaders/basicFboVs.vs";
-const std::string SceneRendering::fsshaderBlur = "shaders/blurFs.fs";
+   const std::string SceneRendering::vsshaderBlur = "shaders/basicFboVs.vs";
+   const std::string SceneRendering::fsshaderBlur = "shaders/blurFs.fs";
 
-const std::string SceneRendering::vsshaderBrightPassFilter =
+   const std::string SceneRendering::vsshaderBrightPassFilter =
     "shaders/basicFboVs.vs";
-const std::string SceneRendering::fsshaderBrightPassFilter =
+   const std::string SceneRendering::fsshaderBrightPassFilter =
     "shaders/brightPassFilter.fs";
 
-const std::string SceneRendering::vsshaderBloom = "shaders/basicFboVs.vs";
-const std::string SceneRendering::fsshaderBloom = "shaders/bloomFs.fs";
-const std::string SceneRendering::vsshaderDepth = "shaders/depthVs.vs";
-const std::string SceneRendering::fsshaderDepth = "shaders/depthFs.fs";
+   const std::string SceneRendering::vsshaderBloom = "shaders/basicFboVs.vs";
+   const std::string SceneRendering::fsshaderBloom = "shaders/bloomFs.fs";
+   const std::string SceneRendering::vsshaderDepth = "shaders/depthVs.vs";
+   const std::string SceneRendering::fsshaderDepth = "shaders/depthFs.fs";*/
 
-const std::vector <float> SceneRendering::gaussComputedValues =
-    Utility::genGaussBuffer(
-        SceneRendering::blurPatchSize, SceneRendering::blurSigma);
+const std::vector <float> SceneRendering::gaussComputedValues = Utility::genGaussBuffer(
+    SceneRendering::blurPatchSize, SceneRendering::blurSigma
+    );
 
 const glm::vec3 SceneRendering::backgroundColor { 0.f, 0.f, .1f };

@@ -146,7 +146,7 @@ std::vector <glm::vec3> GeometricShape::genNormals() const {
     return {};
 }
 
-std::vector <glm::vec3> GeometricShape::genColors (const std::vector <glm::vec3>& colors) const {
+std::vector <glm::vec3> GeometricShape::genColors (const std::vector <glm::vec3>&) const {
     return {};
 }
 

@@ -29,9 +29,10 @@ void TextRendering::updateQuad() {
 
 void TextRendering::createShader() {
     if (!spFont) {
-        spFont = std::make_shared <const ShaderProgram>(
-            Shader(GL_VERTEX_SHADER, vsshaderFont),
-            Shader(GL_FRAGMENT_SHADER, fsshaderFont));
+        spFont = std::make_shared <ShaderProgram>(
+            std::unique_ptr <Shader>(new Shader(GL_VERTEX_SHADER, vsshaderFont)),
+            std::unique_ptr <Shader>(new Shader(GL_FRAGMENT_SHADER, fsshaderFont))
+            );
     }
 }
 

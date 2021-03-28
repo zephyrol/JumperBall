@@ -10,66 +10,60 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include "Shader.h"
 #include "ShaderProgram.h"
 
 class UniformBlock {
 public:
 
 UniformBlock(const std::string& blockName,
-             const ShaderProgram& shaderProgram,
-             const std::vector <std::string>&
-             variablesNames);
+             const std::vector <std::string>& variablesNames);
 
-UniformBlock(const UniformBlock& uniformBlock)
-= delete;
-UniformBlock& operator= (const UniformBlock&
-                         uniformBlock) = delete;
+UniformBlock(const UniformBlock& uniformBlock) = delete;
+UniformBlock& operator= (const UniformBlock& uniformBlock) = delete;
 
 virtual ~UniformBlock();
-static constexpr size_t sizeVec3f = 3 * sizeof(GLfloat);
 
-virtual void bind() const = 0;
-
+const std::string& name() const;
 virtual void update() = 0;
+void bind(const CstShaderProgram_uptr& sp) const;
+void registerShader(const CstShaderProgram_uptr& sp);
 
 protected:
-const std::vector <GLint>& variablesOffsets() const;
-GLuint uboHandle() const;
-GLint blockSize() const;
+
+template<typename T> void fillDataBuffer(size_t variableNumber, const T& value);
 
 private:
 
-const ShaderProgram& _shaderProgram;
-const std::string _blockName;
-const GLint _blockIndex;
-const GLint _blockSize;
 const GLuint _uboHandle;
+const std::string _blockName;
 const std::vector <const char*> _variablesNames;
-const std::vector <GLuint> _variablesIndices;
-const std::vector <GLint> _variablesOffsets;
+std::map <GLuint, GLint> _blockSizes;
+std::map <GLuint, std::vector <GLint> > _variablesOffsets;
+std::map <GLuint, std::vector <GLbyte> > _bufferData;
 
-virtual const std::vector <GLbyte>& dataBuffer() const = 0;
-virtual std::vector <GLbyte> createDataBuffer() const = 0;
-virtual void fillDataBuffer(std::vector <GLbyte>& dataBuffer) const = 0;
+void createVariablesOffsets(const CstShaderProgram_uptr& sp);
+void createBlockSize(const CstShaderProgram_uptr& sp);
 
-GLint createBlockIndex() const;
-GLint createBlockSize() const;
 GLuint createUboHandle() const;
-std::vector <GLuint> createVariablesIndices() const;
-std::vector <GLint> createVariablesOffsets() const;
 
 const std::vector <const char*>& variablesNames() const;
-const std::vector <GLuint>& variablesIndices() const;
+
+GLuint createBlockIndex(const CstShaderProgram_uptr& sp) const;
+std::vector <GLuint> createVariablesIndices(const CstShaderProgram_uptr& sp) const;
 
 void deleteVariablesNamesInfo();
-void configureDataBuffer(
-    const ShaderProgram& sp,
-    const std::string& name);
 
 static std::vector <const char*> getStringsStoredLinearly(const std::vector <std::string>& strNames);
-static std::vector <const char*> copyVariablesNamesInfo(const std::vector <const char*>& varNamesInfo);
 
 };
+
+template<typename T> void UniformBlock::fillDataBuffer (size_t variableNumber, const T& value) {
+    for (auto& bufferData : _bufferData) {
+        memcpy(
+            bufferData.second.data() + _variablesOffsets.at(bufferData.first).at(variableNumber),
+            &value,
+            sizeof(T));
+    }
+}
 
 #endif /* UNIFORMBLOCK_H */

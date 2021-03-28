@@ -9,17 +9,17 @@
 #define SHADERPROGRAM_H
 #include "Shader.h"
 
+class ShaderProgram;
+using ShaderProgram_uptr = std::unique_ptr <ShaderProgram>;
+using CstShaderProgram_uptr = std::unique_ptr <const ShaderProgram>;
+
 class ShaderProgram {
 
 public:
-ShaderProgram(Shader&& vertexShader, Shader&& fragmentShader);
+ShaderProgram(CstShader_uptr&& vertexShader, CstShader_uptr&& fragmentShader);
 
 ShaderProgram(const ShaderProgram& shaderProgram) = delete;
 ShaderProgram& operator= (const ShaderProgram& shaderProgram) = delete;
-
-ShaderProgram(ShaderProgram&& shaderProgram) = default;
-ShaderProgram& operator= (ShaderProgram&& shaderProgram) = default;
-
 ~ShaderProgram() = default;
 
 GLuint getHandle() const;
@@ -38,9 +38,9 @@ void bindUniform(const std::string& name, const std::vector <float>& value) cons
 void bindUniformTexture(const std::string& name, const int& textureNumber, GLuint textureID) const;
 
 private:
-GLuint _shaderProgramHandle;
-Shader _vertexShader;
-Shader _fragmentShader;
+const GLuint _shaderProgramHandle;
+const CstShader_uptr _vertexShader;
+const CstShader_uptr _fragmentShader;
 
 void verifyLinkStatus() const;
 

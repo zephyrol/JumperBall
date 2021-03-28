@@ -10,12 +10,10 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include "FrameBuffer.h"
 #include "Camera.h"
 #include "uniformBlocks/uniformLight.h"
-#include "animations/BallAnimation.h"
 #include "scene/mesh/MeshGenerator.h"
-#include "RenderPass.h"
+#include "RenderProcess.h"
 
 
 class SceneRendering {
@@ -51,36 +49,40 @@ uniformVariable <bool> _uniformBool;
 // ParallelTask <void> _meshMapUpdate;
 // ParallelTask <void> _meshBallUpdate;
 // ParallelTask <void> _meshStarUpdate;
-ParallelTask <void> _uniformUpdate;
+// ParallelTask <void> _uniformUpdate;
 
 const Camera& _camera;
 
-const ShaderProgram _spBlocks;
-const ShaderProgram _spObjects;
-const ShaderProgram _spStar;
-const ShaderProgram _spBall;
-const ShaderProgram _spFbo;
-const ShaderProgram _spBlur;
-const ShaderProgram _spBrightPassFilter;
-const ShaderProgram _spBloom;
-const ShaderProgram _spDepth;
+/*const ShaderProgram _spBlocks;
+   const ShaderProgram _spObjects;
+   const ShaderProgram _spStar;
+   const ShaderProgram _spBall;
+   const ShaderProgram _spFbo;
+   const ShaderProgram _spBlur;
+   const ShaderProgram _spBrightPassFilter;
+   const ShaderProgram _spBloom;
+   const ShaderProgram _spDepth;*/
 
 const std::shared_ptr <UniformLight> _light;
 
-const FrameBuffer _frameBufferDepth;
-const FrameBuffer _frameBufferHDRScene;
-const FrameBuffer _frameBufferBrightPassEffect;
-const FrameBuffer _frameBufferHalfBlurEffect;
-const FrameBuffer _frameBufferCompleteBlurEffect;
+/*const FrameBuffer _frameBufferDepth;
+   const FrameBuffer _frameBufferHDRScene;
+   const FrameBuffer _frameBufferBrightPassEffect;
+   const FrameBuffer _frameBufferHalfBlurEffect;
+   const FrameBuffer _frameBufferCompleteBlurEffect;*/
 
-MapState _mapState;
-RenderPass _renderPassBlocks;
-RenderPass _renderPassObjects;
+// MapState _mapState;
+// RenderPass _renderPassBlocks;
+// RenderPass _renderPassObjects;
 
+vecRenderPass_sptr _renderPasses;
 StarState _starState;
-RenderPass _renderPassStar;
+RenderProcess _sceneRenderingProcess;
+// RenderPass _renderPassStar;
 
-RenderPass _renderPassBall;
+// RenderPass _renderPassBall;
+std::map <RenderPass_sptr, CstShaderProgram_uptr> createSceneRenderingShaders() const;
+std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> createSceneRenderingUniforms() const;
 
 // ---------CONST METHODS--------//
 void phongEffect(GLuint depthTexture) const;
@@ -94,27 +96,28 @@ void bindStarView(const ShaderProgram& sp) const;
 
 // ------------METHODS----------//
 void updateUniform();
-void updateCamera(RenderPass& renderPass);
+void updateCameraUniforms(const RenderPass_sptr& renderPass) const;
+void updateCameraUniformsStar(const RenderPass_sptr& renderPass) const;
 
 // ------STATIC ATTRIBUTES------//
-static const std::string vsshaderBlocks;
-static const std::string fsshaderBlocks;
-static const std::string vsshaderObjects;
-static const std::string fsshaderObjects;
-static const std::string vsshaderBall;
-static const std::string fsshaderBall;
-static const std::string vsshaderStar;
-static const std::string fsshaderStar;
-static const std::string vsshaderFBO;
-static const std::string fsshaderFBO;
-static const std::string vsshaderBlur;
-static const std::string fsshaderBlur;
-static const std::string vsshaderBrightPassFilter;
-static const std::string fsshaderBrightPassFilter;
-static const std::string vsshaderBloom;
-static const std::string fsshaderBloom;
-static const std::string vsshaderDepth;
-static const std::string fsshaderDepth;
+/*static const std::string vsshaderBlocks;
+   static const std::string fsshaderBlocks;
+   static const std::string vsshaderObjects;
+   static const std::string fsshaderObjects;
+   static const std::string vsshaderBall;
+   static const std::string fsshaderBall;
+   static const std::string vsshaderStar;
+   static const std::string fsshaderStar;
+   static const std::string vsshaderFBO;
+   static const std::string fsshaderFBO;
+   static const std::string vsshaderBlur;
+   static const std::string fsshaderBlur;
+   static const std::string vsshaderBrightPassFilter;
+   static const std::string fsshaderBrightPassFilter;
+   static const std::string vsshaderBloom;
+   static const std::string fsshaderBloom;
+   static const std::string vsshaderDepth;
+   static const std::string fsshaderDepth;*/
 
 static const std::vector <float> gaussComputedValues;
 static const glm::vec3 backgroundColor;

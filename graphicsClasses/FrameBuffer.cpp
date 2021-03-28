@@ -52,7 +52,6 @@ FrameBuffer::FrameBuffer(FrameBuffer::TextureCaterory category,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, _renderTexture, mipmapLevel);
     const GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
@@ -113,7 +112,7 @@ std::pair <float, float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
     constexpr unsigned int levelOfDetail = 0; // 0 is the base image level
     constexpr unsigned int numberOfComponents = 3; // RGB
     const size_t numberOfPixels = Utility::windowResolutionX * Utility::windowResolutionY;
-    std::vector <GLfloat> textureData(numberOfPixels* numberOfComponents);
+    std::vector <GLfloat> textureData(numberOfPixels*numberOfComponents);
 
     // bindRenderTexture(); TODO: update with new architecture if you use it
     glGetTexImage(GL_TEXTURE_2D, levelOfDetail,
@@ -123,9 +122,9 @@ std::pair <float, float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
     float maxLuminance = 0.f;
     for (size_t i = 0; i < numberOfPixels; ++i) {
         const float luminance = Utility::getLuminance(epsilon + glm::vec3(textureData.at(i),
-                                                      textureData.at(i + 1),
-                                                      textureData.at(i + 2)
-                                                      ));
+                                                                          textureData.at(i + 1),
+                                                                          textureData.at(i + 2)
+                                                                          ));
         sumLogLuminance += logf(luminance);
         if (luminance > maxLuminance) maxLuminance = luminance;
     }

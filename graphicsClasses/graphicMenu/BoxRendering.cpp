@@ -16,8 +16,8 @@ BoxRendering::BoxRendering(const Label& label,
     _transform(1.f) {
     if (!spBox) {
         spBox = std::make_shared <ShaderProgram>(
-            Shader(GL_VERTEX_SHADER, vsshaderBox),
-            Shader(GL_FRAGMENT_SHADER, fsshaderBox)
+            std::unique_ptr <Shader>(new Shader(GL_VERTEX_SHADER, vsshaderBox)),
+            std::unique_ptr <Shader>(new Shader(GL_FRAGMENT_SHADER, fsshaderBox))
             );
     }
 }

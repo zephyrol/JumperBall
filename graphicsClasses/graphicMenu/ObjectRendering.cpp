@@ -14,8 +14,8 @@ ObjectRendering::ObjectRendering(const Label& label):
     _transformObject(0.f) {
     if (!spObject) {
         spObject = std::make_shared <ShaderProgram>(
-            Shader(GL_VERTEX_SHADER, vsshaderObject),
-            Shader(GL_FRAGMENT_SHADER, fsshaderObject)
+            std::unique_ptr <Shader>(new Shader(GL_VERTEX_SHADER, vsshaderObject)),
+            std::unique_ptr <Shader>(new Shader(GL_FRAGMENT_SHADER, fsshaderObject))
             );
     }
     update(0.f);
