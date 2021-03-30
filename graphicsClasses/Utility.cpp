@@ -28,7 +28,6 @@ std::string Utility::readFileSrc (const std::string& filePath) {
     for (size_t i = 0; i < fileNames.size() && !foundFile; ++i) {
         std::ifstream shaderFile(fileNames.at(i));
         if (shaderFile) {
-            std::cout << "Opening file " << fileNames.at(i) << std::endl;
             foundFile = true;
 
             shaderFile.seekg(0, std::ios::end);

@@ -31,7 +31,6 @@ FrameBuffer::FrameBuffer(FrameBuffer::TextureCaterory category,
 
     const auto getDataFormat = [] (
         const FrameBuffer::TextureCaterory textureCategory)->GLenum {
-
                                    if (textureCategory == FrameBuffer::TextureCaterory::SDR) {
                                        return GL_RGB8;
                                    } else if (textureCategory == FrameBuffer::TextureCaterory::HDR) {

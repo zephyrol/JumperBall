@@ -1,6 +1,6 @@
 #version 330 core
 
-uniform sampler2D frameTexture;
+uniform sampler2D textureScene;
 uniform float threshold;
 
 in vec2 fs_vertexUVs;
@@ -33,12 +33,12 @@ float getLuminance (vec3 xyYColor) {
 }
 
 void main() {
-    vec3 colorRGB = texture(frameTexture, fs_vertexUVs).xyz;
+    vec3 colorRGB = texture(textureScene, fs_vertexUVs).xyz;
     vec3 colorxyY = convertRGBToCIExyY(colorRGB);
     if (getLuminance(colorxyY) > threshold) {
-        pixelColor = vec4(convertCIExyYToRGB(colorxyY), 1.f);
+        pixelColor = vec4(convertCIExyYToRGB(colorxyY), 1.0);
     } else {
-        pixelColor = vec4(0.f, 0.f, 0.f, 1.f);
+        pixelColor = vec4(0.0, 0.0, 0.0, 1.0);
     }
 
 }

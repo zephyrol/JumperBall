@@ -30,6 +30,7 @@ vecMesh_sptr genBall(const Ball& ball);
 vecMesh_sptr genBlocks(const Map& map);
 vecMesh_sptr genObjects(const Map& map);
 vecMesh_sptr genStar(const Star& star);
+vecMesh_sptr genQuad(const Quad& quad);
 
 // vecMeshComponent_sptr genObject(const ObjectState& obj, const glm::vec3& position, const JBTypes::Dir& dir);
 

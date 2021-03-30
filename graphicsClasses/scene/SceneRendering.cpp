@@ -35,6 +35,7 @@ SceneRendering::SceneRendering(const Map& map,
     /*_uniformUpdate([this] (size_t) {
                        updateUniform();
                    }),*/
+    _quadScreen(),
     _camera(camera),
     /*_spBlocks(Shader(GL_VERTEX_SHADER, vsshaderBlocks),
               Shader(GL_FRAGMENT_SHADER, fsshaderBlocks)),
@@ -84,14 +85,34 @@ SceneRendering::SceneRendering(const Map& map,
                   std::make_shared <RenderPass>(MeshGenerator::genBlocks(map)),
                   std::make_shared <RenderPass>(MeshGenerator::genObjects(map)),
                   std::make_shared <RenderPass>(MeshGenerator::genStar(star)),
-                  std::make_shared <RenderPass>(MeshGenerator::genBall(ball))
+                  std::make_shared <RenderPass>(MeshGenerator::genBall(ball)),
+                  std::make_shared <RenderPass>(MeshGenerator::genQuad(_quadScreen))
                   },
     _starState(star),
     _sceneRenderingProcess(
-        _renderPasses,
+        { _renderPasses.at(0), _renderPasses.at(1), _renderPasses.at(2), _renderPasses.at(3) },
         createSceneRenderingShaders(),
         createSceneRenderingUniforms(),
+        FrameBuffer_uptr(new FrameBuffer(FrameBuffer::TextureCaterory::HDR))
+        ),
+    _brightPassFilterProcess(
+        { _renderPasses.at(4) },
+        createBrightPassShaders(),
+        createBrightPassUniforms(),
         nullptr
+        // createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::HDR)
+        ),
+    _horizontalBlurProcess(
+        { _renderPasses.at(4) },
+        createHorizontalBlurShaders(),
+        createHorizontalBlurUniforms(),
+        nullptr // createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::HDR)
+        ),
+    _verticalBlurProcess(
+        { _renderPasses.at(4) },
+        createVerticalBlurShaders(),
+        createVerticalBlurUniforms(),
+        nullptr // createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::SDR)
         ) {
     // _renderPassStar(_spStar, MeshGenerator::genStar(star)),
     // _renderPassBall(_spBall, MeshGenerator::genBall(ball))
@@ -106,38 +127,58 @@ std::map <RenderPass_sptr, CstShaderProgram_uptr> SceneRendering::createSceneRen
                                          const std::string& vertexShader,
                                          const std::string& fragmentShader,
                                          bool useLight)->void {
-            CstShaderProgram_uptr shaderProgram = CstShaderProgram_uptr(
-                new ShaderProgram(
-                    Shader::createVertexShader(vertexShader),
-                    Shader::createFragmentShader(fragmentShader)));
+            CstShaderProgram_uptr shaderProgram = ShaderProgram::createShaderProgram(vertexShader,
+                                                                                     fragmentShader);
             if (useLight) {
                 _light->registerShader(shaderProgram);
             }
             sceneRenderingShaders[renderPass] = std::move(shaderProgram);
         };
 
-    std::cout << "fist" << std::endl;
     fillSceneRenderingShader(_renderPasses.at(0), "blocksVs.vs", "blocksFs.fs", true);
-    std::cout << "second" << std::endl;
     fillSceneRenderingShader(_renderPasses.at(1), "objectsMapVs.vs", "blocksFs.fs", true);
-    std::cout << "third" << std::endl;
     fillSceneRenderingShader(_renderPasses.at(2), "starVs.vs", "starFs.fs", false);
-    std::cout << "fourth" << std::endl;
     fillSceneRenderingShader(_renderPasses.at(3), "ballVs.vs", "blocksFs.fs", true);
-
     return sceneRenderingShaders;
+}
+
+std::map <RenderPass_sptr, CstShaderProgram_uptr> SceneRendering::createBrightPassShaders() const {
+    std::map <RenderPass_sptr, CstShaderProgram_uptr> brightPassShaders;
+    brightPassShaders[_renderPasses.at(4)] = ShaderProgram::createShaderProgram(
+        "basicFboVs.vs",
+        "brightPassFilter.fs");
+    return brightPassShaders;
+}
+
+std::map <RenderPass_sptr, CstShaderProgram_uptr> SceneRendering::createHorizontalBlurShaders() const {
+    std::map <RenderPass_sptr, CstShaderProgram_uptr> blurShaders;
+    blurShaders[_renderPasses.at(4)] = ShaderProgram::createShaderProgram(
+        "basicFboVs.vs",
+        "horizontalBlurFs.fs"
+        );
+    return blurShaders;
+}
+
+std::map <RenderPass_sptr, CstShaderProgram_uptr> SceneRendering::createVerticalBlurShaders() const {
+    std::map <RenderPass_sptr, CstShaderProgram_uptr> blurShaders;
+    blurShaders[_renderPasses.at(4)] = ShaderProgram::createShaderProgram(
+        "basicFboVs.vs",
+        "verticalBlurFs.fs");
+    return blurShaders;
 }
 
 std::map <RenderPass_sptr,
           RenderProcess::UniformUpdatingFct> SceneRendering::createSceneRenderingUniforms() const {
 
     std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> uniformUpdatingFcts;
-    const auto updateCam = [this] (const RenderPass_sptr& renderPass)->void {
-                               this->updateCameraUniforms(renderPass);
-                           };
-    const auto updateCamStar = [this] (const RenderPass_sptr& renderPass)->void {
-                                   this->updateCameraUniformsStar(renderPass);
-                               };
+    const auto updateCam =
+        [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
+            this->updateCameraUniforms(renderPass, shaderProgramID);
+        };
+    const auto updateCamStar =
+        [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
+            this->updateCameraUniformsStar(renderPass, shaderProgramID);
+        };
     uniformUpdatingFcts[_renderPasses.at(0)] = updateCam;
     uniformUpdatingFcts[_renderPasses.at(1)] = updateCam;
     uniformUpdatingFcts[_renderPasses.at(2)] = updateCamStar;
@@ -145,6 +186,37 @@ std::map <RenderPass_sptr,
     return uniformUpdatingFcts;
 }
 
+std::map <RenderPass_sptr,
+          RenderProcess::UniformUpdatingFct> SceneRendering::createBrightPassUniforms() const {
+    std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> uniformUpdatingFcts;
+    uniformUpdatingFcts[_renderPasses.at(4)] =
+        [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
+            this->updateBrightPassFilterUniforms(renderPass, shaderProgramID);
+        };
+    return uniformUpdatingFcts;
+}
+
+
+std::map <RenderPass_sptr,
+          RenderProcess::UniformUpdatingFct> SceneRendering::createHorizontalBlurUniforms() const {
+    std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> uniformUpdatingFcts;
+    uniformUpdatingFcts[_renderPasses.at(4)] =
+        [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
+            this->updateHorizontalBlurUniforms(renderPass, shaderProgramID);
+        };
+    return uniformUpdatingFcts;
+}
+
+
+std::map <RenderPass_sptr,
+          RenderProcess::UniformUpdatingFct> SceneRendering::createVerticalBlurUniforms() const {
+    std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> uniformUpdatingFcts;
+    uniformUpdatingFcts[_renderPasses.at(4)] =
+        [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
+            this->updateVerticalBlurUniforms(renderPass, shaderProgramID);
+        };
+    return uniformUpdatingFcts;
+}
 
 
 void SceneRendering::phongEffect (GLuint depthTexture) const {
@@ -309,20 +381,60 @@ void SceneRendering::updateUniform() {
     // _light.update();
 }
 
-void SceneRendering::updateCameraUniforms (const RenderPass_sptr& renderPass) const {
+void SceneRendering::updateCameraUniforms (const RenderPass_sptr& renderPass, GLuint shaderProgramID) const {
     // renderPass.upsertUniform("VP", _uniformMatrix4.at("VP"));
-    renderPass->upsertUniform("VP", _camera.viewProjection());
+    renderPass->upsertUniform(shaderProgramID, "VP", _camera.viewProjection());
     // renderPass.upsertUniform("VPStar", _uniformMatrix4.at("VPStar"));
     // renderPass.upsertUniform("positionBall", _uniformVec3.at("positionBall"));
-    renderPass->upsertUniform("positionCamera", _camera.pos());
+    renderPass->upsertUniform(shaderProgramID, "positionCamera", _camera.pos());
 
-    renderPass->upsertUniform(_light->name(), _light);
-    // TODO first update uniform block to decomente it
+    renderPass->upsertUniform(shaderProgramID, _light->name(), _light);
 }
 
-void SceneRendering::updateCameraUniformsStar (const RenderPass_sptr& renderPass) const {
-    renderPass->upsertUniform("VP", _camera.viewProjection());
-    renderPass->upsertUniform("positionCamera", _camera.pos());
+void SceneRendering::updateCameraUniformsStar (
+    const RenderPass_sptr& renderPass,
+    GLuint shaderProgramID) const {
+    renderPass->upsertUniform(shaderProgramID, "VP", _camera.viewProjection());
+    renderPass->upsertUniform(shaderProgramID, "positionCamera", _camera.pos());
+}
+
+void SceneRendering::updateBrightPassFilterUniforms (
+    const RenderPass_sptr& renderPass,
+    GLuint shaderProgramID) const {
+    constexpr float brightPassThreshold = 4.f;
+    renderPass->upsertUniform(shaderProgramID, "textureScene",
+                              _sceneRenderingProcess.getFrameBufferTexture());
+    renderPass->upsertUniform(shaderProgramID, "threshold", brightPassThreshold);
+}
+
+void SceneRendering::updateHorizontalBlurUniforms (
+    const RenderPass_sptr& renderPass,
+    GLuint shaderProgramID) const {
+    renderPass->upsertUniform(
+        shaderProgramID,
+        "brightPassTexture",
+        _brightPassFilterProcess.getFrameBufferTexture()
+        );
+}
+
+void SceneRendering::updateVerticalBlurUniforms (
+    const RenderPass_sptr& renderPass,
+    GLuint shaderProgramID) const {
+    renderPass->upsertUniform(
+        shaderProgramID,
+        "horizontalBlurTexture",
+        _horizontalBlurProcess.getFrameBufferTexture()
+        );
+}
+
+FrameBuffer_uptr SceneRendering::createBloomEffectFrameBuffer (
+    const FrameBuffer::TextureCaterory& category
+    ) const {
+    return FrameBuffer_uptr(
+        new FrameBuffer(category,
+                        Utility::getWidthFromHeight(heightBloomTexture),
+                        heightBloomTexture,
+                        false));
 }
 
 
@@ -335,6 +447,9 @@ void SceneRendering::render() const {
     glEnable(GL_CULL_FACE);
     glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.z, 0.0f);
     _sceneRenderingProcess.render();
+    _brightPassFilterProcess.render();
+    // _horizontalBlurProcess.render();
+    // _verticalBlurProcess.render();
 
     // depthFromStar();
 
@@ -366,6 +481,9 @@ void SceneRendering::update() {
         renderPass->update();
     }
     _sceneRenderingProcess.updateUniforms();
+    _brightPassFilterProcess.updateUniforms();
+    // _horizontalBlurProcess.updateUniforms();
+    // _verticalBlurProcess.updateUniforms();
 
     //    _renderPassBlocks.update();
     //    _renderPassObjects.update();
@@ -414,9 +532,5 @@ void SceneRendering::update() {
    const std::string SceneRendering::fsshaderBloom = "shaders/bloomFs.fs";
    const std::string SceneRendering::vsshaderDepth = "shaders/depthVs.vs";
    const std::string SceneRendering::fsshaderDepth = "shaders/depthFs.fs";*/
-
-const std::vector <float> SceneRendering::gaussComputedValues = Utility::genGaussBuffer(
-    SceneRendering::blurPatchSize, SceneRendering::blurSigma
-    );
 
 const glm::vec3 SceneRendering::backgroundColor { 0.f, 0.f, .1f };

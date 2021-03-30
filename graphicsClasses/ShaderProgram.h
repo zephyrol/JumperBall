@@ -23,6 +23,8 @@ ShaderProgram& operator= (const ShaderProgram& shaderProgram) = delete;
 ~ShaderProgram() = default;
 
 GLuint getHandle() const;
+
+static CstShaderProgram_uptr createShaderProgram(const std::string& vs, const std::string& fs);
 void use() const;
 
 void bindUniform(const std::string& name, const glm::mat4& value) const;

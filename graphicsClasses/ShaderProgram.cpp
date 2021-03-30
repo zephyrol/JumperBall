@@ -38,6 +38,13 @@ GLuint ShaderProgram::getHandle() const {
     return _shaderProgramHandle;
 }
 
+CstShaderProgram_uptr ShaderProgram::createShaderProgram (const std::string& vs, const std::string& fs) {
+    return CstShaderProgram_uptr(new ShaderProgram(
+                                     Shader::createVertexShader(vs),
+                                     Shader::createFragmentShader(fs)
+                                     ));
+}
+
 void ShaderProgram::use() const {
     glUseProgram(_shaderProgramHandle);
 }
@@ -59,8 +66,6 @@ void ShaderProgram::verifyLinkStatus() const {
             std::cerr << "Error log : " << std::endl << log;
         }
         exit(EXIT_FAILURE);
-    } else {
-        std::cout << "Shader Program successfully linked" << std::endl;
     }
 }
 
@@ -142,7 +147,6 @@ void ShaderProgram::bindUniformTexture (const std::string& name,
                                         GLuint textureID) const {
     glActiveTexture(GL_TEXTURE0 + textureNumber);
     glBindTexture(GL_TEXTURE_2D, textureID);
-    const GLuint uniformVariableID =
-        glGetUniformLocation(getHandle(), name.c_str());
+    const GLuint uniformVariableID = glGetUniformLocation(getHandle(), name.c_str());
     glUniform1i(uniformVariableID, textureNumber);
 }

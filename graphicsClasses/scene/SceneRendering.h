@@ -28,8 +28,6 @@ void render() const;
 private:
 template<typename T> using uniformVariable = std::map <std::string, T>;
 
-static constexpr float blurSigma = 4.f;
-static constexpr size_t blurPatchSize = 25;
 static constexpr size_t heightBloomTexture = 192;
 static constexpr size_t sizeDepthTexture = 1024;
 
@@ -51,6 +49,7 @@ uniformVariable <bool> _uniformBool;
 // ParallelTask <void> _meshStarUpdate;
 // ParallelTask <void> _uniformUpdate;
 
+const Quad _quadScreen;
 const Camera& _camera;
 
 /*const ShaderProgram _spBlocks;
@@ -78,11 +77,22 @@ const std::shared_ptr <UniformLight> _light;
 vecRenderPass_sptr _renderPasses;
 StarState _starState;
 RenderProcess _sceneRenderingProcess;
+RenderProcess _brightPassFilterProcess;
+RenderProcess _horizontalBlurProcess;
+RenderProcess _verticalBlurProcess;
+// RenderProcess _bloomEffectProcess;
 // RenderPass _renderPassStar;
 
 // RenderPass _renderPassBall;
 std::map <RenderPass_sptr, CstShaderProgram_uptr> createSceneRenderingShaders() const;
+std::map <RenderPass_sptr, CstShaderProgram_uptr> createBrightPassShaders() const;
+std::map <RenderPass_sptr, CstShaderProgram_uptr> createHorizontalBlurShaders() const;
+std::map <RenderPass_sptr, CstShaderProgram_uptr> createVerticalBlurShaders() const;
+
 std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> createSceneRenderingUniforms() const;
+std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> createBrightPassUniforms() const;
+std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> createHorizontalBlurUniforms() const;
+std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> createVerticalBlurUniforms() const;
 
 // ---------CONST METHODS--------//
 void phongEffect(GLuint depthTexture) const;
@@ -96,8 +106,14 @@ void bindStarView(const ShaderProgram& sp) const;
 
 // ------------METHODS----------//
 void updateUniform();
-void updateCameraUniforms(const RenderPass_sptr& renderPass) const;
-void updateCameraUniformsStar(const RenderPass_sptr& renderPass) const;
+void updateCameraUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
+void updateCameraUniformsStar(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
+void updateBrightPassFilterUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
+void updateHorizontalBlurUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
+void updateVerticalBlurUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
+
+FrameBuffer_uptr createBloomEffectFrameBuffer(const FrameBuffer::TextureCaterory& category) const;
+CstShaderProgram_uptr createBloomEffectShader(const std::string& vs, const std::string& fs) const;
 
 // ------STATIC ATTRIBUTES------//
 /*static const std::string vsshaderBlocks;

@@ -40,8 +40,6 @@ void Shader::verifyCompileStatus() const {
             glGetShaderInfoLog(_shaderHandle, logLength, &message, &log[0]);
             std::cerr << "Error log : " << std::endl << log;
         }
-    } else {
-        std::cout << "Shader successfully compiled: " << _shaderFilename << std::endl;
     }
 }
 

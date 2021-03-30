@@ -20,7 +20,7 @@ RenderProcess::RenderProcess(
 
 void RenderProcess::updateUniforms() {
     for (const auto& renderPass : _renderPasses) {
-        _externalUniformsTreating.at(renderPass)(renderPass);
+        _externalUniformsTreating.at(renderPass)(renderPass, _shaderPrograms.at(renderPass)->getHandle());
     }
 }
 
@@ -36,4 +36,8 @@ void RenderProcess::render() const {
         shaderProgram->use();
         renderPass->render(shaderProgram);
     }
+}
+
+GLuint RenderProcess::getFrameBufferTexture() const {
+    return _frameBuffer->getRenderTexture();
 }

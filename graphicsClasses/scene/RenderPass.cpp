@@ -72,35 +72,36 @@ std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > RenderPass::createSeparateM
     return separateMeshGroups;
 }
 
-void RenderPass::upsertUniform (const std::string& name, const glm::mat4& value) {
-    _renderPassUniforms.uniformMat4s[name] = value;
+void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const glm::mat4& value) {
+    _renderPassUniforms[shaderProgramID].uniformMat4s[name] = value;
 }
 
-void RenderPass::upsertUniform (const std::string& name, const glm::vec4& value) {
-    _renderPassUniforms.uniformVec4s[name] = value;
+void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const glm::vec4& value) {
+    _renderPassUniforms[shaderProgramID].uniformVec4s[name] = value;
 }
 
-void RenderPass::upsertUniform (const std::string& name, const glm::vec3& value) {
-    _renderPassUniforms.uniformVec3s[name] = value;
+void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const glm::vec3& value) {
+    _renderPassUniforms[shaderProgramID].uniformVec3s[name] = value;
 }
 
-void RenderPass::upsertUniform (const std::string& name, const glm::vec2& value) {
-    _renderPassUniforms.uniformVec2s[name] = value;
+void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const glm::vec2& value) {
+    _renderPassUniforms[shaderProgramID].uniformVec2s[name] = value;
 }
 
-void RenderPass::upsertUniform (const std::string& name, const GLfloat& value) {
-    _renderPassUniforms.uniformFloats[name] = value;
+void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const GLfloat& value) {
+    _renderPassUniforms[shaderProgramID].uniformFloats[name] = value;
 }
 
-void RenderPass::upsertUniformTexture (const std::string& name, const GLuint value) {
-    _renderPassUniforms.uniformTextures[name] = value;
+void RenderPass::upsertUniformTexture (GLuint shaderProgramID, const std::string& name, const GLuint value) {
+    _renderPassUniforms[shaderProgramID].uniformTextures[name] = value;
 }
 
 void RenderPass::upsertUniform (
+    GLuint shaderProgramID,
     const std::string& name,
     const std::shared_ptr <const UniformBlock>& uniformBlock
     ) {
-    _renderPassUniformBlocks[name] = uniformBlock;
+    _renderPassUniformBlocks[shaderProgramID][name] = uniformBlock;
 }
 
 void RenderPass::bindUniforms (
@@ -116,16 +117,23 @@ void RenderPass::bindUniforms (
 
     int textureNumber = 0;
     for (const auto& uniformTexture : uniforms.uniformTextures) {
-        shaderProgram->bindUniformTexture(uniformTexture.first, textureNumber, uniformTexture.second);
+        shaderProgram->bindUniformTexture(uniformTexture.first, 0, uniformTexture.second);
         ++textureNumber;
     }
 }
 
 void RenderPass::render (const CstShaderProgram_uptr& shaderProgram) const {
-    for (const auto& uniformBlock : _renderPassUniformBlocks) {
-        uniformBlock.second->bind(shaderProgram);
+    const GLuint shaderProgramID = shaderProgram->getHandle();
+    if (_renderPassUniformBlocks.find(shaderProgramID) != _renderPassUniformBlocks.end()) {
+        for (const auto& uniformBlock : _renderPassUniformBlocks.at(shaderProgramID)) {
+            uniformBlock.second->bind(shaderProgram);
+        }
     }
-    bindUniforms(_renderPassUniforms, shaderProgram);
+
+    if (_renderPassUniforms.find(shaderProgramID) != _renderPassUniforms.end()) {
+        bindUniforms(_renderPassUniforms.at(shaderProgramID), shaderProgram);
+    }
+
     for (const auto& renderGroupUniforms : _renderGroupsUniforms) {
         bindUniforms(renderGroupUniforms.second, shaderProgram);
         renderGroupUniforms.first->render();

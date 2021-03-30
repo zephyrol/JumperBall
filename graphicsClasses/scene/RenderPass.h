@@ -34,13 +34,19 @@ RenderPass& operator= (RenderPass&& renderPass) = default;
 void render(const CstShaderProgram_uptr& shaderProgram) const;
 void update();
 void cleanUniforms();
-void upsertUniform(const std::string& name, const glm::mat4& value);
-void upsertUniform(const std::string& name, const glm::vec4& value);
-void upsertUniform(const std::string& name, const glm::vec3& value);
-void upsertUniform(const std::string& name, const glm::vec2& value);
-void upsertUniform(const std::string& name, const GLfloat& value);
-void upsertUniformTexture(const std::string& name, const GLuint value);
-void upsertUniform(const std::string& name, const std::shared_ptr <const UniformBlock>& uniformBlock);
+void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::mat4& value);
+void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::vec4& value);
+void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::vec3& value);
+void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::vec2& value);
+void upsertUniform(GLuint shaderProgramID, const std::string& name, const GLfloat& value);
+void upsertUniformTexture(GLuint shaderProgramID, const std::string& name, const GLuint value);
+void upsertUniform(
+    GLuint shaderProgramID,
+    const std::string& name,
+    const std::shared_ptr <const UniformBlock>& uniformBlock
+    );
+
+using UniformBlockVariable = std::map <std::string, std::shared_ptr <const UniformBlock> >;
 
 private:
 
@@ -60,8 +66,8 @@ const vecMesh_sptr _meshes;
 const std::shared_ptr <RenderGroup> _unitedMeshesGroup;
 std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > _separateMeshGroups;
 std::map <std::shared_ptr <RenderGroup>, Mesh::Uniforms> _renderGroupsUniforms;
-Mesh::Uniforms _renderPassUniforms;
-std::map <std::string, std::shared_ptr <const UniformBlock> > _renderPassUniformBlocks;
+std::map <GLuint, Mesh::Uniforms> _renderPassUniforms;
+std::map <GLuint, UniformBlockVariable> _renderPassUniformBlocks;
 };
 
 
