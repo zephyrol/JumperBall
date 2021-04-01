@@ -52,7 +52,7 @@ private:
 
 void bindUniforms(const Mesh::Uniforms& uniforms, const CstShaderProgram_uptr& shaderProgram) const;
 
-template<typename T> void bindUniforms(
+template<typename T> void bindUniformVariables(
     Mesh::UniformVariable <T> uniforms,
     const CstShaderProgram_uptr& shaderProgram
     ) const;

@@ -9,8 +9,8 @@
 
 RenderProcess::RenderProcess(
     const vecRenderPass_sptr& renderPasses,
-    std::map <RenderPass_sptr, CstShaderProgram_uptr>&& shaderPrograms,
-    std::map <RenderPass_sptr, UniformUpdatingFct>&& externalUniformsTreating,
+    PassShaderMap&& shaderPrograms,
+    PassUniformUpdateMap&& externalUniformsTreating,
     FrameBuffer_uptr&& frameBuffer):
     _renderPasses(renderPasses),
     _shaderPrograms(std::move(shaderPrograms)),

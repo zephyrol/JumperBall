@@ -13,10 +13,13 @@ class RenderProcess {
 public:
 
 using UniformUpdatingFct = std::function <void (const RenderPass_sptr&, GLuint)>;
+using PassShaderMap = std::map <RenderPass_sptr, CstShaderProgram_uptr>;
+using PassUniformUpdateMap = std::map <RenderPass_sptr, UniformUpdatingFct>;
+
 RenderProcess(
     const vecRenderPass_sptr& renderPasses,
-    std::map <RenderPass_sptr, CstShaderProgram_uptr>&& shaderPrograms,
-    std::map <RenderPass_sptr, UniformUpdatingFct>&& externalUniformsTreating,
+    PassShaderMap&& shaderPrograms,
+    PassUniformUpdateMap&& externalUniformsTreating,
     FrameBuffer_uptr&& frameBuffer);
 RenderProcess(const RenderProcess& renderProcess) = delete;
 RenderProcess& operator= (const RenderProcess&) = delete;
@@ -29,7 +32,7 @@ GLuint getFrameBufferTexture() const;
 
 private:
 const vecRenderPass_sptr _renderPasses;
-const std::map <RenderPass_sptr, CstShaderProgram_uptr> _shaderPrograms;
-const std::map <RenderPass_sptr, UniformUpdatingFct> _externalUniformsTreating;
+const PassShaderMap _shaderPrograms;
+const PassUniformUpdateMap _externalUniformsTreating;
 const FrameBuffer_uptr _frameBuffer;
 };

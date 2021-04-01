@@ -26,7 +26,7 @@ void RenderPass::update() {
             }
         };
 
-    vecMesh_sptr rejectedMeshes = _unitedMeshesGroup->update();
+    const vecMesh_sptr rejectedMeshes = _unitedMeshesGroup->update();
     updateRenderGroupUniforms(_unitedMeshesGroup);
 
     for (const auto& separateMeshGroup : _separateMeshGroups) {
@@ -109,16 +109,25 @@ void RenderPass::bindUniforms (
     const CstShaderProgram_uptr& shaderProgram
     ) const {
 
-    bindUniforms(uniforms.uniformFloats, shaderProgram);
-    bindUniforms(uniforms.uniformVec2s, shaderProgram);
-    bindUniforms(uniforms.uniformVec3s, shaderProgram);
-    bindUniforms(uniforms.uniformVec4s, shaderProgram);
-    bindUniforms(uniforms.uniformMat4s, shaderProgram);
+    bindUniformVariables(uniforms.uniformFloats, shaderProgram);
+    bindUniformVariables(uniforms.uniformVec2s, shaderProgram);
+    bindUniformVariables(uniforms.uniformVec3s, shaderProgram);
+    bindUniformVariables(uniforms.uniformVec4s, shaderProgram);
+    bindUniformVariables(uniforms.uniformMat4s, shaderProgram);
 
     int textureNumber = 0;
     for (const auto& uniformTexture : uniforms.uniformTextures) {
         shaderProgram->bindUniformTexture(uniformTexture.first, 0, uniformTexture.second);
         ++textureNumber;
+    }
+}
+
+template<typename T> void RenderPass::bindUniformVariables (
+    Mesh::UniformVariable <T> uniforms,
+    const CstShaderProgram_uptr& shaderProgram
+    ) const {
+    for (const auto& uniform : uniforms) {
+        shaderProgram->bindUniform(uniform.first, uniform.second);
     }
 }
 
@@ -137,14 +146,5 @@ void RenderPass::render (const CstShaderProgram_uptr& shaderProgram) const {
     for (const auto& renderGroupUniforms : _renderGroupsUniforms) {
         bindUniforms(renderGroupUniforms.second, shaderProgram);
         renderGroupUniforms.first->render();
-    }
-}
-
-template<typename T> void RenderPass::bindUniforms (
-    Mesh::UniformVariable <T> uniforms,
-    const CstShaderProgram_uptr& shaderProgram
-    ) const {
-    for (const auto& uniform : uniforms) {
-        shaderProgram->bindUniform(uniform.first, uniform.second);
     }
 }

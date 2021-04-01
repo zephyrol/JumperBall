@@ -31,18 +31,12 @@ template<typename T> using uniformVariable = std::map <std::string, T>;
 static constexpr size_t heightBloomTexture = 192;
 static constexpr size_t sizeDepthTexture = 1024;
 
-uniformVariable <glm::mat4> _uniformMatrix4;
-uniformVariable <glm::vec4> _uniformVec4;
-uniformVariable <glm::vec3> _uniformVec3;
-uniformVariable <glm::vec2> _uniformVec2;
-uniformVariable <GLfloat> _uniformFloat;
-uniformVariable <bool> _uniformBool;
-
-// const Quad _quadFrame;
-// MapMesh _meshMap;
-// BallMesh _meshBall;
-// StarMesh _meshStar;
-// QuadMesh _meshQuadFrame;
+/*uniformVariable <glm::mat4> _uniformMatrix4;
+   uniformVariable <glm::vec4> _uniformVec4;
+   uniformVariable <glm::vec3> _uniformVec3;
+   uniformVariable <glm::vec2> _uniformVec2;
+   uniformVariable <GLfloat> _uniformFloat;
+   uniformVariable <bool> _uniformBool;*/
 
 // ParallelTask <void> _meshMapUpdate;
 // ParallelTask <void> _meshBallUpdate;
@@ -74,7 +68,7 @@ const std::shared_ptr <UniformLight> _light;
 // RenderPass _renderPassBlocks;
 // RenderPass _renderPassObjects;
 
-vecRenderPass_sptr _renderPasses;
+const vecRenderPass_sptr _renderPasses;
 StarState _starState;
 RenderProcess _sceneRenderingProcess;
 RenderProcess _brightPassFilterProcess;
@@ -84,17 +78,29 @@ RenderProcess _verticalBlurProcess;
 // RenderPass _renderPassStar;
 
 // RenderPass _renderPassBall;
-std::map <RenderPass_sptr, CstShaderProgram_uptr> createSceneRenderingShaders() const;
-std::map <RenderPass_sptr, CstShaderProgram_uptr> createBrightPassShaders() const;
-std::map <RenderPass_sptr, CstShaderProgram_uptr> createHorizontalBlurShaders() const;
-std::map <RenderPass_sptr, CstShaderProgram_uptr> createVerticalBlurShaders() const;
 
-std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> createSceneRenderingUniforms() const;
-std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> createBrightPassUniforms() const;
-std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> createHorizontalBlurUniforms() const;
-std::map <RenderPass_sptr, RenderProcess::UniformUpdatingFct> createVerticalBlurUniforms() const;
+const RenderPass_sptr& getScreenRenderPass() const;
+vecRenderPass_sptr getLevelRenderPasses() const;
+const RenderPass_sptr& getStarRenderPass() const;
+vecRenderPass_sptr getSceneRenderPasses() const;
 
-// ---------CONST METHODS--------//
+RenderProcess::PassShaderMap createSceneRenderingShaders() const;
+
+RenderProcess::PassShaderMap createScreenShaders(const std::string& vs, const std::string& fs) const;
+RenderProcess::PassShaderMap createBrightPassShaders() const;
+RenderProcess::PassShaderMap createHorizontalBlurShaders() const;
+RenderProcess::PassShaderMap createVerticalBlurShaders() const;
+
+RenderProcess::PassUniformUpdateMap createSceneRenderingUniforms() const;
+
+
+RenderProcess::PassUniformUpdateMap createScreenUniforms(
+    const std::function <void(const RenderPass_sptr&, GLuint)>& uniformsUpdatingFunction
+    ) const;
+RenderProcess::PassUniformUpdateMap createBrightPassUniforms() const;
+RenderProcess::PassUniformUpdateMap createHorizontalBlurUniforms() const;
+RenderProcess::PassUniformUpdateMap createVerticalBlurUniforms() const;
+
 void phongEffect(GLuint depthTexture) const;
 void blurEffect(GLuint brightPassTexture) const;
 void brightPassEffect(GLuint hdrSceneTexture) const;
@@ -104,7 +110,6 @@ void depthFromStar() const;
 void bindCamera(const ShaderProgram& sp) const;
 void bindStarView(const ShaderProgram& sp) const;
 
-// ------------METHODS----------//
 void updateUniform();
 void updateCameraUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
 void updateCameraUniformsStar(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
@@ -135,7 +140,7 @@ CstShaderProgram_uptr createBloomEffectShader(const std::string& vs, const std::
    static const std::string vsshaderDepth;
    static const std::string fsshaderDepth;*/
 
-static const std::vector <float> gaussComputedValues;
+// static const std::vector <float> gaussComputedValues;
 static const glm::vec3 backgroundColor;
 };
 
