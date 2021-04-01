@@ -159,10 +159,8 @@ void Controller::runGame (size_t level) {
     _ball = std::make_shared <Ball>(*_map);
     _camera = std::make_shared <Camera>();
     _star = std::make_shared <Star>(0.3f, 0.5f, 50.f, 5.f, _map->getCenterMap());
-    _sceneRenderingFrameA =
-        std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera);
-    _sceneRenderingFrameB =
-        std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera);
+    _sceneRenderingFrameA = std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera);
+    _sceneRenderingFrameB = std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera);
     _updating.runTasks();
     _updating.waitTasks();
     switchFrame();

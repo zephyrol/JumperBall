@@ -72,34 +72,46 @@ SceneRendering::SceneRendering(const Map& map,
                   std::make_shared <RenderPass>(MeshGenerator::genQuad(_quadScreen))
                   },
     _starState(star),
-    _sceneRenderingProcess(
-        getSceneRenderPasses(),
-        createSceneRenderingShaders(),
-        createSceneRenderingUniforms(),
-        nullptr // FrameBuffer_uptr(new FrameBuffer(FrameBuffer::TextureCaterory::HDR))
-        ),
-    _brightPassFilterProcess(
-        { getScreenRenderPass() },
-        createBrightPassShaders(),
-        createBrightPassUniforms(),
-        // nullptr
-        createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::HDR)
-        ),
-    _horizontalBlurProcess(
-        { getScreenRenderPass() },
-        createHorizontalBlurShaders(),
-        createHorizontalBlurUniforms(),
-        nullptr // createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::HDR)
-        ),
-    _verticalBlurProcess(
-        { getScreenRenderPass()  },
-        createVerticalBlurShaders(),
-        createVerticalBlurUniforms(),
-        nullptr // createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::SDR)
-        ) {
+    _sceneRenderingProcess(std::make_shared <RenderProcess>(
+                               getSceneRenderPasses(),
+                               createSceneRenderingShaders(),
+                               createSceneRenderingUniforms(),
+                               // nullptr
+                               FrameBuffer_uptr(new FrameBuffer(FrameBuffer::TextureCaterory::HDR))
+                               )),
+    _brightPassFilterProcess(std::make_shared <RenderProcess>(
+                                 vecScreenRenderPass(),
+                                 createBrightPassShaders(),
+                                 createBrightPassUniforms(),
+                                 createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::SDR)
+                                 )),
+    _horizontalBlurProcess(std::make_shared <RenderProcess>(
+                               vecScreenRenderPass(),
+                               createHorizontalBlurShaders(),
+                               createHorizontalBlurUniforms(),
+                               createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::SDR)
+                               )),
+    _verticalBlurProcess(std::make_shared <RenderProcess>(
+                             vecScreenRenderPass(),
+                             createVerticalBlurShaders(),
+                             createVerticalBlurUniforms(),
+                             nullptr // createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::SDR)
+                             )),
+    _sceneRenderingPipeline{
+                            _sceneRenderingProcess,
+                            _brightPassFilterProcess,
+                            _horizontalBlurProcess,
+                            _verticalBlurProcess
+                            } {
     // _renderPassStar(_spStar, MeshGenerator::genStar(star)),
     // _renderPassBall(_spBall, MeshGenerator::genBall(ball))
     update();
+
+    // alpha
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // -----
+    glEnable(GL_CULL_FACE);
 }
 
 RenderProcess::PassShaderMap SceneRendering::createSceneRenderingShaders() const {
@@ -129,6 +141,10 @@ RenderProcess::PassShaderMap SceneRendering::createSceneRenderingShaders() const
 
 const RenderPass_sptr& SceneRendering::getScreenRenderPass() const {
     return _renderPasses.at(4);
+}
+
+std::vector <RenderPass_sptr> SceneRendering::vecScreenRenderPass() const {
+    return { getScreenRenderPass() };
 }
 
 vecRenderPass_sptr SceneRendering::getLevelRenderPasses() const {
@@ -396,28 +412,31 @@ void SceneRendering::updateBrightPassFilterUniforms (
     const RenderPass_sptr& renderPass,
     GLuint shaderProgramID) const {
     constexpr float brightPassThreshold = 4.f;
-    renderPass->upsertUniform(shaderProgramID, "textureScene",
-                              _sceneRenderingProcess.getFrameBufferTexture());
+    renderPass->upsertUniformTexture(
+        shaderProgramID,
+        "textureScene",
+        _sceneRenderingProcess->getFrameBufferTexture()
+        );
     renderPass->upsertUniform(shaderProgramID, "threshold", brightPassThreshold);
 }
 
 void SceneRendering::updateHorizontalBlurUniforms (
     const RenderPass_sptr& renderPass,
     GLuint shaderProgramID) const {
-    renderPass->upsertUniform(
+    renderPass->upsertUniformTexture(
         shaderProgramID,
         "brightPassTexture",
-        _brightPassFilterProcess.getFrameBufferTexture()
+        _brightPassFilterProcess->getFrameBufferTexture()
         );
 }
 
 void SceneRendering::updateVerticalBlurUniforms (
     const RenderPass_sptr& renderPass,
     GLuint shaderProgramID) const {
-    renderPass->upsertUniform(shaderProgramID,
-                              "horizontalBlurTexture",
-                              _horizontalBlurProcess.getFrameBufferTexture()
-                              );
+    renderPass->upsertUniformTexture(shaderProgramID,
+                                     "horizontalBlurTexture",
+                                     _horizontalBlurProcess->getFrameBufferTexture()
+                                     );
 }
 
 FrameBuffer_uptr SceneRendering::createBloomEffectFrameBuffer (
@@ -431,38 +450,6 @@ FrameBuffer_uptr SceneRendering::createBloomEffectFrameBuffer (
 }
 
 
-void SceneRendering::render() const {
-
-    // alpha
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // -----
-    glEnable(GL_CULL_FACE);
-    glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.z, 0.0f);
-    _sceneRenderingProcess.render();
-    // _brightPassFilterProcess.render();
-    // _horizontalBlurProcess.render();
-    // _verticalBlurProcess.render();
-
-    // depthFromStar();
-
-    // phongEffect(_frameBufferDepth.getRenderTexture());
-
-    // brightPassEffect(_frameBufferHDRScene.getRenderTexture());
-
-    // blurEffect(_frameBufferBrightPassEffect.getRenderTexture());
-
-    // bloomEffect(_frameBufferHDRScene.getRenderTexture(),
-    //            _frameBufferCompleteBlurEffect.getRenderTexture());
-
-    /*_spFbo.use();
-       FrameBuffer::bindDefaultFrameBuffer();
-       _spFbo.bindUniformTexture("frameTexture", 0,
-       _frameBufferDepth.getRenderTexture());
-       _meshQuadFrame.render(_spFbo);*/
-
-}
-
 void SceneRendering::update() {
 
     _starState.update();
@@ -472,10 +459,10 @@ void SceneRendering::update() {
     for (auto& renderPass : _renderPasses) {
         renderPass->update();
     }
-    _sceneRenderingProcess.updateUniforms();
-    // _brightPassFilterProcess.updateUniforms();
-    // _horizontalBlurProcess.updateUniforms();
-    // _verticalBlurProcess.updateUniforms();
+
+    for (auto& renderProcess : _sceneRenderingPipeline) {
+        renderProcess->updateUniforms();
+    }
 
     //    _renderPassBlocks.update();
     //    _renderPassObjects.update();
@@ -495,6 +482,32 @@ void SceneRendering::update() {
     //    // _meshMapUpdate.waitTasks();
 
     //    updateUniform();
+}
+
+
+void SceneRendering::render() const {
+
+    for (const auto& renderProcess : _sceneRenderingPipeline) {
+        renderProcess->render();
+    }
+
+    // depthFromStar();
+
+    // phongEffect(_frameBufferDepth.getRenderTexture());
+
+    // brightPassEffect(_frameBufferHDRScene.getRenderTexture());
+
+    // blurEffect(_frameBufferBrightPassEffect.getRenderTexture());
+
+    // bloomEffect(_frameBufferHDRScene.getRenderTexture(),
+    //            _frameBufferCompleteBlurEffect.getRenderTexture());
+
+    /*_spFbo.use();
+       FrameBuffer::bindDefaultFrameBuffer();
+       _spFbo.bindUniformTexture("frameTexture", 0,
+       _frameBufferDepth.getRenderTexture());
+       _meshQuadFrame.render(_spFbo);*/
+
 }
 
 /*const std::string SceneRendering::vsshaderBlocks = "shaders/blocksVs.vs";
@@ -524,5 +537,3 @@ void SceneRendering::update() {
    const std::string SceneRendering::fsshaderBloom = "shaders/bloomFs.fs";
    const std::string SceneRendering::vsshaderDepth = "shaders/depthVs.vs";
    const std::string SceneRendering::fsshaderDepth = "shaders/depthFs.fs";*/
-
-const glm::vec3 SceneRendering::backgroundColor { 0.f, 0.f, .1f };

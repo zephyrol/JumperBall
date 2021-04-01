@@ -24,7 +24,7 @@ void main() {
     float sumCoefficients = 0;
     vec3 blurColor = vec3(0.0, 0.0, 0.0);
     vec2 texelOffset = 1.0 / textureSize(horizontalBlurTexture, 0);
-    for (int i = 0; i < patchSize; i++) {
+    for (int i = 0; i < patchSize; ++i) {
         float coefficient = gaussWeights[i];
         vec2 neighboringPixelUV = fs_vertexUVs + vec2(0.0, texelOffset.y * indicesOffset[i]);
         blurColor += coefficient * texture(horizontalBlurTexture, neighboringPixelUV).xyz;

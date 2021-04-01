@@ -92,7 +92,7 @@ void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name,
     _renderPassUniforms[shaderProgramID].uniformFloats[name] = value;
 }
 
-void RenderPass::upsertUniformTexture (GLuint shaderProgramID, const std::string& name, const GLuint value) {
+void RenderPass::upsertUniformTexture (GLuint shaderProgramID, const std::string& name, const GLuint& value) {
     _renderPassUniforms[shaderProgramID].uniformTextures[name] = value;
 }
 
@@ -117,7 +117,7 @@ void RenderPass::bindUniforms (
 
     int textureNumber = 0;
     for (const auto& uniformTexture : uniforms.uniformTextures) {
-        shaderProgram->bindUniformTexture(uniformTexture.first, 0, uniformTexture.second);
+        shaderProgram->bindUniformTexture(uniformTexture.first, textureNumber, uniformTexture.second);
         ++textureNumber;
     }
 }

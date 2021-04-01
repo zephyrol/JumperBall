@@ -8,6 +8,12 @@
 #include "RenderPass.h"
 #include "FrameBuffer.h"
 
+class RenderProcess;
+using RenderProcess_sptr = std::shared_ptr <RenderProcess>;
+using CstRenderProcess_sptr = std::shared_ptr <const RenderProcess>;
+using vecCstRenderProcess_sptr = std::vector <CstRenderProcess_sptr>;
+using vecRenderProcess_sptr = std::vector <RenderProcess_sptr>;
+
 class RenderProcess {
 
 public:

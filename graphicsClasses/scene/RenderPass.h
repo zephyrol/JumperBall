@@ -39,7 +39,10 @@ void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::v
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::vec3& value);
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::vec2& value);
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const GLfloat& value);
-void upsertUniformTexture(GLuint shaderProgramID, const std::string& name, const GLuint value);
+
+void upsertUniform(GLuint shaderProgramID, const std::string& name, const GLuint& value) = delete;
+void upsertUniformTexture(GLuint shaderProgramID, const std::string& name, const GLuint& value);
+
 void upsertUniform(
     GLuint shaderProgramID,
     const std::string& name,

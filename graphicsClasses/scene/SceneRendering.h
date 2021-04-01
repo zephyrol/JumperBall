@@ -70,16 +70,19 @@ const std::shared_ptr <UniformLight> _light;
 
 const vecRenderPass_sptr _renderPasses;
 StarState _starState;
-RenderProcess _sceneRenderingProcess;
-RenderProcess _brightPassFilterProcess;
-RenderProcess _horizontalBlurProcess;
-RenderProcess _verticalBlurProcess;
+
+const RenderProcess_sptr _sceneRenderingProcess;
+const RenderProcess_sptr _brightPassFilterProcess;
+const RenderProcess_sptr _horizontalBlurProcess;
+const RenderProcess_sptr _verticalBlurProcess;
+const vecRenderProcess_sptr _sceneRenderingPipeline;
 // RenderProcess _bloomEffectProcess;
 // RenderPass _renderPassStar;
 
 // RenderPass _renderPassBall;
 
 const RenderPass_sptr& getScreenRenderPass() const;
+std::vector <RenderPass_sptr> vecScreenRenderPass() const;
 vecRenderPass_sptr getLevelRenderPasses() const;
 const RenderPass_sptr& getStarRenderPass() const;
 vecRenderPass_sptr getSceneRenderPasses() const;
@@ -92,7 +95,6 @@ RenderProcess::PassShaderMap createHorizontalBlurShaders() const;
 RenderProcess::PassShaderMap createVerticalBlurShaders() const;
 
 RenderProcess::PassUniformUpdateMap createSceneRenderingUniforms() const;
-
 
 RenderProcess::PassUniformUpdateMap createScreenUniforms(
     const std::function <void(const RenderPass_sptr&, GLuint)>& uniformsUpdatingFunction
@@ -141,7 +143,6 @@ CstShaderProgram_uptr createBloomEffectShader(const std::string& vs, const std::
    static const std::string fsshaderDepth;*/
 
 // static const std::vector <float> gaussComputedValues;
-static const glm::vec3 backgroundColor;
 };
 
 #endif /* SCENE_RENDERING_H */

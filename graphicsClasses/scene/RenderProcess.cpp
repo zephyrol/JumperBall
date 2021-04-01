@@ -27,9 +27,9 @@ void RenderProcess::updateUniforms() {
 void RenderProcess::render() const {
 
     if (_frameBuffer) {
-        _frameBuffer->bindFrameBuffer(true);
+        _frameBuffer->bindFrameBuffer();
     } else {
-        FrameBuffer::bindDefaultFrameBuffer(true);
+        FrameBuffer::bindDefaultFrameBuffer();
     }
     for (const auto& renderPass : _renderPasses) {
         const CstShaderProgram_uptr& shaderProgram = _shaderPrograms.at(renderPass);

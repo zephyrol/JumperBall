@@ -15,14 +15,18 @@ using CstFrameBuffer_uptr = std::unique_ptr <const FrameBuffer>;
 
 class FrameBuffer {
 
-public:
+private:
+static const glm::vec3 backgroundColor;
 
+public:
 enum class TextureCaterory { SDR, HDR, Depth };
 
 FrameBuffer(TextureCaterory category = TextureCaterory::SDR,
             GLsizei resolutionX = Utility::windowResolutionX,
             GLsizei resolutionY = Utility::windowResolutionY,
-            bool hasDepthBuffer = true);
+            bool hasDepthBuffer = true,
+            bool usedAutoClean = true,
+            const glm::vec3& clearColor = backgroundColor);
 
 FrameBuffer(const FrameBuffer& frameBuffer) = delete;
 FrameBuffer& operator= (const FrameBuffer&) = delete;
@@ -32,26 +36,33 @@ FrameBuffer& operator= (const FrameBuffer&) = delete;
 static constexpr float luminanceKey = 0.4f;
 
 GLuint getHandle() const;
-void bindFrameBuffer(bool clean = true) const;
+void bindFrameBuffer() const;
 std::pair <float, float> computeLogAverageLuminanceAndMax() const;
 GLuint getRenderTexture() const;
 
-
-static void bindDefaultFrameBuffer(bool clean = true);
-static void cleanCurrentFrameBuffer(bool hasDepthBuffer = true);
+static void bindDefaultFrameBuffer();
 
 private:
 
-GLuint _fboHandle;
+const GLuint _fboHandle;
 
-GLuint _renderTexture;
+const GLuint _renderTexture;
 const TextureCaterory _textureCategory;
 
-const bool _hasDepthBuffer;
-GLuint _depthBuffer;
+const std::unique_ptr <const GLuint> _depthBuffer;
+
+const bool _usedAutoClean;
+const glm::vec3 _clearColor;
 
 const GLsizei _resolutionX;
 const GLsizei _resolutionY;
+
+GLuint createFrameBufferObject() const;
+GLuint createRenderTexture() const;
+std::unique_ptr <GLuint> createDepthBuffer() const;
+bool hasDepthBuffer() const;
+static void cleanCurrentFrameBuffer(bool hasDepthBuffer, const glm::vec3& clearColor);
+
 };
 
 #endif /* FRAMEBUFFER_H */
