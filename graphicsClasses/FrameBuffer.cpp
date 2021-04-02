@@ -8,10 +8,10 @@
 #include "FrameBuffer.h"
 
 FrameBuffer::FrameBuffer(FrameBuffer::TextureCaterory category,
+                         bool usedAutoClean,
                          GLsizei resolutionX,
                          GLsizei resolutionY,
                          bool hasDepthBuffer,
-                         bool usedAutoClean,
                          const glm::vec3& clearColor):
     _fboHandle(createFrameBufferObject()),
     _renderTexture(createRenderTexture()),

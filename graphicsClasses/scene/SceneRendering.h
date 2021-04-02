@@ -75,6 +75,7 @@ const RenderProcess_sptr _sceneRenderingProcess;
 const RenderProcess_sptr _brightPassFilterProcess;
 const RenderProcess_sptr _horizontalBlurProcess;
 const RenderProcess_sptr _verticalBlurProcess;
+const RenderProcess_sptr _bloomProcess;
 const vecRenderProcess_sptr _sceneRenderingPipeline;
 // RenderProcess _bloomEffectProcess;
 // RenderPass _renderPassStar;
@@ -93,6 +94,7 @@ RenderProcess::PassShaderMap createScreenShaders(const std::string& vs, const st
 RenderProcess::PassShaderMap createBrightPassShaders() const;
 RenderProcess::PassShaderMap createHorizontalBlurShaders() const;
 RenderProcess::PassShaderMap createVerticalBlurShaders() const;
+RenderProcess::PassShaderMap createBloomShaders() const;
 
 RenderProcess::PassUniformUpdateMap createSceneRenderingUniforms() const;
 
@@ -102,6 +104,7 @@ RenderProcess::PassUniformUpdateMap createScreenUniforms(
 RenderProcess::PassUniformUpdateMap createBrightPassUniforms() const;
 RenderProcess::PassUniformUpdateMap createHorizontalBlurUniforms() const;
 RenderProcess::PassUniformUpdateMap createVerticalBlurUniforms() const;
+RenderProcess::PassUniformUpdateMap createBloomUniforms() const;
 
 void phongEffect(GLuint depthTexture) const;
 void blurEffect(GLuint brightPassTexture) const;
@@ -118,6 +121,7 @@ void updateCameraUniformsStar(const RenderPass_sptr& renderPass, GLuint shaderPr
 void updateBrightPassFilterUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
 void updateHorizontalBlurUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
 void updateVerticalBlurUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
+void updateBloomUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
 
 FrameBuffer_uptr createBloomEffectFrameBuffer(const FrameBuffer::TextureCaterory& category) const;
 CstShaderProgram_uptr createBloomEffectShader(const std::string& vs, const std::string& fs) const;

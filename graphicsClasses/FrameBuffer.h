@@ -22,10 +22,10 @@ public:
 enum class TextureCaterory { SDR, HDR, Depth };
 
 FrameBuffer(TextureCaterory category = TextureCaterory::SDR,
+            bool usedAutoClean = false,
             GLsizei resolutionX = Utility::windowResolutionX,
             GLsizei resolutionY = Utility::windowResolutionY,
             bool hasDepthBuffer = true,
-            bool usedAutoClean = true,
             const glm::vec3& clearColor = backgroundColor);
 
 FrameBuffer(const FrameBuffer& frameBuffer) = delete;

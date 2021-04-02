@@ -77,7 +77,7 @@ SceneRendering::SceneRendering(const Map& map,
                                createSceneRenderingShaders(),
                                createSceneRenderingUniforms(),
                                // nullptr
-                               FrameBuffer_uptr(new FrameBuffer(FrameBuffer::TextureCaterory::HDR))
+                               FrameBuffer_uptr(new FrameBuffer(FrameBuffer::TextureCaterory::HDR, true))
                                )),
     _brightPassFilterProcess(std::make_shared <RenderProcess>(
                                  vecScreenRenderPass(),
@@ -95,16 +95,21 @@ SceneRendering::SceneRendering(const Map& map,
                              vecScreenRenderPass(),
                              createVerticalBlurShaders(),
                              createVerticalBlurUniforms(),
-                             nullptr // createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::SDR)
+                             createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::SDR)
                              )),
+    _bloomProcess(std::make_shared <RenderProcess>(
+                      vecScreenRenderPass(),
+                      createBloomShaders(),
+                      createBloomUniforms(),
+                      nullptr
+                      )),
     _sceneRenderingPipeline{
                             _sceneRenderingProcess,
                             _brightPassFilterProcess,
                             _horizontalBlurProcess,
-                            _verticalBlurProcess
+                            _verticalBlurProcess,
+                            _bloomProcess
                             } {
-    // _renderPassStar(_spStar, MeshGenerator::genStar(star)),
-    // _renderPassBall(_spBall, MeshGenerator::genBall(ball))
     update();
 
     // alpha
@@ -182,6 +187,10 @@ RenderProcess::PassShaderMap SceneRendering::createVerticalBlurShaders() const {
     return createScreenShaders("basicFboVs.vs", "verticalBlurFs.fs");
 }
 
+RenderProcess::PassShaderMap SceneRendering::createBloomShaders() const {
+    return createScreenShaders("basicFboVs.vs", "bloomFs.fs");
+}
+
 RenderProcess::PassUniformUpdateMap SceneRendering::createSceneRenderingUniforms() const {
 
     RenderProcess::PassUniformUpdateMap uniformUpdatingFcts;
@@ -225,6 +234,12 @@ RenderProcess::PassUniformUpdateMap SceneRendering::createHorizontalBlurUniforms
 RenderProcess::PassUniformUpdateMap SceneRendering::createVerticalBlurUniforms() const {
     return createScreenUniforms([this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
                                     this->updateVerticalBlurUniforms(renderPass, shaderProgramID);
+                                });
+}
+
+RenderProcess::PassUniformUpdateMap SceneRendering::createBloomUniforms() const {
+    return createScreenUniforms([this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
+                                    this->updateBloomUniforms(renderPass, shaderProgramID);
                                 });
 }
 
@@ -273,32 +288,9 @@ void SceneRendering::phongEffect (GLuint depthTexture) const {
 
 void SceneRendering::blurEffect (GLuint brightPassTexture) const {
 
-    //    _spBlur.use();
-    //    _frameBufferHalfBlurEffect.bindFrameBuffer(false);
-    //
-    //    _spBlur.bindUniformTexture("frameTexture", 0, brightPassTexture);
-    //    _spBlur.bindUniform("patchSize", static_cast <int>(blurPatchSize));
-    //    _spBlur.bindUniform("gaussWeights", gaussComputedValues);
-    //
-    //    _spBlur.bindUniform("firstPass", true);
-    //    // deprecated _meshQuadFrame.render(_spBlur);
-    //
-    //    _frameBufferCompleteBlurEffect.bindFrameBuffer(false);
-    //    _spBlur.bindUniformTexture("frameTexture", 0,
-    //                               _frameBufferHalfBlurEffect.getRenderTexture());
-    //
-    //    _spBlur.bindUniform("firstPass", false);
-    //    // _meshQuadFrame.render(_spBlur);
 }
 
 void SceneRendering::brightPassEffect (GLuint hdrSceneTexture) const {
-    //    constexpr float bloomThreshold = 4.f;
-    //    _spBrightPassFilter.use();
-    //    _frameBufferBrightPassEffect.bindFrameBuffer(false);
-    //
-    //    _spBrightPassFilter.bindUniformTexture("frameTexture", 0, hdrSceneTexture);
-    //    _spBrightPassFilter.bindUniform("threshold", bloomThreshold);
-    //    // deprecated _meshQuadFrame.render(_spBrightPassFilter);
 }
 
 void SceneRendering::bloomEffect (GLuint hdrSceneTexture,
@@ -335,10 +327,6 @@ void SceneRendering::depthFromStar() const {
 
 
 void SceneRendering::bindCamera (const ShaderProgram& sp) const {
-    // sp.bindUniform("VP", _uniformMatrix4.at("VP"));
-    // sp.bindUniform("VPStar", _uniformMatrix4.at("VPStar"));
-    // sp.bindUniform("positionBall", _uniformVec3.at("positionBall"));
-    // sp.bindUniform("positionCamera", _uniformVec3.at("positionCamera"));
 }
 
 void SceneRendering::updateUniform() {
@@ -433,10 +421,26 @@ void SceneRendering::updateHorizontalBlurUniforms (
 void SceneRendering::updateVerticalBlurUniforms (
     const RenderPass_sptr& renderPass,
     GLuint shaderProgramID) const {
-    renderPass->upsertUniformTexture(shaderProgramID,
-                                     "horizontalBlurTexture",
-                                     _horizontalBlurProcess->getFrameBufferTexture()
-                                     );
+    renderPass->upsertUniformTexture(
+        shaderProgramID,
+        "horizontalBlurTexture",
+        _horizontalBlurProcess->getFrameBufferTexture()
+        );
+}
+
+void SceneRendering::updateBloomUniforms (const RenderPass_sptr& renderPass, GLuint shaderProgramID) const {
+    renderPass->upsertUniformTexture(
+        shaderProgramID,
+        "frameSceneHDRTexture",
+        _sceneRenderingProcess->getFrameBufferTexture()
+        );
+    renderPass->upsertUniformTexture(
+        shaderProgramID,
+        "frameBluredTexture",
+        _verticalBlurProcess->getFrameBufferTexture()
+        );
+    renderPass->upsertUniform(shaderProgramID, "averageLuminance", 1.8f);
+
 }
 
 FrameBuffer_uptr SceneRendering::createBloomEffectFrameBuffer (
@@ -444,7 +448,7 @@ FrameBuffer_uptr SceneRendering::createBloomEffectFrameBuffer (
     ) const {
     return FrameBuffer_uptr(
         new FrameBuffer(
-            category, Utility::getWidthFromHeight(heightBloomTexture), heightBloomTexture, false
+            category, false, Utility::getWidthFromHeight(heightBloomTexture), heightBloomTexture, false
             )
         );
 }
