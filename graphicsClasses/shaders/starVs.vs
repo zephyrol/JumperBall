@@ -1,33 +1,50 @@
 #version 330 core
 
 uniform mat4 VP;
-uniform float distance;
+
+uniform float starDistance;
 uniform float radius;
-uniform float creationTime;
+
+uniform vec3 initialDirection;
 uniform vec3 rotationCenter;
+
+uniform vec4 rotationQuaternion;
 
 layout(location = 0) in vec3 vs_vertexPosition;
 
 out vec2 fs_vertexPosition;
 
+mat4 starTranslation() {
+    return mat4(1.0, 0.0, 0.0, 0.0,
+                0.0, 1.0, 0.0, 0.0,
+                0.0, 0.0, 1.0, 0.0,
+                rotationCenter.x, rotationCenter.y, rotationCenter.z, 1.0);
+}
+
+
+mat4 starRotation() {
+
+    float x2 = rotationQuaternion.x * rotationQuaternion.x;
+    float y2 = rotationQuaternion.y * rotationQuaternion.y;
+    float z2 = rotationQuaternion.z * rotationQuaternion.z;
+    float xy = rotationQuaternion.x * rotationQuaternion.y;
+    float xz = rotationQuaternion.x * rotationQuaternion.z;
+    float yz = rotationQuaternion.y * rotationQuaternion.z;
+    float wx = rotationQuaternion.w * rotationQuaternion.x;
+    float wy = rotationQuaternion.w * rotationQuaternion.y;
+    float wz = rotationQuaternion.w * rotationQuaternion.z;
+    return mat4(
+        1.0 - 2.0 * (y2 + z2), 2.0 * (xy + wz), 2.0 * (xz - wy), 0.0,
+        2.0 * (xy - wz), 1.0 - 2.0 * (x2 + z2), 2.0 * (yz + wx), 0.0,
+        2.0 * (xz + wy), 2.0 * (yz - wx), 1.0 - 2.0 * (x2 + y2), 0.0,
+        0.0, 0.0, 0.0, 1.0
+        );
+}
+
+
 void main() {
 
     fs_vertexPosition = vs_vertexPosition.xy;
-
-    const float w = 1.f;
-    const vec3 rotationAxis = normalize(vec3(0.5, 1.0, 0.0));
-    vec3 translationVector = vec3(0.0, 0.0, -distance);
-
-    vec3 vertexPositionScaled = radius * vs_vertexPosition;
-    vec3 translatedPos = vertexPositionScaled + translationVector;
-    vec3 toPosition = normalize(translatedPos);
-
-    vec3 vDotRotAxisxA = dot(toPosition, rotationAxis) * rotationAxis;
-
-    const float radiansPerSeconds = 0.6;
-    float angle = creationTime * radiansPerSeconds;
-    vec3 toPositionAfterRotation = vDotRotAxisxA + (toPosition - vDotRotAxisxA) * cos(angle)
-                                   + cross(rotationAxis, toPosition) * sin(angle);
-
-    gl_Position = VP * vec4(length(translatedPos) * toPositionAfterRotation + rotationCenter, w);
+    gl_Position = VP * starTranslation() * starRotation() * 
+        vec4(starDistance * initialDirection + radius * vs_vertexPosition, 1.0);
 }

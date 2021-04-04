@@ -18,10 +18,12 @@ State::GlobalState update() override;
 const JBTypes::vec3f& lightDirection() const;
 std::map <std::string, float> getDynamicFloats() const override;
 std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const override;
+std::map <std::string, JBTypes::Quaternion> getDynamicQuaternions() const override;
 
 private:
 const Star& _star;
-float _timeSinceCreation;
+
+JBTypes::Quaternion _rotation;
 JBTypes::vec3f _lightDirection;
 };
 

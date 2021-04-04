@@ -12,12 +12,18 @@ Star::Star(
     float radiusOutside,
     float distance,
     float radius,
-    const JBTypes::vec3f& rotationCenter):
+    const JBTypes::vec3f& initialDirection,
+    const JBTypes::vec3f& rotationAxis,
+    const JBTypes::vec3f& rotationCenter,
+    float radiansPerSecond):
     _radiusInside(radiusInside),
     _radiusOutside(radiusOutside),
     _distance(distance),
     _radius(radius),
+    _initialDirection(initialDirection),
+    _rotationAxis(rotationAxis),
     _rotationCenter(rotationCenter),
+    _radiansPerSeconds(radiansPerSecond),
     _creationTime(JBTypesMethods::getTimePointMSNow()) {
 
 }
@@ -42,17 +48,41 @@ float Star::getTimeSinceCreation() const {
     return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
 
+std::shared_ptr<Star> Star::createBlurStar(const JBTypes::vec3f& rotationCenter) {
+  const JBTypes::vec3f initialDirection = {0.f, 0.f, -1.f};
+  return std::make_shared<Star>(
+    0.3f,
+    0.5f,
+    50.f,
+    5.f, 
+    initialDirection,
+    JBTypesMethods::normalize({0.5f,1.f,0.f}),
+    rotationCenter,
+    0.6f
+    );
+}
+
 const JBTypes::vec3f& Star::rotationCenter() const {
     return _rotationCenter;
 }
 
+const JBTypes::vec3f& Star::initialDirection() const {
+    return _initialDirection; 
+}
+
+JBTypes::Quaternion Star::getRotation() const {
+  const float angle = getTimeSinceCreation() * _radiansPerSeconds;
+  return JBTypesMethods::createRotationQuaternion(_rotationAxis, angle);
+}
+
+
 JBTypes::vec3f Star::lightDirection() const {
-    const float angle = getTimeSinceCreation();
-    const JBTypes::vec3f initialToStar = { 0.f, 0.f, -1.f };
-    const JBTypes::vec3f rotationAxis = JBTypesMethods::normalize({ 0.5f, 1.f, 0.f });
+    const float angle = getTimeSinceCreation() * _radiansPerSeconds;
     const JBTypes::vec3f toStar = JBTypesMethods::add(
-        JBTypesMethods::scalarApplication(cosf(angle), initialToStar),
-        JBTypesMethods::scalarApplication(sinf(angle), JBTypesMethods::cross(rotationAxis, initialToStar))
+        JBTypesMethods::scalarApplication(cosf(angle), _initialDirection),
+        JBTypesMethods::scalarApplication(
+          sinf(angle),
+          JBTypesMethods::cross(_rotationAxis, _initialDirection))
         );
 
     return JBTypesMethods::scalarApplication(-1.f, toStar);
