@@ -31,8 +31,9 @@ const JBTypes::vec3f& rotationCenter() const;
 const JBTypes::vec3f& initialDirection() const;
 JBTypes::Quaternion getRotation() const;
 JBTypes::vec3f lightDirection() const;
+JBTypes::vec3f position() const;
 
-static std::shared_ptr<Star> createBlurStar(const JBTypes::vec3f& rotationCenter);
+static std::shared_ptr <Star> createBlurStar(const JBTypes::vec3f& rotationCenter);
 
 private:
 

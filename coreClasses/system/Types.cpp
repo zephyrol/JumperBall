@@ -285,3 +285,17 @@ JBTypes::Quaternion JBTypesMethods::createRotationQuaternion (const JBTypes::vec
         cosf(angle / 2.f)
         );
 }
+
+JBTypes::vec3f JBTypesMethods::rotateVector (const JBTypes::vec3f& v, const JBTypes::Quaternion& q) {
+    const auto& qv = q.v;
+    const float twoVDotQv = 2.f * JBTypesMethods::dot(v, qv);
+    const float qvDotQv = JBTypesMethods::dot(qv, qv);
+    const JBTypes::vec3f qvCrossV = JBTypesMethods::cross(qv, v);
+    const float qwqwMinusBtwo = q.w * q.w - qvDotQv;
+
+    const JBTypes::vec3f vPart = JBTypesMethods::scalarApplication(qwqwMinusBtwo, v);
+    const JBTypes::vec3f qvPart = JBTypesMethods::scalarApplication(twoVDotQv, qv);
+    const JBTypes::vec3f qvCrosVPart = JBTypesMethods::scalarApplication(2.f * q.w, qvCrossV);
+
+    return JBTypesMethods::add(JBTypesMethods::add(vPart, qvPart), qvCrosVPart);
+}

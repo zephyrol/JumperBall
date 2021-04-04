@@ -45,6 +45,6 @@ mat4 starRotation() {
 void main() {
 
     fs_vertexPosition = vs_vertexPosition.xy;
-    gl_Position = VP * starTranslation() * starRotation() * 
-        vec4(starDistance * initialDirection + radius * vs_vertexPosition, 1.0);
+    gl_Position = VP * starTranslation() * starRotation() *
+                  vec4(starDistance * initialDirection + radius * vs_vertexPosition, 1.0);
 }

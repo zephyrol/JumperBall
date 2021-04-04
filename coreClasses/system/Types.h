@@ -84,6 +84,8 @@ JBTypes::Quaternion q2q1(
 JBTypes::Quaternion inverse(const JBTypes::Quaternion& q);
 JBTypes::Quaternion createRotationQuaternion(const JBTypes::vec3f& axis, float angle);
 
+JBTypes::vec3f rotateVector(const JBTypes::vec3f& v, const JBTypes::Quaternion& q);
+
 void displayInstallError();
 
 std::string colorToString(const JBTypes::Color color);

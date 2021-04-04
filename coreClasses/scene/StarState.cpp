@@ -8,17 +8,23 @@
 
 StarState::StarState(const Star& star):
     _star(star),
-    _lightDirection(star.lightDirection()) {
+    _lightDirection(star.lightDirection()),
+    _position(star.position()) {
 }
 
 State::GlobalState StarState::update() {
     _rotation = _star.getRotation();
     _lightDirection = _star.lightDirection();
+    _position = _star.position();
     return State::GlobalState::United;
 }
 
 const JBTypes::vec3f& StarState::lightDirection() const {
     return _lightDirection;
+}
+
+const JBTypes::vec3f& StarState::position() const {
+    return _position;
 }
 
 std::map <std::string, float> StarState::getDynamicFloats() const {
@@ -37,8 +43,8 @@ std::map <std::string, JBTypes::vec3f> StarState::getDynamicVec3fs() const {
     };
 }
 
-std::map<std::string, JBTypes::Quaternion> StarState::getDynamicQuaternions() const {
-  return {
-    { "rotationQuaternion", _rotation}
-  };
+std::map <std::string, JBTypes::Quaternion> StarState::getDynamicQuaternions() const {
+    return {
+        { "rotationQuaternion", _rotation }
+    };
 }
