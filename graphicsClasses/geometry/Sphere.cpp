@@ -27,53 +27,6 @@ Sphere::Sphere(const glm::vec3& customColor,
 
 }
 
-/*Sphere::Sphere(const glm::mat4& modelTransform,
-               const glm::mat4& normalsTransform):GeometricShape(
-        Sphere::basicInfoSphere.positions,
-        Sphere::basicInfoSphere.normals,
-        Sphere::basicInfoSphere.colors,
-        Sphere::basicInfoSphere.uvCoords,
-        modelTransform,
-        normalsTransform,
-        Sphere::basicInfoSphere.indices) {
-   }
-
-   Sphere::Sphere(const glm::vec3& customColor,
-               const glm::mat4& modelTransform,
-               const glm::mat4& normalsTransform):GeometricShape(
-        Sphere::basicInfoSphere.positions,
-        Sphere::basicInfoSphere.normals,
-        GeometricShape::createCustomColorBuffer(
-            customColor,
-            Sphere::basicInfoSphere.colors.size()),
-        Sphere::basicInfoSphere.uvCoords,
-        modelTransform,
-        normalsTransform,
-        Sphere::basicInfoSphere.indices) {
-   }
-
-   Sphere::Sphere(const glm::vec3& customColor,
-               const glm::vec3& customColor2,
-               const glm::mat4& modelTransform,
-               const glm::mat4& normalsTransform):GeometricShape(
-        Sphere::basicInfoSphere.positions,
-        Sphere::basicInfoSphere.normals,
-        computeBasicInfoSphere(true,
-                               customColor,
-                               customColor2
-                               ).colors,
-        Sphere::basicInfoSphere.uvCoords,
-        modelTransform,
-        normalsTransform,
-        Sphere::basicInfoSphere.indices) {
-   }
-
-   Sphere::Sphere(const GeometricShape& sphere,
-               const glm::mat4& modelTransform,
-               const glm::mat4& normalsTransform):
-    GeometricShape(sphere, modelTransform, normalsTransform) {
-   }*/
-
 GeometricShape::ShapeVerticesInfo Sphere::computeBasicInfoSphere (
     bool useCustomColors,
     const glm::vec3& firstColor,

@@ -17,46 +17,6 @@ GeometricShape::GeometricShape(const glm::mat4& modelTransform,
 
 }
 
-/*GeometricShape::GeometricShape(const std::vector <glm::vec3>& positions,
-                               const std::vector <glm::vec3>& normals,
-                               const std::vector <glm::vec3>& colors,
-                               const std::vector <glm::vec2>& uvCoords,
-                               const glm::mat4& modelTransform,
-                               const glm::mat4& normalsTransform,
-                               const std::vector <GLushort>& indices
-                               ):
-    _positions(positions.empty()
-               ? nullptr
-               : computePositions(positions, modelTransform)),
-    // : std::make_shared <std::vector <glm::vec3> >(positions)),
-    _normals(normals.empty()
-             ? nullptr
-             : computeNormals(normals, normalsTransform)),
-    // : std::make_shared <std::vector <glm::vec3> >(normals)),
-    _colors(colors.empty()
-            ? nullptr
-            : std::make_shared <std::vector <glm::vec3> >(colors)),
-    _uvCoords(uvCoords.empty()
-              ? nullptr
-              : std::make_shared <std::vector <glm::vec2> >(uvCoords)),
-    _numberOfVertices(_positions ? _positions->size() : 0),
-    _indices(indices.empty()
-             ? genIndices()
-             : std::make_shared <std::vector <GLushort> >(indices)) {
-   }
-
-   GeometricShape::GeometricShape(const GeometricShape& geometricShape,
-                               const glm::mat4& modelTransform,
-                               const glm::mat4& normalsTransform):
-    _positions(computePositions(*geometricShape.positions(), modelTransform)),
-    _normals(computeNormals(*geometricShape.normals(), normalsTransform)),
-    _colors(geometricShape.colors()),
-    _uvCoords(geometricShape.uvCoords()),
-    _numberOfVertices(_positions ? _positions->size() : 0),
-    _indices(geometricShape.indices()) {
-
-   }*/
-
 GeometricShape::ShapeVertexAttributes GeometricShape::genVertexAttributes() const {
     const auto computePositions =
         [this] ()->std::vector <glm::vec3> {

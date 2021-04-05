@@ -20,37 +20,6 @@ Triangle::Triangle(const glm::vec3& customColor,
 
 }
 
-/*Triangle::Triangle(const glm::mat4& modelTransform,
-                   const glm::mat4& normalsTransform):
-    GeometricShape(
-        basicPositionsTriangle,
-        basicNormalsTriangle,
-        basicColorsTriangle,
-        basicUVCoordsTriangle,
-        modelTransform,
-        normalsTransform) {
-   }
-
-   Triangle::Triangle(const glm::vec3& customColor,
-                   const glm::mat4& modelTransform,
-                   const glm::mat4& normalsTransform):
-    GeometricShape(
-        basicPositionsTriangle,
-        basicNormalsTriangle,
-   b       GeometricShape::createCustomColorBuffer(customColor,
-                                                basicPositionsTriangle.size()
-                                                ),
-        basicUVCoordsTriangle,
-        modelTransform,
-        normalsTransform) {
-   }
-
-   Triangle::Triangle(const GeometricShape& triangle,
-                   const glm::mat4& modelTransform,
-                   const glm::mat4& normalsTransform):
-    GeometricShape(triangle, modelTransform, normalsTransform) {
-   }*/
-
 std::vector <glm::vec3> Triangle::createCustomColors (
     const glm::vec3& customColor
     ) {

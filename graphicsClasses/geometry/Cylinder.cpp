@@ -7,56 +7,6 @@
 
 #include "Cylinder.h"
 
-/*Cylinder::Cylinder(
-    size_t meriCount,
-    const glm::mat4& modelTransform,
-    const glm::mat4& normalsTransform):GeometricShape(
-        computeBasicInfoCylinder(meriCount).positions,
-        computeBasicInfoCylinder(meriCount).normals,
-        computeBasicInfoCylinder(meriCount).colors,
-        computeBasicInfoCylinder(meriCount).uvCoords,
-        modelTransform,
-        normalsTransform,
-        computeBasicInfoCylinder(meriCount).indices),
-    _meriCount(meriCount) {
-   }*/
-
-/*Cylinder::Cylinder(
-    const glm::vec3& customColor,
-    size_t meriCount,
-    const glm::mat4& modelTransform,
-    const glm::mat4& normalsTransform):GeometricShape(
-        computeBasicInfoCylinder(meriCount).positions,
-        computeBasicInfoCylinder(meriCount).normals,
-        GeometricShape::createCustomColorBuffer(
-            customColor,
-            computeBasicInfoCylinder(meriCount).colors.size()),
-        computeBasicInfoCylinder(meriCount).uvCoords,
-        modelTransform,
-        normalsTransform,
-        computeBasicInfoCylinder(meriCount).indices),
-    _meriCount(meriCount) {
-   }
-
-   Cylinder::Cylinder(const glm::vec3& customColorCenter,
-                   const glm::vec3& customColorEdge,
-                   size_t meriCount,
-                   const glm::mat4& modelTransform,
-                   const glm::mat4& normalsTransform):GeometricShape(
-        computeBasicInfoCylinder(meriCount).positions,
-        computeBasicInfoCylinder(meriCount).normals,
-        createCenterAndEdgeColorBuffer(
-            customColorCenter,
-            customColorEdge,
-            computeBasicInfoCylinder(meriCount).colors.size()),
-        computeBasicInfoCylinder(meriCount).uvCoords,
-        modelTransform,
-        normalsTransform,
-        computeBasicInfoCylinder(meriCount).indices),
-    _meriCount(meriCount) {
-
-   }*/
-
 Cylinder::Cylinder(
     size_t meriCount,
     const glm::mat4& modelTransform,

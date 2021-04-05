@@ -13,7 +13,6 @@
 class Sphere:public GeometricShape {
 public:
 
-// --CONSTRUCTORS & DESTRUCTORS--//
 Sphere(const glm::mat4& modelTransform = glm::mat4(1.f),
        const glm::mat4& normalsTransform = glm::mat4(1.f));
 Sphere(const glm::vec3& customColor,
@@ -33,7 +32,6 @@ private:
 
 static const GeometricShape::ShapeVerticesInfo basicInfoSphere;
 
-// --------STATIC METHODS-------//
 static GeometricShape::ShapeVerticesInfo computeBasicInfoSphere(
     bool useCustomColors = false,
     const glm::vec3& firstColor = glm::vec3(0.f),

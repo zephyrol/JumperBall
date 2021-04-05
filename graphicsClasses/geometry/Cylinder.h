@@ -13,7 +13,7 @@ class Cylinder:public GeometricShape {
 public:
 
 static constexpr size_t defaultMeriCount = 60;
-// --CONSTRUCTORS & DESTRUCTORS--//
+
 Cylinder(size_t meriCount = defaultMeriCount,
          const glm::mat4& modelTransform = glm::mat4(1.f),
          const glm::mat4& normalsTransform = glm::mat4(1.f));
@@ -39,9 +39,7 @@ static const GeometricShape::ShapeVerticesInfo basicInfoCylinder;
 
 
 size_t levelOfDetail() const override;
-// --------STATIC METHODS-------//
-static GeometricShape::ShapeVerticesInfo computeBasicInfoCylinder(
-    size_t meriCount = defaultMeriCount);
+static GeometricShape::ShapeVerticesInfo computeBasicInfoCylinder(size_t meriCount = defaultMeriCount);
 static std::vector <glm::vec3> createCenterAndEdgeColorBuffer(
     const glm::vec3& customColorCenter,
     const glm::vec3& customColorEdge,

@@ -5,7 +5,7 @@
  * Created on 15 decembre 2020, 22h02
  */
 
-#include "scene/mesh/MeshGenerator.h"
+#include "scene/MeshGenerator.h"
 #include "animations/SpecialAnimation.h"
 
 Mesh_sptr genSpecial (const Special& special, const Map::SpecialTypes& category) {
@@ -40,10 +40,9 @@ Mesh_sptr genSpecial (const Special& special, const Map::SpecialTypes& category)
     constexpr size_t teleporterNbOfVertices = 5;
     constexpr size_t buttonNbOfVertices = Cylinder::defaultMeriCount;
 
-    const size_t nbOfVertices =
-        category == Map::SpecialTypes::SwitchButton
-        ? buttonNbOfVertices
-        : teleporterNbOfVertices;
+    const size_t nbOfVertices = category == Map::SpecialTypes::SwitchButton
+                                ? buttonNbOfVertices
+                                : teleporterNbOfVertices;
 
     const glm::mat4 scaleLocal = category == Map::SpecialTypes::SwitchButton
                                  ? glm::scale(glm::vec3(0.2f, 0.05f, 0.2f))

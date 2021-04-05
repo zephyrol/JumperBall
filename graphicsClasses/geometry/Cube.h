@@ -25,9 +25,6 @@ Cube(std::vector <glm::vec3>&& customColors,
      const glm::mat4& modelTransform = glm::mat4(1.f),
      const glm::mat4& normalsTransform = glm::mat4(1.f),
      const std::array <bool, 6>& sides = { true, true, true, true, true, true });
-/*Cube(const GeometricShape& cube,
-     const glm::mat4& modelTransform = glm::mat4(1.f),
-     const glm::mat4& normalsTransform = glm::mat4(1.f));*/
 
 virtual std::vector <glm::vec3> genPositions() const override;
 virtual std::vector <glm::vec3> genNormals() const override;

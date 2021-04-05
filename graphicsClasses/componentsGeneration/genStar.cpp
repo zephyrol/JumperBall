@@ -5,7 +5,7 @@
  * created on 22 aout 2020, 18h15
  */
 
-#include "scene/mesh/MeshGenerator.h"
+#include "scene/MeshGenerator.h"
 
 vecMesh_sptr MeshGenerator::genStar (const Star& star) {
     CstGeometricShape_sptr shape = std::make_shared <Quad>();

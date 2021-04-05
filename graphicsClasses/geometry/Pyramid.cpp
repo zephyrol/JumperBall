@@ -20,39 +20,6 @@ Pyramid::Pyramid(const glm::vec3& customColor,
 
 }
 
-/*Pyramid::Pyramid(const glm::mat4& modelTransform,
-                 const glm::mat4& normalsTransform
-                 ):
-    GeometricShape(
-        basicPositionsPyramid,
-        basicNormalsPyramid,
-        basicColorsPyramid,
-        basicUVCoordsPyramid,
-        modelTransform,
-        normalsTransform) {
-   }
-
-   Pyramid::Pyramid(const glm::vec3& customColor,
-                 const glm::mat4& modelTransform,
-                 const glm::mat4& normalsTransform
-                 ):
-    GeometricShape(
-        basicPositionsPyramid,
-        basicNormalsPyramid,
-        GeometricShape::createCustomColorBuffer(customColor,
-                                                basicPositionsPyramid.size()),
-        basicUVCoordsPyramid,
-        modelTransform,
-        normalsTransform) {
-   }
-
-   Pyramid::Pyramid(const GeometricShape& pyramid,
-                 const glm::mat4& modelTransform,
-                 const glm::mat4& normalsTransform):
-    GeometricShape(pyramid, modelTransform, normalsTransform) {
-   }*/
-
-
 const std::vector <glm::vec3> Pyramid::basicPositionsPyramid =
     Utility::GLfloatListToGlmVec3({
 

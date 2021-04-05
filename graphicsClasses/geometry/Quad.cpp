@@ -28,50 +28,6 @@ Quad::Quad(const glm::vec3& customColor1,
 
 }
 
-/*Quad::Quad(const glm::mat4& modelTransform,
-           const glm::mat4& normalsTransform):
-    GeometricShape(
-        basicPositionsQuad,
-        basicNormalsQuad,
-        basicColorsQuad,
-        basicUVCoordsQuad,
-        modelTransform,
-        normalsTransform) {
-   }
-
-   Quad::Quad(const glm::vec3& customColor,
-           const glm::mat4& modelTransform,
-           const glm::mat4& normalsTransform):
-    GeometricShape(
-        basicPositionsQuad,
-        basicNormalsQuad,
-        GeometricShape::createCustomColorBuffer(customColor,
-                                                basicPositionsQuad.size()),
-        basicUVCoordsQuad,
-        modelTransform,
-        normalsTransform) {
-   }
-
-   Quad::Quad(const glm::vec3& customColor1,
-           const glm::vec3& customColor2,
-           const glm::mat4& modelTransform,
-           const glm::mat4& normalsTransform):
-    GeometricShape(
-        basicPositionsQuad,
-        basicNormalsQuad,
-        createCustomDoubleColors(customColor1, customColor2),
-        basicUVCoordsQuad,
-        modelTransform,
-        normalsTransform) {
-   }*/
-
-
-/*Quad::Quad(const GeometricShape& quad,
-           const glm::mat4& modelTransform,
-           const glm::mat4& normalsTransform):
-    GeometricShape(quad, modelTransform, normalsTransform) {
-   }*/
-
 std::vector <glm::vec3> Quad::createCustomDoubleColors (
     const glm::vec3& customColor1, const glm::vec3& customColor2) {
     return Utility::GLfloatListToGlmVec3({
@@ -84,7 +40,6 @@ std::vector <glm::vec3> Quad::createCustomDoubleColors (
         customColor1.r, customColor1.g, customColor1.b
     });
 }
-
 
 const std::vector <glm::vec3> Quad::basicPositionsQuad =
     Utility::GLfloatListToGlmVec3({

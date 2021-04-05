@@ -4,7 +4,7 @@
  *
  * Created on 22 aout 2020, 18h15
  */
-#include "scene/mesh/MeshGenerator.h"
+#include "scene/MeshGenerator.h"
 
 vecMesh_sptr MeshGenerator::genBlocks (const Map& map) {
 
@@ -30,12 +30,7 @@ vecMesh_sptr MeshGenerator::genBlocks (const Map& map) {
         for (MeshComponent_sptr m : specialComponents) {
             components.push_back(std::move(m));
         }
-       }
-
-       // We have better performances if the components are stored with objects
-       // with the same VAO/VBO, we will not have to change the binding later
-       vecMeshComponent_sptr sortedComponents = sortComponents(components);*/
-    // return sortedComponents;
+       }*/
 
     return meshes;
 }

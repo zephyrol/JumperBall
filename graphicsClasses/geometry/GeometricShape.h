@@ -44,8 +44,6 @@ GeometricShape(
 GeometricShape(const GeometricShape& geometricShape) = delete;
 GeometricShape& operator= (const GeometricShape& geometricShape) = delete;
 
-GeometricShape(GeometricShape&& geometricShape) = default;
-GeometricShape& operator= (GeometricShape&& geometricShape) = default;
 virtual ~GeometricShape() = default;
 
 virtual size_t numberOfVertices() const;

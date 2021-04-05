@@ -5,12 +5,10 @@
  * created on 22 aout 2020, 18h15
  */
 
-#include "scene/mesh/MeshGenerator.h"
-#include "animations/BallAnimation.h"
+#include "scene/MeshGenerator.h"
 
 vecMesh_sptr MeshGenerator::genBall (const Ball& ball) {
 
-    // const glm::mat4 scaleMatrix = glm::scale(glm::vec3(ball.getRadius()));
     const CstGeometricShape_sptr sphere = std::make_shared <const Sphere>();
     vecCstGeometricShape_sptr geometricShapes { sphere };
     Mesh_sptr sphereMesh = std::make_shared <Mesh>(

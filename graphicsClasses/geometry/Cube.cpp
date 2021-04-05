@@ -12,13 +12,6 @@ Cube::Cube(const glm::mat4& modelTransform,
            const std::array <bool, 6>& sides):
     GeometricShape(modelTransform, normalsTransform, {}),
     _sides(sides) {
-    /*GeometricShape(
-        getBasicPosCube(sides),
-        getBasicNormalsCube(sides),
-        getBasicColorsCube(sides),
-        basicUVCoordsCube,
-        modelTransform,
-        normalsTransform) */
 }
 
 Cube::Cube(const glm::vec3& customColor,
@@ -27,14 +20,6 @@ Cube::Cube(const glm::vec3& customColor,
            const std::array <bool, 6>& sides):
     GeometricShape(modelTransform, normalsTransform, { customColor }),
     _sides(sides) {
-    /*GeometricShape(
-        getBasicPosCube(sides),
-        getBasicNormalsCube(sides),
-        getBasicElements(GeometricShape::createCustomColorBuffer
-                             (customColor, basicPositionsCube.size()), sides),
-        basicUVCoordsCube,
-        modelTransform,
-        normalsTransform)*/
 }
 
 
@@ -45,22 +30,7 @@ Cube::Cube(std::vector <glm::vec3>&& customColors,
            ):
     GeometricShape(modelTransform, normalsTransform, std::move(customColors)),
     _sides(sides) {
-    /*GeometricShape(
-        getBasicPosCube(sides),
-        getBasicNormalsCube(sides),
-        getBasicElements(customColors, sides),
-        basicUVCoordsCube,
-        modelTransform,
-        normalsTransform)*/
 }
-
-/*Cube::Cube(const GeometricShape& cube,
-           const glm::mat4& modelTransform,
-           const glm::mat4& normalsTransform):
-           iam
-
-    GeometricShape(cube, modelTransform, normalsTransform) {
-   }*/
 
 std::vector <glm::vec3> Cube::getBasicPosCube (const std::array <bool, 6>& sides) {
     return getBasicElements(basicPositionsCube, sides);

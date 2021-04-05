@@ -13,7 +13,6 @@
 class Pyramid:public GeometricShape {
 public:
 
-// --CONSTRUCTORS & DESTRUCTORS--//
 Pyramid(const glm::mat4& modelTransform = glm::mat4(1.f),
         const glm::mat4& normalsTransform = glm::mat4(1.f));
 Pyramid(const glm::vec3& customColor,

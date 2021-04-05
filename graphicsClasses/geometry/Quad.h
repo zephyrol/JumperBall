@@ -12,7 +12,6 @@
 
 class Quad:public GeometricShape {
 public:
-// --CONSTRUCTORS & DESTRUCTORS--//
 Quad(const glm::mat4& modelTransform = glm::mat4(1.f),
      const glm::mat4& normalsTransform = glm::mat4(1.f));
 Quad(const glm::vec3& customColor,
@@ -29,8 +28,6 @@ virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors)
 virtual std::vector <glm::vec2> genUvCoords() const override;
 
 private:
-
-// --------STATIC METHODS-------//
 static std::vector <glm::vec3> createCustomDoubleColors(
     const glm::vec3& customColor1,
     const glm::vec3& customColor2);
