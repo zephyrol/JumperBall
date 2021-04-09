@@ -48,7 +48,6 @@ vecCstGeometricShape_sptr genJumpers(const Block& block,
 Mesh_sptr genObject(const Object& object);
 Mesh_sptr genEnemy(const Enemy& enemy, const Map::EnemyTypes& category);
 Mesh_sptr genSpecial(const Special& special, const Map::SpecialTypes& category);
-Mesh_sptr genEnemy(const Enemy& enemy, const Map::EnemyTypes& category);
 /*vecMeshComponent_sptr genEnemy(const EnemyState& enemy);
    vecMeshComponent_sptr genSpecial(const SpecialState& special);
 

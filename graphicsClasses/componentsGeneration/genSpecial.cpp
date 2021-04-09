@@ -5,7 +5,7 @@
  * Created on 15 decembre 2020, 22h02
  */
 
-#include "scene/MeshGenerator.h"
+#include "MeshGenerator.h"
 #include "animations/SpecialAnimation.h"
 
 Mesh_sptr genSpecial (const Special& special, const Map::SpecialTypes& category) {

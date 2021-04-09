@@ -12,7 +12,7 @@
 #include <vector>
 #include "Camera.h"
 #include "uniformBlocks/uniformLight.h"
-#include "scene/MeshGenerator.h"
+#include "componentsGeneration/MeshGenerator.h"
 #include "RenderProcess.h"
 
 

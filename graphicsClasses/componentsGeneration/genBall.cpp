@@ -5,7 +5,7 @@
  * created on 22 aout 2020, 18h15
  */
 
-#include "scene/MeshGenerator.h"
+#include "MeshGenerator.h"
 
 vecMesh_sptr MeshGenerator::genBall (const Ball& ball) {
 

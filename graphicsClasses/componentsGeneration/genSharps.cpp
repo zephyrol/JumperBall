@@ -5,7 +5,7 @@
  * Created on 22 aout 2020, 18h15
  */
 
-#include "scene/MeshGenerator.h"
+#include "MeshGenerator.h"
 
 vecCstGeometricShape_sptr MeshGenerator::genSharps (
     const Block& block,

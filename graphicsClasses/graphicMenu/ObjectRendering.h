@@ -12,7 +12,7 @@
 #include <system/ParallelTask.h>
 #include <geometry/Triangle.h>
 #include "LabelRendering.h"
-#include "scene/MeshGenerator.h"
+#include "componentsGeneration/MeshGenerator.h"
 
 class ObjectRendering;
 using ObjectRendering_sptr = std::shared_ptr <ObjectRendering>;
