@@ -148,8 +148,8 @@ RenderGroup::BufferObjects RenderGroup::createBufferObjects() const {
 RenderGroup::BufferObjects RenderGroup::createBufferObjects (const RenderGroup& renderGroup) const {
     RenderGroup::BufferObjects bufferObjects;
     const RenderGroup::BufferObjects& renderGroupBufferObjects = renderGroup.bufferObjects();
-    size_t nbOfShapeVBOs = renderGroupBufferObjects.shapeVertexBufferObjects.size();
-    size_t nbOfStateVBOs = renderGroupBufferObjects.stateVertexBufferObjects.size();
+    const size_t nbOfShapeVBOs = renderGroupBufferObjects.shapeVertexBufferObjects.size();
+    const size_t nbOfStateVBOs = renderGroupBufferObjects.stateVertexBufferObjects.size();
 
     const auto fillVBOs =
         [this] (size_t nbOfVBOs) {

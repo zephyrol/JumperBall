@@ -14,7 +14,6 @@ class ObjectState:public State {
 public:
 ObjectState(const Object& object);
 
-bool isGotten() const;
 std::vector <float> getStaticFloatValues() const override;
 std::vector <JBTypes::vec3f> getStaticVec3fValues() const override;
 std::map <std::string, float> getDynamicFloats() const override;

@@ -56,10 +56,6 @@ const JBTypes::vec3f& BallState::get3DPosition() const noexcept{
     return _position;
 }
 
-float BallState::burnCoefficient() const {
-    return _burnCoefficient;
-}
-
 const JBTypes::vec3f& BallState::currentSideAsVector() const {
     return _currentSideAsVector;
 }
@@ -105,7 +101,8 @@ std::map <std::string, float> BallState::getDynamicFloats() const {
         { "ballRadius", _radius },
         { "crushingCoeff", _crushingCoeff },
         { "status", _stateOfLifeStatus },
-        { "timeStateOfLife", _timeSecondsSinceStateOfLife }
+        { "timeStateOfLife", _timeSecondsSinceStateOfLife },
+        { "burningCoeff", _burnCoefficient }
     };
 }
 

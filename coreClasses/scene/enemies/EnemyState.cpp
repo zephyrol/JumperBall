@@ -20,38 +20,18 @@ EnemyState::EnemyState(const Enemy& enemy, const Map::EnemyTypes& category):
     _transform(enemy.transform()) {
 }
 
-const JBTypes::Color& EnemyState::color() const {
-    return _color;
-}
-
-const Map::EnemyTypes& EnemyState::category() const {
-    return _category;
-}
-
-const JBTypes::vec3f& EnemyState::position() const {
-    return _position;
-}
-
-const JBTypes::Direction& EnemyState::direction() const {
-    return _direction;
-}
-
-const float& EnemyState::size() const {
-    return _size;
-}
-
-const size_t& EnemyState::length() const {
-    return _length;
-}
-
 const std::array <float, 9>& EnemyState::transform() const {
     return _transform;
 }
 
 State::GlobalState EnemyState::update() {
-    _hasHit = _enemy.hasHit();
-    _intersectionTime = _enemy.intersectionTime();
-    _position = _enemy.position();
     _transform = _enemy.transform();
-    return State::GlobalState::United;
+    return State::GlobalState::Separate;
+}
+
+std::map <std::string, JBTypes::vec3f> EnemyState::getDynamicVec3fs() const {
+    return {
+        { "translation", { _transform.at(0), _transform.at(1), _transform.at(2) }},
+        { "scale", { _transform.at(6), _transform.at(7), _transform.at(8) }}
+    };
 }

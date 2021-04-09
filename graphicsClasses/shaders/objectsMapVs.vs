@@ -148,7 +148,7 @@ void main() {
                           translation * rotation * scale;
     mat4 normalTransform = initialRotation * rotation; // TODO: apply scale on normal
 
-    const float w = 1.f;
+    const float w = 1.0;
     vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, w);
 
     fs_vertexColor = vs_vertexColor;

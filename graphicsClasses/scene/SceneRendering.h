@@ -93,6 +93,7 @@ CstShaderProgram_uptr createBloomEffectShader(const std::string& vs, const std::
 
 static const std::string blocksVs;
 static const std::string objectsMapVs;
+static const std::string enemiesVs;
 static const std::string ballVs;
 static const std::string basicFboVs;
 static const std::string levelFs;

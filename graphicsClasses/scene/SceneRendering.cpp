@@ -27,6 +27,7 @@ SceneRendering::SceneRendering(const Map& map,
     _renderPasses{
                   std::make_shared <RenderPass>(MeshGenerator::genBlocks(map)),
                   std::make_shared <RenderPass>(MeshGenerator::genObjects(map)),
+                  std::make_shared <RenderPass>(MeshGenerator::genEnemies(map)),
                   std::make_shared <RenderPass>(MeshGenerator::genBall(ball)),
                   std::make_shared <RenderPass>(MeshGenerator::genStar(star)),
                   std::make_shared <RenderPass>(MeshGenerator::genQuad(_quadScreen))
@@ -54,13 +55,13 @@ SceneRendering::SceneRendering(const Map& map,
                                  vecScreenRenderPass(),
                                  createBrightPassShaders(),
                                  createBrightPassUniforms(),
-                                 createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::SDR)
+                                 createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::HDR)
                                  )),
     _horizontalBlurProcess(std::make_shared <RenderProcess>(
                                vecScreenRenderPass(),
                                createHorizontalBlurShaders(),
                                createHorizontalBlurUniforms(),
-                               createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::SDR)
+                               createBloomEffectFrameBuffer(FrameBuffer::TextureCaterory::HDR)
                                )),
     _verticalBlurProcess(std::make_shared <RenderProcess>(
                              vecScreenRenderPass(),
@@ -99,7 +100,9 @@ RenderProcess::PassShaderMap SceneRendering::createDepthStarShaders() const {
         ShaderProgram::createShaderProgram(blocksVs, depthFs);
     depthStarRenderingShaders[levelRenderPasses.at(1)] =
         ShaderProgram::createShaderProgram(objectsMapVs, depthFs);
-    depthStarRenderingShaders[levelRenderPasses.at(2)] = ShaderProgram::createShaderProgram(ballVs, depthFs);
+    depthStarRenderingShaders[levelRenderPasses.at(2)] =
+        ShaderProgram::createShaderProgram(enemiesVs, depthFs);
+    depthStarRenderingShaders[levelRenderPasses.at(3)] = ShaderProgram::createShaderProgram(ballVs, depthFs);
     return depthStarRenderingShaders;
 }
 
@@ -123,14 +126,15 @@ RenderProcess::PassShaderMap SceneRendering::createSceneRenderingShaders() const
     const vecRenderPass_sptr levelRenderPasses = getLevelRenderPasses();
     fillSceneRenderingShader(levelRenderPasses.at(0), blocksVs, levelFs, true);
     fillSceneRenderingShader(levelRenderPasses.at(1), objectsMapVs, levelFs, true);
-    fillSceneRenderingShader(levelRenderPasses.at(2), ballVs, levelFs, true);
+    fillSceneRenderingShader(levelRenderPasses.at(2), enemiesVs, levelFs, true);
+    fillSceneRenderingShader(levelRenderPasses.at(3), ballVs, levelFs, true);
 
     fillSceneRenderingShader(getStarRenderPass(), "starVs.vs", "starFs.fs", false);
     return sceneRenderingShaders;
 }
 
 const RenderPass_sptr& SceneRendering::getScreenRenderPass() const {
-    return _renderPasses.at(4);
+    return _renderPasses.at(5);
 }
 
 std::vector <RenderPass_sptr> SceneRendering::vecScreenRenderPass() const {
@@ -138,11 +142,11 @@ std::vector <RenderPass_sptr> SceneRendering::vecScreenRenderPass() const {
 }
 
 vecRenderPass_sptr SceneRendering::getLevelRenderPasses() const {
-    return { _renderPasses.at(0), _renderPasses.at(1), _renderPasses.at(2) };
+    return { _renderPasses.at(0), _renderPasses.at(1), _renderPasses.at(2), _renderPasses.at(3) };
 }
 
 const RenderPass_sptr& SceneRendering::getStarRenderPass() const {
-    return _renderPasses.at(3);
+    return _renderPasses.at(4);
 }
 
 vecRenderPass_sptr SceneRendering::getSceneRenderPasses() const {
@@ -380,6 +384,7 @@ void SceneRendering::render() const {
 
 const std::string SceneRendering::blocksVs = "blocksVs.vs";
 const std::string SceneRendering::objectsMapVs = "objectsMapVs.vs";
+const std::string SceneRendering::enemiesVs = "enemiesVs.vs";
 const std::string SceneRendering::ballVs = "ballVs.vs";
 const std::string SceneRendering::basicFboVs = "basicFboVs.vs";
 const std::string SceneRendering::levelFs = "levelFs.fs";

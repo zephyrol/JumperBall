@@ -837,8 +837,7 @@ bool Ball::isBurstingFinished() const {
 }
 
 void Ball::mapInteraction() noexcept{
-    const Map::Effect effect = _map.interaction
-                                   (_currentSide, get3DPosition(), getRadius());
+    const Map::Effect effect = _map.interaction(_currentSide, get3DPosition(), getRadius());
     if (effect == Map::Effect::Burst) {
         if (_stateOfLife != StateOfLife::Bursting) {
             _stateOfLife = StateOfLife::Bursting;

@@ -51,3 +51,16 @@ vecMesh_sptr MeshGenerator::genObjects (const Map& map) {
     }
     return meshes;
 }
+
+vecMesh_sptr MeshGenerator::genEnemies (const Map& map) {
+
+    vecMesh_sptr meshes;
+    const auto enemiesInfos = map.getEnemiesInfo();
+    for (const auto& enemyInfo : enemiesInfos) {
+        const std::shared_ptr <const Enemy> enemy = enemyInfo.enemy;
+        if (enemy) {
+            meshes.push_back(genEnemy(*enemy, enemyInfo.type));
+        }
+    }
+    return meshes;
+}

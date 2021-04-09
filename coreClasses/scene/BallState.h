@@ -16,7 +16,6 @@ BallState(const Ball& ball);
 
 virtual State::GlobalState update() override;
 const JBTypes::vec3f& get3DPosition() const noexcept;
-float burnCoefficient() const;
 const JBTypes::vec3f& currentSideAsVector() const;
 float getTimeSecondsSinceAction() const;
 float getTimeSecondsSinceStateOfLife() const;
