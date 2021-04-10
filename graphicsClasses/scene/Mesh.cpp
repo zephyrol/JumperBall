@@ -6,7 +6,7 @@
  */
 #include "Mesh.h"
 
-Mesh::Mesh(std::unique_ptr <State>&& state, vecCstGeometricShape_sptr&& shapes):
+Mesh::Mesh(State_uptr&& state, vecCstGeometricShape_sptr&& shapes):
     _state(std::move(state)),
     _shapes(std::move(shapes)),
     _numberOfVertices(computeNumberOfVertices()) {
@@ -38,7 +38,7 @@ template<typename RawType, typename OpenGLType> void Mesh::convertAttributesToOp
 
 template<typename RawType, typename OpenGLType> void Mesh::convertUniformsToOpenGLFormat (
     const std::map <std::string, RawType>& rawValues,
-    Mesh::UniformVariable <OpenGLType>& openGLValues) {
+    Mesh::UniformVariables <OpenGLType>& openGLValues) {
     for (const auto& rawValue : rawValues) {
         const OpenGLType openGLValue = Utility::convertToOpenGLFormat(rawValue.second);
         openGLValues[rawValue.first] = openGLValue;

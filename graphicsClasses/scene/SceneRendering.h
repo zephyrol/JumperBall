@@ -37,9 +37,6 @@ const Camera& _camera;
 const std::shared_ptr <UniformLight> _light;
 
 StarState _starState;
-const glm::vec3 _envSize;
-const glm::vec3 _centerWorld;
-const float _largestSize;
 glm::mat4 _VPStar;
 
 const vecRenderPass_sptr _renderPasses;

@@ -49,14 +49,17 @@ void upsertUniform(
     const std::shared_ptr <const UniformBlock>& uniformBlock
     );
 
-using UniformBlockVariable = std::map <std::string, std::shared_ptr <const UniformBlock> >;
+using UniformCstBlockVariables = std::map <std::string, CstUniformBlock_sptr>;
+
+using UniformBlockVariables = std::map <std::string, UniformBlock_sptr>;
+using UniformBlockVariables_uptr = std::unique_ptr <UniformBlockVariables>;
 
 private:
 
 void bindUniforms(const Mesh::Uniforms& uniforms, const CstShaderProgram_uptr& shaderProgram) const;
 
 template<typename T> void bindUniformVariables(
-    Mesh::UniformVariable <T> uniforms,
+    Mesh::UniformVariables <T> uniforms,
     const CstShaderProgram_uptr& shaderProgram
     ) const;
 template<typename T> void upsertUniforms(const std::map <std::string, T>& uniformsData);
@@ -70,7 +73,7 @@ const std::shared_ptr <RenderGroup> _unitedMeshesGroup;
 std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > _separateMeshGroups;
 std::map <std::shared_ptr <RenderGroup>, Mesh::Uniforms> _renderGroupsUniforms;
 std::map <GLuint, Mesh::Uniforms> _renderPassUniforms;
-std::map <GLuint, UniformBlockVariable> _renderPassUniformBlocks;
+std::map <GLuint, UniformCstBlockVariables> _renderPassUniformBlocks;
 };
 
 

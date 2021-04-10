@@ -27,6 +27,14 @@ const JBTypes::vec3f& StarState::position() const {
     return _position;
 }
 
+const JBTypes::vec3f& StarState::rotationCenter() const {
+    return _star.rotationCenter();
+}
+
+float StarState::envSize() const {
+    return _star.envSize();
+}
+
 std::map <std::string, float> StarState::getDynamicFloats() const {
     return {
         { "starDistance", _star.distance() },

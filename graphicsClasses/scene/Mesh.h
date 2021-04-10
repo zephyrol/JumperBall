@@ -21,7 +21,7 @@ using vecMesh_sptr = std::vector <Mesh_sptr>;
 
 class Mesh {
 public:
-Mesh(std::unique_ptr <State>&& state, vecCstGeometricShape_sptr&& shapes);
+Mesh(State_uptr&& state, vecCstGeometricShape_sptr&& shapes);
 
 struct StateVertexAttributes {
     std::vector <std::vector <GLfloat> > staticFloats = {};
@@ -34,14 +34,17 @@ struct MeshVerticesInfo {
     Mesh::StateVertexAttributes stateVertexAttributes;
 };
 
-template<typename T> using UniformVariable = std::map <std::string, T>;
+template<typename T> using UniformVariables = std::map <std::string, T>;
+template<typename T> using UniformVariables_uptr = std::unique_ptr <UniformVariables <T> >;
+
+
 struct Uniforms {
-    UniformVariable <GLfloat> uniformFloats = {};
-    UniformVariable <glm::vec2> uniformVec2s = {};
-    UniformVariable <glm::vec3> uniformVec3s = {};
-    UniformVariable <glm::vec4> uniformVec4s = {};
-    UniformVariable <glm::mat4> uniformMat4s = {};
-    UniformVariable <GLuint> uniformTextures = {};
+    UniformVariables <GLfloat> uniformFloats = {};
+    UniformVariables <glm::vec2> uniformVec2s = {};
+    UniformVariables <glm::vec3> uniformVec3s = {};
+    UniformVariables <glm::vec4> uniformVec4s = {};
+    UniformVariables <glm::mat4> uniformMat4s = {};
+    UniformVariables <GLuint> uniformTextures = {};
 };
 
 State::GlobalState update();
@@ -63,7 +66,7 @@ template<typename RawType, typename OpenGLType> static void convertAttributesToO
     const std::vector <RawType>& rawValues, std::vector <OpenGLType>& openGLValues);
 
 template<typename RawType, typename OpenGLType> static void convertUniformsToOpenGLFormat(
-    const std::map <std::string, RawType>& rawValues, Mesh::UniformVariable <OpenGLType>& openGLValues);
+    const std::map <std::string, RawType>& rawValues, Mesh::UniformVariables <OpenGLType>& openGLValues);
 
 template<typename T> static void concatStateVertexAttribute(
     std::vector <std::vector <T> >& current,
@@ -71,7 +74,7 @@ template<typename T> static void concatStateVertexAttribute(
     );
 static void concatStateVertexAttributes(StateVertexAttributes& current, const StateVertexAttributes& other);
 
-const std::unique_ptr <State> _state;
+const State_uptr _state;
 const vecCstGeometricShape_sptr _shapes;
 const size_t _numberOfVertices;
 };

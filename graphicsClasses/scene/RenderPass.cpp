@@ -123,7 +123,7 @@ void RenderPass::bindUniforms (
 }
 
 template<typename T> void RenderPass::bindUniformVariables (
-    Mesh::UniformVariable <T> uniforms,
+    Mesh::UniformVariables <T> uniforms,
     const CstShaderProgram_uptr& shaderProgram
     ) const {
     for (const auto& uniform : uniforms) {

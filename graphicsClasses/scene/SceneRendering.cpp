@@ -20,9 +20,6 @@ SceneRendering::SceneRendering(const Map& map,
                                            glm::vec3(0.25f, 0.25f, 0.25f),
                                            glm::vec3(0.25f, 0.25f, 0.25f))),
     _starState(star),
-    _envSize(map.width(), map.height(), map.deep()),
-    _centerWorld(_envSize / 2.f),
-    _largestSize(getLargestSize()),
     _VPStar(genVPStar()),
     _renderPasses{
                   std::make_shared <RenderPass>(MeshGenerator::genBlocks(map)),
@@ -318,26 +315,16 @@ void SceneRendering::updateBloomUniforms (const RenderPass_sptr& renderPass, GLu
 
 }
 
-float SceneRendering::getLargestSize() const {
-    float boundingBoxMax = _envSize.x;
-    if (boundingBoxMax < _envSize.y) {
-        boundingBoxMax = _envSize.y;
-    }
-    if (boundingBoxMax < _envSize.z) {
-        boundingBoxMax = _envSize.z;
-    }
-    return boundingBoxMax;
-}
-
 glm::mat4 SceneRendering::genVPStar() const {
 
     constexpr float offsetJumpingBall = 1.f; // size of ball + jump height
-    const float halfBoundingBoxSize = _largestSize / 2.f + offsetJumpingBall;
+    const float halfBoundingBoxSize = _starState.envSize() / 2.f + offsetJumpingBall;
 
     // We use a close star position to get a better ZBuffer accuracy
-    const glm::vec3 closeStarPosition = _centerWorld +
+    const glm::vec3 centerWorld = Utility::convertToOpenGLFormat(_starState.rotationCenter());
+    const glm::vec3 closeStarPosition = centerWorld +
                                         glm::normalize((Utility::convertToOpenGLFormat(_starState.position())
-                                                        - _centerWorld)) *
+                                                        - centerWorld)) *
                                         halfBoundingBoxSize;
 
     return glm::ortho(
@@ -346,7 +333,7 @@ glm::mat4 SceneRendering::genVPStar() const {
         -halfBoundingBoxSize,
         halfBoundingBoxSize,
         _camera.zNear, _camera.zNear + 2.f * halfBoundingBoxSize
-        ) * glm::lookAt(closeStarPosition, _centerWorld, glm::vec3(0.f, 1.f, 0.f));
+        ) * glm::lookAt(closeStarPosition, centerWorld, glm::vec3(0.f, 1.f, 0.f));
 }
 
 FrameBuffer_uptr SceneRendering::createBloomEffectFrameBuffer (
@@ -380,6 +367,7 @@ void SceneRendering::render() const {
     for (const auto& renderProcess : _sceneRenderingPipeline) {
         renderProcess->render();
     }
+
 }
 
 const std::string SceneRendering::blocksVs = "blocksVs.vs";

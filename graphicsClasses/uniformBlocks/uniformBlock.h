@@ -12,6 +12,9 @@
 #include <vector>
 #include "ShaderProgram.h"
 
+class UniformBlock;
+using UniformBlock_sptr = std::shared_ptr <UniformBlock>;
+using CstUniformBlock_sptr = std::shared_ptr <const UniformBlock>;
 class UniformBlock {
 public:
 

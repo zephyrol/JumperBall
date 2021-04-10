@@ -57,7 +57,7 @@ Mesh_sptr genSpecial (const Special& special, const Map::SpecialTypes& category)
                                   ));
 
     return std::make_shared <Mesh>(
-        std::unique_ptr <State>(new SpecialState(special, category)),
+        State_uptr(new SpecialState(special, category)),
         std::move(geometricShapes));
 }
 

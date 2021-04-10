@@ -73,6 +73,6 @@ Mesh_sptr MeshGenerator::genObject (const Object& object) {
         break;
     }
     return std::make_shared <Mesh>(
-        std::unique_ptr <State>(new ObjectState(object)),
+        State_uptr(new ObjectState(object)),
         std::move(geometricShapes));
 }

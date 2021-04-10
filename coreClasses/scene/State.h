@@ -8,6 +8,13 @@
 #define STATE_H
 #include "system/Types.h"
 
+class State;
+using State_sptr = std::shared_ptr <State>;
+using CstState_sptr = std::shared_ptr <const State>;
+using vecCstState_sptr = std::vector <CstState_sptr>;
+using vecState_sptr = std::vector <State_sptr>;
+using State_uptr = std::unique_ptr <State>;
+
 class State {
 
 public:

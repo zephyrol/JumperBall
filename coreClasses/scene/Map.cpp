@@ -219,10 +219,24 @@ unsigned int Map::deep() const {
 
 JBTypes::vec3f Map::getCenterMap() const {
     return {
-        static_cast <float>(_width / 2.f),
-        static_cast <float>(_height / 2.f),
-        static_cast <float>(_deep / 2.f)
+        static_cast <float>(_width) / 2.f,
+        static_cast <float>(_height) / 2.f,
+        static_cast <float>(_deep) / 2.f
     };
+}
+
+float Map::getLargestSize() const {
+    float fWidth = static_cast <float>(_width);
+    float fHeight = static_cast <float>(_height);
+    float fDeep = static_cast <float>(_deep);
+    float boundingBoxMax = fWidth;
+    if (boundingBoxMax < fHeight) {
+        boundingBoxMax = fHeight;
+    }
+    if (boundingBoxMax < fDeep) {
+        boundingBoxMax = fDeep;
+    }
+    return boundingBoxMax;
 }
 
 float Map::getTimeSinceCreation() const {
@@ -254,8 +268,7 @@ Map::Effect Map::interaction (const JBTypes::Dir& ballDir,
     _objectsInteractions.runTasks();
     _enemiesInteractions.runTasks();
 
-    std::shared_ptr <std::vector <Block::Effect> > blocksEffects =
-        _blocksInteractions.waitTasks();
+    std::shared_ptr <std::vector <Block::Effect> > blocksEffects = _blocksInteractions.waitTasks();
     Block::Effect finalBlockEffect = Block::Effect::Nothing;
     for (Block::Effect& blockEffect : *blocksEffects) {
         if (blockEffect != Block::Effect::Nothing) {
@@ -263,8 +276,7 @@ Map::Effect Map::interaction (const JBTypes::Dir& ballDir,
         }
     }
 
-    std::shared_ptr <std::vector <Enemy::Effect> > enemiesEffects =
-        _enemiesInteractions.waitTasks();
+    std::shared_ptr <std::vector <Enemy::Effect> > enemiesEffects = _enemiesInteractions.waitTasks();
     Enemy::Effect finalEnemyEffect = Enemy::Effect::Nothing;
     for (Enemy::Effect& enemyEffect : *enemiesEffects) {
         if (enemyEffect != Enemy::Effect::Nothing) {
@@ -273,10 +285,7 @@ Map::Effect Map::interaction (const JBTypes::Dir& ballDir,
     }
     _objectsInteractions.waitTasks();
 
-    if (
-        finalBlockEffect == Block::Effect::Burst ||
-        finalEnemyEffect == Enemy::Effect::Burst
-        ) {
+    if (finalBlockEffect == Block::Effect::Burst || finalEnemyEffect == Enemy::Effect::Burst) {
         return Map::Effect::Burst;
     } else if (finalBlockEffect == Block::Effect::Jump) {
         return Map::Effect::Jump;
@@ -320,9 +329,7 @@ JBTypes::vec3ui Map::getBlockCoords (size_t index,
                                      unsigned int deep) {
     unsigned int uIntIndex = static_cast <unsigned int>(index);
     const unsigned int widthDeep = width * deep;
-    return { uIntIndex % width,
-             uIntIndex / widthDeep,
-             (uIntIndex % widthDeep) / width };
+    return { uIntIndex % width, uIntIndex / widthDeep, (uIntIndex % widthDeep) / width };
 }
 
 const std::vector <Map::EnemyInfo>& Map::getEnemiesInfo() const {

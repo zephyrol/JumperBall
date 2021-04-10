@@ -8,19 +8,20 @@
 #ifndef STAR_H
 #define STAR_H
 #include "system/Types.h"
+#include "Map.h"
 
 class Star {
 public:
 
 // --CONSTRUCTORS & DESTRUCTORS--//
 Star(
+    const Map& map,
     float radiusInside,
     float radiusOutside,
     float distance,
     float radius,
     const JBTypes::vec3f& initialDirection,
     const JBTypes::vec3f& rotationAxis,
-    const JBTypes::vec3f& rotationCenter,
     float radiansPerSecond);
 
 float radiusInside() const;
@@ -28,12 +29,13 @@ float radiusOutside() const;
 float distance() const;
 float radius() const;
 const JBTypes::vec3f& rotationCenter() const;
+float envSize() const;
 const JBTypes::vec3f& initialDirection() const;
 JBTypes::Quaternion getRotation() const;
 JBTypes::vec3f lightDirection() const;
 JBTypes::vec3f position() const;
 
-static std::shared_ptr <Star> createBlurStar(const JBTypes::vec3f& rotationCenter);
+static std::shared_ptr <Star> createBlurStar(const Map& map);
 
 private:
 
@@ -45,6 +47,7 @@ const float _radius;
 const JBTypes::vec3f _initialDirection;
 const JBTypes::vec3f _rotationAxis;
 const JBTypes::vec3f _rotationCenter;
+const float _envSize;
 const float _radiansPerSeconds;
 const JBTypes::timePointMs _creationTime;
 

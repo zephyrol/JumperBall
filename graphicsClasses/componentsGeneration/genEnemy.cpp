@@ -120,7 +120,7 @@ Mesh_sptr MeshGenerator::genEnemy (const Enemy& enemy, const Map::EnemyTypes& ca
     }
 
     return std::make_shared <Mesh>(
-        std::unique_ptr <State>(new EnemyState(enemy, category)),
+        State_uptr(new EnemyState(enemy, category)),
         std::move(geometricShapes)
         );
 }

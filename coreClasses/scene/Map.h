@@ -83,6 +83,7 @@ unsigned int width() const;
 unsigned int height() const;
 unsigned int deep() const;
 JBTypes::vec3f getCenterMap() const;
+float getLargestSize() const;
 
 float getTimeSinceCreation() const;
 

@@ -82,7 +82,7 @@ Mesh_sptr MeshGenerator::genBlock (const Map& map, size_t index) {
     geometricShapes.insert(geometricShapes.end(), jumpersShapes.begin(), jumpersShapes.end());
     geometricShapes.insert(geometricShapes.end(), sharpsShapes.begin(), sharpsShapes.end());
     return { std::make_shared <Mesh>(
-                 std::unique_ptr <State>(new BlockState(*block)),
+                 State_uptr(new BlockState(*block)),
                  std::move(geometricShapes)
                  ) };
 }
