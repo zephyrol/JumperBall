@@ -37,6 +37,9 @@ struct MeshVerticesInfo {
 template<typename T> using UniformVariables = std::map <std::string, T>;
 template<typename T> using UniformVariables_uptr = std::unique_ptr <UniformVariables <T> >;
 
+template<typename T> static std::vector <T> extractUniformVariablesValues(
+    const UniformVariables <T>& uniformVariables
+    );
 
 struct Uniforms {
     UniformVariables <GLfloat> uniformFloats = {};
@@ -63,10 +66,10 @@ template<typename T> void duplicateStateVertexAttribute(std::vector <std::vector
                                                         const std::vector <T>& values) const;
 
 template<typename RawType, typename OpenGLType> static void convertAttributesToOpenGLFormat(
-    const std::vector <RawType>& rawValues, std::vector <OpenGLType>& openGLValues);
+    const State::StaticValues <RawType>& rawValues, std::vector <OpenGLType>& openGLValues);
 
 template<typename RawType, typename OpenGLType> static void convertUniformsToOpenGLFormat(
-    const std::map <std::string, RawType>& rawValues, Mesh::UniformVariables <OpenGLType>& openGLValues);
+    const State::DynamicValues <RawType>& rawValues, Mesh::UniformVariables <OpenGLType>& openGLValues);
 
 template<typename T> static void concatStateVertexAttribute(
     std::vector <std::vector <T> >& current,

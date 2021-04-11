@@ -29,7 +29,7 @@ State::GlobalState EnemyState::update() {
     return State::GlobalState::Separate;
 }
 
-std::map <std::string, JBTypes::vec3f> EnemyState::getDynamicVec3fs() const {
+State::DynamicValues <JBTypes::vec3f> EnemyState::getDynamicVec3fs() const {
     return {
         { "translation", { _transform.at(0), _transform.at(1), _transform.at(2) }},
         { "scale", { _transform.at(6), _transform.at(7), _transform.at(8) }}

@@ -16,7 +16,8 @@ public:
 EnemyState(const Enemy& enemy, const Map::EnemyTypes& category);
 const std::array <float, 9>& transform() const;
 virtual State::GlobalState update() override;
-virtual std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const override;
+
+virtual State::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 
 private:
 const Enemy& _enemy;

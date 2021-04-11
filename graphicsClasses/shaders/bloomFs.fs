@@ -3,7 +3,6 @@
 
 uniform sampler2D frameSceneHDRTexture;
 uniform sampler2D frameBluredTexture;
-uniform float averageLuminance;
 
 uniform float teleportationCoefficient;
 uniform vec3 flashColor;
@@ -43,6 +42,8 @@ vec3 toneMappingOperator (vec3 xyYColor) {
     // const float luminanceWhite   = 6.39891f;
     // const float luminanceWhite   = 1.5f;
 
+    const float averageLuminance = 1.8;
+
     float luminanceAfterToonMapping = exposureLevelKey * xyYColor.z
                                       / averageLuminance;
     /*float compressedLuminance = luminanceAfterToonMapping
@@ -62,5 +63,4 @@ void main() {
     pixelColor = vec4(toneMappedRGBColor, baseRGBColor.a) +
                  texture(frameBluredTexture, fs_vertexUVs);
     pixelColor = mix(pixelColor, vec4(flashColor, 1.0), teleportationCoefficient);
-
 }

@@ -96,7 +96,7 @@ const JBTypes::vec3f& BallState::nextLook() const {
     return _nextLook;
 }
 
-std::map <std::string, float> BallState::getDynamicFloats() const {
+State::DynamicValues <float> BallState::getDynamicFloats() const {
     return {
         { "ballRadius", _radius },
         { "crushingCoeff", _crushingCoeff },
@@ -106,14 +106,14 @@ std::map <std::string, float> BallState::getDynamicFloats() const {
     };
 }
 
-std::map <std::string, JBTypes::vec3f> BallState::getDynamicVec3fs() const {
+State::DynamicValues <JBTypes::vec3f> BallState::getDynamicVec3fs() const {
     return {
         { "sideDir", _currentSideAsVector },
         { "position", _position }
     };
 }
 
-std::map <std::string, JBTypes::Quaternion> BallState::getDynamicQuaternions() const {
+State::DynamicValues <JBTypes::Quaternion> BallState::getDynamicQuaternions() const {
     return {
         { "quaternion", _coveredRotation }
     };

@@ -8,8 +8,8 @@
 
 Rendering::Rendering(
     const vecState_sptr& externalStates,
-    ExternalUniformBlockVariables&& externalUniformBlocks,
-    ExternalUniformVariables <glm::mat4>&& externalUniformMatrices,
+    Rendering::ExternalUniformBlockVariables&& externalUniformBlocks,
+    Rendering::ExternalUniformVariables <glm::mat4>&& externalUniformMatrices,
     const vecRenderPass_sptr& renderPasses,
     const vecRenderProcess_sptr& renderingPipeline
     ):
@@ -21,22 +21,22 @@ Rendering::Rendering(
 }
 
 void Rendering::update() {
-
     for (const auto& externalState : _externalStates) {
         externalState->update();
     }
 
     for (auto& externalUniformBlock : _externalUniformBlocks) {
-        const auto& uniformBlockVariables = externalUniformBlock.first;
-        externalUniformBlock.second(uniformBlockVariables);
+        const RenderPass::UniformBlockVariables_uptr& uniformBlockVariables = externalUniformBlock.first;
+        const Rendering::UniformBlockUpdatingFct& updatingFct = externalUniformBlock.second;
 
-        for (auto& uniformBlock : *uniformBlockVariables) {
-            uniformBlock.second->update();
-        }
+        updatingFct(uniformBlockVariables);
     }
 
     for (auto& externalUniformMatrix : _externalUniformMatrices) {
-        externalUniformMatrix.second(externalUniformMatrix.first);
+        const Mesh::UniformVariables_uptr <glm::mat4>& uniformMatrices = externalUniformMatrix.first;
+        const Rendering::UniformVariableUpdatingFct <glm::mat4>& updatingFct = externalUniformMatrix.second;
+
+        updatingFct(uniformMatrices);
     }
 
     for (const auto& renderPass : _renderPasses) {
@@ -52,4 +52,17 @@ void Rendering::render() const {
     for (const auto& renderProcess : _renderingPipeline) {
         renderProcess->render();
     }
+}
+
+CstState_sptr Rendering::getExternalState (size_t number) const {
+    return _externalStates.at(number);
+}
+
+const glm::mat4& Rendering::getUniformMatrix (size_t number) const {
+    const Mesh::UniformVariables_uptr <glm::mat4>&
+    return _externalUniformMatrices.at(number).;
+}
+
+const RenderPass_sptr& Rendering::getRenderPass (size_t number) const {
+    return _renderPasses.at(number);
 }

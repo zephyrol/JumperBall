@@ -14,9 +14,11 @@ class ObjectState:public State {
 public:
 ObjectState(const Object& object);
 
-std::vector <float> getStaticFloatValues() const override;
-std::vector <JBTypes::vec3f> getStaticVec3fValues() const override;
-std::map <std::string, float> getDynamicFloats() const override;
+State::StaticValues <float> getStaticFloatValues() const override;
+State::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+
+State::DynamicValues <float> getDynamicFloats() const override;
+
 State::GlobalState update() override;
 
 private:

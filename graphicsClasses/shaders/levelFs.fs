@@ -7,7 +7,7 @@ uniform mat4 VPStar;
 
 uniform vec3 positionCamera;
 uniform light {
-    vec3 directionLight;
+    vec3 lightDirection;
     vec3 ambientLightIntensity;
     vec3 diffuseLightIntensity;
     vec3 specularLightIntensity;
@@ -20,7 +20,6 @@ in vec3 fs_vertexNormal;
 in vec3 fs_vertexPositionWorld;
 
 out vec4 pixelColor;
-
 
 void main() {
 
@@ -47,7 +46,7 @@ void main() {
 
     if (!inShadow) {
 
-        vec3 toLight            = -directionLight;
+        vec3 toLight            = -lightDirection;
         vec3 toCamera           = normalize(positionCamera - fs_vertexPositionWorld);
         vec3 reflection         =
             normalize(-toLight + 2.0 * (dot(toLight, fs_vertexNormal)) * fs_vertexNormal);

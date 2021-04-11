@@ -12,13 +12,19 @@
 class Rendering {
 
 public:
+
+using UniformBlockUpdatingFct = std::function <void (const RenderPass::UniformBlockVariables_uptr&)>;
 using ExternalUniformBlockVariables = std::map <
     RenderPass::UniformBlockVariables_uptr,
-    std::function <void (const RenderPass::UniformBlockVariables_uptr&)>
+    UniformBlockUpdatingFct
+    >;
+
+template<typename T> using UniformVariableUpdatingFct = std::function <
+    void (const Mesh::UniformVariables_uptr <T>&)
     >;
 template<typename T> using ExternalUniformVariables = std::map <
     Mesh::UniformVariables_uptr <T>,
-    std::function <void (const Mesh::UniformVariables_uptr <T>&)>
+    UniformVariableUpdatingFct <T>
     >;
 
 Rendering(
@@ -33,6 +39,11 @@ Rendering& operator= (const Rendering& rendering) = delete;
 
 void update();
 void render() const;
+
+protected:
+CstState_sptr getExternalState(size_t number) const;
+const glm::mat4& getUniformMatrix(size_t number) const;
+const RenderPass_sptr& getRenderPass(size_t number) const;
 
 private:
 const vecState_sptr _externalStates;

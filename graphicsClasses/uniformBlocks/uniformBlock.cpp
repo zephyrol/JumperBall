@@ -8,51 +8,59 @@
 #include "uniformBlock.h"
 #include <cstring>
 
-UniformBlock::UniformBlock(const std::string& blockName,
-                           const std::vector <std::string>& variablesNames):
+UniformBlock::UniformBlock(Mesh::UniformVariables <glm::vec3>&& variablesVecThree):
     _uboHandle(createUboHandle()),
-    _blockName(blockName),
-    _variablesNames(getStringsStoredLinearly(variablesNames)),
-    _blockSizes{},
-    _variablesOffsets{},
-    _bufferData{} {
-
+    _variablesVecThree(std::move(variablesVecThree)),
+    _linearVariablesNames(getStringsStoredLinearly()),
+    _shaderBlocks{} {
 }
 
-std::vector <const char*> UniformBlock::getStringsStoredLinearly (const std::vector <std::string>& strNames) {
+void UniformBlock::update (const std::string& varName, const glm::vec3& value) {
+    _variablesVecThree.at(varName) = value;
 
-    std::vector <const char*> names(strNames.size());
+    const auto& _variablesVecThreeValues = Mesh::extractUniformVariablesValues(_variablesVecThree);
+    for (auto& shaderNameAndBlock : _shaderBlocks) {
+        ShaderBlock& shaderBlock = shaderNameAndBlock.second;
+        fillBlockBuffer(shaderBlock.variablesOffsets, _variablesVecThreeValues, shaderBlock.buffer);
+    }
+}
 
-    for (size_t i = 0; i < strNames.size(); ++i) {
+std::vector <const char*> UniformBlock::getStringsStoredLinearly() const {
+    std::vector <const char*> linearVariablesNames;
+    for (const auto& variableVecThree : _variablesVecThree) {
+        const std::string& variableName = variableVecThree.first;
+        linearVariablesNames.push_back(variableName.c_str());
+
+    }
+    return linearVariablesNames;
+
+    /*std::vector <const char*> names(strNames.size());
+
+       for (size_t i = 0; i < strNames.size(); ++i) {
 
         const std::string& strName = strNames.at(i);
         const char*cName = strName.c_str();
         char*cNameAllocated = new char[strName.length() + 1];
 
 
-#if defined(__STDC_LIB_EXT1__) || defined(_MSC_VER)
+     #if defined(__STDC_LIB_EXT1__) || defined(_MSC_VER)
         strncpy_s(cNameAllocated, strName.length() + 1, cName, strName.length() + 1);
-#else
+     #else
         strncpy(cNameAllocated, cName, strName.length() + 1);
-#endif
+     #endif
         names[i] = cNameAllocated;
-    }
+       }
 
-    return names;
+       return names;*/
 }
 
-
-GLuint UniformBlock::createBlockIndex (const CstShaderProgram_uptr& sp) const {
-    return glGetUniformBlockIndex(sp->getHandle(), _blockName.c_str());
-}
-
-void UniformBlock::createBlockSize (const CstShaderProgram_uptr& sp) {
-    const GLuint blockIndex = createBlockIndex(sp);
+GLint UniformBlock::getBlockSize (const CstShaderProgram_uptr& sp, const std::string& blockName) const {
+    const GLuint blockIndex = glGetUniformBlockIndex(sp->getHandle(), blockName.c_str());
     // Getting the size of the uniform block for the shader program
     GLint blockSize;
     glGetActiveUniformBlockiv(sp->getHandle(), blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
 
-    _blockSizes[sp->getHandle()] = blockSize;
+    return blockSize;
 }
 
 
@@ -63,58 +71,73 @@ GLuint UniformBlock::createUboHandle() const {
 }
 
 std::vector <GLuint> UniformBlock::createVariablesIndices (const CstShaderProgram_uptr& sp) const {
-    std::vector <GLuint> variablesIndices(_variablesNames.size());
+    const size_t numberOfVariables = _linearVariablesNames.size();
+    std::vector <GLuint> variablesIndices(numberOfVariables);
 
     // Getting the indices for each variable
     glGetUniformIndices(sp->getHandle(),
-                        static_cast <GLsizei>(_variablesNames.size()),
-                        _variablesNames.data(),
+                        static_cast <GLsizei>(numberOfVariables),
+                        _linearVariablesNames.data(),
                         variablesIndices.data());
     return variablesIndices;
 }
 
-void UniformBlock::createVariablesOffsets (const CstShaderProgram_uptr& sp) {
+std::vector <GLint> UniformBlock::createVariablesOffsets (const CstShaderProgram_uptr& sp) const {
     const std::vector <GLuint> variablesIndices = createVariablesIndices(sp);
-    std::vector <GLint> variablesOffsets(_variablesNames.size());
+    std::vector <GLint> variablesOffsets(variablesIndices.size());
 
     // Getting the offset in the buffer for each variable
     glGetActiveUniformsiv(sp->getHandle(),
                           static_cast <GLsizei>(variablesIndices.size()),
-                          variablesIndices.data(), GL_UNIFORM_OFFSET,
+                          variablesIndices.data(),
+                          GL_UNIFORM_OFFSET,
                           variablesOffsets.data());
 
-    _variablesOffsets[sp->getHandle()] = variablesOffsets;
+    return variablesOffsets;
 }
 
-const std::vector <const char*>& UniformBlock::variablesNames() const {
-    return _variablesNames;
+UniformBlock::ShaderBlock UniformBlock::createShaderBlock (
+    const CstShaderProgram_uptr& sp,
+    const std::string& blockName
+    ) const {
+    const std::vector <GLint> variablesOffsets = createVariablesOffsets(sp);
+    std::vector <GLbyte> blockBuffer(getBlockSize(sp, blockName));
+    fillBlockBuffer(variablesOffsets, Mesh::extractUniformVariablesValues(_variablesVecThree), blockBuffer);
+
+    return { variablesOffsets, blockBuffer };
 }
 
-void UniformBlock::deleteVariablesNamesInfo() {
-    for (size_t i = 0; i < _variablesNames.size(); ++i) {
-        delete[]_variablesNames[i];
+template<typename T> void UniformBlock::fillBlockBuffer (
+    const std::vector <GLint>& variableOffsets,
+    const std::vector <T>& values,
+    std::vector <GLbyte>& blockBuffer
+    ) const {
+    for (size_t i = 0; i < variableOffsets.size(); ++i) {
+        memcpy(blockBuffer.data() + variableOffsets.at(i), &values.at(i), sizeof(T));
     }
 }
 
-UniformBlock::~UniformBlock() {
-    deleteVariablesNamesInfo();
-}
+/*void UniformBlock::deleteVariablesNamesInfo() {
+    for (size_t i = 0; i < _variablesNames.size(); ++i) {
+        delete[]_variablesNames[i];
+    }
+   }
 
-const std::string& UniformBlock::name() const {
-    return _blockName;
-}
+   UniformBlock::~UniformBlock() {
+    deleteVariablesNamesInfo();
+   }*/
 
 void UniformBlock::bind (const CstShaderProgram_uptr& sp) const {
     glBindBuffer(GL_UNIFORM_BUFFER, _uboHandle);
-    const GLuint handle = sp->getHandle();
-    glBufferData(GL_UNIFORM_BUFFER, _blockSizes.at(handle), _bufferData.at(handle).data(), GL_DYNAMIC_DRAW);
+    // const GLuint handle = sp->getHandle();
+    const UniformBlock::ShaderBlock& shaderBlock = _shaderBlocks.at(sp);
+    const std::vector <GLbyte>& shaderBlockBuffer = shaderBlock.buffer;
+    glBufferData(GL_UNIFORM_BUFFER, shaderBlockBuffer.size(), shaderBlockBuffer.data(), GL_DYNAMIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, _uboHandle);
 }
 
-void UniformBlock::registerShader (const CstShaderProgram_uptr& sp) {
-    const GLuint spHandle = sp->getHandle();
-    createBlockSize(sp);
-    createVariablesOffsets(sp);
-    _bufferData[spHandle] = std::vector <GLbyte>(_blockSizes.at(spHandle));
-    update();
+
+void UniformBlock::registerShader (const CstShaderProgram_uptr& sp, const std::string& blockName) {
+    const UniformBlock::ShaderBlock shaderBlock = createShaderBlock(sp, blockName);
+    _shaderBlocks[sp] = shaderBlock;
 }

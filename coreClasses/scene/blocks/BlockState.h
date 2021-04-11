@@ -14,8 +14,8 @@ public:
 BlockState(const Block& block);
 virtual State::GlobalState update() override;
 
-std::map <std::string, float> getDynamicFloats() const override;
-std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const override;
+State::DynamicValues <float> getDynamicFloats() const override;
+State::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 
 const bool& isFixed() const;
 

@@ -5,21 +5,20 @@
  * Created on 6 novembre 2019, 20:38
  */
 
-#ifndef RENDERING_H
-#define RENDERING_H
+#ifndef SCENE_RENDERING_H
+#define SCENE_RENDERING_H
 #include <iostream>
 #include <map>
 #include <vector>
 #include "Camera.h"
 #include "uniformBlocks/uniformLight.h"
 #include "componentsGeneration/MeshGenerator.h"
-#include "RenderProcess.h"
+#include "../Rendering.h"
 
 
-class SceneRendering {
+class SceneRendering:public Rendering {
 
 public:
-
 SceneRendering(const Map& map, const Ball& ball, const Star& star, const Camera& camera);
 
 void update();
@@ -31,22 +30,21 @@ template<typename T> using uniformVariable = std::map <std::string, T>;
 static constexpr size_t heightBloomTexture = 192;
 static constexpr size_t sizeDepthTexture = 1024;
 
-const Quad _quadScreen;
 const Camera& _camera;
 
-const std::shared_ptr <UniformLight> _light;
+// const std::shared_ptr <UniformLight> _light;
 
-StarState _starState;
-glm::mat4 _VPStar;
+CstState_sptr _starState;
+// glm::mat4 _VPStar;
 
-const vecRenderPass_sptr _renderPasses;
-const RenderProcess_sptr _depthStarProcess;
+// const vecRenderPass_sptr _renderPasses;
+// const RenderProcess_sptr _depthStarProcess;
 const RenderProcess_sptr _sceneRenderingProcess;
 const RenderProcess_sptr _brightPassFilterProcess;
 const RenderProcess_sptr _horizontalBlurProcess;
 const RenderProcess_sptr _verticalBlurProcess;
 const RenderProcess_sptr _bloomProcess;
-const vecRenderProcess_sptr _sceneRenderingPipeline;
+// const vecRenderProcess_sptr _sceneRenderingPipeline;
 
 const RenderPass_sptr& getScreenRenderPass() const;
 std::vector <RenderPass_sptr> vecScreenRenderPass() const;
@@ -54,38 +52,38 @@ vecRenderPass_sptr getLevelRenderPasses() const;
 const RenderPass_sptr& getStarRenderPass() const;
 vecRenderPass_sptr getSceneRenderPasses() const;
 
-RenderProcess::PassShaderMap createDepthStarShaders() const;
+
+RenderProcess_sptr createDepthStarProcess() const;
+RenderProcess_sptr createSceneRenderingProcess() const;
+
+RenderProcess::PassUniformUpdateMap createScreenSpaceUniformsUpdating(
+    const std::map <std::string, RenderProcess_sptr>& textureNameRenderProcess
+    ) const;
+RenderProcess_sptr createBrightPassProcess() const;
+RenderProcess_sptr createHorizontalBlurProcess() const;
+RenderProcess_sptr createVerticalBlurProcess() const;
+RenderProcess_sptr createBloomProcess() const;
+
+// RenderProcess::PassShaderMap createDepthStarShaders() const;
 RenderProcess::PassShaderMap createSceneRenderingShaders() const;
 
-RenderProcess::PassShaderMap createScreenShaders(const std::string& vs, const std::string& fs) const;
-RenderProcess::PassShaderMap createBrightPassShaders() const;
-RenderProcess::PassShaderMap createHorizontalBlurShaders() const;
-RenderProcess::PassShaderMap createVerticalBlurShaders() const;
-RenderProcess::PassShaderMap createBloomShaders() const;
+RenderProcess::PassShaderMap createScreenShaders(const std::string& fs) const;
+RenderProcess::PassUniformUpdateMap createSceneRenderingUniformsUpdating() const;
 
-RenderProcess::PassUniformUpdateMap createDepthStarUniforms() const;
-RenderProcess::PassUniformUpdateMap createSceneRenderingUniforms() const;
+RenderProcess::PassUniformUpdateMap createBrightPassUniformsUpdating() const;
+RenderProcess::PassUniformUpdateMap createHorizontalBlurUniformsUpdating() const;
+RenderProcess::PassUniformUpdateMap createVerticalBlurUniformsUpdating() const;
+RenderProcess::PassUniformUpdateMap createBloomUniformsUpdating() const;
 
-RenderProcess::PassUniformUpdateMap createScreenUniforms(
-    const std::function <void(const RenderPass_sptr&, GLuint)>& uniformsUpdatingFunction
-    ) const;
-RenderProcess::PassUniformUpdateMap createBrightPassUniforms() const;
-RenderProcess::PassUniformUpdateMap createHorizontalBlurUniforms() const;
-RenderProcess::PassUniformUpdateMap createVerticalBlurUniforms() const;
-RenderProcess::PassUniformUpdateMap createBloomUniforms() const;
+Rendering::ExternalUniformBlockVariables createExternalUniformBlockVariables() const;
+Rendering::ExternalUniformVariables <glm::mat4> createExternalUniformMatFourVariables() const;
 
-void updateDepthUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
 void updateCameraUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
 void updateCameraUniformsStar(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
-void updateBrightPassFilterUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
-void updateHorizontalBlurUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
-void updateVerticalBlurUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
-void updateBloomUniforms(const RenderPass_sptr& renderPass, GLuint shaderProgramID) const;
 
-float getLargestSize() const;
 glm::mat4 genVPStar() const;
 
-FrameBuffer_uptr createBloomEffectFrameBuffer(const FrameBuffer::TextureCaterory& category) const;
+FrameBuffer_uptr createScreenSpaceEffectFrameBuffer(const FrameBuffer::TextureCaterory& category) const;
 CstShaderProgram_uptr createBloomEffectShader(const std::string& vs, const std::string& fs) const;
 
 static const std::string blocksVs;

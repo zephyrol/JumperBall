@@ -28,11 +28,11 @@ State::GlobalState ObjectState::update() {
     return State::GlobalState::United;
 }
 
-std::vector <float> ObjectState::getStaticFloatValues() const {
+State::StaticValues <float> ObjectState::getStaticFloatValues() const {
     return { static_cast <float>(_object.direction()) };
 }
 
-std::vector <JBTypes::vec3f> ObjectState::getStaticVec3fValues() const {
+State::StaticValues <JBTypes::vec3f> ObjectState::getStaticVec3fValues() const {
     constexpr float offset = 0.5;
     const auto uintPosition = _object.position();
     const JBTypes::vec3f position = {
@@ -43,7 +43,7 @@ std::vector <JBTypes::vec3f> ObjectState::getStaticVec3fValues() const {
     return { position };
 }
 
-std::map <std::string, float> ObjectState::getDynamicFloats() const {
+State::DynamicValues <float> ObjectState::getDynamicFloats() const {
     return {
         { "creationTime", _timeSinceCreation },
         { "obtainingTime", _timeSinceObtaining }

@@ -29,9 +29,9 @@ const JBTypes::Color& teleportationColor() const;
 const JBTypes::vec3f& nextLook() const;
 
 
-std::map <std::string, float> getDynamicFloats() const override;
-std::map <std::string, JBTypes::vec3f> getDynamicVec3fs() const override;
-std::map <std::string, JBTypes::Quaternion> getDynamicQuaternions() const override;
+State::DynamicValues <float> getDynamicFloats() const override;
+State::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+State::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
 
 private:
 const Ball& _ball;

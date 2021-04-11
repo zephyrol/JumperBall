@@ -7,35 +7,27 @@
 #include "StarState.h"
 
 StarState::StarState(const Star& star):
+    State(
+{
+    { envSizeName, star.envSize() }
+},
+{
+    { lightDirectionName, star.lightDirection() },
+    { positionName, star.position() },
+    { rotationCenterName, star.rotationCenter() },
+}),
     _star(star),
-    _lightDirection(star.lightDirection()),
-    _position(star.position()) {
+    _rotation(star.getRotation()) {
 }
 
 State::GlobalState StarState::update() {
     _rotation = _star.getRotation();
-    _lightDirection = _star.lightDirection();
-    _position = _star.position();
+    setExposableVec3f(lightDirectionName, _star.lightDirection());
+    setExposableVec3f(positionName, _star.position());
     return State::GlobalState::United;
 }
 
-const JBTypes::vec3f& StarState::lightDirection() const {
-    return _lightDirection;
-}
-
-const JBTypes::vec3f& StarState::position() const {
-    return _position;
-}
-
-const JBTypes::vec3f& StarState::rotationCenter() const {
-    return _star.rotationCenter();
-}
-
-float StarState::envSize() const {
-    return _star.envSize();
-}
-
-std::map <std::string, float> StarState::getDynamicFloats() const {
+StarState::DynamicValues <float> StarState::getDynamicFloats() const {
     return {
         { "starDistance", _star.distance() },
         { "radius", _star.radius() },
@@ -44,15 +36,20 @@ std::map <std::string, float> StarState::getDynamicFloats() const {
     };
 }
 
-std::map <std::string, JBTypes::vec3f> StarState::getDynamicVec3fs() const {
+StarState::DynamicValues <JBTypes::vec3f> StarState::getDynamicVec3fs() const {
     return {
         { "initialDirection", _star.initialDirection() },
         { "rotationCenter", _star.rotationCenter() }
     };
 }
 
-std::map <std::string, JBTypes::Quaternion> StarState::getDynamicQuaternions() const {
+StarState::DynamicValues <JBTypes::Quaternion> StarState::getDynamicQuaternions() const {
     return {
         { "rotationQuaternion", _rotation }
     };
 }
+
+const std::string StarState::lightDirectionName = "lightDirection";
+const std::string StarState::positionName = "position";
+const std::string StarState::rotationCenterName = "rotationCenter";
+const std::string StarState::envSizeName = "envSize";

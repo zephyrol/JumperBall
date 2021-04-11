@@ -90,6 +90,7 @@ void displayInstallError();
 
 std::string colorToString(const JBTypes::Color color);
 
+template<typename K, typename V> std::map <K, V> createMap(std::vector <K> keys, std::vector <V> values);
 }
 
 #endif /* TYPES_H */
