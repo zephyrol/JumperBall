@@ -6,11 +6,8 @@
  */
 #include "State.h"
 
-State::State(ExposableValues <float>&& exposableFloats, ExposableValues <JBTypes::vec3f>&& exposableVec3fs):
-    _exposableFloats(std::move(exposableFloats)),
-    _exposableVec3fs(std::move(exposableVec3fs)) {
+State::State() {
 }
-
 
 std::vector <float> State::getStaticFloatValues() const {
     return {};
@@ -38,20 +35,4 @@ std::map <std::string, JBTypes::vec3f> State::getDynamicVec3fs() const {
 
 std::map <std::string, JBTypes::Quaternion> State::getDynamicQuaternions() const {
     return {};
-}
-
-float State::getExposableFloat (const std::string& name) const {
-    return _exposableFloats.at(name);
-}
-
-const JBTypes::vec3f& State::getExposableVec3f (const std::string& name) const {
-    return _exposableVec3fs.at(name);
-}
-
-void State::setExposableFloat (const std::string& name, float floatValue) {
-    _exposableFloats.at(name) = floatValue;
-}
-
-void State::setExposableVec3f (const std::string& name, const JBTypes::vec3f& vector3f) {
-    _exposableVec3fs.at(name) = vector3f;
 }

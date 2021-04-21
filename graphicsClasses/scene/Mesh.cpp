@@ -12,18 +12,6 @@ Mesh::Mesh(State_uptr&& state, vecCstGeometricShape_sptr&& shapes):
     _numberOfVertices(computeNumberOfVertices()) {
 }
 
-template<typename T> std::vector <T> Mesh::extractUniformVariablesValues (
-    const UniformVariables <T>& uniformVariables
-    ) {
-    std::vector <T> uniformVariablesValues;
-    for (const auto& uniformVariable : uniformVariables) {
-        const T& uniformVariableValue = uniformVariable.second;
-        uniformVariablesValues.push_back(uniformVariableValue);
-    }
-
-    return uniformVariablesValues;
-}
-
 State::GlobalState Mesh::update() {
     return _state->update();
 }
@@ -40,7 +28,7 @@ template<typename T> void Mesh::duplicateStateVertexAttribute (std::vector <std:
 }
 
 template<typename RawType, typename OpenGLType> void Mesh::convertAttributesToOpenGLFormat (
-    State::StaticValues <RawType>& rawValues,
+    const State::StaticValues <RawType>& rawValues,
     std::vector <OpenGLType>& openGLValues) {
     for (const RawType& rawValue : rawValues) {
         const OpenGLType openGLValue = Utility::convertToOpenGLFormat(rawValue);
@@ -49,7 +37,7 @@ template<typename RawType, typename OpenGLType> void Mesh::convertAttributesToOp
 }
 
 template<typename RawType, typename OpenGLType> void Mesh::convertUniformsToOpenGLFormat (
-    State::DynamicValues <RawType>& rawValues,
+    const State::DynamicValues <RawType>& rawValues,
     Mesh::UniformVariables <OpenGLType>& openGLValues) {
     for (const auto& rawValue : rawValues) {
         const OpenGLType openGLValue = Utility::convertToOpenGLFormat(rawValue.second);

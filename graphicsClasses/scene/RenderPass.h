@@ -31,7 +31,7 @@ RenderPass(RenderPass&& renderPass) = default;
 RenderPass& operator= (RenderPass&& renderPass) = default;
 
 
-void render(const CstShaderProgram_uptr& shaderProgram) const;
+void render(const CstShaderProgram_sptr& shaderProgram) const;
 void update();
 void cleanUniforms();
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::mat4& value);
@@ -56,11 +56,11 @@ using UniformBlockVariables_uptr = std::unique_ptr <UniformBlockVariables>;
 
 private:
 
-void bindUniforms(const Mesh::Uniforms& uniforms, const CstShaderProgram_uptr& shaderProgram) const;
+void bindUniforms(const Mesh::Uniforms& uniforms, const CstShaderProgram_sptr& shaderProgram) const;
 
 template<typename T> void bindUniformVariables(
     Mesh::UniformVariables <T> uniforms,
-    const CstShaderProgram_uptr& shaderProgram
+    const CstShaderProgram_sptr& shaderProgram
     ) const;
 template<typename T> void upsertUniforms(const std::map <std::string, T>& uniformsData);
 

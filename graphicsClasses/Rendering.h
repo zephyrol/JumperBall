@@ -13,44 +13,25 @@ class Rendering {
 
 public:
 
-using UniformBlockUpdatingFct = std::function <void (const RenderPass::UniformBlockVariables_uptr&)>;
-using ExternalUniformBlockVariables = std::map <
-    RenderPass::UniformBlockVariables_uptr,
-    UniformBlockUpdatingFct
-    >;
+virtual void update() = 0;
+virtual void render() const = 0;
+
+protected:
 
 template<typename T> using UniformVariableUpdatingFct = std::function <
     void (const Mesh::UniformVariables_uptr <T>&)
     >;
-template<typename T> using ExternalUniformVariables = std::map <
-    Mesh::UniformVariables_uptr <T>,
-    UniformVariableUpdatingFct <T>
-    >;
 
-Rendering(
-    const vecState_sptr& externalStates,
-    ExternalUniformBlockVariables&& _externalUniformBlocks,
-    ExternalUniformVariables <glm::mat4>&& externalUniformMatrices,
-    const vecRenderPass_sptr& renderPasses,
-    const vecRenderProcess_sptr& renderingPipeline
-    );
-Rendering(const Rendering& rendering) = delete;
-Rendering& operator= (const Rendering& rendering) = delete;
+template<typename T> struct ExternalUniformVariables {
+    Mesh::UniformVariables_uptr <T> uniformVariables;
+    UniformVariableUpdatingFct <T> uniformVariablesUpdatingFct;
+};
 
-void update();
-void render() const;
-
-protected:
-CstState_sptr getExternalState(size_t number) const;
-const glm::mat4& getUniformMatrix(size_t number) const;
-const RenderPass_sptr& getRenderPass(size_t number) const;
-
-private:
-const vecState_sptr _externalStates;
-ExternalUniformBlockVariables _externalUniformBlocks;
-ExternalUniformVariables <glm::mat4> _externalUniformMatrices;
-const vecRenderPass_sptr _renderPasses;
-const vecRenderProcess_sptr _renderingPipeline;
+using UniformBlockUpdatingFct = std::function <void (const RenderPass::UniformBlockVariables_uptr&)>;
+struct ExternalUniformBlockVariables {
+    RenderPass::UniformBlockVariables_uptr uniformBlockVariables;
+    UniformBlockUpdatingFct uniformBlockVariablesUpdatingFct;
+};
 
 };
 

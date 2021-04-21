@@ -7,23 +7,16 @@
 #include "StarState.h"
 
 StarState::StarState(const Star& star):
-    State(
-{
-    { envSizeName, star.envSize() }
-},
-{
-    { lightDirectionName, star.lightDirection() },
-    { positionName, star.position() },
-    { rotationCenterName, star.rotationCenter() },
-}),
     _star(star),
-    _rotation(star.getRotation()) {
+    _rotation(star.getRotation()),
+    _position(star.position()),
+    _lightDirection(star.lightDirection()) {
 }
 
 State::GlobalState StarState::update() {
     _rotation = _star.getRotation();
-    setExposableVec3f(lightDirectionName, _star.lightDirection());
-    setExposableVec3f(positionName, _star.position());
+    _position = _star.position();
+    _lightDirection = _star.lightDirection();
     return State::GlobalState::United;
 }
 
@@ -49,7 +42,20 @@ StarState::DynamicValues <JBTypes::Quaternion> StarState::getDynamicQuaternions(
     };
 }
 
+float StarState::getEnvSize() const {
+    return _star.envSize();
+}
+
+const JBTypes::vec3f& StarState::getRotationCenter() const {
+    return _star.rotationCenter();
+}
+
+const JBTypes::vec3f& StarState::getPosition() const {
+    return _position;
+}
+
+const JBTypes::vec3f& StarState::getLightDirection() const {
+    return _lightDirection;
+}
+
 const std::string StarState::lightDirectionName = "lightDirection";
-const std::string StarState::positionName = "position";
-const std::string StarState::rotationCenterName = "rotationCenter";
-const std::string StarState::envSizeName = "envSize";

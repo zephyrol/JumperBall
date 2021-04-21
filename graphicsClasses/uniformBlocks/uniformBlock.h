@@ -11,6 +11,7 @@
 #include <map>
 #include <vector>
 #include "scene/Mesh.h"
+#include <cstring>
 
 class UniformBlock;
 using UniformBlock_sptr = std::shared_ptr <UniformBlock>;
@@ -27,8 +28,8 @@ UniformBlock& operator= (const UniformBlock& uniformBlock) = delete;
 
 // virtual void update() = 0;
 void update(const std::string& varName, const glm::vec3& value);
-void bind(const CstShaderProgram_uptr& sp) const;
-void registerShader(const CstShaderProgram_uptr& sp, const std::string& blockName);
+void bind(const CstShaderProgram_sptr& sp) const;
+void registerShader(const CstShaderProgram_sptr& sp, const std::string& blockName);
 
 struct ShaderBlock {
     std::vector <GLint> variablesOffsets;
@@ -46,15 +47,15 @@ const std::vector <const char*> _linearVariablesNames;
 // std::map <GLuint, std::vector <GLbyte> > _bufferData;
 
 
-std::map <CstShaderProgram_uptr, ShaderBlock> _shaderBlocks;
+std::map <CstShaderProgram_sptr, ShaderBlock> _shaderBlocks;
 
 
 GLuint createUboHandle() const;
 
-GLint getBlockSize(const CstShaderProgram_uptr& sp, const std::string& blockName) const;
-std::vector <GLuint> createVariablesIndices(const CstShaderProgram_uptr& sp) const;
-std::vector <GLint> createVariablesOffsets(const CstShaderProgram_uptr& sp) const;
-ShaderBlock createShaderBlock(const CstShaderProgram_uptr& sp, const std::string& blockName) const;
+GLint getBlockSize(const CstShaderProgram_sptr& sp, const std::string& blockName) const;
+std::vector <GLuint> createVariablesIndices(const CstShaderProgram_sptr& sp) const;
+std::vector <GLint> createVariablesOffsets(const CstShaderProgram_sptr& sp) const;
+ShaderBlock createShaderBlock(const CstShaderProgram_sptr& sp, const std::string& blockName) const;
 
 void deleteVariablesNamesInfo();
 std::vector <const char*> getStringsStoredLinearly() const;
@@ -66,6 +67,16 @@ template<typename T> void fillBlockBuffer(
     ) const;
 
 };
+
+template<typename T> void UniformBlock::fillBlockBuffer (
+    const std::vector <GLint>& variableOffsets,
+    const std::vector <T>& values,
+    std::vector <GLbyte>& blockBuffer
+    ) const {
+    for (size_t i = 0; i < variableOffsets.size(); ++i) {
+        memcpy(blockBuffer.data() + variableOffsets.at(i), &values.at(i), sizeof(T));
+    }
+}
 
 
 #endif /* UNIFORMBLOCK_H */

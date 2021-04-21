@@ -32,7 +32,7 @@ void RenderProcess::render() const {
         FrameBuffer::bindDefaultFrameBuffer();
     }
     for (const auto& renderPass : _renderPasses) {
-        const CstShaderProgram_uptr& shaderProgram = _shaderPrograms.at(renderPass);
+        const CstShaderProgram_sptr& shaderProgram = _shaderPrograms.at(renderPass);
         shaderProgram->use();
         renderPass->render(shaderProgram);
     }

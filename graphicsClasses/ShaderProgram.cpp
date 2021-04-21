@@ -38,11 +38,11 @@ GLuint ShaderProgram::getHandle() const {
     return _shaderProgramHandle;
 }
 
-CstShaderProgram_uptr ShaderProgram::createShaderProgram (const std::string& vs, const std::string& fs) {
-    return CstShaderProgram_uptr(new ShaderProgram(
-                                     Shader::createVertexShader(vs),
-                                     Shader::createFragmentShader(fs)
-                                     ));
+CstShaderProgram_sptr ShaderProgram::createShaderProgram (const std::string& vs, const std::string& fs) {
+    return std::make_shared <const ShaderProgram>(
+        Shader::createVertexShader(vs),
+        Shader::createFragmentShader(fs)
+        );
 }
 
 void ShaderProgram::use() const {

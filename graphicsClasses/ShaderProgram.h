@@ -10,8 +10,11 @@
 #include "Shader.h"
 
 class ShaderProgram;
-using ShaderProgram_uptr = std::unique_ptr <ShaderProgram>;
-using CstShaderProgram_uptr = std::unique_ptr <const ShaderProgram>;
+// using ShaderProgram_uptr = std::unique_ptr <ShaderProgram>;
+// using CstShaderProgram_uptr = std::unique_ptr <const ShaderProgram>;
+using ShaderProgram_sptr = std::shared_ptr <ShaderProgram>;
+using CstShaderProgram_sptr = std::shared_ptr <const ShaderProgram>;
+using vecCstShaderProgram_sptr = std::vector <CstShaderProgram_sptr>;
 
 class ShaderProgram {
 
@@ -24,7 +27,7 @@ ShaderProgram& operator= (const ShaderProgram& shaderProgram) = delete;
 
 GLuint getHandle() const;
 
-static CstShaderProgram_uptr createShaderProgram(const std::string& vs, const std::string& fs);
+static CstShaderProgram_sptr createShaderProgram(const std::string& vs, const std::string& fs);
 void use() const;
 
 void bindUniform(const std::string& name, const glm::mat4& value) const;

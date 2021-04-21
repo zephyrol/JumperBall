@@ -19,15 +19,20 @@ StarState::DynamicValues <float> getDynamicFloats() const override;
 StarState::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 StarState::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
 
+float getEnvSize() const;
+const JBTypes::vec3f& getRotationCenter() const;
+const JBTypes::vec3f& getPosition() const;
+const JBTypes::vec3f& getLightDirection() const;
+
 static const std::string lightDirectionName;
-static const std::string positionName;
-static const std::string rotationCenterName;
-static const std::string envSizeName;
 
 private:
 const Star& _star;
 
 JBTypes::Quaternion _rotation;
+JBTypes::vec3f _position;
+JBTypes::vec3f _lightDirection;
+
 };
 
 

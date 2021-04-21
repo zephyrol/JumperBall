@@ -21,10 +21,8 @@ public:
 
 template<typename T> using StaticValues = std::vector <T>;
 template<typename T> using DynamicValues = std::map <std::string, T>;
-template<typename T> using ExposableValues = std::map <std::string, T>;
 
-State(ExposableValues <float>&& exposableFloats = {},
-      ExposableValues <JBTypes::vec3f>&& exposableVec3fs = {});
+State();
 
 enum class GlobalState { United, Separate, Dead };
 virtual GlobalState update() = 0;
@@ -38,20 +36,6 @@ virtual DynamicValues <float> getDynamicFloats() const;
 virtual DynamicValues <JBTypes::vec2f> getDynamicVec2fs() const;
 virtual DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const;
 virtual DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const;
-
-float getExposableFloat(const std::string& name) const;
-const JBTypes::vec3f& getExposableVec3f(const std::string& name) const;
-
-protected:
-
-void setExposableFloat(const std::string& name, float floatValue);
-void setExposableVec3f(const std::string& name, const JBTypes::vec3f& vector3f);
-
-private:
-ExposableValues <float> _exposableFloats;
-ExposableValues <JBTypes::vec3f> _exposableVec3fs;
-
-
 };
 
 #endif // STATE_H

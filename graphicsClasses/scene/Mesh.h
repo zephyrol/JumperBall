@@ -82,4 +82,17 @@ const vecCstGeometricShape_sptr _shapes;
 const size_t _numberOfVertices;
 };
 
+template<typename T> std::vector <T> Mesh::extractUniformVariablesValues (
+    const UniformVariables <T>& uniformVariables
+    ) {
+    std::vector <T> uniformVariablesValues;
+    for (const auto& uniformVariable : uniformVariables) {
+        const T& uniformVariableValue = uniformVariable.second;
+        uniformVariablesValues.push_back(uniformVariableValue);
+    }
+
+    return uniformVariablesValues;
+}
+
+
 #endif // MESH_H

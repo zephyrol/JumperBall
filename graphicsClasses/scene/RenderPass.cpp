@@ -106,7 +106,7 @@ void RenderPass::upsertUniform (
 
 void RenderPass::bindUniforms (
     const Mesh::Uniforms& uniforms,
-    const CstShaderProgram_uptr& shaderProgram
+    const CstShaderProgram_sptr& shaderProgram
     ) const {
 
     bindUniformVariables(uniforms.uniformFloats, shaderProgram);
@@ -124,14 +124,14 @@ void RenderPass::bindUniforms (
 
 template<typename T> void RenderPass::bindUniformVariables (
     Mesh::UniformVariables <T> uniforms,
-    const CstShaderProgram_uptr& shaderProgram
+    const CstShaderProgram_sptr& shaderProgram
     ) const {
     for (const auto& uniform : uniforms) {
         shaderProgram->bindUniform(uniform.first, uniform.second);
     }
 }
 
-void RenderPass::render (const CstShaderProgram_uptr& shaderProgram) const {
+void RenderPass::render (const CstShaderProgram_sptr& shaderProgram) const {
     const GLuint shaderProgramID = shaderProgram->getHandle();
     if (_renderPassUniformBlocks.find(shaderProgramID) != _renderPassUniformBlocks.end()) {
         for (const auto& uniformBlock : _renderPassUniformBlocks.at(shaderProgramID)) {
