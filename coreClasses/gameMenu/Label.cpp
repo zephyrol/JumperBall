@@ -41,7 +41,7 @@ const vecCstLabel_sptr& Label::children() const {
     return _children;
 }
 
-JBTypes::vec2f Label::position() const {
+const JBTypes::vec2f& Label::position() const {
     return _position;
 }
 

@@ -1,0 +1,173 @@
+/*
+ * File: FontTexturesGenerator.cpp
+ * Author: Morgenthaler S
+ *
+ * Created on 22 avril 2021, 10:00
+ */
+
+#include "FontTexturesGenerator.h"
+
+FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont() {
+
+    FontTexturesGenerator::FTContent ftContent;
+
+    if (FT_Init_FreeType(&ftContent.ftLib)) {
+        std::cerr << "Error: Impossible to init FreeType Lib..." << std::endl;
+        return ftContent;
+    }
+
+    const std::vector <std::string> fileNames {
+        "fonts/Cousine-Regular.ttf",
+        "bin/fonts/Cousine-Regular.ttf"
+    };
+
+    bool foundFile = false;
+    for (size_t i = 0; i < fileNames.size() && !foundFile; ++i) {
+        if (FT_New_Face(ftContent.ftLib, fileNames.at(i).c_str(), 0, &ftContent.fontFace) == 0) {
+            foundFile = true;
+        }
+    }
+    if (!foundFile) {
+        std::cerr << "Error: Impossible to load the font" << "Cousine-Regular.ttf ... " << std::endl;
+        JBTypesMethods::displayInstallError();
+        FT_Done_FreeType(ftContent.ftLib);
+    }
+    return ftContent;
+}
+
+void FontTexturesGenerator::clearFreeTypeRessources (FontTexturesGenerator::FTContent& ftContent) {
+    FT_Done_Face(ftContent.fontFace);
+    FT_Done_FreeType(ftContent.ftLib);
+}
+
+FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharacter (
+    unsigned char character,
+    float height,
+    const FontTexturesGenerator::FTContent& ftContent) {
+
+    FontTexturesGenerator::GraphicCharacter graphicCharacter;
+
+    const auto setPixelSizes =
+        [&ftContent] (FT_UInt heightPixels)->void {
+            constexpr FT_UInt scalarQuality = 2;
+            FT_Set_Pixel_Sizes(ftContent.fontFace, 0, scalarQuality * heightPixels);
+        };
+    const auto loadCharacter =
+        [&ftContent] (unsigned char character)->void {
+            if (const auto callback = FT_Load_Char(ftContent.fontFace, character, FT_LOAD_RENDER)) {
+                std::cerr << "Error " << callback << ": Impossible to load glyph " << character << std::endl;
+            }
+        };
+    const auto getMinHeight =
+        [&loadCharacter] (const std::string& message,
+                          const FT_Face& fontFace)->FT_Pos {
+            if (message.size() > 0) {
+                loadCharacter(message.at(0));
+            } else {
+                return 0;
+            }
+            FT_Pos minHeight = fontFace->glyph->metrics.height;
+            for (const char character : message) {
+                loadCharacter(character);
+                const FT_Pos characterHeight = fontFace->glyph->metrics.height;
+                if (minHeight > characterHeight && characterHeight > 0) {
+                    minHeight = characterHeight;
+                }
+            }
+            return minHeight;
+        };
+
+    const auto& glyph = ftContent.fontFace->glyph;
+    const auto& metrics = glyph->metrics;
+    const auto& bitmap = glyph->bitmap;
+
+    const FT_UInt heightPixels = static_cast <FT_UInt> (Utility::windowResolutionY * height);
+
+    setPixelSizes(heightPixels);
+    const FT_Pos minHeight = getMinHeight({static_cast<char>(character)} /*label.message()*/, ftContent.fontFace);
+
+    // Transform
+    loadCharacter(character);
+    const float metricsWidth = static_cast <float>(metrics.width);
+    const float bearingX = static_cast <float>(metrics.horiBearingX);
+    const float scaleX = 1.f / (1.f + (bearingX / metricsWidth));
+
+    const float metricsHeight = static_cast <float>(metrics.height);
+    const float bearingY = static_cast <float>(metrics.horiBearingY);
+    const float fMinHeight = static_cast <float>(minHeight);
+
+    const float scaleY = metricsHeight / fMinHeight;
+    const float translationY = (bearingY - metricsHeight / 2.f) / fMinHeight - 1.f / 2.f;
+
+    const FontTexturesGenerator::CharacterTransform charTransform {
+        { scaleX, scaleY },
+        { 0, translationY }};
+
+    graphicCharacter.characterTransform = charTransform;
+
+    // Texture
+    // TODO: gather this function with FrameBuffer function
+    const std::function <GLuint()> genTexture =
+        [] ()->GLuint {
+            GLuint texture;
+            glGenTextures(1, &texture);
+            return texture;
+        };
+    // disable byte-alignment restriction
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    loadCharacter(character);
+
+    const GLuint textureID = genTexture();
+    glBindTexture(GL_TEXTURE_2D, textureID);
+
+    constexpr GLint levelOfDetail = 0;
+    glTexImage2D(GL_TEXTURE_2D,
+                 levelOfDetail,
+                 GL_RED,
+                 bitmap.width,
+                 bitmap.rows, 0, GL_RED,
+                 GL_UNSIGNED_BYTE,
+                 bitmap.buffer);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    graphicCharacter.textureID = textureID;
+
+    return graphicCharacter;
+}
+
+FontTexturesGenerator::GraphicAlphabet genGraphicAlphabet(
+  const Menu &menu,
+  const FontTexturesGenerator::FTContent& ftContent
+  ) {
+  FontTexturesGenerator::GraphicAlphabet graphicAlphabet;
+
+  const auto getBiggerHeight = [&menu]() {
+    float biggerHeight = 0.f;
+    for (const auto &page : menu.pages()) {
+      for (const auto &label : page->labels()) {
+        const float labelHeight = label->height();
+        if (biggerHeight < labelHeight ) {
+            biggerHeight = labelHeight;
+        }
+      }
+    }
+    return biggerHeight;
+  };
+  const float height = getBiggerHeight();
+
+  for (const auto& page : menu.pages()) {
+    for (const auto& label: page->labels()) {
+      for (unsigned char character: label->message()) {
+        if ( graphicAlphabet.find(character) == graphicAlphabet.end() ) {
+          graphicAlphabet[character] = genGraphicCharacter(character, height, ftContent);
+        }
+      }
+    }
+  }
+
+  return graphicAlphabet;
+}

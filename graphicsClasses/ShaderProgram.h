@@ -10,8 +10,6 @@
 #include "Shader.h"
 
 class ShaderProgram;
-// using ShaderProgram_uptr = std::unique_ptr <ShaderProgram>;
-// using CstShaderProgram_uptr = std::unique_ptr <const ShaderProgram>;
 using ShaderProgram_sptr = std::shared_ptr <ShaderProgram>;
 using CstShaderProgram_sptr = std::shared_ptr <const ShaderProgram>;
 using vecCstShaderProgram_sptr = std::vector <CstShaderProgram_sptr>;

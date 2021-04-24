@@ -11,7 +11,6 @@
 #include <scene/MapGenerator.h>
 #include "Window.h"
 
-using namespace std;
 
 GLFWwindow*initLibraries() {
     GLFWwindow*window;
@@ -64,7 +63,7 @@ int main (int argc, char**argv) {
 
     if (argc == 3) {
 
-        ifstream file;
+        std::ifstream file;
         const std::string fileToOpen = argc > 1
                                        ? argv[1]
                                        : "maps/map1.txt";

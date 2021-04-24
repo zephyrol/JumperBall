@@ -13,7 +13,7 @@
 #include "Camera.h"
 #include "uniformBlocks/uniformLight.h"
 #include "componentsGeneration/MeshGenerator.h"
-#include "../Rendering.h"
+#include "Rendering.h"
 
 
 class SceneRendering:public Rendering {

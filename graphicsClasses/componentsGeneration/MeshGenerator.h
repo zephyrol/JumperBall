@@ -13,6 +13,7 @@
 #include <scene/objects/ObjectState.h>
 #include <scene/enemies/EnemyState.h>
 #include <scene/StarState.h>
+#include <gameMenu/Page.h>
 #include "geometry/Cylinder.h"
 #include "geometry/Pyramid.h"
 #include "geometry/Sphere.h"
@@ -32,6 +33,10 @@ vecMesh_sptr genObjects(const Map& map);
 vecMesh_sptr genEnemies(const Map& map);
 vecMesh_sptr genStar(const Star& star);
 vecMesh_sptr genQuad(const Quad& quad);
+
+
+Mesh_sptr genQuadLabel(const JBTypes::vec2f& position, float width, float height, const glm::vec3& color);
+std::map <unsigned char, vecMesh_sptr> genLettersLabel(const Page& page);
 
 // vecMeshComponent_sptr genObject(const ObjectState& obj, const glm::vec3& position, const JBTypes::Dir& dir);
 

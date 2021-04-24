@@ -69,7 +69,7 @@ bool isActivated() const;
 const std::shared_ptr <LabelAnswer>& action() const;
 const Label::WidthUnit& widthUnit() const;
 
-JBTypes::vec2f position() const;
+const JBTypes::vec2f& position() const;
 virtual std::string message() const;
 
 // ----------METHODS-------------//

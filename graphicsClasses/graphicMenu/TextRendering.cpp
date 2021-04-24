@@ -257,7 +257,6 @@ void TextRendering::updateAlphabets (const Label& label) {
                                                             glGenTextures(1, &texture);
                                                             return texture;
                                                         };
-
             // disable byte-alignment restriction
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
             loadCharacter(character);

@@ -12,19 +12,6 @@ SceneRendering::SceneRendering(const Map& map,
                                const Ball& ball,
                                const Star& star,
                                const Camera& camera):
-    /*SceneRendering(map,
-       ball,
-       star,
-       camera,
-       { std::make_shared <StarState>(star) },
-       {
-       std::make_shared <RenderPass>(MeshGenerator::genBlocks(map)),
-       std::make_shared <RenderPass>(MeshGenerator::genObjects(map)),
-       std::make_shared <RenderPass>(MeshGenerator::genEnemies(map)),
-       std::make_shared <RenderPass>(MeshGenerator::genBall(ball)),
-       std::make_shared <RenderPass>(MeshGenerator::genStar(star)),
-       std::make_shared <RenderPass>(MeshGenerator::genQuad(Quad()))
-       })*/
     _camera(camera),
     _starState(std::make_shared <StarState>(star)),
     _externalStates({ _starState }),
@@ -55,7 +42,6 @@ SceneRendering::SceneRendering(const Map& map,
                        _verticalBlurProcess,
                        _bloomProcess
                        } {
-    update();
     // alpha
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -270,8 +256,8 @@ RenderProcess::PassUniformUpdateMap SceneRendering::createBloomUniformsUpdating(
 }
 
 Rendering::ExternalUniformBlockVariables SceneRendering::createExternalUniformBlockVariables() const {
-    const std::string& lightName = SceneRendering::lightName;
 
+    const std::string& lightName = SceneRendering::lightName;
     const auto updateBlocksVariablesFct =
         [this, &lightName] (const RenderPass::UniformBlockVariables_uptr& uniformBlocks)->void {
             uniformBlocks->at(lightName)->update(
