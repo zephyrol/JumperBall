@@ -26,6 +26,7 @@ enum class CurrentFrame { FrameA, FrameB };
 
 // --CONSTRUCTORS & DESTRUCTORS--//
 Controller();
+~Controller();
 
 // ----------METHODS------------//
 void interactionButtons(const Button& button,
@@ -73,6 +74,7 @@ void releaseMouse(float posX, float posY);
 void manageValidateMouse();
 
 // --------ATTRIBUTES-----------//
+FontTexturesGenerator::FTContent _ftContent;
 Player _player;
 std::shared_ptr <Menu> _menu;
 std::map <Button, Status> _buttonsStatuts;
@@ -93,8 +95,8 @@ std::shared_ptr <Star> _star;
 CurrentFrame _currentFrame;
 std::shared_ptr <SceneRendering> _sceneRenderingFrameA;
 std::shared_ptr <SceneRendering> _sceneRenderingFrameB;
-// std::shared_ptr <MenuRendering> _menuRenderingFrameA;
-// std::shared_ptr <MenuRendering> _menuRenderingFrameB;
+std::shared_ptr <MenuRendering> _menuRenderingFrameA;
+std::shared_ptr <MenuRendering> _menuRenderingFrameB;
 
 ParallelTask <void> _updatingScene;
 ParallelTask <void> _updatingMenu;

@@ -22,6 +22,7 @@
 #include "geometry/QuadState.h"
 #include "FrameBuffer.h"
 #include <scene/Mesh.h>
+#include "graphicMenu/FontTexturesGenerator.h"
 
 
 namespace MeshGenerator {
@@ -36,7 +37,10 @@ vecMesh_sptr genQuad(const Quad& quad);
 
 
 Mesh_sptr genQuadLabel(const JBTypes::vec2f& position, float width, float height, const glm::vec3& color);
-std::map <unsigned char, vecMesh_sptr> genLettersLabel(const Page& page);
+std::map <unsigned char, vecMesh_sptr> genLettersLabel(
+    const Page& page,
+    const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet
+    );
 
 // vecMeshComponent_sptr genObject(const ObjectState& obj, const glm::vec3& position, const JBTypes::Dir& dir);
 

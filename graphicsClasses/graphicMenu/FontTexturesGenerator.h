@@ -33,7 +33,7 @@ using GraphicAlphabet = std::map <unsigned char, GraphicCharacter>;
 
 /**
  * @brief Generate a graphic character
- * 
+ *
  * @param character Letter represented by uchar
  * @param height Proportion of the height screen that the letter should cover without aliasing
  * @param ftContent Object containing the FreeType lib objects

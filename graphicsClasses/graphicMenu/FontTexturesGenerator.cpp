@@ -81,10 +81,11 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
     const auto& metrics = glyph->metrics;
     const auto& bitmap = glyph->bitmap;
 
-    const FT_UInt heightPixels = static_cast <FT_UInt> (Utility::windowResolutionY * height);
+    const FT_UInt heightPixels = static_cast <FT_UInt>(Utility::windowResolutionY * height);
 
     setPixelSizes(heightPixels);
-    const FT_Pos minHeight = getMinHeight({static_cast<char>(character)} /*label.message()*/, ftContent.fontFace);
+    const FT_Pos minHeight = getMinHeight({ static_cast <char>(character) } /*label.message()*/,
+                                          ftContent.fontFace);
 
     // Transform
     loadCharacter(character);
@@ -97,7 +98,7 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
     const float fMinHeight = static_cast <float>(minHeight);
 
     const float scaleY = metricsHeight / fMinHeight;
-    const float translationY = (bearingY - metricsHeight / 2.f) / fMinHeight - 1.f / 2.f;
+    const float translationY = (bearingY - metricsHeight / 2.f) / fMinHeight - 0.5f;
 
     const FontTexturesGenerator::CharacterTransform charTransform {
         { scaleX, scaleY },
@@ -139,35 +140,36 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
     return graphicCharacter;
 }
 
-FontTexturesGenerator::GraphicAlphabet genGraphicAlphabet(
-  const Menu &menu,
-  const FontTexturesGenerator::FTContent& ftContent
-  ) {
-  FontTexturesGenerator::GraphicAlphabet graphicAlphabet;
+FontTexturesGenerator::GraphicAlphabet FontTexturesGenerator::genGraphicAlphabet (
+    const Menu& menu,
+    const FontTexturesGenerator::FTContent& ftContent
+    ) {
+    FontTexturesGenerator::GraphicAlphabet graphicAlphabet;
 
-  const auto getBiggerHeight = [&menu]() {
-    float biggerHeight = 0.f;
-    for (const auto &page : menu.pages()) {
-      for (const auto &label : page->labels()) {
-        const float labelHeight = label->height();
-        if (biggerHeight < labelHeight ) {
-            biggerHeight = labelHeight;
+    const auto getBiggerHeight =
+        [&menu] () {
+            float biggerHeight = 0.f;
+            for (const auto& page : menu.pages()) {
+                for (const auto& label : page->labels()) {
+                    const float labelHeight = label->height();
+                    if (biggerHeight < labelHeight) {
+                        biggerHeight = labelHeight;
+                    }
+                }
+            }
+            return biggerHeight;
+        };
+    const float height = getBiggerHeight();
+
+    for (const auto& page : menu.pages()) {
+        for (const auto& label : page->labels()) {
+            for (unsigned char character : label->message()) {
+                if (graphicAlphabet.find(character) == graphicAlphabet.end()) {
+                    graphicAlphabet[character] = genGraphicCharacter(character, height, ftContent);
+                }
+            }
         }
-      }
     }
-    return biggerHeight;
-  };
-  const float height = getBiggerHeight();
 
-  for (const auto& page : menu.pages()) {
-    for (const auto& label: page->labels()) {
-      for (unsigned char character: label->message()) {
-        if ( graphicAlphabet.find(character) == graphicAlphabet.end() ) {
-          graphicAlphabet[character] = genGraphicCharacter(character, height, ftContent);
-        }
-      }
-    }
-  }
-
-  return graphicAlphabet;
+    return graphicAlphabet;
 }

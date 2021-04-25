@@ -47,9 +47,9 @@ GLFWwindow*initLibraries() {
         exit(EXIT_FAILURE);
     }
 
-    if (!TextRendering::initFreeTypeAndFont()) {
+    /*if (!TextRendering::initFreeTypeAndFont()) {
         exit(EXIT_FAILURE);
-    }
+       }*/
     return window;
 
 }

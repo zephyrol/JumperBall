@@ -9,6 +9,7 @@
 #include "cmath"
 
 Controller::Controller():
+    _ftContent(FontTexturesGenerator::initFreeTypeAndFont()),
     _player(),
     _menu(Menu::getJumperBallMenu(
               _player,
@@ -33,12 +34,10 @@ Controller::Controller():
     _camera(std::make_shared <Camera>()),
     _star(Star::createBlurStar(*_map)),
     _currentFrame(Controller::CurrentFrame::FrameA),
-    _sceneRenderingFrameA(std::make_shared <SceneRendering>
-                              (*_map, *_ball, *_star, *_camera)),
-    _sceneRenderingFrameB(std::make_shared <SceneRendering>
-                              (*_map, *_ball, *_star, *_camera)),
-    // _menuRenderingFrameA(std::make_shared <MenuRendering>(*_menu)),
-    // _menuRenderingFrameB(std::make_shared <MenuRendering>(*_menu)),
+    _sceneRenderingFrameA(std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera)),
+    _sceneRenderingFrameB(std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera)),
+    _menuRenderingFrameA(std::make_shared <MenuRendering>(*_menu, _ftContent)),
+    _menuRenderingFrameB(std::make_shared <MenuRendering>(*_menu, _ftContent)),
     _updatingScene([this] (size_t) {
                        _ball->update();
                        if (_player.statut() == Player::Statut::INMENU) {
@@ -57,19 +56,19 @@ Controller::Controller():
                        currentSceneRendering->update();
                    }),
     _updatingMenu([this] (size_t) {
-                      /*if (_player.statut() == Player::Statut::INMENU) {
+                      if (_player.statut() == Player::Statut::INMENU) {
                           _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
-                         } else if (_player.statut() == Player::Statut::INGAME) {
+                      } else if (_player.statut() == Player::Statut::INGAME) {
                           if (_ball->stateOfLife() == Ball::StateOfLife::Dead) {
                               _player.statut(Player::Statut::INMENU);
                               _menu->failurePageAsCurrentPage();
                           }
-                         }
-                         const std::shared_ptr <MenuRendering> currentMenuRendering =
+                      }
+                      const std::shared_ptr <MenuRendering> currentMenuRendering =
                           _currentFrame == Controller::CurrentFrame::FrameA
                           ? _menuRenderingFrameA
                           : _menuRenderingFrameB;
-                         currentMenuRendering->update();*/
+                      currentMenuRendering->update();
                   }),
     _updating([this] (size_t) {
                   _updatingScene.runTasks();
@@ -135,9 +134,9 @@ void Controller::runController() {
     _currentFrame == Controller::CurrentFrame::FrameA
     ? _sceneRenderingFrameB->render()
     : _sceneRenderingFrameA->render();
-    /*_currentFrame == Controller::CurrentFrame::FrameA
-       ? _menuRenderingFrameB->render()
-       : _menuRenderingFrameA->render();*/
+    _currentFrame == Controller::CurrentFrame::FrameA
+    ? _menuRenderingFrameB->render()
+    : _menuRenderingFrameA->render();
 }
 
 void Controller::waitController() {
@@ -348,4 +347,8 @@ const std::shared_ptr <Ball>& Controller::currentBall() const {
 
 bool Controller::requestToLeave() const {
     return _requestToLeave;
+}
+
+Controller::~Controller() {
+    FontTexturesGenerator::clearFreeTypeRessources(_ftContent);
 }

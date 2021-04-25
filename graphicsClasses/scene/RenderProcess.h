@@ -26,7 +26,8 @@ RenderProcess(
     const vecRenderPass_sptr& renderPasses,
     PassShaderMap&& shaderPrograms,
     PassUniformUpdateMap&& externalUniformsTreating,
-    FrameBuffer_uptr&& frameBuffer);
+    FrameBuffer_uptr&& frameBuffer,
+    bool usingDefaultFrameBufferAutoClean = true);
 RenderProcess(const RenderProcess& renderProcess) = delete;
 RenderProcess& operator= (const RenderProcess&) = delete;
 
@@ -41,4 +42,5 @@ const vecRenderPass_sptr _renderPasses;
 const PassShaderMap _shaderPrograms;
 const PassUniformUpdateMap _externalUniformsTreating;
 const FrameBuffer_uptr _frameBuffer;
+const bool _usingDefaultFrameBufferAutoClean;
 };

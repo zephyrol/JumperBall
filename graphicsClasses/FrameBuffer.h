@@ -41,6 +41,7 @@ std::pair <float, float> computeLogAverageLuminanceAndMax() const;
 GLuint getRenderTexture() const;
 
 static void bindDefaultFrameBuffer();
+static void cleanDefaultFrameBuffer();
 
 private:
 

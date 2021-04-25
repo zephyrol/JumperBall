@@ -11,16 +11,21 @@ MenuRendering::MenuRendering(const Menu& menu, const FontTexturesGenerator::FTCo
     _graphicAlphabet(FontTexturesGenerator::genGraphicAlphabet(_menu, ftContent)),
     _pagesRenderPassesLetters(createPagesRenderPassesLetters()),
     _pagesRenderPasses(createPagesRenderPasses()),
-    _pagesRenderProcess(createPagesRenderProcess())
-{
+    _pagesRenderProcess(createPagesRenderProcess()) {
 }
 
 void MenuRendering::update() {
-  
+
+    const auto& currentPage = _menu.currentPage();
+
+    for (const auto& renderPass : _pagesRenderPasses.at(currentPage)) {
+        renderPass->update();
+    }
+    _pagesRenderProcess.at(currentPage)->updateUniforms();
 }
 
 void MenuRendering::render() const {
-  
+    _pagesRenderProcess.at(_menu.currentPage())->render();
 }
 
 MenuRendering::PagesRenderPassesLetters MenuRendering::createPagesRenderPassesLetters() const {
@@ -29,7 +34,7 @@ MenuRendering::PagesRenderPassesLetters MenuRendering::createPagesRenderPassesLe
     for (const auto& page : _menu.pages()) {
         MenuRendering::RenderPassesLetters renderPassesLetters;
 
-        const auto lettersMeshes =  MeshGenerator::genLettersLabel(*page);
+        const auto lettersMeshes =  MeshGenerator::genLettersLabel(*page, _graphicAlphabet);
 
         for (const auto& letterMeshes : lettersMeshes) {
             const unsigned char letter = letterMeshes.first;
@@ -47,66 +52,66 @@ MenuRendering::PagesRenderPasses MenuRendering::createPagesRenderPasses() const 
     MenuRendering::PagesRenderPasses pagesRenderPasses;
 
     for (const auto& pageRenderPassesLetters : _pagesRenderPassesLetters) {
-      const auto& page = pageRenderPassesLetters.first;
-      const auto& renderPassesLetters = pageRenderPassesLetters.second;
+        const auto& page = pageRenderPassesLetters.first;
+        const auto& renderPassesLetters = pageRenderPassesLetters.second;
 
-      vecRenderPass_sptr renderPasses;
-      for(const auto& letterRenderPass : renderPassesLetters) {
-        renderPasses.push_back(letterRenderPass.first);
-      }
-      pagesRenderPasses[page] = renderPasses;
+        vecRenderPass_sptr renderPasses;
+        for (const auto& letterRenderPass : renderPassesLetters) {
+            renderPasses.push_back(letterRenderPass.first);
+        }
+        pagesRenderPasses[page] = renderPasses;
     }
 
     return pagesRenderPasses;
 }
 
 
-RenderProcess_sptr MenuRendering::createRenderProcess(const CstPage_sptr& page) const {
+RenderProcess_sptr MenuRendering::createRenderProcess (const CstPage_sptr& page) const {
 
-    const auto getRenderPassesLetters = 
-    [this, &page]() -> MenuRendering::RenderPassesLetters { 
-      const auto &pageRenderPassesLetters = _pagesRenderPassesLetters.find(page);
-      if (pageRenderPassesLetters == _pagesRenderPassesLetters.end()) {
-        return {};
-      }
-      const RenderPassesLetters &renderPassesLetters = pageRenderPassesLetters->second;
-      return renderPassesLetters;
-    };
+    const auto getRenderPassesLetters =
+        [this, &page] ()->MenuRendering::RenderPassesLetters {
+            const auto& pageRenderPassesLetters = _pagesRenderPassesLetters.find(page);
+            if (pageRenderPassesLetters == _pagesRenderPassesLetters.end()) {
+                return {};
+            }
+            const RenderPassesLetters& renderPassesLetters = pageRenderPassesLetters->second;
+            return renderPassesLetters;
+        };
 
     const MenuRendering::RenderPassesLetters renderPassesLetters = getRenderPassesLetters();
 
     const auto getRenderPassesUsingLetters =
-    [&renderPassesLetters]() -> vecRenderPass_sptr {
-      vecRenderPass_sptr renderPassesUsingLetters;
-      for( const auto& renderPassLetter : renderPassesLetters) {
-        renderPassesUsingLetters.push_back(renderPassLetter.first);
-      }
-      return renderPassesUsingLetters;
-    };
+        [&renderPassesLetters] ()->vecRenderPass_sptr {
+            vecRenderPass_sptr renderPassesUsingLetters;
+            for (const auto& renderPassLetter : renderPassesLetters) {
+                renderPassesUsingLetters.push_back(renderPassLetter.first);
+            }
+            return renderPassesUsingLetters;
+        };
 
     const vecRenderPass_sptr renderPassesUsingLetters = getRenderPassesUsingLetters();
 
     const auto createLettersShaders =
-        [this, &page, &renderPassesUsingLetters]() -> RenderProcess::PassShaderMap {
+        [this, &page, &renderPassesUsingLetters] ()->RenderProcess::PassShaderMap {
 
-      const CstShaderProgram_sptr lettersShaderPrograms = ShaderProgram::createShaderProgram(
-          "fontVs.vs",
-          "fontFs.fs"
-      );
+            const CstShaderProgram_sptr lettersShaderPrograms = ShaderProgram::createShaderProgram(
+                "fontVs.vs",
+                "fontFs.fs"
+                );
 
-      RenderProcess::PassShaderMap passShaderMap;
+            RenderProcess::PassShaderMap passShaderMap;
 
-      for (const auto &renderPass: renderPassesUsingLetters) {
-        passShaderMap[renderPass] = lettersShaderPrograms;
-      }
-      return passShaderMap;
-    };
+            for (const auto& renderPass : renderPassesUsingLetters) {
+                passShaderMap[renderPass] = lettersShaderPrograms;
+            }
+            return passShaderMap;
+        };
 
     const auto updateSceneLevelRenderingFct =
         [this, &page] (const RenderPass_sptr& letterRenderPass, GLuint shaderProgramID)->void {
 
             // TODO: use a object "page state" and access the values
-            letterRenderPass->upsertUniform(shaderProgramID,"positionY", page->localPosY());
+            letterRenderPass->upsertUniform(shaderProgramID, "positionY", page->localPosY());
 
             const auto& renderPassesLetters = _pagesRenderPassesLetters.at(page);
             const unsigned char character = renderPassesLetters.at(letterRenderPass);
@@ -115,33 +120,35 @@ RenderProcess_sptr MenuRendering::createRenderProcess(const CstPage_sptr& page) 
                 shaderProgramID,
                 "characterTexture",
                 _graphicAlphabet.at(character).textureID
-            );
+                );
         };
 
-    const auto createLettersRenderingFct = 
-    [this, &renderPassesUsingLetters, &updateSceneLevelRenderingFct]() -> RenderProcess::PassUniformUpdateMap {
-      RenderProcess::PassUniformUpdateMap  passUniformUpdateMap;
-      for( const auto& renderPassLetter : renderPassesUsingLetters) {
-          passUniformUpdateMap[renderPassLetter] = updateSceneLevelRenderingFct;
-      }
-      return passUniformUpdateMap;
-    };
+    const auto createLettersRenderingFct =
+        [this, &renderPassesUsingLetters,
+         &updateSceneLevelRenderingFct] ()->RenderProcess::PassUniformUpdateMap {
+            RenderProcess::PassUniformUpdateMap passUniformUpdateMap;
+            for (const auto& renderPassLetter : renderPassesUsingLetters) {
+                passUniformUpdateMap[renderPassLetter] = updateSceneLevelRenderingFct;
+            }
+            return passUniformUpdateMap;
+        };
 
-        return std::make_shared<RenderProcess>(
-          renderPassesUsingLetters,
-          createLettersShaders(),
-          createLettersRenderingFct(),
-          nullptr
+    return std::make_shared <RenderProcess>(
+        renderPassesUsingLetters,
+        createLettersShaders(),
+        createLettersRenderingFct(),
+        nullptr,
+        false
         );
 
 }
 
 MenuRendering::PagesRenderProcess MenuRendering::createPagesRenderProcess() const {
-  MenuRendering::PagesRenderProcess pagesRenderProcess;
-  for ( const auto& page : _menu.pages()) {
-    pagesRenderProcess[page] = createRenderProcess(page);
-  }
-  return pagesRenderProcess;
+    MenuRendering::PagesRenderProcess pagesRenderProcess;
+    for (const auto& page : _menu.pages()) {
+        pagesRenderProcess[page] = createRenderProcess(page);
+    }
+    return pagesRenderProcess;
 }
 
 
@@ -171,5 +178,5 @@ Rendering::ExternalUniformVariables <GLuint> MenuRendering::createExternalUnifor
         };
 
     return {};
-    //return { createTexturesPtr(), updateMat4VariablesFct };
+    // return { createTexturesPtr(), updateMat4VariablesFct };
 }

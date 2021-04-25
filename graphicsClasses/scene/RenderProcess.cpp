@@ -11,11 +11,14 @@ RenderProcess::RenderProcess(
     const vecRenderPass_sptr& renderPasses,
     PassShaderMap&& shaderPrograms,
     PassUniformUpdateMap&& externalUniformsTreating,
-    FrameBuffer_uptr&& frameBuffer):
+    FrameBuffer_uptr&& frameBuffer,
+    bool usingDefaultFrameBufferAutoClean
+    ):
     _renderPasses(renderPasses),
     _shaderPrograms(std::move(shaderPrograms)),
     _externalUniformsTreating(std::move(externalUniformsTreating)),
-    _frameBuffer(std::move(frameBuffer)) {
+    _frameBuffer(std::move(frameBuffer)),
+    _usingDefaultFrameBufferAutoClean(usingDefaultFrameBufferAutoClean) {
 }
 
 void RenderProcess::updateUniforms() {
@@ -30,6 +33,9 @@ void RenderProcess::render() const {
         _frameBuffer->bindFrameBuffer();
     } else {
         FrameBuffer::bindDefaultFrameBuffer();
+        if (_usingDefaultFrameBufferAutoClean) {
+            FrameBuffer::cleanDefaultFrameBuffer();
+        }
     }
     for (const auto& renderPass : _renderPasses) {
         const CstShaderProgram_sptr& shaderProgram = _shaderPrograms.at(renderPass);

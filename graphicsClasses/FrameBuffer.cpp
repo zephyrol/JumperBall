@@ -81,8 +81,11 @@ GLuint FrameBuffer::getRenderTexture() const {
 void FrameBuffer::bindDefaultFrameBuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, Utility::windowResolutionX, Utility::windowResolutionY);
-    glEnable(GL_DEPTH_TEST);
-    cleanCurrentFrameBuffer(true, FrameBuffer::backgroundColor);
+    glDisable(GL_DEPTH_TEST);
+}
+
+void FrameBuffer::cleanDefaultFrameBuffer() {
+    cleanCurrentFrameBuffer(false, FrameBuffer::backgroundColor);
 }
 
 void FrameBuffer::cleanCurrentFrameBuffer (bool hasDepthBuffer, const glm::vec3& clearColor) {
