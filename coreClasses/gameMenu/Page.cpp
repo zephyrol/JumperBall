@@ -161,8 +161,7 @@ void Page::update (bool isPressed, float screenPosY) {
             lastSlideState.first - olderSlideState.first);
 
         // the velocity is the position derivative (pourcentagePage / ms)
-        _releaseVelocity = (lastSlideState.second - olderSlideState.second)
-                           / deltaT;
+        _releaseVelocity = (lastSlideState.second - olderSlideState.second) / deltaT;
 
         _localReleasedPosY = _localPosY;
         _isPressed = false;
@@ -171,21 +170,13 @@ void Page::update (bool isPressed, float screenPosY) {
         const slideState& lastSlideState = _lastSwipeUpdates.front();
         const float t = JBTypesMethods::getFloatFromDurationMS(
             now - lastSlideState.first);
-        const float deceleration =
-            decelerationCoefficient * powf(t, 2.f) / 2.f;
+        const float deceleration = decelerationCoefficient * powf(t, 2.f) / 2.f;
 
-        if (
-            _releaseVelocity > 0.f && t < -(_releaseVelocity) /
-            (2.f * -decelerationCoefficient / 2.f)
-            ) {
-            _localPosY = -deceleration +
-                         _releaseVelocity * t + _localReleasedPosY;
-        } else if (
-            _releaseVelocity < 0.f && t < -(_releaseVelocity) /
-            (2.f * decelerationCoefficient / 2.f)
-            ) {
-            _localPosY = deceleration +
-                         _releaseVelocity * t + _localReleasedPosY;
+        if (_releaseVelocity > 0.f && t < -(_releaseVelocity) / (2.f * -decelerationCoefficient / 2.f)) {
+            _localPosY = -deceleration + _releaseVelocity * t + _localReleasedPosY;
+        } else if (_releaseVelocity < 0.f &&
+                   t < -(_releaseVelocity) / (2.f * decelerationCoefficient / 2.f)) {
+            _localPosY = deceleration + _releaseVelocity * t + _localReleasedPosY;
         }
 
         if (_localPosY < 0.f) _localPosY = 0.f;

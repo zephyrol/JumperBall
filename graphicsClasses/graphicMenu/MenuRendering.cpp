@@ -17,6 +17,9 @@ MenuRendering::MenuRendering(const Menu& menu, const FontTexturesGenerator::FTCo
 void MenuRendering::update() {
 
     const auto& currentPage = _menu.currentPage();
+    if (!currentPage) {
+        return;
+    }
 
     for (const auto& renderPass : _pagesRenderPasses.at(currentPage)) {
         renderPass->update();
@@ -25,7 +28,11 @@ void MenuRendering::update() {
 }
 
 void MenuRendering::render() const {
-    _pagesRenderProcess.at(_menu.currentPage())->render();
+    const auto& currentPage = _menu.currentPage();
+    if (!currentPage) {
+        return;
+    }
+    _pagesRenderProcess.at(currentPage)->render();
 }
 
 MenuRendering::PagesRenderPassesLetters MenuRendering::createPagesRenderPassesLetters() const {

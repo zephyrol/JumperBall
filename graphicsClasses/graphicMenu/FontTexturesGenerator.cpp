@@ -40,8 +40,10 @@ void FontTexturesGenerator::clearFreeTypeRessources (FontTexturesGenerator::FTCo
     FT_Done_FreeType(ftContent.ftLib);
 }
 
+
 FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharacter (
     unsigned char character,
+    const std::string& message,
     float height,
     const FontTexturesGenerator::FTContent& ftContent) {
 
@@ -84,8 +86,8 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
     const FT_UInt heightPixels = static_cast <FT_UInt>(Utility::windowResolutionY * height);
 
     setPixelSizes(heightPixels);
-    const FT_Pos minHeight = getMinHeight({ static_cast <char>(character) } /*label.message()*/,
-                                          ftContent.fontFace);
+    const FT_Pos minHeight = getMinHeight( /*{ static_cast <char>(character) }*/ message,
+                                           ftContent.fontFace);
 
     // Transform
     loadCharacter(character);
@@ -146,26 +148,27 @@ FontTexturesGenerator::GraphicAlphabet FontTexturesGenerator::genGraphicAlphabet
     ) {
     FontTexturesGenerator::GraphicAlphabet graphicAlphabet;
 
-    const auto getBiggerHeight =
+    const auto getBiggestHeight =
         [&menu] () {
-            float biggerHeight = 0.f;
+            float biggestHeight = 0.f;
             for (const auto& page : menu.pages()) {
                 for (const auto& label : page->labels()) {
                     const float labelHeight = label->height();
-                    if (biggerHeight < labelHeight) {
-                        biggerHeight = labelHeight;
+                    if (biggestHeight < labelHeight) {
+                        biggestHeight = labelHeight;
                     }
                 }
             }
-            return biggerHeight;
+            return biggestHeight;
         };
-    const float height = getBiggerHeight();
+    const float height = getBiggestHeight();
 
     for (const auto& page : menu.pages()) {
         for (const auto& label : page->labels()) {
-            for (unsigned char character : label->message()) {
+            const std::string message = label->message();
+            for (unsigned char character : message) {
                 if (graphicAlphabet.find(character) == graphicAlphabet.end()) {
-                    graphicAlphabet[character] = genGraphicCharacter(character, height, ftContent);
+                    graphicAlphabet[character] = genGraphicCharacter(character, message, height, ftContent);
                 }
             }
         }

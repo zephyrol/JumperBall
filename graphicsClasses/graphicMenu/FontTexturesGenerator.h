@@ -35,12 +35,18 @@ using GraphicAlphabet = std::map <unsigned char, GraphicCharacter>;
  * @brief Generate a graphic character
  *
  * @param character Letter represented by uchar
+ * @param message Whole message to compare the size between letters. 'character' letter should present
  * @param height Proportion of the height screen that the letter should cover without aliasing
  * @param ftContent Object containing the FreeType lib objects
  * @return GraphicCharacter Texture and local transform of the character
  */
-GraphicCharacter genGraphicCharacter(unsigned char character, float height, const FTContent& ftContent);
+GraphicCharacter genGraphicCharacter(
+    unsigned char character,
+    const std::string& message,
+    float height,
+    const FTContent& ftContent);
 
+FT_Pos getSmallestHight(const std::string& message, const FontTexturesGenerator::FTContent& ftContent);
 GraphicAlphabet genGraphicAlphabet(const Menu& menu, const FTContent& ftContent);
 
 // gen alphabet (menu)

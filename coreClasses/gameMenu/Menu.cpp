@@ -135,9 +135,7 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
     const float ratioX = static_cast <float>(sizeX) / static_cast <float>(sizeY);
     const float ratioY = 1.f / ratioX;
     // Page 1
-    const float factor = isSmartPhoneFormat
-                         ? 1.f
-                         : ratioY;
+    const float factor = isSmartPhoneFormat ? 1.f : ratioY;
 
     const float label1Page1Width = factor * 0.9f;
     const float label2Page1Width = factor * 0.4f;
@@ -147,10 +145,8 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
     const float label1Page1HeightDivide = 9.f;
     const float label234Page1HeightDivide = 8.f;
 
-    const float label1Page1Height =
-        label1Page1Width * ratioX / label1Page1HeightDivide;
-    const float label234Page1Height =
-        label2Page1Width * ratioX / label234Page1HeightDivide;
+    const float label1Page1Height = label1Page1Width * ratioX / label1Page1HeightDivide;
+    const float label234Page1Height = label2Page1Width * ratioX / label234Page1HeightDivide;
     std::shared_ptr <const MessageLabel> label1Page1 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
@@ -176,9 +172,7 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
             JBTypes::vec2f { 0.5f, 0.2f },
             "Exit");
 
-    const vecCstLabel_sptr labelsPage1 {
-        label1Page1, label2Page1, label3Page1, label4Page1
-    };
+    const vecCstLabel_sptr labelsPage1 { label1Page1, label2Page1, label3Page1, label4Page1 };
 
     // Page 2
     vecCstLabel_sptr labelsPage2;
@@ -188,9 +182,8 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
             label1Page2Width, label1Page1Height,
-            JBTypes::vec2f { .5f - label1Page1Width * .5f
-                             + label1Page1Width * (0.6f)
-                             , 1.f - 0.1f }, "Levels"
+            JBTypes::vec2f { .5f - label1Page1Width * .5f + label1Page1Width * (0.6f), 1.f - 0.1f },
+            "Levels"
             );
 
     Label::LabelAnswer arrowAction;
@@ -201,9 +194,7 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
         std::make_shared <const ArrowLabel>(
             Label::WidthUnit::ShortestSide,
             arrowBackWidth, label1Page1Height,
-            JBTypes::vec2f { .5f - label1Page1Width * .5f
-                             + label1Page1Width * (0.1f)
-                             , 1.f - 0.1f },
+            JBTypes::vec2f { .5f - label1Page1Width * .5f + label1Page1Width * (0.1f), 1.f - 0.1f },
             std::make_shared <Label::LabelAnswer>(arrowAction)
             );
 
@@ -279,8 +270,7 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
             JBTypes::vec2f { 0.5f, 0.3f },
             "Exit");
 
-    const vecCstLabel_sptr labelsPage3
-    { label1Page3, label2Page3, label3Page3 };
+    const vecCstLabel_sptr labelsPage3 { label1Page3, label2Page3, label3Page3 };
 
 
     // Page 4 (Pause page)
