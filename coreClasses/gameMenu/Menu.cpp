@@ -332,58 +332,35 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
         page1, Page::PageFormat::Full, Page::EscapeAnswer::GoToParent
         );
 
-    std::map <CstLabel_sptr, Page::TypeOfLabel> typesPage2;
     std::map <CstLabel_sptr, Page_sptr> childrenPage2;
     for (CstLabel_sptr& label : labelsPage2) {
-        typesPage2[label] = Page::TypeOfLabel::Message;
         childrenPage2[label] = nullptr;
     }
-    typesPage2[labelLevelsArrowBack] = Page::TypeOfLabel::Arrow;
 
     std::map <CstLabel_sptr, Page_sptr> childrenPage1;
-    std::map <CstLabel_sptr, Page::TypeOfLabel> typesPage1;
     childrenPage1[labelsPage1.at(0)] = nullptr;
     childrenPage1[labelsPage1.at(1)] = page2;
     childrenPage1[labelsPage1.at(2)] = nullptr;
     childrenPage1[labelsPage1.at(3)] = nullptr;
-    typesPage1[labelsPage1.at(0)] = Page::TypeOfLabel::Message;
-    typesPage1[labelsPage1.at(1)] = Page::TypeOfLabel::Message;
-    typesPage1[labelsPage1.at(2)] = Page::TypeOfLabel::Message;
-    typesPage1[labelsPage1.at(3)] = Page::TypeOfLabel::Message;
 
     std::map <CstLabel_sptr, Page_sptr> childrenPage3;
-    std::map <CstLabel_sptr, Page::TypeOfLabel> typesPage3;
     childrenPage3[labelsPage3.at(0)] = page5;
     childrenPage3[labelsPage3.at(1)] = nullptr;
     childrenPage3[labelsPage3.at(2)] = page1;
-    typesPage3[labelsPage3.at(0)] = Page::TypeOfLabel::Message;
-    typesPage3[labelsPage3.at(1)] = Page::TypeOfLabel::Message;
-    typesPage3[labelsPage3.at(2)] = Page::TypeOfLabel::Message;
 
     std::map <CstLabel_sptr, Page_sptr> childrenPage4;
-    std::map <CstLabel_sptr, Page::TypeOfLabel> typesPage4;
     childrenPage4[labelsPage4.at(0)] = nullptr;
     childrenPage4[labelsPage4.at(1)] = page1;
-    typesPage4[labelsPage4.at(0)] = Page::TypeOfLabel::Message;
-    typesPage4[labelsPage4.at(1)] = Page::TypeOfLabel::Message;
 
     std::map <CstLabel_sptr, Page_sptr> childrenPage5;
-    std::map <CstLabel_sptr, Page::TypeOfLabel> typesPage5;
     childrenPage5[labelsPage5.at(0)] = nullptr;
     childrenPage5[labelsPage5.at(1)] = page1;
-    typesPage5[labelsPage5.at(0)] = Page::TypeOfLabel::Message;
-    typesPage5[labelsPage5.at(1)] = Page::TypeOfLabel::Message;
 
     page1->setBridges(std::move(childrenPage1));
     page2->setBridges(std::move(childrenPage2));
     page3->setBridges(std::move(childrenPage3));
     page4->setBridges(std::move(childrenPage4));
     page5->setBridges(std::move(childrenPage5));
-    page1->setTypes(std::move(typesPage1));
-    page2->setTypes(std::move(typesPage2));
-    page3->setTypes(std::move(typesPage3));
-    page4->setTypes(std::move(typesPage4));
-    page5->setTypes(std::move(typesPage5));
 
     const vecCstPage_sptr pages { page1, page2, page3, page4, page5 };
     return std::make_shared <Menu>(player, page1, page4, page5, page3, pages);

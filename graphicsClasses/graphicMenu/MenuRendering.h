@@ -6,12 +6,10 @@
  */
 #ifndef MENURENDERING_H
 #define MENURENDERING_H
-#include "PageRendering.h"
-#include "TextRendering.h"
-#include "BoxRendering.h"
 #include <gameMenu/Menu.h>
 #include "Rendering.h"
 #include "FontTexturesGenerator.h"
+#include "componentsGeneration/MeshGenerator.h"
 
 class MenuRendering:public Rendering {
 

@@ -1,4 +1,4 @@
-#include "PageRendering.h"
+/*#include "PageRendering.h"
 #include "TextRendering.h"
 #include "BoxRendering.h"
 
@@ -157,3 +157,4 @@ PageRendering::createCharactersLookUpTable() const {
 
     return charactersLookUpTable;
 }
+*/

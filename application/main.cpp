@@ -56,7 +56,7 @@ GLFWwindow*initLibraries() {
 
 void cleanLibraries() {
     glfwTerminate();
-    TextRendering::clearFreeTypeRessources();
+    //TextRendering::clearFreeTypeRessources();
 }
 
 int main (int argc, char**argv) {

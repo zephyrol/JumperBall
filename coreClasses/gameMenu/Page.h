@@ -22,7 +22,6 @@ public:
 // ------------TYPES------------//
 // Slide state => timepoint and yScreenPosition
 using slideState = std::pair <JBTypes::timePointMs, float>;
-enum class TypeOfLabel { Unknown, Object, Message, Switch, Box, Arrow };
 enum class PageFormat { Full, Scroll };
 enum class EscapeAnswer { QuitGame, GoToParent, GoToPause };
 
@@ -43,13 +42,13 @@ CstLabel_sptr matchedLabel(float x, float y) const;
 float height() const;
 float localPosY() const;
 void setBridges(std::map <CstLabel_sptr, Page_sptr>&& bridges);
-void setTypes(std::map <CstLabel_sptr, TypeOfLabel>&& labelsTypes);
+// void setTypes(std::map <CstLabel_sptr, TypeOfLabel>&& labelsTypes);
 const Page::EscapeAnswer& getEscapeAnswer() const;
 
 // ----------METHODS-----------//
 CstPage_sptr child(const CstLabel_sptr& label) const;
 Page_sptr child(const CstLabel_sptr& label);
-TypeOfLabel type(const CstLabel_sptr& label) const;
+// TypeOfLabel type(const CstLabel_sptr& label) const;
 const vecCstLabel_sptr& labels() const;
 void pressOnPage();
 void release();
@@ -65,7 +64,7 @@ std::vector <Page_sptr> createChildren() const;
 
 const PageFormat _pageFormat;
 std::map <CstLabel_sptr, Page_sptr> _bridges;
-std::map <CstLabel_sptr, TypeOfLabel> _labelsTypes;
+//std::map <CstLabel_sptr, TypeOfLabel> _labelsTypes;
 std::vector <CstLabel_sptr> _labels;
 std::vector <Page_sptr> _children;
 const std::weak_ptr <Page> _parent;

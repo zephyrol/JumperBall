@@ -1,4 +1,4 @@
-#ifndef PAGERENDERING_H
+/*#ifndef PAGERENDERING_H
 #define PAGERENDERING_H
 #include <gameMenu/Page.h>
 #include <system/ParallelTask.h>
@@ -49,3 +49,4 @@ createCharactersLookUpTable() const;
 };
 
 #endif // PAGERENDERING_H
+*/
