@@ -64,7 +64,7 @@ std::vector <Page_sptr> createChildren() const;
 
 const PageFormat _pageFormat;
 std::map <CstLabel_sptr, Page_sptr> _bridges;
-//std::map <CstLabel_sptr, TypeOfLabel> _labelsTypes;
+// std::map <CstLabel_sptr, TypeOfLabel> _labelsTypes;
 std::vector <CstLabel_sptr> _labels;
 std::vector <Page_sptr> _children;
 const std::weak_ptr <Page> _parent;

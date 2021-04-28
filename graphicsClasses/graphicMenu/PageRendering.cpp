@@ -1,8 +1,8 @@
 /*#include "PageRendering.h"
-#include "TextRendering.h"
-#include "BoxRendering.h"
+ #include "TextRendering.h"
+ #include "BoxRendering.h"
 
-PageRendering::PageRendering(const Page& page):
+   PageRendering::PageRendering(const Page& page):
     _page(page),
     _textRenderings(createTextRenderings(page)),
     _boxRenderings(createBoxRenderings(page)),
@@ -13,14 +13,14 @@ PageRendering::PageRendering(const Page& page):
                                _labelRenderings.at(renderingLabelNumber)->update(_page.localPosY());
                            }, _labelRenderings.size()),
     _charactersLookUpTable(createCharactersLookUpTable()) {
-}
+   }
 
-void PageRendering::update() {
+   void PageRendering::update() {
     _labelRenderingsUpdate.runTasks();
     _labelRenderingsUpdate.waitTasks();
-}
+   }
 
-void PageRendering::render() const {
+   void PageRendering::render() const {
     GLuint currentQuadVao = 0;
 
     const auto& spFont = TextRendering::getShaderProgram();
@@ -29,7 +29,7 @@ void PageRendering::render() const {
         std::map <GLuint, std::vector <LettersLookupTable> >::const_iterator
         it = _charactersLookUpTable.begin();
         it != _charactersLookUpTable.end();
-        ++it
+ ++it
         ) {
         const GLuint& characterID = it->first;
         spFont->bindUniformTexture("characterTexture", 0,
@@ -63,10 +63,10 @@ void PageRendering::render() const {
     for (const ArrowRendering_sptr& arrowRendering : _arrowRenderings) {
         arrowRendering->render();
     }
-}
+   }
 
-vecTextRendering_sptr PageRendering::createTextRenderings (const Page& page)
-const {
+   vecTextRendering_sptr PageRendering::createTextRenderings (const Page& page)
+   const {
     vecTextRendering_sptr textRenderings;
     for (const CstLabel_sptr& cstLabel : page.labels()) {
         if (page.type(cstLabel) == Page::TypeOfLabel::Message) {
@@ -75,26 +75,26 @@ const {
         }
     }
     return textRenderings;
-}
+   }
 
-vecBoxRendering_sptr PageRendering::createBoxRenderings (const Page& page)
-const {
+   vecBoxRendering_sptr PageRendering::createBoxRenderings (const Page& page)
+   const {
     vecBoxRendering_sptr boxRenderings;
     for (const CstLabel_sptr& cstLabel : page.labels()) {
         if (page.type(cstLabel) == Page::TypeOfLabel::Box) {
             boxRenderings.push_back(
                 std::make_shared <BoxRendering>(
-                    *cstLabel,
+ * cstLabel,
                     glm::vec3(0.f, 0.f, 0.f),
                     glm::vec3(0.f, 0.f, 0.f))
                 );
         }
     }
     return boxRenderings;
-}
+   }
 
-vecArrowRendering_sptr PageRendering::createArrowRenderings (const Page& page)
-const {
+   vecArrowRendering_sptr PageRendering::createArrowRenderings (const Page& page)
+   const {
     vecArrowRendering_sptr arrowRenderings;
     for (const CstLabel_sptr& cstLabel : page.labels()) {
         if (page.type(cstLabel) == Page::TypeOfLabel::Arrow) {
@@ -103,10 +103,10 @@ const {
         }
     }
     return arrowRenderings;
-}
+   }
 
-vecObjectRendering_sptr PageRendering::createObjectRenderings (const Page& page)
-const {
+   vecObjectRendering_sptr PageRendering::createObjectRenderings (const Page& page)
+   const {
     vecObjectRendering_sptr objectRenderings;
     for (const CstLabel_sptr& cstLabel : page.labels()) {
         if (page.type(cstLabel) == Page::TypeOfLabel::Object) {
@@ -115,9 +115,9 @@ const {
         }
     }
     return objectRenderings;
-}
+   }
 
-vecLabelRendering_sptr PageRendering::createLabelRenderings() const {
+   vecLabelRendering_sptr PageRendering::createLabelRenderings() const {
     vecLabelRendering_sptr labelRenderings;
     for (TextRendering_sptr textRendering : _textRenderings) {
         labelRenderings.push_back(textRendering);
@@ -129,10 +129,10 @@ vecLabelRendering_sptr PageRendering::createLabelRenderings() const {
         labelRenderings.push_back(arrowRendering);
     }
     return labelRenderings;
-}
+   }
 
-std::map <GLuint, std::vector <PageRendering::LettersLookupTable> >
-PageRendering::createCharactersLookUpTable() const {
+   std::map <GLuint, std::vector <PageRendering::LettersLookupTable> >
+   PageRendering::createCharactersLookUpTable() const {
     std::map <GLuint, std::vector <PageRendering::LettersLookupTable> >
     charactersLookUpTable;
 
@@ -156,5 +156,5 @@ PageRendering::createCharactersLookUpTable() const {
     }
 
     return charactersLookUpTable;
-}
-*/
+   }
+ */

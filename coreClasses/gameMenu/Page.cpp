@@ -53,7 +53,7 @@ void Page::setBridges (std::map <CstLabel_sptr, Page_sptr>&& bridges) {
 
 /*void Page::setTypes (std::map <CstLabel_sptr, Page::TypeOfLabel>&& labelsTypes) {
     _labelsTypes = std::move(labelsTypes);
-}*/
+   }*/
 
 bool Page::visibleOnParent() const {
     return _visibleOnParent;
@@ -78,7 +78,7 @@ Page_sptr Page::child (const CstLabel_sptr& label) {
     } else {
         return TypeOfLabel::Unknown;
     }
-}*/
+   }*/
 
 const vecCstLabel_sptr& Page::labels() const {
     return _labels;
@@ -174,8 +174,10 @@ void Page::update (bool isPressed, float screenPosY) {
 
         if (_releaseVelocity > 0.f && t < -(_releaseVelocity) / (2.f * -decelerationCoefficient / 2.f)) {
             _localPosY = -deceleration + _releaseVelocity * t + _localReleasedPosY;
-        } else if (_releaseVelocity < 0.f &&
-                   t < -(_releaseVelocity) / (2.f * decelerationCoefficient / 2.f)) {
+        } else if (
+            _releaseVelocity < 0.f &&
+            t < -(_releaseVelocity) / (2.f * decelerationCoefficient / 2.f)
+            ) {
             _localPosY = deceleration + _releaseVelocity * t + _localReleasedPosY;
         }
 

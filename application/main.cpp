@@ -26,8 +26,7 @@ GLFWwindow*initLibraries() {
     /*window = glfwCreateWindow(RESOLUTION_X,RESOLUTION_Y,
        "JumperBall",glfwGetPrimaryMonitor(),
        nullptr);*/
-    window = glfwCreateWindow(RESOLUTION_X, RESOLUTION_Y,
-                              "JumperBall", nullptr, nullptr);
+    window = glfwCreateWindow(RESOLUTION_X, RESOLUTION_Y, "JumperBall", nullptr, nullptr);
 
     int widthWindow;
     int heightWindow;
@@ -56,7 +55,7 @@ GLFWwindow*initLibraries() {
 
 void cleanLibraries() {
     glfwTerminate();
-    //TextRendering::clearFreeTypeRessources();
+    // TextRendering::clearFreeTypeRessources();
 }
 
 int main (int argc, char**argv) {
