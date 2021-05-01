@@ -120,8 +120,10 @@ RenderProcess_sptr MenuRendering::createRenderProcess (const CstPage_sptr& page)
     const vecRenderPass_sptr renderPassesUsingLetters = getRenderPassesUsingLetters();
 
     const auto getRenderPassesOthers = [this, &page] ()->vecRenderPass_sptr {
-                                           if (_pagesRenderPassesOthers.find(page) ==
-                                               _pagesRenderPassesOthers.end()) {
+                                           if (
+                                               _pagesRenderPassesOthers.find(page) ==
+                                               _pagesRenderPassesOthers.end()
+                                               ) {
                                                return {};
                                            }
                                            return _pagesRenderPassesOthers.at(page);

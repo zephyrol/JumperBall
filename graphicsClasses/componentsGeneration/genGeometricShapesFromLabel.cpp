@@ -53,10 +53,9 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel (const Labe
         const Geometry::ShapeRotation& shapeRotation = geometry.getRotation();
         const Geometry::ShapeScale& shapeScale = geometry.getScale();
 
-        const glm::mat4 localTranslation = glm::translate(glm::vec3(
-                                                              shapeTranslation.at(0), shapeTranslation.at(1),
-                                                              shapeTranslation.at(2)
-                                                              ));
+        const glm::mat4 localTranslation = glm::translate(
+            glm::vec3(shapeTranslation.at(0), shapeTranslation.at(1), shapeTranslation.at(2))
+            );
 
         const glm::mat4 localRotationX = glm::rotate(shapeRotation.at(0), glm::vec3(1.f, 0.f, 0.f));
         const glm::mat4 localRotationY = glm::rotate(shapeRotation.at(1), glm::vec3(0.f, 1.f, 0.f));
@@ -67,13 +66,13 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel (const Labe
                                                               2)));
 
         const JBTypes::vec2f& position = label.position();
-        const glm::mat4 labelTranslation = glm::translate(glm::vec3(
-                                                              Utility::menuPositionToOpenGLScreenFormat(
-                                                                  position.x),
-                                                              Utility::menuPositionToOpenGLScreenFormat(
-                                                                  position.y),
-                                                              0.f)
-                                                          );
+        const glm::mat4 labelTranslation = glm::translate(
+            glm::vec3(
+                Utility::menuPositionToOpenGLScreenFormat(position.x),
+                Utility::menuPositionToOpenGLScreenFormat(position.y),
+                0.f
+                )
+            );
 
         const glm::mat4 labelScale = glm::scale(glm::vec3(label.width(), label.height(), 1.f));
 
