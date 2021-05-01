@@ -17,7 +17,7 @@ Label::Label(
     float height,
     const JBTypes::vec2f& position,
     bool activated,
-    const std::shared_ptr <LabelAnswer> action,
+    const std::shared_ptr <LabelAnswer>& action,
     bool fixed):
     _widthUnit(widthUnit),
     _width(width),
@@ -81,6 +81,10 @@ const std::shared_ptr <Label::LabelAnswer>& Label::action() const {
 
 const Label::WidthUnit& Label::widthUnit() const {
     return _widthUnit;
+}
+
+vecGeometry Label::genGeometries() const {
+    return {};
 }
 
 Label::~Label() {

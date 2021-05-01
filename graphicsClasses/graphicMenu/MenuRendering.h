@@ -30,15 +30,18 @@ using PagesRenderProcess = std::map <CstPage_sptr, RenderProcess_sptr>;
 const Menu& _menu;
 const FontTexturesGenerator::GraphicAlphabet _graphicAlphabet;
 const PagesRenderPassesLetters _pagesRenderPassesLetters;
+const PagesRenderPasses _pagesRenderPassesOthers;
 
-const vecRenderPass_sptr _renderPasses;
+// const vecRenderPass_sptr _renderPasses;
 const PagesRenderPasses _pagesRenderPasses;
+
 const PagesRenderProcess _pagesRenderProcess;
 
 
 Rendering::ExternalUniformVariables <GLuint> _externalUniformTextures;
 
 PagesRenderPassesLetters createPagesRenderPassesLetters() const;
+PagesRenderPasses createPagesRenderPassesOthers() const;
 PagesRenderPasses createPagesRenderPasses() const;
 RenderProcess_sptr createRenderProcess(const CstPage_sptr& page) const;
 PagesRenderProcess createPagesRenderProcess() const;

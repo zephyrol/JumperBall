@@ -2,7 +2,6 @@
  * File: genLettersLabel.cpp
  * Author: Morgenthaler S
  *
- * Created on 21 avril 2020, 16:00
  */
 
 #include "MeshGenerator.h"
@@ -14,15 +13,14 @@ std::map <unsigned char, vecMesh_sptr> MeshGenerator::genLettersLabel (
 
     std::map <unsigned char, vecMesh_sptr> lettersMeshes;
 
-    const glm::vec3 enabledLetterColor = glm::vec3(0.f, 1.f, 1.f);
-    const glm::vec3 disabledLetterColor = glm::vec3(0.5f, 0.5f, 0.5f);
+    const glm::vec3 enabledLetterColor(0.f, 1.f, 1.f);
+    const glm::vec3 disabledLetterColor(0.5f, 0.5f, 0.5f);
 
     for (const auto& label : page.labels()) {
         const float height = label->height();
         const JBTypes::vec2f& position = label->position();
         const float pitch = label->width() / label->message().size();
 
-        constexpr float biasScalar = 2.f; // To multiply the translation by 2
         const float initialOffsetX = -label->width() / 2.f + pitch / 2.f;
         const std::string message = label->message();
         for (size_t i = 0; i < message.size(); ++i) {
@@ -35,7 +33,6 @@ std::map <unsigned char, vecMesh_sptr> MeshGenerator::genLettersLabel (
             const auto& graphicCharacter = graphicAlphabet.at(character);
             const auto& localTransform = graphicCharacter.characterTransform;
 
-            // const CharacterTransform &localTransform = alphabetTransforms.at(c);
             const auto& localScale = localTransform.localScale;
             const float localScaleX = localScale.x;
             const float localScaleY = localScale.y;
@@ -46,8 +43,10 @@ std::map <unsigned char, vecMesh_sptr> MeshGenerator::genLettersLabel (
             const glm::vec3 scale = glm::vec3 { scaleX, scaleY, 0.f };
 
             const glm::mat4 scaleMatrix = glm::scale(scale);
-            const float translateX = (position.x + offsetX) * 2.f - 1.f;
-            const float translateY = (position.y + localTranslateY * height) * 2.f - 1.f;
+            const float translateX = Utility::menuPositionToOpenGLScreenFormat(position.x + offsetX);
+            const float translateY = Utility::menuPositionToOpenGLScreenFormat(
+                position.y + localTranslateY * height
+                );
             // const glm::vec3 translateVec{translateX, translateY, 0.f};
 
             // const glm::mat4 translate = glm::translate(biasScalar * translateVec);

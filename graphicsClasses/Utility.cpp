@@ -281,3 +281,8 @@ glm::vec2 Utility::convertToOpenGLFormat (const JBTypes::vec2f& vec2f) {
 GLubyte Utility::convertToOpenGLFormat (unsigned char uChar) {
     return static_cast <GLubyte>(uChar);
 }
+
+
+float Utility::menuPositionToOpenGLScreenFormat (float value) {
+    return 2.f * value - 1.f;
+}

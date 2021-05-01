@@ -18,7 +18,7 @@ MessageLabel(
     float height,
     const JBTypes::vec2f& position,
     const std::string& message,
-    const std::shared_ptr <LabelAnswer> action = nullptr,
+    const std::shared_ptr <LabelAnswer>& action = nullptr,
     bool activated = true
     );
 virtual ~MessageLabel() = default;

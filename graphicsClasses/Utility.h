@@ -50,6 +50,9 @@ template<typename T> void concatVector (std::vector <T>& current, const std::vec
     current.insert(current.end(), other.begin(), other.end());
 }
 
+float menuPositionToOpenGLScreenFormat(float value);
+
+
 extern const glm::mat3 XYZToRGB;
 extern const glm::mat3 RGBToXYZ;
 extern unsigned int windowResolutionX;

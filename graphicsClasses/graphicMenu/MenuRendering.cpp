@@ -10,6 +10,7 @@ MenuRendering::MenuRendering(const Menu& menu, const FontTexturesGenerator::FTCo
     _menu(menu),
     _graphicAlphabet(FontTexturesGenerator::genGraphicAlphabet(_menu, ftContent)),
     _pagesRenderPassesLetters(createPagesRenderPassesLetters()),
+    _pagesRenderPassesOthers(createPagesRenderPassesOthers()),
     _pagesRenderPasses(createPagesRenderPasses()),
     _pagesRenderProcess(createPagesRenderProcess()) {
 }
@@ -55,6 +56,17 @@ MenuRendering::PagesRenderPassesLetters MenuRendering::createPagesRenderPassesLe
     return pageRenderPassesLetters;
 }
 
+MenuRendering::PagesRenderPasses MenuRendering::createPagesRenderPassesOthers() const {
+    MenuRendering::PagesRenderPasses pageRenderPassesOthers;
+
+    for (const auto& page : _menu.pages()) {
+        const auto meshes = MeshGenerator::genOthersLabel(*page);
+        pageRenderPassesOthers[page] = { std::make_shared <RenderPass>(meshes) };
+    }
+
+    return pageRenderPassesOthers;
+}
+
 MenuRendering::PagesRenderPasses MenuRendering::createPagesRenderPasses() const {
     MenuRendering::PagesRenderPasses pagesRenderPasses;
 
@@ -69,9 +81,20 @@ MenuRendering::PagesRenderPasses MenuRendering::createPagesRenderPasses() const 
         pagesRenderPasses[page] = renderPasses;
     }
 
+    for (const auto& pageRenderPassesOthers : _pagesRenderPassesOthers) {
+        const auto& page = pageRenderPassesOthers.first;
+        const auto& renderPasses = pageRenderPassesOthers.second;
+
+        if (pagesRenderPasses.find(page) == pagesRenderPasses.end()) {
+            pagesRenderPasses[page] = renderPasses;
+        } else {
+            vecRenderPass_sptr& pageRenderPasses = pagesRenderPasses.at(page);
+            pageRenderPasses.insert(pageRenderPasses.end(), renderPasses.begin(), renderPasses.end());
+        }
+    }
+
     return pagesRenderPasses;
 }
-
 
 RenderProcess_sptr MenuRendering::createRenderProcess (const CstPage_sptr& page) const {
 
@@ -84,7 +107,6 @@ RenderProcess_sptr MenuRendering::createRenderProcess (const CstPage_sptr& page)
             const RenderPassesLetters& renderPassesLetters = pageRenderPassesLetters->second;
             return renderPassesLetters;
         };
-
     const MenuRendering::RenderPassesLetters renderPassesLetters = getRenderPassesLetters();
 
     const auto getRenderPassesUsingLetters =
@@ -95,15 +117,27 @@ RenderProcess_sptr MenuRendering::createRenderProcess (const CstPage_sptr& page)
             }
             return renderPassesUsingLetters;
         };
-
     const vecRenderPass_sptr renderPassesUsingLetters = getRenderPassesUsingLetters();
 
-    const auto createLettersShaders =
-        [this, &page, &renderPassesUsingLetters] ()->RenderProcess::PassShaderMap {
+    const auto getRenderPassesOthers = [this, &page] ()->vecRenderPass_sptr {
+                                           if (_pagesRenderPassesOthers.find(page) ==
+                                               _pagesRenderPassesOthers.end()) {
+                                               return {};
+                                           }
+                                           return _pagesRenderPassesOthers.at(page);
+                                       };
+    const vecRenderPass_sptr renderPassesOthers = getRenderPassesOthers();
+
+    const auto createShaders =
+        [this, &page, &renderPassesUsingLetters, &renderPassesOthers] ()->RenderProcess::PassShaderMap {
 
             const CstShaderProgram_sptr lettersShaderPrograms = ShaderProgram::createShaderProgram(
                 "fontVs.vs",
                 "fontFs.fs"
+                );
+            const CstShaderProgram_sptr othersShaderPrograms = ShaderProgram::createShaderProgram(
+                "labelVs.vs",
+                "labelFs.fs"
                 );
 
             RenderProcess::PassShaderMap passShaderMap;
@@ -111,13 +145,17 @@ RenderProcess_sptr MenuRendering::createRenderProcess (const CstPage_sptr& page)
             for (const auto& renderPass : renderPassesUsingLetters) {
                 passShaderMap[renderPass] = lettersShaderPrograms;
             }
+            for (const auto& renderPass : renderPassesOthers) {
+                passShaderMap[renderPass] = othersShaderPrograms;
+            }
             return passShaderMap;
         };
 
-    const auto updateSceneLevelRenderingFct =
+    const auto renderingLettersUpdateFct =
         [this, &page] (const RenderPass_sptr& letterRenderPass, GLuint shaderProgramID)->void {
 
             // TODO: use a object "page state" and access the values
+            // TODO 2: Should we use an external uniform ?
             letterRenderPass->upsertUniform(shaderProgramID, "positionY", page->localPosY());
 
             const auto& renderPassesLetters = _pagesRenderPassesLetters.at(page);
@@ -129,25 +167,40 @@ RenderProcess_sptr MenuRendering::createRenderProcess (const CstPage_sptr& page)
                 _graphicAlphabet.at(character).textureID
                 );
         };
+    const auto renderingOthersUpdateFct =
+        [this, &page] (const RenderPass_sptr& othersRenderPass, GLuint shaderProgramID)->void {
 
-    const auto createLettersRenderingFct =
-        [this, &renderPassesUsingLetters,
-         &updateSceneLevelRenderingFct] ()->RenderProcess::PassUniformUpdateMap {
+            // TODO: use a object "page state" and access the values
+            // TODO 2: Should we use an external uniform ? Yes because it's common with renderingLetUpFct
+            othersRenderPass->upsertUniform(shaderProgramID, "positionY", page->localPosY());
+        };
+    const auto createRenderPassRenderingFctAssociation =
+        [
+            &renderPassesUsingLetters,
+            &renderPassesOthers,
+            &renderingLettersUpdateFct,
+            &renderingOthersUpdateFct
+        ] ()->RenderProcess::PassUniformUpdateMap {
             RenderProcess::PassUniformUpdateMap passUniformUpdateMap;
             for (const auto& renderPassLetter : renderPassesUsingLetters) {
-                passUniformUpdateMap[renderPassLetter] = updateSceneLevelRenderingFct;
+                passUniformUpdateMap[renderPassLetter] = renderingLettersUpdateFct;
+            }
+            for (const auto& renderPassOthers : renderPassesOthers) {
+                passUniformUpdateMap[renderPassOthers] = renderingOthersUpdateFct;
             }
             return passUniformUpdateMap;
         };
 
+    vecRenderPass_sptr renderPasses =  renderPassesUsingLetters;
+    renderPasses.insert(renderPasses.end(), renderPassesOthers.begin(), renderPassesOthers.end());
+
     return std::make_shared <RenderProcess>(
-        renderPassesUsingLetters,
-        createLettersShaders(),
-        createLettersRenderingFct(),
+        renderPasses,
+        createShaders(),
+        createRenderPassRenderingFctAssociation(),
         nullptr,
         false
         );
-
 }
 
 MenuRendering::PagesRenderProcess MenuRendering::createPagesRenderProcess() const {
@@ -158,10 +211,7 @@ MenuRendering::PagesRenderProcess MenuRendering::createPagesRenderProcess() cons
     return pagesRenderProcess;
 }
 
-
-
 Rendering::ExternalUniformVariables <GLuint> MenuRendering::createExternalUniformTexturesVariables() const {
-
 
     const auto updateTexturesFct =
         [] (const Mesh::UniformVariables_uptr <GLuint>&) {

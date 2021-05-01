@@ -30,3 +30,7 @@ const Geometry::ShapeRotation& Geometry::getRotation() const {
 const Geometry::ShapeScale& Geometry::getScale() const {
     return _scale;
 }
+
+const Geometry::Shape& Geometry::getShape() const {
+    return _shape;
+}

@@ -12,6 +12,7 @@
 class Cylinder:public GeometricShape {
 public:
 
+// TODO : always use a unique mericount. So remove it from the parameters
 static constexpr size_t defaultMeriCount = 60;
 
 Cylinder(size_t meriCount = defaultMeriCount,

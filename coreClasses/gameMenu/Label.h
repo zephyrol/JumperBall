@@ -8,6 +8,7 @@
 #ifndef LABEL_H
 #define LABEL_H
 #include "system/Types.h"
+#include "system/Geometry.h"
 #include "scene/objects/Key.h"
 #include "scene/objects/Coin.h"
 #include "scene/objects/Clock.h"
@@ -54,14 +55,15 @@ Label(
     float height,
     const JBTypes::vec2f& position,
     bool activated = false,
-    const std::shared_ptr <LabelAnswer> action
-    = nullptr,
+    const std::shared_ptr <LabelAnswer>& action = nullptr,
     bool fixed = false);
 virtual ~Label() = 0;
 
 // -------CONST METHODS----------//
 float width() const;
 float height() const;
+
+virtual vecGeometry genGeometries() const;
 
 const vecCstLabel_sptr& children() const;
 bool isFixed() const;

@@ -19,7 +19,9 @@
 #include "geometry/Sphere.h"
 #include "geometry/Cube.h"
 #include "geometry/Quad.h"
+#include "geometry/Triangle.h"
 #include "geometry/QuadState.h"
+#include "system/Geometry.h"
 #include "FrameBuffer.h"
 #include <scene/Mesh.h>
 #include "graphicMenu/FontTexturesGenerator.h"
@@ -27,7 +29,6 @@
 
 namespace MeshGenerator {
 
-// vecMeshComponent_sptr genComponents(const QuadState& quad);
 vecMesh_sptr genBall(const Ball& ball);
 vecMesh_sptr genBlocks(const Map& map);
 vecMesh_sptr genObjects(const Map& map);
@@ -41,8 +42,7 @@ std::map <unsigned char, vecMesh_sptr> genLettersLabel(
     const Page& page,
     const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet
     );
-
-// vecMeshComponent_sptr genObject(const ObjectState& obj, const glm::vec3& position, const JBTypes::Dir& dir);
+vecMesh_sptr genOthersLabel(const Page& page);
 
 Mesh_sptr genBlock(const Map& map, size_t index);
 
@@ -57,11 +57,8 @@ vecCstGeometricShape_sptr genJumpers(const Block& block,
 Mesh_sptr genObject(const Object& object);
 Mesh_sptr genEnemy(const Enemy& enemy, const Map::EnemyTypes& category);
 Mesh_sptr genSpecial(const Special& special, const Map::SpecialTypes& category);
-/*vecMeshComponent_sptr genEnemy(const EnemyState& enemy);
-   vecMeshComponent_sptr genSpecial(const SpecialState& special);
 
-   vecMeshComponent_sptr sortComponents( const vecMeshComponent_sptr& components);*/
-// extern std::map <std::string, GeometricShape_sptr> commonShapes;
+vecCstGeometricShape_sptr genGeometricShapesFromLabel(const Label& label);
 }
 
 #endif /* MESHGENERATOR_H */
