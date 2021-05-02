@@ -214,28 +214,5 @@ MenuRendering::PagesRenderProcess MenuRendering::createPagesRenderProcess() cons
 }
 
 Rendering::ExternalUniformVariables <GLuint> MenuRendering::createExternalUniformTexturesVariables() const {
-
-    const auto updateTexturesFct =
-        [] (const Mesh::UniformVariables_uptr <GLuint>&) {
-            // Don't need to update the textures
-        };
-
-    const auto createTexturesVariables =
-        [this] ()->Mesh::UniformVariables <GLuint> {
-            Mesh::UniformVariables <GLuint> lettersTextures;
-
-
-            return lettersTextures;
-        };
-
-    const auto createTexturesPtr =
-        [this, &createTexturesVariables] () {
-            return Mesh::UniformVariables_uptr <GLuint>(
-                new Mesh::UniformVariables <GLuint>(createTexturesVariables())
-                );
-
-        };
-
     return {};
-    // return { createTexturesPtr(), updateMat4VariablesFct };
 }

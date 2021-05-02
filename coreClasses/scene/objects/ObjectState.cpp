@@ -17,10 +17,8 @@ State::GlobalState ObjectState::update() {
     _timeSinceObtaining = _object.getTimeSinceObtaining();
 
     if (_object.isGotten()) {
-        const float thresholdSecondStep = 1.0;
-        const float thresholdThirdStep = 1.5;
-        const float durationSecondStep = thresholdThirdStep - thresholdSecondStep;
-        const float durationThirdStep = 0.2;
+        constexpr float thresholdThirdStep = 1.5;
+        constexpr float durationThirdStep = 0.2;
         return _timeSinceObtaining < thresholdThirdStep + durationThirdStep
                ? State::GlobalState::Separate
                : State::GlobalState::Dead;

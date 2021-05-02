@@ -23,9 +23,9 @@ Mesh_sptr MeshGenerator::genEnemy (const Enemy& enemy, const Map::EnemyTypes& ca
                 constexpr float laserIntensity = 1.5f;
                 // Lasers create the bloom effect, but we would like that
                 // all laser colors have the same brightness;
-                const float redConeSensibilityCoeff = 0.3f;
-                const float greenConeSensibilityCoeff = 0.59f;
-                const float blueConeSensibilityCoeff = 0.11f;
+                constexpr float redConeSensibilityCoeff = 0.3f;
+                constexpr float greenConeSensibilityCoeff = 0.59f;
+                constexpr float blueConeSensibilityCoeff = 0.11f;
 
                 glm::vec3 laserColor;
                 switch (color) {
@@ -84,21 +84,18 @@ Mesh_sptr MeshGenerator::genEnemy (const Enemy& enemy, const Map::EnemyTypes& ca
             modelTransfLaserOne,
             modelTransfLaserTwo,
             modelTransfLaserThree,
-            modelTransfLaserFour };
+            modelTransfLaserFour
+        };
 
         const glm::mat4 normalsTransf = rotationMatrix;
 
         for (const glm::mat4& laserTransf : lasersTransf) {
             geometricShapes.push_back(createLaserShape(color, laserTransf, normalsTransf));
         }
-    } else if (
-        category == Map::EnemyTypes::ThornBall ||
-        category == Map::EnemyTypes::DarkBall
-        ) {
+    } else if (category == Map::EnemyTypes::ThornBall || category == Map::EnemyTypes::DarkBall) {
 
         const JBTypes::Dir& currentDir = enemy.direction();
-        const glm::mat4 rotationLocal =
-            Utility::rotationUpToDir(currentDir);
+        const glm::mat4 rotationLocal = Utility::rotationUpToDir(currentDir);
 
         const JBTypes::vec3f& posWorld = enemy.position();
 
@@ -109,20 +106,16 @@ Mesh_sptr MeshGenerator::genEnemy (const Enemy& enemy, const Map::EnemyTypes& ca
         const glm::mat4 modelTransf = translationLocal * rotationLocal * scaleLocal;
         const glm::mat4 normalsTransf = rotationLocal;
 
-        const glm::vec3 sphereColor =
-            category == Map::EnemyTypes::ThornBall
-            ? glm::vec3(114.f / 255.f, 47.f / 255.f, 55.f / 255.f)
-            : glm::vec3(0.f, 0.f, 0.5f);
+        const glm::vec3 sphereColor = category == Map::EnemyTypes::ThornBall
+                                      ? glm::vec3(114.f / 255.f, 47.f / 255.f, 55.f / 255.f)
+                                      : glm::vec3(0.f, 0.f, 0.5f);
         geometricShapes.push_back(std::make_shared <const Sphere>(
                                       sphereColor,
                                       modelTransf,
                                       normalsTransf));
     }
 
-    return std::make_shared <Mesh>(
-        State_uptr(new EnemyState(enemy, category)),
-        std::move(geometricShapes)
-        );
+    return std::make_shared <Mesh>(State_uptr(new EnemyState(enemy)), std::move(geometricShapes));
 }
 
 /*vecMeshComponent_sptr MeshGenerator::genEnemy (const EnemyState& enemy) {

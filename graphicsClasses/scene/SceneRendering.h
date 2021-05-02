@@ -80,7 +80,6 @@ Rendering::ExternalUniformBlockVariables createExternalUniformBlockVariables() c
 const UniformBlock_sptr& getUniformBlock(const std::string& name) const;
 const glm::mat4& getUniformMatrix(const std::string& name) const;
 
-glm::mat4 genVPStar() const;
 FrameBuffer_uptr createScreenSpaceEffectFrameBuffer(const FrameBuffer::TextureCaterory& category) const;
 
 static const std::string VPName;

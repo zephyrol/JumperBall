@@ -77,7 +77,7 @@ RenderProcess_sptr SceneRendering::createDepthStarProcess() const {
 
     const auto updateDepthStarFct =
         [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
-            renderPass->upsertUniform(shaderProgramID, VPName, genVPStar());
+            renderPass->upsertUniform(shaderProgramID, VPName, Camera::genVPMatrixFromStar(*_starState));
         };
 
     const auto createDepthStarUniformsUpdating =
@@ -293,13 +293,13 @@ Rendering::ExternalUniformVariables <glm::mat4> SceneRendering::createExternalUn
 
     const auto updateMat4VariablesFct =
         [this] (const Mesh::UniformVariables_uptr <glm::mat4>& uniformMatrices) {
-            uniformMatrices->at(VPStarName) = genVPStar();
+            uniformMatrices->at(VPStarName) = Camera::genVPMatrixFromStar(*_starState);
         };
 
     const auto createMat4Variables =
         [this] ()->Mesh::UniformVariables <glm::mat4> {
             return  {
-                { SceneRendering::VPStarName, genVPStar() },
+                { SceneRendering::VPStarName, Camera::genVPMatrixFromStar(*_starState) },
                 { SceneRendering::VPName, _camera.viewProjection() }
             };
         };
@@ -314,32 +314,6 @@ Rendering::ExternalUniformVariables <glm::mat4> SceneRendering::createExternalUn
 
     return { createMat4VariablesPtr(), updateMat4VariablesFct };
 }
-
-glm::mat4 SceneRendering::genVPStar() const {
-
-    constexpr float offsetJumpingBall = 1.f; // size of ball + jump height
-    const float envSize = _starState->getEnvSize();
-    const float halfBoundingBoxSize = envSize / 2.f +
-                                      offsetJumpingBall;
-
-    // We use a close star position to get a better ZBuffer accuracy
-    const JBTypes::vec3f& rotationCenter = _starState->getRotationCenter();
-    const glm::vec3 centerWorld = Utility::convertToOpenGLFormat(rotationCenter);
-
-    const JBTypes::vec3f& position = _starState->getPosition();
-    const glm::vec3 closeStarPosition = centerWorld + glm::normalize(
-        (Utility::convertToOpenGLFormat(position)) - centerWorld
-        )  * halfBoundingBoxSize;
-
-    return glm::ortho(
-        -halfBoundingBoxSize,
-        halfBoundingBoxSize,
-        -halfBoundingBoxSize,
-        halfBoundingBoxSize,
-        _camera.zNear, _camera.zNear + 2.f * halfBoundingBoxSize
-        ) * glm::lookAt(closeStarPosition, centerWorld, glm::vec3(0.f, 1.f, 0.f));
-}
-
 
 // TODO should be in FrameBuffer class
 FrameBuffer_uptr SceneRendering::createScreenSpaceEffectFrameBuffer (

@@ -9,6 +9,7 @@
 #define CAMERA_H
 #include <scene/BallState.h>
 #include <scene/MapState.h>
+#include <scene/StarState.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -40,6 +41,7 @@ void follow(const MapState& mapState) noexcept;
 bool transitionEffect(const BallState& ball,
                       const MapState& map) noexcept;
 
+static glm::mat4 genVPMatrixFromStar(const StarState& starState);
 
 private:
 

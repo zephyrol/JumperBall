@@ -103,8 +103,7 @@ Map::getBlocksTeleporters() const {
     return _blocksTeleporters;
 }
 
-std::map <JBTypes::Color, Map::TeleportersInfo> Map::createBlocksTeleporters()
-const {
+std::map <JBTypes::Color, Map::TeleportersInfo> Map::createBlocksTeleporters() const {
     std::map <JBTypes::Color, Map::TeleportersInfo> blocksTeleporters;
     for (
         unsigned int colorInt = static_cast <unsigned int>(JBTypes::Color::Red);
@@ -255,9 +254,7 @@ unsigned int Map::beginZ() const {
     return _beginZ;
 }
 
-Map::Effect Map::interaction (const JBTypes::Dir& ballDir,
-                              const JBTypes::vec3f& posBall,
-                              float radius) {
+Map::Effect Map::interaction (const JBTypes::Dir& ballDir, const JBTypes::vec3f& posBall, float radius) {
 
     _dirBallInteractions = ballDir;
     _posBallInteractions = posBall;

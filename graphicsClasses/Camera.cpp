@@ -234,6 +234,31 @@ bool Camera::transitionEffect (const BallState& ball, const MapState& map) noexc
     return animationIsFinished;
 }
 
+glm::mat4 Camera::genVPMatrixFromStar (const StarState& starState) {
+
+    constexpr float offsetJumpingBall = 1.f; // size of ball + jump height
+    const float envSize = starState.getEnvSize();
+    const float halfBoundingBoxSize = envSize / 2.f +
+                                      offsetJumpingBall;
+
+    // We use a close star position to get a better ZBuffer accuracy
+    const JBTypes::vec3f& rotationCenter = starState.getRotationCenter();
+    const glm::vec3 centerWorld = Utility::convertToOpenGLFormat(rotationCenter);
+
+    const JBTypes::vec3f& position = starState.getPosition();
+    const glm::vec3 closeStarPosition = centerWorld + glm::normalize(
+        (Utility::convertToOpenGLFormat(position)) - centerWorld
+        )  * halfBoundingBoxSize;
+
+    return glm::ortho(
+        -halfBoundingBoxSize,
+        halfBoundingBoxSize,
+        -halfBoundingBoxSize,
+        halfBoundingBoxSize,
+        zNear, zNear + 2.f * halfBoundingBoxSize
+        ) * glm::lookAt(closeStarPosition, centerWorld, glm::vec3(0.f, 1.f, 0.f));
+
+}
 
 const glm::vec3& Camera::center() const noexcept{
     return _center;

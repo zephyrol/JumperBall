@@ -126,9 +126,6 @@ GeometricShape::ShapeVerticesInfo Cylinder::computeBasicInfoCylinder (size_t mer
 }
 
 
-const GeometricShape::ShapeVerticesInfo Cylinder::basicInfoCylinder =
-    computeBasicInfoCylinder();
-
 std::vector <glm::vec3> Cylinder::createCenterAndEdgeColorBuffer (
     const glm::vec3& customColorCenter,
     const glm::vec3& customColorEdge,
@@ -156,7 +153,7 @@ std::vector <glm::vec3> Cylinder::genColors (const std::vector <glm::vec3>& colo
             );
     }
     if (colors.size() == 1) {
-        GeometricShape::createCustomColorBuffer(
+        return GeometricShape::createCustomColorBuffer(
             colors.at(0), // customColor
             computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.colors.size()
             );

@@ -6,17 +6,8 @@
  */
 #include "EnemyState.h"
 
-EnemyState::EnemyState(const Enemy& enemy, const Map::EnemyTypes& category):
+EnemyState::EnemyState(const Enemy& enemy):
     _enemy(enemy),
-    _category(category),
-    _color(enemy.getColor()),
-    _creationTime(enemy.creationTime()),
-    _direction(enemy.direction()),
-    _size(enemy.size()),
-    _length(enemy.length()),
-    _hasHit(enemy.hasHit()),
-    _intersectionTime(enemy.intersectionTime()),
-    _position(enemy.position()),
     _transform(enemy.transform()) {
 }
 

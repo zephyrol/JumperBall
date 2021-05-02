@@ -127,4 +127,5 @@ std::vector <glm::vec3> Sphere::genPositions() const {
 }
 
 
+// TODO: create a dictionnary to don't keep this geometry and do not compute the geometry each time
 const GeometricShape::ShapeVerticesInfo Sphere::basicInfoSphere = computeBasicInfoSphere();

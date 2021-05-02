@@ -13,7 +13,7 @@
 
 class EnemyState:public State {
 public:
-EnemyState(const Enemy& enemy, const Map::EnemyTypes& category);
+EnemyState(const Enemy& enemy);
 const std::array <float, 9>& transform() const;
 virtual State::GlobalState update() override;
 
@@ -21,15 +21,6 @@ virtual State::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 
 private:
 const Enemy& _enemy;
-const Map::EnemyTypes& _category;
-const JBTypes::Color _color;
-const JBTypes::timePointMs& _creationTime;
-const JBTypes::Direction& _direction;
-const float _size;
-const size_t _length;
-bool _hasHit;
-JBTypes::timePointMs _intersectionTime;
-JBTypes::vec3f _position;
 std::array <float, 9> _transform;
 };
 
