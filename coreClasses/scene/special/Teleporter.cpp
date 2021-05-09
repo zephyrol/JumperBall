@@ -14,6 +14,10 @@ Teleporter::Teleporter(const JBTypes::Color& color,
     :Special(color, tieBlock, dir, position) {
 }
 
+bool Teleporter::isAnimated() const {
+    return true;
+}
+
 Special::SpecialEffect Teleporter::getEffect() const {
     return SpecialEffect::Teleportation;
 }

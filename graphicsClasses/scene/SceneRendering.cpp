@@ -21,6 +21,7 @@ SceneRendering::SceneRendering(const Map& map,
                        std::make_shared <RenderPass>(MeshGenerator::genBlocks(map)),
                        std::make_shared <RenderPass>(MeshGenerator::genObjects(map)),
                        std::make_shared <RenderPass>(MeshGenerator::genEnemies(map)),
+                       std::make_shared <RenderPass>(MeshGenerator::genSpecials(map)),
                        std::make_shared <RenderPass>(MeshGenerator::genBall(ball))
                        },
     _starRenderPass(std::make_shared <RenderPass>(MeshGenerator::genStar(star))),
@@ -70,7 +71,8 @@ RenderProcess_sptr SceneRendering::createDepthStarProcess() const {
                     { _levelRenderPasses.at(0), ShaderProgram::createShaderProgram(blocksVs, depthFs) },
                     { _levelRenderPasses.at(1), ShaderProgram::createShaderProgram(objectsMapVs, depthFs) },
                     { _levelRenderPasses.at(2), ShaderProgram::createShaderProgram(enemiesVs, depthFs) },
-                    { _levelRenderPasses.at(3), ShaderProgram::createShaderProgram(ballVs, depthFs) }
+                    { _levelRenderPasses.at(3), ShaderProgram::createShaderProgram(specialsVs, depthFs) },
+                    { _levelRenderPasses.at(4), ShaderProgram::createShaderProgram(ballVs, depthFs) }
                 }
             };
         };
@@ -94,7 +96,7 @@ RenderProcess_sptr SceneRendering::createDepthStarProcess() const {
         createDepthStarShaders(),
         createDepthStarUniformsUpdating(),
         FrameBuffer_uptr(new FrameBuffer(
-                             FrameBuffer::TextureCaterory::Depth,
+                             FrameBuffer::Content::Depth,
                              true,
                              sizeDepthTexture,
                              sizeDepthTexture,
@@ -114,10 +116,11 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
                 ShaderProgram::createShaderProgram(blocksVs, levelFs),
                 ShaderProgram::createShaderProgram(objectsMapVs, levelFs),
                 ShaderProgram::createShaderProgram(enemiesVs, levelFs),
+                ShaderProgram::createShaderProgram(specialsVs, levelFs),
                 ShaderProgram::createShaderProgram(ballVs, levelFs),
                 ShaderProgram::createShaderProgram("starVs.vs", "starFs.fs")
             };
-            const std::vector <bool> usingLight = { true, true, true, true, false };
+            const std::vector <bool> usingLight = { true, true, true, true, true, false };
 
             RenderProcess::PassShaderMap passShaderMap;
             for (size_t i = 0; i < _sceneRenderPasses.size(); ++i) {
@@ -138,7 +141,6 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
             renderPass->upsertUniform(shaderProgramID, VPStarName, getUniformMatrix(VPStarName));
             renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName, _camera.pos());
 
-            // renderPass->upsertUniform(shaderProgramID, _light->name(), _light);
             const auto& lightBlock = getUniformBlock(lightBlockName);
             renderPass->upsertUniform(shaderProgramID, lightBlockName, lightBlock);
             renderPass->upsertUniformTexture(
@@ -169,7 +171,7 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
         _sceneRenderPasses,
         createSceneRenderingShaders(),
         createSceneRenderingUniformsUpdating(),
-        FrameBuffer_uptr(new FrameBuffer(FrameBuffer::TextureCaterory::HDR, true))
+        FrameBuffer_uptr(new FrameBuffer(FrameBuffer::Content::HDR, true))
         );
 }
 
@@ -197,7 +199,7 @@ RenderProcess_sptr SceneRendering::createBrightPassProcess() const {
         _vecScreenRenderPass,
         createScreenShaders("brightPassFilter.fs"),
         createBrightPassUniformsUpdating(),
-        createScreenSpaceEffectFrameBuffer(FrameBuffer::TextureCaterory::HDR)
+        createScreenSpaceEffectFrameBuffer(FrameBuffer::Content::HDR)
         );
 }
 
@@ -206,7 +208,7 @@ RenderProcess_sptr SceneRendering::createHorizontalBlurProcess() const {
         _vecScreenRenderPass,
         createScreenShaders("horizontalBlurFs.fs"),
         createHorizontalBlurUniformsUpdating(),
-        createScreenSpaceEffectFrameBuffer(FrameBuffer::TextureCaterory::HDR)
+        createScreenSpaceEffectFrameBuffer(FrameBuffer::Content::HDR)
         );
 }
 
@@ -215,7 +217,7 @@ RenderProcess_sptr SceneRendering::createVerticalBlurProcess() const {
         _vecScreenRenderPass,
         createScreenShaders("verticalBlurFs.fs"),
         createVerticalBlurUniformsUpdating(),
-        createScreenSpaceEffectFrameBuffer(FrameBuffer::TextureCaterory::SDR)
+        createScreenSpaceEffectFrameBuffer(FrameBuffer::Content::SDR)
         );
 }
 
@@ -227,7 +229,6 @@ RenderProcess_sptr SceneRendering::createBloomProcess() const {
         nullptr
         );
 }
-
 
 RenderProcess::PassShaderMap SceneRendering::createScreenShaders (const std::string& fs) const {
     return {
@@ -317,10 +318,10 @@ Rendering::ExternalUniformVariables <glm::mat4> SceneRendering::createExternalUn
 
 // TODO should be in FrameBuffer class
 FrameBuffer_uptr SceneRendering::createScreenSpaceEffectFrameBuffer (
-    const FrameBuffer::TextureCaterory& category
+    const FrameBuffer::Content& content
     ) const {
     return FrameBuffer_uptr(new FrameBuffer(
-                                category,
+                                content,
                                 false,
                                 Utility::getWidthFromHeight(heightBloomTexture),
                                 heightBloomTexture,
@@ -367,6 +368,7 @@ void SceneRendering::render() const {
 const std::string SceneRendering::blocksVs = "blocksVs.vs";
 const std::string SceneRendering::objectsMapVs = "objectsMapVs.vs";
 const std::string SceneRendering::enemiesVs = "enemiesVs.vs";
+const std::string SceneRendering::specialsVs = "specialsVs.vs";
 const std::string SceneRendering::ballVs = "ballVs.vs";
 const std::string SceneRendering::basicFboVs = "basicFboVs.vs";
 const std::string SceneRendering::levelFs = "levelFs.fs";

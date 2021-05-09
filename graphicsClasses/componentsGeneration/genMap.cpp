@@ -45,3 +45,16 @@ vecMesh_sptr MeshGenerator::genEnemies (const Map& map) {
     }
     return meshes;
 }
+
+vecMesh_sptr MeshGenerator::genSpecials (const Map& map) {
+
+    vecMesh_sptr meshes;
+    const auto specialsInfos = map.getSpecialInfo();
+    for (const auto& specialInfo : specialsInfos) {
+        const std::shared_ptr <const Special> special = specialInfo.special;
+        if (special) {
+            meshes.push_back(genSpecial(*special, specialInfo.type));
+        }
+    }
+    return meshes;
+}

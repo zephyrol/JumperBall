@@ -6,9 +6,8 @@
  */
 
 #include "MeshGenerator.h"
-#include "animations/SpecialAnimation.h"
 
-Mesh_sptr genSpecial (const Special& special, const Map::SpecialTypes& category) {
+Mesh_sptr MeshGenerator::genSpecial (const Special& special, const Map::SpecialTypes& category) {
     vecCstGeometricShape_sptr geometricShapes;
 
     const std::function <std::pair <glm::vec3, glm::vec3>(const JBTypes::Color&)>
@@ -56,9 +55,7 @@ Mesh_sptr genSpecial (const Special& special, const Map::SpecialTypes& category)
                                   modelTranf
                                   ));
 
-    return std::make_shared <Mesh>(
-        State_uptr(new SpecialState(special, category)),
-        std::move(geometricShapes));
+    return std::make_shared <Mesh>(State_uptr(new SpecialState(special)), std::move(geometricShapes));
 }
 
 /*vecMeshComponent_sptr MeshGenerator::genSpecial (const SpecialState& special) {

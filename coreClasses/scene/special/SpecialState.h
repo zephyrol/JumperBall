@@ -12,22 +12,22 @@
 
 class SpecialState:public State {
 public:
-SpecialState(const Special& special, const Map::SpecialTypes& category);
-const JBTypes::Color& color() const;
-const Map::SpecialTypes& category() const;
-const JBTypes::Dir& direction() const;
-const JBTypes::vec3f& position3D() const;
-const JBTypes::timePointMs& creationTime() const;
-bool isActivated() const;
+SpecialState(const Special& special);
 virtual State::GlobalState update() override;
+
+State::StaticValues <float> getStaticFloatValues() const override;
+State::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+
+State::DynamicValues <float> getDynamicFloats() const override;
 
 private:
 const Special& _special;
-const Map::SpecialTypes& _category;
-const JBTypes::Color _color;
-const JBTypes::timePointMs& _creationTime;
-const JBTypes::Dir& _direction;
-const JBTypes::vec3f _position3D;
+const JBTypes::vec3ui& _position;
+const float _direction;
+const float _color;
+const std::string _colorAttributeName;
+const float _isAnimated;
+float _timeSinceCreation;
 bool _isActivated;
 };
 

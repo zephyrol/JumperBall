@@ -6,41 +6,41 @@
  */
 #include "SpecialState.h"
 
-SpecialState::SpecialState(const Special& special, const Map::SpecialTypes& category):
+SpecialState::SpecialState(const Special& special):
     _special(special),
-    _category(category),
-    _color(special.getColor()),
-    _creationTime(special.creationTime()),
-    _direction(special.direction()),
-    _position3D(special.position3D()),
+    _position(special.position()),
+    _direction(static_cast <float>(special.direction())),
+    _color(static_cast <float>(special.getColor())),
+    _colorAttributeName("is" + JBTypesMethods::colorToString(special.getColor()) + "Activated"),
+    _isAnimated(static_cast <float>(special.isAnimated())),
+    _timeSinceCreation(special.getTimeSinceCreation()),
     _isActivated(special.isActivated()) {
 }
 
-const JBTypes::Color& SpecialState::color() const {
-    return _color;
-}
-
-const Map::SpecialTypes& SpecialState::category() const {
-    return _category;
-}
-
-const JBTypes::Dir& SpecialState::direction() const {
-    return _direction;
-}
-
-const JBTypes::vec3f& SpecialState::position3D() const {
-    return _position3D;
-}
-
-const JBTypes::timePointMs& SpecialState::creationTime() const {
-    return _creationTime;
-}
-
-bool SpecialState::isActivated() const {
-    return _isActivated;
-}
-
 State::GlobalState SpecialState::update() {
+    _timeSinceCreation = _special.getTimeSinceCreation();
     _isActivated = _special.isActivated();
     return GlobalState::United;
+}
+
+State::StaticValues <float> SpecialState::getStaticFloatValues() const {
+    std::cout << "direction " << _direction << std::endl;
+    return { _direction, _color, _isAnimated };
+}
+
+State::StaticValues <JBTypes::vec3f> SpecialState::getStaticVec3fValues() const {
+    constexpr float offset = 0.5;
+    const JBTypes::vec3f position = {
+        static_cast <float>(_position.at(0)) + offset,
+        static_cast <float>(_position.at(1)) + offset,
+        static_cast <float>(_position.at(2)) + offset
+    };
+    return { position };
+}
+
+State::DynamicValues <float> SpecialState::getDynamicFloats() const {
+    return {
+        { "creationTime", _timeSinceCreation },
+        { _colorAttributeName, _isActivated }
+    };
 }

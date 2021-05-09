@@ -5,7 +5,6 @@
  * Created on 22 aout 2020, 18h15
  */
 #include "MeshGenerator.h"
-#include "animations/EnemyAnimation.h"
 
 Mesh_sptr MeshGenerator::genEnemy (const Enemy& enemy, const Map::EnemyTypes& category) {
 

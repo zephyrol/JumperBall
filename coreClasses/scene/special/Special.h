@@ -24,11 +24,12 @@ Special(
 virtual ~Special() = default;
 
 const JBTypes::Color& getColor() const;
-const JBTypes::timePointMs& creationTime() const;
+float getTimeSinceCreation() const;
 const JBTypes::Dir& direction() const;
 const JBTypes::vec3f& position3D() const;
 const JBTypes::vec3ui& position() const;
 bool isActivated() const;
+virtual bool isAnimated() const;
 virtual SpecialEffect getEffect() const = 0;
 
 void switchOnOff();
@@ -42,8 +43,7 @@ const JBTypes::vec3ui _position;
 const JBTypes::vec3f _position3D;
 bool _isActivated;
 
-JBTypes::vec3f initPosition(const JBTypes::vec3ui& position)
-const;
+JBTypes::vec3f initPosition(const JBTypes::vec3ui& position) const;
 };
 
 

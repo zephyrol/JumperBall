@@ -12,6 +12,7 @@
 #include <scene/MapState.h>
 #include <scene/objects/ObjectState.h>
 #include <scene/enemies/EnemyState.h>
+#include <scene/special/SpecialState.h>
 #include <scene/StarState.h>
 #include <gameMenu/Page.h>
 #include "geometry/Cylinder.h"
@@ -33,6 +34,7 @@ vecMesh_sptr genBall(const Ball& ball);
 vecMesh_sptr genBlocks(const Map& map);
 vecMesh_sptr genObjects(const Map& map);
 vecMesh_sptr genEnemies(const Map& map);
+vecMesh_sptr genSpecials(const Map& map);
 vecMesh_sptr genStar(const Star& star);
 vecMesh_sptr genQuad(const Quad& quad);
 

@@ -7,7 +7,7 @@
 
 #include "FrameBuffer.h"
 
-FrameBuffer::FrameBuffer(FrameBuffer::TextureCaterory category,
+FrameBuffer::FrameBuffer(FrameBuffer::Content content,
                          bool usedAutoClean,
                          GLsizei resolutionX,
                          GLsizei resolutionY,
@@ -15,7 +15,7 @@ FrameBuffer::FrameBuffer(FrameBuffer::TextureCaterory category,
                          const glm::vec3& clearColor):
     _fboHandle(createFrameBufferObject()),
     _renderTexture(createRenderTexture()),
-    _textureCategory(category),
+    _content(content),
     _depthBuffer(hasDepthBuffer ? createDepthBuffer() : nullptr),
     _usedAutoClean(usedAutoClean),
     _clearColor(clearColor),
@@ -27,10 +27,10 @@ FrameBuffer::FrameBuffer(FrameBuffer::TextureCaterory category,
     glBindTexture(GL_TEXTURE_2D, _renderTexture);
 
     const auto getDataFormat = [] (
-        const FrameBuffer::TextureCaterory textureCategory)->GLenum {
-                                   if (textureCategory == FrameBuffer::TextureCaterory::SDR) {
+        const FrameBuffer::Content Content)->GLenum {
+                                   if (Content == FrameBuffer::Content::SDR) {
                                        return GL_RGB8;
-                                   } else if (textureCategory == FrameBuffer::TextureCaterory::HDR) {
+                                   } else if (Content == FrameBuffer::Content::HDR) {
                                        return GL_RGB16F;
                                    } else { // Depth Map
                                        return GL_R16F;
@@ -38,7 +38,7 @@ FrameBuffer::FrameBuffer(FrameBuffer::TextureCaterory category,
                                };
 
     constexpr GLsizei levelTexture = 1;
-    const GLenum dataFormat = getDataFormat(_textureCategory);
+    const GLenum dataFormat = getDataFormat(_content);
 
     glTexStorage2D(GL_TEXTURE_2D, levelTexture, dataFormat, resolutionX, resolutionY);
 

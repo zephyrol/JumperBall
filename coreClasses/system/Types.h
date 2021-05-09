@@ -44,23 +44,22 @@ using timePointMs = std::chrono::time_point <
         long int, std::ratio <1, 1000>
         >
     >;
-using durationMs = std::chrono::duration <long int,
-                                          std::ratio <1, 1000> >;
+using durationMs = std::chrono::duration <long int, std::ratio <1, 1000> >;
 struct Quaternion { JBTypes::vec3f v; float w; };
 }
-
 
 namespace JBTypesMethods {
 JBTypes::vec3f directionAsVector(JBTypes::Dir dir);
 JBTypes::Dir integerAsDirection(unsigned int number);
 JBTypes::Dir vectorAsDirection(const JBTypes::vec3f& vec);
-unsigned int directionAsInteger(JBTypes::Dir
-                                dir);
+unsigned int directionAsInteger(JBTypes::Dir dir);
+
 JBTypes::timePointMs getTimePointMSNow() noexcept;
-float getTimeSecondsSinceTimePoint(
-    const JBTypes::timePointMs& timePoint) noexcept;
-float getFloatFromDurationMS(
-    const JBTypes::durationMs& dms);
+
+float getTimeSecondsSinceTimePoint(const JBTypes::timePointMs& timePoint) noexcept;
+
+float getFloatFromDurationMS(const JBTypes::durationMs& dms);
+
 JBTypes::timePointMs getTimePointMsFromTimePoint(
     const std::chrono::time_point <std::chrono::system_clock>& timePoint
     ) noexcept;

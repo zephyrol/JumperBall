@@ -19,9 +19,9 @@ private:
 static const glm::vec3 backgroundColor;
 
 public:
-enum class TextureCaterory { SDR, HDR, Depth };
+enum class Content { SDR, HDR, Depth };
 
-FrameBuffer(TextureCaterory category = TextureCaterory::SDR,
+FrameBuffer(Content content = Content::SDR,
             bool usedAutoClean = false,
             GLsizei resolutionX = Utility::windowResolutionX,
             GLsizei resolutionY = Utility::windowResolutionY,
@@ -48,7 +48,7 @@ private:
 const GLuint _fboHandle;
 
 const GLuint _renderTexture;
-const TextureCaterory _textureCategory;
+const Content _content;
 
 const std::unique_ptr <const GLuint> _depthBuffer;
 

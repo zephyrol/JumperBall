@@ -80,7 +80,7 @@ Rendering::ExternalUniformBlockVariables createExternalUniformBlockVariables() c
 const UniformBlock_sptr& getUniformBlock(const std::string& name) const;
 const glm::mat4& getUniformMatrix(const std::string& name) const;
 
-FrameBuffer_uptr createScreenSpaceEffectFrameBuffer(const FrameBuffer::TextureCaterory& category) const;
+FrameBuffer_uptr createScreenSpaceEffectFrameBuffer(const FrameBuffer::Content& category) const;
 
 static const std::string VPName;
 static const std::string VPStarName;
@@ -90,6 +90,7 @@ static const std::string lightName;
 static const std::string blocksVs;
 static const std::string objectsMapVs;
 static const std::string enemiesVs;
+static const std::string specialsVs;
 static const std::string ballVs;
 static const std::string basicFboVs;
 static const std::string levelFs;

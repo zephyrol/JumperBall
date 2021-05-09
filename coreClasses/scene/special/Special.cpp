@@ -25,9 +25,10 @@ const JBTypes::Color& Special::getColor() const {
     return _color;
 }
 
-const JBTypes::timePointMs& Special::creationTime() const {
-    return _creationTime;
+float Special::getTimeSinceCreation() const {
+    return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
+
 
 const JBTypes::Dir& Special::direction() const {
     return _direction;
@@ -43,6 +44,10 @@ const JBTypes::vec3ui& Special::position() const {
 
 bool Special::isActivated() const {
     return _isActivated;
+}
+
+bool Special::isAnimated() const {
+    return false;
 }
 
 void Special::switchOnOff() {

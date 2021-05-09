@@ -23,6 +23,8 @@ State::GlobalState update() override;
 
 private:
 const Object& _object;
+const JBTypes::vec3ui& _position;
+const float _direction;
 float _timeSinceCreation;
 float _timeSinceObtaining;
 

@@ -17,6 +17,7 @@ Teleporter(
     const JBTypes::vec3ui& position
     );
 
+bool isAnimated() const override;
 virtual Special::SpecialEffect getEffect() const override;
 
 };

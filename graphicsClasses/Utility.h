@@ -12,19 +12,14 @@ namespace Utility {
 
 std::string readFileSrc(const std::string& filePath);
 void printMatrix(const glm::mat4& m);
-std::vector <GLfloat> computeNormals(const std::vector <GLfloat>&
-                                     positions);
-glm::mat4 rotationUpToDir(
-    JBTypes::Dir dir);
+std::vector <GLfloat> computeNormals(const std::vector <GLfloat>& positions);
+glm::mat4 rotationUpToDir(JBTypes::Dir dir);
 
 float evalGauss1D(float x, float sigma);
-std::vector <GLfloat> genGaussBuffer(size_t patchSize,
-                                     float sigma);
+std::vector <GLfloat> genGaussBuffer(size_t patchSize, float sigma);
 
-glm::vec3 convertRBGToCIExyY(const glm::vec3&
-                             rbgColor);
-glm::vec3 convertCIExyYToRGB(const glm::vec3&
-                             CIExyYColor);
+glm::vec3 convertRBGToCIExyY(const glm::vec3& rbgColor);
+glm::vec3 convertCIExyYToRGB(const glm::vec3& CIExyYColor);
 
 glm::vec3 colorAsVec3(const JBTypes::Color& color);
 

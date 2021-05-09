@@ -8,6 +8,8 @@
 
 ObjectState::ObjectState(const Object& object):
     _object(object),
+    _position(object.position()),
+    _direction(static_cast <float>(object.direction())),
     _timeSinceCreation(object.getTimeSinceCreation()),
     _timeSinceObtaining(object.getTimeSinceObtaining()) {
 }
@@ -27,16 +29,15 @@ State::GlobalState ObjectState::update() {
 }
 
 State::StaticValues <float> ObjectState::getStaticFloatValues() const {
-    return { static_cast <float>(_object.direction()) };
+    return { _direction };
 }
 
 State::StaticValues <JBTypes::vec3f> ObjectState::getStaticVec3fValues() const {
     constexpr float offset = 0.5;
-    const auto uintPosition = _object.position();
     const JBTypes::vec3f position = {
-        static_cast <float>(uintPosition.at(0)) + offset,
-        static_cast <float>(uintPosition.at(1)) + offset,
-        static_cast <float>(uintPosition.at(2)) + offset
+        static_cast <float>(_position.at(0)) + offset,
+        static_cast <float>(_position.at(1)) + offset,
+        static_cast <float>(_position.at(2)) + offset
     };
     return { position };
 }
