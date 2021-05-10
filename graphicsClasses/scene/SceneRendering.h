@@ -32,6 +32,7 @@ static constexpr size_t sizeDepthTexture = 1024;
 
 const Camera& _camera;
 const std::shared_ptr <StarState> _starState;
+const std::shared_ptr <BallState> _ballState;
 const vecState_sptr _externalStates;
 
 ExternalUniformBlockVariables _externalUniformBlocks;

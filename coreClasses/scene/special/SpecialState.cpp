@@ -24,7 +24,6 @@ State::GlobalState SpecialState::update() {
 }
 
 State::StaticValues <float> SpecialState::getStaticFloatValues() const {
-    std::cout << "direction " << _direction << std::endl;
     return { _direction, _color, _isAnimated };
 }
 

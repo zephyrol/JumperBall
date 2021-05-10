@@ -14,7 +14,8 @@ SceneRendering::SceneRendering(const Map& map,
                                const Camera& camera):
     _camera(camera),
     _starState(std::make_shared <StarState>(star)),
-    _externalStates({ _starState }),
+    _ballState(std::make_shared <BallState>(ball)),
+    _externalStates({ _starState, _ballState }),
     _externalUniformBlocks(createExternalUniformBlockVariables()),
     _externalUniformMatrices(createExternalUniformMatFourVariables()),
     _levelRenderPasses{
@@ -249,11 +250,25 @@ RenderProcess::PassUniformUpdateMap SceneRendering::createVerticalBlurUniformsUp
 }
 
 RenderProcess::PassUniformUpdateMap SceneRendering::createBloomUniformsUpdating() const {
-    return createScreenSpaceUniformsUpdating(
-    {
-        { "frameSceneHDRTexture", _sceneRenderingProcess },
-        { "frameBluredTexture", _verticalBlurProcess },
-    });
+    const auto uniformsBloomUpdatingFunction =
+        [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
+            renderPass->upsertUniformTexture(
+                shaderProgramID,
+                "frameSceneHDRTexture",
+                _sceneRenderingProcess->getFrameBufferTexture());
+            renderPass->upsertUniformTexture(
+                shaderProgramID,
+                "frameBluredTexture",
+                _verticalBlurProcess->getFrameBufferTexture());
+            renderPass->upsertUniform(shaderProgramID, "teleportationCoeff",
+                                      _ballState->teleportationCoeff());
+            renderPass->upsertUniform(
+                shaderProgramID,
+                "flashColor",
+                Utility::colorAsVec3(_ballState->teleportationColor())
+                );
+        };
+    return {{ _screenRenderPass, uniformsBloomUpdatingFunction }};
 }
 
 Rendering::ExternalUniformBlockVariables SceneRendering::createExternalUniformBlockVariables() const {
