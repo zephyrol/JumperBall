@@ -68,16 +68,8 @@ Ball::State BallState::state() const {
     return _state;
 }
 
-float BallState::getRadius() const {
-    return _radius;
-}
-
 const JBTypes::vec3f& BallState::lookTowardsAsVector() const {
     return _lookTowardsAsVector;
-}
-
-float BallState::crushingCoeff() const noexcept{
-    return _crushingCoeff;
 }
 
 float BallState::teleportationCoeff() const {

@@ -66,32 +66,50 @@ mat4 scaleYMat (float scaleY) {
 
 const float PI = 3.14159265358979323846;
 const float PI_2 = 1.57079632679489661923;
-mat4 upToNorth = rotationX(-PI_2);
-mat4 upToSouth = rotationX(PI_2);
-mat4 upToEast = rotationZ(-PI_2);
-mat4 upToWest = rotationZ(PI_2);
-mat4 upToUp = mat4(1.0);
-mat4 upToDown = rotationX(PI);
+
+mat4 getUpToNorth() {
+    return rotationX(-PI_2);
+}
+
+mat4 getUpToSouth() {
+    return rotationX(PI_2);
+}
+
+mat4 getUpToEast() {
+    return rotationZ(-PI_2);
+}
+
+mat4 getUpToWest() {
+    return rotationZ(PI_2);
+}
+
+mat4 getUpToUp() {
+    return mat4(1.0);
+}
+
+mat4 getUpToDown() {
+    return rotationX(PI);
+}
 
 mat4 rotationUpToDir (float direction) {
     int intDir = int(direction);
     switch (intDir) {
     case 0:
-        return upToNorth;
+        return getUpToNorth();
     case 1:
-        return upToSouth;
+        return getUpToSouth();
     case 2:
-        return upToEast;
+        return getUpToEast();
     case 3:
-        return upToWest;
+        return getUpToWest();
     case 4:
-        return upToUp;
+        return getUpToUp();
     case 5:
-        return upToDown;
+        return getUpToDown();
     default:
-        return upToUp;
+        return getUpToUp();
     }
-    return upToUp;
+    return getUpToUp();
 }
 
 bool isColorActivated() {
@@ -129,14 +147,6 @@ mat4 specialRotation (bool isActivated) {
     return mat4(1.0);
 }
 
-/*mat4 specialTranslation(bool isActivated) {
-    int intAnimated = int(vs_isAnimated);
-    if (intAnimated == 0 && isActivated) {
-        return translate(vec3());
-    }
-    return mat4(1.0);
-   }*/
-
 void main() {
 
     mat4 translationOnBlock = translate(vec3(0.0, 0.5, 0.0));
@@ -147,10 +157,8 @@ void main() {
     bool isActivated = isColorActivated();
 
     mat4 rotation = specialRotation(isActivated);
-    // mat4 translation = specialTranslation(isActivated);
     mat4 scale = specialScale(isActivated);
-    mat4 modelTransform = translationToBlock * initialRotation * translationOnBlock *
-                          /*translation*/ rotation * scale;
+    mat4 modelTransform = translationToBlock * initialRotation * translationOnBlock * rotation * scale;
     mat4 normalTransform = initialRotation * rotation; // TODO: apply scale on normal
 
     const float w = 1.0;

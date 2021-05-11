@@ -32,68 +32,11 @@ mat4 translate (vec3 translation) {
                 translation.x, translation.y, translation.z, 1.0);
 }
 
-mat4 rotationX (float angle) {
-    float cosAngle = cos(angle);
-    float sinAngle = sin(angle);
-    return mat4(1.0, 0.0, 0.0, 0.0,
-                0.0, cosAngle, sinAngle, 0.0,
-                0.0, -sinAngle, cosAngle, 0.0,
-                0.0, 0.0, 0.0, 1.0);
-}
-
-mat4 rotationY (float angle) {
-    float cosAngle = cos(angle);
-    float sinAngle = sin(angle);
-    return mat4(cosAngle, 0.0, -sinAngle, 0.0,
-                0.0, 1.0, 0.0, 0.0,
-                sinAngle, 0.0, cosAngle, 0.0,
-                0.0, 0.0, 0.0, 1.0);
-}
-
-mat4 rotationZ (float angle) {
-    float cosAngle = cos(angle);
-    float sinAngle = sin(angle);
-    return mat4(cosAngle, sinAngle, 0.0, 0.0,
-                -sinAngle, cosAngle, 0.0, 0.0,
-                0.0, 0.0, 1.0, 0.0,
-                0.0, 0.0, 0.0, 1.0);
-}
-
 mat4 scaleMat (vec3 scale) {
     return mat4(scale.x, 0.0, 0.0, 0.0,
                 0.0, scale.y, 0.0, 0.0,
                 0.0, 0.0, scale.z, 0.0,
                 0.0, 0.0, 0.0, 1.0);
-}
-
-const float PI = 3.14159265358979323846;
-const float PI_2 = 1.57079632679489661923;
-mat4 upToNorth = rotationX(-PI_2);
-mat4 upToSouth = rotationX(PI_2);
-mat4 upToEast = rotationZ(-PI_2);
-mat4 upToWest = rotationZ(PI_2);
-mat4 upToUp = mat4(1.0);
-mat4 upToDown = rotationX(PI);
-
-mat4 rotationUpToDir (float direction) {
-    int intDir = int(direction);
-    switch (intDir) {
-    case 0:
-        return upToNorth;
-    case 1:
-        return upToSouth;
-    case 2:
-        return upToEast;
-    case 3:
-        return upToWest;
-    case 4:
-        return upToUp;
-    case 5:
-        return upToDown;
-    default:
-        return upToUp;
-    }
-    return upToUp;
 }
 
 
