@@ -20,12 +20,11 @@ Block::Effect BrittleBlock::interaction (const JBTypes::Dir&,
                                          const JBTypes::timePointMs& currentTime,
                                          const JBTypes::vec3f&,
                                          const JBTypes::vec3ui&) {
-
     constexpr float timeToFall = 1.f;
     _timeUpdate = currentTime;
     if (_isGoingToBreak && _stillThere) {
         JBTypes::durationMs diff = currentTime - _collisionTime;
-        float diffF = JBTypesMethods::getFloatFromDurationMS(diff);
+        const float diffF = JBTypesMethods::getFloatFromDurationMS(diff);
         if (diffF > timeToFall) {
             _stillThere = false;
         }
@@ -33,14 +32,14 @@ Block::Effect BrittleBlock::interaction (const JBTypes::Dir&,
 
     constexpr float fallSpeed = 20.f;
     if (!_stillThere) {
-        const JBTypes::vec3f dirVec =
-            JBTypesMethods::directionAsVector(_fallDirection);
+        const JBTypes::vec3f dirVec = JBTypesMethods::directionAsVector(_fallDirection);
         const JBTypes::durationMs diff = currentTime - _collisionTime;
-        const float diffF = JBTypesMethods::getFloatFromDurationMS(diff)
-                            - timeToFall;
-        _localTransform.at(0) = dirVec.x * diffF * fallSpeed;
-        _localTransform.at(1) = dirVec.y * diffF * fallSpeed;
-        _localTransform.at(2) = dirVec.z * diffF * fallSpeed;
+        const float diffF = JBTypesMethods::getFloatFromDurationMS(diff) - timeToFall;
+        const float distanceTraveled = diffF * fallSpeed;
+        _localTranslation.x = dirVec.x * distanceTraveled;
+        _localTranslation.y = dirVec.y * distanceTraveled;
+        _localTranslation.z = dirVec.z * distanceTraveled;
+
     }
     return Block::Effect::Nothing;
 }
@@ -71,7 +70,7 @@ void BrittleBlock::setFallDirection (JBTypes::Dir ballDir) {
     }
 }
 
-bool BrittleBlock::stillExists() const {
+bool BrittleBlock::isExists() const {
     return _stillThere;
 }
 

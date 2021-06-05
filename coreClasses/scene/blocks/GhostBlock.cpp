@@ -15,7 +15,7 @@ GhostBlock::GhostBlock(const JBTypes::vec3ui& position, float periodicity):
     _isThere(true) {
 }
 
-bool GhostBlock::stillExists() const {
+bool GhostBlock::isExists() const {
     return _isThere;
 }
 
@@ -24,43 +24,37 @@ Block::Effect GhostBlock::interaction (const JBTypes::Dir&,
                                        const JBTypes::vec3f&,
                                        const JBTypes::vec3ui&) {
     const auto passedTime = currentTime - _creationTime;
-    const float fPassedTime =
-        JBTypesMethods::getFloatFromDurationMS(passedTime);
-    const unsigned int nbOfSwitching =
-        static_cast <unsigned int>(fPassedTime / _periodicity);
+    const float fPassedTime = JBTypesMethods::getFloatFromDurationMS(passedTime);
+    const unsigned int nbOfSwitching = static_cast <unsigned int>(fPassedTime / _periodicity);
     if (nbOfSwitching % 2 == 0) {
         _isThere = true;
     } else {
         _isThere = false;
     }
 
-    /*const float passedTimeSinceSwitching =
-       fPassedTime - _periodicity * static_cast<float>(nbOfSwitching);
+    const float passedTimeSinceSwitching = fPassedTime - _periodicity * static_cast<float>(nbOfSwitching);
 
-       constexpr float animationTime = 0.2f;
-       const float coeffPeriod = (passedTimeSinceSwitching /
-       animationTime);
-       const float t = coeffPeriod > 1.f
-       ? 1.f
-       : coeffPeriod ;
+    constexpr float animationTime = 0.1f;
+    const float coeffPeriod = (passedTimeSinceSwitching / animationTime);
+    const float t = coeffPeriod > 1.f
+                        ? 1.f
+                        : coeffPeriod;
 
-       const float beginScale = _isThere
-       ? 0.f
-       : 1.f;
-       const float endScale = _isThere
-       ? 1.f
-       : 0.f;
+    const float beginScale = _isThere
+                                 ? 1.f
+                                 : 0.f;
+    const float endScale = _isThere
+                               ? 0.f
+                               : 1.f;
 
-       const std::function<float(float,float,float)> getScale =
-       [](float t, float begin, float end){
-       return t * begin + (1-t) * end;
-       };
+    const std::function<float(float, float, float)> getScale =
+        [](float t, float begin, float end) {
+        return t * begin + (1 - t) * end;
+    };
 
-       const float scale = getScale(t,beginScale,endScale);*/
-    const float scale = _isThere ? 1.f : 0.f;
-    _localTransform.at(3) = scale;
-    _localTransform.at(4) = scale;
-    _localTransform.at(5) = scale;
+    const float scale = getScale(t, beginScale, endScale);
+    //const float scale = _isThere ? 1.f : 0.f;
+    _localScale = { scale, scale, scale };
 
     return Block::Effect::Nothing;
 }

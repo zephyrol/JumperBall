@@ -19,14 +19,13 @@ State::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
 State::DynamicValues <float> getDynamicFloats() const override;
 State::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
     
-
 const bool& isFixed() const;
 
 private:
 const Block& _block;
-std::array <float, 6> _localTransform;
-JBTypes::vec3f _translation;
-
+JBTypes::vec3f _localScale;
+JBTypes::vec3f _localTranslation;
+bool _isUnited;
 };
 
 #endif // BLOCKSTATE_H

@@ -7,37 +7,37 @@
 
 BlockState::BlockState(const Block& block):
     _block(block),
-    _localTransform(block.localTransform()),
-    _translation {
-        _localTransform.at(0),
-        _localTransform.at(1),
-        _localTransform.at(2)
-    }
+    _localScale(block.localScale()),
+    _localTranslation(block.localTranslation()),
+    _isUnited(block.isExists())
 {
 }
 
 State::GlobalState BlockState::update() {
-    _localTransform = _block.localTransform();
-    _translation = {
-        _localTransform.at(0),
-        _localTransform.at(1),
-        _localTransform.at(2)
-    };
-    
-    return State::GlobalState::United;
+    _localScale = _block.localScale();
+    _localTranslation = _block.localTranslation();
+    if (_isUnited) {
+        _isUnited = _block.isExists();
+    }
+    return _isUnited
+      ? State::GlobalState::United
+      : State::GlobalState::Separate;
 }
 
 State::StaticValues <JBTypes::vec3f> BlockState::getStaticVec3fValues() const {
-    return { _translation };
+    const auto& position = _block.position();
+    constexpr float offset = 0.5f;
+    return {{
+        static_cast<float>(position.at(0) + offset),
+        static_cast<float>(position.at(1) + offset),
+        static_cast<float>(position.at(2) + offset) 
+    }};
 }
 
 State::DynamicValues <float> BlockState::getDynamicFloats() const {
-    const float scale = _localTransform.at(4);
-    return {{ "scale", scale }};
+    return {};
 }
 
 State::DynamicValues <JBTypes::vec3f> BlockState::getDynamicVec3fs() const {
-    const JBTypes::vec3f translation =
-    { _localTransform.at(0), _localTransform.at(1), _localTransform.at(2) };
-    return {{ "translation", translation }};
+    return { { "translation", _localTranslation }, { "scale", _localScale } };
 }

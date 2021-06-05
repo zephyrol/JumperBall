@@ -30,19 +30,23 @@ virtual Effect interaction(
     const JBTypes::Dir& ballDir,
     const JBTypes::timePointMs& currentTime,
     const JBTypes::vec3f& posBall,
-    const JBTypes::vec3ui& posBlock);
+    const JBTypes::vec3ui& posBlock
+ );
 virtual Effect detectionEvent(const JBTypes::Dir& ballDir, const JBTypes::timePointMs& currentTime);
 virtual void createObject(Object::CategoryOfObjects category, JBTypes::Dir dir);
 
 static constexpr size_t objectsNumber = 6;
 
 virtual std::array <bool, 6> faceInfo() const;
-virtual bool stillExists() const;
-virtual const std::array <float, 6>& localTransform() const;
-virtual const std::shared_ptr <const Object> object(size_t number) const;
-virtual bool hasInteraction() const;
-virtual bool hasObjects() const;
-virtual void catchObject(
+virtual bool isExists() const;
+
+const JBTypes::vec3f& localScale() const;
+const JBTypes::vec3f& localTranslation() const;
+
+const std::shared_ptr <const Object> object(size_t number) const;
+bool hasInteraction() const;
+bool hasObjects() const;
+void catchObject(
     const JBTypes::vec3ui&
     blockPosition,
     const JBTypes::vec3f& entityPosition,
@@ -55,12 +59,13 @@ static JBTypes::vec3f objectPosition(const JBTypes::vec3ui& pos, unsigned int di
 
 protected:
 // --------ATTRIBUTES-----------//
-std::array <float, 6> _localTransform;
-std::array <std::shared_ptr <Object>, 6> _objects;
 const JBTypes::vec3ui _position;
 const bool _hasInteraction;
-bool _hasObjects;
 const bool _isFixed;
+JBTypes::vec3f _localScale;
+JBTypes::vec3f _localTranslation;
+std::array <std::shared_ptr <Object>, 6> _objects;
+bool _hasObjects;
 };
 
 #endif /* BLOCK_H */

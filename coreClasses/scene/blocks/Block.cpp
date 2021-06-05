@@ -8,19 +8,21 @@
 #include "Block.h"
 
 Block::Block(const JBTypes::vec3ui& position, bool hasInteraction, bool isFixed):
-    _localTransform{0.f, 0.f, 0.f, 1.f, 1.f, 1.f},
-    _objects{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
     _position(position),
     _hasInteraction(hasInteraction),
-    _hasObjects(false),
-    _isFixed(isFixed) {
+    _isFixed(isFixed),
+    _localScale{1.f, 1.f, 1.f},
+    _localTranslation{0.f, 0.f, 0.f},
+    _objects{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+    _hasObjects(false)
+{
 }
 
 std::array <bool, 6> Block::faceInfo() const {
     return { false, false, false, false, false, false };
 }
 
-bool Block::stillExists() const {
+bool Block::isExists() const {
     return true;
 }
 
@@ -28,9 +30,12 @@ Block::Effect Block::detectionEvent (const JBTypes::Dir&, const JBTypes::timePoi
     return Block::Effect::Nothing;
 }
 
-const std::array <float, 6>& Block::localTransform() const {
-    // 3 values for the translation, 3 for rotation, 3 for the scale
-    return _localTransform;
+const JBTypes::vec3f& Block::localScale() const {
+    return _localScale;
+}
+
+const JBTypes::vec3f& Block::localTranslation() const {
+    return _localTranslation;
 }
 
 Block::Effect Block::interaction (const JBTypes::Dir&,
@@ -40,6 +45,7 @@ Block::Effect Block::interaction (const JBTypes::Dir&,
     return Block::Effect::Nothing;
 }
 
+// TODO : delete it, objects ptr should be add in the constructor
 void Block::createObject (Object::CategoryOfObjects category,
                           JBTypes::Dir dir) {
     _hasObjects = true;
@@ -86,6 +92,7 @@ const bool& Block::isFixed() const {
     return _isFixed;
 }
 
+// TODO : should be in Object class
 JBTypes::vec3f Block::objectPosition (const JBTypes::vec3ui& pos, unsigned int dirUint) {
 
     constexpr float offsetPosition = 1.f;
@@ -118,7 +125,6 @@ JBTypes::vec3f Block::objectPosition (const JBTypes::vec3ui& pos, unsigned int d
     }
 
     return JBTypes::vec3f { x, y, z };
-
 }
 
 const std::array <std::shared_ptr <Object>, 6>& Block::objects() const {

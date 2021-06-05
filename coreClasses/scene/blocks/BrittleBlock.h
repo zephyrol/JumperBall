@@ -13,7 +13,7 @@ class BrittleBlock:public Block {
 public:
 BrittleBlock(const JBTypes::vec3ui& position);
 
-bool stillExists() const override;
+bool isExists() const override;
 
 void setFallDirection(JBTypes::Direction
                       ballDir);

@@ -88,7 +88,7 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
     const std::shared_ptr <const Block>& blockRight = _map.getBlock(rightX, rightY, rightZ);
 
     Ball::nextBlockInformation nextBlock;
-    if (blockAbove && blockAbove->stillExists()) {
+    if (blockAbove && blockAbove->isExists()) {
         nextBlock.poxX = aboveX;
         nextBlock.poxY = aboveY;
         nextBlock.poxZ = aboveZ;
@@ -98,7 +98,7 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
         nextBlock.nextLook = _currentSide;
         nextBlock.nextSide =
             turnBackMovement.evaluate({ lookTowardsBeforeMovement });
-    } else if (blockInFrontOf && blockInFrontOf->stillExists()) {
+    } else if (blockInFrontOf && blockInFrontOf->isExists()) {
         nextBlock.poxX = inFrontOfX;
         nextBlock.poxY = inFrontOfY;
         nextBlock.poxZ = inFrontOfZ;
@@ -106,8 +106,8 @@ Ball::nextBlockInformation Ball::getNextBlockInfo() const noexcept{
         nextBlock.nextLook = _lookTowards;
         nextBlock.nextSide = _currentSide;
     } else if (
-        (!blockLeft || !blockLeft->stillExists()) &&
-        (!blockRight || !blockRight->stillExists())
+        (!blockLeft || !blockLeft->isExists()) &&
+        (!blockRight || !blockRight->isExists())
         ) {
         nextBlock.poxX = _currentBlockX;
         nextBlock.poxY = _currentBlockY;
@@ -268,15 +268,15 @@ void Ball::isGoingStraightAheadIntersectBlock() noexcept{
             _map.getBlock(aboveVeryFarX, aboveVeryFarY, aboveVeryFarZ);
 
         ClassicalMechanics& refMechanicsJumping = getMechanicsJumping();
-        if (blockNear && blockNear->stillExists()) {
+        if (blockNear && blockNear->isExists()) {
             refMechanicsJumping.addShockFromPosition
                 (distanceNear - sizeBlock / 2.f - getRadius());
-        } else if (blockFar && blockFar->stillExists()) {
+        } else if (blockFar && blockFar->isExists()) {
             refMechanicsJumping.addShockFromPosition
                 (distanceFar - sizeBlock / 2.f - getRadius());
         } else if (
             _jumpingType == Ball::JumpingType::Long && blockVeryFar &&
-            blockVeryFar->stillExists()
+            blockVeryFar->isExists()
             ) {
             refMechanicsJumping.addShockFromPosition
                 (distanceVeryFar - sizeBlock / 2.f - getRadius());
@@ -418,7 +418,7 @@ std::shared_ptr <const std::vector <int> > Ball::intersectBlock (float x, float 
     const std::shared_ptr <const Block>& block =
         _map.getBlock(xInteger, yInteger, zInteger);
 
-    return (block && block->stillExists())
+    return (block && block->isExists())
            ? std::make_shared <const std::vector <int> >(
         std::initializer_list <int>({ xInteger, yInteger, zInteger }))
            : nullptr;
@@ -593,7 +593,7 @@ void Ball::stayingUpdate() noexcept{
     const JBTypes::vec3f position3D = get3DPosStayingBall();
     const std::shared_ptr <Block> block =
         _map.getBlock(_currentBlockX, _currentBlockY, _currentBlockZ);
-    if (block && block->stillExists()) {
+    if (block && block->isExists()) {
         _3DPosX = position3D.x;
         _3DPosY = position3D.y;
         _3DPosZ = position3D.z;
