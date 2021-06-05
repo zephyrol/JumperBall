@@ -163,7 +163,8 @@ void burningUpdate() noexcept;
 void teleportingUpdate() noexcept;
 void deteleportingUpdate() noexcept;
 
-void applyRotation();
+void applyRotation(bool inverse = false);
+JBTypes::vec3f getInverseRotationAxis() const noexcept;
 
 static const TurnLeft turnLeftMovement;
 static const TurnRight turnRightMovement;

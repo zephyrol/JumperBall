@@ -387,8 +387,11 @@ void Ball::isFallingIntersectionBlock() noexcept{
             const float coveredDistance = getMechanicsJumping().getPosition(
                 getMechanicsJumping().getTimeToGetDestination()
                 ).x;
-            for (size_t i = 0; i < coveredDistance; ++i) {
-                applyRotation();
+            const float absCoveredDistance = fabs(coveredDistance);
+            const bool inverseRotation = coveredDistance < 0.f;
+            for (size_t i = 0; i < absCoveredDistance; ++i) {
+
+                applyRotation(inverseRotation);
             }
         }
         getMechanicsJumping().timesShock({});
@@ -784,13 +787,16 @@ void Ball::deteleportingUpdate() noexcept{
     }
 }
 
-void Ball::applyRotation() {
+void Ball::applyRotation(bool inverse) {
 
     constexpr float sizeBlock = 1.f; // TODO: use a member in Block or map class
     const float angleToGetBlock = sizeBlock / getRadius();
 
     _currentCoveredRotation = JBTypesMethods::multiply(
-        JBTypesMethods::createRotationQuaternion(getRotationAxis(), angleToGetBlock),
+        JBTypesMethods::createRotationQuaternion(
+            inverse ? getInverseRotationAxis() : getRotationAxis(),
+            angleToGetBlock
+        ),
         _currentCoveredRotation
         );
 }
@@ -798,7 +804,15 @@ void Ball::applyRotation() {
 JBTypes::vec3f Ball::getRotationAxis() const noexcept{
     return JBTypesMethods::cross(
         JBTypesMethods::directionAsVector(_currentSide),
-        JBTypesMethods::directionAsVector(_lookTowards));
+        JBTypesMethods::directionAsVector(_lookTowards)
+    );
+}
+
+JBTypes::vec3f Ball::getInverseRotationAxis() const noexcept{
+    return JBTypesMethods::cross(
+        JBTypesMethods::directionAsVector(_lookTowards),
+        JBTypesMethods::directionAsVector(_currentSide)
+    );
 }
 
 float Ball::getJumpingPosX() const noexcept{
