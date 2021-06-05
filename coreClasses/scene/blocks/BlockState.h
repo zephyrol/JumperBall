@@ -13,15 +13,19 @@ class BlockState:public State {
 public:
 BlockState(const Block& block);
 virtual State::GlobalState update() override;
+    
+State::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
 
 State::DynamicValues <float> getDynamicFloats() const override;
 State::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+    
 
 const bool& isFixed() const;
 
 private:
 const Block& _block;
 std::array <float, 6> _localTransform;
+JBTypes::vec3f _translation;
 
 };
 
