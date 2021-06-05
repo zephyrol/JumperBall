@@ -40,17 +40,11 @@ std::map <unsigned char, vecMesh_sptr> MeshGenerator::genLettersLabel (
 
             const float scaleX = pitch * localScaleX;
             const float scaleY = height * localScaleY;
-            const glm::vec3 scale = glm::vec3 { scaleX, scaleY, 0.f };
 
-            const glm::mat4 scaleMatrix = glm::scale(scale);
             const float translateX = Utility::menuPositionToOpenGLScreenFormat(position.x + offsetX);
             const float translateY = Utility::menuPositionToOpenGLScreenFormat(
                 position.y + localTranslateY * height
                 );
-            // const glm::vec3 translateVec{translateX, translateY, 0.f};
-
-            // const glm::mat4 translate = glm::translate(biasScalar * translateVec);
-            // _charactersTransforms.at(i) = biasMatrix * translate * scaleMatrix;
 
             lettersMeshes[character].push_back(
                 genQuadLabel(
