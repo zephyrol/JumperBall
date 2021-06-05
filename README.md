@@ -1,8 +1,8 @@
 # JUMPER BALL GAME
 
-This project was started in October 2019, there is no a beautiful visual rendering for now.
-The core of the project (physics,maps) is currently under development.
-The project works on **Windows**, **Unix/Linux** and **macOS**.
+This project was started in October 2019.
+The project is currently under development.
+It works on **Windows**, **Unix/Linux** and **macOS**.
 
 
 ## Install requirements
@@ -21,7 +21,7 @@ The project works on **Windows**, **Unix/Linux** and **macOS**.
 - Install those packages (necessary to build GLFW and the project)
 
   ```
-  sudo apt-get install build-essential libx11-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev
+  sudo apt-get install build-essential libx11-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev xorg-dev
   ```
 
 ## Generation of the solution and compilation
