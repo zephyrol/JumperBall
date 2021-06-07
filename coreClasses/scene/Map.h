@@ -65,7 +65,7 @@ struct MapInfo { unsigned int width;
                  unsigned int beginX;
                  unsigned int beginY;
                  unsigned int beginZ;
-                 std::vector <std::shared_ptr <Block> > blocks;
+                 std::vector <Block_sptr > blocks;
                  std::vector <BlockInfo> blocksInfo;
                  std::vector <EnemyInfo> enemiesInfo;
                  std::vector <SpecialInfo> specialInfo; };
@@ -76,8 +76,8 @@ unsigned int beginX() const;
 unsigned int beginY() const;
 unsigned int beginZ() const;
 
-std::shared_ptr <const Block> getBlock(int x, int y, int z) const;
-std::shared_ptr <const Block> getBlock(size_t index) const;
+CstBlock_sptr getBlock(int x, int y, int z) const;
+CstBlock_sptr getBlock(size_t index) const;
 
 unsigned int width() const;
 unsigned int height() const;
@@ -107,8 +107,8 @@ const std::vector <SpecialInfo>& getSpecialInfo() const;
 Map::Effect interaction(const JBTypes::Dir& ballDir, const JBTypes::vec3f& posBall, float radius);
 
 void switchColor(const JBTypes::Color& color);
-std::shared_ptr <Block> getBlock(int x, int y, int z);
-std::shared_ptr <Block> getBlock(size_t index);
+Block_sptr getBlock(int x, int y, int z);
+Block_sptr getBlock(size_t index);
 
 static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int deep);
 
@@ -116,7 +116,7 @@ private:
 std::map <JBTypes::Color, Map::TeleportersInfo> createBlocksTeleporters() const;
 
 // --------ATTRIBUTES-----------//
-std::vector <std::shared_ptr <Block> > _blocks;
+std::vector <Block_sptr > _blocks;
 std::vector <BlockInfo> _blocksInfo;
 std::vector <BlockInfo> _blocksWithInteractionInfo;
 std::vector <size_t> _blocksWithObjectsIndices;

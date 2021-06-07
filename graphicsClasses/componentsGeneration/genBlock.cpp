@@ -13,7 +13,7 @@ Mesh_sptr MeshGenerator::genBlock (const Map& map, size_t index) {
     const glm::mat4 translation = glm::translate(glmPosition);
     const Map::BlockTypes blockType = map.getType(position);
 
-    const std::shared_ptr <const Block> block = map.getBlock(index);
+    const CstBlock_sptr block = map.getBlock(index);
 
     CstGeometricShape_sptr blockShape;
 

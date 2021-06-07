@@ -23,7 +23,7 @@ vecMesh_sptr MeshGenerator::genObjects (const Map& map) {
     for (size_t i = 0; i < blockInfos.size(); ++i) {
         const size_t index = blockInfos.at(i).index;
         for (size_t j = 0; j < Block::objectsNumber; ++j) {
-            const std::shared_ptr <const Block> block = map.getBlock(index);
+            const CstBlock_sptr block = map.getBlock(index);
             const std::shared_ptr <const Object> object = block->objects().at(j);
             if (object) {
                 meshes.push_back(genObject(*object));

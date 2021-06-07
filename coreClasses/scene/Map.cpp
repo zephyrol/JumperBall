@@ -30,7 +30,7 @@ Map::Map(Map::MapInfo&& mapInfo):
     _beginZ(std::move(mapInfo.beginZ)),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _blocksInteractions([this] (size_t blockNumber) {
-                            const std::shared_ptr <Block>& block =
+                            const Block_sptr& block =
                                 getBlock(_blocksWithInteractionInfo.at(blockNumber).index);
                             return block->interaction(
                                 _dirBallInteractions,
@@ -40,7 +40,7 @@ Map::Map(Map::MapInfo&& mapInfo):
                                     (_blocksWithInteractionInfo.at(blockNumber).index));
                         }, _blocksWithInteractionInfo.size()),
     _objectsInteractions([this] (size_t blockNumber) {
-                             const std::shared_ptr <Block>& block =
+                             const Block_sptr& block =
                                  getBlock(_blocksWithObjectsIndices.at(blockNumber));
                              if (block->hasObjects()) {
                                  block->catchObject(
@@ -59,15 +59,15 @@ Map::Map(Map::MapInfo&& mapInfo):
     _timeInteractions() {
 }
 
-std::shared_ptr <Block> Map::getBlock (int x, int y, int z) {
-    std::shared_ptr <const Block> constBlock =
+Block_sptr Map::getBlock (int x, int y, int z) {
+    CstBlock_sptr constBlock =
         static_cast <const Map&>(*this).getBlock(x, y, z);
 
     return std::const_pointer_cast <Block>(constBlock);
 }
 
-std::shared_ptr <Block> Map::getBlock (size_t index) {
-    const std::shared_ptr <const Block>& constBlock =
+Block_sptr Map::getBlock (size_t index) {
+    const CstBlock_sptr& constBlock =
         static_cast <const Map&>(*this).getBlock(index);
 
     return std::const_pointer_cast <Block>(constBlock);
@@ -76,7 +76,7 @@ std::shared_ptr <Block> Map::getBlock (size_t index) {
 std::vector <Map::BlockInfo> Map::getBlocksWithInteraction() const {
     std::vector <Map::BlockInfo> blocksWithInteraction;
     for (unsigned int i = 0; i < _blocksInfo.size(); ++i) {
-        const std::shared_ptr <const Block>& block =
+        const CstBlock_sptr& block =
             getBlock(_blocksInfo.at(i).index);
         if (block->hasInteraction()) {
             blocksWithInteraction.push_back(_blocksInfo.at(i));
@@ -89,7 +89,7 @@ std::vector <size_t> Map::getBlocksWithObjects() const {
     std::vector <size_t> blocksWithObjectsIndices;
     for (unsigned int i = 0; i < _blocksInfo.size(); ++i) {
         const size_t index = _blocksInfo.at(i).index;
-        const std::shared_ptr <const Block>& block =
+        const CstBlock_sptr& block =
             getBlock(index);
         if (block->hasObjects()) {
             blocksWithObjectsIndices.push_back(index);
@@ -163,8 +163,8 @@ const std::map <JBTypes::Color, bool>& Map::getSpecialStates() const {
     return _specialsState;
 }
 
-std::shared_ptr <const Block> Map::getBlock (int x, int y, int z) const {
-    std::shared_ptr <const Block> block;
+CstBlock_sptr Map::getBlock (int x, int y, int z) const {
+    CstBlock_sptr block;
     if (
         x >= static_cast <int>(_width) ||
         y >= static_cast <int>(_height) ||
@@ -179,7 +179,7 @@ std::shared_ptr <const Block> Map::getBlock (int x, int y, int z) const {
     return block;
 }
 
-std::shared_ptr <const Block> Map::getBlock (size_t index) const {
+CstBlock_sptr Map::getBlock (size_t index) const {
     return _blocks.at(index);
 }
 

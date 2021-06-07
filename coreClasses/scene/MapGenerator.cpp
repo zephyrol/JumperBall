@@ -87,7 +87,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             }
             const unsigned int typeOfBlock = readValue - firstKindOfBlock;
             for (unsigned int i = 0; i < nbBlocksTowrite; ++i) {
-                std::shared_ptr <Block> block = nullptr;
+                Block_sptr block = nullptr;
                 const std::vector <unsigned int> blockWithSpecialParams { 4, 6 };
                 std::array <bool, 6> specialParams
                 { false, false, false, false, false, false };
@@ -870,7 +870,7 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
     for (unsigned int y = 0; y < map.height(); y++) {
         for (unsigned int z = 0; z < map.deep(); z++) {
             for (unsigned int x = 0; x < map.width(); x++) {
-                const std::shared_ptr <const Block>& block =
+                const CstBlock_sptr& block =
                     map.getBlock(x, y, z);
                 unsigned int typeOfBlock = 0;
 
@@ -899,7 +899,7 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
     for (unsigned int y = 0; y < map.height(); y++) {
         for (unsigned int z = 0; z < map.deep(); z++) {
             for (unsigned int x = 0; x < map.width(); x++) {
-                const std::shared_ptr <const Block>& block =
+                const CstBlock_sptr& block =
                     map.getBlock(x, y, z);
                 if (block) {
                     bool found = false;
