@@ -19,13 +19,10 @@ void setFallDirection(JBTypes::Direction
                       ballDir);
 
 virtual Block::Effect interaction(
-    const JBTypes::Dir&
-    ballDir,
-    const JBTypes::timePointMs&
-    currentTime,
-    const JBTypes::vec3f& posBall,
-    const JBTypes::vec3ui& posBlock)
-override;
+    const JBTypes::Dir& ballDir,
+    const JBTypes::timePointMs& currentTime,
+    const JBTypes::vec3f& posBall
+    ) override;
 
 virtual Block::Effect detectionEvent(
     const JBTypes::Dir&

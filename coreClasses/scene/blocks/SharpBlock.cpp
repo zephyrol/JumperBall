@@ -15,8 +15,7 @@ SharpBlock::SharpBlock(const JBTypes::vec3ui& position, const std::array <bool, 
 Block::Effect SharpBlock::interaction (
     const JBTypes::Dir&,
     const JBTypes::timePointMs&,
-    const JBTypes::vec3f& positions,
-    const JBTypes::vec3ui& posBlock) {
+    const JBTypes::vec3f& posBall) {
 
     auto isInSharpZone = [] (
         const JBTypes::vec3f& position,
@@ -32,6 +31,7 @@ Block::Effect SharpBlock::interaction (
 
     constexpr float sizeSharp = 0.51f;
     constexpr float offsetCenter = 0.19f;
+    const JBTypes::vec3ui posBlock = position();
     float posBlockfX = static_cast <float>(posBlock.at(0));
     float posBlockfY = static_cast <float>(posBlock.at(1));
     float posBlockfZ = static_cast <float>(posBlock.at(2));
@@ -86,7 +86,7 @@ Block::Effect SharpBlock::interaction (
             }
 
             if (
-                isInSharpZone(positions,
+                isInSharpZone(posBall,
                               posBlockfXMin,
                               posBlockfXMax,
                               posBlockfYMin,

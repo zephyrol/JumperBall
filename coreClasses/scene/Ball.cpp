@@ -322,9 +322,10 @@ float Ball::getCrushingCoefficient() const noexcept{
 
     const std::function <float(float)> movementCrushingCoeff =
         [this] (float timeToDoMovement)->float {
-            const float t = getTimeSecondsSinceAction() / timeToDoMovement > 1.f
+            const float tMax = getTimeSecondsSinceAction() / timeToDoMovement;
+            const float t = tMax > 1.f
                             ? 1.f
-                            : getTimeSecondsSinceAction() / timeToDoMovement;
+                            : tMax;
             return (1.f - t) * _currentCrushing;
         };
 

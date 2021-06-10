@@ -19,10 +19,8 @@ std::array <bool, 6> faceInfo() const override;
 
 // ----------METHODS-------------//
 virtual Block::Effect interaction(const JBTypes::Dir& ballDir,
-                                  const JBTypes::timePointMs&
-                                  currentTime,
-                                  const JBTypes::vec3f& posBall,
-                                  const JBTypes::vec3ui& posBlock)
+                                  const JBTypes::timePointMs& currentTime,
+                                  const JBTypes::vec3f& posBall)
 override;
 
 

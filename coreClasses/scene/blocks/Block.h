@@ -34,8 +34,7 @@ enum class Effect { Nothing, Burst, Burn, Slide, Jump };
 virtual Effect interaction(
     const JBTypes::Dir& ballDir,
     const JBTypes::timePointMs& currentTime,
-    const JBTypes::vec3f& posBall,
-    const JBTypes::vec3ui& posBlock
+    const JBTypes::vec3f& posBall
  );
 virtual Effect detectionEvent(const JBTypes::Dir& ballDir, const JBTypes::timePointMs& currentTime);
 virtual void createObject(Object::CategoryOfObjects category, JBTypes::Dir dir);
@@ -52,8 +51,6 @@ const std::shared_ptr <const Object> object(size_t number) const;
 bool hasInteraction() const;
 bool hasObjects() const;
 void catchObject(
-    const JBTypes::vec3ui&
-    blockPosition,
     const JBTypes::vec3f& entityPosition,
     float radiusEntity);
 virtual const bool& isFixed() const;

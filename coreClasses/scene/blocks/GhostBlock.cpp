@@ -21,8 +21,8 @@ bool GhostBlock::isExists() const {
 
 Block::Effect GhostBlock::interaction (const JBTypes::Dir&,
                                        const JBTypes::timePointMs& currentTime,
-                                       const JBTypes::vec3f&,
-                                       const JBTypes::vec3ui&) {
+                                       const JBTypes::vec3f&
+                                       ) {
     const auto passedTime = currentTime - _creationTime;
     const float fPassedTime = JBTypesMethods::getFloatFromDurationMS(passedTime);
     const unsigned int nbOfSwitching = static_cast <unsigned int>(fPassedTime / _periodicity);

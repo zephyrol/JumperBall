@@ -35,17 +35,14 @@ Map::Map(Map::MapInfo&& mapInfo):
                             return block->interaction(
                                 _dirBallInteractions,
                                 _timeInteractions,
-                                _posBallInteractions,
-                                getBlockCoords
-                                    (_blocksWithInteractionInfo.at(blockNumber).index));
+                                _posBallInteractions
+                                );
                         }, _blocksWithInteractionInfo.size()),
     _objectsInteractions([this] (size_t blockNumber) {
                              const Block_sptr& block =
                                  getBlock(_blocksWithObjectsIndices.at(blockNumber));
                              if (block->hasObjects()) {
-                                 block->catchObject(
-                                     getBlockCoords(_blocksWithObjectsIndices.at(blockNumber)),
-                                     _posBallInteractions, _radiusInteractions);
+                                 block->catchObject(_posBallInteractions, _radiusInteractions);
                              }
                          }, _blocksWithObjectsIndices.size()),
     _enemiesInteractions([this] (size_t enemyNumber) {

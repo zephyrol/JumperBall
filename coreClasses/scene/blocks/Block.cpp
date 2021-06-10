@@ -40,8 +40,8 @@ const JBTypes::vec3f& Block::localTranslation() const {
 
 Block::Effect Block::interaction (const JBTypes::Dir&,
                                   const JBTypes::timePointMs&,
-                                  const JBTypes::vec3f&,
-                                  const JBTypes::vec3ui&) {
+                                  const JBTypes::vec3f&
+                                 ) {
     return Block::Effect::Nothing;
 }
 
@@ -76,13 +76,12 @@ bool Block::hasObjects() const {
     return _hasObjects;
 }
 
-void Block::catchObject (const JBTypes::vec3ui& blockPosition,
-                         const JBTypes::vec3f& entityPosition,
+void Block::catchObject (const JBTypes::vec3f& entityPosition,
                          float radiusEntity) {
     for (size_t i = 0; i < _objects.size(); ++i) {
         const std::shared_ptr <Object> object = _objects.at(i);
         if (object && !object->isGotten()) {
-            const JBTypes::vec3f objectPos = objectPosition(blockPosition, static_cast <unsigned int>(i));
+            const JBTypes::vec3f objectPos = objectPosition(_position, static_cast <unsigned int>(i));
             object->catchingTest(objectPos, entityPosition, radiusEntity);
         }
     }

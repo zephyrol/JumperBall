@@ -14,12 +14,10 @@ public:
 GhostBlock(const JBTypes::vec3ui& position, float periodicity = 3.f);
 bool isExists() const override;
 virtual Block::Effect interaction(
-    const JBTypes::Dir&
-    ballDir,
-    const JBTypes::timePointMs&
-    currentTime,
-    const JBTypes::vec3f& posBall,
-    const JBTypes::vec3ui& posBlock)
+    const JBTypes::Dir& ballDir,
+    const JBTypes::timePointMs& currentTime,
+    const JBTypes::vec3f& posBall
+    )
 override;
 
 private:
