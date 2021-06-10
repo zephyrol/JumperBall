@@ -31,7 +31,7 @@ Controller::Controller():
     _requestToLeave(false),
     _map(MapGenerator::loadMap(_player.levelProgression())),
     _ball(std::make_shared <Ball>(*_map)),
-    _camera(std::make_shared <Camera>()),
+    _camera(std::make_shared <Camera>(*_map)),
     _star(Star::createBlurStar(*_map)),
     _currentFrame(Controller::CurrentFrame::FrameA),
     _sceneRenderingFrameA(std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera)),
@@ -40,12 +40,13 @@ Controller::Controller():
     _menuRenderingFrameB(std::make_shared <MenuRendering>(*_menu, _ftContent)),
     _updatingScene([this] (size_t) {
                        _ball->update();
+                       _camera->update();
                        if (_player.statut() == Player::Statut::INMENU) {
-                           _camera->follow(*_map);
+                           _camera->followMap();
                        } else if (_player.statut() == Player::Statut::INGAME) {
                            _camera->follow(*_ball);
                        } else if (_player.statut() == Player::Statut::INTRANSITION) {
-                           if (_camera->transitionEffect(*_ball, *_map)) {
+                           if (_camera->transitionEffect(*_ball)) {
                                _player.statut(Player::Statut::INGAME);
                            }
                        }
@@ -156,7 +157,7 @@ void Controller::manageValidateButton (const Controller::Status& status) {
 void Controller::runGame (size_t level) {
     _map = MapGenerator::loadMap(level);
     _ball = std::make_shared <Ball>(*_map);
-    _camera = std::make_shared <Camera>();
+    _camera = std::make_shared <Camera>(*_map);
     _star = Star::createBlurStar(*_map);
     _sceneRenderingFrameA = std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera);
     _sceneRenderingFrameB = std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera);

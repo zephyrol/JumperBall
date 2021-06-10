@@ -8,8 +8,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 #include <scene/BallState.h>
-#include <scene/MapState.h>
 #include <scene/StarState.h>
+#include <scene/Map.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -20,7 +20,7 @@ class Camera {
 public:
 
 // --CONSTRUCTORS & DESTRUCTORS--//
-Camera();
+Camera(const Map& map);
 
 
 // ---------CONSTANTS------------//
@@ -36,16 +36,17 @@ glm::mat4 viewProjection() const noexcept;
 
 
 // ----------METHODS-------------//
+void update() noexcept;
 void follow(const BallState& ballState) noexcept;
-void follow(const MapState& mapState) noexcept;
-bool transitionEffect(const BallState& ball,
-                      const MapState& map) noexcept;
+void followMap() noexcept;
+bool transitionEffect(const BallState& ball) noexcept;
 
 static glm::mat4 genVPMatrixFromStar(const StarState& starState);
 
 private:
 
 // --------ATTRIBUTES-----------//
+const Map& _map;
 const float _fovy;
 const float _ratio;
 glm::vec3 _pos;
@@ -54,6 +55,7 @@ glm::vec3 _up;
 bool _willComeBack;
 bool _isComingBack;
 float _cameraAboveWay;
+float _timeSinceCreation;
 JBTypes::timePointMs _timePointComeBack;
 
 };

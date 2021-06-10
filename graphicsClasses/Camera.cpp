@@ -7,7 +7,9 @@
 
 #include "Camera.h"
 
-Camera::Camera():_fovy(glm::radians(70.f)),
+Camera::Camera(const Map& map):
+    _map(map),
+    _fovy(glm::radians(70.f)),
     _ratio(static_cast <float>(Utility::windowResolutionX) /
            static_cast <float>(Utility::windowResolutionY)),
     _pos(glm::vec3(1.f, 0.f, 0.f)),
@@ -16,7 +18,12 @@ Camera::Camera():_fovy(glm::radians(70.f)),
     _willComeBack(false),
     _isComingBack(false),
     _cameraAboveWay(0.f),
+    _timeSinceCreation(map.getTimeSinceCreation()),
     _timePointComeBack() {
+}
+
+void Camera::update() noexcept {
+    _timeSinceCreation = _map.getTimeSinceCreation();
 }
 
 void Camera::follow (const BallState& ballState) noexcept{
@@ -139,11 +146,11 @@ void Camera::follow (const BallState& ballState) noexcept{
 
 }
 
-void Camera::follow (const MapState& mapState) noexcept{
+void Camera::followMap() noexcept{
 
-    const unsigned int xMax = mapState.width();
-    const unsigned int yMax = mapState.height();
-    const unsigned int zMax = mapState.deep();
+    const unsigned int xMax = _map.width();
+    const unsigned int yMax = _map.height();
+    const unsigned int zMax = _map.deep();
 
     const glm::vec3 center { xMax / 2.f, yMax / 2.f, zMax / 2.f };
 
@@ -153,7 +160,7 @@ void Camera::follow (const MapState& mapState) noexcept{
 
     const float cameraDistanceNear = distanceMax * 1.f;
     const float cameraDistanceFar = distanceMax * 1.3f;
-    const float diffF = mapState.getTimeSinceCreation();
+    const float diffF = _timeSinceCreation;
     const float distanceX = cameraDistanceNear +
                             (cameraDistanceFar - cameraDistanceNear) *
                             ((static_cast <float>(-cos(diffF)) + 1.f) / 2.f);
@@ -186,7 +193,7 @@ void Camera::follow (const MapState& mapState) noexcept{
 
 }
 
-bool Camera::transitionEffect (const BallState& ball, const MapState& map) noexcept{
+bool Camera::transitionEffect (const BallState& ball) noexcept{
     bool animationIsFinished;
 
     const JBTypes::vec3f position = ball.get3DPosition();
@@ -195,7 +202,7 @@ bool Camera::transitionEffect (const BallState& ball, const MapState& map) noexc
     constexpr float distBehindBall = 1.3f;
     constexpr float distAboveBall = 1.2f;
 
-    const float diffF = map.getTimeSinceCreation();
+    const float diffF = _timeSinceCreation;
     constexpr float transitionDuration = 2.f;
     float t = diffF / transitionDuration;
 

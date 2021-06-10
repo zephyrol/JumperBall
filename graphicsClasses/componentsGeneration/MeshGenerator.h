@@ -9,7 +9,7 @@
 #define MESHGENERATOR_H
 #include "Utility.h"
 #include <scene/BallState.h>
-#include <scene/MapState.h>
+#include <scene/blocks/BlockState.h>
 #include <scene/objects/ObjectState.h>
 #include <scene/enemies/EnemyState.h>
 #include <scene/special/SpecialState.h>
