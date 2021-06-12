@@ -88,7 +88,7 @@ static const std::string positionCameraName;
 static const std::string lightName;
 
 static const std::string blocksVs;
-static const std::string objectsMapVs;
+static const std::string itemsMapVs;
 static const std::string enemiesVs;
 static const std::string specialsVs;
 static const std::string ballVs;

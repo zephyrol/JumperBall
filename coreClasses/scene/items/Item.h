@@ -1,5 +1,5 @@
 /*
- * File: Object.h
+ * File: Item.h
  * Author: Morgenthaler S
  *
  * Created on 27 mars 2020, 19:40
@@ -9,21 +9,21 @@
 #define OBJECT_H
 #include "system/Types.h"
 
-class Object {
+class Item {
 public:
 
-enum class CategoryOfObjects { Key, Coin, Clock };
+enum class CategoryOfItems { Key, Coin, Clock };
 
-Object(const JBTypes::vec3ui& position, const JBTypes::Dir& direction, const CategoryOfObjects& category);
-virtual ~Object() = default;
-const CategoryOfObjects& getCategory() const;
+Item(const JBTypes::vec3ui& position, const JBTypes::Dir& direction, const CategoryOfItems& category);
+virtual ~Item() = default;
+const CategoryOfItems& getCategory() const;
 const JBTypes::vec3ui& position() const;
 const JBTypes::Dir& direction() const;
 
 bool isGotten() const;
 float getTimeSinceObtaining() const;
 float getTimeSinceCreation() const;
-void catchingTest(const JBTypes::vec3f& objectPosition,
+void catchingTest(const JBTypes::vec3f& itemPosition,
                   const JBTypes::vec3f& entityPosition,
                   float radiusEntity);
 
@@ -35,7 +35,7 @@ const JBTypes::Dir _direction;
 bool _gotten;
 const JBTypes::timePointMs _creationTime;
 JBTypes::timePointMs _obtainingTime;
-const CategoryOfObjects _category;
+const CategoryOfItems _category;
 };
 
 #endif /* OBJECT_H */

@@ -17,7 +17,7 @@ Map::Map(Map::MapInfo&& mapInfo):
     _blocks(std::move(mapInfo.blocks)),
     _blocksInfo(std::move(mapInfo.blocksInfo)),
     _blocksWithInteractionInfo(getBlocksWithInteraction()),
-    _blocksWithObjectsIndices(getBlocksWithObjects()),
+    _blocksWithItemsIndices(getBlocksWithItems()),
     _enemies(std::move(mapInfo.enemiesInfo)),
     _specials(std::move(mapInfo.specialInfo)),
     _blocksTeleporters(createBlocksTeleporters()),
@@ -38,13 +38,13 @@ Map::Map(Map::MapInfo&& mapInfo):
                                 _posBallInteractions
                                 );
                         }, _blocksWithInteractionInfo.size()),
-    _objectsInteractions([this] (size_t blockNumber) {
+    _itemsInteractions([this] (size_t blockNumber) {
                              const Block_sptr& block =
-                                 getBlock(_blocksWithObjectsIndices.at(blockNumber));
-                             if (block->hasObjects()) {
-                                 block->catchObject(_posBallInteractions, _radiusInteractions);
+                                 getBlock(_blocksWithItemsIndices.at(blockNumber));
+                             if (block->hasItems()) {
+                                 block->catchItem(_posBallInteractions, _radiusInteractions);
                              }
-                         }, _blocksWithObjectsIndices.size()),
+                         }, _blocksWithItemsIndices.size()),
     _enemiesInteractions([this] (size_t enemyNumber) {
                              const Map::EnemyInfo enemyInfo = _enemies.at(enemyNumber);
                              const std::shared_ptr <Enemy> enemy = enemyInfo.enemy;
@@ -82,17 +82,17 @@ std::vector <Map::BlockInfo> Map::getBlocksWithInteraction() const {
     return blocksWithInteraction;
 }
 
-std::vector <size_t> Map::getBlocksWithObjects() const {
-    std::vector <size_t> blocksWithObjectsIndices;
+std::vector <size_t> Map::getBlocksWithItems() const {
+    std::vector <size_t> blocksWithItemsIndices;
     for (unsigned int i = 0; i < _blocksInfo.size(); ++i) {
         const size_t index = _blocksInfo.at(i).index;
         const CstBlock_sptr& block =
             getBlock(index);
-        if (block->hasObjects()) {
-            blocksWithObjectsIndices.push_back(index);
+        if (block->hasItems()) {
+            blocksWithItemsIndices.push_back(index);
         }
     }
-    return blocksWithObjectsIndices;
+    return blocksWithItemsIndices;
 }
 
 const std::map <JBTypes::Color, Map::TeleportersInfo>&
@@ -259,7 +259,7 @@ Map::Effect Map::interaction (const JBTypes::Dir& ballDir, const JBTypes::vec3f&
     _timeInteractions = JBTypesMethods::getTimePointMSNow();
 
     _blocksInteractions.runTasks();
-    _objectsInteractions.runTasks();
+    _itemsInteractions.runTasks();
     _enemiesInteractions.runTasks();
 
     std::shared_ptr <std::vector <Block::Effect> > blocksEffects = _blocksInteractions.waitTasks();
@@ -277,7 +277,7 @@ Map::Effect Map::interaction (const JBTypes::Dir& ballDir, const JBTypes::vec3f&
             finalEnemyEffect = enemyEffect;
         }
     }
-    _objectsInteractions.waitTasks();
+    _itemsInteractions.waitTasks();
 
     if (finalBlockEffect == Block::Effect::Burst || finalEnemyEffect == Enemy::Effect::Burst) {
         return Map::Effect::Burst;

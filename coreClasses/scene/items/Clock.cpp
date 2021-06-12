@@ -8,5 +8,5 @@
 #include "Clock.h"
 
 Clock::Clock(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
-    Object(position, direction, Object::CategoryOfObjects::Clock) {
+    Item(position, direction, Item::CategoryOfItems::Clock) {
 }

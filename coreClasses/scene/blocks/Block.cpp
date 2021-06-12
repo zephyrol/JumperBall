@@ -13,8 +13,8 @@ Block::Block(const JBTypes::vec3ui& position, bool hasInteraction, bool isFixed)
     _isFixed(isFixed),
     _localScale{1.f, 1.f, 1.f},
     _localTranslation{0.f, 0.f, 0.f},
-    _objects{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
-    _hasObjects(false)
+    _items{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+    _hasItems(false)
 {
 }
 
@@ -45,44 +45,44 @@ Block::Effect Block::interaction (const JBTypes::Dir&,
     return Block::Effect::Nothing;
 }
 
-// TODO : delete it, objects ptr should be add in the constructor
-void Block::createObject (Object::CategoryOfObjects category,
+// TODO : delete it, items ptr should be add in the constructor
+void Block::createItem (Item::CategoryOfItems category,
                           JBTypes::Dir dir) {
-    _hasObjects = true;
+    _hasItems = true;
     switch (category) {
-    case Object::CategoryOfObjects::Clock:
-        _objects.at(JBTypesMethods::directionAsInteger(dir)) = std::make_shared <Clock>(_position, dir);
+    case Item::CategoryOfItems::Clock:
+        _items.at(JBTypesMethods::directionAsInteger(dir)) = std::make_shared <Clock>(_position, dir);
         break;
-    case Object::CategoryOfObjects::Coin:
-        _objects.at(JBTypesMethods::directionAsInteger(dir)) = std::make_shared <Coin>(_position, dir);
+    case Item::CategoryOfItems::Coin:
+        _items.at(JBTypesMethods::directionAsInteger(dir)) = std::make_shared <Coin>(_position, dir);
         break;
-    case Object::CategoryOfObjects::Key:
-        _objects.at(JBTypesMethods::directionAsInteger(dir)) = std::make_shared <Key>(_position, dir);
+    case Item::CategoryOfItems::Key:
+        _items.at(JBTypesMethods::directionAsInteger(dir)) = std::make_shared <Key>(_position, dir);
         break;
     default:
         break;
     }
 }
 
-const std::shared_ptr <const Object> Block::object (size_t number) const {
-    return _objects.at(number);
+const std::shared_ptr <const Item> Block::item (size_t number) const {
+    return _items.at(number);
 }
 
 bool Block::hasInteraction() const {
     return _hasInteraction;
 }
 
-bool Block::hasObjects() const {
-    return _hasObjects;
+bool Block::hasItems() const {
+    return _hasItems;
 }
 
-void Block::catchObject (const JBTypes::vec3f& entityPosition,
+void Block::catchItem (const JBTypes::vec3f& entityPosition,
                          float radiusEntity) {
-    for (size_t i = 0; i < _objects.size(); ++i) {
-        const std::shared_ptr <Object> object = _objects.at(i);
-        if (object && !object->isGotten()) {
-            const JBTypes::vec3f objectPos = objectPosition(_position, static_cast <unsigned int>(i));
-            object->catchingTest(objectPos, entityPosition, radiusEntity);
+    for (size_t i = 0; i < _items.size(); ++i) {
+        const std::shared_ptr <Item> item = _items.at(i);
+        if (item && !item->isGotten()) {
+            const JBTypes::vec3f itemPos = itemPosition(_position, static_cast <unsigned int>(i));
+            item->catchingTest(itemPos, entityPosition, radiusEntity);
         }
     }
 }
@@ -91,8 +91,8 @@ const bool& Block::isFixed() const {
     return _isFixed;
 }
 
-// TODO : should be in Object class
-JBTypes::vec3f Block::objectPosition (const JBTypes::vec3ui& pos, unsigned int dirUint) {
+// TODO : should be in Item class
+JBTypes::vec3f Block::itemPosition (const JBTypes::vec3ui& pos, unsigned int dirUint) {
 
     constexpr float offsetPosition = 1.f;
     float x = static_cast <float>(pos.at(0) + 0.5f);
@@ -126,8 +126,8 @@ JBTypes::vec3f Block::objectPosition (const JBTypes::vec3ui& pos, unsigned int d
     return JBTypes::vec3f { x, y, z };
 }
 
-const std::array <std::shared_ptr <Object>, 6>& Block::objects() const {
-    return _objects;
+const std::array <std::shared_ptr <Item>, 6>& Block::items() const {
+    return _items;
 }
 
 const JBTypes::vec3ui& Block::position() const {

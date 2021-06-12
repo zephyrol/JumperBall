@@ -8,9 +8,9 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 #include "system/Types.h"
-#include "scene/objects/Clock.h"
-#include "scene/objects/Coin.h"
-#include "scene/objects/Key.h"
+#include "scene/items/Clock.h"
+#include "scene/items/Coin.h"
+#include "scene/items/Key.h"
 
 class Block;
 using Block_sptr = std::shared_ptr <Block>;
@@ -37,9 +37,9 @@ virtual Effect interaction(
     const JBTypes::vec3f& posBall
  );
 virtual Effect detectionEvent(const JBTypes::Dir& ballDir, const JBTypes::timePointMs& currentTime);
-virtual void createObject(Object::CategoryOfObjects category, JBTypes::Dir dir);
+virtual void createItem(Item::CategoryOfItems category, JBTypes::Dir dir);
 
-static constexpr size_t objectsNumber = 6;
+static constexpr size_t itemsNumber = 6;
 
 virtual std::array <bool, 6> faceInfo() const;
 virtual bool isExists() const;
@@ -47,17 +47,17 @@ virtual bool isExists() const;
 const JBTypes::vec3f& localScale() const;
 const JBTypes::vec3f& localTranslation() const;
 
-const std::shared_ptr <const Object> object(size_t number) const;
+const std::shared_ptr <const Item> item(size_t number) const;
 bool hasInteraction() const;
-bool hasObjects() const;
-void catchObject(
+bool hasItems() const;
+void catchItem(
     const JBTypes::vec3f& entityPosition,
     float radiusEntity);
 virtual const bool& isFixed() const;
-const std::array <std::shared_ptr <Object>, 6>& objects() const;
+const std::array <std::shared_ptr <Item>, 6>& items() const;
 const JBTypes::vec3ui& position() const;
 
-static JBTypes::vec3f objectPosition(const JBTypes::vec3ui& pos, unsigned int dirUint);
+static JBTypes::vec3f itemPosition(const JBTypes::vec3ui& pos, unsigned int dirUint);
 
 protected:
 // --------ATTRIBUTES-----------//
@@ -66,8 +66,8 @@ const bool _hasInteraction;
 const bool _isFixed;
 JBTypes::vec3f _localScale;
 JBTypes::vec3f _localTranslation;
-std::array <std::shared_ptr <Object>, 6> _objects;
-bool _hasObjects;
+std::array <std::shared_ptr <Item>, 6> _items;
+bool _hasItems;
 };
 
 #endif /* BLOCK_H */

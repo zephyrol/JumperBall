@@ -1,20 +1,20 @@
 /*
- * File: ObjectLabel.h
+ * File: ItemLabel.h
  * Author: Morgenthaler S
  *
  * Created on 28 avril 2020, 19:43
  */
 
-#include "ObjectLabel.h"
+#include "ItemLabel.h"
 
-ObjectLabel::ObjectLabel(
+ItemLabel::ItemLabel(
     const Label::WidthUnit& widthUnit,
     float width,
     float height,
     const JBTypes::vec2f& position,
-    const Object::CategoryOfObjects& categoryOfObject
+    const Item::CategoryOfItems& categoryOfItem
     ):
     Label(widthUnit, width, height, position),
-    _categoryOfObjects(categoryOfObject) {
+    _categoryOfItems(categoryOfItem) {
 
 }

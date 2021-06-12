@@ -10,7 +10,7 @@ set (CMAKE_CXX_EXTENSIONS OFF)
 FILE(GLOB SOURCE_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/scene/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/scene/blocks/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/scene/objects/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/items/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/scene/enemies/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/scene/special/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/player/*.cpp
@@ -21,7 +21,7 @@ FILE(GLOB SOURCE_FILES
 FILE(GLOB HEADER_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/scene/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/scene/blocks/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/scene/objects/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/scene/items/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/scene/enemies/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/scene/special/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/player/*.h

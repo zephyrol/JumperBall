@@ -8,5 +8,5 @@
 #include "Key.h"
 
 Key::Key(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
-    Object(position, direction, Object::CategoryOfObjects::Key) {
+    Item(position, direction, Item::CategoryOfItems::Key) {
 }

@@ -7,9 +7,9 @@
 
 #ifndef CLOCK_H
 #define CLOCK_H
-#include "Object.h"
+#include "Item.h"
 
-class Clock:public Object {
+class Clock:public Item {
 public:
 Clock(const JBTypes::vec3ui& position, const JBTypes::Dir& direction);
 

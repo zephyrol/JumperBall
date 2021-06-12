@@ -1,16 +1,16 @@
 /*
- * File: genObject.cpp
+ * File: genItem.cpp
  * Author: Morgenthaler S
  *
  * Created on 22 aout 2020, 18h15
  */
 #include "MeshGenerator.h"
 
-Mesh_sptr MeshGenerator::genObject (const Object& object) {
+Mesh_sptr MeshGenerator::genItem (const Item& item) {
 
     vecCstGeometricShape_sptr geometricShapes;
-    switch (object.getCategory()) {
-    case Object::CategoryOfObjects::Key:
+    switch (item.getCategory()) {
+    case Item::CategoryOfItems::Key:
     {
 
         constexpr size_t nbGeometriesToCreateAKey = 4;
@@ -43,7 +43,7 @@ Mesh_sptr MeshGenerator::genObject (const Object& object) {
         }
         break;
     }
-    case Object::CategoryOfObjects::Coin:
+    case Item::CategoryOfItems::Coin:
     {
         const glm::vec3 scale { 0.3f, 0.05f, 0.3f };
         const glm::vec3 translation { 0.f, 0.f, -0.025f };
@@ -67,12 +67,12 @@ Mesh_sptr MeshGenerator::genObject (const Object& object) {
             );
         break;
     }
-    case Object::CategoryOfObjects::Clock:
+    case Item::CategoryOfItems::Clock:
         break;
     default:
         break;
     }
     return std::make_shared <Mesh>(
-        State_uptr(new ObjectState(object)),
+        State_uptr(new ItemState(item)),
         std::move(geometricShapes));
 }

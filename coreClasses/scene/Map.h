@@ -15,9 +15,9 @@
 #include "blocks/BrittleBlock.h"
 #include "blocks/JumpBlock.h"
 #include "blocks/GhostBlock.h"
-#include "objects/Key.h"
-#include "objects/Coin.h"
-#include "objects/Clock.h"
+#include "items/Key.h"
+#include "items/Coin.h"
+#include "items/Clock.h"
 #include "enemies/DarkBall.h"
 #include "enemies/ThornBall.h"
 #include "enemies/Laser.h"
@@ -94,7 +94,7 @@ BlockTypes getType(const JBTypes::vec3ui& position) const;
 const std::vector <BlockInfo>& blocksInfo() const;
 
 std::vector <BlockInfo> getBlocksWithInteraction() const;
-std::vector <size_t> getBlocksWithObjects() const;
+std::vector <size_t> getBlocksWithItems() const;
 const std::map <JBTypes::Color, Map::TeleportersInfo>& getBlocksTeleporters() const;
 
 std::map <JBTypes::Color, bool> createSpecialStates() const;
@@ -119,7 +119,7 @@ std::map <JBTypes::Color, Map::TeleportersInfo> createBlocksTeleporters() const;
 std::vector <Block_sptr > _blocks;
 std::vector <BlockInfo> _blocksInfo;
 std::vector <BlockInfo> _blocksWithInteractionInfo;
-std::vector <size_t> _blocksWithObjectsIndices;
+std::vector <size_t> _blocksWithItemsIndices;
 
 std::vector <EnemyInfo> _enemies;
 
@@ -138,7 +138,7 @@ const JBTypes::timePointMs _creationTime;
 
 // Multithreading
 ParallelTask <Block::Effect> _blocksInteractions;
-ParallelTask <void> _objectsInteractions;
+ParallelTask <void> _itemsInteractions;
 ParallelTask <Enemy::Effect> _enemiesInteractions;
 
 JBTypes::Dir _dirBallInteractions;

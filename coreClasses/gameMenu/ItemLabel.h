@@ -1,5 +1,5 @@
 /*
- * File: ObjectLabel.cpp
+ * File: ItemLabel.cpp
  * Author: Morgenthaler S
  *
  * Created on 28 avril 2020, 19:43
@@ -10,18 +10,18 @@
 #include "Label.h"
 
 
-class ObjectLabel:public Label {
+class ItemLabel:public Label {
 public:
-ObjectLabel(
+ItemLabel(
     const Label::WidthUnit& widthUnit,
     float width,
     float height,
     const JBTypes::vec2f& position,
-    const Object::CategoryOfObjects& categoryOfObject
+    const Item::CategoryOfItems& categoryOfItem
     );
 
 private:
-const Object::CategoryOfObjects _categoryOfObjects;
+const Item::CategoryOfItems _categoryOfItems;
 };
 
 #endif // OBJECTLABEL_H

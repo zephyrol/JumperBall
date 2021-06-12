@@ -32,7 +32,6 @@ const FontTexturesGenerator::GraphicAlphabet _graphicAlphabet;
 const PagesRenderPassesLetters _pagesRenderPassesLetters;
 const PagesRenderPasses _pagesRenderPassesOthers;
 
-// const vecRenderPass_sptr _renderPasses;
 const PagesRenderPasses _pagesRenderPasses;
 
 const PagesRenderProcess _pagesRenderProcess;

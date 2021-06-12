@@ -10,7 +10,7 @@
 #include "Utility.h"
 #include <scene/BallState.h>
 #include <scene/blocks/BlockState.h>
-#include <scene/objects/ObjectState.h>
+#include <scene/items/ItemState.h>
 #include <scene/enemies/EnemyState.h>
 #include <scene/special/SpecialState.h>
 #include <scene/StarState.h>
@@ -32,7 +32,7 @@ namespace MeshGenerator {
 
 vecMesh_sptr genBall(const Ball& ball);
 vecMesh_sptr genBlocks(const Map& map);
-vecMesh_sptr genObjects(const Map& map);
+vecMesh_sptr genItems(const Map& map);
 vecMesh_sptr genEnemies(const Map& map);
 vecMesh_sptr genSpecials(const Map& map);
 vecMesh_sptr genStar(const Star& star);
@@ -56,7 +56,7 @@ vecCstGeometricShape_sptr genJumpers(const Block& block,
                                      const Map::BlockTypes& type,
                                      const glm::vec3& posWorld);
 
-Mesh_sptr genObject(const Object& object);
+Mesh_sptr genItem(const Item& item);
 Mesh_sptr genEnemy(const Enemy& enemy, const Map::EnemyTypes& category);
 Mesh_sptr genSpecial(const Special& special, const Map::SpecialTypes& category);
 

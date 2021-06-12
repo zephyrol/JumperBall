@@ -7,14 +7,14 @@
 
 #ifndef BONUS_H
 #define BONUS_H
-#include "Object.h"
+#include "Item.h"
 
-class Bonus:public Object {
+class Bonus:public Item {
 public:
 Bonus(
     const JBTypes::vec3ui& position,
     const JBTypes::Dir& direction,
-    const CategoryOfObjects& category,
+    const CategoryOfItems& category,
     unsigned int value
     );
 

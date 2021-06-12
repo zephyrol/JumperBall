@@ -145,66 +145,66 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
     }
 
     // OBJECTS PART
-    std::cout << "decompress objects" << std::endl;
-    std::string infoObjects;
-    std::string counterWithoutObjectsBuffer;
+    std::cout << "decompress items" << std::endl;
+    std::string infoItems;
+    std::string counterWithoutItemsBuffer;
     unsigned int currentIndex = 0;
     char previousReadValue = 0;
 
-    file >> infoObjects;
-    while (!infoObjects.empty()) {
+    file >> infoItems;
+    while (!infoItems.empty()) {
 
-        readValue = infoObjects.front();
+        readValue = infoItems.front();
         if (readValue == nextBlockAction) {
-            infoObjects.erase(infoObjects.begin());
+            infoItems.erase(infoItems.begin());
             ++currentIndex; // We increment the cursor to the next block
-        } else if (readValue >= firstNumberWithoutAnyObjects) {
-            counterWithoutObjectsBuffer.push_back(readValue);
-            infoObjects.erase(infoObjects.begin());
+        } else if (readValue >= firstNumberWithoutAnyItems) {
+            counterWithoutItemsBuffer.push_back(readValue);
+            infoItems.erase(infoItems.begin());
 
             if (
-                previousReadValue < firstNumberWithoutAnyObjects &&
+                previousReadValue < firstNumberWithoutAnyItems &&
                 previousReadValue >= firstNumberType
                 ) {
                 ++currentIndex; // We increment the cursor to the next block
             }
         } else {
-            if (!counterWithoutObjectsBuffer.empty()) {
-                counterWithoutObjectsBuffer =
-                    substractOffset(counterWithoutObjectsBuffer,
-                                    firstNumberWithoutAnyObjects);
-                currentIndex += convertToBase10(counterWithoutObjectsBuffer,
-                                                nbOfCharactersWithoutObjects);
+            if (!counterWithoutItemsBuffer.empty()) {
+                counterWithoutItemsBuffer =
+                    substractOffset(counterWithoutItemsBuffer,
+                                    firstNumberWithoutAnyItems);
+                currentIndex += convertToBase10(counterWithoutItemsBuffer,
+                                                nbOfCharactersWithoutItems);
             }
 
-            const unsigned int typeOfObject = readValue - firstNumberType;
+            const unsigned int typeOfItem = readValue - firstNumberType;
 
-            infoObjects.erase(infoObjects.begin());
-            readValue = infoObjects.front();
+            infoItems.erase(infoItems.begin());
+            readValue = infoItems.front();
 
             const unsigned int side = readValue - firstNumberSide;
             const JBTypes::Dir dir =
                 JBTypesMethods::integerAsDirection(side);
 
-            Object::CategoryOfObjects category;
-            switch (typeOfObject) {
+            Item::CategoryOfItems category;
+            switch (typeOfItem) {
             case 0:
-                category = Object::CategoryOfObjects::Key;
+                category = Item::CategoryOfItems::Key;
                 break;
             case 1:
-                category = Object::CategoryOfObjects::Coin;
+                category = Item::CategoryOfItems::Coin;
                 break;
             case 2:
-                category = Object::CategoryOfObjects::Clock;
+                category = Item::CategoryOfItems::Clock;
                 break;
             default:
-                category = Object::CategoryOfObjects::Coin;
+                category = Item::CategoryOfItems::Coin;
                 break;
             }
 
-            mapInfo.blocks.at(currentIndex)->createObject(category, dir);
-            counterWithoutObjectsBuffer.clear();
-            infoObjects.erase(infoObjects.begin(), infoObjects.begin() + 1);
+            mapInfo.blocks.at(currentIndex)->createItem(category, dir);
+            counterWithoutItemsBuffer.clear();
+            infoItems.erase(infoItems.begin(), infoItems.begin() + 1);
         }
         previousReadValue = readValue;
     }
@@ -223,12 +223,12 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
         if (readValue == nextBlockAction) {
             infoEnemies.erase(infoEnemies.begin());
             ++currentIndex; // We increment the cursor to the next block
-        } else if (readValue >= firstNumberWithoutAnyObjects) {
+        } else if (readValue >= firstNumberWithoutAnyItems) {
             counterWithoutEnemiesBuffer.push_back(readValue);
             infoEnemies.erase(infoEnemies.begin());
 
             if (
-                previousReadValue < firstNumberWithoutAnyObjects &&
+                previousReadValue < firstNumberWithoutAnyItems &&
                 previousReadValue >= firstNumberType
                 ) {
                 ++currentIndex; // We increment the cursor to the next block
@@ -237,10 +237,10 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             if (!counterWithoutEnemiesBuffer.empty()) {
                 counterWithoutEnemiesBuffer = substractOffset(
                     counterWithoutEnemiesBuffer,
-                    firstNumberWithoutAnyObjects);
+                    firstNumberWithoutAnyItems);
 
                 currentIndex += convertToBase10(counterWithoutEnemiesBuffer,
-                                                nbOfCharactersWithoutObjects);
+                                                nbOfCharactersWithoutItems);
             }
             // direction
             const unsigned int side = readValue - firstNumberSide;
@@ -338,12 +338,12 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
         if (readValue == nextBlockAction) {
             infoSpecial.erase(infoSpecial.begin());
             ++currentIndex; // We increment the cursor to the next block
-        } else if (readValue >= firstNumberWithoutAnyObjects) {
+        } else if (readValue >= firstNumberWithoutAnyItems) {
             counterWithoutSpecialBuffer.push_back(readValue);
             infoSpecial.erase(infoSpecial.begin());
 
             if (
-                previousReadValue < firstNumberWithoutAnyObjects &&
+                previousReadValue < firstNumberWithoutAnyItems &&
                 previousReadValue >= firstNumberType
                 ) {
                 ++currentIndex; // We increment the cursor to the next block
@@ -352,9 +352,9 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             if (!counterWithoutSpecialBuffer.empty()) {
                 counterWithoutSpecialBuffer =
                     substractOffset(counterWithoutSpecialBuffer,
-                                    firstNumberWithoutAnyObjects);
+                                    firstNumberWithoutAnyItems);
                 currentIndex += convertToBase10(counterWithoutSpecialBuffer,
-                                                nbOfCharactersWithoutObjects);
+                                                nbOfCharactersWithoutItems);
             }
             // direction
             const unsigned int side = readValue - firstNumberSide;
@@ -592,26 +592,26 @@ void MapGenerator::compress (std::ifstream& input) {
     writeEndLine(output);
 
     // OBJECTS PART
-    std::cout << "compress objects" << std::endl;
+    std::cout << "compress items" << std::endl;
     input >> trash;
     std::string readString;
-    unsigned int counterWithoutObjects = 0;
+    unsigned int counterWithoutItems = 0;
 
     for (unsigned int i = 0; i < width * deep * height; ++i) {
         input >> readString;
         if (std::isdigit(readString.at(0)) != 0) {
-            ++counterWithoutObjects;
+            ++counterWithoutItems;
         } else {
-            if (counterWithoutObjects > 0) {
+            if (counterWithoutItems > 0) {
                 std::string stringToWrite = convertToBase(
-                    counterWithoutObjects, nbOfCharactersWithoutObjects);
+                    counterWithoutItems, nbOfCharactersWithoutItems);
                 stringToWrite =
-                    applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+                    applyOffset(stringToWrite, firstNumberWithoutAnyItems);
                 output << stringToWrite;
-                counterWithoutObjects = 0;
+                counterWithoutItems = 0;
             } else if (i > 0) {
                 // we need to differentiate this block and the future block
-                // if two blocks with objects are side-by-side
+                // if two blocks with items are side-by-side
                 // and we do not apply this separator character if it's the
                 // the FIRST block
                 output << nextBlockAction;
@@ -630,7 +630,7 @@ void MapGenerator::compress (std::ifstream& input) {
                 case 'K': charToWrite = firstNumberType; break;
                 case 'I': charToWrite = firstNumberType + 1; break;
                 case 'C': charToWrite = firstNumberType + 2; break;
-                default: std::cerr << "Unknown object character: "
+                default: std::cerr << "Unknown item character: "
                                    << c << std::endl;
                     charToWrite = 0; break;
                 }
@@ -638,12 +638,12 @@ void MapGenerator::compress (std::ifstream& input) {
             }
         }
     }
-    if (counterWithoutObjects > 0) {
+    if (counterWithoutItems > 0) {
         std::string stringToWrite = convertToBase(
-            counterWithoutObjects, nbOfCharactersWithoutObjects);
-        stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+            counterWithoutItems, nbOfCharactersWithoutItems);
+        stringToWrite = applyOffset(stringToWrite, firstNumberWithoutAnyItems);
         output << stringToWrite;
-        counterWithoutObjects = 0;
+        counterWithoutItems = 0;
     }
 
     output << std::endl;
@@ -655,18 +655,18 @@ void MapGenerator::compress (std::ifstream& input) {
     for (unsigned int i = 0; i < width * deep * height; ++i) {
         input >> readString;
         if (std::isdigit(readString.at(0)) != 0) {
-            ++counterWithoutObjects;
+            ++counterWithoutItems;
         } else {
-            if (counterWithoutObjects > 0) {
+            if (counterWithoutItems > 0) {
                 std::string stringToWrite = convertToBase(
-                    counterWithoutObjects, nbOfCharactersWithoutObjects);
+                    counterWithoutItems, nbOfCharactersWithoutItems);
                 stringToWrite =
-                    applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+                    applyOffset(stringToWrite, firstNumberWithoutAnyItems);
                 output << stringToWrite;
-                counterWithoutObjects = 0;
+                counterWithoutItems = 0;
             } else if (i > 0) {
                 // we need to differentiate this block and the future block
-                // if two blocks with objects are side-by-side
+                // if two blocks with items are side-by-side
                 // and we do not apply this separator character if it's the
                 // the FIRST block
                 output << nextBlockAction;
@@ -733,13 +733,13 @@ void MapGenerator::compress (std::ifstream& input) {
             output << outputColor;
         }
     }
-    if (counterWithoutObjects > 0) {
+    if (counterWithoutItems > 0) {
         std::string stringToWrite = convertToBase(
-            counterWithoutObjects, nbOfCharactersWithoutObjects);
+            counterWithoutItems, nbOfCharactersWithoutItems);
         stringToWrite =
-            applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+            applyOffset(stringToWrite, firstNumberWithoutAnyItems);
         output << stringToWrite;
-        counterWithoutObjects = 0;
+        counterWithoutItems = 0;
     }
 
     output << std::endl;
@@ -751,18 +751,18 @@ void MapGenerator::compress (std::ifstream& input) {
     for (unsigned int i = 0; i < width * deep * height; ++i) {
         input >> readString;
         if (std::isdigit(readString.at(0)) != 0) {
-            ++counterWithoutObjects;
+            ++counterWithoutItems;
         } else {
-            if (counterWithoutObjects > 0) {
+            if (counterWithoutItems > 0) {
                 std::string stringToWrite = convertToBase(
-                    counterWithoutObjects, nbOfCharactersWithoutObjects);
+                    counterWithoutItems, nbOfCharactersWithoutItems);
                 stringToWrite = applyOffset(stringToWrite,
-                                            firstNumberWithoutAnyObjects);
+                                            firstNumberWithoutAnyItems);
                 output << stringToWrite;
-                counterWithoutObjects = 0;
+                counterWithoutItems = 0;
             } else if (i > 0) {
                 // we need to differentiate this block and the future block
-                // if two blocks with objects are side-by-side
+                // if two blocks with items are side-by-side
                 // and we do not apply this separator character if it's the
                 // the FIRST block
                 output << nextBlockAction;
@@ -807,13 +807,13 @@ void MapGenerator::compress (std::ifstream& input) {
             output << charToWrite;
         }
     }
-    if (counterWithoutObjects > 0) {
+    if (counterWithoutItems > 0) {
         std::string stringToWrite = convertToBase(
-            counterWithoutObjects, nbOfCharactersWithoutObjects);
+            counterWithoutItems, nbOfCharactersWithoutItems);
         stringToWrite =
-            applyOffset(stringToWrite, firstNumberWithoutAnyObjects);
+            applyOffset(stringToWrite, firstNumberWithoutAnyItems);
         output << stringToWrite;
-        counterWithoutObjects = 0;
+        counterWithoutItems = 0;
     }
     output.close();
 }
@@ -895,7 +895,7 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
         output << std::endl;
     }
     output << "OBJECTS" << std::endl;
-    std::cout << "Verification Objects..." << std::endl;
+    std::cout << "Verification Items..." << std::endl;
     for (unsigned int y = 0; y < map.height(); y++) {
         for (unsigned int z = 0; z < map.deep(); z++) {
             for (unsigned int x = 0; x < map.width(); x++) {
@@ -903,25 +903,25 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
                     map.getBlock(x, y, z);
                 if (block) {
                     bool found = false;
-                    for (size_t i = 0; i < Block::objectsNumber; ++i) {
-                        const auto object = block->object(i);
-                        if (object) {
+                    for (size_t i = 0; i < Block::itemsNumber; ++i) {
+                        const auto item = block->item(i);
+                        if (item) {
 
                             std::string s;
                             s.push_back(getDirection(i));
                             if (
-                                object->getCategory() ==
-                                Object::CategoryOfObjects::Key
+                                item->getCategory() ==
+                                Item::CategoryOfItems::Key
                                 ) {
                                 output << "K" << s;
                             } else if (
-                                object->getCategory() ==
-                                Object::CategoryOfObjects::Coin
+                                item->getCategory() ==
+                                Item::CategoryOfItems::Coin
                                 ) {
                                 output << "I" << s;
                             } else if (
-                                object->getCategory() ==
-                                Object::CategoryOfObjects::Clock
+                                item->getCategory() ==
+                                Item::CategoryOfItems::Clock
                                 ) {
                                 output << "C" << s;
                             }

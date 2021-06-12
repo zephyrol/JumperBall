@@ -6,7 +6,7 @@
 #ifndef BLOCKSTATE_H
 #define BLOCKSTATE_H
 #include <scene/blocks/Block.h>
-#include "scene/objects/ObjectState.h"
+#include "scene/items/ItemState.h"
 #include <scene/State.h>
 
 class BlockState:public State {

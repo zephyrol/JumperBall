@@ -1,17 +1,17 @@
 /*
- * File: Object.cpp
+ * File: Item.cpp
  * Author: Morgenthaler S
  *
  * Created on 27 mars 2020, 19:40
  */
 
-#include "Object.h"
+#include "Item.h"
 #include <math.h>
 
-Object::Object(
+Item::Item(
     const JBTypes::vec3ui& position,
     const JBTypes::Dir& direction,
-    const CategoryOfObjects& category
+    const CategoryOfItems& category
     ):
     _position(position),
     _direction(direction),
@@ -21,37 +21,37 @@ Object::Object(
     _category(category) {
 }
 
-const Object::CategoryOfObjects& Object::getCategory() const {
+const Item::CategoryOfItems& Item::getCategory() const {
     return _category;
 }
 
-const JBTypes::vec3ui& Object::position() const {
+const JBTypes::vec3ui& Item::position() const {
     return _position;
 }
 
-const JBTypes::Dir& Object::direction() const {
+const JBTypes::Dir& Item::direction() const {
     return _direction;
 }
 
-bool Object::isGotten() const {
+bool Item::isGotten() const {
     return _gotten;
 }
 
-float Object::getTimeSinceObtaining() const {
+float Item::getTimeSinceObtaining() const {
     return _gotten
            ? JBTypesMethods::getTimeSecondsSinceTimePoint(_obtainingTime)
            : 0;
 }
 
-float Object::getTimeSinceCreation() const {
+float Item::getTimeSinceCreation() const {
     return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
 
-void Object::catchingTest (const JBTypes::vec3f& objectPosition,
+void Item::catchingTest (const JBTypes::vec3f& itemPosition,
                            const JBTypes::vec3f& entityPosition,
                            float radiusEntity) {
     const float distance =
-        JBTypesMethods::distance(objectPosition, entityPosition);
+        JBTypesMethods::distance(itemPosition, entityPosition);
     if (distance < radiusEntity + radiusBoundingSphere) {
         _obtainingTime = JBTypesMethods::getTimePointMSNow();
         _gotten = true;

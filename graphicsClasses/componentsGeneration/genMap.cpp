@@ -16,17 +16,17 @@ vecMesh_sptr MeshGenerator::genBlocks (const Map& map) {
     return meshes;
 }
 
-vecMesh_sptr MeshGenerator::genObjects (const Map& map) {
+vecMesh_sptr MeshGenerator::genItems (const Map& map) {
 
     vecMesh_sptr meshes;
     const auto blockInfos = map.blocksInfo();
     for (size_t i = 0; i < blockInfos.size(); ++i) {
         const size_t index = blockInfos.at(i).index;
-        for (size_t j = 0; j < Block::objectsNumber; ++j) {
+        for (size_t j = 0; j < Block::itemsNumber; ++j) {
             const CstBlock_sptr block = map.getBlock(index);
-            const std::shared_ptr <const Object> object = block->objects().at(j);
-            if (object) {
-                meshes.push_back(genObject(*object));
+            const std::shared_ptr <const Item> item = block->items().at(j);
+            if (item) {
+                meshes.push_back(genItem(*item));
             }
         }
     }

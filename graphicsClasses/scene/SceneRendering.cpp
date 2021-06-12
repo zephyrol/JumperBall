@@ -20,7 +20,7 @@ SceneRendering::SceneRendering(const Map& map,
     _externalUniformMatrices(createExternalUniformMatFourVariables()),
     _levelRenderPasses{
                        std::make_shared <RenderPass>(MeshGenerator::genBlocks(map)),
-                       std::make_shared <RenderPass>(MeshGenerator::genObjects(map)),
+                       std::make_shared <RenderPass>(MeshGenerator::genItems(map)),
                        std::make_shared <RenderPass>(MeshGenerator::genEnemies(map)),
                        std::make_shared <RenderPass>(MeshGenerator::genSpecials(map)),
                        std::make_shared <RenderPass>(MeshGenerator::genBall(ball))
@@ -72,7 +72,7 @@ RenderProcess_sptr SceneRendering::createDepthStarProcess() const {
             return {
                 {
                     { _levelRenderPasses.at(0), ShaderProgram::createShaderProgram(blocksVs, depthFs) },
-                    { _levelRenderPasses.at(1), ShaderProgram::createShaderProgram(objectsMapVs, depthFs) },
+                    { _levelRenderPasses.at(1), ShaderProgram::createShaderProgram(itemsMapVs, depthFs) },
                     { _levelRenderPasses.at(2), ShaderProgram::createShaderProgram(enemiesVs, depthFs) },
                     { _levelRenderPasses.at(3), ShaderProgram::createShaderProgram(specialsVs, depthFs) },
                     { _levelRenderPasses.at(4), ShaderProgram::createShaderProgram(ballVs, depthFs) }
@@ -117,7 +117,7 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
 
             const vecCstShaderProgram_sptr shaderPrograms {
                 ShaderProgram::createShaderProgram(blocksVs, levelFs),
-                ShaderProgram::createShaderProgram(objectsMapVs, levelFs),
+                ShaderProgram::createShaderProgram(itemsMapVs, levelFs),
                 ShaderProgram::createShaderProgram(enemiesVs, levelFs),
                 ShaderProgram::createShaderProgram(specialsVs, levelFs),
                 ShaderProgram::createShaderProgram(ballVs, levelFs),
@@ -383,7 +383,7 @@ void SceneRendering::render() const {
 }
 
 const std::string SceneRendering::blocksVs = "blocksVs.vs";
-const std::string SceneRendering::objectsMapVs = "objectsMapVs.vs";
+const std::string SceneRendering::itemsMapVs = "itemsMapVs.vs";
 const std::string SceneRendering::enemiesVs = "enemiesVs.vs";
 const std::string SceneRendering::specialsVs = "specialsVs.vs";
 const std::string SceneRendering::ballVs = "ballVs.vs";

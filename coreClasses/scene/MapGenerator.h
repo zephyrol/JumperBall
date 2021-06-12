@@ -19,12 +19,12 @@ static constexpr unsigned char firstNumberOfBlock = 58;
 static constexpr unsigned int nbOfCharactersUsedForNumbers = 69;
 static constexpr unsigned int firstNumberParams = 33;
 
-// Objects and special compression
+// Items and special compression
 static constexpr unsigned char nextBlockAction = 33;
 static constexpr unsigned char firstNumberType = 34;
 static constexpr unsigned char firstNumberSide = 42;
-static constexpr unsigned char firstNumberWithoutAnyObjects = 48;
-static constexpr unsigned int nbOfCharactersWithoutObjects = 79;
+static constexpr unsigned char firstNumberWithoutAnyItems = 48;
+static constexpr unsigned int nbOfCharactersWithoutItems = 79;
 
 // Enemies compression
 static constexpr unsigned char firstNumberLength = 33;

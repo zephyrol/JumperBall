@@ -9,9 +9,9 @@
 #define LABEL_H
 #include "system/Types.h"
 #include "system/Geometry.h"
-#include "scene/objects/Key.h"
-#include "scene/objects/Coin.h"
-#include "scene/objects/Clock.h"
+#include "scene/items/Key.h"
+#include "scene/items/Coin.h"
+#include "scene/items/Clock.h"
 #include <fstream>
 
 class Label;
