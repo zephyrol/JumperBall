@@ -14,7 +14,7 @@ ItemState::ItemState(const Item& item):
     _timeSinceObtaining(item.getTimeSinceObtaining()) {
 }
 
-State::GlobalState ItemState::update() {
+ObjectState::GlobalState ItemState::update() {
     _timeSinceCreation = _item.getTimeSinceCreation();
     _timeSinceObtaining = _item.getTimeSinceObtaining();
 
@@ -22,17 +22,17 @@ State::GlobalState ItemState::update() {
         constexpr float thresholdThirdStep = 1.5;
         constexpr float durationThirdStep = 0.2;
         return _timeSinceObtaining < thresholdThirdStep + durationThirdStep
-               ? State::GlobalState::Separate
-               : State::GlobalState::Dead;
+               ? ObjectState::GlobalState::Separate
+               : ObjectState::GlobalState::Dead;
     }
-    return State::GlobalState::United;
+    return ObjectState::GlobalState::United;
 }
 
-State::StaticValues <float> ItemState::getStaticFloatValues() const {
+ObjectState::StaticValues <float> ItemState::getStaticFloatValues() const {
     return { _direction };
 }
 
-State::StaticValues <JBTypes::vec3f> ItemState::getStaticVec3fValues() const {
+ObjectState::StaticValues <JBTypes::vec3f> ItemState::getStaticVec3fValues() const {
     constexpr float offset = 0.5;
     const JBTypes::vec3f position = {
         static_cast <float>(_position.at(0)) + offset,
@@ -42,7 +42,7 @@ State::StaticValues <JBTypes::vec3f> ItemState::getStaticVec3fValues() const {
     return { position };
 }
 
-State::DynamicValues <float> ItemState::getDynamicFloats() const {
+ObjectState::DynamicValues <float> ItemState::getDynamicFloats() const {
     return {
         { "creationTime", _timeSinceCreation },
         { "obtainingTime", _timeSinceObtaining }

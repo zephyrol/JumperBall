@@ -13,18 +13,18 @@ BlockState::BlockState(const Block& block):
 {
 }
 
-State::GlobalState BlockState::update() {
+ObjectState::GlobalState BlockState::update() {
     _localScale = _block.localScale();
     _localTranslation = _block.localTranslation();
     if (_isUnited) {
         _isUnited = _block.isExists();
     }
     return _isUnited
-      ? State::GlobalState::United
-      : State::GlobalState::Separate;
+      ? ObjectState::GlobalState::United
+      : ObjectState::GlobalState::Separate;
 }
 
-State::StaticValues <JBTypes::vec3f> BlockState::getStaticVec3fValues() const {
+ObjectState::StaticValues <JBTypes::vec3f> BlockState::getStaticVec3fValues() const {
     const auto& position = _block.position();
     constexpr float offset = 0.5f;
     return {{
@@ -34,10 +34,10 @@ State::StaticValues <JBTypes::vec3f> BlockState::getStaticVec3fValues() const {
     }};
 }
 
-State::DynamicValues <float> BlockState::getDynamicFloats() const {
+ObjectState::DynamicValues <float> BlockState::getDynamicFloats() const {
     return {};
 }
 
-State::DynamicValues <JBTypes::vec3f> BlockState::getDynamicVec3fs() const {
+ObjectState::DynamicValues <JBTypes::vec3f> BlockState::getDynamicVec3fs() const {
     return { { "translation", _localTranslation }, { "scale", _localScale } };
 }

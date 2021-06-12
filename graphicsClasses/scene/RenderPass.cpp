@@ -9,7 +9,7 @@
 
 RenderPass::RenderPass(const vecMesh_sptr& meshes):
     _meshes(meshes),
-    _unitedMeshesGroup(std::make_shared <RenderGroup>(meshes, State::GlobalState::United)),
+    _unitedMeshesGroup(std::make_shared <RenderGroup>(meshes, ObjectState::GlobalState::United)),
     _separateMeshGroups(createSeparateMeshGroups(meshes)),
     _renderGroupsUniforms{},
     _renderPassUniforms(),
@@ -66,7 +66,7 @@ std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > RenderPass::createSeparateM
     for (const Mesh_sptr& mesh : meshes) {
         separateMeshGroups[mesh] = std::make_shared <RenderGroup>(
             *_unitedMeshesGroup,
-            State::GlobalState::Separate
+            ObjectState::GlobalState::Separate
             );
     }
     return separateMeshGroups;

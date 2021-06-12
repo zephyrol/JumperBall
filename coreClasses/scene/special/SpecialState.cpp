@@ -17,17 +17,17 @@ SpecialState::SpecialState(const Special& special):
     _isActivated(special.isActivated()) {
 }
 
-State::GlobalState SpecialState::update() {
+ObjectState::GlobalState SpecialState::update() {
     _timeSinceCreation = _special.getTimeSinceCreation();
     _isActivated = _special.isActivated();
     return GlobalState::United;
 }
 
-State::StaticValues <float> SpecialState::getStaticFloatValues() const {
+ObjectState::StaticValues <float> SpecialState::getStaticFloatValues() const {
     return { _direction, _color, _isAnimated };
 }
 
-State::StaticValues <JBTypes::vec3f> SpecialState::getStaticVec3fValues() const {
+ObjectState::StaticValues <JBTypes::vec3f> SpecialState::getStaticVec3fValues() const {
     constexpr float offset = 0.5;
     const JBTypes::vec3f position = {
         static_cast <float>(_position.at(0)) + offset,
@@ -37,7 +37,7 @@ State::StaticValues <JBTypes::vec3f> SpecialState::getStaticVec3fValues() const 
     return { position };
 }
 
-State::DynamicValues <float> SpecialState::getDynamicFloats() const {
+ObjectState::DynamicValues <float> SpecialState::getDynamicFloats() const {
     return {
         { "creationTime", _timeSinceCreation },
         { _colorAttributeName, _isActivated }

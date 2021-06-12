@@ -3,10 +3,10 @@
 #include "geometry/Quad.h"
 #include <scene/State.h>
 
-class QuadState:public State {
+class QuadState:public ObjectState {
 public:
 QuadState(const Quad& quad);
-virtual State::GlobalState update() override;
+virtual ObjectState::GlobalState update() override;
 
 private:
 };

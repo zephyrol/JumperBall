@@ -9,13 +9,13 @@
 #define CAMERASTATE_H
 #include "Camera.h"
 
-class CameraState: public State {
+class CameraState: public ObjectState {
 
 public:
 
 CameraState(const Camera& camera);
 
-virtual State::GlobalState update() override;
+virtual ObjectState::GlobalState update() override;
 const glm::vec3& pos() const noexcept;
 const glm::mat4& viewProjection() const noexcept;
 

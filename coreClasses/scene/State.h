@@ -8,25 +8,25 @@
 #define STATE_H
 #include "system/Types.h"
 
-class State;
-using State_sptr = std::shared_ptr <State>;
-using CstState_sptr = std::shared_ptr <const State>;
+class ObjectState;
+using State_sptr = std::shared_ptr <ObjectState>;
+using CstState_sptr = std::shared_ptr <const ObjectState>;
 using vecCstState_sptr = std::vector <CstState_sptr>;
 using vecState_sptr = std::vector <State_sptr>;
-using State_uptr = std::unique_ptr <State>;
+using State_uptr = std::unique_ptr <ObjectState>;
 
-class State {
+class ObjectState {
 
 public:
 
 template<typename T> using StaticValues = std::vector <T>;
 template<typename T> using DynamicValues = std::map <std::string, T>;
 
-State();
+ObjectState();
 
 enum class GlobalState { United, Separate, Dead };
 virtual GlobalState update() = 0;
-virtual ~State() = default;
+virtual ~ObjectState() = default;
 
 virtual StaticValues <float> getStaticFloatValues() const;
 virtual StaticValues <JBTypes::vec2f> getStaticVec2fValues() const;

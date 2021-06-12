@@ -3,6 +3,6 @@
 QuadState::QuadState(const Quad&) {
 }
 
-State::GlobalState QuadState::update() {
-    return State::GlobalState::United;
+ObjectState::GlobalState QuadState::update() {
+    return ObjectState::GlobalState::United;
 }

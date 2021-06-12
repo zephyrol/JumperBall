@@ -13,11 +13,11 @@ StarState::StarState(const Star& star):
     _lightDirection(star.lightDirection()) {
 }
 
-State::GlobalState StarState::update() {
+ObjectState::GlobalState StarState::update() {
     _rotation = _star.getRotation();
     _position = _star.position();
     _lightDirection = _star.lightDirection();
-    return State::GlobalState::United;
+    return ObjectState::GlobalState::United;
 }
 
 StarState::DynamicValues <float> StarState::getDynamicFloats() const {

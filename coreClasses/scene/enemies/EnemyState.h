@@ -11,13 +11,13 @@
 #include <scene/State.h>
 
 
-class EnemyState:public State {
+class EnemyState:public ObjectState {
 public:
 EnemyState(const Enemy& enemy);
 const std::array <float, 9>& transform() const;
-virtual State::GlobalState update() override;
+virtual ObjectState::GlobalState update() override;
 
-virtual State::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+virtual ObjectState::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 
 private:
 const Enemy& _enemy;

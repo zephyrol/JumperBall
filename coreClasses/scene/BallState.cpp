@@ -21,7 +21,7 @@ BallState::BallState(const Ball& ball):
 {
 }
 
-State::GlobalState BallState::update() {
+ObjectState::GlobalState BallState::update() {
     _coveredRotation = _ball.getCoveredRotation();
     _position = _ball.get3DPosition();
     _burnCoefficient = _ball.burnCoefficient();
@@ -35,12 +35,12 @@ State::GlobalState BallState::update() {
 
     const Ball::StateOfLife stateOfLife = _ball.stateOfLife();
     if (stateOfLife == Ball::StateOfLife::Bursting) {
-        return State::GlobalState::Separate;
+        return ObjectState::GlobalState::Separate;
     }
     if (stateOfLife == Ball::StateOfLife::Dead) {
-        return State::GlobalState::Dead;
+        return ObjectState::GlobalState::Dead;
     }
-    return State::GlobalState::United;
+    return ObjectState::GlobalState::United;
 }
 
 float BallState::teleportationCoeff() const {
@@ -51,7 +51,7 @@ const JBTypes::Color& BallState::teleportationColor() const {
     return _teleportationColor;
 }
 
-State::DynamicValues <float> BallState::getDynamicFloats() const {
+ObjectState::DynamicValues <float> BallState::getDynamicFloats() const {
     return {
         { "ballRadius", _radius },
         { "crushingCoeff", _crushingCoeff },
@@ -61,14 +61,14 @@ State::DynamicValues <float> BallState::getDynamicFloats() const {
     };
 }
 
-State::DynamicValues <JBTypes::vec3f> BallState::getDynamicVec3fs() const {
+ObjectState::DynamicValues <JBTypes::vec3f> BallState::getDynamicVec3fs() const {
     return {
         { "sideDir", _currentSideAsVector },
         { "position", _position }
     };
 }
 
-State::DynamicValues <JBTypes::Quaternion> BallState::getDynamicQuaternions() const {
+ObjectState::DynamicValues <JBTypes::Quaternion> BallState::getDynamicQuaternions() const {
     return {
         { "quaternion", _coveredRotation }
     };

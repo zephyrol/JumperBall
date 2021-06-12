@@ -10,17 +10,17 @@
 #include "State.h"
 
 
-class BallState:public State {
+class BallState:public ObjectState {
 public:
 BallState(const Ball& ball);
 
-virtual State::GlobalState update() override;
+virtual ObjectState::GlobalState update() override;
 float teleportationCoeff() const;
 const JBTypes::Color& teleportationColor() const;
 
-State::DynamicValues <float> getDynamicFloats() const override;
-State::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
-State::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
+ObjectState::DynamicValues <float> getDynamicFloats() const override;
+ObjectState::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+ObjectState::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
 
 private:
 const Ball& _ball;

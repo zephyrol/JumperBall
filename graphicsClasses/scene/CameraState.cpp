@@ -14,10 +14,10 @@ _viewProjection(camera.viewProjection())
 {
 }
 
-State::GlobalState CameraState::update() {
+ObjectState::GlobalState CameraState::update() {
     _pos = _camera.pos();
     _viewProjection = _camera.viewProjection();
-    return State::GlobalState::United;
+    return ObjectState::GlobalState::United;
 }
 
 const glm::vec3& CameraState::pos() const noexcept {

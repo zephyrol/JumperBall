@@ -13,8 +13,8 @@ class RenderGroup {
 
 public:
 
-RenderGroup(const vecMesh_sptr& meshes, const State::GlobalState& globalState);
-RenderGroup(const RenderGroup& renderGroup, const State::GlobalState& globalState);
+RenderGroup(const vecMesh_sptr& meshes, const ObjectState::GlobalState& globalState);
+RenderGroup(const RenderGroup& renderGroup, const ObjectState::GlobalState& globalState);
 RenderGroup(const RenderGroup& renderGroup) = delete;
 RenderGroup& operator= (const RenderGroup& renderGroup) = delete;
 RenderGroup(RenderGroup&& renderGroup) = default;
@@ -23,7 +23,7 @@ RenderGroup& operator= (RenderGroup&& renderGroup) = default;
 CstMesh_sptr getHeadMesh() const;
 vecMesh_sptr update(const vecMesh_sptr& meshesToAdd = {});
 void render() const;
-State::GlobalState _globalState;
+ObjectState::GlobalState _globalState;
 
 private:
 

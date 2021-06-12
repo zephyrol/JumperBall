@@ -10,16 +10,16 @@
 #include <scene/State.h>
 
 
-class ItemState:public State {
+class ItemState:public ObjectState {
 public:
 ItemState(const Item& item);
 
-State::StaticValues <float> getStaticFloatValues() const override;
-State::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+ObjectState::StaticValues <float> getStaticFloatValues() const override;
+ObjectState::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
 
-State::DynamicValues <float> getDynamicFloats() const override;
+ObjectState::DynamicValues <float> getDynamicFloats() const override;
 
-State::GlobalState update() override;
+ObjectState::GlobalState update() override;
 
 private:
 const Item& _item;

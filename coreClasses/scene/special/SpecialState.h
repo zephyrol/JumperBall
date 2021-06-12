@@ -10,15 +10,15 @@
 #include <scene/Map.h>
 #include <scene/State.h>
 
-class SpecialState:public State {
+class SpecialState:public ObjectState {
 public:
 SpecialState(const Special& special);
-virtual State::GlobalState update() override;
+virtual ObjectState::GlobalState update() override;
 
-State::StaticValues <float> getStaticFloatValues() const override;
-State::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+ObjectState::StaticValues <float> getStaticFloatValues() const override;
+ObjectState::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
 
-State::DynamicValues <float> getDynamicFloats() const override;
+ObjectState::DynamicValues <float> getDynamicFloats() const override;
 
 private:
 const Special& _special;

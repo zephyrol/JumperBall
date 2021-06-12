@@ -9,15 +9,15 @@
 #include "scene/items/ItemState.h"
 #include <scene/State.h>
 
-class BlockState:public State {
+class BlockState:public ObjectState {
 public:
 BlockState(const Block& block);
-virtual State::GlobalState update() override;
+virtual ObjectState::GlobalState update() override;
     
-State::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+ObjectState::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
 
-State::DynamicValues <float> getDynamicFloats() const override;
-State::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+ObjectState::DynamicValues <float> getDynamicFloats() const override;
+ObjectState::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
     
 const bool& isFixed() const;
 

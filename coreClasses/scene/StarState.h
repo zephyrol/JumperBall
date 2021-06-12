@@ -10,11 +10,11 @@
 #include "Star.h"
 
 
-class StarState:public State {
+class StarState:public ObjectState {
 public:
 StarState(const Star& star);
 
-State::GlobalState update() override;
+ObjectState::GlobalState update() override;
 StarState::DynamicValues <float> getDynamicFloats() const override;
 StarState::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 StarState::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;

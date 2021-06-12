@@ -50,7 +50,7 @@ struct Uniforms {
     UniformVariables <GLuint> uniformTextures = {};
 };
 
-State::GlobalState update();
+ObjectState::GlobalState update();
 
 size_t numberOfVertices() const;
 Uniforms genUniformsValues() const;
@@ -66,10 +66,10 @@ template<typename T> void duplicateStateVertexAttribute(std::vector <std::vector
                                                         const std::vector <T>& values) const;
 
 template<typename RawType, typename OpenGLType> static void convertAttributesToOpenGLFormat(
-    const State::StaticValues <RawType>& rawValues, std::vector <OpenGLType>& openGLValues);
+    const ObjectState::StaticValues <RawType>& rawValues, std::vector <OpenGLType>& openGLValues);
 
 template<typename RawType, typename OpenGLType> static void convertUniformsToOpenGLFormat(
-    const State::DynamicValues <RawType>& rawValues, Mesh::UniformVariables <OpenGLType>& openGLValues);
+    const ObjectState::DynamicValues <RawType>& rawValues, Mesh::UniformVariables <OpenGLType>& openGLValues);
 
 template<typename T> static void concatStateVertexAttribute(
     std::vector <std::vector <T> >& current,
