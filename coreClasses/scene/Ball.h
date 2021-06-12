@@ -77,6 +77,9 @@ float getCrushingCoefficient() const noexcept;
 float getTeleportationCoefficient() const noexcept;
 const JBTypes::Color& getTeleportationColor() const noexcept;
 
+float getTimeToGetDestination() const;
+JBTypes::vec3f getNextLook() const;
+
 // ----------METHODS------------//
 void update() noexcept;
 void doAction(ActionRequest action);

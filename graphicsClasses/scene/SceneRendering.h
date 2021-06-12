@@ -10,7 +10,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include "Camera.h"
+#include "CameraState.h"
 #include "uniformBlocks/uniformLight.h"
 #include "componentsGeneration/MeshGenerator.h"
 #include "Rendering.h"
@@ -30,9 +30,9 @@ static constexpr size_t heightBloomTexture = 192;
 static constexpr size_t sizeDepthTexture = 1024;
 
 
-const Camera& _camera;
 const std::shared_ptr <StarState> _starState;
 const std::shared_ptr <BallState> _ballState;
+const std::shared_ptr <CameraState> _cameraState;
 const vecState_sptr _externalStates;
 
 ExternalUniformBlockVariables _externalUniformBlocks;
@@ -44,7 +44,6 @@ const vecRenderPass_sptr _sceneRenderPasses;
 const RenderPass_sptr _screenRenderPass;
 const vecRenderPass_sptr _vecScreenRenderPass;
 const vecRenderPass_sptr _renderPasses;
-// const vecRenderPass_sptr _renderPasses;
 
 const RenderProcess_sptr _depthStarProcess;
 const RenderProcess_sptr _sceneRenderingProcess;

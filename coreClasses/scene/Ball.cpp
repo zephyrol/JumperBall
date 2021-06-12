@@ -827,6 +827,14 @@ bool Ball::isOutOfTheMap() const {
     } else return false;
 }
 
+float Ball::getTimeToGetDestination() const {
+    return getMechanicsJumping().getTimeToGetDestination();
+}
+
+JBTypes::vec3f Ball::getNextLook() const {
+    return JBTypesMethods::directionAsVector(getNextBlockInfo().nextLook);
+}
+
 
 const TurnLeft Ball::turnLeftMovement;
 const TurnRight Ball::turnRightMovement;

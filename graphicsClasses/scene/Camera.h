@@ -19,36 +19,35 @@ class Camera {
 
 public:
 
-// --CONSTRUCTORS & DESTRUCTORS--//
-Camera(const Map& map);
+enum class Movement { TurningAroundMap, FollowingBall, ApproachingBall };
 
+Camera(const Map& map, const Ball& ball);
 
-// ---------CONSTANTS------------//
 static constexpr float zNear = 0.1f;
 static constexpr float zFar = 100.f;
 
-
-// -------CONST METHODS----------//
 const glm::vec3& pos() const noexcept;
-const glm::vec3& center() const noexcept;
-const glm::vec3& up() const noexcept;
 glm::mat4 viewProjection() const noexcept;
 
-
-// ----------METHODS-------------//
 void update() noexcept;
-void follow(const BallState& ballState) noexcept;
-void followMap() noexcept;
-bool transitionEffect(const BallState& ball) noexcept;
+void turnAroundMap() noexcept;
+void followBall() noexcept;
+void approachBall() noexcept;
+const Movement& getMovement() noexcept;
 
 static glm::mat4 genVPMatrixFromStar(const StarState& starState);
 
 private:
 
-// --------ATTRIBUTES-----------//
+void turningAroundMapUpdate() noexcept;
+void followingBallUpdate() noexcept;
+bool approachingBallUpdate() noexcept;
+
 const Map& _map;
+const Ball& _ball;
 const float _fovy;
 const float _ratio;
+Movement _movement;
 glm::vec3 _pos;
 glm::vec3 _center;
 glm::vec3 _up;

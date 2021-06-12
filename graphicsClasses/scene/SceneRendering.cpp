@@ -12,10 +12,10 @@ SceneRendering::SceneRendering(const Map& map,
                                const Ball& ball,
                                const Star& star,
                                const Camera& camera):
-    _camera(camera),
     _starState(std::make_shared <StarState>(star)),
     _ballState(std::make_shared <BallState>(ball)),
-    _externalStates({ _starState, _ballState }),
+    _cameraState(std::make_shared <CameraState>(camera)),
+    _externalStates({ _starState, _ballState, _cameraState }),
     _externalUniformBlocks(createExternalUniformBlockVariables()),
     _externalUniformMatrices(createExternalUniformMatFourVariables()),
     _levelRenderPasses{
@@ -44,6 +44,8 @@ SceneRendering::SceneRendering(const Map& map,
                        _verticalBlurProcess,
                        _bloomProcess
                        } {
+
+    // TODO: Move thoses instructions
     // alpha
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -137,10 +139,10 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
     const auto updateSceneLevelRenderingFct =
         [this, lightBlock, lightBlockName] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
 
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, _camera.viewProjection());
+            renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, _cameraState->viewProjection());
             const std::string& VPStarName = SceneRendering::VPStarName;
             renderPass->upsertUniform(shaderProgramID, VPStarName, getUniformMatrix(VPStarName));
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName, _camera.pos());
+            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName, _cameraState->pos());
 
             const auto& lightBlock = getUniformBlock(lightBlockName);
             renderPass->upsertUniform(shaderProgramID, lightBlockName, lightBlock);
@@ -152,8 +154,8 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
 
     const auto updateSceneStarRenderingFct =
         [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, _camera.viewProjection());
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName, _camera.pos());
+            renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, _cameraState->viewProjection());
+            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName, _cameraState->pos());
         };
 
 
@@ -316,7 +318,7 @@ Rendering::ExternalUniformVariables <glm::mat4> SceneRendering::createExternalUn
         [this] ()->Mesh::UniformVariables <glm::mat4> {
             return  {
                 { SceneRendering::VPStarName, Camera::genVPMatrixFromStar(*_starState) },
-                { SceneRendering::VPName, _camera.viewProjection() }
+                { SceneRendering::VPName, _cameraState->viewProjection() }
             };
         };
 
