@@ -7,7 +7,7 @@
 #ifndef OBJECTSTATE_H
 #define OBJECTSTATE_H
 #include <scene/items/Item.h>
-#include <scene/State.h>
+#include <scene/ObjectState.h>
 
 
 class ItemState:public ObjectState {

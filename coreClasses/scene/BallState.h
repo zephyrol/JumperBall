@@ -7,7 +7,7 @@
 #ifndef BALLSTATE_H
 #define BALLSTATE_H
 #include <scene/Ball.h>
-#include "State.h"
+#include "ObjectState.h"
 
 
 class BallState:public ObjectState {

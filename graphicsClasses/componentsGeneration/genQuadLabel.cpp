@@ -16,7 +16,7 @@ Mesh_sptr MeshGenerator::genQuadLabel (const JBTypes::vec2f& position,
     const std::shared_ptr <const Quad> quad = std::make_shared <const Quad>(color, translation * scale);
 
     // TODO : use a LabelState, not a QuadState
-    State_uptr state_ptr(new QuadState(*quad));
+    Frames_uptr<ObjectState> frame_ptr = Frames<ObjectState>::genFrames<Quad, QuadState>(*quad);
     vecCstGeometricShape_sptr geometricShapes { quad };
-    return std::make_shared <Mesh>(std::move(state_ptr), std::move(geometricShapes));
+    return std::make_shared <Mesh>(std::move(frame_ptr), std::move(geometricShapes));
 }

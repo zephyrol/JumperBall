@@ -8,7 +8,7 @@
 #define ENEMYSTATE_H
 #include <scene/enemies/Enemy.h>
 #include <scene/Map.h>
-#include <scene/State.h>
+#include <scene/ObjectState.h>
 
 
 class EnemyState:public ObjectState {

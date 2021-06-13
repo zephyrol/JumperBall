@@ -33,11 +33,8 @@ Controller::Controller():
     _ball(std::make_shared <Ball>(*_map)),
     _camera(std::make_shared <Camera>(*_map, *_ball)),
     _star(Star::createBlurStar(*_map)),
-    _currentFrame(Controller::CurrentFrame::FrameA),
-    _sceneRenderingFrameA(std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera)),
-    _sceneRenderingFrameB(std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera)),
-    _menuRenderingFrameA(std::make_shared <MenuRendering>(*_menu, _ftContent)),
-    _menuRenderingFrameB(std::make_shared <MenuRendering>(*_menu, _ftContent)),
+    _sceneRendering(std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera)),
+    _menuRendering(std::make_shared <MenuRendering>(*_menu, _ftContent)),
     _updatingScene([this] (size_t) {
                        _ball->update();
                        if (_player.statut() == Player::Statut::INMENU) {
@@ -51,11 +48,8 @@ Controller::Controller():
                        if (_camera->getMovement() == Camera::Movement::FollowingBall) {
                            _player.statut(Player::Statut::INGAME);
                        }
-                       const std::shared_ptr <SceneRendering> currentSceneRendering =
-                           _currentFrame == Controller::CurrentFrame::FrameA
-                           ? _sceneRenderingFrameA
-                           : _sceneRenderingFrameB;
-                       currentSceneRendering->update();
+                       _sceneRendering->swapFrames();
+                       _sceneRendering->update();
                    }),
     _updatingMenu([this] (size_t) {
                       if (_player.statut() == Player::Statut::INMENU) {
@@ -66,11 +60,8 @@ Controller::Controller():
                               _menu->failurePageAsCurrentPage();
                           }
                       }
-                      const std::shared_ptr <MenuRendering> currentMenuRendering =
-                          _currentFrame == Controller::CurrentFrame::FrameA
-                          ? _menuRenderingFrameA
-                          : _menuRenderingFrameB;
-                      currentMenuRendering->update();
+                      // TODO: Swap it !
+                      _menuRendering->update();
                   }),
     _updating([this] (size_t) {
                   _updatingScene.runTasks();
@@ -80,7 +71,6 @@ Controller::Controller():
               }, 1, true) {
     _updating.runTasks();
     _updating.waitTasks();
-    switchFrame();
 }
 
 void Controller::interactionButtons (const Controller::Button& button,
@@ -133,18 +123,13 @@ void Controller::runController() {
     _updating.runTasks();
 
     // Launch rendering
-    _currentFrame == Controller::CurrentFrame::FrameA
-    ? _sceneRenderingFrameB->render()
-    : _sceneRenderingFrameA->render();
-    _currentFrame == Controller::CurrentFrame::FrameA
-    ? _menuRenderingFrameB->render()
-    : _menuRenderingFrameA->render();
+    _sceneRendering->render();
+    _menuRendering->render();
 }
 
 void Controller::waitController() {
     // std::cout << "wait tasks !" << std::endl;
     _updating.waitTasks();
-    switchFrame();
 }
 
 void Controller::manageValidateButton (const Controller::Status& status) {
@@ -160,17 +145,10 @@ void Controller::runGame (size_t level) {
     _ball = std::make_shared <Ball>(*_map);
     _camera = std::make_shared <Camera>(*_map, *_ball);
     _star = Star::createBlurStar(*_map);
-    _sceneRenderingFrameA = std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera);
-    _sceneRenderingFrameB = std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera);
+    _sceneRendering = std::make_shared <SceneRendering>(*_map, *_ball, *_star, *_camera);
+    // TODO: check if that is necessary
     _updating.runTasks();
     _updating.waitTasks();
-    switchFrame();
-}
-
-void Controller::switchFrame() {
-    _currentFrame = _currentFrame == Controller::CurrentFrame::FrameA
-                    ? Controller::CurrentFrame::FrameB
-                    : Controller::CurrentFrame::FrameA;
 }
 
 void Controller::manageValidateMouse() {

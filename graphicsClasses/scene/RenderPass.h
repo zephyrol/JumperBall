@@ -32,7 +32,10 @@ RenderPass& operator= (RenderPass&& renderPass) = default;
 
 
 void render(const CstShaderProgram_sptr& shaderProgram) const;
+
+void swapFrames();
 void update();
+
 void cleanUniforms();
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::mat4& value);
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::vec4& value);

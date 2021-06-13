@@ -7,7 +7,7 @@
 #define BLOCKSTATE_H
 #include <scene/blocks/Block.h>
 #include "scene/items/ItemState.h"
-#include <scene/State.h>
+#include <scene/ObjectState.h>
 
 class BlockState:public ObjectState {
 public:

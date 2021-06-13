@@ -1,19 +1,19 @@
 /*
- * File: State.h
+ * File: ObjectState.h
  * Author: Morgenthaler S
  *
  * Created on 31 janvier 2021, 18h52
  */
-#ifndef STATE_H
-#define STATE_H
+#ifndef OBJECT_STATE_H
+#define OBJECT_STATE_H
 #include "system/Types.h"
 
 class ObjectState;
-using State_sptr = std::shared_ptr <ObjectState>;
-using CstState_sptr = std::shared_ptr <const ObjectState>;
-using vecCstState_sptr = std::vector <CstState_sptr>;
-using vecState_sptr = std::vector <State_sptr>;
-using State_uptr = std::unique_ptr <ObjectState>;
+using ObjectState_sptr = std::shared_ptr <ObjectState>;
+using CstObjectState_sptr = std::shared_ptr <const ObjectState>;
+using vecCstObjectState_sptr = std::vector <CstObjectState_sptr>;
+using vecObjectState_sptr = std::vector <ObjectState_sptr>;
+using ObjectState_uptr = std::unique_ptr <ObjectState>;
 
 class ObjectState {
 
@@ -38,4 +38,4 @@ virtual DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const;
 virtual DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const;
 };
 
-#endif // STATE_H
+#endif // OBJECT_STATE_H

@@ -6,7 +6,7 @@
  */
 #ifndef STARSTATE_H
 #define STARSTATE_H
-#include "State.h"
+#include "ObjectState.h"
 #include "Star.h"
 
 

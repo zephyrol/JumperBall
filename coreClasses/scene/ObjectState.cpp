@@ -1,10 +1,10 @@
 /*
- * File: Mesh.h
+ * File: ObjectState.h
  * Author: Morgenthaler S
  *
  * Created on 31 janvier 2021, 18:45
  */
-#include "State.h"
+#include "ObjectState.h"
 
 ObjectState::ObjectState() {
 }

@@ -9,7 +9,7 @@
 vecMesh_sptr MeshGenerator::genQuad (const Quad& quad) {
     CstGeometricShape_sptr shape = std::make_shared <Quad>();
     vecCstGeometricShape_sptr geometricShapes { shape };
-    State_uptr state_ptr(new QuadState(quad));
-    Mesh_sptr meshSptr = std::make_shared <Mesh>(std::move(state_ptr), std::move(geometricShapes));
+    Frames_uptr<ObjectState> frame_ptr = Frames<ObjectState>::genFrames<Quad, QuadState>(quad);
+    Mesh_sptr meshSptr = std::make_shared <Mesh>(std::move(frame_ptr), std::move(geometricShapes));
     return { meshSptr };
 }

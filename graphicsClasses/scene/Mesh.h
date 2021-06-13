@@ -11,7 +11,7 @@
 #include "ShaderProgram.h"
 #include <system/ParallelTask.h>
 #include <geometry/GeometricShape.h>
-#include <scene/State.h>
+#include <scene/Frames.h>
 
 class Mesh;
 using Mesh_sptr = std::shared_ptr <Mesh>;
@@ -20,8 +20,9 @@ using vecCstMesh_sptr = std::vector <CstMesh_sptr>;
 using vecMesh_sptr = std::vector <Mesh_sptr>;
 
 class Mesh {
+
 public:
-Mesh(State_uptr&& state, vecCstGeometricShape_sptr&& shapes);
+Mesh(Frames_uptr<ObjectState>&& frames, vecCstGeometricShape_sptr&& shapes);
 
 struct StateVertexAttributes {
     std::vector <std::vector <GLfloat> > staticFloats = {};
@@ -50,6 +51,7 @@ struct Uniforms {
     UniformVariables <GLuint> uniformTextures = {};
 };
 
+void swapFrames();
 ObjectState::GlobalState update();
 
 size_t numberOfVertices() const;
@@ -77,7 +79,7 @@ template<typename T> static void concatStateVertexAttribute(
     );
 static void concatStateVertexAttributes(StateVertexAttributes& current, const StateVertexAttributes& other);
 
-const State_uptr _state;
+const Frames_uptr<ObjectState> _frames;
 const vecCstGeometricShape_sptr _shapes;
 const size_t _numberOfVertices;
 };

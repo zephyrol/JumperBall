@@ -6,14 +6,19 @@
  */
 #include "Mesh.h"
 
-Mesh::Mesh(State_uptr&& state, vecCstGeometricShape_sptr&& shapes):
-    _state(std::move(state)),
+Mesh::Mesh(Frames_uptr<ObjectState>&& frames, vecCstGeometricShape_sptr&& shapes):
+    _frames(std::move(frames)),
     _shapes(std::move(shapes)),
     _numberOfVertices(computeNumberOfVertices()) {
 }
 
+void Mesh::swapFrames() {
+    _frames->swapFrames();
+}
+
 ObjectState::GlobalState Mesh::update() {
-    return _state->update();
+    auto updatableFrame = _frames->getUpdatableState();
+    return updatableFrame->update();
 }
 
 size_t Mesh::numberOfVertices() const {
@@ -55,10 +60,11 @@ size_t Mesh::computeNumberOfVertices() const {
 
 Mesh::Uniforms Mesh::genUniformsValues() const {
     Mesh::Uniforms uniforms;
-    convertUniformsToOpenGLFormat(_state->getDynamicFloats(), uniforms.uniformFloats);
-    convertUniformsToOpenGLFormat(_state->getDynamicVec2fs(), uniforms.uniformVec2s);
-    convertUniformsToOpenGLFormat(_state->getDynamicVec3fs(), uniforms.uniformVec3s);
-    convertUniformsToOpenGLFormat(_state->getDynamicQuaternions(), uniforms.uniformVec4s);
+    const auto renderableState = _frames->getRenderableState();
+    convertUniformsToOpenGLFormat(renderableState->getDynamicFloats(), uniforms.uniformFloats);
+    convertUniformsToOpenGLFormat(renderableState->getDynamicVec2fs(), uniforms.uniformVec2s);
+    convertUniformsToOpenGLFormat(renderableState->getDynamicVec3fs(), uniforms.uniformVec3s);
+    convertUniformsToOpenGLFormat(renderableState->getDynamicQuaternions(), uniforms.uniformVec4s);
     return uniforms;
 }
 
@@ -73,9 +79,12 @@ Mesh::MeshVerticesInfo Mesh::genMeshVerticesInfo() const {
     std::vector <glm::vec3> glmVec3s {};
     std::vector <glm::vec2> glmVec2s {};
     std::vector <GLfloat> glFloats {};
-    convertAttributesToOpenGLFormat(_state->getStaticFloatValues(), glFloats);
-    convertAttributesToOpenGLFormat(_state->getStaticVec2fValues(), glmVec2s);
-    convertAttributesToOpenGLFormat(_state->getStaticVec3fValues(), glmVec3s);
+
+    const auto renderableState = _frames->getRenderableState();
+    convertAttributesToOpenGLFormat(renderableState->getStaticFloatValues(), glFloats);
+    convertAttributesToOpenGLFormat(renderableState->getStaticVec2fValues(), glmVec2s);
+    convertAttributesToOpenGLFormat(renderableState->getStaticVec3fValues(), glmVec3s);
+
     duplicateStateVertexAttribute(stateVertexAttributes.staticFloats, glFloats);
     duplicateStateVertexAttribute(stateVertexAttributes.staticVec2s, glmVec2s);
     duplicateStateVertexAttribute(stateVertexAttributes.staticVec3s, glmVec3s);

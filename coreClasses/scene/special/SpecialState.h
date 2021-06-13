@@ -8,7 +8,7 @@
 #define SPECIALSTATE_H
 #include "Special.h"
 #include <scene/Map.h>
-#include <scene/State.h>
+#include <scene/ObjectState.h>
 
 class SpecialState:public ObjectState {
 public:

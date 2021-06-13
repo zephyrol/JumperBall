@@ -21,7 +21,6 @@ public:
 enum class Status { Pressed, Released };
 enum class Button { Up, Down, Left, Right, Escape, Validate };
 enum class ScreenDirection { North, South, East, West };
-enum class CurrentFrame { FrameA, FrameB };
 
 
 // --CONSTRUCTORS & DESTRUCTORS--//
@@ -65,7 +64,6 @@ void manageValidateButton(const Status& status);
 void runGame(size_t level);
 void updateRenderingEngine();
 void updateMenuRendering();
-void switchFrame();
 
 // Mouse/TouchPad/TouchScreen
 void pressMouse(float posX, float posY);
@@ -92,11 +90,8 @@ std::shared_ptr <Ball> _ball;
 std::shared_ptr <Camera> _camera;
 std::shared_ptr <Star> _star;
 
-CurrentFrame _currentFrame;
-std::shared_ptr <SceneRendering> _sceneRenderingFrameA;
-std::shared_ptr <SceneRendering> _sceneRenderingFrameB;
-std::shared_ptr <MenuRendering> _menuRenderingFrameA;
-std::shared_ptr <MenuRendering> _menuRenderingFrameB;
+std::shared_ptr <SceneRendering> _sceneRendering;
+std::shared_ptr <MenuRendering> _menuRendering;
 
 ParallelTask <void> _updatingScene;
 ParallelTask <void> _updatingMenu;

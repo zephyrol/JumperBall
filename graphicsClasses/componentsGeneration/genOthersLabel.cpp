@@ -20,7 +20,7 @@ vecMesh_sptr MeshGenerator::genOthersLabel (const Page& page) {
             );
     }
     // TODO: use label state, not quadstate
-    State_uptr state_ptr(new QuadState(Quad()));
-    Mesh_sptr mesh = std::make_shared <Mesh>(std::move(state_ptr), std::move(geometricShapes));
+    Frames_uptr<ObjectState> frame_ptr = Frames<ObjectState>::genFrames<Quad, QuadState>(Quad());
+    Mesh_sptr mesh = std::make_shared <Mesh>(std::move(frame_ptr), std::move(geometricShapes));
     return { mesh };
 }

@@ -16,6 +16,13 @@ RenderPass::RenderPass(const vecMesh_sptr& meshes):
     _renderPassUniformBlocks{} {
 }
 
+
+void RenderPass::swapFrames() {
+    for (auto& mesh: _meshes) {
+        mesh->swapFrames();
+    }
+}
+
 void RenderPass::update() {
 
     const auto updateRenderGroupUniforms =
