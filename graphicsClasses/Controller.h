@@ -35,6 +35,7 @@ void interactionMouse(const Status& status,
 
 void runController();
 void waitController();
+void swapFrames();
 
 void currentMap(const std::shared_ptr <Map>& currentMap);
 const std::shared_ptr <Map>& currentMap() const;

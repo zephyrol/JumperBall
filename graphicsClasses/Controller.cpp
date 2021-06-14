@@ -48,7 +48,6 @@ Controller::Controller():
                        if (_camera->getMovement() == Camera::Movement::FollowingBall) {
                            _player.statut(Player::Statut::INGAME);
                        }
-                       _sceneRendering->swapFrames();
                        _sceneRendering->update();
                    }),
     _updatingMenu([this] (size_t) {
@@ -71,6 +70,14 @@ Controller::Controller():
               }, 1, true) {
     _updating.runTasks();
     _updating.waitTasks();
+    swapFrames();
+    _updating.runTasks();
+    _updating.waitTasks();
+    swapFrames();
+}
+
+void Controller::swapFrames() {
+    _sceneRendering->swapFrames();
 }
 
 void Controller::interactionButtons (const Controller::Button& button,
@@ -130,6 +137,7 @@ void Controller::runController() {
 void Controller::waitController() {
     // std::cout << "wait tasks !" << std::endl;
     _updating.waitTasks();
+    swapFrames();
 }
 
 void Controller::manageValidateButton (const Controller::Status& status) {
@@ -149,6 +157,10 @@ void Controller::runGame (size_t level) {
     // TODO: check if that is necessary
     _updating.runTasks();
     _updating.waitTasks();
+    swapFrames();
+    _updating.runTasks();
+    _updating.waitTasks();
+    swapFrames();
 }
 
 void Controller::manageValidateMouse() {
