@@ -5,8 +5,8 @@
 // Created by S Morgenthaler on 25/05/2020.
 //
 
-#ifndef Controller_h
-#define Controller_h
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
 
 #include <player/Player.h>
 #include <scene/MapGenerator.h>
@@ -100,4 +100,4 @@ ParallelTask <void> _updating;
 
 };
 
-#endif /* Controller_h */
+#endif /* CONTROLLER_H */
