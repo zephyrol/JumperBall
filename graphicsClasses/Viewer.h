@@ -6,23 +6,33 @@
 #include "scene/SceneRendering.h"
 #include "graphicMenu/MenuRendering.h"
 
-class Viewer {
+class Viewer
+{
+    Viewer(
+        unsigned int resolutionX,
+        unsigned int resolutionY,
+        const Map& _map,
+        const Ball& _ball,
+        const Camera& _camera,
+        const Star& _star,
+        const Menu& menu,
+        const FontTexturesGenerator::FTContent& ftContent
+    );
 
-Viewer(unsigned int resolutionX, unsigned int resolutionY);
+    unsigned int _resolutionX;
+    unsigned int _resolutionY;
+    const Map& _map;
+    const Ball& _ball;
+    const Camera& _camera;
+    const Star& _star;
+    const Menu& _menu;
+    const FontTexturesGenerator::FTContent& _ftContent;
 
-std::shared_ptr <Map> _map;
-std::shared_ptr <Ball> _ball;
-std::shared_ptr <Camera> _camera;
-std::shared_ptr <Star> _star;
+    void update();
+    void render() const;
 
-std::shared_ptr <SceneRendering> _sceneRendering;
-std::shared_ptr <MenuRendering> _menuRendering;
-
-ParallelTask <void> _updatingScene;
-ParallelTask <void> _updatingMenu;
-ParallelTask <void> _updating;
-
+    std::shared_ptr<SceneRendering> _sceneRendering;
+    std::shared_ptr<MenuRendering> _menuRendering;
 };
-
 
 #endif // VIEWER_H

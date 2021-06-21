@@ -15,11 +15,6 @@ SceneRendering::SceneRendering(const Map& map,
     _starFrame(Frames<StarState>::genFrames<Star>(star)),
     _ballFrame(Frames<BallState>::genFrames<Ball>(ball)),
     _cameraFrame(Frames<CameraState>::genFrames<Camera>(camera)),
-    /*_starState(std::make_shared <StarState>(star)),
-    _ballState(std::make_shared <BallState>(ball)),
-    _cameraState(std::make_shared <CameraState>(camera)),
-    _externalStates({ _starState, _ballState, _cameraState }),*/
-    //_externalFrames( { _starFrame, _ballFrame, _cameraFrame}),
     _externalUniformBlocks(createExternalUniformBlockVariables()),
     _externalUniformMatrices(createExternalUniformMatFourVariables()),
     _levelRenderPasses{
