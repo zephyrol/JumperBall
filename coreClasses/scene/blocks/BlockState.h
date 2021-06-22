@@ -13,12 +13,12 @@ class BlockState:public ObjectState {
 public:
 BlockState(const Block& block);
 virtual ObjectState::GlobalState update() override;
-    
+
 ObjectState::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
 
 ObjectState::DynamicValues <float> getDynamicFloats() const override;
 ObjectState::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
-    
+
 const bool& isFixed() const;
 
 private:

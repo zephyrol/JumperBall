@@ -35,14 +35,14 @@ static constexpr size_t sizeDepthTexture = 1024;
 
 
 /*const std::shared_ptr <StarState> _starState;
-const std::shared_ptr <BallState> _ballState;
-const std::shared_ptr <CameraState> _cameraState;
-const vecObjectState_sptr _externalStates;*/
+   const std::shared_ptr <BallState> _ballState;
+   const std::shared_ptr <CameraState> _cameraState;
+   const vecObjectState_sptr _externalStates;*/
 
-const Frames_uptr<StarState> _starFrame;
-const Frames_uptr<BallState> _ballFrame;
-const Frames_uptr<CameraState> _cameraFrame;
-//const vecFrames_sptr<ObjectState> _externalFrames;
+const Frames_uptr <StarState> _starFrame;
+const Frames_uptr <BallState> _ballFrame;
+const Frames_uptr <CameraState> _cameraFrame;
+// const vecFrames_sptr<ObjectState> _externalFrames;
 
 ExternalUniformBlockVariables _externalUniformBlocks;
 ExternalUniformVariables <glm::mat4> _externalUniformMatrices;

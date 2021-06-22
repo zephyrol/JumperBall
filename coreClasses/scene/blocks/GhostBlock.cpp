@@ -32,28 +32,28 @@ Block::Effect GhostBlock::interaction (const JBTypes::Dir&,
         _isThere = false;
     }
 
-    const float passedTimeSinceSwitching = fPassedTime - _periodicity * static_cast<float>(nbOfSwitching);
+    const float passedTimeSinceSwitching = fPassedTime - _periodicity * static_cast <float>(nbOfSwitching);
 
     constexpr float animationTime = 0.1f;
     const float coeffPeriod = (passedTimeSinceSwitching / animationTime);
     const float t = coeffPeriod > 1.f
-                        ? 1.f
-                        : coeffPeriod;
+                    ? 1.f
+                    : coeffPeriod;
 
     const float beginScale = _isThere
-                                 ? 1.f
-                                 : 0.f;
+                             ? 1.f
+                             : 0.f;
     const float endScale = _isThere
-                               ? 0.f
-                               : 1.f;
+                           ? 0.f
+                           : 1.f;
 
-    const std::function<float(float, float, float)> getScale =
-        [](float t, float begin, float end) {
-        return t * begin + (1 - t) * end;
-    };
+    const std::function <float(float, float, float)> getScale =
+        [] (float t, float begin, float end) {
+            return t * begin + (1 - t) * end;
+        };
 
     const float scale = getScale(t, beginScale, endScale);
-    //const float scale = _isThere ? 1.f : 0.f;
+    // const float scale = _isThere ? 1.f : 0.f;
     _localScale = { scale, scale, scale };
 
     return Block::Effect::Nothing;

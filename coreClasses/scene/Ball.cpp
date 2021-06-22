@@ -258,9 +258,9 @@ void Ball::isGoingStraightAheadIntersectBlock() noexcept{
         } else if (blockFar && blockFar->isExists()) {
             refMechanicsJumping.addShockFromPosition(distanceFar - sizeBlock / 2.f - getRadius());
         } else if (
-            _jumpingType == Ball::JumpingType::Long && blockVeryFar && blockVeryFar->isExists()
-            ) {
-            refMechanicsJumping.addShockFromPosition (distanceVeryFar - sizeBlock / 2.f - getRadius());
+            _jumpingType == Ball::JumpingType::Long && blockVeryFar &&
+            blockVeryFar->isExists()) {
+            refMechanicsJumping.addShockFromPosition(distanceVeryFar - sizeBlock / 2.f - getRadius());
         } else {
             refMechanicsJumping.timesShock({});
         }
@@ -359,7 +359,7 @@ void Ball::isFallingIntersectionBlock() noexcept{
     const bool descendingJumpPhase = _state == Ball::State::Jumping &&
                                      _mechanicsPatternJumping.getVelocity(fDifference).y < 0;
     const auto positionBlockPtr = intersectBlock(_3DPosX, _3DPosY, _3DPosZ);
-    if ( !positionBlockPtr || (!descendingJumpPhase && _state != Ball::State::Falling)) {
+    if (!positionBlockPtr || (!descendingJumpPhase && _state != Ball::State::Falling)) {
         return;
     }
     if (descendingJumpPhase) {
@@ -403,11 +403,11 @@ std::shared_ptr <const std::vector <int> > Ball::intersectBlock (float x, float 
 }
 
 JBTypes::timePointMs Ball::getTimeActionMs() const noexcept{
-    return std::chrono::time_point_cast <std::chrono::milliseconds> (_timeAction);
+    return std::chrono::time_point_cast <std::chrono::milliseconds>(_timeAction);
 }
 
 JBTypes::timePointMs Ball::getTimeStateOfLifeMs() const noexcept{
-    return std::chrono::time_point_cast <std::chrono::milliseconds> (_timeStateOfLife);
+    return std::chrono::time_point_cast <std::chrono::milliseconds>(_timeStateOfLife);
 }
 
 JBTypes::vec3f Ball::P2DTo3D (ClassicalMechanics::physics2DVector p2D) const {
@@ -485,7 +485,7 @@ void Ball::blockEvent (const JBTypes::vec3ui& blockPos) noexcept{
     const Block::Effect effect = block->detectionEvent(
         _currentSide,
         JBTypesMethods::getTimePointMsFromTimePoint(_timeAction)
-    );
+        );
     if (effect == Block::Effect::Jump) {
         _stateOfLife = StateOfLife::Normal;
         _jumpingType = Ball::JumpingType::Long;
@@ -515,7 +515,7 @@ void Ball::blockEvent (const JBTypes::vec3ui& blockPos) noexcept{
     // Specials
     for (const Map::SpecialInfo& specialInfo : _map.getSpecialInfo()) {
         const std::shared_ptr <const Special>& special = specialInfo.special;
-        if ( special && blockPos == special->position() && _currentSide == special->direction()) {
+        if (special && blockPos == special->position() && _currentSide == special->direction()) {
             const JBTypes::Color& color = special->getColor();
             if (specialInfo.type == Map::SpecialTypes::Teleporter) {
                 if (_map.getSpecialStates().at(color)) {
@@ -560,7 +560,7 @@ void Ball::stayingUpdate() noexcept{
         _3DPosY = position3D.y;
         _3DPosZ = position3D.z;
         return;
-    } 
+    }
     fall();
     update();
 }
@@ -572,7 +572,7 @@ void Ball::turningUpdate() noexcept{
         stay();
         update();
         return;
-    } 
+    }
     _3DPosX = position3D.x;
     _3DPosY = position3D.y;
     _3DPosZ = position3D.z;
@@ -605,11 +605,11 @@ void Ball::movingUpdate() noexcept{
                    / timeToGetNextBlock) + position3D.z;
         return;
     }
-    if ( infoTarget.nextLocal == NextBlockLocal::Same || infoTarget.nextLocal == NextBlockLocal::Above) {
+    if (infoTarget.nextLocal == NextBlockLocal::Same || infoTarget.nextLocal == NextBlockLocal::Above) {
 
         const float distancePerStep = infoTarget.nextLocal == NextBlockLocal::Same
-            ? 0.5f + getRadius()
-            : 0.5f - getRadius();
+                                      ? 0.5f + getRadius()
+                                      : 0.5f - getRadius();
 
         const float halfTimeToGetNextBlock = timeToGetNextBlock / 2.f;
 
@@ -631,7 +631,7 @@ void Ball::movingUpdate() noexcept{
         _3DPosY = position3D.y + lookVec.y * distStep1 + nextLookVec.y * distStep2;
         _3DPosZ = position3D.z + lookVec.z * distStep1 + nextLookVec.z * distStep2;
         return;
-    } 
+    }
     _3DPosX = position3D.x;
     _3DPosY = position3D.y;
     _3DPosZ = position3D.z;
@@ -646,7 +646,7 @@ void Ball::burningUpdate() noexcept{
     if (
         _stateOfLife == StateOfLife::Burning &&
         (_state == State::Staying || _state == State::TurningLeft ||
-            _state == State::TurningRight)
+         _state == State::TurningRight)
         ) {
         // the ball is burning
         _burnCoefficientCurrent = _burnCoefficientTrigger + (time / timeToBurn);
@@ -655,7 +655,7 @@ void Ball::burningUpdate() noexcept{
             setTimeLifeNow();
         }
         return;
-    } 
+    }
     // the ball is cooldown
     if (_stateOfLife == StateOfLife::Burning) {
         _stateOfLife = StateOfLife::Normal;
@@ -666,7 +666,7 @@ void Ball::burningUpdate() noexcept{
     if (_burnCoefficientCurrent < 0.f) {
         _burnCoefficientCurrent = 0.f;
     }
-       
+
 }
 
 void Ball::teleportingUpdate() noexcept{
@@ -728,7 +728,7 @@ void Ball::deteleportingUpdate() noexcept{
     }
 }
 
-void Ball::applyRotation(bool inverse) {
+void Ball::applyRotation (bool inverse) {
 
     constexpr float sizeBlock = 1.f; // TODO: use a member in Block or map class
     const float angleToGetBlock = sizeBlock / getRadius();
@@ -737,7 +737,7 @@ void Ball::applyRotation(bool inverse) {
         JBTypesMethods::createRotationQuaternion(
             inverse ? getInverseRotationAxis() : getRotationAxis(),
             angleToGetBlock
-        ),
+            ),
         _currentCoveredRotation
         );
 }
@@ -746,14 +746,14 @@ JBTypes::vec3f Ball::getRotationAxis() const noexcept{
     return JBTypesMethods::cross(
         JBTypesMethods::directionAsVector(_currentSide),
         JBTypesMethods::directionAsVector(_lookTowards)
-    );
+        );
 }
 
 JBTypes::vec3f Ball::getInverseRotationAxis() const noexcept{
     return JBTypesMethods::cross(
         JBTypesMethods::directionAsVector(_lookTowards),
         JBTypesMethods::directionAsVector(_currentSide)
-    );
+        );
 }
 
 float Ball::getJumpingPosX() const noexcept{

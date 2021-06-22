@@ -56,7 +56,7 @@ Mesh_sptr MeshGenerator::genSpecial (const Special& special, const Map::SpecialT
                                   ));
 
     return std::make_shared <Mesh>(
-        Frames<ObjectState>::genFrames<Special,SpecialState>(special),
+        Frames <ObjectState>::genFrames <Special, SpecialState>(special),
         std::move(geometricShapes)
-    );
+        );
 }

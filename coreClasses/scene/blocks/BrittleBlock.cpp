@@ -19,7 +19,7 @@ BrittleBlock::BrittleBlock(const JBTypes::vec3ui& position):
 Block::Effect BrittleBlock::interaction (const JBTypes::Dir&,
                                          const JBTypes::timePointMs& currentTime,
                                          const JBTypes::vec3f&
-                                        ) {
+                                         ) {
     constexpr float timeToFall = 1.f;
     _timeUpdate = currentTime;
     if (_isGoingToBreak && _stillThere) {

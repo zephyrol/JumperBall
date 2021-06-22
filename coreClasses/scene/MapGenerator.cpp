@@ -875,10 +875,10 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
                 unsigned int typeOfBlock = 0;
 
                 if (block) {
-                    typeOfBlock = static_cast <unsigned int>( map.getType({ x, y, z }));
+                    typeOfBlock = static_cast <unsigned int>(map.getType({ x, y, z }));
                     output << typeOfBlock;
                 } else {
-                    output << static_cast <unsigned int> (Map::BlockTypes::None);
+                    output << static_cast <unsigned int>(Map::BlockTypes::None);
                 }
                 if (typeOfBlock == 4 || typeOfBlock == 6) {
                     output << " ";
@@ -938,7 +938,7 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
                     }
                     if (x != map.width() - 1) output << " ";
                 } else {
-                    output << static_cast <unsigned int> (Map::BlockTypes::None);
+                    output << static_cast <unsigned int>(Map::BlockTypes::None);
                     if (x != map.width() - 1) output << " ";
                 }
             }
@@ -959,7 +959,7 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
                     currentInfo >= map.getEnemiesInfo().size() ||
                     currentIndex < map.getEnemiesInfo().at(currentInfo).index
                     ) {
-                    output << static_cast <unsigned int> (Map::BlockTypes::None);
+                    output << static_cast <unsigned int>(Map::BlockTypes::None);
                 } else {
                     const JBTypes::Dir& dir =
                         map.getEnemiesInfo().at(currentInfo).enemy->direction();
@@ -1023,7 +1023,7 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
                     currentInfo >= map.getSpecialInfo().size() ||
                     currentIndex < map.getSpecialInfo().at(currentInfo).index
                     ) {
-                    output << static_cast <unsigned int> (Map::BlockTypes::None);
+                    output << static_cast <unsigned int>(Map::BlockTypes::None);
                 } else {
                     const JBTypes::Dir& dir =
                         map.getSpecialInfo().at(currentInfo).special->direction();

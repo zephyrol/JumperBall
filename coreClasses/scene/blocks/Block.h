@@ -35,7 +35,7 @@ virtual Effect interaction(
     const JBTypes::Dir& ballDir,
     const JBTypes::timePointMs& currentTime,
     const JBTypes::vec3f& posBall
- );
+    );
 virtual Effect detectionEvent(const JBTypes::Dir& ballDir, const JBTypes::timePointMs& currentTime);
 virtual void createItem(Item::CategoryOfItems category, JBTypes::Dir dir);
 

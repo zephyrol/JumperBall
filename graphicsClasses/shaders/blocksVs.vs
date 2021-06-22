@@ -22,7 +22,7 @@ void main() {
 
     fs_vertexColor              = vs_vertexColor;
     fs_vertexNormal             = vs_vertexNormal; // normalize((N * vec4(vs_vertexNormal,1.f)).xyz);
-    fs_vertexPositionWorld      = position; 
+    fs_vertexPositionWorld      = position;
     fs_vertexDepthMapSpace      = VPStar * positionVec4;
 
     gl_Position                 = VP * positionVec4;

@@ -14,8 +14,7 @@ Block::Block(const JBTypes::vec3ui& position, bool hasInteraction, bool isFixed)
     _localScale{1.f, 1.f, 1.f},
     _localTranslation{0.f, 0.f, 0.f},
     _items{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
-    _hasItems(false)
-{
+    _hasItems(false) {
 }
 
 std::array <bool, 6> Block::faceInfo() const {
@@ -41,13 +40,13 @@ const JBTypes::vec3f& Block::localTranslation() const {
 Block::Effect Block::interaction (const JBTypes::Dir&,
                                   const JBTypes::timePointMs&,
                                   const JBTypes::vec3f&
-                                 ) {
+                                  ) {
     return Block::Effect::Nothing;
 }
 
 // TODO : delete it, items ptr should be add in the constructor
 void Block::createItem (Item::CategoryOfItems category,
-                          JBTypes::Dir dir) {
+                        JBTypes::Dir dir) {
     _hasItems = true;
     switch (category) {
     case Item::CategoryOfItems::Clock:
@@ -77,7 +76,7 @@ bool Block::hasItems() const {
 }
 
 void Block::catchItem (const JBTypes::vec3f& entityPosition,
-                         float radiusEntity) {
+                       float radiusEntity) {
     for (size_t i = 0; i < _items.size(); ++i) {
         const std::shared_ptr <Item> item = _items.at(i);
         if (item && !item->isGotten()) {
