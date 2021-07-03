@@ -11,23 +11,21 @@
 #include <player/Player.h>
 #include <scene/MapGenerator.h>
 #include "scene/SceneRendering.h"
+#include "Viewer.h"
 #include "graphicMenu/MenuRendering.h"
 
 class Controller {
 
 public:
 
-// ------------TYPES------------//
 enum class Status { Pressed, Released };
 enum class Button { Up, Down, Left, Right, Escape, Validate };
 enum class ScreenDirection { North, South, East, West };
 
 
-// --CONSTRUCTORS & DESTRUCTORS--//
 Controller();
 ~Controller();
 
-// ----------METHODS------------//
 void interactionButtons(const Button& button,
                         const Status& status);
 void interactionMouse(const Status& status,
@@ -35,27 +33,17 @@ void interactionMouse(const Status& status,
 
 void runController();
 void waitController();
-void swapFrames();
 
-void currentMap(const std::shared_ptr <Map>& currentMap);
-const std::shared_ptr <Map>& currentMap() const;
-
-void currentBall(const std::shared_ptr <Ball>& currentBall);
-const std::shared_ptr <Ball>& currentBall() const;
-
-const std::shared_ptr <Menu>& menu() const;
 bool requestToLeave() const;
 
 
 private:
-// -------CONST METHODS--------//
 ScreenDirection nearestDirection(float posX, float posY) const;
 const std::shared_ptr <SceneRendering>& sceneRendering() const;
 const std::shared_ptr <MenuRendering>& menuRendedering() const;
 void renderRenderingEngine() const;
 void renderMenuRendering() const;
 
-// ----------METHODS------------//
 void manageUp(const Status& status);
 void manageDown(const Status& status);
 void manageRight(const Status& status);
@@ -72,7 +60,8 @@ void updateMouse(float posX, float posY);
 void releaseMouse(float posX, float posY);
 void manageValidateMouse();
 
-// --------ATTRIBUTES-----------//
+std::shared_ptr<Viewer> createViewer() const;
+
 FontTexturesGenerator::FTContent _ftContent;
 Player _player;
 std::shared_ptr <Menu> _menu;
@@ -86,16 +75,10 @@ float _mousePressingYCoord;
 bool _mouseIsPressed;
 bool _requestToLeave;
 
-std::shared_ptr <Map> _map;
-std::shared_ptr <Ball> _ball;
-std::shared_ptr <Camera> _camera;
-std::shared_ptr <Star> _star;
+std::shared_ptr <Scene> _scene;
+std::shared_ptr<Viewer> _viewer;
 
-std::shared_ptr <SceneRendering> _sceneRendering;
-std::shared_ptr <MenuRendering> _menuRendering;
-
-ParallelTask <void> _updatingScene;
-ParallelTask <void> _updatingMenu;
+ParallelTask <void> _updatingSceneMenu;
 ParallelTask <void> _updating;
 
 };

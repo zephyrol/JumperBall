@@ -8,28 +8,20 @@
 #include "SceneRendering.h"
 #include <future>
 
-SceneRendering::SceneRendering(const Map& map,
-                               const Ball& ball,
-                               const Star& star,
-                               const Camera& camera):
-    _starFrame(Frames<StarState>::genFrames<Star>(star)),
-    _ballFrame(Frames<BallState>::genFrames<Ball>(ball)),
-    _cameraFrame(Frames<CameraState>::genFrames<Camera>(camera)),
-    /*_starState(std::make_shared <StarState>(star)),
-    _ballState(std::make_shared <BallState>(ball)),
-    _cameraState(std::make_shared <CameraState>(camera)),
-    _externalStates({ _starState, _ballState, _cameraState }),*/
-    //_externalFrames( { _starFrame, _ballFrame, _cameraFrame}),
+SceneRendering::SceneRendering(const Scene& scene):
+    _starFrame(Frames<StarState>::genFrames<Star>(*scene.getStar())),
+    _ballFrame(Frames<BallState>::genFrames<Ball>(*scene.getBall())),
+    _cameraFrame(Frames<CameraState>::genFrames<Camera>(*scene.getCamera())),
     _externalUniformBlocks(createExternalUniformBlockVariables()),
     _externalUniformMatrices(createExternalUniformMatFourVariables()),
     _levelRenderPasses{
-                       std::make_shared <RenderPass>(MeshGenerator::genBlocks(map)),
-                       std::make_shared <RenderPass>(MeshGenerator::genItems(map)),
-                       std::make_shared <RenderPass>(MeshGenerator::genEnemies(map)),
-                       std::make_shared <RenderPass>(MeshGenerator::genSpecials(map)),
-                       std::make_shared <RenderPass>(MeshGenerator::genBall(ball))
+                       std::make_shared <RenderPass>(MeshGenerator::genBlocks(*scene.getMap())),
+                       std::make_shared <RenderPass>(MeshGenerator::genItems(*scene.getMap())),
+                       std::make_shared <RenderPass>(MeshGenerator::genEnemies(*scene.getMap())),
+                       std::make_shared <RenderPass>(MeshGenerator::genSpecials(*scene.getMap())),
+                       std::make_shared <RenderPass>(MeshGenerator::genBall(*scene.getBall()))
                        },
-    _starRenderPass(std::make_shared <RenderPass>(MeshGenerator::genStar(star))),
+    _starRenderPass(std::make_shared <RenderPass>(MeshGenerator::genStar(*scene.getStar()))),
     _sceneRenderPasses(createSceneRenderPasses()),
     _screenRenderPass(std::make_shared <RenderPass>(MeshGenerator::genQuad(Quad()))),
     _vecScreenRenderPass({ _screenRenderPass }),

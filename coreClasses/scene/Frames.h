@@ -74,10 +74,6 @@ template<typename ObjState>
 template<typename UpdatableObj> 
 std::unique_ptr<Frames<ObjState> > Frames<ObjState>::genFrames( const UpdatableObj& object) {
 
-  /*const std::shared_ptr<ObjState> objStateFrameA = std::make_shared<ObjState>(object);
-  const std::shared_ptr<ObjState> objStateFrameB = std::make_shared<ObjState>(object);
-
-  return std::unique_ptr<Frames<ObjState> >(new Frames<ObjState>(objStateFrameA, objStateFrameB));*/
   return Frames<ObjState>::genFrames<UpdatableObj, ObjState>(object);
 }
 

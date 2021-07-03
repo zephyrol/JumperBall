@@ -1,3 +1,8 @@
+/*
+ * File: Viewer.h
+ * Author: Morgenthaler S
+ */
+
 #ifndef VIEWER_H 
 #define VIEWER_H 
 
@@ -8,19 +13,26 @@
 
 class Viewer {
 
-Viewer(unsigned int resolutionX, unsigned int resolutionY);
+public:
+  Viewer(
+      unsigned int resolutionX,
+      unsigned int resolutionY,
+      const Scene& scene,
+      const Menu& menu,
+      const FontTexturesGenerator::FTContent& ftContent
+  );
 
-std::shared_ptr <Map> _map;
-std::shared_ptr <Ball> _ball;
-std::shared_ptr <Camera> _camera;
-std::shared_ptr <Star> _star;
+  void update();
+  void render() const;
 
-std::shared_ptr <SceneRendering> _sceneRendering;
-std::shared_ptr <MenuRendering> _menuRendering;
+  void swapFrames();
 
-ParallelTask <void> _updatingScene;
-ParallelTask <void> _updatingMenu;
-ParallelTask <void> _updating;
+  SceneRendering _sceneRendering;
+  MenuRendering _menuRendering;
+
+  ParallelTask <void> _updatingSceneRendering;
+  ParallelTask <void> _updatingMenuRendering;
+
 
 };
 

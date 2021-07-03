@@ -15,12 +15,13 @@
 #include "componentsGeneration/MeshGenerator.h"
 #include "scene/Frames.h"
 #include "Rendering.h"
+#include "Scene.h"
 
 
 class SceneRendering:public Rendering {
 
 public:
-SceneRendering(const Map& map, const Ball& ball, const Star& star, const Camera& camera);
+SceneRendering(const Scene& scene);
 
 void render() const override;
 
@@ -33,16 +34,9 @@ private:
 static constexpr size_t heightBloomTexture = 192;
 static constexpr size_t sizeDepthTexture = 1024;
 
-
-/*const std::shared_ptr <StarState> _starState;
-const std::shared_ptr <BallState> _ballState;
-const std::shared_ptr <CameraState> _cameraState;
-const vecObjectState_sptr _externalStates;*/
-
 const Frames_uptr<StarState> _starFrame;
 const Frames_uptr<BallState> _ballFrame;
 const Frames_uptr<CameraState> _cameraFrame;
-//const vecFrames_sptr<ObjectState> _externalFrames;
 
 ExternalUniformBlockVariables _externalUniformBlocks;
 ExternalUniformVariables <glm::mat4> _externalUniformMatrices;
