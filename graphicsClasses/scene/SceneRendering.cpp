@@ -9,9 +9,9 @@
 #include <future>
 
 SceneRendering::SceneRendering(const Scene& scene):
-    _starFrame(Frames<StarState>::genFrames<Star>(*scene.getStar())),
-    _ballFrame(Frames<BallState>::genFrames<Ball>(*scene.getBall())),
-    _cameraFrame(Frames<CameraState>::genFrames<Camera>(*scene.getCamera())),
+    _starFrame(Frames<StarState>::genFrames <Star>(*scene.getStar())),
+    _ballFrame(Frames<BallState>::genFrames <Ball>(*scene.getBall())),
+    _cameraFrame(Frames<CameraState>::genFrames <Camera>(*scene.getCamera())),
     _externalUniformBlocks(createExternalUniformBlockVariables()),
     _externalUniformMatrices(createExternalUniformMatFourVariables()),
     _levelRenderPasses{
@@ -140,7 +140,8 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
             renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, cameraState->viewProjection());
             const std::string& VPStarName = SceneRendering::VPStarName;
             renderPass->upsertUniform(shaderProgramID, VPStarName, getUniformMatrix(VPStarName));
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName, cameraState->pos());
+            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName,
+                                      cameraState->pos());
 
             const auto& lightBlock = getUniformBlock(lightBlockName);
             renderPass->upsertUniform(shaderProgramID, lightBlockName, lightBlock);
@@ -154,7 +155,8 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
         [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
             const auto& cameraState = _cameraFrame->getRenderableState();
             renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, cameraState->viewProjection());
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName, cameraState->pos());
+            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName,
+                                      cameraState->pos());
         };
 
 
@@ -359,7 +361,7 @@ const glm::mat4& SceneRendering::getUniformMatrix (const std::string& name) cons
 }
 
 void SceneRendering::update() {
-    //Todo refactor
+    // Todo refactor
     _starFrame->getUpdatableState()->update();
     _ballFrame->getUpdatableState()->update();
     _cameraFrame->getUpdatableState()->update();
@@ -385,7 +387,7 @@ void SceneRendering::swapFrames() {
     _starFrame->swapFrames();
     _ballFrame->swapFrames();
     _cameraFrame->swapFrames();
-    for (auto sceneRenderPass: _sceneRenderPasses) {
+    for (auto sceneRenderPass : _sceneRenderPasses) {
         sceneRenderPass->swapFrames();
     }
 }

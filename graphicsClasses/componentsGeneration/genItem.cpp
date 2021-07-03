@@ -73,6 +73,6 @@ Mesh_sptr MeshGenerator::genItem (const Item& item) {
         break;
     }
     return std::make_shared <Mesh>(
-        Frames<ObjectState>::genFrames<Item,ItemState>(item),
+        Frames <ObjectState>::genFrames <Item, ItemState>(item),
         std::move(geometricShapes));
 }

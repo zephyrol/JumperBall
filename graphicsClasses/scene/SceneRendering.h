@@ -34,9 +34,9 @@ private:
 static constexpr size_t heightBloomTexture = 192;
 static constexpr size_t sizeDepthTexture = 1024;
 
-const Frames_uptr<StarState> _starFrame;
-const Frames_uptr<BallState> _ballFrame;
-const Frames_uptr<CameraState> _cameraFrame;
+const Frames_uptr <StarState> _starFrame;
+const Frames_uptr <BallState> _ballFrame;
+const Frames_uptr <CameraState> _cameraFrame;
 
 ExternalUniformBlockVariables _externalUniformBlocks;
 ExternalUniformVariables <glm::mat4> _externalUniformMatrices;

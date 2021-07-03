@@ -9,7 +9,7 @@
 #define CAMERASTATE_H
 #include "Camera.h"
 
-class CameraState: public ObjectState {
+class CameraState:public ObjectState {
 
 public:
 

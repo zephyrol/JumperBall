@@ -115,6 +115,6 @@ Mesh_sptr MeshGenerator::genEnemy (const Enemy& enemy, const Map::EnemyTypes& ca
     }
 
     return std::make_shared <Mesh>(
-        Frames<ObjectState>::genFrames<Enemy, EnemyState>(enemy),
+        Frames <ObjectState>::genFrames <Enemy, EnemyState>(enemy),
         std::move(geometricShapes));
 }

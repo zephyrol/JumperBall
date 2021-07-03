@@ -6,7 +6,7 @@
  */
 #include "Mesh.h"
 
-Mesh::Mesh(Frames_uptr<ObjectState>&& frames, vecCstGeometricShape_sptr&& shapes):
+Mesh::Mesh(Frames_uptr <ObjectState>&& frames, vecCstGeometricShape_sptr&& shapes):
     _frames(std::move(frames)),
     _shapes(std::move(shapes)),
     _numberOfVertices(computeNumberOfVertices()) {

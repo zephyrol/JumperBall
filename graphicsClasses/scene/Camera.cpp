@@ -24,7 +24,7 @@ Camera::Camera(const Map& map, const Ball& ball):
     _timePointComeBack() {
 }
 
-void Camera::update() noexcept {
+void Camera::update() noexcept{
     _timeSinceCreation = _map.getTimeSinceCreation();
     if (_movement == Camera::Movement::TurningAroundMap) {
         turningAroundMapUpdate();
@@ -39,19 +39,19 @@ void Camera::update() noexcept {
         update();
     }
 }
-const Camera::Movement& Camera::getMovement() noexcept {
+const Camera::Movement& Camera::getMovement() noexcept{
     return _movement;
 }
 
-void Camera::turnAroundMap() noexcept {
+void Camera::turnAroundMap() noexcept{
     _movement = Camera::Movement::TurningAroundMap;
 }
 
-void Camera::followBall() noexcept {
+void Camera::followBall() noexcept{
     _movement = Camera::Movement::FollowingBall;
 }
 
-void Camera::approachBall() noexcept {
+void Camera::approachBall() noexcept{
     _movement = Camera::Movement::ApproachingBall;
 }
 
@@ -198,9 +198,9 @@ void Camera::turningAroundMapUpdate() noexcept{
     const glm::mat4 rotation = glm::rotate(
         1.5f * diffF,
         glm::vec3(0.f,
-                  1.f + static_cast<float>(sin(diffF / 5.f)),
-                  1.f + static_cast<float>(sin(diffF / 3.f)))
-    );
+                  1.f + static_cast <float>(sin(diffF / 5.f)),
+                  1.f + static_cast <float>(sin(diffF / 3.f)))
+        );
     const glm::mat4 transform = rotation * translation;
 
 

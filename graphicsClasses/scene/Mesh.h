@@ -22,7 +22,7 @@ using vecMesh_sptr = std::vector <Mesh_sptr>;
 class Mesh {
 
 public:
-Mesh(Frames_uptr<ObjectState>&& frames, vecCstGeometricShape_sptr&& shapes);
+Mesh(Frames_uptr <ObjectState>&& frames, vecCstGeometricShape_sptr&& shapes);
 
 struct StateVertexAttributes {
     std::vector <std::vector <GLfloat> > staticFloats = {};
@@ -79,7 +79,7 @@ template<typename T> static void concatStateVertexAttribute(
     );
 static void concatStateVertexAttributes(StateVertexAttributes& current, const StateVertexAttributes& other);
 
-const Frames_uptr<ObjectState> _frames;
+const Frames_uptr <ObjectState> _frames;
 const vecCstGeometricShape_sptr _shapes;
 const size_t _numberOfVertices;
 };

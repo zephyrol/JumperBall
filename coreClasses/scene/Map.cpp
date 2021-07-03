@@ -39,12 +39,12 @@ Map::Map(Map::MapInfo&& mapInfo):
                                 );
                         }, _blocksWithInteractionInfo.size()),
     _itemsInteractions([this] (size_t blockNumber) {
-                             const Block_sptr& block =
-                                 getBlock(_blocksWithItemsIndices.at(blockNumber));
-                             if (block->hasItems()) {
-                                 block->catchItem(_posBallInteractions, _radiusInteractions);
-                             }
-                         }, _blocksWithItemsIndices.size()),
+                           const Block_sptr& block =
+                               getBlock(_blocksWithItemsIndices.at(blockNumber));
+                           if (block->hasItems()) {
+                               block->catchItem(_posBallInteractions, _radiusInteractions);
+                           }
+                       }, _blocksWithItemsIndices.size()),
     _enemiesInteractions([this] (size_t enemyNumber) {
                              const Map::EnemyInfo enemyInfo = _enemies.at(enemyNumber);
                              const std::shared_ptr <Enemy> enemy = enemyInfo.enemy;

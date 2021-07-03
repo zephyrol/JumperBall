@@ -17,8 +17,7 @@ BallState::BallState(const Ball& ball):
     _crushingCoeff(ball.getCrushingCoefficient()),
     _teleportationCoeff(ball.getTeleportationCoefficient()),
     _teleportationColor(ball.getTeleportationColor()),
-    _timeSecondsSinceStateOfLife(ball.getTimeSecondsSinceStateOfLife())
-{
+    _timeSecondsSinceStateOfLife(ball.getTimeSecondsSinceStateOfLife()) {
 }
 
 ObjectState::GlobalState BallState::update() {

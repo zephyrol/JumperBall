@@ -18,7 +18,7 @@ RenderPass::RenderPass(const vecMesh_sptr& meshes):
 
 
 void RenderPass::swapFrames() {
-    for (auto& mesh: _meshes) {
+    for (auto& mesh : _meshes) {
         mesh->swapFrames();
     }
 }

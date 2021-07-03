@@ -48,8 +48,8 @@ float Item::getTimeSinceCreation() const {
 }
 
 void Item::catchingTest (const JBTypes::vec3f& itemPosition,
-                           const JBTypes::vec3f& entityPosition,
-                           float radiusEntity) {
+                         const JBTypes::vec3f& entityPosition,
+                         float radiusEntity) {
     const float distance =
         JBTypesMethods::distance(itemPosition, entityPosition);
     if (distance < radiusEntity + radiusBoundingSphere) {

@@ -65,7 +65,7 @@ struct MapInfo { unsigned int width;
                  unsigned int beginX;
                  unsigned int beginY;
                  unsigned int beginZ;
-                 std::vector <Block_sptr > blocks;
+                 std::vector <Block_sptr> blocks;
                  std::vector <BlockInfo> blocksInfo;
                  std::vector <EnemyInfo> enemiesInfo;
                  std::vector <SpecialInfo> specialInfo; };
@@ -116,7 +116,7 @@ private:
 std::map <JBTypes::Color, Map::TeleportersInfo> createBlocksTeleporters() const;
 
 // --------ATTRIBUTES-----------//
-std::vector <Block_sptr > _blocks;
+std::vector <Block_sptr> _blocks;
 std::vector <BlockInfo> _blocksInfo;
 std::vector <BlockInfo> _blocksWithInteractionInfo;
 std::vector <size_t> _blocksWithItemsIndices;
