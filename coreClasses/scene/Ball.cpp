@@ -309,6 +309,9 @@ JBTypes::Quaternion Ball::getCoveredRotation() const noexcept{
 
 float Ball::getCrushingCoefficient() const noexcept{
 
+    if (_stateOfLife == Ball::StateOfLife::Sliding) {
+        return 0.f;
+    }
 
     const std::function <float()> stayCrushingCoeff =
         [this] ()->float {
@@ -320,6 +323,10 @@ float Ball::getCrushingCoefficient() const noexcept{
             return 0.5f - cosf(angleInCosinusFunc) / 2.f;
         };
 
+    if (_state == Ball::State::Staying) {
+        return stayCrushingCoeff();
+    }
+
     const std::function <float(float)> movementCrushingCoeff =
         [this] (float timeToDoMovement)->float {
             const float tMax = getTimeSecondsSinceAction() / timeToDoMovement;
@@ -329,21 +336,13 @@ float Ball::getCrushingCoefficient() const noexcept{
             return (1.f - t) * _currentCrushing;
         };
 
-    if (_state == Ball::State::Staying) {
-        return stayCrushingCoeff();
-    } else if (
-        _state == Ball::State::Moving ||
-        _state == Ball::State::Jumping
-        ) {
+    if ( _state == Ball::State::Moving || _state == Ball::State::Jumping) {
         return movementCrushingCoeff(timeToGetNextBlock);
-    } else if (
-        _state == Ball::State::TurningLeft ||
-        _state == Ball::State::TurningRight
-        ) {
+    } 
+    if ( _state == Ball::State::TurningLeft || _state == Ball::State::TurningRight) {
         return movementCrushingCoeff(timeToTurn);
-    } else {
-        return 0.f;
-    }
+    } 
+    return 0.f;
 }
 
 float Ball::getTeleportationCoefficient() const noexcept{

@@ -85,6 +85,7 @@ void Window::run() {
     unsigned int counter = 0;
     while (!inputManagement()) {
         _controller.runController();
+        _controller.waitController();
         glfwSwapBuffers(_window);
         glfwPollEvents();
 
@@ -99,7 +100,6 @@ void Window::run() {
             counter = 0;
         }
 
-        _controller.waitController();
     }
 
 }
