@@ -61,7 +61,7 @@ struct TeleportersInfo {
 
 struct MapInfo { unsigned int width;
                  unsigned int height;
-                 unsigned int deep;
+                 unsigned int depth;
                  unsigned int beginX;
                  unsigned int beginY;
                  unsigned int beginZ;
@@ -81,7 +81,7 @@ CstBlock_sptr getBlock(size_t index) const;
 
 unsigned int width() const;
 unsigned int height() const;
-unsigned int deep() const;
+unsigned int depth() const;
 JBTypes::vec3f getCenterMap() const;
 float getLargestSize() const;
 
@@ -110,7 +110,7 @@ void switchColor(const JBTypes::Color& color);
 Block_sptr getBlock(int x, int y, int z);
 Block_sptr getBlock(size_t index);
 
-static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int deep);
+static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int depth);
 
 private:
 std::map <JBTypes::Color, Map::TeleportersInfo> createBlocksTeleporters() const;
@@ -130,7 +130,7 @@ std::map <JBTypes::Color, bool> _specialsState;
 
 unsigned int _width;
 unsigned int _height;
-unsigned int _deep;
+unsigned int _depth;
 unsigned int _beginX;
 unsigned int _beginY;
 unsigned int _beginZ;

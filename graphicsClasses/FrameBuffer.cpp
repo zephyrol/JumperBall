@@ -26,16 +26,17 @@ FrameBuffer::FrameBuffer(FrameBuffer::Content content,
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _renderTexture);
 
-    const auto getDataFormat = [] (
-        const FrameBuffer::Content Content)->GLenum {
-                                   if (Content == FrameBuffer::Content::SDR) {
-                                       return GL_RGB8;
-                                   } else if (Content == FrameBuffer::Content::HDR) {
-                                       return GL_RGB16F;
-                                   } else { // Depth Map
-                                       return GL_R16F;
-                                   }
-                               };
+    const auto getDataFormat =
+        [](const FrameBuffer::Content Content) -> GLenum {
+        if (Content == FrameBuffer::Content::SDR) {
+            return GL_RGB8;
+        }
+        if (Content == FrameBuffer::Content::HDR) {
+            return GL_RGB16F;
+        }
+        // Depth Map
+        return GL_R16F;
+    };
 
     constexpr GLsizei levelTexture = 1;
     const GLenum dataFormat = getDataFormat(_content);
@@ -57,7 +58,6 @@ FrameBuffer::FrameBuffer(FrameBuffer::Content content,
     }
     const GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
     glDrawBuffers(1, &drawBuffer);
-    // glBindFramebuffer(GL_FRAMEBUFFER, 0);
     bindDefaultFrameBuffer();
 }
 

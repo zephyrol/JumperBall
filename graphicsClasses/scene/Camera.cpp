@@ -176,7 +176,7 @@ void Camera::turningAroundMapUpdate() noexcept{
 
     const unsigned int xMax = _map.width();
     const unsigned int yMax = _map.height();
-    const unsigned int zMax = _map.deep();
+    const unsigned int zMax = _map.depth();
 
     const glm::vec3 center { xMax / 2.f, yMax / 2.f, zMax / 2.f };
 

@@ -24,7 +24,7 @@ Map::Map(Map::MapInfo&& mapInfo):
     _specialsState(createSpecialStates()),
     _width(std::move(mapInfo.width)),
     _height(std::move(mapInfo.height)),
-    _deep(std::move(mapInfo.deep)),
+    _depth(std::move(mapInfo.depth)),
     _beginX(std::move(mapInfo.beginX)),
     _beginY(std::move(mapInfo.beginY)),
     _beginZ(std::move(mapInfo.beginZ)),
@@ -165,12 +165,12 @@ CstBlock_sptr Map::getBlock (int x, int y, int z) const {
     if (
         x >= static_cast <int>(_width) ||
         y >= static_cast <int>(_height) ||
-        z >= static_cast <int>(_deep) ||
+        z >= static_cast <int>(_depth) ||
         x < 0 || y < 0 || z < 0
         )
         block = nullptr;
     else {
-        size_t index = _width * (z + y * _deep) + x;
+        size_t index = _width * (z + y * _depth) + x;
         block = _blocks.at(index);
     }
     return block;
@@ -181,11 +181,11 @@ CstBlock_sptr Map::getBlock (size_t index) const {
 }
 
 JBTypes::vec3ui Map::getBlockCoords (size_t index) const {
-    return getBlockCoords(index, _width, _deep);
+    return getBlockCoords(index, _width, _depth);
 }
 
 size_t Map::getIndex (const JBTypes::vec3ui& coords) const {
-    return _width * (coords.at(2) + coords.at(1) * _deep) + coords.at(0);
+    return _width * (coords.at(2) + coords.at(1) * _depth) + coords.at(0);
 }
 
 Map::BlockTypes Map::getType (const JBTypes::vec3ui& position) const {
@@ -209,28 +209,28 @@ unsigned int Map::height() const {
     return _height;
 }
 
-unsigned int Map::deep() const {
-    return _deep;
+unsigned int Map::depth() const {
+    return _depth;
 }
 
 JBTypes::vec3f Map::getCenterMap() const {
     return {
         static_cast <float>(_width) / 2.f,
         static_cast <float>(_height) / 2.f,
-        static_cast <float>(_deep) / 2.f
+        static_cast <float>(_depth) / 2.f
     };
 }
 
 float Map::getLargestSize() const {
     float fWidth = static_cast <float>(_width);
     float fHeight = static_cast <float>(_height);
-    float fDeep = static_cast <float>(_deep);
+    float fDepth = static_cast <float>(_depth);
     float boundingBoxMax = fWidth;
     if (boundingBoxMax < fHeight) {
         boundingBoxMax = fHeight;
     }
-    if (boundingBoxMax < fDeep) {
-        boundingBoxMax = fDeep;
+    if (boundingBoxMax < fDepth) {
+        boundingBoxMax = fDepth;
     }
     return boundingBoxMax;
 }
@@ -320,10 +320,10 @@ void Map::switchColor (const JBTypes::Color& color) {
 
 JBTypes::vec3ui Map::getBlockCoords (size_t index,
                                      unsigned int width,
-                                     unsigned int deep) {
+                                     unsigned int depth) {
     unsigned int uIntIndex = static_cast <unsigned int>(index);
-    const unsigned int widthDeep = width * deep;
-    return { uIntIndex % width, uIntIndex / widthDeep, (uIntIndex % widthDeep) / width };
+    const unsigned int widthDepth = width * depth;
+    return { uIntIndex % width, uIntIndex / widthDepth, (uIntIndex % widthDepth) / width };
 }
 
 const std::vector <Map::EnemyInfo>& Map::getEnemiesInfo() const {

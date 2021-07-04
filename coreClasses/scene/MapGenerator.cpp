@@ -47,16 +47,16 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
     Map::MapInfo mapInfo {};
 
     unsigned int width;
-    unsigned int deep;
+    unsigned int depth;
     unsigned int height;
 
     file >> width;
-    file >> deep;
+    file >> depth;
     file >> height;
 
     mapInfo.width = width;
     mapInfo.height = height;
-    mapInfo.deep = deep;
+    mapInfo.depth = depth;
 
     file >> mapInfo.beginX;
     file >> mapInfo.beginZ;
@@ -114,7 +114,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                         }
                     }
                 }
-                const auto blockPos = Map::getBlockCoords(mapInfo.blocks.size(), mapInfo.width, mapInfo.deep);
+                const auto blockPos = Map::getBlockCoords(mapInfo.blocks.size(), mapInfo.width, mapInfo.depth);
                 switch (typeOfBlock) {
                 case 0:
                     break;
@@ -280,7 +280,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                 enemy = std::make_shared <Laser>(
                     color,
                     *blockPtr,
-                    Map::getBlockCoords(currentIndex, width, deep),
+                    Map::getBlockCoords(currentIndex, width, depth),
                     dir,
                     length
                     );
@@ -288,7 +288,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             case 1:
                 enemy = std::make_shared <ThornBall>(
                     *blockPtr,
-                    Map::getBlockCoords(currentIndex, width, deep),
+                    Map::getBlockCoords(currentIndex, width, depth),
                     dir,
                     movementDir,
                     length
@@ -297,7 +297,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             case 2:
                 enemy = std::make_shared <DarkBall>(
                     *blockPtr,
-                    Map::getBlockCoords(currentIndex, width, deep),
+                    Map::getBlockCoords(currentIndex, width, depth),
                     dir,
                     movementDir,
                     length
@@ -307,7 +307,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                 enemy = std::make_shared <Laser>(
                     color,
                     *blockPtr,
-                    Map::getBlockCoords(currentIndex, width, deep),
+                    Map::getBlockCoords(currentIndex, width, depth),
                     dir,
                     length
                     );
@@ -375,7 +375,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                     JBTypes::Color::Red,
                     *blockPtr,
                     dir,
-                    Map::getBlockCoords(currentIndex, width, deep)
+                    Map::getBlockCoords(currentIndex, width, depth)
                     );
                 specialType = Map::SpecialTypes::SwitchButton;
                 break;
@@ -384,7 +384,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                     JBTypes::Color::Green,
                     *blockPtr,
                     dir,
-                    Map::getBlockCoords(currentIndex, width, deep)
+                    Map::getBlockCoords(currentIndex, width, depth)
                     );
                 specialType = Map::SpecialTypes::SwitchButton;
                 break;
@@ -393,7 +393,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                     JBTypes::Color::Blue,
                     *blockPtr,
                     dir,
-                    Map::getBlockCoords(currentIndex, width, deep)
+                    Map::getBlockCoords(currentIndex, width, depth)
                     );
                 specialType = Map::SpecialTypes::SwitchButton;
                 break;
@@ -402,7 +402,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                     JBTypes::Color::Yellow,
                     *blockPtr,
                     dir,
-                    Map::getBlockCoords(currentIndex, width, deep)
+                    Map::getBlockCoords(currentIndex, width, depth)
                     );
                 specialType = Map::SpecialTypes::SwitchButton;
                 break;
@@ -411,7 +411,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                     JBTypes::Color::Red,
                     *blockPtr,
                     dir,
-                    Map::getBlockCoords(currentIndex, width, deep)
+                    Map::getBlockCoords(currentIndex, width, depth)
                     );
                 specialType = Map::SpecialTypes::Teleporter;
                 break;
@@ -420,7 +420,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                     JBTypes::Color::Green,
                     *blockPtr,
                     dir,
-                    Map::getBlockCoords(currentIndex, width, deep)
+                    Map::getBlockCoords(currentIndex, width, depth)
                     );
                 specialType = Map::SpecialTypes::Teleporter;
                 break;
@@ -429,7 +429,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                     JBTypes::Color::Blue,
                     *blockPtr,
                     dir,
-                    Map::getBlockCoords(currentIndex, width, deep)
+                    Map::getBlockCoords(currentIndex, width, depth)
                     );
                 specialType = Map::SpecialTypes::Teleporter;
                 break;
@@ -438,7 +438,7 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
                     JBTypes::Color::Yellow,
                     *blockPtr,
                     dir,
-                    Map::getBlockCoords(currentIndex, width, deep)
+                    Map::getBlockCoords(currentIndex, width, depth)
                     );
                 specialType = Map::SpecialTypes::Teleporter;
                 break;
@@ -497,7 +497,7 @@ void MapGenerator::compress (std::ifstream& input) {
     std::ofstream output("outMap.txt");
 
     const unsigned int width = readUnsignedInt(input);
-    const unsigned int deep = readUnsignedInt(input);
+    const unsigned int depth = readUnsignedInt(input);
     const unsigned int height = readUnsignedInt(input);
     const unsigned int beginX = readUnsignedInt(input);
     const unsigned int beginZ = readUnsignedInt(input);
@@ -506,7 +506,7 @@ void MapGenerator::compress (std::ifstream& input) {
     writeUnsignedInt(output, width);
     writeSeparator(output);
 
-    writeUnsignedInt(output, deep);
+    writeUnsignedInt(output, depth);
     writeSeparator(output);
 
     writeUnsignedInt(output, height);
@@ -530,7 +530,7 @@ void MapGenerator::compress (std::ifstream& input) {
     const auto getBlocksString =
         [&input] (unsigned int width,
                   unsigned int height,
-                  unsigned int deep)->std::string {
+                  unsigned int depth)->std::string {
             std::cout << "compress blocks" << std::endl;
             readingString(input);
 
@@ -538,7 +538,7 @@ void MapGenerator::compress (std::ifstream& input) {
             unsigned int counter = 1;
             std::string blocksString;
             const std::vector <unsigned int> blockWithSpecialParams { 4, 6 };
-            for (unsigned int i = 1; i < width * deep * height; ++i) {
+            for (unsigned int i = 1; i < width * depth * height; ++i) {
                 const unsigned int readValue = readUnsignedInt(input);
 
                 if (readValue != currentType) {
@@ -587,7 +587,7 @@ void MapGenerator::compress (std::ifstream& input) {
 
     // BLOCKS PART
     std::cout << "compress blocks" << std::endl;
-    const std::string blocksString = getBlocksString(width, height, deep);
+    const std::string blocksString = getBlocksString(width, height, depth);
     writeString(output, blocksString);
     writeEndLine(output);
 
@@ -597,7 +597,7 @@ void MapGenerator::compress (std::ifstream& input) {
     std::string readString;
     unsigned int counterWithoutItems = 0;
 
-    for (unsigned int i = 0; i < width * deep * height; ++i) {
+    for (unsigned int i = 0; i < width * depth * height; ++i) {
         input >> readString;
         if (std::isdigit(readString.at(0)) != 0) {
             ++counterWithoutItems;
@@ -652,7 +652,7 @@ void MapGenerator::compress (std::ifstream& input) {
     input >> trash;
     readString.clear();
 
-    for (unsigned int i = 0; i < width * deep * height; ++i) {
+    for (unsigned int i = 0; i < width * depth * height; ++i) {
         input >> readString;
         if (std::isdigit(readString.at(0)) != 0) {
             ++counterWithoutItems;
@@ -748,7 +748,7 @@ void MapGenerator::compress (std::ifstream& input) {
     input >> trash;
     readString.clear();
 
-    for (unsigned int i = 0; i < width * deep * height; ++i) {
+    for (unsigned int i = 0; i < width * depth * height; ++i) {
         input >> readString;
         if (std::isdigit(readString.at(0)) != 0) {
             ++counterWithoutItems;
@@ -845,7 +845,7 @@ std::string MapGenerator::applyOffset (const std::string& s, int offset) {
 void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
     std::ofstream output("outMapVerification.txt");
 
-    output << map.width() << " " << map.deep() << " "
+    output << map.width() << " " << map.depth() << " "
            << map.height() << std::endl;
 
     output << map.beginX() << " " << map.beginZ() << " "
@@ -868,7 +868,7 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
 
     std::cout << "Verification Blocks..." << std::endl;
     for (unsigned int y = 0; y < map.height(); y++) {
-        for (unsigned int z = 0; z < map.deep(); z++) {
+        for (unsigned int z = 0; z < map.depth(); z++) {
             for (unsigned int x = 0; x < map.width(); x++) {
                 const CstBlock_sptr& block =
                     map.getBlock(x, y, z);
@@ -897,7 +897,7 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
     output << "OBJECTS" << std::endl;
     std::cout << "Verification Items..." << std::endl;
     for (unsigned int y = 0; y < map.height(); y++) {
-        for (unsigned int z = 0; z < map.deep(); z++) {
+        for (unsigned int z = 0; z < map.depth(); z++) {
             for (unsigned int x = 0; x < map.width(); x++) {
                 const CstBlock_sptr& block =
                     map.getBlock(x, y, z);
@@ -953,7 +953,7 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
     size_t currentInfo = 0;
     size_t currentIndex = 0;
     for (unsigned int y = 0; y < map.height(); y++) {
-        for (unsigned int z = 0; z < map.deep(); z++) {
+        for (unsigned int z = 0; z < map.depth(); z++) {
             for (unsigned int x = 0; x < map.width(); x++) {
                 if (
                     currentInfo >= map.getEnemiesInfo().size() ||
@@ -1017,7 +1017,7 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
     currentInfo = 0;
     currentIndex = 0;
     for (unsigned int y = 0; y < map.height(); y++) {
-        for (unsigned int z = 0; z < map.deep(); z++) {
+        for (unsigned int z = 0; z < map.depth(); z++) {
             for (unsigned int x = 0; x < map.width(); x++) {
                 if (
                     currentInfo >= map.getSpecialInfo().size() ||
