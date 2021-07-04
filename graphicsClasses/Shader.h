@@ -17,7 +17,6 @@ class Shader {
 
 public:
 
-// --CONSTRUCTORS & DESTRUCTORS--//
 Shader(const GLenum& shaderType,
        const std::string& shaderFilename);
 
@@ -26,9 +25,9 @@ Shader& operator= (const Shader& shader) = delete;
 
 ~Shader() = default;
 
-// -------CONST METHODS--------//
 GLuint getHandle() const;
 GLenum getShaderType() const;
+void freeGPUMemory() const;
 
 static CstShader_uptr createVertexShader(const std::string& shaderName);
 static CstShader_uptr createFragmentShader(const std::string& shaderName);

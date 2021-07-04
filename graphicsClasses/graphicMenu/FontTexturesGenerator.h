@@ -49,6 +49,8 @@ GraphicCharacter genGraphicCharacter(
 FT_Pos getSmallestHight(const std::string& message, const FontTexturesGenerator::FTContent& ftContent);
 GraphicAlphabet genGraphicAlphabet(const Menu& menu, const FTContent& ftContent);
 
+void freeGraphicAlphabetGPUMemory(const GraphicAlphabet& graphicAlphabet);
+
 // gen alphabet (menu)
 
 

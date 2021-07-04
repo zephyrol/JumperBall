@@ -123,8 +123,10 @@ void Controller::manageValidateButton (const Controller::Status& status) {
 
 void Controller::runGame (size_t level) {
     _scene = std::make_shared<Scene>(level);
+
+    _viewer->freeGPUMemory();
     _viewer = createViewer();
-    // TODO: check if that is necessary
+
     _updating.runTasks();
     _updating.waitTasks();
 }

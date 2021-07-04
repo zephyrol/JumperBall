@@ -44,6 +44,20 @@ void RenderProcess::render() const {
     }
 }
 
+void RenderProcess::freeGPUMemory() {
+    std::cout << "free render process" << std::endl;
+    if (_frameBuffer) {
+        _frameBuffer->freeGPUMemory();
+    }
+    for (const auto& passShaderProgram : _shaderPrograms) {
+        const auto& shaderProgram = passShaderProgram.second;
+        shaderProgram->freeGPUMemory();
+    }
+    for (const auto& renderPass: _renderPasses){
+        renderPass->freeGPUMemory();
+    }
+}
+
 GLuint RenderProcess::getFrameBufferTexture() const {
     return _frameBuffer->getRenderTexture();
 }

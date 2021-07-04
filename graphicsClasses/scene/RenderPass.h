@@ -12,7 +12,7 @@
 #include <vector>
 #include "FrameBuffer.h"
 #include "RenderGroup.h"
-#include "uniformBlocks/uniformBlock.h"
+#include "uniformBlocks/UniformBlock.h"
 
 class RenderPass;
 using RenderPass_sptr = std::shared_ptr <RenderPass>;
@@ -33,6 +33,7 @@ RenderPass& operator= (RenderPass&& renderPass) = default;
 
 void render(const CstShaderProgram_sptr& shaderProgram) const;
 void update();
+void freeGPUMemory();
 
 void cleanUniforms();
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::mat4& value);

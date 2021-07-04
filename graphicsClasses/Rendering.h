@@ -14,10 +14,11 @@ class Rendering {
 public:
 
 virtual void update() = 0;
+virtual void freeGPUMemory() = 0;
+
 virtual void render() const = 0;
 
 protected:
-
 template<typename T> using UniformVariableUpdatingFct = std::function <
     void (const Mesh::UniformVariables_uptr <T>&)
     >;

@@ -35,6 +35,7 @@ RenderProcess& operator= (const RenderProcess&) = delete;
 
 void updateUniforms();
 void render() const;
+void freeGPUMemory();
 GLuint getFrameBufferTexture() const;
 
 private:

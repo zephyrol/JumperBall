@@ -35,3 +35,8 @@ void Viewer::render() const {
   _sceneRendering.render();
   _menuRendering.render();
 }
+
+void Viewer::freeGPUMemory() {
+  _sceneRendering.freeGPUMemory();
+  _menuRendering.freeGPUMemory();
+}

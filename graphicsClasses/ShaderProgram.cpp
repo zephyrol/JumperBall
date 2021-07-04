@@ -38,6 +38,12 @@ GLuint ShaderProgram::getHandle() const {
     return _shaderProgramHandle;
 }
 
+void ShaderProgram::freeGPUMemory() const {
+    _vertexShader->freeGPUMemory();
+    _fragmentShader->freeGPUMemory();
+    glDeleteProgram(_shaderProgramHandle);
+}
+
 CstShaderProgram_sptr ShaderProgram::createShaderProgram (const std::string& vs, const std::string& fs) {
     return std::make_shared <const ShaderProgram>(
         Shader::createVertexShader(vs),

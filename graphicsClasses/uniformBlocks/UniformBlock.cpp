@@ -1,11 +1,11 @@
 /*
- * File: uniformBlock.cpp
+ * File: UniformBlock.cpp
  * Author: Morgenthaler S
  *
  * Created on 22 décembre 2019, 12:22
  */
 
-#include "uniformBlock.h"
+#include "UniformBlock.h"
 
 UniformBlock::UniformBlock(Mesh::UniformVariables <glm::vec3>&& variablesVecThree):
     _uboHandle(createUboHandle()),
@@ -32,25 +32,6 @@ std::vector <const char*> UniformBlock::getStringsStoredLinearly() const {
 
     }
     return linearVariablesNames;
-
-    /*std::vector <const char*> names(strNames.size());
-
-       for (size_t i = 0; i < strNames.size(); ++i) {
-
-        const std::string& strName = strNames.at(i);
-        const char*cName = strName.c_str();
-        char*cNameAllocated = new char[strName.length() + 1];
-
-
-     #if defined(__STDC_LIB_EXT1__) || defined(_MSC_VER)
-        strncpy_s(cNameAllocated, strName.length() + 1, cName, strName.length() + 1);
-     #else
-        strncpy(cNameAllocated, cName, strName.length() + 1);
-     #endif
-        names[i] = cNameAllocated;
-       }
-
-       return names;*/
 }
 
 GLint UniformBlock::getBlockSize (const CstShaderProgram_sptr& sp, const std::string& blockName) const {
@@ -107,19 +88,9 @@ UniformBlock::ShaderBlock UniformBlock::createShaderBlock (
     return { variablesOffsets, blockBuffer };
 }
 
-/*void UniformBlock::deleteVariablesNamesInfo() {
-    for (size_t i = 0; i < _variablesNames.size(); ++i) {
-        delete[]_variablesNames[i];
-    }
-   }
-
-   UniformBlock::~UniformBlock() {
-    deleteVariablesNamesInfo();
-   }*/
 
 void UniformBlock::bind (const CstShaderProgram_sptr& sp) const {
     glBindBuffer(GL_UNIFORM_BUFFER, _uboHandle);
-    // const GLuint handle = sp->getHandle();
     const UniformBlock::ShaderBlock& shaderBlock = _shaderBlocks.at(sp);
     const std::vector <GLbyte>& shaderBlockBuffer = shaderBlock.buffer;
     glBufferData(GL_UNIFORM_BUFFER, shaderBlockBuffer.size(), shaderBlockBuffer.data(), GL_DYNAMIC_DRAW);
@@ -130,4 +101,8 @@ void UniformBlock::bind (const CstShaderProgram_sptr& sp) const {
 void UniformBlock::registerShader (const CstShaderProgram_sptr& sp, const std::string& blockName) {
     const UniformBlock::ShaderBlock shaderBlock = createShaderBlock(sp, blockName);
     _shaderBlocks[sp] = shaderBlock;
+}
+
+void UniformBlock::freeGPUMemory() {
+    glDeleteBuffers(1, &_uboHandle);
 }

@@ -24,6 +24,7 @@ public:
 
   void update();
   void render() const;
+  void freeGPUMemory();
 
   const unsigned int _resolutionX;
   const unsigned int _resolutionY;

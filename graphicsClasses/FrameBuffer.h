@@ -40,6 +40,8 @@ void bindFrameBuffer() const;
 std::pair <float, float> computeLogAverageLuminanceAndMax() const;
 GLuint getRenderTexture() const;
 
+void freeGPUMemory();
+
 static void bindDefaultFrameBuffer();
 static void cleanDefaultFrameBuffer();
 

@@ -18,6 +18,7 @@ public:
 MenuRendering(const Menu& menu, const FontTexturesGenerator::FTContent& ftContent);
 void update() override;
 void render() const override;
+void freeGPUMemory() override;
 
 private:
 

@@ -20,10 +20,12 @@ RenderGroup& operator= (const RenderGroup& renderGroup) = delete;
 RenderGroup(RenderGroup&& renderGroup) = default;
 RenderGroup& operator= (RenderGroup&& renderGroup) = default;
 
-CstMesh_sptr getHeadMesh() const;
 vecMesh_sptr update(const vecMesh_sptr& meshesToAdd = {});
+void freeGPUMemory();
+
 void render() const;
-SceneElement::GlobalState _globalState;
+CstMesh_sptr getHeadMesh() const;
+
 
 private:
 
@@ -94,9 +96,9 @@ GLuint genBufferObject() const;
 Mesh::MeshVerticesInfo createMeshesVerticesInfo() const;
 const BufferObjects& bufferObjects() const;
 
+SceneElement::GlobalState _globalState;
 vecMesh_sptr _meshes;
 Mesh::MeshVerticesInfo _meshesVerticesInfo;
-public:
 const GLuint _vertexArrayObject;
 const BufferObjects _bufferObjects;
 bool _needBuffersRebinding;

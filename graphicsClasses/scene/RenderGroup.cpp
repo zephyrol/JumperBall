@@ -291,3 +291,15 @@ void RenderGroup::render() const {
     const GLsizei numberOfIndices = _meshesVerticesInfo.shapeVerticesInfo.indices.size();
     glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, nullptr);
 }
+
+void RenderGroup::freeGPUMemory() {
+    std::cout << "free group" << std::endl;
+    glDeleteBuffers(1, &_bufferObjects.elementBufferObject);
+    for(const auto& shapeVBO: _bufferObjects.shapeVertexBufferObjects){
+        glDeleteBuffers(1, &shapeVBO);
+    }
+    for(const auto& stateVBO: _bufferObjects.stateVertexBufferObjects){
+        glDeleteBuffers(1, &stateVBO);
+    }
+    glDeleteVertexArrays(1, &_vertexArrayObject);
+}

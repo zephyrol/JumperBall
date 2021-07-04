@@ -24,6 +24,7 @@ ShaderProgram& operator= (const ShaderProgram& shaderProgram) = delete;
 ~ShaderProgram() = default;
 
 GLuint getHandle() const;
+void freeGPUMemory() const;
 
 static CstShaderProgram_sptr createShaderProgram(const std::string& vs, const std::string& fs);
 void use() const;

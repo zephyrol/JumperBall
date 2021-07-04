@@ -51,6 +51,11 @@ GLenum Shader::getShaderType() const {
     return _shaderType;
 }
 
+void Shader::freeGPUMemory() const {
+    std::cout << "free gpu shader" << std::endl;
+    glDeleteShader(_shaderHandle);
+}
+
 const std::string Shader::shadersDir = "shaders/";
 CstShader_uptr Shader::createVertexShader (const std::string& shaderName) {
     return std::unique_ptr <const Shader>(new Shader(GL_VERTEX_SHADER, shadersDir + shaderName));

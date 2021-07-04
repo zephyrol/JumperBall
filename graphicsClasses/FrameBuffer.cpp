@@ -78,6 +78,14 @@ GLuint FrameBuffer::getRenderTexture() const {
     return _renderTexture;
 }
 
+void FrameBuffer::freeGPUMemory() {
+    glDeleteTextures(1, &_renderTexture);
+    if(_depthBuffer) {
+        glDeleteRenderbuffers(1, _depthBuffer.get());
+    }
+    glDeleteFramebuffers(1, &_fboHandle);
+}
+
 void FrameBuffer::bindDefaultFrameBuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, Utility::windowResolutionX, Utility::windowResolutionY);

@@ -176,3 +176,11 @@ FontTexturesGenerator::GraphicAlphabet FontTexturesGenerator::genGraphicAlphabet
 
     return graphicAlphabet;
 }
+
+void FontTexturesGenerator::freeGraphicAlphabetGPUMemory(const GraphicAlphabet &graphicAlphabet)
+{
+    for (const auto& character: graphicAlphabet) {
+        const auto& graphicCharacter = character.second; 
+        glDeleteTextures(1, &graphicCharacter.textureID);
+    }
+}

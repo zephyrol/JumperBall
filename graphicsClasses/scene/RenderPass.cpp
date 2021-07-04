@@ -36,7 +36,7 @@ void RenderPass::update() {
 
         bool foundRejectedMesh = false;
         for (const Mesh_sptr& rejectedMesh : rejectedMeshes) {
-            if (rejectedMesh.get() == separateMesh.get()) {
+            if (rejectedMesh == separateMesh) {
                 foundRejectedMesh = true;
             }
         }
@@ -147,5 +147,13 @@ void RenderPass::render (const CstShaderProgram_sptr& shaderProgram) const {
     for (const auto& renderGroupUniforms : _renderGroupsUniforms) {
         bindUniforms(renderGroupUniforms.second, shaderProgram);
         renderGroupUniforms.first->render();
+    }
+}
+
+void RenderPass::freeGPUMemory() {
+    _unitedMeshesGroup->freeGPUMemory();
+    for (const auto& separateMeshGroup: _separateMeshGroups){
+        const auto& renderGroup = separateMeshGroup.second;
+        renderGroup->freeGPUMemory();
     }
 }

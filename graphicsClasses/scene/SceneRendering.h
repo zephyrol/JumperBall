@@ -10,7 +10,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include "uniformBlocks/uniformLight.h"
+#include "uniformBlocks/UniformLight.h"
 #include "componentsGeneration/MeshGenerator.h"
 #include "scene/SceneElement.h"
 #include "Rendering.h"
@@ -22,9 +22,10 @@ class SceneRendering:public Rendering {
 public:
 SceneRendering(const Scene& scene);
 
-void render() const override;
-
 void update() override;
+void freeGPUMemory() override;
+
+void render() const override;
 
 private:
 

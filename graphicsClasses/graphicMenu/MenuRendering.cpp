@@ -36,6 +36,10 @@ void MenuRendering::render() const {
     _pagesRenderProcess.at(currentPage)->render();
 }
 
+void MenuRendering::freeGPUMemory() {
+    FontTexturesGenerator::freeGraphicAlphabetGPUMemory(_graphicAlphabet);
+}
+
 MenuRendering::PagesRenderPassesLetters MenuRendering::createPagesRenderPassesLetters() const {
     MenuRendering::PagesRenderPassesLetters pageRenderPassesLetters;
 

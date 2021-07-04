@@ -338,7 +338,6 @@ Rendering::ExternalUniformVariables <glm::mat4> SceneRendering::createExternalUn
             return Mesh::UniformVariables_uptr <glm::mat4>(
                 new Mesh::UniformVariables <glm::mat4>(createMat4Variables())
                 );
-
         };
 
     return { createMat4VariablesPtr(), updateMat4VariablesFct };
@@ -388,6 +387,20 @@ void SceneRendering::render() const {
     for (const auto& renderProcess : _renderingPipeline) {
         renderProcess->render();
     }
+}
+
+void SceneRendering::freeGPUMemory() {
+
+    auto& uniformBlockVariables = _externalUniformBlocks.uniformBlockVariables;
+    for (const auto& uniformBlockVariable: *uniformBlockVariables ) {
+        const auto& uniformBlock = uniformBlockVariable.second;
+        uniformBlock->freeGPUMemory();
+    }
+
+    for (const auto& renderProcess: _renderingPipeline) {
+        renderProcess->freeGPUMemory();
+    }
+
 }
 
 const std::string SceneRendering::blocksVs = "blocksVs.vs";

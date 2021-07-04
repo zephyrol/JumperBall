@@ -24,12 +24,11 @@ UniformBlock(Mesh::UniformVariables <glm::vec3>&& variablesVecThree);
 UniformBlock(const UniformBlock& uniformBlock) = delete;
 UniformBlock& operator= (const UniformBlock& uniformBlock) = delete;
 
-// virtual ~UniformBlock();
-
-// virtual void update() = 0;
 void update(const std::string& varName, const glm::vec3& value);
 void bind(const CstShaderProgram_sptr& sp) const;
 void registerShader(const CstShaderProgram_sptr& sp, const std::string& blockName);
+
+void freeGPUMemory();
 
 struct ShaderBlock {
     std::vector <GLint> variablesOffsets;
@@ -42,13 +41,8 @@ const GLuint _uboHandle;
 
 Mesh::UniformVariables <glm::vec3> _variablesVecThree;
 const std::vector <const char*> _linearVariablesNames;
-// std::map <GLuint, GLint> _blockSizes;
-// std::map <GLuint, std::vector <GLint> > _variablesOffsets;
-// std::map <GLuint, std::vector <GLbyte> > _bufferData;
-
 
 std::map <CstShaderProgram_sptr, ShaderBlock> _shaderBlocks;
-
 
 GLuint createUboHandle() const;
 
