@@ -8,8 +8,9 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 #include "system/Types.h"
+#include "scene/SceneElement.h"
 
-class Item {
+class Item : public SceneElement{
 public:
 
 enum class CategoryOfItems { Key, Coin, Clock };
@@ -29,6 +30,12 @@ void catchingTest(const JBTypes::vec3f& itemPosition,
 
 static constexpr float radiusBoundingSphere = 0.15f;
 
+SceneElement::StaticValues <float> getStaticFloatValues() const override;
+SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+SceneElement::DynamicValues <float> getDynamicFloats() const override;
+
+SceneElement::GlobalState getGlobalState() const override;
+
 private:
 const JBTypes::vec3ui _position;
 const JBTypes::Dir _direction;
@@ -36,6 +43,7 @@ bool _gotten;
 const JBTypes::timePointMs _creationTime;
 JBTypes::timePointMs _obtainingTime;
 const CategoryOfItems _category;
+
 };
 
 #endif /* OBJECT_H */

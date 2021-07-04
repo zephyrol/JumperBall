@@ -208,3 +208,9 @@ std::vector <Page_sptr> Page::createChildren() const {
     }
     return children;
 }
+
+
+SceneElement::GlobalState Page::getGlobalState() const {
+    return SceneElement::GlobalState::United; 
+}
+

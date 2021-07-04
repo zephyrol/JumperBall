@@ -4,23 +4,23 @@
  *
  * Created on 19 septembre 2020, 07h50
  */
-#ifndef BALLSTATE_H
+/*#ifndef BALLSTATE_H
 #define BALLSTATE_H
 #include <scene/Ball.h>
 #include "ObjectState.h"
 
 
-class BallState:public ObjectState {
+class BallState:public SceneElement {
 public:
 BallState(const Ball& ball);
 
-virtual ObjectState::GlobalState update() override;
+virtual SceneElement::SceneElementState update() override;
 float teleportationCoeff() const;
 const JBTypes::Color& teleportationColor() const;
 
-ObjectState::DynamicValues <float> getDynamicFloats() const override;
-ObjectState::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
-ObjectState::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
+SceneElement::DynamicValues <float> getDynamicFloats() const override;
+SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+SceneElement::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
 
 private:
 const Ball& _ball;
@@ -39,4 +39,4 @@ float getStateOfLifeStatus() const;
 
 };
 
-#endif // BALLSTATE_H
+#endif // BALLSTATE_H*/

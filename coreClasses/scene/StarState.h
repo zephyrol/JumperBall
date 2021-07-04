@@ -4,17 +4,17 @@
  *
  * Created on 19 septembre 2020, 07h50
  */
-#ifndef STARSTATE_H
+/*#ifndef STARSTATE_H
 #define STARSTATE_H
 #include "ObjectState.h"
 #include "Star.h"
 
 
-class StarState:public ObjectState {
+class StarState:public SceneElement {
 public:
 StarState(const Star& star);
 
-ObjectState::GlobalState update() override;
+SceneElement::SceneElementState update() override;
 StarState::DynamicValues <float> getDynamicFloats() const override;
 StarState::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 StarState::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
@@ -36,4 +36,4 @@ JBTypes::vec3f _lightDirection;
 };
 
 
-#endif // STARSTATE_H
+#endif */// STARSTATE_H

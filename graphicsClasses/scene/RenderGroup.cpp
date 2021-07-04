@@ -6,7 +6,7 @@
  */
 #include "RenderGroup.h"
 
-RenderGroup::RenderGroup(const vecMesh_sptr& meshes, const ObjectState::GlobalState& globalState):
+RenderGroup::RenderGroup(const vecMesh_sptr& meshes, const SceneElement::GlobalState& globalState):
     _globalState(globalState),
     _meshes(meshes),
     _meshesVerticesInfo(createMeshesVerticesInfo()),
@@ -15,7 +15,7 @@ RenderGroup::RenderGroup(const vecMesh_sptr& meshes, const ObjectState::GlobalSt
     _needBuffersRebinding(false) {
 }
 
-RenderGroup::RenderGroup(const RenderGroup& renderGroup, const ObjectState::GlobalState& globalState):
+RenderGroup::RenderGroup(const RenderGroup& renderGroup, const SceneElement::GlobalState& globalState):
     _globalState(globalState),
     _meshes{},
     _meshesVerticesInfo(),
@@ -36,9 +36,9 @@ vecMesh_sptr RenderGroup::update (const vecMesh_sptr& meshesToAdd) {
 
     for (vecMesh_sptr::iterator it = _meshes.begin(); it != _meshes.end(); ) {
         const Mesh_sptr& mesh = *it;
-        const ObjectState::GlobalState meshState = mesh->update();
+        const SceneElement::GlobalState meshState = mesh->update();
         if (meshState != _globalState) {
-            if (meshState != ObjectState::GlobalState::Dead) {
+            if (meshState != SceneElement::GlobalState::Dead) {
                 rejectedMeshes.push_back(mesh);
             }
             _meshes.erase(it);

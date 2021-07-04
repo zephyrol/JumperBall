@@ -7,13 +7,13 @@
 #include "MeshGenerator.h"
 
 
-Mesh_sptr MeshGenerator::genBlock (const Map& map, size_t index) {
-    const JBTypes::vec3ui position = map.getBlockCoords(index);
+Mesh_sptr MeshGenerator::genBlock (const std::shared_ptr<const Map>& map, size_t index) {
+    const JBTypes::vec3ui position = map->getBlockCoords(index);
     const glm::vec3 glmPosition { position.at(0), position.at(1), position.at(2) };
     const glm::mat4 translation = glm::translate(glmPosition);
-    const Map::BlockTypes blockType = map.getType(position);
+    const Map::BlockTypes blockType = map->getType(position);
 
-    const CstBlock_sptr block = map.getBlock(index);
+    const CstBlock_sptr block = map->getBlock(index);
 
     CstGeometricShape_sptr blockShape;
 
@@ -33,7 +33,7 @@ Mesh_sptr MeshGenerator::genBlock (const Map& map, size_t index) {
 
     for (size_t i = 0; i < numberOfFaces; ++i) {
         const JBTypes::vec3ui& neighbourgPosition = positions.at(i);
-        const Map::BlockTypes typeNeighbourg = map.getType(neighbourgPosition);
+        const Map::BlockTypes typeNeighbourg = map->getType(neighbourgPosition);
         if (typeNeighbourg != Map::BlockTypes::Brittle && typeNeighbourg != Map::BlockTypes::None) {
             // strSidesInfo.push_back('0');
             boolSidesInfo.at(i) = false;
@@ -81,8 +81,5 @@ Mesh_sptr MeshGenerator::genBlock (const Map& map, size_t index) {
     geometricShapes.push_back(blockShape);
     geometricShapes.insert(geometricShapes.end(), jumpersShapes.begin(), jumpersShapes.end());
     geometricShapes.insert(geometricShapes.end(), sharpsShapes.begin(), sharpsShapes.end());
-    return { std::make_shared <Mesh>(
-                 Frames <ObjectState>::genFrames <Block, BlockState>(*block),
-                 std::move(geometricShapes)
-                 ) };
+    return { std::make_shared <Mesh>( block, std::move(geometricShapes)) };
 }

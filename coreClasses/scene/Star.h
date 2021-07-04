@@ -9,8 +9,9 @@
 #define STAR_H
 #include "system/Types.h"
 #include "Map.h"
+#include "SceneElement.h"
 
-class Star {
+class Star: public SceneElement {
 public:
 
 // --CONSTRUCTORS & DESTRUCTORS--//
@@ -34,8 +35,14 @@ const JBTypes::vec3f& initialDirection() const;
 JBTypes::Quaternion getRotation() const;
 JBTypes::vec3f lightDirection() const;
 JBTypes::vec3f position() const;
+SceneElement::GlobalState getGlobalState() const override;
+
+SceneElement::DynamicValues <float> getDynamicFloats() const override;
+SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+SceneElement::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
 
 static std::shared_ptr <Star> createBlurStar(const Map& map);
+static const std::string lightDirectionName;
 
 private:
 

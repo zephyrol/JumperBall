@@ -7,7 +7,7 @@
 #include "MeshGenerator.h"
 
 std::map <unsigned char, vecMesh_sptr> MeshGenerator::genLettersLabel (
-    const Page& page,
+    const CstPage_sptr& page,
     const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet
     ) {
 
@@ -16,7 +16,7 @@ std::map <unsigned char, vecMesh_sptr> MeshGenerator::genLettersLabel (
     const glm::vec3 enabledLetterColor(0.f, 1.f, 1.f);
     const glm::vec3 disabledLetterColor(0.5f, 0.5f, 0.5f);
 
-    for (const auto& label : page.labels()) {
+    for (const auto& label : page->labels()) {
         const float height = label->height();
         const JBTypes::vec2f& position = label->position();
         const float pitch = label->width() / label->message().size();
@@ -47,7 +47,8 @@ std::map <unsigned char, vecMesh_sptr> MeshGenerator::genLettersLabel (
                 );
 
             lettersMeshes[character].push_back(
-                genQuadLabel(
+                genLetterLabel(
+                    page,
                     { translateX, translateY },
                     scaleX,
                     scaleY,

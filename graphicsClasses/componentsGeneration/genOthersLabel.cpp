@@ -8,10 +8,10 @@
 #include "MeshGenerator.h"
 
 
-vecMesh_sptr MeshGenerator::genOthersLabel (const Page& page) {
+vecMesh_sptr MeshGenerator::genOthersLabel (const CstPage_sptr& page) {
 
     vecCstGeometricShape_sptr geometricShapes {};
-    for (const auto& label : page.labels()) {
+    for (const auto& label : page->labels()) {
         vecCstGeometricShape_sptr geometricShapesLabel = genGeometricShapesFromLabel(*label);
         geometricShapes.insert(
             geometricShapes.end(),
@@ -19,8 +19,6 @@ vecMesh_sptr MeshGenerator::genOthersLabel (const Page& page) {
             std::make_move_iterator(geometricShapesLabel.end())
             );
     }
-    // TODO: use label state, not quadstate
-    Frames_uptr <ObjectState> frame_ptr = Frames <ObjectState>::genFrames <Quad, QuadState>(Quad());
-    Mesh_sptr mesh = std::make_shared <Mesh>(std::move(frame_ptr), std::move(geometricShapes));
+    Mesh_sptr mesh = std::make_shared <Mesh>(page, std::move(geometricShapes));
     return { mesh };
 }

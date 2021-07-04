@@ -61,10 +61,10 @@ template<typename T> void ParallelTask <T>::runTasks() {
     for (size_t i = 0; i < _numberOfThreads; ++i) {
         _asyncTasks.push_back(
             _forceAsync
-            ? std::async(std::launch::async, [this, i] () {
+            ? std::async(std::launch::deferred, [this, i] () {
                              threadFunction(_taskFunction, i, _numberOfThreads, _numberOfTasks);
                          })
-            : std::async([this, i] () {
+            : std::async(std::launch::deferred, [this, i] () {
                              threadFunction(_taskFunction, i, _numberOfThreads, _numberOfTasks);
                          })
             );

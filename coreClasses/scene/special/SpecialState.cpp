@@ -4,7 +4,7 @@
  *
  * Created on 14 novembre 2020, 18h09
  */
-#include "SpecialState.h"
+/*#include "SpecialState.h"
 
 SpecialState::SpecialState(const Special& special):
     _special(special),
@@ -17,17 +17,17 @@ SpecialState::SpecialState(const Special& special):
     _isActivated(special.isActivated()) {
 }
 
-ObjectState::GlobalState SpecialState::update() {
+SceneElement::SceneElementState SpecialState::update() {
     _timeSinceCreation = _special.getTimeSinceCreation();
     _isActivated = _special.isActivated();
-    return GlobalState::United;
+    return SceneElementState::United;
 }
 
-ObjectState::StaticValues <float> SpecialState::getStaticFloatValues() const {
+SceneElement::StaticValues <float> SpecialState::getStaticFloatValues() const {
     return { _direction, _color, _isAnimated };
 }
 
-ObjectState::StaticValues <JBTypes::vec3f> SpecialState::getStaticVec3fValues() const {
+SceneElement::StaticValues <JBTypes::vec3f> SpecialState::getStaticVec3fValues() const {
     constexpr float offset = 0.5;
     const JBTypes::vec3f position = {
         static_cast <float>(_position.at(0)) + offset,
@@ -37,9 +37,10 @@ ObjectState::StaticValues <JBTypes::vec3f> SpecialState::getStaticVec3fValues() 
     return { position };
 }
 
-ObjectState::DynamicValues <float> SpecialState::getDynamicFloats() const {
+SceneElement::DynamicValues <float> SpecialState::getDynamicFloats() const {
     return {
         { "creationTime", _timeSinceCreation },
         { _colorAttributeName, _isActivated }
     };
 }
+*/

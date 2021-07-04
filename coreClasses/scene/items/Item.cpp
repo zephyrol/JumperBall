@@ -50,11 +50,45 @@ float Item::getTimeSinceCreation() const {
 void Item::catchingTest (const JBTypes::vec3f& itemPosition,
                          const JBTypes::vec3f& entityPosition,
                          float radiusEntity) {
-    const float distance =
-        JBTypesMethods::distance(itemPosition, entityPosition);
+    const float distance = JBTypesMethods::distance(itemPosition, entityPosition);
     if (distance < radiusEntity + radiusBoundingSphere) {
         _obtainingTime = JBTypesMethods::getTimePointMSNow();
         _gotten = true;
     }
 
+}
+
+SceneElement::StaticValues <float> Item::getStaticFloatValues() const {
+    return { static_cast<float>(_direction) };
+}
+
+SceneElement::StaticValues <JBTypes::vec3f> Item::getStaticVec3fValues() const {
+    constexpr float offset = 0.5;
+    const JBTypes::vec3f position = {
+        static_cast <float>(_position.at(0)) + offset,
+        static_cast <float>(_position.at(1)) + offset,
+        static_cast <float>(_position.at(2)) + offset
+    };
+    return { position };
+}
+
+SceneElement::DynamicValues <float> Item::getDynamicFloats() const {
+    return {
+        { "creationTime", getTimeSinceCreation()},
+        { "obtainingTime", getTimeSinceObtaining()}
+    };
+
+}
+
+SceneElement::GlobalState Item::getGlobalState() const {
+    const float timeSinceObtaining = getTimeSinceObtaining();
+
+    if (isGotten()) {
+        constexpr float thresholdThirdStep = 1.5;
+        constexpr float durationThirdStep = 0.2;
+        return timeSinceObtaining < thresholdThirdStep + durationThirdStep
+               ? SceneElement::GlobalState::Separate
+               : SceneElement::GlobalState::Dead;
+    }
+    return SceneElement::GlobalState::United;
 }

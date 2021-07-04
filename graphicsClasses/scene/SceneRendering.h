@@ -13,7 +13,7 @@
 #include "CameraState.h"
 #include "uniformBlocks/uniformLight.h"
 #include "componentsGeneration/MeshGenerator.h"
-#include "scene/Frames.h"
+#include "scene/SceneElement.h"
 #include "Rendering.h"
 #include "Scene.h"
 
@@ -26,17 +26,13 @@ SceneRendering(const Scene& scene);
 void render() const override;
 
 void update() override;
-void swapFrames();
-
 
 private:
 
 static constexpr size_t heightBloomTexture = 192;
 static constexpr size_t sizeDepthTexture = 1024;
 
-const Frames_uptr <StarState> _starFrame;
-const Frames_uptr <BallState> _ballFrame;
-const Frames_uptr <CameraState> _cameraFrame;
+const Scene& _scene;
 
 ExternalUniformBlockVariables _externalUniformBlocks;
 ExternalUniformVariables <glm::mat4> _externalUniformMatrices;

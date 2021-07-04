@@ -4,7 +4,7 @@
  *
  * Created on 19 septembre 2020, 07h50
  */
-#include "BallState.h"
+/*#include "BallState.h"
 
 BallState::BallState(const Ball& ball):
     _ball(ball),
@@ -20,7 +20,7 @@ BallState::BallState(const Ball& ball):
     _timeSecondsSinceStateOfLife(ball.getTimeSecondsSinceStateOfLife()) {
 }
 
-ObjectState::GlobalState BallState::update() {
+SceneElement::SceneElementState BallState::update() {
     _coveredRotation = _ball.getCoveredRotation();
     _position = _ball.get3DPosition();
     _burnCoefficient = _ball.burnCoefficient();
@@ -34,12 +34,12 @@ ObjectState::GlobalState BallState::update() {
 
     const Ball::StateOfLife stateOfLife = _ball.stateOfLife();
     if (stateOfLife == Ball::StateOfLife::Bursting) {
-        return ObjectState::GlobalState::Separate;
+        return SceneElement::SceneElementState::Separate;
     }
     if (stateOfLife == Ball::StateOfLife::Dead) {
-        return ObjectState::GlobalState::Dead;
+        return SceneElement::SceneElementState::Dead;
     }
-    return ObjectState::GlobalState::United;
+    return SceneElement::SceneElementState::United;
 }
 
 float BallState::teleportationCoeff() const {
@@ -50,7 +50,7 @@ const JBTypes::Color& BallState::teleportationColor() const {
     return _teleportationColor;
 }
 
-ObjectState::DynamicValues <float> BallState::getDynamicFloats() const {
+SceneElement::DynamicValues <float> BallState::getDynamicFloats() const {
     return {
         { "ballRadius", _radius },
         { "crushingCoeff", _crushingCoeff },
@@ -60,14 +60,14 @@ ObjectState::DynamicValues <float> BallState::getDynamicFloats() const {
     };
 }
 
-ObjectState::DynamicValues <JBTypes::vec3f> BallState::getDynamicVec3fs() const {
+SceneElement::DynamicValues <JBTypes::vec3f> BallState::getDynamicVec3fs() const {
     return {
         { "sideDir", _currentSideAsVector },
         { "position", _position }
     };
 }
 
-ObjectState::DynamicValues <JBTypes::Quaternion> BallState::getDynamicQuaternions() const {
+SceneElement::DynamicValues <JBTypes::Quaternion> BallState::getDynamicQuaternions() const {
     return {
         { "quaternion", _coveredRotation }
     };
@@ -87,3 +87,4 @@ float BallState::getStateOfLifeStatus() const {
     }
     return 2.f;
 }
+*/

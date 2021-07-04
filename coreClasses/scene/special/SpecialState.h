@@ -4,21 +4,21 @@
  *
  * Created on 14 novembre 2020, 18h09
  */
-#ifndef SPECIALSTATE_H
+/*#ifndef SPECIALSTATE_H
 #define SPECIALSTATE_H
 #include "Special.h"
 #include <scene/Map.h>
 #include <scene/ObjectState.h>
 
-class SpecialState:public ObjectState {
+class SpecialState:public SceneElement {
 public:
 SpecialState(const Special& special);
-virtual ObjectState::GlobalState update() override;
+virtual SceneElement::SceneElementState update() override;
 
-ObjectState::StaticValues <float> getStaticFloatValues() const override;
-ObjectState::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+SceneElement::StaticValues <float> getStaticFloatValues() const override;
+SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
 
-ObjectState::DynamicValues <float> getDynamicFloats() const override;
+SceneElement::DynamicValues <float> getDynamicFloats() const override;
 
 private:
 const Special& _special;
@@ -31,4 +31,4 @@ float _timeSinceCreation;
 bool _isActivated;
 };
 
-#endif // SPECIALSTATE_H
+#endif // SPECIALSTATE_H*/

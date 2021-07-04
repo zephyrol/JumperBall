@@ -259,17 +259,17 @@ bool Camera::approachingBallUpdate() noexcept{
     return animationIsFinished;
 }
 
-glm::mat4 Camera::genVPMatrixFromStar (const StarState& starState) {
+glm::mat4 Camera::genVPMatrixFromStar (const Star& star) {
 
     constexpr float offsetJumpingBall = 1.f; // size of ball + jump height
-    const float envSize = starState.getEnvSize();
+    const float envSize = star.envSize();
     const float halfBoundingBoxSize = envSize / 2.f + offsetJumpingBall;
 
     // We use a close star position to get a better ZBuffer accuracy
-    const JBTypes::vec3f& rotationCenter = starState.getRotationCenter();
+    const JBTypes::vec3f& rotationCenter = star.rotationCenter();
     const glm::vec3 centerWorld = Utility::convertToOpenGLFormat(rotationCenter);
 
-    const JBTypes::vec3f& position = starState.getPosition();
+    const JBTypes::vec3f& position = star.position();
     const glm::vec3 closeStarPosition = centerWorld + glm::normalize(
         (Utility::convertToOpenGLFormat(position)) - centerWorld
         )  * halfBoundingBoxSize;
@@ -300,4 +300,8 @@ glm::mat4 Camera::viewProjection() const noexcept{
             zFar
             );
     return perspectiveMatrix * viewMatrix;
+}
+
+SceneElement::GlobalState Camera::getGlobalState() const {
+    return SceneElement::GlobalState::United;
 }

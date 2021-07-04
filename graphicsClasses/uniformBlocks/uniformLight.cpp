@@ -8,7 +8,7 @@
 #include <cstdio>
 #include <cstring>
 #include "uniformLight.h"
-#include "scene/StarState.h"
+#include "scene/Star.h"
 
 UniformLight::UniformLight(const glm::vec3& directionLight,
                            const glm::vec3& ambientLightIntensity,
@@ -21,12 +21,7 @@ UniformLight::UniformLight(const glm::vec3& directionLight,
                       diffuseLightIntensity,
                       specularLightIntensity
                       ))
-        ) { /*,
-               _directionLight(directionLight),
-               _ambientLightIntensity(ambientLightIntensity),
-               _diffuseLightIntensity(diffuseLightIntensity),
-               _specularLightIntensity(specularLightIntensity)*/
-}
+        ) { }
 
 Mesh::UniformVariables <glm::vec3> UniformLight::createVariablesVecThree (
     const glm::vec3& directionLight,
@@ -35,7 +30,7 @@ Mesh::UniformVariables <glm::vec3> UniformLight::createVariablesVecThree (
     const glm::vec3& specularLightIntensity
     ) const {
     Mesh::UniformVariables <glm::vec3> variablesVecThree;
-    variablesVecThree[StarState::lightDirectionName] = directionLight;
+    variablesVecThree[Star::lightDirectionName] = directionLight;
     variablesVecThree["ambientLightIntensity"] = ambientLightIntensity;
     variablesVecThree["diffuseLightIntensity"] = diffuseLightIntensity;
     variablesVecThree["specularLightIntensity"] = specularLightIntensity;

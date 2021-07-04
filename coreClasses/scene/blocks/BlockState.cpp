@@ -3,7 +3,7 @@
  * Author: Morgenthaler S
  *
  */
-#include "BlockState.h"
+/*#include "BlockState.h"
 
 BlockState::BlockState(const Block& block):
     _block(block),
@@ -12,18 +12,18 @@ BlockState::BlockState(const Block& block):
     _isUnited(block.isExists()) {
 }
 
-ObjectState::GlobalState BlockState::update() {
+SceneElement::SceneElementState BlockState::update() {
     _localScale = _block.localScale();
     _localTranslation = _block.localTranslation();
     if (_isUnited) {
         _isUnited = _block.isExists();
     }
     return _isUnited
-           ? ObjectState::GlobalState::United
-           : ObjectState::GlobalState::Separate;
+           ? SceneElement::SceneElementState::United
+           : SceneElement::SceneElementState::Separate;
 }
 
-ObjectState::StaticValues <JBTypes::vec3f> BlockState::getStaticVec3fValues() const {
+SceneElement::StaticValues <JBTypes::vec3f> BlockState::getStaticVec3fValues() const {
     const auto& position = _block.position();
     constexpr float offset = 0.5f;
     return {{
@@ -33,10 +33,10 @@ ObjectState::StaticValues <JBTypes::vec3f> BlockState::getStaticVec3fValues() co
     }};
 }
 
-ObjectState::DynamicValues <float> BlockState::getDynamicFloats() const {
+SceneElement::DynamicValues <float> BlockState::getDynamicFloats() const {
     return {};
 }
 
-ObjectState::DynamicValues <JBTypes::vec3f> BlockState::getDynamicVec3fs() const {
+SceneElement::DynamicValues <JBTypes::vec3f> BlockState::getDynamicVec3fs() const {
     return {{ "translation", _localTranslation }, { "scale", _localScale }};
-}
+}*/

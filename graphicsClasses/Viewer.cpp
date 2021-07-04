@@ -33,11 +33,3 @@ void Viewer::render() const {
   _sceneRendering.render();
   _menuRendering.render();
 }
-
-void Viewer::swapFrames() {
-  _sceneRendering.swapFrames();
-}
-
-
-
-

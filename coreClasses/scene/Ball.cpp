@@ -835,6 +835,53 @@ JBTypes::vec3f Ball::getNextLook() const {
     return JBTypesMethods::directionAsVector(getNextBlockInfo().nextLook);
 }
 
+SceneElement::DynamicValues <float> Ball::getDynamicFloats() const {
+
+    const auto getStateOfLifeStatus = [this]() {
+        if (
+            _stateOfLife == Ball::StateOfLife::Normal ||
+            _stateOfLife == Ball::StateOfLife::Burning ||
+            _stateOfLife == Ball::StateOfLife::Sliding) {
+            return 0.f;
+        }
+        if (_stateOfLife == Ball::StateOfLife::Bursting) { 
+            return 1.f;
+        }
+        return 2.f;
+    };
+
+    return {
+        { "ballRadius", getRadius()},
+        { "crushingCoeff", getCrushingCoefficient()},
+        { "status", getStateOfLifeStatus()},
+        { "timeStateOfLife", getTimeSecondsSinceStateOfLife()},
+        { "burningCoeff", burnCoefficient()}
+    };
+}
+
+SceneElement::DynamicValues <JBTypes::vec3f> Ball::getDynamicVec3fs() const {
+    return {
+        { "sideDir", currentSideAsVector() },
+        { "position", get3DPosition() }
+    };
+}
+
+SceneElement::DynamicValues <JBTypes::Quaternion> Ball::getDynamicQuaternions() const {
+    return {
+        { "quaternion", getCoveredRotation()}
+    };
+}
+
+SceneElement::GlobalState Ball::getGlobalState() const {
+    if (_stateOfLife == Ball::StateOfLife::Bursting) {
+        return SceneElement::GlobalState::Separate;
+    }
+    if (_stateOfLife == Ball::StateOfLife::Dead) {
+        return SceneElement::GlobalState::Dead;
+    }
+    return SceneElement::GlobalState::United;
+}
+
 
 const TurnLeft Ball::turnLeftMovement;
 const TurnRight Ball::turnRightMovement;

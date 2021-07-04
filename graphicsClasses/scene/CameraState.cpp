@@ -5,7 +5,7 @@
  * Created on 12 juin 2021, 10:05
  */
 
-#include "CameraState.h"
+/*#include "CameraState.h"
 
 CameraState::CameraState(const Camera& camera):
     _camera(camera),
@@ -13,10 +13,10 @@ CameraState::CameraState(const Camera& camera):
     _viewProjection(camera.viewProjection()) {
 }
 
-ObjectState::GlobalState CameraState::update() {
+SceneElement::SceneElementState CameraState::update() {
     _pos = _camera.pos();
     _viewProjection = _camera.viewProjection();
-    return ObjectState::GlobalState::United;
+    return SceneElement::SceneElementState::United;
 }
 
 const glm::vec3& CameraState::pos() const noexcept{
@@ -25,3 +25,4 @@ const glm::vec3& CameraState::pos() const noexcept{
 const glm::mat4& CameraState::viewProjection() const noexcept{
     return _viewProjection;
 }
+*/

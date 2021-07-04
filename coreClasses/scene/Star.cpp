@@ -96,6 +96,33 @@ JBTypes::vec3f Star::lightDirection() const {
 
 JBTypes::vec3f Star::position() const {
     const JBTypes::vec3f initialPosition = JBTypesMethods::scalarApplication(_distance, _initialDirection);
-    // return initialPosition;
     return JBTypesMethods::rotateVector(initialPosition, getRotation());
 }
+
+SceneElement::GlobalState Star::getGlobalState() const {
+    return SceneElement::GlobalState::United;
+}
+
+Star::DynamicValues <float> Star::getDynamicFloats() const {
+    return {
+        { "starDistance", _distance },
+        { "radius", _radius },
+        { "radiusInside", _radiusInside },
+        { "radiusOutside", _radiusOutside },
+    };
+}
+
+Star::DynamicValues <JBTypes::vec3f> Star::getDynamicVec3fs() const {
+    return {
+        { "initialDirection", _initialDirection },
+        { "rotationCenter", _rotationCenter }
+    };
+}
+
+Star::DynamicValues <JBTypes::Quaternion> Star::getDynamicQuaternions() const {
+    return {
+        { "rotationQuaternion", getRotation() }
+    };
+}
+
+const std::string Star::lightDirectionName = "lightDirection";

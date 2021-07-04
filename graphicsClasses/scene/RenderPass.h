@@ -32,8 +32,6 @@ RenderPass& operator= (RenderPass&& renderPass) = default;
 
 
 void render(const CstShaderProgram_sptr& shaderProgram) const;
-
-void swapFrames();
 void update();
 
 void cleanUniforms();

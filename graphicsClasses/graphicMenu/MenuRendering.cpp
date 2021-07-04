@@ -42,7 +42,7 @@ MenuRendering::PagesRenderPassesLetters MenuRendering::createPagesRenderPassesLe
     for (const auto& page : _menu.pages()) {
         MenuRendering::RenderPassesLetters renderPassesLetters;
 
-        const auto lettersMeshes =  MeshGenerator::genLettersLabel(*page, _graphicAlphabet);
+        const auto lettersMeshes =  MeshGenerator::genLettersLabel(page, _graphicAlphabet);
 
         for (const auto& letterMeshes : lettersMeshes) {
             const unsigned char letter = letterMeshes.first;
@@ -60,7 +60,7 @@ MenuRendering::PagesRenderPasses MenuRendering::createPagesRenderPassesOthers() 
     MenuRendering::PagesRenderPasses pageRenderPassesOthers;
 
     for (const auto& page : _menu.pages()) {
-        const auto meshes = MeshGenerator::genOthersLabel(*page);
+        const auto meshes = MeshGenerator::genOthersLabel(page);
         pageRenderPassesOthers[page] = { std::make_shared <RenderPass>(meshes) };
     }
 

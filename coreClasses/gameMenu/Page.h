@@ -16,7 +16,7 @@ using CstPage_sptr = std::shared_ptr <const Page>;
 using vecCstPage_sptr = std::vector <CstPage_sptr>;
 using vecPage_sptr = std::vector <Page_sptr>;
 
-class Page {
+class Page: public SceneElement {
 public:
 
 // ------------TYPES------------//
@@ -33,22 +33,19 @@ Page(const Page_sptr& parent,
      bool visibleOnParent = false);
 
 
-// -------CONST METHODS--------//
 std::weak_ptr <const Page> parent() const;
 std::weak_ptr <Page> parent();
 bool visibleOnParent() const;
-// CstPage_sptr child(float x, float y) const;
 CstLabel_sptr matchedLabel(float x, float y) const;
 float height() const;
 float localPosY() const;
 void setBridges(std::map <CstLabel_sptr, Page_sptr>&& bridges);
-// void setTypes(std::map <CstLabel_sptr, TypeOfLabel>&& labelsTypes);
 const Page::EscapeAnswer& getEscapeAnswer() const;
 
-// ----------METHODS-----------//
+SceneElement::GlobalState getGlobalState() const override;
+
 CstPage_sptr child(const CstLabel_sptr& label) const;
 Page_sptr child(const CstLabel_sptr& label);
-// TypeOfLabel type(const CstLabel_sptr& label) const;
 const vecCstLabel_sptr& labels() const;
 void pressOnPage();
 void release();
@@ -56,7 +53,6 @@ void update(bool isPressed, float screenPosY = 0.f);
 
 private:
 
-// --------ATTRIBUTES-----------//
 constexpr static float decelerationCoefficient = 10.f; // pagePourcentage /s^2
 
 std::vector <CstLabel_sptr> createLabels() const;
@@ -64,7 +60,6 @@ std::vector <Page_sptr> createChildren() const;
 
 const PageFormat _pageFormat;
 std::map <CstLabel_sptr, Page_sptr> _bridges;
-// std::map <CstLabel_sptr, TypeOfLabel> _labelsTypes;
 std::vector <CstLabel_sptr> _labels;
 std::vector <Page_sptr> _children;
 const std::weak_ptr <Page> _parent;

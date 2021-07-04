@@ -4,7 +4,7 @@
  *
  * Created on 19 septembre 2020, 07h50
  */
-#include "StarState.h"
+/*#include "StarState.h"
 
 StarState::StarState(const Star& star):
     _star(star),
@@ -13,11 +13,11 @@ StarState::StarState(const Star& star):
     _lightDirection(star.lightDirection()) {
 }
 
-ObjectState::GlobalState StarState::update() {
+SceneElement::SceneElementState StarState::update() {
     _rotation = _star.getRotation();
     _position = _star.position();
     _lightDirection = _star.lightDirection();
-    return ObjectState::GlobalState::United;
+    return SceneElement::SceneElementState::United;
 }
 
 StarState::DynamicValues <float> StarState::getDynamicFloats() const {
@@ -59,3 +59,4 @@ const JBTypes::vec3f& StarState::getLightDirection() const {
 }
 
 const std::string StarState::lightDirectionName = "lightDirection";
+*/

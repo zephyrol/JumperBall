@@ -7,8 +7,9 @@
 #ifndef Enemy_hpp
 #define Enemy_hpp
 #include "scene/blocks/Block.h"
+#include "scene/SceneElement.h"
 
-class Enemy {
+class Enemy : public SceneElement{
 public:
 
 enum class Effect { Nothing, Burst };
@@ -33,6 +34,10 @@ virtual const JBTypes::Dir& movementDirection() const;
 bool hasHit() const;
 float size() const;
 size_t length() const;
+
+virtual SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+
+SceneElement::GlobalState getGlobalState() const override;
 
 virtual void switchOnOff();
 virtual ~Enemy() = default;

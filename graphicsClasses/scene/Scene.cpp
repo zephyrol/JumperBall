@@ -84,3 +84,11 @@
     return _star; 
  }
  
+ vecCstSceneElement_sptr Scene::getSceneElements() const {
+    CstSceneElement_sptr cstStar = _star;
+    CstSceneElement_sptr cstCamera = _camera;
+    CstSceneElement_sptr cstBall = _ball;
+
+    return { cstStar, cstBall, cstCamera };
+ }
+ 

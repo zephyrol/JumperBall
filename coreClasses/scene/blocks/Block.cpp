@@ -132,3 +132,24 @@ const std::array <std::shared_ptr <Item>, 6>& Block::items() const {
 const JBTypes::vec3ui& Block::position() const {
     return _position;
 }
+
+SceneElement::StaticValues <JBTypes::vec3f> Block::getStaticVec3fValues() const {
+    constexpr float offset = 0.5f;
+    return {{
+        static_cast <float>(_position.at(0) + offset),
+        static_cast <float>(_position.at(1) + offset),
+        static_cast <float>(_position.at(2) + offset)
+    }};
+}
+
+
+
+SceneElement::DynamicValues <JBTypes::vec3f> Block::getDynamicVec3fs() const {
+    return {{ "translation", _localTranslation }, { "scale", _localScale }};
+}
+
+SceneElement::GlobalState Block::getGlobalState() const {
+    return isExists() 
+           ? SceneElement::GlobalState::United
+           : SceneElement::GlobalState::Separate;
+}

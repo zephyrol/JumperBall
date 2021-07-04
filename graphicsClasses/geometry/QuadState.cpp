@@ -1,8 +1,9 @@
-#include "QuadState.h"
+/*#include "QuadState.h"
 
 QuadState::QuadState(const Quad&) {
 }
 
-ObjectState::GlobalState QuadState::update() {
-    return ObjectState::GlobalState::United;
+SceneElement::SceneElementState QuadState::update() {
+    return SceneElement::SceneElementState::United;
 }
+*/

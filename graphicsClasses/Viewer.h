@@ -25,8 +25,6 @@ public:
   void update();
   void render() const;
 
-  void swapFrames();
-
   SceneRendering _sceneRendering;
   MenuRendering _menuRendering;
 

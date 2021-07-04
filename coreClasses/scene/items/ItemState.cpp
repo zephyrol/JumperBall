@@ -4,7 +4,7 @@
  *
  * Created on 19 septembre 2020, 07h50
  */
-#include "ItemState.h"
+/*#include "ItemState.h"
 
 ItemState::ItemState(const Item& item):
     _item(item),
@@ -14,7 +14,7 @@ ItemState::ItemState(const Item& item):
     _timeSinceObtaining(item.getTimeSinceObtaining()) {
 }
 
-ObjectState::GlobalState ItemState::update() {
+SceneElement::SceneElementState ItemState::update() {
     _timeSinceCreation = _item.getTimeSinceCreation();
     _timeSinceObtaining = _item.getTimeSinceObtaining();
 
@@ -22,17 +22,17 @@ ObjectState::GlobalState ItemState::update() {
         constexpr float thresholdThirdStep = 1.5;
         constexpr float durationThirdStep = 0.2;
         return _timeSinceObtaining < thresholdThirdStep + durationThirdStep
-               ? ObjectState::GlobalState::Separate
-               : ObjectState::GlobalState::Dead;
+               ? SceneElement::SceneElementState::Separate
+               : SceneElement::SceneElementState::Dead;
     }
-    return ObjectState::GlobalState::United;
+    return SceneElement::SceneElementState::United;
 }
 
-ObjectState::StaticValues <float> ItemState::getStaticFloatValues() const {
+SceneElement::StaticValues <float> ItemState::getStaticFloatValues() const {
     return { _direction };
 }
 
-ObjectState::StaticValues <JBTypes::vec3f> ItemState::getStaticVec3fValues() const {
+SceneElement::StaticValues <JBTypes::vec3f> ItemState::getStaticVec3fValues() const {
     constexpr float offset = 0.5;
     const JBTypes::vec3f position = {
         static_cast <float>(_position.at(0)) + offset,
@@ -42,9 +42,9 @@ ObjectState::StaticValues <JBTypes::vec3f> ItemState::getStaticVec3fValues() con
     return { position };
 }
 
-ObjectState::DynamicValues <float> ItemState::getDynamicFloats() const {
+SceneElement::DynamicValues <float> ItemState::getDynamicFloats() const {
     return {
         { "creationTime", _timeSinceCreation },
         { "obtainingTime", _timeSinceObtaining }
     };
-}
+}*/

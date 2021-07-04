@@ -9,21 +9,19 @@
 #include <future>
 
 SceneRendering::SceneRendering(const Scene& scene):
-    _starFrame(Frames<StarState>::genFrames <Star>(*scene.getStar())),
-    _ballFrame(Frames<BallState>::genFrames <Ball>(*scene.getBall())),
-    _cameraFrame(Frames<CameraState>::genFrames <Camera>(*scene.getCamera())),
+    _scene(scene),
     _externalUniformBlocks(createExternalUniformBlockVariables()),
     _externalUniformMatrices(createExternalUniformMatFourVariables()),
     _levelRenderPasses{
-                       std::make_shared <RenderPass>(MeshGenerator::genBlocks(*scene.getMap())),
-                       std::make_shared <RenderPass>(MeshGenerator::genItems(*scene.getMap())),
-                       std::make_shared <RenderPass>(MeshGenerator::genEnemies(*scene.getMap())),
-                       std::make_shared <RenderPass>(MeshGenerator::genSpecials(*scene.getMap())),
-                       std::make_shared <RenderPass>(MeshGenerator::genBall(*scene.getBall()))
+                       std::make_shared <RenderPass>(MeshGenerator::genBlocks(scene.getMap())),
+                       std::make_shared <RenderPass>(MeshGenerator::genItems(scene.getMap())),
+                       std::make_shared <RenderPass>(MeshGenerator::genEnemies(scene.getMap())),
+                       std::make_shared <RenderPass>(MeshGenerator::genSpecials(scene.getMap())),
+                       std::make_shared <RenderPass>(MeshGenerator::genBall(scene.getBall()))
                        },
-    _starRenderPass(std::make_shared <RenderPass>(MeshGenerator::genStar(*scene.getStar()))),
+    _starRenderPass(std::make_shared <RenderPass>(MeshGenerator::genStar(scene.getStar()))),
     _sceneRenderPasses(createSceneRenderPasses()),
-    _screenRenderPass(std::make_shared <RenderPass>(MeshGenerator::genQuad(Quad()))),
+    _screenRenderPass(std::make_shared <RenderPass>(MeshGenerator::genScreen())),
     _vecScreenRenderPass({ _screenRenderPass }),
     _renderPasses{createRenderPasses()},
     _depthStarProcess(createDepthStarProcess()),
@@ -78,8 +76,11 @@ RenderProcess_sptr SceneRendering::createDepthStarProcess() const {
 
     const auto updateDepthStarFct =
         [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
-            const auto& starState = _starFrame->getRenderableState();
-            renderPass->upsertUniform(shaderProgramID, VPName, Camera::genVPMatrixFromStar(*starState));
+            renderPass->upsertUniform(
+                shaderProgramID,
+                VPName,
+                Camera::genVPMatrixFromStar(*_scene.getStar())
+                );
         };
 
     const auto createDepthStarUniformsUpdating =
@@ -136,12 +137,17 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
     const auto updateSceneLevelRenderingFct =
         [this, lightBlock, lightBlockName] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
 
-            const auto& cameraState = _cameraFrame->getRenderableState();
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, cameraState->viewProjection());
+            renderPass->upsertUniform(
+                shaderProgramID,
+                SceneRendering::VPName,
+                _scene.getCamera()->viewProjection());
             const std::string& VPStarName = SceneRendering::VPStarName;
             renderPass->upsertUniform(shaderProgramID, VPStarName, getUniformMatrix(VPStarName));
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName,
-                                      cameraState->pos());
+            renderPass->upsertUniform(
+                shaderProgramID, 
+                SceneRendering::positionCameraName,
+                _scene.getCamera()->pos()
+            );
 
             const auto& lightBlock = getUniformBlock(lightBlockName);
             renderPass->upsertUniform(shaderProgramID, lightBlockName, lightBlock);
@@ -153,10 +159,10 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
 
     const auto updateSceneStarRenderingFct =
         [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
-            const auto& cameraState = _cameraFrame->getRenderableState();
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, cameraState->viewProjection());
+            const auto& camera = _scene.getCamera();
+            renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, camera->viewProjection());
             renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName,
-                                      cameraState->pos());
+                                      camera->pos());
         };
 
 
@@ -255,7 +261,7 @@ RenderProcess::PassUniformUpdateMap SceneRendering::createVerticalBlurUniformsUp
 RenderProcess::PassUniformUpdateMap SceneRendering::createBloomUniformsUpdating() const {
     const auto uniformsBloomUpdatingFunction =
         [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
-            const auto& ballState = _ballFrame->getRenderableState();
+            const auto& ball = _scene.getBall();
             renderPass->upsertUniformTexture(
                 shaderProgramID,
                 "frameSceneHDRTexture",
@@ -264,12 +270,15 @@ RenderProcess::PassUniformUpdateMap SceneRendering::createBloomUniformsUpdating(
                 shaderProgramID,
                 "frameBluredTexture",
                 _verticalBlurProcess->getFrameBufferTexture());
-            renderPass->upsertUniform(shaderProgramID, "teleportationCoeff",
-                                      ballState->teleportationCoeff());
+            renderPass->upsertUniform(
+                shaderProgramID,
+                "teleportationCoeff",
+                ball->getTeleportationCoefficient()
+            );
             renderPass->upsertUniform(
                 shaderProgramID,
                 "flashColor",
-                Utility::colorAsVec3(ballState->teleportationColor())
+                Utility::colorAsVec3(ball->getTeleportationColor())
                 );
         };
     return {{ _screenRenderPass, uniformsBloomUpdatingFunction }};
@@ -280,11 +289,10 @@ Rendering::ExternalUniformBlockVariables SceneRendering::createExternalUniformBl
     const std::string& lightName = SceneRendering::lightName;
     const auto updateBlocksVariablesFct =
         [this, &lightName] (const RenderPass::UniformBlockVariables_uptr& uniformBlocks)->void {
-            const auto& starState = _starFrame->getRenderableState();
             uniformBlocks->at(lightName)->update(
-                StarState::lightDirectionName,
-                Utility::convertToOpenGLFormat(starState->getLightDirection())
-                );
+                Star::lightDirectionName,
+                Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection())
+            );
         };
 
     const auto createBlocksVariables =
@@ -314,17 +322,14 @@ Rendering::ExternalUniformVariables <glm::mat4> SceneRendering::createExternalUn
 
     const auto updateMat4VariablesFct =
         [this] (const Mesh::UniformVariables_uptr <glm::mat4>& uniformMatrices) {
-            const auto& starState = _starFrame->getRenderableState();
-            uniformMatrices->at(VPStarName) = Camera::genVPMatrixFromStar(*starState);
+            uniformMatrices->at(VPStarName) = Camera::genVPMatrixFromStar(*_scene.getStar());
         };
 
     const auto createMat4Variables =
         [this] ()->Mesh::UniformVariables <glm::mat4> {
-            const auto& starState = _starFrame->getRenderableState();
-            const auto& cameraState = _cameraFrame->getRenderableState();
-            return  {
-                { SceneRendering::VPStarName, Camera::genVPMatrixFromStar(*starState) },
-                { SceneRendering::VPName, cameraState->viewProjection() }
+            return {
+                { SceneRendering::VPStarName, Camera::genVPMatrixFromStar(*_scene.getStar()) },
+                { SceneRendering::VPName, _scene.getCamera()->viewProjection() }
             };
         };
 
@@ -362,10 +367,6 @@ const glm::mat4& SceneRendering::getUniformMatrix (const std::string& name) cons
 
 void SceneRendering::update() {
     // Todo refactor
-    _starFrame->getUpdatableState()->update();
-    _ballFrame->getUpdatableState()->update();
-    _cameraFrame->getUpdatableState()->update();
-
     const auto& uniformBlocks = _externalUniformBlocks.uniformBlockVariables;
     const auto& updatingBlocksFct = _externalUniformBlocks.uniformBlockVariablesUpdatingFct;
     updatingBlocksFct(uniformBlocks);
@@ -380,15 +381,6 @@ void SceneRendering::update() {
 
     for (const auto& renderProcess : _renderingPipeline) {
         renderProcess->updateUniforms();
-    }
-}
-
-void SceneRendering::swapFrames() {
-    _starFrame->swapFrames();
-    _ballFrame->swapFrames();
-    _cameraFrame->swapFrames();
-    for (auto sceneRenderPass : _sceneRenderPasses) {
-        sceneRenderPass->swapFrames();
     }
 }
 

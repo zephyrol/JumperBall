@@ -11,7 +11,7 @@
 #include "ShaderProgram.h"
 #include <system/ParallelTask.h>
 #include <geometry/GeometricShape.h>
-#include <scene/Frames.h>
+#include <scene/SceneElement.h>
 
 class Mesh;
 using Mesh_sptr = std::shared_ptr <Mesh>;
@@ -22,7 +22,7 @@ using vecMesh_sptr = std::vector <Mesh_sptr>;
 class Mesh {
 
 public:
-Mesh(Frames_uptr <ObjectState>&& frames, vecCstGeometricShape_sptr&& shapes);
+Mesh(const CstSceneElement_sptr& sceneElement, vecCstGeometricShape_sptr&& shapes);
 
 struct StateVertexAttributes {
     std::vector <std::vector <GLfloat> > staticFloats = {};
@@ -51,8 +51,7 @@ struct Uniforms {
     UniformVariables <GLuint> uniformTextures = {};
 };
 
-void swapFrames();
-ObjectState::GlobalState update();
+SceneElement::GlobalState update();
 
 size_t numberOfVertices() const;
 Uniforms genUniformsValues() const;
@@ -68,10 +67,10 @@ template<typename T> void duplicateStateVertexAttribute(std::vector <std::vector
                                                         const std::vector <T>& values) const;
 
 template<typename RawType, typename OpenGLType> static void convertAttributesToOpenGLFormat(
-    const ObjectState::StaticValues <RawType>& rawValues, std::vector <OpenGLType>& openGLValues);
+    const SceneElement::StaticValues <RawType>& rawValues, std::vector <OpenGLType>& openGLValues);
 
 template<typename RawType, typename OpenGLType> static void convertUniformsToOpenGLFormat(
-    const ObjectState::DynamicValues <RawType>& rawValues, Mesh::UniformVariables <OpenGLType>& openGLValues);
+    const SceneElement::DynamicValues <RawType>& rawValues, Mesh::UniformVariables <OpenGLType>& openGLValues);
 
 template<typename T> static void concatStateVertexAttribute(
     std::vector <std::vector <T> >& current,
@@ -79,7 +78,7 @@ template<typename T> static void concatStateVertexAttribute(
     );
 static void concatStateVertexAttributes(StateVertexAttributes& current, const StateVertexAttributes& other);
 
-const Frames_uptr <ObjectState> _frames;
+const CstSceneElement_sptr _sceneElement;
 const vecCstGeometricShape_sptr _shapes;
 const size_t _numberOfVertices;
 };

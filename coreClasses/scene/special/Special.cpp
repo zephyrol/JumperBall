@@ -16,6 +16,7 @@ Special::Special(const JBTypes::Color& color,
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(dir),
     _color(color),
+    _colorAttributeName("is" + JBTypesMethods::colorToString(_color) + "Activated"),
     _position(position),
     _position3D(initPosition(position)),
     _isActivated(isActivated) {
@@ -71,5 +72,30 @@ const {
         posWorld.x + offset + vecDir.x * offset,
         posWorld.y + offset + vecDir.y * offset,
         posWorld.z + offset + vecDir.z * offset
+    };
+}
+
+SceneElement::GlobalState Special::getGlobalState() const {
+    return SceneElement::GlobalState::United;
+}
+
+SceneElement::StaticValues <float> Special::getStaticFloatValues() const {
+    return { static_cast<float>(_direction), static_cast<float>(_color), static_cast<float>(isAnimated()) };
+}
+
+SceneElement::StaticValues <JBTypes::vec3f> Special::getStaticVec3fValues() const {
+    constexpr float offset = 0.5;
+    const JBTypes::vec3f position = {
+        static_cast <float>(_position.at(0)) + offset,
+        static_cast <float>(_position.at(1)) + offset,
+        static_cast <float>(_position.at(2)) + offset
+    };
+    return { position };
+}
+
+SceneElement::DynamicValues <float> Special::getDynamicFloats() const {
+    return {
+        { "creationTime", getTimeSinceCreation()},
+        { _colorAttributeName, _isActivated }
     };
 }

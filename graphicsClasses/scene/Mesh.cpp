@@ -6,19 +6,14 @@
  */
 #include "Mesh.h"
 
-Mesh::Mesh(Frames_uptr <ObjectState>&& frames, vecCstGeometricShape_sptr&& shapes):
-    _frames(std::move(frames)),
+Mesh::Mesh(const std::shared_ptr<const SceneElement>& sceneElement, vecCstGeometricShape_sptr&& shapes):
+    _sceneElement(sceneElement),
     _shapes(std::move(shapes)),
     _numberOfVertices(computeNumberOfVertices()) {
 }
 
-void Mesh::swapFrames() {
-    _frames->swapFrames();
-}
-
-ObjectState::GlobalState Mesh::update() {
-    auto updatableFrame = _frames->getUpdatableState();
-    return updatableFrame->update();
+SceneElement::GlobalState Mesh::update() {
+    return _sceneElement->getGlobalState();
 }
 
 size_t Mesh::numberOfVertices() const {
@@ -33,7 +28,7 @@ template<typename T> void Mesh::duplicateStateVertexAttribute (std::vector <std:
 }
 
 template<typename RawType, typename OpenGLType> void Mesh::convertAttributesToOpenGLFormat (
-    const ObjectState::StaticValues <RawType>& rawValues,
+    const SceneElement::StaticValues <RawType>& rawValues,
     std::vector <OpenGLType>& openGLValues) {
     for (const RawType& rawValue : rawValues) {
         const OpenGLType openGLValue = Utility::convertToOpenGLFormat(rawValue);
@@ -42,7 +37,7 @@ template<typename RawType, typename OpenGLType> void Mesh::convertAttributesToOp
 }
 
 template<typename RawType, typename OpenGLType> void Mesh::convertUniformsToOpenGLFormat (
-    const ObjectState::DynamicValues <RawType>& rawValues,
+    const SceneElement::DynamicValues <RawType>& rawValues,
     Mesh::UniformVariables <OpenGLType>& openGLValues) {
     for (const auto& rawValue : rawValues) {
         const OpenGLType openGLValue = Utility::convertToOpenGLFormat(rawValue.second);
@@ -60,11 +55,10 @@ size_t Mesh::computeNumberOfVertices() const {
 
 Mesh::Uniforms Mesh::genUniformsValues() const {
     Mesh::Uniforms uniforms;
-    const auto renderableState = _frames->getRenderableState();
-    convertUniformsToOpenGLFormat(renderableState->getDynamicFloats(), uniforms.uniformFloats);
-    convertUniformsToOpenGLFormat(renderableState->getDynamicVec2fs(), uniforms.uniformVec2s);
-    convertUniformsToOpenGLFormat(renderableState->getDynamicVec3fs(), uniforms.uniformVec3s);
-    convertUniformsToOpenGLFormat(renderableState->getDynamicQuaternions(), uniforms.uniformVec4s);
+    convertUniformsToOpenGLFormat(_sceneElement->getDynamicFloats(), uniforms.uniformFloats);
+    convertUniformsToOpenGLFormat(_sceneElement->getDynamicVec2fs(), uniforms.uniformVec2s);
+    convertUniformsToOpenGLFormat(_sceneElement->getDynamicVec3fs(), uniforms.uniformVec3s);
+    convertUniformsToOpenGLFormat(_sceneElement->getDynamicQuaternions(), uniforms.uniformVec4s);
     return uniforms;
 }
 
@@ -80,10 +74,9 @@ Mesh::MeshVerticesInfo Mesh::genMeshVerticesInfo() const {
     std::vector <glm::vec2> glmVec2s {};
     std::vector <GLfloat> glFloats {};
 
-    const auto renderableState = _frames->getRenderableState();
-    convertAttributesToOpenGLFormat(renderableState->getStaticFloatValues(), glFloats);
-    convertAttributesToOpenGLFormat(renderableState->getStaticVec2fValues(), glmVec2s);
-    convertAttributesToOpenGLFormat(renderableState->getStaticVec3fValues(), glmVec3s);
+    convertAttributesToOpenGLFormat(_sceneElement->getStaticFloatValues(), glFloats);
+    convertAttributesToOpenGLFormat(_sceneElement->getStaticVec2fValues(), glmVec2s);
+    convertAttributesToOpenGLFormat(_sceneElement->getStaticVec3fValues(), glmVec3s);
 
     duplicateStateVertexAttribute(stateVertexAttributes.staticFloats, glFloats);
     duplicateStateVertexAttribute(stateVertexAttributes.staticVec2s, glmVec2s);

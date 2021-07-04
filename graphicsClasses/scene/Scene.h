@@ -10,6 +10,7 @@
 #include <player/Player.h>
 #include <scene/MapGenerator.h>
 #include <scene/Ball.h>
+#include <scene/Star.h>
 #include "Camera.h"
 
 class Scene {
@@ -29,6 +30,8 @@ std::shared_ptr<const Map> getMap() const;
 std::shared_ptr<const Ball> getBall() const;
 std::shared_ptr<const Camera> getCamera() const;
 std::shared_ptr<const Star> getStar() const;
+
+vecCstSceneElement_sptr getSceneElements() const;
 
 private:
 const std::shared_ptr<Map> _map;

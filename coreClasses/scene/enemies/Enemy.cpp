@@ -94,3 +94,15 @@ const JBTypes::Dir& Enemy::direction() const {
 const JBTypes::Dir& Enemy::movementDirection() const {
     return _direction;
 }
+
+SceneElement::DynamicValues <JBTypes::vec3f> Enemy::getDynamicVec3fs() const {
+    return {
+        { "translation", { _transform.at(0), _transform.at(1), _transform.at(2) }},
+        { "scale", { _transform.at(6), _transform.at(7), _transform.at(8) }}
+    };
+}
+
+SceneElement::GlobalState Enemy::getGlobalState() const {
+    return SceneElement::GlobalState::Separate;
+}
+

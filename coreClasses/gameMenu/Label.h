@@ -9,9 +9,11 @@
 #define LABEL_H
 #include "system/Types.h"
 #include "system/Geometry.h"
+// TODO clean those include
 #include "scene/items/Key.h"
 #include "scene/items/Coin.h"
 #include "scene/items/Clock.h"
+#include "scene/SceneElement.h"
 #include <fstream>
 
 class Label;
@@ -23,7 +25,6 @@ using vecLabel_sptr = std::vector <Label_sptr>;
 class Label {
 public:
 
-// ------------TYPES------------//
 enum class TypeOfAction { PredefinedAction, GoLevel };
 enum class PredefinedAction {
     ExitGame,
@@ -46,9 +47,6 @@ struct LabelAnswer {
 
 enum class WidthUnit { ScreenWidth, ShortestSide };
 
-// ---------CONSTANTS------------//
-
-// --CONSTRUCTORS & DESTRUCTORS--//
 Label(
     const Label::WidthUnit& widthUnit,
     float width,
@@ -59,7 +57,6 @@ Label(
     bool fixed = false);
 virtual ~Label() = 0;
 
-// -------CONST METHODS----------//
 float width() const;
 float height() const;
 
@@ -74,17 +71,15 @@ const Label::WidthUnit& widthUnit() const;
 const JBTypes::vec2f& position() const;
 virtual std::string message() const;
 
-// ----------METHODS-------------//
 void activate();
 void deactivate();
 
-// --------STATIC METHODS-------//
 static void updateLabelsLevels(vecLabel_sptr& labels,
                                size_t end);
 
+
 private:
 
-// --------ATTRIBUTES-----------//
 const Label::WidthUnit _widthUnit;
 const float _width;
 const float _height;

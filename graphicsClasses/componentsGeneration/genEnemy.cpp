@@ -6,12 +6,15 @@
  */
 #include "MeshGenerator.h"
 
-Mesh_sptr MeshGenerator::genEnemy (const Enemy& enemy, const Map::EnemyTypes& category) {
+Mesh_sptr MeshGenerator::genEnemy (
+    const std::shared_ptr<const Enemy>& enemy,
+    const Map::EnemyTypes& category
+    ) {
 
     vecCstGeometricShape_sptr geometricShapes;
     if (category == Map::EnemyTypes::Laser) {
 
-        const JBTypes::Color color = enemy.getColor();
+        const JBTypes::Color color = enemy->getColor();
         std::string laserName;
 
         const auto createLaserShape =
@@ -53,11 +56,11 @@ Mesh_sptr MeshGenerator::genEnemy (const Enemy& enemy, const Map::EnemyTypes& ca
             };
 
         constexpr float offsetLaserSide = 0.15f;
-        const JBTypes::vec3f& position = enemy.position();
+        const JBTypes::vec3f& position = enemy->position();
         const glm::vec3 glmPosition { position.x, position.y, position.z };
-        const glm::vec3 scale { enemy.size(), static_cast <float>(enemy.length()), enemy.size() };
+        const glm::vec3 scale { enemy->size(), static_cast <float>(enemy->length()), enemy->size() };
 
-        const JBTypes::Dir& currentDir = enemy.direction();
+        const JBTypes::Dir& currentDir = enemy->direction();
         const glm::mat4 rotationMatrix = Utility::rotationUpToDir(currentDir);
 
         const glm::mat4 translationMatrix = glm::translate(glmPosition);
@@ -93,12 +96,12 @@ Mesh_sptr MeshGenerator::genEnemy (const Enemy& enemy, const Map::EnemyTypes& ca
         }
     } else if (category == Map::EnemyTypes::ThornBall || category == Map::EnemyTypes::DarkBall) {
 
-        const JBTypes::Dir& currentDir = enemy.direction();
+        const JBTypes::Dir& currentDir = enemy->direction();
         const glm::mat4 rotationLocal = Utility::rotationUpToDir(currentDir);
 
-        const JBTypes::vec3f& posWorld = enemy.position();
+        const JBTypes::vec3f& posWorld = enemy->position();
 
-        const glm::mat4 scaleLocal = glm::scale(glm::vec3(enemy.size()));
+        const glm::mat4 scaleLocal = glm::scale(glm::vec3(enemy->size()));
 
         const glm::mat4 translationLocal = glm::translate(glm::vec3(posWorld.x, posWorld.y, posWorld.z));
 
@@ -114,7 +117,5 @@ Mesh_sptr MeshGenerator::genEnemy (const Enemy& enemy, const Map::EnemyTypes& ca
                                       normalsTransf));
     }
 
-    return std::make_shared <Mesh>(
-        Frames <ObjectState>::genFrames <Enemy, EnemyState>(enemy),
-        std::move(geometricShapes));
+    return std::make_shared <Mesh>(enemy, std::move(geometricShapes));
 }

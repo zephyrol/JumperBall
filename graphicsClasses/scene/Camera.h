@@ -8,14 +8,16 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 #include <scene/BallState.h>
-#include <scene/StarState.h>
+#include <scene/Star.h>
+#include <scene/Ball.h>
 #include <scene/Map.h>
+#include <scene/SceneElement.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include "Utility.h"
 
-class Camera {
+class Camera: public SceneElement {
 
 public:
 
@@ -29,13 +31,15 @@ static constexpr float zFar = 100.f;
 const glm::vec3& pos() const noexcept;
 glm::mat4 viewProjection() const noexcept;
 
+SceneElement::GlobalState getGlobalState() const override;
+
 void update() noexcept;
 void turnAroundMap() noexcept;
 void followBall() noexcept;
 void approachBall() noexcept;
 const Movement& getMovement() noexcept;
 
-static glm::mat4 genVPMatrixFromStar(const StarState& starState);
+static glm::mat4 genVPMatrixFromStar(const Star& star);
 
 private:
 

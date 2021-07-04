@@ -11,6 +11,7 @@
 #include "scene/items/Clock.h"
 #include "scene/items/Coin.h"
 #include "scene/items/Key.h"
+#include "scene/SceneElement.h"
 
 class Block;
 using Block_sptr = std::shared_ptr <Block>;
@@ -18,7 +19,7 @@ using CstBlock_sptr = std::shared_ptr <const Block>;
 using vecCstBlock_sptr = std::vector <CstBlock_sptr>;
 using vecBlock_sptr = std::vector <Block_sptr>;
 
-class Block {
+class Block: public SceneElement {
 public:
 
 // --CONSTRUCTORS & DESTRUCTORS--//
@@ -57,7 +58,12 @@ virtual const bool& isFixed() const;
 const std::array <std::shared_ptr <Item>, 6>& items() const;
 const JBTypes::vec3ui& position() const;
 
+SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+SceneElement::GlobalState getGlobalState() const override;
+
 static JBTypes::vec3f itemPosition(const JBTypes::vec3ui& pos, unsigned int dirUint);
+
 
 protected:
 // --------ATTRIBUTES-----------//

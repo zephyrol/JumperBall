@@ -55,10 +55,6 @@ Controller::Controller() : _ftContent(FontTexturesGenerator::initFreeTypeAndFont
 {
     _updating.runTasks();
     _updating.waitTasks();
-    _viewer->swapFrames();
-    _updating.runTasks();
-    _updating.waitTasks();
-    _viewer->swapFrames();
 }
 
 void Controller::interactionButtons (const Controller::Button& button,
@@ -115,7 +111,6 @@ void Controller::runController() {
 
 void Controller::waitController() {
     _updating.waitTasks();
-    _viewer->swapFrames();
 }
 
 void Controller::manageValidateButton (const Controller::Status& status) {
@@ -132,10 +127,6 @@ void Controller::runGame (size_t level) {
     // TODO: check if that is necessary
     _updating.runTasks();
     _updating.waitTasks();
-    _viewer->swapFrames();
-    _updating.runTasks();
-    _updating.waitTasks();
-    _viewer->swapFrames();
 }
 
 void Controller::manageValidateMouse() {

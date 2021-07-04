@@ -12,15 +12,14 @@
 #include "movements/TurnRight.h"
 #include "movements/TurnBack.h"
 #include "movements/NextBlock.h"
+#include "SceneElement.h"
 
-class Ball {
+class Ball: public SceneElement {
 public:
 
-// --CONSTRUCTORS & DESTRUCTORS--//
 Ball(Map& map);
 
 
-// ---------CONSTANTS------------//
 static constexpr float timeToGetNextBlock = 0.25f;
 static constexpr float timeToTurn = 0.3f;
 static constexpr float timeToBurn = 2.f;
@@ -29,7 +28,6 @@ static constexpr float basicRadius = 0.2f;
 static constexpr float teleportationDuration = 1.f;
 static constexpr float halfTimeTeleportationDuration = teleportationDuration / 2.f;
 
-// ------------TYPES------------//
 enum class State { Staying, Moving, Jumping,
                    TurningLeft, TurningRight, Falling,
                    Teleporting, Deteleporting };
@@ -50,7 +48,6 @@ struct nextBlockInformation { JBTypes::Dir nextSide;
                               unsigned int poxY;
                               unsigned int poxZ; };
 
-// -------CONST METHODS--------//
 JBTypes::vec3f get3DPosition() const noexcept;
 float getRadius() const;
 JBTypes::vec3f lookTowardsAsVector() const;
@@ -79,6 +76,12 @@ const JBTypes::Color& getTeleportationColor() const noexcept;
 
 float getTimeToGetDestination() const;
 JBTypes::vec3f getNextLook() const;
+
+SceneElement::DynamicValues <float> getDynamicFloats() const override;
+SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+SceneElement::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
+
+SceneElement::GlobalState getGlobalState() const override;
 
 // ----------METHODS------------//
 void update() noexcept;
@@ -127,7 +130,6 @@ JBTypes::timePointMs _timeJumpRequest;
 JBTypes::Quaternion _currentCoveredRotation;
 float _currentCrushing;
 
-// -------CONST METHODS--------//
 std::shared_ptr <const std::vector <int> >
 intersectBlock(float x, float y, float z) const;
 JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
@@ -138,7 +140,6 @@ JBTypes::vec3f getRotationAxis() const noexcept;
 float getJumpingPosX() const noexcept;
 float getFallingPosX() const noexcept;
 
-// ----------METHODS------------//
 void turnLeft() noexcept;
 void turnRight() noexcept;
 void goStraightAhead() noexcept;

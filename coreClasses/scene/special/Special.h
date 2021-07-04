@@ -7,8 +7,9 @@
 #ifndef __SPECIAL_H__
 #define __SPECIAL_H__
 #include "scene/blocks/Block.h"
+#include "scene/SceneElement.h"
 
-class Special {
+class Special: public SceneElement {
 public:
 enum class SpecialEffect { Switch,
                            Teleportation };
@@ -34,11 +35,19 @@ virtual SpecialEffect getEffect() const = 0;
 
 void switchOnOff();
 
+SceneElement::StaticValues <float> getStaticFloatValues() const override;
+SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+
+SceneElement::DynamicValues <float> getDynamicFloats() const override;
+
+SceneElement::GlobalState getGlobalState() const override;
+
 private:
 const Block& _tieBlock;
 const JBTypes::timePointMs _creationTime;
 const JBTypes::Dir _direction;
 const JBTypes::Color _color;
+const std::string _colorAttributeName;
 const JBTypes::vec3ui _position;
 const JBTypes::vec3f _position3D;
 bool _isActivated;

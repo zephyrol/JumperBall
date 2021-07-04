@@ -6,10 +6,10 @@
  */
 #include "MeshGenerator.h"
 
-Mesh_sptr MeshGenerator::genItem (const Item& item) {
+Mesh_sptr MeshGenerator::genItem (const std::shared_ptr<const Item>& item) {
 
     vecCstGeometricShape_sptr geometricShapes;
-    switch (item.getCategory()) {
+    switch (item->getCategory()) {
     case Item::CategoryOfItems::Key:
     {
 
@@ -72,7 +72,5 @@ Mesh_sptr MeshGenerator::genItem (const Item& item) {
     default:
         break;
     }
-    return std::make_shared <Mesh>(
-        Frames <ObjectState>::genFrames <Item, ItemState>(item),
-        std::move(geometricShapes));
+    return std::make_shared <Mesh>( item, std::move(geometricShapes)); 
 }
