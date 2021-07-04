@@ -7,7 +7,6 @@
 
 #ifndef CAMERA_H
 #define CAMERA_H
-#include <scene/BallState.h>
 #include <scene/Star.h>
 #include <scene/Ball.h>
 #include <scene/Map.h>

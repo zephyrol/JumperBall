@@ -21,7 +21,6 @@
 #include "geometry/Cube.h"
 #include "geometry/Quad.h"
 #include "geometry/Triangle.h"
-#include "geometry/QuadState.h"
 #include "system/Geometry.h"
 #include "FrameBuffer.h"
 #include <scene/Mesh.h>

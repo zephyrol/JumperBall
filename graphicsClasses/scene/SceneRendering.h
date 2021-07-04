@@ -10,7 +10,6 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include "CameraState.h"
 #include "uniformBlocks/uniformLight.h"
 #include "componentsGeneration/MeshGenerator.h"
 #include "scene/SceneElement.h"

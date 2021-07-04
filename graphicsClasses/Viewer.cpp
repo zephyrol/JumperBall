@@ -10,7 +10,9 @@ Viewer::Viewer(
     unsigned int resolutionY,
     const Scene& scene,
     const Menu& menu,
-    const FontTexturesGenerator::FTContent &ftContent): 
+    const FontTexturesGenerator::FTContent &ftContent):
+      _resolutionX(resolutionX),
+      _resolutionY(resolutionY),
       _sceneRendering(scene),
       _menuRendering(menu, ftContent),
       _updatingSceneRendering( [this](size_t) {

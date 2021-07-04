@@ -25,6 +25,9 @@ public:
   void update();
   void render() const;
 
+  const unsigned int _resolutionX;
+  const unsigned int _resolutionY;
+
   SceneRendering _sceneRendering;
   MenuRendering _menuRendering;
 
