@@ -60,7 +60,8 @@ Mesh_sptr MeshGenerator::genBlock (const std::shared_ptr<const Map>& map, size_t
             boolSidesInfo
             );
     } else if (blockType == Map::BlockTypes::Brittle) {
-        blockShape = std::make_shared <const Cube>(translation);
+        std::vector <glm::vec3> brittleColors = Cube::brittleColorsCube;
+        blockShape = std::make_shared <const Cube>(std::move(brittleColors), translation);
     } else if (blockType == Map::BlockTypes::Ghost) {
         std::vector <glm::vec3> ghostColors = Cube::ghostColorsCube;
         blockShape = std::make_shared <const Cube>(

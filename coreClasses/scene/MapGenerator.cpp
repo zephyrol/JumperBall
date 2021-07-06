@@ -1025,12 +1025,9 @@ void MapGenerator::verificationMap (std::ifstream& input, const Map& map) {
                     ) {
                     output << static_cast <unsigned int>(Map::BlockTypes::None);
                 } else {
-                    const JBTypes::Dir& dir =
-                        map.getSpecialInfo().at(currentInfo).special->direction();
-                    const auto typeOfSpecial =
-                        map.getSpecialInfo().at(currentInfo).type;
-                    const auto color =
-                        map.getSpecialInfo().at(currentInfo).special->getColor();
+                    const JBTypes::Dir& dir = map.getSpecialInfo().at(currentInfo).special->direction();
+                    const auto typeOfSpecial = map.getSpecialInfo().at(currentInfo).type;
+                    const auto color = map.getSpecialInfo().at(currentInfo).special->getColor();
 
                     const unsigned int offsetType =
                         typeOfSpecial == Map::SpecialTypes::Teleporter

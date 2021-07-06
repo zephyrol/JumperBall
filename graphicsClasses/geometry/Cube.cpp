@@ -235,6 +235,28 @@ const std::vector <glm::vec3> Cube::fireColorsCube =
     0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f
 });
 
+const std::vector <glm::vec3> Cube::brittleColorsCube =
+    Utility::GLfloatListToGlmVec3({
+    // Face 1
+  0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f, 0.75f, 0.f, 0.f,
+  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
+  // Face 2
+  1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f,
+  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
+  // Face 6
+  1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f,
+  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
+  // Face 5
+  0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f,
+  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
+  // Face 4
+  0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f,
+  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
+  // Face 3
+  1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f,
+  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f
+});
+
 const std::vector <glm::vec2> Cube::basicUVCoordsCube =
     Utility::GLfloatListToGlmVec2({
     // Face 1

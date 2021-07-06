@@ -33,6 +33,7 @@ virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors)
 static const std::vector <glm::vec3> iceColorsCube;
 static const std::vector <glm::vec3> fireColorsCube;
 static const std::vector <glm::vec3> ghostColorsCube;
+static const std::vector <glm::vec3> brittleColorsCube;
 
 private:
 
