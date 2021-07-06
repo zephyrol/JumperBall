@@ -293,7 +293,6 @@ void RenderGroup::render() const {
 }
 
 void RenderGroup::freeGPUMemory() {
-    std::cout << "free group" << std::endl;
     glDeleteBuffers(1, &_bufferObjects.elementBufferObject);
     for(const auto& shapeVBO: _bufferObjects.shapeVertexBufferObjects){
         glDeleteBuffers(1, &shapeVBO);

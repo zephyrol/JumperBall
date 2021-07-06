@@ -45,7 +45,6 @@ void RenderProcess::render() const {
 }
 
 void RenderProcess::freeGPUMemory() {
-    std::cout << "free render process" << std::endl;
     if (_frameBuffer) {
         _frameBuffer->freeGPUMemory();
     }

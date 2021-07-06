@@ -52,7 +52,6 @@ GLenum Shader::getShaderType() const {
 }
 
 void Shader::freeGPUMemory() const {
-    std::cout << "free gpu shader" << std::endl;
     glDeleteShader(_shaderHandle);
 }
 
