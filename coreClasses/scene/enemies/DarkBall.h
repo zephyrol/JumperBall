@@ -12,8 +12,7 @@
 
 class DarkBall:public Enemy {
 public:
-DarkBall(const Block& tieBlock,
-         const JBTypes::vec3ui& initialPosition,
+DarkBall(const JBTypes::vec3ui& initialPosition,
          const JBTypes::Dir& dir,
          const JBTypes::Dir& movementDirection,
          size_t nbOfJumps);

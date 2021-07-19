@@ -7,13 +7,11 @@
 
 #include "ThornBall.h"
 
-ThornBall::ThornBall(const Block& tieBlock,
-                     const JBTypes::vec3ui& initialPosition,
+ThornBall::ThornBall(const JBTypes::vec3ui& initialPosition,
                      const JBTypes::Dir& dir,
                      const JBTypes::Dir& movementDirection,
                      size_t movementLength):
-    Enemy(tieBlock,
-          initialPosition,
+    Enemy(initialPosition,
           dir,
           thornBallRadius,
           movementLength,

@@ -17,8 +17,10 @@ virtual Block::Effect interaction(
     const JBTypes::Dir& ballDir,
     const JBTypes::timePointMs& currentTime,
     const JBTypes::vec3f& posBall
-    )
-override;
+) override;
+
+virtual unsigned char getBlockSymbol() const override;
+virtual std::string getBlockOptions() const override;
 
 private:
 const float _periodicity;

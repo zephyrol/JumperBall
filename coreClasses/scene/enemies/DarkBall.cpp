@@ -7,13 +7,11 @@
 
 #include "DarkBall.h"
 
-DarkBall::DarkBall(const Block& tieBlock,
-                   const JBTypes::vec3ui& initialPosition,
+DarkBall::DarkBall(const JBTypes::vec3ui& initialPosition,
                    const JBTypes::Dir& dir,
                    const JBTypes::Dir& movementDirection,
                    size_t nbOfJumps):
-    Enemy(tieBlock,
-          initialPosition,
+    Enemy(initialPosition,
           dir,
           darkBallRadius,
           nbOfJumps,

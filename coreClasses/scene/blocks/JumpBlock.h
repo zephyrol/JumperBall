@@ -11,18 +11,17 @@
 
 class JumpBlock:public Block {
 public:
-// --CONSTRUCTORS & DESTRUCTORS--//
 JumpBlock(const JBTypes::vec3ui& position, const std::array <bool, 6>& facesJumpers);
 
-// -------CONST METHODS----------//
 std::array <bool, 6> faceInfo() const override;
+virtual unsigned char getBlockSymbol() const override;
+virtual std::string getBlockOptions() const override;
 
-
-// ----------METHODS-------------//
 virtual Effect detectionEvent(
     const JBTypes::Dir& ballDir,
     const JBTypes::timePointMs& currentTime
-    ) override;
+) override;
+
 
 private:
 const std::array <bool, 6> _facesJumpers;

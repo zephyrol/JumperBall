@@ -31,8 +31,8 @@ GLFWwindow*initLibraries() {
     int widthWindow;
     int heightWindow;
     glfwGetFramebufferSize(window, &widthWindow, &heightWindow);
-
     Utility::windowResolutionX = widthWindow;
+
     Utility::windowResolutionY = heightWindow;
 
     if (window == nullptr) {
@@ -46,19 +46,19 @@ GLFWwindow*initLibraries() {
         exit(EXIT_FAILURE);
     }
 
-    /*if (!TextRendering::initFreeTypeAndFont()) {
-        exit(EXIT_FAILURE);
-       }*/
     return window;
 
 }
 
 void cleanLibraries() {
     glfwTerminate();
-    // TextRendering::clearFreeTypeRessources();
 }
 
 int main (int argc, char**argv) {
+
+    /*const auto map1 (MapGenerator::loadMap(1));
+    std::ifstream mapFileu("a");
+    MapGenerator::verificationMap(mapFileu, *map1);*/
 
     if (argc == 3) {
 
@@ -75,11 +75,11 @@ int main (int argc, char**argv) {
         }
         const std::string arg(argv[2]);
         if (arg == "-compress") {
-            MapGenerator::compress(file);
-            std::ifstream mapFile("outMap.txt");
-            std::ifstream mapFile2(fileToOpen);
-            Map map(MapGenerator::createMapInfo(mapFile));
-            MapGenerator::verificationMap(mapFile2, map);
+            MapGenerator::compressNew(file);
+            //std::ifstream mapFile("outMap.txt");
+            //std::ifstream mapFile2(fileToOpen);
+            //Map map(MapGenerator::createMapInfo(mapFile));
+            //MapGenerator::verificationMap(mapFile2, map);
         } else {
             std::cerr << "ERROR: Unknown option" << std::endl;
             return EXIT_FAILURE;

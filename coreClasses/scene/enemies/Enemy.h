@@ -9,13 +9,20 @@
 #include "scene/blocks/Block.h"
 #include "scene/SceneElement.h"
 
+
+class Enemy;
+using Enemy_sptr = std::shared_ptr <Enemy>;
+using CstEnemy_sptr = std::shared_ptr <const Enemy>;
+using vecCstEnemy_sptr = std::vector <CstEnemy_sptr>;
+using vecEnemy_sptr = std::vector <Enemy_sptr>;
+using Enemy_uptr = std::unique_ptr <Enemy>;
+
 class Enemy : public SceneElement{
 public:
 
 enum class Effect { Nothing, Burst };
 
-Enemy(const Block& tieBlock,
-      const JBTypes::vec3ui& initialPosition,
+Enemy(const JBTypes::vec3ui& initialPosition,
       const JBTypes::Dir& direction,
       float size,
       size_t length,
@@ -43,7 +50,6 @@ virtual void switchOnOff();
 virtual ~Enemy() = default;
 
 private:
-const Block& _tieBlock;
 const JBTypes::timePointMs _creationTime;
 const JBTypes::Dir _direction;
 const float _size;

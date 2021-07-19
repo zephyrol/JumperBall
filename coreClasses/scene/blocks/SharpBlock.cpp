@@ -17,17 +17,18 @@ Block::Effect SharpBlock::interaction (
     const JBTypes::timePointMs&,
     const JBTypes::vec3f& posBall) {
 
-    auto isInSharpZone = [] (
-        const JBTypes::vec3f& position,
-        float x_min, float x_max,
-        float y_min, float y_max,
-        float z_min, float z_max ) {
-
-                             return position.x > x_min && position.x < x_max &&
-                                    position.y > y_min && position.y < y_max &&
-                                    position.z > z_min && position.z < z_max;
-
-                         };
+    auto isInSharpZone =
+        [](
+            const JBTypes::vec3f &position,
+            float x_min, float x_max,
+            float y_min, float y_max,
+            float z_min, float z_max
+        )
+    {
+        return position.x > x_min && position.x < x_max &&
+               position.y > y_min && position.y < y_max &&
+               position.z > z_min && position.z < z_max;
+    };
 
     constexpr float sizeSharp = 0.51f;
     constexpr float offsetCenter = 0.19f;
@@ -101,6 +102,22 @@ Block::Effect SharpBlock::interaction (
         }
     }
     return Block::Effect::Nothing;
+}
+
+unsigned char SharpBlock::getBlockSymbol() const {
+    return 'S';
+}
+
+std::string SharpBlock::getBlockOptions() const {
+    std::string options;
+    const std::array<unsigned char, 6> directions { 'N', 'S', 'E', 'W', 'U', 'D'};
+    for (size_t i = 0; i < _facesSharps.size(); ++i) {
+        if (_facesSharps.at(i)) {
+            options.push_back(directions.at(i));
+        }
+    } 
+    
+    return options;
 }
 
 

@@ -9,3 +9,7 @@
 
 BaseBlock::BaseBlock(const JBTypes::vec3ui& position):Block(position) {
 }
+
+unsigned char BaseBlock::getBlockSymbol() const {
+    return 'N';
+}

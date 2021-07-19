@@ -58,3 +58,12 @@ Block::Effect GhostBlock::interaction (const JBTypes::Dir&,
 
     return Block::Effect::Nothing;
 }
+
+unsigned char GhostBlock::getBlockSymbol() const {
+    return 'G';
+}
+
+std::string GhostBlock::getBlockOptions() const {
+    const unsigned int periodicityUint = static_cast<unsigned int>(_periodicity);
+    return std::to_string(periodicityUint);
+}

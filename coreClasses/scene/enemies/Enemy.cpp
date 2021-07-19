@@ -7,13 +7,11 @@
 
 #include "Enemy.h"
 
-Enemy::Enemy(const Block& tieBlock,
-             const JBTypes::vec3ui& initialPosition,
+Enemy::Enemy(const JBTypes::vec3ui& initialPosition,
              const JBTypes::Dir& direction,
              float size,
              size_t length,
              const std::array <float, 9>& transform):
-    _tieBlock(tieBlock),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(direction),
     _size(size),

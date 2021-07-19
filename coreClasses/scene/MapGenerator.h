@@ -11,6 +11,10 @@
 
 namespace MapGenerator {
 
+
+static constexpr unsigned char baseUsuableAsciiCharacters = 92;
+static constexpr unsigned char firstUsuableAsciiCharacter = 34;
+
 // ---------CONSTANTS------------//
 
 // Blocks compression
@@ -30,11 +34,25 @@ static constexpr unsigned int nbOfCharactersWithoutItems = 79;
 static constexpr unsigned char firstNumberLength = 33;
 static constexpr unsigned char firstNumberColor = 33;
 
+bool verifyBlockType(unsigned char blockType);
+bool verifyBlockOption(unsigned char blockOption);
+bool blockHasAnyProperties(unsigned char blockType);
+
 void compress(std::ifstream& input);
+
+std::string compressString(const std::string& asciiString);
+std::string uncompressString(const std::string& compressedString);
+
+void compressNew(std::ifstream& input);
+
 std::shared_ptr <Map> loadMap(size_t mapNumber);
+
 Map::MapInfo createMapInfo(std::ifstream& file);
-std::string convertToBase(unsigned int number, unsigned char base);
-unsigned int convertToBase10(const std::string& s, unsigned int base);
+Map::MapInfo uncompressMap(std::ifstream& file);
+
+
+std::string convertToBase(unsigned long long int number, unsigned char base);
+unsigned long long int convertToBase10(const std::string& s, unsigned int base);
 std::string applyOffset(const std::string& s, int offset);
 std::string substractOffset(const std::string& s, int offset);
 Map::BlockTypes uintToBlockType(unsigned int number);

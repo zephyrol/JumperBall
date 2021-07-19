@@ -10,6 +10,13 @@
 #include "system/Types.h"
 #include "scene/SceneElement.h"
 
+class Item;
+using Item_sptr = std::shared_ptr <Item>;
+using CstItem_sptr = std::shared_ptr <const Item>;
+using vecCstItem_sptr = std::vector <CstItem_sptr>;
+using vecItem_sptr = std::vector <Item_sptr>;
+using Item_uptr = std::unique_ptr <Item>;
+
 class Item : public SceneElement{
 public:
 

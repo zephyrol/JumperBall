@@ -10,8 +10,7 @@
 
 class ThornBall:public Enemy {
 public:
-ThornBall(const Block& tieBlock,
-          const JBTypes::vec3ui& initialPosition,
+ThornBall(const JBTypes::vec3ui& initialPosition,
           const JBTypes::Dir& dir,
           const JBTypes::Dir& movementDirection,
           size_t movementLength);

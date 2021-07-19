@@ -22,16 +22,13 @@ using vecBlock_sptr = std::vector <Block_sptr>;
 class Block: public SceneElement {
 public:
 
-// --CONSTRUCTORS & DESTRUCTORS--//
 Block(const JBTypes::vec3ui& position,
       bool hasInteraction = false,
       bool isFixed = true);
 virtual ~Block() = default;
 
-// ------------TYPES------------//
 enum class Effect { Nothing, Burst, Burn, Slide, Jump };
 
-// ----------METHODS-------------//
 virtual Effect interaction(
     const JBTypes::Dir& ballDir,
     const JBTypes::timePointMs& currentTime,
@@ -39,6 +36,9 @@ virtual Effect interaction(
     );
 virtual Effect detectionEvent(const JBTypes::Dir& ballDir, const JBTypes::timePointMs& currentTime);
 virtual void createItem(Item::CategoryOfItems category, JBTypes::Dir dir);
+
+virtual unsigned char getBlockSymbol() const = 0;
+virtual std::string getBlockOptions() const;
 
 static constexpr size_t itemsNumber = 6;
 
@@ -51,9 +51,7 @@ const JBTypes::vec3f& localTranslation() const;
 const std::shared_ptr <const Item> item(size_t number) const;
 bool hasInteraction() const;
 bool hasItems() const;
-void catchItem(
-    const JBTypes::vec3f& entityPosition,
-    float radiusEntity);
+void catchItem( const JBTypes::vec3f& entityPosition, float radiusEntity);
 virtual const bool& isFixed() const;
 const std::array <std::shared_ptr <Item>, 6>& items() const;
 const JBTypes::vec3ui& position() const;

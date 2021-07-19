@@ -128,12 +128,12 @@ std::map <JBTypes::Color, TeleportersInfo>
 _blocksTeleporters;
 std::map <JBTypes::Color, bool> _specialsState;
 
-unsigned int _width;
-unsigned int _height;
-unsigned int _depth;
-unsigned int _beginX;
-unsigned int _beginY;
-unsigned int _beginZ;
+const unsigned int _width;
+const unsigned int _height;
+const unsigned int _depth;
+const unsigned int _beginX;
+const unsigned int _beginY;
+const unsigned int _beginZ;
 const JBTypes::timePointMs _creationTime;
 
 // Multithreading

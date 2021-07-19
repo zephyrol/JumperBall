@@ -12,7 +12,7 @@ class SceneElement;
 using SceneElement_sptr = std::shared_ptr <SceneElement>;
 using CstSceneElement_sptr = std::shared_ptr <const SceneElement>;
 using vecCstSceneElement_sptr = std::vector <CstSceneElement_sptr>;
-using vecObjectState_sptr = std::vector <SceneElement_sptr>;
+using vecSceneElement_sptr = std::vector <SceneElement_sptr>;
 using SceneElement_uptr = std::unique_ptr <SceneElement>;
 
 class SceneElement {

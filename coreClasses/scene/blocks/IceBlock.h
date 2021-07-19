@@ -13,6 +13,8 @@ class IceBlock:public Block {
 public:
 IceBlock(const JBTypes::vec3ui& position);
 
+virtual unsigned char getBlockSymbol() const override;
+
 virtual Effect detectionEvent(
     const JBTypes::Dir& ballDir,
     const JBTypes::timePointMs& currentTime

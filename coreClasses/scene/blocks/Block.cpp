@@ -63,6 +63,10 @@ void Block::createItem (Item::CategoryOfItems category,
     }
 }
 
+std::string Block::getBlockOptions() const {
+    return "";
+}
+
 const std::shared_ptr <const Item> Block::item (size_t number) const {
     return _items.at(number);
 }

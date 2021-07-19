@@ -308,3 +308,33 @@ JBTypesMethods::createMap (std::vector <K> keys, std::vector <V> values) {
     }
     return mapKV;
 }
+
+JBTypes::Dir JBTypesMethods::charAsDirection(unsigned char dirChar) {
+
+    JBTypes::Dir dir;
+
+    switch (dirChar) {
+    case 'N':
+        dir = JBTypes::Dir::North;
+        break;
+    case 'S':
+        dir = JBTypes::Dir::South;
+        break;
+    case 'E':
+        dir = JBTypes::Dir::East;
+        break;
+    case 'W':
+        dir = JBTypes::Dir::West;
+        break;
+    case 'U':
+        dir = JBTypes::Dir::Up;
+        break;
+    case 'D':
+        dir = JBTypes::Dir::Down;
+        break;
+    default:
+        dir = JBTypes::Dir::North;
+        break;
+    }
+    return dir;
+}

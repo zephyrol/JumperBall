@@ -70,6 +70,10 @@ void BrittleBlock::setFallDirection (JBTypes::Dir ballDir) {
     }
 }
 
+unsigned char BrittleBlock::getBlockSymbol() const {
+    return 'B';
+}
+
 bool BrittleBlock::isExists() const {
     return _stillThere;
 }

@@ -8,12 +8,10 @@
 #include "Laser.h"
 
 Laser::Laser(const JBTypes::Color& color,
-             const Block& tieBlock,
              const JBTypes::vec3ui& initialPosition,
              const JBTypes::Dir& dir,
              size_t length):
-    Enemy(tieBlock,
-          initialPosition,
+    Enemy(initialPosition,
           dir,
           laserRadius,
           length,

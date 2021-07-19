@@ -18,6 +18,8 @@ bool isExists() const override;
 void setFallDirection(JBTypes::Direction
                       ballDir);
 
+virtual unsigned char getBlockSymbol() const override;
+
 virtual Block::Effect interaction(
     const JBTypes::Dir& ballDir,
     const JBTypes::timePointMs& currentTime,
