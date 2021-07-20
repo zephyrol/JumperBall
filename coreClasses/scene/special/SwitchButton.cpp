@@ -7,10 +7,9 @@
 #include "SwitchButton.h"
 
 SwitchButton::SwitchButton(const JBTypes::Color& color,
-                           const Block& tieBlock,
                            const JBTypes::Dir& dir,
                            const JBTypes::vec3ui& position
-                           ):Special(color, tieBlock, dir, position) {
+                           ):Special(color, dir, position) {
 }
 
 Special::SpecialEffect SwitchButton::getEffect() const {

@@ -6,14 +6,12 @@
  */
 #include "Special.h"
 
-Special::Special(const JBTypes::Color& color,
-                 const Block& tieBlock,
-                 const JBTypes::Dir& dir,
-                 const JBTypes::vec3ui& position,
-                 bool isActivated
-                 ):
-    _tieBlock(tieBlock),
-    _creationTime(JBTypesMethods::getTimePointMSNow()),
+Special::Special(
+    const JBTypes::Color& color,
+    const JBTypes::Dir& dir,
+    const JBTypes::vec3ui& position,
+    bool isActivated
+):  _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(dir),
     _color(color),
     _colorAttributeName("is" + JBTypesMethods::colorToString(_color) + "Activated"),

@@ -88,7 +88,8 @@ JBTypes::vec3f rotateVector(const JBTypes::vec3f& v, const JBTypes::Quaternion& 
 
 void displayInstallError();
 
-std::string colorToString(const JBTypes::Color color);
+std::string colorToString(const JBTypes::Color& color);
+JBTypes::Color charAsColor(unsigned char charColor);
 
 template<typename K, typename V> std::map <K, V> createMap(std::vector <K> keys, std::vector <V> values);
 }

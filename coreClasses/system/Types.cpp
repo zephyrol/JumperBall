@@ -225,7 +225,7 @@ JBTypes::vec3f JBTypesMethods::normalize (const JBTypes::vec3f& vec) {
     return { vec.x / vecLength, vec.y / vecLength, vec.z / vecLength };
 }
 
-std::string JBTypesMethods::colorToString (const JBTypes::Color color) {
+std::string JBTypesMethods::colorToString (const JBTypes::Color& color) {
     switch (color) {
     case JBTypes::Color::Blue: return "Blue";
     case JBTypes::Color::Red: return "Red";
@@ -333,8 +333,33 @@ JBTypes::Dir JBTypesMethods::charAsDirection(unsigned char dirChar) {
         dir = JBTypes::Dir::Down;
         break;
     default:
+        std::cerr << "Unknown direction character " << dirChar << std::endl;
         dir = JBTypes::Dir::North;
         break;
     }
     return dir;
+}
+
+JBTypes::Color JBTypesMethods::charAsColor(unsigned char charColor) {
+
+    JBTypes::Color color;
+    switch (charColor) {
+    case 'R':
+        color = JBTypes::Color::Red;
+        break;
+    case 'G':
+        color = JBTypes::Color::Green;
+        break;
+    case 'B':
+        color = JBTypes::Color::Blue;
+        break;
+    case 'Y':
+        color = JBTypes::Color::Yellow;
+        break;
+    default:
+        std::cerr << "Unknown color character " << charColor << std::endl;
+        color = JBTypes::Color::None;
+        break;
+    }
+    return color;
 }

@@ -12,7 +12,6 @@ class Teleporter:public Special {
 public:
 Teleporter(
     const JBTypes::Color& color,
-    const Block& tieBlock,
     const JBTypes::Dir& dir,
     const JBTypes::vec3ui& position
     );

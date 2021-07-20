@@ -95,22 +95,16 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
 
         const auto createItem = 
         [&mapInfo, &blockIndexCursor](unsigned char itemType, unsigned char direction) -> Item_sptr {
+            const JBTypes::Dir dir = JBTypesMethods::charAsDirection(direction);
+            const auto blockCoords = Map::getBlockCoords(blockIndexCursor, mapInfo.width, mapInfo.depth);
             if (itemType == 'I') {
-                return std::make_shared<Coin>(
-                    Map::getBlockCoords(blockIndexCursor, mapInfo.width, mapInfo.depth),
-                    JBTypesMethods::charAsDirection(direction)
-                );
-            } else if (itemType  == 'K') {
-                return std::make_shared<Key>(
-                    Map::getBlockCoords(blockIndexCursor, mapInfo.width, mapInfo.depth),
-                    JBTypesMethods::charAsDirection(direction)
-                );
+                return std::make_shared<Coin>(blockCoords, dir);
+            }
+            if (itemType  == 'K') {
+                return std::make_shared<Key>(blockCoords, dir);
             } 
             //Clock
-            return std::make_shared<Clock>(
-                Map::getBlockCoords(blockIndexCursor, mapInfo.width, mapInfo.depth),
-                JBTypesMethods::charAsDirection(direction)
-            );
+            return std::make_shared<Clock>(blockCoords, dir);
         };
 
         vecItem_sptr items;
@@ -122,6 +116,81 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
             }
         }
         return items;
+    };
+
+    const auto isAnEnemyTypeChar = [](unsigned char info) {
+        return info == 'L' || info == 'T' || info == 'D';
+    };
+    const auto createEnemies = 
+    [&getTypeOptions, &isAnEnemyTypeChar, &mapInfo, &blockIndexCursor](const std::string& enemiesInfo) {
+        const auto typeOptions = getTypeOptions(enemiesInfo, isAnEnemyTypeChar);
+
+        const auto createEnemy = 
+        [&mapInfo, &blockIndexCursor](
+            unsigned char enemyType,
+            const std::string& options
+            ) -> Enemy_sptr {
+            const auto blockCoords = Map::getBlockCoords(blockIndexCursor, mapInfo.width, mapInfo.depth);
+            const JBTypes::Dir direction = JBTypesMethods::charAsDirection(options.at(0));
+            if (enemyType == 'L') {
+                const JBTypes::Color color = JBTypesMethods::charAsColor(options.at(1));
+                const size_t length = static_cast<size_t>(
+                    stoi(std::string(options.begin() + 2, options.end()))
+                );
+                return std::make_shared<Laser>(color, blockCoords, direction, length);
+            }
+            if (enemyType  == 'T') {
+                const JBTypes::Dir movementDir = JBTypesMethods::charAsDirection(options.at(1));
+                const size_t movementLength = static_cast<size_t>(
+                    stoi(std::string(options.begin() + 2, options.end()))
+                );
+                return std::make_shared<ThornBall>(blockCoords, direction, movementDir, movementLength );
+            }
+            // Dark Ball
+            const JBTypes::Dir movementDir = JBTypesMethods::charAsDirection(options.at(1));
+            const size_t numberOfJumps = static_cast<size_t>(
+                stoi(std::string(options.begin() + 2, options.end())));
+            return std::make_shared<DarkBall>(blockCoords, direction, movementDir, numberOfJumps);
+        };
+
+        vecEnemy_sptr enemies;
+        for (const auto& typeOption: typeOptions) {
+            const unsigned char enemyType = typeOption.first;
+            const std::string& enemyOptions = typeOption.second;
+            enemies.push_back(createEnemy(enemyType, enemyOptions));
+        }
+        return enemies;
+    };
+
+    const auto isAnSpecialTypeChar = [](unsigned char info) {
+        return info == 'S' || info == 'T';
+    };
+    const auto createSpecials = 
+    [&getTypeOptions, &isAnSpecialTypeChar, &mapInfo, &blockIndexCursor](const std::string& specialsInfo) {
+        const auto typeOptions = getTypeOptions(specialsInfo, isAnSpecialTypeChar);
+
+        const auto createSpecial = 
+        [&mapInfo, &blockIndexCursor](
+            unsigned char specialType,
+            const std::string& options
+            ) -> Special_sptr {
+            const auto blockCoords = Map::getBlockCoords(blockIndexCursor, mapInfo.width, mapInfo.depth);
+            const JBTypes::Color color = JBTypesMethods::charAsColor(options.at(0));
+            const JBTypes::Dir direction = JBTypesMethods::charAsDirection(options.at(1));
+            if (specialType == 'S') {
+                return std::make_shared<SwitchButton>(color, direction, blockCoords);
+            }
+            // Teleporter
+            return std::make_shared<Teleporter>(color, direction, blockCoords);
+        };
+
+        vecSpecial_sptr specials;
+        for (const auto& typeOption: typeOptions) {
+            const unsigned char specialType = typeOption.first;
+            const std::string& specialOptions = typeOption.second;
+            specials.push_back(createSpecial(specialType, specialOptions));
+        }
+        return specials;
     };
 
     std::vector<Block_sptr> blocks;
@@ -152,15 +221,21 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
             }
             
             const bool hasProperties = blockHasAnyProperties(blockType);
-            const size_t wordsToRead = hasProperties
-                ? blockOptions.size()
-                : blockOptions.size() + 1;
 
             vecItem_sptr items;
+            vecEnemy_sptr enemies;
+            vecSpecial_sptr specials;
             for (size_t i = 0; i < blockOptions.size(); ++i) {
                 const unsigned char optionType = blockOptions.at(i);
+                const std::string uncompressedString = uncompressString(readingString(file));
                 if (optionType == 'I') {
-                    items = createItems(uncompressString(readingString(file)));
+                    items = createItems(uncompressedString);
+                } else if (optionType == 'E') {
+                    enemies = createEnemies(uncompressedString);
+                } else if (optionType == 'S') {
+                    specials = createSpecials(uncompressedString);
+                } else {
+                    std::cerr << "Unknown block option: " << optionType << std::endl;
                 }
 
             }
@@ -401,7 +476,6 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             infoEnemies.erase(infoEnemies.begin());
 
             std::shared_ptr <Enemy> enemy;
-            const auto& blockPtr = mapInfo.blocks.at(currentIndex);
             switch (typeOfEnemy) {
             case 0:
                 enemy = std::make_shared <Laser>(
@@ -496,7 +570,6 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             case 0:
                 special = std::make_shared <SwitchButton>(
                     JBTypes::Color::Red,
-                    *blockPtr,
                     dir,
                     Map::getBlockCoords(currentIndex, width, depth)
                     );
@@ -505,7 +578,6 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             case 1:
                 special = std::make_shared <SwitchButton>(
                     JBTypes::Color::Green,
-                    *blockPtr,
                     dir,
                     Map::getBlockCoords(currentIndex, width, depth)
                     );
@@ -514,7 +586,6 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             case 2:
                 special = std::make_shared <SwitchButton>(
                     JBTypes::Color::Blue,
-                    *blockPtr,
                     dir,
                     Map::getBlockCoords(currentIndex, width, depth)
                     );
@@ -523,7 +594,6 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             case 3:
                 special = std::make_shared <SwitchButton>(
                     JBTypes::Color::Yellow,
-                    *blockPtr,
                     dir,
                     Map::getBlockCoords(currentIndex, width, depth)
                     );
@@ -532,7 +602,6 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             case 4:
                 special = std::make_shared <Teleporter>(
                     JBTypes::Color::Red,
-                    *blockPtr,
                     dir,
                     Map::getBlockCoords(currentIndex, width, depth)
                     );
@@ -541,7 +610,6 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             case 5:
                 special = std::make_shared <Teleporter>(
                     JBTypes::Color::Green,
-                    *blockPtr,
                     dir,
                     Map::getBlockCoords(currentIndex, width, depth)
                     );
@@ -550,7 +618,6 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             case 6:
                 special = std::make_shared <Teleporter>(
                     JBTypes::Color::Blue,
-                    *blockPtr,
                     dir,
                     Map::getBlockCoords(currentIndex, width, depth)
                     );
@@ -559,7 +626,6 @@ Map::MapInfo MapGenerator::createMapInfo (std::ifstream& file) {
             case 7:
                 special = std::make_shared <Teleporter>(
                     JBTypes::Color::Yellow,
-                    *blockPtr,
                     dir,
                     Map::getBlockCoords(currentIndex, width, depth)
                     );

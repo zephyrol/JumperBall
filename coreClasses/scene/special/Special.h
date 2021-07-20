@@ -9,6 +9,12 @@
 #include "scene/blocks/Block.h"
 #include "scene/SceneElement.h"
 
+class Special;
+using Special_sptr = std::shared_ptr <Special>;
+using CstSpecial_sptr = std::shared_ptr <const Special>;
+using vecCstSpecial_sptr = std::vector <CstSpecial_sptr>;
+using vecSpecial_sptr = std::vector <Special_sptr>;
+using Special_uptr = std::unique_ptr <Special>;
 class Special: public SceneElement {
 public:
 enum class SpecialEffect { Switch,
@@ -16,7 +22,6 @@ enum class SpecialEffect { Switch,
 
 Special(
     const JBTypes::Color& color,
-    const Block& tieBlock,
     const JBTypes::Dir& dir,
     const JBTypes::vec3ui& position,
     bool isActivated = true
@@ -43,7 +48,6 @@ SceneElement::DynamicValues <float> getDynamicFloats() const override;
 SceneElement::GlobalState getGlobalState() const override;
 
 private:
-const Block& _tieBlock;
 const JBTypes::timePointMs _creationTime;
 const JBTypes::Dir _direction;
 const JBTypes::Color _color;
