@@ -11,12 +11,13 @@ Special::Special(
     const JBTypes::Dir& dir,
     const JBTypes::vec3ui& position,
     bool isActivated
-):  _creationTime(JBTypesMethods::getTimePointMSNow()),
+):  
+    _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(dir),
     _color(color),
     _colorAttributeName("is" + JBTypesMethods::colorToString(_color) + "Activated"),
     _position(position),
-    _position3D(initPosition(position)),
+    _position3D(init3DPosition()),
     _isActivated(isActivated) {
 }
 
@@ -27,7 +28,6 @@ const JBTypes::Color& Special::getColor() const {
 float Special::getTimeSinceCreation() const {
     return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
-
 
 const JBTypes::Dir& Special::direction() const {
     return _direction;
@@ -53,8 +53,7 @@ void Special::switchOnOff() {
     _isActivated = !_isActivated;
 }
 
-JBTypes::vec3f Special::initPosition (const JBTypes::vec3ui& position)
-const {
+JBTypes::vec3f Special::init3DPosition() const {
     constexpr float sizeBlock = 1.f;
     constexpr float offset = sizeBlock / 2.f;
 
@@ -62,9 +61,9 @@ const {
     const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
 
     const JBTypes::vec3f posWorld =
-    { static_cast <float>(position.at(0)),
-      static_cast <float>(position.at(1)),
-      static_cast <float>(position.at(2)) };
+    { static_cast <float>(_position.at(0)),
+      static_cast <float>(_position.at(1)),
+      static_cast <float>(_position.at(2)) };
 
     return {
         posWorld.x + offset + vecDir.x * offset,

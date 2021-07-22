@@ -62,13 +62,9 @@ const JBTypes::vec3f _initialPosition;
 JBTypes::vec3f _position;
 std::array <float, 9> _transform;
 
-
 private:
-JBTypes::vec3f initPosition(const JBTypes::vec3ui& position)
-const;
-
-virtual void touchingTest(const JBTypes::vec3f& entityPosition,
-                          float radiusEntity) = 0;
+JBTypes::vec3f init3DPosition(const JBTypes::vec3f& initialPosition) const;
+virtual void touchingTest(const JBTypes::vec3f& entityPosition, float radiusEntity) = 0;
 };
 
 #endif /* Enemy_h */

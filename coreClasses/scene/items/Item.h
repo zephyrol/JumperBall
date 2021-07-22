@@ -26,16 +26,16 @@ Item(const JBTypes::vec3ui& position, const JBTypes::Dir& direction, const Categ
 virtual ~Item() = default;
 const CategoryOfItems& getCategory() const;
 const JBTypes::vec3ui& position() const;
+const JBTypes::vec3f& get3Dposition() const;
 const JBTypes::Dir& direction() const;
 
 bool isGotten() const;
 float getTimeSinceObtaining() const;
 float getTimeSinceCreation() const;
-void catchingTest(const JBTypes::vec3f& itemPosition,
-                  const JBTypes::vec3f& entityPosition,
-                  float radiusEntity);
+void catchingTest(const JBTypes::vec3f& boundingSphereCenter,
+                  float boundingSphereRadius);
 
-static constexpr float radiusBoundingSphere = 0.15f;
+static constexpr float itemBoundingSphereRadius = 0.15f;
 
 SceneElement::StaticValues <float> getStaticFloatValues() const override;
 SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
@@ -44,8 +44,12 @@ SceneElement::DynamicValues <float> getDynamicFloats() const override;
 SceneElement::GlobalState getGlobalState() const override;
 
 private:
+
+JBTypes::vec3f compute3DPosition() const;
+
 const JBTypes::vec3ui _position;
 const JBTypes::Dir _direction;
+const JBTypes::vec3f _3Dposition;
 bool _gotten;
 const JBTypes::timePointMs _creationTime;
 JBTypes::timePointMs _obtainingTime;

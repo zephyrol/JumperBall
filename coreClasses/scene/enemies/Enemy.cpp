@@ -7,18 +7,20 @@
 
 #include "Enemy.h"
 
-Enemy::Enemy(const JBTypes::vec3ui& initialPosition,
-             const JBTypes::Dir& direction,
-             float size,
-             size_t length,
-             const std::array <float, 9>& transform):
+Enemy::Enemy(
+    const JBTypes::vec3ui& initialPosition,
+    const JBTypes::Dir& direction,
+    float size,
+    size_t length,
+    const std::array <float, 9>& transform
+):
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(direction),
     _size(size),
     _length(length),
     _intersectionTime(),
     _hasHit(false),
-    _initialPosition(initPosition(initialPosition)),
+    _initialPosition(init3DPosition(initialPosition)),
     _position(_initialPosition),
     _transform(transform) {
 }
@@ -50,22 +52,20 @@ size_t Enemy::length() const {
 void Enemy::switchOnOff() {
 }
 
-JBTypes::vec3f Enemy::initPosition (const JBTypes::vec3ui& position)
-const {
+JBTypes::vec3f Enemy::init3DPosition(const JBTypes::vec3f& initialPosition) const {
     constexpr float sizeBlock = 1.f;
     constexpr float offset = sizeBlock / 2.f;
 
     const JBTypes::Dir& currentDir = _direction;
-    const JBTypes::vec3f vecDir =
-        JBTypesMethods::directionAsVector(currentDir);
+    const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
 
-    const JBTypes::vec3f posWorld =
-    { static_cast <float>(position.at(0)),
-      static_cast <float>(position.at(1)),
-      static_cast <float>(position.at(2)) };
+    const JBTypes::vec3f posWorld = { 
+        static_cast <float>(initialPosition.at(0)),
+        static_cast <float>(initialPosition.at(1)),
+        static_cast <float>(initialPosition.at(2))
+    };
 
     const float& radius = _size;
-
     return {
         posWorld.x + offset + vecDir.x * (offset + radius),
         posWorld.y + offset + vecDir.y * (offset + radius),
@@ -103,4 +103,3 @@ SceneElement::DynamicValues <JBTypes::vec3f> Enemy::getDynamicVec3fs() const {
 SceneElement::GlobalState Enemy::getGlobalState() const {
     return SceneElement::GlobalState::Separate;
 }
-

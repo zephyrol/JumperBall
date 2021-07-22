@@ -15,6 +15,7 @@ Item::Item(
     ):
     _position(position),
     _direction(direction),
+    _3Dposition(get3DPosition()),
     _gotten(false),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _obtainingTime(),
@@ -29,8 +30,12 @@ const JBTypes::vec3ui& Item::position() const {
     return _position;
 }
 
-const JBTypes::Dir& Item::direction() const {
-    return _direction;
+const JBTypes::vec3f& Item::get3Dposition() const
+{return _3Dposition; 
+    
+}
+
+const JBType irection;
 }
 
 bool Item::isGotten() const {
@@ -47,11 +52,9 @@ float Item::getTimeSinceCreation() const {
     return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
 
-void Item::catchingTest (const JBTypes::vec3f& itemPosition,
-                         const JBTypes::vec3f& entityPosition,
-                         float radiusEntity) {
-    const float distance = JBTypesMethods::distance(itemPosition, entityPosition);
-    if (distance < radiusEntity + radiusBoundingSphere) {
+void Item::catchingTest (const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius) {
+    const float distance = JBTypesMethods::distance(_3Dposition, boundingSphereCenter);
+    if (distance < boundingSphereRadius + itemBoundingSphereRadius) {
         _obtainingTime = JBTypesMethods::getTimePointMSNow();
         _gotten = true;
     }
@@ -91,4 +94,37 @@ SceneElement::GlobalState Item::getGlobalState() const {
                : SceneElement::GlobalState::Dead;
     }
     return SceneElement::GlobalState::United;
+}
+
+JBTypes::vec3f Item::compute3DPosition() const {
+    constexpr float offsetPosition = 1.f;
+    float x = static_cast <float>(_position.at(0) + 0.5f);
+    float y = static_cast <float>(_position.at(1) + 0.5f);
+    float z = static_cast <float>(_position.at(2) + 0.5f);
+
+    switch (_direction)
+    {
+    case JBTypes::Dir::North:
+        z -= offsetPosition;
+        break;
+    case JBTypes::Dir::South:
+        z += offsetPosition;
+        break;
+    case JBTypes::Dir::East:
+        x += offsetPosition;
+        break;
+    case JBTypes::Dir::West:
+        x -= offsetPosition;
+        break;
+    case JBTypes::Dir::Up:
+        y += offsetPosition;
+        break;
+    case JBTypes::Dir::Down:
+        y -= offsetPosition;
+        break;
+    default:
+        break;
+    }
+
+    return JBTypes::vec3f { x, y, z };
 }

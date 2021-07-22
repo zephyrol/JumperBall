@@ -8,9 +8,9 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 #include "system/Types.h"
-#include "scene/items/Clock.h"
-#include "scene/items/Coin.h"
-#include "scene/items/Key.h"
+#include "scene/enemies/Enemy.h"
+#include "scene/items/Item.h"
+#include "scene/special/Special.h"
 #include "scene/SceneElement.h"
 
 class Block;
@@ -22,11 +22,16 @@ using vecBlock_sptr = std::vector <Block_sptr>;
 class Block: public SceneElement {
 public:
 
-Block(const JBTypes::vec3ui& position,
-      bool hasInteraction = false,
-      bool isFixed = true);
-virtual ~Block() = default;
+Block(
+    const JBTypes::vec3ui& position,
+    const vecItem_sptr& items, 
+    const vecEnemy_sptr& enemies,
+    const vecSpecial_sptr& specials,
+    bool hasInteraction = false,
+    bool isFixed = true
+);
 
+virtual ~Block() = default;
 enum class Effect { Nothing, Burst, Burn, Slide, Jump };
 
 virtual Effect interaction(
@@ -35,7 +40,6 @@ virtual Effect interaction(
     const JBTypes::vec3f& posBall
     );
 virtual Effect detectionEvent(const JBTypes::Dir& ballDir, const JBTypes::timePointMs& currentTime);
-virtual void createItem(Item::CategoryOfItems category, JBTypes::Dir dir);
 
 virtual unsigned char getBlockSymbol() const = 0;
 virtual std::string getBlockOptions() const;
@@ -50,10 +54,8 @@ const JBTypes::vec3f& localTranslation() const;
 
 const std::shared_ptr <const Item> item(size_t number) const;
 bool hasInteraction() const;
-bool hasItems() const;
-void catchItem( const JBTypes::vec3f& entityPosition, float radiusEntity);
+void catchItem(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
 virtual const bool& isFixed() const;
-const std::array <std::shared_ptr <Item>, 6>& items() const;
 const JBTypes::vec3ui& position() const;
 
 SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
@@ -64,14 +66,14 @@ static JBTypes::vec3f itemPosition(const JBTypes::vec3ui& pos, unsigned int dirU
 
 
 protected:
-// --------ATTRIBUTES-----------//
 const JBTypes::vec3ui _position;
+const vecItem_sptr _items;
+const vecEnemy_sptr _enemies;
+const vecSpecial_sptr _specials;
 const bool _hasInteraction;
 const bool _isFixed;
 JBTypes::vec3f _localScale;
 JBTypes::vec3f _localTranslation;
-std::array <std::shared_ptr <Item>, 6> _items;
-bool _hasItems;
 };
 
 #endif /* BLOCK_H */

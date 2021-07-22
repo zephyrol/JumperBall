@@ -56,7 +56,7 @@ const JBTypes::vec3ui _position;
 const JBTypes::vec3f _position3D;
 bool _isActivated;
 
-JBTypes::vec3f initPosition(const JBTypes::vec3ui& position) const;
+JBTypes::vec3f init3DPosition() const;
 };
 
 

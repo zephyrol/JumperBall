@@ -176,29 +176,12 @@ CstBlock_sptr Map::getBlock (int x, int y, int z) const {
     return block;
 }
 
-CstBlock_sptr Map::getBlock (size_t index) const {
-    return _blocks.at(index);
-}
-
 JBTypes::vec3ui Map::getBlockCoords (size_t index) const {
     return getBlockCoords(index, _width, _depth);
 }
 
 size_t Map::getIndex (const JBTypes::vec3ui& coords) const {
     return _width * (coords.at(2) + coords.at(1) * _depth) + coords.at(0);
-}
-
-Map::BlockTypes Map::getType (const JBTypes::vec3ui& position) const {
-    const size_t index = getIndex(position);
-    for (const Map::BlockInfo& blockInfo : _blocksInfo) {
-        if (blockInfo.index == index)
-            return blockInfo.type;
-    }
-    return Map::BlockTypes::None;
-}
-
-const std::vector <Map::BlockInfo>& Map::blocksInfo() const {
-    return _blocksInfo;
 }
 
 unsigned int Map::width() const {
@@ -325,13 +308,3 @@ JBTypes::vec3ui Map::getBlockCoords (size_t index,
     const unsigned int widthDepth = width * depth;
     return { uIntIndex % width, uIntIndex / widthDepth, (uIntIndex % widthDepth) / width };
 }
-
-const std::vector <Map::EnemyInfo>& Map::getEnemiesInfo() const {
-    return _enemies;
-}
-
-const std::vector <Map::SpecialInfo>& Map::getSpecialInfo() const {
-    return _specials;
-}
-
-unsigned int Map::nbMaps = 0;
