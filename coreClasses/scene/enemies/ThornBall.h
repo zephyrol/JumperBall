@@ -14,8 +14,8 @@ ThornBall(const JBTypes::vec3ui& initialPosition,
           const JBTypes::Dir& dir,
           const JBTypes::Dir& movementDirection,
           size_t movementLength);
-virtual Effect update(const JBTypes::vec3f& entityPosition,
-                      float radiusEntity) override;
+virtual Effect update(const JBTypes::vec3f& boundingSpherePosition,
+                      float boundingSphereRadius) override;
 virtual const JBTypes::Dir& movementDirection() const override;
 virtual ~ThornBall() = default;
 static constexpr float thornBallRadius = 0.1f;
@@ -23,8 +23,8 @@ static constexpr float thornBallRadius = 0.1f;
 private:
 const JBTypes::Dir _movementDirection;
 
-virtual void touchingTest(const JBTypes::vec3f& entityPosition,
-                          float radiusEntity) override;
+virtual void touchingTest(const JBTypes::vec3f& boundingSpherePosition,
+                          float boundingSphereRadius) override;
 };
 
 #endif /* ThornBall_h */

@@ -16,16 +16,16 @@ DarkBall(const JBTypes::vec3ui& initialPosition,
          const JBTypes::Dir& dir,
          const JBTypes::Dir& movementDirection,
          size_t nbOfJumps);
-virtual Effect update(const JBTypes::vec3f& entityPosition,
-                      float radiusEntity) override;
+virtual Effect update(const JBTypes::vec3f& boundingSpherePosition,
+                      float boundingSphereRadius) override;
 virtual const JBTypes::Dir& movementDirection() const override;
 virtual ~DarkBall() = default;
 static constexpr float darkBallRadius = 0.2f;
 
 private:
 const JBTypes::Dir _movementDirection;
-virtual void touchingTest(const JBTypes::vec3f& entityPosition,
-                          float radiusEntity) override;
+virtual void touchingTest(const JBTypes::vec3f& boundingSpherePosition,
+                          float boundingSphereRadius) override;
 static const ClassicalMechanics darkBallClassicalMechanics;
 };
 

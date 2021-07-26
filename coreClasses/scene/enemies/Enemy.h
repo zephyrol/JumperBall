@@ -28,8 +28,7 @@ Enemy(const JBTypes::vec3ui& initialPosition,
       size_t length,
       const std::array <float, 9>& transform);
 
-virtual Effect update(const JBTypes::vec3f& entityPosition,
-                      float radiusEntity) = 0;
+virtual Effect update(const JBTypes::vec3f& boundingSpherePosition, float boundingSphereRadius) = 0;
 virtual JBTypes::Color getColor() const;
 const JBTypes::timePointMs& creationTime() const;
 const JBTypes::timePointMs& intersectionTime() const;
@@ -64,7 +63,7 @@ std::array <float, 9> _transform;
 
 private:
 JBTypes::vec3f init3DPosition(const JBTypes::vec3f& initialPosition) const;
-virtual void touchingTest(const JBTypes::vec3f& entityPosition, float radiusEntity) = 0;
+virtual void touchingTest(const JBTypes::vec3f& boundingSpherePosition, float boundingSphereRadius) = 0;
 };
 
 #endif /* Enemy_h */

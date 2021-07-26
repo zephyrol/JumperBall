@@ -27,8 +27,8 @@ ThornBall::ThornBall(const JBTypes::vec3ui& initialPosition,
     _movementDirection(movementDirection) {
 }
 
-Enemy::Effect ThornBall::update (const JBTypes::vec3f& entityPosition,
-                                 float radiusEntity) {
+Enemy::Effect ThornBall::update (const JBTypes::vec3f& boundingSpherePosition,
+                                 float boundingSphereRadius) {
     constexpr float movementDuration = 2.f;
     const float timeSinceCreation =
         JBTypesMethods::getTimeSecondsSinceTimePoint(creationTime());
@@ -48,7 +48,7 @@ Enemy::Effect ThornBall::update (const JBTypes::vec3f& entityPosition,
     _position.x = _initialPosition.x + _transform.at(0);
     _position.y = _initialPosition.y + _transform.at(1);
     _position.z = _initialPosition.z + _transform.at(2);
-    touchingTest(entityPosition, radiusEntity);
+    touchingTest(boundingSpherePosition, boundingSphereRadius);
     return _hasHit
            ? Enemy::Effect::Burst
            : Enemy::Effect::Nothing;
@@ -58,11 +58,11 @@ const JBTypes::Dir& ThornBall::movementDirection() const {
     return _movementDirection;
 }
 
-void ThornBall::touchingTest (const JBTypes::vec3f& entityPosition,
-                              float radiusEntity) {
+void ThornBall::touchingTest (const JBTypes::vec3f& boundingSpherePosition,
+                              float boundingSphereRadius) {
     if (
-        JBTypesMethods::distance(entityPosition, _position) <
-        (radiusEntity + thornBallRadius)
+        JBTypesMethods::distance(boundingSpherePosition, _position) <
+        (boundingSphereRadius + thornBallRadius)
         ) {
         _intersectionTime = JBTypesMethods::getTimePointMSNow();
         _hasHit = true;

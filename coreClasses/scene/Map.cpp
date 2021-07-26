@@ -15,13 +15,9 @@
 
 Map::Map(Map::MapInfo&& mapInfo):
     _blocks(std::move(mapInfo.blocks)),
-    _blocksInfo(std::move(mapInfo.blocksInfo)),
-    _blocksWithInteractionInfo(getBlocksWithInteraction()),
-    _blocksWithItemsIndices(getBlocksWithItems()),
-    _enemies(std::move(mapInfo.enemiesInfo)),
-    _specials(std::move(mapInfo.specialInfo)),
-    _blocksTeleporters(createBlocksTeleporters()),
-    _specialsState(createSpecialStates()),
+    _blocksWithInteraction(createBlocksWithInteraction()),
+    _blocksWithItems(createBlocksWithItems()),
+    _blocksWithSpecials(createBlocksWithSpecials()),
     _width(std::move(mapInfo.width)),
     _height(std::move(mapInfo.height)),
     _depth(std::move(mapInfo.depth)),
@@ -30,26 +26,21 @@ Map::Map(Map::MapInfo&& mapInfo):
     _beginZ(std::move(mapInfo.beginZ)),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _blocksInteractions([this] (size_t blockNumber) {
-                            const Block_sptr& block =
-                                getBlock(_blocksWithInteractionInfo.at(blockNumber).index);
-                            return block->interaction(
+                            return _blocksWithInteraction.at(blockNumber)->interaction(
                                 _dirBallInteractions,
                                 _timeInteractions,
                                 _posBallInteractions
                                 );
-                        }, _blocksWithInteractionInfo.size()),
+                        }, _blocksWithInteraction.size()),
     _itemsInteractions([this] (size_t blockNumber) {
-                           const Block_sptr& block =
-                               getBlock(_blocksWithItemsIndices.at(blockNumber));
-                           if (block->hasItems()) {
-                               block->catchItem(_posBallInteractions, _radiusInteractions);
-                           }
-                       }, _blocksWithItemsIndices.size()),
-    _enemiesInteractions([this] (size_t enemyNumber) {
-                             const Map::EnemyInfo enemyInfo = _enemies.at(enemyNumber);
-                             const std::shared_ptr <Enemy> enemy = enemyInfo.enemy;
-                             return enemy->update(_posBallInteractions, _radiusInteractions);
-                         }, _enemies.size()),
+                            _blocksWithItems.at(blockNumber)->catchItem(_posBallInteractions, _radiusInteractions);
+                       }, _blocksWithItems.size()),
+    _enemiesInteractions([this] (size_t blockNumber) {
+                            _blocksWithEnemies.at(blockNumber)->updateEnemies(
+                                _posBallInteractions,
+                                _radiusInteractions
+                            );
+                         }, _blocksWithEnemies.size(),
     _dirBallInteractions(JBTypes::Dir::North),
     _posBallInteractions({ 0.f, 0.f, 0.f }),
     _radiusInteractions(0.f),
@@ -68,36 +59,6 @@ Block_sptr Map::getBlock (size_t index) {
         static_cast <const Map&>(*this).getBlock(index);
 
     return std::const_pointer_cast <Block>(constBlock);
-}
-
-std::vector <Map::BlockInfo> Map::getBlocksWithInteraction() const {
-    std::vector <Map::BlockInfo> blocksWithInteraction;
-    for (unsigned int i = 0; i < _blocksInfo.size(); ++i) {
-        const CstBlock_sptr& block =
-            getBlock(_blocksInfo.at(i).index);
-        if (block->hasInteraction()) {
-            blocksWithInteraction.push_back(_blocksInfo.at(i));
-        }
-    }
-    return blocksWithInteraction;
-}
-
-std::vector <size_t> Map::getBlocksWithItems() const {
-    std::vector <size_t> blocksWithItemsIndices;
-    for (unsigned int i = 0; i < _blocksInfo.size(); ++i) {
-        const size_t index = _blocksInfo.at(i).index;
-        const CstBlock_sptr& block =
-            getBlock(index);
-        if (block->hasItems()) {
-            blocksWithItemsIndices.push_back(index);
-        }
-    }
-    return blocksWithItemsIndices;
-}
-
-const std::map <JBTypes::Color, Map::TeleportersInfo>&
-Map::getBlocksTeleporters() const {
-    return _blocksTeleporters;
 }
 
 std::map <JBTypes::Color, Map::TeleportersInfo> Map::createBlocksTeleporters() const {
@@ -144,6 +105,72 @@ std::map <JBTypes::Color, Map::TeleportersInfo> Map::createBlocksTeleporters() c
     return blocksTeleporters;
 }
 
+std::string Map::positionToString(const JBTypes::vec3ui& position) {
+    return std::to_string(position.at(0)) + "," + 
+        std::to_string(position.at(1)) + "," +
+        std::to_string(position.at(2));
+}
+
+JBTypes::vec3ui Map::stringToPosition(const std::string& stringPosition) {
+    const auto& firstComma = std::find(stringPosition.begin(), stringPosition.end(), ',');
+    const auto& secondComma = std::find(firstComma + 1, stringPosition.end(), ',');
+    return {
+        std::stoi(std::string(stringPosition.begin(), firstComma)), 
+        std::stoi(std::string(firstComma + 1, secondComma)), 
+        std::stoi(std::string(secondComma + 1, stringPosition.end()))
+    };
+}
+
+std::map<std::string,Block_sptr> Map::createBlockPositions() const {
+    std::map<std::string,Block_sptr> positions;
+    for (const auto& block: _blocks) {
+        const auto position = block->position();
+        positions[positionToString(position)] = block;
+    }
+    return positions;
+}
+
+std::vector<Block_sptr> Map::createBlocksWithInteraction() const {
+    std::vector<Block_sptr>  blocksWithInteraction;
+    for (const auto& block: _blocks) {
+        if (block->hasInteraction()) {
+            blocksWithInteraction.push_back(block);
+        }
+    }
+    return blocksWithInteraction;
+}
+
+std::vector<Block_sptr> Map::createBlocksWithItems() const {
+    std::vector<Block_sptr>  blocksWithItems;
+    for (const auto& block: _blocks) {
+        if (block->getItems().size() > 0) {
+            blocksWithItems.push_back(block);
+        }
+    }
+    return blocksWithItems;
+}
+
+std::vector<Block_sptr> Map::createBlocksWithEnemies() const {
+    std::vector<Block_sptr> blocksWithEnemies;
+    for (const auto& block: _blocks) {
+        if (block->getEnemies() > 0) {
+            blocksWithEnemies.push_back(block);
+        }
+    }
+    return blocksWithEnemies;
+}
+
+std::vector<Block_sptr> Map::createBlocksWithSpecials() const {
+    std::vector<Block_sptr>  blocksWithSpecials;
+    for (const auto& block: _blocks) {
+        if (block->getSpe > 0) {
+            blocksWithItems.push_back(block);
+        }
+    }
+    return blocksWithSpecials;
+}
+
+// TODO: move to special class
 std::map <JBTypes::Color, bool> Map::createSpecialStates() const {
     constexpr bool defaultStateValue = true;
     return {
@@ -156,32 +183,8 @@ std::map <JBTypes::Color, bool> Map::createSpecialStates() const {
     };
 }
 
-const std::map <JBTypes::Color, bool>& Map::getSpecialStates() const {
-    return _specialsState;
-}
-
 CstBlock_sptr Map::getBlock (int x, int y, int z) const {
-    CstBlock_sptr block;
-    if (
-        x >= static_cast <int>(_width) ||
-        y >= static_cast <int>(_height) ||
-        z >= static_cast <int>(_depth) ||
-        x < 0 || y < 0 || z < 0
-        )
-        block = nullptr;
-    else {
-        size_t index = _width * (z + y * _depth) + x;
-        block = _blocks.at(index);
-    }
-    return block;
-}
-
-JBTypes::vec3ui Map::getBlockCoords (size_t index) const {
-    return getBlockCoords(index, _width, _depth);
-}
-
-size_t Map::getIndex (const JBTypes::vec3ui& coords) const {
-    return _width * (coords.at(2) + coords.at(1) * _depth) + coords.at(0);
+    return _blocksPositions.at(positionToString({x,y,z}));
 }
 
 unsigned int Map::width() const {

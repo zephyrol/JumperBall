@@ -52,9 +52,15 @@ virtual bool isExists() const;
 const JBTypes::vec3f& localScale() const;
 const JBTypes::vec3f& localTranslation() const;
 
-const std::shared_ptr <const Item> item(size_t number) const;
+const vecCstItem_sptr& getItems() const;
+const vecCstEnemy_sptr& getEnemies() const;
+const vecCstSpecial_sptr& getSpecials() const;
+
 bool hasInteraction() const;
+
 void catchItem(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
+void updateEnemies(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
+
 virtual const bool& isFixed() const;
 const JBTypes::vec3ui& position() const;
 
@@ -68,8 +74,11 @@ static JBTypes::vec3f itemPosition(const JBTypes::vec3ui& pos, unsigned int dirU
 protected:
 const JBTypes::vec3ui _position;
 const vecItem_sptr _items;
+const vecCstItem_sptr _cstItems;
 const vecEnemy_sptr _enemies;
+const vecCstEnemy_sptr _cstEnemies;
 const vecSpecial_sptr _specials;
+const vecCstSpecial_sptr _cstSpecials;
 const bool _hasInteraction;
 const bool _isFixed;
 JBTypes::vec3f _localScale;

@@ -27,8 +27,8 @@ DarkBall::DarkBall(const JBTypes::vec3ui& initialPosition,
     _movementDirection(movementDirection) {
 }
 
-Enemy::Effect DarkBall::update (const JBTypes::vec3f& entityPosition,
-                                float radiusEntity) {
+Enemy::Effect DarkBall::update (const JBTypes::vec3f& boundingSpherePosition,
+                                float boundingSphereRadius) {
     const ClassicalMechanics& mechanics = darkBallClassicalMechanics;
     const float timeSinceCreation =
         JBTypesMethods::getTimeSecondsSinceTimePoint(creationTime());
@@ -95,7 +95,7 @@ Enemy::Effect DarkBall::update (const JBTypes::vec3f& entityPosition,
     _position.y = _initialPosition.y + _transform.at(1);
     _position.z = _initialPosition.z + _transform.at(2);
 
-    touchingTest(entityPosition, radiusEntity);
+    touchingTest(boundingSpherePosition, boundingSphereRadius);
     return _hasHit
            ? Enemy::Effect::Burst
            : Enemy::Effect::Nothing;
@@ -105,11 +105,11 @@ const JBTypes::Dir& DarkBall::movementDirection() const {
     return _movementDirection;
 }
 
-void DarkBall::touchingTest (const JBTypes::vec3f& entityPosition,
-                             float radiusEntity) {
+void DarkBall::touchingTest (const JBTypes::vec3f& boundingSpherePosition,
+                             float boundingSphereRadius) {
     if (
-        JBTypesMethods::distance(entityPosition, _position) <
-        (radiusEntity + darkBallRadius)
+        JBTypesMethods::distance(boundingSpherePosition, _position) <
+        (boundingSphereRadius + darkBallRadius)
         ) {
         _intersectionTime = JBTypesMethods::getTimePointMSNow();
         _hasHit = true;

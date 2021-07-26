@@ -59,13 +59,10 @@ float getLargestSize() const;
 float getTimeSinceCreation() const;
 
 
-JBTypes::vec3ui getBlockCoords(size_t index) const;
-size_t getIndex(const JBTypes::vec3ui& coords) const;
-std::vector <size_t> getBlocksWithItems() const;
-const std::map <JBTypes::Color, Map::TeleportersInfo>& getBlocksTeleporters() const;
+vecCstBlock_sptr getBlocksWithItems() const;
 
+// TODO: move to special
 std::map <JBTypes::Color, bool> createSpecialStates() const;
-const std::map <JBTypes::Color, bool>& getSpecialStates() const;
 
 Map::Effect interaction(const JBTypes::Dir& ballDir, const JBTypes::vec3f& posBall, float radius);
 
@@ -76,13 +73,22 @@ Block_sptr getBlock(size_t index);
 static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int depth);
 
 private:
-std::map <JBTypes::Color, Map::TeleportersInfo> createBlocksTeleporters() const;
 
-const std::vector <Block_sptr> _blocks;
-const std::map<std::string,Block_sptr> blocksPositions;
-const std::vector <Block_sptr> _blocksWithInteraction;
-std::vector <size_t> _blocksWithItemsIndices;
-std::map <JBTypes::Color, bool> _specialsState;
+static std::string positionToString(const JBTypes::vec3ui& position);
+static JBTypes::vec3ui stringToPosition(const std::string& stringPosition);
+
+std::map<std::string,Block_sptr> createBlockPositions() const;
+std::vector<Block_sptr> createBlocksWithInteraction() const;
+std::vector<Block_sptr> createBlocksWithItems() const;
+std::vector<Block_sptr> createBlocksWithEnemies() const;
+std::vector<Block_sptr> createBlocksWithSpecials() const;
+
+const vecBlock_sptr _blocks;
+const std::map<std::string,Block_sptr> _blocksPositions;
+const vecBlock_sptr _blocksWithInteraction;
+const vecBlock_sptr _blocksWithItems;
+const vecBlock_sptr _blocksWithEnemies;
+const vecBlock_sptr _blocksWithSpecials;
 
 const unsigned int _width;
 const unsigned int _height;

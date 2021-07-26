@@ -16,8 +16,11 @@ Block::Block(
     bool isFixed):
     _position(position),
     _items(items),
+    _cstItems(_items),
     _enemies(enemies),
+    _cstEnemies(_enemies),
     _specials(specials),
+    _cstSpecials(_specials),
     _hasInteraction(hasInteraction),
     _isFixed(isFixed),
     _localScale{1.f, 1.f, 1.f},
@@ -46,6 +49,18 @@ const JBTypes::vec3f& Block::localTranslation() const {
     return _localTranslation;
 }
 
+const vecCstItem_sptr& Block::getItems() const {
+    return _cstItems; 
+}
+
+const vecCstEnemy_sptr& Block::getEnemies() const {
+    return _cstEnemies;
+}
+
+const vecCstSpecial_sptr& Block::getSpecials() const {
+    return _cstSpecials; 
+}
+
 Block::Effect Block::interaction (
     const JBTypes::Dir&,
     const JBTypes::timePointMs&,
@@ -58,10 +73,6 @@ std::string Block::getBlockOptions() const {
     return "";
 }
 
-const std::shared_ptr <const Item> Block::item (size_t number) const {
-    return _items.at(number);
-}
-
 bool Block::hasInteraction() const {
     return _hasInteraction;
 }
@@ -71,6 +82,12 @@ void Block::catchItem (const JBTypes::vec3f& boundingSphereCenter, float boundin
         if (!item->isGotten()) {
             item->catchingTest(boundingSphereCenter, boundingSphereRadius);
         }
+    }
+}
+
+void Block::updateEnemies(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius) {
+    for (Enemy_sptr enemy: _enemies) {
+        enemy->update(boundingSphereCenter, boundingSphereRadius);
     }
 }
 

@@ -28,9 +28,9 @@ Laser::Laser(const JBTypes::Color& color,
     _isActivated(true) {
 }
 
-Enemy::Effect Laser::update (const JBTypes::vec3f& entityPosition,
-                             float radiusEntity) {
-    touchingTest(entityPosition, radiusEntity);
+Enemy::Effect Laser::update (const JBTypes::vec3f& boundingSpherePosition,
+                             float boundingSphereRadius) {
+    touchingTest(boundingSpherePosition, boundingSphereRadius);
 
     if (_isActivated) {
         _transform.at(6) = 1.f;
@@ -54,19 +54,19 @@ void Laser::switchOnOff() {
     _isActivated = !_isActivated;
 }
 
-void Laser::touchingTest (const JBTypes::vec3f& entityPosition,
-                          float radiusEntity) {
+void Laser::touchingTest (const JBTypes::vec3f& boundingSpherePosition,
+                          float boundingSphereRadius) {
     if (!_isActivated) {
         return;
     }
     constexpr float offsetLaser = 0.5f;
 
-    const float entityMinX = entityPosition.x - radiusEntity;
-    const float entityMaxX = entityPosition.x + radiusEntity;
-    const float entityMinY = entityPosition.y - radiusEntity;
-    const float entityMaxY = entityPosition.y + radiusEntity;
-    const float entityMinZ = entityPosition.z - radiusEntity;
-    const float entityMaxZ = entityPosition.z + radiusEntity;
+    const float entityMinX = boundingSpherePosition.x - boundingSphereRadius;
+    const float entityMaxX = boundingSpherePosition.x + boundingSphereRadius;
+    const float entityMinY = boundingSpherePosition.y - boundingSphereRadius;
+    const float entityMaxY = boundingSpherePosition.y + boundingSphereRadius;
+    const float entityMinZ = boundingSpherePosition.z - boundingSphereRadius;
+    const float entityMaxZ = boundingSpherePosition.z + boundingSphereRadius;
 
     const float fLength = static_cast <float>(length());
     const float laserMinX = direction() == JBTypes::Dir::West
