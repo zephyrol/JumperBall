@@ -36,11 +36,11 @@ Map::Map(Map::MapInfo&& mapInfo):
                             _blocksWithItems.at(blockNumber)->catchItem(_posBallInteractions, _radiusInteractions);
                        }, _blocksWithItems.size()),
     _enemiesInteractions([this] (size_t blockNumber) {
-                            _blocksWithEnemies.at(blockNumber)->updateEnemies(
+                            return _blocksWithEnemies.at(blockNumber)->updateEnemies(
                                 _posBallInteractions,
                                 _radiusInteractions
                             );
-                         }, _blocksWithEnemies.size(),
+                         }, _blocksWithEnemies.size()),
     _dirBallInteractions(JBTypes::Dir::North),
     _posBallInteractions({ 0.f, 0.f, 0.f }),
     _radiusInteractions(0.f),
@@ -54,57 +54,6 @@ Block_sptr Map::getBlock (int x, int y, int z) {
     return std::const_pointer_cast <Block>(constBlock);
 }
 
-Block_sptr Map::getBlock (size_t index) {
-    const CstBlock_sptr& constBlock =
-        static_cast <const Map&>(*this).getBlock(index);
-
-    return std::const_pointer_cast <Block>(constBlock);
-}
-
-std::map <JBTypes::Color, Map::TeleportersInfo> Map::createBlocksTeleporters() const {
-    std::map <JBTypes::Color, Map::TeleportersInfo> blocksTeleporters;
-    for (
-        unsigned int colorInt = static_cast <unsigned int>(JBTypes::Color::Red);
-        colorInt < static_cast <unsigned int>(JBTypes::Color::Yellow);
-        ++colorInt
-        ) {
-        const JBTypes::Color color = static_cast <JBTypes::Color>(colorInt);
-        size_t counterTeleporter = 0;
-        size_t indexFirstTeleporter;
-        size_t indexSecondTeleporter;
-        JBTypes::Dir directionFirstTeleporter;
-        JBTypes::Dir directionSecondTeleporter;
-        for (const Map::SpecialInfo& specialInfo : _specials) {
-            if (
-                specialInfo.type == Map::SpecialTypes::Teleporter &&
-                specialInfo.special->getColor() == color
-                ) {
-                if (counterTeleporter == 0) {
-                    indexFirstTeleporter = specialInfo.index;
-                    directionFirstTeleporter = specialInfo.special->direction();
-                } else {
-                    indexSecondTeleporter = specialInfo.index;
-                    directionSecondTeleporter = specialInfo.special->direction();
-                }
-                ++counterTeleporter;
-            }
-        }
-        if (counterTeleporter == 2) {
-            Map::TeleportersInfo teleporterInfo;
-            teleporterInfo.coupleIndices =
-            { indexFirstTeleporter, indexSecondTeleporter };
-            teleporterInfo.coupleDirections =
-            { directionFirstTeleporter, directionSecondTeleporter };
-            blocksTeleporters[color] = teleporterInfo;
-        } else if (counterTeleporter != 0) {
-            std::cerr << "Error: The map contains an invalid number of " <<
-                " teleporters for a specific color : " << counterTeleporter
-                      << std::endl;
-        }
-    }
-    return blocksTeleporters;
-}
-
 std::string Map::positionToString(const JBTypes::vec3ui& position) {
     return std::to_string(position.at(0)) + "," + 
         std::to_string(position.at(1)) + "," +
@@ -115,9 +64,9 @@ JBTypes::vec3ui Map::stringToPosition(const std::string& stringPosition) {
     const auto& firstComma = std::find(stringPosition.begin(), stringPosition.end(), ',');
     const auto& secondComma = std::find(firstComma + 1, stringPosition.end(), ',');
     return {
-        std::stoi(std::string(stringPosition.begin(), firstComma)), 
-        std::stoi(std::string(firstComma + 1, secondComma)), 
-        std::stoi(std::string(secondComma + 1, stringPosition.end()))
+        static_cast<unsigned int>(std::stoi(std::string(stringPosition.begin(), firstComma))), 
+        static_cast<unsigned int>(std::stoi(std::string(firstComma + 1, secondComma))), 
+        static_cast<unsigned int>(std::stoi(std::string(secondComma + 1, stringPosition.end())))
     };
 }
 
@@ -153,7 +102,7 @@ std::vector<Block_sptr> Map::createBlocksWithItems() const {
 std::vector<Block_sptr> Map::createBlocksWithEnemies() const {
     std::vector<Block_sptr> blocksWithEnemies;
     for (const auto& block: _blocks) {
-        if (block->getEnemies() > 0) {
+        if (block->getEnemies().size() > 0) {
             blocksWithEnemies.push_back(block);
         }
     }
@@ -163,8 +112,8 @@ std::vector<Block_sptr> Map::createBlocksWithEnemies() const {
 std::vector<Block_sptr> Map::createBlocksWithSpecials() const {
     std::vector<Block_sptr>  blocksWithSpecials;
     for (const auto& block: _blocks) {
-        if (block->getSpe > 0) {
-            blocksWithItems.push_back(block);
+        if (block->getSpecials().size() > 0) {
+            blocksWithSpecials.push_back(block);
         }
     }
     return blocksWithSpecials;
@@ -184,7 +133,11 @@ std::map <JBTypes::Color, bool> Map::createSpecialStates() const {
 }
 
 CstBlock_sptr Map::getBlock (int x, int y, int z) const {
-    return _blocksPositions.at(positionToString({x,y,z}));
+    return _blocksPositions.at(positionToString({
+        static_cast<unsigned int>(x),
+        static_cast<unsigned int>(y),
+        static_cast<unsigned int>(z)
+    }));
 }
 
 unsigned int Map::width() const {
@@ -256,16 +209,16 @@ Map::Effect Map::interaction (const JBTypes::Dir& ballDir, const JBTypes::vec3f&
         }
     }
 
-    std::shared_ptr <std::vector <Enemy::Effect> > enemiesEffects = _enemiesInteractions.waitTasks();
-    Enemy::Effect finalEnemyEffect = Enemy::Effect::Nothing;
-    for (Enemy::Effect& enemyEffect : *enemiesEffects) {
-        if (enemyEffect != Enemy::Effect::Nothing) {
+    std::shared_ptr <std::vector <Block::Effect> > enemiesEffects = _enemiesInteractions.waitTasks();
+    Block::Effect finalEnemyEffect = Block::Effect::Nothing;
+    for (Block::Effect& enemyEffect : *enemiesEffects) {
+        if (enemyEffect != Block::Effect::Nothing) {
             finalEnemyEffect = enemyEffect;
         }
     }
     _itemsInteractions.waitTasks();
 
-    if (finalBlockEffect == Block::Effect::Burst || finalEnemyEffect == Enemy::Effect::Burst) {
+    if (finalBlockEffect == Block::Effect::Burst || finalEnemyEffect == Block::Effect::Burst) {
         return Map::Effect::Burst;
     } else if (finalBlockEffect == Block::Effect::Jump) {
         return Map::Effect::Jump;
@@ -275,7 +228,7 @@ Map::Effect Map::interaction (const JBTypes::Dir& ballDir, const JBTypes::vec3f&
         return Map::Effect::Burn;
     } else if (
         finalBlockEffect == Block::Effect::Nothing ||
-        finalEnemyEffect == Enemy::Effect::Nothing
+        finalEnemyEffect == Block::Effect::Nothing
         ) {
         return Map::Effect::Nothing;
     }
@@ -283,25 +236,26 @@ Map::Effect Map::interaction (const JBTypes::Dir& ballDir, const JBTypes::vec3f&
 }
 
 void Map::switchColor (const JBTypes::Color& color) {
-    if (_specialsState.find(color) == _specialsState.end()) {
-        _specialsState[color] = false;
-    } else {
-        _specialsState.at(color) = !_specialsState.at(color);
-    }
+    // TODO update it
+    // if (_specialsState.find(color) == _specialsState.end()) {
+    //     _specialsState[color] = false;
+    // } else {
+    //     _specialsState.at(color) = !_specialsState.at(color);
+    // }
 
-    for (SpecialInfo& specialInfo : _specials) {
-        const std::shared_ptr <Special> special = specialInfo.special;
-        if (special && special->getColor() == color) {
-            special->switchOnOff();
-        }
-    }
+    // for (SpecialInfo& specialInfo : _specials) {
+    //     const std::shared_ptr <Special> special = specialInfo.special;
+    //     if (special && special->getColor() == color) {
+    //         special->switchOnOff();
+    //     }
+    // }
 
-    for (EnemyInfo& enemyInfo : _enemies) {
-        const std::shared_ptr <Enemy> enemy = enemyInfo.enemy;
-        if (enemy && enemy->getColor() == color) {
-            enemy->switchOnOff();
-        }
-    }
+    // for (EnemyInfo& enemyInfo : _enemies) {
+    //     const std::shared_ptr <Enemy> enemy = enemyInfo.enemy;
+    //     if (enemy && enemy->getColor() == color) {
+    //         enemy->switchOnOff();
+    //     }
+    // }
 }
 
 JBTypes::vec3ui Map::getBlockCoords (size_t index,

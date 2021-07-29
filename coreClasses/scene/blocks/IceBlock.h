@@ -15,10 +15,7 @@ IceBlock(const JBTypes::vec3ui& position);
 
 virtual unsigned char getBlockSymbol() const override;
 
-virtual Effect detectionEvent(
-    const JBTypes::Dir& ballDir,
-    const JBTypes::timePointMs& currentTime
-    );
+virtual Effect detectionEvent(const JBTypes::Dir& ballDir, const JBTypes::timePointMs& currentTime) override;
 };
 
 #endif /* ICEBLOCK_H */

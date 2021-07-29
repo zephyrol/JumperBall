@@ -100,7 +100,7 @@ const JBTypes::timePointMs _creationTime;
 
 ParallelTask <Block::Effect> _blocksInteractions;
 ParallelTask <void> _itemsInteractions;
-ParallelTask <Enemy::Effect> _enemiesInteractions;
+ParallelTask <Block::Effect> _enemiesInteractions;
 
 JBTypes::Dir _dirBallInteractions;
 JBTypes::vec3f _posBallInteractions;

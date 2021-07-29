@@ -1111,22 +1111,6 @@ void MapGenerator::compressNew(std::ifstream& input) {
 //    output.close();
 //}
 
-Map::BlockTypes MapGenerator::uintToBlockType (unsigned int number) {
-    Map::BlockTypes type;
-    switch (number) {
-    case 0: type = Map::BlockTypes::None; break;
-    case 1: type = Map::BlockTypes::Base; break;
-    case 2: type = Map::BlockTypes::Fire; break;
-    case 3: type = Map::BlockTypes::Ice; break;
-    case 4: type = Map::BlockTypes::Sharp; break;
-    case 5: type = Map::BlockTypes::Brittle; break;
-    case 6: type = Map::BlockTypes::Jump; break;
-    case 7: type = Map::BlockTypes::Ghost; break;
-    default: type = Map::BlockTypes::None; break;
-    }
-    return type;
-}
-
 std::string MapGenerator::applyOffset (const std::string& s, int offset) {
     std::string offsetString = s;
     for (char& c : offsetString) {

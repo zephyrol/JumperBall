@@ -511,20 +511,21 @@ void Ball::blockEvent (const JBTypes::vec3ui& blockPos) noexcept{
         _stateOfLife = StateOfLife::Normal;
     }
 
+    // TODO update it
     // Specials
-    for (const Map::SpecialInfo& specialInfo : _map.getSpecialInfo()) {
-        const std::shared_ptr <const Special>& special = specialInfo.special;
-        if (special && blockPos == special->position() && _currentSide == special->direction()) {
-            const JBTypes::Color& color = special->getColor();
-            if (specialInfo.type == Map::SpecialTypes::Teleporter) {
-                if (_map.getSpecialStates().at(color)) {
-                    teleport(color);
-                }
-            } else { // Switch Button
-                _map.switchColor(color);
-            }
-        }
-    }
+    // for (const Map::SpecialInfo& specialInfo : _map.getSpecialInfo()) {
+    //     const std::shared_ptr <const Special>& special = specialInfo.special;
+    //     if (special && blockPos == special->position() && _currentSide == special->direction()) {
+    //         const JBTypes::Color& color = special->getColor();
+    //         if (specialInfo.type == Map::SpecialTypes::Teleporter) {
+    //             if (_map.getSpecialStates().at(color)) {
+    //                 teleport(color);
+    //             }
+    //         } else { // Switch Button
+    //             _map.switchColor(color);
+    //         }
+    //     }
+    // }
 
 }
 
@@ -675,38 +676,39 @@ void Ball::teleportingUpdate() noexcept{
         _teleportationCoefficient = timeSinceAction / Ball::halfTimeTeleportationDuration;
         return;
     }
-    const size_t blockIndex = _map.getIndex({ _currentBlockX, _currentBlockY, _currentBlockZ });
+    // TODO update it
+    // const size_t blockIndex = _map.getIndex({ _currentBlockX, _currentBlockY, _currentBlockZ });
 
-    const auto& blockTeleporter = _map.getBlocksTeleporters();
-    const Map::TeleportersInfo teleporterInfo = blockTeleporter.at(_teleportationColor);
+    // const auto& blockTeleporter = _map.getBlocksTeleporters();
+    // const Map::TeleportersInfo teleporterInfo = blockTeleporter.at(_teleportationColor);
 
-    const size_t firstTeleporterIndex = teleporterInfo.coupleIndices.first;
-    const size_t secondTeleporterIndex = teleporterInfo.coupleIndices.second;
+    // const size_t firstTeleporterIndex = teleporterInfo.coupleIndices.first;
+    // const size_t secondTeleporterIndex = teleporterInfo.coupleIndices.second;
 
-    const JBTypes::Dir firstTeleporterDir = teleporterInfo.coupleDirections.first;
-    const JBTypes::Dir secondTeleporterDir = teleporterInfo.coupleDirections.second;
+    // const JBTypes::Dir firstTeleporterDir = teleporterInfo.coupleDirections.first;
+    // const JBTypes::Dir secondTeleporterDir = teleporterInfo.coupleDirections.second;
 
-    const size_t destinationIndex = blockIndex == firstTeleporterIndex
-                                    ? secondTeleporterIndex
-                                    : firstTeleporterIndex;
+    // const size_t destinationIndex = blockIndex == firstTeleporterIndex
+    //                                 ? secondTeleporterIndex
+    //                                 : firstTeleporterIndex;
 
-    const JBTypes::Dir destinationDir = blockIndex == firstTeleporterIndex
-                                        ? secondTeleporterDir
-                                        : firstTeleporterDir;
+    // const JBTypes::Dir destinationDir = blockIndex == firstTeleporterIndex
+    //                                     ? secondTeleporterDir
+    //                                     : firstTeleporterDir;
 
-    const JBTypes::vec3ui& destinationPosition = _map.getBlockCoords(destinationIndex);
+    // const JBTypes::vec3ui& destinationPosition = _map.getBlockCoords(destinationIndex);
 
-    _currentBlockX = destinationPosition.at(0);
-    _currentBlockY = destinationPosition.at(1);
-    _currentBlockZ = destinationPosition.at(2);
-    if (_currentSide != destinationDir) {
-        const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(destinationDir);
-        _lookTowards = JBTypesMethods::vectorAsDirection(
-            JBTypesMethods::cross(vecDir, { vecDir.y, -vecDir.x, 0.f })
-            );
-    }
-    _currentSide = destinationDir;
-    _teleportationCoefficient = 1.f;
+    // _currentBlockX = destinationPosition.at(0);
+    // _currentBlockY = destinationPosition.at(1);
+    // _currentBlockZ = destinationPosition.at(2);
+    // if (_currentSide != destinationDir) {
+    //     const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(destinationDir);
+    //     _lookTowards = JBTypesMethods::vectorAsDirection(
+    //         JBTypesMethods::cross(vecDir, { vecDir.y, -vecDir.x, 0.f })
+    //         );
+    // }
+    // _currentSide = destinationDir;
+    // _teleportationCoefficient = 1.f;
 
     stay();
     update();

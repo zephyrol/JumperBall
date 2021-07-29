@@ -55,7 +55,6 @@ std::string convertToBase(unsigned long long int number, unsigned char base);
 unsigned long long int convertToBase10(const std::string& s, unsigned int base);
 std::string applyOffset(const std::string& s, int offset);
 std::string substractOffset(const std::string& s, int offset);
-Map::BlockTypes uintToBlockType(unsigned int number);
 
 // Reading functions
 unsigned int readUnsignedInt(std::ifstream& input);

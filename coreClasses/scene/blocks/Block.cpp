@@ -25,7 +25,6 @@ Block::Block(
     _isFixed(isFixed),
     _localScale{1.f, 1.f, 1.f},
     _localTranslation{0.f, 0.f, 0.f}
-)
 {
 }
 
@@ -85,10 +84,15 @@ void Block::catchItem (const JBTypes::vec3f& boundingSphereCenter, float boundin
     }
 }
 
-void Block::updateEnemies(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius) {
+Block::Effect Block::updateEnemies(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius) {
+    Block::Effect effect;
     for (Enemy_sptr enemy: _enemies) {
-        enemy->update(boundingSphereCenter, boundingSphereRadius);
+        const auto enemyEffect = enemy->update(boundingSphereCenter, boundingSphereRadius);
+        if(enemyEffect == Enemy::Effect::Burst) {
+            effect = Block::Effect::Burst;
+        }
     }
+    return effect;
 }
 
 const bool& Block::isFixed() const {

@@ -25,7 +25,7 @@ public:
 Block(
     const JBTypes::vec3ui& position,
     const vecItem_sptr& items, 
-    const vecEnemy_sptr& enemies,
+    const vecCstEnemy_sptr& enemies,
     const vecSpecial_sptr& specials,
     bool hasInteraction = false,
     bool isFixed = true
@@ -59,7 +59,7 @@ const vecCstSpecial_sptr& getSpecials() const;
 bool hasInteraction() const;
 
 void catchItem(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
-void updateEnemies(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
+Block::Effect updateEnemies(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
 
 virtual const bool& isFixed() const;
 const JBTypes::vec3ui& position() const;
