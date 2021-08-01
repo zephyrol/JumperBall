@@ -10,10 +10,6 @@
 IceBlock::IceBlock(const JBTypes::vec3ui& position):Block(position) {
 }
 
-unsigned char IceBlock::getBlockSymbol() const {
-    return 'I';
-}
-
 Block::Effect IceBlock::detectionEvent (const JBTypes::Dir&,
                                         const JBTypes::timePointMs&) {
     return Block::Effect::Slide;

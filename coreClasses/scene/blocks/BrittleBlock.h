@@ -16,19 +16,17 @@ BrittleBlock(const JBTypes::vec3ui& position);
 bool isExists() const override;
 
 void setFallDirection(JBTypes::Direction
-                      ballDir);
-
-virtual unsigned char getBlockSymbol() const override;
+                      direction);
 
 virtual Block::Effect interaction(
-    const JBTypes::Dir& ballDir,
+    const JBTypes::Dir& direction,
     const JBTypes::timePointMs& currentTime,
-    const JBTypes::vec3f& posBall
+    const JBTypes::vec3f& boundingSpherePosition
     ) override;
 
 virtual Block::Effect detectionEvent(
     const JBTypes::Dir&
-    ballDir,
+    direction,
     const JBTypes::timePointMs&
     currentTime) override;
 

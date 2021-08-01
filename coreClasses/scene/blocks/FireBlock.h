@@ -14,11 +14,9 @@ public:
 FireBlock(const JBTypes::vec3ui& position);
 
 virtual Effect detectionEvent(
-    const JBTypes::Dir& ballDir,
+    const JBTypes::Dir& direction,
     const JBTypes::timePointMs& currentTime
 ) override;
-
-virtual unsigned char getBlockSymbol() const override;
 
 };
 

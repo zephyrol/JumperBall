@@ -27,22 +27,14 @@ Block(
     const vecItem_sptr& items, 
     const vecCstEnemy_sptr& enemies,
     const vecSpecial_sptr& specials,
-    bool hasInteraction = false,
+    bool alwaysHasInteractions = false,
     bool isFixed = true
 );
 
 virtual ~Block() = default;
 enum class Effect { Nothing, Burst, Burn, Slide, Jump };
 
-virtual Effect interaction(
-    const JBTypes::Dir& ballDir,
-    const JBTypes::timePointMs& currentTime,
-    const JBTypes::vec3f& posBall
-    );
-virtual Effect detectionEvent(const JBTypes::Dir& ballDir, const JBTypes::timePointMs& currentTime);
-
-virtual unsigned char getBlockSymbol() const = 0;
-virtual std::string getBlockOptions() const;
+virtual Effect detectionEvent(const JBTypes::Dir& direction, const JBTypes::timePointMs& currentTime);
 
 static constexpr size_t itemsNumber = 6;
 
@@ -58,6 +50,13 @@ const vecCstSpecial_sptr& getSpecials() const;
 
 bool hasInteraction() const;
 
+void update(
+    const JBTypes::Dir& direction,
+    const JBTypes::timePointMs& currentTime,
+    const JBTypes::vec3f& boundingSpherePosition,
+    float boundingSphereRadius
+);
+
 void catchItem(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
 Block::Effect updateEnemies(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
 
@@ -68,7 +67,13 @@ SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const overrid
 SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 SceneElement::GlobalState getGlobalState() const override;
 
-static JBTypes::vec3f itemPosition(const JBTypes::vec3ui& pos, unsigned int dirUint);
+private: 
+
+virtual Effect interaction(
+    const JBTypes::Dir& direction,
+    const JBTypes::timePointMs& currentTime,
+    const JBTypes::vec3f& boundingSpherePosition
+);
 
 
 protected:

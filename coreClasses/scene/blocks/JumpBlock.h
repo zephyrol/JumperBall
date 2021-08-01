@@ -14,11 +14,9 @@ public:
 JumpBlock(const JBTypes::vec3ui& position, const std::array <bool, 6>& facesJumpers);
 
 std::array <bool, 6> faceInfo() const override;
-virtual unsigned char getBlockSymbol() const override;
-virtual std::string getBlockOptions() const override;
 
 virtual Effect detectionEvent(
-    const JBTypes::Dir& ballDir,
+    const JBTypes::Dir& direction,
     const JBTypes::timePointMs& currentTime
 ) override;
 

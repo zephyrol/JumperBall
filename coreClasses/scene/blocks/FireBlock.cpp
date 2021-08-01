@@ -14,7 +14,3 @@ Block::Effect FireBlock::detectionEvent (const JBTypes::Dir&,
                                          const JBTypes::timePointMs&) {
     return Block::Effect::Burn;
 }
-
-unsigned char FireBlock::getBlockSymbol() const {
-    return 'F';
-}

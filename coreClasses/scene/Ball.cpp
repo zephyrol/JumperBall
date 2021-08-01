@@ -25,9 +25,7 @@ Ball::Ball(Map& map):
     _jumpingType(Ball::JumpingType::Short),
     _map(map),
     _mechanicsPatternJumping(getRadius()),
-    _mechanicsPatternLongJumping(getRadius(),
-                                 3.f,
-                                 4.2f),
+    _mechanicsPatternLongJumping(getRadius(), 3.f, 4.2f),
     _mechanicsPatternFalling(getRadius(), 0.f, 0.f),
     _timeAction(std::chrono::system_clock::now()),
     _timeStateOfLife(std::chrono::system_clock::now()),
@@ -236,15 +234,19 @@ void Ball::isGoingStraightAheadIntersectBlock() noexcept{
         const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
         const JBTypes::vec3f lookVec = JBTypesMethods::directionAsVector(_lookTowards);
 
-        const int aboveNearX = _currentBlockX + static_cast <int>(sideVec.x + lookVec.x);
-        const int aboveNearY = _currentBlockY + static_cast <int>(sideVec.y + lookVec.y);
-        const int aboveNearZ = _currentBlockZ + static_cast <int>(sideVec.z + lookVec.z);
-        const int aboveFarX = _currentBlockX + static_cast <int>(sideVec.x + 2.f * lookVec.x);
-        const int aboveFarY = _currentBlockY + static_cast <int>(sideVec.y + 2.f * lookVec.y);
-        const int aboveFarZ = _currentBlockZ + static_cast <int>(sideVec.z + 2.f * lookVec.z);
-        const int aboveVeryFarX = _currentBlockX + static_cast <int>(sideVec.x + 3.f * lookVec.x);
-        const int aboveVeryFarY = _currentBlockY + static_cast <int>(sideVec.y + 3.f * lookVec.y);
-        const int aboveVeryFarZ = _currentBlockZ + static_cast <int>(sideVec.z + 3.f * lookVec.z);
+        const int intBlockX = static_cast<int>(_currentBlockX);
+        const int intBlockY = static_cast<int>(_currentBlockY);
+        const int intBlockZ = static_cast<int>(_currentBlockZ);
+
+        const auto aboveNearX = intBlockX + static_cast <int>(sideVec.x + lookVec.x);
+        const auto aboveNearY = intBlockY + static_cast <int>(sideVec.y + lookVec.y);
+        const auto aboveNearZ = intBlockZ + static_cast <int>(sideVec.z + lookVec.z);
+        const auto aboveFarX = intBlockX + static_cast <int>(sideVec.x + 2.f * lookVec.x);
+        const auto aboveFarY = intBlockY + static_cast <int>(sideVec.y + 2.f * lookVec.y);
+        const auto aboveFarZ = intBlockZ + static_cast <int>(sideVec.z + 2.f * lookVec.z);
+        const auto aboveVeryFarX = intBlockX + static_cast <int>(sideVec.x + 3.f * lookVec.x);
+        const auto aboveVeryFarY = intBlockY + static_cast <int>(sideVec.y + 3.f * lookVec.y);
+        const auto aboveVeryFarZ = intBlockZ + static_cast <int>(sideVec.z + 3.f * lookVec.z);
 
         const CstBlock_sptr blockNear = _map.getBlock(aboveNearX, aboveNearY, aboveNearZ);
 
@@ -336,12 +338,12 @@ float Ball::getCrushingCoefficient() const noexcept{
             return (1.f - t) * _currentCrushing;
         };
 
-    if ( _state == Ball::State::Moving || _state == Ball::State::Jumping) {
+    if (_state == Ball::State::Moving || _state == Ball::State::Jumping) {
         return movementCrushingCoeff(timeToGetNextBlock);
     } 
-    if ( _state == Ball::State::TurningLeft || _state == Ball::State::TurningRight) {
+    if (_state == Ball::State::TurningLeft || _state == Ball::State::TurningRight) {
         return movementCrushingCoeff(timeToTurn);
-    } 
+    }
     return 0.f;
 }
 
@@ -367,7 +369,8 @@ void Ball::isFallingIntersectionBlock() noexcept{
             ).x;
         const float absCoveredDistance = fabs(coveredDistance);
         const bool inverseRotation = coveredDistance < 0.f;
-        for (size_t i = 0; i < absCoveredDistance; ++i) {
+        const auto distance = static_cast<size_t>(absCoveredDistance);
+        for (size_t i = 0; i < distance; ++i) {
             applyRotation(inverseRotation);
         }
     }

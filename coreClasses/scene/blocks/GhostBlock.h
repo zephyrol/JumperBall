@@ -14,13 +14,10 @@ public:
 GhostBlock(const JBTypes::vec3ui& position, float periodicity = 3.f);
 bool isExists() const override;
 virtual Block::Effect interaction(
-    const JBTypes::Dir& ballDir,
+    const JBTypes::Dir& direction,
     const JBTypes::timePointMs& currentTime,
-    const JBTypes::vec3f& posBall
+    const JBTypes::vec3f& boundingSpherePosition
 ) override;
-
-virtual unsigned char getBlockSymbol() const override;
-virtual std::string getBlockOptions() const override;
 
 private:
 const float _periodicity;

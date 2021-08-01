@@ -13,7 +13,6 @@
 class BaseBlock:public Block {
 public:
 BaseBlock(const JBTypes::vec3ui& position);
-virtual unsigned char getBlockSymbol() const override;
 };
 
 #endif /* BASEBLOCK_H */

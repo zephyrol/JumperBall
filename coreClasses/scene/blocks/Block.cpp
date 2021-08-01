@@ -12,7 +12,7 @@ Block::Block(
     const vecItem_sptr& items, 
     const vecEnemy_sptr& enemies,
     const vecSpecial_sptr& specials,
-    bool hasInteraction,
+    bool alwaysHasInteractions ,
     bool isFixed):
     _position(position),
     _items(items),
@@ -21,7 +21,7 @@ Block::Block(
     _cstEnemies(_enemies),
     _specials(specials),
     _cstSpecials(_specials),
-    _hasInteraction(hasInteraction),
+    _hasInteraction(alwaysHasInteractions || items.size() > 0 || enemies.size() > 0 || specials.size() > 0),
     _isFixed(isFixed),
     _localScale{1.f, 1.f, 1.f},
     _localTranslation{0.f, 0.f, 0.f}
@@ -74,6 +74,18 @@ std::string Block::getBlockOptions() const {
 
 bool Block::hasInteraction() const {
     return _hasInteraction;
+}
+
+Block::Effect Block::update(
+    const JBTypes::Dir& direction,
+    const JBTypes::timePointMs& currentTime,
+    const JBTypes::vec3f& boundingSpherePosition,
+    float boundingSphereRadius
+) {
+    const auto interactionEffect = interaction(direction, currentTime, boundingSpherePosition);
+}
+
+void Block::update() {
 }
 
 void Block::catchItem (const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius) {

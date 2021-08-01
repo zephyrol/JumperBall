@@ -45,8 +45,8 @@ Block::Effect BrittleBlock::interaction (const JBTypes::Dir&,
 }
 
 
-void BrittleBlock::setFallDirection (JBTypes::Dir ballDir) {
-    switch (ballDir) {
+void BrittleBlock::setFallDirection (JBTypes::Dir direction) {
+    switch (direction) {
     case JBTypes::Dir::South:
         _fallDirection = JBTypes::Dir::North;
         break;
@@ -70,20 +70,16 @@ void BrittleBlock::setFallDirection (JBTypes::Dir ballDir) {
     }
 }
 
-unsigned char BrittleBlock::getBlockSymbol() const {
-    return 'B';
-}
-
 bool BrittleBlock::isExists() const {
     return _stillThere;
 }
 
-Block::Effect BrittleBlock::detectionEvent (const JBTypes::Dir& ballDir,
+Block::Effect BrittleBlock::detectionEvent (const JBTypes::Dir& direction,
                                             const JBTypes::timePointMs& currentTime) {
 
     if (!_isGoingToBreak) {
         _collisionTime = currentTime;
-        setFallDirection(ballDir);
+        setFallDirection(direction);
         _isGoingToBreak = true;
     }
     return Effect::Nothing;

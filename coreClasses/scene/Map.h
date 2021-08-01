@@ -8,21 +8,6 @@
 #ifndef MAP_H
 #define MAP_H
 #include "blocks/Block.h"
-#include "blocks/BaseBlock.h"
-#include "blocks/FireBlock.h"
-#include "blocks/IceBlock.h"
-#include "blocks/SharpBlock.h"
-#include "blocks/BrittleBlock.h"
-#include "blocks/JumpBlock.h"
-#include "blocks/GhostBlock.h"
-#include "items/Key.h"
-#include "items/Coin.h"
-#include "items/Clock.h"
-#include "enemies/DarkBall.h"
-#include "enemies/ThornBall.h"
-#include "enemies/Laser.h"
-#include "special/SwitchButton.h"
-#include "special/Teleporter.h"
 #include "system/ParallelTask.h"
 #include <fstream>
 
@@ -33,16 +18,17 @@ public:
 
 enum class Effect { Nothing, Burst, Burn, Slide, Jump };
 
-struct MapInfo { unsigned int width;
-                 unsigned int height;
-                 unsigned int depth;
-                 unsigned int beginX;
-                 unsigned int beginY;
-                 unsigned int beginZ;
-                 std::vector <Block_sptr> blocks;
+struct MapInfo { 
+    unsigned int width;
+    unsigned int height;
+    unsigned int depth;
+    unsigned int beginX;
+    unsigned int beginY;
+    unsigned int beginZ;
+    std::vector <Block_sptr> blocks;
 };
 
-Map(MapInfo&& mapInfo);
+explicit Map(MapInfo&& mapInfo);
 
 unsigned int beginX() const;
 unsigned int beginY() const;
@@ -58,17 +44,13 @@ float getLargestSize() const;
 
 float getTimeSinceCreation() const;
 
-
-vecCstBlock_sptr getBlocksWithItems() const;
-
 // TODO: move to special
 std::map <JBTypes::Color, bool> createSpecialStates() const;
 
-Map::Effect interaction(const JBTypes::Dir& ballDir, const JBTypes::vec3f& posBall, float radius);
+Map::Effect interaction(const JBTypes::Dir& direction, const JBTypes::vec3f& boundingSpherePosition, float radius);
 
 void switchColor(const JBTypes::Color& color);
 Block_sptr getBlock(int x, int y, int z);
-Block_sptr getBlock(size_t index);
 
 static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int depth);
 

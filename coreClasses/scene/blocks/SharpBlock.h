@@ -16,16 +16,13 @@ SharpBlock(const JBTypes::vec3ui& position, const std::array <bool, 6>& facesSha
 std::array <bool, 6> faceInfo() const override;
 
 virtual Block::Effect interaction(
-    const JBTypes::Dir& ballDir,
+    const JBTypes::Dir& direction,
     const JBTypes::timePointMs& currentTime,
-    const JBTypes::vec3f& posBall
+    const JBTypes::vec3f& boundingSpherePosition
 ) override;
-
-virtual unsigned char getBlockSymbol() const override;
-virtual std::string getBlockOptions() const override;
 
 private:
 const std::array <bool, 6> _facesSharps;
 };
 
-#endif /* SPICYBLOCK_H */
+#endif /* SHARPBLOCK_H */

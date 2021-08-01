@@ -8,7 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include <functional>
-#include <math.h>
+#include <cmath>
 #include <cctype>
 #include <future>
 #include "Map.h"
@@ -18,12 +18,12 @@ Map::Map(Map::MapInfo&& mapInfo):
     _blocksWithInteraction(createBlocksWithInteraction()),
     _blocksWithItems(createBlocksWithItems()),
     _blocksWithSpecials(createBlocksWithSpecials()),
-    _width(std::move(mapInfo.width)),
-    _height(std::move(mapInfo.height)),
-    _depth(std::move(mapInfo.depth)),
-    _beginX(std::move(mapInfo.beginX)),
-    _beginY(std::move(mapInfo.beginY)),
-    _beginZ(std::move(mapInfo.beginZ)),
+    _width(mapInfo.width),
+    _height(mapInfo.height),
+    _depth(mapInfo.depth),
+    _beginX(mapInfo.beginX),
+    _beginY(mapInfo.beginY),
+    _beginZ(mapInfo.beginZ),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _blocksInteractions([this] (size_t blockNumber) {
                             return _blocksWithInteraction.at(blockNumber)->interaction(
@@ -42,14 +42,13 @@ Map::Map(Map::MapInfo&& mapInfo):
                             );
                          }, _blocksWithEnemies.size()),
     _dirBallInteractions(JBTypes::Dir::North),
-    _posBallInteractions({ 0.f, 0.f, 0.f }),
-    _radiusInteractions(0.f),
+    _posBallInteractions({ 0.F, 0.F, 0.F }),
+    _radiusInteractions(0.F),
     _timeInteractions() {
 }
 
 Block_sptr Map::getBlock (int x, int y, int z) {
-    CstBlock_sptr constBlock =
-        static_cast <const Map&>(*this).getBlock(x, y, z);
+    CstBlock_sptr constBlock = static_cast <const Map&>(*this).getBlock(x, y, z);
 
     return std::const_pointer_cast <Block>(constBlock);
 }
@@ -92,7 +91,7 @@ std::vector<Block_sptr> Map::createBlocksWithInteraction() const {
 std::vector<Block_sptr> Map::createBlocksWithItems() const {
     std::vector<Block_sptr>  blocksWithItems;
     for (const auto& block: _blocks) {
-        if (block->getItems().size() > 0) {
+        if (!block->getItems().empty()) {
             blocksWithItems.push_back(block);
         }
     }
@@ -102,7 +101,7 @@ std::vector<Block_sptr> Map::createBlocksWithItems() const {
 std::vector<Block_sptr> Map::createBlocksWithEnemies() const {
     std::vector<Block_sptr> blocksWithEnemies;
     for (const auto& block: _blocks) {
-        if (block->getEnemies().size() > 0) {
+        if (!block->getEnemies().empty()) {
             blocksWithEnemies.push_back(block);
         }
     }
@@ -112,7 +111,7 @@ std::vector<Block_sptr> Map::createBlocksWithEnemies() const {
 std::vector<Block_sptr> Map::createBlocksWithSpecials() const {
     std::vector<Block_sptr>  blocksWithSpecials;
     for (const auto& block: _blocks) {
-        if (block->getSpecials().size() > 0) {
+        if (!block->getSpecials().empty()) {
             blocksWithSpecials.push_back(block);
         }
     }
@@ -154,16 +153,16 @@ unsigned int Map::depth() const {
 
 JBTypes::vec3f Map::getCenterMap() const {
     return {
-        static_cast <float>(_width) / 2.f,
-        static_cast <float>(_height) / 2.f,
-        static_cast <float>(_depth) / 2.f
+        static_cast <const float>(_width) / 2.F,
+        static_cast <const float>(_height) / 2.F,
+        static_cast <const float>(_depth) / 2.F
     };
 }
 
 float Map::getLargestSize() const {
-    float fWidth = static_cast <float>(_width);
-    float fHeight = static_cast <float>(_height);
-    float fDepth = static_cast <float>(_depth);
+    const auto fWidth = static_cast <const float>(_width);
+    const auto fHeight = static_cast <const float>(_height);
+    const auto fDepth = static_cast <const float>(_depth);
     float boundingBoxMax = fWidth;
     if (boundingBoxMax < fHeight) {
         boundingBoxMax = fHeight;
@@ -190,12 +189,16 @@ unsigned int Map::beginZ() const {
     return _beginZ;
 }
 
-Map::Effect Map::interaction (const JBTypes::Dir& ballDir, const JBTypes::vec3f& posBall, float radius) {
-
-    _dirBallInteractions = ballDir;
-    _posBallInteractions = posBall;
+Map::Effect Map::interaction (
+    const JBTypes::Dir& direction,
+    const JBTypes::vec3f& boundingSpherePosition,
+    float radius
+) {
+    _dirBallInteractions = direction;
+    _posBallInteractions = boundingSpherePosition;
     _radiusInteractions = radius;
     _timeInteractions = JBTypesMethods::getTimePointMSNow();
+
 
     _blocksInteractions.runTasks();
     _itemsInteractions.runTasks();
@@ -261,7 +264,7 @@ void Map::switchColor (const JBTypes::Color& color) {
 JBTypes::vec3ui Map::getBlockCoords (size_t index,
                                      unsigned int width,
                                      unsigned int depth) {
-    unsigned int uIntIndex = static_cast <unsigned int>(index);
+    const auto uIntIndex = static_cast <const unsigned int>(index);
     const unsigned int widthDepth = width * depth;
     return { uIntIndex % width, uIntIndex / widthDepth, (uIntIndex % widthDepth) / width };
 }
