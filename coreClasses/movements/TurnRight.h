@@ -9,11 +9,9 @@
 #define TurnRight_h
 #include "Movement.h"
 
-
 class TurnRight:public Movement <JBTypes::Dir, 2> {
 public:
 TurnRight();
-~TurnRight() = default;
 };
 
 

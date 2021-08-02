@@ -17,8 +17,7 @@
 class Ball: public SceneElement {
 public:
 
-Ball(Map& map);
-
+Ball(int x, int y, int z);
 
 static constexpr float timeToGetNextBlock = 0.25f;
 static constexpr float timeToTurn = 0.3f;
@@ -37,16 +36,8 @@ enum class StateOfLife { Normal, Bursting, Burning, Sliding, Dead };
 enum class JumpingType { Short, Long };
 
 enum class ActionRequest { GoStraightAhead, TurnLeft, TurnRight, Jump };
-enum class NextBlockLocal { Above, InFrontOf, Same, None };
 
 using shock = std::array <unsigned int, 3>;
-
-struct nextBlockInformation { JBTypes::Dir nextSide;
-                              JBTypes::Dir nextLook;
-                              NextBlockLocal nextLocal;
-                              unsigned int poxX;
-                              unsigned int poxY;
-                              unsigned int poxZ; };
 
 JBTypes::vec3f get3DPosition() const noexcept;
 float getRadius() const;
@@ -65,7 +56,6 @@ JBTypes::timePointMs getTimeActionMs() const noexcept;
 float getTimeSecondsSinceStateOfLife() const noexcept;
 JBTypes::timePointMs getTimeStateOfLifeMs() const noexcept;
 
-struct nextBlockInformation getNextBlockInfo () const noexcept;
 const ClassicalMechanics& getMechanicsJumping() const noexcept;
 const ClassicalMechanics& getMechanicsFalling() const noexcept;
 
@@ -83,16 +73,14 @@ SceneElement::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const 
 
 SceneElement::GlobalState getGlobalState() const override;
 
-// ----------METHODS------------//
 void update() noexcept;
 void doAction(ActionRequest action);
 
 private:
 
-// --------ATTRIBUTES-----------//
-unsigned int _currentBlockX;
-unsigned int _currentBlockY;
-unsigned int _currentBlockZ;
+unsigned int _posX;
+unsigned int _posY;
+unsigned int _posZ;
 
 float _3DPosX;
 float _3DPosY;
@@ -103,9 +91,6 @@ JBTypes::Dir _lookTowards;
 Ball::State _state;
 Ball::StateOfLife _stateOfLife;
 Ball::JumpingType _jumpingType;
-
-// Through the interactions, a ball may modify a map
-Map& _map;
 
 const ClassicalMechanics _mechanicsPatternJumping;
 const ClassicalMechanics _mechanicsPatternLongJumping;
@@ -157,6 +142,8 @@ void die() noexcept;
 ClassicalMechanics& getMechanicsJumping() noexcept;
 void isFallingIntersectionBlock() noexcept;
 void isGoingStraightAheadIntersectBlock() noexcept;
+
+void setPosition(int x, int y, int z);
 
 void fallingUpdate() noexcept;
 void stayingUpdate() noexcept;

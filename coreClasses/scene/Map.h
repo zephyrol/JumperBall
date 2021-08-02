@@ -56,6 +56,15 @@ static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned
 
 private:
 
+enum class NextBlockLocal { Above, InFrontOf, Same, None };
+struct nextBlockInformation { JBTypes::Dir nextSide;
+    JBTypes::Dir nextLook;
+    NextBlockLocal nextLocal;
+    unsigned int poxX;
+    unsigned int poxY;
+    unsigned int poxZ;
+};
+
 static std::string positionToString(const JBTypes::vec3ui& position);
 static JBTypes::vec3ui stringToPosition(const std::string& stringPosition);
 
@@ -89,6 +98,10 @@ JBTypes::vec3f _posBallInteractions;
 float _radiusInteractions;
 JBTypes::timePointMs _timeInteractions;
 
+static nextBlockInformation getNextBlockInfo();
+static void mapInteraction();
+
+    std::shared_ptr<const std::vector<int>> intersectBlock(float x, float y, float z) const;
 };
 
 #endif /* MAP_H */

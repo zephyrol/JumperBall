@@ -7,10 +7,9 @@
 
 #ifndef TYPES_H
 #define TYPES_H
-#define __STDC_WANT_LIB_EXT1__ 1
 #include <iostream>
 #include <string>
-#include <math.h>
+#include <cmath>
 #include <vector>
 #include <map>
 #include <array>
@@ -40,10 +39,8 @@ struct vec2f { float x; float y; };
 using vec3ui = std::array <unsigned int, 3>;
 using timePointMs = std::chrono::time_point <
     std::chrono::system_clock,
-    std::chrono::duration <
-        long int, std::ratio <1, 1000>
-        >
-    >;
+    std::chrono::duration < long int, std::ratio <1, 1000> >
+>;
 using durationMs = std::chrono::duration <long int, std::ratio <1, 1000> >;
 struct Quaternion { JBTypes::vec3f v; float w; };
 }

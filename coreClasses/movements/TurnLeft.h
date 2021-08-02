@@ -13,7 +13,6 @@
 class TurnLeft:public Movement <JBTypes::Dir, 2> {
 public:
 TurnLeft();
-~TurnLeft() = default;
 };
 
 

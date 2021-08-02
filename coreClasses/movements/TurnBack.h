@@ -11,7 +11,6 @@
 class TurnBack:public Movement <JBTypes::Dir, 1> {
 public:
 TurnBack();
-~TurnBack() = default;
 
 };
 

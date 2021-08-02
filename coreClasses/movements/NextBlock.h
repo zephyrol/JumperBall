@@ -13,7 +13,6 @@
 class NextBlock:public Movement <std::array <int, 12>, 2> {
 public:
 NextBlock();
-~NextBlock() = default;
 };
 
 

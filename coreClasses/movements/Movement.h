@@ -8,12 +8,11 @@
 #ifndef Movement_h
 #define Movement_h
 #include <functional>
-#include "scene/Map.h"
 
 template<typename T, size_t N> class Movement {
 
 public:
-Movement(const std::function <T(const std::array <JBTypes::Dir, N>)>&& fct);
+explicit Movement(const std::function <T(const std::array <JBTypes::Dir, N>&)>&& fct);
 
 Movement(const Movement& movement) = delete;
 Movement& operator= (const Movement& movement) = delete;
@@ -27,11 +26,11 @@ T evaluate(const std::array <JBTypes::Dir, N>& inputs) const;
 
 
 private:
-const std::function <T(const std::array <JBTypes::Dir, N>)> _fct;
+const std::function <T(const std::array <JBTypes::Dir, N>&)> _fct;
 };
 
 template<typename T, size_t N> Movement <T, N>::Movement(
-    const std::function <T(const std::array <JBTypes::Dir, N>)>&& fct
+    const std::function <T(const std::array <JBTypes::Dir, N>&)>&& fct
     ):
     _fct(fct) {
 }
