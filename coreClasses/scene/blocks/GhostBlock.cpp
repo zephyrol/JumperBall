@@ -8,8 +8,13 @@
 #include "GhostBlock.h"
 #include <functional>
 
-GhostBlock::GhostBlock(const JBTypes::vec3ui& position, float periodicity):
-    Block(position, true, false),
+GhostBlock::GhostBlock(const JBTypes::vec3ui &position,
+                       const vecItem_sptr &items,
+                       const vecEnemy_sptr &enemies,
+                       const vecSpecial_sptr &specials,
+                       const Ball_sptr& ball,
+                       float periodicity):
+    Block(position, ball, items, enemies, specials, true, false),
     _periodicity(periodicity),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _isThere(true) {
@@ -19,18 +24,11 @@ bool GhostBlock::isExists() const {
     return _isThere;
 }
 
-Block::Effect GhostBlock::interaction (const JBTypes::Dir&,
-                                       const JBTypes::timePointMs& currentTime,
-                                       const JBTypes::vec3f&
-                                       ) {
+Block::Effect GhostBlock::interaction (const JBTypes::timePointMs& currentTime) {
     const auto passedTime = currentTime - _creationTime;
     const float fPassedTime = JBTypesMethods::getFloatFromDurationMS(passedTime);
-    const unsigned int nbOfSwitching = static_cast <unsigned int>(fPassedTime / _periodicity);
-    if (nbOfSwitching % 2 == 0) {
-        _isThere = true;
-    } else {
-        _isThere = false;
-    }
+    const auto nbOfSwitching = static_cast <unsigned int>(fPassedTime / _periodicity);
+    _isThere = nbOfSwitching % 2 == 0;
 
     const float passedTimeSinceSwitching = fPassedTime - _periodicity * static_cast <float>(nbOfSwitching);
 
@@ -59,7 +57,3 @@ Block::Effect GhostBlock::interaction (const JBTypes::Dir&,
     return Block::Effect::Nothing;
 }
 
-std::string GhostBlock::getBlockOptions() const {
-    const unsigned int periodicityUint = static_cast<unsigned int>(_periodicity);
-    return std::to_string(periodicityUint);
-}

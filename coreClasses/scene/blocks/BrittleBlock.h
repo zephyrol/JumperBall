@@ -11,24 +11,26 @@
 
 class BrittleBlock:public Block {
 public:
-BrittleBlock(const JBTypes::vec3ui& position);
+    BrittleBlock(
+        const JBTypes::vec3ui& position,
+        const vecItem_sptr& items,
+        const vecEnemy_sptr& enemies,
+        const vecSpecial_sptr& specials,
+        const Ball_sptr& ball
+    );
 
-bool isExists() const override;
+    bool isExists() const override;
 
-void setFallDirection(JBTypes::Direction
-                      direction);
+void setFallDirection(JBTypes::Direction direction);
 
 virtual Block::Effect interaction(
-    const JBTypes::Dir& direction,
-    const JBTypes::timePointMs& currentTime,
-    const JBTypes::vec3f& boundingSpherePosition
-    ) override;
+    const JBTypes::timePointMs& currentTime
+) override;
 
 virtual Block::Effect detectionEvent(
-    const JBTypes::Dir&
-    direction,
-    const JBTypes::timePointMs&
-    currentTime) override;
+    const JBTypes::Dir& direction,
+    const JBTypes::timePointMs& currentTime
+) override;
 
 private:
 bool _stillThere;

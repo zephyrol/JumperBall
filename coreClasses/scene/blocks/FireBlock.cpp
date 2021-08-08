@@ -7,7 +7,13 @@
 
 #include "FireBlock.h"
 
-FireBlock::FireBlock(const JBTypes::vec3ui& position):Block(position) {
+FireBlock::FireBlock(const JBTypes::vec3ui &position,
+                     const vecItem_sptr &items,
+                     const vecEnemy_sptr &enemies,
+                     const vecSpecial_sptr &specials,
+                     const Ball_sptr& ball
+                     ):
+                     Block(position, ball, items, enemies, specials){
 }
 
 Block::Effect FireBlock::detectionEvent (const JBTypes::Dir&,

@@ -6,21 +6,24 @@
  */
 
 #include "Block.h"
+#include <utility>
 
 Block::Block(
     const JBTypes::vec3ui& position,
-    const vecItem_sptr& items, 
+    const Ball_sptr& ball,
+    const vecItem_sptr& items,
     const vecEnemy_sptr& enemies,
     const vecSpecial_sptr& specials,
-    bool alwaysHasInteractions ,
+    bool alwaysHasInteractions,
     bool isFixed):
     _position(position),
+    _ball(ball),
     _items(items),
-    _cstItems(_items),
+    _cstItems(getCstItems()),
     _enemies(enemies),
-    _cstEnemies(_enemies),
+    _cstEnemies(getCstEnemies()),
     _specials(specials),
-    _cstSpecials(_specials),
+    _cstSpecials(getCstSpecials()),
     _hasInteraction(alwaysHasInteractions || items.size() > 0 || enemies.size() > 0 || specials.size() > 0),
     _isFixed(isFixed),
     _localScale{1.f, 1.f, 1.f},
@@ -61,50 +64,25 @@ const vecCstSpecial_sptr& Block::getSpecials() const {
 }
 
 Block::Effect Block::interaction (
-    const JBTypes::Dir&,
-    const JBTypes::timePointMs&,
-    const JBTypes::vec3f&
+    const JBTypes::timePointMs&
 ) {
     return Block::Effect::Nothing;
-}
-
-std::string Block::getBlockOptions() const {
-    return "";
 }
 
 bool Block::hasInteraction() const {
     return _hasInteraction;
 }
 
-Block::Effect Block::update(
-    const JBTypes::Dir& direction,
-    const JBTypes::timePointMs& currentTime,
-    const JBTypes::vec3f& boundingSpherePosition,
-    float boundingSphereRadius
-) {
-    const auto interactionEffect = interaction(direction, currentTime, boundingSpherePosition);
-}
-
-void Block::update() {
+void Block::update(const JBTypes::timePointMs& currentTime) {
+    interaction(currentTime);
 }
 
 void Block::catchItem (const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius) {
-    for (Item_sptr item : _items) {
+    for (const Item_sptr& item : _items) {
         if (!item->isGotten()) {
             item->catchingTest(boundingSphereCenter, boundingSphereRadius);
         }
     }
-}
-
-Block::Effect Block::updateEnemies(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius) {
-    Block::Effect effect;
-    for (Enemy_sptr enemy: _enemies) {
-        const auto enemyEffect = enemy->update(boundingSphereCenter, boundingSphereRadius);
-        if(enemyEffect == Enemy::Effect::Burst) {
-            effect = Block::Effect::Burst;
-        }
-    }
-    return effect;
 }
 
 const bool& Block::isFixed() const {
@@ -118,9 +96,9 @@ const JBTypes::vec3ui& Block::position() const {
 SceneElement::StaticValues <JBTypes::vec3f> Block::getStaticVec3fValues() const {
     constexpr float offset = 0.5f;
     return {{
-        static_cast <float>(_position.at(0) + offset),
-        static_cast <float>(_position.at(1) + offset),
-        static_cast <float>(_position.at(2) + offset)
+        static_cast <float>(_position.at(0)) + offset,
+        static_cast <float>(_position.at(1)) + offset,
+        static_cast <float>(_position.at(2)) + offset
     }};
 }
 
@@ -132,4 +110,28 @@ SceneElement::GlobalState Block::getGlobalState() const {
     return isExists() 
            ? SceneElement::GlobalState::United
            : SceneElement::GlobalState::Separate;
+}
+
+vecCstItem_sptr Block::getCstItems() const {
+    vecCstItem_sptr cstItems;
+    for(const auto& item: _items){
+        cstItems.push_back(item);
+    }
+    return cstItems;
+}
+
+vecCstEnemy_sptr Block::getCstEnemies() const{
+    vecCstEnemy_sptr cstEnemies;
+    for(const auto& enemy: _enemies){
+        cstEnemies.push_back(enemy);
+    }
+    return cstEnemies;
+}
+
+vecCstSpecial_sptr Block::getCstSpecials() const {
+    vecCstSpecial_sptr cstSpecials;
+    for(const auto& special: _specials){
+        cstSpecials.push_back(special);
+    }
+    return cstSpecials;
 }

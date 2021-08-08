@@ -7,19 +7,21 @@
 
 #include "BrittleBlock.h"
 
-BrittleBlock::BrittleBlock(const JBTypes::vec3ui& position):
-    Block(position, true, false),
-    _stillThere(true),
-    _isGoingToBreak(false),
-    _collisionTime(),
-    _timeUpdate(),
-    _fallDirection(JBTypes::Dir::Down) {
+BrittleBlock::BrittleBlock(const JBTypes::vec3ui &position,
+                           const vecItem_sptr &items,
+                           const vecEnemy_sptr &enemies,
+                           const vecSpecial_sptr &specials,
+                           const Ball_sptr& ball
+                           ):
+                           Block(position, ball, items, enemies, specials, true, false),
+                           _stillThere(true),
+                           _isGoingToBreak(false),
+                           _collisionTime(),
+                           _timeUpdate(),
+                           _fallDirection(JBTypes::Dir::Down){
 }
 
-Block::Effect BrittleBlock::interaction (const JBTypes::Dir&,
-                                         const JBTypes::timePointMs& currentTime,
-                                         const JBTypes::vec3f&
-                                         ) {
+Block::Effect BrittleBlock::interaction (const JBTypes::timePointMs& currentTime) {
     constexpr float timeToFall = 1.f;
     _timeUpdate = currentTime;
     if (_isGoingToBreak && _stillThere) {
@@ -84,3 +86,4 @@ Block::Effect BrittleBlock::detectionEvent (const JBTypes::Dir& direction,
     }
     return Effect::Nothing;
 }
+

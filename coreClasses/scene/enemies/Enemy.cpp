@@ -12,12 +12,14 @@ Enemy::Enemy(
     const JBTypes::Dir& direction,
     float size,
     size_t length,
-    const std::array <float, 9>& transform
+    const std::array <float, 9>& transform,
+    const Ball_sptr& ball
 ):
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(direction),
     _size(size),
     _length(length),
+    _ball(ball),
     _intersectionTime(),
     _hasHit(false),
     _initialPosition(init3DPosition(initialPosition)),
@@ -52,7 +54,7 @@ size_t Enemy::length() const {
 void Enemy::switchOnOff() {
 }
 
-JBTypes::vec3f Enemy::init3DPosition(const JBTypes::vec3f& initialPosition) const {
+JBTypes::vec3f Enemy::init3DPosition(const JBTypes::vec3ui & initialPosition) const {
     constexpr float sizeBlock = 1.f;
     constexpr float offset = sizeBlock / 2.f;
 
@@ -73,10 +75,6 @@ JBTypes::vec3f Enemy::init3DPosition(const JBTypes::vec3f& initialPosition) cons
     };
 }
 
-const JBTypes::vec3f& Enemy::initialPosition() const {
-    return _initialPosition;
-}
-
 const JBTypes::vec3f& Enemy::position() const {
     return _position;
 }
@@ -86,10 +84,6 @@ const std::array <float, 9>& Enemy::transform() const {
 }
 
 const JBTypes::Dir& Enemy::direction() const {
-    return _direction;
-}
-
-const JBTypes::Dir& Enemy::movementDirection() const {
     return _direction;
 }
 

@@ -11,13 +11,17 @@
 
 class GhostBlock:public Block {
 public:
-GhostBlock(const JBTypes::vec3ui& position, float periodicity = 3.f);
-bool isExists() const override;
-virtual Block::Effect interaction(
-    const JBTypes::Dir& direction,
-    const JBTypes::timePointMs& currentTime,
-    const JBTypes::vec3f& boundingSpherePosition
-) override;
+    GhostBlock(
+        const JBTypes::vec3ui& position,
+        const vecItem_sptr& items,
+        const vecEnemy_sptr& enemies,
+        const vecSpecial_sptr& specials,
+        const Ball_sptr& ball,
+        float periodicity = 3.f
+    );
+
+    bool isExists() const override;
+virtual Block::Effect interaction(const JBTypes::timePointMs& currentTime ) override;
 
 private:
 const float _periodicity;

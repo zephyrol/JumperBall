@@ -10,7 +10,9 @@
 ThornBall::ThornBall(const JBTypes::vec3ui& initialPosition,
                      const JBTypes::Dir& dir,
                      const JBTypes::Dir& movementDirection,
-                     size_t movementLength):
+                     size_t movementLength,
+                     const Ball_sptr &ball
+                     ):
     Enemy(initialPosition,
           dir,
           thornBallRadius,
@@ -23,7 +25,8 @@ ThornBall::ThornBall(const JBTypes::vec3ui& initialPosition,
             0.f,
             1.f,
             1.f,
-            1.f }),
+            1.f },
+          ball),
     _movementDirection(movementDirection) {
 }
 
@@ -36,7 +39,7 @@ Enemy::Effect ThornBall::update (const JBTypes::vec3f& boundingSpherePosition,
     const JBTypes::vec3f vecDir =
         JBTypesMethods::directionAsVector(_movementDirection);
 
-    const float movementLength = static_cast <float>(length());
+    const auto movementLength = static_cast <float>(length());
     const float localMovement = (1.f - cosf(2.f * static_cast <float>(M_PI) *
                                             (timeSinceCreation / movementDuration))) / 2.f;
     const float movementPosition = localMovement * movementLength;

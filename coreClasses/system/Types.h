@@ -51,6 +51,7 @@ JBTypes::Dir integerAsDirection(unsigned int number);
 JBTypes::Dir charAsDirection(unsigned char dirChar);
 JBTypes::Dir vectorAsDirection(const JBTypes::vec3f& vec);
 unsigned int directionAsInteger(JBTypes::Dir dir);
+std::array<bool,6> strDirAsArray(const std::string& directions);
 
 JBTypes::timePointMs getTimePointMSNow() noexcept;
 

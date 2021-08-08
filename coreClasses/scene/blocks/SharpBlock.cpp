@@ -7,15 +7,20 @@
 
 #include "SharpBlock.h"
 
-SharpBlock::SharpBlock(const JBTypes::vec3ui& position, const std::array <bool, 6>& facesSharps):
-    Block(position, true),
-    _facesSharps(facesSharps) {
+SharpBlock::SharpBlock(const JBTypes::vec3ui &position,
+                       const vecItem_sptr &items,
+                       const vecEnemy_sptr &enemies,
+                       const vecSpecial_sptr &specials,
+                       const Ball_sptr& ball,
+                       const std::array<bool, 6> &facesSharps):
+                       Block(position, ball, items, enemies, specials, true),
+                       _facesSharps((facesSharps)){
+
 }
 
 Block::Effect SharpBlock::interaction (
-    const JBTypes::Dir&,
-    const JBTypes::timePointMs&,
-    const JBTypes::vec3f& boundingSpherePosition) {
+    const JBTypes::timePointMs&
+    ) {
 
     auto isInSharpZone = 
     []( const JBTypes::vec3f &position,
@@ -32,9 +37,9 @@ Block::Effect SharpBlock::interaction (
     constexpr float sizeSharp = 0.51f;
     constexpr float offsetCenter = 0.19f;
     const JBTypes::vec3ui posBlock = position();
-    const float posBlockfX = static_cast <float>(posBlock.at(0));
-    const float posBlockfY = static_cast <float>(posBlock.at(1));
-    const float posBlockfZ = static_cast <float>(posBlock.at(2));
+    const auto posBlockfX = static_cast <float>(posBlock.at(0));
+    const auto posBlockfY = static_cast <float>(posBlock.at(1));
+    const auto posBlockfZ = static_cast <float>(posBlock.at(2));
     for (size_t i = 0; i < _facesSharps.size(); ++i) {
 
         if (_facesSharps.at(i)) {
@@ -86,7 +91,7 @@ Block::Effect SharpBlock::interaction (
             }
 
             if (isInSharpZone(
-                    boundingSpherePosition,
+                    _ball->get3DPosition(),
                     posBlockfXMin,
                     posBlockfXMax,
                     posBlockfYMin,

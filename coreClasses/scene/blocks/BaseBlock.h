@@ -12,7 +12,13 @@
 
 class BaseBlock:public Block {
 public:
-BaseBlock(const JBTypes::vec3ui& position);
+BaseBlock(
+    const JBTypes::vec3ui& position,
+    const vecItem_sptr& items,
+    const vecEnemy_sptr& enemies,
+    const vecSpecial_sptr& specials,
+    const Ball_sptr& ball
+);
 };
 
 #endif /* BASEBLOCK_H */

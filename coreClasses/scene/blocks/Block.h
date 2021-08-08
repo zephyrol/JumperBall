@@ -24,8 +24,9 @@ public:
 
 Block(
     const JBTypes::vec3ui& position,
+    const Ball_sptr& ball,
     const vecItem_sptr& items, 
-    const vecCstEnemy_sptr& enemies,
+    const vecEnemy_sptr& enemies,
     const vecSpecial_sptr& specials,
     bool alwaysHasInteractions = false,
     bool isFixed = true
@@ -51,14 +52,10 @@ const vecCstSpecial_sptr& getSpecials() const;
 bool hasInteraction() const;
 
 void update(
-    const JBTypes::Dir& direction,
-    const JBTypes::timePointMs& currentTime,
-    const JBTypes::vec3f& boundingSpherePosition,
-    float boundingSphereRadius
+    const JBTypes::timePointMs& currentTime
 );
 
 void catchItem(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
-Block::Effect updateEnemies(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
 
 virtual const bool& isFixed() const;
 const JBTypes::vec3ui& position() const;
@@ -70,14 +67,17 @@ SceneElement::GlobalState getGlobalState() const override;
 private: 
 
 virtual Effect interaction(
-    const JBTypes::Dir& direction,
-    const JBTypes::timePointMs& currentTime,
-    const JBTypes::vec3f& boundingSpherePosition
+    const JBTypes::timePointMs& currentTime
 );
+
+vecCstItem_sptr getCstItems() const;
+vecCstEnemy_sptr getCstEnemies() const;
+vecCstSpecial_sptr getCstSpecials() const;
 
 
 protected:
 const JBTypes::vec3ui _position;
+const Ball_sptr _ball;
 const vecItem_sptr _items;
 const vecCstItem_sptr _cstItems;
 const vecEnemy_sptr _enemies;

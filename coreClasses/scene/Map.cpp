@@ -13,38 +13,24 @@
 #include <future>
 #include "Map.h"
 
-Map::Map(Map::MapInfo&& mapInfo):
+Map::Map(Map::MapInfo &&mapInfo):
     _blocks(std::move(mapInfo.blocks)),
-    _blocksWithInteraction(createBlocksWithInteraction()),
-    _blocksWithItems(createBlocksWithItems()),
-    _blocksWithSpecials(createBlocksWithSpecials()),
+    _blocksPositions(createBlockPositions()),
+    _blocksToUpdate(getBlocksToUpdate()),
+    _ball(std::move(mapInfo.ball)),
     _width(mapInfo.width),
     _height(mapInfo.height),
     _depth(mapInfo.depth),
-    _beginX(mapInfo.beginX),
-    _beginY(mapInfo.beginY),
-    _beginZ(mapInfo.beginZ),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
-    _blocksInteractions([this] (size_t blockNumber) {
-                            return _blocksWithInteraction.at(blockNumber)->interaction(
-                                _dirBallInteractions,
-                                _timeInteractions,
-                                _posBallInteractions
+    _blocksUpdating([this] (size_t blockNumber) {
+                            _blocksToUpdate.at(blockNumber)->update(
+                                    _timeInteractions
                                 );
-                        }, _blocksWithInteraction.size()),
-    _itemsInteractions([this] (size_t blockNumber) {
-                            _blocksWithItems.at(blockNumber)->catchItem(_posBallInteractions, _radiusInteractions);
-                       }, _blocksWithItems.size()),
-    _enemiesInteractions([this] (size_t blockNumber) {
-                            return _blocksWithEnemies.at(blockNumber)->updateEnemies(
-                                _posBallInteractions,
-                                _radiusInteractions
-                            );
-                         }, _blocksWithEnemies.size()),
-    _dirBallInteractions(JBTypes::Dir::North),
-    _posBallInteractions({ 0.F, 0.F, 0.F }),
-    _radiusInteractions(0.F),
-    _timeInteractions() {
+                        }, _blocksToUpdate.size()),
+    _timeInteractions(),
+    _nextBlockGetter(),
+    _turnBackMovement()
+{
 }
 
 Block_sptr Map::getBlock (int x, int y, int z) {
@@ -78,7 +64,7 @@ std::map<std::string,Block_sptr> Map::createBlockPositions() const {
     return positions;
 }
 
-std::vector<Block_sptr> Map::createBlocksWithInteraction() const {
+std::vector<Block_sptr> Map::getBlocksToUpdate() const {
     std::vector<Block_sptr>  blocksWithInteraction;
     for (const auto& block: _blocks) {
         if (block->hasInteraction()) {
@@ -86,36 +72,6 @@ std::vector<Block_sptr> Map::createBlocksWithInteraction() const {
         }
     }
     return blocksWithInteraction;
-}
-
-std::vector<Block_sptr> Map::createBlocksWithItems() const {
-    std::vector<Block_sptr>  blocksWithItems;
-    for (const auto& block: _blocks) {
-        if (!block->getItems().empty()) {
-            blocksWithItems.push_back(block);
-        }
-    }
-    return blocksWithItems;
-}
-
-std::vector<Block_sptr> Map::createBlocksWithEnemies() const {
-    std::vector<Block_sptr> blocksWithEnemies;
-    for (const auto& block: _blocks) {
-        if (!block->getEnemies().empty()) {
-            blocksWithEnemies.push_back(block);
-        }
-    }
-    return blocksWithEnemies;
-}
-
-std::vector<Block_sptr> Map::createBlocksWithSpecials() const {
-    std::vector<Block_sptr>  blocksWithSpecials;
-    for (const auto& block: _blocks) {
-        if (!block->getSpecials().empty()) {
-            blocksWithSpecials.push_back(block);
-        }
-    }
-    return blocksWithSpecials;
 }
 
 // TODO: move to special class
@@ -177,64 +133,19 @@ float Map::getTimeSinceCreation() const {
     return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
 
-unsigned int Map::beginX() const {
-    return _beginX;
-}
-
-unsigned int Map::beginY() const {
-    return _beginY;
-}
-
-unsigned int Map::beginZ() const {
-    return _beginZ;
-}
-
-Map::Effect Map::interaction (
-    const JBTypes::Dir& direction,
-    const JBTypes::vec3f& boundingSpherePosition,
-    float radius
-) {
-    _dirBallInteractions = direction;
-    _posBallInteractions = boundingSpherePosition;
-    _radiusInteractions = radius;
+void Map::interaction() {
     _timeInteractions = JBTypesMethods::getTimePointMSNow();
+    _blocksUpdating.runTasks();
+    _blocksUpdating.waitTasks();
 
-    _blocksInteractions.runTasks();
-    _itemsInteractions.runTasks();
-    _enemiesInteractions.runTasks();
 
-    std::shared_ptr <std::vector <Block::Effect> > blocksEffects = _blocksInteractions.waitTasks();
-    Block::Effect finalBlockEffect = Block::Effect::Nothing;
-    for (Block::Effect& blockEffect : *blocksEffects) {
-        if (blockEffect != Block::Effect::Nothing) {
-            finalBlockEffect = blockEffect;
+    /*const Map::Effect effect = _map.interaction(_currentSide, get3DPosition(), getRadius());
+    if (effect == Map::Effect::Burst) {
+        if (_stateOfLife != StateOfLife::Bursting) {
+            _stateOfLife = StateOfLife::Bursting;
+            setTimeLifeNow();
         }
-    }
-
-    std::shared_ptr <std::vector <Block::Effect> > enemiesEffects = _enemiesInteractions.waitTasks();
-    Block::Effect finalEnemyEffect = Block::Effect::Nothing;
-    for (Block::Effect& enemyEffect : *enemiesEffects) {
-        if (enemyEffect != Block::Effect::Nothing) {
-            finalEnemyEffect = enemyEffect;
-        }
-    }
-    _itemsInteractions.waitTasks();
-
-    if (finalBlockEffect == Block::Effect::Burst || finalEnemyEffect == Block::Effect::Burst) {
-        return Map::Effect::Burst;
-    } else if (finalBlockEffect == Block::Effect::Jump) {
-        return Map::Effect::Jump;
-    } else if (finalBlockEffect == Block::Effect::Slide) {
-        return Map::Effect::Slide;
-    } else if (finalBlockEffect == Block::Effect::Burn) {
-        return Map::Effect::Burn;
-    } else if (
-        finalBlockEffect == Block::Effect::Nothing ||
-        finalEnemyEffect == Block::Effect::Nothing
-        ) {
-        return Map::Effect::Nothing;
-    }
-    return Map::Effect::Nothing;
+    }*/
 }
 
 void Map::switchColor (const JBTypes::Color& color) {
@@ -260,89 +171,70 @@ void Map::switchColor (const JBTypes::Color& color) {
     // }
 }
 
-void Map::mapInteraction() {
-    const Map::Effect effect = _map.interaction(_currentSide, get3DPosition(), getRadius());
-    if (effect == Map::Effect::Burst) {
-        if (_stateOfLife != StateOfLife::Bursting) {
-            _stateOfLife = StateOfLife::Bursting;
-            setTimeLifeNow();
-        }
-    }
-}
+Map::nextBlockInformation Map::getNextBlockInfo() const {
 
-Map::nextBlockInformation Map::getNextBlockInfo() {
+    const JBTypes::Dir lookTowards = _ball->lookTowards();
+    const JBTypes::Dir currentSide = _ball->currentSide();
+    const std::array <int, 12> offsetsNextBlocks = _nextBlockGetter.evaluate(
+        {currentSide, lookTowards}
+    );
 
-    const std::array <int, 12> offsetsNextBlocks = nextBlockGetter.evaluate({ _currentSide, _lookTowards });
+    const auto& position = _ball->getPosition();
 
-    const int inFrontOfX = _currentBlockX + offsetsNextBlocks.at(0);
-    const int inFrontOfY = _currentBlockY + offsetsNextBlocks.at(1);
-    const int inFrontOfZ = _currentBlockZ + offsetsNextBlocks.at(2);
+    const auto& getNeighbour = [&position, offsetsNextBlocks](size_t n) -> JBTypes::vec3ui  {
+        const size_t offset = 3 * n;
+        return {
+            position.at(0) + offsetsNextBlocks.at(offset),
+            position.at(1) + offsetsNextBlocks.at(offset + 1),
+            position.at(2) + offsetsNextBlocks.at(offset + 2)
+        };
+    };
 
-    const int leftX = _currentBlockX + offsetsNextBlocks.at(3);
-    const int leftY = _currentBlockY + offsetsNextBlocks.at(4);
-    const int leftZ = _currentBlockZ + offsetsNextBlocks.at(5);
+    const auto inFrontOf = getNeighbour(0);
+    const auto left = getNeighbour(1);
+    const auto right = getNeighbour(2);
+    const auto above = getNeighbour(3);
 
-    const int rightX = _currentBlockX + offsetsNextBlocks.at(6);
-    const int rightY = _currentBlockY + offsetsNextBlocks.at(7);
-    const int rightZ = _currentBlockZ + offsetsNextBlocks.at(8);
+    const CstBlock_sptr& blockAbove = getBlock(above);
+    const CstBlock_sptr& blockInFrontOf = getBlock(inFrontOf);
+    const CstBlock_sptr& blockLeft = getBlock(left);
+    const CstBlock_sptr& blockRight = getBlock(right);
 
-    const int aboveX = _currentBlockX + offsetsNextBlocks.at(9);
-    const int aboveY = _currentBlockY + offsetsNextBlocks.at(10);
-    const int aboveZ = _currentBlockZ + offsetsNextBlocks.at(11);
 
-    const CstBlock_sptr& blockAbove = _map.getBlock(aboveX, aboveY, aboveZ);
+    Map::nextBlockInformation nextBlock{};
 
-    const CstBlock_sptr& blockInFrontOf = _map.getBlock(inFrontOfX, inFrontOfY, inFrontOfZ);
-
-    const CstBlock_sptr& blockLeft = _map.getBlock(leftX, leftY, leftZ);
-
-    const CstBlock_sptr& blockRight = _map.getBlock(rightX, rightY, rightZ);
-
-    Ball::nextBlockInformation nextBlock;
     if (blockAbove && blockAbove->isExists()) {
-        nextBlock.poxX = aboveX;
-        nextBlock.poxY = aboveY;
-        nextBlock.poxZ = aboveZ;
+        nextBlock.pos = above;
         nextBlock.nextLocal = NextBlockLocal::Above;
 
-        const JBTypes::Dir lookTowardsBeforeMovement = _lookTowards;
-        nextBlock.nextLook = _currentSide;
-        nextBlock.nextSide =
-                turnBackMovement.evaluate({ lookTowardsBeforeMovement });
+        const JBTypes::Dir lookTowardsBeforeMovement = lookTowards;
+        nextBlock.nextLook = currentSide;
+        nextBlock.nextSide = _turnBackMovement.evaluate({ lookTowardsBeforeMovement });
     } else if (blockInFrontOf && blockInFrontOf->isExists()) {
-        nextBlock.poxX = inFrontOfX;
-        nextBlock.poxY = inFrontOfY;
-        nextBlock.poxZ = inFrontOfZ;
+        nextBlock.pos = inFrontOf;
         nextBlock.nextLocal = NextBlockLocal::InFrontOf;
-        nextBlock.nextLook = _lookTowards;
-        nextBlock.nextSide = _currentSide;
+        nextBlock.nextLook = lookTowards;
+        nextBlock.nextSide = currentSide;
     } else if (
             (!blockLeft || !blockLeft->isExists()) &&
             (!blockRight || !blockRight->isExists())
             ) {
-        nextBlock.poxX = _currentBlockX;
-        nextBlock.poxY = _currentBlockY;
-        nextBlock.poxZ = _currentBlockZ;
+        nextBlock.pos = position;
         nextBlock.nextLocal = NextBlockLocal::Same;
-        const JBTypes::Dir sideBeforeMovement = _currentSide;
-        nextBlock.nextSide = _lookTowards;
-        nextBlock.nextLook = turnBackMovement.evaluate({ sideBeforeMovement });
-    } else if (_stateOfLife == StateOfLife::Sliding) {
-        nextBlock.poxX = inFrontOfX;
-        nextBlock.poxY = inFrontOfY;
-        nextBlock.poxZ = inFrontOfZ;
+        const JBTypes::Dir sideBeforeMovement = currentSide;
+        nextBlock.nextSide = lookTowards;
+        nextBlock.nextLook = _turnBackMovement.evaluate({ sideBeforeMovement });
+    } else if (_ball->stateOfLife() == Ball::StateOfLife::Sliding) {
+        nextBlock.pos = inFrontOf;
         nextBlock.nextLocal = NextBlockLocal::InFrontOf;
-        nextBlock.nextLook = _lookTowards;
-        nextBlock.nextSide = _currentSide;
+        nextBlock.nextLook = lookTowards;
+        nextBlock.nextSide = currentSide;
     } else {
-        nextBlock.poxX = _currentBlockX;
-        nextBlock.poxY = _currentBlockY;
-        nextBlock.poxZ = _currentBlockZ;
+        nextBlock.pos = position;
         nextBlock.nextLocal = NextBlockLocal::None;
-        nextBlock.nextSide = _currentSide;
-        nextBlock.nextLook = _lookTowards;
+        nextBlock.nextSide = currentSide;;
+        nextBlock.nextLook = lookTowards;
     }
-
     return nextBlock;
 }
 
@@ -359,21 +251,40 @@ JBTypes::vec3ui Map::getBlockCoords (size_t index,
 }
 
 std::shared_ptr <const std::vector <int> > Map::intersectBlock (float x, float y, float z) const {
-    const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
+    const JBTypes::vec3f sideVec = _ball->currentSideAsVector();
 
-    const float offsetBlockPosition = getRadius();
+    const float offsetBlockPosition = _ball->getRadius();
     const float xIntersectionUnder = x - sideVec.x * offsetBlockPosition;
     const float yIntersectionUnder = y - sideVec.y * offsetBlockPosition;
     const float zIntersectionUnder = z - sideVec.z * offsetBlockPosition;
 
-    const int xInteger = static_cast <int>(xIntersectionUnder);
-    const int yInteger = static_cast <int>(yIntersectionUnder);
-    const int zInteger = static_cast <int>(zIntersectionUnder);
+    const auto xInteger = static_cast <int>(xIntersectionUnder);
+    const auto yInteger = static_cast <int>(yIntersectionUnder);
+    const auto zInteger = static_cast <int>(zIntersectionUnder);
 
-    const CstBlock_sptr& block = _map.getBlock(xInteger, yInteger, zInteger);
+    const CstBlock_sptr& block = getBlock({ xInteger, yInteger, zInteger });
 
     return (block && block->isExists())
            ? std::make_shared <const std::vector <int> >(
-                    std::initializer_list <int>({ xInteger, yInteger, zInteger }))
+               std::initializer_list <int>({ xInteger, yInteger, zInteger })
+           )
+           : nullptr;
+}
+
+bool Map::ballIsOut() const {
+
+    constexpr float thresholdOut = 5.f;
+    // TODO: get ball 3D position
+    return (
+        _3DPosX < -thresholdOut || _3DPosX > (static_cast <float>(_map.width()) + thresholdOut) ||
+        _3DPosY < -thresholdOut || _3DPosY > (static_cast <float>(_map.height()) + thresholdOut) ||
+        _3DPosZ < -thresholdOut || _3DPosZ > (static_cast <float>(_map.depth()) + thresholdOut)
+    );
+}
+
+CstBlock_sptr Map::getBlock(const JBTypes::vec3ui &pos) const {
+    const std::string strPos = positionToString(pos);
+    return _blocksPositions.find(strPos) != _blocksPositions.end()
+           ? _blocksPositions.at(strPos)
            : nullptr;
 }

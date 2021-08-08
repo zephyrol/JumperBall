@@ -7,10 +7,18 @@
 
 #include "IceBlock.h"
 
-IceBlock::IceBlock(const JBTypes::vec3ui& position):Block(position) {
+IceBlock::IceBlock(const JBTypes::vec3ui &position,
+                   const vecItem_sptr &items,
+                   const vecEnemy_sptr &enemies,
+                   const vecSpecial_sptr &specials,
+                   const Ball_sptr& ball
+                   ):
+                   Block(position, ball, items, enemies, specials){
+
 }
 
 Block::Effect IceBlock::detectionEvent (const JBTypes::Dir&,
                                         const JBTypes::timePointMs&) {
     return Block::Effect::Slide;
 }
+

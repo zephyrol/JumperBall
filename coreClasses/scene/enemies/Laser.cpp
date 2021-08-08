@@ -8,9 +8,11 @@
 #include "Laser.h"
 
 Laser::Laser(const JBTypes::Color& color,
-             const JBTypes::vec3ui& initialPosition,
-             const JBTypes::Dir& dir,
-             size_t length):
+    const JBTypes::vec3ui& initialPosition,
+    const JBTypes::Dir& dir,
+    size_t length,
+    const Ball_sptr &ball
+):
     Enemy(initialPosition,
           dir,
           laserRadius,
@@ -23,7 +25,8 @@ Laser::Laser(const JBTypes::Color& color,
             0.f,
             1.f,
             1.f,
-            1.f }),
+            1.f },
+          ball),
     _color(color),
     _isActivated(true) {
 }

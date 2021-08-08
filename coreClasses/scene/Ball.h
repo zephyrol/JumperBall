@@ -14,10 +14,16 @@
 #include "movements/NextBlock.h"
 #include "SceneElement.h"
 
+class Ball;
+using Ball_sptr = std::shared_ptr <Ball>;
+using CstBall_sptr = std::shared_ptr <const Ball>;
+using vecCstBall_sptr = std::vector <CstBall_sptr>;
+using vecBall_sptr = std::vector <Ball_sptr>;
+
 class Ball: public SceneElement {
 public:
 
-Ball(int x, int y, int z);
+Ball(unsigned int x, unsigned int y, unsigned int z);
 
 static constexpr float timeToGetNextBlock = 0.25f;
 static constexpr float timeToTurn = 0.3f;
@@ -39,7 +45,8 @@ enum class ActionRequest { GoStraightAhead, TurnLeft, TurnRight, Jump };
 
 using shock = std::array <unsigned int, 3>;
 
-JBTypes::vec3f get3DPosition() const noexcept;
+const JBTypes::vec3f& get3DPosition() const noexcept;
+const JBTypes::vec3ui& getPosition() const noexcept;
 float getRadius() const;
 JBTypes::vec3f lookTowardsAsVector() const;
 JBTypes::vec3f currentSideAsVector() const;
@@ -78,13 +85,8 @@ void doAction(ActionRequest action);
 
 private:
 
-unsigned int _posX;
-unsigned int _posY;
-unsigned int _posZ;
-
-float _3DPosX;
-float _3DPosY;
-float _3DPosZ;
+JBTypes::vec3ui _pos;
+JBTypes::vec3f _3DPos;
 
 JBTypes::Dir _currentSide;
 JBTypes::Dir _lookTowards;
@@ -115,8 +117,10 @@ JBTypes::timePointMs _timeJumpRequest;
 JBTypes::Quaternion _currentCoveredRotation;
 float _currentCrushing;
 
-std::shared_ptr <const std::vector <int> >
-intersectBlock(float x, float y, float z) const;
+const TurnLeft _turnLeftMovement;
+const TurnRight _turnRightMovement;
+
+std::shared_ptr <const std::vector <int> > intersectBlock(float x, float y, float z) const;
 JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 JBTypes::vec3f get3DPosStayingBall() const;
 bool isOutOfTheMap() const;
@@ -137,13 +141,10 @@ void deteleport() noexcept;
 void setTimeActionNow() noexcept;
 void setTimeLifeNow() noexcept;
 void mapInteraction() noexcept;
-void blockEvent(const JBTypes::vec3ui& blockPos) noexcept;
+void blockEvent() noexcept;
 void die() noexcept;
 ClassicalMechanics& getMechanicsJumping() noexcept;
-void isFallingIntersectionBlock() noexcept;
 void isGoingStraightAheadIntersectBlock() noexcept;
-
-void setPosition(int x, int y, int z);
 
 void fallingUpdate() noexcept;
 void stayingUpdate() noexcept;
@@ -156,11 +157,6 @@ void deteleportingUpdate() noexcept;
 
 void applyRotation(bool inverse = false);
 JBTypes::vec3f getInverseRotationAxis() const noexcept;
-
-static const TurnLeft turnLeftMovement;
-static const TurnRight turnRightMovement;
-static const TurnBack turnBackMovement;
-static const NextBlock nextBlockGetter;
 };
 
 #endif /* BALL_H */

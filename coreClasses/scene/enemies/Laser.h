@@ -16,7 +16,9 @@ public:
 Laser(const JBTypes::Color& color,
       const JBTypes::vec3ui& initialPosition,
       const JBTypes::Dir& dir,
-      size_t length);
+      size_t length,
+      const Ball_sptr &ball
+      );
 
 virtual Effect update(const JBTypes::vec3f& boundingSpherePosition,
                       float boundingSphereRadius) override;

@@ -7,10 +7,13 @@
 
 #include "DarkBall.h"
 
-DarkBall::DarkBall(const JBTypes::vec3ui& initialPosition,
-                   const JBTypes::Dir& dir,
-                   const JBTypes::Dir& movementDirection,
-                   size_t nbOfJumps):
+DarkBall::DarkBall(
+    const JBTypes::vec3ui& initialPosition,
+    const JBTypes::Dir& dir,
+    const JBTypes::Dir& movementDirection,
+    size_t nbOfJumps,
+    const Ball_sptr &ball
+):
     Enemy(initialPosition,
           dir,
           darkBallRadius,
@@ -23,7 +26,8 @@ DarkBall::DarkBall(const JBTypes::vec3ui& initialPosition,
             0.f,
             1.f,
             1.f,
-            1.f }),
+            1.f },
+          ball),
     _movementDirection(movementDirection) {
 }
 
@@ -39,16 +43,14 @@ Enemy::Effect DarkBall::update (const JBTypes::vec3f& boundingSpherePosition,
     const JBTypes::vec3f vecDirSide =
         JBTypesMethods::directionAsVector(direction());
 
-    const size_t nbOfJumpsDone = static_cast <size_t>(timeSinceCreation /
-                                                      mechanics.getTimeToGetDestination());
+    const auto nbOfJumpsDone = static_cast <size_t>(timeSinceCreation / mechanics.getTimeToGetDestination());
 
-    const float distanceAlreadyTravelled = nbOfJumpsDone *
-                                           mechanics.getJumpDistance();
+    const float distanceAlreadyTravelled = nbOfJumpsDone * mechanics.getJumpDistance();
 
     const std::function <float(float, float)> getRemainder =
         [] (float dividend, float divisor)
         ->float {
-            const size_t quotient = static_cast <size_t>(dividend / divisor);
+            const auto quotient = static_cast <size_t>(dividend / divisor);
             return dividend - (divisor * static_cast <float>(quotient));
         };
 
@@ -116,5 +118,4 @@ void DarkBall::touchingTest (const JBTypes::vec3f& boundingSpherePosition,
     }
 }
 
-const ClassicalMechanics DarkBall::darkBallClassicalMechanics(
-    DarkBall::darkBallRadius);
+const ClassicalMechanics DarkBall::darkBallClassicalMechanics(DarkBall::darkBallRadius);

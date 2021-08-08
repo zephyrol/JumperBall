@@ -50,11 +50,17 @@ std::shared_ptr <Map> loadMap(size_t mapNumber);
 Map::MapInfo createMapInfo(std::ifstream& file);
 Map::MapInfo uncompressMap(std::ifstream& file);
 
-
 std::string convertToBase(unsigned long long int number, unsigned char base);
 unsigned long long int convertToBase10(const std::string& s, unsigned int base);
 std::string applyOffset(const std::string& s, int offset);
 std::string substractOffset(const std::string& s, int offset);
+
+Block_sptr createBlockWithoutProperties(
+    unsigned char blockType,
+    const vecItem_sptr& items,
+    const vecEnemy_sptr& enemies,
+    const vecSpecial_sptr& specials
+);
 
 // Reading functions
 unsigned int readUnsignedInt(std::ifstream& input);
@@ -67,6 +73,20 @@ void writeUnsignedInt(std::ofstream& output, unsigned int unsignedInt);
 void writeString(std::ofstream& output, const std::string& string);
 
 void verificationMap(std::ifstream& input, const Map& map);
+
+    Block_sptr createBlock(
+        unsigned char blockType,
+        const JBTypes::vec3ui &position,
+        const vecItem_sptr &items,
+        const vecEnemy_sptr &enemies,
+        const vecSpecial_sptr &specials,
+        const Ball_sptr &ball,
+        const std::string& properties = ""
+    );
+
+    Block_sptr
+    createBlock(unsigned char blockType, const JBTypes::vec3ui &position, const vecItem_sptr &items,
+                const vecEnemy_sptr &enemies, const vecSpecial_sptr &specials);
 }
 
 #endif

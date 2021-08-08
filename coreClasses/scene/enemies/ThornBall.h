@@ -13,10 +13,14 @@ public:
 ThornBall(const JBTypes::vec3ui& initialPosition,
           const JBTypes::Dir& dir,
           const JBTypes::Dir& movementDirection,
-          size_t movementLength);
+          size_t movementLength,
+          const Ball_sptr &ball
+          );
+
 virtual Effect update(const JBTypes::vec3f& boundingSpherePosition,
                       float boundingSphereRadius) override;
-virtual const JBTypes::Dir& movementDirection() const override;
+
+const JBTypes::Dir& movementDirection() const ;
 virtual ~ThornBall() = default;
 static constexpr float thornBallRadius = 0.1f;
 

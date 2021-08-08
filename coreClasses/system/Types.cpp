@@ -363,3 +363,37 @@ JBTypes::Color JBTypesMethods::charAsColor(unsigned char charColor) {
     }
     return color;
 }
+
+std::array<bool, 6> JBTypesMethods::strDirAsArray(const std::string& directions) {
+    std::array<bool, 6> dirsArray = { false, false, false, false, false, false };
+    for (unsigned char dir : directions) {
+        switch (dir) {
+            case 'N' : {
+                dirsArray.at(0) = true;
+                break;
+            }
+            case 'S' : {
+                dirsArray.at(1) = true;
+                break;
+            }
+            case 'E' : {
+                dirsArray.at(2) = true;
+                break;
+            }
+            case 'W' : {
+                dirsArray.at(3) = true;
+                break;
+            }
+            case 'U' : {
+                dirsArray.at(4) = true;
+                break;
+            }
+            case 'D' : {
+                dirsArray.at(5) = true;
+                break;
+            }
+            default: break;
+        }
+    }
+    return dirsArray;
+}
