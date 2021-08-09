@@ -327,7 +327,7 @@ JBTypes::vec3f Ball::P2DTo3D (ClassicalMechanics::physics2DVector p2D) const {
     return JBTypes::vec3f { x, y, z };
 }
 
-float Ball::getRadius() const {
+float Ball::getRadius() {
     return Ball::basicRadius;
 }
 
@@ -622,9 +622,9 @@ void Ball::deteleportingUpdate() noexcept{
         _teleportationColor = JBTypes::Color::None;
         stay();
         update();
-    } else {
-        _teleportationCoefficient = 1.f - (timeSinceAction / halfTimeTeleportationDuration);
+        return;
     }
+    _teleportationCoefficient = 1.f - (timeSinceAction / halfTimeTeleportationDuration);
 }
 
 void Ball::applyRotation (bool inverse) {
@@ -678,11 +678,12 @@ void Ball::update() noexcept{
     case Ball::State::Deteleporting: deteleportingUpdate(); break;
     default: break;
     }
-    mapInteraction();
+     // mapInteraction(); TODO: Move using in map
     burningUpdate();
-    if (isOutOfTheMap() || isBurstingFinished()) {
+    // TODO: The same
+    /* if (isOutOfTheMap() || isBurstingFinished()) {
         die();
-    }
+    } */
 }
 
 bool Ball::isBurstingFinished() const {

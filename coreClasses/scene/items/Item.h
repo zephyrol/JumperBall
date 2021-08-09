@@ -23,11 +23,9 @@ public:
 enum class CategoryOfItems { Key, Coin, Clock };
 
 Item(const JBTypes::vec3ui& position, const JBTypes::Dir& direction, const CategoryOfItems& category);
-virtual ~Item() = default;
 const CategoryOfItems& getCategory() const;
 const JBTypes::vec3ui& position() const;
-const JBTypes::vec3f& get3Dposition() const;
-const JBTypes::Dir& direction() const;
+const JBTypes::vec3f& get3DPosition() const;
 
 bool isGotten() const;
 float getTimeSinceObtaining() const;

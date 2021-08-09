@@ -6,7 +6,6 @@
  */
 #ifndef __SPECIAL_H__
 #define __SPECIAL_H__
-#include "scene/blocks/Block.h"
 #include "scene/SceneElement.h"
 
 class Special;
@@ -26,8 +25,6 @@ Special(
     const JBTypes::vec3ui& position,
     bool isActivated = true
     );
-
-virtual ~Special() = default;
 
 const JBTypes::Color& getColor() const;
 float getTimeSinceCreation() const;

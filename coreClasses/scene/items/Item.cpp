@@ -30,12 +30,8 @@ const JBTypes::vec3ui& Item::position() const {
     return _position;
 }
 
-const JBTypes::vec3f& Item::get3Dposition() const
-{return _3Dposition; 
-    
-}
-
-const JBType irection;
+const JBTypes::vec3f& Item::get3DPosition() const {
+    return _3Dposition;
 }
 
 bool Item::isGotten() const {

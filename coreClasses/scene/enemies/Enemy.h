@@ -8,7 +8,6 @@
 #define Enemy_hpp
 
 #include <scene/Ball.h>
-#include "scene/blocks/Block.h"
 #include "scene/SceneElement.h"
 
 

@@ -47,7 +47,7 @@ using shock = std::array <unsigned int, 3>;
 
 const JBTypes::vec3f& get3DPosition() const noexcept;
 const JBTypes::vec3ui& getPosition() const noexcept;
-float getRadius() const;
+static float getRadius() ;
 JBTypes::vec3f lookTowardsAsVector() const;
 JBTypes::vec3f currentSideAsVector() const;
 
@@ -120,10 +120,8 @@ float _currentCrushing;
 const TurnLeft _turnLeftMovement;
 const TurnRight _turnRightMovement;
 
-std::shared_ptr <const std::vector <int> > intersectBlock(float x, float y, float z) const;
 JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 JBTypes::vec3f get3DPosStayingBall() const;
-bool isOutOfTheMap() const;
 bool isBurstingFinished() const;
 JBTypes::vec3f getRotationAxis() const noexcept;
 float getJumpingPosX() const noexcept;
@@ -140,7 +138,6 @@ void teleport(const JBTypes::Color& col) noexcept;
 void deteleport() noexcept;
 void setTimeActionNow() noexcept;
 void setTimeLifeNow() noexcept;
-void mapInteraction() noexcept;
 void blockEvent() noexcept;
 void die() noexcept;
 ClassicalMechanics& getMechanicsJumping() noexcept;

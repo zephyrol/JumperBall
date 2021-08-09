@@ -238,7 +238,7 @@ Map::nextBlockInformation Map::getNextBlockInfo() const {
     return nextBlock;
 }
 
-JBTypes::vec3f Ball::getNextLook() const {
+JBTypes::vec3f Map::getNextLook() const {
     return JBTypesMethods::directionAsVector(getNextBlockInfo().nextLook);
 }
 
@@ -250,7 +250,7 @@ JBTypes::vec3ui Map::getBlockCoords (size_t index,
     return { uIntIndex % width, uIntIndex / widthDepth, (uIntIndex % widthDepth) / width };
 }
 
-std::shared_ptr <const std::vector <int> > Map::intersectBlock (float x, float y, float z) const {
+std::shared_ptr <const std::vector <unsigned int> > Map::intersectBlock (float x, float y, float z) const {
     const JBTypes::vec3f sideVec = _ball->currentSideAsVector();
 
     const float offsetBlockPosition = _ball->getRadius();
@@ -258,27 +258,28 @@ std::shared_ptr <const std::vector <int> > Map::intersectBlock (float x, float y
     const float yIntersectionUnder = y - sideVec.y * offsetBlockPosition;
     const float zIntersectionUnder = z - sideVec.z * offsetBlockPosition;
 
-    const auto xInteger = static_cast <int>(xIntersectionUnder);
-    const auto yInteger = static_cast <int>(yIntersectionUnder);
-    const auto zInteger = static_cast <int>(zIntersectionUnder);
+    const auto xInteger = static_cast <unsigned int>(xIntersectionUnder);
+    const auto yInteger = static_cast <unsigned int>(yIntersectionUnder);
+    const auto zInteger = static_cast <unsigned int>(zIntersectionUnder);
 
     const CstBlock_sptr& block = getBlock({ xInteger, yInteger, zInteger });
 
     return (block && block->isExists())
-           ? std::make_shared <const std::vector <int> >(
-               std::initializer_list <int>({ xInteger, yInteger, zInteger })
+           ? std::make_shared <const std::vector <unsigned int> >(
+               std::initializer_list <unsigned int>({ xInteger, yInteger, zInteger })
            )
            : nullptr;
 }
 
 bool Map::ballIsOut() const {
 
+    const auto ballPosition = _ball->get3DPosition();
     constexpr float thresholdOut = 5.f;
     // TODO: get ball 3D position
     return (
-        _3DPosX < -thresholdOut || _3DPosX > (static_cast <float>(_map.width()) + thresholdOut) ||
-        _3DPosY < -thresholdOut || _3DPosY > (static_cast <float>(_map.height()) + thresholdOut) ||
-        _3DPosZ < -thresholdOut || _3DPosZ > (static_cast <float>(_map.depth()) + thresholdOut)
+        ballPosition.x < -thresholdOut || ballPosition.x > (static_cast <float>(_width) + thresholdOut) ||
+        ballPosition.y < -thresholdOut || ballPosition.y > (static_cast <float>(_height) + thresholdOut) ||
+        ballPosition.z < -thresholdOut || ballPosition.z > (static_cast <float>(_depth) + thresholdOut)
     );
 }
 

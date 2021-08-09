@@ -81,7 +81,9 @@ const NextBlock _nextBlockGetter;
 const TurnBack _turnBackMovement;
 
 nextBlockInformation getNextBlockInfo() const;
-std::shared_ptr<const std::vector<int>> intersectBlock(float x, float y, float z) const;
+std::shared_ptr<const std::vector<unsigned int>> intersectBlock(float x, float y, float z) const;
+
+    JBTypes::vec3f getNextLook() const;
 };
 
 #endif /* MAP_H */
