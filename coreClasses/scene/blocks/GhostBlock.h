@@ -22,6 +22,9 @@ public:
 
     bool isExists() const override;
 virtual Block::Effect interaction(const JBTypes::timePointMs& currentTime ) override;
+bool mayDisappear() const override;
+    JBTypes::Color getColor() const override;
+
 
 private:
 const float _periodicity;

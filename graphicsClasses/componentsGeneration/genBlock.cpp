@@ -7,15 +7,10 @@
 #include "MeshGenerator.h"
 
 
-Mesh_sptr MeshGenerator::genBlock (const std::shared_ptr<const Map>& map, size_t index) {
-    const JBTypes::vec3ui position = map->getBlockCoords(index);
+Mesh_sptr MeshGenerator::genBlock (const CstMap_sptr& map, const CstBlock_sptr& block) {
+    const auto& position = block->position();
     const glm::vec3 glmPosition { position.at(0), position.at(1), position.at(2) };
     const glm::mat4 translation = glm::translate(glmPosition);
-    const Map::BlockTypes blockType = map->getType(position);
-
-    const CstBlock_sptr block = map->getBlock(index);
-
-    CstGeometricShape_sptr blockShape;
 
     constexpr size_t numberOfFaces = 6;
 
@@ -32,48 +27,23 @@ Mesh_sptr MeshGenerator::genBlock (const std::shared_ptr<const Map>& map, size_t
     }};
 
     for (size_t i = 0; i < numberOfFaces; ++i) {
-        const JBTypes::vec3ui& neighbourgPosition = positions.at(i);
-        const Map::BlockTypes typeNeighbourg = map->getType(neighbourgPosition);
-        if (typeNeighbourg != Map::BlockTypes::Brittle && typeNeighbourg != Map::BlockTypes::None) {
-            // strSidesInfo.push_back('0');
-            boolSidesInfo.at(i) = false;
-        } else {
-            // strSidesInfo.push_back('1');
+        const JBTypes::vec3ui& neighborPosition = positions.at(i);
+        // true = closed
+        if (block->mayDisappear()) {
             boolSidesInfo.at(i) = true;
+        } else {
+            const auto neighborBlock = map->getBlock(neighborPosition);
+            boolSidesInfo.at(i) = !neighborBlock || neighborBlock->mayDisappear();
         }
+
     }
 
-    if (blockType == Map::BlockTypes::Ice) {
-        std::vector <glm::vec3> iceColors = Cube::iceColorsCube;
-        blockShape = std::make_shared <const Cube>(
-            std::move(iceColors),
-            translation,
-            glm::mat4(1.f),
-            boolSidesInfo
-            );
-    } else if (blockType == Map::BlockTypes::Fire) {
-        std::vector <glm::vec3> fireColors = Cube::fireColorsCube;
-        blockShape = std::make_shared <const Cube>(
-            std::move(fireColors),
-            translation,
-            glm::mat4(1.f),
-            boolSidesInfo
-            );
-    } else if (blockType == Map::BlockTypes::Brittle) {
-        std::vector <glm::vec3> brittleColors = Cube::brittleColorsCube;
-        blockShape = std::make_shared <const Cube>(std::move(brittleColors), translation);
-    } else if (blockType == Map::BlockTypes::Ghost) {
-        std::vector <glm::vec3> ghostColors = Cube::ghostColorsCube;
-        blockShape = std::make_shared <const Cube>(
-            std::move(ghostColors),
-            translation,
-            glm::mat4(1.f),
-            boolClosedSides
-            );
-    } else {
-        blockShape = std::make_shared <const Cube>(translation, glm::mat4(1.f), boolSidesInfo);
-    }
-
+    const CstGeometricShape_sptr blockShape = std::make_shared <const Cube>(
+        block->getColor(),
+        translation,
+        glm::mat4(1.f),
+        boolSidesInfo
+    );
 
     const vecCstGeometricShape_sptr sharpsShapes = genSharps(*block, blockType, glmPosition);
     const vecCstGeometricShape_sptr jumpersShapes = genJumpers(*block, blockType, glmPosition);

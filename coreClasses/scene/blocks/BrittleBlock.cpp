@@ -87,3 +87,11 @@ Block::Effect BrittleBlock::detectionEvent (const JBTypes::Dir& direction,
     return Effect::Nothing;
 }
 
+bool BrittleBlock::mayDisappear() const {
+    return true;
+}
+
+JBTypes::Color BrittleBlock::getColor() const {
+    return JBTypes::Color::Red;
+}
+

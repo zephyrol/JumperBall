@@ -41,6 +41,7 @@ static constexpr size_t itemsNumber = 6;
 
 virtual std::array <bool, 6> faceInfo() const;
 virtual bool isExists() const;
+virtual JBTypes::Color getColor() const;
 
 const JBTypes::vec3f& localScale() const;
 const JBTypes::vec3f& localTranslation() const;
@@ -54,6 +55,8 @@ bool hasInteraction() const;
 void update(
     const JBTypes::timePointMs& currentTime
 );
+
+virtual bool mayDisappear() const;
 
 void catchItem(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
 

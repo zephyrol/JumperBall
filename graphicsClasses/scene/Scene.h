@@ -26,7 +26,7 @@ void doAction( const ActionKey& key);
 
 bool gameIsFinished() const;
 
-std::shared_ptr<const Map> getMap() const;
+CstMap_sptr getMap() const;
 std::shared_ptr<const Ball> getBall() const;
 std::shared_ptr<const Camera> getCamera() const;
 std::shared_ptr<const Star> getStar() const;
@@ -34,7 +34,7 @@ std::shared_ptr<const Star> getStar() const;
 vecCstSceneElement_sptr getSceneElements() const;
 
 private:
-const std::shared_ptr<Map> _map;
+const Map_sptr _map;
 const std::shared_ptr<Ball> _ball;
 const std::shared_ptr<Camera> _camera;
 const std::shared_ptr<Star> _star;

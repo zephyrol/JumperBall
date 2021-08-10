@@ -57,3 +57,11 @@ Block::Effect GhostBlock::interaction (const JBTypes::timePointMs& currentTime) 
     return Block::Effect::Nothing;
 }
 
+bool GhostBlock::mayDisappear() const {
+    return true;
+}
+
+JBTypes::Color GhostBlock::getColor() const {
+    return JBTypes::Color::Purple;
+}
+

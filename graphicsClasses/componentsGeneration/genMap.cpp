@@ -6,17 +6,18 @@
  */
 #include "MeshGenerator.h"
 
-vecMesh_sptr MeshGenerator::genBlocks (const std::shared_ptr<const Map>& map) {
+vecMesh_sptr MeshGenerator::genBlocks (const CstMap_sptr& map) {
 
     vecMesh_sptr meshes;
     const auto blockInfos = map->blocksInfo();
     for (size_t i = 0; i < blockInfos.size(); ++i) {
         meshes.push_back(genBlock(map, blockInfos.at(i).index));
     }
+
     return meshes;
 }
 
-vecMesh_sptr MeshGenerator::genItems (const std::shared_ptr<const Map>& map) {
+vecMesh_sptr MeshGenerator::genItems (const CstMap_sptr& map) {
 
     vecMesh_sptr meshes;
     const auto blockInfos = map->blocksInfo();
@@ -33,7 +34,7 @@ vecMesh_sptr MeshGenerator::genItems (const std::shared_ptr<const Map>& map) {
     return meshes;
 }
 
-vecMesh_sptr MeshGenerator::genEnemies (const std::shared_ptr<const Map>& map) {
+vecMesh_sptr MeshGenerator::genEnemies (const CstMap_sptr& map) {
 
     vecMesh_sptr meshes;
     const auto enemiesInfos = map->getEnemiesInfo();
@@ -46,7 +47,7 @@ vecMesh_sptr MeshGenerator::genEnemies (const std::shared_ptr<const Map>& map) {
     return meshes;
 }
 
-vecMesh_sptr MeshGenerator::genSpecials (const std::shared_ptr<const Map>& map) {
+vecMesh_sptr MeshGenerator::genSpecials (const CstMap_sptr& map) {
 
     vecMesh_sptr meshes;
     const auto specialsInfos = map->getSpecialInfo();

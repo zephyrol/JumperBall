@@ -33,12 +33,6 @@ Map::Map(Map::MapInfo &&mapInfo):
 {
 }
 
-Block_sptr Map::getBlock (int x, int y, int z) {
-    CstBlock_sptr constBlock = static_cast <const Map&>(*this).getBlock(x, y, z);
-
-    return std::const_pointer_cast <Block>(constBlock);
-}
-
 std::string Map::positionToString(const JBTypes::vec3ui& position) {
     return std::to_string(position.at(0)) + "," + 
         std::to_string(position.at(1)) + "," +
@@ -85,14 +79,6 @@ std::map <JBTypes::Color, bool> Map::createSpecialStates() const {
             { JBTypes::Color::Yellow, defaultStateValue }
         }
     };
-}
-
-CstBlock_sptr Map::getBlock (int x, int y, int z) const {
-    return _blocksPositions.at(positionToString({
-        static_cast<unsigned int>(x),
-        static_cast<unsigned int>(y),
-        static_cast<unsigned int>(z)
-    }));
 }
 
 unsigned int Map::width() const {
@@ -181,7 +167,7 @@ Map::nextBlockInformation Map::getNextBlockInfo() const {
 
     const auto& position = _ball->getPosition();
 
-    const auto& getNeighbour = [&position, offsetsNextBlocks](size_t n) -> JBTypes::vec3ui  {
+    const auto& getNeighbor = [&position, offsetsNextBlocks](size_t n) -> JBTypes::vec3ui  {
         const size_t offset = 3 * n;
         return {
             position.at(0) + offsetsNextBlocks.at(offset),
@@ -190,10 +176,10 @@ Map::nextBlockInformation Map::getNextBlockInfo() const {
         };
     };
 
-    const auto inFrontOf = getNeighbour(0);
-    const auto left = getNeighbour(1);
-    const auto right = getNeighbour(2);
-    const auto above = getNeighbour(3);
+    const auto inFrontOf = getNeighbor(0);
+    const auto left = getNeighbor(1);
+    const auto right = getNeighbor(2);
+    const auto above = getNeighbor(3);
 
     const CstBlock_sptr& blockAbove = getBlock(above);
     const CstBlock_sptr& blockInFrontOf = getBlock(inFrontOf);

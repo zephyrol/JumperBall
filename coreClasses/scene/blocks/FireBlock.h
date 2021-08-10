@@ -25,6 +25,8 @@ virtual Effect detectionEvent(
     const JBTypes::timePointMs& currentTime
 ) override;
 
+    JBTypes::Color getColor() const override;
+
 };
 
 #endif /* FIREBLOCK_H */

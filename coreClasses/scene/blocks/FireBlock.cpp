@@ -16,7 +16,10 @@ FireBlock::FireBlock(const JBTypes::vec3ui &position,
                      Block(position, ball, items, enemies, specials){
 }
 
-Block::Effect FireBlock::detectionEvent (const JBTypes::Dir&,
-                                         const JBTypes::timePointMs&) {
+Block::Effect FireBlock::detectionEvent (const JBTypes::Dir&, const JBTypes::timePointMs&) {
     return Block::Effect::Burn;
+}
+
+JBTypes::Color FireBlock::getColor() const {
+    return JBTypes::Color::Orange;
 }

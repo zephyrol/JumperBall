@@ -29,7 +29,7 @@ namespace JBTypes {
 
 enum class Direction { North, South, East, West, Up, Down };
 
-enum class Color { None, Red, Green, Blue, Yellow };
+enum class Color { None, Red, Green, Blue, Yellow, Orange, Purple };
 
 using Dir = Direction;
 

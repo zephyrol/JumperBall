@@ -135,3 +135,11 @@ vecCstSpecial_sptr Block::getCstSpecials() const {
     }
     return cstSpecials;
 }
+
+bool Block::mayDisappear() const {
+    return false;
+}
+
+JBTypes::Color Block::getColor() const {
+    return JBTypes::Color::None;
+}

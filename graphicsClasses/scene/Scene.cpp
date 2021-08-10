@@ -68,7 +68,7 @@
     return _ball->stateOfLife() == Ball::StateOfLife::Dead;
  }
  
- std::shared_ptr<const Map> Scene::getMap() const {
+ CstMap_sptr Scene::getMap() const {
     return _map; 
  }
  

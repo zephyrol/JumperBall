@@ -16,7 +16,13 @@ public:
 // --CONSTRUCTORS & DESTRUCTORS--//
 Cube(const glm::mat4& modelTransform = glm::mat4(1.f),
      const glm::mat4& normalsTransform = glm::mat4(1.f),
-     const std::array <bool, 6>& sides = { true, true, true, true, true, true });
+     const std::array <bool, 6>& sides = { true, true, true, true, true, true }
+     );
+    Cube(const JBTypes::Color& color,
+         const glm::mat4& modelTransform = glm::mat4(1.f),
+         const glm::mat4& normalsTransform = glm::mat4(1.f),
+         const std::array <bool, 6>& sides = { true, true, true, true, true, true }
+    );
 Cube(const glm::vec3& customColor,
      const glm::mat4& modelTransform = glm::mat4(1.f),
      const glm::mat4& normalsTransform = glm::mat4(1.f),
@@ -45,6 +51,8 @@ static std::vector <glm::vec3> getBasicPosCube(const std::array <bool, 6>& sides
 static std::vector <glm::vec3> getBasicNormalsCube(const std::array <bool, 6>& sides);
 static std::vector <glm::vec3> getBasicColorsCube(const std::array <bool, 6>& sides);
 static std::vector <glm::vec2> getBasicUVCoordsCube(const std::array <bool, 6>& sides);
+
+static std::vector <glm::vec3> genColors(const JBTypes::Color& color);
 static const std::vector <glm::vec3> basicPositionsCube;
 static const std::vector <glm::vec3> basicNormalsCube;
 static const std::vector <glm::vec2> basicUVCoordsCube;

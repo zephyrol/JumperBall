@@ -14,6 +14,15 @@ Cube::Cube(const glm::mat4& modelTransform,
     _sides(sides) {
 }
 
+Cube::Cube(const JBTypes::Color &color,
+           const glm::mat4 &modelTransform,
+           const glm::mat4 &normalsTransform,
+           const std::array<bool, 6> &sides):
+    GeometricShape(modelTransform, normalsTransform, std::move(genColors(color))),
+    _sides(sides) {
+
+}
+
 Cube::Cube(const glm::vec3& customColor,
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform,
@@ -167,96 +176,6 @@ const std::vector <glm::vec3> Cube::basicColorsCube =
     0.f, 0.f, 0.8f, 0.f, 0.f, 0.8f, 0.f, 0.f, 0.8f
 });
 
-const std::vector <glm::vec3> Cube::iceColorsCube =
-    Utility::GLfloatListToGlmVec3({
-
-    // Face 1
-    0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
-    0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-    // Face 2
-    0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-    0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-    // Face 6
-    0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-    0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-    // Face 5
-    0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
-    0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-    // Face 4
-    0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
-    0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-    // Face 3
-    0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-    0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f
-});
-
-const std::vector <glm::vec3> Cube::ghostColorsCube =
-    Utility::GLfloatListToGlmVec3({
-
-    // Face 1
-    0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f,
-    0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
-    // Face 2
-    0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
-    0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
-    // Face 6
-    0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
-    0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
-    // Face 5
-    0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f,
-    0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
-    // Face 4
-    0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f,
-    0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
-    // Face 3
-    0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
-    0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f
-});
-
-const std::vector <glm::vec3> Cube::fireColorsCube =
-    Utility::GLfloatListToGlmVec3({
-    // Face 1
-    0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f,
-    0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
-    // Face 2
-    1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
-    0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
-    // Face 6
-    1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
-    0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
-    // Face 5
-    0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f,
-    0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
-    // Face 4
-    0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f,
-    0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
-    // Face 3
-    1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
-    0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f
-});
-
-const std::vector <glm::vec3> Cube::brittleColorsCube =
-    Utility::GLfloatListToGlmVec3({
-    // Face 1
-  0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f, 0.75f, 0.f, 0.f,
-  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
-  // Face 2
-  1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f,
-  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
-  // Face 6
-  1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f,
-  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
-  // Face 5
-  0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f,
-  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
-  // Face 4
-  0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f,
-  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
-  // Face 3
-  1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f,
-  0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f
-});
-
 const std::vector <glm::vec2> Cube::basicUVCoordsCube =
     Utility::GLfloatListToGlmVec2({
     // Face 1
@@ -278,3 +197,121 @@ const std::vector <glm::vec2> Cube::basicUVCoordsCube =
     0.f, 0.f, 1.f, 0.f, 0.f, 0.f,
     1.f, 0.f, 1.f, 0.f, 0.f, 0.f
 });
+
+std::vector<glm::vec3> Cube::genColors(const JBTypes::Color &color) {
+    if (color == JBTypes::Color::Purple) {
+        Utility::GLfloatListToGlmVec3(
+            {
+                // Face 1
+                0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
+                0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+                // Face 2
+                0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+                0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+                // Face 6
+                0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+                0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+                // Face 5
+                0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
+                0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+                // Face 4
+                0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
+                0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+                // Face 3
+                0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+                0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f
+            }
+        );
+    }
+    if (color == JBTypes::Color::Orange) {
+        return Utility::GLfloatListToGlmVec3({
+            // Face 1
+            0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f,
+            0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
+            // Face 2
+            1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
+            0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
+            // Face 6
+            1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
+            0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
+            // Face 5
+            0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f,
+            0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
+            // Face 4
+            0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f,
+            0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
+            // Face 3
+            1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f,
+            0.8f * 1.5f, 0.8f * 1.5f, 0.f, 1.f * 1.5f, 0.f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f
+        });
+    }
+    if (color == JBTypes::Color::Red) {
+        return Utility::GLfloatListToGlmVec3({
+            // Face 1
+            0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f, 0.75f, 0.f, 0.f,
+            0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
+            // Face 2
+            1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f,
+            0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
+            // Face 6
+            1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f,
+            0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
+            // Face 5
+            0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f,
+            0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
+            // Face 4
+            0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f,
+            0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f,
+            // Face 3
+            1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f, 0.6f, 0.5f, 0.4f,
+            0.6f, 0.5f, 0.4f, 1.f, 0.f, 0.f, 0.6f, 0.5f, 0.4f
+        });
+    }
+    if (color == JBTypes::Color::Purple) {
+        return Utility::GLfloatListToGlmVec3({
+
+            // Face 1
+            0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f,
+            0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
+            // Face 2
+            0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
+            0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
+            // Face 6
+            0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
+            0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
+            // Face 5
+            0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f,
+            0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
+            // Face 4
+            0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f,
+            0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
+            // Face 3
+            0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
+            0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f
+        });
+    }
+    if (color == JBTypes::Color::Purple) {
+        Utility::GLfloatListToGlmVec3({
+            // Face 1
+            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
+            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+            // Face 2
+            0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+            // Face 6
+            0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+            // Face 5
+            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
+            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+            // Face 4
+            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
+            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+            // Face 3
+            0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
+            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f
+        });
+    }
+    return basicColorsCube;
+}
+

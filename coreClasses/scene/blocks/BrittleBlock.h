@@ -23,15 +23,18 @@ public:
 
 void setFallDirection(JBTypes::Direction direction);
 
-virtual Block::Effect interaction(
+Block::Effect interaction(
     const JBTypes::timePointMs& currentTime
 ) override;
 
-virtual Block::Effect detectionEvent(
+Block::Effect detectionEvent(
     const JBTypes::Dir& direction,
     const JBTypes::timePointMs& currentTime
 ) override;
 
+bool mayDisappear() const override;
+
+JBTypes::Color getColor() const override;
 private:
 bool _stillThere;
 bool _isGoingToBreak;

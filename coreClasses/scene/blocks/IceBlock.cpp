@@ -22,3 +22,7 @@ Block::Effect IceBlock::detectionEvent (const JBTypes::Dir&,
     return Block::Effect::Slide;
 }
 
+JBTypes::Color IceBlock::getColor() const {
+    return JBTypes::Color::Blue;
+}
+

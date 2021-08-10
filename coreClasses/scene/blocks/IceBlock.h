@@ -23,6 +23,8 @@ public:
         const JBTypes::Dir& direction,
         const JBTypes::timePointMs& currentTime
     ) override;
+
+    JBTypes::Color getColor() const override;
 };
 
 #endif /* ICEBLOCK_H */

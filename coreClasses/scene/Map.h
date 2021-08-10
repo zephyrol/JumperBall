@@ -12,6 +12,11 @@
 #include "Ball.h"
 #include <fstream>
 
+class Map;
+using Map_sptr = std::shared_ptr <Map>;
+using CstMap_sptr = std::shared_ptr <const Map>;
+using vecCstMap_sptr = std::vector <CstMap_sptr>;
+using vecMap_sptr = std::vector <Map_sptr>;
 class Map {
 public:
 
@@ -24,7 +29,6 @@ struct MapInfo {
 };
 
 explicit Map(MapInfo&& mapInfo);
-CstBlock_sptr getBlock(int x, int y, int z) const;
 
 unsigned int width() const;
 unsigned int height() const;
@@ -41,7 +45,7 @@ std::map <JBTypes::Color, bool> createSpecialStates() const;
 void interaction();
 
 void switchColor(const JBTypes::Color& color);
-Block_sptr getBlock(int x, int y, int z);
+CstBlock_sptr getBlock(const JBTypes::vec3ui& pos) const;
 
 static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int depth);
 
@@ -57,7 +61,6 @@ struct nextBlockInformation {
 
 static std::string positionToString(const JBTypes::vec3ui& position);
 static JBTypes::vec3ui stringToPosition(const std::string& stringPosition);
-CstBlock_sptr getBlock(const JBTypes::vec3ui& pos) const;
 
 bool ballIsOut() const;
 
