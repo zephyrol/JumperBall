@@ -8,5 +8,5 @@
 #include "Coin.h"
 
 Coin::Coin(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
-    Bonus(position, direction, Item::CategoryOfItems::Coin, 100) {
+    Bonus(position, direction, 100) {
 }

@@ -6,24 +6,19 @@
  */
 
 #include "Item.h"
-#include <math.h>
+#include <cmath>
 
 Item::Item(
     const JBTypes::vec3ui& position,
-    const JBTypes::Dir& direction,
-    const CategoryOfItems& category
+    const JBTypes::Dir& direction
     ):
     _position(position),
     _direction(direction),
     _3Dposition(get3DPosition()),
     _gotten(false),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
-    _obtainingTime(),
-    _category(category) {
-}
-
-const Item::CategoryOfItems& Item::getCategory() const {
-    return _category;
+    _obtainingTime()
+{
 }
 
 const JBTypes::vec3ui& Item::position() const {

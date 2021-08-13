@@ -20,10 +20,7 @@ using Item_uptr = std::unique_ptr <Item>;
 class Item : public SceneElement{
 public:
 
-enum class CategoryOfItems { Key, Coin, Clock };
-
-Item(const JBTypes::vec3ui& position, const JBTypes::Dir& direction, const CategoryOfItems& category);
-const CategoryOfItems& getCategory() const;
+Item(const JBTypes::vec3ui& position, const JBTypes::Dir& direction);
 const JBTypes::vec3ui& position() const;
 const JBTypes::vec3f& get3DPosition() const;
 
@@ -51,7 +48,6 @@ const JBTypes::vec3f _3Dposition;
 bool _gotten;
 const JBTypes::timePointMs _creationTime;
 JBTypes::timePointMs _obtainingTime;
-const CategoryOfItems _category;
 
 };
 

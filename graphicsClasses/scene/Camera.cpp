@@ -7,9 +7,8 @@
 
 #include "Camera.h"
 
-Camera::Camera(const Map& map, const Ball& ball):
+Camera::Camera(const Map& map):
     _map(map),
-    _ball(ball),
     _fovy(glm::radians(70.f)),
     _ratio(static_cast <float>(Utility::windowResolutionX) /
            static_cast <float>(Utility::windowResolutionY)),
@@ -57,12 +56,13 @@ void Camera::approachBall() noexcept{
 
 void Camera::followingBallUpdate() noexcept{
 
-    const JBTypes::vec3f& position = _ball.get3DPosition();
-    const auto sideBall = _ball.currentSideAsVector();
-    const auto lookingDirection = _ball.lookTowardsAsVector();
+    const auto& ball = *_map.getBall();
+    const JBTypes::vec3f& position = ball.get3DPosition();
+    const auto sideBall = ball.currentSideAsVector();
+    const auto lookingDirection = ball.lookTowardsAsVector();
     const glm::vec3 vecLookingDirection = Utility::convertToOpenGLFormat(lookingDirection);
 
-    const auto stateBall = _ball.state();
+    const auto stateBall = ball.state();
 
     constexpr float distDirPoint = 2.f;
     constexpr float distBehindBall = 1.3f;
@@ -85,7 +85,7 @@ void Camera::followingBallUpdate() noexcept{
     constexpr float durationMoveAbove = 0.2f;
     constexpr float durationMoveComingBack = 0.2f;
 
-    const float timeSinceAction = _ball.getTimeSecondsSinceAction();
+    const float timeSinceAction = ball.getTimeSecondsSinceAction();
     const JBTypes::timePointMs now = JBTypesMethods::getTimePointMSNow();
 
     if (stateBall == Ball::State::Staying) {
@@ -96,7 +96,7 @@ void Camera::followingBallUpdate() noexcept{
         }
     }
     if (stateBall == Ball::State::Moving) {
-        const JBTypes::vec3f vecNextLook = _ball.getNextLook();
+        const JBTypes::vec3f vecNextLook = _map.getNextLook();
 
         const glm::vec3 axisNewLook = Utility::convertToOpenGLFormat(vecNextLook);
 
@@ -125,8 +125,8 @@ void Camera::followingBallUpdate() noexcept{
         matRotationCam = glm::toMat4(quaternion);
     } else if (stateBall == Ball::State::Jumping) {
         constexpr float offsetTimeToBeginCamMoving = 0.4f;
-        const float timeSinceBeginningMoving = _ball.getTimeSecondsSinceAction();
-        const float timeToGetDestination = _ball.getTimeToGetDestination();
+        const float timeSinceBeginningMoving = ball.getTimeSecondsSinceAction();
+        const float timeToGetDestination = ball.getTimeToGetDestination();
         if (timeSinceBeginningMoving > (timeToGetDestination + offsetTimeToBeginCamMoving)) {
 
             float timeSinceBeginningCameraMoving = timeSinceBeginningMoving - (timeToGetDestination
@@ -174,22 +174,22 @@ void Camera::followingBallUpdate() noexcept{
 
 void Camera::turningAroundMapUpdate() noexcept{
 
-    const unsigned int xMax = _map.width();
-    const unsigned int yMax = _map.height();
-    const unsigned int zMax = _map.depth();
+    const auto xMax = static_cast<float>(_map.width());
+    const auto yMax = static_cast<float>(_map.height());
+    const auto zMax = static_cast<float>(_map.depth());
 
     const glm::vec3 center { xMax / 2.f, yMax / 2.f, zMax / 2.f };
 
-    float distanceMax = static_cast <float>(xMax);
-    if (distanceMax < yMax) distanceMax = static_cast <float>(yMax);
-    if (distanceMax < zMax) distanceMax = static_cast <float>(zMax);
+    float distanceMax = xMax;
+    if (distanceMax < yMax) distanceMax = yMax;
+    if (distanceMax < zMax) distanceMax = zMax;
 
     const float cameraDistanceNear = distanceMax * 1.f;
     const float cameraDistanceFar = distanceMax * 1.3f;
     const float diffF = _timeSinceCreation;
     const float distanceX = cameraDistanceNear +
                             (cameraDistanceFar - cameraDistanceNear) *
-                            ((static_cast <float>(-cos(diffF)) + 1.f) / 2.f);
+                            ((-cosf(diffF) + 1.f) / 2.f);
 
     const float distanceZ = distanceX;
 
@@ -197,9 +197,7 @@ void Camera::turningAroundMapUpdate() noexcept{
 
     const glm::mat4 rotation = glm::rotate(
         1.5f * diffF,
-        glm::vec3(0.f,
-                  1.f + static_cast <float>(sin(diffF / 5.f)),
-                  1.f + static_cast <float>(sin(diffF / 3.f)))
+        glm::vec3(0.f, 1.f + sinf(diffF / 5.f), 1.f + sinf(diffF / 3.f))
         );
     const glm::mat4 transform = rotation * translation;
 
@@ -218,7 +216,7 @@ void Camera::turningAroundMapUpdate() noexcept{
 bool Camera::approachingBallUpdate() noexcept{
     bool animationIsFinished;
 
-    const JBTypes::vec3f position = _ball.get3DPosition();
+    const JBTypes::vec3f position = _map.getBall()->get3DPosition();
 
     constexpr float distDirPoint = 2.f;
     constexpr float distBehindBall = 1.3f;

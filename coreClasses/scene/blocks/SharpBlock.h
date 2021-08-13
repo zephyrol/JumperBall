@@ -5,8 +5,9 @@
  * Created on 5 octobre 2019, 12:51
  */
 
-#ifndef SPICYBLOCK_H
-#define SPICYBLOCK_H
+#ifndef SHARPBLOCK_H
+#define SHARPBLOCK_H
+
 #include "Block.h"
 
 class SharpBlock:public Block {
@@ -23,9 +24,11 @@ public:
 
     std::array <bool, 6> faceInfo() const override;
 
-virtual Block::Effect interaction(
+Block::Effect interaction(
     const JBTypes::timePointMs& currentTime
 ) override;
+
+std::vector<Shape> getExtraShapes() const override;
 
 private:
 const std::array <bool, 6> _facesSharps;

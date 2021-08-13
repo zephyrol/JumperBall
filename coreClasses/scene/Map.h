@@ -44,10 +44,14 @@ std::map <JBTypes::Color, bool> createSpecialStates() const;
 
 void interaction();
 
+CstBall_sptr getBall() const;
+
 void switchColor(const JBTypes::Color& color);
 CstBlock_sptr getBlock(const JBTypes::vec3ui& pos) const;
 
 static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int depth);
+
+    JBTypes::vec3f getNextLook() const;
 
 private:
 
@@ -86,7 +90,9 @@ const TurnBack _turnBackMovement;
 nextBlockInformation getNextBlockInfo() const;
 std::shared_ptr<const std::vector<unsigned int>> intersectBlock(float x, float y, float z) const;
 
-    JBTypes::vec3f getNextLook() const;
+
+public :
+    vecCstBlock_sptr getBlocks() const;
 };
 
 #endif /* MAP_H */

@@ -72,7 +72,6 @@ float getTeleportationCoefficient() const noexcept;
 const JBTypes::Color& getTeleportationColor() const noexcept;
 
 float getTimeToGetDestination() const;
-JBTypes::vec3f getNextLook() const;
 
 SceneElement::DynamicValues <float> getDynamicFloats() const override;
 SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;

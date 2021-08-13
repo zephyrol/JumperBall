@@ -6,7 +6,7 @@
  */
 #include "MeshGenerator.h"
 
-Mesh_sptr MeshGenerator::genEnemy (
+/*Mesh_sptr MeshGenerator::genEnemy (
     const std::shared_ptr<const Enemy>& enemy,
     const Map::EnemyTypes& category
     ) {
@@ -118,4 +118,4 @@ Mesh_sptr MeshGenerator::genEnemy (
     }
 
     return std::make_shared <Mesh>(enemy, std::move(geometricShapes));
-}
+}*/

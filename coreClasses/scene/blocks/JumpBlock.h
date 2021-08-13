@@ -22,10 +22,12 @@ public:
 
     std::array <bool, 6> faceInfo() const override;
 
-virtual Effect detectionEvent(
+Effect detectionEvent(
     const JBTypes::Dir& direction,
     const JBTypes::timePointMs& currentTime
 ) override;
+
+std::vector<Shape> getExtraShapes() const override;
 
 
 private:

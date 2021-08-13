@@ -7,17 +7,16 @@
 #include "MapGenerator.h"
 #include <algorithm>
 #include <cmath>
-#include <cctype>
 #include <future>
 #include <functional>
-#include <scene/special/SwitchButton.h>
-#include <scene/items/Clock.h>
-#include <scene/items/Key.h>
-#include <scene/items/Coin.h>
-#include <scene/enemies/Laser.h>
-#include <scene/enemies/ThornBall.h>
-#include <scene/enemies/DarkBall.h>
-#include <scene/special/Teleporter.h>
+#include <scene/blocks/special/SwitchButton.h>
+#include <scene/blocks/items/Clock.h>
+#include <scene/blocks/items/Key.h>
+#include <scene/blocks/items/Coin.h>
+#include <scene/blocks/enemies/Laser.h>
+#include <scene/blocks/enemies/ThornBall.h>
+#include <scene/blocks/enemies/DarkBall.h>
+#include <scene/blocks/special/Teleporter.h>
 #include <scene/blocks/BaseBlock.h>
 #include <scene/blocks/FireBlock.h>
 #include <scene/blocks/BrittleBlock.h>
@@ -30,10 +29,10 @@
 std::shared_ptr <Map> MapGenerator::loadMap (size_t mapNumber) {
     std::shared_ptr <Map> map = nullptr;
 
-    std::string mapFileToOpenV1 = "maps/map" + std::to_string(mapNumber) + ".txt";
+    const std::string mapFileToOpenV1 = "maps/map" + std::to_string(mapNumber) + ".txt";
     std::string mapFileToOpenV2 = "bin/maps/map" + std::to_string(mapNumber) + ".txt";
     const std::vector <std::string> fileNames {
-        std::move(mapFileToOpenV1), std::move(mapFileToOpenV2) };
+        mapFileToOpenV1, std::move(mapFileToOpenV2) };
 
     bool foundFile = false;
     for (size_t i = 0; i < fileNames.size() && !foundFile; ++i) {
@@ -41,7 +40,7 @@ std::shared_ptr <Map> MapGenerator::loadMap (size_t mapNumber) {
         mapFile.open(fileNames.at(i)); // Opening file to read
         if (mapFile) {
             foundFile = true;
-            map = std::make_shared <Map>(createMapInfo(mapFile));
+            map = std::make_shared <Map>(uncompressMap(mapFile));
             mapFile.close();
         }
     }
@@ -305,6 +304,14 @@ std::string MapGenerator::substractOffset (const std::string& s, int offset) {
     std::string offsetString = s;
     for (char& c : offsetString) {
         c -= offset;
+    }
+    return offsetString;
+}
+
+std::string MapGenerator::applyOffset (const std::string& s, int offset) {
+    std::string offsetString = s;
+    for (char& c : offsetString) {
+        c += offset;
     }
     return offsetString;
 }

@@ -45,12 +45,12 @@ Mesh_sptr MeshGenerator::genBlock (const CstMap_sptr& map, const CstBlock_sptr& 
         boolSidesInfo
     );
 
-    const vecCstGeometricShape_sptr sharpsShapes = genSharps(*block, blockType, glmPosition);
-    const vecCstGeometricShape_sptr jumpersShapes = genJumpers(*block, blockType, glmPosition);
+    // const vecCstGeometricShape_sptr sharpsShapes = genSharps(*block, blockType, glmPosition);
+    // const vecCstGeometricShape_sptr jumpersShapes = genJumpers(*block, blockType, glmPosition);
 
     vecCstGeometricShape_sptr geometricShapes {};
     geometricShapes.push_back(blockShape);
-    geometricShapes.insert(geometricShapes.end(), jumpersShapes.begin(), jumpersShapes.end());
-    geometricShapes.insert(geometricShapes.end(), sharpsShapes.begin(), sharpsShapes.end());
+    // geometricShapes.insert(geometricShapes.end(), jumpersShapes.begin(), jumpersShapes.end());
+    // geometricShapes.insert(geometricShapes.end(), sharpsShapes.begin(), sharpsShapes.end());
     return { std::make_shared <Mesh>( block, std::move(geometricShapes)) };
 }

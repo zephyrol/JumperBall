@@ -35,7 +35,6 @@ vecCstSceneElement_sptr getSceneElements() const;
 
 private:
 const Map_sptr _map;
-const std::shared_ptr<Ball> _ball;
 const std::shared_ptr<Camera> _camera;
 const std::shared_ptr<Star> _star;
 

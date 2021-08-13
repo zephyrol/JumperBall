@@ -10,9 +10,6 @@
 #include "system/Types.h"
 #include "system/Geometry.h"
 // TODO clean those include
-#include "scene/items/Key.h"
-#include "scene/items/Coin.h"
-#include "scene/items/Clock.h"
 #include "scene/SceneElement.h"
 #include <fstream>
 

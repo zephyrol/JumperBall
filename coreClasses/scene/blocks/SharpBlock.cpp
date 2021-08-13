@@ -109,3 +109,60 @@ Block::Effect SharpBlock::interaction (
 std::array <bool, 6> SharpBlock::faceInfo() const {
     return _facesSharps;
 }
+
+std::vector<Shape> SharpBlock::getExtraShapes() const {
+
+
+    std::vector<Shape> shapes {};
+    const std::array <float, 7> scales { .2f, .1f, .05f, .1f, .075f, .15f, .175f };
+
+    const std::array <JBTypes::vec2f, 7> translationFloorFactor {
+        JBTypes::vec2f{0.f, 0.f}, JBTypes::vec2f{-0.6f, -0.4f}, JBTypes::vec2f{0.6f, -0.6f},
+        JBTypes::vec2f{0.2f, 0.6f}, JBTypes::vec2f{-0.2f, -0.6f}, JBTypes::vec2f{0.6f, 0.6f},
+        JBTypes::vec2f{-0.6f, 0.6f}
+    };
+
+    for (size_t i = 0; i < _facesSharps.size(); i++) {
+
+        const bool isSharp = _facesSharps.at(i);
+        if (isSharp) {
+            constexpr float sizeBlock = 1.f; // TODO specify it elsewhere
+            constexpr float offset = sizeBlock / 2.f;
+
+            const JBTypes::Dir currentDir = JBTypesMethods::integerAsDirection(
+                static_cast <unsigned int>(i)
+            );
+            const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
+
+            const JBTypes::vec3f translationOffset = {-offset, 0, -offset};
+
+            for (size_t j = 0; j < scales.size(); j++) {
+                const JBTypes::vec3f scaleLocal { scales.at(j), 0.5f, scales.at(j) };
+
+                const JBTypes::vec3f translationLocal {
+                    static_cast<float>(_position.at(0)) + offset + vecDir.x * offset,
+                    static_cast<float>(_position.at(1)) + offset + vecDir.y * offset,
+                    static_cast<float>(_position.at(2)) + offset + vecDir.z * offset
+                };
+
+                const JBTypes::vec3f translationFloor {
+                    offset * translationFloorFactor.at(j).x,
+                    0.f,
+                    offset * translationFloorFactor.at(j).y
+                };
+
+                shapes.emplace_back(
+                    Shape::Aspect::Pyramid,
+                    JBTypes::Color::None,
+                    currentDir,
+                    JBTypesMethods::add(
+                        JBTypesMethods::add(translationOffset, translationLocal),
+                        translationFloor
+                    ),
+                    scaleLocal
+                );
+            }
+        }
+    }
+    return shapes;
+}

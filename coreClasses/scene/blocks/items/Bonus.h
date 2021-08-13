@@ -14,7 +14,6 @@ public:
 Bonus(
     const JBTypes::vec3ui& position,
     const JBTypes::Dir& direction,
-    const CategoryOfItems& category,
     unsigned int value
     );
 

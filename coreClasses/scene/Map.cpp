@@ -275,3 +275,15 @@ CstBlock_sptr Map::getBlock(const JBTypes::vec3ui &pos) const {
            ? _blocksPositions.at(strPos)
            : nullptr;
 }
+
+vecCstBlock_sptr Map::getBlocks() const {
+    vecCstBlock_sptr cstBlocks;
+    for (const auto& block : _blocks) {
+        cstBlocks.push_back(block) ;
+    }
+    return cstBlocks;
+}
+
+CstBall_sptr Map::getBall() const {
+    return _ball;
+}

@@ -7,10 +7,13 @@
 
 #ifndef BLOCK_H
 #define BLOCK_H
+
+#include <scene/Shape.h>
+#include <scene/Ball.h>
+#include <scene/blocks/enemies/Enemy.h>
+#include <scene/blocks/special/Special.h>
+#include <scene/blocks/items/Item.h>
 #include "system/Types.h"
-#include "scene/enemies/Enemy.h"
-#include "scene/items/Item.h"
-#include "scene/special/Special.h"
 #include "scene/SceneElement.h"
 
 class Block;
@@ -25,7 +28,7 @@ public:
 Block(
     const JBTypes::vec3ui& position,
     const Ball_sptr& ball,
-    const vecItem_sptr& items, 
+    const vecItem_sptr& items,
     const vecEnemy_sptr& enemies,
     const vecSpecial_sptr& specials,
     bool alwaysHasInteractions = false,
@@ -55,6 +58,8 @@ bool hasInteraction() const;
 void update(
     const JBTypes::timePointMs& currentTime
 );
+
+virtual std::vector<Shape> getExtraShapes() const;
 
 virtual bool mayDisappear() const;
 

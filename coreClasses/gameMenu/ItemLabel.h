@@ -16,12 +16,9 @@ ItemLabel(
     const Label::WidthUnit& widthUnit,
     float width,
     float height,
-    const JBTypes::vec2f& position,
-    const Item::CategoryOfItems& categoryOfItem
+    const JBTypes::vec2f& position
     );
 
-private:
-const Item::CategoryOfItems _categoryOfItems;
 };
 
 #endif // OBJECTLABEL_H

@@ -143,3 +143,7 @@ bool Block::mayDisappear() const {
 JBTypes::Color Block::getColor() const {
     return JBTypes::Color::None;
 }
+
+std::vector<Shape> Block::getExtraShapes() const {
+    return {};
+}

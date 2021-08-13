@@ -10,9 +10,9 @@
 #include "Utility.h"
 #include <scene/Ball.h>
 #include <scene/blocks/Block.h>
-#include <scene/items/Item.h>
-#include <scene/enemies/Enemy.h>
-#include <scene/special/Special.h>
+#include <scene/blocks/items/Item.h>
+#include <scene/blocks/enemies/Enemy.h>
+#include <scene/blocks/special/Special.h>
 #include <scene/Star.h>
 #include <gameMenu/Page.h>
 #include "geometry/Cylinder.h"
@@ -52,19 +52,11 @@ std::map <unsigned char, vecMesh_sptr> genLettersLabel(
     );
 vecMesh_sptr genOthersLabel(const CstPage_sptr& page);
 
-    Mesh_sptr genBlock(const CstMap_sptr &map, const CstBlock_sptr &block);
-
-    vecCstGeometricShape_sptr genSharps(const Block& block,
-                                    const Map::BlockTypes& type,
-                                    const glm::vec3& posWorld);
-
-vecCstGeometricShape_sptr genJumpers(const Block& block,
-                                     const Map::BlockTypes& type,
-                                     const glm::vec3& posWorld);
+Mesh_sptr genBlock(const CstMap_sptr &map, const CstBlock_sptr &block);
 
 Mesh_sptr genItem(const std::shared_ptr<const Item>& item);
-Mesh_sptr genEnemy(const std::shared_ptr<const Enemy>& enemy, const Map::EnemyTypes& category);
-Mesh_sptr genSpecial(const std::shared_ptr<const Special>& special, const Map::SpecialTypes& category);
+// Mesh_sptr genEnemy(const std::shared_ptr<const Enemy>& enemy, const Map::EnemyTypes& category);
+// Mesh_sptr genSpecial(const std::shared_ptr<const Special>& special, const Map::SpecialTypes& category);
 
 vecCstGeometricShape_sptr genGeometricShapesFromLabel(const Label& label);
 

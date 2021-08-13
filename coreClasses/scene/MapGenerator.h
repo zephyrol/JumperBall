@@ -47,7 +47,6 @@ void compressNew(std::ifstream& input);
 
 std::shared_ptr <Map> loadMap(size_t mapNumber);
 
-Map::MapInfo createMapInfo(std::ifstream& file);
 Map::MapInfo uncompressMap(std::ifstream& file);
 
 std::string convertToBase(unsigned long long int number, unsigned char base);

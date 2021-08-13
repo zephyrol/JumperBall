@@ -6,7 +6,7 @@
  */
 #include "MeshGenerator.h"
 
-Mesh_sptr MeshGenerator::genItem (const std::shared_ptr<const Item>& item) {
+/*Mesh_sptr MeshGenerator::genItem (const std::shared_ptr<const Item>& item) {
 
     vecCstGeometricShape_sptr geometricShapes;
     switch (item->getCategory()) {
@@ -73,4 +73,4 @@ Mesh_sptr MeshGenerator::genItem (const std::shared_ptr<const Item>& item) {
         break;
     }
     return std::make_shared <Mesh>( item, std::move(geometricShapes)); 
-}
+}*/

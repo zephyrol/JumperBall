@@ -761,3 +761,4 @@ SceneElement::GlobalState Ball::getGlobalState() const {
 const JBTypes::vec3ui &Ball::getPosition() const noexcept {
     return _pos;
 }
+

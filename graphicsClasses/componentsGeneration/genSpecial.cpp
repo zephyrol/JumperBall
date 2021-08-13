@@ -7,7 +7,7 @@
 
 #include "MeshGenerator.h"
 
-Mesh_sptr MeshGenerator::genSpecial (const std::shared_ptr<const Special>& special, const Map::SpecialTypes& category) {
+/*Mesh_sptr MeshGenerator::genSpecial (const std::shared_ptr<const Special>& special, const Map::SpecialTypes& category) {
     vecCstGeometricShape_sptr geometricShapes;
 
     const std::function <std::pair <glm::vec3, glm::vec3>(const JBTypes::Color&)>
@@ -56,4 +56,4 @@ Mesh_sptr MeshGenerator::genSpecial (const std::shared_ptr<const Special>& speci
                                   ));
 
     return std::make_shared <Mesh>( special, std::move(geometricShapes));
-}
+}*/

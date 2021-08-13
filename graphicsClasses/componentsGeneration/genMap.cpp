@@ -9,18 +9,16 @@
 vecMesh_sptr MeshGenerator::genBlocks (const CstMap_sptr& map) {
 
     vecMesh_sptr meshes;
-    const auto blockInfos = map->blocksInfo();
-    for (size_t i = 0; i < blockInfos.size(); ++i) {
-        meshes.push_back(genBlock(map, blockInfos.at(i).index));
+    for (const auto& block: map->getBlocks()) {
+        meshes.push_back(genBlock(map, block));
     }
-
     return meshes;
 }
 
 vecMesh_sptr MeshGenerator::genItems (const CstMap_sptr& map) {
 
     vecMesh_sptr meshes;
-    const auto blockInfos = map->blocksInfo();
+    /*const auto blockInfos = map->blocksInfo();
     for (size_t i = 0; i < blockInfos.size(); ++i) {
         const size_t index = blockInfos.at(i).index;
         for (size_t j = 0; j < Block::itemsNumber; ++j) {
@@ -30,32 +28,32 @@ vecMesh_sptr MeshGenerator::genItems (const CstMap_sptr& map) {
                 meshes.push_back(genItem(item));
             }
         }
-    }
+    }*/
     return meshes;
 }
 
 vecMesh_sptr MeshGenerator::genEnemies (const CstMap_sptr& map) {
 
     vecMesh_sptr meshes;
-    const auto enemiesInfos = map->getEnemiesInfo();
+    /*const auto enemiesInfos = map->getEnemiesInfo();
     for (const auto& enemyInfo : enemiesInfos) {
         const std::shared_ptr <const Enemy> enemy = enemyInfo.enemy;
         if (enemy) {
             meshes.push_back(genEnemy(enemy, enemyInfo.type));
         }
-    }
+    }*/
     return meshes;
 }
 
 vecMesh_sptr MeshGenerator::genSpecials (const CstMap_sptr& map) {
 
     vecMesh_sptr meshes;
-    const auto specialsInfos = map->getSpecialInfo();
+    /*const auto specialsInfos = map->getSpecialInfo();
     for (const auto& specialInfo : specialsInfos) {
         const std::shared_ptr <const Special> special = specialInfo.special;
         if (special) {
             meshes.push_back(genSpecial(special, specialInfo.type));
         }
-    }
+    }*/
     return meshes;
 }

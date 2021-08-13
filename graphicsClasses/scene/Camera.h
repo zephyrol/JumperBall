@@ -22,7 +22,7 @@ public:
 
 enum class Movement { TurningAroundMap, FollowingBall, ApproachingBall };
 
-Camera(const Map& map, const Ball& ball);
+Camera(const Map& map);
 
 static constexpr float zNear = 0.1f;
 static constexpr float zFar = 100.f;
@@ -47,7 +47,6 @@ void followingBallUpdate() noexcept;
 bool approachingBallUpdate() noexcept;
 
 const Map& _map;
-const Ball& _ball;
 const float _fovy;
 const float _ratio;
 Movement _movement;

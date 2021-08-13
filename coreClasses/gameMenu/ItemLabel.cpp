@@ -11,10 +11,8 @@ ItemLabel::ItemLabel(
     const Label::WidthUnit& widthUnit,
     float width,
     float height,
-    const JBTypes::vec2f& position,
-    const Item::CategoryOfItems& categoryOfItem
+    const JBTypes::vec2f& position
     ):
-    Label(widthUnit, width, height, position),
-    _categoryOfItems(categoryOfItem) {
-
+    Label(widthUnit, width, height, position)
+    {
 }

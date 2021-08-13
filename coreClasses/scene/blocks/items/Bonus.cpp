@@ -10,9 +10,8 @@
 Bonus::Bonus(
     const JBTypes::vec3ui& position,
     const JBTypes::Dir& direction,
-    const Item::CategoryOfItems& category,
     unsigned int value):
-    Item(position, direction,  category),
+    Item(position, direction),
     _value(value) {
 }
 
