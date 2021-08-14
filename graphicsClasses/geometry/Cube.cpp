@@ -18,7 +18,7 @@ Cube::Cube(const JBTypes::Color &color,
            const glm::mat4 &modelTransform,
            const glm::mat4 &normalsTransform,
            const std::array<bool, 6> &sides):
-    GeometricShape(modelTransform, normalsTransform, std::move(genColors(color))),
+    GeometricShape(modelTransform, normalsTransform, genColors(color)),
     _sides(sides) {
 
 }
@@ -79,7 +79,7 @@ template<typename T> std::vector <T> Cube::getBasicElements
                             basicElements.begin() + vecsPerFace * i,
                             basicElements.begin() + vecsPerFace * (i + 1));
         } else if (sides.at(i) && !isValid) {
-            for (unsigned int i = 0; i < vecsPerFace; ++i) {
+            for (unsigned int j = 0; j < vecsPerFace; ++j) {
                 elements.push_back(T(0.f));
             }
         }
@@ -199,8 +199,8 @@ const std::vector <glm::vec2> Cube::basicUVCoordsCube =
 });
 
 std::vector<glm::vec3> Cube::genColors(const JBTypes::Color &color) {
-    if (color == JBTypes::Color::Purple) {
-        Utility::GLfloatListToGlmVec3(
+    if (color == JBTypes::Color::Blue) {
+        return Utility::GLfloatListToGlmVec3(
             {
                 // Face 1
                 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
@@ -288,28 +288,6 @@ std::vector<glm::vec3> Cube::genColors(const JBTypes::Color &color) {
             // Face 3
             0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f,
             0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f
-        });
-    }
-    if (color == JBTypes::Color::Purple) {
-        Utility::GLfloatListToGlmVec3({
-            // Face 1
-            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
-            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-            // Face 2
-            0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-            // Face 6
-            0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-            // Face 5
-            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
-            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-            // Face 4
-            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f,
-            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-            // Face 3
-            0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f,
-            0.f, 0.8f * 1.5f, 0.8f * 1.5f, 0.f, 0.f, 1.f * 1.5f, 0.f, 0.8f * 1.5f, 0.8f * 1.5f
         });
     }
     return basicColorsCube;

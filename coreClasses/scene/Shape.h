@@ -8,6 +8,7 @@
 
 #include <system/Types.h>
 
+// TODO: merge it with Geometry class
 class Shape {
 public:
 

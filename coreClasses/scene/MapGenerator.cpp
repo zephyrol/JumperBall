@@ -270,6 +270,7 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
             mapInfo.blocks.push_back(
                 createBlock(blockType, position, items, enemies, specials, mapInfo.ball, properties)
             );
+            ++blockIndexCursor;
         }
     }
 
