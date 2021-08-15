@@ -10,3 +10,7 @@
 Key::Key(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
     Item(position, direction) {
 }
+
+std::vector<Shape> Key::getShapes() const {
+    return {};
+}

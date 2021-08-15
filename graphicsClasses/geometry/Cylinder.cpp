@@ -33,6 +33,20 @@ Cylinder::Cylinder(const glm::vec3& customColorCenter,
     _meriCount(meriCount) {
 }
 
+Cylinder::Cylinder(const JBTypes::Color &color,
+                   size_t meriCount,
+                   const glm::mat4 &modelTransform,
+                   const glm::mat4 &normalsTransform):
+    Cylinder(
+        getCenterAndEdgeColor(color).at(0),
+        getCenterAndEdgeColor(color).at(1),
+        meriCount,
+        modelTransform,
+        normalsTransform
+    ) {
+
+}
+
 GeometricShape::ShapeVerticesInfo Cylinder::computeBasicInfoCylinder (size_t meriCount) {
 
     GeometricShape::ShapeVertexAttributes infoAttributesCylinder;
@@ -43,15 +57,15 @@ GeometricShape::ShapeVerticesInfo Cylinder::computeBasicInfoCylinder (size_t mer
     const float a2 = (360.0f / static_cast <float>(meriCount - 1)) *
                      static_cast <float>(M_PI) / 180.0f;
 
-    infoAttributesCylinder.positions.push_back(glm::vec3(0.f, 0.f, 0.f));
-    infoAttributesCylinder.normals.push_back(glm::vec3(0.f, -1.f, 0.f));
-    infoAttributesCylinder.colors.push_back(glm::vec3(1.f, 0.f, 0.f));
-    infoAttributesCylinder.uvCoords.push_back(glm::vec2(0.f, 0.f));
+    infoAttributesCylinder.positions.emplace_back(0.f, 0.f, 0.f);
+    infoAttributesCylinder.normals.emplace_back(0.f, -1.f, 0.f);
+    infoAttributesCylinder.colors.emplace_back(1.f, 0.f, 0.f);
+    infoAttributesCylinder.uvCoords.emplace_back(0.f, 0.f);
 
-    infoAttributesCylinder.positions.push_back(glm::vec3(0.f, 1.f, 0.f));
-    infoAttributesCylinder.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
-    infoAttributesCylinder.colors.push_back(glm::vec3(0.f, 1.f, 0.f));
-    infoAttributesCylinder.uvCoords.push_back(glm::vec2(0.f, 0.f));
+    infoAttributesCylinder.positions.emplace_back(0.f, 1.f, 0.f);
+    infoAttributesCylinder.normals.emplace_back(0.f, 1.f, 0.f);
+    infoAttributesCylinder.colors.emplace_back(0.f, 1.f, 0.f);
+    infoAttributesCylinder.uvCoords.emplace_back(0.f, 0.f);
 
 
     const glm::vec3 initialPositionBase(r, 0.f, 0.f);
@@ -61,20 +75,20 @@ GeometricShape::ShapeVerticesInfo Cylinder::computeBasicInfoCylinder (size_t mer
     infoAttributesCylinder.positions.push_back(initialPositionBase);
     infoAttributesCylinder.positions.push_back(initialPositionTop);
 
-    infoAttributesCylinder.colors.push_back(glm::vec3(1.f, 0.f, 0.f));
-    infoAttributesCylinder.colors.push_back(glm::vec3(0.f, 1.f, 0.f));
-    infoAttributesCylinder.colors.push_back(glm::vec3(1.f, 0.f, 0.f));
-    infoAttributesCylinder.colors.push_back(glm::vec3(0.f, 1.f, 0.f));
+    infoAttributesCylinder.colors.emplace_back(1.f, 0.f, 0.f);
+    infoAttributesCylinder.colors.emplace_back(0.f, 1.f, 0.f);
+    infoAttributesCylinder.colors.emplace_back(1.f, 0.f, 0.f);
+    infoAttributesCylinder.colors.emplace_back(0.f, 1.f, 0.f);
 
     infoAttributesCylinder.normals.push_back(glm::normalize(initialPositionBase));
     infoAttributesCylinder.normals.push_back(glm::normalize(initialPositionBase));
-    infoAttributesCylinder.normals.push_back(glm::vec3(0.f, -1.f, 0.f));
-    infoAttributesCylinder.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
+    infoAttributesCylinder.normals.emplace_back(0.f, -1.f, 0.f);
+    infoAttributesCylinder.normals.emplace_back(0.f, 1.f, 0.f);
 
-    infoAttributesCylinder.uvCoords.push_back(glm::vec2(initialPositionBase.x, initialPositionBase.z));
-    infoAttributesCylinder.uvCoords.push_back(glm::vec2(initialPositionTop.x, initialPositionTop.z));
-    infoAttributesCylinder.uvCoords.push_back(glm::vec2(initialPositionBase.x, initialPositionBase.z));
-    infoAttributesCylinder.uvCoords.push_back(glm::vec2(initialPositionTop.x, initialPositionTop.z));
+    infoAttributesCylinder.uvCoords.emplace_back(initialPositionBase.x, initialPositionBase.z);
+    infoAttributesCylinder.uvCoords.emplace_back(initialPositionTop.x, initialPositionTop.z);
+    infoAttributesCylinder.uvCoords.emplace_back(initialPositionBase.x, initialPositionBase.z);
+    infoAttributesCylinder.uvCoords.emplace_back(initialPositionTop.x, initialPositionTop.z);
 
     for (unsigned int i = 1; i < meriCount; ++i) {
         const glm::mat4 rotation = glm::rotate(a2 * i, glm::vec3(0.f, 1.f, 0.f));
@@ -86,19 +100,17 @@ GeometricShape::ShapeVerticesInfo Cylinder::computeBasicInfoCylinder (size_t mer
             infoAttributesCylinder.positions.push_back(positionBase);
             infoAttributesCylinder.positions.push_back(positionTop);
 
-            infoAttributesCylinder.colors.push_back(glm::vec3(1.f, 0.f, 0.f));
-            infoAttributesCylinder.colors.push_back(glm::vec3(0.f, 1.f, 0.f));
+            infoAttributesCylinder.colors.emplace_back(1.f, 0.f, 0.f);
+            infoAttributesCylinder.colors.emplace_back(0.f, 1.f, 0.f);
 
-            infoAttributesCylinder.uvCoords.push_back(
-                glm::vec2(positionBase.x, positionBase.z));
-            infoAttributesCylinder.uvCoords.push_back(
-                glm::vec2(positionTop.x, positionTop.z));
+            infoAttributesCylinder.uvCoords.emplace_back(positionBase.x, positionBase.z);
+            infoAttributesCylinder.uvCoords.emplace_back(positionTop.x, positionTop.z);
         }
 
         infoAttributesCylinder.normals.push_back(glm::normalize(positionBase));
         infoAttributesCylinder.normals.push_back(glm::normalize(positionBase));
-        infoAttributesCylinder.normals.push_back(glm::vec3(0.f, -1.f, 0.f));
-        infoAttributesCylinder.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
+        infoAttributesCylinder.normals.emplace_back(0.f, -1.f, 0.f);
+        infoAttributesCylinder.normals.emplace_back(0.f, 1.f, 0.f);
     }
 
     for (unsigned int i = 0; i < (meriCount - 1); ++i) {
@@ -172,3 +184,13 @@ std::vector <glm::vec3> Cylinder::genNormals() const {
 std::vector <glm::vec3> Cylinder::genPositions() const {
     return computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.positions;
 }
+
+std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color& color) {
+    if (color == JBTypes::Color::Yellow) {
+        return { glm::vec3 (1.f, 1.f, 0.f), glm::vec3(1.f, 150.f / 255.f, 0.f)};
+    }
+    return {glm::vec3(0.f), glm::vec3(0.f)};
+}
+
+
+

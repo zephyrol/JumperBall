@@ -17,16 +17,24 @@ static constexpr size_t defaultMeriCount = 60;
 
 Cylinder(size_t meriCount = defaultMeriCount,
          const glm::mat4& modelTransform = glm::mat4(1.f),
-         const glm::mat4& normalsTransform = glm::mat4(1.f));
+         const glm::mat4& normalsTransform = glm::mat4(1.f)
+         );
 Cylinder(const glm::vec3& customColor,
          size_t meriCount = defaultMeriCount,
          const glm::mat4& modelTransform = glm::mat4(1.f),
-         const glm::mat4& normalsTransform = glm::mat4(1.f));
+         const glm::mat4& normalsTransform = glm::mat4(1.f)
+         );
+Cylinder(const JBTypes::Color& color,
+         size_t meriCount = defaultMeriCount,
+         const glm::mat4& modelTransform = glm::mat4(1.f),
+         const glm::mat4& normalsTransform = glm::mat4(1.f)
+         );
 Cylinder(const glm::vec3& customColorCenter,
          const glm::vec3& customColorEdge,
          size_t meriCount = defaultMeriCount,
          const glm::mat4& modelTransform = glm::mat4(1.f),
-         const glm::mat4& normalsTransform = glm::mat4(1.f));
+         const glm::mat4& normalsTransform = glm::mat4(1.f)
+         );
 
 virtual std::vector <glm::vec3> genPositions() const override;
 virtual std::vector <glm::vec3> genNormals() const override;
@@ -45,6 +53,8 @@ static std::vector <glm::vec3> createCenterAndEdgeColorBuffer(
     const glm::vec3& customColorEdge,
     size_t size
     );
+
+static std::array<glm::vec3, 2> getCenterAndEdgeColor(const JBTypes::Color& color);
 
 };
 

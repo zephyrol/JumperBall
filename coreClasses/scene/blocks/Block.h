@@ -8,7 +8,6 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
-#include <scene/Shape.h>
 #include <scene/Ball.h>
 #include <scene/blocks/enemies/Enemy.h>
 #include <scene/blocks/special/Special.h>

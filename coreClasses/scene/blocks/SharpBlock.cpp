@@ -134,15 +134,13 @@ std::vector<Shape> SharpBlock::getExtraShapes() const {
             );
             const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
 
-            const JBTypes::vec3f translationOffset = {-offset, 0, -offset};
-
             for (size_t j = 0; j < scales.size(); j++) {
                 const JBTypes::vec3f scaleLocal { scales.at(j), 0.5f, scales.at(j) };
 
                 const JBTypes::vec3f translationLocal {
-                    static_cast<float>(_position.at(0)) + offset + vecDir.x * offset,
-                    static_cast<float>(_position.at(1)) + offset + vecDir.y * offset,
-                    static_cast<float>(_position.at(2)) + offset + vecDir.z * offset
+                    static_cast<float>(_position.at(0)) + vecDir.x * offset,
+                    static_cast<float>(_position.at(1)) + vecDir.y * offset,
+                    static_cast<float>(_position.at(2)) + vecDir.z * offset
                 };
 
                 const JBTypes::vec3f translationFloor {
@@ -155,10 +153,7 @@ std::vector<Shape> SharpBlock::getExtraShapes() const {
                     Shape::Aspect::Pyramid,
                     JBTypes::Color::None,
                     currentDir,
-                    JBTypesMethods::add(
-                        JBTypesMethods::add(translationOffset, translationLocal),
-                        translationFloor
-                    ),
+                    JBTypesMethods::add(translationLocal, translationFloor),
                     scaleLocal
                 );
             }

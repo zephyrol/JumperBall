@@ -10,3 +10,7 @@
 Clock::Clock(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
     Item(position, direction) {
 }
+
+std::vector<Shape> Clock::getShapes() const {
+    return {};
+}

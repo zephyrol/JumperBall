@@ -119,3 +119,7 @@ JBTypes::vec3f Item::compute3DPosition() const {
 
     return JBTypes::vec3f { x, y, z };
 }
+
+const JBTypes::Dir &Item::direction() const {
+    return _direction;
+}

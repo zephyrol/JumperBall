@@ -45,9 +45,9 @@ std::vector<Shape> JumpBlock::getExtraShapes() const {
             const JBTypes::vec3f scaleLocal { 0.7f, 0.05f, 0.7f };
 
             const JBTypes::vec3f translationLocal {
-                static_cast<float>(_position.at(0)) + offset + vecDir.x * offset,
-                static_cast<float>(_position.at(1)) + offset + vecDir.y * offset,
-                static_cast<float>(_position.at(2)) + offset + vecDir.z * offset
+                static_cast<float>(_position.at(0)) + vecDir.x * offset,
+                static_cast<float>(_position.at(1)) + vecDir.y * offset,
+                static_cast<float>(_position.at(2)) + vecDir.z * offset
             };
 
             shapes.emplace_back(

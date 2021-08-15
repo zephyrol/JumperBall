@@ -9,6 +9,7 @@
 #define OBJECT_H
 #include "system/Types.h"
 #include "scene/SceneElement.h"
+#include <scene/Shape.h>
 
 class Item;
 using Item_sptr = std::shared_ptr <Item>;
@@ -23,12 +24,14 @@ public:
 Item(const JBTypes::vec3ui& position, const JBTypes::Dir& direction);
 const JBTypes::vec3ui& position() const;
 const JBTypes::vec3f& get3DPosition() const;
+const JBTypes::Dir& direction() const;
 
 bool isGotten() const;
 float getTimeSinceObtaining() const;
 float getTimeSinceCreation() const;
-void catchingTest(const JBTypes::vec3f& boundingSphereCenter,
-                  float boundingSphereRadius);
+void catchingTest(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
+
+virtual std::vector<Shape> getShapes() const = 0;
 
 static constexpr float itemBoundingSphereRadius = 0.15f;
 

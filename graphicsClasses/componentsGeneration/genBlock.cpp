@@ -16,7 +16,6 @@ Mesh_sptr MeshGenerator::genBlock (const CstMap_sptr& map, const CstBlock_sptr& 
 
     // std::string strSidesInfo {};
     std::array <bool, numberOfFaces> boolSidesInfo {}; // true <=> close, false <=> open
-    const std::array <bool, numberOfFaces> boolClosedSides { true, true, true, true, true, true };
     const std::array <JBTypes::vec3ui, numberOfFaces> positions {{
         { position.at(0), position.at(1), position.at(2) - 1 },
         { position.at(0), position.at(1), position.at(2) + 1 },
@@ -47,9 +46,15 @@ Mesh_sptr MeshGenerator::genBlock (const CstMap_sptr& map, const CstBlock_sptr& 
 
     // const vecCstGeometricShape_sptr sharpsShapes = genSharps(*block, blockType, glmPosition);
     // const vecCstGeometricShape_sptr jumpersShapes = genJumpers(*block, blockType, glmPosition);
+    //glm::vec3(1.f, 1.f, 0.f),
+    //    glm::vec3(1.f, 150.f / 255.f, 0.f),
+    //    60,
 
     vecCstGeometricShape_sptr geometricShapes {};
     geometricShapes.push_back(blockShape);
+    for (const auto& shape: block->getExtraShapes()) {
+        geometricShapes.push_back(createGeometricShape(shape));
+    }
     // geometricShapes.insert(geometricShapes.end(), jumpersShapes.begin(), jumpersShapes.end());
     // geometricShapes.insert(geometricShapes.end(), sharpsShapes.begin(), sharpsShapes.end());
     return { std::make_shared <Mesh>( block, std::move(geometricShapes)) };

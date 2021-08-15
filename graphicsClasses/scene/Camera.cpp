@@ -178,7 +178,7 @@ void Camera::turningAroundMapUpdate() noexcept{
     const auto yMax = static_cast<float>(_map.height());
     const auto zMax = static_cast<float>(_map.depth());
 
-    const glm::vec3 center { xMax / 2.f, yMax / 2.f, zMax / 2.f };
+    const glm::vec3 center { (xMax - 1.f) / 2.f, (yMax - 1.f) / 2.f, (zMax - 1.f) / 2.f };
 
     float distanceMax = xMax;
     if (distanceMax < yMax) distanceMax = yMax;

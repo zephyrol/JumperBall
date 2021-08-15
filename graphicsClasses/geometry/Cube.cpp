@@ -112,23 +112,23 @@ std::vector <glm::vec3> Cube::genColors (const std::vector <glm::vec3>& colors) 
 const std::vector <glm::vec3> Cube::basicPositionsCube =
     Utility::GLfloatListToGlmVec3({
     // Face 1
-    0.f, 1.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f, 0.f,
-    0.f, 1.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f, 0.f,
+    -0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f,
+    -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f,
     // Face 2
-    0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f, 1.f, 1.f,
-    1.f, 0.f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 1.f,
+    -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f,
+    0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f,
     // Face 6
-    1.f, 0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f, 1.f,
-    1.f, 1.f, 0.f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f,
+    0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0.5f,
+    0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f,
     // Face 5
-    0.f, 0.f, 1.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f,
-    0.f, 0.f, 1.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f,
+    -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f,
+    -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f,
     // Face 4
-    0.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 1.f, 0.f,
-    0.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f,
+    -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f,
+    -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f,
     // Face 3
-    0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f,
-    1.f, 0.f, 0.f, 1.f, 0.f, 1.f, 0.f, 0.f, 1.f
+    -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f,
+    0.5f, -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f
 });
 
 const std::vector <glm::vec3> Cube::basicNormalsCube =
