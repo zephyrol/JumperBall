@@ -54,10 +54,9 @@ const vecCstSpecial_sptr& getSpecials() const;
 
 bool hasInteraction() const;
 
-void update(
-    const JBTypes::timePointMs& currentTime
-);
+void update(const JBTypes::timePointMs& currentTime);
 
+std::map<CstItem_sptr ,std::vector<Shape>> getItemShapes() const;
 virtual std::vector<Shape> getExtraShapes() const;
 
 virtual bool mayDisappear() const;
@@ -73,14 +72,11 @@ SceneElement::GlobalState getGlobalState() const override;
 
 private: 
 
-virtual Effect interaction(
-    const JBTypes::timePointMs& currentTime
-);
+virtual Effect interaction(const JBTypes::timePointMs& currentTime);
 
 vecCstItem_sptr getCstItems() const;
 vecCstEnemy_sptr getCstEnemies() const;
 vecCstSpecial_sptr getCstSpecials() const;
-
 
 protected:
 const JBTypes::vec3ui _position;

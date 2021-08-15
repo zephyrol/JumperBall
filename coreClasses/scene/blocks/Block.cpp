@@ -63,9 +63,7 @@ const vecCstSpecial_sptr& Block::getSpecials() const {
     return _cstSpecials; 
 }
 
-Block::Effect Block::interaction (
-    const JBTypes::timePointMs&
-) {
+Block::Effect Block::interaction (const JBTypes::timePointMs& ) {
     return Block::Effect::Nothing;
 }
 
@@ -147,3 +145,12 @@ JBTypes::Color Block::getColor() const {
 std::vector<Shape> Block::getExtraShapes() const {
     return {};
 }
+
+std::map<CstItem_sptr ,std::vector<Shape> > Block::getItemShapes() const {
+    std::map<CstItem_sptr, std::vector<Shape> > itemShapes {};
+    for(const auto& item: _items) {
+        itemShapes[item] = item->getShapes();
+    }
+    return itemShapes;
+}
+

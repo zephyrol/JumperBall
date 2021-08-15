@@ -18,17 +18,17 @@ vecMesh_sptr MeshGenerator::genBlocks (const CstMap_sptr& map) {
 vecMesh_sptr MeshGenerator::genItems (const CstMap_sptr& map) {
 
     vecMesh_sptr meshes;
-    /*const auto blockInfos = map->blocksInfo();
-    for (size_t i = 0; i < blockInfos.size(); ++i) {
-        const size_t index = blockInfos.at(i).index;
-        for (size_t j = 0; j < Block::itemsNumber; ++j) {
-            const CstBlock_sptr block = map->getBlock(index);
-            const std::shared_ptr <const Item> item = block->items().at(j);
-            if (item) {
-                meshes.push_back(genItem(item));
+    for (const auto& block: map->getBlocks()) {
+        for (const auto& itemShapes : block->getItemShapes()) {
+            const auto& item = itemShapes.first;
+            const auto& shapes = itemShapes.second;
+            vecCstGeometricShape_sptr geometricShapes;
+            for(const auto& shape: shapes) {
+                geometricShapes.push_back(createGeometricShape(shape));
             }
+            const auto mesh = std::make_shared <Mesh>(item, std::move(geometricShapes));
         }
-    }*/
+    }
     return meshes;
 }
 
