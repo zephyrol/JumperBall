@@ -50,7 +50,8 @@ Mesh_sptr genLetterLabel(
 std::map <unsigned char, vecMesh_sptr> genLettersLabel(
     const CstPage_sptr& page,
     const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet
-    );
+);
+
 vecMesh_sptr genOthersLabel(const CstPage_sptr& page);
 
 Mesh_sptr genBlock(const CstMap_sptr &map, const CstBlock_sptr &block);

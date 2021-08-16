@@ -12,5 +12,35 @@ Key::Key(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
 }
 
 std::vector<Shape> Key::getShapes() const {
-    return {};
+    std::cout << "get shapes" << std::endl;
+    return {
+        Shape(
+            Shape::Aspect::Sphere,
+            JBTypes::Color::Yellow,
+            direction(),
+            { 0.f, 0.175f, 0.f},
+            { 0.09f, 0.075f, 0.050f}
+        ),
+        Shape(
+            Shape::Aspect::Cube,
+            JBTypes::Color::Yellow,
+            direction(),
+            { -0.025f, -0.175f, -0.025f },
+            { 0.09f, 0.075f, 0.050f }
+        ),
+        Shape(
+            Shape::Aspect::Cube,
+            JBTypes::Color::Yellow,
+            direction(),
+            { -0.025f, -0.075f, -0.025f },
+            { 0.1f, 0.05f, 0.05f }
+        ),
+        Shape(
+            Shape::Aspect::Cube,
+            JBTypes::Color::Yellow,
+            direction(),
+            { -0.025f, -0.175f, -0.025f },
+            { 0.1f, 0.05f, 0.05f }
+        )
+    };
 }

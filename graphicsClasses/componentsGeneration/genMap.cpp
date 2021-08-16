@@ -26,7 +26,7 @@ vecMesh_sptr MeshGenerator::genItems (const CstMap_sptr& map) {
             for(const auto& shape: shapes) {
                 geometricShapes.push_back(createGeometricShape(shape));
             }
-            const auto mesh = std::make_shared <Mesh>(item, std::move(geometricShapes));
+            meshes.push_back(std::make_shared <Mesh>(item, std::move(geometricShapes)));
         }
     }
     return meshes;

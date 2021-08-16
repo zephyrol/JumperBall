@@ -100,13 +100,12 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
     size_t blockIndexCursor= 0;
 
     const auto isAnItemTypeChar = [](unsigned char info) {
-        return info == 'I' || info == 'E' || info == 'S';
+        return info == 'I' || info == 'K' || info == 'C';
     };
     const auto createItems = 
     [&getTypeOptions, &isAnItemTypeChar, &mapInfo, &blockIndexCursor](const std::string& itemsInfo) {
         const auto typeOptions = getTypeOptions(itemsInfo, isAnItemTypeChar);
-
-        const auto createItem = 
+        const auto createItem =
         [&mapInfo, &blockIndexCursor](unsigned char itemType, unsigned char direction) -> Item_sptr {
             const JBTypes::Dir dir = JBTypesMethods::charAsDirection(direction);
             const auto blockCoords = Map::getBlockCoords(blockIndexCursor, mapInfo.width, mapInfo.depth);

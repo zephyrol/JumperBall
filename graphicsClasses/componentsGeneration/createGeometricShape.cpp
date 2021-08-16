@@ -11,14 +11,18 @@ CstGeometricShape_sptr MeshGenerator::createGeometricShape(const Shape& shape) {
     const glm::mat4 scale = glm::scale(Utility::convertToOpenGLFormat(shape.scale()));
     const glm::mat4 localTransform = rotation * translation * scale;
     if(shape.aspect() == Shape::Aspect::Cylinder) {
-        std::cout << "cylinder" << std::endl;
         return std::make_shared<Cylinder>(shape.color(), 60, localTransform, rotation);
     }
     if(shape.aspect() == Shape::Aspect::Pyramid) {
-        std::cout << "pyramid" << std::endl;
         return std::make_shared<Pyramid>(localTransform, rotation);
     }
-
-    return std::make_shared<Cube>();
+    if(shape.aspect() == Shape::Aspect::Cube) {
+        return std::make_shared<Cube>(shape.color(), localTransform, rotation);
+    }
+    if(shape.aspect() == Shape::Aspect::Sphere) {
+        return std::make_shared<Sphere>(shape.color(), localTransform, rotation);
+    }
+    std::cerr << "Shape aspect not managed" << std::endl;
+    return nullptr;
 }
 
