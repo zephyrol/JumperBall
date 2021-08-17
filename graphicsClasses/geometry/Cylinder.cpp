@@ -186,6 +186,9 @@ std::vector <glm::vec3> Cylinder::genPositions() const {
 }
 
 std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color& color) {
+    if (color == JBTypes::Color::Orange) {
+        return { glm::vec3 (1.f, 215.f / 255.f, 0.f), glm::vec3(150.f / 255.f, 75.f / 255.f, 0.f)};
+    }
     if (color == JBTypes::Color::Yellow) {
         return { glm::vec3 (1.f, 1.f, 0.f), glm::vec3(1.f, 150.f / 255.f, 0.f)};
     }

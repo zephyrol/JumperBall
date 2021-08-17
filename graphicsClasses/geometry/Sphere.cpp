@@ -27,6 +27,13 @@ Sphere::Sphere(const glm::vec3& customColor,
 
 }
 
+Sphere::Sphere(const JBTypes::Color &color,
+               const glm::mat4 &modelTransform,
+               const glm::mat4 &normalsTransform):
+    Sphere(getSphereColor(color), modelTransform, normalsTransform){
+
+}
+
 GeometricShape::ShapeVerticesInfo Sphere::computeBasicInfoSphere (
     bool useCustomColors,
     const glm::vec3& firstColor,
@@ -43,34 +50,33 @@ GeometricShape::ShapeVerticesInfo Sphere::computeBasicInfoSphere (
     // Create a sphere ---------------------------------------------------------
     constexpr GLuint iVertexCount = iParaCount * iMeriCount;
 
-    constexpr float a1 = (180.0f / static_cast <float>(iParaCount - 1)) *
-                         static_cast <float>(M_PI) / 180.0f;
-    constexpr float a2 = (360.0f / (iMeriCount - 1)) *
-                         static_cast <float>(M_PI) / 180.0f;
+    constexpr float a1 = (180.0f / static_cast <float>(iParaCount - 1)) * static_cast <float>(M_PI) / 180.0f;
+    constexpr float a2 = (360.0f / (iMeriCount - 1)) * static_cast <float>(M_PI) / 180.0f;
 
     // parallels ---------------------------------------------------------------
     for (unsigned int i = 0; i < iParaCount; ++i) {
-        const float fAngle = -static_cast <float>(M_PI) / 2.0f + a1 * (i);
-        const float z = r * static_cast <float>(sin(fAngle));
-        const float fRadius = r * static_cast <float>(cos(fAngle));
+        const float fAngle = -static_cast <float>(M_PI) / 2.0f + a1 * i;
+        const float z = r * sinf(fAngle);
+        const float fRadius = r * cosf(fAngle);
 
         for (unsigned int j = 0; j < iMeriCount; ++j) {
-            infoAttributesSphere.positions.push_back(glm::vec3(
-                                                         fRadius * static_cast <float>(cos(a2 * j)),
-                                                         fRadius * static_cast <float>(sin(a2 * j)),
-                                                         z));
-            infoAttributesSphere.uvCoords.push_back(
-                glm::vec2(static_cast <float>(j) / iMeriCount,
-                          static_cast <float>(iParaCount - i) / iParaCount));
+            infoAttributesSphere.positions.emplace_back(
+                fRadius * cosf(a2 * j),
+                fRadius * sinf(a2 * j),
+                z
+            );
+            infoAttributesSphere.uvCoords.emplace_back(
+                static_cast <float>(j) / iMeriCount,
+                static_cast <float>(iParaCount - i) / iParaCount
+            );
             if (!useCustomColors) {
-                infoAttributesSphere.colors.push_back(
-                    glm::vec3(static_cast <float>(i) / iParaCount,
-                              (j < iMeriCount / 2) ? 1.f : 0.f,
-                              0.5f));
+                infoAttributesSphere.colors.emplace_back(
+                    static_cast <float>(i) / iParaCount,
+                    (j < iMeriCount / 2) ? 1.f : 0.f,
+                    0.5f
+                );
             } else {
-                infoAttributesSphere.colors.push_back(
-                    (j < iMeriCount / 2) ? firstColor : secondColor
-                    );
+                infoAttributesSphere.colors.push_back((j < iMeriCount / 2) ? firstColor : secondColor);
             }
         }
     }
@@ -79,8 +85,7 @@ GeometricShape::ShapeVerticesInfo Sphere::computeBasicInfoSphere (
     infoAttributesSphere.normals.reserve(iVertexCount);
 
     for (unsigned int i = 0; i < iVertexCount; ++i) {
-        infoAttributesSphere.normals.push_back(glm::normalize(
-                                                   infoAttributesSphere.positions[i]));
+        infoAttributesSphere.normals.push_back(glm::normalize(infoAttributesSphere.positions[i]));
     }
 
     // for quads split in 2
@@ -129,3 +134,11 @@ std::vector <glm::vec3> Sphere::genPositions() const {
 
 // TODO: create a dictionnary to don't keep this geometry and do not compute the geometry each time
 const GeometricShape::ShapeVerticesInfo Sphere::basicInfoSphere = computeBasicInfoSphere();
+
+glm::vec3 Sphere::getSphereColor(const JBTypes::Color &color) {
+    if (color == JBTypes::Color::Yellow) {
+        return { 1.f, 215.f / 255.f, 0.f };
+    }
+    return {0.f,0.f,0.f };
+}
+

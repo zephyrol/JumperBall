@@ -26,7 +26,7 @@ std::vector<Shape> Key::getShapes() const {
             JBTypes::Color::Yellow,
             direction(),
             { -0.025f, -0.175f, -0.025f },
-            { 0.09f, 0.075f, 0.050f }
+            { 0.05f, 0.3f, 0.050f }
         ),
         Shape(
             Shape::Aspect::Cube,

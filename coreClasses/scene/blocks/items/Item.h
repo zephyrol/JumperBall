@@ -31,7 +31,7 @@ float getTimeSinceObtaining() const;
 float getTimeSinceCreation() const;
 void catchingTest(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
 
-virtual std::vector<Shape> getShapes() const = 0;
+virtual vecCstShape_sptr getShapes() const = 0;
 
 static constexpr float itemBoundingSphereRadius = 0.15f;
 

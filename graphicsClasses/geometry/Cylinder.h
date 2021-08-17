@@ -36,10 +36,10 @@ Cylinder(const glm::vec3& customColorCenter,
          const glm::mat4& normalsTransform = glm::mat4(1.f)
          );
 
-virtual std::vector <glm::vec3> genPositions() const override;
-virtual std::vector <glm::vec3> genNormals() const override;
-virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const override;
-virtual std::vector <GLushort> genIndices() const override;
+std::vector <glm::vec3> genPositions() const override;
+std::vector <glm::vec3> genNormals() const override;
+std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const override;
+std::vector <GLushort> genIndices() const override;
 
 private:
 const size_t _meriCount;

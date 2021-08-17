@@ -18,6 +18,9 @@ Sphere(const glm::mat4& modelTransform = glm::mat4(1.f),
 Sphere(const glm::vec3& customColor,
        const glm::mat4& modelTransform = glm::mat4(1.f),
        const glm::mat4& normalsTransform = glm::mat4(1.f));
+    Sphere(const JBTypes::Color& color,
+           const glm::mat4& modelTransform = glm::mat4(1.f),
+           const glm::mat4& normalsTransform = glm::mat4(1.f));
 Sphere(const glm::vec3& customColor,
        const glm::vec3& customColor2,
        const glm::mat4& modelTransform = glm::mat4(1.f),
@@ -31,6 +34,8 @@ virtual std::vector <GLushort> genIndices() const override;
 private:
 
 static const GeometricShape::ShapeVerticesInfo basicInfoSphere;
+
+static glm::vec3 getSphereColor(const JBTypes::Color& color);
 
 static GeometricShape::ShapeVerticesInfo computeBasicInfoSphere(
     bool useCustomColors = false,
