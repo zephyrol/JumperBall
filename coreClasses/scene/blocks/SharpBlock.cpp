@@ -110,10 +110,10 @@ std::array <bool, 6> SharpBlock::faceInfo() const {
     return _facesSharps;
 }
 
-std::vector<Shape> SharpBlock::getExtraShapes() const {
+vecCstShape_sptr SharpBlock::getExtraShapes() const {
 
 
-    std::vector<Shape> shapes {};
+    vecCstShape_sptr shapes {};
     const std::array <float, 7> scales { .2f, .1f, .05f, .1f, .075f, .15f, .175f };
 
     const std::array <JBTypes::vec2f, 7> translationFloorFactor {
@@ -149,13 +149,15 @@ std::vector<Shape> SharpBlock::getExtraShapes() const {
                     offset * translationFloorFactor.at(j).y
                 };
 
-                shapes.emplace_back(
+                const JBTypes::vec3f translation = JBTypesMethods::add(translationLocal, translationFloor);
+
+                shapes.push_back(std::make_shared<const Shape>(
                     Shape::Aspect::Pyramid,
                     JBTypes::Color::None,
                     currentDir,
-                    JBTypesMethods::add(translationLocal, translationFloor),
+                    translation,
                     scaleLocal
-                );
+                ));
             }
         }
     }

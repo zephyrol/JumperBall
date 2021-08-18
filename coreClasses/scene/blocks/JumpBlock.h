@@ -27,7 +27,7 @@ Effect detectionEvent(
     const JBTypes::timePointMs& currentTime
 ) override;
 
-std::vector<Shape> getExtraShapes() const override;
+vecCstShape_sptr getExtraShapes() const override;
 
 
 private:

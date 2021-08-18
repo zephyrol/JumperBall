@@ -16,7 +16,7 @@ Key(
     const JBTypes::Dir& direction
     );
 
-std::vector<Shape> getShapes() const override;
+vecCstShape_sptr getShapes() const override;
 
 private:
 };

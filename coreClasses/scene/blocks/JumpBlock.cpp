@@ -27,9 +27,9 @@ Block::Effect JumpBlock::detectionEvent (const JBTypes::Dir& direction,
     return faceInfo().at(dir) ? Block::Effect::Jump : Block::Effect::Nothing;
 }
 
-std::vector<Shape> JumpBlock::getExtraShapes() const {
+vecCstShape_sptr JumpBlock::getExtraShapes() const {
 
-    std::vector<Shape> shapes {};
+    vecCstShape_sptr shapes {};
     for (size_t i = 0; i < _facesJumpers.size(); i++) {
 
         const bool isJumper = _facesJumpers.at(i);
@@ -50,13 +50,13 @@ std::vector<Shape> JumpBlock::getExtraShapes() const {
                 static_cast<float>(_position.at(2)) + vecDir.z * offset
             };
 
-            shapes.emplace_back(
+            shapes.push_back(std::make_shared<const Shape>(
                 Shape::Aspect::Cylinder,
                 JBTypes::Color::Yellow,
                 currentDir,
                 translationLocal,
                 scaleLocal
-            );
+            ));
         }
     }
     return shapes;

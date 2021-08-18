@@ -12,13 +12,16 @@ Coin::Coin(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
 }
 
 vecCstShape_sptr Coin::getShapes() const {
-    return { std::make_shared<const Shape>(
+    const JBTypes::vec3f localRotation { static_cast<float>(M_PI / 2), 0.f, 0.f };
+    const JBTypes::vec3f localTranslation { 0.f, 0.f, -0.025f };
+
+    const auto coinShape = std::make_shared<const Shape>(
         Shape::Aspect::Cylinder,
         JBTypes::Color::Orange,
         direction(),
-        JBTypesMethods::add(get3DPosition(),
-                            std::initializer_list <float>({ 0.f, 0.f, -0.025f}),
-                            std::initializer_list <float>({ { 0.3f, 0.05f, 0.3f})
-    )};
-}
+        localRotation,
+        JBTypesMethods::add(get3DPosition(), localTranslation)
+    );
 
+    return { coinShape };
+}

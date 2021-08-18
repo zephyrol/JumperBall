@@ -12,7 +12,7 @@
 class Clock:public Item {
 public:
 Clock(const JBTypes::vec3ui& position, const JBTypes::Dir& direction);
-std::vector<Shape> getShapes() const override;
+vecCstShape_sptr getShapes() const override;
 
 private:
 

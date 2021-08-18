@@ -28,7 +28,7 @@ Block::Effect interaction(
     const JBTypes::timePointMs& currentTime
 ) override;
 
-std::vector<Shape> getExtraShapes() const override;
+vecCstShape_sptr getExtraShapes() const override;
 
 private:
 const std::array <bool, 6> _facesSharps;

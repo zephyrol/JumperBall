@@ -4,9 +4,14 @@
 
 #include "MeshGenerator.h"
 
-CstGeometricShape_sptr MeshGenerator::createGeometricShape(const Shape& shape) {
+CstGeometricShape_sptr MeshGenerator::createGeometricShape(const CstShape_sptr& shape) {
 
-    const glm::mat4 rotation = Utility::rotationUpToDir(shape.dir());
+    const auto& shapeDir = shape->dir();
+    const glm::mat4 localRotation = shapeDir 
+        ? Utility::rotationUpToDir(*shapeDir)
+        : glm::mat4(1.f);
+
+    const glm::mat4 rotation = Utility::rotationUpToDir(shape->dir());
     const glm::mat4 translation = glm::translate(Utility::convertToOpenGLFormat(shape.position()));
     const glm::mat4 scale = glm::scale(Utility::convertToOpenGLFormat(shape.scale()));
     const glm::mat4 localTransform = rotation * translation * scale;

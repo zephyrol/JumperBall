@@ -56,8 +56,8 @@ bool hasInteraction() const;
 
 void update(const JBTypes::timePointMs& currentTime);
 
-std::map<CstItem_sptr ,std::vector<Shape>> getItemShapes() const;
-virtual std::vector<Shape> getExtraShapes() const;
+std::map<CstItem_sptr ,vecCstShape_sptr> getItemShapes() const;
+virtual vecCstShape_sptr getExtraShapes() const;
 
 virtual bool mayDisappear() const;
 

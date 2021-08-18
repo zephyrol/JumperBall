@@ -142,12 +142,12 @@ JBTypes::Color Block::getColor() const {
     return JBTypes::Color::None;
 }
 
-std::vector<Shape> Block::getExtraShapes() const {
+vecCstShape_sptr Block::getExtraShapes() const {
     return {};
 }
 
-std::map<CstItem_sptr ,std::vector<Shape> > Block::getItemShapes() const {
-    std::map<CstItem_sptr, std::vector<Shape> > itemShapes {};
+std::map<CstItem_sptr ,vecCstShape_sptr > Block::getItemShapes() const {
+    std::map<CstItem_sptr, vecCstShape_sptr > itemShapes {};
     for(const auto& item: _items) {
         itemShapes[item] = item->getShapes();
     }
