@@ -47,6 +47,8 @@ struct Quaternion { JBTypes::vec3f v; float w; };
 
 namespace JBTypesMethods {
 JBTypes::vec3f directionAsVector(JBTypes::Dir dir);
+JBTypes::vec3f rotationVectorUpToDir (const JBTypes::Dir& dir);
+
 JBTypes::Dir integerAsDirection(unsigned int number);
 JBTypes::Dir charAsDirection(unsigned char dirChar);
 JBTypes::Dir vectorAsDirection(const JBTypes::vec3f& vec);

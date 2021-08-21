@@ -9,8 +9,8 @@ uniform float obtainingTime;
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec3 vs_vertexNormal;
-layout(location = 3) in float vs_objectDirection;
-layout(location = 4) in vec3 vs_objectPosition;
+layout(location = 3) in float vs_itemDirection;
+layout(location = 4) in vec3 vs_itemPosition;
 
 out vec3 fs_vertexColor;
 out vec4 fs_vertexDepthMapSpace;
@@ -60,46 +60,20 @@ mat4 scaleMat (float scale) {
 
 const float PI = 3.14159265358979323846;
 const float PI_2 = 1.57079632679489661923;
-mat4 upToNorth = rotationX(-PI_2);
-mat4 upToSouth = rotationX(PI_2);
-mat4 upToEast = rotationZ(-PI_2);
-mat4 upToWest = rotationZ(PI_2);
-mat4 upToUp = mat4(1.0);
-mat4 upToDown = rotationX(PI);
-
-mat4 rotationUpToDir (float direction) {
-    int intDir = int(direction);
-    switch (intDir) {
-    case 0:
-        return upToNorth;
-    case 1:
-        return upToSouth;
-    case 2:
-        return upToEast;
-    case 3:
-        return upToWest;
-    case 4:
-        return upToUp;
-    case 5:
-        return upToDown;
-    default:
-        return upToUp;
-    }
-    return upToUp;
-}
-
 
 const float thresholdSecondStep = 1.0;
 const float thresholdThirdStep = 1.5;
 const float durationSecondStep = thresholdThirdStep - thresholdSecondStep;
 const float durationThirdStep = 0.2;
 
-bool objectIsGotten() {
+int intDir = int(vs_itemDirection);
+
+bool itemIsGotten() {
     return (obtainingTime > 0);
 }
 
-mat4 objectScale() {
-    if (!objectIsGotten()) {
+mat4 itemScale() {
+    if (!itemIsGotten()) {
         return mat4(1.0);
     }
     if (obtainingTime < thresholdSecondStep) {
@@ -114,39 +88,76 @@ mat4 objectScale() {
     return mat4(0.0);
 }
 
-mat4 objectRotation() {
-    if (!objectIsGotten()) {
-        const float speedFactor = 5.0;
-        return rotationY(speedFactor * creationTime);
+mat4 computeRotationMatrix(float angle) {
+    switch (intDir) {
+        case 0:
+        return rotationZ(-angle);
+        case 1:
+        return rotationZ(angle);
+        case 2:
+        return rotationX(angle);
+        case 3:
+        return rotationX(-angle);
+        case 4:
+        return rotationY(angle);
+        case 5:
+        return rotationY(-angle);
+        default:
+        return rotationY(angle);
     }
-    const float speedPow = 5.0;
-    return rotationY(pow(obtainingTime, speedPow));
 }
 
-mat4 objectTranslation() {
-    if (!objectIsGotten()) {
+mat4 itemRotation() {
+    if (!itemIsGotten()) {
+        const float speedFactor = 5.0;
+        return computeRotationMatrix(speedFactor * creationTime);
+    }
+    const float speedPow = 5.0;
+    return computeRotationMatrix(pow(obtainingTime, speedPow));
+}
+
+vec3 dirToVec() {
+    switch (intDir) {
+        case 0:
+        return vec3(0.0, 0.0, -1.0);
+        case 1:
+        return vec3(0.0, 0.0, 1.0);
+        case 2:
+        return vec3(1.0, 0.0, 0.0);
+        case 3:
+        return vec3(-1.0, 0.0, 0.0);
+        case 4:
+        return vec3(0.0, 1.0, 0.0);
+        case 5:
+        return vec3(0.0, -1.0, 0.0);
+        default:
+        return vec3(0.0, 1.0, 0.0);
+    }
+}
+
+mat4 itemTranslation() {
+    if (!itemIsGotten()) {
         return mat4(1.0);
     }
-    vec3 translateVector = vec3(0.0, 1.0, 0.0);
+    float translateCoeff = 0.0;
     if (obtainingTime < thresholdSecondStep) {
-        translateVector = vec3(0.0, obtainingTime / thresholdSecondStep, 0.0);
+        translateCoeff = obtainingTime / thresholdSecondStep;
     }
-    return translate(translateVector);
+    return translate(dirToVec());
 }
+
 
 void main() {
 
-    mat4 translationOnBlock = translate(vec3(0.0, 0.75, 0.0));
+    mat4 translationToItem = translate(vs_itemPosition);
 
-    mat4 translationToBlock = translate(vs_objectPosition);
-    mat4 initialRotation = rotationUpToDir(vs_objectDirection);
+    mat4 rotation = itemRotation();
+    mat4 translation = itemTranslation();
+    mat4 scale = itemScale();
 
-    mat4 rotation = objectRotation();
-    mat4 translation = objectTranslation();
-    mat4 scale = objectScale();
-    mat4 modelTransform = translationToBlock * initialRotation * translationOnBlock *
-                          translation * rotation * scale;
-    mat4 normalTransform = initialRotation * rotation; // TODO: apply scale on normal
+    mat4 modelTransform = translationToItem * translation * rotation * scale;
+
+    mat4 normalTransform = rotation; // TODO: apply scale on normal
 
     const float w = 1.0;
     vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, w);

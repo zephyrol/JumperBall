@@ -14,7 +14,7 @@ Item::Item(
     ):
     _position(position),
     _direction(direction),
-    _3Dposition(get3DPosition()),
+    _3Dposition(compute3DPosition()),
     _gotten(false),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _obtainingTime()
@@ -57,13 +57,7 @@ SceneElement::StaticValues <float> Item::getStaticFloatValues() const {
 }
 
 SceneElement::StaticValues <JBTypes::vec3f> Item::getStaticVec3fValues() const {
-    constexpr float offset = 0.5;
-    const JBTypes::vec3f position = {
-        static_cast <float>(_position.at(0)) + offset,
-        static_cast <float>(_position.at(1)) + offset,
-        static_cast <float>(_position.at(2)) + offset
-    };
-    return { position };
+    return { _3Dposition };
 }
 
 SceneElement::DynamicValues <float> Item::getDynamicFloats() const {
@@ -89,9 +83,9 @@ SceneElement::GlobalState Item::getGlobalState() const {
 
 JBTypes::vec3f Item::compute3DPosition() const {
     constexpr float offsetPosition = 1.f;
-    float x = static_cast <float>(_position.at(0) + 0.5f);
-    float y = static_cast <float>(_position.at(1) + 0.5f);
-    float z = static_cast <float>(_position.at(2) + 0.5f);
+    auto x = static_cast <float>(_position.at(0));
+    auto y = static_cast <float>(_position.at(1));
+    auto z = static_cast <float>(_position.at(2));
 
     switch (_direction)
     {

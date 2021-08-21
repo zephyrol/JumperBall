@@ -135,13 +135,7 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
             const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
 
             for (size_t j = 0; j < scales.size(); j++) {
-                const JBTypes::vec3f scaleLocal { scales.at(j), 0.5f, scales.at(j) };
-
-                const JBTypes::vec3f translationLocal {
-                    static_cast<float>(_position.at(0)) + vecDir.x * offset,
-                    static_cast<float>(_position.at(1)) + vecDir.y * offset,
-                    static_cast<float>(_position.at(2)) + vecDir.z * offset
-                };
+                const JBTypes::vec3f localScale { scales.at(j), 0.5f, scales.at(j) };
 
                 const JBTypes::vec3f translationFloor {
                     offset * translationFloorFactor.at(j).x,
@@ -149,14 +143,34 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
                     offset * translationFloorFactor.at(j).y
                 };
 
-                const JBTypes::vec3f translation = JBTypesMethods::add(translationLocal, translationFloor);
+                const JBTypes::vec3f translationOnBlock {
+                    vecDir.x * offset,
+                    vecDir.y * offset,
+                    vecDir.z * offset
+                };
+
+                const JBTypes::vec3f translationPosition {
+                    static_cast<float>(_position.at(0)),
+                    static_cast<float>(_position.at(1)),
+                    static_cast<float>(_position.at(2))
+                };
+
+                const JBTypes::vec3f localTranslation = JBTypesMethods::add(
+                    translationOnBlock,
+                    translationFloor
+                );
+
+                const auto directionRotation = JBTypesMethods::rotationVectorUpToDir(currentDir);
 
                 shapes.push_back(std::make_shared<const Shape>(
                     Shape::Aspect::Pyramid,
                     JBTypes::Color::None,
-                    currentDir,
-                    translation,
-                    scaleLocal
+                    std::initializer_list<Transformation>({
+                        Transformation(Transformation::Type::Scale, localScale),
+                        Transformation(Transformation::Type::Translation, localTranslation),
+                        Transformation(Transformation::Type::Rotation, directionRotation),
+                        Transformation(Transformation::Type::Translation, translationPosition)
+                    })
                 ));
             }
         }

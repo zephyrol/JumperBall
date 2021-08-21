@@ -37,25 +37,36 @@ vecCstShape_sptr JumpBlock::getExtraShapes() const {
             constexpr float sizeBlock = 1.f; // TODO specify it elsewhere
             constexpr float offset = sizeBlock / 2.f;
 
-            const JBTypes::Dir currentDir = JBTypesMethods::integerAsDirection(
+            const JBTypes::Dir direction = JBTypesMethods::integerAsDirection(
                 static_cast <unsigned int>(i)
             );
-            const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
+            const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(direction);
 
-            const JBTypes::vec3f scaleLocal { 0.7f, 0.05f, 0.7f };
+            const JBTypes::vec3f localScale { 0.7f, 0.05f, 0.7f };
 
-            const JBTypes::vec3f translationLocal {
-                static_cast<float>(_position.at(0)) + vecDir.x * offset,
-                static_cast<float>(_position.at(1)) + vecDir.y * offset,
-                static_cast<float>(_position.at(2)) + vecDir.z * offset
+            const JBTypes::vec3f translationOnBlock {
+                vecDir.x * offset,
+                vecDir.y * offset,
+                vecDir.z * offset
             };
+
+            const JBTypes::vec3f translationPosition {
+                static_cast<float>(_position.at(0)),
+                static_cast<float>(_position.at(1)),
+                static_cast<float>(_position.at(2))
+            };
+
+            const auto directionRotation = JBTypesMethods::rotationVectorUpToDir(direction);
 
             shapes.push_back(std::make_shared<const Shape>(
                 Shape::Aspect::Cylinder,
                 JBTypes::Color::Yellow,
-                currentDir,
-                translationLocal,
-                scaleLocal
+                std::initializer_list<Transformation>({
+                    Transformation(Transformation::Type::Scale, localScale),
+                    Transformation(Transformation::Type::Translation, translationOnBlock),
+                    Transformation(Transformation::Type::Rotation, directionRotation),
+                    Transformation(Transformation::Type::Translation, translationPosition)
+                })
             ));
         }
     }
