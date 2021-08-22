@@ -7,7 +7,7 @@
 #include "Player.h"
 
 Player::Player():
-    _statut(Player::Statut::INMENU),
+    _status(Player::Status::INMENU),
     _levelProgression(1),
     _money(0),
     _diamonds(false),
@@ -58,12 +58,12 @@ unsigned int Player::getMoney() const {
     return _money;
 }
 
-Player::Statut Player::statut() const {
-    return _statut;
+Player::Status Player::status() const {
+    return _status;
 }
 
-void Player::statut (const Player::Statut& s) {
-    _statut = s;
+void Player::status (const Player::Status& s) {
+    _status = s;
 }
 
 void Player::bonusLevelUp() {

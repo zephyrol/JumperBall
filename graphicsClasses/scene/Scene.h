@@ -17,12 +17,11 @@ class Scene {
 
 public:
 
-enum class ActionKey { Up, Down, Left, Right, Validate };
+enum class ActionKey { Up, Down, Left, Right, Validate, Nothing };
 
-Scene(size_t mapNumber);
+explicit Scene(size_t mapNumber);
 
-Player::Statut update(const Player::Statut& statut);
-void doAction( const ActionKey& key);
+Player::Status update(const Player::Status& status, const ActionKey& key);
 
 bool gameIsFinished() const;
 

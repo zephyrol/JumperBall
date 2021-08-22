@@ -73,8 +73,8 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
     mapInfo.height = getUncompressedDimension(readingString(file));
 
     const auto beginX = getUncompressedDimension(readingString(file));
-    const auto beginZ = getUncompressedDimension(readingString(file));
     const auto beginY = getUncompressedDimension(readingString(file));
+    const auto beginZ = getUncompressedDimension(readingString(file));
     mapInfo.ball = std::make_shared<Ball>(beginX, beginY, beginZ);
 
 

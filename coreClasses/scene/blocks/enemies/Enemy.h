@@ -68,4 +68,4 @@ JBTypes::vec3f init3DPosition(const JBTypes::vec3ui& initialPosition) const;
 virtual void touchingTest(const JBTypes::vec3f& boundingSpherePosition, float boundingSphereRadius) = 0;
 };
 
-#endif /* Enemy_h */
+#endif /* Enemy_hpp */

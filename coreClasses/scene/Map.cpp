@@ -21,13 +21,14 @@ Map::Map(Map::MapInfo &&mapInfo):
     _width(mapInfo.width),
     _height(mapInfo.height),
     _depth(mapInfo.depth),
+    _currentBallPosition(nullptr),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _blocksUpdating([this] (size_t blockNumber) {
                             _blocksToUpdate.at(blockNumber)->update(
-                                    _timeInteractions
+                                    _updatingTime
                                 );
                         }, _blocksToUpdate.size()),
-    _timeInteractions(),
+    _updatingTime(),
     _nextBlockGetter(),
     _turnBackMovement()
 {
@@ -119,11 +120,28 @@ float Map::getTimeSinceCreation() const {
     return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
 
-void Map::interaction() {
-    _timeInteractions = JBTypesMethods::getTimePointMSNow();
+void Map::update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action) {
+
+    const auto ballPosition = _ball->getPosition();
+    const bool updateDestination = !_currentBallPosition || ballPosition != *_currentBallPosition;
+
+    if(!_currentBallPosition) {
+        std::unique_ptr<JBTypes::vec3ui> ptr { new JBTypes::vec3ui (ballPosition) };
+        _currentBallPosition = std::move(ptr);
+    }
+    if(updateDestination) {
+        _ball->setDestination(getNextBlockInfo());
+        std::cout << "set destination" << std::endl;
+        *_currentBallPosition = ballPosition;
+    }
+
+    _updatingTime = updatingTime;
+    _ball->update(updatingTime, action);
+
     _blocksUpdating.runTasks();
     _blocksUpdating.waitTasks();
 
+    _ball->update(updatingTime, action);
 
     /*const Map::Effect effect = _map.interaction(_currentSide, get3DPosition(), getRadius());
     if (effect == Map::Effect::Burst) {
@@ -157,7 +175,7 @@ void Map::switchColor (const JBTypes::Color& color) {
     // }
 }
 
-Map::nextBlockInformation Map::getNextBlockInfo() const {
+Ball::MovementDestination Map::getNextBlockInfo() const {
 
     const JBTypes::Dir lookTowards = _ball->lookTowards();
     const JBTypes::Dir currentSide = _ball->currentSide();
@@ -167,7 +185,7 @@ Map::nextBlockInformation Map::getNextBlockInfo() const {
 
     const auto& position = _ball->getPosition();
 
-    const auto& getNeighbor = [&position, offsetsNextBlocks](size_t n) -> JBTypes::vec3ui  {
+    const auto getNeighbor = [&position, offsetsNextBlocks](size_t n) -> JBTypes::vec3ui  {
         const size_t offset = 3 * n;
         return {
             position.at(0) + offsetsNextBlocks.at(offset),
@@ -186,38 +204,33 @@ Map::nextBlockInformation Map::getNextBlockInfo() const {
     const CstBlock_sptr& blockLeft = getBlock(left);
     const CstBlock_sptr& blockRight = getBlock(right);
 
-
-    Map::nextBlockInformation nextBlock{};
-
+    Ball::MovementDestination nextBlock {};
     if (blockAbove && blockAbove->isExists()) {
         nextBlock.pos = above;
-        nextBlock.nextLocal = NextBlockLocal::Above;
+        nextBlock.nextLocal = Ball::NextDestination::Above;
 
         const JBTypes::Dir lookTowardsBeforeMovement = lookTowards;
         nextBlock.nextLook = currentSide;
         nextBlock.nextSide = _turnBackMovement.evaluate({ lookTowardsBeforeMovement });
     } else if (blockInFrontOf && blockInFrontOf->isExists()) {
         nextBlock.pos = inFrontOf;
-        nextBlock.nextLocal = NextBlockLocal::InFrontOf;
+        nextBlock.nextLocal = Ball::NextDestination::InFrontOf;
         nextBlock.nextLook = lookTowards;
         nextBlock.nextSide = currentSide;
-    } else if (
-            (!blockLeft || !blockLeft->isExists()) &&
-            (!blockRight || !blockRight->isExists())
-            ) {
+    } else if ( (!blockLeft || !blockLeft->isExists()) && (!blockRight || !blockRight->isExists()) ) {
         nextBlock.pos = position;
-        nextBlock.nextLocal = NextBlockLocal::Same;
+        nextBlock.nextLocal = Ball::NextDestination::Same;
         const JBTypes::Dir sideBeforeMovement = currentSide;
         nextBlock.nextSide = lookTowards;
         nextBlock.nextLook = _turnBackMovement.evaluate({ sideBeforeMovement });
     } else if (_ball->stateOfLife() == Ball::StateOfLife::Sliding) {
         nextBlock.pos = inFrontOf;
-        nextBlock.nextLocal = NextBlockLocal::InFrontOf;
+        nextBlock.nextLocal = Ball::NextDestination::InFrontOf;
         nextBlock.nextLook = lookTowards;
         nextBlock.nextSide = currentSide;
     } else {
         nextBlock.pos = position;
-        nextBlock.nextLocal = NextBlockLocal::None;
+        nextBlock.nextLocal = Ball::NextDestination::None;
         nextBlock.nextSide = currentSide;;
         nextBlock.nextLook = lookTowards;
     }

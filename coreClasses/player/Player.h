@@ -13,7 +13,7 @@ class Player {
 public:
 Player();
 
-enum class Statut { INGAME, INMENU, INTRANSITION };
+enum class Status { INGAME, INMENU, INTRANSITION };
 
 size_t levelProgression() const;
 unsigned int getMoney() const;
@@ -34,12 +34,12 @@ void timeLevelUp();
 void clockItemLevelUp();
 void bonusLevelUp();
 
-Statut statut() const;
-void statut(const Statut& s);
+Status status() const;
+void status(const Status& s);
 
 private:
 
-Statut _statut;
+Status _status;
 size_t _levelProgression;
 
 unsigned int _money;

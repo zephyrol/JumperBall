@@ -26,17 +26,17 @@ public:
     explicit Shape(
         const Aspect& aspect,
         const JBTypes::Color& color,
-        std::list<Transformation>&& transformations
+        std::vector<Transformation>&& transformations
     );
 
     const Aspect& aspect() const;
     const JBTypes::Color& color() const;
-    const std::list<Transformation>& transformations() const;
+    const std::vector<Transformation>& transformations() const;
 
 private:
     const Aspect _aspect;
     const JBTypes::Color _color;
-    const std::list<Transformation> _transformations;
+    const std::vector<Transformation> _transformations;
 };
 
 #endif //JUMPERBALLAPPLICATION_SHAPE_H

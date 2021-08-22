@@ -14,56 +14,54 @@
    
  }
  
- Player::Statut Scene::update(const Player::Statut& statut) {
+ Player::Status Scene::update(const Player::Status& status, const Scene::ActionKey& key) {
 
    //_ball->update(); TODO update map (use interaction)
-   if (statut == Player::Statut::INMENU)
-   {
-     _camera->turnAroundMap();
-   }
-   else if (statut == Player::Statut::INGAME)
-   {
-     _camera->followBall();
-   }
-   else if (statut == Player::Statut::INTRANSITION)
-   {
-     _camera->approachBall();
-   }
-   _camera->update();
 
-   if (_camera->getMovement() == Camera::Movement::FollowingBall) {
-     return Player::Statut::INGAME;
-   }
+    Ball::ActionRequest actionRequest;
+     switch (key) {
+         case Scene::ActionKey::Up: {
+             actionRequest = Ball::ActionRequest::GoStraightAhead;
+             break;
+         }
+         case Scene::ActionKey::Down: {
+             break;
+         }
+         case Scene::ActionKey::Right: {
+             actionRequest = Ball::ActionRequest::TurnRight;
+             break;
+         }
+         case Scene::ActionKey::Left: {
+             actionRequest = Ball::ActionRequest::TurnLeft;
+             break;
+         }
+         case Scene::ActionKey::Validate: {
+             actionRequest = Ball::ActionRequest::Jump;
+             break;
+         }
+         default: break;
+     }
 
-   return statut;
+     _map->update(JBTypesMethods::getTimePointMSNow(), actionRequest);
+
+     if (status == Player::Status::INMENU) {
+         _camera->turnAroundMap();
+     }
+     else if (status == Player::Status::INGAME) {
+         _camera->followBall();
+     }
+     else if (status == Player::Status::INTRANSITION) {
+         _camera->approachBall();
+     }
+     _camera->update();
+
+     if (_camera->getMovement() == Camera::Movement::FollowingBall) {
+         return Player::Status::INGAME;
+     }
+
+    return status;
  }
- 
- void Scene::doAction(const Scene::ActionKey& key) {
-     // TODO: call  functions in map, not ball
-    /*switch (key) {
-      case Scene::ActionKey::Up: {
-        _ball->doAction(Ball::ActionRequest::GoStraightAhead);
-        break;
-      }
-      case Scene::ActionKey::Down: {
-        break;
-      }
-      case Scene::ActionKey::Right: {
-        _ball->doAction(Ball::ActionRequest::TurnRight);
-        break;
-      }
-      case Scene::ActionKey::Left: {
-        _ball->doAction(Ball::ActionRequest::TurnLeft);
-        break;
-      }
-      case Scene::ActionKey::Validate: {
-        _ball->doAction(Ball::ActionRequest::Jump);
-        break;
-      }
-      default: break;
-    }*/
- }
- 
+
  bool Scene::gameIsFinished() const {
      // TODO: call function gameIsFinished in map
     return _map->getBall()->stateOfLife() == Ball::StateOfLife::Dead;

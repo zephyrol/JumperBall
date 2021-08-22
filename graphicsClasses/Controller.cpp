@@ -15,13 +15,14 @@ Controller::Controller() : _ftContent(FontTexturesGenerator::initFreeTypeAndFont
                                1,
                                Utility::windowResolutionX,
                                Utility::windowResolutionY)),
-                           _buttonsStatuts{
+                           _buttonsStatus{
                                {Controller::Button::Up, Controller::Status::Released},
                                {Controller::Button::Down, Controller::Status::Released},
                                {Controller::Button::Right, Controller::Status::Released},
                                {Controller::Button::Left, Controller::Status::Released},
                                {Controller::Button::Escape, Controller::Status::Released},
                                {Controller::Button::Validate, Controller::Status::Released}},
+                           _currentKey(Scene::ActionKey::Nothing),
                            _mouseCurrentXCoord(0.f),
                            _mouseCurrentYCoord(0.f),
                            _mousePressingXCoord(0.f),
@@ -32,15 +33,15 @@ Controller::Controller() : _ftContent(FontTexturesGenerator::initFreeTypeAndFont
                            _viewer(createViewer()),
                            _updatingSceneMenu([this](size_t)
                                 {
-                                    _player.statut(_scene->update(_player.statut()));
-
-                                    if (_player.statut() == Player::Statut::INMENU) {
+                                    _player.status(_scene->update(_player.status(), _currentKey));
+                                    _currentKey = Scene::ActionKey::Nothing;
+                                    if (_player.status() == Player::Status::INMENU) {
                                         _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
                                     }
-                                    else if (_player.statut() == Player::Statut::INGAME) {
+                                    else if (_player.status() == Player::Status::INGAME) {
                                         if (_scene->gameIsFinished())
                                         {
-                                            _player.statut(Player::Statut::INMENU);
+                                            _player.status(Player::Status::INMENU);
                                             _menu->failurePageAsCurrentPage();
                                         }
                                     }
@@ -57,8 +58,7 @@ Controller::Controller() : _ftContent(FontTexturesGenerator::initFreeTypeAndFont
     _updating.waitTasks();
 }
 
-void Controller::interactionButtons (const Controller::Button& button,
-                                     const Controller::Status& status) {
+void Controller::interactionButtons (const Controller::Button& button, const Controller::Status& status) {
 
     switch (button) {
     case Controller::Button::Up:
@@ -81,7 +81,7 @@ void Controller::interactionButtons (const Controller::Button& button,
         break;
     default: break;
     }
-    _buttonsStatuts[button] = status;
+    _buttonsStatus[button] = status;
 }
 
 
@@ -114,9 +114,9 @@ void Controller::waitController() {
 }
 
 void Controller::manageValidateButton (const Controller::Status& status) {
-    if (_player.statut() == Player::Statut::INGAME) {
+    if (_player.status() == Player::Status::INGAME) {
         if (status == Controller::Status::Pressed) {
-            _scene->doAction(Scene::ActionKey::Validate);
+            _currentKey = Scene::ActionKey::Validate;
         }
     }
 }
@@ -132,11 +132,11 @@ void Controller::runGame (size_t level) {
 }
 
 void Controller::manageValidateMouse() {
-    if (_player.statut() == Player::Statut::INGAME) {
-        _scene->doAction(Scene::ActionKey::Validate);
+    if (_player.status() == Player::Status::INGAME) {
+        _currentKey = Scene::ActionKey::Validate;
         return;
     }
-    if (_player.statut() == Player::Statut::INMENU) {
+    if (_player.status() == Player::Status::INMENU) {
         const Menu::MenuAnswer menuAnswer =
             _menu->mouseClick(_mousePressingXCoord, _mousePressingYCoord);
 
@@ -156,38 +156,38 @@ std::shared_ptr<Viewer> Controller::createViewer() const {
 }
 
 void Controller::manageEscape (const Controller::Status& status) {
-    if (_player.statut() == Player::Statut::INMENU) {
+    if (_player.status() == Player::Status::INMENU) {
         if (
             status == Controller::Status::Released &&
-            _buttonsStatuts.at(Button::Escape) == Status::Pressed
+                _buttonsStatus.at(Button::Escape) == Status::Pressed
             ) {
             if (_menu->escapeAction().action == Menu::Action::QuitGame) {
                 _requestToLeave = true;
             }
         }
-    } else if (_player.statut() == Player::Statut::INGAME) {
+    } else if (_player.status() == Player::Status::INGAME) {
         if (
             status == Controller::Status::Released &&
-            _buttonsStatuts.at(Button::Escape) == Status::Pressed
+                _buttonsStatus.at(Button::Escape) == Status::Pressed
             ) {
             _menu->pausePageAsCurrentPage();
-            _player.statut(Player::Statut::INMENU);
+            _player.status(Player::Status::INMENU);
         }
     }
 }
 
 void Controller::manageRight (const Controller::Status& status) {
-    if (_player.statut() == Player::Statut::INGAME) {
+    if (_player.status() == Player::Status::INGAME) {
         if (status == Controller::Status::Pressed) {
-            _scene->doAction(Scene::ActionKey::Right);
+            _currentKey = Scene::ActionKey::Right;
         }
     }
 }
 
 void Controller::manageLeft (const Status& status) {
-    if (_player.statut() == Player::Statut::INGAME) {
+    if (_player.status() == Player::Status::INGAME) {
         if (status == Controller::Status::Pressed) {
-            _scene->doAction(Scene::ActionKey::Left);
+            _currentKey = Scene::ActionKey::Left;
         }
     }
 }
@@ -196,18 +196,14 @@ void Controller::manageDown (const Controller::Status&) {
 }
 
 void Controller::manageUp (const Controller::Status& status) {
-    if (_player.statut() == Player::Statut::INGAME) {
+    if (_player.status() == Player::Status::INGAME) {
         if (status == Controller::Status::Pressed) {
-            _scene->doAction(Scene::ActionKey::Up);
+            _currentKey = Scene::ActionKey::Up;
         }
     }
 }
 
 Controller::ScreenDirection Controller::nearestDirection (float posX, float posY) const {
-
-    const auto computeDistance = [] ( float x0, float y0, float x1, float y1) {
-                                     return sqrtf(pow(x1 - x0, 2) + pow(y1 - y0, 2));
-                                 };
 
     Controller::ScreenDirection nearestDir = Controller::ScreenDirection::North;
     float computedDistance;
@@ -255,12 +251,7 @@ void Controller::updateMouse (float posX, float posY) {
 
     constexpr float thresholdMoving = 0.05f;
 
-    auto computeDistance = [] ( float x0, float y0, float x1, float y1) {
-                               return sqrtf(pow(x1 - x0, 2) + pow(y1 - y0, 2));
-                           };
-
-    const float distance = computeDistance(_mousePressingXCoord,
-                                           _mousePressingYCoord, posX, posY);
+    const float distance = computeDistance(_mousePressingXCoord, _mousePressingYCoord, posX, posY);
     if (distance > thresholdMoving) {
         Controller::ScreenDirection sDir = nearestDirection(posX, posY);
 
@@ -283,10 +274,6 @@ void Controller::releaseMouse (float posX, float posY) {
 
     constexpr float thresholdMoving = 0.05f;
 
-    const auto computeDistance = [] (float x0, float y0, float x1, float y1) {
-                                     return sqrtf(pow(x1 - x0, 2) + pow(y1 - y0, 2));
-                                 };
-
     const float distance = computeDistance(_mousePressingXCoord, _mousePressingYCoord, posX, posY);
     if (distance < thresholdMoving) {
         manageValidateMouse();
@@ -299,4 +286,8 @@ bool Controller::requestToLeave() const {
 
 Controller::~Controller() {
     FontTexturesGenerator::clearFreeTypeRessources(_ftContent);
+}
+
+float Controller::computeDistance(float x0, float y0, float x1, float y1) {
+    return sqrtf(powf(x1 - x0, 2.f) + powf(y1 - y0, 2.f));
 }

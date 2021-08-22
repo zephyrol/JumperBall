@@ -91,7 +91,7 @@ Menu::MenuAnswer Menu::mouseClick (float mouseX, float mouseY) {
                     _currentPage = nullptr;
                     menuAnswer.action = Menu::Action::GoLevel;
                     menuAnswer.newLevel = action->chooseLevel + 1;
-                    _player.statut(Player::Statut::INTRANSITION);
+                    _player.status(Player::Status::INTRANSITION);
                 } else if (
                     action->typeOfAction == Label::TypeOfAction::PredefinedAction) {
                     if (

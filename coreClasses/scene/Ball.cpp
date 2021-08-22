@@ -11,9 +11,9 @@
 
 Ball::Ball(unsigned int x, unsigned int y, unsigned int z):
     _pos({x,y,z}),
-    _3DPos({0.f,0.f,0.f}),
     _currentSide(JBTypes::Dir::Up),
     _lookTowards(JBTypes::Dir::North),
+    _3DPos(get3DPosStayingBall()),
     _state(Ball::State::Staying),
     _stateOfLife(Ball::StateOfLife::Normal),
     _jumpingType(Ball::JumpingType::Short),
@@ -27,13 +27,15 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z):
     _teleportationColor(JBTypes::Color::None),
     _teleportationCoefficient(0.f),
     _teleportationBlockDestination(0),
+    _updatingTime(),
     _jumpRequest(false),
     _timeJumpRequest(),
     _currentCoveredRotation(JBTypesMethods::createQuaternion({ 0.f, 0.f, 0.f }, 1.f)),
     _currentCrushing(0.f),
     _turnLeftMovement(),
-    _turnRightMovement()
-    {
+    _turnRightMovement(),
+    _movementDestination()
+{
 }
 
 void Ball::turnLeft() noexcept{
@@ -54,7 +56,7 @@ const JBTypes::vec3f& Ball::get3DPosition() const noexcept{
 
 void Ball::goStraightAhead() noexcept{
     // TODO : manage in class Map
-    /*const Ball::nextBlockInformation nextBlock = getNextBlockInfo();
+    /*const Ball::NextBlockInformation nextBlock = getNextBlockInfo();
     _posX = nextBlock.poxX;
     _posY = nextBlock.poxY;
     _posZ = nextBlock.poxZ;
@@ -93,8 +95,14 @@ void Ball::deteleport() noexcept{
 }
 
 void Ball::move() noexcept{
+
+    if (_movementDestination.nextLocal != Ball::NextDestination::None) {
+        _state = Ball::State::Moving;
+        setTimeActionNow();
+    }
+
     // TODO: use this method, bur pass infos by parameter from map class
-    /*const Ball::nextBlockInformation infos = getNextBlockInfo();
+    /*const Ball::NextBlockInformation infos = getNextBlockInfo();
     if (infos.nextLocal != NextBlockLocal::None) {
         _state = Ball::State::Moving;
         setTimeActionNow();
@@ -102,11 +110,11 @@ void Ball::move() noexcept{
 }
 
 void Ball::setTimeActionNow() noexcept{
-    _timeAction = std::chrono::system_clock::now();
+    _timeAction = _updatingTime;
 }
 
 void Ball::setTimeLifeNow() noexcept{
-    _timeStateOfLife = std::chrono::system_clock::now();
+    _timeStateOfLife = _updatingTime;
 }
 
 void Ball::doAction (Ball::ActionRequest action) {
@@ -114,7 +122,9 @@ void Ball::doAction (Ball::ActionRequest action) {
         return;
     }
     switch (action) {
+    case Ball::ActionRequest::Nothing: break;
     case Ball::ActionRequest::GoStraightAhead:
+        std::cout << "go tout droit" << std::endl;
         if (_state == Ball::State::Staying) {
             move();
         }
@@ -237,17 +247,18 @@ float Ball::getCrushingCoefficient() const noexcept{
         return 0.f;
     }
 
-    const std::function <float()> stayCrushingCoeff =
-        [this] ()->float {
-            constexpr float durationWaitingCrushing = 0.7f;
-            const float angleInCosinusFunc = getTimeSecondsSinceAction() * 2.f *
-                                             static_cast <float>(M_PI) / durationWaitingCrushing;
-            // -cos(0) = -1;
-            // cos(0) = 1;
-            return 0.5f - cosf(angleInCosinusFunc) / 2.f;
-        };
-
     if (_state == Ball::State::Staying) {
+
+        const std::function <float()> stayCrushingCoeff =
+            [this] ()->float {
+                constexpr float durationWaitingCrushing = 0.7f;
+                const float angleInCosinusFunc = getTimeSecondsSinceAction() * 2.f *
+                                                 static_cast <float>(M_PI) / durationWaitingCrushing;
+                // -cos(0) = -1;
+                // cos(0) = 1;
+                return 0.5f - cosf(angleInCosinusFunc) / 2.f;
+            };
+
         return stayCrushingCoeff();
     }
 
@@ -317,11 +328,11 @@ JBTypes::vec3f Ball::P2DTo3D (ClassicalMechanics::physics2DVector p2D) const {
     const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
     const JBTypes::vec3f lookVec = JBTypesMethods::directionAsVector(_lookTowards);
 
-    const float x = static_cast <float>(_pos.at(0)) + 0.5f +
+    const float x = static_cast <float>(_pos.at(0)) +
                     sideVec.x * (offsetRealPosition + p2D.y) + lookVec.x * p2D.x;
-    const float y = static_cast <float>(_pos.at(1)) + 0.5f +
+    const float y = static_cast <float>(_pos.at(1)) +
                     sideVec.y * (offsetRealPosition + p2D.y) + lookVec.y * p2D.x;
-    const float z = static_cast <float>(_pos.at(2)) + 0.5f +
+    const float z = static_cast <float>(_pos.at(2)) +
                     sideVec.z * (offsetRealPosition + p2D.y) + lookVec.z * p2D.x;
 
     return JBTypes::vec3f { x, y, z };
@@ -368,9 +379,9 @@ JBTypes::vec3f Ball::get3DPosStayingBall() const {
     const float offsetPosition = 0.5f + getRadius();
 
     const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
-    const auto x = static_cast <float>(_pos.at(0)) + 0.5f + sideVec.x * offsetPosition;
-    const auto y = static_cast <float>(_pos.at(1)) + 0.5f + sideVec.y * offsetPosition;
-    const auto z = static_cast <float>(_pos.at(2)) + 0.5f + sideVec.z * offsetPosition;
+    const auto x = static_cast <float>(_pos.at(0)) + sideVec.x * offsetPosition;
+    const auto y = static_cast <float>(_pos.at(1)) + sideVec.y * offsetPosition;
+    const auto z = static_cast <float>(_pos.at(2)) + sideVec.z * offsetPosition;
 
     return { x, y, z };
 }
@@ -452,9 +463,9 @@ void Ball::fallingUpdate() noexcept{
 }
 
 void Ball::stayingUpdate() noexcept{
+    _currentCrushing = getCrushingCoefficient();
     // TODO: manage that in block class
-    /*_currentCrushing = getCrushingCoefficient();
-    const JBTypes::vec3f position3D = get3DPosStayingBall();
+    /*const JBTypes::vec3f position3D = get3DPosStayingBall();
     const Block_sptr block = _map.getBlock(_posX, _posY, _posZ);
     if (block && block->isExists()) {
         _3DPosX = position3D.x;
@@ -467,31 +478,29 @@ void Ball::stayingUpdate() noexcept{
 }
 
 void Ball::turningUpdate() noexcept{
-    const JBTypes::vec3f position3D = get3DPosStayingBall();
     const float sSinceAction = getTimeSecondsSinceAction();
     if (sSinceAction >= (timeToTurn)) {
         stay();
-        update();
+        internalUpdate();
         return;
     }
-    _3DPos = position3D;
+    _3DPos = get3DPosStayingBall();
 }
 
 void Ball::movingUpdate() noexcept{
+    std::cout << "moving update" << std::endl;
     const float sSinceAction = getTimeSecondsSinceAction();
     if (sSinceAction >= timeToGetNextBlock) {
         goStraightAhead();
-        const JBTypes::vec3f position3D = get3DPosStayingBall();
-        _3DPos = position3D;
+        _3DPos = get3DPosStayingBall();
         stay();
         blockEvent();
-        update();
+        internalUpdate();
         return;
     }
-    // TODO mayby pass info target from map class
-    /*const JBTypes::vec3f position3D = get3DPosStayingBall();
-    const Ball::nextBlockInformation infoTarget = getNextBlockInfo();
-    if (infoTarget.nextLocal == NextBlockLocal::InFrontOf) {
+
+    const JBTypes::vec3f position3D = get3DPosStayingBall();
+    if (_movementDestination.nextLocal == Ball::NextDestination::InFrontOf) {
         _3DPosX = (sSinceAction * (static_cast <float>(infoTarget.poxX)
                                    - static_cast <float>(_posX))
                    / timeToGetNextBlock) + position3D.x;
@@ -503,9 +512,10 @@ void Ball::movingUpdate() noexcept{
                    / timeToGetNextBlock) + position3D.z;
         return;
     }
-    if (infoTarget.nextLocal == NextBlockLocal::Same || infoTarget.nextLocal == NextBlockLocal::Above) {
+    if (_movementDestination.nextLocal == Ball::NextDestination::Same ||
+        _movementDestination.nextLocal == Ball::NextDestination::Above) {
 
-        const float distancePerStep = infoTarget.nextLocal == NextBlockLocal::Same
+        const float distancePerStep = _movementDestination.nextLocal == Ball::NextDestination::Same
                                       ? 0.5f + getRadius()
                                       : 0.5f - getRadius();
 
@@ -520,7 +530,7 @@ void Ball::movingUpdate() noexcept{
                                 : 0.f;
 
         const JBTypes::vec3f lookVec = JBTypesMethods::directionAsVector(_lookTowards);
-        const JBTypes::vec3f nextLookVec = JBTypesMethods::directionAsVector(infoTarget.nextLook);
+        const JBTypes::vec3f nextLookVec = JBTypesMethods::directionAsVector(_movementDestination.nextLook);
 
         const float distStep1 = distancePerStep * timeStep1 / halfTimeToGetNextBlock;
         const float distStep2 = distancePerStep * timeStep2 / halfTimeToGetNextBlock;
@@ -532,7 +542,7 @@ void Ball::movingUpdate() noexcept{
     }
     _3DPosX = position3D.x;
     _3DPosY = position3D.y;
-    _3DPosZ = position3D.z;*/
+    _3DPosZ = position3D.z;
 }
 
 void Ball::burningUpdate() noexcept{
@@ -554,7 +564,7 @@ void Ball::burningUpdate() noexcept{
         }
         return;
     }
-    // the ball is cooldown
+    // the ball is cooling down
     if (_stateOfLife == StateOfLife::Burning) {
         _stateOfLife = StateOfLife::Normal;
         setTimeLifeNow();
@@ -609,9 +619,9 @@ void Ball::teleportingUpdate() noexcept{
     // _teleportationCoefficient = 1.f;
 
     stay();
-    update();
+    internalUpdate();
     deteleport();
-    update();
+    internalUpdate();
 }
 
 void Ball::deteleportingUpdate() noexcept{
@@ -621,7 +631,7 @@ void Ball::deteleportingUpdate() noexcept{
         _teleportationCoefficient = 0.f;
         _teleportationColor = JBTypes::Color::None;
         stay();
-        update();
+        internalUpdate();
         return;
     }
     _teleportationCoefficient = 1.f - (timeSinceAction / halfTimeTeleportationDuration);
@@ -663,28 +673,14 @@ float Ball::getFallingPosX() const noexcept{
     return getMechanicsFalling().getPosition(getTimeSecondsSinceAction()).x;
 }
 
-void Ball::update() noexcept{
-    if (_stateOfLife == Ball::StateOfLife::Dead) {
-        return;
-    }
-    switch (_state) {
-    case Ball::State::Falling: fallingUpdate(); break;
-    case Ball::State::Jumping: jumpingUpdate(); break;
-    case Ball::State::TurningLeft: turningUpdate(); break;
-    case Ball::State::Staying: stayingUpdate(); break;
-    case Ball::State::TurningRight: turningUpdate(); break;
-    case Ball::State::Moving: movingUpdate(); break;
-    case Ball::State::Teleporting: teleportingUpdate(); break;
-    case Ball::State::Deteleporting: deteleportingUpdate(); break;
-    default: break;
-    }
-     // mapInteraction(); TODO: Move using in map
-    burningUpdate();
-    // TODO: The same
-    /* if (isOutOfTheMap() || isBurstingFinished()) {
-        die();
-    } */
+void Ball::update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action) noexcept{
+
+    _updatingTime = updatingTime;
+
+    doAction(action);
+    internalUpdate();
 }
+
 
 bool Ball::isBurstingFinished() const {
     return (_stateOfLife == Ball::StateOfLife::Bursting) && (getTimeSecondsSinceStateOfLife() > timeToBurst);
@@ -717,7 +713,8 @@ SceneElement::DynamicValues <float> Ball::getDynamicFloats() const {
         if (
             _stateOfLife == Ball::StateOfLife::Normal ||
             _stateOfLife == Ball::StateOfLife::Burning ||
-            _stateOfLife == Ball::StateOfLife::Sliding) {
+            _stateOfLife == Ball::StateOfLife::Sliding
+        ) {
             return 0.f;
         }
         if (_stateOfLife == Ball::StateOfLife::Bursting) { 
@@ -728,7 +725,7 @@ SceneElement::DynamicValues <float> Ball::getDynamicFloats() const {
 
     return {
         { "ballRadius", getRadius()},
-        { "crushingCoeff", getCrushingCoefficient()},
+        { "crushingCoeff", _currentCrushing},
         { "status", getStateOfLifeStatus()},
         { "timeStateOfLife", getTimeSecondsSinceStateOfLife()},
         { "burningCoeff", burnCoefficient()}
@@ -760,5 +757,35 @@ SceneElement::GlobalState Ball::getGlobalState() const {
 
 const JBTypes::vec3ui &Ball::getPosition() const noexcept {
     return _pos;
+}
+
+void Ball::setDestination(const Ball::MovementDestination &movementDestination) {
+    _movementDestination = movementDestination;
+}
+
+void Ball::internalUpdate() noexcept {
+
+    if (_stateOfLife == Ball::StateOfLife::Dead) {
+        return;
+    }
+
+    switch (_state) {
+        case Ball::State::Falling: fallingUpdate(); break;
+        case Ball::State::Jumping: jumpingUpdate(); break;
+        case Ball::State::TurningLeft: turningUpdate(); break;
+        case Ball::State::Staying: stayingUpdate(); break;
+        case Ball::State::TurningRight: turningUpdate(); break;
+        case Ball::State::Moving: movingUpdate(); break;
+        case Ball::State::Teleporting: teleportingUpdate(); break;
+        case Ball::State::Deteleporting: deteleportingUpdate(); break;
+        default: break;
+    }
+    // mapInteraction(); TODO: Move using in map
+    burningUpdate();
+    // TODO: The same
+    /* if (isOutOfTheMap() || isBurstingFinished()) {
+        die();
+    } */
+
 }
 

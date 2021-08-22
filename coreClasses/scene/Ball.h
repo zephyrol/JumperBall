@@ -33,15 +33,31 @@ static constexpr float basicRadius = 0.2f;
 static constexpr float teleportationDuration = 1.f;
 static constexpr float halfTimeTeleportationDuration = teleportationDuration / 2.f;
 
-enum class State { Staying, Moving, Jumping,
-                   TurningLeft, TurningRight, Falling,
-                   Teleporting, Deteleporting };
+enum class State {
+    Staying,
+    Moving,
+    Jumping,
+    TurningLeft,
+    TurningRight,
+    Falling,
+    Teleporting,
+    Deteleporting
+};
 
 enum class StateOfLife { Normal, Bursting, Burning, Sliding, Dead };
 
 enum class JumpingType { Short, Long };
 
-enum class ActionRequest { GoStraightAhead, TurnLeft, TurnRight, Jump };
+enum class ActionRequest { GoStraightAhead, TurnLeft, TurnRight, Jump, Nothing};
+
+
+enum class NextDestination { Above, InFrontOf, Same, None };
+struct MovementDestination {
+    JBTypes::Dir nextSide;
+    JBTypes::Dir nextLook;
+    NextDestination nextLocal;
+    JBTypes::vec3ui pos;
+};
 
 using shock = std::array <unsigned int, 3>;
 
@@ -73,22 +89,25 @@ const JBTypes::Color& getTeleportationColor() const noexcept;
 
 float getTimeToGetDestination() const;
 
+void setDestination(const Ball::MovementDestination& movementDestination);
+
 SceneElement::DynamicValues <float> getDynamicFloats() const override;
 SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 SceneElement::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
 
 SceneElement::GlobalState getGlobalState() const override;
 
-void update() noexcept;
-void doAction(ActionRequest action);
+void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action) noexcept;
 
 private:
 
 JBTypes::vec3ui _pos;
-JBTypes::vec3f _3DPos;
 
 JBTypes::Dir _currentSide;
 JBTypes::Dir _lookTowards;
+
+JBTypes::vec3f _3DPos;
+
 Ball::State _state;
 Ball::StateOfLife _stateOfLife;
 Ball::JumpingType _jumpingType;
@@ -110,6 +129,8 @@ JBTypes::Color _teleportationColor;
 float _teleportationCoefficient;
 size_t _teleportationBlockDestination;
 
+JBTypes::timePointMs _updatingTime;
+
 bool _jumpRequest;
 JBTypes::timePointMs _timeJumpRequest;
 
@@ -118,6 +139,8 @@ float _currentCrushing;
 
 const TurnLeft _turnLeftMovement;
 const TurnRight _turnRightMovement;
+
+MovementDestination _movementDestination;
 
 JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 JBTypes::vec3f get3DPosStayingBall() const;
@@ -142,6 +165,8 @@ void die() noexcept;
 ClassicalMechanics& getMechanicsJumping() noexcept;
 void isGoingStraightAheadIntersectBlock() noexcept;
 
+void internalUpdate() noexcept;
+
 void fallingUpdate() noexcept;
 void stayingUpdate() noexcept;
 void movingUpdate() noexcept;
@@ -150,6 +175,8 @@ void jumpingUpdate() noexcept;
 void burningUpdate() noexcept;
 void teleportingUpdate() noexcept;
 void deteleportingUpdate() noexcept;
+
+void doAction(ActionRequest action);
 
 void applyRotation(bool inverse = false);
 JBTypes::vec3f getInverseRotationAxis() const noexcept;

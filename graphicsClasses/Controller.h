@@ -39,10 +39,8 @@ bool requestToLeave() const;
 
 private:
 ScreenDirection nearestDirection(float posX, float posY) const;
-const std::shared_ptr <SceneRendering>& sceneRendering() const;
-const std::shared_ptr <MenuRendering>& menuRendedering() const;
-void renderRenderingEngine() const;
-void renderMenuRendering() const;
+
+static float computeDistance(float x0, float y0, float x1, float y1);
 
 void manageUp(const Status& status);
 void manageDown(const Status& status);
@@ -51,8 +49,6 @@ void manageLeft(const Status& status);
 void manageEscape(const Status& status);
 void manageValidateButton(const Status& status);
 void runGame(size_t level);
-void updateRenderingEngine();
-void updateMenuRendering();
 
 // Mouse/TouchPad/TouchScreen
 void pressMouse(float posX, float posY);
@@ -65,7 +61,8 @@ std::shared_ptr<Viewer> createViewer() const;
 FontTexturesGenerator::FTContent _ftContent;
 Player _player;
 std::shared_ptr <Menu> _menu;
-std::map <Button, Status> _buttonsStatuts;
+std::map <Button, Status> _buttonsStatus;
+Scene::ActionKey _currentKey;
 
 
 float _mouseCurrentXCoord;
