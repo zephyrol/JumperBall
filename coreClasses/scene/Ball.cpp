@@ -463,7 +463,6 @@ void Ball::fallingUpdate() noexcept{
 }
 
 void Ball::stayingUpdate() noexcept{
-    _currentCrushing = getCrushingCoefficient();
     // TODO: manage that in block class
     /*const JBTypes::vec3f position3D = get3DPosStayingBall();
     const Block_sptr block = _map.getBlock(_posX, _posY, _posZ);
@@ -501,14 +500,14 @@ void Ball::movingUpdate() noexcept{
 
     const JBTypes::vec3f position3D = get3DPosStayingBall();
     if (_movementDestination.nextLocal == Ball::NextDestination::InFrontOf) {
-        _3DPosX = (sSinceAction * (static_cast <float>(infoTarget.poxX)
-                                   - static_cast <float>(_posX))
+        _3DPos.x = (sSinceAction * (static_cast <float>(_movementDestination.pos.at(0))
+                                   - static_cast <float>(_pos.at(0)))
                    / timeToGetNextBlock) + position3D.x;
-        _3DPosY = (sSinceAction * (static_cast <float>(infoTarget.poxY)
-                                   - static_cast <float>(_posY))
+        _3DPos.y = (sSinceAction * (static_cast <float>(_movementDestination.pos.at(1))
+                                   - static_cast <float>(_pos.at(1)))
                    / timeToGetNextBlock) + position3D.y;
-        _3DPosZ = (sSinceAction * (static_cast <float>(infoTarget.poxZ)
-                                   - static_cast <float>(_posZ))
+        _3DPos.z = (sSinceAction * (static_cast <float>(_movementDestination.pos.at(2))
+                                   - static_cast <float>(_pos.at(2)))
                    / timeToGetNextBlock) + position3D.z;
         return;
     }
@@ -534,15 +533,14 @@ void Ball::movingUpdate() noexcept{
 
         const float distStep1 = distancePerStep * timeStep1 / halfTimeToGetNextBlock;
         const float distStep2 = distancePerStep * timeStep2 / halfTimeToGetNextBlock;
-
-        _3DPosX = position3D.x + lookVec.x * distStep1 + nextLookVec.x * distStep2;
-        _3DPosY = position3D.y + lookVec.y * distStep1 + nextLookVec.y * distStep2;
-        _3DPosZ = position3D.z + lookVec.z * distStep1 + nextLookVec.z * distStep2;
+        _3DPos = {
+            position3D.x + lookVec.x * distStep1 + nextLookVec.x * distStep2,
+            position3D.y + lookVec.y * distStep1 + nextLookVec.y * distStep2,
+            position3D.z + lookVec.z * distStep1 + nextLookVec.z * distStep2
+        };
         return;
     }
-    _3DPosX = position3D.x;
-    _3DPosY = position3D.y;
-    _3DPosZ = position3D.z;
+    _3DPos = position3D;
 }
 
 void Ball::burningUpdate() noexcept{
@@ -769,6 +767,7 @@ void Ball::internalUpdate() noexcept {
         return;
     }
 
+
     switch (_state) {
         case Ball::State::Falling: fallingUpdate(); break;
         case Ball::State::Jumping: jumpingUpdate(); break;
@@ -781,6 +780,8 @@ void Ball::internalUpdate() noexcept {
         default: break;
     }
     // mapInteraction(); TODO: Move using in map
+
+    _currentCrushing = getCrushingCoefficient();
     burningUpdate();
     // TODO: The same
     /* if (isOutOfTheMap() || isBurstingFinished()) {
