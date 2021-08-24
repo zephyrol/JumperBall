@@ -13,7 +13,7 @@ FireBlock::FireBlock(const JBTypes::vec3ui &position,
                      const vecSpecial_sptr &specials,
                      const Ball_sptr& ball
                      ):
-                     Block(position, ball, items, enemies, specials){
+    InteractiveBlock(position, items, enemies, specials, ball){
 }
 
 Block::Effect FireBlock::detectionEvent (const JBTypes::Dir&, const JBTypes::timePointMs&) {

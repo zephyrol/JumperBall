@@ -7,10 +7,11 @@
 
 #ifndef DarkBall_h
 #define DarkBall_h
-#include "scene/ClassicalMechanics.h"
-#include "Enemy.h"
 
-class DarkBall:public Enemy {
+#include "scene/ClassicalMechanics.h"
+#include "InteractiveEnemy.h"
+
+class DarkBall:public InteractiveEnemy{
 public:
 DarkBall(const JBTypes::vec3ui& initialPosition,
          const JBTypes::Dir& dir,

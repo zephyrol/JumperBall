@@ -13,7 +13,7 @@ BrittleBlock::BrittleBlock(const JBTypes::vec3ui &position,
                            const vecSpecial_sptr &specials,
                            const Ball_sptr& ball
                            ):
-                           Block(position, ball, items, enemies, specials, true, false),
+                           InteractiveBlock(position, items, enemies, specials, ball, true, false),
                            _stillThere(true),
                            _isGoingToBreak(false),
                            _collisionTime(),

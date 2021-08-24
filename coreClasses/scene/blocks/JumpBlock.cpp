@@ -13,7 +13,7 @@ JumpBlock::JumpBlock(const JBTypes::vec3ui &position,
                      const vecSpecial_sptr &specials,
                      const Ball_sptr& ball,
                      const std::array<bool, 6> &facesJumpers):
-                     Block(position, ball, items, enemies, specials),
+    InteractiveBlock(position, items, enemies, specials, ball),
                      _facesJumpers(facesJumpers) {
 }
 

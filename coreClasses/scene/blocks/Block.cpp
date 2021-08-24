@@ -10,14 +10,12 @@
 
 Block::Block(
     const JBTypes::vec3ui& position,
-    const Ball_sptr& ball,
     const vecItem_sptr& items,
     const vecEnemy_sptr& enemies,
     const vecSpecial_sptr& specials,
     bool alwaysHasInteractions,
     bool isFixed):
     _position(position),
-    _ball(ball),
     _items(items),
     _cstItems(getCstItems()),
     _enemies(enemies),

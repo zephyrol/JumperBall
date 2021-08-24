@@ -12,14 +12,12 @@ Enemy::Enemy(
     const JBTypes::Dir& direction,
     float size,
     size_t length,
-    const std::array <float, 9>& transform,
-    const Ball_sptr& ball
+    const std::array <float, 9>& transform
 ):
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(direction),
     _size(size),
     _length(length),
-    _ball(ball),
     _intersectionTime(),
     _hasHit(false),
     _initialPosition(init3DPosition(initialPosition)),

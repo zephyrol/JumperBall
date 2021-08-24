@@ -7,9 +7,9 @@
 
 #ifndef ICEBLOCK_H
 #define ICEBLOCK_H
-#include "Block.h"
+#include "InteractiveBlock.h"
 
-class IceBlock:public Block {
+class IceBlock:public InteractiveBlock {
 public:
     IceBlock(
         const JBTypes::vec3ui& position,

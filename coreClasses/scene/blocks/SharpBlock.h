@@ -9,8 +9,9 @@
 #define SHARPBLOCK_H
 
 #include "Block.h"
+#include "InteractiveBlock.h"
 
-class SharpBlock:public Block {
+class SharpBlock:public InteractiveBlock {
 public:
 
     SharpBlock(

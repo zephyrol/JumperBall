@@ -6,9 +6,9 @@
 
 #ifndef ThornBall_h
 #define ThornBall_h
-#include "Enemy.h"
+#include "InteractiveEnemy.h"
 
-class ThornBall:public Enemy {
+class ThornBall:public InteractiveEnemy {
 public:
 ThornBall(const JBTypes::vec3ui& initialPosition,
           const JBTypes::Dir& dir,

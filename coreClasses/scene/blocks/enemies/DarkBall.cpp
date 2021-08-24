@@ -14,7 +14,7 @@ DarkBall::DarkBall(
     size_t nbOfJumps,
     const Ball_sptr &ball
 ):
-    Enemy(initialPosition,
+    InteractiveEnemy(initialPosition,
           dir,
           darkBallRadius,
           nbOfJumps,

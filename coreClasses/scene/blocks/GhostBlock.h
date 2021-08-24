@@ -7,9 +7,9 @@
 
 #ifndef GHOSTBLOCK_H
 #define GHOSTBLOCK_H
-#include "Block.h"
+#include "InteractiveBlock.h"
 
-class GhostBlock:public Block {
+class GhostBlock:public InteractiveBlock {
 public:
     GhostBlock(
         const JBTypes::vec3ui& position,
@@ -21,7 +21,7 @@ public:
     );
 
     bool isExists() const override;
-virtual Block::Effect interaction(const JBTypes::timePointMs& currentTime ) override;
+Block::Effect interaction(const JBTypes::timePointMs& currentTime ) override;
 bool mayDisappear() const override;
     JBTypes::Color getColor() const override;
 

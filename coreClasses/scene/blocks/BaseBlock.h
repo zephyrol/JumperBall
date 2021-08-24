@@ -7,10 +7,10 @@
 
 #ifndef BASEBLOCK_H
 #define BASEBLOCK_H
-#include "Block.h"
+#include "InteractiveBlock.h"
 
 
-class BaseBlock:public Block {
+class BaseBlock:public InteractiveBlock {
 public:
 BaseBlock(
     const JBTypes::vec3ui& position,

@@ -13,7 +13,7 @@ ThornBall::ThornBall(const JBTypes::vec3ui& initialPosition,
                      size_t movementLength,
                      const Ball_sptr &ball
                      ):
-    Enemy(initialPosition,
+    InteractiveEnemy(initialPosition,
           dir,
           thornBallRadius,
           movementLength,

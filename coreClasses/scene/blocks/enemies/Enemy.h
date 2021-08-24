@@ -7,9 +7,7 @@
 #ifndef Enemy_hpp
 #define Enemy_hpp
 
-#include <scene/Ball.h>
 #include "scene/SceneElement.h"
-
 
 class Enemy;
 using Enemy_sptr = std::shared_ptr <Enemy>;
@@ -26,8 +24,7 @@ Enemy(const JBTypes::vec3ui& initialPosition,
       const JBTypes::Dir& direction,
       float size,
       size_t length,
-      const std::array <float, 9>& transform,
-      const Ball_sptr &ball
+      const std::array <float, 9>& transform
       );
 
 virtual Effect update(const JBTypes::vec3f& boundingSpherePosition, float boundingSphereRadius) = 0;
@@ -53,7 +50,6 @@ const JBTypes::timePointMs _creationTime;
 const JBTypes::Dir _direction;
 const float _size;
 const size_t _length;
-const Ball_sptr _ball;
 
 protected:
 JBTypes::timePointMs _intersectionTime;

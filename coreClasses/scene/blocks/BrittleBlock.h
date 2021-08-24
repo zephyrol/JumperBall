@@ -7,9 +7,9 @@
 
 #ifndef BRITTLEBLOCK_H
 #define BRITTLEBLOCK_H
-#include "Block.h"
+#include "InteractiveBlock.h"
 
-class BrittleBlock:public Block {
+class BrittleBlock:public InteractiveBlock {
 public:
     BrittleBlock(
         const JBTypes::vec3ui& position,

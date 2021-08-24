@@ -7,9 +7,9 @@
 
 #ifndef FIREBLOCK_H
 #define FIREBLOCK_H
-#include "Block.h"
+#include "InteractiveBlock.h"
 
-class FireBlock:public Block {
+class FireBlock:public InteractiveBlock {
 public:
 
     FireBlock(

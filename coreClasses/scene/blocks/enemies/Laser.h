@@ -7,10 +7,9 @@
 
 #ifndef Laser_h
 #define Laser_h
-#include "Enemy.h"
-#include "scene/Map.h"
+#include "InteractiveEnemy.h"
 
-class Laser:public Enemy {
+class Laser:public InteractiveEnemy {
 public:
 
 Laser(const JBTypes::Color& color,

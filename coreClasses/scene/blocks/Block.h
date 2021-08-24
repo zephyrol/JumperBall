@@ -8,7 +8,6 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
-#include <scene/Ball.h>
 #include <scene/blocks/enemies/Enemy.h>
 #include <scene/blocks/special/Special.h>
 #include <scene/blocks/items/Item.h>
@@ -26,12 +25,11 @@ public:
 
 Block(
     const JBTypes::vec3ui& position,
-    const Ball_sptr& ball,
     const vecItem_sptr& items,
     const vecEnemy_sptr& enemies,
     const vecSpecial_sptr& specials,
-    bool alwaysHasInteractions = false,
-    bool isFixed = true
+    bool alwaysHasInteractions,
+    bool isFixed
 );
 
 virtual ~Block() = default;
@@ -80,7 +78,6 @@ vecCstSpecial_sptr getCstSpecials() const;
 
 protected:
 const JBTypes::vec3ui _position;
-const Ball_sptr _ball;
 const vecItem_sptr _items;
 const vecCstItem_sptr _cstItems;
 const vecEnemy_sptr _enemies;

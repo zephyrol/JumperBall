@@ -14,7 +14,7 @@ GhostBlock::GhostBlock(const JBTypes::vec3ui &position,
                        const vecSpecial_sptr &specials,
                        const Ball_sptr& ball,
                        float periodicity):
-    Block(position, ball, items, enemies, specials, true, false),
+    InteractiveBlock(position, items, enemies, specials, ball, true, false),
     _periodicity(periodicity),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _isThere(true) {

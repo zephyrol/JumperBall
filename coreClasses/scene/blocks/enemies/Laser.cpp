@@ -13,7 +13,7 @@ Laser::Laser(const JBTypes::Color& color,
     size_t length,
     const Ball_sptr &ball
 ):
-    Enemy(initialPosition,
+    InteractiveEnemy(initialPosition,
           dir,
           laserRadius,
           length,

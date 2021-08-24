@@ -7,9 +7,9 @@
 
 #ifndef JUMPBLOCK_H
 #define JUMPBLOCK_H
-#include "Block.h"
+#include "InteractiveBlock.h"
 
-class JumpBlock:public Block {
+class JumpBlock:public InteractiveBlock {
 public:
     JumpBlock(
         const JBTypes::vec3ui& position,

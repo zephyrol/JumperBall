@@ -13,7 +13,7 @@ SharpBlock::SharpBlock(const JBTypes::vec3ui &position,
                        const vecSpecial_sptr &specials,
                        const Ball_sptr& ball,
                        const std::array<bool, 6> &facesSharps):
-                       Block(position, ball, items, enemies, specials, true),
+                       InteractiveBlock(position, items, enemies, specials, ball, true),
                        _facesSharps((facesSharps)){
 
 }
