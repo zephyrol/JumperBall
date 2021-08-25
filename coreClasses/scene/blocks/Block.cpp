@@ -152,3 +152,11 @@ std::map<CstItem_sptr ,vecCstShape_sptr > Block::getItemShapes() const {
     return itemShapes;
 }
 
+
+std::string Block::positionToString(const JBTypes::vec3ui& position) {
+    return std::to_string(position.at(0)) + "," +
+           std::to_string(position.at(1)) + "," +
+           std::to_string(position.at(2));
+}
+
+

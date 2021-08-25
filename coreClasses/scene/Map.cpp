@@ -15,29 +15,21 @@
 
 Map::Map(Map::MapInfo &&mapInfo):
     _blocks(std::move(mapInfo.blocks)),
-    _blocksPositions(createBlockPositions()),
+    _blocksPositions(std::make_shared<const std::map<std::string,Block_sptr> >(createBlockPositions())),
     _blocksToUpdate(getBlocksToUpdate()),
     _ball(std::move(mapInfo.ball)),
     _width(mapInfo.width),
     _height(mapInfo.height),
     _depth(mapInfo.depth),
-    _currentBallPosition(nullptr),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _blocksUpdating([this] (size_t blockNumber) {
                             _blocksToUpdate.at(blockNumber)->update(
                                     _updatingTime
                                 );
                         }, _blocksToUpdate.size()),
-    _updatingTime(),
-    _nextBlockGetter(),
-    _turnBackMovement()
+    _updatingTime()
 {
-}
-
-std::string Map::positionToString(const JBTypes::vec3ui& position) {
-    return std::to_string(position.at(0)) + "," + 
-        std::to_string(position.at(1)) + "," +
-        std::to_string(position.at(2));
+    _ball->setBlockPositions(_blocksPositions);
 }
 
 JBTypes::vec3ui Map::stringToPosition(const std::string& stringPosition) {
@@ -54,7 +46,7 @@ std::map<std::string,Block_sptr> Map::createBlockPositions() const {
     std::map<std::string,Block_sptr> positions;
     for (const auto& block: _blocks) {
         const auto position = block->position();
-        positions[positionToString(position)] = block;
+        positions[Block::positionToString(position)] = block;
     }
     return positions;
 }
@@ -122,19 +114,6 @@ float Map::getTimeSinceCreation() const {
 
 void Map::update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action) {
 
-    const auto ballPosition = _ball->getPosition();
-    const bool updateDestination = !_currentBallPosition || ballPosition != *_currentBallPosition;
-
-    if(!_currentBallPosition) {
-        std::unique_ptr<JBTypes::vec3ui> ptr { new JBTypes::vec3ui (ballPosition) };
-        _currentBallPosition = std::move(ptr);
-    }
-    if(updateDestination) {
-        _ball->setDestination(getNextBlockInfo());
-        std::cout << "set destination" << std::endl;
-        *_currentBallPosition = ballPosition;
-    }
-
     _updatingTime = updatingTime;
     _ball->update(updatingTime, action);
 
@@ -175,71 +154,6 @@ void Map::switchColor (const JBTypes::Color& color) {
     // }
 }
 
-Ball::MovementDestination Map::getNextBlockInfo() const {
-
-    const JBTypes::Dir lookTowards = _ball->lookTowards();
-    const JBTypes::Dir currentSide = _ball->currentSide();
-    const std::array <int, 12> offsetsNextBlocks = _nextBlockGetter.evaluate(
-        {currentSide, lookTowards}
-    );
-
-    const auto& position = _ball->getPosition();
-
-    const auto getNeighbor = [&position, offsetsNextBlocks](size_t n) -> JBTypes::vec3ui  {
-        const size_t offset = 3 * n;
-        return {
-            position.at(0) + offsetsNextBlocks.at(offset),
-            position.at(1) + offsetsNextBlocks.at(offset + 1),
-            position.at(2) + offsetsNextBlocks.at(offset + 2)
-        };
-    };
-
-    const auto inFrontOf = getNeighbor(0);
-    const auto left = getNeighbor(1);
-    const auto right = getNeighbor(2);
-    const auto above = getNeighbor(3);
-
-    const CstBlock_sptr& blockAbove = getBlock(above);
-    const CstBlock_sptr& blockInFrontOf = getBlock(inFrontOf);
-    const CstBlock_sptr& blockLeft = getBlock(left);
-    const CstBlock_sptr& blockRight = getBlock(right);
-
-    Ball::MovementDestination nextBlock {};
-    if (blockAbove && blockAbove->isExists()) {
-        nextBlock.pos = above;
-        nextBlock.nextLocal = Ball::NextDestination::Above;
-
-        const JBTypes::Dir lookTowardsBeforeMovement = lookTowards;
-        nextBlock.nextLook = currentSide;
-        nextBlock.nextSide = _turnBackMovement.evaluate({ lookTowardsBeforeMovement });
-    } else if (blockInFrontOf && blockInFrontOf->isExists()) {
-        nextBlock.pos = inFrontOf;
-        nextBlock.nextLocal = Ball::NextDestination::InFrontOf;
-        nextBlock.nextLook = lookTowards;
-        nextBlock.nextSide = currentSide;
-    } else if ( (!blockLeft || !blockLeft->isExists()) && (!blockRight || !blockRight->isExists()) ) {
-        nextBlock.pos = position;
-        nextBlock.nextLocal = Ball::NextDestination::Same;
-        const JBTypes::Dir sideBeforeMovement = currentSide;
-        nextBlock.nextSide = lookTowards;
-        nextBlock.nextLook = _turnBackMovement.evaluate({ sideBeforeMovement });
-    } else if (_ball->stateOfLife() == Ball::StateOfLife::Sliding) {
-        nextBlock.pos = inFrontOf;
-        nextBlock.nextLocal = Ball::NextDestination::InFrontOf;
-        nextBlock.nextLook = lookTowards;
-        nextBlock.nextSide = currentSide;
-    } else {
-        nextBlock.pos = position;
-        nextBlock.nextLocal = Ball::NextDestination::None;
-        nextBlock.nextSide = currentSide;;
-        nextBlock.nextLook = lookTowards;
-    }
-    return nextBlock;
-}
-
-JBTypes::vec3f Map::getNextLook() const {
-    return JBTypesMethods::directionAsVector(getNextBlockInfo().nextLook);
-}
 
 JBTypes::vec3ui Map::getBlockCoords (size_t index,
                                      unsigned int width,
@@ -282,10 +196,14 @@ bool Map::ballIsOut() const {
     );
 }
 
+JBTypes::vec3f Map::getNextLook() const {
+    return _ball->getNextLook();
+}
+
 CstBlock_sptr Map::getBlock(const JBTypes::vec3ui &pos) const {
-    const std::string strPos = positionToString(pos);
-    return _blocksPositions.find(strPos) != _blocksPositions.end()
-           ? _blocksPositions.at(strPos)
+    const std::string strPos = Block::positionToString(pos);
+    return _blocksPositions->find(strPos) != _blocksPositions->end()
+           ? _blocksPositions->at(strPos)
            : nullptr;
 }
 

@@ -34,7 +34,10 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z):
     _currentCrushing(0.f),
     _turnLeftMovement(),
     _turnRightMovement(),
-    _movementDestination()
+    _nextBlockGetter(),
+    _turnBackMovement(),
+    _movementDestination(),
+    _blocksPositions(nullptr)
 {
 }
 
@@ -75,6 +78,7 @@ void Ball::jump() noexcept{
 void Ball::stay() noexcept{
     _jumpingType = Ball::JumpingType::Short;
     _state = Ball::State::Staying;
+    _movementDestination = getNextBlockInfo();
     setTimeActionNow();
 }
 
@@ -575,6 +579,66 @@ void Ball::burningUpdate() noexcept{
 
 }
 
+Ball::MovementDestination Ball::getNextBlockInfo() const {
+
+    const JBTypes::Dir lookTowards = _lookTowards;
+    const JBTypes::Dir currentSide = _currentSide;
+    const std::array <int, 12> offsetsNextBlocks = _nextBlockGetter.evaluate(
+        {currentSide, lookTowards}
+    );
+
+    const auto getNeighbor = [this, offsetsNextBlocks](size_t n) -> JBTypes::vec3ui  {
+        const size_t offset = 3 * n;
+        return {
+            _pos.at(0) + offsetsNextBlocks.at(offset),
+            _pos.at(1) + offsetsNextBlocks.at(offset + 1),
+            _pos.at(2) + offsetsNextBlocks.at(offset + 2)
+        };
+    };
+
+    const auto inFrontOf = getNeighbor(0);
+    const auto left = getNeighbor(1);
+    const auto right = getNeighbor(2);
+    const auto above = getNeighbor(3);
+
+    const CstBlock_sptr& blockAbove = getBlock(above);
+    const CstBlock_sptr& blockInFrontOf = getBlock(inFrontOf);
+    const CstBlock_sptr& blockLeft = getBlock(left);
+    const CstBlock_sptr& blockRight = getBlock(right);
+
+    Ball::MovementDestination nextBlock {};
+    if (blockAbove && blockAbove->isExists()) {
+        nextBlock.pos = above;
+        nextBlock.nextLocal = Ball::NextDestination::Above;
+
+        const JBTypes::Dir lookTowardsBeforeMovement = lookTowards;
+        nextBlock.nextLook = currentSide;
+        nextBlock.nextSide = _turnBackMovement.evaluate({ lookTowardsBeforeMovement });
+    } else if (blockInFrontOf && blockInFrontOf->isExists()) {
+        nextBlock.pos = inFrontOf;
+        nextBlock.nextLocal = Ball::NextDestination::InFrontOf;
+        nextBlock.nextLook = lookTowards;
+        nextBlock.nextSide = currentSide;
+    } else if ( (!blockLeft || !blockLeft->isExists()) && (!blockRight || !blockRight->isExists()) ) {
+        nextBlock.pos = _pos;
+        nextBlock.nextLocal = Ball::NextDestination::Same;
+        const JBTypes::Dir sideBeforeMovement = currentSide;
+        nextBlock.nextSide = lookTowards;
+        nextBlock.nextLook = _turnBackMovement.evaluate({ sideBeforeMovement });
+    } else if (_stateOfLife == Ball::StateOfLife::Sliding) {
+        nextBlock.pos = inFrontOf;
+        nextBlock.nextLocal = Ball::NextDestination::InFrontOf;
+        nextBlock.nextLook = lookTowards;
+        nextBlock.nextSide = currentSide;
+    } else {
+        nextBlock.pos = _pos;
+        nextBlock.nextLocal = Ball::NextDestination::None;
+        nextBlock.nextSide = currentSide;;
+        nextBlock.nextLook = lookTowards;
+    }
+    return nextBlock;
+}
+
 void Ball::teleportingUpdate() noexcept{
 
     const float timeSinceAction = getTimeSecondsSinceAction();
@@ -757,10 +821,6 @@ const JBTypes::vec3ui &Ball::getPosition() const noexcept {
     return _pos;
 }
 
-void Ball::setDestination(const Ball::MovementDestination &movementDestination) {
-    _movementDestination = movementDestination;
-}
-
 void Ball::internalUpdate() noexcept {
 
     if (_stateOfLife == Ball::StateOfLife::Dead) {
@@ -790,3 +850,19 @@ void Ball::internalUpdate() noexcept {
 
 }
 
+void Ball::setBlockPositions(
+    const std::shared_ptr<const std::map<std::string, Block_sptr>> &blocksPositions
+) {
+    _blocksPositions = blocksPositions;
+}
+
+CstBlock_sptr Ball::getBlock(const JBTypes::vec3ui &pos) const {
+    const std::string strPos = Block::positionToString(pos);
+    return _blocksPositions->find(strPos) != _blocksPositions->end()
+           ? _blocksPositions->at(strPos)
+           : nullptr;
+}
+
+JBTypes::vec3f Ball::getNextLook() const {
+    return JBTypesMethods::directionAsVector(_movementDestination.nextLook);
+}

@@ -68,6 +68,8 @@ SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const overrid
 SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 SceneElement::GlobalState getGlobalState() const override;
 
+static std::string positionToString(const JBTypes::vec3ui& position);
+
 private: 
 
 virtual Effect interaction(const JBTypes::timePointMs& currentTime);

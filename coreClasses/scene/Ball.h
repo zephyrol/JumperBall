@@ -12,7 +12,7 @@
 #include "movements/TurnRight.h"
 #include "movements/TurnBack.h"
 #include "movements/NextBlock.h"
-#include "SceneElement.h"
+#include <scene/blocks/Block.h>
 
 class Ball;
 using Ball_sptr = std::shared_ptr <Ball>;
@@ -87,17 +87,21 @@ float getCrushingCoefficient() const noexcept;
 float getTeleportationCoefficient() const noexcept;
 const JBTypes::Color& getTeleportationColor() const noexcept;
 
+Ball::MovementDestination getNextBlockInfo() const;
 float getTimeToGetDestination() const;
-
-void setDestination(const Ball::MovementDestination& movementDestination);
 
 SceneElement::DynamicValues <float> getDynamicFloats() const override;
 SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 SceneElement::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
 
 SceneElement::GlobalState getGlobalState() const override;
+CstBlock_sptr getBlock(const JBTypes::vec3ui& pos) const;
 
 void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action) noexcept;
+
+void setBlockPositions(const std::shared_ptr<const std::map<std::string, Block_sptr> >& blocksPositions);
+
+JBTypes::vec3f getNextLook() const;
 
 private:
 
@@ -139,8 +143,13 @@ float _currentCrushing;
 
 const TurnLeft _turnLeftMovement;
 const TurnRight _turnRightMovement;
+const NextBlock _nextBlockGetter;
+const TurnBack _turnBackMovement;
+
 
 MovementDestination _movementDestination;
+
+std::shared_ptr<const std::map<std::string, Block_sptr> > _blocksPositions;
 
 JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 JBTypes::vec3f get3DPosStayingBall() const;
@@ -148,6 +157,7 @@ bool isBurstingFinished() const;
 JBTypes::vec3f getRotationAxis() const noexcept;
 float getJumpingPosX() const noexcept;
 float getFallingPosX() const noexcept;
+
 
 void turnLeft() noexcept;
 void turnRight() noexcept;
