@@ -59,14 +59,12 @@ const JBTypes::vec3f& Ball::get3DPosition() const noexcept{
 
 void Ball::goStraightAhead() noexcept{
     // TODO : manage in class Map
-    /*const Ball::NextBlockInformation nextBlock = getNextBlockInfo();
-    _posX = nextBlock.poxX;
-    _posY = nextBlock.poxY;
-    _posZ = nextBlock.poxZ;
-    _currentSide = nextBlock.nextSide;
-    _lookTowards = nextBlock.nextLook;
+    ///const Ball::NextBlockInformation nextBlock = getNextBlockInfo();
+    _pos = _movementDestination.pos;
+    _currentSide = _movementDestination.nextSide;
+    _lookTowards = _movementDestination.nextLook;
 
-    applyRotation();*/
+    applyRotation();
 }
 
 void Ball::jump() noexcept{
