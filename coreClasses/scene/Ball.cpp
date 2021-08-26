@@ -290,7 +290,8 @@ const JBTypes::Color& Ball::getTeleportationColor() const noexcept{
     return _teleportationColor;
 }
 
-/*void Ball::isFallingIntersectionBlock() noexcept{
+void Ball::isFallingIntersectionBlock() noexcept{
+    // TODO Get time since action should be used only one at the beginning of the update
     const float fDifference = getTimeSecondsSinceAction();
     const bool descendingJumpPhase = _state == Ball::State::Jumping &&
                                      _mechanicsPatternJumping.getVelocity(fDifference).y < 0;
@@ -314,7 +315,7 @@ const JBTypes::Color& Ball::getTeleportationColor() const noexcept{
     stay();
     blockEvent();
     update();
-}*/
+}
 
 JBTypes::timePointMs Ball::getTimeActionMs() const noexcept{
     return std::chrono::time_point_cast <std::chrono::milliseconds>(_timeAction);
@@ -391,8 +392,8 @@ JBTypes::vec3f Ball::get3DPosStayingBall() const {
 
 void Ball::blockEvent () noexcept{
 
-    // TODO that should be move in Block class
-    /*const auto& block = _map.getBlock(blockPos.at(0), blockPos.at(1), blockPos.at(2));
+    // TODO: create attribute strPosition if used more that once
+    const auto& block = _blocksPositions->at(Block::positionToString(_pos));
     if (!block || _stateOfLife == StateOfLife::Bursting) {
         return;
     }
@@ -425,7 +426,7 @@ void Ball::blockEvent () noexcept{
         update();
     } else {
         _stateOfLife = StateOfLife::Normal;
-    }*/
+    }
 
     // TODO update it
     // Specials
