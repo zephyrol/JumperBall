@@ -37,10 +37,6 @@ bool Block::isExists() const {
     return true;
 }
 
-Block::Effect Block::detectionEvent (const JBTypes::Dir&, const JBTypes::timePointMs&) {
-    return Block::Effect::Nothing;
-}
-
 const JBTypes::vec3f& Block::localScale() const {
     return _localScale;
 }
@@ -159,4 +155,6 @@ std::string Block::positionToString(const JBTypes::vec3ui& position) {
            std::to_string(position.at(2));
 }
 
+Block::Effect Block::detectionEvent() {
+}
 

@@ -76,12 +76,11 @@ bool BrittleBlock::isExists() const {
     return _stillThere;
 }
 
-Block::Effect BrittleBlock::detectionEvent (const JBTypes::Dir& direction,
-                                            const JBTypes::timePointMs& currentTime) {
+Block::Effect BrittleBlock::detectionEvent () {
 
     if (!_isGoingToBreak) {
-        _collisionTime = currentTime;
-        setFallDirection(direction);
+        _collisionTime = _ball->getTimeActionMs();
+        setFallDirection(_ball->currentSide());
         _isGoingToBreak = true;
     }
     return Effect::Nothing;

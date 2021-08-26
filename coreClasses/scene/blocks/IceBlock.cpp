@@ -17,8 +17,7 @@ IceBlock::IceBlock(const JBTypes::vec3ui &position,
     std::cout << "create ice block" << std::endl;
 }
 
-Block::Effect IceBlock::detectionEvent (const JBTypes::Dir&,
-                                        const JBTypes::timePointMs&) {
+Block::Effect IceBlock::detectionEvent () {
     return Block::Effect::Slide;
 }
 

@@ -22,10 +22,7 @@ public:
 
     std::array <bool, 6> faceInfo() const override;
 
-Effect detectionEvent(
-    const JBTypes::Dir& direction,
-    const JBTypes::timePointMs& currentTime
-) override;
+Effect detectionEvent() override;
 
 vecCstShape_sptr getExtraShapes() const override;
 

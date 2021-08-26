@@ -27,10 +27,7 @@ Block::Effect interaction(
     const JBTypes::timePointMs& currentTime
 ) override;
 
-Block::Effect detectionEvent(
-    const JBTypes::Dir& direction,
-    const JBTypes::timePointMs& currentTime
-) override;
+Block::Effect detectionEvent() override;
 
 bool mayDisappear() const override;
 

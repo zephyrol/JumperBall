@@ -190,6 +190,8 @@ void doAction(ActionRequest action);
 
 void applyRotation(bool inverse = false);
 JBTypes::vec3f getInverseRotationAxis() const noexcept;
+
+    void isFallingIntersectionBlock() noexcept;
 };
 
 #endif /* BALL_H */

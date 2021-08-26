@@ -20,10 +20,7 @@ public:
         const Ball_sptr& ball
     );
 
-virtual Effect detectionEvent(
-    const JBTypes::Dir& direction,
-    const JBTypes::timePointMs& currentTime
-) override;
+virtual Effect detectionEvent() override;
 
     JBTypes::Color getColor() const override;
 

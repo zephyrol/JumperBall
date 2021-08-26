@@ -19,10 +19,7 @@ public:
         const Ball_sptr& ball
     );
 
-    Effect detectionEvent(
-        const JBTypes::Dir& direction,
-        const JBTypes::timePointMs& currentTime
-    ) override;
+    Effect detectionEvent() override;
 
     JBTypes::Color getColor() const override;
 };

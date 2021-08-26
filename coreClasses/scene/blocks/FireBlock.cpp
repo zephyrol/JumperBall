@@ -16,7 +16,7 @@ FireBlock::FireBlock(const JBTypes::vec3ui &position,
     InteractiveBlock(position, items, enemies, specials, ball){
 }
 
-Block::Effect FireBlock::detectionEvent (const JBTypes::Dir&, const JBTypes::timePointMs&) {
+Block::Effect FireBlock::detectionEvent () {
     return Block::Effect::Burn;
 }
 

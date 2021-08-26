@@ -21,9 +21,8 @@ std::array <bool, 6> JumpBlock::faceInfo() const {
     return _facesJumpers;
 }
 
-Block::Effect JumpBlock::detectionEvent (const JBTypes::Dir& direction,
-                                         const JBTypes::timePointMs&) {
-    const unsigned int dir = JBTypesMethods::directionAsInteger(direction);
+Block::Effect JumpBlock::detectionEvent () {
+    const unsigned int dir = JBTypesMethods::directionAsInteger(_ball->currentSide());
     return faceInfo().at(dir) ? Block::Effect::Jump : Block::Effect::Nothing;
 }
 

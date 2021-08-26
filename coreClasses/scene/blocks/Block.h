@@ -35,7 +35,7 @@ Block(
 virtual ~Block() = default;
 enum class Effect { Nothing, Burst, Burn, Slide, Jump };
 
-virtual Effect detectionEvent(const JBTypes::Dir& direction, const JBTypes::timePointMs& currentTime);
+virtual Block::Effect detectionEvent();
 
 static constexpr size_t itemsNumber = 6;
 
