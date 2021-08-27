@@ -126,7 +126,6 @@ void Ball::doAction (Ball::ActionRequest action) {
     switch (action) {
     case Ball::ActionRequest::Nothing: break;
     case Ball::ActionRequest::GoStraightAhead:
-        std::cout << "go tout droit" << std::endl;
         if (_state == Ball::State::Staying) {
             move();
         }
@@ -295,7 +294,9 @@ void Ball::isFallingIntersectionBlock() noexcept{
     const float fDifference = getTimeSecondsSinceAction();
     const bool descendingJumpPhase = _state == Ball::State::Jumping &&
                                      _mechanicsPatternJumping.getVelocity(fDifference).y < 0;
-    const auto positionBlockPtr = intersectBlock(_3DPosX, _3DPosY, _3DPosZ);
+    // TODO update it
+    //const auto positionBlockPtr = intersectBlock(_3DPosX, _3DPosY, _3DPosZ);
+    const auto positionBlockPtr = nullptr;
     if (!positionBlockPtr || (!descendingJumpPhase && _state != Ball::State::Falling)) {
         return;
     }
@@ -314,7 +315,7 @@ void Ball::isFallingIntersectionBlock() noexcept{
     _pos = { positionBlockPtr->at(0), positionBlockPtr->at(1), positionBlockPtr->at(2) };
     stay();
     blockEvent();
-    update();
+    internalUpdate();
 }
 
 JBTypes::timePointMs Ball::getTimeActionMs() const noexcept{
@@ -398,10 +399,7 @@ void Ball::blockEvent () noexcept{
         return;
     }
 
-    const Block::Effect effect = block->detectionEvent(
-        _currentSide,
-        JBTypesMethods::getTimePointMsFromTimePoint(_timeAction)
-        );
+    const Block::Effect effect = block->detectionEvent();
     if (effect == Block::Effect::Jump) {
         _stateOfLife = StateOfLife::Normal;
         _jumpingType = Ball::JumpingType::Long;
@@ -423,7 +421,7 @@ void Ball::blockEvent () noexcept{
         } else {
             move();
         }
-        update();
+        internalUpdate();
     } else {
         _stateOfLife = StateOfLife::Normal;
     }
