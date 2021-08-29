@@ -76,7 +76,7 @@ void Ball::jump() noexcept{
 void Ball::stay() noexcept{
     _jumpingType = Ball::JumpingType::Short;
     _state = Ball::State::Staying;
-    _movementDestination = getNextBlockInfo();
+    updateMovements();
     setTimeActionNow();
 }
 
@@ -156,50 +156,50 @@ void Ball::doAction (Ball::ActionRequest action) {
 
 void Ball::isGoingStraightAheadIntersectBlock() noexcept{
 
-    // TODO: call this method from map class and may be pass the three blocks by parameters
-    /*if (_state == Ball::State::Jumping) {
-        constexpr float distanceNear = 1.f;
-        constexpr float distanceFar = 2.f;
-        constexpr float distanceVeryFar = 3.f;
-        constexpr float sizeBlock = 1.f;
+    if (_state != Ball::State::Jumping) {
+        return;
+    }
+    constexpr float distanceNear = 1.f;
+    constexpr float distanceFar = 2.f;
+    constexpr float distanceVeryFar = 3.f;
+    constexpr float sizeBlock = 1.f;
 
-        const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
-        const JBTypes::vec3f lookVec = JBTypesMethods::directionAsVector(_lookTowards);
+    const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
+    const JBTypes::vec3f lookVec = JBTypesMethods::directionAsVector(_lookTowards);
 
-        const int intBlockX = static_cast<int>(_posX);
-        const int intBlockY = static_cast<int>(_posY);
-        const int intBlockZ = static_cast<int>(_posZ);
+    const auto offsetPosX = _3DPos.x;
+    const auto offsetPosY = _3DPos.y;
+    const auto offsetPosZ = _3DPos.z;
 
-        const auto aboveNearX = intBlockX + static_cast <int>(sideVec.x + lookVec.x);
-        const auto aboveNearY = intBlockY + static_cast <int>(sideVec.y + lookVec.y);
-        const auto aboveNearZ = intBlockZ + static_cast <int>(sideVec.z + lookVec.z);
-        const auto aboveFarX = intBlockX + static_cast <int>(sideVec.x + 2.f * lookVec.x);
-        const auto aboveFarY = intBlockY + static_cast <int>(sideVec.y + 2.f * lookVec.y);
-        const auto aboveFarZ = intBlockZ + static_cast <int>(sideVec.z + 2.f * lookVec.z);
-        const auto aboveVeryFarX = intBlockX + static_cast <int>(sideVec.x + 3.f * lookVec.x);
-        const auto aboveVeryFarY = intBlockY + static_cast <int>(sideVec.y + 3.f * lookVec.y);
-        const auto aboveVeryFarZ = intBlockZ + static_cast <int>(sideVec.z + 3.f * lookVec.z);
+    const auto aboveNearX = static_cast <unsigned int>(offsetPosX + sideVec.x + lookVec.x);
+    const auto aboveNearY = static_cast <unsigned int>(offsetPosY + sideVec.y + lookVec.y);
+    const auto aboveNearZ = static_cast <unsigned int>(offsetPosZ + sideVec.z + lookVec.z);
+    const auto aboveFarX = static_cast <unsigned int>(offsetPosX + sideVec.x + 2.f * lookVec.x);
+    const auto aboveFarY = static_cast <unsigned int>(offsetPosY + sideVec.y + 2.f * lookVec.y);
+    const auto aboveFarZ = static_cast <unsigned int>(offsetPosZ + sideVec.z + 2.f * lookVec.z);
+    const auto aboveVeryFarX = static_cast <unsigned int>(offsetPosX + sideVec.x + 3.f * lookVec.x);
+    const auto aboveVeryFarY = static_cast <unsigned int>(offsetPosY + sideVec.y + 3.f * lookVec.y);
+    const auto aboveVeryFarZ = static_cast <unsigned int>(offsetPosZ + sideVec.z + 3.f * lookVec.z);
 
-        const CstBlock_sptr blockNear = _map.getBlock(aboveNearX, aboveNearY, aboveNearZ);
+    const CstBlock_sptr blockNear = getBlock({ aboveNearX, aboveNearY, aboveNearZ });
 
-        const CstBlock_sptr blockFar = _map.getBlock(aboveFarX, aboveFarY, aboveFarZ);
+    const CstBlock_sptr blockFar = getBlock({ aboveFarX, aboveFarY, aboveFarZ });
 
-        const CstBlock_sptr blockVeryFar = _map.getBlock(aboveVeryFarX, aboveVeryFarY, aboveVeryFarZ);
+    const CstBlock_sptr blockVeryFar = getBlock({ aboveVeryFarX, aboveVeryFarY, aboveVeryFarZ });
 
-        ClassicalMechanics& refMechanicsJumping = getMechanicsJumping();
-        const float sizeBlock2 = sizeBlock / 2.f;
-        if (blockNear && blockNear->isExists()) {
-            refMechanicsJumping.addShockFromPosition(distanceNear - sizeBlock2 - getRadius());
-        } else if (blockFar && blockFar->isExists()) {
-            refMechanicsJumping.addShockFromPosition(distanceFar - sizeBlock2 - getRadius());
-        } else if (
-            _jumpingType == Ball::JumpingType::Long && blockVeryFar &&
-            blockVeryFar->isExists()) {
-            refMechanicsJumping.addShockFromPosition(distanceVeryFar - sizeBlock2 - getRadius());
-        } else {
-            refMechanicsJumping.timesShock({});
-        }
-    }*/
+    ClassicalMechanics& refMechanicsJumping = getMechanicsJumping();
+    const float sizeBlock2 = sizeBlock / 2.f;
+    if (blockNear && blockNear->isExists()) {
+        refMechanicsJumping.addShockFromPosition(distanceNear - sizeBlock2 - getRadius());
+    } else if (blockFar && blockFar->isExists()) {
+        refMechanicsJumping.addShockFromPosition(distanceFar - sizeBlock2 - getRadius());
+    } else if (
+        _jumpingType == Ball::JumpingType::Long && blockVeryFar &&
+        blockVeryFar->isExists()) {
+        refMechanicsJumping.addShockFromPosition(distanceVeryFar - sizeBlock2 - getRadius());
+    } else {
+        refMechanicsJumping.timesShock({});
+    }
 }
 
 const ClassicalMechanics& Ball::getMechanicsJumping() const noexcept{
@@ -295,8 +295,7 @@ void Ball::isFallingIntersectionBlock() noexcept{
     const bool descendingJumpPhase = _state == Ball::State::Jumping &&
                                      _mechanicsPatternJumping.getVelocity(fDifference).y < 0;
     // TODO update it
-    //const auto positionBlockPtr = intersectBlock(_3DPosX, _3DPosY, _3DPosZ);
-    const auto positionBlockPtr = nullptr;
+    const auto positionBlockPtr = intersectBlock();
     if (!positionBlockPtr || (!descendingJumpPhase && _state != Ball::State::Falling)) {
         return;
     }
@@ -450,7 +449,7 @@ void Ball::jumpingUpdate() noexcept{
 
     const JBTypes::vec3f relativePositionJump = P2DTo3D(pos2D);
     _3DPos = relativePositionJump;
-    // isFallingIntersectionBlock();
+    isFallingIntersectionBlock();
 }
 
 void Ball::fallingUpdate() noexcept{
@@ -460,21 +459,17 @@ void Ball::fallingUpdate() noexcept{
 
     const JBTypes::vec3f relativePositionJump = P2DTo3D(pos2D);
     _3DPos = relativePositionJump;
-    // isFallingIntersectionBlock();
+    isFallingIntersectionBlock();
 }
 
 void Ball::stayingUpdate() noexcept{
     // TODO: manage that in block class
-    /*const JBTypes::vec3f position3D = get3DPosStayingBall();
-    const Block_sptr block = _map.getBlock(_posX, _posY, _posZ);
+    const auto block = getBlock(_pos);
     if (block && block->isExists()) {
-        _3DPosX = position3D.x;
-        _3DPosY = position3D.y;
-        _3DPosZ = position3D.z;
         return;
     }
     fall();
-    update();*/
+    internalUpdate();
 }
 
 void Ball::turningUpdate() noexcept{
@@ -488,7 +483,6 @@ void Ball::turningUpdate() noexcept{
 }
 
 void Ball::movingUpdate() noexcept{
-    std::cout << "moving update" << std::endl;
     const float sSinceAction = getTimeSecondsSinceAction();
     if (sSinceAction >= timeToGetNextBlock) {
         goStraightAhead();
@@ -836,14 +830,13 @@ void Ball::internalUpdate() noexcept {
         case Ball::State::Deteleporting: deteleportingUpdate(); break;
         default: break;
     }
-    // mapInteraction(); TODO: Move using in map
+    mapInteraction();
 
     _currentCrushing = getCrushingCoefficient();
     burningUpdate();
-    // TODO: The same
-    /* if (isOutOfTheMap() || isBurstingFinished()) {
+    if (isOutOfTheMap() || isBurstingFinished()) {
         die();
-    } */
+    }
 
 }
 
@@ -862,4 +855,29 @@ CstBlock_sptr Ball::getBlock(const JBTypes::vec3ui &pos) const {
 
 JBTypes::vec3f Ball::getNextLook() const {
     return JBTypesMethods::directionAsVector(_movementDestination.nextLook);
+}
+
+std::shared_ptr<const JBTypes::vec3ui> Ball::intersectBlock() const {
+
+    const JBTypes::vec3f sideVec = currentSideAsVector();
+    const float offsetBlockPosition = getRadius();
+
+    const float xIntersectionUnder = _3DPos.x - sideVec.x * offsetBlockPosition;
+    const float yIntersectionUnder = _3DPos.y - sideVec.y * offsetBlockPosition;
+    const float zIntersectionUnder = _3DPos.z - sideVec.z * offsetBlockPosition;
+
+    constexpr float offset = 0.5f;
+    const auto xInteger = static_cast <unsigned int>(xIntersectionUnder + offset);
+    const auto yInteger = static_cast <unsigned int>(yIntersectionUnder + offset);
+    const auto zInteger = static_cast <unsigned int>(zIntersectionUnder + offset);
+
+    const CstBlock_sptr& block = getBlock({ xInteger, yInteger, zInteger });
+
+    return (block && block->isExists())
+           ? std::make_shared <const JBTypes::vec3ui >(block->position())
+           : nullptr;
+}
+
+void Ball::updateMovements() {
+    _movementDestination = getNextBlockInfo();
 }

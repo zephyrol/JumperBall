@@ -100,6 +100,7 @@ CstBlock_sptr getBlock(const JBTypes::vec3ui& pos) const;
 void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action) noexcept;
 
 void setBlockPositions(const std::shared_ptr<const std::map<std::string, Block_sptr> >& blocksPositions);
+void updateMovements();
 
 JBTypes::vec3f getNextLook() const;
 
@@ -188,6 +189,8 @@ void deteleportingUpdate() noexcept;
 
 void doAction(ActionRequest action);
 
+
+std::shared_ptr<const JBTypes::vec3ui> intersectBlock() const;
 void applyRotation(bool inverse = false);
 JBTypes::vec3f getInverseRotationAxis() const noexcept;
 

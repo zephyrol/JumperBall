@@ -30,6 +30,7 @@ Map::Map(Map::MapInfo &&mapInfo):
     _updatingTime()
 {
     _ball->setBlockPositions(_blocksPositions);
+    _ball->updateMovements();
 }
 
 JBTypes::vec3ui Map::stringToPosition(const std::string& stringPosition) {
@@ -161,27 +162,6 @@ JBTypes::vec3ui Map::getBlockCoords (size_t index,
     const auto uIntIndex = static_cast <const unsigned int>(index);
     const unsigned int widthDepth = width * depth;
     return { uIntIndex % width, uIntIndex / widthDepth, (uIntIndex % widthDepth) / width };
-}
-
-std::shared_ptr <const std::vector <unsigned int> > Map::intersectBlock (float x, float y, float z) const {
-    const JBTypes::vec3f sideVec = _ball->currentSideAsVector();
-
-    const float offsetBlockPosition = _ball->getRadius();
-    const float xIntersectionUnder = x - sideVec.x * offsetBlockPosition;
-    const float yIntersectionUnder = y - sideVec.y * offsetBlockPosition;
-    const float zIntersectionUnder = z - sideVec.z * offsetBlockPosition;
-
-    const auto xInteger = static_cast <unsigned int>(xIntersectionUnder);
-    const auto yInteger = static_cast <unsigned int>(yIntersectionUnder);
-    const auto zInteger = static_cast <unsigned int>(zIntersectionUnder);
-
-    const CstBlock_sptr& block = getBlock({ xInteger, yInteger, zInteger });
-
-    return (block && block->isExists())
-           ? std::make_shared <const std::vector <unsigned int> >(
-               std::initializer_list <unsigned int>({ xInteger, yInteger, zInteger })
-           )
-           : nullptr;
 }
 
 bool Map::ballIsOut() const {

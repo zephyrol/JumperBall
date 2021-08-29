@@ -77,10 +77,6 @@ const JBTypes::timePointMs _creationTime;
 ParallelTask <void> _blocksUpdating;
 JBTypes::timePointMs _updatingTime;
 
-
-std::shared_ptr<const std::vector<unsigned int>> intersectBlock(float x, float y, float z) const;
-
-
 public :
     vecCstBlock_sptr getBlocks() const;
 };
