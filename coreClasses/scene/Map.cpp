@@ -16,7 +16,7 @@
 Map::Map(Map::MapInfo &&mapInfo):
     _blocks(std::move(mapInfo.blocks)),
     _blocksPositions(std::make_shared<const std::map<std::string,Block_sptr> >(createBlockPositions())),
-    _blocksToUpdate(getBlocksToUpdate()),
+    _blocksToUpdate(std::make_shared<const vecBlock_sptr>(getBlocksToUpdate())),
     _ball(std::move(mapInfo.ball)),
     _width(mapInfo.width),
     _height(mapInfo.height),
@@ -30,6 +30,7 @@ Map::Map(Map::MapInfo &&mapInfo):
     _updatingTime()
 {
     _ball->setBlockPositions(_blocksPositions);
+    _ball->setBlockWithInteractions(_blocksToUpdate);
     _ball->updateMovements();
 }
 

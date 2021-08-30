@@ -37,7 +37,8 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z):
     _nextBlockGetter(),
     _turnBackMovement(),
     _movementDestination(),
-    _blocksPositions(nullptr)
+    _blocksPositions(nullptr),
+    _blockWithInteractions(nullptr)
 {
 }
 
@@ -812,6 +813,17 @@ const JBTypes::vec3ui &Ball::getPosition() const noexcept {
     return _pos;
 }
 
+void Ball::interaction() {
+    Block::Effect finalBlockEffect = Block::Effect::Nothing;
+
+    for( const auto& block: *_blockWithInteractions) {
+        const auto blockEffect = block->interaction(_updatingTime);
+        if (blockEffect != Block::Effect::Nothing) {
+            finalBlockEffect = blockEffect;
+        }
+    }
+}
+
 void Ball::internalUpdate() noexcept {
 
     if (_stateOfLife == Ball::StateOfLife::Dead) {
@@ -830,7 +842,7 @@ void Ball::internalUpdate() noexcept {
         case Ball::State::Deteleporting: deteleportingUpdate(); break;
         default: break;
     }
-    mapInteraction();
+    interaction();
 
     _currentCrushing = getCrushingCoefficient();
     burningUpdate();
@@ -880,4 +892,8 @@ std::shared_ptr<const JBTypes::vec3ui> Ball::intersectBlock() const {
 
 void Ball::updateMovements() {
     _movementDestination = getNextBlockInfo();
+}
+
+void Ball::setBlockWithInteractions(const std::shared_ptr<const vecBlock_sptr> &blocksWithInterraction) {
+    _blockWithInteractions = blocksWithInterraction;
 }

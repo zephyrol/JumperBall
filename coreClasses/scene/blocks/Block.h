@@ -53,6 +53,7 @@ const vecCstSpecial_sptr& getSpecials() const;
 bool hasInteraction() const;
 
 void update(const JBTypes::timePointMs& currentTime);
+virtual Effect interaction(const JBTypes::timePointMs& currentTime);
 
 std::map<CstItem_sptr ,vecCstShape_sptr> getItemShapes() const;
 virtual vecCstShape_sptr getExtraShapes() const;
@@ -72,7 +73,6 @@ static std::string positionToString(const JBTypes::vec3ui& position);
 
 private: 
 
-virtual Effect interaction(const JBTypes::timePointMs& currentTime);
 
 vecCstItem_sptr getCstItems() const;
 vecCstEnemy_sptr getCstEnemies() const;

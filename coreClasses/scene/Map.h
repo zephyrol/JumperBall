@@ -64,7 +64,7 @@ std::vector<Block_sptr> getBlocksToUpdate() const;
 
 const vecBlock_sptr _blocks;
 const std::shared_ptr<const std::map<std::string,Block_sptr> > _blocksPositions;
-const vecBlock_sptr _blocksToUpdate;
+const std::shared_ptr<const vecBlock_sptr> _blocksToUpdate;
 
 const Ball_sptr _ball;
 

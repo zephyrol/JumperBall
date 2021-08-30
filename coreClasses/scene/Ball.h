@@ -100,6 +100,7 @@ CstBlock_sptr getBlock(const JBTypes::vec3ui& pos) const;
 void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action) noexcept;
 
 void setBlockPositions(const std::shared_ptr<const std::map<std::string, Block_sptr> >& blocksPositions);
+void setBlockWithInteractions(const std::shared_ptr<const vecBlock_sptr>& blocksWithInterraction);
 void updateMovements();
 
 JBTypes::vec3f getNextLook() const;
@@ -151,6 +152,7 @@ const TurnBack _turnBackMovement;
 MovementDestination _movementDestination;
 
 std::shared_ptr<const std::map<std::string, Block_sptr> > _blocksPositions;
+std::shared_ptr<const vecBlock_sptr> _blockWithInteractions;
 
 JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 JBTypes::vec3f get3DPosStayingBall() const;
@@ -195,6 +197,8 @@ void applyRotation(bool inverse = false);
 JBTypes::vec3f getInverseRotationAxis() const noexcept;
 
     void isFallingIntersectionBlock() noexcept;
+
+    void interaction();
 };
 
 #endif /* BALL_H */
