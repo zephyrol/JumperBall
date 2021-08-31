@@ -393,11 +393,16 @@ JBTypes::vec3f Ball::get3DPosStayingBall() const {
 
 void Ball::blockEvent () noexcept{
 
-    // TODO: create attribute strPosition if used more that once
-    const auto& block = _blocksPositions->at(Block::positionToString(_pos));
-    if (!block || _stateOfLife == StateOfLife::Bursting) {
+    if (_stateOfLife == StateOfLife::Bursting) {
         return;
     }
+
+    // TODO: create attribute strPosition if used more that once
+    const std::string blockPosition = Block::positionToString(_pos);
+    if (_blocksPositions->find(blockPosition) == _blocksPositions->end()){
+        return;
+    }
+    const auto& block = _blocksPositions->at(blockPosition);
 
     const Block::Effect effect = block->detectionEvent();
     if (effect == Block::Effect::Jump) {
@@ -412,6 +417,7 @@ void Ball::blockEvent () noexcept{
     } else if (effect == Block::Effect::Slide) {
         _burnCoefficientTrigger = 0.f;
         _stateOfLife = StateOfLife::Sliding;
+        setTimeLifeNow();
         if (
             _jumpRequest && JBTypesMethods::getTimeSecondsSinceTimePoint(
                 _timeJumpRequest) < timeToGetNextBlock
@@ -419,6 +425,7 @@ void Ball::blockEvent () noexcept{
             _jumpRequest = false;
             jump();
         } else {
+            updateMovements();
             move();
         }
         internalUpdate();
@@ -814,20 +821,22 @@ const JBTypes::vec3ui &Ball::getPosition() const noexcept {
 }
 
 void Ball::interaction() {
+
     if(_stateOfLife == Ball::StateOfLife::Bursting || _stateOfLife == Ball::StateOfLife::Dead) {
         return;
     }
     Block::Effect finalBlockEffect = Block::Effect::Nothing;
 
     for( const auto& block: *_blockWithInteractions) {
+        block->catchItem();
         const auto blockEffect = block->interaction(_updatingTime);
         if (blockEffect != Block::Effect::Nothing) {
             finalBlockEffect = blockEffect;
         }
     }
     if (finalBlockEffect == Block::Effect::Burst) {
-
         _stateOfLife = Ball::StateOfLife::Bursting;
+        setTimeLifeNow();
         internalUpdate();
     }
 }

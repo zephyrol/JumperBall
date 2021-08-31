@@ -123,6 +123,7 @@ void Map::update(const JBTypes::timePointMs& updatingTime, const Ball::ActionReq
     _blocksUpdating.waitTasks();
 
     _ball->update(updatingTime, action);
+
     if (ballIsOut()) {
         _ball->die();
     }

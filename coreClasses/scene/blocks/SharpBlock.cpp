@@ -126,8 +126,7 @@ std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > SharpBlock::computeSharp
     std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f>> boundingBoxes;
 
 
-    constexpr float sizeSharp = 0.51f;
-    constexpr float offsetCenter = 0.19f;
+    constexpr float sizeSharp = 0.31f;
     const auto posBlockfX = static_cast <float>(_position.at(0));
     const auto posBlockfY = static_cast <float>(_position.at(1));
     const auto posBlockfZ = static_cast <float>(_position.at(2));
@@ -146,10 +145,6 @@ std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > SharpBlock::computeSharp
             JBTypes::vec3f dirVec = JBTypesMethods::directionAsVector(dir);
 
             if (dirVec.x > EPSILON_F || dirVec.x < -EPSILON_F) {
-                posBlockfYMin += offsetCenter;
-                posBlockfYMax -= offsetCenter;
-                posBlockfZMin += offsetCenter;
-                posBlockfZMax -= offsetCenter;
                 if (dirVec.x < 0) {
                     posBlockfXMin -= sizeSharp;
                 } else if (dirVec.x > 0) {
@@ -157,10 +152,6 @@ std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > SharpBlock::computeSharp
                 }
             }
             if (dirVec.y > EPSILON_F || dirVec.y < -EPSILON_F) {
-                posBlockfXMin += offsetCenter;
-                posBlockfXMax -= offsetCenter;
-                posBlockfZMin += offsetCenter;
-                posBlockfZMax -= offsetCenter;
                 if (dirVec.y < 0) {
                     posBlockfYMin -= sizeSharp;
                 } else if (dirVec.y > 0) {
@@ -168,29 +159,15 @@ std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > SharpBlock::computeSharp
                 }
             }
             if (dirVec.z > EPSILON_F || dirVec.z < -EPSILON_F) {
-                posBlockfXMin += offsetCenter;
-                posBlockfXMax -= offsetCenter;
-                posBlockfYMin += offsetCenter;
-                posBlockfYMax -= offsetCenter;
                 if (dirVec.y < 0) {
                     posBlockfZMin -= sizeSharp;
                 } else if (dirVec.y > 0) {
                     posBlockfZMax += sizeSharp;
                 }
             }
-            std::cout << "valeurs" << std::endl;
-            std::cout << "xmin" << posBlockfXMin << std::endl;
-            std::cout << "xmax" << posBlockfXMax << std::endl;
-            std::cout << "ymin" << posBlockfYMin << std::endl;
-            std::cout << "ymax" << posBlockfYMax << std::endl;
-            std::cout << "zmin" << posBlockfZMin << std::endl;
-            std::cout << "zmax" << posBlockfZMax << std::endl;
-            std::cout << "x" << _ball->get3DPosition().x << std::endl;
-            std::cout << "y" << _ball->get3DPosition().y << std::endl;
-            std::cout << "z" << _ball->get3DPosition().z << std::endl;
             boundingBoxes.push_back( {
                 { posBlockfXMin, posBlockfYMin, posBlockfZMin },
-                { posBlockfXMin, posBlockfYMax, posBlockfZMax }
+                { posBlockfXMax, posBlockfYMax, posBlockfZMax }
             });
         }
     }

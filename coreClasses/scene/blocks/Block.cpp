@@ -69,14 +69,6 @@ void Block::update(const JBTypes::timePointMs& currentTime) {
     interaction(currentTime);
 }
 
-void Block::catchItem (const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius) {
-    for (const Item_sptr& item : _items) {
-        if (!item->isGotten()) {
-            item->catchingTest(boundingSphereCenter, boundingSphereRadius);
-        }
-    }
-}
-
 const bool& Block::isFixed() const {
     return _isFixed;
 }

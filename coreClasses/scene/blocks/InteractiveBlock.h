@@ -21,8 +21,11 @@ public:
         bool isFixed = true
     );
 
+    void catchItem() override;
+
 protected:
     const Ball_sptr _ball;
+
 
 };
 

@@ -60,7 +60,7 @@ virtual vecCstShape_sptr getExtraShapes() const;
 
 virtual bool mayDisappear() const;
 
-void catchItem(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
+virtual void catchItem() = 0;
 
 virtual const bool& isFixed() const;
 const JBTypes::vec3ui& position() const;

@@ -18,3 +18,10 @@ InteractiveBlock::InteractiveBlock(
 {
 }
 
+void InteractiveBlock::catchItem() {
+    for (const Item_sptr& item : _items) {
+        if (!item->isGotten()) {
+            item->catchingTest(_ball->get3DPosition(), _ball->getRadius());
+        }
+    }
+}
