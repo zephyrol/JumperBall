@@ -105,6 +105,8 @@ void updateMovements();
 
 JBTypes::vec3f getNextLook() const;
 
+void die() noexcept;
+
 private:
 
 JBTypes::vec3ui _pos;
@@ -174,7 +176,6 @@ void deteleport() noexcept;
 void setTimeActionNow() noexcept;
 void setTimeLifeNow() noexcept;
 void blockEvent() noexcept;
-void die() noexcept;
 ClassicalMechanics& getMechanicsJumping() noexcept;
 void isGoingStraightAheadIntersectBlock() noexcept;
 

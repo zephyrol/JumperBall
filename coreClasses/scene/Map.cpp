@@ -23,10 +23,10 @@ Map::Map(Map::MapInfo &&mapInfo):
     _depth(mapInfo.depth),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _blocksUpdating([this] (size_t blockNumber) {
-                            _blocksToUpdate.at(blockNumber)->update(
+                            _blocksToUpdate->at(blockNumber)->update(
                                     _updatingTime
                                 );
-                        }, _blocksToUpdate.size()),
+                        }, _blocksToUpdate->size()),
     _updatingTime()
 {
     _ball->setBlockPositions(_blocksPositions);
@@ -123,6 +123,9 @@ void Map::update(const JBTypes::timePointMs& updatingTime, const Ball::ActionReq
     _blocksUpdating.waitTasks();
 
     _ball->update(updatingTime, action);
+    if (ballIsOut()) {
+        _ball->die();
+    }
 
     /*const Map::Effect effect = _map.interaction(_currentSide, get3DPosition(), getRadius());
     if (effect == Map::Effect::Burst) {

@@ -14,15 +14,14 @@ SharpBlock::SharpBlock(const JBTypes::vec3ui &position,
                        const Ball_sptr& ball,
                        const std::array<bool, 6> &facesSharps):
                        InteractiveBlock(position, items, enemies, specials, ball, true),
-                       _facesSharps((facesSharps)){
+                       _facesSharps((facesSharps)),
+                       _sharpBoundingBoxes(computeSharpBoundingBoxes()){
 
 }
 
-Block::Effect SharpBlock::interaction (
-    const JBTypes::timePointMs&
-    ) {
+Block::Effect SharpBlock::interaction (const JBTypes::timePointMs&) {
 
-    auto isInSharpZone = 
+    const auto isInSharpZone =
     []( const JBTypes::vec3f &position,
             float x_min, float x_max,
             float y_min, float y_max,
@@ -34,73 +33,17 @@ Block::Effect SharpBlock::interaction (
                position.z > z_min && position.z < z_max;
     };
 
-    constexpr float sizeSharp = 0.51f;
-    constexpr float offsetCenter = 0.19f;
-    const JBTypes::vec3ui posBlock = position();
-    const auto posBlockfX = static_cast <float>(posBlock.at(0));
-    const auto posBlockfY = static_cast <float>(posBlock.at(1));
-    const auto posBlockfZ = static_cast <float>(posBlock.at(2));
-    for (size_t i = 0; i < _facesSharps.size(); ++i) {
-
-        if (_facesSharps.at(i)) {
-            float posBlockfXMin = posBlockfX;
-            float posBlockfXMax = posBlockfX + 1;
-            float posBlockfYMin = posBlockfY;
-            float posBlockfYMax = posBlockfY + 1;
-            float posBlockfZMin = posBlockfZ;
-            float posBlockfZMax = posBlockfZ + 1;
-
-            JBTypes::Dir dir =
-                JBTypesMethods::integerAsDirection(
-                    static_cast <unsigned int>(i));
-            JBTypes::vec3f dirVec =
-                JBTypesMethods::directionAsVector(dir);
-
-            if (dirVec.x > EPSILON_F || dirVec.x < -EPSILON_F) {
-                posBlockfYMin += offsetCenter;
-                posBlockfYMax -= offsetCenter;
-                posBlockfZMin += offsetCenter;
-                posBlockfZMax -= offsetCenter;
-                if (dirVec.x < 0) {
-                    posBlockfXMin -= sizeSharp;
-                } else if (dirVec.x > 0) {
-                    posBlockfXMax += sizeSharp;
-                }
-            }
-            if (dirVec.y > EPSILON_F || dirVec.y < -EPSILON_F) {
-                posBlockfXMin += offsetCenter;
-                posBlockfXMax -= offsetCenter;
-                posBlockfZMin += offsetCenter;
-                posBlockfZMax -= offsetCenter;
-                if (dirVec.y < 0) {
-                    posBlockfYMin -= sizeSharp;
-                } else if (dirVec.y > 0) {
-                    posBlockfYMax += sizeSharp;
-                }
-            }
-            if (dirVec.z > EPSILON_F || dirVec.z < -EPSILON_F) {
-                posBlockfXMin += offsetCenter;
-                posBlockfXMax -= offsetCenter;
-                posBlockfYMin += offsetCenter;
-                posBlockfYMax -= offsetCenter;
-                if (dirVec.y < 0) {
-                    posBlockfZMin -= sizeSharp;
-                } else if (dirVec.y > 0) {
-                    posBlockfZMax += sizeSharp;
-                }
-            }
-
-            if (isInSharpZone(
-                    _ball->get3DPosition(),
-                    posBlockfXMin,
-                    posBlockfXMax,
-                    posBlockfYMin,
-                    posBlockfYMax,
-                    posBlockfZMin,
-                    posBlockfZMax
-                )) {
-                return Block::Effect::Burst;
-            }
+    for (const auto& boundingBox: _sharpBoundingBoxes) {
+        if (isInSharpZone(
+            _ball->get3DPosition(),
+            boundingBox.first.x,
+            boundingBox.second.x,
+            boundingBox.first.y,
+            boundingBox.second.y,
+            boundingBox.first.z,
+            boundingBox.second.z
+        )) {
+            return Block::Effect::Burst;
         }
     }
     return Block::Effect::Nothing;
@@ -176,4 +119,81 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
         }
     }
     return shapes;
+}
+
+std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > SharpBlock::computeSharpBoundingBoxes() const {
+
+    std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f>> boundingBoxes;
+
+
+    constexpr float sizeSharp = 0.51f;
+    constexpr float offsetCenter = 0.19f;
+    const auto posBlockfX = static_cast <float>(_position.at(0));
+    const auto posBlockfY = static_cast <float>(_position.at(1));
+    const auto posBlockfZ = static_cast <float>(_position.at(2));
+    for (size_t i = 0; i < _facesSharps.size(); ++i) {
+
+        if (_facesSharps.at(i)) {
+            constexpr float halfSizeBlock = 0.5f;
+            float posBlockfXMin = posBlockfX - halfSizeBlock;
+            float posBlockfXMax = posBlockfX + halfSizeBlock;
+            float posBlockfYMin = posBlockfY - halfSizeBlock;
+            float posBlockfYMax = posBlockfY + halfSizeBlock;
+            float posBlockfZMin = posBlockfZ - halfSizeBlock;
+            float posBlockfZMax = posBlockfZ + halfSizeBlock;
+
+            JBTypes::Dir dir = JBTypesMethods::integerAsDirection(static_cast <unsigned int>(i));
+            JBTypes::vec3f dirVec = JBTypesMethods::directionAsVector(dir);
+
+            if (dirVec.x > EPSILON_F || dirVec.x < -EPSILON_F) {
+                posBlockfYMin += offsetCenter;
+                posBlockfYMax -= offsetCenter;
+                posBlockfZMin += offsetCenter;
+                posBlockfZMax -= offsetCenter;
+                if (dirVec.x < 0) {
+                    posBlockfXMin -= sizeSharp;
+                } else if (dirVec.x > 0) {
+                    posBlockfXMax += sizeSharp;
+                }
+            }
+            if (dirVec.y > EPSILON_F || dirVec.y < -EPSILON_F) {
+                posBlockfXMin += offsetCenter;
+                posBlockfXMax -= offsetCenter;
+                posBlockfZMin += offsetCenter;
+                posBlockfZMax -= offsetCenter;
+                if (dirVec.y < 0) {
+                    posBlockfYMin -= sizeSharp;
+                } else if (dirVec.y > 0) {
+                    posBlockfYMax += sizeSharp;
+                }
+            }
+            if (dirVec.z > EPSILON_F || dirVec.z < -EPSILON_F) {
+                posBlockfXMin += offsetCenter;
+                posBlockfXMax -= offsetCenter;
+                posBlockfYMin += offsetCenter;
+                posBlockfYMax -= offsetCenter;
+                if (dirVec.y < 0) {
+                    posBlockfZMin -= sizeSharp;
+                } else if (dirVec.y > 0) {
+                    posBlockfZMax += sizeSharp;
+                }
+            }
+            std::cout << "valeurs" << std::endl;
+            std::cout << "xmin" << posBlockfXMin << std::endl;
+            std::cout << "xmax" << posBlockfXMax << std::endl;
+            std::cout << "ymin" << posBlockfYMin << std::endl;
+            std::cout << "ymax" << posBlockfYMax << std::endl;
+            std::cout << "zmin" << posBlockfZMin << std::endl;
+            std::cout << "zmax" << posBlockfZMax << std::endl;
+            std::cout << "x" << _ball->get3DPosition().x << std::endl;
+            std::cout << "y" << _ball->get3DPosition().y << std::endl;
+            std::cout << "z" << _ball->get3DPosition().z << std::endl;
+            boundingBoxes.push_back( {
+                { posBlockfXMin, posBlockfYMin, posBlockfZMin },
+                { posBlockfXMin, posBlockfYMax, posBlockfZMax }
+            });
+        }
+    }
+
+    return boundingBoxes;
 }

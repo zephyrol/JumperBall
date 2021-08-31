@@ -30,9 +30,11 @@ Block::Effect interaction(
 ) override;
 
 vecCstShape_sptr getExtraShapes() const override;
+std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > computeSharpBoundingBoxes() const;
 
 private:
 const std::array <bool, 6> _facesSharps;
+const std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > _sharpBoundingBoxes;
 };
 
 #endif /* SHARPBLOCK_H */

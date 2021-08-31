@@ -814,6 +814,9 @@ const JBTypes::vec3ui &Ball::getPosition() const noexcept {
 }
 
 void Ball::interaction() {
+    if(_stateOfLife == Ball::StateOfLife::Bursting || _stateOfLife == Ball::StateOfLife::Dead) {
+        return;
+    }
     Block::Effect finalBlockEffect = Block::Effect::Nothing;
 
     for( const auto& block: *_blockWithInteractions) {
@@ -822,6 +825,11 @@ void Ball::interaction() {
             finalBlockEffect = blockEffect;
         }
     }
+    if (finalBlockEffect == Block::Effect::Burst) {
+
+        _stateOfLife = Ball::StateOfLife::Bursting;
+        internalUpdate();
+    }
 }
 
 void Ball::internalUpdate() noexcept {
@@ -829,7 +837,6 @@ void Ball::internalUpdate() noexcept {
     if (_stateOfLife == Ball::StateOfLife::Dead) {
         return;
     }
-
 
     switch (_state) {
         case Ball::State::Falling: fallingUpdate(); break;
@@ -846,7 +853,7 @@ void Ball::internalUpdate() noexcept {
 
     _currentCrushing = getCrushingCoefficient();
     burningUpdate();
-    if (isOutOfTheMap() || isBurstingFinished()) {
+    if (isBurstingFinished()) {
         die();
     }
 
