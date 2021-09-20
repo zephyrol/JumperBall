@@ -29,6 +29,35 @@ JBTypes::vec3f JBTypesMethods::directionAsVector (JBTypes::Dir dir) {
     return dirVec3;
 }
 
+JBTypes::vec3i JBTypesMethods::directionAsVectorInt(JBTypes::Dir dir) {
+
+    JBTypes::vec3i dirVec3 { 0, 0, 0 };
+    switch (dir) {
+        case JBTypes::Dir::North:
+            dirVec3.at(2) = -1;
+            break;
+        case JBTypes::Dir::South:
+            dirVec3.at(2) = 1;
+            break;
+        case JBTypes::Dir::East:
+            dirVec3.at(0) = 1;
+            break;
+        case JBTypes::Dir::West:
+            dirVec3.at(0) = -1;
+            break;
+        case JBTypes::Dir::Up:
+            dirVec3.at(1) = 1;
+            break;
+        case JBTypes::Dir::Down:
+            dirVec3.at(1) = -1;
+            break;
+        default:
+            break;
+    }
+
+    return dirVec3;
+}
+
 
 JBTypes::vec3f JBTypesMethods::rotationVectorUpToDir (const JBTypes::Dir& dir) {
 

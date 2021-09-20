@@ -37,6 +37,8 @@ struct vec3f { float x; float y; float z; };
 struct vec2f { float x; float y; };
 
 using vec3ui = std::array <unsigned int, 3>;
+using vec3i = std::array <int, 3>;
+
 using timePointMs = std::chrono::time_point <
     std::chrono::system_clock,
     std::chrono::duration < long int, std::ratio <1, 1000> >
@@ -92,6 +94,9 @@ std::string colorToString(const JBTypes::Color& color);
 JBTypes::Color charAsColor(unsigned char charColor);
 
 template<typename K, typename V> std::map <K, V> createMap(std::vector <K> keys, std::vector <V> values);
+
+JBTypes::vec3i directionAsVectorInt(JBTypes::Dir dir);
+
 }
 
 #endif /* TYPES_H */

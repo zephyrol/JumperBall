@@ -22,10 +22,10 @@ Block::Block(
     _cstEnemies(getCstEnemies()),
     _specials(specials),
     _cstSpecials(getCstSpecials()),
-    _hasInteraction(alwaysHasInteractions || items.size() > 0 || enemies.size() > 0 || specials.size() > 0),
+    _hasInteraction(alwaysHasInteractions || !items.empty() || !enemies.empty() || !specials.empty()),
     _isFixed(isFixed),
-    _localScale{1.f, 1.f, 1.f},
-    _localTranslation{0.f, 0.f, 0.f}
+    _localScale{1.f, 1.f, 1.f },
+    _localTranslation{0.f, 0.f, 0.f }
 {
 }
 

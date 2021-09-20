@@ -54,7 +54,7 @@ ClassicalMechanics::physics2DVector ClassicalMechanics::getAcceleration (float t
 float ClassicalMechanics::evalPositionX (float t) const {
     const float posX = t < _timeToGetDestinationX
                        ? _v0.x * _timeToGetDestinationX * t - _v0.x *
-                       static_cast <float>(pow(t, 2)) / 2.f
+                       static_cast <float>(powf(t, 2.f)) / 2.f
                        : _jumpDistance;
     return posX;
 }
@@ -173,7 +173,7 @@ std::pair <float, float> ClassicalMechanics::solveQuadraticEquation (float a, fl
 }
 
 float ClassicalMechanics::getV0xToRespectDistanceAndTime() const {
-    return 2.f * _jumpDistance / static_cast <float>(pow(_timeToGetDestinationX, 2));
+    return 2.f * _jumpDistance / static_cast <float>(powf(_timeToGetDestinationX, 2.f));
 }
 
 float ClassicalMechanics::getTimeToGetDestFromV0y (float v0y) {

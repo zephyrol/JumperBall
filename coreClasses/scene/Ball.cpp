@@ -160,47 +160,45 @@ void Ball::isGoingStraightAheadIntersectBlock() noexcept{
     if (_state != Ball::State::Jumping) {
         return;
     }
-    constexpr float distanceNear = 1.f;
-    constexpr float distanceFar = 2.f;
-    constexpr float distanceVeryFar = 3.f;
-    constexpr float sizeBlock = 1.f;
+    const auto sideVec = JBTypesMethods::directionAsVectorInt(_currentSide);
+    const auto lookVec = JBTypesMethods::directionAsVectorInt(_lookTowards);
+    const auto offsetPosX = _pos.at(0) + sideVec.at(0);
+    const auto offsetPosY = _pos.at(1) + sideVec.at(1);
+    const auto offsetPosZ = _pos.at(2) + sideVec.at(2);
 
-    const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
-    const JBTypes::vec3f lookVec = JBTypesMethods::directionAsVector(_lookTowards);
-
-    const auto offsetPosX = _3DPos.x + sideVec.x;
-    const auto offsetPosY = _3DPos.y + sideVec.y;
-    const auto offsetPosZ = _3DPos.z + sideVec.z;
-
-    const auto aboveNearX = static_cast <unsigned int>(offsetPosX + lookVec.x);
-    const auto aboveNearY = static_cast <unsigned int>(offsetPosY + lookVec.y);
-    const auto aboveNearZ = static_cast <unsigned int>(offsetPosZ + lookVec.z);
+    const auto aboveNearX = offsetPosX + lookVec.at(0);
+    const auto aboveNearY = offsetPosY + lookVec.at(1);
+    const auto aboveNearZ = offsetPosZ + lookVec.at(2);
     const CstBlock_sptr blockNear = getBlock({ aboveNearX, aboveNearY, aboveNearZ });
 
     ClassicalMechanics& refMechanicsJumping = getMechanicsJumping();
-    const float sizeBlock2MinusRadius = (sizeBlock / 2.f) - getRadius() ;
+    constexpr float sizeBlock = 1.f;
+    const float sizeBlock2MinusRadius = sizeBlock / 2.f - getRadius() ;
+
     if (blockNear && blockNear->isExists()) {
-        refMechanicsJumping.addShockFromPosition(distanceNear - sizeBlock2MinusRadius);
+        refMechanicsJumping.addShockFromPosition(sizeBlock2MinusRadius);
         return;
     }
 
-    const auto aboveFarX = static_cast <unsigned int>(offsetPosX + 2.f * lookVec.x);
-    const auto aboveFarY = static_cast <unsigned int>(offsetPosY + 2.f * lookVec.y);
-    const auto aboveFarZ = static_cast <unsigned int>(offsetPosZ + 2.f * lookVec.z);
+    const auto aboveFarX = offsetPosX + 2 * lookVec.at(0);
+    const auto aboveFarY = offsetPosY + 2 * lookVec.at(1);
+    const auto aboveFarZ = offsetPosZ + 2 * lookVec.at(2);
     const CstBlock_sptr blockFar = getBlock({ aboveFarX, aboveFarY, aboveFarZ });
 
     if (blockFar && blockFar->isExists()) {
-        refMechanicsJumping.addShockFromPosition(distanceFar - sizeBlock2MinusRadius);
+        constexpr float offsetFar = 1.f;
+        refMechanicsJumping.addShockFromPosition(sizeBlock2MinusRadius + offsetFar);
         return;
     }
 
-    const auto aboveVeryFarX = static_cast <unsigned int>(offsetPosX + 3.f * lookVec.x);
-    const auto aboveVeryFarY = static_cast <unsigned int>(offsetPosY + 3.f * lookVec.y);
-    const auto aboveVeryFarZ = static_cast <unsigned int>(offsetPosZ + 3.f * lookVec.z);
+    const auto aboveVeryFarX = offsetPosX + 3 * lookVec.at(0);
+    const auto aboveVeryFarY = offsetPosY + 3 * lookVec.at(1);
+    const auto aboveVeryFarZ = offsetPosZ + 3 * lookVec.at(2);
     const CstBlock_sptr blockVeryFar = getBlock({ aboveVeryFarX, aboveVeryFarY, aboveVeryFarZ });
 
     if (_jumpingType == Ball::JumpingType::Long && blockVeryFar && blockVeryFar->isExists()) {
-        refMechanicsJumping.addShockFromPosition(distanceVeryFar - sizeBlock2MinusRadius);
+        constexpr float offsetVeryFar = 2.f;
+        refMechanicsJumping.addShockFromPosition(sizeBlock2MinusRadius + offsetVeryFar);
         return;
     }
     refMechanicsJumping.timesShock({});
@@ -304,9 +302,9 @@ void Ball::isFallingIntersectionBlock() noexcept{
         return;
     }
     if (descendingJumpPhase) {
-        const float coveredDistance = getMechanicsJumping().getPosition(
+        const float coveredDistance = roundf(getMechanicsJumping().getPosition(
             getMechanicsJumping().getTimeToGetDestination()
-            ).x;
+        ).x);
         const float absCoveredDistance = fabsf(coveredDistance);
         const bool inverseRotation = coveredDistance < 0.f;
         const auto distance = static_cast<size_t>(absCoveredDistance);
