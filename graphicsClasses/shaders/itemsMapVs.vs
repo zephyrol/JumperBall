@@ -140,10 +140,12 @@ mat4 itemTranslation() {
         return mat4(1.0);
     }
     float translateCoeff = 0.0;
+    vec3 wayDir = 0.7 * dirToVec();
     if (obtainingTime < thresholdSecondStep) {
         translateCoeff = obtainingTime / thresholdSecondStep;
+        return translate(translateCoeff * wayDir);
     }
-    return translate(dirToVec());
+    return translate(wayDir);
 }
 
 
