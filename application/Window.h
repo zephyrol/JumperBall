@@ -10,8 +10,8 @@
 #include <system/Types.h>
 #include <Utility.h>
 #include <Controller.h>
-#define RESOLUTION_X 1024
-#define RESOLUTION_Y 768
+#define RESOLUTION_X 120
+#define RESOLUTION_Y 120
 
 class Window {
 public:

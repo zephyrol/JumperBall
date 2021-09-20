@@ -122,19 +122,9 @@ void Map::update(const JBTypes::timePointMs& updatingTime, const Ball::ActionReq
     _blocksUpdating.runTasks();
     _blocksUpdating.waitTasks();
 
-    _ball->update(updatingTime, action);
-
     if (ballIsOut()) {
         _ball->die();
     }
-
-    /*const Map::Effect effect = _map.interaction(_currentSide, get3DPosition(), getRadius());
-    if (effect == Map::Effect::Burst) {
-        if (_stateOfLife != StateOfLife::Bursting) {
-            _stateOfLife = StateOfLife::Bursting;
-            setTimeLifeNow();
-        }
-    }*/
 }
 
 void Map::switchColor (const JBTypes::Color& color) {

@@ -58,7 +58,6 @@ CstGeometricShape_sptr MeshGenerator::createGeometricShape(const CstShape_sptr& 
 
 
     if(shape->aspect() == Shape::Aspect::Cylinder) {
-        std::cout << "Create cylinder" << std::endl;
         return std::make_shared<Cylinder>(shape->color(), 60, localTransform, normalTransform);
     }
     if(shape->aspect() == Shape::Aspect::Pyramid) {

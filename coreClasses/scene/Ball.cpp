@@ -168,39 +168,42 @@ void Ball::isGoingStraightAheadIntersectBlock() noexcept{
     const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
     const JBTypes::vec3f lookVec = JBTypesMethods::directionAsVector(_lookTowards);
 
-    const auto offsetPosX = _3DPos.x;
-    const auto offsetPosY = _3DPos.y;
-    const auto offsetPosZ = _3DPos.z;
+    const auto offsetPosX = _3DPos.x + sideVec.x;
+    const auto offsetPosY = _3DPos.y + sideVec.y;
+    const auto offsetPosZ = _3DPos.z + sideVec.z;
 
-    const auto aboveNearX = static_cast <unsigned int>(offsetPosX + sideVec.x + lookVec.x);
-    const auto aboveNearY = static_cast <unsigned int>(offsetPosY + sideVec.y + lookVec.y);
-    const auto aboveNearZ = static_cast <unsigned int>(offsetPosZ + sideVec.z + lookVec.z);
-    const auto aboveFarX = static_cast <unsigned int>(offsetPosX + sideVec.x + 2.f * lookVec.x);
-    const auto aboveFarY = static_cast <unsigned int>(offsetPosY + sideVec.y + 2.f * lookVec.y);
-    const auto aboveFarZ = static_cast <unsigned int>(offsetPosZ + sideVec.z + 2.f * lookVec.z);
-    const auto aboveVeryFarX = static_cast <unsigned int>(offsetPosX + sideVec.x + 3.f * lookVec.x);
-    const auto aboveVeryFarY = static_cast <unsigned int>(offsetPosY + sideVec.y + 3.f * lookVec.y);
-    const auto aboveVeryFarZ = static_cast <unsigned int>(offsetPosZ + sideVec.z + 3.f * lookVec.z);
-
+    const auto aboveNearX = static_cast <unsigned int>(offsetPosX + lookVec.x);
+    const auto aboveNearY = static_cast <unsigned int>(offsetPosY + lookVec.y);
+    const auto aboveNearZ = static_cast <unsigned int>(offsetPosZ + lookVec.z);
     const CstBlock_sptr blockNear = getBlock({ aboveNearX, aboveNearY, aboveNearZ });
 
+    ClassicalMechanics& refMechanicsJumping = getMechanicsJumping();
+    const float sizeBlock2MinusRadius = (sizeBlock / 2.f) - getRadius() ;
+    if (blockNear && blockNear->isExists()) {
+        refMechanicsJumping.addShockFromPosition(distanceNear - sizeBlock2MinusRadius);
+        return;
+    }
+
+    const auto aboveFarX = static_cast <unsigned int>(offsetPosX + 2.f * lookVec.x);
+    const auto aboveFarY = static_cast <unsigned int>(offsetPosY + 2.f * lookVec.y);
+    const auto aboveFarZ = static_cast <unsigned int>(offsetPosZ + 2.f * lookVec.z);
     const CstBlock_sptr blockFar = getBlock({ aboveFarX, aboveFarY, aboveFarZ });
 
+    if (blockFar && blockFar->isExists()) {
+        refMechanicsJumping.addShockFromPosition(distanceFar - sizeBlock2MinusRadius);
+        return;
+    }
+
+    const auto aboveVeryFarX = static_cast <unsigned int>(offsetPosX + 3.f * lookVec.x);
+    const auto aboveVeryFarY = static_cast <unsigned int>(offsetPosY + 3.f * lookVec.y);
+    const auto aboveVeryFarZ = static_cast <unsigned int>(offsetPosZ + 3.f * lookVec.z);
     const CstBlock_sptr blockVeryFar = getBlock({ aboveVeryFarX, aboveVeryFarY, aboveVeryFarZ });
 
-    ClassicalMechanics& refMechanicsJumping = getMechanicsJumping();
-    const float sizeBlock2 = sizeBlock / 2.f;
-    if (blockNear && blockNear->isExists()) {
-        refMechanicsJumping.addShockFromPosition(distanceNear - sizeBlock2 - getRadius());
-    } else if (blockFar && blockFar->isExists()) {
-        refMechanicsJumping.addShockFromPosition(distanceFar - sizeBlock2 - getRadius());
-    } else if (
-        _jumpingType == Ball::JumpingType::Long && blockVeryFar &&
-        blockVeryFar->isExists()) {
-        refMechanicsJumping.addShockFromPosition(distanceVeryFar - sizeBlock2 - getRadius());
-    } else {
-        refMechanicsJumping.timesShock({});
+    if (_jumpingType == Ball::JumpingType::Long && blockVeryFar && blockVeryFar->isExists()) {
+        refMechanicsJumping.addShockFromPosition(distanceVeryFar - sizeBlock2MinusRadius);
+        return;
     }
+    refMechanicsJumping.timesShock({});
 }
 
 const ClassicalMechanics& Ball::getMechanicsJumping() const noexcept{
@@ -735,9 +738,7 @@ float Ball::getFallingPosX() const noexcept{
 }
 
 void Ball::update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action) noexcept{
-
     _updatingTime = updatingTime;
-
     doAction(action);
     internalUpdate();
 }
