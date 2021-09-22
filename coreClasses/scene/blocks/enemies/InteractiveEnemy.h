@@ -21,7 +21,7 @@ public:
     );
 
 protected:
-    const Ball_sptr _ball;
+    const Ball_wptr _ball;
 };
 
 

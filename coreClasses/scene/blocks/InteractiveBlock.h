@@ -24,7 +24,7 @@ public:
     void catchItem() override;
 
 protected:
-    const Ball_sptr _ball;
+    const CstBall_wptr _ball;
 
 
 };

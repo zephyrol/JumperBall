@@ -22,7 +22,8 @@ std::array <bool, 6> JumpBlock::faceInfo() const {
 }
 
 Block::Effect JumpBlock::detectionEvent () {
-    const unsigned int dir = JBTypesMethods::directionAsInteger(_ball->currentSide());
+    const auto ball = _ball.lock();
+    const unsigned int dir = JBTypesMethods::directionAsInteger(ball->currentSide());
     return faceInfo().at(dir) ? Block::Effect::Jump : Block::Effect::Nothing;
 }
 

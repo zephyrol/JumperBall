@@ -79,8 +79,9 @@ bool BrittleBlock::isExists() const {
 Block::Effect BrittleBlock::detectionEvent () {
 
     if (!_isGoingToBreak) {
-        _collisionTime = _ball->getTimeActionMs();
-        setFallDirection(_ball->currentSide());
+        const auto ball = _ball.lock();
+        _collisionTime = ball->getTimeActionMs();
+        setFallDirection(ball->currentSide());
         _isGoingToBreak = true;
     }
     return Effect::Nothing;

@@ -16,9 +16,9 @@
 
 class Ball;
 using Ball_sptr = std::shared_ptr <Ball>;
+using Ball_wptr = std::weak_ptr<Ball>;
 using CstBall_sptr = std::shared_ptr <const Ball>;
-using vecCstBall_sptr = std::vector <CstBall_sptr>;
-using vecBall_sptr = std::vector <Ball_sptr>;
+using CstBall_wptr = std::weak_ptr<const Ball>;
 
 class Ball: public SceneElement {
 public:

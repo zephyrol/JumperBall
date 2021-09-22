@@ -25,6 +25,7 @@
              break;
          }
          case Scene::ActionKey::Down: {
+             actionRequest = Ball::ActionRequest::Nothing;
              break;
          }
          case Scene::ActionKey::Right: {
@@ -39,7 +40,10 @@
              actionRequest = Ball::ActionRequest::Jump;
              break;
          }
-         default: break;
+         default: {
+             actionRequest = Ball::ActionRequest::Nothing;
+             break;
+         }
      }
 
      _map->update(JBTypesMethods::getTimePointMSNow(), actionRequest);

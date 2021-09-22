@@ -34,8 +34,9 @@ Block::Effect SharpBlock::interaction (const JBTypes::timePointMs&) {
     };
 
     for (const auto& boundingBox: _sharpBoundingBoxes) {
+        const auto ball = _ball.lock();
         if (isInSharpZone(
-            _ball->get3DPosition(),
+            ball->get3DPosition(),
             boundingBox.first.x,
             boundingBox.second.x,
             boundingBox.first.y,
