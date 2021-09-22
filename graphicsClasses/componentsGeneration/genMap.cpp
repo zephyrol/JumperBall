@@ -35,13 +35,15 @@ vecMesh_sptr MeshGenerator::genItems (const CstMap_sptr& map) {
 vecMesh_sptr MeshGenerator::genEnemies (const CstMap_sptr& map) {
 
     vecMesh_sptr meshes;
-    /*const auto enemiesInfos = map->getEnemiesInfo();
-    for (const auto& enemyInfo : enemiesInfos) {
-        const std::shared_ptr <const Enemy> enemy = enemyInfo.enemy;
-        if (enemy) {
-            meshes.push_back(genEnemy(enemy, enemyInfo.type));
+    for (const auto& block: map->getBlocks()) {
+        for (const auto& enemy: block->getEnemies()) {
+            vecCstGeometricShape_sptr geometricShapes;
+            for(const auto& shape: enemy->getShapes()) {
+                geometricShapes.push_back(createGeometricShape(shape));
+            }
+            meshes.push_back(std::make_shared <Mesh>(enemy, std::move(geometricShapes)));
         }
-    }*/
+    }
     return meshes;
 }
 

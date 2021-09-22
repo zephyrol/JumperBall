@@ -22,6 +22,7 @@ Laser(const JBTypes::Color& color,
 virtual Effect update(const JBTypes::vec3f& boundingSpherePosition,
                       float boundingSphereRadius) override;
 virtual JBTypes::Color getColor() const override;
+vecCstShape_sptr getShapes() const override;
 virtual void switchOnOff() override;
 virtual ~Laser() = default;
 
@@ -30,8 +31,7 @@ const JBTypes::Color _color;
 bool _isActivated;
 static constexpr float laserRadius = 0.05f;
 
-virtual void touchingTest(const JBTypes::vec3f& boundingSpherePosition,
-                          float boundingSphereRadius) override;
+void touchingTest(const JBTypes::vec3f& boundingSpherePosition, float boundingSphereRadius) override;
 };
 
 #endif /* Laser_h */

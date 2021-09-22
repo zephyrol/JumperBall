@@ -7,6 +7,7 @@
 #ifndef Enemy_hpp
 #define Enemy_hpp
 
+#include <scene/Shape.h>
 #include "scene/SceneElement.h"
 
 class Enemy;
@@ -41,6 +42,8 @@ size_t length() const;
 SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 
 SceneElement::GlobalState getGlobalState() const override;
+
+virtual vecCstShape_sptr getShapes() const = 0;
 
 virtual void switchOnOff();
 virtual ~Enemy() = default;

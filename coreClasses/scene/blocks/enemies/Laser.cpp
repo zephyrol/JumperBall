@@ -100,3 +100,7 @@ void Laser::touchingTest (const JBTypes::vec3f& boundingSpherePosition,
         _hasHit = true;
     }
 }
+
+vecCstShape_sptr Laser::getShapes() const {
+    return {};
+}

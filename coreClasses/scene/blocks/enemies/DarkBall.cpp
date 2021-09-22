@@ -119,3 +119,7 @@ void DarkBall::touchingTest (const JBTypes::vec3f& boundingSpherePosition,
 }
 
 const ClassicalMechanics DarkBall::darkBallClassicalMechanics(DarkBall::darkBallRadius);
+
+vecCstShape_sptr DarkBall::getShapes() const {
+    return {};
+}

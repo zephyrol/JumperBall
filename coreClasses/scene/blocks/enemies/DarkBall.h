@@ -26,6 +26,8 @@ const JBTypes::Dir& movementDirection() const;
 virtual ~DarkBall() = default;
 static constexpr float darkBallRadius = 0.2f;
 
+vecCstShape_sptr getShapes() const override;
+
 private:
 const JBTypes::Dir _movementDirection;
 virtual void touchingTest(const JBTypes::vec3f& boundingSpherePosition,

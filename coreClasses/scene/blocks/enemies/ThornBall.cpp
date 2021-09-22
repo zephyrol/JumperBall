@@ -71,3 +71,15 @@ void ThornBall::touchingTest (const JBTypes::vec3f& boundingSpherePosition,
         _hasHit = true;
     }
 }
+
+vecCstShape_sptr ThornBall::getShapes() const {
+    const auto thornBallShape = std::make_shared<const Shape>(
+        Shape::Aspect::Sphere,
+        JBTypes::Color::Red,
+        std::initializer_list<Transformation>({
+            Transformation(Transformation::Type::Translation, { 0.f, -0.5f, 0.f}),
+            Transformation(Transformation::Type::Scale, { 0.5f, 0.5f, 0.5f })
+        })
+    );
+    return { thornBallShape };
+}
