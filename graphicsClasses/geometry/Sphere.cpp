@@ -139,6 +139,12 @@ glm::vec3 Sphere::getSphereColor(const JBTypes::Color &color) {
     if (color == JBTypes::Color::Yellow) {
         return { 1.f, 215.f / 255.f, 0.f };
     }
+    if(color == JBTypes::Color::Red) {
+        return { 114.f/ 255.f, 47.f / 255.f, 55.f / 255.f };
+    }
+    if(color == JBTypes::Color::Blue) {
+        return { 0.f, 0.f, 0.5f };
+    }
     return {0.f,0.f,0.f };
 }
 

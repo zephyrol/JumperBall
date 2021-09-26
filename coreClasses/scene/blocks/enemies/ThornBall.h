@@ -17,8 +17,7 @@ ThornBall(const JBTypes::vec3ui& initialPosition,
           const Ball_sptr &ball
           );
 
-Effect update(const JBTypes::vec3f& boundingSpherePosition,
-                      float boundingSphereRadius) override;
+Effect update() override;
 
 const JBTypes::Dir& movementDirection() const ;
 vecCstShape_sptr getShapes() const override;
@@ -28,7 +27,7 @@ static constexpr float thornBallRadius = 0.1f;
 private:
 const JBTypes::Dir _movementDirection;
 
-void touchingTest(const JBTypes::vec3f& boundingSpherePosition, float boundingSphereRadius) override;
+void touchingTest() override;
 };
 
 #endif /* ThornBall_h */

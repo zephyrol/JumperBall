@@ -14,7 +14,6 @@ IceBlock::IceBlock(const JBTypes::vec3ui &position,
                    const Ball_sptr& ball
                    ):
     InteractiveBlock(position, items, enemies, specials, ball){
-    std::cout << "create ice block" << std::endl;
 }
 
 Block::Effect IceBlock::detectionEvent () {

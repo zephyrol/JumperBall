@@ -22,6 +22,7 @@ public:
     );
 
     void catchItem() override;
+    void update(const JBTypes::timePointMs& currentTime) override;
 
 protected:
     const CstBall_wptr _ball;

@@ -65,10 +65,6 @@ bool Block::hasInteraction() const {
     return _hasInteraction;
 }
 
-void Block::update(const JBTypes::timePointMs& currentTime) {
-    interaction(currentTime);
-}
-
 const bool& Block::isFixed() const {
     return _isFixed;
 }

@@ -30,14 +30,11 @@ ThornBall::ThornBall(const JBTypes::vec3ui& initialPosition,
     _movementDirection(movementDirection) {
 }
 
-Enemy::Effect ThornBall::update (const JBTypes::vec3f& boundingSpherePosition,
-                                 float boundingSphereRadius) {
+Enemy::Effect ThornBall::update () {
     constexpr float movementDuration = 2.f;
-    const float timeSinceCreation =
-        JBTypesMethods::getTimeSecondsSinceTimePoint(creationTime());
+    const float timeSinceCreation = JBTypesMethods::getTimeSecondsSinceTimePoint(creationTime());
 
-    const JBTypes::vec3f vecDir =
-        JBTypesMethods::directionAsVector(_movementDirection);
+    const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(_movementDirection);
 
     const auto movementLength = static_cast <float>(length());
     const float localMovement = (1.f - cosf(2.f * static_cast <float>(M_PI) *
@@ -51,7 +48,7 @@ Enemy::Effect ThornBall::update (const JBTypes::vec3f& boundingSpherePosition,
     _position.x = _initialPosition.x + _transform.at(0);
     _position.y = _initialPosition.y + _transform.at(1);
     _position.z = _initialPosition.z + _transform.at(2);
-    touchingTest(boundingSpherePosition, boundingSphereRadius);
+    touchingTest();
     return _hasHit
            ? Enemy::Effect::Burst
            : Enemy::Effect::Nothing;
@@ -61,8 +58,11 @@ const JBTypes::Dir& ThornBall::movementDirection() const {
     return _movementDirection;
 }
 
-void ThornBall::touchingTest (const JBTypes::vec3f& boundingSpherePosition,
-                              float boundingSphereRadius) {
+void ThornBall::touchingTest () {
+
+    const auto ball = _ball.lock();
+    const auto& boundingSpherePosition = ball->get3DPosition();
+    const auto& boundingSphereRadius = ball->getRadius();
     if (
         JBTypesMethods::distance(boundingSpherePosition, _position) <
         (boundingSphereRadius + thornBallRadius)
@@ -73,12 +73,13 @@ void ThornBall::touchingTest (const JBTypes::vec3f& boundingSpherePosition,
 }
 
 vecCstShape_sptr ThornBall::getShapes() const {
+    const auto& diameter = this->size();
     const auto thornBallShape = std::make_shared<const Shape>(
         Shape::Aspect::Sphere,
         JBTypes::Color::Red,
         std::initializer_list<Transformation>({
-            Transformation(Transformation::Type::Translation, { 0.f, -0.5f, 0.f}),
-            Transformation(Transformation::Type::Scale, { 0.5f, 0.5f, 0.5f })
+            //Transformation(Transformation::Type::Translation, { 0.f, -0.5f, 0.f}),
+            Transformation(Transformation::Type::Scale, { diameter, diameter, diameter })
         })
     );
     return { thornBallShape };

@@ -22,6 +22,8 @@ public:
 
 protected:
     const Ball_wptr _ball;
+
+    virtual void touchingTest() = 0;
 };
 
 

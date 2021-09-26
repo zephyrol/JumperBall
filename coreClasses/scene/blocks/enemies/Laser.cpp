@@ -31,10 +31,8 @@ Laser::Laser(const JBTypes::Color& color,
     _isActivated(true) {
 }
 
-Enemy::Effect Laser::update (const JBTypes::vec3f& boundingSpherePosition,
-                             float boundingSphereRadius) {
-    touchingTest(boundingSpherePosition, boundingSphereRadius);
-
+Enemy::Effect Laser::update () {
+    touchingTest();
     if (_isActivated) {
         _transform.at(6) = 1.f;
         _transform.at(7) = 1.f;
@@ -57,11 +55,15 @@ void Laser::switchOnOff() {
     _isActivated = !_isActivated;
 }
 
-void Laser::touchingTest (const JBTypes::vec3f& boundingSpherePosition,
-                          float boundingSphereRadius) {
+void Laser::touchingTest () {
     if (!_isActivated) {
         return;
     }
+
+    const auto ball = _ball.lock();
+    const auto& boundingSpherePosition = ball->get3DPosition();
+    const auto& boundingSphereRadius = ball->getRadius();
+
     constexpr float offsetLaser = 0.5f;
 
     const float entityMinX = boundingSpherePosition.x - boundingSphereRadius;
@@ -71,7 +73,7 @@ void Laser::touchingTest (const JBTypes::vec3f& boundingSpherePosition,
     const float entityMinZ = boundingSpherePosition.z - boundingSphereRadius;
     const float entityMaxZ = boundingSpherePosition.z + boundingSphereRadius;
 
-    const float fLength = static_cast <float>(length());
+    const auto fLength = static_cast <float>(length());
     const float laserMinX = direction() == JBTypes::Dir::West
                             ? _position.x - offsetLaser - fLength
                             : _position.x - offsetLaser;
