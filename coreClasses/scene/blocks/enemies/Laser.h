@@ -19,7 +19,6 @@ Laser(const JBTypes::Color& color,
       const Ball_sptr &ball
       );
 
-virtual Effect update() override;
 virtual JBTypes::Color getColor() const override;
 vecCstShape_sptr getShapes() const override;
 virtual void switchOnOff() override;
@@ -30,7 +29,7 @@ const JBTypes::Color _color;
 bool _isActivated;
 static constexpr float laserRadius = 0.05f;
 
-void touchingTest() override;
+bool touchingTest() override;
 };
 
 #endif /* Laser_h */

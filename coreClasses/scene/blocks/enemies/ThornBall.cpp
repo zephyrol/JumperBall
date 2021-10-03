@@ -21,7 +21,7 @@ ThornBall::ThornBall(const JBTypes::vec3ui& initialPosition,
     _movementDirection(movementDirection) {
 }
 
-Enemy::Effect ThornBall::update() {
+void ThornBall::update() {
     constexpr float movementDuration = 2.f;
     const float timeSinceCreation = JBTypesMethods::getTimeSecondsSinceTimePoint(creationTime());
 
@@ -35,29 +35,19 @@ Enemy::Effect ThornBall::update() {
     _position.x = _initialPosition.x + vecDir.x * movementPosition;
     _position.y = _initialPosition.y + vecDir.y * movementPosition;
     _position.z = _initialPosition.z + vecDir.z * movementPosition;
-    touchingTest();
-    return _hasHit
-           ? Enemy::Effect::Burst
-           : Enemy::Effect::Nothing;
 }
 
 const JBTypes::Dir& ThornBall::movementDirection() const {
     return _movementDirection;
 }
 
-void ThornBall::touchingTest() {
+bool ThornBall::touchingTest() {
 
     const auto ball = _ball.lock();
     const auto& boundingSpherePosition = ball->get3DPosition();
     const auto& boundingSphereRadius = ball->getRadius();
-    if (
-        JBTypesMethods::distance(boundingSpherePosition, _position) <
-        (boundingSphereRadius + thornBallRadius)
-        ) {
-        _intersectionTime = JBTypesMethods::getTimePointMSNow();
-        _hasHit = true;
-
-    }
+    return JBTypesMethods::distance(boundingSpherePosition, _position) <
+        (boundingSphereRadius + thornBallRadius);
 }
 
 vecCstShape_sptr ThornBall::getShapes() const {

@@ -20,7 +20,7 @@ DarkBall(const JBTypes::vec3ui& initialPosition,
          const Ball_sptr &ball
 );
 
-virtual Effect update() override;
+virtual void update() override;
 const JBTypes::Dir& movementDirection() const;
 virtual ~DarkBall() = default;
 static constexpr float darkBallRadius = 0.2f;
@@ -29,7 +29,7 @@ vecCstShape_sptr getShapes() const override;
 
 private:
 const JBTypes::Dir _movementDirection;
-virtual void touchingTest() override;
+bool touchingTest() override;
 static const ClassicalMechanics darkBallClassicalMechanics;
 };
 

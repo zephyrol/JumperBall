@@ -22,7 +22,7 @@ public:
 protected:
     const Ball_wptr _ball;
 
-    virtual void touchingTest() = 0;
+    virtual bool touchingTest() = 0;
 };
 
 

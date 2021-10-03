@@ -22,23 +22,6 @@ Laser::Laser(const JBTypes::Color& color,
     _isActivated(true) {
 }
 
-Enemy::Effect Laser::update () {
-    touchingTest();
-    if (_isActivated) {
-        // TODO : use a scale attribute in Enemy and update it there
-        //_transform.at(6) = 1.f;
-        //_transform.at(7) = 1.f;
-        //_transform.at(8) = 1.f;
-    } else {
-        //_transform.at(6) = 0.f;
-        //_transform.at(7) = 0.f;
-        //_transform.at(8) = 0.f;
-    }
-    return _hasHit
-           ? Enemy::Effect::Burst
-           : Enemy::Effect::Nothing;
-}
-
 JBTypes::Color Laser::getColor() const {
     return _color;
 }
@@ -47,9 +30,9 @@ void Laser::switchOnOff() {
     _isActivated = !_isActivated;
 }
 
-void Laser::touchingTest () {
+bool Laser::touchingTest () {
     if (!_isActivated) {
-        return;
+        return false;
     }
 
     const auto ball = _ball.lock();
@@ -85,14 +68,9 @@ void Laser::touchingTest () {
                             ? _position.z + offsetLaser + fLength
                             : _position.z + offsetLaser;
 
-    if (
-        (entityMinX < laserMaxX && entityMaxX > laserMinX) &&
+    return (entityMinX < laserMaxX && entityMaxX > laserMinX) &&
         (entityMinY < laserMaxY && entityMaxY > laserMinY) &&
-        (entityMinZ < laserMaxZ && entityMaxZ > laserMinZ)
-        ) {
-        _intersectionTime = JBTypesMethods::getTimePointMSNow();
-        _hasHit = true;
-    }
+        (entityMinZ < laserMaxZ && entityMaxZ > laserMinZ);
 }
 
 vecCstShape_sptr Laser::getShapes() const {

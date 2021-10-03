@@ -27,13 +27,11 @@ Enemy(const JBTypes::vec3ui& initialPosition,
       size_t length
       );
 
-virtual Effect update() = 0;
+virtual void update();
 virtual JBTypes::Color getColor() const;
 const JBTypes::timePointMs& creationTime() const;
-const JBTypes::timePointMs& intersectionTime() const;
 const JBTypes::vec3f& position() const;
 const JBTypes::Dir& direction() const;
-bool hasHit() const;
 float size() const;
 size_t length() const;
 
@@ -53,8 +51,6 @@ const float _size;
 const size_t _length;
 
 protected:
-JBTypes::timePointMs _intersectionTime;
-bool _hasHit;
 const JBTypes::vec3f _initialPosition;
 JBTypes::vec3f _position;
 

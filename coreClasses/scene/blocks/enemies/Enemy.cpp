@@ -17,8 +17,6 @@ Enemy::Enemy(
     _direction(direction),
     _size(size),
     _length(length),
-    _intersectionTime(),
-    _hasHit(false),
     _initialPosition(init3DPosition(initialPosition)),
     _position(_initialPosition)
 {
@@ -30,14 +28,6 @@ JBTypes::Color Enemy::getColor() const {
 
 const JBTypes::timePointMs& Enemy::creationTime() const {
     return _creationTime;
-}
-
-const JBTypes::timePointMs& Enemy::intersectionTime() const {
-    return _intersectionTime;
-}
-
-bool Enemy::hasHit() const {
-    return _hasHit;
 }
 
 float Enemy::size() const {
@@ -89,4 +79,7 @@ SceneElement::DynamicValues <JBTypes::vec3f> Enemy::getDynamicVec3fs() const {
 
 SceneElement::GlobalState Enemy::getGlobalState() const {
     return SceneElement::GlobalState::Separate;
+}
+
+void Enemy::update() {
 }
