@@ -17,15 +17,6 @@ Laser::Laser(const JBTypes::Color& color,
           dir,
           laserRadius,
           length,
-          { 0.f,
-            0.f,
-            0.f,
-            0.f,
-            0.f,
-            0.f,
-            1.f,
-            1.f,
-            1.f },
           ball),
     _color(color),
     _isActivated(true) {
@@ -34,13 +25,14 @@ Laser::Laser(const JBTypes::Color& color,
 Enemy::Effect Laser::update () {
     touchingTest();
     if (_isActivated) {
-        _transform.at(6) = 1.f;
-        _transform.at(7) = 1.f;
-        _transform.at(8) = 1.f;
+        // TODO : use a scale attribute in Enemy and update it there
+        //_transform.at(6) = 1.f;
+        //_transform.at(7) = 1.f;
+        //_transform.at(8) = 1.f;
     } else {
-        _transform.at(6) = 0.f;
-        _transform.at(7) = 0.f;
-        _transform.at(8) = 0.f;
+        //_transform.at(6) = 0.f;
+        //_transform.at(7) = 0.f;
+        //_transform.at(8) = 0.f;
     }
     return _hasHit
            ? Enemy::Effect::Burst

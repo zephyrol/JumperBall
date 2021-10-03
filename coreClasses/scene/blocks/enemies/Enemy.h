@@ -24,8 +24,7 @@ public:
 Enemy(const JBTypes::vec3ui& initialPosition,
       const JBTypes::Dir& direction,
       float size,
-      size_t length,
-      const std::array <float, 9>& transform
+      size_t length
       );
 
 virtual Effect update() = 0;
@@ -33,7 +32,6 @@ virtual JBTypes::Color getColor() const;
 const JBTypes::timePointMs& creationTime() const;
 const JBTypes::timePointMs& intersectionTime() const;
 const JBTypes::vec3f& position() const;
-const std::array <float, 9>& transform() const;
 const JBTypes::Dir& direction() const;
 bool hasHit() const;
 float size() const;
@@ -59,7 +57,6 @@ JBTypes::timePointMs _intersectionTime;
 bool _hasHit;
 const JBTypes::vec3f _initialPosition;
 JBTypes::vec3f _position;
-std::array <float, 9> _transform;
 
 private:
 JBTypes::vec3f init3DPosition(const JBTypes::vec3ui& initialPosition) const;

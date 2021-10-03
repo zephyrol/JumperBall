@@ -9,9 +9,8 @@ InteractiveEnemy::InteractiveEnemy(
     const JBTypes::Dir &direction,
     float size,
     size_t length,
-    const std::array<float, 9> &transform,
     const Ball_sptr &ball
 ):
-Enemy(initialPosition, direction, size, length, transform),
+Enemy(initialPosition, direction, size, length),
 _ball(ball) {
 }

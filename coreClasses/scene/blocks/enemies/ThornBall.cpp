@@ -17,20 +17,11 @@ ThornBall::ThornBall(const JBTypes::vec3ui& initialPosition,
           dir,
           thornBallRadius,
           movementLength,
-          { 0.f,
-            0.f,
-            0.f,
-            0.f,
-            0.f,
-            0.f,
-            1.f,
-            1.f,
-            1.f },
           ball),
     _movementDirection(movementDirection) {
 }
 
-Enemy::Effect ThornBall::update () {
+Enemy::Effect ThornBall::update() {
     constexpr float movementDuration = 2.f;
     const float timeSinceCreation = JBTypesMethods::getTimeSecondsSinceTimePoint(creationTime());
 
@@ -41,13 +32,9 @@ Enemy::Effect ThornBall::update () {
                                             (timeSinceCreation / movementDuration))) / 2.f;
     const float movementPosition = localMovement * movementLength;
 
-    _transform.at(0) = vecDir.x * movementPosition;
-    _transform.at(1) = vecDir.y * movementPosition;
-    _transform.at(2) = vecDir.z * movementPosition;
-
-    _position.x = _initialPosition.x + _transform.at(0);
-    _position.y = _initialPosition.y + _transform.at(1);
-    _position.z = _initialPosition.z + _transform.at(2);
+    _position.x = _initialPosition.x + vecDir.x * movementPosition;
+    _position.y = _initialPosition.y + vecDir.y * movementPosition;
+    _position.z = _initialPosition.z + vecDir.z * movementPosition;
     touchingTest();
     return _hasHit
            ? Enemy::Effect::Burst
@@ -58,7 +45,7 @@ const JBTypes::Dir& ThornBall::movementDirection() const {
     return _movementDirection;
 }
 
-void ThornBall::touchingTest () {
+void ThornBall::touchingTest() {
 
     const auto ball = _ball.lock();
     const auto& boundingSpherePosition = ball->get3DPosition();
@@ -69,6 +56,7 @@ void ThornBall::touchingTest () {
         ) {
         _intersectionTime = JBTypesMethods::getTimePointMSNow();
         _hasHit = true;
+
     }
 }
 
@@ -78,7 +66,7 @@ vecCstShape_sptr ThornBall::getShapes() const {
         Shape::Aspect::Sphere,
         JBTypes::Color::Red,
         std::initializer_list<Transformation>({
-            //Transformation(Transformation::Type::Translation, { 0.f, -0.5f, 0.f}),
+            //Transformation(Transformation::Type::Translation, { 0.f, -1.5f, 0.f}),
             Transformation(Transformation::Type::Scale, { diameter, diameter, diameter })
         })
     );

@@ -11,8 +11,7 @@ Enemy::Enemy(
     const JBTypes::vec3ui& initialPosition,
     const JBTypes::Dir& direction,
     float size,
-    size_t length,
-    const std::array <float, 9>& transform
+    size_t length
 ):
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(direction),
@@ -21,8 +20,8 @@ Enemy::Enemy(
     _intersectionTime(),
     _hasHit(false),
     _initialPosition(init3DPosition(initialPosition)),
-    _position(_initialPosition),
-    _transform(transform) {
+    _position(_initialPosition)
+{
 }
 
 JBTypes::Color Enemy::getColor() const {
@@ -53,8 +52,6 @@ void Enemy::switchOnOff() {
 }
 
 JBTypes::vec3f Enemy::init3DPosition(const JBTypes::vec3ui & initialPosition) const {
-    constexpr float sizeBlock = 1.f;
-    constexpr float offset = sizeBlock / 2.f;
 
     const JBTypes::Dir& currentDir = _direction;
     const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
@@ -65,20 +62,17 @@ JBTypes::vec3f Enemy::init3DPosition(const JBTypes::vec3ui & initialPosition) co
         static_cast <float>(initialPosition.at(2))
     };
 
-    const float& radius = _size;
+    constexpr float offsetBlock = 0.5f;
+    const float offsetToApply = offsetBlock + _size;
     return {
-        posWorld.x + offset + vecDir.x * (offset + radius),
-        posWorld.y + offset + vecDir.y * (offset + radius),
-        posWorld.z + offset + vecDir.z * (offset + radius)
+        posWorld.x + vecDir.x * offsetToApply,
+        posWorld.y + vecDir.y * offsetToApply,
+        posWorld.z + vecDir.z * offsetToApply
     };
 }
 
 const JBTypes::vec3f& Enemy::position() const {
     return _position;
-}
-
-const std::array <float, 9>& Enemy::transform() const {
-    return _transform;
 }
 
 const JBTypes::Dir& Enemy::direction() const {
@@ -87,8 +81,9 @@ const JBTypes::Dir& Enemy::direction() const {
 
 SceneElement::DynamicValues <JBTypes::vec3f> Enemy::getDynamicVec3fs() const {
     return {
-        { "translation", { _transform.at(0), _transform.at(1), _transform.at(2) }},
-        { "scale", { _transform.at(6), _transform.at(7), _transform.at(8) }}
+        //{ "translation", { _position.x, _position.y, _position.z }},
+        { "translation", { _position.x, _position.y, _position.z }},
+        { "scale", { 1.f, 1.f, 1.f }}
     };
 }
 

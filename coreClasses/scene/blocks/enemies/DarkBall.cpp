@@ -18,15 +18,6 @@ DarkBall::DarkBall(
           dir,
           darkBallRadius,
           nbOfJumps,
-          { 0.f,
-            0.f,
-            0.f,
-            0.f,
-            0.f,
-            0.f,
-            1.f,
-            1.f,
-            1.f },
           ball),
     _movementDirection(movementDirection) {
 }
@@ -36,11 +27,9 @@ Enemy::Effect DarkBall::update () {
     const float timeSinceCreation =
         JBTypesMethods::getTimeSecondsSinceTimePoint(creationTime());
 
-    const JBTypes::vec3f vecDirMovement =
-        JBTypesMethods::directionAsVector(_movementDirection);
+    const JBTypes::vec3f vecDirMovement = JBTypesMethods::directionAsVector(_movementDirection);
 
-    const JBTypes::vec3f vecDirSide =
-        JBTypesMethods::directionAsVector(direction());
+    const JBTypes::vec3f vecDirSide = JBTypesMethods::directionAsVector(direction());
 
     const auto nbOfJumpsDone = static_cast <size_t>(timeSinceCreation / mechanics.getTimeToGetDestination());
 
@@ -58,12 +47,10 @@ Enemy::Effect DarkBall::update () {
         mechanics.getTimeToGetDestination()
         );
 
-    const ClassicalMechanics::physics2DVector positionCurrentJump =
-        mechanics.getPosition(timeCurrentJump);
+    const ClassicalMechanics::physics2DVector positionCurrentJump = mechanics.getPosition(timeCurrentJump);
     const float sidePosition = positionCurrentJump.y;
 
-    const float distanceTravelled =
-        positionCurrentJump.x + distanceAlreadyTravelled;
+    const float distanceTravelled = positionCurrentJump.x + distanceAlreadyTravelled;
 
     std::function <float(float, float, size_t)> getMovementPosition =
         [&getRemainder] (float distanceTravelled,
@@ -84,17 +71,10 @@ Enemy::Effect DarkBall::update () {
         mechanics.getJumpDistance(),
         length()
         );
-    _transform.at(0) =
-        vecDirMovement.x * movementPosition + vecDirSide.x * sidePosition;
-    _transform.at(1) =
-        vecDirMovement.y * movementPosition + vecDirSide.y * sidePosition;
-    _transform.at(2) =
-        vecDirMovement.z * movementPosition + vecDirSide.z * sidePosition;
 
-
-    _position.x = _initialPosition.x + _transform.at(0);
-    _position.y = _initialPosition.y + _transform.at(1);
-    _position.z = _initialPosition.z + _transform.at(2);
+    _position.x = _initialPosition.x + vecDirMovement.x * movementPosition + vecDirSide.x * sidePosition;
+    _position.y = _initialPosition.y + vecDirMovement.y * movementPosition + vecDirSide.y * sidePosition;
+    _position.z = _initialPosition.z + vecDirMovement.z * movementPosition + vecDirSide.z * sidePosition;
 
     touchingTest();
     return _hasHit

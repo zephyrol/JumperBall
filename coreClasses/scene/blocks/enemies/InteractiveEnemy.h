@@ -16,7 +16,6 @@ public:
         const JBTypes::Dir& direction,
         float size,
         size_t length,
-        const std::array <float, 9>& transform,
         const Ball_sptr &ball
     );
 
