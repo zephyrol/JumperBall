@@ -24,6 +24,7 @@ Block::Block(
     _cstSpecials(getCstSpecials()),
     _hasInteraction(alwaysHasInteractions || !items.empty() || !enemies.empty() || !specials.empty()),
     _isFixed(isFixed),
+    _updatingTime(JBTypesMethods::getTimePointMSNow()),
     _localScale{1.f, 1.f, 1.f },
     _localTranslation{0.f, 0.f, 0.f }
 {
@@ -57,7 +58,7 @@ const vecCstSpecial_sptr& Block::getSpecials() const {
     return _cstSpecials; 
 }
 
-Block::Effect Block::interaction (const JBTypes::timePointMs& ) {
+Block::Effect Block::interaction() {
     return Block::Effect::Nothing;
 }
 
@@ -144,5 +145,12 @@ std::string Block::positionToString(const JBTypes::vec3ui& position) {
 }
 
 Block::Effect Block::detectionEvent() {
+}
+
+void Block::update(const JBTypes::timePointMs &updatingTime) {
+    _updatingTime = updatingTime;
+    for(const auto& enemy : _enemies) {
+        enemy->update();
+    }
 }
 

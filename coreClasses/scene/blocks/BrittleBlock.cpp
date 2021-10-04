@@ -17,35 +17,8 @@ BrittleBlock::BrittleBlock(const JBTypes::vec3ui &position,
                            _stillThere(true),
                            _isGoingToBreak(false),
                            _collisionTime(),
-                           _timeUpdate(),
                            _fallDirection(JBTypes::Dir::Down){
 }
-
-Block::Effect BrittleBlock::interaction (const JBTypes::timePointMs& currentTime) {
-    constexpr float timeToFall = 1.f;
-    _timeUpdate = currentTime;
-    if (_isGoingToBreak && _stillThere) {
-        JBTypes::durationMs diff = currentTime - _collisionTime;
-        const float diffF = JBTypesMethods::getFloatFromDurationMS(diff);
-        if (diffF > timeToFall) {
-            _stillThere = false;
-        }
-    }
-
-    constexpr float fallSpeed = 20.f;
-    if (!_stillThere) {
-        const JBTypes::vec3f dirVec = JBTypesMethods::directionAsVector(_fallDirection);
-        const JBTypes::durationMs diff = currentTime - _collisionTime;
-        const float diffF = JBTypesMethods::getFloatFromDurationMS(diff) - timeToFall;
-        const float distanceTraveled = diffF * fallSpeed;
-        _localTranslation.x = dirVec.x * distanceTraveled;
-        _localTranslation.y = dirVec.y * distanceTraveled;
-        _localTranslation.z = dirVec.z * distanceTraveled;
-
-    }
-    return Block::Effect::Nothing;
-}
-
 
 void BrittleBlock::setFallDirection (JBTypes::Dir direction) {
     switch (direction) {
@@ -93,5 +66,29 @@ bool BrittleBlock::mayDisappear() const {
 
 JBTypes::Color BrittleBlock::getColor() const {
     return JBTypes::Color::Red;
+}
+
+void BrittleBlock::update(const JBTypes::timePointMs &updatingTime) {
+    InteractiveBlock::update(updatingTime);
+
+    constexpr float timeToFall = 1.f;
+    if (_isGoingToBreak && _stillThere) {
+        JBTypes::durationMs diff = _updatingTime - _collisionTime;
+        const float diffF = JBTypesMethods::getFloatFromDurationMS(diff);
+        if (diffF > timeToFall) {
+            _stillThere = false;
+        }
+    }
+
+    constexpr float fallSpeed = 20.f;
+    if (!_stillThere) {
+        const JBTypes::vec3f dirVec = JBTypesMethods::directionAsVector(_fallDirection);
+        const JBTypes::durationMs diff = _updatingTime - _collisionTime;
+        const float diffF = JBTypesMethods::getFloatFromDurationMS(diff) - timeToFall;
+        const float distanceTraveled = diffF * fallSpeed;
+        _localTranslation.x = dirVec.x * distanceTraveled;
+        _localTranslation.y = dirVec.y * distanceTraveled;
+        _localTranslation.z = dirVec.z * distanceTraveled;
+    }
 }
 

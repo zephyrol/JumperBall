@@ -27,9 +27,7 @@ void InteractiveBlock::catchItem() {
     }
 }
 
-void InteractiveBlock::update(const JBTypes::timePointMs &currentTime) {
-    interaction(currentTime);
-    for(const auto& enemy : _enemies) {
-        enemy->update();
-    }
+void InteractiveBlock::update(const JBTypes::timePointMs &updatingTime){
+    Block::update(updatingTime);
+    catchItem();
 }

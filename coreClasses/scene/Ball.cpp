@@ -827,8 +827,7 @@ void Ball::interaction() {
     Block::Effect finalBlockEffect = Block::Effect::Nothing;
 
     for( const auto& block: *_blockWithInteractions) {
-        block->catchItem();
-        const auto blockEffect = block->interaction(_updatingTime);
+        const auto blockEffect = block->interaction();
         if (blockEffect != Block::Effect::Nothing) {
             finalBlockEffect = blockEffect;
         }

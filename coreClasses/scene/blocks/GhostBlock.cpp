@@ -24,8 +24,18 @@ bool GhostBlock::isExists() const {
     return _isThere;
 }
 
-Block::Effect GhostBlock::interaction (const JBTypes::timePointMs& currentTime) {
-    const auto passedTime = currentTime - _creationTime;
+bool GhostBlock::mayDisappear() const {
+    return true;
+}
+
+JBTypes::Color GhostBlock::getColor() const {
+    return JBTypes::Color::Purple;
+}
+
+void GhostBlock::update(const JBTypes::timePointMs &updatingTime) {
+    InteractiveBlock::update(updatingTime);
+
+    const auto passedTime = _updatingTime - _creationTime;
     const float fPassedTime = JBTypesMethods::getFloatFromDurationMS(passedTime);
     const auto nbOfSwitching = static_cast <unsigned int>(fPassedTime / _periodicity);
     _isThere = nbOfSwitching % 2 == 0;
@@ -54,14 +64,5 @@ Block::Effect GhostBlock::interaction (const JBTypes::timePointMs& currentTime) 
     // const float scale = _isThere ? 1.f : 0.f;
     _localScale = { scale, scale, scale };
 
-    return Block::Effect::Nothing;
-}
-
-bool GhostBlock::mayDisappear() const {
-    return true;
-}
-
-JBTypes::Color GhostBlock::getColor() const {
-    return JBTypes::Color::Purple;
 }
 

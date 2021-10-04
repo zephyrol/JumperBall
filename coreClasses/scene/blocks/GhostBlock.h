@@ -21,8 +21,8 @@ public:
     );
 
     bool isExists() const override;
-Block::Effect interaction(const JBTypes::timePointMs& currentTime ) override;
-bool mayDisappear() const override;
+    void update(const JBTypes::timePointMs &updatingTime) override;
+    bool mayDisappear() const override;
     JBTypes::Color getColor() const override;
 
 

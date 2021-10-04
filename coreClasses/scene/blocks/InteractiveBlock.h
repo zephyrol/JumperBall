@@ -21,12 +21,11 @@ public:
         bool isFixed = true
     );
 
-    void catchItem() override;
-    void update(const JBTypes::timePointMs& currentTime) override;
+void update(const JBTypes::timePointMs &updatingTime) override;
 
 protected:
+    void catchItem();
     const CstBall_wptr _ball;
-
 
 };
 

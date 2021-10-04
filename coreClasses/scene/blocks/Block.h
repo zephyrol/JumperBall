@@ -52,15 +52,13 @@ const vecCstSpecial_sptr& getSpecials() const;
 
 bool hasInteraction() const;
 
-virtual Effect interaction(const JBTypes::timePointMs& currentTime);
+virtual void update(const JBTypes::timePointMs &updatingTime);
+virtual Effect interaction();
 
 std::map<CstItem_sptr ,vecCstShape_sptr> getItemShapes() const;
 virtual vecCstShape_sptr getExtraShapes() const;
 
 virtual bool mayDisappear() const;
-
-virtual void update(const JBTypes::timePointMs& currentTime) = 0;
-virtual void catchItem() = 0;
 
 virtual const bool& isFixed() const;
 const JBTypes::vec3ui& position() const;
@@ -88,6 +86,7 @@ const vecSpecial_sptr _specials;
 const vecCstSpecial_sptr _cstSpecials;
 const bool _hasInteraction;
 const bool _isFixed;
+JBTypes::timePointMs _updatingTime;
 JBTypes::vec3f _localScale;
 JBTypes::vec3f _localTranslation;
 };

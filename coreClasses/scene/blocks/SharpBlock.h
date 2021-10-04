@@ -25,9 +25,7 @@ public:
 
     std::array <bool, 6> faceInfo() const override;
 
-Block::Effect interaction(
-    const JBTypes::timePointMs& currentTime
-) override;
+Block::Effect interaction() override;
 
 vecCstShape_sptr getExtraShapes() const override;
 std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > computeSharpBoundingBoxes() const;

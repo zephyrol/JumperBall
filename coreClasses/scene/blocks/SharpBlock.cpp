@@ -19,7 +19,7 @@ SharpBlock::SharpBlock(const JBTypes::vec3ui &position,
 
 }
 
-Block::Effect SharpBlock::interaction (const JBTypes::timePointMs&) {
+Block::Effect SharpBlock::interaction () {
 
     const auto isInSharpZone =
     []( const JBTypes::vec3f &position,

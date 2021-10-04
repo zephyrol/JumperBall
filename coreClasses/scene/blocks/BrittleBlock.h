@@ -23,9 +23,7 @@ public:
 
 void setFallDirection(JBTypes::Direction direction);
 
-Block::Effect interaction(
-    const JBTypes::timePointMs& currentTime
-) override;
+void update(const JBTypes::timePointMs &updatingTime) override;
 
 Block::Effect detectionEvent() override;
 
@@ -36,7 +34,6 @@ private:
 bool _stillThere;
 bool _isGoingToBreak;
 JBTypes::timePointMs _collisionTime;
-JBTypes::timePointMs _timeUpdate;
 JBTypes::Dir _fallDirection;
 };
 
