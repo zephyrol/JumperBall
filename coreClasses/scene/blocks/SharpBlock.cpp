@@ -19,7 +19,7 @@ SharpBlock::SharpBlock(const JBTypes::vec3ui &position,
 
 }
 
-Block::Effect SharpBlock::interaction () {
+Block::Effect SharpBlock::interaction () const {
 
     const auto isInSharpZone =
     []( const JBTypes::vec3f &position,
@@ -47,7 +47,7 @@ Block::Effect SharpBlock::interaction () {
             return Block::Effect::Burst;
         }
     }
-    return Block::Effect::Nothing;
+    return InteractiveBlock::interaction();
 }
 
 std::array <bool, 6> SharpBlock::faceInfo() const {

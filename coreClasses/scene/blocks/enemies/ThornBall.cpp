@@ -41,8 +41,7 @@ const JBTypes::Dir& ThornBall::movementDirection() const {
     return _movementDirection;
 }
 
-bool ThornBall::touchingTest() {
-
+bool ThornBall::touchingTest() const {
     const auto ball = _ball.lock();
     const auto& boundingSpherePosition = ball->get3DPosition();
     const auto& boundingSphereRadius = ball->getRadius();

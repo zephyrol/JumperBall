@@ -27,7 +27,7 @@ static constexpr float thornBallRadius = 0.1f;
 private:
 const JBTypes::Dir _movementDirection;
 
-bool touchingTest() override;
+bool touchingTest() const override;
 };
 
 #endif /* ThornBall_h */

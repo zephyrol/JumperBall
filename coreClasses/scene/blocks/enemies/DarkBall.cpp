@@ -81,7 +81,7 @@ const JBTypes::Dir& DarkBall::movementDirection() const {
     return _movementDirection;
 }
 
-bool DarkBall::touchingTest () {
+bool DarkBall::touchingTest () const {
 
     const auto ball = _ball.lock();
     const auto& boundingSpherePosition = ball->get3DPosition();

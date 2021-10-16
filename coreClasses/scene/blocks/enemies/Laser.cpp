@@ -30,7 +30,7 @@ void Laser::switchOnOff() {
     _isActivated = !_isActivated;
 }
 
-bool Laser::touchingTest () {
+bool Laser::touchingTest () const {
     if (!_isActivated) {
         return false;
     }

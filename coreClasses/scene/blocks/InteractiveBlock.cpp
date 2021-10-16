@@ -27,6 +27,16 @@ void InteractiveBlock::catchItem() {
     }
 }
 
+Block::Effect InteractiveBlock::interaction() const {
+    for (const auto& enemy : _cstEnemies) {
+        const bool isTouching = enemy->touchingTest();
+        if (isTouching) {
+            return Block::Effect::Burst;
+        }
+    }
+    return Block::Effect::Nothing;
+}
+
 void InteractiveBlock::update(const JBTypes::timePointMs &updatingTime){
     Block::update(updatingTime);
     catchItem();

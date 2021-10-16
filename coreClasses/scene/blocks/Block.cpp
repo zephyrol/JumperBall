@@ -58,10 +58,6 @@ const vecCstSpecial_sptr& Block::getSpecials() const {
     return _cstSpecials; 
 }
 
-Block::Effect Block::interaction() {
-    return Block::Effect::Nothing;
-}
-
 bool Block::hasInteraction() const {
     return _hasInteraction;
 }

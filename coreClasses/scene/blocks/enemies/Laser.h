@@ -29,7 +29,7 @@ const JBTypes::Color _color;
 bool _isActivated;
 static constexpr float laserRadius = 0.05f;
 
-bool touchingTest() override;
+bool touchingTest() const override;
 };
 
 #endif /* Laser_h */

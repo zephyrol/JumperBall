@@ -53,7 +53,7 @@ const vecCstSpecial_sptr& getSpecials() const;
 bool hasInteraction() const;
 
 virtual void update(const JBTypes::timePointMs &updatingTime);
-virtual Effect interaction();
+virtual Effect interaction() const = 0;
 
 std::map<CstItem_sptr ,vecCstShape_sptr> getItemShapes() const;
 virtual vecCstShape_sptr getExtraShapes() const;

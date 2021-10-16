@@ -24,8 +24,7 @@ public:
 Enemy(const JBTypes::vec3ui& initialPosition,
       const JBTypes::Dir& direction,
       float size,
-      size_t length
-      );
+      size_t length );
 
 virtual void update();
 virtual JBTypes::Color getColor() const;
@@ -40,8 +39,9 @@ SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 SceneElement::GlobalState getGlobalState() const override;
 
 virtual vecCstShape_sptr getShapes() const = 0;
+virtual bool touchingTest() const = 0;
 
-virtual void switchOnOff();
+    virtual void switchOnOff();
 virtual ~Enemy() = default;
 
 private:
