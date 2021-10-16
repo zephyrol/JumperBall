@@ -76,7 +76,19 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
             const JBTypes::Dir currentDir = JBTypesMethods::integerAsDirection(
                 static_cast <unsigned int>(i)
             );
-            const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
+
+            const JBTypes::vec3f translationOnBlock {
+                0.f,
+                offset,
+                0.f
+            };
+
+            const JBTypes::vec3f translationPosition {
+                static_cast<float>(_position.at(0)),
+                static_cast<float>(_position.at(1)),
+                static_cast<float>(_position.at(2))
+            };
+
 
             for (size_t j = 0; j < scales.size(); j++) {
                 const JBTypes::vec3f localScale { scales.at(j), 0.5f, scales.at(j) };
@@ -85,18 +97,6 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
                     offset * translationFloorFactor.at(j).x,
                     0.f,
                     offset * translationFloorFactor.at(j).y
-                };
-
-                const JBTypes::vec3f translationOnBlock {
-                    vecDir.x * offset,
-                    vecDir.y * offset,
-                    vecDir.z * offset
-                };
-
-                const JBTypes::vec3f translationPosition {
-                    static_cast<float>(_position.at(0)),
-                    static_cast<float>(_position.at(1)),
-                    static_cast<float>(_position.at(2))
                 };
 
                 const JBTypes::vec3f localTranslation = JBTypesMethods::add(
@@ -160,9 +160,9 @@ std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > SharpBlock::computeSharp
                 }
             }
             if (dirVec.z > EPSILON_F || dirVec.z < -EPSILON_F) {
-                if (dirVec.y < 0) {
+                if (dirVec.z < 0) {
                     posBlockfZMin -= sizeSharp;
-                } else if (dirVec.y > 0) {
+                } else if (dirVec.z > 0) {
                     posBlockfZMax += sizeSharp;
                 }
             }

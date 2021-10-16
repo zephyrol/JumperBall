@@ -40,14 +40,13 @@ vecCstShape_sptr JumpBlock::getExtraShapes() const {
             const JBTypes::Dir direction = JBTypesMethods::integerAsDirection(
                 static_cast <unsigned int>(i)
             );
-            const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(direction);
 
             const JBTypes::vec3f localScale { 0.7f, 0.05f, 0.7f };
 
             const JBTypes::vec3f translationOnBlock {
-                vecDir.x * offset,
-                vecDir.y * offset,
-                vecDir.z * offset
+                0.f,
+                offset,
+                0.f
             };
 
             const JBTypes::vec3f translationPosition {
