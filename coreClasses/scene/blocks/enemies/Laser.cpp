@@ -74,5 +74,36 @@ bool Laser::touchingTest () const {
 }
 
 vecCstShape_sptr Laser::getShapes() const {
-    return {};
+
+    vecCstShape_sptr shapes {};
+
+    constexpr float offsetLaserSide = 0.15f;
+
+    const std::array <JBTypes::vec3f, 4> translationsFloor {
+        JBTypes::vec3f{ -offsetLaserSide, 0.f , -offsetLaserSide },
+        JBTypes::vec3f{ offsetLaserSide, 0.f, -offsetLaserSide },
+        JBTypes::vec3f{ -offsetLaserSide, 0.f, offsetLaserSide },
+        JBTypes::vec3f{ offsetLaserSide, 0.f, offsetLaserSide }
+    };
+
+    constexpr float sizeBlock = 1.f; // TODO specify it elsewhere
+    constexpr float offset = sizeBlock / 2.f;
+
+    const JBTypes::vec3f scale { size(), static_cast <float>(length()),size() };
+    const auto directionRotation = JBTypesMethods::rotationVectorUpToDir(direction());
+
+    for (const auto& translationFloor : translationsFloor) {
+
+        shapes.push_back(std::make_shared<const Shape>(
+            Shape::Aspect::Cylinder,
+            getColor(),
+            std::initializer_list<Transformation>({
+                    Transformation(Transformation::Type::Scale, scale),
+                    Transformation(Transformation::Type::Translation, translationFloor),
+                    Transformation(Transformation::Type::Rotation, directionRotation)
+                })
+        ));
+    }
+    return shapes;
 }
+

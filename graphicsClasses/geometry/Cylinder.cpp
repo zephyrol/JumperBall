@@ -192,6 +192,29 @@ std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color& c
     if (color == JBTypes::Color::Yellow) {
         return { glm::vec3 (1.f, 1.f, 0.f), glm::vec3(1.f, 150.f / 255.f, 0.f)};
     }
+
+    constexpr float laserIntensity = 1.5f;
+    // Lasers create the bloom effect, but we would like that
+    // all laser colors have the same brightness;
+    constexpr float redConeSensibilityCoeff = 0.3f;
+    constexpr float greenConeSensibilityCoeff = 0.59f;
+    constexpr float blueConeSensibilityCoeff = 0.11f;
+    if (color == JBTypes::Color::Red) {
+        const auto redColor = laserIntensity * glm::vec3(1.f / redConeSensibilityCoeff, 0.f, 0.f);
+        return { redColor, redColor };
+    }
+    if (color == JBTypes::Color::Blue) {
+        const auto blueColor = laserIntensity * glm::vec3(
+            0.f,
+            1.f / greenConeSensibilityCoeff,
+            1.f / blueConeSensibilityCoeff
+        );
+        return { blueColor, blueColor };
+    }
+    if (color == JBTypes::Color::Green) {
+        const auto greenColor = laserIntensity * glm::vec3(0.f, 1.f / greenConeSensibilityCoeff, 0.f);
+        return { greenColor, greenColor };
+    }
     return {glm::vec3(0.f), glm::vec3(0.f)};
 }
 
