@@ -50,12 +50,14 @@ vecMesh_sptr MeshGenerator::genEnemies (const CstMap_sptr& map) {
 vecMesh_sptr MeshGenerator::genSpecials (const CstMap_sptr& map) {
 
     vecMesh_sptr meshes;
-    /*const auto specialsInfos = map->getSpecialInfo();
-    for (const auto& specialInfo : specialsInfos) {
-        const std::shared_ptr <const Special> special = specialInfo.special;
-        if (special) {
-            meshes.push_back(genSpecial(special, specialInfo.type));
+    for (const auto& block: map->getBlocks()) {
+        for (const auto& special: block->getSpecials()) {
+            vecCstGeometricShape_sptr geometricShapes;
+            for(const auto& shape: special->getShapes()) {
+                geometricShapes.push_back(createGeometricShape(shape));
+            }
+            meshes.push_back(std::make_shared <Mesh>(special, std::move(geometricShapes)));
         }
-    }*/
+    }
     return meshes;
 }

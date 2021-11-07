@@ -21,6 +21,7 @@ public:
 
 bool isAnimated() const override;
 void applySpecialEffect() const override;
+vecCstShape_sptr getShapes() const override;
 
 };
 

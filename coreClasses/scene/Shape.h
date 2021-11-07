@@ -21,7 +21,7 @@ using vecShape_sptr = std::vector <Shape_sptr>;
 class Shape {
 public:
 
-    enum class Aspect { Cube, Cylinder, Sphere, Pyramid };
+    enum class Aspect { Cube, Cylinder, Sphere, Pyramid, Pedestal };
 
     explicit Shape(
         const Aspect& aspect,

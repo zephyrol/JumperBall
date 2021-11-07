@@ -68,6 +68,9 @@ CstGeometricShape_sptr MeshGenerator::createGeometricShape(const CstShape_sptr& 
     if(shape->aspect() == Shape::Aspect::Sphere) {
         return std::make_shared<Sphere>(shape->color(), localTransform, normalTransform);
     }
+    if(shape->aspect() == Shape::Aspect::Pedestal) {
+        return std::make_shared<Cylinder>(shape->color(), 5, localTransform, normalTransform);
+    }
     std::cerr << "Shape aspect not managed" << std::endl;
     return nullptr;
 }

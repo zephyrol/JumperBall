@@ -71,7 +71,6 @@ const JBTypes::Dir& Enemy::direction() const {
 
 SceneElement::DynamicValues <JBTypes::vec3f> Enemy::getDynamicVec3fs() const {
     return {
-        //{ "translation", { _position.x, _position.y, _position.z }},
         { "translation", { _position.x, _position.y, _position.z }},
         { "scale", { 1.f, 1.f, 1.f }}
     };

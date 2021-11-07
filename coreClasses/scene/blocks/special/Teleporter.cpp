@@ -19,3 +19,16 @@ bool Teleporter::isAnimated() const {
 void Teleporter::applySpecialEffect() const {
 }
 
+vecCstShape_sptr Teleporter::getShapes() const {
+    const auto teleporterShape = std::make_shared<const Shape>(
+        Shape::Aspect::Pedestal,
+        getColor(),
+        std::initializer_list<Transformation>({
+            Transformation(Transformation::Type::Translation, { 0.f, -0.5f, 0.f}),
+            Transformation(Transformation::Type::Scale, { 0.7f, 0.05f, 0.7f }),
+        })
+    );
+
+    return { teleporterShape };
+}
+

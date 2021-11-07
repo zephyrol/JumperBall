@@ -19,6 +19,7 @@ SwitchButton(
 );
 
 void applySpecialEffect() const override;
+vecCstShape_sptr getShapes() const override;
 
 };
 

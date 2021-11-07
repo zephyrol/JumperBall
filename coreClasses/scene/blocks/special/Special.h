@@ -6,6 +6,7 @@
  */
 #ifndef __SPECIAL_H__
 #define __SPECIAL_H__
+#include <scene/Shape.h>
 #include "scene/SceneElement.h"
 
 class Special;
@@ -35,6 +36,7 @@ virtual void applySpecialEffect() const = 0;
 
 void switchOnOff();
 
+virtual vecCstShape_sptr getShapes() const = 0;
 SceneElement::StaticValues <float> getStaticFloatValues() const override;
 SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
 
