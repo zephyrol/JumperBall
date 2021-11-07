@@ -16,8 +16,6 @@ using vecSpecial_sptr = std::vector <Special_sptr>;
 using Special_uptr = std::unique_ptr <Special>;
 class Special: public SceneElement {
 public:
-enum class SpecialEffect { Switch,
-                           Teleportation };
 
 Special(
     const JBTypes::Color& color,
@@ -33,7 +31,7 @@ const JBTypes::vec3f& position3D() const;
 const JBTypes::vec3ui& position() const;
 bool isActivated() const;
 virtual bool isAnimated() const;
-virtual SpecialEffect getEffect() const = 0;
+virtual void applySpecialEffect() const = 0;
 
 void switchOnOff();
 

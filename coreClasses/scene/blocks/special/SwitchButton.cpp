@@ -8,10 +8,12 @@
 
 SwitchButton::SwitchButton(const JBTypes::Color& color,
                            const JBTypes::Dir& dir,
-                           const JBTypes::vec3ui& position
-                           ):Special(color, dir, position) {
+                           const JBTypes::vec3ui& position,
+                           const Ball_sptr &ball,
+                           bool isActivated
+                           ):InteractiveSpecial(color, position, dir, ball, isActivated) {
 }
 
-Special::SpecialEffect SwitchButton::getEffect() const {
-    return SpecialEffect::Switch;
+void SwitchButton::applySpecialEffect() const {
+
 }

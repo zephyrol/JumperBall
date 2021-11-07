@@ -22,7 +22,8 @@ public:
     );
 
 void update(const JBTypes::timePointMs &updatingTime) override;
-virtual Block::Effect interaction() const override;
+Block::Effect detectionEvent() override;
+Block::Effect interaction() const override;
 
 protected:
     void catchItem();

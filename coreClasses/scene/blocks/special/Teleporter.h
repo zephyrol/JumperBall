@@ -6,18 +6,21 @@
  */
 #ifndef __TELEPORTER_H__
 #define __TELEPORTER_H__
-#include "Special.h"
 
-class Teleporter:public Special {
+#include "InteractiveSpecial.h"
+
+class Teleporter:public InteractiveSpecial{
 public:
-Teleporter(
-    const JBTypes::Color& color,
-    const JBTypes::Dir& dir,
-    const JBTypes::vec3ui& position
+    Teleporter(
+        const JBTypes::Color& color,
+        const JBTypes::Dir& dir,
+        const JBTypes::vec3ui& position,
+        const Ball_sptr &ball,
+        bool isActivated = true
     );
 
 bool isAnimated() const override;
-virtual Special::SpecialEffect getEffect() const override;
+void applySpecialEffect() const override;
 
 };
 

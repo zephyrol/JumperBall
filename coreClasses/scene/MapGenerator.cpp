@@ -190,23 +190,24 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
         return info == 'S' || info == 'T';
     };
     const auto createSpecials = 
-    [&getTypeOptions, &isAnSpecialTypeChar](
+        [&getTypeOptions, &isAnSpecialTypeChar, &mapInfo](
         const std::string& specialsInfo,
         const JBTypes::vec3ui& blockCoords
         ) {
         const auto typeOptions = getTypeOptions(specialsInfo, isAnSpecialTypeChar);
 
         const auto createSpecial = 
-        [&blockCoords] (
+        [&blockCoords, &mapInfo] (
             unsigned char specialType,
             const std::string& options
             ) -> Special_sptr {
             const JBTypes::Color color = JBTypesMethods::charAsColor(options.at(0));
             const JBTypes::Dir direction = JBTypesMethods::charAsDirection(options.at(1));
             if (specialType == 'S') {
-                return std::make_shared<SwitchButton>(color, direction, blockCoords);
+                const SwitchButton a (color, direction, blockCoords, mapInfo.ball);
+                return std::make_shared<SwitchButton>(color, direction, blockCoords, mapInfo.ball);
             } else {
-                return std::make_shared<Teleporter>(color, direction, blockCoords);
+                return std::make_shared<Teleporter>(color, direction, blockCoords, mapInfo.ball);
             }
         };
 

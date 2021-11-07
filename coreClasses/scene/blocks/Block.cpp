@@ -140,9 +140,6 @@ std::string Block::positionToString(const JBTypes::vec3ui& position) {
            std::to_string(position.at(2));
 }
 
-Block::Effect Block::detectionEvent() {
-}
-
 void Block::update(const JBTypes::timePointMs &updatingTime) {
     _updatingTime = updatingTime;
     for(const auto& enemy : _enemies) {

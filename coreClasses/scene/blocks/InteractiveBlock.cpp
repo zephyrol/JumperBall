@@ -41,3 +41,10 @@ void InteractiveBlock::update(const JBTypes::timePointMs &updatingTime){
     Block::update(updatingTime);
     catchItem();
 }
+
+Block::Effect InteractiveBlock::detectionEvent() {
+    for (const auto& special: _specials) {
+        special->applySpecialEffect();
+    }
+    return Block::Effect::Nothing;
+}

@@ -6,17 +6,19 @@
  */
 #ifndef __SWITCHBUTTON_H__
 #define __SWITCHBUTTON_H__
-#include "Special.h"
+#include "InteractiveSpecial.h"
 
-class SwitchButton:public Special {
+class SwitchButton:public InteractiveSpecial {
 public:
 SwitchButton(
     const JBTypes::Color& color,
     const JBTypes::Dir& dir,
-    const JBTypes::vec3ui& position
-    );
+    const JBTypes::vec3ui& position,
+    const Ball_sptr &ball,
+    bool isActivated = true
+);
 
-virtual Special::SpecialEffect getEffect() const override;
+void applySpecialEffect() const override;
 
 };
 

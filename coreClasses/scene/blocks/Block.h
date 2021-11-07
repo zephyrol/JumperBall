@@ -35,7 +35,7 @@ Block(
 virtual ~Block() = default;
 enum class Effect { Nothing, Burst, Burn, Slide, Jump };
 
-virtual Block::Effect detectionEvent();
+virtual Block::Effect detectionEvent() = 0;
 
 static constexpr size_t itemsNumber = 6;
 
