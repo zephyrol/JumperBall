@@ -275,12 +275,14 @@ JBTypes::vec3f JBTypesMethods::normalize (const JBTypes::vec3f& vec) {
 
 std::string JBTypesMethods::colorToString (const JBTypes::Color& color) {
     switch (color) {
-    case JBTypes::Color::Blue: return "Blue";
-    case JBTypes::Color::Red: return "Red";
-    case JBTypes::Color::Yellow: return "Yellow";
-    case JBTypes::Color::Green: return "Green";
-    case JBTypes::Color::None: return "None";
-    default: return "None";
+        case JBTypes::Color::Blue: return "Blue";
+        case JBTypes::Color::Red: return "Red";
+        case JBTypes::Color::Yellow: return "Yellow";
+        case JBTypes::Color::Green: return "Green";
+        case JBTypes::Color::Orange: return "Orange";
+        case JBTypes::Color::None: return "None";
+        case JBTypes::Color::Purple: return "Purple";
+        default: return "None";
     }
     return "None";
 }

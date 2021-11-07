@@ -90,9 +90,9 @@ unsigned int Map::depth() const {
 
 JBTypes::vec3f Map::getCenterMap() const {
     return {
-        static_cast <const float>(_width) / 2.F,
-        static_cast <const float>(_height) / 2.F,
-        static_cast <const float>(_depth) / 2.F
+        static_cast <float>(_width) / 2.F,
+        static_cast <float>(_height) / 2.F,
+        static_cast <float>(_depth) / 2.F
     };
 }
 
@@ -127,7 +127,7 @@ void Map::update(const JBTypes::timePointMs& updatingTime, const Ball::ActionReq
     }
 }
 
-void Map::switchColor (const JBTypes::Color& color) {
+void Map::switchColor (const JBTypes::Color&) {
     // TODO update it
     // if (_specialsState.find(color) == _specialsState.end()) {
     //     _specialsState[color] = false;
@@ -154,7 +154,7 @@ void Map::switchColor (const JBTypes::Color& color) {
 JBTypes::vec3ui Map::getBlockCoords (size_t index,
                                      unsigned int width,
                                      unsigned int depth) {
-    const auto uIntIndex = static_cast <const unsigned int>(index);
+    const auto uIntIndex = static_cast <unsigned int>(index);
     const unsigned int widthDepth = width * depth;
     return { uIntIndex % width, uIntIndex / widthDepth, (uIntIndex % widthDepth) / width };
 }

@@ -86,9 +86,6 @@ vecCstShape_sptr Laser::getShapes() const {
         JBTypes::vec3f{ offsetLaserSide, 0.f, offsetLaserSide }
     };
 
-    constexpr float sizeBlock = 1.f; // TODO specify it elsewhere
-    constexpr float offset = sizeBlock / 2.f;
-
     const JBTypes::vec3f scale { size(), static_cast <float>(length()),size() };
     const auto directionRotation = JBTypesMethods::rotationVectorUpToDir(direction());
 

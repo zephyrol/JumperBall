@@ -242,12 +242,14 @@ GLsizei Utility::getWidthFromHeight (unsigned int resolutionY) {
 
 glm::vec3 Utility::colorAsVec3 (const JBTypes::Color& color) {
     switch (color) {
-    case JBTypes::Color::Red: return glm::vec3(1.f, 0.f, 0.f); break;
-    case JBTypes::Color::Green: return glm::vec3(0.f, 1.f, 0.f); break;
-    case JBTypes::Color::Blue: return glm::vec3(0.f, 0.f, 1.f); break;
-    case JBTypes::Color::Yellow: return glm::vec3(1.f, 1.f, 0.f); break;
-    case JBTypes::Color::None: return glm::vec3(0.f, 0.f, 0.f); break;
-    default: return glm::vec3(0.f, 0.f, 0.f); break;
+        case JBTypes::Color::Red: return glm::vec3(1.f, 0.f, 0.f); break;
+        case JBTypes::Color::Green: return glm::vec3(0.f, 1.f, 0.f); break;
+        case JBTypes::Color::Blue: return glm::vec3(0.f, 0.f, 1.f); break;
+        case JBTypes::Color::Yellow: return glm::vec3(1.f, 1.f, 0.f); break;
+        case JBTypes::Color::Orange: return glm::vec3(1.f, 0.4f, 0.f); break;
+        case JBTypes::Color::Purple: return glm::vec3(0.4f, 0.f, 0.4f); break;
+        case JBTypes::Color::None: return glm::vec3(0.f, 0.f, 0.f); break;
+        default: return glm::vec3(0.f, 0.f, 0.f); break;
     }
     return glm::vec3(0.f, 0.f, 0.f);
 }
