@@ -62,9 +62,12 @@ bool ballIsOut() const;
 std::map<std::string, Block_sptr> createBlockPositions() const;
 std::vector<Block_sptr> getBlocksToUpdate() const;
 
+std::map<Block_sptr, Block_sptr> createBlocksTeleportations() const;
+
 const vecBlock_sptr _blocks;
 const std::shared_ptr<const std::map<std::string,Block_sptr> > _blocksPositions;
 const std::shared_ptr<const vecBlock_sptr> _blocksToUpdate;
+const std::shared_ptr<const std::map<Block_sptr, Block_sptr> > _blocksTeleportations;
 
 const Ball_sptr _ball;
 
@@ -76,6 +79,8 @@ const JBTypes::timePointMs _creationTime;
 
 ParallelTask <void> _blocksUpdating;
 JBTypes::timePointMs _updatingTime;
+
+
 
 public :
     vecCstBlock_sptr getBlocks() const;

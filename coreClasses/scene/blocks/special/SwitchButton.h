@@ -18,7 +18,7 @@ SwitchButton(
     bool isActivated = true
 );
 
-void applySpecialEffect() const override;
+void applySpecialEffect() override;
 vecCstShape_sptr getShapes() const override;
 
 };

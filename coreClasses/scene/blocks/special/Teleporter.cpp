@@ -16,7 +16,12 @@ bool Teleporter::isAnimated() const {
     return true;
 }
 
-void Teleporter::applySpecialEffect() const {
+void Teleporter::applySpecialEffect() {
+    if (!isActivated()){
+        return;
+    }
+    const auto ball = _ball.lock();
+    ball->teleport(this->getColor());
 }
 
 vecCstShape_sptr Teleporter::getShapes() const {

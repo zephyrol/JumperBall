@@ -38,7 +38,8 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z):
     _turnBackMovement(),
     _movementDestination(),
     _blocksPositions(nullptr),
-    _blockWithInteractions(nullptr)
+    _blockWithInteractions(nullptr),
+    _blocksTeleportations(nullptr)
 {
 }
 
@@ -433,6 +434,8 @@ void Ball::blockEvent () noexcept{
     } else {
         _stateOfLife = StateOfLife::Normal;
     }
+
+
 
     // TODO update it
     // Specials
@@ -910,4 +913,10 @@ void Ball::updateMovements() {
 
 void Ball::setBlockWithInteractions(const std::shared_ptr<const vecBlock_sptr> &blocksWithInterraction) {
     _blockWithInteractions = blocksWithInterraction;
+}
+
+void Ball::setBlockTeleportations(
+    const std::shared_ptr<const std::map<Block_sptr, Block_sptr>> &blocksTeleportations
+) {
+    _blocksTeleportations = blocksTeleportations;
 }

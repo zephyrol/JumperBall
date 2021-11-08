@@ -14,7 +14,7 @@ SwitchButton::SwitchButton(const JBTypes::Color& color,
                            ):InteractiveSpecial(color, position, dir, ball, isActivated) {
 }
 
-void SwitchButton::applySpecialEffect() const {
+void SwitchButton::applySpecialEffect() {
 
 }
 

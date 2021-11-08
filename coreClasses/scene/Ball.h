@@ -101,11 +101,17 @@ void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest&
 
 void setBlockPositions(const std::shared_ptr<const std::map<std::string, Block_sptr> >& blocksPositions);
 void setBlockWithInteractions(const std::shared_ptr<const vecBlock_sptr>& blocksWithInterraction);
+void setBlockTeleportations(
+    const std::shared_ptr<const std::map<Block_sptr, Block_sptr> >& blocksTeleportations
+);
+
 void updateMovements();
 
 JBTypes::vec3f getNextLook() const;
 
 void die() noexcept;
+
+void teleport(const JBTypes::Color& col) noexcept;
 
 private:
 
@@ -155,6 +161,7 @@ MovementDestination _movementDestination;
 
 std::shared_ptr<const std::map<std::string, Block_sptr> > _blocksPositions;
 std::shared_ptr<const vecBlock_sptr> _blockWithInteractions;
+std::shared_ptr<const std::map<Block_sptr, Block_sptr> > _blocksTeleportations;
 
 JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 JBTypes::vec3f get3DPosStayingBall() const;
@@ -171,7 +178,6 @@ void stay() noexcept;
 void jump() noexcept;
 void move() noexcept;
 void fall() noexcept;
-void teleport(const JBTypes::Color& col) noexcept;
 void deteleport() noexcept;
 void setTimeActionNow() noexcept;
 void setTimeLifeNow() noexcept;

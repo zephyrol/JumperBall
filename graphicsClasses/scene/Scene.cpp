@@ -11,15 +11,16 @@
   _camera(std::make_shared<Camera>(*_map)),
   _star(Star::createBlurStar(*_map))
  {
-   
  }
  
  Player::Status Scene::update(const Player::Status& status, const Scene::ActionKey& key) {
 
-   //_ball->update(); TODO update map (use interaction)
-
     Ball::ActionRequest actionRequest;
      switch (key) {
+         case Scene::ActionKey::Nothing: {
+             actionRequest = Ball::ActionRequest::Nothing;
+             break;
+         }
          case Scene::ActionKey::Up: {
              actionRequest = Ball::ActionRequest::GoStraightAhead;
              break;
