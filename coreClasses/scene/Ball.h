@@ -102,7 +102,7 @@ void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest&
 void setBlockPositions(const std::shared_ptr<const std::map<std::string, Block_sptr> >& blocksPositions);
 void setBlockWithInteractions(const std::shared_ptr<const vecBlock_sptr>& blocksWithInterraction);
 void setBlockTeleportations(
-    const std::shared_ptr<const std::map<Block_sptr, Block_sptr> >& blocksTeleportations
+    const std::shared_ptr<const std::map<BlockCstSpecial , BlockCstSpecial> >& blocksTeleportations
 );
 
 void updateMovements();
@@ -161,7 +161,7 @@ MovementDestination _movementDestination;
 
 std::shared_ptr<const std::map<std::string, Block_sptr> > _blocksPositions;
 std::shared_ptr<const vecBlock_sptr> _blockWithInteractions;
-std::shared_ptr<const std::map<Block_sptr, Block_sptr> > _blocksTeleportations;
+std::shared_ptr<const std::map<BlockCstSpecial , BlockCstSpecial> > _blocksTeleportations;
 
 JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 JBTypes::vec3f get3DPosStayingBall() const;

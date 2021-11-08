@@ -916,7 +916,7 @@ void Ball::setBlockWithInteractions(const std::shared_ptr<const vecBlock_sptr> &
 }
 
 void Ball::setBlockTeleportations(
-    const std::shared_ptr<const std::map<Block_sptr, Block_sptr>> &blocksTeleportations
+    const std::shared_ptr<const std::map<BlockCstSpecial , BlockCstSpecial>> &blocksTeleportations
 ) {
     _blocksTeleportations = blocksTeleportations;
 }

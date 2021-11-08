@@ -18,7 +18,7 @@ Map::Map(Map::MapInfo &&mapInfo):
     _blocksPositions(std::make_shared<const std::map<std::string,Block_sptr> >(createBlockPositions())),
     _blocksToUpdate(std::make_shared<const vecBlock_sptr>(getBlocksToUpdate())),
     _blocksTeleportations(
-        std::make_shared<const std::map<Block_sptr , Block_sptr> >(createBlocksTeleportations())
+        std::make_shared<const std::map<BlockCstSpecial , BlockCstSpecial> >(createBlocksTeleportations())
     ),
     _ball(std::move(mapInfo.ball)),
     _width(mapInfo.width),
@@ -198,21 +198,21 @@ CstBall_sptr Map::getBall() const {
     return _ball;
 }
 
-std::map<Block_sptr, Block_sptr> Map::createBlocksTeleportations() const {
-    std::map<Block_sptr, Block_sptr> teleportationBlocks;
-    std::map<JBTypes::Color, Block_sptr> foundColors;
+std::map<BlockCstSpecial , BlockCstSpecial> Map::createBlocksTeleportations() const {
+    std::map<BlockCstSpecial , BlockCstSpecial> teleportationBlocks;
+    std::map<JBTypes::Color, BlockCstSpecial> foundColors;
     for (const auto& block: _blocks) {
         for(const auto& special: block->getSpecials()) {
             const auto& color = special->getColor();
             if (foundColors.find(color) != foundColors.end() ){
-                foundColors[color] = block;
+                foundColors[color] = { block, special };
             } else {
-                teleportationBlocks[foundColors[color]] = block;
+                teleportationBlocks[foundColors[color]] = { block, special };
             }
         }
     }
 
-    std::map<Block_sptr, Block_sptr> invertedTeleportationBlocks;
+    std::map<BlockCstSpecial , BlockCstSpecial> invertedTeleportationBlocks;
     for(const auto& origDest: invertedTeleportationBlocks) {
         invertedTeleportationBlocks[origDest.second] = origDest.first;
     }

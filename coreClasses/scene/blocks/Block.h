@@ -19,6 +19,7 @@ using Block_sptr = std::shared_ptr <Block>;
 using CstBlock_sptr = std::shared_ptr <const Block>;
 using vecCstBlock_sptr = std::vector <CstBlock_sptr>;
 using vecBlock_sptr = std::vector <Block_sptr>;
+using BlockCstSpecial = std::pair<Block_sptr, CstSpecial_sptr>;
 
 class Block: public SceneElement {
 public:

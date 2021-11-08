@@ -15,6 +15,7 @@ using CstSpecial_sptr = std::shared_ptr <const Special>;
 using vecCstSpecial_sptr = std::vector <CstSpecial_sptr>;
 using vecSpecial_sptr = std::vector <Special_sptr>;
 using Special_uptr = std::unique_ptr <Special>;
+
 class Special: public SceneElement {
 public:
 
