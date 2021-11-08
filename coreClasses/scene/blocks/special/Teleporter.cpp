@@ -20,8 +20,10 @@ void Teleporter::applySpecialEffect() {
     if (!isActivated()){
         return;
     }
-    const auto ball = _ball.lock();
-    ball->teleport(this->getColor());
+    const auto& ball = _ball.lock();
+    if(ball->currentSide() == direction()) {
+        ball->teleport(this->getColor());
+    }
 }
 
 vecCstShape_sptr Teleporter::getShapes() const {
