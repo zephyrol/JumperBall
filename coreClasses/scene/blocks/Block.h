@@ -70,12 +70,14 @@ SceneElement::GlobalState getGlobalState() const override;
 
 static std::string positionToString(const JBTypes::vec3ui& position);
 
-private: 
-
-
 vecCstItem_sptr getCstItems() const;
 vecCstEnemy_sptr getCstEnemies() const;
 vecCstSpecial_sptr getCstSpecials() const;
+
+vecItem_sptr getItems();
+vecEnemy_sptr getEnemies();
+vecSpecial_sptr getSpecials();
+
 
 protected:
 const JBTypes::vec3ui _position;

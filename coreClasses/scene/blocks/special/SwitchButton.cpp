@@ -15,7 +15,14 @@ SwitchButton::SwitchButton(const JBTypes::Color& color,
 }
 
 void SwitchButton::applySpecialEffect() {
-
+    const auto& ball = _ball.lock();
+    for (const auto& block: *ball->getBlocksWithInteraction() ) {
+        for (const auto& special: block->getSpecials()) {
+            if (special->getColor() == getColor()){
+                special->switchOnOff();
+            }
+        }
+    }
 }
 
 vecCstShape_sptr SwitchButton::getShapes() const {

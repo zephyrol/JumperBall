@@ -147,3 +147,15 @@ void Block::update(const JBTypes::timePointMs &updatingTime) {
     }
 }
 
+vecItem_sptr Block::getItems() {
+    return _items;
+}
+
+vecEnemy_sptr Block::getEnemies() {
+    return _enemies;
+}
+
+vecSpecial_sptr Block::getSpecials() {
+    return _specials;
+}
+

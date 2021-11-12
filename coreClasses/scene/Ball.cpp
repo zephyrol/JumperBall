@@ -907,4 +907,8 @@ Block_sptr Ball::getCurrentBlock() {
     return _blocksPositions->at(strPos);
 }
 
+const std::shared_ptr<const vecBlock_sptr> &Ball::getBlocksWithInteraction() {
+    return _blockWithInteractions;
+}
+
 

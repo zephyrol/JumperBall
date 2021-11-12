@@ -105,6 +105,8 @@ void setBlockTeleportations(
     const std::shared_ptr<const std::map<BlockDir , BlockDir> >& blocksTeleportations
 );
 
+const std::shared_ptr<const vecBlock_sptr>& getBlocksWithInteraction();
+
 void updateMovements();
 
 JBTypes::vec3f getNextLook() const;
@@ -155,10 +157,10 @@ const TurnRight _turnRightMovement;
 const NextBlock _nextBlockGetter;
 const TurnBack _turnBackMovement;
 
-Block_sptr getCurrentBlock();
 
 MovementDestination _movementDestination;
 
+Block_sptr getCurrentBlock();
 std::shared_ptr<const std::map<std::string, Block_sptr> > _blocksPositions;
 std::shared_ptr<const vecBlock_sptr> _blockWithInteractions;
 std::shared_ptr<const std::map<BlockDir , BlockDir> > _blocksTeleportations;
