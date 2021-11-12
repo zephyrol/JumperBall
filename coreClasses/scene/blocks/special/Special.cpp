@@ -17,7 +17,6 @@ Special::Special(
     _color(color),
     _colorAttributeName("is" + JBTypesMethods::colorToString(_color) + "Activated"),
     _position(position),
-    _position3D(init3DPosition()),
     _isActivated(isActivated) {
 }
 
@@ -31,10 +30,6 @@ float Special::getTimeSinceCreation() const {
 
 const JBTypes::Dir& Special::direction() const {
     return _direction;
-}
-
-const JBTypes::vec3f& Special::position3D() const {
-    return _position3D;
 }
 
 const JBTypes::vec3ui& Special::position() const {
@@ -53,25 +48,6 @@ void Special::switchOnOff() {
     _isActivated = !_isActivated;
 }
 
-JBTypes::vec3f Special::init3DPosition() const {
-    constexpr float sizeBlock = 1.f;
-    constexpr float offset = sizeBlock / 2.f;
-
-    const JBTypes::Dir& currentDir = _direction;
-    const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
-
-    const JBTypes::vec3f posWorld =
-    { static_cast <float>(_position.at(0)),
-      static_cast <float>(_position.at(1)),
-      static_cast <float>(_position.at(2)) };
-
-    return {
-        posWorld.x + offset + vecDir.x * offset,
-        posWorld.y + offset + vecDir.y * offset,
-        posWorld.z + offset + vecDir.z * offset
-    };
-}
-
 SceneElement::GlobalState Special::getGlobalState() const {
     return SceneElement::GlobalState::United;
 }
@@ -81,11 +57,10 @@ SceneElement::StaticValues <float> Special::getStaticFloatValues() const {
 }
 
 SceneElement::StaticValues <JBTypes::vec3f> Special::getStaticVec3fValues() const {
-    constexpr float offset = 0.5;
     const JBTypes::vec3f position = {
-        static_cast <float>(_position.at(0)) + offset,
-        static_cast <float>(_position.at(1)) + offset,
-        static_cast <float>(_position.at(2)) + offset
+        static_cast <float>(_position.at(0)),
+        static_cast <float>(_position.at(1)),
+        static_cast <float>(_position.at(2))
     };
     return { position };
 }

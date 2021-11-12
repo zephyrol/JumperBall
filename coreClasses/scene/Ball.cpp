@@ -26,7 +26,6 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z):
     _burnCoefficientCurrent(0.f),
     _teleportationColor(JBTypes::Color::None),
     _teleportationCoefficient(0.f),
-    _teleportationBlockDestination(0),
     _updatingTime(),
     _jumpRequest(false),
     _timeJumpRequest(),
@@ -78,6 +77,7 @@ void Ball::jump() noexcept{
 void Ball::stay() noexcept{
     _jumpingType = Ball::JumpingType::Short;
     _state = Ball::State::Staying;
+    _3DPos = get3DPosStayingBall();
     updateMovements();
     setTimeActionNow();
 }
@@ -491,14 +491,12 @@ void Ball::turningUpdate() noexcept{
         internalUpdate();
         return;
     }
-    _3DPos = get3DPosStayingBall();
 }
 
 void Ball::movingUpdate() noexcept{
     const float sSinceAction = getTimeSecondsSinceAction();
     if (sSinceAction >= timeToGetNextBlock) {
         goStraightAhead();
-        _3DPos = get3DPosStayingBall();
         stay();
         blockEvent();
         internalUpdate();
@@ -649,44 +647,27 @@ void Ball::teleportingUpdate() noexcept{
         _teleportationCoefficient = timeSinceAction / Ball::halfTimeTeleportationDuration;
         return;
     }
-    // TODO update it
-    // const size_t blockIndex = _map.getIndex({ _posX, _posY, _posZ });
 
-    // const auto& blockTeleporter = _map.getBlocksTeleporters();
-    // const Map::TeleportersInfo teleporterInfo = blockTeleporter.at(_teleportationColor);
+    const auto currentBlock = getCurrentBlock();
+    const auto destination = _blocksTeleportations->at(
+        BlockDir(currentBlock, _currentSide)
+    );
+    _pos = destination.first->position();
+    const auto destinationDir = destination.second;
 
-    // const size_t firstTeleporterIndex = teleporterInfo.coupleIndices.first;
-    // const size_t secondTeleporterIndex = teleporterInfo.coupleIndices.second;
-
-    // const JBTypes::Dir firstTeleporterDir = teleporterInfo.coupleDirections.first;
-    // const JBTypes::Dir secondTeleporterDir = teleporterInfo.coupleDirections.second;
-
-    // const size_t destinationIndex = blockIndex == firstTeleporterIndex
-    //                                 ? secondTeleporterIndex
-    //                                 : firstTeleporterIndex;
-
-    // const JBTypes::Dir destinationDir = blockIndex == firstTeleporterIndex
-    //                                     ? secondTeleporterDir
-    //                                     : firstTeleporterDir;
-
-    // const JBTypes::vec3ui& destinationPosition = _map.getBlockCoords(destinationIndex);
-
-    // _posX = destinationPosition.at(0);
-    // _posY = destinationPosition.at(1);
-    // _posZ = destinationPosition.at(2);
-    // if (_currentSide != destinationDir) {
-    //     const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(destinationDir);
-    //     _lookTowards = JBTypesMethods::vectorAsDirection(
-    //         JBTypesMethods::cross(vecDir, { vecDir.y, -vecDir.x, 0.f })
-    //         );
-    // }
-    // _currentSide = destinationDir;
-    // _teleportationCoefficient = 1.f;
+    if (_currentSide != destinationDir) {
+        const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(destinationDir);
+        _lookTowards = JBTypesMethods::vectorAsDirection(
+            JBTypesMethods::cross(vecDir, { vecDir.y, -vecDir.x, 0.f })
+            );
+    }
+    _currentSide = destinationDir;
+    _teleportationCoefficient = 1.f;
 
     stay();
     internalUpdate();
     deteleport();
-    internalUpdate();
+    // internalUpdate();
 }
 
 void Ball::deteleportingUpdate() noexcept{
@@ -916,7 +897,14 @@ void Ball::setBlockWithInteractions(const std::shared_ptr<const vecBlock_sptr> &
 }
 
 void Ball::setBlockTeleportations(
-    const std::shared_ptr<const std::map<BlockCstSpecial , BlockCstSpecial>> &blocksTeleportations
+    const std::shared_ptr<const std::map<BlockDir , BlockDir>> &blocksTeleportations
 ) {
     _blocksTeleportations = blocksTeleportations;
 }
+
+Block_sptr Ball::getCurrentBlock() {
+    const std::string strPos = Block::positionToString(_pos);
+    return _blocksPositions->at(strPos);
+}
+
+

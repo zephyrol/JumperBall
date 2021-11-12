@@ -18,7 +18,7 @@ Laser::Laser(const JBTypes::Color& color,
           laserRadius,
           length,
           ball),
-    _color(color),
+    _color(JBTypesMethods::colorToShiny(color)),
     _isActivated(true) {
 }
 

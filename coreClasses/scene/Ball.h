@@ -102,7 +102,7 @@ void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest&
 void setBlockPositions(const std::shared_ptr<const std::map<std::string, Block_sptr> >& blocksPositions);
 void setBlockWithInteractions(const std::shared_ptr<const vecBlock_sptr>& blocksWithInterraction);
 void setBlockTeleportations(
-    const std::shared_ptr<const std::map<BlockCstSpecial , BlockCstSpecial> >& blocksTeleportations
+    const std::shared_ptr<const std::map<BlockDir , BlockDir> >& blocksTeleportations
 );
 
 void updateMovements();
@@ -141,7 +141,6 @@ float _burnCoefficientCurrent;
 
 JBTypes::Color _teleportationColor;
 float _teleportationCoefficient;
-size_t _teleportationBlockDestination;
 
 JBTypes::timePointMs _updatingTime;
 
@@ -156,12 +155,13 @@ const TurnRight _turnRightMovement;
 const NextBlock _nextBlockGetter;
 const TurnBack _turnBackMovement;
 
+Block_sptr getCurrentBlock();
 
 MovementDestination _movementDestination;
 
 std::shared_ptr<const std::map<std::string, Block_sptr> > _blocksPositions;
 std::shared_ptr<const vecBlock_sptr> _blockWithInteractions;
-std::shared_ptr<const std::map<BlockCstSpecial , BlockCstSpecial> > _blocksTeleportations;
+std::shared_ptr<const std::map<BlockDir , BlockDir> > _blocksTeleportations;
 
 JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 JBTypes::vec3f get3DPosStayingBall() const;

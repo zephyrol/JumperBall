@@ -31,8 +31,8 @@ vecCstShape_sptr Teleporter::getShapes() const {
         Shape::Aspect::Pedestal,
         getColor(),
         std::initializer_list<Transformation>({
-            Transformation(Transformation::Type::Translation, { 0.f, -0.5f, 0.f}),
-            Transformation(Transformation::Type::Scale, { 0.7f, 0.05f, 0.7f }),
+            //Transformation(Transformation::Type::Translation, { 0.f, -0.5f, 0.f}),
+            Transformation(Transformation::Type::Scale, { 0.7f, 0.05f, 0.7f })
         })
     );
 

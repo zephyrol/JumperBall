@@ -18,7 +18,7 @@ Map::Map(Map::MapInfo &&mapInfo):
     _blocksPositions(std::make_shared<const std::map<std::string,Block_sptr> >(createBlockPositions())),
     _blocksToUpdate(std::make_shared<const vecBlock_sptr>(getBlocksToUpdate())),
     _blocksTeleportations(
-        std::make_shared<const std::map<BlockCstSpecial , BlockCstSpecial> >(createBlocksTeleportations())
+        std::make_shared<const std::map<BlockDir , BlockDir> >(createBlocksTeleportations())
     ),
     _ball(std::move(mapInfo.ball)),
     _width(mapInfo.width),
@@ -198,22 +198,22 @@ CstBall_sptr Map::getBall() const {
     return _ball;
 }
 
-std::map<BlockCstSpecial , BlockCstSpecial> Map::createBlocksTeleportations() const {
-    std::map<BlockCstSpecial , BlockCstSpecial> teleportationBlocks;
-    std::map<JBTypes::Color, BlockCstSpecial> foundColors;
+std::map<BlockDir , BlockDir> Map::createBlocksTeleportations() const {
+    std::map<BlockDir , BlockDir> teleportationBlocks;
+    std::map<JBTypes::Color, BlockDir> foundColors;
     for (const auto& block: _blocks) {
         for(const auto& special: block->getSpecials()) {
             const auto& color = special->getColor();
-            if (foundColors.find(color) != foundColors.end() ){
-                foundColors[color] = { block, special };
+            if (foundColors.find(color) == foundColors.end() ){
+                foundColors[color] = { block, special->direction() };
             } else {
-                teleportationBlocks[foundColors[color]] = { block, special };
+                teleportationBlocks[foundColors[color]] = { block, special->direction() };
             }
         }
     }
 
-    std::map<BlockCstSpecial , BlockCstSpecial> invertedTeleportationBlocks;
-    for(const auto& origDest: invertedTeleportationBlocks) {
+    std::map<BlockDir , BlockDir> invertedTeleportationBlocks;
+    for(const auto& origDest: teleportationBlocks) {
         invertedTeleportationBlocks[origDest.second] = origDest.first;
     }
     teleportationBlocks.insert(invertedTeleportationBlocks.begin(), invertedTeleportationBlocks.end());

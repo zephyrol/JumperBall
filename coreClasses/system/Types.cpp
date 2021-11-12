@@ -282,6 +282,9 @@ std::string JBTypesMethods::colorToString (const JBTypes::Color& color) {
         case JBTypes::Color::Orange: return "Orange";
         case JBTypes::Color::None: return "None";
         case JBTypes::Color::Purple: return "Purple";
+        case JBTypes::Color::ShinyRed: return "Red";
+        case JBTypes::Color::ShinyGreen: return "Green";
+        case JBTypes::Color::ShinyBlue: return "Blue";
         default: return "None";
     }
     return "None";
@@ -412,6 +415,19 @@ JBTypes::Color JBTypesMethods::charAsColor(unsigned char charColor) {
         break;
     }
     return color;
+}
+
+JBTypes::Color JBTypesMethods::colorToShiny(const JBTypes::Color& color) {
+    if(color == JBTypes::Color::Red) {
+       return JBTypes::Color::ShinyRed;
+    }
+    if(color == JBTypes::Color::Green) {
+        return JBTypes::Color::ShinyGreen;
+    }
+    if(color == JBTypes::Color::Blue) {
+        return JBTypes::Color::ShinyBlue;
+    }
+    return JBTypes::Color::None;
 }
 
 std::array<bool, 6> JBTypesMethods::strDirAsArray(const std::string& directions) {

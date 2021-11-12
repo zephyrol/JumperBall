@@ -62,12 +62,12 @@ bool ballIsOut() const;
 std::map<std::string, Block_sptr> createBlockPositions() const;
 std::vector<Block_sptr> getBlocksToUpdate() const;
 
-std::map<BlockCstSpecial , BlockCstSpecial> createBlocksTeleportations() const;
+std::map<BlockDir , BlockDir> createBlocksTeleportations() const;
 
 const vecBlock_sptr _blocks;
 const std::shared_ptr<const std::map<std::string,Block_sptr> > _blocksPositions;
 const std::shared_ptr<const vecBlock_sptr> _blocksToUpdate;
-const std::shared_ptr<const std::map<BlockCstSpecial, BlockCstSpecial> > _blocksTeleportations;
+const std::shared_ptr<const std::map<BlockDir, BlockDir> > _blocksTeleportations;
 
 const Ball_sptr _ball;
 

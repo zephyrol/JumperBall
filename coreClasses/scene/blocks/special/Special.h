@@ -29,7 +29,6 @@ Special(
 const JBTypes::Color& getColor() const;
 float getTimeSinceCreation() const;
 const JBTypes::Dir& direction() const;
-const JBTypes::vec3f& position3D() const;
 const JBTypes::vec3ui& position() const;
 bool isActivated() const;
 virtual bool isAnimated() const;
@@ -51,10 +50,8 @@ const JBTypes::Dir _direction;
 const JBTypes::Color _color;
 const std::string _colorAttributeName;
 const JBTypes::vec3ui _position;
-const JBTypes::vec3f _position3D;
 bool _isActivated;
 
-JBTypes::vec3f init3DPosition() const;
 };
 
 

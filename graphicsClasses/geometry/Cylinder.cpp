@@ -91,7 +91,10 @@ GeometricShape::ShapeVerticesInfo Cylinder::computeBasicInfoCylinder (size_t mer
     infoAttributesCylinder.uvCoords.emplace_back(initialPositionTop.x, initialPositionTop.z);
 
     for (unsigned int i = 1; i < meriCount; ++i) {
-        const glm::mat4 rotation = glm::rotate(a2 * i, glm::vec3(0.f, 1.f, 0.f));
+        const glm::mat4 rotation = glm::rotate(
+            a2 * static_cast<float>(i),
+            glm::vec3(0.f, 1.f, 0.f)
+        );
 
         const glm::vec3 positionBase(rotation * glm::vec4(r, 0.f, 0.f, 1.f));
         const glm::vec3 positionTop(positionBase.x, 1.f, positionBase.z);
@@ -186,6 +189,15 @@ std::vector <glm::vec3> Cylinder::genPositions() const {
 }
 
 std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color& color) {
+    if (color == JBTypes::Color::Red) {
+        return { glm::vec3 (1.f, 0.f, 0.f), glm::vec3 (0.5f, 0.f, 0.f) };
+    }
+    if (color == JBTypes::Color::Green) {
+        return { glm::vec3 (0.f, 1.f, 0.f), glm::vec3 (0.f, 0.5f, 0.f) };
+    }
+    if (color == JBTypes::Color::Blue) {
+        return { glm::vec3 (0.f, 0.f, 1.f), glm::vec3 (0.f, 0.f, 0.5f) };
+    }
     if (color == JBTypes::Color::Orange) {
         return { glm::vec3 (1.f, 215.f / 255.f, 0.f), glm::vec3(150.f / 255.f, 75.f / 255.f, 0.f)};
     }
@@ -199,11 +211,11 @@ std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color& c
     constexpr float redConeSensibilityCoeff = 0.3f;
     constexpr float greenConeSensibilityCoeff = 0.59f;
     constexpr float blueConeSensibilityCoeff = 0.11f;
-    if (color == JBTypes::Color::Red) {
+    if (color == JBTypes::Color::ShinyRed) {
         const auto redColor = laserIntensity * glm::vec3(1.f / redConeSensibilityCoeff, 0.f, 0.f);
         return { redColor, redColor };
     }
-    if (color == JBTypes::Color::Blue) {
+    if (color == JBTypes::Color::ShinyBlue) {
         const auto blueColor = laserIntensity * glm::vec3(
             0.f,
             1.f / greenConeSensibilityCoeff,
@@ -211,7 +223,7 @@ std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color& c
         );
         return { blueColor, blueColor };
     }
-    if (color == JBTypes::Color::Green) {
+    if (color == JBTypes::Color::ShinyGreen) {
         const auto greenColor = laserIntensity * glm::vec3(0.f, 1.f / greenConeSensibilityCoeff, 0.f);
         return { greenColor, greenColor };
     }

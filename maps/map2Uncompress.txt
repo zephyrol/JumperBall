@@ -11,7 +11,7 @@
 . . . . . . . .
 
 . . . . . . . .
-. X . . . . . . N
+. X . . . . . . NS TRU
 . X . X . . . . N N
 . . . . . . . .
 . . . X . . X . I   S D
@@ -38,7 +38,7 @@
 . . . . . . . .
 
 . . . . . . . .
-. X X X X X X . N N N   G 1     G 1     N
+. X X X X X X . N N N   G 1     G 1     NS TRE
 . . . X . . . . I
 . . . X . . X . I B
 . . . X . . X . F B

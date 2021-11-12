@@ -12,7 +12,7 @@
 
 std::string Utility::readFileSrc (const std::string& filePath) {
     // precondition
-    if (filePath.size() == 0)
+    if (filePath.empty())
         std::cerr << "Invalid parameter filePath : size() must not be 0."
                   << std::endl;
     // --------------------------------------------------------------------------
@@ -37,7 +37,7 @@ std::string Utility::readFileSrc (const std::string& filePath) {
                               std::istreambuf_iterator <char>());
 
             // postcondition
-            if (strContent.size() == 0)
+            if (strContent.empty())
                 std::cout << "Invalid content read strContent(\"" << strContent
                           << "\") : size() must not be 0." << std::endl;
             // ------------------------------------------------------------------
@@ -122,7 +122,7 @@ std::vector <glm::vec3> Utility::GLfloatListToGlmVec3 (
                   << std::endl;
     } else {
         for (size_t i = 0; i < list.size(); i += 3) {
-            vecList.push_back(glm::vec3(list.at(i), list.at(i + 1), list.at(i + 2)));
+            vecList.emplace_back(list.at(i), list.at(i + 1), list.at(i + 2));
         }
     }
     return vecList;
@@ -136,7 +136,7 @@ std::vector <glm::vec2> Utility::GLfloatListToGlmVec2 (
                   << std::endl;
     } else {
         for (size_t i = 0; i < list.size(); i += 2) {
-            vecList.push_back(glm::vec2(list.at(i), list.at(i + 1)));
+            vecList.emplace_back(list.at(i), list.at(i + 1));
         }
     }
     return vecList;
@@ -209,7 +209,7 @@ glm::vec3 Utility::convertCIExyYToRGB (const glm::vec3& CIExyYColor) {
 glm::vec3 Utility::convertRBGToCIExyY (const glm::vec3& rbgColor) {
     const glm::vec3 CIEXYZ = Utility::RGBToXYZ * rbgColor;
     const float sumXYZ = CIEXYZ.x + CIEXYZ.y + CIEXYZ.z;
-    return glm::vec3(CIEXYZ.x / sumXYZ, CIEXYZ.y / sumXYZ, CIEXYZ.y);
+    return {CIEXYZ.x / sumXYZ, CIEXYZ.y / sumXYZ, CIEXYZ.y};
 }
 
 unsigned int Utility::windowResolutionX = 0;
@@ -242,20 +242,23 @@ GLsizei Utility::getWidthFromHeight (unsigned int resolutionY) {
 
 glm::vec3 Utility::colorAsVec3 (const JBTypes::Color& color) {
     switch (color) {
-        case JBTypes::Color::Red: return glm::vec3(1.f, 0.f, 0.f); break;
-        case JBTypes::Color::Green: return glm::vec3(0.f, 1.f, 0.f); break;
-        case JBTypes::Color::Blue: return glm::vec3(0.f, 0.f, 1.f); break;
-        case JBTypes::Color::Yellow: return glm::vec3(1.f, 1.f, 0.f); break;
-        case JBTypes::Color::Orange: return glm::vec3(1.f, 0.4f, 0.f); break;
-        case JBTypes::Color::Purple: return glm::vec3(0.4f, 0.f, 0.4f); break;
-        case JBTypes::Color::None: return glm::vec3(0.f, 0.f, 0.f); break;
-        default: return glm::vec3(0.f, 0.f, 0.f); break;
+        case JBTypes::Color::None: return {0.f, 0.f, 0.f}; break;
+        case JBTypes::Color::Red: return {1.f, 0.f, 0.f}; break;
+        case JBTypes::Color::Green: return {0.f, 1.f, 0.f}; break;
+        case JBTypes::Color::Blue: return {0.f, 0.f, 1.f}; break;
+        case JBTypes::Color::Yellow: return {1.f, 1.f, 0.f}; break;
+        case JBTypes::Color::Orange: return {1.f, 0.4f, 0.f}; break;
+        case JBTypes::Color::Purple: return {0.4f, 0.f, 0.4f}; break;
+        case JBTypes::Color::ShinyRed: return {1.f, 0.f, 0.f}; break;
+        case JBTypes::Color::ShinyGreen: return {0.f, 1.f, 0.f}; break;
+        case JBTypes::Color::ShinyBlue: return {0.f, 0.f, 1.f}; break;
+        default: return {0.f, 0.f, 0.f}; break;
     }
-    return glm::vec3(0.f, 0.f, 0.f);
+    return {0.f, 0.f, 0.f};
 }
 
 glm::vec3 Utility::convertToOpenGLFormat (const JBTypes::vec3f& vec3f) {
-    return glm::vec3(vec3f.x, vec3f.y, vec3f.z);
+    return {vec3f.x, vec3f.y, vec3f.z};
 }
 
 glm::vec4 Utility::convertToOpenGLFormat (const JBTypes::Quaternion& q) {
@@ -267,7 +270,7 @@ GLfloat Utility::convertToOpenGLFormat (const float& f) {
 }
 
 glm::vec2 Utility::convertToOpenGLFormat (const JBTypes::vec2f& vec2f) {
-    return glm::vec2(vec2f.x, vec2f.y);
+    return {vec2f.x, vec2f.y};
 }
 
 GLubyte Utility::convertToOpenGLFormat (unsigned char uChar) {

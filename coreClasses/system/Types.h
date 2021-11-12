@@ -29,7 +29,18 @@ namespace JBTypes {
 
 enum class Direction { North, South, East, West, Up, Down };
 
-enum class Color { None, Red, Green, Blue, Yellow, Orange, Purple };
+enum class Color {
+    None,
+    Red,
+    Green,
+    Blue,
+    Yellow,
+    Orange,
+    Purple,
+    ShinyRed,
+    ShinyGreen,
+    ShinyBlue
+};
 
 using Dir = Direction;
 
@@ -91,6 +102,7 @@ JBTypes::vec3f rotateVector(const JBTypes::vec3f& v, const JBTypes::Quaternion& 
 void displayInstallError();
 
 std::string colorToString(const JBTypes::Color& color);
+JBTypes::Color colorToShiny(const JBTypes::Color& color);
 JBTypes::Color charAsColor(unsigned char charColor);
 
 template<typename K, typename V> std::map <K, V> createMap(std::vector <K> keys, std::vector <V> values);
