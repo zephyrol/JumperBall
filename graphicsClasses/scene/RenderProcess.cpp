@@ -13,12 +13,32 @@ RenderProcess::RenderProcess(
     PassUniformUpdateMap&& externalUniformsTreating,
     FrameBuffer_uptr&& frameBuffer,
     bool usingDefaultFrameBufferAutoClean
-    ):
+):
     _renderPasses(renderPasses),
     _shaderPrograms(std::move(shaderPrograms)),
     _externalUniformsTreating(std::move(externalUniformsTreating)),
     _frameBuffer(std::move(frameBuffer)),
+    _defaultFrameBufferWidth(nullptr),
+    _defaultFrameBufferHeight(nullptr),
     _usingDefaultFrameBufferAutoClean(usingDefaultFrameBufferAutoClean) {
+}
+
+RenderProcess::RenderProcess(
+    const vecRenderPass_sptr &renderPasses,
+    RenderProcess::PassShaderMap &&shaderPrograms,
+    RenderProcess::PassUniformUpdateMap &&externalUniformsTreating,
+    GLsizei defaultFrameBufferWidth,
+    GLsizei defaultFrameBufferHeight,
+    bool usingDefaultFrameBufferAutoClean
+):
+    _renderPasses(renderPasses),
+    _shaderPrograms(std::move(shaderPrograms)),
+    _externalUniformsTreating(std::move(externalUniformsTreating)),
+    _frameBuffer(nullptr),
+    _defaultFrameBufferWidth(new GLsizei(defaultFrameBufferWidth)),
+    _defaultFrameBufferHeight(new GLsizei(defaultFrameBufferHeight)),
+    _usingDefaultFrameBufferAutoClean(usingDefaultFrameBufferAutoClean) {
+
 }
 
 void RenderProcess::updateUniforms() {
@@ -32,7 +52,7 @@ void RenderProcess::render() const {
     if (_frameBuffer) {
         _frameBuffer->bindFrameBuffer();
     } else {
-        FrameBuffer::bindDefaultFrameBuffer();
+        FrameBuffer::bindDefaultFrameBuffer(*_defaultFrameBufferWidth, *_defaultFrameBufferHeight);
         if (_usingDefaultFrameBufferAutoClean) {
             FrameBuffer::cleanDefaultFrameBuffer();
         }
@@ -60,3 +80,4 @@ void RenderProcess::freeGPUMemory() {
 GLuint RenderProcess::getFrameBufferTexture() const {
     return _frameBuffer->getRenderTexture();
 }
+

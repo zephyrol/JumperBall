@@ -6,9 +6,9 @@
  */
 #include "Scene.h"
 
- Scene::Scene(size_t mapNumber):
+Scene::Scene(size_t mapNumber, float screenRatio):
   _map(MapGenerator::loadMap(mapNumber)),
-  _camera(std::make_shared<Camera>(*_map)),
+  _camera(std::make_shared<Camera>(*_map, screenRatio)),
   _star(Star::createBlurStar(*_map))
  {
  }
@@ -96,4 +96,8 @@
 
     return { cstStar, cstBall, cstCamera };
  }
+
+void Scene::updateScreenRatio(float ratio) {
+    _camera->setRatio(ratio);
+}
  

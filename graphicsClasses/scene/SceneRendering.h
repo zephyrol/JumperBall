@@ -20,7 +20,7 @@
 class SceneRendering:public Rendering {
 
 public:
-SceneRendering(const Scene& scene);
+SceneRendering(const Scene& scene, GLsizei width, GLsizei height);
 
 void update() override;
 void freeGPUMemory() override;
@@ -31,6 +31,9 @@ private:
 
 static constexpr size_t heightBloomTexture = 192;
 static constexpr size_t sizeDepthTexture = 1024;
+
+const GLsizei _expensivePreprocessWidth;
+const GLsizei _expensivePreprocessHeight;
 
 const Scene& _scene;
 
@@ -78,8 +81,6 @@ Rendering::ExternalUniformBlockVariables createExternalUniformBlockVariables() c
 
 const UniformBlock_sptr& getUniformBlock(const std::string& name) const;
 const glm::mat4& getUniformMatrix(const std::string& name) const;
-
-FrameBuffer_uptr createScreenSpaceEffectFrameBuffer(const FrameBuffer::Content& category) const;
 
 static const std::string VPName;
 static const std::string VPStarName;

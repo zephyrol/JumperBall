@@ -45,6 +45,7 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
     unsigned char character,
     const std::string& message,
     float height,
+    GLsizei screenHeight,
     const FontTexturesGenerator::FTContent& ftContent) {
 
     FontTexturesGenerator::GraphicCharacter graphicCharacter;
@@ -83,7 +84,7 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
     const auto& metrics = glyph->metrics;
     const auto& bitmap = glyph->bitmap;
 
-    const FT_UInt heightPixels = static_cast <FT_UInt>(Utility::windowResolutionY * height);
+    const FT_UInt heightPixels = static_cast <FT_UInt>(screenHeight * height);
 
     setPixelSizes(heightPixels);
     const FT_Pos minHeight = getMinHeight( /*{ static_cast <char>(character) }*/ message,
@@ -144,6 +145,7 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
 
 FontTexturesGenerator::GraphicAlphabet FontTexturesGenerator::genGraphicAlphabet (
     const Menu& menu,
+    GLsizei screenHeight,
     const FontTexturesGenerator::FTContent& ftContent
     ) {
     FontTexturesGenerator::GraphicAlphabet graphicAlphabet;
@@ -168,7 +170,13 @@ FontTexturesGenerator::GraphicAlphabet FontTexturesGenerator::genGraphicAlphabet
             const std::string message = label->message();
             for (unsigned char character : message) {
                 if (graphicAlphabet.find(character) == graphicAlphabet.end()) {
-                    graphicAlphabet[character] = genGraphicCharacter(character, message, height, ftContent);
+                    graphicAlphabet[character] = genGraphicCharacter(
+                        character,
+                        message,
+                        height,
+                        screenHeight,
+                        ftContent
+                    );
                 }
             }
         }

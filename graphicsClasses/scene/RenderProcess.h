@@ -27,7 +27,18 @@ RenderProcess(
     PassShaderMap&& shaderPrograms,
     PassUniformUpdateMap&& externalUniformsTreating,
     FrameBuffer_uptr&& frameBuffer,
-    bool usingDefaultFrameBufferAutoClean = true);
+    bool usingDefaultFrameBufferAutoClean = true
+);
+
+RenderProcess(
+    const vecRenderPass_sptr& renderPasses,
+    PassShaderMap&& shaderPrograms,
+    PassUniformUpdateMap&& externalUniformsTreating,
+    GLsizei defaultFrameBufferWidth,
+    GLsizei defaultFrameBufferHeight,
+    bool usingDefaultFrameBufferAutoClean = true
+);
+
 RenderProcess(const RenderProcess& renderProcess) = delete;
 RenderProcess& operator= (const RenderProcess&) = delete;
 
@@ -43,5 +54,7 @@ const vecRenderPass_sptr _renderPasses;
 const PassShaderMap _shaderPrograms;
 const PassUniformUpdateMap _externalUniformsTreating;
 const FrameBuffer_uptr _frameBuffer;
+const std::unique_ptr<const GLsizei> _defaultFrameBufferWidth;
+const std::unique_ptr<const GLsizei> _defaultFrameBufferHeight;
 const bool _usingDefaultFrameBufferAutoClean;
 };

@@ -22,7 +22,7 @@ public:
 
 enum class Movement { TurningAroundMap, FollowingBall, ApproachingBall };
 
-Camera(const Map& map);
+Camera(const Map& map, float ratio);
 
 static constexpr float zNear = 0.1f;
 static constexpr float zFar = 100.f;
@@ -37,6 +37,7 @@ void turnAroundMap() noexcept;
 void followBall() noexcept;
 void approachBall() noexcept;
 const Movement& getMovement() noexcept;
+void setRatio(float ratio);
 
 static glm::mat4 genVPMatrixFromStar(const Star& star);
 
@@ -48,7 +49,7 @@ bool approachingBallUpdate() noexcept;
 
 const Map& _map;
 const float _fovy;
-const float _ratio;
+float _ratio;
 Movement _movement;
 glm::vec3 _pos;
 glm::vec3 _center;

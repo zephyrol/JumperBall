@@ -7,12 +7,14 @@
 
 #include "FrameBuffer.h"
 
-FrameBuffer::FrameBuffer(FrameBuffer::Content content,
-                         bool usedAutoClean,
-                         GLsizei resolutionX,
-                         GLsizei resolutionY,
-                         bool hasDepthBuffer,
-                         const glm::vec3& clearColor):
+FrameBuffer::FrameBuffer(
+    GLsizei resolutionX,
+    GLsizei resolutionY,
+    FrameBuffer::Content content,
+    bool usedAutoClean,
+    bool hasDepthBuffer,
+    const glm::vec3& clearColor
+):
     _fboHandle(createFrameBufferObject()),
     _renderTexture(createRenderTexture()),
     _content(content),
@@ -58,7 +60,7 @@ FrameBuffer::FrameBuffer(FrameBuffer::Content content,
     }
     const GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
     glDrawBuffers(1, &drawBuffer);
-    bindDefaultFrameBuffer();
+    // bindDefaultFrameBuffer();
 }
 
 void FrameBuffer::bindFrameBuffer() const {
@@ -86,10 +88,10 @@ void FrameBuffer::freeGPUMemory() {
     glDeleteFramebuffers(1, &_fboHandle);
 }
 
-void FrameBuffer::bindDefaultFrameBuffer() {
+void FrameBuffer::bindDefaultFrameBuffer(GLsizei width, GLsizei height) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, Utility::windowResolutionX, Utility::windowResolutionY);
     glDisable(GL_DEPTH_TEST);
+    glViewport(0, 0, width, height);
 }
 
 void FrameBuffer::cleanDefaultFrameBuffer() {
@@ -135,7 +137,7 @@ std::pair <float, float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
     constexpr float epsilon = 0.001f;
     constexpr unsigned int levelOfDetail = 0; // 0 is the base image level
     constexpr unsigned int numberOfComponents = 3; // RGB
-    const size_t numberOfPixels = Utility::windowResolutionX * Utility::windowResolutionY;
+    const size_t numberOfPixels = 0; // Utility::windowResolutionX * Utility::windowResolutionY;
     std::vector <GLfloat> textureData(numberOfPixels*numberOfComponents);
 
     // bindRenderTexture(); TODO: update with new architecture if you use it
@@ -154,6 +156,20 @@ std::pair <float, float> FrameBuffer::computeLogAverageLuminanceAndMax() const {
     }
 
     return std::pair <float, float>(exp(sumLogLuminance / numberOfPixels), maxLuminance);
+}
+
+FrameBuffer_uptr FrameBuffer::createScreenSpaceEffectFrameBuffer (
+    const FrameBuffer::Content& content,
+    GLsizei width,
+    GLsizei height
+) {
+    return FrameBuffer_uptr(new FrameBuffer(
+        width,
+        height,
+        content,
+        false,
+        false
+    ));
 }
 
 

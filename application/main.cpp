@@ -7,7 +7,6 @@
 
 #include <cstdlib>
 #include <iostream>
-#include <fstream>
 #include <scene/MapGenerator.h>
 #include "Window.h"
 
@@ -17,7 +16,7 @@ GLFWwindow*initLibraries() {
     if (!glfwInit()) {
         std::cerr << "Failed to init glfw" << std::endl;
     }
-    glfwWindowHint(GLFW_RESIZABLE, false);
+    glfwWindowHint(GLFW_RESIZABLE, true);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -27,13 +26,6 @@ GLFWwindow*initLibraries() {
        "JumperBall",glfwGetPrimaryMonitor(),
        nullptr);*/
     window = glfwCreateWindow(RESOLUTION_X, RESOLUTION_Y, "JumperBall", nullptr, nullptr);
-
-    int widthWindow;
-    int heightWindow;
-    glfwGetFramebufferSize(window, &widthWindow, &heightWindow);
-    Utility::windowResolutionX = widthWindow;
-
-    Utility::windowResolutionY = heightWindow;
 
     if (window == nullptr) {
         std::cerr << "Failed to open GLFW window" << std::endl;
@@ -88,8 +80,10 @@ int main (int argc, char**argv) {
     }
 
     GLFWwindow*glfwWindow = initLibraries();
-
-    Window window(glfwWindow);
+    int widthWindow;
+    int heightWindow;
+    glfwGetFramebufferSize(glfwWindow, &widthWindow, &heightWindow);
+    Window window(glfwWindow, widthWindow, heightWindow);
 
     window.run();
 

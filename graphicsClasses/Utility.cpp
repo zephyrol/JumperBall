@@ -6,7 +6,7 @@
  */
 
 #include "Utility.h"
-#include <math.h>
+#include <cmath>
 #include <fstream>
 
 
@@ -212,32 +212,9 @@ glm::vec3 Utility::convertRBGToCIExyY (const glm::vec3& rbgColor) {
     return {CIEXYZ.x / sumXYZ, CIEXYZ.y / sumXYZ, CIEXYZ.y};
 }
 
-unsigned int Utility::windowResolutionX = 0;
-unsigned int Utility::windowResolutionY = 0;
-
 float Utility::getLuminance (const glm::vec3& rgbColor) {
     const glm::vec3 CIExyYColor = convertRBGToCIExyY(rgbColor);
-
     return CIExyYColor.z;
-}
-
-
-float Utility::getWindowRatio() {
-    return static_cast <float>(Utility::windowResolutionX) /
-           static_cast <float>(Utility::windowResolutionY);
-}
-
-
-float Utility::xScreenToPortrait (float x) {
-    constexpr float maxRatio = 2.75f;
-    return x / (static_cast <float>(windowResolutionX) /
-                (static_cast <float>(windowResolutionY) / maxRatio));
-}
-
-GLsizei Utility::getWidthFromHeight (unsigned int resolutionY) {
-    return static_cast <GLsizei>(static_cast <float>(resolutionY) *
-                                 static_cast <float>(windowResolutionX) /
-                                 static_cast <float>(windowResolutionY));
 }
 
 glm::vec3 Utility::colorAsVec3 (const JBTypes::Color& color) {

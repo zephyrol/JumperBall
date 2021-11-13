@@ -8,7 +8,13 @@
 #include "SceneRendering.h"
 #include <future>
 
-SceneRendering::SceneRendering(const Scene& scene):
+SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height):
+    Rendering(width, height),
+    _expensivePreprocessWidth(static_cast<GLsizei>(
+        static_cast<float>(SceneRendering::heightBloomTexture)
+        * static_cast<float>(width) / static_cast<float>(height)
+    )),
+    _expensivePreprocessHeight(SceneRendering::heightBloomTexture),
     _scene(scene),
     _externalUniformBlocks(createExternalUniformBlockVariables()),
     _externalUniformMatrices(createExternalUniformMatFourVariables()),
@@ -97,13 +103,14 @@ RenderProcess_sptr SceneRendering::createDepthStarProcess() const {
         createDepthStarShaders(),
         createDepthStarUniformsUpdating(),
         FrameBuffer_uptr(new FrameBuffer(
-                             FrameBuffer::Content::Depth,
+            sizeDepthTexture,
+            sizeDepthTexture,
+            FrameBuffer::Content::Depth,
                              true,
-                             sizeDepthTexture,
-                             sizeDepthTexture,
                              true,
-                             { 1.f, 1.f, 1.f }))
-        );
+                             { 1.f, 1.f, 1.f }
+        ))
+    );
 }
 
 RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
@@ -181,7 +188,7 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
         _sceneRenderPasses,
         createSceneRenderingShaders(),
         createSceneRenderingUniformsUpdating(),
-        FrameBuffer_uptr(new FrameBuffer(FrameBuffer::Content::HDR, true))
+        FrameBuffer_uptr(new FrameBuffer(_width, _height, FrameBuffer::Content::HDR, true))
         );
 }
 
@@ -209,8 +216,12 @@ RenderProcess_sptr SceneRendering::createBrightPassProcess() const {
         _vecScreenRenderPass,
         createScreenShaders("brightPassFilter.fs"),
         createBrightPassUniformsUpdating(),
-        createScreenSpaceEffectFrameBuffer(FrameBuffer::Content::HDR)
-        );
+        FrameBuffer::createScreenSpaceEffectFrameBuffer(
+            FrameBuffer::Content::HDR,
+            _expensivePreprocessWidth,
+            _expensivePreprocessHeight
+        )
+    );
 }
 
 RenderProcess_sptr SceneRendering::createHorizontalBlurProcess() const {
@@ -218,8 +229,12 @@ RenderProcess_sptr SceneRendering::createHorizontalBlurProcess() const {
         _vecScreenRenderPass,
         createScreenShaders("horizontalBlurFs.fs"),
         createHorizontalBlurUniformsUpdating(),
-        createScreenSpaceEffectFrameBuffer(FrameBuffer::Content::HDR)
-        );
+        FrameBuffer::createScreenSpaceEffectFrameBuffer(
+            FrameBuffer::Content::HDR,
+            _expensivePreprocessWidth,
+            _expensivePreprocessHeight
+        )
+    );
 }
 
 RenderProcess_sptr SceneRendering::createVerticalBlurProcess() const {
@@ -227,8 +242,12 @@ RenderProcess_sptr SceneRendering::createVerticalBlurProcess() const {
         _vecScreenRenderPass,
         createScreenShaders("verticalBlurFs.fs"),
         createVerticalBlurUniformsUpdating(),
-        createScreenSpaceEffectFrameBuffer(FrameBuffer::Content::SDR)
-        );
+        FrameBuffer::createScreenSpaceEffectFrameBuffer(
+            FrameBuffer::Content::SDR,
+            _expensivePreprocessWidth,
+            _expensivePreprocessHeight
+        )
+    );
 }
 
 RenderProcess_sptr SceneRendering::createBloomProcess() const {
@@ -236,8 +255,9 @@ RenderProcess_sptr SceneRendering::createBloomProcess() const {
         _vecScreenRenderPass,
         createScreenShaders("bloomFs.fs"),
         createBloomUniformsUpdating(),
-        nullptr
-        );
+       _width,
+       _height
+    );
 }
 
 RenderProcess::PassShaderMap SceneRendering::createScreenShaders (const std::string& fs) const {
@@ -344,17 +364,6 @@ Rendering::ExternalUniformVariables <glm::mat4> SceneRendering::createExternalUn
 }
 
 // TODO should be in FrameBuffer class
-FrameBuffer_uptr SceneRendering::createScreenSpaceEffectFrameBuffer (
-    const FrameBuffer::Content& content
-    ) const {
-    return FrameBuffer_uptr(new FrameBuffer(
-                                content,
-                                false,
-                                Utility::getWidthFromHeight(heightBloomTexture),
-                                heightBloomTexture,
-                                false
-                                ));
-}
 
 const UniformBlock_sptr& SceneRendering::getUniformBlock (const std::string& name) const {
     return _externalUniformBlocks.uniformBlockVariables->at(name);

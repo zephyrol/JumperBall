@@ -16,23 +16,18 @@
 class Window {
 public:
 
-// --CONSTRUCTORS & DESTRUCTORS--//
-Window(GLFWwindow*glfwWindow);
+Window(GLFWwindow*glfwWindow, int width, int height);
 
-// ----------METHODS-------------//
 void run();
 
 private:
 
-// --------ATTRIBUTES-----------//
 GLFWwindow*_window;
+int _width;
+int _height;
 Controller _controller;
 
-// ----------METHODS-------------//
 bool inputManagement();
-void runMenu();
-
-static std::shared_ptr <Menu> initMainMenu(size_t currentLevel);
 
 };
 

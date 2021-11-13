@@ -23,7 +23,7 @@ enum class Button { Up, Down, Left, Right, Escape, Validate };
 enum class ScreenDirection { North, South, East, West };
 
 
-Controller();
+Controller(const size_t& screenWidth, const size_t& screenHeight);
 ~Controller();
 
 void interactionButtons(const Button& button,
@@ -36,6 +36,7 @@ void waitController();
 
 bool requestToLeave() const;
 
+void resize(size_t screenWidth, size_t screenHeight);
 
 private:
 ScreenDirection nearestDirection(float posX, float posY) const;
@@ -57,6 +58,7 @@ void releaseMouse(float posX, float posY);
 void manageValidateMouse();
 
 std::shared_ptr<Viewer> createViewer() const;
+void refreshViewer();
 
 FontTexturesGenerator::FTContent _ftContent;
 Player _player;
@@ -64,6 +66,9 @@ std::shared_ptr <Menu> _menu;
 std::map <Button, Status> _buttonsStatus;
 Scene::ActionKey _currentKey;
 
+size_t _screenWidth;
+size_t _screenHeight;
+float _ratio;
 
 float _mouseCurrentXCoord;
 float _mouseCurrentYCoord;

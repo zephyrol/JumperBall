@@ -13,8 +13,8 @@ Viewer::Viewer(
     const FontTexturesGenerator::FTContent &ftContent):
       _resolutionX(resolutionX),
       _resolutionY(resolutionY),
-      _sceneRendering(scene),
-      _menuRendering(menu, ftContent),
+      _sceneRendering(scene, _resolutionX, _resolutionY),
+      _menuRendering(menu, ftContent, _resolutionX, _resolutionY),
       _updatingSceneRendering( [this](size_t) {
           _sceneRendering.update();
       }),

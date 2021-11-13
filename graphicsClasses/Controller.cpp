@@ -8,51 +8,51 @@
 #include "Controller.h"
 #include "cmath"
 
-Controller::Controller() : _ftContent(FontTexturesGenerator::initFreeTypeAndFont()),
-                           _player(),
-                           _menu(Menu::getJumperBallMenu(
-                               _player,
-                               1,
-                               Utility::windowResolutionX,
-                               Utility::windowResolutionY)),
-                           _buttonsStatus{
-                               {Controller::Button::Up, Controller::Status::Released},
-                               {Controller::Button::Down, Controller::Status::Released},
-                               {Controller::Button::Right, Controller::Status::Released},
-                               {Controller::Button::Left, Controller::Status::Released},
-                               {Controller::Button::Escape, Controller::Status::Released},
-                               {Controller::Button::Validate, Controller::Status::Released}},
-                           _currentKey(Scene::ActionKey::Nothing),
-                           _mouseCurrentXCoord(0.f),
-                           _mouseCurrentYCoord(0.f),
-                           _mousePressingXCoord(0.f),
-                           _mousePressingYCoord(0.f),
-                           _mouseIsPressed(false),
-                           _requestToLeave(false),
-                           _scene(std::make_shared<Scene>(_player.levelProgression())),
-                           _viewer(createViewer()),
-                           _updatingSceneMenu([this](size_t)
-                                {
-                                    _player.status(_scene->update(_player.status(), _currentKey));
-                                    _currentKey = Scene::ActionKey::Nothing;
-                                    if (_player.status() == Player::Status::INMENU) {
-                                        _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
-                                    }
-                                    else if (_player.status() == Player::Status::INGAME) {
-                                        if (_scene->gameIsFinished())
-                                        {
-                                            _player.status(Player::Status::INMENU);
-                                            _menu->failurePageAsCurrentPage();
-                                        }
-                                    }
-                                }),
-                           _updating([this](size_t)
-                                {
-                                    _updatingSceneMenu.runTasks();
-                                    _updatingSceneMenu.waitTasks();
-                                    _viewer->update();
-                                },
-                                1, true)
+Controller::Controller(const size_t& screenWidth, const size_t& screenHeight) :
+    _ftContent(FontTexturesGenerator::initFreeTypeAndFont()),
+    _player(),
+    _menu(Menu::getJumperBallMenu(_player, 1, screenWidth, screenHeight)),
+    _buttonsStatus{
+        {Controller::Button::Up, Controller::Status::Released},
+        {Controller::Button::Down, Controller::Status::Released},
+        {Controller::Button::Right, Controller::Status::Released},
+        {Controller::Button::Left, Controller::Status::Released},
+        {Controller::Button::Escape, Controller::Status::Released},
+        {Controller::Button::Validate, Controller::Status::Released}},
+    _currentKey(Scene::ActionKey::Nothing),
+    _screenWidth(screenWidth),
+    _screenHeight(screenHeight),
+    _ratio(static_cast<float>(_screenWidth) / static_cast<float>(_screenHeight)),
+    _mouseCurrentXCoord(0.f),
+    _mouseCurrentYCoord(0.f),
+    _mousePressingXCoord(0.f),
+    _mousePressingYCoord(0.f),
+    _mouseIsPressed(false),
+    _requestToLeave(false),
+    _scene(std::make_shared<Scene>(_player.levelProgression(), _ratio)),
+    _viewer(createViewer()),
+    _updatingSceneMenu([this](size_t)
+         {
+             _player.status(_scene->update(_player.status(), _currentKey));
+             _currentKey = Scene::ActionKey::Nothing;
+             if (_player.status() == Player::Status::INMENU) {
+                 _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
+             }
+             else if (_player.status() == Player::Status::INGAME) {
+                 if (_scene->gameIsFinished())
+                 {
+                     _player.status(Player::Status::INMENU);
+                     _menu->failurePageAsCurrentPage();
+                 }
+             }
+         }),
+    _updating([this](size_t)
+         {
+             _updatingSceneMenu.runTasks();
+             _updatingSceneMenu.waitTasks();
+             _viewer->update();
+         },
+         1, true)
 {
     _updating.runTasks();
     _updating.waitTasks();
@@ -122,11 +122,8 @@ void Controller::manageValidateButton (const Controller::Status& status) {
 }
 
 void Controller::runGame (size_t level) {
-    _scene = std::make_shared<Scene>(level);
-
-    _viewer->freeGPUMemory();
-    _viewer = createViewer();
-
+    _scene = std::make_shared<Scene>(level, _ratio);
+    refreshViewer();
     _updating.runTasks();
     _updating.waitTasks();
 }
@@ -148,8 +145,8 @@ void Controller::manageValidateMouse() {
 
 std::shared_ptr<Viewer> Controller::createViewer() const {
     return std::make_shared<Viewer>(
-        Utility::windowResolutionX,
-        Utility::windowResolutionY,
+        _screenWidth,
+        _screenHeight,
         *_scene,
         *_menu,
         _ftContent);
@@ -291,3 +288,18 @@ Controller::~Controller() {
 float Controller::computeDistance(float x0, float y0, float x1, float y1) {
     return sqrtf(powf(x1 - x0, 2.f) + powf(y1 - y0, 2.f));
 }
+
+void Controller::refreshViewer() {
+    _viewer->freeGPUMemory();
+    _viewer = createViewer();
+}
+
+void Controller::resize(size_t screenWidth, size_t screenHeight) {
+    _screenWidth = screenWidth;
+    _screenHeight = screenHeight;
+    _ratio = static_cast<float>(_screenWidth) / static_cast<float>(_screenHeight);
+    _scene->updateScreenRatio(_ratio);
+    _menu = Menu::getJumperBallMenu(_player, 1, _screenWidth, _screenHeight),
+    refreshViewer();
+}
+

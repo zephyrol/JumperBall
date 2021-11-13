@@ -21,12 +21,14 @@ static const glm::vec3 backgroundColor;
 public:
 enum class Content { SDR, HDR, Depth };
 
-FrameBuffer(Content content = Content::SDR,
-            bool usedAutoClean = false,
-            GLsizei resolutionX = Utility::windowResolutionX,
-            GLsizei resolutionY = Utility::windowResolutionY,
-            bool hasDepthBuffer = true,
-            const glm::vec3& clearColor = backgroundColor);
+FrameBuffer(
+    GLsizei resolutionX,
+    GLsizei resolutionY,
+    Content content = Content::SDR,
+    bool usedAutoClean = false,
+    bool hasDepthBuffer = true,
+    const glm::vec3& clearColor = backgroundColor
+);
 
 FrameBuffer(const FrameBuffer& frameBuffer) = delete;
 FrameBuffer& operator= (const FrameBuffer&) = delete;
@@ -42,8 +44,14 @@ GLuint getRenderTexture() const;
 
 void freeGPUMemory();
 
-static void bindDefaultFrameBuffer();
+static void bindDefaultFrameBuffer(GLsizei width, GLsizei height);
 static void cleanDefaultFrameBuffer();
+static FrameBuffer_uptr createScreenSpaceEffectFrameBuffer(
+    const FrameBuffer::Content& category,
+    GLsizei width,
+    GLsizei height
+);
+
 
 private:
 

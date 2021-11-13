@@ -150,25 +150,29 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
     std::shared_ptr <const MessageLabel> label1Page1 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label1Page1Width, label1Page1Height,
+            label1Page1Width,
+            label1Page1Height,
             JBTypes::vec2f { 0.5f, 0.8f },
             "Jumper Ball");
     std::shared_ptr <const MessageLabel> label2Page1 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label2Page1Width, label234Page1Height,
+            label2Page1Width,
+            label234Page1Height,
             JBTypes::vec2f { 0.5f, 0.6f },
             "Play");
     std::shared_ptr <const MessageLabel> label3Page1 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label3Page1Width, label234Page1Height,
+            label3Page1Width,
+            label234Page1Height,
             JBTypes::vec2f { 0.5f, 0.4f },
             "Store");
     std::shared_ptr <const MessageLabel> label4Page1 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label4Page1Width, label234Page1Height,
+            label4Page1Width,
+            label234Page1Height,
             JBTypes::vec2f { 0.5f, 0.2f },
             "Exit");
 
@@ -181,7 +185,8 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
     std::shared_ptr <const MessageLabel> labelLevelsTitle =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label1Page2Width, label1Page1Height,
+            label1Page2Width,
+            label1Page1Height,
             JBTypes::vec2f { .5f - label1Page1Width * .5f + label1Page1Width * (0.6f), 1.f - 0.1f },
             "Levels"
             );
@@ -193,7 +198,8 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
     std::shared_ptr <const ArrowLabel> labelLevelsArrowBack =
         std::make_shared <const ArrowLabel>(
             Label::WidthUnit::ShortestSide,
-            arrowBackWidth, label1Page1Height,
+            arrowBackWidth,
+            label1Page1Height,
             JBTypes::vec2f { .5f - label1Page1Width * .5f + label1Page1Width * (0.1f), 1.f - 0.1f },
             std::make_shared <Label::LabelAnswer>(arrowAction)
             );
@@ -254,19 +260,22 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
     std::shared_ptr <const MessageLabel> label1Page3 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label1Page3Width, label1Page1Height,
+            label1Page3Width,
+            label1Page1Height,
             JBTypes::vec2f { 0.5f, 0.8f },
             "You lost");
     std::shared_ptr <const MessageLabel> label2Page3 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label4Page1Width, label234Page1Height,
+            label4Page1Width,
+            label234Page1Height,
             JBTypes::vec2f { 0.5f, 0.6f },
             "Retry");
     std::shared_ptr <const MessageLabel> label3Page3 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label4Page1Width, label234Page1Height,
+            label4Page1Width,
+            label234Page1Height,
             JBTypes::vec2f { 0.5f, 0.3f },
             "Exit");
 
@@ -277,13 +286,15 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
     std::shared_ptr <const MessageLabel> label1Page4 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label2Page1Width, label234Page1Height,
+            label2Page1Width,
+            label234Page1Height,
             JBTypes::vec2f { 0.5f, 0.4f },
             "Continue");
     std::shared_ptr <const MessageLabel> label2Page4 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label3Page1Width, label234Page1Height,
+            label3Page1Width,
+            label234Page1Height,
             JBTypes::vec2f { 0.5f, 0.6f },
             "Main menu");
     const vecCstLabel_sptr labelsPage4 { label1Page4, label2Page4 };
@@ -294,19 +305,22 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
     std::shared_ptr <const MessageLabel> label1Page5 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label1Page5Width, label1Page1Height,
+            label1Page5Width,
+            label1Page1Height,
             JBTypes::vec2f { 0.5f, 0.8f },
             "Good game!");
     std::shared_ptr <const MessageLabel> label2Page5 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label2Page5Width, label234Page1Height,
+            label2Page5Width,
+            label234Page1Height,
             JBTypes::vec2f { 0.5f, 0.6f },
             "Continue");
     std::shared_ptr <const MessageLabel> label3Page5 =
         std::make_shared <const MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label4Page1Width, label234Page1Height,
+            label4Page1Width,
+            label234Page1Height,
             JBTypes::vec2f { 0.5f, 0.3f },
             "Exit");
 

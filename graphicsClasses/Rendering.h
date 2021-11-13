@@ -13,6 +13,8 @@ class Rendering {
 
 public:
 
+    Rendering(GLsizei width, GLsizei height);
+
 virtual void update() = 0;
 virtual void freeGPUMemory() = 0;
 
@@ -33,6 +35,10 @@ struct ExternalUniformBlockVariables {
     RenderPass::UniformBlockVariables_uptr uniformBlockVariables;
     UniformBlockUpdatingFct uniformBlockVariablesUpdatingFct;
 };
+
+protected:
+const GLsizei _width;
+const GLsizei _height;
 
 };
 

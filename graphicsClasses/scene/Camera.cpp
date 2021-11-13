@@ -7,11 +7,10 @@
 
 #include "Camera.h"
 
-Camera::Camera(const Map& map):
+Camera::Camera(const Map& map, float ratio):
     _map(map),
     _fovy(glm::radians(70.f)),
-    _ratio(static_cast <float>(Utility::windowResolutionX) /
-           static_cast <float>(Utility::windowResolutionY)),
+    _ratio(ratio),
     _movement(Camera::Movement::TurningAroundMap),
     _pos(1.f, 0.f, 0.f),
     _center(0.f, 0.f, 0.f),
@@ -286,8 +285,7 @@ const glm::vec3& Camera::pos() const noexcept{
 
 glm::mat4 Camera::viewProjection() const noexcept{
     const glm::mat4 viewMatrix = glm::lookAt(_pos, _center, _up);
-    const glm::mat4 perspectiveMatrix =
-        Utility::windowResolutionX > Utility::windowResolutionY
+    const glm::mat4 perspectiveMatrix = _ratio > 1.f
         ? glm::perspective(_fovy, _ratio, zNear, zFar)
         : glm::perspective(
             2.f * atanf((1.f / _ratio) * tanf(_fovy / 2.f)),
@@ -300,4 +298,8 @@ glm::mat4 Camera::viewProjection() const noexcept{
 
 SceneElement::GlobalState Camera::getGlobalState() const {
     return SceneElement::GlobalState::United;
+}
+
+void Camera::setRatio(float ratio) {
+    _ratio = ratio;
 }

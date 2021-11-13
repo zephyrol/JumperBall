@@ -15,7 +15,13 @@ class MenuRendering:public Rendering {
 
 public:
 
-MenuRendering(const Menu& menu, const FontTexturesGenerator::FTContent& ftContent);
+MenuRendering(
+    const Menu& menu,
+    const FontTexturesGenerator::FTContent& ftContent,
+    GLsizei width,
+    GLsizei height
+    );
+
 void update() override;
 void render() const override;
 void freeGPUMemory() override;

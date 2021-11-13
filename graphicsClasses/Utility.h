@@ -36,22 +36,14 @@ glm::vec2 convertToOpenGLFormat(const JBTypes::vec2f& vec2f);
 GLfloat convertToOpenGLFormat(const float& f);
 GLubyte convertToOpenGLFormat(unsigned char uChar);
 
-
-float xScreenToPortrait(float x);
-float getWindowRatio();
-
-GLsizei getWidthFromHeight(unsigned int resolutionY);
 template<typename T> void concatVector (std::vector <T>& current, const std::vector <T>& other) {
     current.insert(current.end(), other.begin(), other.end());
 }
 
 float menuPositionToOpenGLScreenFormat(float value);
 
-
 extern const glm::mat3 XYZToRGB;
 extern const glm::mat3 RGBToXYZ;
-extern unsigned int windowResolutionX;
-extern unsigned int windowResolutionY;
 
 }
 

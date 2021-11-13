@@ -5,19 +5,28 @@
  * Created on 2 novembre 2019, 11:17
  */
 
-#include <fstream>
 #include <istream>
 #include <sstream>
 #include "Window.h"
-#include <initializer_list>
 
 
-Window::Window(GLFWwindow*glfwWindow):
+Window::Window(GLFWwindow*glfwWindow, int width, int height):
     _window(glfwWindow),
-    _controller() {
+    _width(width),
+    _height(height),
+    _controller(_width, _height) {
 }
 
 bool Window::inputManagement() {
+
+    int widthWindow;
+    int heightWindow;
+    glfwGetFramebufferSize(_window, &widthWindow, &heightWindow);
+    if (_width != widthWindow || _height != heightWindow ) {
+        _width = widthWindow;
+        _height = heightWindow;
+        _controller.resize(_width, _height);
+    }
 
     const std::function <Controller::Status(const std::vector <unsigned int> &&)>
     getButtonStatus = [this] (const std::vector <unsigned int>&& keys)->Controller::Status {
@@ -66,13 +75,9 @@ bool Window::inputManagement() {
 
     // GLFW defines y=0 as the top
     const float posY = 1.f - posXY.second / static_cast <float>(RESOLUTION_Y);
-    _controller.interactionMouse(mouseButton1Status,
-                                 posX,
-                                 posY);
+    _controller.interactionMouse(mouseButton1Status, posX, posY);
 
-    const bool exit = glfwWindowShouldClose(_window) != 0 ||
-                      _controller.requestToLeave();
-
+    const bool exit = glfwWindowShouldClose(_window) != 0 || _controller.requestToLeave();
     return exit;
 }
 

@@ -6,9 +6,15 @@
  */
 #include "MenuRendering.h"
 
-MenuRendering::MenuRendering(const Menu& menu, const FontTexturesGenerator::FTContent& ftContent):
+MenuRendering::MenuRendering(
+    const Menu& menu,
+    const FontTexturesGenerator::FTContent& ftContent,
+    GLsizei width,
+    GLsizei height
+    ):
+    Rendering(width, height),
     _menu(menu),
-    _graphicAlphabet(FontTexturesGenerator::genGraphicAlphabet(_menu, ftContent)),
+    _graphicAlphabet(FontTexturesGenerator::genGraphicAlphabet(_menu, height, ftContent)),
     _pagesRenderPassesLetters(createPagesRenderPassesLetters()),
     _pagesRenderPassesOthers(createPagesRenderPassesOthers()),
     _pagesRenderPasses(createPagesRenderPasses()),
@@ -204,7 +210,8 @@ RenderProcess_sptr MenuRendering::createRenderProcess (const CstPage_sptr& page)
         renderPasses,
         createShaders(),
         createRenderPassRenderingFctAssociation(),
-        nullptr,
+        _width,
+        _height,
         false
         );
 }
