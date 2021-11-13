@@ -64,5 +64,7 @@ void GhostBlock::update(const JBTypes::timePointMs &updatingTime) {
     // const float scale = _isThere ? 1.f : 0.f;
     _localScale = { scale, scale, scale };
 
+    const float translation = (1-scale) * (-0.5f);
+    _localTranslation = { translation, translation, translation };
 }
 

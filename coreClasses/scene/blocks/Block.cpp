@@ -84,9 +84,7 @@ SceneElement::DynamicValues <JBTypes::vec3f> Block::getDynamicVec3fs() const {
 }
 
 SceneElement::GlobalState Block::getGlobalState() const {
-    return isExists() 
-           ? SceneElement::GlobalState::United
-           : SceneElement::GlobalState::Separate;
+    return SceneElement::GlobalState::Separate;
 }
 
 vecCstItem_sptr Block::getCstItems() const {

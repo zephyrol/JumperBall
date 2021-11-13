@@ -44,7 +44,9 @@ void InteractiveBlock::update(const JBTypes::timePointMs &updatingTime){
 
 Block::Effect InteractiveBlock::detectionEvent() {
     for (const auto& special: _specials) {
-        special->applySpecialEffect();
+        if (special->direction() == _ball.lock()->currentSide()) {
+            special->applySpecialEffect();
+        }
     }
     return Block::Effect::Nothing;
 }
