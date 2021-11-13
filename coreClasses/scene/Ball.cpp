@@ -78,7 +78,6 @@ void Ball::stay() noexcept{
     _jumpingType = Ball::JumpingType::Short;
     _state = Ball::State::Staying;
     _3DPos = get3DPosStayingBall();
-    updateMovements();
     setTimeActionNow();
 }
 
@@ -100,17 +99,11 @@ void Ball::deteleport() noexcept{
 
 void Ball::move() noexcept{
 
+    updateMovements();
     if (_movementDestination.nextLocal != Ball::NextDestination::None) {
         _state = Ball::State::Moving;
         setTimeActionNow();
     }
-
-    // TODO: use this method, bur pass infos by parameter from map class
-    /*const Ball::NextBlockInformation infos = getNextBlockInfo();
-    if (infos.nextLocal != NextBlockLocal::None) {
-        _state = Ball::State::Moving;
-        setTimeActionNow();
-    }*/
 }
 
 void Ball::setTimeActionNow() noexcept{
@@ -258,8 +251,6 @@ float Ball::getCrushingCoefficient() const noexcept{
                 constexpr float durationWaitingCrushing = 0.7f;
                 const float angleInCosinusFunc = getTimeSecondsSinceAction() * 2.f *
                                                  static_cast <float>(M_PI) / durationWaitingCrushing;
-                // -cos(0) = -1;
-                // cos(0) = 1;
                 return 0.5f - cosf(angleInCosinusFunc) / 2.f;
             };
 
@@ -427,31 +418,12 @@ void Ball::blockEvent () noexcept{
             _jumpRequest = false;
             jump();
         } else {
-            updateMovements();
             move();
         }
         internalUpdate();
     } else {
         _stateOfLife = StateOfLife::Normal;
     }
-
-
-
-    // TODO update it
-    // Specials
-    // for (const Map::SpecialInfo& specialInfo : _map.getSpecialInfo()) {
-    //     const std::shared_ptr <const Special>& special = specialInfo.special;
-    //     if (special && blockPos == special->position() && _currentSide == special->direction()) {
-    //         const JBTypes::Color& color = special->getColor();
-    //         if (specialInfo.type == Map::SpecialTypes::Teleporter) {
-    //             if (_map.getSpecialStates().at(color)) {
-    //                 teleport(color);
-    //             }
-    //         } else { // Switch Button
-    //             _map.switchColor(color);
-    //         }
-    //     }
-    // }
 
 }
 
@@ -475,7 +447,6 @@ void Ball::fallingUpdate() noexcept{
 }
 
 void Ball::stayingUpdate() noexcept{
-    // TODO: manage that in block class
     const auto block = getBlock(_pos);
     if (block && block->isExists()) {
         return;

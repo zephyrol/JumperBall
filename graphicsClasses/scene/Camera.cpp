@@ -88,12 +88,10 @@ void Camera::followingBallUpdate() noexcept{
     const float timeSinceAction = ball.getTimeSecondsSinceAction();
     const JBTypes::timePointMs now = JBTypesMethods::getTimePointMSNow();
 
-    if (stateBall == Ball::State::Staying) {
-        if (_willComeBack) {
-            _timePointComeBack = now;
-            _isComingBack = true;
-            _willComeBack = false;
-        }
+    if (_willComeBack) {
+        _timePointComeBack = now;
+        _isComingBack = true;
+        _willComeBack = false;
     }
     if (stateBall == Ball::State::Moving) {
         const JBTypes::vec3f vecNextLook = _map.getNextLook();
