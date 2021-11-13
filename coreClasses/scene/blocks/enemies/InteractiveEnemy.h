@@ -16,7 +16,8 @@ public:
         const JBTypes::Dir& direction,
         float size,
         size_t length,
-        const Ball_sptr &ball
+        const Ball_sptr &ball,
+        bool isActivated = true
     );
 
 protected:

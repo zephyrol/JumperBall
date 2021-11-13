@@ -11,14 +11,17 @@ Enemy::Enemy(
     const JBTypes::vec3ui& initialPosition,
     const JBTypes::Dir& direction,
     float size,
-    size_t length
+    size_t length,
+    bool isActivated
 ):
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(direction),
     _size(size),
     _length(length),
     _initialPosition(init3DPosition(initialPosition)),
-    _position(_initialPosition)
+    _position(_initialPosition),
+    _isActivated(isActivated),
+    _scale(isActivated ? scaleActivated : scaleDisable )
 {
 }
 
@@ -72,7 +75,7 @@ const JBTypes::Dir& Enemy::direction() const {
 SceneElement::DynamicValues <JBTypes::vec3f> Enemy::getDynamicVec3fs() const {
     return {
         { "translation", { _position.x, _position.y, _position.z }},
-        { "scale", { 1.f, 1.f, 1.f }}
+        { "scale", _scale }
     };
 }
 
@@ -82,3 +85,6 @@ SceneElement::GlobalState Enemy::getGlobalState() const {
 
 void Enemy::update() {
 }
+
+const JBTypes::vec3f Enemy::scaleActivated = { 1.f, 1.f, 1.f };
+const JBTypes::vec3f Enemy::scaleDisable = { 0.f, 0.f, 0.f };

@@ -9,8 +9,9 @@ InteractiveEnemy::InteractiveEnemy(
     const JBTypes::Dir &direction,
     float size,
     size_t length,
-    const Ball_sptr &ball
+    const Ball_sptr &ball,
+    bool isActivated
 ):
-Enemy(initialPosition, direction, size, length),
+Enemy(initialPosition, direction, size, length, isActivated),
 _ball(ball) {
 }

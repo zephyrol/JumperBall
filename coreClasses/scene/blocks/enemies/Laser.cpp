@@ -11,15 +11,16 @@ Laser::Laser(const JBTypes::Color& color,
     const JBTypes::vec3ui& initialPosition,
     const JBTypes::Dir& dir,
     size_t length,
-    const Ball_sptr &ball
+    const Ball_sptr &ball,
+    bool isActivated
 ):
     InteractiveEnemy(initialPosition,
           dir,
           laserRadius,
           length,
-          ball),
-    _color(JBTypesMethods::colorToShiny(color)),
-    _isActivated(true) {
+          ball,
+          isActivated),
+    _color(JBTypesMethods::colorToShiny(color)) {
 }
 
 JBTypes::Color Laser::getColor() const {
@@ -28,6 +29,7 @@ JBTypes::Color Laser::getColor() const {
 
 void Laser::switchOnOff() {
     _isActivated = !_isActivated;
+    _scale = _isActivated ? Enemy::scaleActivated : Enemy::scaleDisable;
 }
 
 bool Laser::touchingTest () const {

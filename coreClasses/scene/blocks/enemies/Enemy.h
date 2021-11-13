@@ -24,7 +24,8 @@ public:
 Enemy(const JBTypes::vec3ui& initialPosition,
       const JBTypes::Dir& direction,
       float size,
-      size_t length );
+      size_t length,
+      bool isActivated);
 
 virtual void update();
 virtual JBTypes::Color getColor() const;
@@ -53,6 +54,11 @@ const size_t _length;
 protected:
 const JBTypes::vec3f _initialPosition;
 JBTypes::vec3f _position;
+bool _isActivated;
+JBTypes::vec3f _scale;
+
+static const JBTypes::vec3f scaleActivated;
+static const JBTypes::vec3f scaleDisable;
 
 private:
 JBTypes::vec3f init3DPosition(const JBTypes::vec3ui& initialPosition) const;

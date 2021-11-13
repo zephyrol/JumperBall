@@ -16,17 +16,17 @@ Laser(const JBTypes::Color& color,
       const JBTypes::vec3ui& initialPosition,
       const JBTypes::Dir& dir,
       size_t length,
-      const Ball_sptr &ball
+      const Ball_sptr &ball,
+      bool isActivated = true
       );
 
 virtual JBTypes::Color getColor() const override;
 vecCstShape_sptr getShapes() const override;
-virtual void switchOnOff() override;
+void switchOnOff() override;
 virtual ~Laser() = default;
 
 private:
 const JBTypes::Color _color;
-bool _isActivated;
 static constexpr float laserRadius = 0.05f;
 
 bool touchingTest() const override;

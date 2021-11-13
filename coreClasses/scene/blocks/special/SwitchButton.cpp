@@ -18,8 +18,19 @@ void SwitchButton::applySpecialEffect() {
     const auto& ball = _ball.lock();
     for (const auto& block: *ball->getBlocksWithInteraction() ) {
         for (const auto& special: block->getSpecials()) {
-            if (special->getColor() == getColor()){
+            if (
+                special->getColor() == getColor() ||
+                special->getColor() == JBTypesMethods::colorToShiny(getColor())
+            ){
                 special->switchOnOff();
+            }
+        }
+        for (const auto& enemy: block->getEnemies()) {
+            if (
+                enemy->getColor() == getColor() ||
+                enemy->getColor() == JBTypesMethods::colorToShiny(getColor())
+                ){
+                enemy->switchOnOff();
             }
         }
     }
@@ -30,7 +41,6 @@ vecCstShape_sptr SwitchButton::getShapes() const {
         Shape::Aspect::Cylinder,
         getColor(),
         std::initializer_list<Transformation>({
-            Transformation(Transformation::Type::Translation, { 0.f, -0.5f, 0.f}),
             Transformation(Transformation::Type::Scale, { 0.2f, 0.05f, 0.2f }),
         })
     );
