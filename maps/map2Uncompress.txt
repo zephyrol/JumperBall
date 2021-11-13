@@ -43,7 +43,7 @@
 . . . X . . X . I B
 . . . X . . X . F B
 . . . X . . . . I
-. X X X X X X . NE TUE5     I N I I N
+. X X X X X X . NE TUE5     I     NE DUN2   I I N
 . . . . . . . .
 
 . . . . . . . .

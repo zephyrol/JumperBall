@@ -94,5 +94,13 @@ bool DarkBall::touchingTest () const {
 const ClassicalMechanics DarkBall::darkBallClassicalMechanics(DarkBall::darkBallRadius);
 
 vecCstShape_sptr DarkBall::getShapes() const {
-    return {};
+    const auto& diameter = this->size();
+    const auto darkBallShape = std::make_shared<const Shape>(
+        Shape::Aspect::Sphere,
+        JBTypes::Color::Blue,
+        std::initializer_list<Transformation>({
+            Transformation(Transformation::Type::Scale, { diameter, diameter, diameter })
+        })
+    );
+    return { darkBallShape };
 }

@@ -55,7 +55,6 @@ vecCstShape_sptr ThornBall::getShapes() const {
         Shape::Aspect::Sphere,
         JBTypes::Color::Red,
         std::initializer_list<Transformation>({
-            //Transformation(Transformation::Type::Translation, { 0.f, -1.5f, 0.f}),
             Transformation(Transformation::Type::Scale, { diameter, diameter, diameter })
         })
     );
