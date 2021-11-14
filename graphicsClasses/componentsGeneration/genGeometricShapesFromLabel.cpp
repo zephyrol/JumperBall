@@ -40,7 +40,6 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel (const Labe
                 return std::make_shared <const Quad>(model, normalTransform);
                 break;
             }
-            ;
             return std::make_shared <const Quad>(model, normalTransform);
         };
 
@@ -65,7 +64,7 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel (const Labe
         const glm::mat4 localScale = glm::scale(glm::vec3(shapeScale.at(0), shapeScale.at(1), shapeScale.at(
                                                               2)));
 
-        const JBTypes::vec2f& position = label.position();
+        const JBTypes::vec2f position { label.positionX(), label.positionY() };
         const glm::mat4 labelTranslation = glm::translate(
             glm::vec3(
                 Utility::menuPositionToOpenGLScreenFormat(position.x),

@@ -299,7 +299,8 @@ void Controller::resize(size_t screenWidth, size_t screenHeight) {
     _screenHeight = screenHeight;
     _ratio = static_cast<float>(_screenWidth) / static_cast<float>(_screenHeight);
     _scene->updateScreenRatio(_ratio);
-    _menu = Menu::getJumperBallMenu(_player, 1, _screenWidth, _screenHeight),
+    //_menu = Menu::getJumperBallMenu(_player, 1, _screenWidth, _screenHeight),
+    _menu->resize(_ratio);
     refreshViewer();
 }
 

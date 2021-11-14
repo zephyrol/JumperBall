@@ -14,9 +14,8 @@ class MessageLabel:public Label {
 public:
 MessageLabel(
     const Label::WidthUnit& widthUnit,
-    float width,
-    float height,
-    const JBTypes::vec2f& position,
+    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    float ratio,
     const std::string& message,
     const std::shared_ptr <LabelAnswer>& action = nullptr,
     bool activated = true

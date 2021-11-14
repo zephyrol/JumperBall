@@ -5,44 +5,45 @@
  * Created on 28 avril 2020, 17:44
  */
 
-#include <iostream>
 #include <algorithm>
-#include <math.h>
-#include <cctype>
+#include <cmath>
+#include <functional>
 #include "Label.h"
 
 Label::Label(
     const Label::WidthUnit& widthUnit,
-    float width,
-    float height,
-    const JBTypes::vec2f& position,
+    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    float ratio,
     bool activated,
     const std::shared_ptr <LabelAnswer>& action,
     bool fixed):
     _widthUnit(widthUnit),
-    _width(width),
-    _height(height),
+    _updateLabelSizes(updateLabelSizesFct),
+    _dimensions(_updateLabelSizes(ratio)),
     _children{},
-    _position(position),
     _fixed(fixed),
     _activated(activated),
     _action(action) {
 }
 
 float Label::width() const {
-    return _width;
+    return _dimensions.width;
 }
 
 float Label::height() const {
-    return _height;
+    return _dimensions.height;
 }
 
 const vecCstLabel_sptr& Label::children() const {
     return _children;
 }
 
-const JBTypes::vec2f& Label::position() const {
-    return _position;
+float Label::positionX() const {
+    return _dimensions.positionX;
+}
+
+float Label::positionY() const {
+    return _dimensions.positionY;
 }
 
 std::string Label::message() const {
@@ -88,4 +89,8 @@ vecGeometry Label::genGeometries() const {
 }
 
 Label::~Label() {
+}
+
+void Label::resize(float screenRatio) {
+    _dimensions = _updateLabelSizes(screenRatio);
 }

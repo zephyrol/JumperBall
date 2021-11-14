@@ -80,10 +80,10 @@ int main (int argc, char**argv) {
     }
 
     GLFWwindow*glfwWindow = initLibraries();
-    int widthWindow;
-    int heightWindow;
-    glfwGetFramebufferSize(glfwWindow, &widthWindow, &heightWindow);
-    Window window(glfwWindow, widthWindow, heightWindow);
+    int windowWidth;
+    int windowHeight;
+    glfwGetFramebufferSize(glfwWindow, &windowWidth, &windowHeight);
+    Window window(glfwWindow, windowWidth, windowHeight);
 
     window.run();
 

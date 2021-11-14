@@ -11,15 +11,15 @@
  * Created on 29 avril 2020, 19:43
  */
 
+#include <functional>
 #include "SwitchLabel.h"
 
 SwitchLabel::SwitchLabel(
     const Label::WidthUnit& widthUnit,
-    float width,
-    float height,
-    const JBTypes::vec2f& position,
+    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    float ratio,
     bool switchButton):
-    Label(widthUnit, width, height, position),
+    Label(widthUnit, updateLabelSizesFct, ratio),
     _switch(switchButton) {
 }
 

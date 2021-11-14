@@ -12,9 +12,10 @@ class BoxLabel:public Label {
 public:
 BoxLabel(
     const Label::WidthUnit& widthUnit,
-    float width,
-    float height,
-    const JBTypes::vec2f& position);
+    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    float ratio
+);
+
 virtual ~BoxLabel() = default;
 
 private:

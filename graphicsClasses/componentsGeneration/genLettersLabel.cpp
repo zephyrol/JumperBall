@@ -18,8 +18,8 @@ std::map <unsigned char, vecMesh_sptr> MeshGenerator::genLettersLabel (
 
     for (const auto& label : page->labels()) {
         const float height = label->height();
-        const JBTypes::vec2f& position = label->position();
-        const float pitch = label->width() / label->message().size();
+        const JBTypes::vec2f position { label->positionX(), label->positionY() };
+        const float pitch = label->width() / static_cast<float>(label->message().size());
 
         const float initialOffsetX = -label->width() / 2.f + pitch / 2.f;
         const std::string message = label->message();

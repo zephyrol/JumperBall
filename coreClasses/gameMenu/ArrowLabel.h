@@ -13,9 +13,8 @@ class ArrowLabel:public Label {
 public:
 ArrowLabel(
     const Label::WidthUnit& widthUnit,
-    float width,
-    float height,
-    const JBTypes::vec2f& position,
+    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    float ratio,
     const std::shared_ptr <LabelAnswer>& action = nullptr,
     bool activated = true
     );

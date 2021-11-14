@@ -13,9 +13,8 @@ class SwitchLabel:public Label {
 public:
 SwitchLabel(
     const Label::WidthUnit& widthUnit,
-    float width,
-    float height,
-    const JBTypes::vec2f& position,
+    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    float ratio,
     bool switchButton = false);
 
 void turnOn();

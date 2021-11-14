@@ -26,41 +26,46 @@ enum class PageFormat { Full, Scroll };
 enum class EscapeAnswer { QuitGame, GoToParent, GoToPause };
 
 // --CONSTRUCTORS & DESTRUCTORS--//
-Page(const Page_sptr& parent,
-     const Page::PageFormat& pageFormat,
-     const Page::EscapeAnswer& escapeAnswer,
-     float height = 1.f,
-     bool visibleOnParent = false);
-
+Page(
+    const Page_sptr& parent,
+    const Page::PageFormat& pageFormat,
+    const Page::EscapeAnswer& escapeAnswer,
+    float height = 1.f,
+    bool visibleOnParent = false
+);
 
 std::weak_ptr <const Page> parent() const;
 std::weak_ptr <Page> parent();
 bool visibleOnParent() const;
-CstLabel_sptr matchedLabel(float x, float y) const;
+Label_sptr matchedLabel(float x, float y);
 float height() const;
 float localPosY() const;
-void setBridges(std::map <CstLabel_sptr, Page_sptr>&& bridges);
+void setBridges(std::map <Label_sptr, Page_sptr>&& bridges);
 const Page::EscapeAnswer& getEscapeAnswer() const;
 
 SceneElement::GlobalState getGlobalState() const override;
 
-CstPage_sptr child(const CstLabel_sptr& label) const;
-Page_sptr child(const CstLabel_sptr& label);
+Page_sptr child(const Label_sptr& label);
 const vecCstLabel_sptr& labels() const;
 void pressOnPage();
 void release();
 void update(bool isPressed, float screenPosY = 0.f);
+void resize(float screenRatio);
 
 private:
 
 constexpr static float decelerationCoefficient = 10.f; // pagePourcentage /s^2
 
-std::vector <CstLabel_sptr> createLabels() const;
+vecLabel_sptr createLabels() const;
+vecCstLabel_sptr createCstLabels() const;
 std::vector <Page_sptr> createChildren() const;
 
 const PageFormat _pageFormat;
-std::map <CstLabel_sptr, Page_sptr> _bridges;
-std::vector <CstLabel_sptr> _labels;
+std::map <Label_sptr, Page_sptr> _bridges;
+
+vecLabel_sptr _labels;
+vecCstLabel_sptr _cstLabels;
+
 std::vector <Page_sptr> _children;
 const std::weak_ptr <Page> _parent;
 const bool _visibleOnParent;

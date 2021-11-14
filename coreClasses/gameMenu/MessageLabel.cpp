@@ -4,17 +4,17 @@
  *
  * Created on 28 avril 2020, 19:43
  */
+#include <functional>
 #include "MessageLabel.h"
 
 MessageLabel::MessageLabel(
     const Label::WidthUnit& widthUnit,
-    float width,
-    float height,
-    const JBTypes::vec2f& position,
+    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    float ratio,
     const std::string& message,
     const std::shared_ptr <LabelAnswer>& action,
     bool activated):
-    Label(widthUnit, width, height, position, activated, action),
+    Label(widthUnit, updateLabelSizesFct, ratio, activated, action),
     _message(message) {
 }
 

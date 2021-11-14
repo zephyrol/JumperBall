@@ -5,12 +5,13 @@
  * Created on 13 juin 2020
  */
 
+#include <functional>
 #include "BoxLabel.h"
 
 BoxLabel::BoxLabel(
     const Label::WidthUnit& widthUnit,
-    float width,
-    float height,
-    const JBTypes::vec2f& position):
-    Label(widthUnit, width, height, position) {
+    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    float ratio
+):
+    Label(widthUnit, updateLabelSizesFct, ratio) {
 }

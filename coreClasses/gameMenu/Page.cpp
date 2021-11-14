@@ -18,6 +18,7 @@ Page::Page(const Page_sptr& parent,
     _pageFormat(pageFormat),
     _bridges{},
     _labels{},
+    _cstLabels{},
     _children{},
     _parent(parent),
     _visibleOnParent(visibleOnParent),
@@ -45,21 +46,28 @@ float Page::localPosY() const {
     return _localPosY;
 }
 
-void Page::setBridges (std::map <CstLabel_sptr, Page_sptr>&& bridges) {
+void Page::setBridges (std::map <Label_sptr, Page_sptr>&& bridges) {
     _bridges = std::move(bridges);
     _labels = createLabels();
+    _cstLabels = createCstLabels();
     _children = createChildren();
 }
-
-/*void Page::setTypes (std::map <CstLabel_sptr, Page::TypeOfLabel>&& labelsTypes) {
-    _labelsTypes = std::move(labelsTypes);
-   }*/
 
 bool Page::visibleOnParent() const {
     return _visibleOnParent;
 }
 
-CstPage_sptr Page::child (const CstLabel_sptr& label) const {
+/*CstPage_sptr Page::child (const CstLabel_sptr& label) const {
+    if (_bridges.find(label) != _bridges.end()) {
+        return _bridges.at(label);
+    } else {
+        return nullptr;
+    }
+}*/
+
+Page_sptr Page::child (const Label_sptr& label) {
+    //CstPage_sptr cstPage = static_cast <const Page&>(*this).child(label);
+    //return std::const_pointer_cast <Page>(cstPage);
     if (_bridges.find(label) != _bridges.end()) {
         return _bridges.at(label);
     } else {
@@ -67,51 +75,21 @@ CstPage_sptr Page::child (const CstLabel_sptr& label) const {
     }
 }
 
-Page_sptr Page::child (const CstLabel_sptr& label) {
-    CstPage_sptr cstPage = static_cast <const Page&>(*this).child(label);
-    return std::const_pointer_cast <Page>(cstPage);
-}
-
-/*Page::TypeOfLabel Page::type (const CstLabel_sptr& label) const {
-    if (_labelsTypes.find(label) != _labelsTypes.end()) {
-        return _labelsTypes.at(label);
-    } else {
-        return TypeOfLabel::Unknown;
-    }
-   }*/
-
 const vecCstLabel_sptr& Page::labels() const {
-    return _labels;
+    return _cstLabels;
 }
-
-/*CstPage_sptr Page::child(float x, float y) const {
-
-   CstPage_sptr childPage = nullptr;
-   if (const CstLabel_sptr label = matchedLabel(x,y)) {
-   if ( _bridges.find(label) != _bridges.end() ) {
-   childPage = _bridges.at(label);
-   }
-   }
-   return childPage;
-   }*/
 
 float Page::height() const {
     return _height;
 }
 
-CstLabel_sptr Page::matchedLabel (
-    float x,
-    float y
-    ) const {
-    for (const CstLabel_sptr& label : _labels) {
-        /*if (label->widthUnit() == Label::WidthUnit::ShortestSide) {
-           x = 0.5f + (x - 0.5f) * longestOnShortestSide;
-           }*/
+Label_sptr Page::matchedLabel(float x, float y ) {
+    for (const auto& label : _labels) {
         if (
-            x > (label->position().x - label->width() / 2.f) &&
-            x < (label->position().x + label->width() / 2.f) &&
-            y > (label->position().y + _localPosY - label->height() / 2.f) &&
-            y < (label->position().y + _localPosY + label->height() / 2.f)
+            x > (label->positionX() - label->width() / 2.f) &&
+            x < (label->positionX() + label->width() / 2.f) &&
+            y > (label->positionY() + _localPosY - label->height() / 2.f) &&
+            y < (label->positionY() + _localPosY + label->height() / 2.f)
             ) {
             return label;
         }
@@ -187,13 +165,22 @@ void Page::update (bool isPressed, float screenPosY) {
 
 }
 
-std::vector <CstLabel_sptr> Page::createLabels() const {
-    std::vector <CstLabel_sptr> labels;
+vecLabel_sptr Page::createLabels() const {
+    vecLabel_sptr labels;
     for (const auto& bridge : _bridges) {
         labels.push_back(bridge.first);
     }
     return labels;
 }
+
+vecCstLabel_sptr Page::createCstLabels() const {
+    vecCstLabel_sptr cstLabels;
+    for (const auto& label : _labels) {
+        cstLabels.push_back(label) ;
+    }
+    return cstLabels;
+}
+
 
 const Page::EscapeAnswer& Page::getEscapeAnswer() const {
     return _escapeAnswer;
@@ -212,5 +199,11 @@ std::vector <Page_sptr> Page::createChildren() const {
 
 SceneElement::GlobalState Page::getGlobalState() const {
     return SceneElement::GlobalState::United; 
+}
+
+void Page::resize(float screenRatio) {
+    for (const auto& label: _labels) {
+        label->resize(screenRatio);
+    }
 }
 

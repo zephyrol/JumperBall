@@ -5,14 +5,14 @@
  * Created on 28 avril 2020, 19:43
  */
 
+#include <functional>
 #include "ItemLabel.h"
 
 ItemLabel::ItemLabel(
     const Label::WidthUnit& widthUnit,
-    float width,
-    float height,
-    const JBTypes::vec2f& position
+    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    float ratio
     ):
-    Label(widthUnit, width, height, position)
+    Label(widthUnit, updateLabelSizesFct, ratio)
     {
 }

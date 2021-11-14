@@ -4,16 +4,16 @@
  *
  * Created on 16 janvier 2021, 21:42
  */
+#include <functional>
 #include "ArrowLabel.h"
 
 ArrowLabel::ArrowLabel(
     const Label::WidthUnit& widthUnit,
-    float width,
-    float height,
-    const JBTypes::vec2f& position,
+    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    float ratio,
     const std::shared_ptr <LabelAnswer>& action,
     bool activated):
-    Label(widthUnit, width, height, position, activated, action) {
+    Label(widthUnit, updateLabelSizesFct, ratio, activated, action) {
 }
 
 vecGeometry ArrowLabel::genGeometries() const {

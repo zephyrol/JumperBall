@@ -9,8 +9,8 @@
 #define LABEL_H
 #include "system/Types.h"
 #include "system/Geometry.h"
-// TODO clean those include
 #include "scene/SceneElement.h"
+#include <functional>
 #include <fstream>
 
 class Label;
@@ -42,13 +42,19 @@ struct LabelAnswer {
     };
 };
 
+struct LabelDimensions {
+    float width;
+    float height;
+    float positionX;
+    float positionY;
+};
+
 enum class WidthUnit { ScreenWidth, ShortestSide };
 
 Label(
     const Label::WidthUnit& widthUnit,
-    float width,
-    float height,
-    const JBTypes::vec2f& position,
+    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    float ratio,
     bool activated = false,
     const std::shared_ptr <LabelAnswer>& action = nullptr,
     bool fixed = false);
@@ -65,11 +71,14 @@ bool isActivated() const;
 const std::shared_ptr <LabelAnswer>& action() const;
 const Label::WidthUnit& widthUnit() const;
 
-const JBTypes::vec2f& position() const;
+float positionX() const;
+float positionY() const;
+
 virtual std::string message() const;
 
 void activate();
 void deactivate();
+void resize(float screenRatio);
 
 static void updateLabelsLevels(vecLabel_sptr& labels,
                                size_t end);
@@ -78,10 +87,9 @@ static void updateLabelsLevels(vecLabel_sptr& labels,
 private:
 
 const Label::WidthUnit _widthUnit;
-const float _width;
-const float _height;
+const std::function<Label::LabelDimensions(float)> _updateLabelSizes;
+Label::LabelDimensions _dimensions;
 const vecCstLabel_sptr _children;
-const JBTypes::vec2f _position;
 const bool _fixed;
 bool _activated;
 const std::shared_ptr <LabelAnswer> _action;

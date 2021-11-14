@@ -13,13 +13,14 @@ Menu::Menu(
     const Page_sptr& pausePage,
     const Page_sptr& successPage,
     const Page_sptr& failurePage,
-    const vecCstPage_sptr& pages):
+    const vecPage_sptr& pages):
     _player(player),
     _rootPage(rootPage),
     _pausePage(pausePage),
     _successPage(successPage),
     _failurePage(failurePage),
     _pages(pages),
+    _cstPages(createCstPages()),
     _currentPage(rootPage) {
 }
 
@@ -76,8 +77,7 @@ void Menu::noPageAsCurrentPage() {
 Menu::MenuAnswer Menu::mouseClick (float mouseX, float mouseY) {
     Menu::MenuAnswer menuAnswer;
     if (_currentPage) {
-        const CstLabel_sptr label =
-            _currentPage->matchedLabel(mouseX, mouseY);
+        const auto& label = _currentPage->matchedLabel(mouseX, mouseY);
         if (label) {
             const Page_sptr newPage = _currentPage->child(label);
             if (newPage) {
@@ -123,84 +123,117 @@ CstPage_sptr Menu::failurePage() const {
 }
 
 const vecCstPage_sptr& Menu::pages() const {
-    return _pages;
+    return _cstPages;
 }
 
 std::shared_ptr <Menu> Menu::getJumperBallMenu (
     Player& player,
     size_t currentLevel,
     unsigned int sizeX,
-    unsigned int sizeY) {
-    const bool isSmartPhoneFormat = sizeX < sizeY;
+    unsigned int sizeY
+) {
     const float ratioX = static_cast <float>(sizeX) / static_cast <float>(sizeY);
-    const float ratioY = 1.f / ratioX;
     // Page 1
-    const float factor = isSmartPhoneFormat ? 1.f : ratioY;
-
-    const float label1Page1Width = factor * 0.9f;
-    const float label2Page1Width = factor * 0.4f;
-    const float label3Page1Width = factor * 0.6f;
-    const float label4Page1Width = factor * 0.4f;
-
-    const float label1Page1HeightDivide = 9.f;
-    const float label234Page1HeightDivide = 8.f;
-
-    const float label1Page1Height = label1Page1Width * ratioX / label1Page1HeightDivide;
-    const float label234Page1Height = label2Page1Width * ratioX / label234Page1HeightDivide;
-    std::shared_ptr <const MessageLabel> label1Page1 =
-        std::make_shared <const MessageLabel>(
+    const auto getFactor = [](float ratioX) {
+        const bool isSmartPhoneFormat = ratioX < 1.f;
+        const float ratioY = 1.f / ratioX;
+        return isSmartPhoneFormat ? 1.f : ratioY;
+    };
+    auto label1Page1 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label1Page1Width,
-            label1Page1Height,
-            JBTypes::vec2f { 0.5f, 0.8f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float label1Page1Width = factor * 0.9f;
+                const float label1Page1HeightDivide = 9.f;
+                const float label1Page1Height = label1Page1Width * ratioX / label1Page1HeightDivide;
+                const Label::LabelDimensions dimensions = { label1Page1Width, label1Page1Height, 0.5f, 0.8f };
+                return dimensions;
+            },
+            ratioX,
             "Jumper Ball");
-    std::shared_ptr <const MessageLabel> label2Page1 =
-        std::make_shared <const MessageLabel>(
+    auto label2Page1 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label2Page1Width,
-            label234Page1Height,
-            JBTypes::vec2f { 0.5f, 0.6f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+
+                const float label2Page1Width = factor * 0.4f;
+                const float label234Page1HeightDivide = 8.f;
+                const float label234Page1Height = label2Page1Width * ratioX / label234Page1HeightDivide;
+                const Label::LabelDimensions dimensions = { label2Page1Width, label234Page1Height, 0.5f, 0.6f };
+                return dimensions;
+            },
+            ratioX,
             "Play");
-    std::shared_ptr <const MessageLabel> label3Page1 =
-        std::make_shared <const MessageLabel>(
+    auto label3Page1 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label3Page1Width,
-            label234Page1Height,
-            JBTypes::vec2f { 0.5f, 0.4f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+
+                const float label3Page1Width = factor * 0.6f;
+                const float label234Page1HeightDivide = 8.f;
+                const float label234Page1Height = label3Page1Width * ratioX / label234Page1HeightDivide;
+                const Label::LabelDimensions dimensions = { label3Page1Width, label234Page1Height, 0.5f, 0.4f };
+                return dimensions;
+            },
+            ratioX,
             "Store");
-    std::shared_ptr <const MessageLabel> label4Page1 =
-        std::make_shared <const MessageLabel>(
+    auto label4Page1 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label4Page1Width,
-            label234Page1Height,
-            JBTypes::vec2f { 0.5f, 0.2f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float label4Page1Width = factor * 0.4f;
+                const float label234Page1HeightDivide = 8.f;
+                const float label234Page1Height = label4Page1Width * ratioX / label234Page1HeightDivide;
+                const Label::LabelDimensions dimensions = { label4Page1Width, label234Page1Height, 0.5f, 0.2f };
+                return dimensions;
+            },
+            ratioX,
             "Exit");
 
-    const vecCstLabel_sptr labelsPage1 { label1Page1, label2Page1, label3Page1, label4Page1 };
+    const vecLabel_sptr labelsPage1 { label1Page1, label2Page1, label3Page1, label4Page1 };
 
     // Page 2
-    vecCstLabel_sptr labelsPage2;
+    vecLabel_sptr labelsPage2;
 
-    const float label1Page2Width = factor * 0.6f;
-    std::shared_ptr <const MessageLabel> labelLevelsTitle =
-        std::make_shared <const MessageLabel>(
+    auto labelLevelsTitle = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label1Page2Width,
-            label1Page1Height,
-            JBTypes::vec2f { .5f - label1Page1Width * .5f + label1Page1Width * (0.6f), 1.f - 0.1f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float label1Page1Width = factor * 0.6f;
+                const float label1Page1HeightDivide = 9.f;
+                const float label1Page1Height = label1Page1Width * ratioX / label1Page1HeightDivide;
+                const Label::LabelDimensions dimensions = {
+                    label1Page1Width,
+                    label1Page1Height,
+                    0.5f - label1Page1Width * .5f + label1Page1Width * (0.6f),
+                    1.f - 0.1f
+                };
+                return dimensions;
+            },
+            ratioX,
             "Levels"
             );
 
     Label::LabelAnswer arrowAction;
     arrowAction.typeOfAction = Label::TypeOfAction::PredefinedAction;
     arrowAction.predefinedAction = Label::PredefinedAction::GoBack;
-    const float arrowBackWidth = factor * 0.15f;
-    std::shared_ptr <const ArrowLabel> labelLevelsArrowBack =
-        std::make_shared <const ArrowLabel>(
+    auto labelLevelsArrowBack = std::make_shared <ArrowLabel>(
             Label::WidthUnit::ShortestSide,
-            arrowBackWidth,
-            label1Page1Height,
-            JBTypes::vec2f { .5f - label1Page1Width * .5f + label1Page1Width * (0.1f), 1.f - 0.1f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float arrowBackWidth = factor * 0.15f;
+                const float label1Page1Width = factor * 0.9f;
+                const float label1Page1HeightDivide = 9.f;
+                const float label1Page1Height = label1Page1Width * ratioX / label1Page1HeightDivide;
+                const Label::LabelDimensions dimensions = {
+                    arrowBackWidth,
+                    label1Page1Height,
+                    0.5f - label1Page1Width * .5f + label1Page1Width * (0.1f),
+                    1.f - 0.1f
+                };
+                return dimensions;
+            },
+            ratioX,
             std::make_shared <Label::LabelAnswer>(arrowAction)
             );
 
@@ -211,23 +244,11 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
 
     vecLabel_sptr labelLevels;
     for (size_t i = 0; i < 99; ++i) {
-        const float labelNumberWidth = factor * 0.1f;
-
-        const float labelNumberHeight =
-            labelNumberWidth * ratioX;
-
         std::string sNumber;
         if (i < 10) {
             sNumber.append("0");
         }
         sNumber.append(std::to_string(i + 1));
-
-        /*std::shared_ptr<const BoxLabel> boxLabelLevels =
-           std::make_shared<const BoxLabel>
-           ( Utility::xScreenToPortrait(.2f), 0.1f,
-           JBTypes::vec2f{.5f - Utility::xScreenToPortrait(.5f)
-         + Utility::xScreenToPortrait(.1f + (i%3) * .4f), 1.f-(0.3f + i/3 * 0.3f)-offsetBox});
-           labelsPage2.push_back(boxLabelLevels);*/
 
         Label::LabelAnswer associatedLevel;
         associatedLevel.typeOfAction = Label::TypeOfAction::GoLevel;
@@ -236,10 +257,20 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
         std::shared_ptr <MessageLabel> labelLevel =
             std::make_shared <MessageLabel>(
                 Label::WidthUnit::ShortestSide,
-                labelNumberWidth, labelNumberHeight,
-                JBTypes::vec2f { .5f - label1Page1Width * .5f
-                                 + label1Page1Width * (.1f + (i % 3) * .4f),
-                                 1.f - (0.3f + i / 3 * 0.3f) },
+                [getFactor,i](float ratioX){
+                    const float factor = getFactor(ratioX);
+                    const float labelNumberWidth = factor * 0.1f;
+                    const float labelNumberHeight = labelNumberWidth * ratioX;
+                    const float label1Page1Width = factor * 0.9f;
+                    const Label::LabelDimensions dimensions = {
+                        labelNumberWidth,
+                        labelNumberHeight,
+                        .5f - label1Page1Width * .5f + label1Page1Width * (.1f + (i % 3) * .4f),
+                        1.f - (0.3f + i / 3 * 0.3f)
+                    };
+                    return dimensions;
+                },
+                ratioX,
                 sNumber,
                 std::make_shared <Label::LabelAnswer>(associatedLevel)
                 );
@@ -247,85 +278,140 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
         labelLevels.push_back(labelLevel);
     }
 
-    Label::updateLabelsLevels(labelLevels, currentLevel
-                              /*_player.levelProgression()*/);
-
-    /*std::shared_ptr<const BoxLabel> labelBox =
-       std::make_shared<const BoxLabel>(0.5f, 0.1f,
-       JBTypes::vec2f{0.5f,0.8f} );*/
-
+    Label::updateLabelsLevels(labelLevels, currentLevel);
 
     // Page 3 (Failure page)
-    const float label1Page3Width = factor * 0.6f;
-    std::shared_ptr <const MessageLabel> label1Page3 =
-        std::make_shared <const MessageLabel>(
+    auto label1Page3 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label1Page3Width,
-            label1Page1Height,
-            JBTypes::vec2f { 0.5f, 0.8f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float label1Page3Width = factor * 0.6f;
+                const float label1Page1HeightDivide = 9.f;
+                const float label1Page1Width = factor * 0.9f;
+                const float label1Page1Height = label1Page1Width * ratioX / label1Page1HeightDivide;
+                const Label::LabelDimensions dimensions = { label1Page3Width, label1Page1Height, 0.5f, 0.8f };
+                return dimensions;
+            },
+            ratioX,
             "You lost");
-    std::shared_ptr <const MessageLabel> label2Page3 =
-        std::make_shared <const MessageLabel>(
+    auto label2Page3 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label4Page1Width,
-            label234Page1Height,
-            JBTypes::vec2f { 0.5f, 0.6f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float label4Page1Width = factor * 0.4f;
+                const float label234Page1HeightDivide = 8.f;
+                const float label234Page1Height = label4Page1Width * ratioX / label234Page1HeightDivide;
+                const Label::LabelDimensions dimensions = {
+                    label4Page1Width,
+                    label234Page1Height,
+                    0.5f,
+                    0.6f
+                };
+                return dimensions;
+            },
+            ratioX,
             "Retry");
-    std::shared_ptr <const MessageLabel> label3Page3 =
-        std::make_shared <const MessageLabel>(
+    auto label3Page3 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label4Page1Width,
-            label234Page1Height,
-            JBTypes::vec2f { 0.5f, 0.3f },
-            "Exit");
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float label4Page1Width = factor * 0.4f;
+                const float label234Page1HeightDivide = 8.f;
+                const float label234Page1Height = label4Page1Width * ratioX / label234Page1HeightDivide;
+                const Label::LabelDimensions dimensions = {
+                    label4Page1Width,
+                    label234Page1Height,
+                    0.5f,
+                    0.3f
+                };
+                return dimensions;
+            },
+            ratioX,
+            "Exit"
+        );
 
-    const vecCstLabel_sptr labelsPage3 { label1Page3, label2Page3, label3Page3 };
+    const vecLabel_sptr labelsPage3 { label1Page3, label2Page3, label3Page3 };
 
 
     // Page 4 (Pause page)
-    std::shared_ptr <const MessageLabel> label1Page4 =
-        std::make_shared <const MessageLabel>(
+    auto label1Page4 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label2Page1Width,
-            label234Page1Height,
-            JBTypes::vec2f { 0.5f, 0.4f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float label2Page1Width = factor * 0.4f;
+                const float label234Page1HeightDivide = 8.f;
+                const float label234Page1Height = label2Page1Width * ratioX / label234Page1HeightDivide;
+                const Label::LabelDimensions dimensions = {
+                    label2Page1Width,
+                    label234Page1Height,
+                    0.5f,
+                    0.4f
+                };
+                return dimensions;
+            },
+            ratioX,
             "Continue");
-    std::shared_ptr <const MessageLabel> label2Page4 =
-        std::make_shared <const MessageLabel>(
+   auto label2Page4 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label3Page1Width,
-            label234Page1Height,
-            JBTypes::vec2f { 0.5f, 0.6f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float label3Page1Width = factor * 0.6f;
+                const float label2Page1Width = factor * 0.4f;
+                const float label234Page1HeightDivide = 8.f;
+                const float label234Page1Height = label2Page1Width * ratioX / label234Page1HeightDivide;
+                const Label::LabelDimensions dimensions = {
+                    label3Page1Width,
+                    label234Page1Height,
+                    0.5f,
+                    0.6f
+                };
+                return dimensions;
+            },
+            ratioX,
             "Main menu");
-    const vecCstLabel_sptr labelsPage4 { label1Page4, label2Page4 };
+    const vecLabel_sptr labelsPage4 { label1Page4, label2Page4 };
 
     // Page 5 (Success page)
-    const float label1Page5Width = factor * 0.8f;
-    const float label2Page5Width = factor * 0.7f;
-    std::shared_ptr <const MessageLabel> label1Page5 =
-        std::make_shared <const MessageLabel>(
+    auto label1Page5 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label1Page5Width,
-            label1Page1Height,
-            JBTypes::vec2f { 0.5f, 0.8f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float label1Page5Width = factor * 0.8f;
+                const float label1Page1HeightDivide = 9.f;
+                const float label1Page1Width = factor * 0.9f;
+                const float label1Page1Height = label1Page1Width * ratioX / label1Page1HeightDivide;
+                const Label::LabelDimensions dimensions = { label1Page5Width, label1Page1Height, 0.5f, 0.8f };
+                return dimensions;
+            },
+            ratioX,
             "Good game!");
-    std::shared_ptr <const MessageLabel> label2Page5 =
-        std::make_shared <const MessageLabel>(
+    auto label2Page5 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label2Page5Width,
-            label234Page1Height,
-            JBTypes::vec2f { 0.5f, 0.6f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float label2Page5Width = factor * 0.7f;
+                const float label1Page1HeightDivide = 9.f;
+                const float label1Page1Width = factor * 0.9f;
+                const float label1Page1Height = label1Page1Width * ratioX / label1Page1HeightDivide;
+                const Label::LabelDimensions dimensions = { label2Page5Width, label1Page1Height, 0.5f, 0.6f };
+                return dimensions;
+            },
+            ratioX,
             "Continue");
-    std::shared_ptr <const MessageLabel> label3Page5 =
-        std::make_shared <const MessageLabel>(
+    auto label3Page5 = std::make_shared <MessageLabel>(
             Label::WidthUnit::ShortestSide,
-            label4Page1Width,
-            label234Page1Height,
-            JBTypes::vec2f { 0.5f, 0.3f },
+            [getFactor](float ratioX){
+                const float factor = getFactor(ratioX);
+                const float label4Page1Width = factor * 0.4f;
+                const float label234Page1HeightDivide = 8.f;
+                const float label234Page1Height = label4Page1Width * ratioX / label234Page1HeightDivide;
+                const Label::LabelDimensions dimensions = { label4Page1Width, label234Page1Height, 0.5f, 0.3f };
+                return dimensions;
+            },
+            ratioX,
             "Exit");
 
-    const vecCstLabel_sptr labelsPage5
-    { label1Page5, label2Page5, label3Page5 };
+    const vecLabel_sptr labelsPage5 { label1Page5, label2Page5, label3Page5 };
 
     const Page_sptr page1 = std::make_shared <Page>(
         nullptr, Page::PageFormat::Full, Page::EscapeAnswer::QuitGame
@@ -346,27 +432,27 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
         page1, Page::PageFormat::Full, Page::EscapeAnswer::GoToParent
         );
 
-    std::map <CstLabel_sptr, Page_sptr> childrenPage2;
-    for (CstLabel_sptr& label : labelsPage2) {
+    std::map <Label_sptr, Page_sptr> childrenPage2;
+    for (const Label_sptr& label : labelsPage2) {
         childrenPage2[label] = nullptr;
     }
 
-    std::map <CstLabel_sptr, Page_sptr> childrenPage1;
+    std::map <Label_sptr, Page_sptr> childrenPage1;
     childrenPage1[labelsPage1.at(0)] = nullptr;
     childrenPage1[labelsPage1.at(1)] = page2;
     childrenPage1[labelsPage1.at(2)] = nullptr;
     childrenPage1[labelsPage1.at(3)] = nullptr;
 
-    std::map <CstLabel_sptr, Page_sptr> childrenPage3;
+    std::map <Label_sptr, Page_sptr> childrenPage3;
     childrenPage3[labelsPage3.at(0)] = page5;
     childrenPage3[labelsPage3.at(1)] = nullptr;
     childrenPage3[labelsPage3.at(2)] = page1;
 
-    std::map <CstLabel_sptr, Page_sptr> childrenPage4;
+    std::map <Label_sptr, Page_sptr> childrenPage4;
     childrenPage4[labelsPage4.at(0)] = nullptr;
     childrenPage4[labelsPage4.at(1)] = page1;
 
-    std::map <CstLabel_sptr, Page_sptr> childrenPage5;
+    std::map <Label_sptr, Page_sptr> childrenPage5;
     childrenPage5[labelsPage5.at(0)] = nullptr;
     childrenPage5[labelsPage5.at(1)] = page1;
 
@@ -376,7 +462,7 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
     page4->setBridges(std::move(childrenPage4));
     page5->setBridges(std::move(childrenPage5));
 
-    const vecCstPage_sptr pages { page1, page2, page3, page4, page5 };
+    const vecPage_sptr pages { page1, page2, page3, page4, page5 };
     return std::make_shared <Menu>(player, page1, page4, page5, page3, pages);
 }
 
@@ -392,4 +478,19 @@ Menu::MenuAnswer Menu::escapeAction() {
         menuAnswer.action = Menu::Action::None;
     }
     return menuAnswer;
+}
+
+vecCstPage_sptr Menu::createCstPages() const {
+    vecCstPage_sptr cstPages;
+    for(const auto& pages: _pages) {
+        cstPages.push_back(pages);
+    }
+    return cstPages;
+}
+
+void Menu::resize(float screenRatio) {
+    for(const auto& page: _pages) {
+        page->resize(screenRatio);
+    }
+
 }

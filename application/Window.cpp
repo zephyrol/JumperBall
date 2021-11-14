@@ -19,12 +19,12 @@ Window::Window(GLFWwindow*glfwWindow, int width, int height):
 
 bool Window::inputManagement() {
 
-    int widthWindow;
-    int heightWindow;
-    glfwGetFramebufferSize(_window, &widthWindow, &heightWindow);
-    if (_width != widthWindow || _height != heightWindow ) {
-        _width = widthWindow;
-        _height = heightWindow;
+    int windowWidth;
+    int windowHeight;
+    glfwGetFramebufferSize(_window, &windowWidth, &windowHeight);
+    if (_width != windowWidth || _height != windowHeight ) {
+        _width = windowWidth;
+        _height = windowHeight;
         _controller.resize(_width, _height);
     }
 
@@ -71,10 +71,10 @@ bool Window::inputManagement() {
                           };
     const std::pair <float, float> posXY = getPosXY();
 
-    const float posX = posXY.first / static_cast <float>(RESOLUTION_X);
+    const float posX = posXY.first / static_cast <float>(windowWidth);
 
     // GLFW defines y=0 as the top
-    const float posY = 1.f - posXY.second / static_cast <float>(RESOLUTION_Y);
+    const float posY = 1.f - posXY.second / static_cast <float>(windowHeight);
     _controller.interactionMouse(mouseButton1Status, posX, posY);
 
     const bool exit = glfwWindowShouldClose(_window) != 0 || _controller.requestToLeave();

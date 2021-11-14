@@ -29,7 +29,7 @@ Menu(
     const Page_sptr& pausePage,
     const Page_sptr& successPage,
     const Page_sptr& failurePage,
-    const vecCstPage_sptr& pages
+    const vecPage_sptr& pages
     );
 
 Page_sptr currentPage();
@@ -54,11 +54,14 @@ CstPage_sptr successPage() const;
 CstPage_sptr failurePage() const;
 const vecCstPage_sptr& pages() const;
 
-static std::shared_ptr <Menu> getJumperBallMenu(Player& player,
-                                                size_t currentLevel,
-                                                unsigned int sizeX,
-                                                unsigned int sizeY
-                                                );
+static std::shared_ptr <Menu> getJumperBallMenu(
+    Player& player,
+    size_t currentLevel,
+    unsigned int sizeX,
+    unsigned int sizeY
+);
+
+void resize(float screenRatio);
 
 private:
 Player& _player;
@@ -66,8 +69,11 @@ const Page_sptr _rootPage;
 const Page_sptr _pausePage;
 const Page_sptr _successPage;
 const Page_sptr _failurePage;
-const vecCstPage_sptr _pages;
+const vecPage_sptr _pages;
+const vecCstPage_sptr _cstPages;
 Page_sptr _currentPage;
+
+vecCstPage_sptr createCstPages() const;
 
 };
 
