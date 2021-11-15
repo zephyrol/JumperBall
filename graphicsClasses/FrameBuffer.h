@@ -39,7 +39,6 @@ static constexpr float luminanceKey = 0.4f;
 
 GLuint getHandle() const;
 void bindFrameBuffer() const;
-std::pair <float, float> computeLogAverageLuminanceAndMax() const;
 GLuint getRenderTexture() const;
 
 void freeGPUMemory();
