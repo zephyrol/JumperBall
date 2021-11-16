@@ -10,22 +10,38 @@
 #include "Window.h"
 
 
-Window::Window(GLFWwindow*glfwWindow, int width, int height):
+Window::Window(
+    GLFWwindow*glfwWindow,
+    int frameBufferWidth,
+    int frameBufferHeight,
+    int windowWidth,
+    int windowHeight
+):
     _window(glfwWindow),
-    _width(width),
-    _height(height),
-    _controller(_width, _height) {
+    _frameBufferWidth(frameBufferWidth),
+    _frameBufferHeight(frameBufferHeight),
+    _windowWidth(windowWidth),
+    _windowHeight(windowHeight),
+    _controller(_frameBufferWidth, _frameBufferHeight) {
 }
 
 bool Window::inputManagement() {
 
-    int windowWidth;
-    int windowHeight;
-    glfwGetFramebufferSize(_window, &windowWidth, &windowHeight);
-    if (_width != windowWidth || _height != windowHeight ) {
-        _width = windowWidth;
-        _height = windowHeight;
-        _controller.resize(_width, _height);
+    int frameBufferWidth;
+    int frameBufferHeight;
+    glfwGetFramebufferSize(_window, &frameBufferWidth, &frameBufferHeight);
+    if (_frameBufferWidth != frameBufferWidth || _frameBufferHeight != frameBufferHeight) {
+        // Frame buffer resizing
+        _frameBufferWidth = frameBufferWidth;
+        _frameBufferHeight = frameBufferHeight;
+        _controller.resize(_frameBufferWidth, _frameBufferHeight);
+
+        // Window sizes updating
+        int windowWidth;
+        int windowHeight;
+        glfwGetWindowSize(_window, &windowWidth, &windowHeight);
+        _windowWidth = windowWidth;
+        _windowHeight = windowHeight;
     }
 
     const std::function <Controller::Status(const std::vector <unsigned int> &&)>
@@ -71,10 +87,10 @@ bool Window::inputManagement() {
                           };
     const std::pair <float, float> posXY = getPosXY();
 
-    const float posX = posXY.first / static_cast <float>(windowWidth);
+    const float posX = posXY.first / static_cast <float>(_windowWidth);
 
     // GLFW defines y=0 as the top
-    const float posY = 1.f - posXY.second / static_cast <float>(windowHeight);
+    const float posY = 1.f - posXY.second / static_cast <float>(_windowHeight);
     _controller.interactionMouse(mouseButton1Status, posX, posY);
 
     const bool exit = glfwWindowShouldClose(_window) != 0 || _controller.requestToLeave();

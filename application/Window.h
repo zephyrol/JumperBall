@@ -16,15 +16,23 @@
 class Window {
 public:
 
-Window(GLFWwindow*glfwWindow, int width, int height);
+Window(
+    GLFWwindow*glfwWindow,
+    int frameBufferWidth,
+    int frameBufferHeight,
+    int windowWidth,
+    int windowHeight
+);
 
 void run();
 
 private:
 
 GLFWwindow*_window;
-int _width;
-int _height;
+int _frameBufferWidth;
+int _frameBufferHeight;
+int _windowWidth;
+int _windowHeight;
 Controller _controller;
 
 bool inputManagement();
