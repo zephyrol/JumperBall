@@ -193,7 +193,7 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
 }
 
 RenderProcess::PassUniformUpdateMap SceneRendering::createScreenSpaceUniformsUpdating (
-    const std::map <std::string, RenderProcess_sptr>& textureNameRenderProcess
+    const std::unordered_map <std::string, RenderProcess_sptr>& textureNameRenderProcess
     ) const {
     const auto uniformsTextureUpdatingFunction =
         [textureNameRenderProcess] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {

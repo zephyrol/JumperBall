@@ -47,7 +47,7 @@ const CstShader_uptr _vertexShader;
 const CstShader_uptr _fragmentShader;
 
 // TODO: define the list of uniform in constructor
-mutable std::map<std::string, GLint> _cacheUniformLocation;
+mutable std::unordered_map<std::string, GLint> _cacheUniformLocation;
 
 GLuint fillCacheAndGet(const std::string& name) const;
 

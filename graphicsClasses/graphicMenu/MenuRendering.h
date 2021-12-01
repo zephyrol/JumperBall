@@ -28,11 +28,11 @@ void freeGPUMemory() override;
 
 private:
 
-using RenderPassesLetters = std::map <RenderPass_sptr, unsigned char>;
+using RenderPassesLetters = std::unordered_map <RenderPass_sptr, unsigned char>;
 
-using PagesRenderPassesLetters = std::map <CstPage_sptr, RenderPassesLetters>;
-using PagesRenderPasses = std::map <CstPage_sptr, vecRenderPass_sptr>;
-using PagesRenderProcess = std::map <CstPage_sptr, RenderProcess_sptr>;
+using PagesRenderPassesLetters = std::unordered_map <CstPage_sptr, RenderPassesLetters>;
+using PagesRenderPasses = std::unordered_map <CstPage_sptr, vecRenderPass_sptr>;
+using PagesRenderProcess = std::unordered_map <CstPage_sptr, RenderProcess_sptr>;
 
 const Menu& _menu;
 const FontTexturesGenerator::GraphicAlphabet _graphicAlphabet;

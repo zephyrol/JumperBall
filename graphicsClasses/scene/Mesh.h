@@ -35,7 +35,7 @@ struct MeshVerticesInfo {
     Mesh::StateVertexAttributes stateVertexAttributes;
 };
 
-template<typename T> using UniformVariables = std::map <std::string, T>;
+template<typename T> using UniformVariables = std::unordered_map <std::string, T>;
 template<typename T> using UniformVariables_uptr = std::unique_ptr <UniformVariables <T> >;
 
 template<typename T> static std::vector <T> extractUniformVariablesValues(

@@ -51,9 +51,9 @@ void upsertUniform(
     const std::shared_ptr <const UniformBlock>& uniformBlock
     );
 
-using UniformCstBlockVariables = std::map <std::string, CstUniformBlock_sptr>;
+using UniformCstBlockVariables = std::unordered_map <std::string, CstUniformBlock_sptr>;
 
-using UniformBlockVariables = std::map <std::string, UniformBlock_sptr>;
+using UniformBlockVariables = std::unordered_map <std::string, UniformBlock_sptr>;
 using UniformBlockVariables_uptr = std::unique_ptr <UniformBlockVariables>;
 
 private:
@@ -64,18 +64,18 @@ template<typename T> void bindUniformVariables(
     Mesh::UniformVariables <T> uniforms,
     const CstShaderProgram_sptr& shaderProgram
     ) const;
-template<typename T> void upsertUniforms(const std::map <std::string, T>& uniformsData);
+template<typename T> void upsertUniforms(const std::unordered_map <std::string, T>& uniformsData);
 
-std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > createSeparateMeshGroups(
+std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > createSeparateMeshGroups(
     const vecMesh_sptr& meshes
     ) const;
 
 const vecMesh_sptr _meshes;
 const std::shared_ptr <RenderGroup> _unitedMeshesGroup;
-std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > _separateMeshGroups;
-std::map <std::shared_ptr <RenderGroup>, Mesh::Uniforms> _renderGroupsUniforms;
-std::map <GLuint, Mesh::Uniforms> _renderPassUniforms;
-std::map <GLuint, UniformCstBlockVariables> _renderPassUniformBlocks;
+std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > _separateMeshGroups;
+std::unordered_map <std::shared_ptr <RenderGroup>, Mesh::Uniforms> _renderGroupsUniforms;
+std::unordered_map <GLuint, Mesh::Uniforms> _renderPassUniforms;
+std::unordered_map <GLuint, UniformCstBlockVariables> _renderPassUniformBlocks;
 };
 
 

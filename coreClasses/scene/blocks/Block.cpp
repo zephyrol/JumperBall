@@ -123,8 +123,8 @@ vecCstShape_sptr Block::getExtraShapes() const {
     return {};
 }
 
-std::map<CstItem_sptr ,vecCstShape_sptr > Block::getItemShapes() const {
-    std::map<CstItem_sptr, vecCstShape_sptr > itemShapes {};
+std::unordered_map<CstItem_sptr ,vecCstShape_sptr > Block::getItemShapes() const {
+    std::unordered_map<CstItem_sptr, vecCstShape_sptr > itemShapes {};
     for(const auto& item: _items) {
         itemShapes[item] = item->getShapes();
     }

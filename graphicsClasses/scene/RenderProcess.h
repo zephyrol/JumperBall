@@ -19,8 +19,8 @@ class RenderProcess {
 public:
 
 using UniformUpdatingFct = std::function <void (const RenderPass_sptr&, GLuint)>;
-using PassShaderMap = std::map <RenderPass_sptr, CstShaderProgram_sptr>;
-using PassUniformUpdateMap = std::map <RenderPass_sptr, UniformUpdatingFct>;
+using PassShaderMap = std::unordered_map <RenderPass_sptr, CstShaderProgram_sptr>;
+using PassUniformUpdateMap = std::unordered_map <RenderPass_sptr, UniformUpdatingFct>;
 
 RenderProcess(
     const vecRenderPass_sptr& renderPasses,

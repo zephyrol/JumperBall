@@ -432,27 +432,27 @@ std::shared_ptr <Menu> Menu::getJumperBallMenu (
         page1, Page::PageFormat::Full, Page::EscapeAnswer::GoToParent
         );
 
-    std::map <Label_sptr, Page_sptr> childrenPage2;
+    std::unordered_map <Label_sptr, Page_sptr> childrenPage2;
     for (const Label_sptr& label : labelsPage2) {
         childrenPage2[label] = nullptr;
     }
 
-    std::map <Label_sptr, Page_sptr> childrenPage1;
+    std::unordered_map <Label_sptr, Page_sptr> childrenPage1;
     childrenPage1[labelsPage1.at(0)] = nullptr;
     childrenPage1[labelsPage1.at(1)] = page2;
     childrenPage1[labelsPage1.at(2)] = nullptr;
     childrenPage1[labelsPage1.at(3)] = nullptr;
 
-    std::map <Label_sptr, Page_sptr> childrenPage3;
+    std::unordered_map <Label_sptr, Page_sptr> childrenPage3;
     childrenPage3[labelsPage3.at(0)] = page5;
     childrenPage3[labelsPage3.at(1)] = nullptr;
     childrenPage3[labelsPage3.at(2)] = page1;
 
-    std::map <Label_sptr, Page_sptr> childrenPage4;
+    std::unordered_map <Label_sptr, Page_sptr> childrenPage4;
     childrenPage4[labelsPage4.at(0)] = nullptr;
     childrenPage4[labelsPage4.at(1)] = page1;
 
-    std::map <Label_sptr, Page_sptr> childrenPage5;
+    std::unordered_map <Label_sptr, Page_sptr> childrenPage5;
     childrenPage5[labelsPage5.at(0)] = nullptr;
     childrenPage5[labelsPage5.at(1)] = page1;
 

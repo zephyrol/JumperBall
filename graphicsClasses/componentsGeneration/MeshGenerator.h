@@ -47,7 +47,7 @@ Mesh_sptr genLetterLabel(
     const glm::vec3& color
 );
 
-std::map <unsigned char, vecMesh_sptr> genLettersLabel(
+std::unordered_map <unsigned char, vecMesh_sptr> genLettersLabel(
     const CstPage_sptr& page,
     const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet
 );

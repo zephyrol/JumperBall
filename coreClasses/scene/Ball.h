@@ -99,7 +99,7 @@ CstBlock_sptr getBlock(const JBTypes::vec3ui& pos) const;
 
 void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action) noexcept;
 
-void setBlockPositions(const std::shared_ptr<const std::map<std::string, Block_sptr> >& blocksPositions);
+void setBlockPositions(const std::shared_ptr<const std::unordered_map<std::string, Block_sptr> >& blocksPositions);
 void setBlockWithInteractions(const std::shared_ptr<const vecBlock_sptr>& blocksWithInterraction);
 void setBlockTeleportations(
     const std::shared_ptr<const std::map<BlockDir , BlockDir> >& blocksTeleportations
@@ -161,7 +161,7 @@ const TurnBack _turnBackMovement;
 MovementDestination _movementDestination;
 
 Block_sptr getCurrentBlock();
-std::shared_ptr<const std::map<std::string, Block_sptr> > _blocksPositions;
+std::shared_ptr<const std::unordered_map<std::string, Block_sptr> > _blocksPositions;
 std::shared_ptr<const vecBlock_sptr> _blockWithInteractions;
 std::shared_ptr<const std::map<BlockDir , BlockDir> > _blocksTeleportations;
 

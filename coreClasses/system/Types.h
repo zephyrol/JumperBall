@@ -11,6 +11,7 @@
 #include <string>
 #include <cmath>
 #include <vector>
+#include <unordered_map>
 #include <map>
 #include <array>
 #include <memory>
@@ -105,7 +106,7 @@ std::string colorToString(const JBTypes::Color& color);
 JBTypes::Color colorToShiny(const JBTypes::Color& color);
 JBTypes::Color charAsColor(unsigned char charColor);
 
-template<typename K, typename V> std::map <K, V> createMap(std::vector <K> keys, std::vector <V> values);
+template<typename K, typename V> std::unordered_map <K, V> createMap(std::vector <K> keys, std::vector <V> values);
 
 JBTypes::vec3i directionAsVectorInt(JBTypes::Dir dir);
 

@@ -21,18 +21,18 @@ std::vector <JBTypes::vec3f> SceneElement::getStaticVec3fValues() const {
     return {};
 }
 
-std::map <std::string, float> SceneElement::getDynamicFloats() const {
+std::unordered_map <std::string, float> SceneElement::getDynamicFloats() const {
     return {};
 }
 
-std::map <std::string, JBTypes::vec2f> SceneElement::getDynamicVec2fs() const {
+std::unordered_map <std::string, JBTypes::vec2f> SceneElement::getDynamicVec2fs() const {
     return {};
 }
 
-std::map <std::string, JBTypes::vec3f> SceneElement::getDynamicVec3fs() const {
+std::unordered_map <std::string, JBTypes::vec3f> SceneElement::getDynamicVec3fs() const {
     return {};
 }
 
-std::map <std::string, JBTypes::Quaternion> SceneElement::getDynamicQuaternions() const {
+std::unordered_map <std::string, JBTypes::Quaternion> SceneElement::getDynamicQuaternions() const {
     return {};
 }

@@ -42,7 +42,7 @@ const GLuint _uboHandle;
 Mesh::UniformVariables <glm::vec3> _variablesVecThree;
 const std::vector <const char*> _linearVariablesNames;
 
-std::map <CstShaderProgram_sptr, ShaderBlock> _shaderBlocks;
+std::unordered_map <CstShaderProgram_sptr, ShaderBlock> _shaderBlocks;
 
 GLuint createUboHandle() const;
 

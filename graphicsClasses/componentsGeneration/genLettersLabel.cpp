@@ -6,12 +6,12 @@
 
 #include "MeshGenerator.h"
 
-std::map <unsigned char, vecMesh_sptr> MeshGenerator::genLettersLabel (
+std::unordered_map <unsigned char, vecMesh_sptr> MeshGenerator::genLettersLabel (
     const CstPage_sptr& page,
     const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet
     ) {
 
-    std::map <unsigned char, vecMesh_sptr> lettersMeshes;
+    std::unordered_map <unsigned char, vecMesh_sptr> lettersMeshes;
 
     const glm::vec3 enabledLetterColor(0.f, 1.f, 1.f);
     const glm::vec3 disabledLetterColor(0.5f, 0.5f, 0.5f);

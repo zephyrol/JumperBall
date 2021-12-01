@@ -68,7 +68,7 @@ RenderProcess_sptr createBloomProcess() const;
 RenderProcess::PassShaderMap createScreenShaders(const std::string& fs) const;
 
 RenderProcess::PassUniformUpdateMap createScreenSpaceUniformsUpdating(
-    const std::map <std::string, RenderProcess_sptr>& textureNameRenderProcess
+    const std::unordered_map <std::string, RenderProcess_sptr>& textureNameRenderProcess
     ) const;
 
 RenderProcess::PassUniformUpdateMap createBrightPassUniformsUpdating() const;

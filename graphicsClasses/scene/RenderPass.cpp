@@ -55,15 +55,15 @@ void RenderPass::cleanUniforms() {
     _renderPassUniforms = {};
 }
 
-template<typename T> void RenderPass::upsertUniforms (const std::map <std::string, T>& uniformsData) {
+template<typename T> void RenderPass::upsertUniforms (const std::unordered_map <std::string, T>& uniformsData) {
     for (const auto& uniform : uniformsData) {
         upsertUniform(uniform.first, uniform.second);
     }
 }
 
-std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > RenderPass::createSeparateMeshGroups (
+std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > RenderPass::createSeparateMeshGroups (
     const vecMesh_sptr& meshes) const {
-    std::map <Mesh_sptr, std::shared_ptr <RenderGroup> > separateMeshGroups;
+    std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > separateMeshGroups;
     for (const Mesh_sptr& mesh : meshes) {
         separateMeshGroups[mesh] = std::make_shared <RenderGroup>(
             *_unitedMeshesGroup,

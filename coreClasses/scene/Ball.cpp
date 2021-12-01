@@ -822,7 +822,7 @@ void Ball::internalUpdate() noexcept {
 }
 
 void Ball::setBlockPositions(
-    const std::shared_ptr<const std::map<std::string, Block_sptr>> &blocksPositions
+    const std::shared_ptr<const std::unordered_map<std::string, Block_sptr>> &blocksPositions
 ) {
     _blocksPositions = blocksPositions;
 }

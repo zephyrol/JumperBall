@@ -40,7 +40,7 @@ bool visibleOnParent() const;
 Label_sptr matchedLabel(float x, float y);
 float height() const;
 float localPosY() const;
-void setBridges(std::map <Label_sptr, Page_sptr>&& bridges);
+void setBridges(std::unordered_map <Label_sptr, Page_sptr>&& bridges);
 const Page::EscapeAnswer& getEscapeAnswer() const;
 
 SceneElement::GlobalState getGlobalState() const override;
@@ -61,7 +61,7 @@ vecCstLabel_sptr createCstLabels() const;
 std::vector <Page_sptr> createChildren() const;
 
 const PageFormat _pageFormat;
-std::map <Label_sptr, Page_sptr> _bridges;
+std::unordered_map <Label_sptr, Page_sptr> _bridges;
 
 vecLabel_sptr _labels;
 vecCstLabel_sptr _cstLabels;

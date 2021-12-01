@@ -20,7 +20,7 @@ class SceneElement {
 public:
 
 template<typename T> using StaticValues = std::vector <T>;
-template<typename T> using DynamicValues = std::map <std::string, T>;
+template<typename T> using DynamicValues = std::unordered_map <std::string, T>;
 enum class GlobalState { United, Separate, Dead };
 
 SceneElement();

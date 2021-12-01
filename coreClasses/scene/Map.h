@@ -59,13 +59,13 @@ static JBTypes::vec3ui stringToPosition(const std::string& stringPosition);
 
 bool ballIsOut() const;
 
-std::map<std::string, Block_sptr> createBlockPositions() const;
+std::unordered_map<std::string, Block_sptr> createBlockPositions() const;
 std::vector<Block_sptr> getBlocksToUpdate() const;
 
 std::map<BlockDir , BlockDir> createBlocksTeleportations() const;
 
 const vecBlock_sptr _blocks;
-const std::shared_ptr<const std::map<std::string,Block_sptr> > _blocksPositions;
+const std::shared_ptr<const std::unordered_map<std::string,Block_sptr> > _blocksPositions;
 const std::shared_ptr<const vecBlock_sptr> _blocksToUpdate;
 const std::shared_ptr<const std::map<BlockDir, BlockDir> > _blocksTeleportations;
 

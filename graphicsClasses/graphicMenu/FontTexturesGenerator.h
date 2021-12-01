@@ -29,7 +29,7 @@ struct FTContent {
     FT_Face fontFace;
 };
 
-using GraphicAlphabet = std::map <unsigned char, GraphicCharacter>;
+using GraphicAlphabet = std::unordered_map <unsigned char, GraphicCharacter>;
 
 /**
  * @brief Generate a graphic character

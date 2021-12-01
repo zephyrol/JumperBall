@@ -15,7 +15,7 @@
 
 Map::Map(Map::MapInfo &&mapInfo):
     _blocks(std::move(mapInfo.blocks)),
-    _blocksPositions(std::make_shared<const std::map<std::string,Block_sptr> >(createBlockPositions())),
+    _blocksPositions(std::make_shared<const std::unordered_map<std::string,Block_sptr> >(createBlockPositions())),
     _blocksToUpdate(std::make_shared<const vecBlock_sptr>(getBlocksToUpdate())),
     _blocksTeleportations(
         std::make_shared<const std::map<BlockDir , BlockDir> >(createBlocksTeleportations())
@@ -48,8 +48,8 @@ JBTypes::vec3ui Map::stringToPosition(const std::string& stringPosition) {
     };
 }
 
-std::map<std::string,Block_sptr> Map::createBlockPositions() const {
-    std::map<std::string,Block_sptr> positions;
+std::unordered_map<std::string,Block_sptr> Map::createBlockPositions() const {
+    std::unordered_map<std::string,Block_sptr> positions;
     for (const auto& block: _blocks) {
         const auto position = block->position();
         positions[Block::positionToString(position)] = block;
@@ -199,8 +199,8 @@ CstBall_sptr Map::getBall() const {
 }
 
 std::map<BlockDir , BlockDir> Map::createBlocksTeleportations() const {
-    std::map<BlockDir , BlockDir> teleportationBlocks;
-    std::map<JBTypes::Color, BlockDir> foundColors;
+    std::map<BlockDir , BlockDir> teleportationBlocks {};
+    std::map<JBTypes::Color, BlockDir> foundColors {};
     for (const auto& block: _blocks) {
         for(const auto& special: block->getSpecials()) {
             const auto& color = special->getColor();

@@ -46,7 +46,7 @@ float Page::localPosY() const {
     return _localPosY;
 }
 
-void Page::setBridges (std::map <Label_sptr, Page_sptr>&& bridges) {
+void Page::setBridges (std::unordered_map <Label_sptr, Page_sptr>&& bridges) {
     _bridges = std::move(bridges);
     _labels = createLabels();
     _cstLabels = createCstLabels();
