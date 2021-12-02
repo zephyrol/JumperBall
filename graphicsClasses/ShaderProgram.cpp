@@ -151,11 +151,12 @@ void ShaderProgram::bindUniformTexture (const std::string& name,
 }
 
 GLuint ShaderProgram::fillCacheAndGet(const std::string &name) const {
-    if (_cacheUniformLocation.find(name) == _cacheUniformLocation.end()) {
+    const auto uniformIterator = _cacheUniformLocation.find(name);
+    if ( uniformIterator == _cacheUniformLocation.end()) {
         const GLuint uniformLocation = glGetUniformLocation(getHandle(), name.c_str());
         _cacheUniformLocation[name] = uniformLocation;
         return uniformLocation;
     }
-    return _cacheUniformLocation.at(name);
+    return uniformIterator->second;
 }
 

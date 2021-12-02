@@ -25,11 +25,6 @@ Map::Map(Map::MapInfo &&mapInfo):
     _height(mapInfo.height),
     _depth(mapInfo.depth),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
-    _blocksUpdating([this] (size_t blockNumber) {
-                            _blocksToUpdate->at(blockNumber)->update(
-                                    _updatingTime
-                                );
-                        }, _blocksToUpdate->size()),
     _updatingTime()
 {
     _ball->setBlockPositions(_blocksPositions);
@@ -123,37 +118,14 @@ void Map::update(const JBTypes::timePointMs& updatingTime, const Ball::ActionReq
     _updatingTime = updatingTime;
     _ball->update(updatingTime, action);
 
-    _blocksUpdating.runTasks();
-    _blocksUpdating.waitTasks();
+    for (const auto& block: *_blocksToUpdate) {
+        block->update(_updatingTime);
+    }
 
     if (ballIsOut()) {
         _ball->die();
     }
 }
-
-void Map::switchColor (const JBTypes::Color&) {
-    // TODO update it
-    // if (_specialsState.find(color) == _specialsState.end()) {
-    //     _specialsState[color] = false;
-    // } else {
-    //     _specialsState.at(color) = !_specialsState.at(color);
-    // }
-
-    // for (SpecialInfo& specialInfo : _specials) {
-    //     const std::shared_ptr <Special> special = specialInfo.special;
-    //     if (special && special->getColor() == color) {
-    //         special->switchOnOff();
-    //     }
-    // }
-
-    // for (EnemyInfo& enemyInfo : _enemies) {
-    //     const std::shared_ptr <Enemy> enemy = enemyInfo.enemy;
-    //     if (enemy && enemy->getColor() == color) {
-    //         enemy->switchOnOff();
-    //     }
-    // }
-}
-
 
 JBTypes::vec3ui Map::getBlockCoords (size_t index,
                                      unsigned int width,
@@ -181,8 +153,9 @@ JBTypes::vec3f Map::getNextLook() const {
 
 CstBlock_sptr Map::getBlock(const JBTypes::vec3ui &pos) const {
     const std::string strPos = Block::positionToString(pos);
-    return _blocksPositions->find(strPos) != _blocksPositions->end()
-           ? _blocksPositions->at(strPos)
+    const auto blockIterator = _blocksPositions->find(strPos);
+    return blockIterator != _blocksPositions->end()
+           ? blockIterator->second
            : nullptr;
 }
 

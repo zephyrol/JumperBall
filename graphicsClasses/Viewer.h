@@ -32,10 +32,6 @@ public:
   SceneRendering _sceneRendering;
   MenuRendering _menuRendering;
 
-  ParallelTask <void> _updatingSceneRendering;
-  ParallelTask <void> _updatingMenuRendering;
-
-
 };
 
 #endif // VIEWER_H

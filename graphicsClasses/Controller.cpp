@@ -30,32 +30,9 @@ Controller::Controller(const size_t& screenWidth, const size_t& screenHeight) :
     _mouseIsPressed(false),
     _requestToLeave(false),
     _scene(std::make_shared<Scene>(_player.levelProgression(), _ratio)),
-    _viewer(createViewer()),
-    _updatingSceneMenu([this](size_t)
-         {
-             _player.status(_scene->update(_player.status(), _currentKey));
-             _currentKey = Scene::ActionKey::Nothing;
-             if (_player.status() == Player::Status::INMENU) {
-                 _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
-             }
-             else if (_player.status() == Player::Status::INGAME) {
-                 if (_scene->gameIsFinished())
-                 {
-                     _player.status(Player::Status::INMENU);
-                     _menu->failurePageAsCurrentPage();
-                 }
-             }
-         }),
-    _updating([this](size_t)
-         {
-             _updatingSceneMenu.runTasks();
-             _updatingSceneMenu.waitTasks();
-             _viewer->update();
-         },
-         1, true)
+    _viewer(createViewer())
 {
-    _updating.runTasks();
-    _updating.waitTasks();
+    updateSceneMenu();
 }
 
 void Controller::interactionButtons (const Controller::Button& button, const Controller::Status& status) {
@@ -100,19 +77,6 @@ void Controller::interactionMouse (const Status& status, float posX, float posY)
         }
     }
 }
-
-void Controller::runController() {
-    // Scene and Menu updating
-    _updating.runTasks();
-
-    // Launch rendering
-    _viewer->render();
-}
-
-void Controller::waitController() {
-    _updating.waitTasks();
-}
-
 void Controller::manageValidateButton (const Controller::Status& status) {
     if (_player.status() == Player::Status::INGAME) {
         if (status == Controller::Status::Pressed) {
@@ -124,8 +88,7 @@ void Controller::manageValidateButton (const Controller::Status& status) {
 void Controller::runGame (size_t level) {
     _scene = std::make_shared<Scene>(level, _ratio);
     refreshViewer();
-    _updating.runTasks();
-    _updating.waitTasks();
+    updateSceneMenu();
 }
 
 void Controller::manageValidateMouse() {
@@ -303,4 +266,34 @@ void Controller::resize(size_t screenWidth, size_t screenHeight) {
     _menu->resize(_ratio);
     refreshViewer();
 }
+
+void Controller::updateSceneMenu() {
+
+    _player.status(_scene->update(_player.status(), _currentKey));
+    _currentKey = Scene::ActionKey::Nothing;
+    if (_player.status() == Player::Status::INMENU) {
+        _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
+    }
+    else if (_player.status() == Player::Status::INGAME) {
+        if (_scene->gameIsFinished())
+        {
+            _player.status(Player::Status::INMENU);
+            _menu->failurePageAsCurrentPage();
+        }
+    }
+}
+
+void Controller::updateViewer() {
+    _viewer->update();
+}
+
+void Controller::render() const {
+    _viewer->render();
+}
+
+void Controller::update() {
+    updateSceneMenu();
+    updateViewer();
+}
+
 

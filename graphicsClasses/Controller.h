@@ -31,14 +31,18 @@ void interactionButtons(const Button& button,
 void interactionMouse(const Status& status,
                       float posX, float posY);
 
-void runController();
-void waitController();
+void update();
+void render() const;
 
 bool requestToLeave() const;
 
 void resize(size_t screenWidth, size_t screenHeight);
 
 private:
+
+void updateViewer();
+void updateSceneMenu();
+
 ScreenDirection nearestDirection(float posX, float posY) const;
 
 static float computeDistance(float x0, float y0, float x1, float y1);
@@ -79,9 +83,6 @@ bool _requestToLeave;
 
 std::shared_ptr <Scene> _scene;
 std::shared_ptr<Viewer> _viewer;
-
-ParallelTask <void> _updatingSceneMenu;
-ParallelTask <void> _updating;
 
 };
 

@@ -11,32 +11,24 @@ Viewer::Viewer(
     const Scene& scene,
     const Menu& menu,
     const FontTexturesGenerator::FTContent &ftContent):
-      _resolutionX(resolutionX),
-      _resolutionY(resolutionY),
-      _sceneRendering(scene, _resolutionX, _resolutionY),
-      _menuRendering(menu, ftContent, _resolutionX, _resolutionY),
-      _updatingSceneRendering( [this](size_t) {
-          _sceneRendering.update();
-      }),
-      _updatingMenuRendering( [this](size_t) {
-          _menuRendering.update();
-      })
+        _resolutionX(resolutionX),
+        _resolutionY(resolutionY),
+        _sceneRendering(scene, _resolutionX, _resolutionY),
+        _menuRendering(menu, ftContent, _resolutionX, _resolutionY)
 {
 }
 
 void Viewer::update() {
-  _updatingSceneRendering.runTasks();
-  _updatingMenuRendering.runTasks();
-  _updatingSceneRendering.waitTasks();
-  _updatingMenuRendering.waitTasks();
+    _sceneRendering.update();
+    _menuRendering.update();
 }
 
 void Viewer::render() const {
-  _sceneRendering.render();
-  _menuRendering.render();
+    _sceneRendering.render();
+    _menuRendering.render();
 }
 
 void Viewer::freeGPUMemory() {
-  _sceneRendering.freeGPUMemory();
-  _menuRendering.freeGPUMemory();
+    _sceneRendering.freeGPUMemory();
+    _menuRendering.freeGPUMemory();
 }

@@ -95,10 +95,11 @@ MenuRendering::PagesRenderPasses MenuRendering::createPagesRenderPasses() const 
         const auto& page = pageRenderPassesOthers.first;
         const auto& renderPasses = pageRenderPassesOthers.second;
 
-        if (pagesRenderPasses.find(page) == pagesRenderPasses.end()) {
+        const auto pageIterator = pagesRenderPasses.find(page);
+        if ( pageIterator == pagesRenderPasses.end()) {
             pagesRenderPasses[page] = renderPasses;
         } else {
-            vecRenderPass_sptr& pageRenderPasses = pagesRenderPasses.at(page);
+            vecRenderPass_sptr& pageRenderPasses = pageIterator->second;
             pageRenderPasses.insert(pageRenderPasses.end(), renderPasses.begin(), renderPasses.end());
         }
     }
@@ -130,13 +131,11 @@ RenderProcess_sptr MenuRendering::createRenderProcess (const CstPage_sptr& page)
     const vecRenderPass_sptr renderPassesUsingLetters = getRenderPassesUsingLetters();
 
     const auto getRenderPassesOthers = [this, &page] ()->vecRenderPass_sptr {
-                                           if (
-                                               _pagesRenderPassesOthers.find(page) ==
-                                               _pagesRenderPassesOthers.end()
-                                               ) {
-                                               return {};
-                                           }
-                                           return _pagesRenderPassesOthers.at(page);
+                                            const auto& pageIterator =_pagesRenderPassesOthers.find(page);
+                                            if ( pageIterator == _pagesRenderPassesOthers.end() ) {
+                                                return {};
+                                            }
+                                            return pageIterator->second;
                                        };
     const vecRenderPass_sptr renderPassesOthers = getRenderPassesOthers();
 

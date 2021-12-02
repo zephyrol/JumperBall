@@ -12,7 +12,6 @@
 #include <freetype2/ft2build.h>
 #include FT_FREETYPE_H
 #include <gameMenu/Menu.h>
-#include <system/ParallelTask.h>
 
 namespace FontTexturesGenerator {
 

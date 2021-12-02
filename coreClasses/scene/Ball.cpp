@@ -829,8 +829,9 @@ void Ball::setBlockPositions(
 
 CstBlock_sptr Ball::getBlock(const JBTypes::vec3ui &pos) const {
     const std::string strPos = Block::positionToString(pos);
-    return _blocksPositions->find(strPos) != _blocksPositions->end()
-           ? _blocksPositions->at(strPos)
+    const auto blockPositionIterator = _blocksPositions->find(strPos);
+    return blockPositionIterator != _blocksPositions->end()
+           ? blockPositionIterator->second
            : nullptr;
 }
 

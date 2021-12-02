@@ -8,7 +8,6 @@
 #ifndef MAP_H
 #define MAP_H
 #include "blocks/Block.h"
-#include "system/ParallelTask.h"
 #include "Ball.h"
 #include <fstream>
 
@@ -46,7 +45,6 @@ void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest&
 
     CstBall_sptr getBall() const;
 
-void switchColor(const JBTypes::Color& color);
 CstBlock_sptr getBlock(const JBTypes::vec3ui& pos) const;
 
 static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int depth);
@@ -77,7 +75,6 @@ const unsigned int _depth;
 
 const JBTypes::timePointMs _creationTime;
 
-ParallelTask <void> _blocksUpdating;
 JBTypes::timePointMs _updatingTime;
 
 
