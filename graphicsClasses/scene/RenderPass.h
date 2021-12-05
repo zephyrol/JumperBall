@@ -10,6 +10,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <functional>
 #include "FrameBuffer.h"
 #include "RenderGroup.h"
 #include "uniformBlocks/UniformBlock.h"

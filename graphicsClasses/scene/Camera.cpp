@@ -19,7 +19,9 @@ Camera::Camera(const Map& map, float ratio):
     _isComingBack(false),
     _cameraAboveWay(0.f),
     _timeSinceCreation(map.getTimeSinceCreation()),
-    _timePointComeBack() {
+    _timePointComeBack(),
+    _perspectiveMatrix(computePerspectiveMatrix())
+{
 }
 
 void Camera::update() noexcept{
@@ -74,12 +76,8 @@ void Camera::followingBallUpdate() noexcept{
     const glm::vec3 toSkyVec3 = Utility::convertToOpenGLFormat(sideBall);
     const glm::vec4 toSky(toSkyVec3, 1.f);
 
-
     const glm::vec4 initPosCam(distAboveBall * toSkyVec3 - distBehindBall * vecLookingDirection, 1.f);
-    const glm::vec4 initCenterCam
-        (-glm::vec3(vecLookingDirection.x * -distDirPoint,
-                    vecLookingDirection.y * -distDirPoint,
-                    vecLookingDirection.z * -distDirPoint), 1.f);
+    const glm::vec4 initCenterCam ( distDirPoint * vecLookingDirection , 1.f );
 
     constexpr float durationMoveAbove = 0.2f;
     constexpr float durationMoveComingBack = 0.2f;
@@ -99,27 +97,24 @@ void Camera::followingBallUpdate() noexcept{
 
         const glm::vec3 axisRotation = glm::cross(vecLookingDirection, axisNewLook);
         const glm::vec3 eulerAngles = (timeSinceAction *
-                                       (static_cast <float>(M_PI) / 2) / Ball::timeToGetNextBlock) *
+                                       (static_cast <float>(M_PI_2)) / Ball::timeToGetNextBlock) *
                                       axisRotation;
 
         const glm::quat quaternion(eulerAngles);
         matRotationCam = glm::toMat4(quaternion);
-    } else if (
-        stateBall == Ball::State::TurningLeft ||
-        stateBall == Ball::State::TurningRight
-        ) {
+    } else if ( stateBall == Ball::State::TurningLeft || stateBall == Ball::State::TurningRight ) {
         const glm::vec3& axisRotation = toSkyVec3;
 
-        glm::vec3 eulerAngles =
-            (static_cast <float>(M_PI) / 2) * axisRotation -
-            (timeSinceAction * (static_cast <float>(M_PI) / 2) / (Ball::timeToTurn))
-            * axisRotation;
+        glm::vec3 eulerAngles = static_cast <float>(M_PI_2) * axisRotation -
+            (timeSinceAction * static_cast <float>(M_PI_2) / (Ball::timeToTurn)) * axisRotation;
 
-        if (stateBall == Ball::State::TurningLeft)
+        if (stateBall == Ball::State::TurningLeft) {
             eulerAngles = -eulerAngles;
+        }
 
         const glm::quat quaternion(eulerAngles);
         matRotationCam = glm::toMat4(quaternion);
+
     } else if (stateBall == Ball::State::Jumping) {
         constexpr float offsetTimeToBeginCamMoving = 0.4f;
         const float timeSinceBeginningMoving = ball.getTimeSecondsSinceAction();
@@ -213,7 +208,7 @@ void Camera::turningAroundMapUpdate() noexcept{
 bool Camera::approachingBallUpdate() noexcept{
     bool animationIsFinished;
 
-    const JBTypes::vec3f position = _map.getBall()->get3DPosition();
+    const JBTypes::vec3f& position = _map.getBall()->get3DPosition();
 
     constexpr float distDirPoint = 2.f;
     constexpr float distBehindBall = 1.3f;
@@ -285,15 +280,7 @@ const glm::vec3& Camera::pos() const noexcept{
 
 glm::mat4 Camera::viewProjection() const noexcept{
     const glm::mat4 viewMatrix = glm::lookAt(_pos, _center, _up);
-    const glm::mat4 perspectiveMatrix = _ratio > 1.f
-        ? glm::perspective(_fovy, _ratio, zNear, zFar)
-        : glm::perspective(
-            2.f * atanf((1.f / _ratio) * tanf(_fovy / 2.f)),
-            _ratio,
-            zNear,
-            zFar
-            );
-    return perspectiveMatrix * viewMatrix;
+    return _perspectiveMatrix * viewMatrix;
 }
 
 SceneElement::GlobalState Camera::getGlobalState() const {
@@ -302,4 +289,17 @@ SceneElement::GlobalState Camera::getGlobalState() const {
 
 void Camera::setRatio(float ratio) {
     _ratio = ratio;
+    _perspectiveMatrix = computePerspectiveMatrix();
+}
+
+glm::mat4 Camera::computePerspectiveMatrix() const noexcept {
+    const glm::mat4 perspectiveMatrix = _ratio > 1.f
+        ? glm::perspective(_fovy, _ratio, zNear, zFar)
+        : glm::perspective(
+            2.f * atanf((1.f / _ratio) * tanf(_fovy / 2.f)),
+            _ratio,
+            zNear,
+            zFar
+    );
+    return perspectiveMatrix;
 }

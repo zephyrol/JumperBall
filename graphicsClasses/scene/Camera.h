@@ -46,6 +46,7 @@ private:
 void turningAroundMapUpdate() noexcept;
 void followingBallUpdate() noexcept;
 bool approachingBallUpdate() noexcept;
+glm::mat4 computePerspectiveMatrix() const noexcept;
 
 const Map& _map;
 const float _fovy;
@@ -59,6 +60,7 @@ bool _isComingBack;
 float _cameraAboveWay;
 float _timeSinceCreation;
 JBTypes::timePointMs _timePointComeBack;
+glm::mat4 _perspectiveMatrix;
 
 };
 #endif /* CAMERA_H */

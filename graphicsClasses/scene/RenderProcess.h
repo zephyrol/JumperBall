@@ -7,6 +7,7 @@
 
 #include "RenderPass.h"
 #include "FrameBuffer.h"
+#include <functional>
 
 class RenderProcess;
 using RenderProcess_sptr = std::shared_ptr <RenderProcess>;
