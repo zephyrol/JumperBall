@@ -168,8 +168,7 @@ RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
         [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
             const auto& camera = _scene.getCamera();
             renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, camera->viewProjection());
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName,
-                                      camera->pos());
+            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName, camera->pos());
         };
 
 

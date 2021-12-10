@@ -9,8 +9,8 @@
 
 Camera::Camera(const Map& map, float ratio):
     _map(map),
-    _fovy(glm::radians(70.f)),
-    _ratio(ratio),
+    _fovy(computeFovy(ratio)),
+    _rotationAngle(computeRotationAngle(_fovy)),
     _movement(Camera::Movement::TurningAroundMap),
     _pos(1.f, 0.f, 0.f),
     _center(0.f, 0.f, 0.f),
@@ -20,7 +20,7 @@ Camera::Camera(const Map& map, float ratio):
     _cameraAboveWay(0.f),
     _timeSinceCreation(map.getTimeSinceCreation()),
     _timePointComeBack(),
-    _perspectiveMatrix(computePerspectiveMatrix())
+    _perspectiveMatrix(glm::perspective(_fovy, ratio, zNear, zFar))
 {
 }
 
@@ -58,29 +58,16 @@ void Camera::approachBall() noexcept{
 void Camera::followingBallUpdate() noexcept{
 
     const auto& ball = *_map.getBall();
-    const JBTypes::vec3f& position = ball.get3DPosition();
-    const auto sideBall = ball.currentSideAsVector();
     const auto lookingDirection = ball.lookTowardsAsVector();
-    const glm::vec3 vecLookingDirection = Utility::convertToOpenGLFormat(lookingDirection);
 
     const auto stateBall = ball.state();
 
-    constexpr float distDirPoint = 2.f;
-    constexpr float distBehindBall = 1.3f;
-    constexpr float distAboveBall = 1.2f;
-
-    glm::mat4 matRotationCam(1.f);
-
-    const glm::mat4 matPosBall = glm::translate(Utility::convertToOpenGLFormat(position));
-
-    const glm::vec3 toSkyVec3 = Utility::convertToOpenGLFormat(sideBall);
-    const glm::vec4 toSky(toSkyVec3, 1.f);
-
-    const glm::vec4 initPosCam(distAboveBall * toSkyVec3 - distBehindBall * vecLookingDirection, 1.f);
-    const glm::vec4 initCenterCam ( distDirPoint * vecLookingDirection , 1.f );
-
     constexpr float durationMoveAbove = 0.2f;
     constexpr float durationMoveComingBack = 0.2f;
+
+    const auto sideBall = ball.currentSideAsVector();
+    const glm::vec3 toSkyVec3 = Utility::convertToOpenGLFormat(sideBall);
+    const glm::vec4 toSky(toSkyVec3, 1.f);
 
     const float timeSinceAction = ball.getTimeSecondsSinceAction();
     const JBTypes::timePointMs now = JBTypesMethods::getTimePointMSNow();
@@ -90,6 +77,10 @@ void Camera::followingBallUpdate() noexcept{
         _isComingBack = true;
         _willComeBack = false;
     }
+
+    glm::mat4 matRotationCam(1.f);
+    const glm::vec3 vecLookingDirection = Utility::convertToOpenGLFormat(lookingDirection);
+
     if (stateBall == Ball::State::Moving) {
         const JBTypes::vec3f vecNextLook = _map.getNextLook();
 
@@ -121,8 +112,8 @@ void Camera::followingBallUpdate() noexcept{
         const float timeToGetDestination = ball.getTimeToGetDestination();
         if (timeSinceBeginningMoving > (timeToGetDestination + offsetTimeToBeginCamMoving)) {
 
-            float timeSinceBeginningCameraMoving = timeSinceBeginningMoving - (timeToGetDestination
-                                                                               + offsetTimeToBeginCamMoving);
+            float timeSinceBeginningCameraMoving = timeSinceBeginningMoving -
+                (timeToGetDestination + offsetTimeToBeginCamMoving);
 
             if (timeSinceBeginningCameraMoving > durationMoveAbove) {
                 timeSinceBeginningCameraMoving = durationMoveAbove;
@@ -144,23 +135,37 @@ void Camera::followingBallUpdate() noexcept{
         }
     }
 
-    const glm::vec3 axisRotation = glm::cross(toSkyVec3, vecLookingDirection);
+    const glm::vec3 axisRotation = glm::cross(vecLookingDirection, toSkyVec3);
+
     const glm::vec3 eulerAngles = _cameraAboveWay * static_cast <float>(M_PI / 3) * axisRotation;
 
     const glm::quat quaternion(eulerAngles);
 
+    const glm::vec3 offset (0.3f * vecLookingDirection + ball.getRadius() * toSkyVec3);
+    constexpr float distAboveBall = 1.2f;
+
+    const glm::vec3 toBall(distBehindBall * vecLookingDirection - distAboveBall * toSkyVec3);
+    const glm::vec3 toGround = toBall - offset;
+    const glm::vec3 initPosCam = -toBall;
+
+    const glm::mat4 rotationToRespectFov = glm::rotate(_fovy / 2.f, axisRotation);
+    const glm::vec4 lookAtDirection = rotationToRespectFov * glm::vec4(toGround, 1.f);
+    //const glm::vec3 initCenterCam = initPosCam + glm::vec3(lookAtDirection);
+    const glm::vec3 initCenterCam = 2.f * vecLookingDirection;
+
+    const JBTypes::vec3f& position = ball.get3DPosition();
+    const glm::mat4 matPosBall = glm::translate(Utility::convertToOpenGLFormat(position));
     matRotationCam = glm::toMat4(quaternion) * matRotationCam;
+    const glm::mat4 matPosBallRotationCam = matPosBall * matRotationCam;
 
-    const glm::vec3 direction = glm::normalize(initCenterCam - initPosCam);
-    const glm::vec3 right = glm::cross(direction, toSkyVec3);
-    const glm::vec3 upVector = matRotationCam * glm::vec4(glm::cross(right, direction), 1.f);
-
-    const glm::vec4 posVec = matPosBall * matRotationCam * initPosCam;
-    const glm::vec4 centerVec = matPosBall * matRotationCam * initCenterCam;
-
-    _up = upVector;
+    const glm::vec4 posVec =  matPosBallRotationCam * glm::vec4(initPosCam, 1.f);
     _pos = posVec;
+
+    const glm::vec4 centerVec = matPosBallRotationCam * glm::vec4(initCenterCam, 1.f);
     _center = centerVec;
+
+    const glm::vec3 upVector = matRotationCam * glm::vec4(glm::cross(axisRotation, glm::vec3(lookAtDirection)), 1.f);
+    _up = upVector;
 
 }
 
@@ -210,10 +215,7 @@ bool Camera::approachingBallUpdate() noexcept{
 
     const JBTypes::vec3f& position = _map.getBall()->get3DPosition();
 
-    constexpr float distDirPoint = 2.f;
-    constexpr float distBehindBall = 1.3f;
     constexpr float distAboveBall = 1.2f;
-
     const float diffF = _timeSinceCreation;
     constexpr float transitionDuration = 2.f;
     float t = diffF / transitionDuration;
@@ -235,13 +237,12 @@ bool Camera::approachingBallUpdate() noexcept{
     const glm::mat4 upRotation = glm::rotate(tCos * 2.f * static_cast <float>(M_PI), directionVector);
     const glm::vec4 upVector = upRotation * glm::vec4(0.f, 1.f, 0.f, 1.f);
 
-    _pos =
-    {
-        tCos*position.x + (1.f - tCos) * (position.x + distanceXStarting),
-        t*(position.y + distAboveBall) +
-        (1.f - tCos) * (position.y + distAboveBall + distanceYStarting),
-        t*(position.z + distBehindBall) +
-        (1.f - tCos) * (position.z + distBehindBall + distanceZStarting)
+    const auto oneMinusTCos = 1.f - tCos;
+
+    _pos = {
+        tCos * position.x + oneMinusTCos * (position.x + distanceXStarting),
+        t * (position.y + distAboveBall) + oneMinusTCos * (position.y + distAboveBall + distanceYStarting),
+        t * (position.z + distBehindBall) + oneMinusTCos * (position.z + distBehindBall + distanceZStarting)
     };
     _center = { position.x, position.y, position.z - distDirPoint };
     _up = upVector;
@@ -288,18 +289,36 @@ SceneElement::GlobalState Camera::getGlobalState() const {
 }
 
 void Camera::setRatio(float ratio) {
-    _ratio = ratio;
-    _perspectiveMatrix = computePerspectiveMatrix();
+    _fovy = computeFovy(ratio);
+    _rotationAngle = computeRotationAngle(_fovy);
+    std::cout << "angle" << _rotationAngle << std::endl;
+    _perspectiveMatrix = glm::perspective(_fovy, ratio, zNear, zFar);
 }
 
-glm::mat4 Camera::computePerspectiveMatrix() const noexcept {
-    const glm::mat4 perspectiveMatrix = _ratio > 1.f
-        ? glm::perspective(_fovy, _ratio, zNear, zFar)
-        : glm::perspective(
-            2.f * atanf((1.f / _ratio) * tanf(_fovy / 2.f)),
-            _ratio,
-            zNear,
-            zFar
+float Camera::computeRotationAngle(float fovy) noexcept {
+
+    // Using law of cosines
+    constexpr float squaredDistBehindBall = distBehindBall * distBehindBall;
+    constexpr float squaredDistDirPoint = distDirPoint * distDirPoint;
+    constexpr float twoDistDirPointDistBehindBall = 2.f * distBehindBall * distDirPoint;
+    const float squaredEyeTargetLength = squaredDistDirPoint - squaredDistBehindBall +
+                                         twoDistDirPointDistBehindBall * cosf(fovy / 2.f);
+    std::cout << "C" << sqrtf(squaredEyeTargetLength) << std::endl;
+
+    return static_cast<float>(M_PI) - acosf(
+        (squaredDistBehindBall + squaredDistDirPoint - squaredEyeTargetLength) / twoDistDirPointDistBehindBall
     );
-    return perspectiveMatrix;
 }
+
+float Camera::computeFovy(float ratio) noexcept {
+    constexpr float defaultFovy = 1.22173f;// 70 degrees;
+    if (ratio > 1.f)  {
+        return defaultFovy;
+    }
+    constexpr float maxFov = 1.74;
+    const float theoricalFovVerticalMod = 2.f * atanf((1.f / ratio) * tanf(defaultFovy/ 2.f));
+    return theoricalFovVerticalMod > maxFov
+        ? maxFov
+        : theoricalFovVerticalMod;
+}
+
