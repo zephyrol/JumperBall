@@ -46,12 +46,14 @@ private:
 void turningAroundMapUpdate() noexcept;
 void followingBallUpdate() noexcept;
 bool approachingBallUpdate() noexcept;
+
 static float computeRotationAngle(float fovy) noexcept;
 static float computeFovy(float ratio) noexcept;
+static float computeLocalOffset(float fovy) noexcept;
 
 const Map& _map;
 float _fovy;
-float _rotationAngle;
+float _localOffset;
 Movement _movement;
 glm::vec3 _pos;
 glm::vec3 _center;
@@ -63,7 +65,8 @@ float _timeSinceCreation;
 JBTypes::timePointMs _timePointComeBack;
 glm::mat4 _perspectiveMatrix;
 
-static constexpr float distBehindBall = 1.1f;
+static constexpr float distBehindBall = 0.5f;
+static constexpr float distAbove = 1.1f;
 static constexpr float distDirPoint = 2.f;
 };
 #endif /* CAMERA_H */
