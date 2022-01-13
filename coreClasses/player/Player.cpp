@@ -7,7 +7,7 @@
 #include "Player.h"
 
 Player::Player():
-    _status(Player::Status::INGAME),
+    _status(Player::Status::INMENU),
     _levelProgression(1),
     _money(0),
     _diamonds(false),

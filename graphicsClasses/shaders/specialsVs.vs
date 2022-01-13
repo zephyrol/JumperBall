@@ -92,36 +92,39 @@ mat4 getUpToDown() {
 }
 
 mat4 rotationUpToDir (float direction) {
-    int intDir = int(direction);
-    switch (intDir) {
-    case 0:
+    // Cast to int does not work on Apple M1...
+    if (direction == 0.0) {
         return getUpToNorth();
-    case 1:
+    }
+    if (direction == 1.0) {
         return getUpToSouth();
-    case 2:
+    }
+    if (direction == 2.0) {
         return getUpToEast();
-    case 3:
+    }
+    if (direction == 3.0) {
         return getUpToWest();
-    case 4:
+    }
+    if (direction == 4.0) {
         return getUpToUp();
-    case 5:
+    }
+    if (direction == 5.0) {
         return getUpToDown();
-    default:
-        return getUpToUp();
     }
     return getUpToUp();
 }
 
 bool isColorActivated() {
-    int intColor = int(vs_specialColor);
-    switch (intColor) {
-    case 1:
+    if (vs_specialColor == 1) {
         return isRedActivated == 1.0;
-    case 2:
+    }
+    if (vs_specialColor == 2) {
         return isGreenActivated == 1.0;
-    case 3:
+    }
+    if (vs_specialColor == 3) {
         return isBlueActivated == 1.0;
-    case 4:
+    }
+    if (vs_specialColor == 4) {
         return isYellowActivated == 1.0;
     }
     return false;
@@ -149,7 +152,10 @@ mat4 specialRotation (bool isActivated) {
 
 void main() {
 
-    mat4 translationOnBlock = translate(vec3(0.0, 0.5, 0.0));
+    const mat4 translationOnBlock = mat4(1.0, 0.0, 0.0, 0.0,
+                                         0.0, 1.0, 0.0, 0.0,
+                                         0.0, 0.0, 1.0, 0.0,
+                                         0.0, 0.5, 0.0, 1.0);
 
     mat4 translationToBlock = translate(vs_specialPosition);
     mat4 initialRotation = rotationUpToDir(vs_specialDirection);
@@ -161,11 +167,10 @@ void main() {
     mat4 modelTransform = translationToBlock * initialRotation * translationOnBlock * rotation * scale;
     mat4 normalTransform = initialRotation * rotation; // TODO: apply scale on normal
 
-    const float w = 1.0;
-    vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, w);
+    vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, 1.0);
 
     fs_vertexColor = vs_vertexColor;
-    fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, w)).xyz);
+    fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, 1.0)).xyz);
     fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
     fs_vertexDepthMapSpace = VPStar * vertexPositionWorldSpace;
 

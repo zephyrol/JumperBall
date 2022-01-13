@@ -33,7 +33,6 @@ ShaderProgram::ShaderProgram(CstShader_uptr&& vertexShader,
     glDeleteShader(_vertexShader->getHandle());
     glDeleteShader(_fragmentShader->getHandle());
 
-
 }
 
 GLuint ShaderProgram::getHandle() const {

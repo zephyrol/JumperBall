@@ -66,8 +66,6 @@ const float thresholdThirdStep = 1.5;
 const float durationSecondStep = thresholdThirdStep - thresholdSecondStep;
 const float durationThirdStep = 0.2;
 
-int intDir = int(vs_itemDirection);
-
 bool itemIsGotten() {
     return (obtainingTime > 0);
 }
@@ -89,22 +87,26 @@ mat4 itemScale() {
 }
 
 mat4 computeRotationMatrix(float angle) {
-    switch (intDir) {
-        case 0:
+    // Cast to int does not work on Apple M1...
+    if (vs_itemDirection == 0.0) {
         return rotationZ(-angle);
-        case 1:
+    }
+    if (vs_itemDirection == 1.0) {
         return rotationZ(angle);
-        case 2:
+    }
+    if (vs_itemDirection == 2.0) {
         return rotationX(angle);
-        case 3:
+    }
+    if (vs_itemDirection == 3.0) {
         return rotationX(-angle);
-        case 4:
-        return rotationY(angle);
-        case 5:
-        return rotationY(-angle);
-        default:
+    }
+    if (vs_itemDirection == 4.0) {
         return rotationY(angle);
     }
+    if (vs_itemDirection == 5.0) {
+        return rotationY(-angle);
+    }
+    return rotationY(angle);
 }
 
 mat4 itemRotation() {
@@ -117,22 +119,25 @@ mat4 itemRotation() {
 }
 
 vec3 dirToVec() {
-    switch (intDir) {
-        case 0:
+    if (vs_itemDirection == 0.0) {
         return vec3(0.0, 0.0, -1.0);
-        case 1:
+    }
+    if (vs_itemDirection == 1.0) {
         return vec3(0.0, 0.0, 1.0);
-        case 2:
+    }
+    if (vs_itemDirection == 2.0) {
         return vec3(1.0, 0.0, 0.0);
-        case 3:
+    }
+    if (vs_itemDirection == 3.0) {
         return vec3(-1.0, 0.0, 0.0);
-        case 4:
-        return vec3(0.0, 1.0, 0.0);
-        case 5:
-        return vec3(0.0, -1.0, 0.0);
-        default:
+    }
+    if (vs_itemDirection == 4.0) {
         return vec3(0.0, 1.0, 0.0);
     }
+    if (vs_itemDirection == 5.0) {
+        return vec3(0.0, -1.0, 0.0);
+    }
+    return vec3(0.0, 1.0, 0.0);
 }
 
 mat4 itemTranslation() {
@@ -161,11 +166,10 @@ void main() {
 
     mat4 normalTransform = rotation; // TODO: apply scale on normal
 
-    const float w = 1.0;
-    vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, w);
+    vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, 1.0);
 
     fs_vertexColor = vs_vertexColor;
-    fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, w)).xyz);
+    fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, 1.0)).xyz);
     fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
     fs_vertexDepthMapSpace = VPStar * vertexPositionWorldSpace;
 

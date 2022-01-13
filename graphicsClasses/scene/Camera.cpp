@@ -136,23 +136,8 @@ void Camera::followingBallUpdate() noexcept{
     }
 
     const glm::vec3 axisRotation = glm::cross(vecLookingDirection, toSkyVec3);
-
     const glm::vec3 eulerAngles = _cameraAboveWay * static_cast <float>(M_PI / 3) * axisRotation;
-
     const glm::quat quaternion(eulerAngles);
-
-    /*const glm::vec3 offset (0.3f * vecLookingDirection + Ball::getRadius() * toSkyVec3);
-
-    const glm::vec3 toBall(distBehindBall * vecLookingDirection - distAbove * toSkyVec3);
-    const glm::vec3 toGround = toBall - offset;
-    const glm::vec3 initPosCam = -toBall;*/
-
-    /*const glm::mat4 rotationToRespectFov = glm::rotate(_fovy / 2.f, axisRotation);
-    const glm::vec4 lookAtDirection = rotationToRespectFov * glm::vec4(toGround, 1.f);
-    //const glm::vec3 initCenterCam = initPosCam + glm::vec3(lookAtDirection);
-    const glm::vec3 initCenterCam = 2.f * vecLookingDirection;*/
-
-
 
     const glm::vec3 toInitialCameraPosition = distAbove * toSkyVec3 - distBehindBall * vecLookingDirection;
     const glm::vec3 initCenterCam = distDirPoint * vecLookingDirection;
@@ -222,7 +207,6 @@ bool Camera::approachingBallUpdate() noexcept{
 
     const JBTypes::vec3f& position = _map.getBall()->get3DPosition();
 
-    constexpr float distAboveBall = 1.2f;
     const float diffF = _timeSinceCreation;
     constexpr float transitionDuration = 2.f;
     float t = diffF / transitionDuration;
@@ -238,6 +222,14 @@ bool Camera::approachingBallUpdate() noexcept{
         animationIsFinished = false;
     }
 
+    const auto& ball = *_map.getBall();
+    const auto lookingDirection = ball.lookTowardsAsVector();
+    const glm::vec3 vecLookingDirection = Utility::convertToOpenGLFormat(lookingDirection);
+
+    const auto sideBall = ball.currentSideAsVector();
+    const glm::vec3 toSkyVec3 = Utility::convertToOpenGLFormat(sideBall);
+    const glm::vec4 toSky(toSkyVec3, 1.f);
+
     const float tCos = cosf(t * static_cast <float>(M_PI_2) + static_cast <float>(M_PI)) + 1.f;
 
     const glm::vec3 directionVector = glm::normalize(_center - _pos);
@@ -245,13 +237,25 @@ bool Camera::approachingBallUpdate() noexcept{
     const glm::vec4 upVector = upRotation * glm::vec4(0.f, 1.f, 0.f, 1.f);
 
     const auto oneMinusTCos = 1.f - tCos;
+    const glm::vec3 axisRotation = glm::cross(vecLookingDirection, toSkyVec3);
+    const glm::vec3 eulerAngles = _cameraAboveWay * static_cast <float>(M_PI / 3) * axisRotation;
+    const glm::quat quaternion(eulerAngles);
+
+    const glm::vec3 toInitialCameraPosition = distAbove * toSkyVec3 - distBehindBall * vecLookingDirection;
+    const glm::vec3 initCenterCam = distDirPoint * vecLookingDirection;
+    const glm::vec3 offsetDirection = glm::normalize(initCenterCam - toInitialCameraPosition);
+    const glm::vec3 initPosCam = toInitialCameraPosition + _localOffset * offsetDirection;
+
+    const glm::mat4 matPosBall = glm::translate(Utility::convertToOpenGLFormat(position));
+    const glm::vec4 posVec =  matPosBall * glm::vec4(initPosCam, 1.f);
+    const glm::vec4 centerVec = matPosBall * glm::vec4(initCenterCam, 1.f);
 
     _pos = {
-        tCos * position.x + oneMinusTCos * (position.x + distanceXStarting),
-        t * (position.y + distAboveBall) + oneMinusTCos * (position.y + distAboveBall + distanceYStarting),
-        t * (position.z + distBehindBall) + oneMinusTCos * (position.z + distBehindBall + distanceZStarting)
+        tCos * posVec.x + oneMinusTCos * (posVec.x + distanceXStarting),
+        t * posVec.y + oneMinusTCos * (posVec.y + distanceYStarting),
+        t * posVec.z + oneMinusTCos * (posVec.z + distanceZStarting)
     };
-    _center = { position.x, position.y, position.z - distDirPoint };
+    _center = centerVec;
     _up = upVector;
 
     return animationIsFinished;
