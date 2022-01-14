@@ -115,22 +115,14 @@ JBTypes::timePointMs JBTypesMethods::getTimePointMSNow() noexcept{
 float JBTypesMethods::getTimeSecondsSinceTimePoint (
     const JBTypes::timePointMs& timePoint) noexcept{
 
-    const JBTypes::timePointMs timeNowMs
-        = JBTypesMethods::
-          getTimePointMSNow();
-    const JBTypes::durationMs timeNowSinceEpoch
-        = timeNowMs.time_since_epoch();
+    const JBTypes::timePointMs timeNowMs = JBTypesMethods:: getTimePointMSNow();
+    const JBTypes::durationMs timeNowSinceEpoch = timeNowMs.time_since_epoch();
 
-    const JBTypes::timePointMs timeActionMs
-        = timePoint;
-    const JBTypes::durationMs timeActionSinceEpoch
-        = timeActionMs.time_since_epoch();
+    const JBTypes::timePointMs timeActionMs = timePoint;
+    const JBTypes::durationMs timeActionSinceEpoch = timeActionMs.time_since_epoch();
 
-    const JBTypes::durationMs difference
-        = timeNowSinceEpoch -
-          timeActionSinceEpoch;
-    const std::chrono::duration <float> durationFloatDifference
-        = difference;
+    const JBTypes::durationMs difference = timeNowSinceEpoch - timeActionSinceEpoch;
+    const std::chrono::duration <float> durationFloatDifference = difference;
     const float fDifference = durationFloatDifference.count();
 
     return fDifference;

@@ -38,25 +38,25 @@ Controller::Controller(const size_t& screenWidth, const size_t& screenHeight) :
 void Controller::interactionButtons (const Controller::Button& button, const Controller::Status& status) {
 
     switch (button) {
-    case Controller::Button::Up:
-        manageUp(status);
-        break;
-    case Controller::Button::Down:
-        manageDown(status);
-        break;
-    case Controller::Button::Left:
-        manageLeft(status);
-        break;
-    case Controller::Button::Right:
-        manageRight(status);
-        break;
-    case Controller::Button::Validate:
-        manageValidateButton(status);
-        break;
-    case Controller::Button::Escape:
-        manageEscape(status);
-        break;
-    default: break;
+        case Controller::Button::Up:
+            manageUp(status);
+            break;
+        case Controller::Button::Down:
+            manageDown(status);
+            break;
+        case Controller::Button::Left:
+            manageLeft(status);
+            break;
+        case Controller::Button::Right:
+            manageRight(status);
+            break;
+        case Controller::Button::Validate:
+            manageValidateButton(status);
+            break;
+        case Controller::Button::Escape:
+            manageEscape(status);
+            break;
+        default: break;
     }
     _buttonsStatus[button] = status;
 }
@@ -152,7 +152,12 @@ void Controller::manageLeft (const Status& status) {
     }
 }
 
-void Controller::manageDown (const Controller::Status&) {
+void Controller::manageDown (const Controller::Status& status) {
+    if (_player.status() == Player::Status::INGAME) {
+        if (status == Controller::Status::Pressed) {
+            _currentKey = Scene::ActionKey::Down;
+        }
+    }
 }
 
 void Controller::manageUp (const Controller::Status& status) {

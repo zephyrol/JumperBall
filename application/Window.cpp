@@ -74,6 +74,10 @@ bool Window::inputManagement() {
     const Controller::Status upStatus = getButtonStatus({ GLFW_KEY_UP, GLFW_KEY_K });
     _controller.interactionButtons(Controller::Button::Up, upStatus);
 
+    // Down
+    const Controller::Status downStatus = getButtonStatus({ GLFW_KEY_DOWN, GLFW_KEY_J });
+    _controller.interactionButtons(Controller::Button::Down, downStatus);
+
     // MOUSE BUTTON 1;
     const Controller::Status mouseButton1Status =
         glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS

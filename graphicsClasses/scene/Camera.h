@@ -11,6 +11,7 @@
 #include <scene/Ball.h>
 #include <scene/Map.h>
 #include <scene/SceneElement.h>
+#include "player/Player.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -32,10 +33,11 @@ glm::mat4 viewProjection() const noexcept;
 
 SceneElement::GlobalState getGlobalState() const override;
 
-void update() noexcept;
-void turnAroundMap() noexcept;
-void followBall() noexcept;
-void approachBall() noexcept;
+void update(
+    const JBTypes::timePointMs& updatingTime,
+    const Player::Status& status,
+    bool goAbove
+) noexcept;
 const Movement& getMovement() noexcept;
 void setRatio(float ratio);
 
@@ -47,26 +49,26 @@ void turningAroundMapUpdate() noexcept;
 void followingBallUpdate() noexcept;
 bool approachingBallUpdate() noexcept;
 
-static float computeRotationAngle(float fovy) noexcept;
 static float computeFovy(float ratio) noexcept;
 static float computeLocalOffset(float fovy) noexcept;
 
 const Map& _map;
+const JBTypes::timePointMs _creationTime;
+JBTypes::timePointMs _updatingTime;
 float _fovy;
 float _localOffset;
 Movement _movement;
 glm::vec3 _pos;
 glm::vec3 _center;
 glm::vec3 _up;
-bool _willComeBack;
-bool _isComingBack;
-float _cameraAboveWay;
 float _timeSinceCreation;
 JBTypes::timePointMs _timePointComeBack;
+JBTypes::timePointMs _timePointGoAbove;
 glm::mat4 _perspectiveMatrix;
 
 static constexpr float distBehindBall = 0.5f;
 static constexpr float distAbove = 1.1f;
 static constexpr float distDirPoint = 2.f;
+
 };
 #endif /* CAMERA_H */

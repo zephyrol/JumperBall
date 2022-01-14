@@ -26,7 +26,7 @@ Scene::Scene(size_t mapNumber, float screenRatio):
              break;
          }
          case Scene::ActionKey::Down: {
-             actionRequest = Ball::ActionRequest::Nothing;
+             actionRequest = Ball::ActionRequest::MoveCamera;
              break;
          }
          case Scene::ActionKey::Right: {
@@ -47,18 +47,10 @@ Scene::Scene(size_t mapNumber, float screenRatio):
          }
      }
 
-     _map->update(JBTypesMethods::getTimePointMSNow(), actionRequest);
+     const auto updatingTime = JBTypesMethods::getTimePointMSNow();
 
-     if (status == Player::Status::INMENU) {
-         _camera->turnAroundMap();
-     }
-     else if (status == Player::Status::INGAME) {
-         _camera->followBall();
-     }
-     else if (status == Player::Status::INTRANSITION) {
-         _camera->approachBall();
-     }
-     _camera->update();
+     _map->update(updatingTime, actionRequest);
+     _camera->update(updatingTime, status, actionRequest == Ball::ActionRequest::MoveCamera);
 
      if (_camera->getMovement() == Camera::Movement::FollowingBall) {
          return Player::Status::INGAME;

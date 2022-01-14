@@ -48,7 +48,7 @@ enum class StateOfLife { Normal, Bursting, Burning, Sliding, Dead };
 
 enum class JumpingType { Short, Long };
 
-enum class ActionRequest { GoStraightAhead, TurnLeft, TurnRight, Jump, Nothing};
+enum class ActionRequest { GoStraightAhead, TurnLeft, TurnRight, Jump, MoveCamera, Nothing};
 
 
 enum class NextDestination { Above, InFrontOf, Same, None };
