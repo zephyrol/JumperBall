@@ -119,33 +119,34 @@ void Ball::doAction (Ball::ActionRequest action) {
         return;
     }
     switch (action) {
-    case Ball::ActionRequest::Nothing: break;
-    case Ball::ActionRequest::GoStraightAhead:
-        if (_state == Ball::State::Staying) {
-            move();
-        }
-        break;
-    case Ball::ActionRequest::TurnLeft:
-        if (_state == Ball::State::Staying) {
-            turnLeft();
-        }
-        break;
-    case Ball::ActionRequest::TurnRight:
-        if (_state == Ball::State::Staying) {
-            turnRight();
-        }
-        break;
-    case Ball::ActionRequest::Jump:
-        if (_state == Ball::State::Staying) {
-            _state = Ball::State::Jumping;
-            jump();
-        } else {
-            _jumpRequest = true;
-            _timeJumpRequest = JBTypesMethods::getTimePointMSNow();
-        }
-        break;
-    default:
-        break;
+        case Ball::ActionRequest::Nothing: break;
+        case Ball::ActionRequest::GoStraightAhead:
+            if (_state == Ball::State::Staying) {
+                move();
+            }
+            break;
+        case Ball::ActionRequest::TurnLeft:
+            if (_state == Ball::State::Staying) {
+                turnLeft();
+            }
+            break;
+        case Ball::ActionRequest::TurnRight:
+            if (_state == Ball::State::Staying) {
+                turnRight();
+            }
+            break;
+        case Ball::ActionRequest::MoveCamera: break;
+        case Ball::ActionRequest::Jump:
+            if (_state == Ball::State::Staying) {
+                _state = Ball::State::Jumping;
+                jump();
+            } else {
+                _jumpRequest = true;
+                _timeJumpRequest = JBTypesMethods::getTimePointMSNow();
+            }
+            break;
+        default:
+            break;
     }
 }
 

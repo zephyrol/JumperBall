@@ -140,7 +140,7 @@ RenderProcess_sptr MenuRendering::createRenderProcess (const CstPage_sptr& page)
     const vecRenderPass_sptr renderPassesOthers = getRenderPassesOthers();
 
     const auto createShaders =
-        [this, &page, &renderPassesUsingLetters, &renderPassesOthers] ()->RenderProcess::PassShaderMap {
+        [&renderPassesUsingLetters, &renderPassesOthers] ()->RenderProcess::PassShaderMap {
 
             const CstShaderProgram_sptr lettersShaderPrograms = ShaderProgram::createShaderProgram(
                 "fontVs.vs",
@@ -179,7 +179,7 @@ RenderProcess_sptr MenuRendering::createRenderProcess (const CstPage_sptr& page)
                 );
         };
     const auto renderingOthersUpdateFct =
-        [this, &page] (const RenderPass_sptr& othersRenderPass, GLuint shaderProgramID)->void {
+        [&page] (const RenderPass_sptr& othersRenderPass, GLuint shaderProgramID)->void {
 
             // TODO: use a object "page state" and access the values
             // TODO 2: Should we use an external uniform ? Yes because it's common with renderingLetUpFct

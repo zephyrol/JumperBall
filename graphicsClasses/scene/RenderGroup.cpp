@@ -73,7 +73,7 @@ GLuint RenderGroup::genBufferObject() const {
 
 Mesh::MeshVerticesInfo RenderGroup::createMeshesVerticesInfo() const {
     Mesh::MeshVerticesInfo meshesVerticesInfo;
-    for (const CstMesh_sptr& mesh : _meshes) {
+    for (const auto& mesh : _meshes) {
         Mesh::concatMeshVerticesInfo(meshesVerticesInfo, mesh->genMeshVerticesInfo());
     }
     return meshesVerticesInfo;

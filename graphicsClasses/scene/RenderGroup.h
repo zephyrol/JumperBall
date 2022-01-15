@@ -18,7 +18,6 @@ RenderGroup(const RenderGroup& renderGroup, const SceneElement::GlobalState& glo
 RenderGroup(const RenderGroup& renderGroup) = delete;
 RenderGroup& operator= (const RenderGroup& renderGroup) = delete;
 RenderGroup(RenderGroup&& renderGroup) = default;
-RenderGroup& operator= (RenderGroup&& renderGroup) = default;
 
 vecMesh_sptr update(const vecMesh_sptr& meshesToAdd = {});
 void freeGPUMemory();

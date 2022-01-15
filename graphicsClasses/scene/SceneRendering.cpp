@@ -305,9 +305,8 @@ RenderProcess::PassUniformUpdateMap SceneRendering::createBloomUniformsUpdating(
 
 Rendering::ExternalUniformBlockVariables SceneRendering::createExternalUniformBlockVariables() const {
 
-    const std::string& lightName = SceneRendering::lightName;
     const auto updateBlocksVariablesFct =
-        [this, &lightName] (const RenderPass::UniformBlockVariables_uptr& uniformBlocks)->void {
+        [this] (const RenderPass::UniformBlockVariables_uptr& uniformBlocks)->void {
             uniformBlocks->at(lightName)->update(
                 Star::lightDirectionName,
                 Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection())
@@ -315,7 +314,7 @@ Rendering::ExternalUniformBlockVariables SceneRendering::createExternalUniformBl
         };
 
     const auto createBlocksVariables =
-        [this, &lightName] ()->RenderPass::UniformBlockVariables {
+        [] ()->RenderPass::UniformBlockVariables {
             return  {{
                 lightName,
                 std::make_shared <UniformLight>(
@@ -326,7 +325,7 @@ Rendering::ExternalUniformBlockVariables SceneRendering::createExternalUniformBl
             }};
         };
     const auto createBlocksVariablesPtr =
-        [this, &createBlocksVariables] () {
+        [&createBlocksVariables] () {
             return RenderPass::UniformBlockVariables_uptr(
                 new RenderPass::UniformBlockVariables(
                     createBlocksVariables())
@@ -353,7 +352,7 @@ Rendering::ExternalUniformVariables <glm::mat4> SceneRendering::createExternalUn
         };
 
     const auto createMat4VariablesPtr =
-        [this, &createMat4Variables] () {
+        [&createMat4Variables] () {
             return Mesh::UniformVariables_uptr <glm::mat4>(
                 new Mesh::UniformVariables <glm::mat4>(createMat4Variables())
                 );

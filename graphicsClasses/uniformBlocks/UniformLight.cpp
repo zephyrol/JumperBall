@@ -14,14 +14,13 @@ UniformLight::UniformLight(const glm::vec3& directionLight,
                            const glm::vec3& ambientLightIntensity,
                            const glm::vec3& diffuseLightIntensity,
                            const glm::vec3& specularLightIntensity):
-    UniformBlock(
-        std::move(createVariablesVecThree(
-                      directionLight,
-                      ambientLightIntensity,
-                      diffuseLightIntensity,
-                      specularLightIntensity
-                      ))
-        ) {}
+    UniformBlock( createVariablesVecThree(
+                    directionLight,
+                    ambientLightIntensity,
+                    diffuseLightIntensity,
+                    specularLightIntensity
+    ))
+{}
 
 Mesh::UniformVariables <glm::vec3> UniformLight::createVariablesVecThree (
     const glm::vec3& directionLight,
