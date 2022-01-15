@@ -59,8 +59,6 @@ const JBTypes::vec3f& Ball::get3DPosition() const noexcept{
 }
 
 void Ball::goStraightAhead() noexcept{
-    // TODO : manage in class Map
-    ///const Ball::NextBlockInformation nextBlock = getNextBlockInfo();
     _pos = _movementDestination.pos;
     _currentSide = _movementDestination.nextSide;
     _lookTowards = _movementDestination.nextLook;
@@ -403,29 +401,32 @@ void Ball::blockEvent () noexcept{
         _stateOfLife = StateOfLife::Normal;
         _jumpingType = Ball::JumpingType::Long;
         jump();
-    } else if (effect == Block::Effect::Burn) {
+        return;
+    }
+    if (effect == Block::Effect::Burn) {
         _burnCoefficientCurrent += .2f;
         _burnCoefficientTrigger = _burnCoefficientCurrent;
         _stateOfLife = StateOfLife::Burning;
         setTimeLifeNow();
-    } else if (effect == Block::Effect::Slide) {
+        return;
+    }
+    const auto hasToJump =_jumpRequest && JBTypesMethods::getTimeSecondsSinceTimePoint( _timeJumpRequest)
+                                          < timeToGetNextBlock;
+    if (hasToJump) {
+        _jumpRequest = false;
+        jump();
+    }
+    if (effect == Block::Effect::Slide) {
         _burnCoefficientTrigger = 0.f;
         _stateOfLife = StateOfLife::Sliding;
         setTimeLifeNow();
-        if (
-            _jumpRequest && JBTypesMethods::getTimeSecondsSinceTimePoint(
-                _timeJumpRequest) < timeToGetNextBlock
-            ) {
-            _jumpRequest = false;
-            jump();
-        } else {
+        if (!hasToJump) {
             move();
         }
         internalUpdate();
-    } else {
-        _stateOfLife = StateOfLife::Normal;
+        return;
     }
-
+    _stateOfLife = StateOfLife::Normal;
 }
 
 void Ball::jumpingUpdate() noexcept{
