@@ -110,6 +110,8 @@ template<typename K, typename V> std::unordered_map <K, V> createMap(std::vector
 
 JBTypes::vec3i directionAsVectorInt(JBTypes::Dir dir);
 
+bool floatsEqual(float a, float b);
+
 }
 
 #endif /* TYPES_H */

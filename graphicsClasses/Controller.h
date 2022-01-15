@@ -47,19 +47,19 @@ ScreenDirection nearestDirection(float posX, float posY) const;
 
 static float computeDistance(float x0, float y0, float x1, float y1);
 
-void manageUp(const Status& status);
-void manageDown(const Status& status);
-void manageRight(const Status& status);
-void manageLeft(const Status& status);
-void manageEscape(const Status& status);
-void manageValidateButton(const Status& status);
+void setUp(const Status& status);
+void setDown(const Status& status);
+void setRight(const Status& status);
+void setLeft(const Status& status);
+void setEscape(const Status& status);
+void setValidateButton(const Status& status);
 void runGame(size_t level);
 
 // Mouse/TouchPad/TouchScreen
 void pressMouse(float posX, float posY);
 void updateMouse(float posX, float posY);
 void releaseMouse(float posX, float posY);
-void manageValidateMouse();
+void setValidateMouse();
 
 std::shared_ptr<Viewer> createViewer() const;
 void refreshViewer();
@@ -74,10 +74,14 @@ size_t _screenWidth;
 size_t _screenHeight;
 float _ratio;
 
-float _mouseCurrentXCoord;
-float _mouseCurrentYCoord;
 float _mousePressingXCoord;
 float _mousePressingYCoord;
+float _mouseCurrentXCoord;
+float _mouseCurrentYCoord;
+float _mousePreviousXCoord;
+float _mousePreviousYCoord;
+JBTypes::timePointMs _mouseUpdatingTime;
+std::shared_ptr<const Controller::ScreenDirection> _currentMovementDir;
 bool _mouseIsPressed;
 bool _requestToLeave;
 

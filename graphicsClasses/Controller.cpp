@@ -9,28 +9,32 @@
 #include "cmath"
 
 Controller::Controller(const size_t& screenWidth, const size_t& screenHeight) :
-    _ftContent(FontTexturesGenerator::initFreeTypeAndFont()),
-    _player(),
-    _menu(Menu::getJumperBallMenu(_player, 1, screenWidth, screenHeight)),
-    _buttonsStatus{
+        _ftContent(FontTexturesGenerator::initFreeTypeAndFont()),
+        _player(),
+        _menu(Menu::getJumperBallMenu(_player, 1, screenWidth, screenHeight)),
+        _buttonsStatus{
         {Controller::Button::Up, Controller::Status::Released},
         {Controller::Button::Down, Controller::Status::Released},
         {Controller::Button::Right, Controller::Status::Released},
         {Controller::Button::Left, Controller::Status::Released},
         {Controller::Button::Escape, Controller::Status::Released},
         {Controller::Button::Validate, Controller::Status::Released}},
-    _currentKey(Scene::ActionKey::Nothing),
-    _screenWidth(screenWidth),
-    _screenHeight(screenHeight),
-    _ratio(static_cast<float>(_screenWidth) / static_cast<float>(_screenHeight)),
-    _mouseCurrentXCoord(0.f),
-    _mouseCurrentYCoord(0.f),
-    _mousePressingXCoord(0.f),
-    _mousePressingYCoord(0.f),
-    _mouseIsPressed(false),
-    _requestToLeave(false),
-    _scene(std::make_shared<Scene>(_player.levelProgression(), _ratio)),
-    _viewer(createViewer())
+        _currentKey(Scene::ActionKey::Nothing),
+        _screenWidth(screenWidth),
+        _screenHeight(screenHeight),
+        _ratio(static_cast<float>(_screenWidth) / static_cast<float>(_screenHeight)),
+        _mousePressingXCoord(0.f),
+        _mousePressingYCoord(0.f),
+        _mouseCurrentXCoord(0.f),
+        _mouseCurrentYCoord(0.f),
+        _mousePreviousXCoord(0.f),
+        _mousePreviousYCoord(0.f),
+        _mouseUpdatingTime(),
+        _currentMovementDir(nullptr),
+        _mouseIsPressed(false),
+        _requestToLeave(false),
+        _scene(std::make_shared<Scene>(_player.levelProgression(), _ratio)),
+        _viewer(createViewer())
 {
     updateSceneMenu();
 }
@@ -39,22 +43,22 @@ void Controller::interactionButtons (const Controller::Button& button, const Con
 
     switch (button) {
         case Controller::Button::Up:
-            manageUp(status);
+            setUp(status);
             break;
         case Controller::Button::Down:
-            manageDown(status);
+            setDown(status);
             break;
         case Controller::Button::Left:
-            manageLeft(status);
+            setLeft(status);
             break;
         case Controller::Button::Right:
-            manageRight(status);
+            setRight(status);
             break;
         case Controller::Button::Validate:
-            manageValidateButton(status);
+            setValidateButton(status);
             break;
         case Controller::Button::Escape:
-            manageEscape(status);
+            setEscape(status);
             break;
         default: break;
     }
@@ -68,16 +72,16 @@ void Controller::interactionMouse (const Status& status, float posX, float posY)
             releaseMouse(posX, posY);
             _mouseIsPressed = false;
         }
-    } else {
-        if (!_mouseIsPressed) {
-            pressMouse(posX, posY);
-            _mouseIsPressed = true;
-        } else {
-            updateMouse(posX, posY);
-        }
+        return;
     }
+    if (!_mouseIsPressed) {
+        pressMouse(posX, posY);
+        _mouseIsPressed = true;
+        return;
+    }
+    updateMouse(posX, posY);
 }
-void Controller::manageValidateButton (const Controller::Status& status) {
+void Controller::setValidateButton (const Controller::Status& status) {
     if (_player.status() == Player::Status::INGAME) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Validate;
@@ -91,14 +95,14 @@ void Controller::runGame (size_t level) {
     updateSceneMenu();
 }
 
-void Controller::manageValidateMouse() {
+void Controller::setValidateMouse() {
     if (_player.status() == Player::Status::INGAME) {
         _currentKey = Scene::ActionKey::Validate;
         return;
     }
     if (_player.status() == Player::Status::INMENU) {
         const Menu::MenuAnswer menuAnswer =
-            _menu->mouseClick(_mousePressingXCoord, _mousePressingYCoord);
+            _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
 
         if (menuAnswer.action == Menu::Action::GoLevel) {
             runGame(menuAnswer.newLevel);
@@ -115,7 +119,7 @@ std::shared_ptr<Viewer> Controller::createViewer() const {
         _ftContent);
 }
 
-void Controller::manageEscape (const Controller::Status& status) {
+void Controller::setEscape (const Controller::Status& status) {
     if (_player.status() == Player::Status::INMENU) {
         if (
             status == Controller::Status::Released &&
@@ -136,7 +140,7 @@ void Controller::manageEscape (const Controller::Status& status) {
     }
 }
 
-void Controller::manageRight (const Controller::Status& status) {
+void Controller::setRight (const Controller::Status& status) {
     if (_player.status() == Player::Status::INGAME) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Right;
@@ -144,7 +148,7 @@ void Controller::manageRight (const Controller::Status& status) {
     }
 }
 
-void Controller::manageLeft (const Status& status) {
+void Controller::setLeft (const Status& status) {
     if (_player.status() == Player::Status::INGAME) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Left;
@@ -152,7 +156,7 @@ void Controller::manageLeft (const Status& status) {
     }
 }
 
-void Controller::manageDown (const Controller::Status& status) {
+void Controller::setDown (const Controller::Status& status) {
     if (_player.status() == Player::Status::INGAME) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Down;
@@ -160,7 +164,7 @@ void Controller::manageDown (const Controller::Status& status) {
     }
 }
 
-void Controller::manageUp (const Controller::Status& status) {
+void Controller::setUp (const Controller::Status& status) {
     if (_player.status() == Player::Status::INGAME) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Up;
@@ -172,12 +176,12 @@ Controller::ScreenDirection Controller::nearestDirection (float posX, float posY
 
     Controller::ScreenDirection nearestDir = Controller::ScreenDirection::North;
     float computedDistance;
-    float nearestDistance = computeDistance(_mousePressingXCoord,
-                                            _mousePressingYCoord + 1.f,
+    float nearestDistance = computeDistance(_mousePreviousXCoord,
+                                            _mousePreviousYCoord + 1.f,
                                             posX, posY);
     if (
-        (computedDistance = computeDistance(_mousePressingXCoord,
-                                            _mousePressingYCoord - 1.f,
+        (computedDistance = computeDistance(_mousePreviousXCoord,
+                                            _mousePreviousYCoord - 1.f,
                                             posX, posY))
         < nearestDistance
         ) {
@@ -185,8 +189,8 @@ Controller::ScreenDirection Controller::nearestDirection (float posX, float posY
         nearestDir = Controller::ScreenDirection::South;
     }
     if (
-        (computedDistance = computeDistance(_mousePressingXCoord + 1.f,
-                                            _mousePressingYCoord,
+        (computedDistance = computeDistance(_mousePreviousXCoord + 1.f,
+                                            _mousePreviousYCoord,
                                             posX, posY))
         < nearestDistance
         ) {
@@ -194,8 +198,8 @@ Controller::ScreenDirection Controller::nearestDirection (float posX, float posY
         nearestDir = Controller::ScreenDirection::East;
     }
     if (
-        (computedDistance = computeDistance(_mousePressingXCoord - 1.f,
-                                            _mousePressingYCoord,
+        (computedDistance = computeDistance(_mousePreviousXCoord - 1.f,
+                                            _mousePreviousYCoord,
                                             posX, posY))
         < nearestDistance
         ) {
@@ -206,32 +210,61 @@ Controller::ScreenDirection Controller::nearestDirection (float posX, float posY
 }
 
 void Controller::pressMouse (float posX, float posY) {
+    _currentMovementDir = nullptr;
     _mousePressingXCoord = posX;
     _mousePressingYCoord = posY;
+    _mousePreviousXCoord = posX;
+    _mousePreviousYCoord = posY;
     _mouseCurrentXCoord = posX;
     _mouseCurrentYCoord = posY;
+    _mouseUpdatingTime = JBTypesMethods::getTimePointMSNow();
 }
 
 void Controller::updateMouse (float posX, float posY) {
 
+    const auto now = JBTypesMethods::getTimePointMSNow();
+    if( !JBTypesMethods::floatsEqual(posX, _mouseCurrentXCoord)
+    || !JBTypesMethods::floatsEqual(posY, _mouseCurrentYCoord)) {
+        _mouseUpdatingTime = now;
+    }
+
+    _mouseCurrentXCoord = posX;
+    _mouseCurrentYCoord = posY;
+
     constexpr float thresholdMoving = 0.05f;
+    const float distance = computeDistance(_mousePreviousXCoord, _mousePreviousYCoord, posX, posY);
 
-    const float distance = computeDistance(_mousePressingXCoord, _mousePressingYCoord, posX, posY);
-    if (distance > thresholdMoving) {
-        Controller::ScreenDirection sDir = nearestDirection(posX, posY);
+    const auto movementIsDetected = distance > thresholdMoving;
+    if (movementIsDetected) {
+        _currentMovementDir = std::make_shared<const Controller::ScreenDirection>(nearestDirection(posX, posY));
+    }
 
-        if (sDir == Controller::ScreenDirection::North) {
-            manageUp(Controller::Status::Pressed);
-        } else if (sDir == Controller::ScreenDirection::South) {
-            manageDown(Controller::Status::Pressed);
-        }
-        if (sDir == Controller::ScreenDirection::East) {
-            manageRight(Controller::Status::Pressed);
-        } else if (sDir == Controller::ScreenDirection::West) {
-            manageLeft(Controller::Status::Pressed);
-        }
-        _mouseCurrentXCoord = posX;
-        _mouseCurrentYCoord = posY;
+    constexpr float updatingMouseThreshold = 300.f; // 0.3 secondes
+    if(JBTypesMethods::getFloatFromDurationMS(now - _mouseUpdatingTime) > updatingMouseThreshold
+    || movementIsDetected ) {
+        _mouseUpdatingTime = now;
+        _mousePreviousXCoord = posX;
+        _mousePreviousYCoord = posY;
+    }
+
+    if(!_currentMovementDir) {
+        return;
+    }
+    if (*_currentMovementDir == Controller::ScreenDirection::North) {
+        setUp(Controller::Status::Pressed);
+        return;
+    }
+    if (*_currentMovementDir == Controller::ScreenDirection::South) {
+        setDown(Controller::Status::Pressed);
+        return;
+    }
+    if (*_currentMovementDir == Controller::ScreenDirection::East) {
+        setRight(Controller::Status::Pressed);
+        return;
+    }
+    if (*_currentMovementDir == Controller::ScreenDirection::West) {
+        setLeft(Controller::Status::Pressed);
+        return;
     }
 }
 
@@ -241,7 +274,7 @@ void Controller::releaseMouse (float posX, float posY) {
 
     const float distance = computeDistance(_mousePressingXCoord, _mousePressingYCoord, posX, posY);
     if (distance < thresholdMoving) {
-        manageValidateMouse();
+        setValidateMouse();
     }
 }
 

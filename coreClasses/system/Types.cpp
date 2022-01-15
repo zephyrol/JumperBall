@@ -455,3 +455,8 @@ std::array<bool, 6> JBTypesMethods::strDirAsArray(const std::string& directions)
     }
     return dirsArray;
 }
+
+bool JBTypesMethods::floatsEqual(float a, float b) {
+    const float diff = a - b;
+    return diff < EPSILON_F && diff > -EPSILON_F;
+}
