@@ -29,7 +29,7 @@ const JBTypes::Dir& direction() const;
 bool isGotten() const;
 float getTimeSinceObtaining() const;
 float getTimeSinceCreation() const;
-void catchingTest(const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius);
+virtual void catchingTest() = 0;
 
 virtual vecCstShape_sptr getShapes() const = 0;
 
@@ -40,6 +40,8 @@ SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const overrid
 SceneElement::DynamicValues <float> getDynamicFloats() const override;
 
 SceneElement::GlobalState getGlobalState() const override;
+
+void setAsGotten();
 
 private:
 

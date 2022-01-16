@@ -96,6 +96,7 @@ SceneElement::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const 
 
 SceneElement::GlobalState getGlobalState() const override;
 CstBlock_sptr getBlock(const JBTypes::vec3ui& pos) const;
+JBTypes::vec3f getNextLook() const;
 
 void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action) noexcept;
 
@@ -109,12 +110,15 @@ const std::shared_ptr<const vecBlock_sptr>& getBlocksWithInteraction();
 
 void updateMovements();
 
-JBTypes::vec3f getNextLook() const;
+void obtainKey();
+void obtainCoin();
 
 void die() noexcept;
 
 void teleport(const JBTypes::Color& col) noexcept;
 
+unsigned int numberOfKeys() const;
+unsigned int numberOfCoins() const;
 private:
 
 JBTypes::vec3ui _pos;
@@ -157,13 +161,14 @@ const TurnRight _turnRightMovement;
 const NextBlock _nextBlockGetter;
 const TurnBack _turnBackMovement;
 
-
 MovementDestination _movementDestination;
 
-Block_sptr getCurrentBlock();
 std::shared_ptr<const std::unordered_map<std::string, Block_sptr> > _blocksPositions;
 std::shared_ptr<const vecBlock_sptr> _blockWithInteractions;
 std::shared_ptr<const std::map<BlockDir , BlockDir> > _blocksTeleportations;
+
+unsigned int _nbOfKeys;
+unsigned int _nbOfCoins;
 
 JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 JBTypes::vec3f get3DPosStayingBall() const;
@@ -173,6 +178,7 @@ float getJumpingPosX() const noexcept;
 float getFallingPosX() const noexcept;
 
 
+Block_sptr getCurrentBlock();
 void turnLeft() noexcept;
 void turnRight() noexcept;
 void goStraightAhead() noexcept;

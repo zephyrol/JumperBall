@@ -7,11 +7,12 @@
 
 #ifndef CLOCK_H
 #define CLOCK_H
-#include "Item.h"
+#include "scene/Ball.h"
+#include "InteractiveItem.h"
 
-class Clock:public Item {
+class Clock:public InteractiveItem {
 public:
-Clock(const JBTypes::vec3ui& position, const JBTypes::Dir& direction);
+Clock(const JBTypes::vec3ui& position, const JBTypes::Dir& direction, const Ball_sptr &ball);
 vecCstShape_sptr getShapes() const override;
 
 private:

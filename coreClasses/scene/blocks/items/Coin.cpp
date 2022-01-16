@@ -7,8 +7,8 @@
 
 #include "Coin.h"
 
-Coin::Coin(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
-    Bonus(position, direction, 100) {
+Coin::Coin(const JBTypes::vec3ui& position, const JBTypes::Dir& direction, const Ball_sptr &ball):
+    Bonus(position, direction, 100, ball) {
 }
 
 vecCstShape_sptr Coin::getShapes() const {
@@ -24,4 +24,9 @@ vecCstShape_sptr Coin::getShapes() const {
     );
 
     return { coinShape };
+}
+
+void Coin::catchItem() {
+    const auto ball = _ball.lock();
+    ball->obtainCoin();
 }

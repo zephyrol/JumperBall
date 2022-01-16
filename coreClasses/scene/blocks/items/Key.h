@@ -7,18 +7,21 @@
 
 #ifndef KEY_H
 #define KEY_H
-#include "Item.h"
 
-class Key:public Item {
+#include "InteractiveItem.h"
+
+class Key: public InteractiveItem {
 public:
 Key(
     const JBTypes::vec3ui& position,
-    const JBTypes::Dir& direction
-    );
+    const JBTypes::Dir& direction,
+    const Ball_sptr &ball
+);
 
 vecCstShape_sptr getShapes() const override;
 
 private:
+    void catchItem() override;
 };
 
 #endif /* KEY_H */

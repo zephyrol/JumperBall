@@ -10,13 +10,14 @@
 Bonus::Bonus(
     const JBTypes::vec3ui& position,
     const JBTypes::Dir& direction,
-    unsigned int value):
-    Item(position, direction),
+    unsigned int value,
+    const Ball_sptr &ball
+    ):
+    InteractiveItem(position, direction, ball),
     _value(value) {
 }
 
 Bonus::~Bonus() {
-
 }
 
 unsigned int Bonus::value() const {

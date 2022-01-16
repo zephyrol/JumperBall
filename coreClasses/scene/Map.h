@@ -23,6 +23,8 @@ struct MapInfo {
     unsigned int width;
     unsigned int height;
     unsigned int depth;
+    unsigned int nbOfKeys;
+    unsigned int nbOfCoins;
     Ball_sptr ball;
     vecBlock_sptr blocks;
 };
@@ -39,7 +41,7 @@ float getLargestSize() const;
 float getTimeSinceCreation() const;
 
 // TODO: move to special
-std::map <JBTypes::Color, bool> createSpecialStates() const;
+static std::map <JBTypes::Color, bool> createSpecialStates() ;
 
 void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action);
 
@@ -73,9 +75,13 @@ const unsigned int _width;
 const unsigned int _height;
 const unsigned int _depth;
 
+const unsigned int _nbOfKeys;
+const unsigned int _nbOfCoins;
+
 const JBTypes::timePointMs _creationTime;
 
 JBTypes::timePointMs _updatingTime;
+bool _isExitUnlocked;
 
 
 

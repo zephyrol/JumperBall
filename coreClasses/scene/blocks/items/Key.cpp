@@ -8,8 +8,8 @@
 #include "Key.h"
 #include <initializer_list>
 
-Key::Key(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
-    Item(position, direction) {
+Key::Key(const JBTypes::vec3ui& position, const JBTypes::Dir& direction, const Ball_sptr &ball):
+InteractiveItem(position, direction, ball) {
 }
 
 vecCstShape_sptr Key::getShapes() const {
@@ -51,4 +51,9 @@ vecCstShape_sptr Key::getShapes() const {
     );
 
     return { sphereHead, cubeBody1, cubeBody2, cubeBody3 };
+}
+
+void Key::catchItem() {
+    const auto ball = _ball.lock();
+    ball->obtainKey();
 }

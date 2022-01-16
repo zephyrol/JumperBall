@@ -24,8 +24,11 @@ Map::Map(Map::MapInfo &&mapInfo):
     _width(mapInfo.width),
     _height(mapInfo.height),
     _depth(mapInfo.depth),
+    _nbOfKeys(mapInfo.nbOfKeys),
+    _nbOfCoins(mapInfo.nbOfCoins),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
-    _updatingTime()
+    _updatingTime(),
+    _isExitUnlocked(false)
 {
     _ball->setBlockPositions(_blocksPositions);
     _ball->setBlockWithInteractions(_blocksToUpdate);
@@ -63,7 +66,7 @@ std::vector<Block_sptr> Map::getBlocksToUpdate() const {
 }
 
 // TODO: move to special class
-std::map <JBTypes::Color, bool> Map::createSpecialStates() const {
+std::map <JBTypes::Color, bool> Map::createSpecialStates() {
     constexpr bool defaultStateValue = true;
     return {
         {
@@ -124,6 +127,13 @@ void Map::update(const JBTypes::timePointMs& updatingTime, const Ball::ActionReq
 
     if (ballIsOut()) {
         _ball->die();
+    }
+
+    if (!_isExitUnlocked && _ball->numberOfKeys() >= _nbOfKeys) {
+        for (const auto& block: _blocks) {
+            block->unlockExit();
+        }
+        _isExitUnlocked = true;
     }
 }
 

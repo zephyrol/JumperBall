@@ -7,8 +7,8 @@
 
 #include "Clock.h"
 
-Clock::Clock(const JBTypes::vec3ui& position, const JBTypes::Dir& direction):
-    Item(position, direction) {
+Clock::Clock(const JBTypes::vec3ui& position, const JBTypes::Dir& direction, const Ball_sptr &ball):
+    InteractiveItem(position, direction, ball) {
 }
 
 vecCstShape_sptr Clock::getShapes() const {

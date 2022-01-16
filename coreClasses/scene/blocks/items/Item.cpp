@@ -43,15 +43,6 @@ float Item::getTimeSinceCreation() const {
     return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
 
-void Item::catchingTest (const JBTypes::vec3f& boundingSphereCenter, float boundingSphereRadius) {
-    const float distance = JBTypesMethods::distance(_3Dposition, boundingSphereCenter);
-    if (distance < boundingSphereRadius + itemBoundingSphereRadius) {
-        _obtainingTime = JBTypesMethods::getTimePointMSNow();
-        _gotten = true;
-    }
-
-}
-
 SceneElement::StaticValues <float> Item::getStaticFloatValues() const {
     return { static_cast<float>(_direction) };
 }
@@ -116,4 +107,9 @@ JBTypes::vec3f Item::compute3DPosition() const {
 
 const JBTypes::Dir &Item::direction() const {
     return _direction;
+}
+
+void Item::setAsGotten() {
+    _obtainingTime = JBTypesMethods::getTimePointMSNow();
+    _gotten = true;
 }

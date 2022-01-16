@@ -38,7 +38,9 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z):
     _movementDestination(),
     _blocksPositions(nullptr),
     _blockWithInteractions(nullptr),
-    _blocksTeleportations(nullptr)
+    _blocksTeleportations(nullptr),
+    _nbOfKeys(0),
+    _nbOfCoins(0)
 {
 }
 
@@ -888,6 +890,22 @@ Block_sptr Ball::getCurrentBlock() {
 
 const std::shared_ptr<const vecBlock_sptr> &Ball::getBlocksWithInteraction() {
     return _blockWithInteractions;
+}
+
+void Ball::obtainKey() {
+    ++_nbOfKeys;
+}
+
+void Ball::obtainCoin() {
+    ++_nbOfCoins;
+}
+
+unsigned int Ball::numberOfKeys() const {
+    return _nbOfKeys;
+}
+
+unsigned int Ball::numberOfCoins() const {
+    return _nbOfCoins;
 }
 
 

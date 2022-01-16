@@ -103,22 +103,40 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
     const auto isAnItemTypeChar = [](unsigned char info) {
         return info == 'I' || info == 'K' || info == 'C';
     };
-    const auto createItems = 
-    [&getTypeOptions, &isAnItemTypeChar, &mapInfo, &blockIndexCursor](const std::string& itemsInfo) {
-        const auto typeOptions = getTypeOptions(itemsInfo, isAnItemTypeChar);
-        const auto createItem =
-        [&mapInfo, &blockIndexCursor](unsigned char itemType, unsigned char direction) -> Item_sptr {
-            const JBTypes::Dir dir = JBTypesMethods::charAsDirection(direction);
-            const auto blockCoords = Map::getBlockCoords(blockIndexCursor, mapInfo.width, mapInfo.depth);
-            if (itemType == 'I') {
-                return std::make_shared<Coin>(blockCoords, dir);
-            }
-            if (itemType  == 'K') {
-                return std::make_shared<Key>(blockCoords, dir);
-            } 
-            //Clock
-            return std::make_shared<Clock>(blockCoords, dir);
-        };
+
+    unsigned int coinsCounter = 0;
+    unsigned int keysCounter = 0;
+
+    const auto createItems =
+        [
+            &getTypeOptions,
+            &isAnItemTypeChar,
+            &mapInfo,
+            &blockIndexCursor,
+            &coinsCounter,
+            &keysCounter
+        ](const std::string& itemsInfo) {
+            const auto typeOptions = getTypeOptions(itemsInfo, isAnItemTypeChar);
+            const auto createItem =
+                [
+                    &mapInfo,
+                    &blockIndexCursor,
+                    &coinsCounter,
+                    &keysCounter
+                ](unsigned char itemType, unsigned char direction) -> Item_sptr {
+                    const JBTypes::Dir dir = JBTypesMethods::charAsDirection(direction);
+                    const auto blockCoords = Map::getBlockCoords(blockIndexCursor, mapInfo.width, mapInfo.depth);
+                    if (itemType == 'I') {
+                        ++coinsCounter;
+                        return std::make_shared<Coin>(blockCoords, dir, mapInfo.ball);
+                    }
+                    if (itemType  == 'K') {
+                        ++keysCounter;
+                        return std::make_shared<Key>(blockCoords, dir, mapInfo.ball);
+                    }
+                    //Clock
+                    return std::make_shared<Clock>(blockCoords, dir, mapInfo.ball);
+                };
 
         vecItem_sptr items;
         for (const auto& typeOption: typeOptions) {
@@ -277,6 +295,8 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
         }
     }
 
+    mapInfo.nbOfCoins = coinsCounter;
+    mapInfo.nbOfKeys = keysCounter;
     return mapInfo;
 }
 

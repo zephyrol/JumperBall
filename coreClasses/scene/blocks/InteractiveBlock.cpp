@@ -19,10 +19,7 @@ InteractiveBlock::InteractiveBlock(
 
 void InteractiveBlock::catchItem() {
     for (const Item_sptr& item : _items) {
-        if (!item->isGotten()) {
-            const auto ball = _ball.lock();
-            item->catchingTest(ball->get3DPosition(), ball->getRadius());
-        }
+        item->catchingTest();
     }
 }
 
