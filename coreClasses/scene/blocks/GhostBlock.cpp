@@ -32,6 +32,7 @@ JBTypes::Color GhostBlock::getColor() const {
     return JBTypes::Color::Purple;
 }
 
+
 void GhostBlock::update(const JBTypes::timePointMs &updatingTime) {
     InteractiveBlock::update(updatingTime);
 
@@ -66,5 +67,9 @@ void GhostBlock::update(const JBTypes::timePointMs &updatingTime) {
 
     const float translation = (1-scale) * (-0.5f);
     _localTranslation = { translation, translation, translation };
+}
+
+SceneElement::GlobalState GhostBlock::getGlobalState() const {
+    return SceneElement::GlobalState::Separate;
 }
 

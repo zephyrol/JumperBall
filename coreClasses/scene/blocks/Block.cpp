@@ -79,7 +79,7 @@ SceneElement::DynamicValues <JBTypes::vec3f> Block::getDynamicVec3fs() const {
 }
 
 SceneElement::GlobalState Block::getGlobalState() const {
-    return SceneElement::GlobalState::Separate;
+    return SceneElement::GlobalState::United;
 }
 
 vecCstItem_sptr Block::getCstItems() const {

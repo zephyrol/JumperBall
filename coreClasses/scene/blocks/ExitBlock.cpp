@@ -84,3 +84,7 @@ Block::Effect ExitBlock::detectionEvent() {
 JBTypes::Color ExitBlock::getColor() const {
     return _isUnlockModel ? JBTypes::Color::Green : JBTypes::Color::Red;
 }
+
+SceneElement::GlobalState ExitBlock::getGlobalState() const {
+    return SceneElement::GlobalState::Separate;
+}
