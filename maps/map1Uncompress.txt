@@ -37,7 +37,7 @@
 . . . X . N
 . . X X . N N
 . X X X . I N N
-. . . X . N
+. . . X . E S
 . X . . . N
 . . . . .
 

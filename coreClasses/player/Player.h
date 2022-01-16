@@ -13,7 +13,7 @@ class Player {
 public:
 Player();
 
-enum class Status { INGAME, INMENU, INTRANSITION };
+enum class Status { InGame, InMenu, InTransition };
 
 size_t levelProgression() const;
 unsigned int getMoney() const;

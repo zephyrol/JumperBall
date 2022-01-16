@@ -30,13 +30,13 @@ void Camera::update(
     bool goAbove
 ) noexcept{
 
-    if (status == Player::Status::INMENU) {
+    if (status == Player::Status::InMenu) {
         _movement = Camera::Movement::TurningAroundMap;
     }
-    else if (status == Player::Status::INGAME) {
+    else if (status == Player::Status::InGame) {
         _movement = Camera::Movement::FollowingBall;
     }
-    else if (status == Player::Status::INTRANSITION) {
+    else if (status == Player::Status::InTransition) {
         _movement = Camera::Movement::ApproachingBall;
     }
 

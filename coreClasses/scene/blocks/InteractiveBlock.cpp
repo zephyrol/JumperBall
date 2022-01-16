@@ -10,10 +10,9 @@ InteractiveBlock::InteractiveBlock(
     const vecEnemy_sptr &enemies,
     const vecSpecial_sptr &specials,
     const Ball_sptr &ball,
-    bool alwaysHasInteractions,
-    bool isFixed
+    bool alwaysHasInteractions
 ):
-    Block(position,items,enemies,specials,alwaysHasInteractions, isFixed),
+    Block(position,items,enemies,specials,alwaysHasInteractions),
     _ball(ball)
 {
 }

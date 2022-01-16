@@ -73,7 +73,7 @@ void writeString(std::ofstream& output, const std::string& string);
 
 void verificationMap(std::ifstream& input, const Map& map);
 
-    Block_sptr createBlock(
+    vecBlock_sptr createBlocks(
         unsigned char blockType,
         const JBTypes::vec3ui &position,
         const vecItem_sptr &items,
@@ -83,9 +83,6 @@ void verificationMap(std::ifstream& input, const Map& map);
         const std::string& properties = ""
     );
 
-    Block_sptr
-    createBlock(unsigned char blockType, const JBTypes::vec3ui &position, const vecItem_sptr &items,
-                const vecEnemy_sptr &enemies, const vecSpecial_sptr &specials);
 }
 
 #endif

@@ -5,6 +5,7 @@
  * Created on 2 novembre 2020, 22:38
  */
 #include "MapGenerator.h"
+#include "scene/blocks/ExitBlock.h"
 #include <algorithm>
 #include <cmath>
 #include <future>
@@ -267,9 +268,11 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
                 ? uncompressString(readingString(file))
                 : "";
 
-            mapInfo.blocks.push_back(
-                createBlock(blockType, position, items, enemies, specials, mapInfo.ball, properties)
+            const auto newBlocks = createBlocks(
+                    blockType, position, items, enemies, specials, mapInfo.ball, properties
             );
+            mapInfo.blocks.insert(mapInfo.blocks.end(),newBlocks.begin(), newBlocks.end());
+
             ++blockIndexCursor;
         }
     }
@@ -527,7 +530,7 @@ std::string MapGenerator::uncompressString(const std::string &compressedString) 
 }
 
 bool MapGenerator::verifyBlockType(unsigned char blockType) {
-    const std::vector<unsigned char> blocksList = { 'N', 'F', 'I', 'B', 'G', 'S', 'J' };
+    const std::vector<unsigned char> blocksList = { 'N', 'F', 'I', 'B', 'G', 'S', 'J', 'E' };
     if (std::find(blocksList.begin(), blocksList.end(), blockType) == blocksList.end()) {
         std::cerr << "Error: unknown block type: " << blockType << std::endl;
         return false;
@@ -545,14 +548,14 @@ bool MapGenerator::verifyBlockOption(unsigned char blockOption) {
 }
 
 bool MapGenerator::blockHasAnyProperties(unsigned char blockType) {
-    const std::vector<unsigned char> blocksWithProperties = { 'G', 'S', 'J' };
+    const std::vector<unsigned char> blocksWithProperties = { 'G', 'S', 'J', 'E' };
     return std::find(
                blocksWithProperties.begin(),
                blocksWithProperties.end(),
                blockType) != blocksWithProperties.end();
 }
 
-Block_sptr MapGenerator::createBlock(
+vecBlock_sptr MapGenerator::createBlocks(
     unsigned char blockType,
     const JBTypes::vec3ui& position,
     const vecItem_sptr &items,
@@ -562,35 +565,52 @@ Block_sptr MapGenerator::createBlock(
     const std::string& properties
     ) {
     switch (blockType) {
-        case 'N': return std::make_shared<BaseBlock>(position, items, enemies, specials, ball);
-        case 'F': return std::make_shared<FireBlock>(position, items, enemies, specials, ball);
-        case 'I': return std::make_shared<IceBlock>(position, items, enemies, specials, ball);
-        case 'B': return std::make_shared<BrittleBlock>(position, items, enemies, specials, ball);
-        case 'G': return std::make_shared<GhostBlock>(
+        case 'N': return { std::make_shared<BaseBlock>(position, items, enemies, specials, ball) };
+        case 'F': return { std::make_shared<FireBlock>(position, items, enemies, specials, ball)};
+        case 'I': return { std::make_shared<IceBlock>(position, items, enemies, specials, ball)};
+        case 'B': return { std::make_shared<BrittleBlock>(position, items, enemies, specials, ball)};
+        case 'G': return { std::make_shared<GhostBlock>(
             position,
             items,
             enemies,
             specials,
             ball,
             std::stof(properties)
-        );
-        case 'S': return std::make_shared<SharpBlock>(
+        )};
+        case 'S': return { std::make_shared<SharpBlock>(
             position,
             items,
             enemies,
             specials,
             ball,
             JBTypesMethods::strDirAsArray(properties)
-        );
-        case 'J': return std::make_shared<JumpBlock>(
+        )};
+        case 'J': return { std::make_shared<JumpBlock>(
             position,
             items,
             enemies,
             specials,
             ball,
             JBTypesMethods::strDirAsArray(properties)
-        );
-        default: return nullptr;
+        )};
+        case 'E': return { std::make_shared<ExitBlock>(
+                    position,
+                    items,
+                    enemies,
+                    specials,
+                    ball,
+                    JBTypesMethods::charAsDirection(properties[0]),
+                    true
+            ), std::make_shared<ExitBlock>(
+                    position,
+                    vecItem_sptr(),
+                    vecEnemy_sptr(),
+                    vecSpecial_sptr(),
+                    ball,
+                    JBTypesMethods::charAsDirection(properties[0]),
+                   false
+            )};
+        default: return {};
     }
 }
 

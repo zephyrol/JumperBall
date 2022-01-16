@@ -53,18 +53,24 @@ Scene::Scene(size_t mapNumber, float screenRatio):
      _camera->update(updatingTime, status, actionRequest == Ball::ActionRequest::MoveCamera);
 
      if (_camera->getMovement() == Camera::Movement::FollowingBall) {
-         return Player::Status::INGAME;
+         return Player::Status::InGame;
      }
 
     return status;
  }
 
- bool Scene::gameIsFinished() const {
-     // TODO: call function gameIsFinished in map
-    return _map->getBall()->stateOfLife() == Ball::StateOfLife::Dead;
+ bool Scene::gameIsLost() const {
+     // TODO: call function gameIsLost in map
+     return _map->getBall()->stateOfLife() == Ball::StateOfLife::Dead;
  }
- 
- CstMap_sptr Scene::getMap() const {
+
+bool Scene::gameIsWon() const {
+    // TODO: call function gameIsLost in map
+    return _map->getBall()->stateOfLife() == Ball::StateOfLife::Winner;
+}
+
+
+CstMap_sptr Scene::getMap() const {
     return _map; 
  }
 
@@ -92,4 +98,3 @@ Scene::Scene(size_t mapNumber, float screenRatio):
 void Scene::updateScreenRatio(float ratio) {
     _camera->setRatio(ratio);
 }
- 

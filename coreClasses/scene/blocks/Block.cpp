@@ -13,8 +13,8 @@ Block::Block(
     const vecItem_sptr& items,
     const vecEnemy_sptr& enemies,
     const vecSpecial_sptr& specials,
-    bool alwaysHasInteractions,
-    bool isFixed):
+    bool alwaysHasInteractions
+    ):
     _position(position),
     _items(items),
     _cstItems(getCstItems()),
@@ -23,7 +23,6 @@ Block::Block(
     _specials(specials),
     _cstSpecials(getCstSpecials()),
     _hasInteraction(alwaysHasInteractions || !items.empty() || !enemies.empty() || !specials.empty()),
-    _isFixed(isFixed),
     _updatingTime(JBTypesMethods::getTimePointMSNow()),
     _localScale{1.f, 1.f, 1.f },
     _localTranslation{0.f, 0.f, 0.f }
@@ -60,10 +59,6 @@ const vecCstSpecial_sptr& Block::getSpecials() const {
 
 bool Block::hasInteraction() const {
     return _hasInteraction;
-}
-
-const bool& Block::isFixed() const {
-    return _isFixed;
 }
 
 const JBTypes::vec3ui& Block::position() const {
@@ -155,5 +150,8 @@ vecEnemy_sptr Block::getEnemies() {
 
 vecSpecial_sptr Block::getSpecials() {
     return _specials;
+}
+
+void Block::unlockExit() {
 }
 

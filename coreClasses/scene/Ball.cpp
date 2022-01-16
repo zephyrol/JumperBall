@@ -397,6 +397,11 @@ void Ball::blockEvent () noexcept{
     const auto& block = _blocksPositions->at(blockPosition);
 
     const Block::Effect effect = block->detectionEvent();
+
+    if (effect == Block::Effect::FinishLevel) {
+        _stateOfLife = StateOfLife::Winner;
+        return;
+    }
     if (effect == Block::Effect::Jump) {
         _stateOfLife = StateOfLife::Normal;
         _jumpingType = Ball::JumpingType::Long;
@@ -798,7 +803,7 @@ void Ball::interaction() {
 
 void Ball::internalUpdate() noexcept {
 
-    if (_stateOfLife == Ball::StateOfLife::Dead) {
+    if (_stateOfLife == Ball::StateOfLife::Dead || _stateOfLife == Ball::StateOfLife::Winner) {
         return;
     }
 

@@ -82,7 +82,7 @@ void Controller::interactionMouse (const Status& status, float posX, float posY)
     updateMouse(posX, posY);
 }
 void Controller::setValidateButton (const Controller::Status& status) {
-    if (_player.status() == Player::Status::INGAME) {
+    if (_player.status() == Player::Status::InGame) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Validate;
         }
@@ -96,11 +96,11 @@ void Controller::runGame (size_t level) {
 }
 
 void Controller::setValidateMouse() {
-    if (_player.status() == Player::Status::INGAME) {
+    if (_player.status() == Player::Status::InGame) {
         _currentKey = Scene::ActionKey::Validate;
         return;
     }
-    if (_player.status() == Player::Status::INMENU) {
+    if (_player.status() == Player::Status::InMenu) {
         const Menu::MenuAnswer menuAnswer =
             _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
 
@@ -120,7 +120,7 @@ std::shared_ptr<Viewer> Controller::createViewer() const {
 }
 
 void Controller::setEscape (const Controller::Status& status) {
-    if (_player.status() == Player::Status::INMENU) {
+    if (_player.status() == Player::Status::InMenu) {
         if (
             status == Controller::Status::Released &&
                 _buttonsStatus.at(Button::Escape) == Status::Pressed
@@ -129,19 +129,19 @@ void Controller::setEscape (const Controller::Status& status) {
                 _requestToLeave = true;
             }
         }
-    } else if (_player.status() == Player::Status::INGAME) {
+    } else if (_player.status() == Player::Status::InGame) {
         if (
             status == Controller::Status::Released &&
                 _buttonsStatus.at(Button::Escape) == Status::Pressed
             ) {
             _menu->pausePageAsCurrentPage();
-            _player.status(Player::Status::INMENU);
+            _player.status(Player::Status::InMenu);
         }
     }
 }
 
 void Controller::setRight (const Controller::Status& status) {
-    if (_player.status() == Player::Status::INGAME) {
+    if (_player.status() == Player::Status::InGame) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Right;
         }
@@ -149,7 +149,7 @@ void Controller::setRight (const Controller::Status& status) {
 }
 
 void Controller::setLeft (const Status& status) {
-    if (_player.status() == Player::Status::INGAME) {
+    if (_player.status() == Player::Status::InGame) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Left;
         }
@@ -157,7 +157,7 @@ void Controller::setLeft (const Status& status) {
 }
 
 void Controller::setDown (const Controller::Status& status) {
-    if (_player.status() == Player::Status::INGAME) {
+    if (_player.status() == Player::Status::InGame) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Down;
         }
@@ -165,7 +165,7 @@ void Controller::setDown (const Controller::Status& status) {
 }
 
 void Controller::setUp (const Controller::Status& status) {
-    if (_player.status() == Player::Status::INGAME) {
+    if (_player.status() == Player::Status::InGame) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Up;
         }
@@ -309,13 +309,17 @@ void Controller::updateSceneMenu() {
 
     _player.status(_scene->update(_player.status(), _currentKey));
     _currentKey = Scene::ActionKey::Nothing;
-    if (_player.status() == Player::Status::INMENU) {
+    if (_player.status() == Player::Status::InMenu) {
         _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
     }
-    else if (_player.status() == Player::Status::INGAME) {
-        if (_scene->gameIsFinished())
-        {
-            _player.status(Player::Status::INMENU);
+    else if (_player.status() == Player::Status::InGame) {
+        if (_scene->gameIsWon()) {
+            _player.status(Player::Status::InMenu);
+            _menu->successPageAsCurrentPage();
+            return;
+        }
+        if (_scene->gameIsLost()) {
+            _player.status(Player::Status::InMenu);
             _menu->failurePageAsCurrentPage();
         }
     }

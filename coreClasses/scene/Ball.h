@@ -44,7 +44,7 @@ enum class State {
     Deteleporting
 };
 
-enum class StateOfLife { Normal, Bursting, Burning, Sliding, Dead };
+enum class StateOfLife { Normal, Bursting, Burning, Sliding, Dead, Winner };
 
 enum class JumpingType { Short, Long };
 

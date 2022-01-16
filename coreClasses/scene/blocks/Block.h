@@ -29,12 +29,11 @@ Block(
     const vecItem_sptr& items,
     const vecEnemy_sptr& enemies,
     const vecSpecial_sptr& specials,
-    bool alwaysHasInteractions,
-    bool isFixed
+    bool alwaysHasInteractions
 );
 
 virtual ~Block() = default;
-enum class Effect { Nothing, Burst, Burn, Slide, Jump };
+enum class Effect { Nothing, Burst, Burn, Slide, Jump, FinishLevel };
 
 virtual Block::Effect detectionEvent() = 0;
 
@@ -54,6 +53,7 @@ const vecCstSpecial_sptr& getSpecials() const;
 bool hasInteraction() const;
 
 virtual void update(const JBTypes::timePointMs &updatingTime);
+virtual void unlockExit();
 virtual Effect interaction() const = 0;
 
 std::unordered_map<CstItem_sptr ,vecCstShape_sptr> getItemShapes() const;
@@ -61,7 +61,6 @@ virtual vecCstShape_sptr getExtraShapes() const;
 
 virtual bool mayDisappear() const;
 
-virtual const bool& isFixed() const;
 const JBTypes::vec3ui& position() const;
 
 SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
@@ -88,7 +87,6 @@ const vecCstEnemy_sptr _cstEnemies;
 const vecSpecial_sptr _specials;
 const vecCstSpecial_sptr _cstSpecials;
 const bool _hasInteraction;
-const bool _isFixed;
 JBTypes::timePointMs _updatingTime;
 JBTypes::vec3f _localScale;
 JBTypes::vec3f _localTranslation;

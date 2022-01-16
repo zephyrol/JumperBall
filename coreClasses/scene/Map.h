@@ -43,7 +43,7 @@ std::map <JBTypes::Color, bool> createSpecialStates() const;
 
 void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action);
 
-    CstBall_sptr getBall() const;
+CstBall_sptr getBall() const;
 
 CstBlock_sptr getBlock(const JBTypes::vec3ui& pos) const;
 

@@ -17,8 +17,7 @@ public:
         const vecEnemy_sptr &enemies,
         const vecSpecial_sptr &specials,
         const Ball_sptr& ball,
-        bool alwaysHasInteractions = false,
-        bool isFixed = true
+        bool alwaysHasInteractions = false
     );
 
 void update(const JBTypes::timePointMs &updatingTime) override;

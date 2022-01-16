@@ -24,7 +24,8 @@ explicit Scene(size_t mapNumber, float screenRatio);
 Player::Status update(const Player::Status& status, const ActionKey& key);
 void updateScreenRatio(float ratio);
 
-bool gameIsFinished() const;
+bool gameIsLost() const;
+bool gameIsWon() const;
 
 CstMap_sptr getMap() const;
 std::shared_ptr<const Ball> getBall() const;
