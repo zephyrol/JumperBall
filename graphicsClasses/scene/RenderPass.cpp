@@ -21,6 +21,7 @@ void RenderPass::update() {
 
     const auto updateRenderGroupUniforms =
         [this] (const std::shared_ptr <RenderGroup>& renderGroup) {
+            // Every mesh of a render group uses the same uniform values
             const CstMesh_sptr headMesh = renderGroup->getHeadMesh();
             if (headMesh) {
                 _renderGroupsUniforms[renderGroup] = headMesh->genUniformsValues();

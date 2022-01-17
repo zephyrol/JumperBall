@@ -9,7 +9,8 @@
 Mesh::Mesh(const std::shared_ptr<const SceneElement>& sceneElement, vecCstGeometricShape_sptr&& shapes):
     _sceneElement(sceneElement),
     _shapes(std::move(shapes)),
-    _numberOfVertices(computeNumberOfVertices()) {
+    _numberOfVertices(computeNumberOfVertices()),
+    _updatingIsUseless(!_sceneElement->globalStateMayChange()){
 }
 
 SceneElement::GlobalState Mesh::update() {
@@ -113,4 +114,8 @@ void Mesh::concatMeshVerticesInfo (Mesh::MeshVerticesInfo& current,
     Mesh::StateVertexAttributes& currentStateVertexAttributes = current.stateVertexAttributes;
     const Mesh::StateVertexAttributes& otherStateVertexAttributes = other.stateVertexAttributes;
     concatStateVertexAttributes(currentStateVertexAttributes, otherStateVertexAttributes);
+}
+
+bool Mesh::updatingIsUseless() const {
+    return _updatingIsUseless;
 }

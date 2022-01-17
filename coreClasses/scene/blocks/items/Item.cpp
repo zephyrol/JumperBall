@@ -113,3 +113,7 @@ void Item::setAsGotten() {
     _obtainingTime = JBTypesMethods::getTimePointMSNow();
     _gotten = true;
 }
+
+bool Item::globalStateMayChange() const {
+    return true;
+}

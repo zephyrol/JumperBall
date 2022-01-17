@@ -36,3 +36,7 @@ std::unordered_map <std::string, JBTypes::vec3f> SceneElement::getDynamicVec3fs(
 std::unordered_map <std::string, JBTypes::Quaternion> SceneElement::getDynamicQuaternions() const {
     return {};
 }
+
+bool SceneElement::globalStateMayChange() const {
+    return false;
+}

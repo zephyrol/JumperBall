@@ -57,6 +57,9 @@ Uniforms genUniformsValues() const;
 
 MeshVerticesInfo genMeshVerticesInfo() const;
 
+
+bool updatingIsUseless() const;
+
 static void concatMeshVerticesInfo(MeshVerticesInfo& current, const MeshVerticesInfo& other);
 
 private:
@@ -75,11 +78,13 @@ template<typename T> static void concatStateVertexAttribute(
     std::vector <std::vector <T> >& current,
     const std::vector <std::vector <T> >& other
     );
+
 static void concatStateVertexAttributes(StateVertexAttributes& current, const StateVertexAttributes& other);
 
 const CstSceneElement_sptr _sceneElement;
 const vecCstGeometricShape_sptr _shapes;
 const size_t _numberOfVertices;
+const bool _updatingIsUseless;
 };
 
 template<typename T> std::vector <T> Mesh::extractUniformVariablesValues (

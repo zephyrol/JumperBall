@@ -99,7 +99,7 @@ Label_sptr Page::matchedLabel(float x, float y ) {
 
 void Page::update (bool isPressed, float screenPosY) {
 
-    if (_height - 1.f < EPSILON_F) {
+    if (JBTypesMethods::floatsEqual(_height, 1.f)) {
         return;
     }
 

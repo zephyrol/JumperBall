@@ -40,6 +40,7 @@ SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const overrid
 SceneElement::DynamicValues <float> getDynamicFloats() const override;
 
 SceneElement::GlobalState getGlobalState() const override;
+bool globalStateMayChange() const override;
 
 void setAsGotten();
 

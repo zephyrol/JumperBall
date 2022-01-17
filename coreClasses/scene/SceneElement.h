@@ -37,6 +37,7 @@ virtual DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const;
 virtual DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const;
 
 virtual GlobalState getGlobalState() const = 0;
+virtual bool globalStateMayChange() const;
 
 };
 

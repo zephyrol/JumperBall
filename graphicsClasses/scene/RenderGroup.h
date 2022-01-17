@@ -90,13 +90,15 @@ template<typename T> size_t updateBufferObjectData(
 
 void updateBufferObjectsData() const;
 
-GLuint genVertexArrayObject() const;
-GLuint genBufferObject() const;
+static GLuint genVertexArrayObject() ;
+static GLuint genBufferObject() ;
 Mesh::MeshVerticesInfo createMeshesVerticesInfo() const;
+vecMesh_sptr createMeshesToUpdate() const;
 const BufferObjects& bufferObjects() const;
 
 SceneElement::GlobalState _globalState;
 vecMesh_sptr _meshes;
+vecMesh_sptr _meshesToUpdate;
 Mesh::MeshVerticesInfo _meshesVerticesInfo;
 const GLuint _vertexArrayObject;
 const BufferObjects _bufferObjects;
