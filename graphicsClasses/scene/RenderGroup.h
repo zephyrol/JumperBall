@@ -32,9 +32,6 @@ struct BufferObjects {
     GLuint elementBufferObject;
 };
 
-template<typename T> std::vector <GLuint> createStateVertexAttributesBufferObject(
-    const std::vector <std::vector <T> >& attributes) const;
-
 template<typename T> void fillBufferObjectData(
     GLuint bo,
     const std::vector <T>& bufferObjectData,
@@ -88,8 +85,6 @@ template<typename T> size_t updateBufferObjectData(
 static GLuint genVertexArrayObject() ;
 static GLuint genBufferObject() ;
 Mesh::MeshVerticesInfo createMeshesVerticesInfo() const;
-vecMesh_sptr createMeshesToUpdate() const;
-const BufferObjects& bufferObjects() const;
 
 const vecMesh_sptr _meshes;
 const Mesh::MeshVerticesInfo _meshesVerticesInfo;

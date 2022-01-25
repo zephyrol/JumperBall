@@ -17,35 +17,6 @@ CstMesh_sptr RenderGroup::getHeadMesh() const {
     return _meshes.at(0);
 }
 
-/*vecMesh_sptr RenderGroup::update (const vecMesh_sptr& meshesToAdd) {
-    vecMesh_sptr rejectedMeshes;
-    bool needBuffersRebinding = false;
-
-    for (auto it = _meshes.begin(); it != _meshes.end();) {
-        const Mesh_sptr& mesh = *it;
-        const SceneElement::GlobalState meshState = mesh->update();
-        if (meshState != _globalState) {
-            if (meshState != SceneElement::GlobalState::Dead) {
-                rejectedMeshes.push_back(mesh);
-            }
-            _meshes.erase(it);
-            needBuffersRebinding = true;
-        } else {
-            ++it;
-        }
-    }
-    if (!meshesToAdd.empty()) {
-        _meshes.insert(_meshes.end(), meshesToAdd.begin(), meshesToAdd.end());
-        needBuffersRebinding = true;
-    }
-
-    if (needBuffersRebinding) {
-        _meshesVerticesInfo = createMeshesVerticesInfo();
-    }
-    _needBuffersRebinding = needBuffersRebinding;
-    return rejectedMeshes;
-}*/
-
 GLuint RenderGroup::genVertexArrayObject() {
     GLuint vao;
     glGenVertexArrays(1, &vao);
@@ -66,21 +37,6 @@ Mesh::MeshVerticesInfo RenderGroup::createMeshesVerticesInfo() const {
     return meshesVerticesInfo;
 }
 
-const RenderGroup::BufferObjects& RenderGroup::bufferObjects() const {
-    return _bufferObjects;
-}
-
-template<typename T> std::vector <GLuint> RenderGroup::createStateVertexAttributesBufferObject (
-    const std::vector <std::vector <T> >& attributes) const {
-    std::vector <GLuint> vertexBufferObjects;
-    for (const auto& stateVertexAttribute : attributes) {
-        const auto vertexBuffer = initializeVBO(stateVertexAttribute);
-        if (vertexBuffer) {
-            vertexBufferObjects.push_back(*vertexBuffer);
-        }
-    }
-    return vertexBufferObjects;
-}
 
 template<typename T> void RenderGroup::fillVBOsList (
     std::vector <GLuint>& vboList,
@@ -252,14 +208,4 @@ void RenderGroup::freeGPUMemory() {
         glDeleteBuffers(1, &stateVBO);
     }
     glDeleteVertexArrays(1, &_vertexArrayObject);
-}
-
-vecMesh_sptr RenderGroup::createMeshesToUpdate() const {
-    vecMesh_sptr meshesToUpdate {};
-    for (const auto &mesh : _meshes) {
-        if (!mesh->updatingIsUseless()) {
-            meshesToUpdate.push_back(mesh);
-        }
-    }
-    return meshesToUpdate;
 }
