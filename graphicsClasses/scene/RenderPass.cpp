@@ -9,8 +9,10 @@
 
 RenderPass::RenderPass(const vecMesh_sptr& meshes):
     _meshes(meshes),
-    _unitedMeshesGroup(std::make_shared <RenderGroup>(meshes, SceneElement::GlobalState::United)),
-    _separateMeshGroups(createSeparateMeshGroups(meshes)),
+    _updatableMeshes(createUpdatableMeshes()),
+    _meshStates(createMeshStates()),
+    _unitedMeshesGroup(createUnitedMeshesGroup()),
+    _separateMeshGroups(createSeparateMeshGroups()),
     _renderGroupsUniforms{},
     _renderPassUniforms(),
     _renderPassUniformBlocks{} {
@@ -21,39 +23,32 @@ void RenderPass::update() {
 
     const auto updateRenderGroupUniforms =
         [this] (const std::shared_ptr <RenderGroup>& renderGroup) {
-            // Every mesh of a render group uses the same uniform values
             const CstMesh_sptr headMesh = renderGroup->getHeadMesh();
-            if (headMesh) {
-                _renderGroupsUniforms[renderGroup] = headMesh->genUniformsValues();
-            }
+            _renderGroupsUniforms[renderGroup] = headMesh->genUniformsValues();
         };
 
-    const vecMesh_sptr rejectedMeshes = _unitedMeshesGroup->update();
-    updateRenderGroupUniforms(_unitedMeshesGroup);
+    bool needsGroupsRedefinition = false;
+    for(const auto& updatableMesh: _updatableMeshes) {
+        if(updatableMesh->getGlobalState() != _meshStates.at(updatableMesh)) {
+            needsGroupsRedefinition = true;
+        }
+    }
+    if (needsGroupsRedefinition) {
+        freeGPUMemory();
+        _meshStates = createMeshStates();
+        _unitedMeshesGroup = createUnitedMeshesGroup();
+        _separateMeshGroups = createSeparateMeshGroups();
+        _renderGroupsUniforms.clear();
+    }
+
+    if (_unitedMeshesGroup) {
+        updateRenderGroupUniforms(_unitedMeshesGroup);
+    }
 
     for (const auto& separateMeshGroup : _separateMeshGroups) {
-        const Mesh_sptr& separateMesh = separateMeshGroup.first;
         const std::shared_ptr <RenderGroup>& separateRenderGroup = separateMeshGroup.second;
-
-        bool foundRejectedMesh = false;
-        for (const Mesh_sptr& rejectedMesh : rejectedMeshes) {
-            if (rejectedMesh == separateMesh) {
-                foundRejectedMesh = true;
-            }
-        }
-        if (foundRejectedMesh) {
-            separateRenderGroup->update({ separateMesh });
-        } else {
-            separateRenderGroup->update();
-        }
         updateRenderGroupUniforms(separateRenderGroup);
     }
-}
-
-void RenderPass::cleanUniforms() {
-    _renderGroupsUniforms = {};
-    _renderPassUniformBlocks = {};
-    _renderPassUniforms = {};
 }
 
 template<typename T> void RenderPass::upsertUniforms (const std::unordered_map <std::string, T>& uniformsData) {
@@ -62,14 +57,14 @@ template<typename T> void RenderPass::upsertUniforms (const std::unordered_map <
     }
 }
 
-std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > RenderPass::createSeparateMeshGroups (
-    const vecMesh_sptr& meshes) const {
+std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > RenderPass::createSeparateMeshGroups () const {
     std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > separateMeshGroups;
-    for (const Mesh_sptr& mesh : meshes) {
-        separateMeshGroups[mesh] = std::make_shared <RenderGroup>(
-            *_unitedMeshesGroup,
-            SceneElement::GlobalState::Separate
+    for (const Mesh_sptr& mesh : _meshes) {
+        if(mesh->getGlobalState() == SceneElement::GlobalState::Separate) {
+            separateMeshGroups[mesh] = std::make_shared <RenderGroup>(
+                    std::initializer_list<Mesh_sptr>({mesh})
             );
+        }
     }
     return separateMeshGroups;
 }
@@ -151,10 +146,41 @@ void RenderPass::render (const CstShaderProgram_sptr& shaderProgram) const {
     }
 }
 
+vecMesh_sptr RenderPass::createUpdatableMeshes() const {
+    vecMesh_sptr updatableMeshes {};
+    for (const auto &mesh : _meshes) {
+        if (!mesh->updatingIsUseless()) {
+            updatableMeshes.push_back(mesh);
+        }
+    }
+    return updatableMeshes;
+}
+
 void RenderPass::freeGPUMemory() {
-    _unitedMeshesGroup->freeGPUMemory();
+    if(_unitedMeshesGroup) {
+        _unitedMeshesGroup->freeGPUMemory();
+    }
     for (const auto& separateMeshGroup: _separateMeshGroups){
         const auto& renderGroup = separateMeshGroup.second;
         renderGroup->freeGPUMemory();
     }
 }
+
+std::map<Mesh_sptr, SceneElement::GlobalState> RenderPass::createMeshStates() const {
+    std::map<Mesh_sptr, SceneElement::GlobalState> meshStates {};
+    for(const auto& updatableMesh: _updatableMeshes) {
+        meshStates[updatableMesh] = updatableMesh->getGlobalState();
+    }
+    return meshStates;
+}
+
+std::shared_ptr<RenderGroup> RenderPass::createUnitedMeshesGroup() const {
+    vecMesh_sptr unitedMeshes {};
+    for(const auto& mesh: _meshes) {
+        if (mesh->getGlobalState() == SceneElement::GlobalState::United) {
+            unitedMeshes.push_back(mesh);
+        }
+    }
+    return !unitedMeshes.empty() ? std::make_shared<RenderGroup>(unitedMeshes) : nullptr;
+}
+

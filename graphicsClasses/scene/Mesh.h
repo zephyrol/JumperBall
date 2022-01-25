@@ -50,7 +50,7 @@ struct Uniforms {
     UniformVariables <GLuint> uniformTextures = {};
 };
 
-SceneElement::GlobalState update();
+SceneElement::GlobalState getGlobalState() const;
 
 size_t numberOfVertices() const;
 Uniforms genUniformsValues() const;

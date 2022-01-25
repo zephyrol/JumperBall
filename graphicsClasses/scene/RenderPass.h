@@ -35,7 +35,6 @@ void render(const CstShaderProgram_sptr& shaderProgram) const;
 void update();
 void freeGPUMemory();
 
-void cleanUniforms();
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::mat4& value);
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::vec4& value);
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::vec3& value);
@@ -66,13 +65,20 @@ template<typename T> void bindUniformVariables(
     ) const;
 template<typename T> void upsertUniforms(const std::unordered_map <std::string, T>& uniformsData);
 
-std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > createSeparateMeshGroups(
-    const vecMesh_sptr& meshes
-    ) const;
+std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > createSeparateMeshGroups() const;
+
+vecMesh_sptr createUpdatableMeshes() const;
+std::map<Mesh_sptr, SceneElement::GlobalState> createMeshStates() const;
+std::shared_ptr<RenderGroup> createUnitedMeshesGroup() const;
+
 
 const vecMesh_sptr _meshes;
-const std::shared_ptr <RenderGroup> _unitedMeshesGroup;
+const vecMesh_sptr _updatableMeshes;
+std::map<Mesh_sptr, SceneElement::GlobalState> _meshStates;
+
+std::shared_ptr <RenderGroup> _unitedMeshesGroup;
 std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > _separateMeshGroups;
+
 std::unordered_map <std::shared_ptr <RenderGroup>, Mesh::Uniforms> _renderGroupsUniforms;
 std::unordered_map <GLuint, Mesh::Uniforms> _renderPassUniforms;
 std::unordered_map <GLuint, UniformCstBlockVariables> _renderPassUniformBlocks;

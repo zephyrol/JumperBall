@@ -57,7 +57,9 @@ MenuRendering::PagesRenderPassesLetters MenuRendering::createPagesRenderPassesLe
         for (const auto& letterMeshes : lettersMeshes) {
             const unsigned char letter = letterMeshes.first;
             const vecMesh_sptr meshes = letterMeshes.second;
-            renderPassesLetters[std::make_shared <RenderPass>(meshes)] = letter;
+            if (!meshes.empty()) {
+                renderPassesLetters[std::make_shared <RenderPass>(meshes)] = letter;
+            }
         }
 
         pageRenderPassesLetters[page] = renderPassesLetters;
@@ -71,7 +73,9 @@ MenuRendering::PagesRenderPasses MenuRendering::createPagesRenderPassesOthers() 
 
     for (const auto& page : _menu.pages()) {
         const auto meshes = MeshGenerator::genOthersLabel(page);
-        pageRenderPassesOthers[page] = { std::make_shared <RenderPass>(meshes) };
+        if(!meshes.empty()) {
+            pageRenderPassesOthers[page] = { std::make_shared <RenderPass>(meshes) };
+        }
     }
 
     return pageRenderPassesOthers;

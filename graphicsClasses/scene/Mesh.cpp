@@ -13,7 +13,7 @@ Mesh::Mesh(const std::shared_ptr<const SceneElement>& sceneElement, vecCstGeomet
     _updatingIsUseless(!_sceneElement->globalStateMayChange()){
 }
 
-SceneElement::GlobalState Mesh::update() {
+SceneElement::GlobalState Mesh::getGlobalState() const{
     return _sceneElement->getGlobalState();
 }
 

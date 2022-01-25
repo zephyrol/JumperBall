@@ -13,13 +13,11 @@ class RenderGroup {
 
 public:
 
-RenderGroup(const vecMesh_sptr& meshes, const SceneElement::GlobalState& globalState);
-RenderGroup(const RenderGroup& renderGroup, const SceneElement::GlobalState& globalState);
+RenderGroup(const vecMesh_sptr& meshes);
 RenderGroup(const RenderGroup& renderGroup) = delete;
 RenderGroup& operator= (const RenderGroup& renderGroup) = delete;
 RenderGroup(RenderGroup&& renderGroup) = default;
 
-vecMesh_sptr update(const vecMesh_sptr& meshesToAdd = {});
 void freeGPUMemory();
 
 void render() const;
@@ -64,7 +62,6 @@ template<typename T> void fillStateVertexAttributesVBOsList(
     ) const;
 
 BufferObjects createBufferObjects() const;
-BufferObjects createBufferObjects(const RenderGroup& renderGroup) const;
 
 template<typename T> void activateVertexAttribute(
     const std::vector <T>& attributeData,
@@ -88,21 +85,16 @@ template<typename T> size_t updateBufferObjectData(
     GLenum target
     ) const;
 
-void updateBufferObjectsData() const;
-
 static GLuint genVertexArrayObject() ;
 static GLuint genBufferObject() ;
 Mesh::MeshVerticesInfo createMeshesVerticesInfo() const;
 vecMesh_sptr createMeshesToUpdate() const;
 const BufferObjects& bufferObjects() const;
 
-SceneElement::GlobalState _globalState;
-vecMesh_sptr _meshes;
-vecMesh_sptr _meshesToUpdate;
-Mesh::MeshVerticesInfo _meshesVerticesInfo;
+const vecMesh_sptr _meshes;
+const Mesh::MeshVerticesInfo _meshesVerticesInfo;
 const GLuint _vertexArrayObject;
 const BufferObjects _bufferObjects;
-bool _needBuffersRebinding;
 };
 
 

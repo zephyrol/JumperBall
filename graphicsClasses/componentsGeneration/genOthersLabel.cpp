@@ -19,6 +19,9 @@ vecMesh_sptr MeshGenerator::genOthersLabel (const CstPage_sptr& page) {
             std::make_move_iterator(geometricShapesLabel.end())
             );
     }
+    if(geometricShapes.empty()) {
+        return {};
+    }
     Mesh_sptr mesh = std::make_shared <Mesh>(page, std::move(geometricShapes));
     return { mesh };
 }
