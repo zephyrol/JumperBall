@@ -6,7 +6,6 @@
  */
 
 #include "SceneRendering.h"
-#include <future>
 
 SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height):
     Rendering(width, height),

@@ -12,7 +12,7 @@
 #include <vector>
 #include <functional>
 #include "FrameBuffer.h"
-#include "RenderGroup.h"
+#include "process/RenderGroup.h"
 #include "uniformBlocks/UniformBlock.h"
 
 class RenderPass;

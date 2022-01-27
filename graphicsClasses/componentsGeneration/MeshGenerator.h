@@ -23,7 +23,7 @@
 #include "geometry/Triangle.h"
 #include "system/Geometry.h"
 #include "FrameBuffer.h"
-#include <scene/Mesh.h>
+#include "process/Mesh.h"
 #include "graphicMenu/FontTexturesGenerator.h"
 
 

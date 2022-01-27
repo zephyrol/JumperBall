@@ -25,6 +25,7 @@ FrameBuffer(
     GLsizei resolutionX,
     GLsizei resolutionY,
     Content content = Content::SDR,
+    // TODO: remove auto clean, force to set clear color and scene rendering call clearMethod
     bool usedAutoClean = false,
     bool hasDepthBuffer = true,
     const glm::vec3& clearColor = backgroundColor

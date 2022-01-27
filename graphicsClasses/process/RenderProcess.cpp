@@ -7,7 +7,7 @@
 #include "RenderProcess.h"
 
 
-RenderProcess::RenderProcess(
+/*RenderProcess::RenderProcess(
     const vecRenderPass_sptr& renderPasses,
     PassShaderMap&& shaderPrograms,
     PassUniformUpdateMap&& externalUniformsTreating,
@@ -39,9 +39,9 @@ RenderProcess::RenderProcess(
     _defaultFrameBufferHeight(new GLsizei(defaultFrameBufferHeight)),
     _usingDefaultFrameBufferAutoClean(usingDefaultFrameBufferAutoClean) {
 
-}
+}*/
 
-void RenderProcess::updateUniforms() {
+/*void RenderProcess::updateUniforms() {
     for (const auto& renderPass : _renderPasses) {
         _externalUniformsTreating.at(renderPass)(renderPass, _shaderPrograms.at(renderPass)->getHandle());
     }
@@ -62,9 +62,9 @@ void RenderProcess::render() const {
         shaderProgram->use();
         renderPass->render(shaderProgram);
     }
-}
+}*/
 
-void RenderProcess::freeGPUMemory() {
+/*void RenderProcess::freeGPUMemory() {
     if (_frameBuffer) {
         _frameBuffer->freeGPUMemory();
     }
@@ -79,5 +79,6 @@ void RenderProcess::freeGPUMemory() {
 
 GLuint RenderProcess::getFrameBufferTexture() const {
     return _frameBuffer->getRenderTexture();
-}
+}*/
+
 

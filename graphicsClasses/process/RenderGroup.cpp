@@ -4,7 +4,7 @@
  *
  * Created on 20 mars 2021, 16:30
  */
-#include "RenderGroup.h"
+#include "process/RenderGroup.h"
 
 RenderGroup::RenderGroup(const vecMesh_sptr& meshes):
     _meshes(meshes),

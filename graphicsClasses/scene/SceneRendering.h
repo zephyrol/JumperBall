@@ -30,7 +30,6 @@ void render() const override;
 private:
 
 static constexpr size_t heightBloomTexture = 192;
-static constexpr size_t sizeDepthTexture = 1024;
 
 const GLsizei _expensivePreprocessWidth;
 const GLsizei _expensivePreprocessHeight;

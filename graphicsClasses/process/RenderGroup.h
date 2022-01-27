@@ -7,7 +7,7 @@
 
 #ifndef RENDERGROUP_H
 #define RENDERGROUP_H
-#include "Mesh.h"
+#include "process/Mesh.h"
 
 class RenderGroup {
 

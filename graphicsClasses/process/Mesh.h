@@ -9,8 +9,8 @@
 #define MESH_H
 #include "Shader.h"
 #include "ShaderProgram.h"
-#include <geometry/GeometricShape.h>
-#include <scene/SceneElement.h>
+#include "geometry/GeometricShape.h"
+#include "scene/SceneElement.h"
 
 class Mesh;
 using Mesh_sptr = std::shared_ptr <Mesh>;

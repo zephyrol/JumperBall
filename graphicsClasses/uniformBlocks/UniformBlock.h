@@ -10,7 +10,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include "scene/Mesh.h"
+#include "process/Mesh.h"
 #include <cstring>
 
 class UniformBlock;
