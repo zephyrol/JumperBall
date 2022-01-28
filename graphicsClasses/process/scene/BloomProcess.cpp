@@ -17,8 +17,6 @@ BloomProcess::BloomProcess(
 }
 
 void BloomProcess::render() const {
-    FrameBuffer::bindDefaultFrameBuffer(_width, _height);
-
     _bloomBlurShader->use();
     _screen->render(_bloomBlurShader);
 }

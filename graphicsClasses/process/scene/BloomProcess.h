@@ -2,11 +2,11 @@
 // Created by Sébastien Morgenthaler on 26/01/2022.
 //
 
-#ifndef JUMPERBALLAPPLICATION_BLOOMPROCESS_H
+#ifndef JUMPERBALLAPPLICATION_LETTERSPROCESS_H
 #define JUMPERBALLAPPLICATION_BLOOMPROCESS_H
 
 
-#include "RenderProcess.h"
+#include "process/RenderProcess.h"
 
 class BloomProcess: RenderProcess {
 
@@ -25,4 +25,4 @@ private:
 };
 
 
-#endif //JUMPERBALLAPPLICATION_BLOOMPROCESS_H
+#endif //JUMPERBALLAPPLICATION_LETTERSPROCESS_H

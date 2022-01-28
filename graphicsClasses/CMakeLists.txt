@@ -22,6 +22,8 @@ FILE(GLOB SOURCE_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/scene/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/process/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/process/scene/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/process/menu/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/componentsGeneration/*.cpp)
 
 
@@ -32,6 +34,8 @@ FILE(GLOB HEADER_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/uniformBlocks/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/process/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/process/scene/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/process/menu/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/scene/*.h)
 
 INSTALL (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR}/bin)

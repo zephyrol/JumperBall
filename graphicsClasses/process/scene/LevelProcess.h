@@ -4,7 +4,7 @@
 
 #ifndef JUMPERBALLAPPLICATION_LEVELPROCESS_H
 #define JUMPERBALLAPPLICATION_LEVELPROCESS_H
-#include "RenderProcess.h"
+#include "process/RenderProcess.h"
 
 
 class LevelProcess: public RenderProcess {

@@ -6,7 +6,7 @@
 #define JUMPERBALLAPPLICATION_VERTICALBLURPROCESS_H
 
 
-#include "RenderProcess.h"
+#include "process/RenderProcess.h"
 
 class VerticalBlurProcess: RenderProcess {
 

@@ -4,7 +4,7 @@
 
 #ifndef JUMPERBALLAPPLICATION_SHADOWPROCESS_H
 #define JUMPERBALLAPPLICATION_SHADOWPROCESS_H
-#include "RenderProcess.h"
+#include "process/RenderProcess.h"
 
 
 class ShadowProcess: public RenderProcess {
