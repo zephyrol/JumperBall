@@ -9,15 +9,14 @@
 #include "process/RenderProcess.h"
 #include "gameMenu/Page.h"
 
-class ShapeLabelProcess: RenderProcess {
+class ShapeLabelProcess: public RenderProcess {
 public:
-    ShapeLabelProcess(
-        const RenderPass_sptr& renderPass
-    );
+    ShapeLabelProcess(const CstPage_sptr& page);
 
     void render() const override;
     void freeGPUMemory() override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
+    static RenderPass_sptr createRenderPassesShapes(const CstPage_sptr& page);
 
 private:
     const RenderPass_sptr _renderPassesShapes;

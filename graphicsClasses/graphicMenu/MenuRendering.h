@@ -28,31 +28,13 @@ void freeGPUMemory() override;
 
 private:
 
-using RenderPassesLetters = std::unordered_map <RenderPass_sptr, unsigned char>;
-
-using PagesRenderPassesLetters = std::unordered_map <CstPage_sptr, RenderPassesLetters>;
-using PagesRenderPasses = std::unordered_map <CstPage_sptr, vecRenderPass_sptr>;
-using PagesRenderProcess = std::unordered_map <CstPage_sptr, RenderProcess_sptr>;
+using PagesRenderProcesses = std::unordered_map <CstPage_sptr, vecRenderProcess_sptr>;
 
 const Menu& _menu;
 const FontTexturesGenerator::GraphicAlphabet _graphicAlphabet;
-const PagesRenderPassesLetters _pagesRenderPassesLetters;
-const PagesRenderPasses _pagesRenderPassesOthers;
 
-const PagesRenderPasses _pagesRenderPasses;
-
-const PagesRenderProcess _pagesRenderProcess;
-
-
-Rendering::ExternalUniformVariables <GLuint> _externalUniformTextures;
-
-PagesRenderPassesLetters createPagesRenderPassesLetters() const;
-PagesRenderPasses createPagesRenderPassesOthers() const;
-PagesRenderPasses createPagesRenderPasses() const;
-RenderProcess_sptr createRenderProcess(const CstPage_sptr& page) const;
-PagesRenderProcess createPagesRenderProcess() const;
-Rendering::ExternalUniformVariables <GLuint> createExternalUniformTexturesVariables() const;
-// vecRenderPass_sptr createRenderPasses() const;
+const PagesRenderProcesses _pagesRenderProcess;
+PagesRenderProcesses createPagesRenderProcess() const;
 };
 
 

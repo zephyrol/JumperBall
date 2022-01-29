@@ -20,7 +20,10 @@ public:
 private:
     const RenderPass_sptr _screen;
     const FrameBuffer_uptr _frameBuffer;
+    const GLuint _horizontalBlurTexture;
     const CstShaderProgram_sptr _bloomShader;
+
+    CstShaderProgram_sptr createVerticalBlurProcessShaderProgram() const;
 };
 
 

@@ -10,7 +10,7 @@
 #include "gameMenu/Page.h"
 #include "graphicMenu/FontTexturesGenerator.h"
 
-class LettersProcess: RenderProcess {
+class LettersProcess: public RenderProcess {
 
 public:
 

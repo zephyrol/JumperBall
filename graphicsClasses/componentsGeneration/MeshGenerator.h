@@ -52,7 +52,7 @@ std::unordered_map <unsigned char, vecMesh_sptr> genLettersLabel(
     const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet
 );
 
-vecMesh_sptr genOthersLabel(const CstPage_sptr& page);
+vecMesh_sptr genShapesLabel(const CstPage_sptr& page);
 
 Mesh_sptr genBlock(const CstMap_sptr &map, const CstBlock_sptr &block);
 

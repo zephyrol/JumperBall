@@ -60,7 +60,6 @@ void main() {
     vec4 baseRGBColor = texture(frameSceneHDRTexture, fs_vertexUVs);
     vec3 basexyYColor = convertRBGToCIExyY(baseRGBColor.xyz);
     vec3 toneMappedRGBColor = toneMappingOperator(basexyYColor);
-    pixelColor = vec4(toneMappedRGBColor, baseRGBColor.a) +
-                 texture(frameBluredTexture, fs_vertexUVs);
+    pixelColor = vec4(toneMappedRGBColor, baseRGBColor.a) + texture(frameBluredTexture, fs_vertexUVs);
     pixelColor = mix(pixelColor, vec4(flashColor, 1.0), teleportationCoeff);
 }

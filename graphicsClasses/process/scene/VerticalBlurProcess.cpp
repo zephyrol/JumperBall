@@ -7,6 +7,7 @@
 VerticalBlurProcess::VerticalBlurProcess(
         GLsizei width,
         GLsizei height,
+        GLuint horizontalBlurTexture,
         const RenderPass_sptr& screen
 ):
         _screen(screen),
@@ -17,7 +18,8 @@ VerticalBlurProcess::VerticalBlurProcess(
         false,
         false ))
 ),
-        _bloomShader(ShaderProgram::createShaderProgram("basicFboVs.vs", "verticalBlurFs.fs" ))
+        _horizontalBlurTexture(horizontalBlurTexture),
+        _bloomShader(createVerticalBlurProcessShaderProgram())
 {
 }
 
@@ -35,5 +37,12 @@ std::shared_ptr<const GLuint> VerticalBlurProcess::getRenderTexture() const {
 void VerticalBlurProcess::freeGPUMemory() {
     _frameBuffer->freeGPUMemory();
     _bloomShader->freeGPUMemory();
+}
+
+CstShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgram() const {
+    CstShaderProgram_sptr sp = ShaderProgram::createShaderProgram("basicFboVs.vs", "verticalBlurFs.fs");
+    sp->use();
+    sp->bindUniformTexture("brightPassTexture", 0, _horizontalBlurTexture);
+    return sp;
 }
 

@@ -7,6 +7,7 @@
 LevelProcess::LevelProcess(
     GLsizei width,
     GLsizei height,
+    GLuint shadowTexture,
     const RenderPass_sptr& blocks,
     const RenderPass_sptr& items,
     const RenderPass_sptr& enemies,
@@ -20,18 +21,19 @@ LevelProcess::LevelProcess(
                 FrameBuffer::Content::HDR,
                 true
         )),
-        _blocks(blocks),
-        _items(items),
-        _enemies(enemies),
-        _specials(specials),
-        _ball(ball),
-        _star(star),
-        _sceneBlocksShader(ShaderProgram::createShaderProgram("blocksVs.vs", levelFs)),
-        _sceneItemsShader(ShaderProgram::createShaderProgram("itemsMapVs.vs", levelFs)),
-        _sceneEnemiesShader(ShaderProgram::createShaderProgram("enemiesVs.vs", levelFs)),
-        _sceneSpecialsShader(ShaderProgram::createShaderProgram("specialsVs.vs", levelFs)),
-        _sceneBallShader(ShaderProgram::createShaderProgram("ballVs.vs", levelFs)),
-        _sceneStarShader(ShaderProgram::createShaderProgram("starVs.vs", "starFs.fs"))
+   _blocks(blocks),
+   _items(items),
+   _enemies(enemies),
+   _specials(specials),
+   _ball(ball),
+   _star(star),
+   _shadowTexture(shadowTexture),
+   _sceneBlocksShader(createLevelProcessShaderProgram("blocksVs.vs")),
+   _sceneItemsShader(createLevelProcessShaderProgram("itemsMapVs.vs")),
+   _sceneEnemiesShader(createLevelProcessShaderProgram("enemiesVs.vs")),
+   _sceneSpecialsShader(createLevelProcessShaderProgram("specialsVs.vs")),
+   _sceneBallShader(createLevelProcessShaderProgram("ballVs.vs")),
+   _sceneStarShader(ShaderProgram::createShaderProgram("starVs.vs", "starFs.fs"))
 {
 }
 
@@ -67,8 +69,16 @@ void LevelProcess::freeGPUMemory() {
     _sceneStarShader->freeGPUMemory();
 }
 
-const std::string LevelProcess::levelFs = "levelFs.fs";
-
 std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
     return std::make_shared<const GLuint>(_frameBuffer->getRenderTexture());
 }
+
+CstShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(const std::string &vs) const {
+    CstShaderProgram_sptr sp = ShaderProgram::createShaderProgram(vs, levelFs);
+    sp->use();
+    sp->bindUniformTexture("depthTexture", 0, _shadowTexture);
+    return sp;
+}
+
+const std::string LevelProcess::levelFs = "levelFs.fs";
+

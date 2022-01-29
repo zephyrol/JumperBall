@@ -19,12 +19,6 @@ class RenderProcess {
 
 public:
 
-//using UniformUpdatingFct = std::function <void (const RenderPass_sptr&, GLuint)>;
-//using PassShaderMap = std::unordered_map <RenderPass_sptr, CstShaderProgram_sptr>;
-//using PassUniformUpdateMap = std::unordered_map <RenderPass_sptr, UniformUpdatingFct>;
-
-// Render to a texture
-
 RenderProcess(const RenderProcess& renderProcess) = delete;
 
     RenderProcess() = default;

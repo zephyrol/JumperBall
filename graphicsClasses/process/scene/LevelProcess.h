@@ -13,6 +13,7 @@ public:
     LevelProcess(
         GLsizei width,
         GLsizei height,
+        GLuint shadowTexture,
         const RenderPass_sptr& blocks,
         const RenderPass_sptr& items,
         const RenderPass_sptr& enemies,
@@ -36,12 +37,15 @@ private:
     const RenderPass_sptr _ball;
     const RenderPass_sptr _star;
 
+    const GLuint _shadowTexture;
     const CstShaderProgram_sptr _sceneBlocksShader;
     const CstShaderProgram_sptr _sceneItemsShader;
     const CstShaderProgram_sptr _sceneEnemiesShader;
     const CstShaderProgram_sptr _sceneSpecialsShader;
     const CstShaderProgram_sptr _sceneBallShader;
     const CstShaderProgram_sptr _sceneStarShader;
+
+    CstShaderProgram_sptr createLevelProcessShaderProgram(const std::string& vs) const;
 
     static const std::string levelFs;
 };

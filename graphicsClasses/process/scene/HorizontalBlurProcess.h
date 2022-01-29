@@ -11,15 +11,22 @@
 class HorizontalBlurProcess: RenderProcess {
 
 public:
-    HorizontalBlurProcess(GLsizei width, GLsizei height, const RenderPass_sptr& screen);
+    HorizontalBlurProcess(
+        GLsizei width,
+        GLsizei height,
+        GLuint brightPassTexture,
+        const RenderPass_sptr& screen
+    );
 
     void render() const override;
     void freeGPUMemory() override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
+    CstShaderProgram_sptr createHorizontalBlurProcessShaderProgram() const;
 
 private:
     const RenderPass_sptr _screen;
     const FrameBuffer_uptr _frameBuffer;
+    const GLuint _brightPassTexture;
     const CstShaderProgram_sptr _bloomShader;
 };
 

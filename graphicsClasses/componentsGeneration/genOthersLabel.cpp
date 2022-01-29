@@ -1,5 +1,5 @@
 /*
- * File: genOthersLabel.cpp
+ * File: genShapesLabel.cpp
  * Author: Morgenthaler S
  *
  * Created on 30 avril 2021, 14:20
@@ -8,7 +8,7 @@
 #include "MeshGenerator.h"
 
 
-vecMesh_sptr MeshGenerator::genOthersLabel (const CstPage_sptr& page) {
+vecMesh_sptr MeshGenerator::genShapesLabel (const CstPage_sptr& page) {
 
     vecCstGeometricShape_sptr geometricShapes {};
     for (const auto& label : page->labels()) {

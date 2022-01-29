@@ -11,17 +11,22 @@
 class BloomProcess: RenderProcess {
 
 public:
-    BloomProcess(GLsizei width, GLsizei height, const RenderPass_sptr& screen);
+    BloomProcess(
+        GLuint sceneHDRTexture,
+        GLuint bluredTexture,
+        const RenderPass_sptr& screen);
 
     void render() const override;
     void freeGPUMemory() override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
 
 private:
-    const GLsizei _width;
-    const GLsizei _height;
     const RenderPass_sptr _screen;
-    const CstShaderProgram_sptr _bloomBlurShader;
+    const GLuint _sceneHDRTexture;
+    const GLuint _bluredTexture;
+    const CstShaderProgram_sptr _bloomShader;
+
+    CstShaderProgram_sptr createBloomProcessShaderProgram() const;
 };
 
 
