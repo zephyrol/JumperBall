@@ -8,9 +8,6 @@ uniform mat4 VPStar;
 uniform vec3 positionCamera;
 uniform light {
     vec3 lightDirection;
-    vec3 ambientLightIntensity;
-    vec3 diffuseLightIntensity;
-    vec3 specularLightIntensity;
 };
 
 uniform float burningCoeff;
@@ -20,6 +17,10 @@ in vec3 fs_vertexNormal;
 in vec3 fs_vertexPositionWorld;
 
 out vec4 pixelColor;
+
+const vec3 ambientLightIntensity = vec3(0.7, 0.7, 0.7);
+const vec3 diffuseLightIntensity = vec3(0.25, 0.25, 0.25);
+const vec3 specularLightIntensity = vec3(0.25, 0.25, 0.25);
 
 void main() {
 

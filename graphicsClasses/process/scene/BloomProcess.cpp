@@ -5,10 +5,14 @@
 #include "BloomProcess.h"
 
 BloomProcess::BloomProcess(
-        GLuint sceneHDRTexture,
-        GLuint bluredTexture,
-        const RenderPass_sptr& screen
+    GLsizei width,
+    GLsizei height,
+    GLuint sceneHDRTexture,
+    GLuint bluredTexture,
+    const RenderPass_sptr& screen
 ):
+        _width(width),
+        _height(height),
         _screen(screen),
         _sceneHDRTexture(sceneHDRTexture),
         _bluredTexture(bluredTexture),
@@ -17,6 +21,7 @@ BloomProcess::BloomProcess(
 }
 
 void BloomProcess::render() const {
+    FrameBuffer::setViewportSize(_width, _height);
     _bloomShader->use();
     _screen->render(_bloomShader);
 }

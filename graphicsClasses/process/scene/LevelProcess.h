@@ -28,6 +28,8 @@ public:
 
 private:
 
+    GLsizei _width;
+    GLsizei _height;
     const FrameBuffer_uptr _frameBuffer;
 
     const RenderPass_sptr _blocks;

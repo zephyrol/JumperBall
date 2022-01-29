@@ -26,6 +26,7 @@ void MenuRendering::update() {
     if (!currentPage) {
         return;
     }
+    // TODO: update renderPasses
     // TODO: update Y position
 
     //letterRenderPass->upsertUniform(shaderProgramID, "positionY", page->localPosY());

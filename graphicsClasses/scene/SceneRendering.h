@@ -15,6 +15,12 @@
 #include "scene/SceneElement.h"
 #include "Rendering.h"
 #include "Scene.h"
+#include "process/scene/ShadowProcess.h"
+#include "process/scene/LevelProcess.h"
+#include "process/scene/BrightPassFilterProcess.h"
+#include "process/scene/HorizontalBlurProcess.h"
+#include "process/scene/VerticalBlurProcess.h"
+#include "process/scene/BloomProcess.h"
 
 
 class SceneRendering:public Rendering {
@@ -36,64 +42,28 @@ const GLsizei _expensivePreprocessHeight;
 
 const Scene& _scene;
 
-ExternalUniformBlockVariables _externalUniformBlocks;
-ExternalUniformVariables <glm::mat4> _externalUniformMatrices;
+const RenderPass_sptr _blocks;
+const RenderPass_sptr _items;
+const RenderPass_sptr _enemies;
+const RenderPass_sptr _specials;
+const RenderPass_sptr _ball;
+const RenderPass_sptr _star;
+const RenderPass_sptr _screen;
 
-const vecRenderPass_sptr _levelRenderPasses;
-const RenderPass_sptr _starRenderPass;
-const vecRenderPass_sptr _sceneRenderPasses;
-const RenderPass_sptr _screenRenderPass;
-const vecRenderPass_sptr _vecScreenRenderPass;
 const vecRenderPass_sptr _renderPasses;
 
-const RenderProcess_sptr _depthStarProcess;
-const RenderProcess_sptr _sceneRenderingProcess;
-const RenderProcess_sptr _brightPassFilterProcess;
-const RenderProcess_sptr _horizontalBlurProcess;
-const RenderProcess_sptr _verticalBlurProcess;
-const RenderProcess_sptr _bloomProcess;
-const vecRenderProcess_sptr _renderingPipeline;
-vecRenderPass_sptr createSceneRenderPasses() const;
-vecRenderPass_sptr createRenderPasses() const;
-
-RenderProcess_sptr createDepthStarProcess() const;
-RenderProcess_sptr createSceneRenderingProcess() const;
-
-RenderProcess_sptr createBrightPassProcess() const;
-RenderProcess_sptr createHorizontalBlurProcess() const;
-RenderProcess_sptr createVerticalBlurProcess() const;
-RenderProcess_sptr createBloomProcess() const;
-
-RenderProcess::PassShaderMap createScreenShaders(const std::string& fs) const;
-
-RenderProcess::PassUniformUpdateMap createScreenSpaceUniformsUpdating(
-    const std::unordered_map <std::string, RenderProcess_sptr>& textureNameRenderProcess
-    ) const;
-
-RenderProcess::PassUniformUpdateMap createBrightPassUniformsUpdating() const;
-RenderProcess::PassUniformUpdateMap createHorizontalBlurUniformsUpdating() const;
-RenderProcess::PassUniformUpdateMap createVerticalBlurUniformsUpdating() const;
-RenderProcess::PassUniformUpdateMap createBloomUniformsUpdating() const;
-
-Rendering::ExternalUniformVariables <glm::mat4> createExternalUniformMatFourVariables() const;
-Rendering::ExternalUniformBlockVariables createExternalUniformBlockVariables() const;
-
-const UniformBlock_sptr& getUniformBlock(const std::string& name) const;
-const glm::mat4& getUniformMatrix(const std::string& name) const;
+const std::shared_ptr<ShadowProcess> _shadowStar;
+const std::shared_ptr<LevelProcess> _sceneRenderingProcess;
+const std::shared_ptr<BrightPassFilterProcess> _brightPassFilter;
+const std::shared_ptr<HorizontalBlurProcess> _horizontalBlur;
+const std::shared_ptr<VerticalBlurProcess> _verticalBlur;
+const std::shared_ptr<BloomProcess> _bloom;
+const vecRenderProcess_sptr _processes;
 
 static const std::string VPName;
 static const std::string VPStarName;
 static const std::string positionCameraName;
 static const std::string lightName;
-
-static const std::string blocksVs;
-static const std::string itemsMapVs;
-static const std::string enemiesVs;
-static const std::string specialsVs;
-static const std::string ballVs;
-static const std::string basicFboVs;
-static const std::string levelFs;
-static const std::string depthFs;
 };
 
 #endif /* SCENE_RENDERING_H */

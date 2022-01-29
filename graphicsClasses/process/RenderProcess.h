@@ -5,6 +5,9 @@
  * Created on 25 mars 2021, 21:48
  */
 
+#ifndef RENDER_PROCESS_H
+#define RENDER_PROCESS_H
+
 #include "process/RenderPass.h"
 #include "FrameBuffer.h"
 #include <functional>
@@ -31,3 +34,5 @@ virtual void render() const = 0;
 virtual void freeGPUMemory() = 0;
 virtual std::shared_ptr<const GLuint> getRenderTexture() const = 0;
 };
+
+#endif

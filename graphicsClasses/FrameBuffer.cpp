@@ -65,14 +65,6 @@ FrameBuffer::FrameBuffer(
 void FrameBuffer::bindFrameBuffer() const {
     glBindFramebuffer(GL_FRAMEBUFFER, _fboHandle);
 
-    // TODO: call those function only if it's necessary
-    glViewport(0, 0, _resolutionX, _resolutionY);
-    if (_depthBuffer) {
-        glEnable(GL_DEPTH_TEST);
-    } else {
-        glDisable(GL_DEPTH_TEST);
-    }
-    // ----
     if (_usedAutoClean) {
         cleanCurrentFrameBuffer(hasDepthBuffer(), _clearColor);
     }
@@ -134,20 +126,17 @@ GLuint FrameBuffer::getHandle() const {
     return _fboHandle;
 }
 
-// TODO: Remove this function
-FrameBuffer_uptr FrameBuffer::createScreenSpaceEffectFrameBuffer (
-    const FrameBuffer::Content& content,
-    GLsizei width,
-    GLsizei height
-) {
-    return FrameBuffer_uptr(new FrameBuffer(
-        width,
-        height,
-        content,
-        false,
-        false
-    ));
-}
-
 
 const glm::vec3 FrameBuffer::backgroundColor { 0.f, 0.f, .1f };
+
+void FrameBuffer::setViewportSize(GLsizei resolutionX, GLsizei resolutionY) {
+    glViewport(0, 0, resolutionX, resolutionY);
+}
+
+void FrameBuffer::enableDepthTest() {
+    glEnable(GL_DEPTH_TEST);
+}
+
+void FrameBuffer::disableDepthTest() {
+    glDisable(GL_DEPTH_TEST);
+}

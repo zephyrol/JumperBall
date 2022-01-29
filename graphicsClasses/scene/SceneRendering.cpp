@@ -15,34 +15,59 @@ SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height
     )),
     _expensivePreprocessHeight(SceneRendering::heightBloomTexture),
     _scene(scene),
-    _externalUniformBlocks(createExternalUniformBlockVariables()),
-    _externalUniformMatrices(createExternalUniformMatFourVariables()),
-    _levelRenderPasses{
-        std::make_shared <RenderPass>(MeshGenerator::genBlocks(scene.getMap())),
-        std::make_shared <RenderPass>(MeshGenerator::genItems(scene.getMap())),
-        std::make_shared <RenderPass>(MeshGenerator::genEnemies(scene.getMap())),
-        std::make_shared <RenderPass>(MeshGenerator::genSpecials(scene.getMap())),
-        std::make_shared <RenderPass>(MeshGenerator::genBall(scene.getBall()))
-    },
-    _starRenderPass(std::make_shared <RenderPass>(MeshGenerator::genStar(scene.getStar()))),
-    _sceneRenderPasses(createSceneRenderPasses()),
-    _screenRenderPass(std::make_shared <RenderPass>(MeshGenerator::genScreen())),
-    _vecScreenRenderPass({ _screenRenderPass }),
-    _renderPasses{createRenderPasses()},
-    _depthStarProcess(),
-    _sceneRenderingProcess(createSceneRenderingProcess()),
-    _brightPassFilterProcess(createBrightPassProcess()),
-    _horizontalBlurProcess(createHorizontalBlurProcess()),
-    _verticalBlurProcess(createVerticalBlurProcess()),
-    _bloomProcess(createBloomProcess()),
-    _renderingPipeline{
-                       _depthStarProcess,
-                       _sceneRenderingProcess,
-                       _brightPassFilterProcess,
-                       _horizontalBlurProcess,
-                       _verticalBlurProcess,
-                       _bloomProcess
-                       } {
+    _blocks(std::make_shared <RenderPass>(MeshGenerator::genBlocks(scene.getMap()))),
+    _items(std::make_shared<RenderPass>(MeshGenerator::genItems(scene.getMap()))),
+    _enemies(std::make_shared <RenderPass>(MeshGenerator::genEnemies(scene.getMap()))),
+    _specials(std::make_shared <RenderPass>(MeshGenerator::genSpecials(scene.getMap()))),
+    _ball(std::make_shared <RenderPass>(MeshGenerator::genBall(scene.getBall()))),
+    _star(std::make_shared <RenderPass>(MeshGenerator::genStar(scene.getStar()))),
+    _screen(std::make_shared <RenderPass>(MeshGenerator::genScreen())),
+    _renderPasses{ _blocks, _items, _enemies, _specials, _ball, _ball, _screen },
+    _shadowStar(std::make_shared<ShadowProcess>(_blocks, _items, _enemies, _specials, _ball )),
+    _sceneRenderingProcess(std::make_shared<LevelProcess>(
+        _width,
+        _height,
+        *_shadowStar->getRenderTexture(),
+        _blocks,
+        _items,
+        _enemies,
+        _specials,
+        _ball,
+        _star)),
+    _brightPassFilter(std::make_shared<BrightPassFilterProcess>(
+        _expensivePreprocessWidth,
+        _expensivePreprocessHeight,
+        *_sceneRenderingProcess->getRenderTexture(),
+        _screen
+        )),
+    _horizontalBlur(std::make_shared<HorizontalBlurProcess>(
+        _expensivePreprocessWidth,
+        _expensivePreprocessHeight,
+        *_brightPassFilter->getRenderTexture(),
+        _screen
+        )),
+    _verticalBlur(std::make_shared<VerticalBlurProcess>(
+        _expensivePreprocessWidth,
+        _expensivePreprocessHeight,
+        *_horizontalBlur->getRenderTexture(),
+        _screen
+    )),
+    _bloom(std::make_shared<BloomProcess>(
+        width,
+        height,
+        *_sceneRenderingProcess->getRenderTexture(),
+        *_verticalBlur->getRenderTexture(),
+        _screen
+    )),
+    _processes({
+        _shadowStar,
+        _sceneRenderingProcess,
+        _brightPassFilter,
+        _horizontalBlur,
+        _verticalBlur,
+        _bloom
+    })
+    {
 
     // TODO: Move thoses instructions
     // alpha
@@ -52,291 +77,8 @@ SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height
     glEnable(GL_CULL_FACE);
 }
 
-vecRenderPass_sptr SceneRendering::createSceneRenderPasses() const {
-    vecRenderPass_sptr sceneRenderPasses = _levelRenderPasses;
-    sceneRenderPasses.push_back(_starRenderPass);
-    return sceneRenderPasses;
-}
-
-vecRenderPass_sptr SceneRendering::createRenderPasses() const {
-    vecRenderPass_sptr renderPasses = _sceneRenderPasses;
-    renderPasses.push_back(_screenRenderPass);
-    return renderPasses;
-}
-
-RenderProcess_sptr SceneRendering::createDepthStarProcess() const {
-
-    const auto createDepthStarShaders =
-        [this] ()->RenderProcess::PassShaderMap {
-            return {
-                {
-                    { _levelRenderPasses.at(0), ShaderProgram::createShaderProgram(blocksVs, depthFs) },
-                    { _levelRenderPasses.at(1), ShaderProgram::createShaderProgram(itemsMapVs, depthFs) },
-                    { _levelRenderPasses.at(2), ShaderProgram::createShaderProgram(enemiesVs, depthFs) },
-                    { _levelRenderPasses.at(3), ShaderProgram::createShaderProgram(specialsVs, depthFs) },
-                    { _levelRenderPasses.at(4), ShaderProgram::createShaderProgram(ballVs, depthFs) }
-                }
-            };
-        };
-
-    const auto updateDepthStarFct =
-        [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
-            renderPass->upsertUniform(
-                shaderProgramID,
-                VPName,
-                Camera::genVPMatrixFromStar(*_scene.getStar())
-                );
-        };
-
-    const auto createDepthStarUniformsUpdating =
-        [this, &updateDepthStarFct] () {
-            RenderProcess::PassUniformUpdateMap uniformUpdatingFcts;
-            for (const RenderPass_sptr& levelRenderPass : _levelRenderPasses) {
-                uniformUpdatingFcts[levelRenderPass] = updateDepthStarFct;
-            }
-            return uniformUpdatingFcts;
-        };
-
-    return std::make_shared <RenderProcess>(
-        _levelRenderPasses,
-        createDepthStarShaders(),
-        createDepthStarUniformsUpdating(),
-        FrameBuffer_uptr(new FrameBuffer(
-            sizeDepthTexture,
-            sizeDepthTexture,
-            FrameBuffer::Content::Depth,
-                             true,
-                             true,
-                             { 1.f, 1.f, 1.f }
-        ))
-    );
-}
-
-RenderProcess_sptr SceneRendering::createSceneRenderingProcess() const {
-    const std::string& lightBlockName = SceneRendering::lightName;
-    const auto& lightBlock = getUniformBlock(lightBlockName);
-
-    const auto createSceneRenderingShaders =
-        [this, lightBlockName, lightBlock] ()->RenderProcess::PassShaderMap {
-
-            const vecCstShaderProgram_sptr shaderPrograms {
-                ShaderProgram::createShaderProgram(blocksVs, levelFs),
-                ShaderProgram::createShaderProgram(itemsMapVs, levelFs),
-                ShaderProgram::createShaderProgram(enemiesVs, levelFs),
-                ShaderProgram::createShaderProgram(specialsVs, levelFs),
-                ShaderProgram::createShaderProgram(ballVs, levelFs),
-                ShaderProgram::createShaderProgram("starVs.vs", "starFs.fs")
-            };
-            const std::vector <bool> usingLight = { true, true, true, true, true, false };
-
-            RenderProcess::PassShaderMap passShaderMap;
-            for (size_t i = 0; i < _sceneRenderPasses.size(); ++i) {
-                const auto& shaderProgram = shaderPrograms.at(i);
-                if (usingLight.at(i)) {
-                    lightBlock->registerShader(shaderProgram, lightBlockName);
-                }
-                passShaderMap[_sceneRenderPasses.at(i)] = shaderProgram;
-            }
-            return passShaderMap;
-        };
-
-    const auto updateSceneLevelRenderingFct =
-        [this, lightBlock, lightBlockName] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
-
-            renderPass->upsertUniform(
-                shaderProgramID,
-                SceneRendering::VPName,
-                _scene.getCamera()->viewProjection());
-            const std::string& VPStarName = SceneRendering::VPStarName;
-            renderPass->upsertUniform(shaderProgramID, VPStarName, getUniformMatrix(VPStarName));
-            renderPass->upsertUniform(
-                shaderProgramID, 
-                SceneRendering::positionCameraName,
-                _scene.getCamera()->pos()
-            );
-
-            const auto& lightBlock = getUniformBlock(lightBlockName);
-            renderPass->upsertUniform(shaderProgramID, lightBlockName, lightBlock);
-            renderPass->upsertUniformTexture(
-                shaderProgramID,
-                "depthTexture",
-                _depthStarProcess->getFrameBufferTexture());
-        };
-
-    const auto updateSceneStarRenderingFct =
-        [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
-            const auto& camera = _scene.getCamera();
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, camera->viewProjection());
-            renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName, camera->pos());
-        };
-
-
-    // TODO: this function is duplicated, refactor !
-    const auto createSceneRenderingUniformsUpdating =
-        [this, &updateSceneLevelRenderingFct, &updateSceneStarRenderingFct] () {
-            RenderProcess::PassUniformUpdateMap uniformUpdatingFcts;
-            for (const RenderPass_sptr& levelRenderPass : _levelRenderPasses) {
-                uniformUpdatingFcts[levelRenderPass] = updateSceneLevelRenderingFct;
-            }
-            uniformUpdatingFcts[_starRenderPass] = updateSceneStarRenderingFct;
-            return uniformUpdatingFcts;
-        };
-
-    return std::make_shared <RenderProcess>(
-        _sceneRenderPasses,
-        createSceneRenderingShaders(),
-        createSceneRenderingUniformsUpdating(),
-        FrameBuffer_uptr(new FrameBuffer(_width, _height, FrameBuffer::Content::HDR, true))
-        );
-}
-
-RenderProcess::PassUniformUpdateMap SceneRendering::createScreenSpaceUniformsUpdating (
-    const std::unordered_map <std::string, RenderProcess_sptr>& textureNameRenderProcess
-    ) const {
-    const auto uniformsTextureUpdatingFunction =
-        [textureNameRenderProcess] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
-            for (const auto& textureNameRenderProcessValue : textureNameRenderProcess) {
-                const std::string& textureName = textureNameRenderProcessValue.first;
-                const RenderProcess_sptr renderProcess = textureNameRenderProcessValue.second;
-                renderPass->upsertUniformTexture(
-                    shaderProgramID,
-                    textureName,
-                    renderProcess->getFrameBufferTexture()
-                    );
-            }
-        };
-    return {{ _screenRenderPass, uniformsTextureUpdatingFunction }};
-}
-
-// TODO refactor those functions
-RenderProcess_sptr SceneRendering::createBrightPassProcess() const {
-    return std::make_shared <RenderProcess>(
-        _vecScreenRenderPass,
-        createScreenShaders("brightPassFilter.fs"),
-        createBrightPassUniformsUpdating(),
-        FrameBuffer::createScreenSpaceEffectFrameBuffer(
-            FrameBuffer::Content::HDR,
-            _expensivePreprocessWidth,
-            _expensivePreprocessHeight
-        )
-    );
-}
-
-RenderProcess_sptr SceneRendering::createHorizontalBlurProcess() const {
-    return std::make_shared <RenderProcess>(
-        _vecScreenRenderPass,
-        createScreenShaders("horizontalBlurFs.fs"),
-        createHorizontalBlurUniformsUpdating(),
-        FrameBuffer::createScreenSpaceEffectFrameBuffer(
-            FrameBuffer::Content::HDR,
-            _expensivePreprocessWidth,
-            _expensivePreprocessHeight
-        )
-    );
-}
-
-RenderProcess_sptr SceneRendering::createVerticalBlurProcess() const {
-    return std::make_shared <RenderProcess>(
-        _vecScreenRenderPass,
-        createScreenShaders("verticalBlurFs.fs"),
-        createVerticalBlurUniformsUpdating(),
-        FrameBuffer::createScreenSpaceEffectFrameBuffer(
-            FrameBuffer::Content::SDR,
-            _expensivePreprocessWidth,
-            _expensivePreprocessHeight
-        )
-    );
-}
-
-RenderProcess_sptr SceneRendering::createBloomProcess() const {
-    return std::make_shared <RenderProcess>(
-        _vecScreenRenderPass,
-        createScreenShaders("bloomFs.fs"),
-        createBloomUniformsUpdating(),
-       _width,
-       _height
-    );
-}
-
-RenderProcess::PassShaderMap SceneRendering::createScreenShaders (const std::string& fs) const {
-    return {
-        { _screenRenderPass, ShaderProgram::createShaderProgram(basicFboVs, fs) }
-    };
-}
-
-RenderProcess::PassUniformUpdateMap SceneRendering::createBrightPassUniformsUpdating() const {
-    return createScreenSpaceUniformsUpdating({{ "textureScene", _sceneRenderingProcess }});
-}
-
-RenderProcess::PassUniformUpdateMap SceneRendering::createHorizontalBlurUniformsUpdating() const {
-    return createScreenSpaceUniformsUpdating({{ "brightPassTexture", _brightPassFilterProcess }});
-}
-
-RenderProcess::PassUniformUpdateMap SceneRendering::createVerticalBlurUniformsUpdating() const {
-    return createScreenSpaceUniformsUpdating({{ "horizontalBlurTexture", _horizontalBlurProcess }});
-}
-
-RenderProcess::PassUniformUpdateMap SceneRendering::createBloomUniformsUpdating() const {
-    const auto uniformsBloomUpdatingFunction =
-        [this] (const RenderPass_sptr& renderPass, GLuint shaderProgramID)->void {
-            const auto& ball = _scene.getBall();
-            renderPass->upsertUniformTexture(
-                shaderProgramID,
-                "frameSceneHDRTexture",
-                _sceneRenderingProcess->getFrameBufferTexture());
-            renderPass->upsertUniformTexture(
-                shaderProgramID,
-                "frameBluredTexture",
-                _verticalBlurProcess->getFrameBufferTexture());
-            renderPass->upsertUniform(
-                shaderProgramID,
-                "teleportationCoeff",
-                ball->getTeleportationCoefficient()
-            );
-            renderPass->upsertUniform(
-                shaderProgramID,
-                "flashColor",
-                Utility::colorAsVec3(ball->getTeleportationColor())
-                );
-        };
-    return {{ _screenRenderPass, uniformsBloomUpdatingFunction }};
-}
-
-Rendering::ExternalUniformBlockVariables SceneRendering::createExternalUniformBlockVariables() const {
-
-    const auto updateBlocksVariablesFct =
-        [this] (const RenderPass::UniformBlockVariables_uptr& uniformBlocks)->void {
-            uniformBlocks->at(lightName)->update(
-                Star::lightDirectionName,
-                Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection())
-            );
-        };
-
-    const auto createBlocksVariables =
-        [] ()->RenderPass::UniformBlockVariables {
-            return  {{
-                lightName,
-                std::make_shared <UniformLight>(
-                    glm::vec3(0.f, 0.f, 0.f),
-                    glm::vec3(0.7f, 0.7f, 0.7f),
-                    glm::vec3(0.25f, 0.25f, 0.25f),
-                    glm::vec3(0.25f, 0.25f, 0.25f))
-            }};
-        };
-    const auto createBlocksVariablesPtr =
-        [&createBlocksVariables] () {
-            return RenderPass::UniformBlockVariables_uptr(
-                new RenderPass::UniformBlockVariables(
-                    createBlocksVariables())
-                );
-        };
-
-    return { createBlocksVariablesPtr(), updateBlocksVariablesFct };
-}
-
-Rendering::ExternalUniformVariables <glm::mat4> SceneRendering::createExternalUniformMatFourVariables() const
-{
-
+void SceneRendering::update() {
+    /*
     const auto updateMat4VariablesFct =
         [this] (const Mesh::UniformVariables_uptr <glm::mat4>& uniformMatrices) {
             uniformMatrices->at(VPStarName) = Camera::genVPMatrixFromStar(*_scene.getStar());
@@ -350,27 +92,35 @@ Rendering::ExternalUniformVariables <glm::mat4> SceneRendering::createExternalUn
             };
         };
 
-    const auto createMat4VariablesPtr =
-        [&createMat4Variables] () {
-            return Mesh::UniformVariables_uptr <glm::mat4>(
-                new Mesh::UniformVariables <glm::mat4>(createMat4Variables())
-                );
-        };
 
-    return { createMat4VariablesPtr(), updateMat4VariablesFct };
-}
+    // Block uniform
+    renderPass->upsertUniform(
+        shaderProgramID,
+        VPName,
+        Camera::genVPMatrixFromStar(*_scene.getStar())
+    );
 
-// TODO should be in FrameBuffer class
+    renderPass->upsertUniform(
+        shaderProgramID,
+        SceneRendering::VPName,
+        _scene.getCamera()->viewProjection());
+    const std::string& VPStarName = SceneRendering::VPStarName;
+    renderPass->upsertUniform(shaderProgramID, VPStarName, getUniformMatrix(VPStarName));
+    renderPass->upsertUniform(
+        shaderProgramID,
+        SceneRendering::positionCameraName,
+        _scene.getCamera()->pos()
+    );
 
-const UniformBlock_sptr& SceneRendering::getUniformBlock (const std::string& name) const {
-    return _externalUniformBlocks.uniformBlockVariables->at(name);
-}
+    renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, camera->viewProjection());
+    renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName, camera->pos());
 
-const glm::mat4& SceneRendering::getUniformMatrix (const std::string& name) const {
-    return _externalUniformMatrices.uniformVariables->at(name);
-}
+    uniformBlocks->at(lightName)->update(
+        Star::lightDirectionName,
+        Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection())
+    );
 
-void SceneRendering::update() {
+
     // Todo refactor
     const auto& uniformBlocks = _externalUniformBlocks.uniformBlockVariables;
     const auto& updatingBlocksFct = _externalUniformBlocks.uniformBlockVariablesUpdatingFct;
@@ -379,44 +129,31 @@ void SceneRendering::update() {
     const auto& uniformMatrices = _externalUniformMatrices.uniformVariables;
     const auto& updatingMatricesFct = _externalUniformMatrices.uniformVariablesUpdatingFct;
     updatingMatricesFct(uniformMatrices);
-
+    */
     for (const auto& renderPass : _renderPasses) {
         renderPass->update();
-    }
-
-    for (const auto& renderProcess : _renderingPipeline) {
-        renderProcess->updateUniforms();
     }
 }
 
 void SceneRendering::render() const {
-    for (const auto& renderProcess : _renderingPipeline) {
-        renderProcess->render();
+    for (const auto &process: _processes) {
+        process->render();
     }
 }
 
 void SceneRendering::freeGPUMemory() {
 
-    auto& uniformBlockVariables = _externalUniformBlocks.uniformBlockVariables;
-    for (const auto& uniformBlockVariable: *uniformBlockVariables ) {
-        const auto& uniformBlock = uniformBlockVariable.second;
-        uniformBlock->freeGPUMemory();
+    for (const auto &renderPass: _renderPasses) {
+        renderPass->freeGPUMemory();
     }
 
-    for (const auto& renderProcess: _renderingPipeline) {
-        renderProcess->freeGPUMemory();
+    for (const auto &process: _processes) {
+        process->freeGPUMemory();
     }
 
+    // TODO: dispose ubo
 }
 
-const std::string SceneRendering::blocksVs = "blocksVs.vs";
-const std::string SceneRendering::itemsMapVs = "itemsMapVs.vs";
-const std::string SceneRendering::enemiesVs = "enemiesVs.vs";
-const std::string SceneRendering::specialsVs = "specialsVs.vs";
-const std::string SceneRendering::ballVs = "ballVs.vs";
-const std::string SceneRendering::basicFboVs = "basicFboVs.vs";
-const std::string SceneRendering::levelFs = "levelFs.fs";
-const std::string SceneRendering::depthFs = "depthFs.fs";
 
 const std::string SceneRendering::VPName = "VP";
 const std::string SceneRendering::VPStarName = "VPStar";

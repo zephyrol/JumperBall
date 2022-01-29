@@ -46,12 +46,9 @@ void freeGPUMemory();
 
 static void bindDefaultFrameBuffer(GLsizei width, GLsizei height);
 static void cleanDefaultFrameBuffer();
-static FrameBuffer_uptr createScreenSpaceEffectFrameBuffer(
-    const FrameBuffer::Content& category,
-    GLsizei width,
-    GLsizei height
-);
-
+static void setViewportSize(GLsizei resolutionX, GLsizei resolutionY);
+static void enableDepthTest();
+static void disableDepthTest();
 
 private:
 

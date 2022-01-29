@@ -8,7 +8,7 @@
 
 #include "process/RenderProcess.h"
 
-class HorizontalBlurProcess: RenderProcess {
+class HorizontalBlurProcess: public RenderProcess {
 
 public:
     HorizontalBlurProcess(

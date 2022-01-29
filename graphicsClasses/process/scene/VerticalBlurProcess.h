@@ -8,10 +8,14 @@
 
 #include "process/RenderProcess.h"
 
-class VerticalBlurProcess: RenderProcess {
+class VerticalBlurProcess: public RenderProcess {
 
 public:
-    VerticalBlurProcess(GLsizei width, GLsizei height, const RenderPass_sptr& screen);
+    VerticalBlurProcess(
+        GLsizei width,
+        GLsizei height,
+        GLuint horizontalBlurTexture,
+        const RenderPass_sptr& screen);
 
     void render() const override;
     void freeGPUMemory() override;

@@ -8,7 +8,7 @@
 
 #include "process/RenderProcess.h"
 
-class BrightPassFilterProcess: RenderProcess {
+class BrightPassFilterProcess: public RenderProcess {
 
 public:
     BrightPassFilterProcess(
@@ -24,6 +24,8 @@ public:
     CstShaderProgram_sptr createBrightPassFilterProcessShaderProgram() const;
 
 private:
+    const GLsizei _width;
+    const GLsizei _height;
     const RenderPass_sptr _screen;
     const FrameBuffer_uptr _frameBuffer;
     const GLuint _hdrSceneTexture;

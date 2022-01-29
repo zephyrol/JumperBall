@@ -14,10 +14,12 @@ LevelProcess::LevelProcess(
     const RenderPass_sptr& specials,
     const RenderPass_sptr& ball,
     const RenderPass_sptr& star
-): _frameBuffer(
+):  _width(width),
+    _height(height),
+    _frameBuffer(
         new FrameBuffer(
-                width,
-                height,
+                _width,
+                _height,
                 FrameBuffer::Content::HDR,
                 true
         )),
@@ -40,6 +42,8 @@ LevelProcess::LevelProcess(
 void LevelProcess::render() const {
 
     _frameBuffer->bindFrameBuffer();
+
+    FrameBuffer::setViewportSize(_width, _height);
 
     _sceneBlocksShader->use();
     _blocks->render(_sceneBlocksShader);

@@ -10,6 +10,8 @@ BrightPassFilterProcess::BrightPassFilterProcess(
         GLuint hdrSceneTexture,
         const RenderPass_sptr& screen
 ):
+    _width(width),
+    _height(height),
     _screen(screen),
     _frameBuffer(FrameBuffer_uptr(new FrameBuffer(
         width,
@@ -26,6 +28,9 @@ BrightPassFilterProcess::BrightPassFilterProcess(
 
 void BrightPassFilterProcess::render() const {
     _frameBuffer->bindFrameBuffer();
+    FrameBuffer::disableDepthTest();
+    FrameBuffer::setViewportSize(_width, _height);
+
     _brightPassFilterShader->use();
     _screen->render(_brightPassFilterShader);
 }
