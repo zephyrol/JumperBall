@@ -22,6 +22,7 @@ BloomProcess::BloomProcess(
 
 void BloomProcess::render() const {
     FrameBuffer::setViewportSize(_width, _height);
+    FrameBuffer::bindDefaultFrameBuffer();
     _bloomShader->use();
     _screen->render(_bloomShader);
 }

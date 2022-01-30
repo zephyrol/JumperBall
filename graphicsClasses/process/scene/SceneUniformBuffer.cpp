@@ -21,7 +21,7 @@ void SceneUniformBuffer::update(
     const glm::vec3 &cameraPosition,
     const glm::vec3 &lightDirection,
     const glm::vec3 &flashColor,
-    float teleportationCoeff
+    GLfloat teleportationCoeff
 ) {
     _VP = VP;
     _VPStar = VPStar;

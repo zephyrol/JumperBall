@@ -44,7 +44,7 @@ GLuint getRenderTexture() const;
 
 void freeGPUMemory();
 
-static void bindDefaultFrameBuffer(GLsizei width, GLsizei height);
+static void bindDefaultFrameBuffer();
 static void cleanDefaultFrameBuffer();
 static void setViewportSize(GLsizei resolutionX, GLsizei resolutionY);
 static void enableDepthTest();

@@ -17,6 +17,7 @@ LettersProcess::LettersProcess(
 
 void LettersProcess::render() const {
 
+    _lettersShader->use();
     for(const auto& renderPassLetter: _renderPassesLetters) {
         const auto& renderPass = renderPassLetter.first;
         const auto letter = renderPassLetter.second;

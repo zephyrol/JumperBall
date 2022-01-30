@@ -116,12 +116,6 @@ void SceneRendering::freeGPUMemory() {
 }
 
 
-const std::string SceneRendering::VPName = "VP";
-const std::string SceneRendering::VPStarName = "VPStar";
-const std::string SceneRendering::cameraPositionName = "cameraPosition";
-const std::string SceneRendering::lightName = "light";
-
-
 vecCstShaderProgram_sptr SceneRendering::getShaderProgramsUsingUniformBuffer() const {
     auto shadersPrograms = _shadowStar->getShaderPrograms();
 

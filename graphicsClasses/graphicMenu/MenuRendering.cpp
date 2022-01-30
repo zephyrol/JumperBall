@@ -17,7 +17,10 @@ MenuRendering::MenuRendering(
     Rendering(width, height),
     _menu(menu),
     _graphicAlphabet(FontTexturesGenerator::genGraphicAlphabet(_menu, height, ftContent)),
-    _pagesRenderProcess(createPagesRenderProcess()) {
+    _pagesLettersProcess(createPagesLettersProcess()),
+    _pagesShapeProcess(createPagesShapeProcess()),
+    _renderProcesses(createRenderProcesses()),
+    _menuUniformBuffer(getShaderProgramsUsingUniformBuffer()){
 }
 
 void MenuRendering::update() {
@@ -26,10 +29,7 @@ void MenuRendering::update() {
     if (!currentPage) {
         return;
     }
-    // TODO: update renderPasses
-    // TODO: update Y position
-
-    //letterRenderPass->upsertUniform(shaderProgramID, "positionY", page->localPosY());
+    _menuUniformBuffer.update(currentPage->localPosY());
 }
 
 void MenuRendering::render() const {
@@ -37,24 +37,59 @@ void MenuRendering::render() const {
     if (!currentPage) {
         return;
     }
-    for (const auto &renderProcess: _pagesRenderProcess.at(currentPage)) {
-        renderProcess->render();
-    }
+    const auto& shapeProcess = _pagesShapeProcess.at(currentPage);
+    shapeProcess->render();
+
+    const auto& lettersProcess = _pagesShapeProcess.at(currentPage);
+    lettersProcess->render();
+
 }
 
 void MenuRendering::freeGPUMemory() {
     FontTexturesGenerator::freeGraphicAlphabetGPUMemory(_graphicAlphabet);
+    for (const auto &renderProcess: _renderProcesses) {
+        renderProcess->freeGPUMemory();
+    }
 }
 
 
-MenuRendering::PagesRenderProcesses MenuRendering::createPagesRenderProcess() const {
-    MenuRendering::PagesRenderProcesses pagesRenderProcess;
-    for (const auto& page : _menu.pages()) {
-        pagesRenderProcess[page] = {
-            std::make_shared<ShapeLabelProcess>(page),
-            std::make_shared<LettersProcess>(page, _graphicAlphabet),
-        };
+vecRenderProcess_sptr MenuRendering::createRenderProcesses() const {
+    vecRenderProcess_sptr renderProcesses;
+    for (const auto &pageLetterProcess: _pagesLettersProcess) {
+        renderProcesses.push_back(pageLetterProcess.second);
     }
-    return pagesRenderProcess;
+    for (const auto &pageShapeProcess: _pagesShapeProcess) {
+        renderProcesses.push_back(pageShapeProcess.second);
+    }
+    return renderProcesses;
+}
+
+MenuRendering::PagesLettersProcess MenuRendering::createPagesLettersProcess() const {
+    MenuRendering::PagesLettersProcess pagesLettersProcess;
+    for (const auto& page : _menu.pages()) {
+        pagesLettersProcess[page] = std::make_shared<LettersProcess>(page, _graphicAlphabet);
+    }
+    return pagesLettersProcess;
+}
+
+MenuRendering::PagesShapeProcess MenuRendering::createPagesShapeProcess() const {
+    MenuRendering::PagesShapeProcess pagesShapeProcess;
+    for (const auto& page : _menu.pages()) {
+        pagesShapeProcess[page] = std::make_shared<ShapeLabelProcess>(page);
+    }
+    return pagesShapeProcess;
+}
+
+vecCstShaderProgram_sptr MenuRendering::getShaderProgramsUsingUniformBuffer() const {
+    vecCstShaderProgram_sptr shadersPrograms {};
+    for (const auto &renderProcess: _renderProcesses) {
+        const auto& processShaderPrograms = renderProcess->getShaderPrograms();
+        shadersPrograms.insert(
+            shadersPrograms.end(),
+            processShaderPrograms.begin(),
+            processShaderPrograms.end()
+        );
+    }
+    return shadersPrograms;
 }
 

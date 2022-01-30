@@ -21,12 +21,12 @@ public:
         const glm::vec3& cameraPosition,
         const glm::vec3& lightDirection,
         const glm::vec3& flashColor,
-        float teleportationCoeff
+        GLfloat teleportationCoeff
     );
 
 private:
     static constexpr size_t sizeSceneUniformBuffer = 2 * sizeof(glm::mat4) +
-                                                     3 * sizeof (glm::vec3) + sizeof (float);
+                                                     3 * sizeof (glm::vec3) + sizeof (GLfloat);
 
     static UniformBuffer::ShaderProgramBindingPoint getBindingPointMap(
         const vecCstShaderProgram_sptr& sceneShaderPrograms
@@ -37,7 +37,7 @@ private:
     glm::vec3 _cameraPosition;
     glm::vec3 _lightDirection;
     glm::vec3 _flashColor;
-    float _teleportationCoeff;
+    GLfloat _teleportationCoeff;
 };
 
 

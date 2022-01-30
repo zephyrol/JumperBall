@@ -15,6 +15,7 @@ void ShapeLabelProcess::render() const {
     if(!_renderPassesShapes) {
         return;
     }
+    _shapesShader->use();
     _renderPassesShapes->render(_shapesShader);
 }
 

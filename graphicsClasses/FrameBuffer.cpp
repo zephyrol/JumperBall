@@ -82,10 +82,8 @@ void FrameBuffer::freeGPUMemory() {
     glDeleteFramebuffers(1, &_fboHandle);
 }
 
-void FrameBuffer::bindDefaultFrameBuffer(GLsizei width, GLsizei height) {
+void FrameBuffer::bindDefaultFrameBuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDisable(GL_DEPTH_TEST);
-    glViewport(0, 0, width, height);
 }
 
 void FrameBuffer::cleanDefaultFrameBuffer() {

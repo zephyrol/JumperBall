@@ -10,6 +10,9 @@
 #include "Rendering.h"
 #include "FontTexturesGenerator.h"
 #include "componentsGeneration/MeshGenerator.h"
+#include "process/menu/LettersProcess.h"
+#include "process/menu/ShapeLabelProcess.h"
+#include "process/menu/MenuUniformBuffer.h"
 
 class MenuRendering:public Rendering {
 
@@ -28,13 +31,22 @@ void freeGPUMemory() override;
 
 private:
 
-using PagesRenderProcesses = std::unordered_map <CstPage_sptr, vecRenderProcess_sptr>;
+using PagesLettersProcess = std::unordered_map <CstPage_sptr, std::shared_ptr<LettersProcess> >;
+using PagesShapeProcess = std::unordered_map <CstPage_sptr, std::shared_ptr<ShapeLabelProcess> >;
 
 const Menu& _menu;
 const FontTexturesGenerator::GraphicAlphabet _graphicAlphabet;
 
-const PagesRenderProcesses _pagesRenderProcess;
-PagesRenderProcesses createPagesRenderProcess() const;
+const PagesLettersProcess _pagesLettersProcess;
+const PagesShapeProcess  _pagesShapeProcess;
+const vecRenderProcess_sptr  _renderProcesses;
+MenuUniformBuffer _menuUniformBuffer;
+
+PagesLettersProcess createPagesLettersProcess() const;
+PagesShapeProcess createPagesShapeProcess() const;
+vecRenderProcess_sptr createRenderProcesses() const;
+
+    vecCstShaderProgram_sptr getShaderProgramsUsingUniformBuffer() const;
 };
 
 
