@@ -22,7 +22,7 @@ SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height
     _ball(std::make_shared <RenderPass>(MeshGenerator::genBall(scene.getBall()))),
     _star(std::make_shared <RenderPass>(MeshGenerator::genStar(scene.getStar()))),
     _screen(std::make_shared <RenderPass>(MeshGenerator::genScreen())),
-    _renderPasses{ _blocks, _items, _enemies, _specials, _ball, _ball, _screen },
+    _renderPasses{ _blocks, _items, _enemies, _specials, _ball, _star, _screen },
     _shadowStar(std::make_shared<ShadowProcess>(_blocks, _items, _enemies, _specials, _ball )),
     _sceneRenderingProcess(std::make_shared<LevelProcess>(
         _width,
@@ -97,8 +97,9 @@ void SceneRendering::update() {
 }
 
 void SceneRendering::render() const {
+    _sceneRenderingProcess->render();
     for (const auto &process: _processes) {
-        process->render();
+        //process->render();
     }
 }
 
@@ -112,7 +113,7 @@ void SceneRendering::freeGPUMemory() {
         process->freeGPUMemory();
     }
 
-    // TODO: dispose ubo
+    _sceneUniformBuffer.freeGPUMemory();
 }
 
 

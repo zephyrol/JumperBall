@@ -41,9 +41,14 @@ LevelProcess::LevelProcess(
 
 void LevelProcess::render() const {
 
-    _frameBuffer->bindFrameBuffer();
+    //_frameBuffer->bindFrameBuffer();
+    //FrameBuffer::setViewportSize(_width, _height);
 
+    FrameBuffer::bindDefaultFrameBuffer();
+    FrameBuffer::enableDepthTest();
     FrameBuffer::setViewportSize(_width, _height);
+    FrameBuffer::bindDefaultFrameBuffer();
+    FrameBuffer::cleanDefaultFrameBuffer();
 
     _sceneBlocksShader->use();
     _blocks->render(_sceneBlocksShader);

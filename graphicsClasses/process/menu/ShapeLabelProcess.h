@@ -11,16 +11,15 @@
 
 class ShapeLabelProcess: public RenderProcess {
 public:
-    ShapeLabelProcess(const CstPage_sptr& page);
+    ShapeLabelProcess(const CstPage_sptr& page, const RenderPass_sptr& renderPassShapes);
 
     void render() const override;
     void freeGPUMemory() override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
-    static RenderPass_sptr createRenderPassesShapes(const CstPage_sptr& page);
     vecCstShaderProgram_sptr getShaderPrograms() const override;
 
 private:
-    const RenderPass_sptr _renderPassesShapes;
+    const RenderPass_sptr _renderPassShapes;
     const CstShaderProgram_sptr _shapesShader;
 };
 

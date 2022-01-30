@@ -18,7 +18,8 @@ public:
 
     LettersProcess(
         const CstPage_sptr& page,
-        const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet
+        const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet,
+        const LettersProcess::RenderPassesLetters& renderPassesLetters
     );
 
     void render() const override;
@@ -30,8 +31,6 @@ private:
     const FontTexturesGenerator::GraphicAlphabet& _graphicAlphabet;
     const RenderPassesLetters _renderPassesLetters;
     const CstShaderProgram_sptr _lettersShader;
-
-    RenderPassesLetters createRenderPassesLetters(const CstPage_sptr& page);
 };
 
 

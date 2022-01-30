@@ -29,24 +29,33 @@ void update() override;
 void render() const override;
 void freeGPUMemory() override;
 
+
 private:
 
-using PagesLettersProcess = std::unordered_map <CstPage_sptr, std::shared_ptr<LettersProcess> >;
-using PagesShapeProcess = std::unordered_map <CstPage_sptr, std::shared_ptr<ShapeLabelProcess> >;
+using PagesProcesses = std::unordered_map <CstPage_sptr, vecRenderProcess_sptr>;
+using PagesRenderPassLetters = std::unordered_map <CstPage_sptr, LettersProcess::RenderPassesLetters>;
+using PagesRenderPassShapes = std::unordered_map <CstPage_sptr, RenderPass_sptr>;
 
 const Menu& _menu;
+
 const FontTexturesGenerator::GraphicAlphabet _graphicAlphabet;
 
-const PagesLettersProcess _pagesLettersProcess;
-const PagesShapeProcess  _pagesShapeProcess;
-const vecRenderProcess_sptr  _renderProcesses;
+const PagesRenderPassLetters _pageToRenderPassesLetter;
+const PagesRenderPassShapes _pageToRenderPassesShape;
+const vecRenderPass_sptr _renderPasses;
+
+const PagesProcesses _pagesProcesses;
+const vecRenderProcess_sptr _renderProcesses;
 MenuUniformBuffer _menuUniformBuffer;
 
-PagesLettersProcess createPagesLettersProcess() const;
-PagesShapeProcess createPagesShapeProcess() const;
+PagesProcesses createPagesProcesses() const;
 vecRenderProcess_sptr createRenderProcesses() const;
 
     vecCstShaderProgram_sptr getShaderProgramsUsingUniformBuffer() const;
+
+    PagesRenderPassLetters createPageToRenderPassesLetters() const;
+    PagesRenderPassShapes createPageToRenderPassesShapes() const;
+    vecRenderPass_sptr createRenderPasses() const;
 };
 
 
