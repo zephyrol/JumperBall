@@ -26,7 +26,11 @@ ShaderProgram& operator= (const ShaderProgram& shaderProgram) = delete;
 GLuint getHandle() const;
 void freeGPUMemory() const;
 
-static CstShaderProgram_sptr createShaderProgram(const std::string& vs, const std::string& fs);
+static CstShaderProgram_sptr createShaderProgram(
+    const std::string& vs,
+    const std::string& fs,
+    const std::vector<std::string>& defines
+);
 void use() const;
 
 void bindUniform(const std::string& name, const glm::mat4& value) const;

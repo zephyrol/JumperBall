@@ -7,9 +7,7 @@
 
 #include "ShaderProgram.h"
 
-ShaderProgram::ShaderProgram(CstShader_uptr&& vertexShader,
-                             CstShader_uptr&& fragmentShader
-                             ):
+ShaderProgram::ShaderProgram(CstShader_uptr&& vertexShader, CstShader_uptr&& fragmentShader):
     _shaderProgramHandle(glCreateProgram()),
     _vertexShader(std::move(vertexShader)),
     _fragmentShader(std::move(fragmentShader)),
@@ -45,10 +43,38 @@ void ShaderProgram::freeGPUMemory() const {
     glDeleteProgram(_shaderProgramHandle);
 }
 
-CstShaderProgram_sptr ShaderProgram::createShaderProgram (const std::string& vs, const std::string& fs) {
+CstShaderProgram_sptr ShaderProgram::createShaderProgram (
+    const std::string& vs,
+    const std::string& fs,
+    const std::vector<std::string>& defines
+) {
+
+    const auto cleanDefine = [defines](const std::string& shader) {
+        std::string finalShader = shader;
+        const std::string ifdefKey = "#ifdef";
+        const std::string endifKey = "#endif";
+        for (const auto &define: defines) {
+            const std::string defineKey = ifdefKey + "(" + define + ")";
+            while(auto index = finalShader.find(defineKey) != std::string::npos) {
+                finalShader.replace(index, defineKey.length(),"");
+            }
+            while(auto index = finalShader.find(ifdefKey) != std::string::npos) {
+                const auto endifPos = finalShader.find("endif", index);
+                finalShader.replace(index, endifPos - index,"");
+            }
+            while(auto index = finalShader.find(endifKey) != std::string::npos) {
+                finalShader.replace(index, endifKey.length(), "");
+            }
+        }
+        return finalShader;
+    };
+
+    const std::string finalVertexShader = cleanDefine(vs);
+    const std::string finalFragmentShader = cleanDefine(fs);
+
     return std::make_shared <const ShaderProgram>(
-        Shader::createVertexShader(vs),
-        Shader::createFragmentShader(fs)
+        Shader::createVertexShader(finalVertexShader),
+        Shader::createFragmentShader(finalFragmentShader)
         );
 }
 

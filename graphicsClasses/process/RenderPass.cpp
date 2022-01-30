@@ -14,8 +14,8 @@ RenderPass::RenderPass(const vecMesh_sptr& meshes):
     _unitedMeshesGroup(createUnitedMeshesGroup()),
     _separateMeshGroups(createSeparateMeshGroups()),
     _renderGroupsUniforms{},
-    _renderPassUniforms(),
-    _renderPassUniformBlocks{} {
+    _renderPassUniforms()
+{
 }
 
 
@@ -89,34 +89,16 @@ void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name,
     _renderPassUniforms[shaderProgramID].uniformFloats[name] = value;
 }
 
-void RenderPass::upsertUniformTexture (GLuint shaderProgramID, const std::string& name, const GLuint& value) {
-    _renderPassUniforms[shaderProgramID].uniformTextures[name] = value;
-}
-
-void RenderPass::upsertUniform (
-    GLuint shaderProgramID,
-    const std::string& name,
-    const std::shared_ptr <const UniformBlock>& uniformBlock
-    ) {
-    _renderPassUniformBlocks[shaderProgramID][name] = uniformBlock;
-}
-
 void RenderPass::bindUniforms (
     const Mesh::Uniforms& uniforms,
     const CstShaderProgram_sptr& shaderProgram
-    ) const {
+) const {
 
     bindUniformVariables(uniforms.uniformFloats, shaderProgram);
     bindUniformVariables(uniforms.uniformVec2s, shaderProgram);
     bindUniformVariables(uniforms.uniformVec3s, shaderProgram);
     bindUniformVariables(uniforms.uniformVec4s, shaderProgram);
     bindUniformVariables(uniforms.uniformMat4s, shaderProgram);
-
-    int textureNumber = 0;
-    for (const auto& uniformTexture : uniforms.uniformTextures) {
-        shaderProgram->bindUniformTexture(uniformTexture.first, textureNumber, uniformTexture.second);
-        ++textureNumber;
-    }
 }
 
 template<typename T> void RenderPass::bindUniformVariables (
@@ -130,11 +112,6 @@ template<typename T> void RenderPass::bindUniformVariables (
 
 void RenderPass::render (const CstShaderProgram_sptr& shaderProgram) const {
     const GLuint shaderProgramID = shaderProgram->getHandle();
-    if (_renderPassUniformBlocks.find(shaderProgramID) != _renderPassUniformBlocks.end()) {
-        for (const auto& uniformBlock : _renderPassUniformBlocks.at(shaderProgramID)) {
-            uniformBlock.second->bind(shaderProgram);
-        }
-    }
 
     if (_renderPassUniforms.find(shaderProgramID) != _renderPassUniforms.end()) {
         bindUniforms(_renderPassUniforms.at(shaderProgramID), shaderProgram);
@@ -156,16 +133,6 @@ vecMesh_sptr RenderPass::createUpdatableMeshes() const {
     return updatableMeshes;
 }
 
-void RenderPass::freeGPUMemory() {
-    if(_unitedMeshesGroup) {
-        _unitedMeshesGroup->freeGPUMemory();
-    }
-    for (const auto& separateMeshGroup: _separateMeshGroups){
-        const auto& renderGroup = separateMeshGroup.second;
-        renderGroup->freeGPUMemory();
-    }
-}
-
 std::map<Mesh_sptr, SceneElement::GlobalState> RenderPass::createMeshStates() const {
     std::map<Mesh_sptr, SceneElement::GlobalState> meshStates {};
     for(const auto& updatableMesh: _updatableMeshes) {
@@ -183,4 +150,15 @@ std::shared_ptr<RenderGroup> RenderPass::createUnitedMeshesGroup() const {
     }
     return !unitedMeshes.empty() ? std::make_shared<RenderGroup>(unitedMeshes) : nullptr;
 }
+
+void RenderPass::freeGPUMemory() {
+    if(_unitedMeshesGroup) {
+        _unitedMeshesGroup->freeGPUMemory();
+    }
+    for (const auto& separateMeshGroup: _separateMeshGroups){
+        const auto& renderGroup = separateMeshGroup.second;
+        renderGroup->freeGPUMemory();
+    }
+}
+
 

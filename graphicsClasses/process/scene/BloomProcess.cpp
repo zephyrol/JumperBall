@@ -42,3 +42,7 @@ CstShaderProgram_sptr BloomProcess::createBloomProcessShaderProgram() const {
     return sp;
 }
 
+vecCstShaderProgram_sptr BloomProcess::getShaderPrograms() const {
+    return { _bloomShader };
+}
+

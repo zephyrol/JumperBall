@@ -184,11 +184,11 @@ void Camera::turningAroundMapUpdate() noexcept{
 
 
     const glm::vec4 positionTransform = transform * glm::vec4(0.f, 0.f, 0.f, 1.f);
-    const glm::vec3 positionCamera(positionTransform.x, positionTransform.y, positionTransform.z);
+    const glm::vec3 cameraPosition(positionTransform.x, positionTransform.y, positionTransform.z);
 
     const glm::vec4 up = rotation * glm::vec4(0.f, 1.f, 0.f, 1.f);
 
-    _pos = positionCamera;
+    _pos = cameraPosition;
     _center = center;
     _up = up;
 

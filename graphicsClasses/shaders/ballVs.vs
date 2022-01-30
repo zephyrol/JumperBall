@@ -1,11 +1,15 @@
 #version 330 core
 
-uniform mat4 VP;
-uniform mat4 VPStar;
+layout (std140) uniform Scene {
+    mat4 VP;
+    mat4 VPStar;
+    vec3 cameraPosition;
+    vec3 lightDirection;
+    vec3 flashColor;
+    float teleportationCoeff;
+};
 
 uniform float creationTime;
-uniform float obtainingTime;
-
 uniform float ballRadius;
 uniform float crushingCoeff;
 uniform float status;
@@ -20,10 +24,12 @@ layout(location = 2) in vec3 vs_vertexNormal;
 layout(location = 4) in float vs_objectDirection;
 layout(location = 5) in vec3 vs_objectPosition;
 
-out vec3 fs_vertexColor;
-out vec4 fs_vertexDepthMapSpace;
-out vec3 fs_vertexNormal;
-out vec3 fs_vertexPositionWorld;
+#ifdef(LEVEL_PASS)
+    out vec3 fs_vertexColor;
+    out vec4 fs_vertexDepthMapSpace;
+    out vec3 fs_vertexNormal;
+    out vec3 fs_vertexPositionWorld;
+#endif
 
 mat4 translate (vec3 translation) {
     return mat4(1.0, 0.0, 0.0, 0.0,
@@ -110,15 +116,21 @@ void main() {
     mat4 translation = ballTranslation();
     mat4 scale = ballScale();
     mat4 modelTransform = translation * scale * rotation;
-    mat4 normalTransform = rotation; // TODO: apply scale on normal
 
     const float w = 1.f;
     vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, w);
 
-    fs_vertexColor = vs_vertexColor;
-    fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, w)).xyz);
-    fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
-    fs_vertexDepthMapSpace = VPStar * vertexPositionWorldSpace;
+    #ifdef(LEVEL_PASS)
+        fs_vertexColor = vs_vertexColor;
+        mat4 normalTransform = rotation; // TODO: apply scale on normal
+        fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, w)).xyz);
+        fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
+        fs_vertexDepthMapSpace = VPStar * vertexPositionWorldSpace;
+        gl_Position = VP * vertexPositionWorldSpace;
+    #endif
 
-    gl_Position = VP * vertexPositionWorldSpace;
+    #ifdef(SHADOW_PASS)
+        gl_Position = VPStar * vertexPositionWorldSpace;
+    #endif
+
 }

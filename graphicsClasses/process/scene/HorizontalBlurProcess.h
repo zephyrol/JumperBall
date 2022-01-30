@@ -21,13 +21,14 @@ public:
     void render() const override;
     void freeGPUMemory() override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
+    vecCstShaderProgram_sptr getShaderPrograms() const override;
     CstShaderProgram_sptr createHorizontalBlurProcessShaderProgram() const;
 
 private:
     const RenderPass_sptr _screen;
     const FrameBuffer_uptr _frameBuffer;
     const GLuint _brightPassTexture;
-    const CstShaderProgram_sptr _bloomShader;
+    const CstShaderProgram_sptr _horizontalBlurShader;
 };
 
 

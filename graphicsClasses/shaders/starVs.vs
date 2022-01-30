@@ -1,7 +1,15 @@
 #version 330 core
 
-uniform mat4 VP;
+layout (std140) uniform Scene {
+    mat4 VP;
+    mat4 VPStar;
+    vec3 cameraPosition;
+    vec3 lightDirection;
+    vec3 flashColor;
+    float teleportationCoeff;
+};
 
+// TODO Use vertex attributes (2 stars) or const variables (1 star)
 uniform float starDistance;
 uniform float radius;
 

@@ -1,11 +1,16 @@
 #version 330 core
 
+layout (std140) uniform Scene {
+    mat4 VP;
+    mat4 VPStar;
+    vec3 cameraPosition;
+    vec3 lightDirection;
+    vec3 flashColor;
+    float teleportationCoeff;
+};
 
 uniform sampler2D frameSceneHDRTexture;
 uniform sampler2D frameBluredTexture;
-
-uniform float teleportationCoeff;
-uniform vec3 flashColor;
 
 in vec2 fs_vertexUVs;
 out vec4 pixelColor;

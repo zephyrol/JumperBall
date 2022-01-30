@@ -21,6 +21,7 @@
 #include "process/scene/HorizontalBlurProcess.h"
 #include "process/scene/VerticalBlurProcess.h"
 #include "process/scene/BloomProcess.h"
+#include "process/scene/SceneUniformBuffer.h"
 
 
 class SceneRendering:public Rendering {
@@ -60,9 +61,13 @@ const std::shared_ptr<VerticalBlurProcess> _verticalBlur;
 const std::shared_ptr<BloomProcess> _bloom;
 const vecRenderProcess_sptr _processes;
 
+SceneUniformBuffer _sceneUniformBuffer;
+
+vecCstShaderProgram_sptr getShaderProgramsUsingUniformBuffer() const;
+
 static const std::string VPName;
 static const std::string VPStarName;
-static const std::string positionCameraName;
+static const std::string cameraPositionName;
 static const std::string lightName;
 };
 

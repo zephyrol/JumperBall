@@ -103,6 +103,7 @@ SceneElement::GlobalState Star::getGlobalState() const {
     return SceneElement::GlobalState::United;
 }
 
+// TODO those floats are not dynamic !
 Star::DynamicValues <float> Star::getDynamicFloats() const {
     return {
         { "starDistance", _distance },

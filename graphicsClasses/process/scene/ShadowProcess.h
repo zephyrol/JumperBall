@@ -20,6 +20,7 @@ public:
 
     void render() const override;
     void freeGPUMemory() override;
+    vecCstShaderProgram_sptr getShaderPrograms() const override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
 
 private:

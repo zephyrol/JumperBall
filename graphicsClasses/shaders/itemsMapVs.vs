@@ -12,10 +12,12 @@ layout(location = 2) in vec3 vs_vertexNormal;
 layout(location = 3) in float vs_itemDirection;
 layout(location = 4) in vec3 vs_itemPosition;
 
-out vec3 fs_vertexColor;
-out vec4 fs_vertexDepthMapSpace;
-out vec3 fs_vertexNormal;
-out vec3 fs_vertexPositionWorld;
+#ifdef(LEVEL_PASS)
+    out vec3 fs_vertexColor;
+    out vec4 fs_vertexDepthMapSpace;
+    out vec3 fs_vertexNormal;
+    out vec3 fs_vertexPositionWorld;
+#endif
 
 mat4 translate (vec3 translation) {
     return mat4(1.0, 0.0, 0.0, 0.0,
@@ -164,14 +166,20 @@ void main() {
 
     mat4 modelTransform = translationToItem * translation * rotation * scale;
 
-    mat4 normalTransform = rotation; // TODO: apply scale on normal
 
     vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, 1.0);
 
-    fs_vertexColor = vs_vertexColor;
-    fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, 1.0)).xyz);
-    fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
-    fs_vertexDepthMapSpace = VPStar * vertexPositionWorldSpace;
+    #ifdef(LEVEL_PASS)
+        fs_vertexColor = vs_vertexColor;
+        mat4 normalTransform = rotation; // TODO: apply scale on normal
+        fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, 1.0)).xyz);
+        fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
+        fs_vertexDepthMapSpace = VPStar * vertexPositionWorldSpace;
+        gl_Position = VP * vertexPositionWorldSpace;
+    #endif
 
-    gl_Position = VP * vertexPositionWorldSpace;
+    #ifdef(SHADOW_PASS)
+        gl_Position = VPStar * vertexPositionWorldSpace;
+    #endif
+
 }

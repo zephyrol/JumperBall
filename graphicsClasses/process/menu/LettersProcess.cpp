@@ -9,9 +9,9 @@ LettersProcess::LettersProcess(
     const CstPage_sptr& page,
     const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet
 ):
-        _renderPassesLetters(createRenderPassesLetters(page)),
-        _graphicAlphabet(graphicAlphabet),
-        _lettersShader(ShaderProgram::createShaderProgram("fontVs.vs", "fontFs.fs"))
+    _graphicAlphabet(graphicAlphabet),
+    _renderPassesLetters(createRenderPassesLetters(page)),
+    _lettersShader(ShaderProgram::createShaderProgram("fontVs.vs", "fontFs.fs"))
 {
 }
 
@@ -57,5 +57,9 @@ LettersProcess::RenderPassesLetters LettersProcess::createRenderPassesLetters(co
     }
 
     return renderPassesLetters;
+}
+
+vecCstShaderProgram_sptr LettersProcess::getShaderPrograms() const {
+    return { _lettersShader };
 }
 

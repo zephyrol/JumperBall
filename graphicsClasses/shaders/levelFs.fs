@@ -2,15 +2,17 @@
 
 uniform sampler2D depthTexture;
 
-uniform mat4 VP;
-uniform mat4 VPStar;
-
-uniform vec3 positionCamera;
-uniform light {
+layout (std140) uniform Scene {
+    mat4 VP;
+    mat4 VPStar;
+    vec3 cameraPosition;
     vec3 lightDirection;
+    vec3 flashColor;
+    float teleportationCoeff;
 };
 
 uniform float burningCoeff;
+
 in vec3 fs_vertexColor;
 in vec4 fs_vertexDepthMapSpace;
 in vec3 fs_vertexNormal;
@@ -30,9 +32,9 @@ void main() {
                                  0.5, 0.5, 0.5, 1.0);
 
 
-    bool inShadow;
     vec4 fragStarSysCoord = biasMatrix * fs_vertexDepthMapSpace;
 
+    bool inShadow;
     if (texture(depthTexture, fragStarSysCoord.xy).x < ((fragStarSysCoord.z) - 0.001))
         inShadow = true;
     else {
@@ -47,15 +49,14 @@ void main() {
 
     if (!inShadow) {
 
-        vec3 toLight            = -lightDirection;
-        vec3 toCamera           = normalize(positionCamera - fs_vertexPositionWorld);
-        vec3 reflection         =
-            normalize(-toLight + 2.0 * (dot(toLight, fs_vertexNormal)) * fs_vertexNormal);
-        vec3 diffuseComponent   = diffuseLightIntensity * max(0.0, dot(toLight, fs_vertexNormal));
+        vec3 toLight = -lightDirection;
+        vec3 toCamera = normalize(cameraPosition - fs_vertexPositionWorld);
+        vec3 reflection = normalize(-toLight + 2.0 * (dot(toLight, fs_vertexNormal)) * fs_vertexNormal);
+        vec3 diffuseComponent = diffuseLightIntensity * max(0.0, dot(toLight, fs_vertexNormal));
 
-        vec3 specularComponent  = specularLightIntensity * pow(max(0.0, dot(reflection, toCamera)), 20.0);
+        vec3 specularComponent = specularLightIntensity * pow(max(0.0, dot(reflection, toCamera)), 20.0);
 
-        composition  += diffuseComponent + specularComponent;
+        composition += diffuseComponent + specularComponent;
     }
     pixelColor = vec4(composition, 1.0);
 

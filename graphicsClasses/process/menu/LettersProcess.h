@@ -23,11 +23,12 @@ public:
 
     void render() const override;
     void freeGPUMemory() override;
+    vecCstShaderProgram_sptr getShaderPrograms() const override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
 
 private:
-    const RenderPassesLetters _renderPassesLetters;
     const FontTexturesGenerator::GraphicAlphabet& _graphicAlphabet;
+    const RenderPassesLetters _renderPassesLetters;
     const CstShaderProgram_sptr _lettersShader;
 
     RenderPassesLetters createRenderPassesLetters(const CstPage_sptr& page);

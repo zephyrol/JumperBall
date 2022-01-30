@@ -40,3 +40,7 @@ RenderPass_sptr ShapeLabelProcess::createRenderPassesShapes(const CstPage_sptr &
     return nullptr;
 }
 
+vecCstShaderProgram_sptr ShapeLabelProcess::getShaderPrograms() const {
+    return { _shapesShader };
+}
+

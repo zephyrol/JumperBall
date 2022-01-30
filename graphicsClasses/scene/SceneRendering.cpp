@@ -66,7 +66,8 @@ SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height
         _horizontalBlur,
         _verticalBlur,
         _bloom
-    })
+    }),
+    _sceneUniformBuffer(getShaderProgramsUsingUniformBuffer())
     {
 
     // TODO: Move thoses instructions
@@ -78,58 +79,18 @@ SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height
 }
 
 void SceneRendering::update() {
-    /*
-    const auto updateMat4VariablesFct =
-        [this] (const Mesh::UniformVariables_uptr <glm::mat4>& uniformMatrices) {
-            uniformMatrices->at(VPStarName) = Camera::genVPMatrixFromStar(*_scene.getStar());
-        };
 
-    const auto createMat4Variables =
-        [this] ()->Mesh::UniformVariables <glm::mat4> {
-            return {
-                { SceneRendering::VPStarName, Camera::genVPMatrixFromStar(*_scene.getStar()) },
-                { SceneRendering::VPName, _scene.getCamera()->viewProjection() }
-            };
-        };
-
-
-    // Block uniform
-    renderPass->upsertUniform(
-        shaderProgramID,
-        VPName,
-        Camera::genVPMatrixFromStar(*_scene.getStar())
+    const auto& sceneCamera = _scene.getCamera();
+    _sceneUniformBuffer.update(
+        sceneCamera->viewProjection(),
+        Camera::genVPMatrixFromStar(*_scene.getStar()),
+        sceneCamera->pos(),
+        Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection()),
+        // TODO FLASH COLOR ???
+        glm::vec3(0,0,0),
+        _scene.getBall()->getTeleportationCoefficient()
     );
 
-    renderPass->upsertUniform(
-        shaderProgramID,
-        SceneRendering::VPName,
-        _scene.getCamera()->viewProjection());
-    const std::string& VPStarName = SceneRendering::VPStarName;
-    renderPass->upsertUniform(shaderProgramID, VPStarName, getUniformMatrix(VPStarName));
-    renderPass->upsertUniform(
-        shaderProgramID,
-        SceneRendering::positionCameraName,
-        _scene.getCamera()->pos()
-    );
-
-    renderPass->upsertUniform(shaderProgramID, SceneRendering::VPName, camera->viewProjection());
-    renderPass->upsertUniform(shaderProgramID, SceneRendering::positionCameraName, camera->pos());
-
-    uniformBlocks->at(lightName)->update(
-        Star::lightDirectionName,
-        Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection())
-    );
-
-
-    // Todo refactor
-    const auto& uniformBlocks = _externalUniformBlocks.uniformBlockVariables;
-    const auto& updatingBlocksFct = _externalUniformBlocks.uniformBlockVariablesUpdatingFct;
-    updatingBlocksFct(uniformBlocks);
-
-    const auto& uniformMatrices = _externalUniformMatrices.uniformVariables;
-    const auto& updatingMatricesFct = _externalUniformMatrices.uniformVariablesUpdatingFct;
-    updatingMatricesFct(uniformMatrices);
-    */
     for (const auto& renderPass : _renderPasses) {
         renderPass->update();
     }
@@ -157,5 +118,18 @@ void SceneRendering::freeGPUMemory() {
 
 const std::string SceneRendering::VPName = "VP";
 const std::string SceneRendering::VPStarName = "VPStar";
-const std::string SceneRendering::positionCameraName = "positionCamera";
+const std::string SceneRendering::cameraPositionName = "cameraPosition";
 const std::string SceneRendering::lightName = "light";
+
+
+vecCstShaderProgram_sptr SceneRendering::getShaderProgramsUsingUniformBuffer() const {
+    auto shadersPrograms = _shadowStar->getShaderPrograms();
+
+    const auto levelShaderPrograms = _sceneRenderingProcess->getShaderPrograms();
+    shadersPrograms.insert(shadersPrograms.end(),levelShaderPrograms.begin(), levelShaderPrograms.end());
+
+    const auto bloomShaderProgram = _bloom->getShaderPrograms();
+    shadersPrograms.insert(shadersPrograms.end(),bloomShaderProgram.begin(), bloomShaderProgram.end());
+
+    return shadersPrograms;
+}

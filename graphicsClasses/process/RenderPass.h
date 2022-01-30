@@ -40,17 +40,7 @@ void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::v
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::vec3& value);
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const glm::vec2& value);
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const GLfloat& value);
-
 void upsertUniform(GLuint shaderProgramID, const std::string& name, const GLuint& value) = delete;
-void upsertUniformTexture(GLuint shaderProgramID, const std::string& name, const GLuint& value);
-
-void upsertUniform(
-    GLuint shaderProgramID,
-    const std::string& name,
-    const std::shared_ptr <const UniformBlock>& uniformBlock
-    );
-
-using UniformCstBlockVariables = std::unordered_map <std::string, CstUniformBlock_sptr>;
 
 using UniformBlockVariables = std::unordered_map <std::string, UniformBlock_sptr>;
 using UniformBlockVariables_uptr = std::unique_ptr <UniformBlockVariables>;
@@ -81,7 +71,6 @@ std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > _separateMeshGrou
 
 std::unordered_map <std::shared_ptr <RenderGroup>, Mesh::Uniforms> _renderGroupsUniforms;
 std::unordered_map <GLuint, Mesh::Uniforms> _renderPassUniforms;
-std::unordered_map <GLuint, UniformCstBlockVariables> _renderPassUniformBlocks;
 };
 
 

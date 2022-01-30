@@ -69,3 +69,13 @@ const std::string ShadowProcess::depthFs = "depthFs.fs";
 std::shared_ptr<const GLuint> ShadowProcess::getRenderTexture() const {
     return std::make_shared<const GLuint>(_frameBuffer->getRenderTexture());
 }
+
+vecCstShaderProgram_sptr ShadowProcess::getShaderPrograms() const {
+    return {
+        _shadowBlocksShader,
+        _shadowItemsShader,
+        _shadowEnemiesShader,
+        _shadowSpecialsShader,
+        _shadowBallShader
+    };
+}

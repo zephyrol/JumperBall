@@ -1,9 +1,17 @@
 #version 330 core
 
-uniform mat4 VP;
-uniform mat4 VPStar;
+layout (std140) uniform Scene {
+    mat4 VP;
+    mat4 VPStar;
+    vec3 cameraPosition;
+    vec3 lightDirection;
+    vec3 flashColor;
+    float teleportationCoeff;
+};
 
 uniform float creationTime;
+
+// TODO use a vec4
 uniform float isRedActivated;
 uniform float isGreenActivated;
 uniform float isBlueActivated;
@@ -17,10 +25,12 @@ layout(location = 4) in float vs_specialColor;
 layout(location = 5) in float vs_isAnimated;
 layout(location = 6) in vec3 vs_specialPosition;
 
-out vec3 fs_vertexColor;
-out vec4 fs_vertexDepthMapSpace;
-out vec3 fs_vertexNormal;
-out vec3 fs_vertexPositionWorld;
+#ifdef(LEVEL_PASS)
+    out vec3 fs_vertexColor;
+    out vec4 fs_vertexDepthMapSpace;
+    out vec3 fs_vertexNormal;
+    out vec3 fs_vertexPositionWorld;
+#endif
 
 
 mat4 translate (vec3 translation) {
@@ -165,14 +175,19 @@ void main() {
     mat4 rotation = specialRotation(isActivated);
     mat4 scale = specialScale(isActivated);
     mat4 modelTransform = translationToBlock * initialRotation * translationOnBlock * rotation * scale;
-    mat4 normalTransform = initialRotation * rotation; // TODO: apply scale on normal
 
     vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, 1.0);
 
-    fs_vertexColor = vs_vertexColor;
-    fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, 1.0)).xyz);
-    fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
-    fs_vertexDepthMapSpace = VPStar * vertexPositionWorldSpace;
+    #ifdef(LEVEL_PASS)
+        fs_vertexColor = vs_vertexColor;
+        mat4 normalTransform = initialRotation * rotation; // TODO: apply scale on normal
+        fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, 1.0)).xyz);
+        fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
+        fs_vertexDepthMapSpace = VPStar * vertexPositionWorldSpace;
+        gl_Position = VP * vertexPositionWorldSpace;
+    #endif
 
-    gl_Position = VP * vertexPositionWorldSpace;
+    #ifdef(SHADOW_PASS)
+        gl_Position = VPStar * vertexPositionWorldSpace;
+    #endif
 }

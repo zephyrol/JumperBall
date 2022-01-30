@@ -10,8 +10,8 @@ HorizontalBlurProcess::HorizontalBlurProcess(
         GLuint brightPassTexture,
         const RenderPass_sptr& screen
 ):
-        _screen(screen),
-        _frameBuffer(FrameBuffer_uptr(new FrameBuffer(
+    _screen(screen),
+    _frameBuffer(FrameBuffer_uptr(new FrameBuffer(
         width,
         height,
         FrameBuffer::Content::HDR,
@@ -19,15 +19,15 @@ HorizontalBlurProcess::HorizontalBlurProcess(
         false
         ))
 ),
-_brightPassTexture(brightPassTexture),
-        _bloomShader(createHorizontalBlurProcessShaderProgram())
+    _brightPassTexture(brightPassTexture),
+    _horizontalBlurShader(createHorizontalBlurProcessShaderProgram())
 {
 }
 
 void HorizontalBlurProcess::render() const {
     _frameBuffer->bindFrameBuffer();
-    _bloomShader->use();
-    _screen->render(_bloomShader);
+    _horizontalBlurShader->use();
+    _screen->render(_horizontalBlurShader);
 }
 
 std::shared_ptr<const GLuint> HorizontalBlurProcess::getRenderTexture() const {
@@ -36,7 +36,7 @@ std::shared_ptr<const GLuint> HorizontalBlurProcess::getRenderTexture() const {
 
 void HorizontalBlurProcess::freeGPUMemory() {
     _frameBuffer->freeGPUMemory();
-    _bloomShader->freeGPUMemory();
+    _horizontalBlurShader->freeGPUMemory();
 }
 
 CstShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderProgram() const {
@@ -44,5 +44,9 @@ CstShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderPr
     sp->use();
     sp->bindUniformTexture("brightPassTexture", 0, _brightPassTexture);
     return sp;
+}
+
+vecCstShaderProgram_sptr HorizontalBlurProcess::getShaderPrograms() const {
+    return { _horizontalBlurShader };
 }
 

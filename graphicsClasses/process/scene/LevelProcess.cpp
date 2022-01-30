@@ -86,3 +86,14 @@ CstShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(const std::s
 
 const std::string LevelProcess::levelFs = "levelFs.fs";
 
+vecCstShaderProgram_sptr LevelProcess::getShaderPrograms() const {
+    return {
+        _sceneBlocksShader,
+        _sceneItemsShader,
+        _sceneEnemiesShader,
+        _sceneSpecialsShader,
+        _sceneBallShader,
+        _sceneStarShader
+    };
+}
+

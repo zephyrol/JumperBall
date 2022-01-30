@@ -17,6 +17,7 @@ public:
     void freeGPUMemory() override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
     static RenderPass_sptr createRenderPassesShapes(const CstPage_sptr& page);
+    vecCstShaderProgram_sptr getShaderPrograms() const override;
 
 private:
     const RenderPass_sptr _renderPassesShapes;

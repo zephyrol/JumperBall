@@ -21,6 +21,7 @@ public:
     void render() const override;
     void freeGPUMemory() override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
+    vecCstShaderProgram_sptr getShaderPrograms() const override;
     CstShaderProgram_sptr createBrightPassFilterProcessShaderProgram() const;
 
 private:

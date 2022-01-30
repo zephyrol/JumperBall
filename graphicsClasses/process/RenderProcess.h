@@ -32,6 +32,7 @@ RenderProcess(const RenderProcess& renderProcess) = delete;
 
 virtual void render() const = 0;
 virtual void freeGPUMemory() = 0;
+virtual vecCstShaderProgram_sptr getShaderPrograms() const = 0;
 virtual std::shared_ptr<const GLuint> getRenderTexture() const = 0;
 };
 
