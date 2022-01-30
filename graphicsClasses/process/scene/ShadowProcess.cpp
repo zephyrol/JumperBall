@@ -24,11 +24,11 @@ ShadowProcess::ShadowProcess(
         _enemies(enemies),
         _specials(specials),
         _ball(ball),
-        _shadowBlocksShader(ShaderProgram::createShaderProgram("blocksVs.vs", depthFs)),
-        _shadowItemsShader(ShaderProgram::createShaderProgram("itemsMapVs.vs", depthFs)),
-        _shadowEnemiesShader(ShaderProgram::createShaderProgram("enemiesVs.vs", depthFs)),
-        _shadowSpecialsShader(ShaderProgram::createShaderProgram("specialsVs.vs", depthFs)),
-        _shadowBallShader(ShaderProgram::createShaderProgram("ballVs.vs", depthFs))
+        _shadowBlocksShader(ShaderProgram::createShaderProgram("blocksVs.vs", depthFs, shadowDefines)),
+        _shadowItemsShader(ShaderProgram::createShaderProgram("itemsMapVs.vs", depthFs, shadowDefines)),
+        _shadowEnemiesShader(ShaderProgram::createShaderProgram("enemiesVs.vs", depthFs, shadowDefines)),
+        _shadowSpecialsShader(ShaderProgram::createShaderProgram("specialsVs.vs", depthFs, shadowDefines)),
+        _shadowBallShader(ShaderProgram::createShaderProgram("ballVs.vs", depthFs, shadowDefines))
 {
 }
 
@@ -65,6 +65,7 @@ void ShadowProcess::freeGPUMemory() {
 }
 
 const std::string ShadowProcess::depthFs = "depthFs.fs";
+const std::vector<std::string> ShadowProcess::shadowDefines= { "SHADOW_PASS" };
 
 std::shared_ptr<const GLuint> ShadowProcess::getRenderTexture() const {
     return std::make_shared<const GLuint>(_frameBuffer->getRenderTexture());

@@ -17,8 +17,11 @@ class Shader {
 
 public:
 
-Shader(const GLenum& shaderType,
-       const std::string& shaderFilename);
+Shader(
+    const GLenum& shaderType,
+    const std::string& shaderFilename,
+    const std::vector<std::string>& defines
+);
 
 Shader(const Shader& shader) = delete;
 Shader& operator= (const Shader& shader) = delete;
@@ -29,21 +32,27 @@ GLuint getHandle() const;
 GLenum getShaderType() const;
 void freeGPUMemory() const;
 
-static CstShader_uptr createVertexShader(const std::string& shaderName);
-static CstShader_uptr createFragmentShader(const std::string& shaderName);
+static CstShader_uptr createVertexShader(
+    const std::string& shaderName,
+    const std::vector<std::string>& defines
+);
+
+static CstShader_uptr createFragmentShader(
+    const std::string& shaderName,
+    const std::vector<std::string>& defines
+);
 
 static const std::string shadersDir;
 
 private:
 
-// --------ATTRIBUTES-----------//
+    static std::string cleanDefines(const std::string& shaderCode, const std::vector<std::string>& defines);
 const GLuint _shaderHandle;
 const GLenum _shaderType;
 const std::string _shaderFilename;
 const std::string _shaderCode;
 
-// -------CONST METHODS--------//
-void verifyCompileStatus() const;
+void verifyCompileStatus(const std::string& shaderCode) const;
 
 };
 

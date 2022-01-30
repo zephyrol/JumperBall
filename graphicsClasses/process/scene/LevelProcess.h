@@ -51,6 +51,7 @@ private:
     CstShaderProgram_sptr createLevelProcessShaderProgram(const std::string& vs) const;
 
     static const std::string levelFs;
+    static const std::vector<std::string> levelDefines;
 };
 
 #endif //JUMPERBALLAPPLICATION_LEVELPROCESS_H

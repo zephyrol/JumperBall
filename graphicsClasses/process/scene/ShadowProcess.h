@@ -40,6 +40,7 @@ private:
     const CstShaderProgram_sptr _shadowBallShader;
 
     static const std::string depthFs;
+    static const std::vector<std::string> shadowDefines;
 };
 
 #endif //JUMPERBALLAPPLICATION_SHADOWPROCESS_H

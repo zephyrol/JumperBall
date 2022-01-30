@@ -48,34 +48,10 @@ CstShaderProgram_sptr ShaderProgram::createShaderProgram (
     const std::string& fs,
     const std::vector<std::string>& defines
 ) {
-
-    const auto cleanDefine = [defines](const std::string& shader) {
-        std::string finalShader = shader;
-        const std::string ifdefKey = "#ifdef";
-        const std::string endifKey = "#endif";
-        for (const auto &define: defines) {
-            const std::string defineKey = ifdefKey + "(" + define + ")";
-            while(auto index = finalShader.find(defineKey) != std::string::npos) {
-                finalShader.replace(index, defineKey.length(),"");
-            }
-            while(auto index = finalShader.find(ifdefKey) != std::string::npos) {
-                const auto endifPos = finalShader.find("endif", index);
-                finalShader.replace(index, endifPos - index,"");
-            }
-            while(auto index = finalShader.find(endifKey) != std::string::npos) {
-                finalShader.replace(index, endifKey.length(), "");
-            }
-        }
-        return finalShader;
-    };
-
-    const std::string finalVertexShader = cleanDefine(vs);
-    const std::string finalFragmentShader = cleanDefine(fs);
-
     return std::make_shared <const ShaderProgram>(
-        Shader::createVertexShader(finalVertexShader),
-        Shader::createFragmentShader(finalFragmentShader)
-        );
+        Shader::createVertexShader(vs, defines),
+        Shader::createFragmentShader(fs, defines)
+    );
 }
 
 void ShaderProgram::use() const {
@@ -94,8 +70,7 @@ void ShaderProgram::verifyLinkStatus() const {
         if (logLength > 0) {
             std::string log(logLength, ' ');
             GLsizei message;
-            glGetProgramInfoLog(_shaderProgramHandle, logLength,
-                                &message, &log[0]);
+            glGetProgramInfoLog(_shaderProgramHandle, logLength, &message, &log[0]);
             std::cerr << "Error log : " << std::endl << log;
         }
         exit(EXIT_FAILURE);

@@ -78,13 +78,14 @@ std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
 }
 
 CstShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(const std::string &vs) const {
-    CstShaderProgram_sptr sp = ShaderProgram::createShaderProgram(vs, levelFs);
+    CstShaderProgram_sptr sp = ShaderProgram::createShaderProgram(vs, levelFs, levelDefines);
     sp->use();
     sp->bindUniformTexture("depthTexture", 0, _shadowTexture);
     return sp;
 }
 
 const std::string LevelProcess::levelFs = "levelFs.fs";
+const std::vector<std::string> LevelProcess::levelDefines = {"LEVEL_PASS"};
 
 vecCstShaderProgram_sptr LevelProcess::getShaderPrograms() const {
     return {

@@ -29,7 +29,7 @@ void freeGPUMemory() const;
 static CstShaderProgram_sptr createShaderProgram(
     const std::string& vs,
     const std::string& fs,
-    const std::vector<std::string>& defines
+    const std::vector<std::string>& defines = {}
 );
 void use() const;
 
