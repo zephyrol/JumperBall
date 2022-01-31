@@ -15,8 +15,8 @@ VerticalBlurProcess::VerticalBlurProcess(
         width,
         height,
         FrameBuffer::Content::SDR,
-        false,
-        false ))
+        false
+    ))
 ),
     _horizontalBlurTexture(horizontalBlurTexture),
     _verticalBlurShader(createVerticalBlurProcessShaderProgram())

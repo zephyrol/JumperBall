@@ -25,8 +25,6 @@ FrameBuffer(
     GLsizei resolutionX,
     GLsizei resolutionY,
     Content content = Content::SDR,
-    // TODO: remove auto clean, force to set clear color and scene rendering call clearMethod
-    bool usedAutoClean = false,
     bool hasDepthBuffer = true,
     const glm::vec3& clearColor = backgroundColor
 );
@@ -41,6 +39,7 @@ static constexpr float luminanceKey = 0.4f;
 GLuint getHandle() const;
 void bindFrameBuffer() const;
 GLuint getRenderTexture() const;
+GLuint clean();
 
 void freeGPUMemory();
 
@@ -59,7 +58,6 @@ const Content _content;
 
 const std::unique_ptr <const GLuint> _depthBuffer;
 
-const bool _usedAutoClean;
 const glm::vec3 _clearColor;
 
 const GLsizei _resolutionX;

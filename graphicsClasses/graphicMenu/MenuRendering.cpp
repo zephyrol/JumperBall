@@ -48,11 +48,10 @@ void MenuRendering::render() const {
     if (!currentPage) {
         return;
     }
-    FrameBuffer::bindDefaultFrameBuffer();
-
+    /*FrameBuffer::bindDefaultFrameBuffer();
     FrameBuffer::disableDepthTest();
     FrameBuffer::setViewportSize(_width, _height);
-    FrameBuffer::cleanDefaultFrameBuffer();
+    FrameBuffer::cleanDefaultFrameBuffer();*/
     for (const auto& process: _pagesProcesses.at(currentPage)) {
         process->render();
     }

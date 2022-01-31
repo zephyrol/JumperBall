@@ -43,7 +43,7 @@ void LevelProcess::render() const {
 
     _frameBuffer->bindFrameBuffer();
     FrameBuffer::setViewportSize(_width, _height);
-
+    _frameBuffer->clean();
 
     _sceneBlocksShader->use();
     _blocks->render(_sceneBlocksShader);

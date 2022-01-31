@@ -111,17 +111,14 @@ template<typename T> void RenderPass::bindUniformVariables (
 }
 
 void RenderPass::render (const CstShaderProgram_sptr& shaderProgram) const {
-    const GLuint shaderProgramID = shaderProgram->getHandle();
-
-    /*if (_renderPassUniforms.find(shaderProgramID) != _renderPassUniforms.end()) {
-        bindUniforms(_renderPassUniforms.at(shaderProgramID), shaderProgram);
-    }*/
 
     for (const auto& renderGroupUniforms : _renderGroupsUniforms) {
         bindUniforms(renderGroupUniforms.second, shaderProgram);
     }
 
-    _unitedMeshesGroup->render();
+    if(_unitedMeshesGroup) {
+        _unitedMeshesGroup->render();
+    }
     for(const auto& renderGroup: _separateMeshGroups) {
         renderGroup.second->render();
     }

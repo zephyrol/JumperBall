@@ -16,7 +16,6 @@ ShadowProcess::ShadowProcess(
                 sizeDepthTexture,
                 FrameBuffer::Content::Depth,
                 true,
-                true,
                 { 1.f, 1.f, 1.f }
         )),
         _blocks(blocks),
@@ -35,9 +34,9 @@ ShadowProcess::ShadowProcess(
 void ShadowProcess::render() const {
 
     _frameBuffer->bindFrameBuffer();
-
-    FrameBuffer::setViewportSize(sizeDepthTexture, sizeDepthTexture);
     FrameBuffer::enableDepthTest();
+    FrameBuffer::setViewportSize(sizeDepthTexture, sizeDepthTexture);
+    _frameBuffer->clean();
 
     _shadowBlocksShader->use();
     _blocks->render(_shadowBlocksShader);

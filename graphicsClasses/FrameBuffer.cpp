@@ -11,7 +11,6 @@ FrameBuffer::FrameBuffer(
     GLsizei resolutionX,
     GLsizei resolutionY,
     FrameBuffer::Content content,
-    bool usedAutoClean,
     bool hasDepthBuffer,
     const glm::vec3& clearColor
 ):
@@ -19,7 +18,6 @@ FrameBuffer::FrameBuffer(
     _renderTexture(createRenderTexture()),
     _content(content),
     _depthBuffer(hasDepthBuffer ? createDepthBuffer() : nullptr),
-    _usedAutoClean(usedAutoClean),
     _clearColor(clearColor),
     _resolutionX(resolutionX),
     _resolutionY(resolutionY) {
@@ -64,10 +62,6 @@ FrameBuffer::FrameBuffer(
 
 void FrameBuffer::bindFrameBuffer() const {
     glBindFramebuffer(GL_FRAMEBUFFER, _fboHandle);
-
-    if (_usedAutoClean) {
-        cleanCurrentFrameBuffer(hasDepthBuffer(), _clearColor);
-    }
 }
 
 GLuint FrameBuffer::getRenderTexture() const {
@@ -88,6 +82,10 @@ void FrameBuffer::bindDefaultFrameBuffer() {
 
 void FrameBuffer::cleanDefaultFrameBuffer() {
     cleanCurrentFrameBuffer(false, FrameBuffer::backgroundColor);
+}
+
+GLuint FrameBuffer::clean() {
+    cleanCurrentFrameBuffer(hasDepthBuffer(), _clearColor);
 }
 
 void FrameBuffer::cleanCurrentFrameBuffer (bool hasDepthBuffer, const glm::vec3& clearColor) {

@@ -17,7 +17,6 @@ BrightPassFilterProcess::BrightPassFilterProcess(
         width,
         height,
         FrameBuffer::Content::HDR,
-        false,
         false
         ))
 ),

@@ -15,7 +15,6 @@ HorizontalBlurProcess::HorizontalBlurProcess(
         width,
         height,
         FrameBuffer::Content::HDR,
-        false,
         false
         ))
 ),
