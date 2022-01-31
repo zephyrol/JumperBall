@@ -87,7 +87,7 @@ void FrameBuffer::bindDefaultFrameBuffer() {
 }
 
 void FrameBuffer::cleanDefaultFrameBuffer() {
-    cleanCurrentFrameBuffer(true, FrameBuffer::backgroundColor);
+    cleanCurrentFrameBuffer(false, FrameBuffer::backgroundColor);
 }
 
 void FrameBuffer::cleanCurrentFrameBuffer (bool hasDepthBuffer, const glm::vec3& clearColor) {

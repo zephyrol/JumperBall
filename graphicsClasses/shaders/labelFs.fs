@@ -1,5 +1,9 @@
 #version 330 core
 
+layout (std140) uniform Menu {
+    float positionY;
+};
+
 in vec3 fs_vertexColor;
 
 out vec4 pixelColor;

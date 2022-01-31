@@ -29,7 +29,6 @@ void LettersProcess::render() const {
             characterTextureNumber,
             _graphicAlphabet.at(letter).textureID
         );
-        std::cout<<"render lettre" << std::endl;
         renderPass->render(_lettersShader);
     }
 }

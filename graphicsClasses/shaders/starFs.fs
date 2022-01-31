@@ -1,5 +1,14 @@
 #version 330 core
 
+layout (std140) uniform Scene {
+    mat4 VP;
+    mat4 VPStar;
+    vec3 cameraPosition;
+    vec3 lightDirection;
+    vec3 flashColor;
+    float teleportationCoeff;
+};
+
 out vec4 pixelColor;
 
 uniform float radiusInside;

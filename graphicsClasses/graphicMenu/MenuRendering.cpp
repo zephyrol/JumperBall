@@ -22,6 +22,13 @@ MenuRendering::MenuRendering(
     _pagesProcesses(createPagesProcesses()),
     _renderProcesses(createRenderProcesses()),
     _menuUniformBuffer(getShaderProgramsUsingUniformBuffer()){
+
+    // TODO: Move thoses instructions
+    // alpha
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // -----
+    glEnable(GL_CULL_FACE);
 }
 
 void MenuRendering::update() {
@@ -41,7 +48,11 @@ void MenuRendering::render() const {
     if (!currentPage) {
         return;
     }
+    FrameBuffer::bindDefaultFrameBuffer();
 
+    FrameBuffer::disableDepthTest();
+    FrameBuffer::setViewportSize(_width, _height);
+    FrameBuffer::cleanDefaultFrameBuffer();
     for (const auto& process: _pagesProcesses.at(currentPage)) {
         process->render();
     }

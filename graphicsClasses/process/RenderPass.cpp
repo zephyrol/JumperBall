@@ -13,8 +13,8 @@ RenderPass::RenderPass(const vecMesh_sptr& meshes):
     _meshStates(createMeshStates()),
     _unitedMeshesGroup(createUnitedMeshesGroup()),
     _separateMeshGroups(createSeparateMeshGroups()),
-    _renderGroupsUniforms{},
-    _renderPassUniforms()
+    _renderGroupsUniforms{}
+    //_renderPassUniforms()
 {
 }
 
@@ -62,14 +62,14 @@ std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > RenderPass::creat
     for (const Mesh_sptr& mesh : _meshes) {
         if(mesh->getGlobalState() == SceneElement::GlobalState::Separate) {
             separateMeshGroups[mesh] = std::make_shared <RenderGroup>(
-                    std::initializer_list<Mesh_sptr>({mesh})
+                std::initializer_list<Mesh_sptr>({mesh})
             );
         }
     }
     return separateMeshGroups;
 }
 
-void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const glm::mat4& value) {
+/*void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const glm::mat4& value) {
     _renderPassUniforms[shaderProgramID].uniformMat4s[name] = value;
 }
 
@@ -87,7 +87,7 @@ void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name,
 
 void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const GLfloat& value) {
     _renderPassUniforms[shaderProgramID].uniformFloats[name] = value;
-}
+}*/
 
 void RenderPass::bindUniforms (
     const Mesh::Uniforms& uniforms,
@@ -113,13 +113,17 @@ template<typename T> void RenderPass::bindUniformVariables (
 void RenderPass::render (const CstShaderProgram_sptr& shaderProgram) const {
     const GLuint shaderProgramID = shaderProgram->getHandle();
 
-    if (_renderPassUniforms.find(shaderProgramID) != _renderPassUniforms.end()) {
+    /*if (_renderPassUniforms.find(shaderProgramID) != _renderPassUniforms.end()) {
         bindUniforms(_renderPassUniforms.at(shaderProgramID), shaderProgram);
-    }
+    }*/
 
     for (const auto& renderGroupUniforms : _renderGroupsUniforms) {
         bindUniforms(renderGroupUniforms.second, shaderProgram);
-        renderGroupUniforms.first->render();
+    }
+
+    _unitedMeshesGroup->render();
+    for(const auto& renderGroup: _separateMeshGroups) {
+        renderGroup.second->render();
     }
 }
 

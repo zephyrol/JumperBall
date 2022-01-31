@@ -1,7 +1,14 @@
 #version 330 core
 
-uniform mat4 VP;
-uniform mat4 VPStar;
+
+layout (std140) uniform Scene {
+    mat4 VP;
+    mat4 VPStar;
+    vec3 cameraPosition;
+    vec3 lightDirection;
+    vec3 flashColor;
+    float teleportationCoeff;
+};
 
 uniform float creationTime;
 uniform float obtainingTime;

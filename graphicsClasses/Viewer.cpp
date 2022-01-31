@@ -19,16 +19,16 @@ Viewer::Viewer(
 }
 
 void Viewer::update() {
-    _sceneRendering.update();
-    //_menuRendering.update();
+    //_sceneRendering.update();
+    _menuRendering.update();
 }
 
 void Viewer::render() const {
-    _sceneRendering.render();
-    //_menuRendering.render();
+    //_sceneRendering.render();
+    _menuRendering.render();
 }
 
 void Viewer::freeGPUMemory() {
-    _sceneRendering.freeGPUMemory();
-    //_menuRendering.freeGPUMemory();
+    //_sceneRendering.freeGPUMemory();
+    _menuRendering.freeGPUMemory();
 }

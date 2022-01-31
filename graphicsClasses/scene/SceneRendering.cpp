@@ -97,9 +97,9 @@ void SceneRendering::update() {
 }
 
 void SceneRendering::render() const {
-    _sceneRenderingProcess->render();
+    //_sceneRenderingProcess->render();
     for (const auto &process: _processes) {
-        //process->render();
+        process->render();
     }
 }
 
