@@ -81,14 +81,14 @@ SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height
 void SceneRendering::update() {
 
     const auto& sceneCamera = _scene.getCamera();
+    const auto& sceneBall = _scene.getBall();
     _sceneUniformBuffer.update(
         sceneCamera->viewProjection(),
         Camera::genVPMatrixFromStar(*_scene.getStar()),
         sceneCamera->pos(),
         Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection()),
-        // TODO FLASH COLOR ???
-        glm::vec3(0,0,0),
-        glm::vec1(_scene.getBall()->getTeleportationCoefficient())
+        Utility::colorAsVec3(sceneBall->getTeleportationColor()),
+        glm::vec1(sceneBall->getTeleportationCoefficient())
     );
 
     for (const auto& renderPass : _renderPasses) {
