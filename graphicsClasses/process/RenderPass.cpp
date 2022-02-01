@@ -93,14 +93,12 @@ template<typename T> void RenderPass::bindUniformVariables (
 
 void RenderPass::render (const CstShaderProgram_sptr& shaderProgram) const {
 
-    for (const auto& renderGroupUniforms : _renderGroupsUniforms) {
-        bindUniforms(renderGroupUniforms.second, shaderProgram);
-    }
-
     if(_unitedMeshesGroup) {
+        bindUniforms(_renderGroupsUniforms.at(_unitedMeshesGroup), shaderProgram);
         _unitedMeshesGroup->render();
     }
     for(const auto& renderGroup: _separateMeshGroups) {
+        bindUniforms(_renderGroupsUniforms.at(renderGroup.second), shaderProgram);
         renderGroup.second->render();
     }
 }

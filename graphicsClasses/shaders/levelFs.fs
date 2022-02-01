@@ -46,7 +46,7 @@ void main() {
     vec3 composition = ambientComponent *
                        ((1.0 - burningCoeff) * fs_vertexColor + (burningCoeff) * fireEffet);
 
-    if (!inShadow) {
+    if (true) {
 
         vec3 toLight = -lightDirection;
         vec3 toCamera = normalize(cameraPosition - fs_vertexPositionWorld);

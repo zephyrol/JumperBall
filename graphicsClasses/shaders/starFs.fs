@@ -28,5 +28,4 @@ void main() {
     float coefficient = smoothstep(radiusInside, radiusOutside, dist);
 
     pixelColor = mix(colorInside, colorOutside, coefficient);
-    // pixelColor = vec4(1.0,1.0,1.0,1.0);
 }

@@ -19,16 +19,10 @@ MenuRendering::MenuRendering(
     _graphicAlphabet(FontTexturesGenerator::genGraphicAlphabet(_menu, height, ftContent)),
     _pageToRenderPassesLetter(createPageToRenderPassesLetters()),
     _pageToRenderPassesShape(createPageToRenderPassesShapes()),
+    _renderPasses(createRenderPasses()),
     _pagesProcesses(createPagesProcesses()),
     _renderProcesses(createRenderProcesses()),
     _menuUniformBuffer(getShaderProgramsUsingUniformBuffer()){
-
-    // TODO: Move thoses instructions
-    // alpha
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // -----
-    glEnable(GL_CULL_FACE);
 }
 
 void MenuRendering::update() {
