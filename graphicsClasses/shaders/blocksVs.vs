@@ -25,7 +25,7 @@ layout(location = 3) in vec3 vs_blockPosition;
 #endif
 
 void main() {
-    vec3 position = (vs_vertexPosition - vs_blockPosition) * scale + vs_blockPosition + translation;
+    vec3 position = (vs_vertexPosition - vs_blockPosition) * vec3(scale) + vs_blockPosition + translation;
     vec4 positionVec4 = vec4(position, 1.0);
 
     #ifdef(LEVEL_PASS)
@@ -33,7 +33,7 @@ void main() {
         fs_vertexNormal             = vs_vertexNormal; // normalize((N * vec4(vs_vertexNormal,1.f)).xyz);
         fs_vertexPositionWorld      = position;
         fs_vertexDepthMapSpace      = VPStar * positionVec4;
-        gl_Position                 = VP * positionVec4;
+        gl_Position = VP * positionVec4;
     #endif
 
     #ifdef(SHADOW_PASS)

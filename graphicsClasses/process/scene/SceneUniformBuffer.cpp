@@ -5,13 +5,17 @@
 #include "SceneUniformBuffer.h"
 
 SceneUniformBuffer::SceneUniformBuffer(const vecCstShaderProgram_sptr &sceneShaderPrograms):
-    UniformBuffer("Scene", getBindingPointMap(sceneShaderPrograms),sizeSceneUniformBuffer),
-_VP(),
-_VPStar(),
-_cameraPosition(),
-_lightDirection(),
-_flashColor(),
-_teleportationCoeff()
+    UniformBuffer("Scene", sceneShaderPrograms,sizeSceneUniformBuffer),
+_VP(std::make_shared<glm::mat4>()),
+_VPStar(std::make_shared<glm::mat4>()),
+_cameraPosition(std::make_shared<glm::vec3>()),
+_lightDirection(std::make_shared<glm::vec3>()),
+_flashColor(std::make_shared<glm::vec3>()),
+_teleportationCoeff(std::make_shared<glm::vec1>()),
+_uniformBufferContent(sizeSceneUniformBuffer),
+_mat4DataLocations(createMat4DataLocation()),
+_vec3DataLocations(createVec3DataLocation()),
+_vec1DataLocations(createVec1DataLocation())
 {
 }
 
@@ -21,38 +25,44 @@ void SceneUniformBuffer::update(
     const glm::vec3 &cameraPosition,
     const glm::vec3 &lightDirection,
     const glm::vec3 &flashColor,
-    GLfloat teleportationCoeff
+    const glm::vec1 &teleportationCoeff
 ) {
-    _VP = VP;
-    _VPStar = VPStar;
-    _cameraPosition = cameraPosition;
-    _lightDirection = lightDirection;
-    _teleportationCoeff = teleportationCoeff;
-    _flashColor = flashColor;
 
-    constexpr size_t VPOffset = 0;
-    constexpr size_t VPStarOffset = sizeof(glm::mat4);
-    constexpr size_t cameraPositionOffset = VPStarOffset + sizeof(glm::mat4);
-    constexpr size_t lightDirectionOffset = cameraPositionOffset + sizeof(glm::vec3);
-    constexpr size_t teleportationCoeffOffset = lightDirectionOffset + sizeof(glm::vec3);
-    constexpr size_t flashColorOffset = teleportationCoeffOffset + sizeof(glm::vec3);
+    updateUniformBufferContent(_VP, VP, _mat4DataLocations);
+    updateUniformBufferContent(_VPStar, VPStar, _mat4DataLocations);
 
-    fillBufferData(VPOffset, _VP);
-    fillBufferData(VPStarOffset, _VPStar);
-    fillBufferData(cameraPositionOffset, _cameraPosition);
-    fillBufferData(lightDirectionOffset, _lightDirection);
-    fillBufferData(teleportationCoeffOffset, _teleportationCoeff);
-    fillBufferData(flashColorOffset, _flashColor);
+    updateUniformBufferContent(_cameraPosition, cameraPosition, _vec3DataLocations);
+    updateUniformBufferContent(_lightDirection, lightDirection, _vec3DataLocations);
+    updateUniformBufferContent(_flashColor, flashColor, _vec3DataLocations);
+
+    updateUniformBufferContent(_teleportationCoeff, teleportationCoeff, _vec1DataLocations);
+
+    bindBuffer();
+    fillBufferData(_uniformBufferContent);
+    unbindBuffer();
 }
 
-UniformBuffer::ShaderProgramBindingPoint SceneUniformBuffer::getBindingPointMap(
-    const vecCstShaderProgram_sptr &sceneShaderPrograms
-) {
-    UniformBuffer::ShaderProgramBindingPoint shaderProgramBindingPoint;
-    for (const auto &sp: sceneShaderPrograms) {
-        // Every scene shader program has only this uniform buffer, so the binding point is 0
-        shaderProgramBindingPoint[sp] = 0;
-    }
+SceneUniformBuffer::DataLocation<glm::mat4> SceneUniformBuffer::createMat4DataLocation() {
+    return  {
+        { _VP, { _uniformBufferContent.data() + VPOffset, &(*_VP)[0][0] }},
+        { _VPStar, {_uniformBufferContent.data() + VPStarOffset, &(*_VPStar)[0][0]}}
+    };
 
-    return shaderProgramBindingPoint;
+}
+
+SceneUniformBuffer::DataLocation<glm::vec3> SceneUniformBuffer::createVec3DataLocation() {
+    return {
+        { _cameraPosition, { _uniformBufferContent.data() + cameraPositionOffset, &(*_cameraPosition)[0] }},
+        { _lightDirection, { _uniformBufferContent.data() + lightDirectionOffset, &(*_lightDirection)[0] }},
+        { _flashColor, {_uniformBufferContent.data() + flashColorOffset, &(*_flashColor)[0]}}
+    };
+}
+
+SceneUniformBuffer::DataLocation<glm::vec1> SceneUniformBuffer::createVec1DataLocation() {
+    return  {
+        {
+            _teleportationCoeff,
+            { _uniformBufferContent.data() + teleportationCoeffOffset, &(*_teleportationCoeff)[0] }
+        },
+    };
 }

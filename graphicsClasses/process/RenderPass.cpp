@@ -34,6 +34,7 @@ void RenderPass::update() {
         }
     }
     if (needsGroupsRedefinition) {
+        std::cout << "needs redefinition" << std::endl;
         freeGPUMemory();
         _meshStates = createMeshStates();
         _unitedMeshesGroup = createUnitedMeshesGroup();
@@ -68,26 +69,6 @@ std::unordered_map <Mesh_sptr, std::shared_ptr <RenderGroup> > RenderPass::creat
     }
     return separateMeshGroups;
 }
-
-/*void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const glm::mat4& value) {
-    _renderPassUniforms[shaderProgramID].uniformMat4s[name] = value;
-}
-
-void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const glm::vec4& value) {
-    _renderPassUniforms[shaderProgramID].uniformVec4s[name] = value;
-}
-
-void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const glm::vec3& value) {
-    _renderPassUniforms[shaderProgramID].uniformVec3s[name] = value;
-}
-
-void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const glm::vec2& value) {
-    _renderPassUniforms[shaderProgramID].uniformVec2s[name] = value;
-}
-
-void RenderPass::upsertUniform (GLuint shaderProgramID, const std::string& name, const GLfloat& value) {
-    _renderPassUniforms[shaderProgramID].uniformFloats[name] = value;
-}*/
 
 void RenderPass::bindUniforms (
     const Mesh::Uniforms& uniforms,
@@ -127,6 +108,7 @@ void RenderPass::render (const CstShaderProgram_sptr& shaderProgram) const {
 vecMesh_sptr RenderPass::createUpdatableMeshes() const {
     vecMesh_sptr updatableMeshes {};
     for (const auto &mesh : _meshes) {
+        updatableMeshes.push_back(mesh);
         if (!mesh->updatingIsUseless()) {
             updatableMeshes.push_back(mesh);
         }

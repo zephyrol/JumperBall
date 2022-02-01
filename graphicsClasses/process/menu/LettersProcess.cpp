@@ -6,7 +6,6 @@
 #include "componentsGeneration/MeshGenerator.h"
 
 LettersProcess::LettersProcess(
-    const CstPage_sptr& page,
     const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet,
     const LettersProcess::RenderPassesLetters& renderPassesLetters
 ):

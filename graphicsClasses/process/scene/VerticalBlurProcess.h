@@ -28,7 +28,7 @@ private:
     const GLuint _horizontalBlurTexture;
     const CstShaderProgram_sptr _verticalBlurShader;
 
-    CstShaderProgram_sptr createVerticalBlurProcessShaderProgram() const;
+    static CstShaderProgram_sptr createVerticalBlurProcessShaderProgram() ;
 };
 
 

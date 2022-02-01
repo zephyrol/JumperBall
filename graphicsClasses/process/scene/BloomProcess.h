@@ -33,7 +33,7 @@ private:
     const GLuint _bluredTexture;
     const CstShaderProgram_sptr _bloomShader;
 
-    CstShaderProgram_sptr createBloomProcessShaderProgram() const;
+    static CstShaderProgram_sptr createBloomProcessShaderProgram() ;
 };
 
 

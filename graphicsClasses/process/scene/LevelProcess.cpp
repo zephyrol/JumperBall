@@ -41,24 +41,23 @@ LevelProcess::LevelProcess(
 
 void LevelProcess::render() const {
 
-    _frameBuffer->bindFrameBuffer();
     FrameBuffer::setViewportSize(_width, _height);
+    _frameBuffer->bindFrameBuffer();
     _frameBuffer->clean();
 
-    _sceneBlocksShader->use();
-    _blocks->render(_sceneBlocksShader);
-
-    _sceneItemsShader->use();
-    _items->render(_sceneItemsShader);
-
-    _sceneEnemiesShader->use();
-    _enemies->render(_sceneEnemiesShader);
-
-    _sceneSpecialsShader->use();
-    _specials->render(_sceneSpecialsShader);
-
-    _sceneBallShader->use();
-    _ball->render(_sceneBallShader);
+    for (const auto& shaderRenderPass : std::map<CstShaderProgram_sptr, RenderPass_sptr>({
+        { _sceneBlocksShader, _blocks },
+        { _sceneItemsShader, _items },
+        { _sceneEnemiesShader, _enemies },
+        { _sceneSpecialsShader, _specials },
+        { _sceneBallShader, _ball }
+    })){
+        const auto& shader = shaderRenderPass.first;
+        const auto& renderPass = shaderRenderPass.second;
+        shader->use();
+        shader->bindUniformTexture("depthTexture", 0, _shadowTexture);
+        renderPass->render(shader);
+    }
 
     _sceneStarShader->use();
     _star->render(_sceneStarShader);
@@ -77,11 +76,8 @@ std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
     return std::make_shared<const GLuint>(_frameBuffer->getRenderTexture());
 }
 
-CstShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(const std::string &vs) const {
-    CstShaderProgram_sptr sp = ShaderProgram::createShaderProgram(vs, levelFs, levelDefines);
-    sp->use();
-    sp->bindUniformTexture("depthTexture", 0, _shadowTexture);
-    return sp;
+CstShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(const std::string &vs) {
+    return ShaderProgram::createShaderProgram(vs, levelFs, levelDefines);
 }
 
 const std::string LevelProcess::levelFs = "levelFs.fs";

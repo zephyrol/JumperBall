@@ -28,7 +28,7 @@ RenderProcess(const RenderProcess& renderProcess) = delete;
 
     RenderProcess& operator= (const RenderProcess&) = delete;
 
-~RenderProcess() = default;
+virtual ~RenderProcess() = default;
 
 virtual void render() const = 0;
 virtual void freeGPUMemory() = 0;

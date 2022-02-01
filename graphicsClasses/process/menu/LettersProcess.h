@@ -17,7 +17,6 @@ public:
     using RenderPassesLetters = std::unordered_map <RenderPass_sptr, unsigned char>;
 
     LettersProcess(
-        const CstPage_sptr& page,
         const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet,
         const LettersProcess::RenderPassesLetters& renderPassesLetters
     );

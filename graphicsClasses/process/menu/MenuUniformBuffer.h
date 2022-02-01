@@ -20,11 +20,7 @@ public:
 private:
     static constexpr size_t sizeMenuUniformBuffer = sizeof(GLfloat);
 
-    static UniformBuffer::ShaderProgramBindingPoint getBindingPointMap(
-        const vecCstShaderProgram_sptr& menuShaderPrograms
-    );
-
-    GLfloat _positionY;
+    glm::vec1 _positionY;
 };
 
 

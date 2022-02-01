@@ -6,23 +6,23 @@
 
 UniformBuffer::UniformBuffer(
     const std::string &name,
-    UniformBuffer::ShaderProgramBindingPoint &&shaderProgramsBindingPoint,
+    const vecCstShaderProgram_sptr& shaderPrograms,
     size_t bufferSize):
     _name(name),
     _bufferSize(static_cast<GLsizeiptr>(bufferSize)),
-    _shaderProgramToBindingPoint(std::move(shaderProgramsBindingPoint)),
+    _shaderPrograms(shaderPrograms),
     _ubo(createUbo()){
 }
 
 GLuint UniformBuffer::createUbo() const {
 
-    for (const auto &shaderProgramBindingPoint: _shaderProgramToBindingPoint) {
-        const auto& shaderProgram = shaderProgramBindingPoint.first;
-        const auto& bindingPoint = shaderProgramBindingPoint.second;
+    for (const auto &shaderProgram: _shaderPrograms) {
 
         const auto& sp = shaderProgram->getHandle();
         const auto uniformBlockIndex = glGetUniformBlockIndex(sp, _name.c_str());
-        glUniformBlockBinding(sp, uniformBlockIndex, bindingPoint);
+
+        // We always use binding point 0
+        glUniformBlockBinding(sp, uniformBlockIndex, 0);
     }
 
     GLuint ubo;
@@ -32,9 +32,24 @@ GLuint UniformBuffer::createUbo() const {
     glBufferData(GL_UNIFORM_BUFFER, _bufferSize, nullptr, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, _bufferSize);
 
     return ubo;
+}
+
+void UniformBuffer::bindBuffer() const {
+    //glBindBuffer(GL_UNIFORM_BUFFER, _ubo);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, _ubo, 0, _bufferSize);
+}
+
+
+void UniformBuffer::fillBufferData(const std::vector<GLubyte> &values) {
+    //glBindBuffer(GL_UNIFORM_BUFFER, _ubo);
+    //glBufferData(GL_UNIFORM_BUFFER, _bufferSize, values.data(), GL_DYNAMIC_DRAW);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, _bufferSize, values.data());
+}
+
+void UniformBuffer::unbindBuffer() {
+    //glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void UniformBuffer::freeGPUMemory() {

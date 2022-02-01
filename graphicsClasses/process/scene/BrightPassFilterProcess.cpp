@@ -26,11 +26,12 @@ BrightPassFilterProcess::BrightPassFilterProcess(
 }
 
 void BrightPassFilterProcess::render() const {
-    _frameBuffer->bindFrameBuffer();
     FrameBuffer::disableDepthTest();
+    _frameBuffer->bindFrameBuffer();
     FrameBuffer::setViewportSize(_width, _height);
 
     _brightPassFilterShader->use();
+    _brightPassFilterShader->bindUniformTexture("textureScene", 0, _hdrSceneTexture);
     _screen->render(_brightPassFilterShader);
 }
 
@@ -43,11 +44,8 @@ void BrightPassFilterProcess::freeGPUMemory() {
     _brightPassFilterShader->freeGPUMemory();
 }
 
-CstShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShaderProgram() const {
-    CstShaderProgram_sptr sp = ShaderProgram::createShaderProgram("basicFboVs.vs", "brightPassFilter.fs");
-    sp->use();
-    sp->bindUniformTexture("textureScene", 0, _hdrSceneTexture);
-    return sp;
+CstShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShaderProgram() {
+    return ShaderProgram::createShaderProgram("basicFboVs.vs", "brightPassFilter.fs");
 }
 
 vecCstShaderProgram_sptr BrightPassFilterProcess::getShaderPrograms() const {

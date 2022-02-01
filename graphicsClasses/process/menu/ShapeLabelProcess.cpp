@@ -5,7 +5,7 @@
 #include "ShapeLabelProcess.h"
 #include "componentsGeneration/MeshGenerator.h"
 
-ShapeLabelProcess::ShapeLabelProcess(const CstPage_sptr& page, const RenderPass_sptr& renderPassShapes):
+ShapeLabelProcess::ShapeLabelProcess(const RenderPass_sptr& renderPassShapes):
     _renderPassShapes(renderPassShapes),
     _shapesShader(ShaderProgram::createShaderProgram("labelVs.vs", "labelFs.fs"))
 {

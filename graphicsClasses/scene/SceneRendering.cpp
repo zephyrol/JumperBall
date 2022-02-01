@@ -88,7 +88,7 @@ void SceneRendering::update() {
         Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection()),
         // TODO FLASH COLOR ???
         glm::vec3(0,0,0),
-        _scene.getBall()->getTeleportationCoefficient()
+        glm::vec1(_scene.getBall()->getTeleportationCoefficient())
     );
 
     for (const auto& renderPass : _renderPasses) {
@@ -97,7 +97,8 @@ void SceneRendering::update() {
 }
 
 void SceneRendering::render() const {
-    //_sceneRenderingProcess->render();
+
+    _sceneUniformBuffer.bindBuffer();
     for (const auto &process: _processes) {
         process->render();
     }

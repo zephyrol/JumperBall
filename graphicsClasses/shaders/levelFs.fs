@@ -1,7 +1,5 @@
 #version 330 core
 
-uniform sampler2D depthTexture;
-
 layout (std140) uniform Scene {
     mat4 VP;
     mat4 VPStar;
@@ -12,6 +10,7 @@ layout (std140) uniform Scene {
 };
 
 uniform float burningCoeff;
+uniform sampler2D depthTexture;
 
 in vec3 fs_vertexColor;
 in vec4 fs_vertexDepthMapSpace;
@@ -59,5 +58,4 @@ void main() {
         composition += diffuseComponent + specularComponent;
     }
     pixelColor = vec4(composition, 1.0);
-
 }

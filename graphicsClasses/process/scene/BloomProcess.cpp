@@ -23,8 +23,10 @@ BloomProcess::BloomProcess(
 void BloomProcess::render() const {
     FrameBuffer::bindDefaultFrameBuffer();
     FrameBuffer::setViewportSize(_width, _height);
-    FrameBuffer::cleanDefaultFrameBuffer();
+    //FrameBuffer::cleanDefaultFrameBuffer();
     _bloomShader->use();
+    _bloomShader->bindUniformTexture("frameSceneHDRTexture", 0, _sceneHDRTexture);
+    _bloomShader->bindUniformTexture("frameBluredTexture", 1, _bluredTexture);
     _screen->render(_bloomShader);
 }
 
@@ -36,12 +38,8 @@ std::shared_ptr<const GLuint> BloomProcess::getRenderTexture() const {
     return nullptr;
 }
 
-CstShaderProgram_sptr BloomProcess::createBloomProcessShaderProgram() const {
-    CstShaderProgram_sptr sp = ShaderProgram::createShaderProgram("basicFboVs.vs", "bloomFs.fs");
-    sp->use();
-    sp->bindUniformTexture("frameSceneHDRTexture", 0, _sceneHDRTexture);
-    sp->bindUniformTexture("frameBluredTexture", 1, _bluredTexture);
-    return sp;
+CstShaderProgram_sptr BloomProcess::createBloomProcessShaderProgram() {
+    return ShaderProgram::createShaderProgram("basicFboVs.vs", "bloomFs.fs");
 }
 
 vecCstShaderProgram_sptr BloomProcess::getShaderPrograms() const {

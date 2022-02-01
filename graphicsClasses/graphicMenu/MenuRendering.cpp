@@ -48,10 +48,7 @@ void MenuRendering::render() const {
     if (!currentPage) {
         return;
     }
-    /*FrameBuffer::bindDefaultFrameBuffer();
-    FrameBuffer::disableDepthTest();
-    FrameBuffer::setViewportSize(_width, _height);
-    FrameBuffer::cleanDefaultFrameBuffer();*/
+    _menuUniformBuffer.bindBuffer();
     for (const auto& process: _pagesProcesses.at(currentPage)) {
         process->render();
     }
@@ -100,13 +97,13 @@ MenuRendering::PagesProcesses MenuRendering::createPagesProcesses() const {
         const auto& renderPassLetter = _pageToRenderPassesLetter.find(page);
         if(renderPassLetter != _pageToRenderPassesLetter.end()) {
             pagesProcesses[page].push_back(
-                std::make_shared<LettersProcess>(page, _graphicAlphabet, renderPassLetter->second)
+                std::make_shared<LettersProcess>(_graphicAlphabet, renderPassLetter->second)
             );
         }
         const auto& renderPassShape = _pageToRenderPassesShape.find(page);
         if(renderPassShape != _pageToRenderPassesShape.end()) {
             pagesProcesses[page].push_back(
-                std::make_shared<ShapeLabelProcess>(page, renderPassShape->second)
+                std::make_shared<ShapeLabelProcess>(renderPassShape->second)
             );
         }
 }

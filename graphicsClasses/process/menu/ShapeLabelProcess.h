@@ -11,7 +11,7 @@
 
 class ShapeLabelProcess: public RenderProcess {
 public:
-    ShapeLabelProcess(const CstPage_sptr& page, const RenderPass_sptr& renderPassShapes);
+    ShapeLabelProcess(const RenderPass_sptr& renderPassShapes);
 
     void render() const override;
     void freeGPUMemory() override;

@@ -22,7 +22,7 @@ public:
     void freeGPUMemory() override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
     vecCstShaderProgram_sptr getShaderPrograms() const override;
-    CstShaderProgram_sptr createHorizontalBlurProcessShaderProgram() const;
+    static CstShaderProgram_sptr createHorizontalBlurProcessShaderProgram() ;
 
 private:
     const RenderPass_sptr _screen;

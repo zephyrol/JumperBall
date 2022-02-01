@@ -5,24 +5,14 @@
 #include "MenuUniformBuffer.h"
 
 MenuUniformBuffer::MenuUniformBuffer(const vecCstShaderProgram_sptr &menuShaderPrograms):
-    UniformBuffer("Menu", getBindingPointMap(menuShaderPrograms),sizeMenuUniformBuffer),
+    UniformBuffer("Menu", menuShaderPrograms,sizeMenuUniformBuffer),
     _positionY()
 {
 }
 
-void MenuUniformBuffer::update(GLfloat positionY ) {
-    _positionY = positionY;
+void MenuUniformBuffer::update(GLfloat positionY) {
+    _positionY.x = positionY;
+    bindBuffer();
     fillBufferData(0, _positionY);
-}
-
-UniformBuffer::ShaderProgramBindingPoint MenuUniformBuffer::getBindingPointMap(
-    const vecCstShaderProgram_sptr &menuShaderPrograms
-) {
-    UniformBuffer::ShaderProgramBindingPoint shaderProgramBindingPoint;
-    for (const auto &sp: menuShaderPrograms) {
-        // Every menu shader program has only this uniform buffer, so the binding point is 0
-        shaderProgramBindingPoint[sp] = 0;
-    }
-
-    return shaderProgramBindingPoint;
+    unbindBuffer();
 }
