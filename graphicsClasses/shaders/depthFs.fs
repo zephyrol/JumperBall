@@ -1,6 +1,6 @@
 #version 330 core
 
-layout (std140) uniform Scene {
+uniform Scene {
     mat4 VP;
     mat4 VPStar;
     vec3 cameraPosition;

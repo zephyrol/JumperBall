@@ -1,6 +1,6 @@
 #version 330 core
 
-layout (std140) uniform Menu {
+uniform Menu {
     float positionY;
 };
 

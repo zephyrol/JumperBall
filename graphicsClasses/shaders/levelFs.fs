@@ -1,6 +1,6 @@
 #version 330 core
 
-layout (std140) uniform Scene {
+uniform Scene {
     mat4 VP;
     mat4 VPStar;
     vec3 cameraPosition;
@@ -46,7 +46,7 @@ void main() {
     vec3 composition = ambientComponent *
                        ((1.0 - burningCoeff) * fs_vertexColor + (burningCoeff) * fireEffet);
 
-    if (true) {
+    if (!inShadow) {
 
         vec3 toLight = -lightDirection;
         vec3 toCamera = normalize(cameraPosition - fs_vertexPositionWorld);

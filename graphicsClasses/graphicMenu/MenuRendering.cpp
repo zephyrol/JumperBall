@@ -42,7 +42,7 @@ void MenuRendering::render() const {
     if (!currentPage) {
         return;
     }
-    _menuUniformBuffer.bindBuffer();
+    _menuUniformBuffer.bindBufferRange();
     for (const auto& process: _pagesProcesses.at(currentPage)) {
         process->render();
     }

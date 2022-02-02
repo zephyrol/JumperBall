@@ -5,14 +5,13 @@
 #include "MenuUniformBuffer.h"
 
 MenuUniformBuffer::MenuUniformBuffer(const vecCstShaderProgram_sptr &menuShaderPrograms):
-    UniformBuffer("Menu", menuShaderPrograms,sizeMenuUniformBuffer),
+    UniformBuffer("Menu", menuShaderPrograms,{"positionY"}),
     _positionY()
 {
 }
 
 void MenuUniformBuffer::update(GLfloat positionY) {
     _positionY.x = positionY;
-    bindBuffer();
+    bindBufferRange();
     fillBufferData(0, _positionY);
-    unbindBuffer();
 }

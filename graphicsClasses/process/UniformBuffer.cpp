@@ -7,10 +7,13 @@
 UniformBuffer::UniformBuffer(
     const std::string &name,
     const vecCstShaderProgram_sptr& shaderPrograms,
-    size_t bufferSize):
+    const std::vector<std::string>& fieldNames
+):
     _name(name),
-    _bufferSize(static_cast<GLsizeiptr>(bufferSize)),
     _shaderPrograms(shaderPrograms),
+    _bufferSize(getBufferSize()),
+    _fieldNames(fieldNames),
+    _fieldOffsets(getFieldOffsets()),
     _ubo(createUbo()){
 }
 
@@ -36,20 +39,42 @@ GLuint UniformBuffer::createUbo() const {
     return ubo;
 }
 
-void UniformBuffer::bindBuffer() const {
-    //glBindBuffer(GL_UNIFORM_BUFFER, _ubo);
+void UniformBuffer::bindBufferRange() const {
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, _ubo, 0, _bufferSize);
 }
 
-
 void UniformBuffer::fillBufferData(const std::vector<GLubyte> &values) {
-    //glBindBuffer(GL_UNIFORM_BUFFER, _ubo);
-    //glBufferData(GL_UNIFORM_BUFFER, _bufferSize, values.data(), GL_DYNAMIC_DRAW);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, _bufferSize, values.data());
 }
 
-void UniformBuffer::unbindBuffer() {
-    //glBindBuffer(GL_UNIFORM_BUFFER, 0);
+GLsizeiptr UniformBuffer::getBufferSize() const {
+    const auto& spHandle = (*_shaderPrograms.begin())->getHandle();
+    const GLuint blockIndex = glGetUniformBlockIndex(spHandle, _name.c_str());
+    GLint bufferSize;
+    glGetActiveUniformBlockiv(spHandle, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &bufferSize);
+    return bufferSize;
+}
+
+std::unordered_map<std::string, GLint> UniformBuffer::getFieldOffsets() {
+
+    std::vector <const char*> linearFieldNames;
+    for (const auto &fieldName : _fieldNames) {
+        linearFieldNames.push_back(fieldName.c_str());
+    }
+    const auto& spHandle = (*_shaderPrograms.begin())->getHandle();
+
+    std::vector<GLuint> indices(_fieldNames.size());
+    glGetUniformIndices(spHandle, _fieldNames.size(), linearFieldNames.data(), indices.data());
+
+    std::vector<GLint> offsets(_fieldNames.size());
+    glGetActiveUniformsiv(spHandle, _fieldNames.size(), indices.data(), GL_UNIFORM_OFFSET, offsets.data());
+
+    std::unordered_map<std::string, GLint> fieldOffsets {};
+    for (size_t i = 0; i < _fieldNames.size(); ++i) {
+        fieldOffsets[_fieldNames.at(i)] = offsets[i];
+    }
+
+    return fieldOffsets;
 }
 
 void UniformBuffer::freeGPUMemory() {

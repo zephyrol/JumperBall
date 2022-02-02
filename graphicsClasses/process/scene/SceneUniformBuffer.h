@@ -25,17 +25,6 @@ public:
     );
 
 private:
-    static constexpr size_t sizeSceneUniformBuffer =
-        2 * sizeof(glm::mat4) + 3 * sizeof(glm::vec3) + sizeof(glm::vec1);
-
-
-    static constexpr size_t VPOffset = 0;
-    static constexpr size_t VPStarOffset = sizeof(glm::mat4);
-    static constexpr size_t cameraPositionOffset = VPStarOffset + sizeof(glm::mat4);
-    static constexpr size_t lightDirectionOffset = cameraPositionOffset + sizeof(glm::vec3);
-    static constexpr size_t flashColorOffset = lightDirectionOffset + sizeof(glm::vec3);
-    static constexpr size_t teleportationCoeffOffset = flashColorOffset + sizeof(glm::vec3);
-
     const std::shared_ptr<glm::mat4> _VP;
     const std::shared_ptr<glm::mat4> _VPStar;
     const std::shared_ptr<glm::vec3> _cameraPosition;
@@ -44,7 +33,6 @@ private:
     const std::shared_ptr<glm::vec1> _teleportationCoeff;
 
     std::vector<GLubyte> _uniformBufferContent;
-
 
     struct FieldLocation {
         GLubyte* uboLocation;
@@ -67,6 +55,13 @@ private:
     DataLocation<glm::mat4> createMat4DataLocation();
     DataLocation<glm::vec3> createVec3DataLocation();
     DataLocation<glm::vec1> createVec1DataLocation();
+
+    static const std::string nameVP;
+    static const std::string nameVPStar;
+    static const std::string nameCameraPosition;
+    static const std::string nameLightDirection;
+    static const std::string nameFlashColor;
+    static const std::string nameTeleportationCoeff;
 
 };
 
