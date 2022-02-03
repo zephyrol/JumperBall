@@ -103,27 +103,13 @@ SceneElement::GlobalState Star::getGlobalState() const {
     return SceneElement::GlobalState::United;
 }
 
-// TODO those floats are not dynamic !
-Star::DynamicValues <float> Star::getDynamicFloats() const {
+SceneElement::StaticValues <JBTypes::vec3f> Star::getStaticVec3fValues() const {
+    return { JBTypesMethods::scalarApplication(_distance,_initialDirection), _rotationCenter, _rotationAxis};
+}
+
+SceneElement::DynamicValues<float> Star::getDynamicFloats() const {
     return {
-        { "starDistance", _distance },
-        { "radius", _radius },
-        { "radiusInside", _radiusInside },
-        { "radiusOutside", _radiusOutside },
+        { "timeSinceCreation", getTimeSinceCreation() }
     };
 }
 
-Star::DynamicValues <JBTypes::vec3f> Star::getDynamicVec3fs() const {
-    return {
-        { "initialDirection", _initialDirection },
-        { "rotationCenter", _rotationCenter }
-    };
-}
-
-Star::DynamicValues <JBTypes::Quaternion> Star::getDynamicQuaternions() const {
-    return {
-        { "rotationQuaternion", getRotation() }
-    };
-}
-
-const std::string Star::lightDirectionName = "lightDirection";

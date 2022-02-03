@@ -10,15 +10,13 @@ uniform Scene {
 };
 
 out vec4 pixelColor;
-
-uniform float radiusInside;
-uniform float radiusOutside;
-
 in vec2 fs_vertexPosition;
 
 void main() {
     const vec4 colorInside = vec4(1.0, 1.0, 1.0, 1.0);
     const vec4 colorOutside = vec4(0.0, 1.0, 1.0, 0.0);
+    const float radiusInside = 0.3f;
+    const float radiusOutside = 0.5f;
 
     // Star center at the position 0.f,0.f
     float dx = fs_vertexPosition.x;

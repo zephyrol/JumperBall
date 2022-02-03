@@ -11,7 +11,6 @@ uniform Scene {
 
 uniform float creationTime;
 
-// TODO use a vec4
 uniform float isRedActivated;
 uniform float isGreenActivated;
 uniform float isBlueActivated;

@@ -9,29 +9,32 @@ uniform Scene {
     float teleportationCoeff;
 };
 
-// TODO Use vertex attributes (2 stars) or const variables (1 star)
-uniform float starDistance;
-uniform float radius;
-
-uniform vec3 initialDirection;
-uniform vec3 rotationCenter;
-
-uniform vec4 rotationQuaternion;
+uniform float timeSinceCreation;
 
 layout(location = 0) in vec3 vs_vertexPosition;
+layout(location = 4) in vec3 vs_centerToStar;
+layout(location = 5) in vec3 vs_rotationCenter;
+layout(location = 6) in vec3 vs_rotationAxis;
 
 out vec2 fs_vertexPosition;
+
+vec4 createRotationQuaternion() {
+    const float radiansPerSeconds = 0.6;
+    float angle = radiansPerSeconds * timeSinceCreation;
+    float angleOverTwo = angle / 2;
+    return vec4(vec3(sin(angleOverTwo) * vs_rotationAxis), cos(angleOverTwo));
+}
 
 mat4 starTranslation() {
     return mat4(1.0, 0.0, 0.0, 0.0,
                 0.0, 1.0, 0.0, 0.0,
                 0.0, 0.0, 1.0, 0.0,
-                rotationCenter.x, rotationCenter.y, rotationCenter.z, 1.0);
+                vs_rotationCenter.x, vs_rotationCenter.y, vs_rotationCenter.z, 1.0);
 }
 
 
 mat4 starRotation() {
-
+    vec4 rotationQuaternion = createRotationQuaternion();
     float x2 = rotationQuaternion.x * rotationQuaternion.x;
     float y2 = rotationQuaternion.y * rotationQuaternion.y;
     float z2 = rotationQuaternion.z * rotationQuaternion.z;
@@ -52,7 +55,10 @@ mat4 starRotation() {
 
 void main() {
 
+    const float starRadius = 5.0;
+
     fs_vertexPosition = vs_vertexPosition.xy;
+
     gl_Position = VP * starTranslation() * starRotation() *
-                  vec4(starDistance * initialDirection + radius * vs_vertexPosition, 1.0);
+                  vec4(vs_centerToStar + starRadius * vs_vertexPosition, 1.0);
 }

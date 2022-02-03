@@ -10,7 +10,6 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include "uniformBlocks/UniformLight.h"
 #include "componentsGeneration/MeshGenerator.h"
 #include "scene/SceneElement.h"
 #include "Rendering.h"

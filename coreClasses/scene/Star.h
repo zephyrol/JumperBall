@@ -37,12 +37,11 @@ JBTypes::vec3f lightDirection() const;
 JBTypes::vec3f position() const;
 SceneElement::GlobalState getGlobalState() const override;
 
+    StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+
 SceneElement::DynamicValues <float> getDynamicFloats() const override;
-SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
-SceneElement::DynamicValues <JBTypes::Quaternion> getDynamicQuaternions() const override;
 
 static std::shared_ptr <Star> createBlurStar(const Map& map);
-static const std::string lightDirectionName;
 
 private:
 
