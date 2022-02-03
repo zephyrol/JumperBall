@@ -11,23 +11,19 @@ LettersProcess::LettersProcess(
 ):
     _graphicAlphabet(graphicAlphabet),
     _renderPassesLetters(renderPassesLetters),
-    _lettersShader(ShaderProgram::createShaderProgram("fontVs.vs", "fontFs.fs"))
+    _lettersShader(createLettersProcessShaderProgram())
 {
 }
 
 void LettersProcess::render() const {
 
     _lettersShader->use();
+    ShaderProgram::setActiveTexture(0);
     for(const auto& renderPassLetter: _renderPassesLetters) {
         const auto& renderPass = renderPassLetter.first;
         const auto letter = renderPassLetter.second;
 
-        constexpr int characterTextureNumber = 0;
-        _lettersShader->bindUniformTexture(
-            "characterTexture",
-            characterTextureNumber,
-            _graphicAlphabet.at(letter).textureID
-        );
+        ShaderProgram::bindTexture(_graphicAlphabet.at(letter).textureID);
         renderPass->render(_lettersShader);
     }
 }
@@ -44,3 +40,10 @@ vecCstShaderProgram_sptr LettersProcess::getShaderPrograms() const {
     return { _lettersShader };
 }
 
+
+CstShaderProgram_sptr LettersProcess::createLettersProcessShaderProgram() {
+    auto shader = ShaderProgram::createShaderProgram("fontVs.vs", "fontFs.fs");
+    shader->use();
+    shader->bindUniformTextureIndex("characterTexture", 0);
+    return shader;
+}

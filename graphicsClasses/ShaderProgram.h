@@ -43,7 +43,9 @@ void bindUniform(const std::string& name, const int& value) const;
 void bindUniform(const std::string& name, const std::vector <int>& value) const;
 void bindUniform(const std::string& name, const std::vector <float>& value) const;
 
-void bindUniformTexture(const std::string& name, const int& textureNumber, GLuint textureID) const;
+void bindUniformTextureIndex(const std::string& name, int textureNumber) const;
+static void setActiveTexture(int textureNumber);
+static void bindTexture(GLuint textureID);
 
 private:
 const GLuint _shaderProgramHandle;

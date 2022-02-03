@@ -14,9 +14,9 @@ LevelProcess::LevelProcess(
     const RenderPass_sptr& specials,
     const RenderPass_sptr& ball,
     const RenderPass_sptr& star
-):  _width(width),
-    _height(height),
-    _frameBuffer(
+): _width(width),
+   _height(height),
+   _frameBuffer(
         new FrameBuffer(
                 _width,
                 _height,
@@ -35,7 +35,15 @@ LevelProcess::LevelProcess(
    _sceneEnemiesShader(createLevelProcessShaderProgram("enemiesVs.vs")),
    _sceneSpecialsShader(createLevelProcessShaderProgram("specialsVs.vs")),
    _sceneBallShader(createLevelProcessShaderProgram("ballVs.vs")),
-   _sceneStarShader(ShaderProgram::createShaderProgram("starVs.vs", "starFs.fs"))
+   _sceneStarShader(ShaderProgram::createShaderProgram("starVs.vs", "starFs.fs")),
+   _shadersRenderPasses({
+                          { _sceneBlocksShader, _blocks },
+                          { _sceneItemsShader, _items },
+                          { _sceneEnemiesShader, _enemies },
+                          { _sceneSpecialsShader, _specials },
+                          { _sceneBallShader, _ball },
+                          { _sceneStarShader, _star }
+                      })
 {
 }
 
@@ -45,22 +53,15 @@ void LevelProcess::render() const {
     _frameBuffer->bindFrameBuffer();
     _frameBuffer->clean();
 
-    for (const auto& shaderRenderPass : std::map<CstShaderProgram_sptr, RenderPass_sptr>({
-        { _sceneBlocksShader, _blocks },
-        { _sceneItemsShader, _items },
-        { _sceneEnemiesShader, _enemies },
-        { _sceneSpecialsShader, _specials },
-        { _sceneBallShader, _ball }
-    })){
+    ShaderProgram::setActiveTexture(0);
+    ShaderProgram::bindTexture(_shadowTexture);
+
+    for (const auto& shaderRenderPass : _shadersRenderPasses){
         const auto& shader = shaderRenderPass.first;
         const auto& renderPass = shaderRenderPass.second;
         shader->use();
-        shader->bindUniformTexture("depthTexture", 0, _shadowTexture);
         renderPass->render(shader);
     }
-
-    _sceneStarShader->use();
-    _star->render(_sceneStarShader);
 }
 
 void LevelProcess::freeGPUMemory() {
@@ -69,6 +70,7 @@ void LevelProcess::freeGPUMemory() {
     _sceneEnemiesShader->freeGPUMemory();
     _sceneItemsShader->freeGPUMemory();
     _sceneBallShader->freeGPUMemory();
+    _sceneSpecialsShader->freeGPUMemory();
     _sceneStarShader->freeGPUMemory();
 }
 
@@ -77,7 +79,10 @@ std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
 }
 
 CstShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(const std::string &vs) {
-    return ShaderProgram::createShaderProgram(vs, levelFs, levelDefines);
+    auto shader = ShaderProgram::createShaderProgram(vs, levelFs, levelDefines);
+    shader->use();
+    shader->bindUniformTextureIndex("depthTexture", 0);
+    return shader;
 }
 
 const std::string LevelProcess::levelFs = "levelFs.fs";

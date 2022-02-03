@@ -141,13 +141,17 @@ void ShaderProgram::bindUniform (const std::string& name,
     glUniform1fv(uniformVariableID, size, value.data());
 }
 
-void ShaderProgram::bindUniformTexture (const std::string& name,
-                                        const int& textureNumber,
-                                        GLuint textureID) const {
-    glActiveTexture(GL_TEXTURE0 + textureNumber);
-    glBindTexture(GL_TEXTURE_2D, textureID);
+void ShaderProgram::bindUniformTextureIndex(const std::string &name, int textureNumber) const {
     const GLuint uniformVariableID = fillCacheAndGet(name);
     glUniform1i(uniformVariableID, textureNumber);
+}
+
+void ShaderProgram::setActiveTexture(int textureNumber) {
+    glActiveTexture(GL_TEXTURE0 + textureNumber);
+}
+
+void ShaderProgram::bindTexture(GLuint textureID) {
+    glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
 GLuint ShaderProgram::fillCacheAndGet(const std::string &name) const {

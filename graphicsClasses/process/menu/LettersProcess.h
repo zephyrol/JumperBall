@@ -30,6 +30,8 @@ private:
     const FontTexturesGenerator::GraphicAlphabet& _graphicAlphabet;
     const RenderPassesLetters _renderPassesLetters;
     const CstShaderProgram_sptr _lettersShader;
+
+    static CstShaderProgram_sptr createLettersProcessShaderProgram();
 };
 
 

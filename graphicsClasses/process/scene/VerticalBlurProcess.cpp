@@ -27,7 +27,8 @@ void VerticalBlurProcess::render() const {
     _frameBuffer->bindFrameBuffer();
 
     _verticalBlurShader->use();
-    _verticalBlurShader->bindUniformTexture("brightPassTexture", 0, _horizontalBlurTexture);
+    ShaderProgram::bindTexture(_horizontalBlurTexture);
+
     _screen->render(_verticalBlurShader);
 }
 
@@ -41,7 +42,10 @@ void VerticalBlurProcess::freeGPUMemory() {
 }
 
 CstShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgram() {
-    return ShaderProgram::createShaderProgram("basicFboVs.vs", "verticalBlurFs.fs");
+    auto shader = ShaderProgram::createShaderProgram("basicFboVs.vs", "verticalBlurFs.fs");
+    shader->use();
+    shader->bindUniformTextureIndex("horizontalBlurTexture", 1);
+    return shader;
 }
 
 vecCstShaderProgram_sptr VerticalBlurProcess::getShaderPrograms() const {

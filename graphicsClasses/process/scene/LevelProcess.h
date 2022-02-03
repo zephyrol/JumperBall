@@ -48,6 +48,8 @@ private:
     const CstShaderProgram_sptr _sceneBallShader;
     const CstShaderProgram_sptr _sceneStarShader;
 
+    const std::map<CstShaderProgram_sptr, RenderPass_sptr> _shadersRenderPasses;
+
     static CstShaderProgram_sptr createLevelProcessShaderProgram(const std::string& vs) ;
 
     static const std::string levelFs;

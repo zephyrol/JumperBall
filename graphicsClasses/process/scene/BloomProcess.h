@@ -29,11 +29,10 @@ private:
     GLsizei _width;
     GLsizei _height;
     const RenderPass_sptr _screen;
-    const GLuint _sceneHDRTexture;
     const GLuint _bluredTexture;
     const CstShaderProgram_sptr _bloomShader;
 
-    static CstShaderProgram_sptr createBloomProcessShaderProgram() ;
+    static CstShaderProgram_sptr createBloomProcessShaderProgram();
 };
 
 

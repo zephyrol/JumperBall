@@ -26,7 +26,10 @@ HorizontalBlurProcess::HorizontalBlurProcess(
 void HorizontalBlurProcess::render() const {
     _frameBuffer->bindFrameBuffer();
     _horizontalBlurShader->use();
-    _horizontalBlurShader->bindUniformTexture("brightPassTexture", 0, _brightPassTexture);
+
+    ShaderProgram::setActiveTexture(1);
+    ShaderProgram::bindTexture(_brightPassTexture);
+
     _screen->render(_horizontalBlurShader);
 }
 
@@ -40,7 +43,10 @@ void HorizontalBlurProcess::freeGPUMemory() {
 }
 
 CstShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderProgram() {
-    return ShaderProgram::createShaderProgram("basicFboVs.vs", "horizontalBlurFs.fs");
+    auto shader = ShaderProgram::createShaderProgram("basicFboVs.vs", "horizontalBlurFs.fs");
+    shader->use();
+    shader->bindUniformTextureIndex("brightPassTexture", 1);
+    return shader;
 }
 
 vecCstShaderProgram_sptr HorizontalBlurProcess::getShaderPrograms() const {
