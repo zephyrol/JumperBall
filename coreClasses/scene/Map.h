@@ -76,7 +76,6 @@ const unsigned int _height;
 const unsigned int _depth;
 
 const unsigned int _nbOfKeys;
-const unsigned int _nbOfCoins;
 
 const JBTypes::timePointMs _creationTime;
 

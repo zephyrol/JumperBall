@@ -55,7 +55,6 @@ SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height
     _bloom(std::make_shared<BloomProcess>(
         width,
         height,
-        *_sceneRenderingProcess->getRenderTexture(),
         *_verticalBlur->getRenderTexture(),
         _screen
     )),

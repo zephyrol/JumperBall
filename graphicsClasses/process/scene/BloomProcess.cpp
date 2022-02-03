@@ -7,7 +7,6 @@
 BloomProcess::BloomProcess(
     GLsizei width,
     GLsizei height,
-    GLuint sceneHDRTexture,
     GLuint bluredTexture,
     const RenderPass_sptr& screen
 ):

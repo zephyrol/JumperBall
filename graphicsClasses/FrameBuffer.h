@@ -39,7 +39,7 @@ static constexpr float luminanceKey = 0.4f;
 GLuint getHandle() const;
 void bindFrameBuffer() const;
 GLuint getRenderTexture() const;
-GLuint clean();
+void clean();
 
 void freeGPUMemory();
 
@@ -59,9 +59,6 @@ const Content _content;
 const std::unique_ptr <const GLuint> _depthBuffer;
 
 const glm::vec3 _clearColor;
-
-const GLsizei _resolutionX;
-const GLsizei _resolutionY;
 
 GLuint createFrameBufferObject() const;
 GLuint createRenderTexture() const;

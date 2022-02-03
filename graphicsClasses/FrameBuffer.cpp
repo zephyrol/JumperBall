@@ -18,9 +18,8 @@ FrameBuffer::FrameBuffer(
     _renderTexture(createRenderTexture()),
     _content(content),
     _depthBuffer(hasDepthBuffer ? createDepthBuffer() : nullptr),
-    _clearColor(clearColor),
-    _resolutionX(resolutionX),
-    _resolutionY(resolutionY) {
+    _clearColor(clearColor)
+{
 
     glBindFramebuffer(GL_FRAMEBUFFER, _fboHandle);
     glActiveTexture(GL_TEXTURE0);
@@ -84,7 +83,7 @@ void FrameBuffer::cleanDefaultFrameBuffer() {
     cleanCurrentFrameBuffer(false, FrameBuffer::backgroundColor);
 }
 
-GLuint FrameBuffer::clean() {
+void FrameBuffer::clean() {
     cleanCurrentFrameBuffer(hasDepthBuffer(), _clearColor);
 }
 

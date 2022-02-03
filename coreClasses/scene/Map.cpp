@@ -25,7 +25,6 @@ Map::Map(Map::MapInfo &&mapInfo):
     _height(mapInfo.height),
     _depth(mapInfo.depth),
     _nbOfKeys(mapInfo.nbOfKeys),
-    _nbOfCoins(mapInfo.nbOfCoins),
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _updatingTime(),
     _isExitUnlocked(false)
