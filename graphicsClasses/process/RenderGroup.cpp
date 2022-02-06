@@ -45,7 +45,7 @@ template<typename T> void RenderGroup::fillVBOsList (
     ) const {
     const std::shared_ptr <GLuint> vertexBufferObject = initializeVBO(attributeData);
     if (vertexBufferObject) {
-        const size_t attributeNumber = vboList.size() + attributesOffset;
+        const auto attributeNumber = static_cast<GLuint>(vboList.size() + attributesOffset);
         activateVertexAttribute(attributeData, attributeNumber);
         vboList.push_back(*vertexBufferObject);
     }
@@ -140,7 +140,9 @@ template<typename T> size_t RenderGroup::updateStateVBOsData (
         const auto& vbo = vbosList.at(stateVboNumber);
 
         if (updateBufferObjectData(vbo, bufferObjectData, GL_ARRAY_BUFFER)) {
-            const GLuint vertexAttributeNumber = nbOfShapeVbos + attributesOffset + vbosDataUpdated;
+            const auto vertexAttributeNumber = static_cast<GLuint>(
+                nbOfShapeVbos + attributesOffset + vbosDataUpdated
+            );
             activateVertexAttribute(bufferObjectData, vertexAttributeNumber);
             ++vbosDataUpdated;
         }
@@ -154,7 +156,7 @@ template<typename T> size_t RenderGroup::updateShapeVBOsData (const std::vector 
     if (attributesOffset < vbosList.size()) {
         const GLuint vbo = vbosList.at(attributesOffset);
         if (updateBufferObjectData(vbo, bufferObjectsData, GL_ARRAY_BUFFER)) {
-            activateVertexAttribute(bufferObjectsData, attributesOffset);
+            activateVertexAttribute(bufferObjectsData, static_cast<GLuint>(attributesOffset));
             return 1;
         }
     }

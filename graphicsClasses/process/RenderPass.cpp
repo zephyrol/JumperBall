@@ -34,7 +34,6 @@ void RenderPass::update() {
         }
     }
     if (needsGroupsRedefinition) {
-        std::cout << "needs redefinition" << std::endl;
         freeGPUMemory();
         _meshStates = createMeshStates();
         _unitedMeshesGroup = createUnitedMeshesGroup();

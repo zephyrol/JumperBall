@@ -63,8 +63,8 @@ SceneElement::GlobalState Item::getGlobalState() const {
     const float timeSinceObtaining = getTimeSinceObtaining();
 
     if (isGotten()) {
-        constexpr float thresholdThirdStep = 1.5;
-        constexpr float durationThirdStep = 0.2;
+        constexpr float thresholdThirdStep = 1.5f;
+        constexpr float durationThirdStep = 0.2f;
         return timeSinceObtaining < thresholdThirdStep + durationThirdStep
                ? SceneElement::GlobalState::Separate
                : SceneElement::GlobalState::Dead;

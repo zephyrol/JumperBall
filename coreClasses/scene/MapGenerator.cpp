@@ -66,7 +66,7 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
             compressedDimension,
             firstUsuableAsciiCharacter
         );
-        return convertToBase10(baseAsciiDimension, baseUsuableAsciiCharacters);
+        return static_cast<unsigned int>(convertToBase10(baseAsciiDimension, baseUsuableAsciiCharacters));
     };
 
     mapInfo.width = getUncompressedDimension(readingString(file));
@@ -247,10 +247,10 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
                 compressedNoBlocksCounter,
                 firstUsuableAsciiCharacter
             );
-            const unsigned int noBlocksCounter = convertToBase10(
+            const unsigned int noBlocksCounter = static_cast<unsigned int>(convertToBase10(
                 asciiBasedNoBlocksCounter,
                 baseUsuableAsciiCharacters
-            );
+            ));
             blockIndexCursor += noBlocksCounter;
         } else {
             const std::string uncompressedInfoMap = uncompressString(infoMap);
@@ -318,7 +318,9 @@ unsigned long long int MapGenerator::convertToBase10 (const std::string& s, unsi
     std::string copyS = s;
     while (copyS.length() > 0) {
         const auto number = static_cast <unsigned int>(copyS.front());
-        value += number * static_cast <unsigned int>(pow(base, copyS.length() - 1));
+        value += static_cast<unsigned long long>(
+            number * static_cast <unsigned int>(pow(base, copyS.length() - 1))
+        );
         copyS.erase(copyS.begin());
     }
     return value;
@@ -496,7 +498,7 @@ std::string MapGenerator::compressString(const std::string &asciiString) {
     const std::string letterDigitBaseString = asciiStringToLetterDigitBase(asciiString);
     const unsigned long long int base10StringRepresentation = convertToBase10(
         letterDigitBaseString,
-        asciiToLetterDigitBaseCorrespondences.size()
+        static_cast<unsigned int>(asciiToLetterDigitBaseCorrespondences.size())
     );
     const std::string baseUsuableAsciiCharactersBaseString = convertToBase(
         base10StringRepresentation,
@@ -543,7 +545,7 @@ std::string MapGenerator::uncompressString(const std::string &compressedString) 
     );
     const std::string letterDigitBaseStr = convertToBase(
         base10StringRepresentation,
-        letterDigitBaseToAsciiCorrespondences.size()
+        static_cast<unsigned int>(letterDigitBaseToAsciiCorrespondences.size())
     );
 
     return letterDigitStringToAsciiBase(letterDigitBaseStr);

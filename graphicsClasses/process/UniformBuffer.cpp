@@ -64,10 +64,14 @@ std::unordered_map<std::string, GLint> UniformBuffer::getFieldOffsets() {
     const auto& spHandle = (*_shaderPrograms.begin())->getHandle();
 
     std::vector<GLuint> indices(_fieldNames.size());
-    glGetUniformIndices(spHandle, _fieldNames.size(), linearFieldNames.data(), indices.data());
+    glGetUniformIndices(
+        spHandle, static_cast<GLsizei>(_fieldNames.size()), linearFieldNames.data(), indices.data()
+    );
 
     std::vector<GLint> offsets(_fieldNames.size());
-    glGetActiveUniformsiv(spHandle, _fieldNames.size(), indices.data(), GL_UNIFORM_OFFSET, offsets.data());
+    glGetActiveUniformsiv(
+        spHandle, static_cast<GLsizei>(_fieldNames.size()), indices.data(), GL_UNIFORM_OFFSET, offsets.data()
+    );
 
     std::unordered_map<std::string, GLint> fieldOffsets {};
     for (size_t i = 0; i < _fieldNames.size(); ++i) {

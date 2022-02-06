@@ -11,7 +11,12 @@
 Controller::Controller(const size_t& screenWidth, const size_t& screenHeight) :
         _ftContent(FontTexturesGenerator::initFreeTypeAndFont()),
         _player(),
-        _menu(Menu::getJumperBallMenu(_player, 1, screenWidth, screenHeight)),
+        _menu(Menu::getJumperBallMenu(
+            _player,
+            1,
+            static_cast<unsigned int>(screenWidth),
+            static_cast<unsigned int>(screenHeight)
+        )),
         _buttonsStatus{
         {Controller::Button::Up, Controller::Status::Released},
         {Controller::Button::Down, Controller::Status::Released},
