@@ -8,9 +8,7 @@
 #ifndef RENDER_PROCESS_H
 #define RENDER_PROCESS_H
 
-#include "process/RenderPass.h"
-#include "FrameBuffer.h"
-#include <functional>
+#include "RenderPass.h"
 
 class RenderProcess;
 using RenderProcess_sptr = std::shared_ptr <RenderProcess>;

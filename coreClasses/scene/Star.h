@@ -7,9 +7,7 @@
 
 #ifndef STAR_H
 #define STAR_H
-#include "system/Types.h"
 #include "Map.h"
-#include "SceneElement.h"
 
 class Star: public SceneElement {
 public:

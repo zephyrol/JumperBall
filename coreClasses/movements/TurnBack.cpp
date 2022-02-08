@@ -5,7 +5,6 @@
 // Created by Sebastien Morgenthaler on 31/07/2020.
 //
 
-#include <system/Types.h>
 #include "TurnBack.h"
 
 TurnBack::TurnBack(): Movement <JBTypes::Dir, 1>(

@@ -7,7 +7,6 @@
 
 #ifndef MESH_H
 #define MESH_H
-#include "Shader.h"
 #include "ShaderProgram.h"
 #include "geometry/GeometricShape.h"
 #include "scene/SceneElement.h"

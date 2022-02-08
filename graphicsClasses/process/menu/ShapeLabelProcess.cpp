@@ -3,7 +3,6 @@
 //
 
 #include "ShapeLabelProcess.h"
-#include "componentsGeneration/MeshGenerator.h"
 
 ShapeLabelProcess::ShapeLabelProcess(const RenderPass_sptr& renderPassShapes):
     _renderPassShapes(renderPassShapes),

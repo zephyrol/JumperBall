@@ -7,12 +7,8 @@
 
 #ifndef RENDER_PASS_H
 #define RENDER_PASS_H
-#include <iostream>
-#include <map>
-#include <vector>
-#include <functional>
 #include "FrameBuffer.h"
-#include "process/RenderGroup.h"
+#include "RenderGroup.h"
 
 class RenderPass;
 using RenderPass_sptr = std::shared_ptr <RenderPass>;

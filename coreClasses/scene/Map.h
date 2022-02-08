@@ -7,7 +7,6 @@
 
 #ifndef MAP_H
 #define MAP_H
-#include "blocks/Block.h"
 #include "Ball.h"
 #include <fstream>
 

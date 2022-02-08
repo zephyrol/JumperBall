@@ -5,7 +5,6 @@
 // Created by Sebastien Morgenthaler on 30/07/2020.
 //
 
-#include <system/Types.h>
 #include "TurnRight.h"
 
 TurnRight::TurnRight():

@@ -6,8 +6,7 @@
 #define JUMPERBALLAPPLICATION_SHAPE_H
 
 
-#include <system/Types.h>
-#include <scene/blocks/Transformation.h>
+#include "blocks/Transformation.h"
 #include <list>
 
 // TODO: merge it with Geometry class

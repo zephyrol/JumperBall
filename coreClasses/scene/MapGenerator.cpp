@@ -5,26 +5,22 @@
  * Created on 2 novembre 2020, 22:38
  */
 #include "MapGenerator.h"
-#include "scene/blocks/ExitBlock.h"
-#include <algorithm>
-#include <cmath>
-#include <future>
-#include <functional>
-#include <scene/blocks/special/SwitchButton.h>
-#include <scene/blocks/items/Clock.h>
-#include <scene/blocks/items/Key.h>
-#include <scene/blocks/items/Coin.h>
-#include <scene/blocks/enemies/Laser.h>
-#include <scene/blocks/enemies/ThornBall.h>
-#include <scene/blocks/enemies/DarkBall.h>
-#include <scene/blocks/special/Teleporter.h>
-#include <scene/blocks/BaseBlock.h>
-#include <scene/blocks/FireBlock.h>
-#include <scene/blocks/BrittleBlock.h>
-#include <scene/blocks/IceBlock.h>
-#include <scene/blocks/SharpBlock.h>
-#include <scene/blocks/JumpBlock.h>
-#include <scene/blocks/GhostBlock.h>
+#include "blocks/ExitBlock.h"
+#include "blocks/special/SwitchButton.h"
+#include "blocks/items/Clock.h"
+#include "blocks/items/Key.h"
+#include "blocks/items/Coin.h"
+#include "blocks/enemies/Laser.h"
+#include "blocks/enemies/ThornBall.h"
+#include "blocks/enemies/DarkBall.h"
+#include "blocks/special/Teleporter.h"
+#include "blocks/BaseBlock.h"
+#include "blocks/FireBlock.h"
+#include "blocks/BrittleBlock.h"
+#include "blocks/IceBlock.h"
+#include "blocks/SharpBlock.h"
+#include "blocks/JumpBlock.h"
+#include "blocks/GhostBlock.h"
 
 
 std::shared_ptr <Map> MapGenerator::loadMap (size_t mapNumber) {

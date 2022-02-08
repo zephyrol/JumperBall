@@ -5,8 +5,6 @@
  * Created on 21 avril 2020, 14:50
  */
 #include "MenuRendering.h"
-#include "process/menu/LettersProcess.h"
-#include "process/menu/ShapeLabelProcess.h"
 
 MenuRendering::MenuRendering(
     const Menu& menu,

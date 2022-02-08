@@ -8,9 +8,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 #include <scene/Star.h>
-#include <scene/Ball.h>
 #include <scene/Map.h>
-#include <scene/SceneElement.h>
 #include "player/Player.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>

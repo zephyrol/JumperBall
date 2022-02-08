@@ -11,7 +11,6 @@
  * Created on 29 avril 2020, 19:43
  */
 
-#include <functional>
 #include "SwitchLabel.h"
 
 SwitchLabel::SwitchLabel(

@@ -6,7 +6,6 @@
  */
 
 #include "GhostBlock.h"
-#include <functional>
 
 GhostBlock::GhostBlock(const JBTypes::vec3ui &position,
                        const vecItem_sptr &items,

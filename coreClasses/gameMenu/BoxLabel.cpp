@@ -5,7 +5,6 @@
  * Created on 13 juin 2020
  */
 
-#include <functional>
 #include "BoxLabel.h"
 
 BoxLabel::BoxLabel(

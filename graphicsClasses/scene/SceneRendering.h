@@ -7,11 +7,7 @@
 
 #ifndef SCENE_RENDERING_H
 #define SCENE_RENDERING_H
-#include <iostream>
-#include <map>
-#include <vector>
 #include "componentsGeneration/MeshGenerator.h"
-#include "scene/SceneElement.h"
 #include "Rendering.h"
 #include "Scene.h"
 #include "process/scene/ShadowProcess.h"

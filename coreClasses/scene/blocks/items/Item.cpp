@@ -6,7 +6,6 @@
  */
 
 #include "Item.h"
-#include <cmath>
 
 Item::Item(
     const JBTypes::vec3ui& position,

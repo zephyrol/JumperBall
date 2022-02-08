@@ -9,7 +9,6 @@
  */
 
 #include "system/Types.h"
-#include <functional>
 
 class ClassicalMechanics {
 public:

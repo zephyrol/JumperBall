@@ -20,7 +20,7 @@ public:
 
     void bindBufferRange() const;
     template<class T> void fillBufferData(size_t offset, const T& value);
-    void illBufferData(const std::vector<GLubyte>& values);
+    void fillBufferData(const std::vector<GLubyte>& values);
 
     void freeGPUMemory();
 
@@ -32,7 +32,6 @@ protected:
     const std::unordered_map<std::string, GLint> _fieldOffsets;
     const GLuint _ubo;
     GLuint createUbo() const;
-    void fillBufferData(const std::vector<GLubyte> &values);
 
 private:
     GLsizeiptr getBufferSize() const;

@@ -6,8 +6,6 @@
  */
 
 #include "ClassicalMechanics.h"
-#include <cmath>
-#include <iostream>
 
 
 ClassicalMechanics::ClassicalMechanics(float ballRadius):

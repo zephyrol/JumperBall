@@ -5,9 +5,6 @@
  * Created on 28 avril 2020, 17:44
  */
 
-#include <algorithm>
-#include <cmath>
-#include <functional>
 #include "Label.h"
 
 Label::Label(

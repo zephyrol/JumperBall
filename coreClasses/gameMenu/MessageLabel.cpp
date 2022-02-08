@@ -4,7 +4,6 @@
  *
  * Created on 28 avril 2020, 19:43
  */
-#include <functional>
 #include "MessageLabel.h"
 
 MessageLabel::MessageLabel(

@@ -8,7 +8,6 @@
 #ifndef FONT_TEXTURES_GENERATOR_H
 #define FONT_TEXTURES_GENERATOR_H
 #include "Utility.h"
-#include <map>
 #include <freetype2/ft2build.h>
 #include FT_FREETYPE_H
 #include <gameMenu/Menu.h>

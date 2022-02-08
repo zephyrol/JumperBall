@@ -7,7 +7,7 @@
 
 #ifndef RENDERING_H
 #define RENDERING_H
-#include "process/RenderProcess.h"
+#include "Utility.h"
 
 class Rendering {
 

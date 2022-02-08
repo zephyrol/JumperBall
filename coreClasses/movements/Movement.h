@@ -7,7 +7,7 @@
 
 #ifndef Movement_h
 #define Movement_h
-#include <functional>
+#include <system/Types.h>
 
 template<typename T, size_t N> class Movement {
 

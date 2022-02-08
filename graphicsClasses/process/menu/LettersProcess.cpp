@@ -3,7 +3,6 @@
 //
 
 #include "LettersProcess.h"
-#include "componentsGeneration/MeshGenerator.h"
 
 LettersProcess::LettersProcess(
     const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet,

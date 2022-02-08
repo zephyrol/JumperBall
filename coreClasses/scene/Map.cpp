@@ -5,12 +5,6 @@
  * Created on 1 octobre 2019, 21:18
  */
 
-#include <iostream>
-#include <algorithm>
-#include <functional>
-#include <cmath>
-#include <cctype>
-#include <future>
 #include "Map.h"
 
 Map::Map(Map::MapInfo &&mapInfo):

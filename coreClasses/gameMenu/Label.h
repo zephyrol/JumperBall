@@ -7,10 +7,8 @@
 
 #ifndef LABEL_H
 #define LABEL_H
-#include "system/Types.h"
 #include "system/Geometry.h"
 #include "scene/SceneElement.h"
-#include <functional>
 #include <fstream>
 
 class Label;

@@ -4,7 +4,6 @@
  *
  * Created on 16 janvier 2021, 21:42
  */
-#include <functional>
 #include "ArrowLabel.h"
 
 ArrowLabel::ArrowLabel(
