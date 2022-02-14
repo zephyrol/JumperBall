@@ -49,8 +49,8 @@ std::shared_ptr <Map> loadMap(size_t mapNumber);
 
 Map::MapInfo uncompressMap(std::ifstream& file);
 
-std::string convertToBase(unsigned long long int number, unsigned char base);
-unsigned long long int convertToBase10(const std::string& s, unsigned int base);
+std::string convertToBase(unsigned long int number, unsigned char base);
+unsigned long int convertToBase10(const std::string& s, unsigned int base);
 std::string applyOffset(const std::string& s, int offset);
 std::string substractOffset(const std::string& s, int offset);
 

@@ -9,7 +9,7 @@
 #define TYPES_H
 #include <iostream>
 #include <string>
-#include <cmath>
+#include <math.h>
 #include <vector>
 #include <functional>
 #include <unordered_map>

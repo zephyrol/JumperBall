@@ -296,7 +296,7 @@ Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
     return mapInfo;
 }
 
-std::string MapGenerator::convertToBase (unsigned long long int number, unsigned char base) {
+std::string MapGenerator::convertToBase (unsigned long int number, unsigned char base) {
     std::string convertedNumber;
 
     while (number > 0) {
@@ -309,12 +309,12 @@ std::string MapGenerator::convertToBase (unsigned long long int number, unsigned
     return convertedNumber;
 }
 
-unsigned long long int MapGenerator::convertToBase10 (const std::string& s, unsigned int base) {
-    unsigned long long int value = 0;
+unsigned long int MapGenerator::convertToBase10 (const std::string& s, unsigned int base) {
+    unsigned long int value = 0;
     std::string copyS = s;
     while (copyS.length() > 0) {
         const auto number = static_cast <unsigned int>(copyS.front());
-        value += static_cast<unsigned long long>(
+        value += static_cast<unsigned long>(
             number * static_cast <unsigned int>(pow(base, copyS.length() - 1))
         );
         copyS.erase(copyS.begin());
@@ -492,7 +492,7 @@ std::string MapGenerator::compressString(const std::string &asciiString) {
     };
 
     const std::string letterDigitBaseString = asciiStringToLetterDigitBase(asciiString);
-    const unsigned long long int base10StringRepresentation = convertToBase10(
+    const unsigned long int base10StringRepresentation = convertToBase10(
         letterDigitBaseString,
         static_cast<unsigned int>(asciiToLetterDigitBaseCorrespondences.size())
     );
@@ -535,7 +535,7 @@ std::string MapGenerator::uncompressString(const std::string &compressedString) 
         compressedString, 
         firstUsuableAsciiCharacter
     );
-    const unsigned long long int base10StringRepresentation = convertToBase10(
+    const unsigned long int base10StringRepresentation = convertToBase10(
         baseUsuableAsciiCharactersBaseString,
         baseUsuableAsciiCharacters
     );
