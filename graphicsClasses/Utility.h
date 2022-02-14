@@ -1,7 +1,6 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 #include <glad.h>
-#include <GLFW/glfw3.h>
 #include <system/Types.h>
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
