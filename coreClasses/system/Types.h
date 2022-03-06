@@ -28,6 +28,8 @@
 
 namespace JBTypes {
 
+
+    using FileContent = std::map<std::string, std::string>;
 enum class Direction { North, South, East, West, Up, Down };
 
 enum class Color {

@@ -1,6 +1,6 @@
 #ifndef UTILITY_H
 #define UTILITY_H
-#include <glad.h>
+#include <GLES3/gl3.h>
 #include <system/Types.h>
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
@@ -9,7 +9,6 @@
 
 namespace Utility {
 
-std::string readFileSrc(const std::string& filePath);
 void printMatrix(const glm::mat4& m);
 std::vector <GLfloat> computeNormals(const std::vector <GLfloat>& positions);
 glm::mat4 rotationUpToDir(JBTypes::Dir dir);

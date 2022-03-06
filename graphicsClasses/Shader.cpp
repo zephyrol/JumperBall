@@ -9,13 +9,14 @@
 
 Shader::Shader(
     const GLenum& shaderType,
+    const JBTypes::FileContent& fileContent,
     const std::string& shaderFilename,
     const std::vector<std::string>& defines
 ):
     _shaderHandle(glCreateShader(shaderType)),
     _shaderType(shaderType),
     _shaderFilename(shaderFilename),
-    _shaderCode(cleanDefines(Utility::readFileSrc(shaderFilename), defines)) {
+    _shaderCode(cleanDefines(fileContent.at(shaderFilename), defines)) {
     if (_shaderHandle == 0) {
         std::cerr << "Error during creation of the shader ..." << std::endl;
         exit(EXIT_FAILURE);
@@ -24,6 +25,7 @@ Shader::Shader(
     constexpr GLsizei numberOfStrings = 1;
     const GLchar*const glCode = _shaderCode.c_str();
 
+    const auto size = _shaderCode.size();
     glShaderSource(_shaderHandle, numberOfStrings, &glCode, nullptr);
     glCompileShader(_shaderHandle);
     verifyCompileStatus(_shaderCode);
@@ -61,17 +63,19 @@ void Shader::freeGPUMemory() const {
 }
 
 CstShader_uptr Shader::createVertexShader (
+    const JBTypes::FileContent& fileContent,
     const std::string& shaderName,
     const std::vector<std::string>& defines
 ) {
-    return std::unique_ptr <const Shader>(new Shader(GL_VERTEX_SHADER, shadersDir + shaderName, defines));
+    return std::unique_ptr <const Shader>(new Shader(GL_VERTEX_SHADER, fileContent, shaderName, defines));
 }
 
 CstShader_uptr Shader::createFragmentShader (
+    const JBTypes::FileContent& fileContent,
     const std::string& shaderName,
     const std::vector<std::string>& defines
     ) {
-    return std::unique_ptr <const Shader>(new Shader(GL_FRAGMENT_SHADER, shadersDir + shaderName, defines));
+    return std::unique_ptr <const Shader>(new Shader(GL_FRAGMENT_SHADER, fileContent, shaderName, defines));
 }
 
 std::string Shader::cleanDefines(const std::string& shaderCode, const std::vector<std::string> &defines) {
@@ -94,5 +98,3 @@ std::string Shader::cleanDefines(const std::string& shaderCode, const std::vecto
     }
     return finalShader;
 }
-
-const std::string Shader::shadersDir = "shaders/";

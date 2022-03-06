@@ -22,7 +22,8 @@ MenuRendering(
     const Menu& menu,
     const FontTexturesGenerator::FTContent& ftContent,
     GLsizei width,
-    GLsizei height
+    GLsizei height,
+    const JBTypes::FileContent& fileContent
     );
 
 void update() override;
@@ -48,8 +49,10 @@ const PagesProcesses _pagesProcesses;
 const vecRenderProcess_sptr _renderProcesses;
 MenuUniformBuffer _menuUniformBuffer;
 
-PagesProcesses createPagesProcesses() const;
-vecRenderProcess_sptr createRenderProcesses() const;
+PagesProcesses createPagesProcesses(
+    const JBTypes::FileContent& fileContent
+) const;
+    vecRenderProcess_sptr createRenderProcesses() const;
 
     vecCstShaderProgram_sptr getShaderProgramsUsingUniformBuffer() const;
 

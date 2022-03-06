@@ -4,9 +4,12 @@
 
 #include "ShapeLabelProcess.h"
 
-ShapeLabelProcess::ShapeLabelProcess(const RenderPass_sptr& renderPassShapes):
+ShapeLabelProcess::ShapeLabelProcess(
+    const JBTypes::FileContent& fileContent,
+    const RenderPass_sptr& renderPassShapes
+    ):
     _renderPassShapes(renderPassShapes),
-    _shapesShader(ShaderProgram::createShaderProgram("labelVs.vs", "labelFs.fs"))
+    _shapesShader(ShaderProgram::createShaderProgram(fileContent, "labelVs.vs", "labelFs.fs"))
 {
 }
 

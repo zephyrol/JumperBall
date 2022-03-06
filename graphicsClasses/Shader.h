@@ -19,6 +19,7 @@ public:
 
 Shader(
     const GLenum& shaderType,
+    const JBTypes::FileContent& fileContent,
     const std::string& shaderFilename,
     const std::vector<std::string>& defines
 );
@@ -33,16 +34,16 @@ GLenum getShaderType() const;
 void freeGPUMemory() const;
 
 static CstShader_uptr createVertexShader(
+    const JBTypes::FileContent& fileContent,
     const std::string& shaderName,
     const std::vector<std::string>& defines
 );
 
 static CstShader_uptr createFragmentShader(
+    const JBTypes::FileContent& fileContent,
     const std::string& shaderName,
     const std::vector<std::string>& defines
 );
-
-static const std::string shadersDir;
 
 private:
 

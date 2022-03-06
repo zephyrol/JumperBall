@@ -5,12 +5,13 @@
 #include "LettersProcess.h"
 
 LettersProcess::LettersProcess(
+    const JBTypes::FileContent& fileContent,
     const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet,
     const LettersProcess::RenderPassesLetters& renderPassesLetters
 ):
     _graphicAlphabet(graphicAlphabet),
     _renderPassesLetters(renderPassesLetters),
-    _lettersShader(createLettersProcessShaderProgram())
+    _lettersShader(createLettersProcessShaderProgram(fileContent))
 {
 }
 
@@ -40,8 +41,14 @@ vecCstShaderProgram_sptr LettersProcess::getShaderPrograms() const {
 }
 
 
-CstShaderProgram_sptr LettersProcess::createLettersProcessShaderProgram() {
-    auto shader = ShaderProgram::createShaderProgram("fontVs.vs", "fontFs.fs");
+CstShaderProgram_sptr LettersProcess::createLettersProcessShaderProgram(
+    const JBTypes::FileContent& fileContent
+) {
+    auto shader = ShaderProgram::createShaderProgram(
+        fileContent,
+        "fontVs.vs",
+        "fontFs.fs"
+        );
     shader->use();
     shader->bindUniformTextureIndex("characterTexture", 0);
     return shader;

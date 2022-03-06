@@ -7,7 +7,12 @@
 
 #include "SceneRendering.h"
 
-SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height):
+SceneRendering::SceneRendering(
+    const Scene& scene,
+    GLsizei width,
+    GLsizei height,
+    const JBTypes::FileContent& fileContent
+):
     Rendering(width, height),
     _expensivePreprocessWidth(static_cast<GLsizei>(
         static_cast<float>(SceneRendering::heightBloomTexture)
@@ -23,8 +28,9 @@ SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height
     _star(std::make_shared <RenderPass>(MeshGenerator::genStar(scene.getStar()))),
     _screen(std::make_shared <RenderPass>(MeshGenerator::genScreen())),
     _renderPasses{ _blocks, _items, _enemies, _specials, _ball, _star, _screen },
-    _shadowStar(std::make_shared<ShadowProcess>(_blocks, _items, _enemies, _specials, _ball )),
+    _shadowStar(std::make_shared<ShadowProcess>(fileContent, _blocks, _items, _enemies, _specials, _ball )),
     _sceneRenderingProcess(std::make_shared<LevelProcess>(
+        fileContent,
         _width,
         _height,
         *_shadowStar->getRenderTexture(),
@@ -35,24 +41,28 @@ SceneRendering::SceneRendering(const Scene& scene, GLsizei width, GLsizei height
         _ball,
         _star)),
     _brightPassFilter(std::make_shared<BrightPassFilterProcess>(
+        fileContent,
         _expensivePreprocessWidth,
         _expensivePreprocessHeight,
         *_sceneRenderingProcess->getRenderTexture(),
         _screen
         )),
     _horizontalBlur(std::make_shared<HorizontalBlurProcess>(
+        fileContent,
         _expensivePreprocessWidth,
         _expensivePreprocessHeight,
         *_brightPassFilter->getRenderTexture(),
         _screen
         )),
     _verticalBlur(std::make_shared<VerticalBlurProcess>(
+        fileContent,
         _expensivePreprocessWidth,
         _expensivePreprocessHeight,
         *_horizontalBlur->getRenderTexture(),
         _screen
     )),
     _bloom(std::make_shared<BloomProcess>(
+        fileContent,
         width,
         height,
         *_verticalBlur->getRenderTexture(),

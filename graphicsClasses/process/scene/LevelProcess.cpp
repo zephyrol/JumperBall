@@ -5,6 +5,7 @@
 #include "LevelProcess.h"
 
 LevelProcess::LevelProcess(
+    const JBTypes::FileContent& fileContent,
     GLsizei width,
     GLsizei height,
     GLuint shadowTexture,
@@ -30,12 +31,12 @@ LevelProcess::LevelProcess(
    _ball(ball),
    _star(star),
    _shadowTexture(shadowTexture),
-   _sceneBlocksShader(createLevelProcessShaderProgram("blocksVs.vs")),
-   _sceneItemsShader(createLevelProcessShaderProgram("itemsMapVs.vs")),
-   _sceneEnemiesShader(createLevelProcessShaderProgram("enemiesVs.vs")),
-   _sceneSpecialsShader(createLevelProcessShaderProgram("specialsVs.vs")),
-   _sceneBallShader(createLevelProcessShaderProgram("ballVs.vs")),
-   _sceneStarShader(ShaderProgram::createShaderProgram("starVs.vs", "starFs.fs")),
+   _sceneBlocksShader(createLevelProcessShaderProgram(fileContent, "blocksVs.vs")),
+   _sceneItemsShader(createLevelProcessShaderProgram(fileContent, "itemsMapVs.vs")),
+   _sceneEnemiesShader(createLevelProcessShaderProgram(fileContent, "enemiesVs.vs")),
+   _sceneSpecialsShader(createLevelProcessShaderProgram(fileContent, "specialsVs.vs")),
+   _sceneBallShader(createLevelProcessShaderProgram(fileContent, "ballVs.vs")),
+   _sceneStarShader(ShaderProgram::createShaderProgram(fileContent, "starVs.vs", "starFs.fs")),
    _shadersRenderPasses({
                           { _sceneBlocksShader, _blocks },
                           { _sceneItemsShader, _items },
@@ -78,8 +79,11 @@ std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
     return std::make_shared<const GLuint>(_frameBuffer->getRenderTexture());
 }
 
-CstShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(const std::string &vs) {
-    auto shader = ShaderProgram::createShaderProgram(vs, levelFs, levelDefines);
+CstShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
+    const JBTypes::FileContent& fileContent,
+    const std::string &vs
+    ) {
+    auto shader = ShaderProgram::createShaderProgram(fileContent, vs , levelFs, levelDefines);
     shader->use();
     shader->bindUniformTextureIndex("depthTexture", 0);
     return shader;

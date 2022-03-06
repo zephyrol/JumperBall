@@ -10,11 +10,13 @@ Viewer::Viewer(
     unsigned int resolutionY,
     const Scene& scene,
     const Menu& menu,
-    const FontTexturesGenerator::FTContent &ftContent):
+    const FontTexturesGenerator::FTContent &ftContent,
+    const JBTypes::FileContent& fileContent
+):
         _resolutionX(resolutionX),
         _resolutionY(resolutionY),
-        _sceneRendering(scene, _resolutionX, _resolutionY),
-        _menuRendering(menu, ftContent, _resolutionX, _resolutionY)
+        _sceneRendering(scene, _resolutionX, _resolutionY, fileContent),
+        _menuRendering(menu, ftContent, _resolutionX, _resolutionY, fileContent)
 {
 }
 

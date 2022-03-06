@@ -44,13 +44,14 @@ void ShaderProgram::freeGPUMemory() const {
 }
 
 CstShaderProgram_sptr ShaderProgram::createShaderProgram (
+    const JBTypes::FileContent& fileContent,
     const std::string& vs,
     const std::string& fs,
     const std::vector<std::string>& defines
 ) {
     return std::make_shared <const ShaderProgram>(
-        Shader::createVertexShader(vs, defines),
-        Shader::createFragmentShader(fs, defines)
+        Shader::createVertexShader(fileContent, vs, defines),
+        Shader::createFragmentShader(fileContent, fs, defines)
     );
 }
 

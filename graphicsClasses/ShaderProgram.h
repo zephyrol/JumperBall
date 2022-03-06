@@ -27,6 +27,7 @@ GLuint getHandle() const;
 void freeGPUMemory() const;
 
 static CstShaderProgram_sptr createShaderProgram(
+    const JBTypes::FileContent& fileContent,
     const std::string& vs,
     const std::string& fs,
     const std::vector<std::string>& defines = {}

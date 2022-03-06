@@ -6,13 +6,13 @@
  */
 #include "Scene.h"
 
-Scene::Scene(size_t mapNumber, float screenRatio):
-  _map(MapGenerator::loadMap(mapNumber)),
-  _camera(std::make_shared<Camera>(*_map, screenRatio)),
-  _star(Star::createBlurStar(*_map))
- {
- }
- 
+Scene::Scene(const std::string &mapContent, float screenRatio):
+        _map(MapGenerator::loadMap(mapContent)),
+        _camera(std::make_shared<Camera>(*_map, screenRatio)),
+        _star(Star::createBlurStar(*_map))
+{
+}
+
  Player::Status Scene::update(const Player::Status& status, const Scene::ActionKey& key) {
 
     Ball::ActionRequest actionRequest;
@@ -98,3 +98,4 @@ CstMap_sptr Scene::getMap() const {
 void Scene::updateScreenRatio(float ratio) {
     _camera->setRatio(ratio);
 }
+

@@ -8,8 +8,14 @@
 #include "Controller.h"
 #include "cmath"
 
-Controller::Controller(const size_t& screenWidth, const size_t& screenHeight) :
-        _ftContent(FontTexturesGenerator::initFreeTypeAndFont()),
+Controller::Controller(
+        const size_t& screenWidth,
+        const size_t& screenHeight,
+        const JBTypes::FileContent& filesContent,
+        const unsigned char* fontData,
+        size_t fontDataSize
+        ) :
+        _ftContent(FontTexturesGenerator::initFreeTypeAndFont(fontData, fontDataSize)),
         _player(),
         _menu(Menu::getJumperBallMenu(
             _player,
@@ -25,6 +31,7 @@ Controller::Controller(const size_t& screenWidth, const size_t& screenHeight) :
         {Controller::Button::Escape, Controller::Status::Released},
         {Controller::Button::Validate, Controller::Status::Released}},
         _currentKey(Scene::ActionKey::Nothing),
+        _filesContent(filesContent),
         _screenWidth(screenWidth),
         _screenHeight(screenHeight),
         _ratio(static_cast<float>(_screenWidth) / static_cast<float>(_screenHeight)),
@@ -38,7 +45,10 @@ Controller::Controller(const size_t& screenWidth, const size_t& screenHeight) :
         _currentMovementDir(nullptr),
         _mouseIsPressed(false),
         _requestToLeave(false),
-        _scene(std::make_shared<Scene>(_player.levelProgression(), _ratio)),
+        _scene(std::make_shared<Scene>(
+                filesContent.at("map" + std::to_string(_player.levelProgression()) + ".txt"),
+                _ratio
+                )),
         _viewer(createViewer())
 {
     updateSceneMenu();
@@ -95,7 +105,10 @@ void Controller::setValidateButton (const Controller::Status& status) {
 }
 
 void Controller::runGame (size_t level) {
-    _scene = std::make_shared<Scene>(level, _ratio);
+    _scene = std::make_shared<Scene>(
+        _filesContent.at("map" + std::to_string(_player.levelProgression()) + ".txt"),
+        _ratio
+    );
     refreshViewer();
     updateSceneMenu();
 }
@@ -121,7 +134,9 @@ std::shared_ptr<Viewer> Controller::createViewer() const {
         _screenHeight,
         *_scene,
         *_menu,
-        _ftContent);
+        _ftContent,
+        _filesContent
+    );
 }
 
 void Controller::setEscape (const Controller::Status& status) {

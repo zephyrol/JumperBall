@@ -12,6 +12,7 @@ class BrightPassFilterProcess: public RenderProcess {
 
 public:
     BrightPassFilterProcess(
+        const JBTypes::FileContent& fileContent,
         GLsizei width,
         GLsizei height,
         GLuint hdrSceneTexture,
@@ -22,7 +23,9 @@ public:
     void freeGPUMemory() override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
     vecCstShaderProgram_sptr getShaderPrograms() const override;
-    static CstShaderProgram_sptr createBrightPassFilterProcessShaderProgram() ;
+    static CstShaderProgram_sptr createBrightPassFilterProcessShaderProgram(
+        const JBTypes::FileContent& fileContent
+        ) ;
 
 private:
     const GLsizei _width;

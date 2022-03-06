@@ -8,6 +8,7 @@
 #ifndef MAPGENERATOR_H
 #define MAPGENERATOR_H
 #include "Map.h"
+#include <sstream>
 
 namespace MapGenerator {
 
@@ -38,16 +39,17 @@ bool verifyBlockType(unsigned char blockType);
 bool verifyBlockOption(unsigned char blockOption);
 bool blockHasAnyProperties(unsigned char blockType);
 
-void compress(std::ifstream& input);
+void compress(std::istringstream& input);
 
 std::string compressString(const std::string& asciiString);
 std::string uncompressString(const std::string& compressedString);
 
-void compressNew(std::ifstream& input);
+void compressNew(std::istringstream& input);
 
 std::shared_ptr <Map> loadMap(size_t mapNumber);
+std::shared_ptr <Map> loadMap(const std::string& mapContent);
 
-Map::MapInfo uncompressMap(std::ifstream& file);
+Map::MapInfo uncompressMap(std::istringstream& file);
 
 std::string convertToBase(unsigned long int number, unsigned char base);
 unsigned long int convertToBase10(const std::string& s, unsigned int base);
@@ -62,8 +64,8 @@ Block_sptr createBlockWithoutProperties(
 );
 
 // Reading functions
-unsigned int readUnsignedInt(std::ifstream& input);
-std::string readingString(std::ifstream& input);
+unsigned int readUnsignedInt(std::istringstream& input);
+std::string readingString(std::istringstream& input);
 
 // Writing functions
 void writeSeparator(std::ofstream& output);
@@ -71,7 +73,7 @@ void writeEndLine(std::ofstream& output);
 void writeUnsignedInt(std::ofstream& output, unsigned int unsignedInt);
 void writeString(std::ofstream& output, const std::string& string);
 
-void verificationMap(std::ifstream& input, const Map& map);
+void verificationMap(std::istringstream& input, const Map& map);
 
     vecBlock_sptr createBlocks(
         unsigned char blockType,

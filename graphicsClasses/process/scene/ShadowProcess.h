@@ -11,6 +11,7 @@ class ShadowProcess: public RenderProcess {
 public:
 
     ShadowProcess(
+        const JBTypes::FileContent& fileContent,
         const RenderPass_sptr& blocks,
         const RenderPass_sptr& items,
         const RenderPass_sptr& enemies,

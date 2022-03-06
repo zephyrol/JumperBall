@@ -4,7 +4,9 @@
 
 #include "SceneUniformBuffer.h"
 
-SceneUniformBuffer::SceneUniformBuffer(const vecCstShaderProgram_sptr &sceneShaderPrograms):
+SceneUniformBuffer::SceneUniformBuffer(
+    const vecCstShaderProgram_sptr &sceneShaderPrograms
+    ):
     UniformBuffer(
         "Scene",
         sceneShaderPrograms,

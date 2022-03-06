@@ -19,7 +19,8 @@ public:
       unsigned int resolutionY,
       const Scene& scene,
       const Menu& menu,
-      const FontTexturesGenerator::FTContent& ftContent
+      const FontTexturesGenerator::FTContent& ftContent,
+      const JBTypes::FileContent& fileContent
   );
 
   void update();

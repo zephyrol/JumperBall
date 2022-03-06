@@ -11,6 +11,7 @@ class LevelProcess: public RenderProcess {
 public:
 
     LevelProcess(
+        const JBTypes::FileContent& fileContent,
         GLsizei width,
         GLsizei height,
         GLuint shadowTexture,
@@ -50,7 +51,10 @@ private:
 
     const std::map<CstShaderProgram_sptr, RenderPass_sptr> _shadersRenderPasses;
 
-    static CstShaderProgram_sptr createLevelProcessShaderProgram(const std::string& vs) ;
+    static CstShaderProgram_sptr createLevelProcessShaderProgram(
+        const JBTypes::FileContent& fileContent,
+        const std::string& vs
+    ) ;
 
     static const std::string levelFs;
     static const std::vector<std::string> levelDefines;

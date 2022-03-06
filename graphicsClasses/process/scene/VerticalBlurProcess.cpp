@@ -5,6 +5,7 @@
 #include "VerticalBlurProcess.h"
 
 VerticalBlurProcess::VerticalBlurProcess(
+        const JBTypes::FileContent& fileContent,
         GLsizei width,
         GLsizei height,
         GLuint horizontalBlurTexture,
@@ -19,7 +20,7 @@ VerticalBlurProcess::VerticalBlurProcess(
     ))
 ),
     _horizontalBlurTexture(horizontalBlurTexture),
-    _verticalBlurShader(createVerticalBlurProcessShaderProgram())
+    _verticalBlurShader(createVerticalBlurProcessShaderProgram(fileContent))
 {
 }
 
@@ -41,8 +42,10 @@ void VerticalBlurProcess::freeGPUMemory() {
     _verticalBlurShader->freeGPUMemory();
 }
 
-CstShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgram() {
-    auto shader = ShaderProgram::createShaderProgram("basicFboVs.vs", "verticalBlurFs.fs");
+CstShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgram(
+    const JBTypes::FileContent& fileContent
+    ) {
+    auto shader = ShaderProgram::createShaderProgram(fileContent, "basicFboVs.vs", "verticalBlurFs.fs");
     shader->use();
     shader->bindUniformTextureIndex("horizontalBlurTexture", 1);
     return shader;

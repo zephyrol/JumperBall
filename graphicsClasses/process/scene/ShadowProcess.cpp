@@ -5,6 +5,7 @@
 #include "ShadowProcess.h"
 
 ShadowProcess::ShadowProcess(
+    const JBTypes::FileContent& fileContent,
     const RenderPass_sptr& blocks,
     const RenderPass_sptr& items,
     const RenderPass_sptr& enemies,
@@ -23,11 +24,36 @@ ShadowProcess::ShadowProcess(
         _enemies(enemies),
         _specials(specials),
         _ball(ball),
-        _shadowBlocksShader(ShaderProgram::createShaderProgram("blocksVs.vs", depthFs, shadowDefines)),
-        _shadowItemsShader(ShaderProgram::createShaderProgram("itemsMapVs.vs", depthFs, shadowDefines)),
-        _shadowEnemiesShader(ShaderProgram::createShaderProgram("enemiesVs.vs", depthFs, shadowDefines)),
-        _shadowSpecialsShader(ShaderProgram::createShaderProgram("specialsVs.vs", depthFs, shadowDefines)),
-        _shadowBallShader(ShaderProgram::createShaderProgram("ballVs.vs", depthFs, shadowDefines))
+        _shadowBlocksShader(ShaderProgram::createShaderProgram(
+            fileContent,
+            "blocksVs.vs",
+            depthFs,
+            shadowDefines
+        )),
+        _shadowItemsShader(ShaderProgram::createShaderProgram(
+            fileContent,
+            "itemsMapVs.vs",
+            depthFs,
+            shadowDefines
+        )),
+        _shadowEnemiesShader(ShaderProgram::createShaderProgram(
+            fileContent,
+            "enemiesVs.vs",
+            depthFs,
+            shadowDefines
+        )),
+        _shadowSpecialsShader(ShaderProgram::createShaderProgram(
+            fileContent,
+            "specialsVs.vs",
+            depthFs,
+            shadowDefines
+        )),
+        _shadowBallShader(ShaderProgram::createShaderProgram(
+            fileContent,
+            "ballVs.vs",
+            depthFs,
+            shadowDefines
+        ))
 {
 }
 

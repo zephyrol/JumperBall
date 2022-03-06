@@ -12,6 +12,7 @@ class BloomProcess: public RenderProcess {
 
 public:
     BloomProcess(
+        const JBTypes::FileContent& fileContent,
         GLsizei width,
         GLsizei height,
         GLuint bluredTexture,
@@ -31,7 +32,9 @@ private:
     const GLuint _bluredTexture;
     const CstShaderProgram_sptr _bloomShader;
 
-    static CstShaderProgram_sptr createBloomProcessShaderProgram();
+    static CstShaderProgram_sptr createBloomProcessShaderProgram(
+        const JBTypes::FileContent& fileContent
+    );
 };
 
 

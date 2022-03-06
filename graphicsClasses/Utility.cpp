@@ -10,48 +10,6 @@
 #include <fstream>
 
 
-std::string Utility::readFileSrc (const std::string& filePath) {
-    // precondition
-    if (filePath.empty())
-        std::cerr << "Invalid parameter filePath : size() must not be 0."
-                  << std::endl;
-    // --------------------------------------------------------------------------
-
-
-    std::string strContent;
-
-    std::string filePathV2 = "bin/" + filePath;
-    const std::vector <std::string> fileNames {
-        filePath, std::move(filePathV2) };
-
-    bool foundFile = false;
-    for (size_t i = 0; i < fileNames.size() && !foundFile; ++i) {
-        std::ifstream shaderFile(fileNames.at(i));
-        if (shaderFile) {
-            foundFile = true;
-
-            shaderFile.seekg(0, std::ios::end);
-            strContent.reserve(shaderFile.tellg());
-            shaderFile.seekg(0, std::ios::beg);
-            strContent.assign((std::istreambuf_iterator <char>(shaderFile)),
-                              std::istreambuf_iterator <char>());
-
-            // postcondition
-            if (strContent.empty())
-                std::cout << "Invalid content read strContent(\"" << strContent
-                          << "\") : size() must not be 0." << std::endl;
-            // ------------------------------------------------------------------
-            shaderFile.close();
-        }
-    }
-    if (!foundFile) {
-        std::cerr << "Could not open file " << filePath << std::endl;
-    }
-
-    return strContent;
-}
-
-
 const glm::mat3 Utility::RGBToXYZ { 2.7689, 1.7517, 1.1302,
                                     1.0000, 4.5907, 0.060100,
                                     0.0000, 0.056508, 5.5943 };
@@ -257,3 +215,5 @@ GLubyte Utility::convertToOpenGLFormat (unsigned char uChar) {
 float Utility::menuPositionToOpenGLScreenFormat (float value) {
     return 2.f * value - 1.f;
 }
+
+

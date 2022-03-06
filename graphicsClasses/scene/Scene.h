@@ -19,7 +19,7 @@ public:
 
 enum class ActionKey { Up, Down, Left, Right, Validate, Nothing };
 
-explicit Scene(size_t mapNumber, float screenRatio);
+Scene(const std::string& mapContent, float screenRatio);
 
 Player::Status update(const Player::Status& status, const ActionKey& key);
 void updateScreenRatio(float ratio);

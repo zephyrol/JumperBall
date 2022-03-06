@@ -22,38 +22,12 @@
 #include "blocks/JumpBlock.h"
 #include "blocks/GhostBlock.h"
 
-
-std::shared_ptr <Map> MapGenerator::loadMap (size_t mapNumber) {
-    std::shared_ptr <Map> map = nullptr;
-
-    const std::string mapFileToOpenV1 = "maps/map" + std::to_string(mapNumber) + ".txt";
-    std::string mapFileToOpenV2 = "bin/maps/map" + std::to_string(mapNumber) + ".txt";
-    const std::vector <std::string> fileNames {
-        mapFileToOpenV1, std::move(mapFileToOpenV2) };
-
-    bool foundFile = false;
-    for (size_t i = 0; i < fileNames.size() && !foundFile; ++i) {
-        std::ifstream mapFile;
-        mapFile.open(fileNames.at(i)); // Opening file to read
-        if (mapFile) {
-            foundFile = true;
-            map = std::make_shared <Map>(uncompressMap(mapFile));
-            mapFile.close();
-        }
-    }
-
-    if (!foundFile) {
-        std::cerr << "ERROR: Opening " << mapFileToOpenV1 << " impossible .." << std::endl;
-        JBTypesMethods::displayInstallError();
-        exit(EXIT_FAILURE);
-    }
-    std::cout << "Map " << mapNumber << " loaded" << std::endl;
-
-    return map;
+std::shared_ptr<Map> MapGenerator::loadMap(const std::string &mapContent) {
+    std::istringstream sst (mapContent.c_str());
+    return std::make_shared<Map>(uncompressMap(sst));
 }
 
-
-Map::MapInfo MapGenerator::uncompressMap(std::ifstream& file) {
+Map::MapInfo MapGenerator::uncompressMap(std::istringstream& file) {
 
     Map::MapInfo mapInfo {};
 
@@ -338,7 +312,7 @@ std::string MapGenerator::applyOffset (const std::string& s, int offset) {
     return offsetString;
 }
 
-void MapGenerator::compressNew(std::ifstream& input) {
+void MapGenerator::compressNew(std::istringstream& input) {
     std::ofstream output("outMapNew.txt");
 
     // Compress dimensions
@@ -443,13 +417,13 @@ void MapGenerator::compressNew(std::ifstream& input) {
     output.close();
 }
 
-unsigned int MapGenerator::readUnsignedInt (std::ifstream& input) {
+unsigned int MapGenerator::readUnsignedInt (std::istringstream& input) {
     unsigned int readValue;
     input >> readValue;
     return readValue;
 }
 
-std::string MapGenerator::readingString (std::ifstream& input) {
+std::string MapGenerator::readingString (std::istringstream& input) {
     std::string readValue;
     input >> readValue;
     return readValue;

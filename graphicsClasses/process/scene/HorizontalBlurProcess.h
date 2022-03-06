@@ -12,6 +12,7 @@ class HorizontalBlurProcess: public RenderProcess {
 
 public:
     HorizontalBlurProcess(
+        const JBTypes::FileContent& fileContent,
         GLsizei width,
         GLsizei height,
         GLuint brightPassTexture,
@@ -22,7 +23,9 @@ public:
     void freeGPUMemory() override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
     vecCstShaderProgram_sptr getShaderPrograms() const override;
-    static CstShaderProgram_sptr createHorizontalBlurProcessShaderProgram() ;
+    static CstShaderProgram_sptr createHorizontalBlurProcessShaderProgram(
+        const JBTypes::FileContent& fileContent
+    );
 
 private:
     const RenderPass_sptr _screen;

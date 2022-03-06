@@ -11,7 +11,10 @@
 
 class ShapeLabelProcess: public RenderProcess {
 public:
-    ShapeLabelProcess(const RenderPass_sptr& renderPassShapes);
+    ShapeLabelProcess(
+        const JBTypes::FileContent& fileContent,
+        const RenderPass_sptr& renderPassShapes
+    );
 
     void render() const override;
     void freeGPUMemory() override;

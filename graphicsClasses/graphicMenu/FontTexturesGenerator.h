@@ -50,8 +50,11 @@ GraphicAlphabet genGraphicAlphabet(const Menu& menu, GLsizei screenHeight, const
 
 void freeGraphicAlphabetGPUMemory(const GraphicAlphabet& graphicAlphabet);
 
-FTContent initFreeTypeAndFont();
-void clearFreeTypeRessources(FTContent& ftContent);
+FTContent initFreeTypeAndFont(
+    const unsigned char* fontData,
+    size_t fontDataSize
+);
+    void clearFreeTypeRessources(FTContent& ftContent);
 }
 
 

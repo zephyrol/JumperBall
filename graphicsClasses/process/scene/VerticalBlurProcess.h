@@ -12,6 +12,7 @@ class VerticalBlurProcess: public RenderProcess {
 
 public:
     VerticalBlurProcess(
+        const JBTypes::FileContent& fileContent,
         GLsizei width,
         GLsizei height,
         GLuint horizontalBlurTexture,
@@ -28,7 +29,9 @@ private:
     const GLuint _horizontalBlurTexture;
     const CstShaderProgram_sptr _verticalBlurShader;
 
-    static CstShaderProgram_sptr createVerticalBlurProcessShaderProgram() ;
+    static CstShaderProgram_sptr createVerticalBlurProcessShaderProgram(
+        const JBTypes::FileContent& fileContent
+    ) ;
 };
 
 

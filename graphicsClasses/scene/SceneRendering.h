@@ -22,7 +22,12 @@
 class SceneRendering:public Rendering {
 
 public:
-SceneRendering(const Scene& scene, GLsizei width, GLsizei height);
+SceneRendering(
+    const Scene& scene,
+    GLsizei width,
+    GLsizei height,
+    const JBTypes::FileContent& fileContent
+    );
 
 void update() override;
 void freeGPUMemory() override;

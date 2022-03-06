@@ -7,7 +7,10 @@
 
 #include "FontTexturesGenerator.h"
 
-FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont() {
+FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont(
+    const unsigned char* fontData,
+    size_t fontDataSize
+) {
 
     FontTexturesGenerator::FTContent ftContent;
 
@@ -16,21 +19,19 @@ FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont() {
         return ftContent;
     }
 
-    const std::vector <std::string> fileNames {
-        "fonts/Cousine-Regular.ttf",
-        "bin/fonts/Cousine-Regular.ttf"
-    };
+    FT_Open_Args openArgs;
+    openArgs.flags = FT_OPEN_MEMORY;
+    openArgs.memory_size = fontDataSize;
+    openArgs.memory_base = fontData;
 
-    bool foundFile = false;
-    for (size_t i = 0; i < fileNames.size() && !foundFile; ++i) {
-        if (FT_New_Face(ftContent.ftLib, fileNames.at(i).c_str(), 0, &ftContent.fontFace) == 0) {
-            foundFile = true;
-        }
-    }
-    if (!foundFile) {
-        std::cerr << "Error: Impossible to load the font" << "Cousine-Regular.ttf ... " << std::endl;
-        JBTypesMethods::displayInstallError();
-        FT_Done_FreeType(ftContent.ftLib);
+    const auto ftOpenFaceResult = FT_Open_Face(
+        ftContent.ftLib,
+        &openArgs,
+        0,
+        &ftContent.fontFace
+    );
+    if(ftOpenFaceResult != 0) {
+        std::cerr << "Error: Impossible to init font face ..." << std::endl;
     }
     return ftContent;
 }

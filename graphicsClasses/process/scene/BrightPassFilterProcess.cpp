@@ -5,6 +5,7 @@
 #include "BrightPassFilterProcess.h"
 
 BrightPassFilterProcess::BrightPassFilterProcess(
+        const JBTypes::FileContent& fileContent,
         GLsizei width,
         GLsizei height,
         GLuint hdrSceneTexture,
@@ -21,7 +22,7 @@ BrightPassFilterProcess::BrightPassFilterProcess(
         ))
 ),
     _hdrSceneTexture(hdrSceneTexture),
-    _brightPassFilterShader(createBrightPassFilterProcessShaderProgram())
+    _brightPassFilterShader(createBrightPassFilterProcessShaderProgram(fileContent))
 {
 }
 
@@ -44,8 +45,10 @@ void BrightPassFilterProcess::freeGPUMemory() {
     _brightPassFilterShader->freeGPUMemory();
 }
 
-CstShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShaderProgram() {
-    auto shader = ShaderProgram::createShaderProgram("basicFboVs.vs", "brightPassFilter.fs");
+CstShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShaderProgram(
+    const JBTypes::FileContent& fileContent
+) {
+    auto shader = ShaderProgram::createShaderProgram(fileContent, "basicFboVs.vs", "brightPassFilter.fs");
     shader->use();
     shader->bindUniformTextureIndex("textureScene", 0);
     return shader;

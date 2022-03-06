@@ -23,8 +23,14 @@ enum class Button { Up, Down, Left, Right, Escape, Validate };
 enum class ScreenDirection { North, South, East, West };
 
 
-Controller(const size_t& screenWidth, const size_t& screenHeight);
-~Controller();
+Controller(
+    const size_t& screenWidth,
+    const size_t& screenHeight,
+    const JBTypes::FileContent& filesContent,
+    const unsigned char* fontData,
+    size_t fontDataSize
+);
+    ~Controller();
 
 void interactionButtons(const Button& button,
                         const Status& status);
@@ -70,6 +76,7 @@ std::shared_ptr <Menu> _menu;
 std::map <Button, Status> _buttonsStatus;
 Scene::ActionKey _currentKey;
 
+const JBTypes::FileContent _filesContent;
 size_t _screenWidth;
 size_t _screenHeight;
 float _ratio;

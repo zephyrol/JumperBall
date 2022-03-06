@@ -5,6 +5,7 @@
 #include "BloomProcess.h"
 
 BloomProcess::BloomProcess(
+    const JBTypes::FileContent& fileContent,
     GLsizei width,
     GLsizei height,
     GLuint bluredTexture,
@@ -14,7 +15,7 @@ BloomProcess::BloomProcess(
         _height(height),
         _screen(screen),
         _bluredTexture(bluredTexture),
-        _bloomShader(createBloomProcessShaderProgram())
+        _bloomShader(createBloomProcessShaderProgram(fileContent))
 {
 }
 
@@ -35,8 +36,10 @@ std::shared_ptr<const GLuint> BloomProcess::getRenderTexture() const {
     return nullptr;
 }
 
-CstShaderProgram_sptr BloomProcess::createBloomProcessShaderProgram() {
-    auto shader = ShaderProgram::createShaderProgram("basicFboVs.vs", "bloomFs.fs");
+CstShaderProgram_sptr BloomProcess::createBloomProcessShaderProgram(
+    const JBTypes::FileContent& fileContent
+) {
+    auto shader = ShaderProgram::createShaderProgram(fileContent,"basicFboVs.vs", "bloomFs.fs");
     shader->use();
     shader->bindUniformTextureIndex("frameSceneHDRTexture", 0);
     shader->bindUniformTextureIndex("frameBluredTexture", 1);

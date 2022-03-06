@@ -10,7 +10,8 @@ MenuRendering::MenuRendering(
     const Menu& menu,
     const FontTexturesGenerator::FTContent& ftContent,
     GLsizei width,
-    GLsizei height
+    GLsizei height,
+    const JBTypes::FileContent& fileContent
     ):
     Rendering(width, height),
     _menu(menu),
@@ -18,7 +19,7 @@ MenuRendering::MenuRendering(
     _pageToRenderPassesLetter(createPageToRenderPassesLetters()),
     _pageToRenderPassesShape(createPageToRenderPassesShapes()),
     _renderPasses(createRenderPasses()),
-    _pagesProcesses(createPagesProcesses()),
+    _pagesProcesses(createPagesProcesses(fileContent)),
     _renderProcesses(createRenderProcesses()),
     _menuUniformBuffer(getShaderProgramsUsingUniformBuffer()){
 }
@@ -82,20 +83,22 @@ vecCstShaderProgram_sptr MenuRendering::getShaderProgramsUsingUniformBuffer() co
     return shadersPrograms;
 }
 
-MenuRendering::PagesProcesses MenuRendering::createPagesProcesses() const {
+MenuRendering::PagesProcesses MenuRendering::createPagesProcesses(
+    const JBTypes::FileContent& fileContent
+) const {
     MenuRendering::PagesProcesses pagesProcesses;
     for (const auto& page : _menu.pages()) {
         pagesProcesses[page] = {};
         const auto& renderPassLetter = _pageToRenderPassesLetter.find(page);
         if(renderPassLetter != _pageToRenderPassesLetter.end()) {
             pagesProcesses[page].push_back(
-                std::make_shared<LettersProcess>(_graphicAlphabet, renderPassLetter->second)
+                std::make_shared<LettersProcess>(fileContent, _graphicAlphabet, renderPassLetter->second)
             );
         }
         const auto& renderPassShape = _pageToRenderPassesShape.find(page);
         if(renderPassShape != _pageToRenderPassesShape.end()) {
             pagesProcesses[page].push_back(
-                std::make_shared<ShapeLabelProcess>(renderPassShape->second)
+                std::make_shared<ShapeLabelProcess>(fileContent, renderPassShape->second)
             );
         }
 }

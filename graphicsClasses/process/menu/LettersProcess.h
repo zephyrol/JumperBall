@@ -17,6 +17,7 @@ public:
     using RenderPassesLetters = std::unordered_map <RenderPass_sptr, unsigned char>;
 
     LettersProcess(
+        const JBTypes::FileContent& fileContent,
         const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet,
         const LettersProcess::RenderPassesLetters& renderPassesLetters
     );
@@ -31,7 +32,9 @@ private:
     const RenderPassesLetters _renderPassesLetters;
     const CstShaderProgram_sptr _lettersShader;
 
-    static CstShaderProgram_sptr createLettersProcessShaderProgram();
+    static CstShaderProgram_sptr createLettersProcessShaderProgram(
+        const JBTypes::FileContent& fileContent
+    );
 };
 
 
