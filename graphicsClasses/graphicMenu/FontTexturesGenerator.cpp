@@ -124,15 +124,18 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
 
     const GLuint textureID = genTexture();
     glBindTexture(GL_TEXTURE_2D, textureID);
-
-    constexpr GLint levelOfDetail = 0;
-    glTexImage2D(GL_TEXTURE_2D,
-                 levelOfDetail,
-                 GL_RED,
-                 bitmap.width,
-                 bitmap.rows, 0, GL_RED,
-                 GL_UNSIGNED_BYTE,
-                 bitmap.buffer);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, bitmap.width, bitmap.rows);
+    glTexSubImage2D(
+        GL_TEXTURE_2D,
+        0,
+        0,
+        0,
+        bitmap.width,
+        bitmap.rows,
+        GL_RED,
+        GL_UNSIGNED_BYTE,
+        bitmap.buffer
+    );
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

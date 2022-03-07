@@ -52,7 +52,7 @@ FrameBuffer::FrameBuffer(
 
     if (hasDepthBuffer) {
         glBindRenderbuffer(GL_RENDERBUFFER, *_depthBuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, resolutionX, resolutionY);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolutionX, resolutionY);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, *_depthBuffer);
     }
     const GLenum drawBuffer = GL_COLOR_ATTACHMENT0;
