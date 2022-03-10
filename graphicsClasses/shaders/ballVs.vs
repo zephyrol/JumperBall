@@ -1,4 +1,5 @@
 #version 300 es
+precision highp float;
 
 uniform Scene {
     mat4 VP;
@@ -52,7 +53,6 @@ const float durationSecondStep = thresholdThirdStep - thresholdSecondStep;
 const float durationThirdStep = 0.2;
 
 const float minScaleCrushing = 0.8;
-float crushingScale = crushingCoeff * minScaleCrushing + (1.0 - crushingCoeff);
 
 mat4 burstingScaleMatrix() {
     const float durationBursting = 0.07;
@@ -68,7 +68,7 @@ mat4 burstingScaleMatrix() {
     return scaleMat(vec3(scaleBursting * ballRadius));
 }
 
-mat4 ballScale() {
+mat4 ballScale(float crushingScale) {
     if (status == 1.0) {
         return burstingScaleMatrix();
     }
@@ -80,7 +80,7 @@ mat4 ballScale() {
     return scaleMat(scaleVector * ballRadius);
 }
 
-mat4 ballTranslation() {
+mat4 ballTranslation(float crushingScale) {
 
     mat4 translation = translate(position);
     if (status != 0.0) {
@@ -112,12 +112,13 @@ mat4 ballRotation() {
 
 void main() {
 
+    float crushingScale = crushingCoeff * minScaleCrushing + (1.0 - crushingCoeff);
     mat4 rotation = ballRotation();
-    mat4 translation = ballTranslation();
-    mat4 scale = ballScale();
+    mat4 translation = ballTranslation(crushingScale);
+    mat4 scale = ballScale(crushingScale);
     mat4 modelTransform = translation * scale * rotation;
 
-    const float w = 1.f;
+    const float w = 1.0;
     vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, w);
 
     #ifdef(LEVEL_PASS)

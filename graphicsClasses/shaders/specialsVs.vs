@@ -124,16 +124,16 @@ mat4 rotationUpToDir (float direction) {
 }
 
 bool isColorActivated() {
-    if (vs_specialColor == 1) {
+    if (vs_specialColor == 1.0) {
         return isRedActivated == 1.0;
     }
-    if (vs_specialColor == 2) {
+    if (vs_specialColor == 2.0) {
         return isGreenActivated == 1.0;
     }
-    if (vs_specialColor == 3) {
+    if (vs_specialColor == 3.0) {
         return isBlueActivated == 1.0;
     }
-    if (vs_specialColor == 4) {
+    if (vs_specialColor == 4.0) {
         return isYellowActivated == 1.0;
     }
     return false;

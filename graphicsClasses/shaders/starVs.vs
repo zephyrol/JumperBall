@@ -1,4 +1,5 @@
 #version 300 es
+precision highp float;
 
 uniform Scene {
     mat4 VP;
@@ -21,7 +22,7 @@ out vec2 fs_vertexPosition;
 vec4 createRotationQuaternion() {
     const float radiansPerSeconds = 0.6;
     float angle = radiansPerSeconds * timeSinceCreation;
-    float angleOverTwo = angle / 2;
+    float angleOverTwo = angle / 2.0;
     return vec4(vec3(sin(angleOverTwo) * vs_rotationAxis), cos(angleOverTwo));
 }
 

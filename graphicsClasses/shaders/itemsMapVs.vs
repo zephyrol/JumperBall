@@ -1,4 +1,5 @@
 #version 300 es
+precision highp float;
 
 
 uniform Scene {
@@ -76,7 +77,7 @@ const float durationSecondStep = thresholdThirdStep - thresholdSecondStep;
 const float durationThirdStep = 0.2;
 
 bool itemIsGotten() {
-    return (obtainingTime > 0);
+    return (obtainingTime > 0.0);
 }
 
 mat4 itemScale() {

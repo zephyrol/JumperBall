@@ -1,4 +1,6 @@
 #version 300 es
+precision highp float;
+
 
 uniform sampler2D brightPassTexture;
 
@@ -8,8 +10,33 @@ out vec4 pixelColor;
 void main() {
 
     const int patchSize = 25;
-    const int indicesOffset[25] =
-        int[] (-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+    const float indicesOffsets[patchSize] = float[] (
+        -12.0,
+        -11.0,
+        -10.0,
+        -9.0,
+        -8.0,
+        -7.0,
+        -6.0,
+        -5.0,
+        -4.0,
+        -3.0,
+        -2.0,
+        -1.0,
+        0.0,
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0,
+        7.0,
+        8.0,
+        9.0,
+        10.0,
+        11.0,
+        12.0
+    );
 
     // Getting 25 Gauss weights computed with sigma = 4
     const float gaussWeights[25] = float[] (
@@ -21,12 +48,13 @@ void main() {
 
     const int levelOfDetail = 0;
 
-    float sumCoefficients = 0;
+    float sumCoefficients = 0.0;
     vec3 blurColor = vec3(0.0, 0.0, 0.0);
-    vec2 texelOffset = 1.0 / textureSize(brightPassTexture, 0);
+    ivec2 texSize = textureSize(brightPassTexture, 0);
+    vec2 texelOffset = 1.0 / vec2(float(texSize.x), float(texSize.y));
     for (int i = 0; i < patchSize; ++i) {
         float coefficient = gaussWeights[i];
-        vec2 neighboringPixelUV = fs_vertexUVs + vec2(texelOffset.x * indicesOffset[i], 0.0);
+        vec2 neighboringPixelUV = fs_vertexUVs + vec2(texelOffset.x * indicesOffsets[i], 0.0);
         blurColor += coefficient * texture(brightPassTexture, neighboringPixelUV).xyz;
         sumCoefficients += coefficient;
     }

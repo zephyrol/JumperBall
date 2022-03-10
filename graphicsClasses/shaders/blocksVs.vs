@@ -1,4 +1,5 @@
 #version 300 es
+precision highp float;
 
 uniform Scene {
     mat4 VP;
@@ -30,7 +31,7 @@ void main() {
 
     #ifdef(LEVEL_PASS)
         fs_vertexColor              = vs_vertexColor;
-        fs_vertexNormal             = vs_vertexNormal; // normalize((N * vec4(vs_vertexNormal,1.f)).xyz);
+        fs_vertexNormal             = vs_vertexNormal; // normalize((N * vec4(vs_vertexNormal,1.0)).xyz);
         fs_vertexPositionWorld      = position;
         fs_vertexDepthMapSpace      = VPStar * positionVec4;
         gl_Position = VP * positionVec4;

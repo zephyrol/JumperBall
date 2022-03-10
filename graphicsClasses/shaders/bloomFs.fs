@@ -1,4 +1,5 @@
 #version 300 es
+precision highp float;
 
 uniform Scene {
     mat4 VP;
@@ -26,7 +27,7 @@ const mat3 RGBToXYZ = mat3(2.7689, 1.7517,   1.1302,
 vec3 convertCIExyYToRGB (vec3 CIExyYColor) {
     float scalar = CIExyYColor.z / CIExyYColor.y;
     vec3 CIEXYZ = vec3(scalar * CIExyYColor.x, CIExyYColor.z,
-                       scalar * (1.f - CIExyYColor.x - CIExyYColor.y));
+                       scalar * (1.0 - CIExyYColor.x - CIExyYColor.y));
     return XYZToRGB * CIEXYZ;
 }
 
