@@ -89,6 +89,7 @@ void Controller::interactionMouse (const Status& status, float posX, float posY)
         }
         return;
     }
+
     if (!_mouseIsPressed) {
         pressMouse(posX, posY);
         _mouseIsPressed = true;
@@ -106,7 +107,7 @@ void Controller::setValidateButton (const Controller::Status& status) {
 
 void Controller::runGame (size_t level) {
     _scene = std::make_shared<Scene>(
-        _filesContent.at("map" + std::to_string(_player.levelProgression()) + ".txt"),
+        _filesContent.at("map" + std::to_string(level) + ".txt"),
         _ratio
     );
     refreshViewer();
