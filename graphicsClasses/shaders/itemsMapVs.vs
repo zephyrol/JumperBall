@@ -1,7 +1,3 @@
-#version 300 es
-precision highp float;
-
-
 uniform Scene {
     mat4 VP;
     mat4 VPStar;

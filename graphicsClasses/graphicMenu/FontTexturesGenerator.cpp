@@ -50,7 +50,6 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
     const FontTexturesGenerator::FTContent& ftContent) {
 
     FontTexturesGenerator::GraphicCharacter graphicCharacter;
-
     const auto setPixelSizes =
         [&ftContent] (FT_UInt heightPixels)->void {
             constexpr FT_UInt scalarQuality = 2;
@@ -88,8 +87,7 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
     const FT_UInt heightPixels = static_cast <FT_UInt>(screenHeight * height);
 
     setPixelSizes(heightPixels);
-    const FT_Pos minHeight = getMinHeight( /*{ static_cast <char>(character) }*/ message,
-                                           ftContent.fontFace);
+    const FT_Pos minHeight = getMinHeight(message, ftContent.fontFace);
 
     // Transform
     loadCharacter(character);

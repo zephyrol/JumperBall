@@ -47,7 +47,7 @@ static CstShader_uptr createFragmentShader(
 
 private:
 
-    static std::string cleanDefines(const std::string& shaderCode, const std::vector<std::string>& defines);
+    static std::string completeShaderCode(const std::string& shaderCode, const std::vector<std::string>& defines);
 const GLuint _shaderHandle;
 const GLenum _shaderType;
 const std::string _shaderFilename;

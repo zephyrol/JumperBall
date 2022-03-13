@@ -1,5 +1,3 @@
-#version 300 es
-
 uniform Scene {
     mat4 VP;
     mat4 VPStar;

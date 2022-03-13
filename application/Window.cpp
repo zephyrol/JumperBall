@@ -6,7 +6,6 @@
  */
 
 #include <istream>
-#include <sstream>
 #include "Window.h"
 
 
@@ -22,7 +21,95 @@ Window::Window(
     _frameBufferHeight(frameBufferHeight),
     _windowWidth(windowWidth),
     _windowHeight(windowHeight),
-    _controller(_frameBufferWidth, _frameBufferHeight) {
+    _binaryFont(createBinaryFont()),
+    _controller(
+        _frameBufferWidth,
+        _frameBufferHeight,
+        createFilesContent(),
+        _binaryFont.data(),
+        _binaryFont.size()
+    ) {
+}
+
+JBTypes::FileContent Window::createFilesContent() {
+
+    std::map<std::string, std::string> fileDistPath;
+
+    for (const std::string& shader : { "ballVs.vs",
+                                "basicFboVs.vs",
+                                "basicFboFs.fs",
+                                "blocksVs.vs",
+                                "bloomFs.fs",
+                                "brightPassFilter.fs",
+                                "depthFs.fs",
+                                "enemiesVs.vs",
+                                "fontFs.fs",
+                                "fontVs.vs",
+                                "horizontalBlurFs.fs",
+                                "itemsMapVs.vs",
+                                "labelFs.fs",
+                                "labelVs.vs",
+                                "levelFs.fs",
+                                "specialsVs.vs",
+                                "starFs.fs",
+                                "starVs.vs",
+                                "verticalBlurFs.fs"}) {
+        fileDistPath[shader] = "shaders/" + shader;
+    }
+
+    constexpr size_t numberOfLevel = 2;
+    for (size_t i = 1; i <= numberOfLevel; ++i) {
+        const auto mapName = "map" + std::to_string(i) + ".txt";
+        fileDistPath[mapName] = "maps/" + mapName;
+    }
+
+    const auto searchingDirs = { "./", "bin/" };
+    JBTypes::FileContent filesContent;
+
+    for (const auto &item : fileDistPath) {
+        const auto& fileName = item.first;
+        const auto& path = item.second;
+        bool foundFile = false;
+        std::ifstream inFile;
+        for(const auto& searchingDir: searchingDirs) {
+            if(!foundFile) {
+                inFile.open(searchingDir + path);
+                foundFile = true;
+            }
+        }
+        if(!foundFile) {
+            std::cerr << "ERROR: Opening " << fileName << " impossible .." << std::endl;
+            JBTypesMethods::displayInstallError();
+            exit(EXIT_FAILURE);
+        }
+        std::stringstream strStream;
+        strStream << inFile.rdbuf();
+        filesContent[fileName] =  strStream.str();
+    }
+    return filesContent;
+}
+
+std::vector<unsigned char> Window::createBinaryFont() {
+    const auto searchingDirs = { "./", "bin/" };
+
+    const std::string& fileName = "Cousine-Regular.ttf";
+    const auto& path = "fonts/" + fileName;
+    bool foundFile = false;
+    std::ifstream fontFile;
+    for(const auto& searchingDir: searchingDirs) {
+        if(!foundFile) {
+            fontFile.open(searchingDir + path, std::ios::binary);
+            foundFile = true;
+        }
+    }
+    if(!foundFile) {
+        std::cerr << "ERROR: Opening " << fileName << " impossible .." << std::endl;
+        JBTypesMethods::displayInstallError();
+        exit(EXIT_FAILURE);
+    }
+    std::vector<unsigned char> buffer(std::istreambuf_iterator<char>(fontFile), {});
+    return buffer;
+
 }
 
 bool Window::inputManagement() {
@@ -129,3 +216,4 @@ void Window::run() {
     }
 
 }
+

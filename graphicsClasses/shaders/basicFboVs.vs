@@ -1,6 +1,3 @@
-#version 300 es
-precision highp float;
-
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 3) in vec2 vs_vertexUVs;
 

@@ -8,7 +8,11 @@
 #ifndef FONT_TEXTURES_GENERATOR_H
 #define FONT_TEXTURES_GENERATOR_H
 #include "Utility.h"
+#ifdef __ANDROID__
 #include <include/ft2build.h>
+#else
+#include <freetype2/ft2build.h>
+#endif
 #include FT_FREETYPE_H
 #include <gameMenu/Menu.h>
 

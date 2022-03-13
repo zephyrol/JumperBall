@@ -44,7 +44,7 @@ void compress(std::istringstream& input);
 std::string compressString(const std::string& asciiString);
 std::string uncompressString(const std::string& compressedString);
 
-void compressNew(std::istringstream& input);
+void compressNew(std::ifstream& input);
 
 std::shared_ptr <Map> loadMap(size_t mapNumber);
 std::shared_ptr <Map> loadMap(const std::string& mapContent);
@@ -64,8 +64,10 @@ Block_sptr createBlockWithoutProperties(
 );
 
 // Reading functions
+unsigned int readUnsignedInt(std::ifstream& input);
+std::string readString(std::ifstream& input);
 unsigned int readUnsignedInt(std::istringstream& input);
-std::string readingString(std::istringstream& input);
+std::string readString(std::istringstream & input);
 
 // Writing functions
 void writeSeparator(std::ofstream& output);

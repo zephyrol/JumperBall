@@ -48,10 +48,6 @@ void cleanLibraries() {
 
 int main (int argc, char**argv) {
 
-    /*const auto map1 (MapGenerator::loadMap(1));
-    std::ifstream mapFileu("a");
-    MapGenerator::verificationMap(mapFileu, *map1);*/
-
     if (argc == 3) {
 
         std::ifstream file;

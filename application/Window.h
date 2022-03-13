@@ -7,11 +7,10 @@
 
 #ifndef WINDOW_H
 #define WINDOW_H
-#include <system/Types.h>
-#include <Utility.h>
-#include <Controller.h>
 #define RESOLUTION_X 1024
 #define RESOLUTION_Y 768
+#include <Controller.h>
+#include <GLFW/glfw3.h>
 
 class Window {
 public:
@@ -33,9 +32,13 @@ int _frameBufferWidth;
 int _frameBufferHeight;
 int _windowWidth;
 int _windowHeight;
+const std::vector<unsigned char> _binaryFont;
+
 Controller _controller;
 
 bool inputManagement();
+static JBTypes::FileContent createFilesContent();
+static std::vector<unsigned char> createBinaryFont();
 
 };
 

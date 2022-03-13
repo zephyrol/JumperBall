@@ -39,13 +39,13 @@ Map::MapInfo MapGenerator::uncompressMap(std::istringstream& file) {
         return static_cast<unsigned int>(convertToBase10(baseAsciiDimension, baseUsuableAsciiCharacters));
     };
 
-    mapInfo.width = getUncompressedDimension(readingString(file));
-    mapInfo.depth = getUncompressedDimension(readingString(file));
-    mapInfo.height = getUncompressedDimension(readingString(file));
+    mapInfo.width = getUncompressedDimension(readString(file));
+    mapInfo.depth = getUncompressedDimension(readString(file));
+    mapInfo.height = getUncompressedDimension(readString(file));
 
-    const auto beginX = getUncompressedDimension(readingString(file));
-    const auto beginY = getUncompressedDimension(readingString(file));
-    const auto beginZ = getUncompressedDimension(readingString(file));
+    const auto beginX = getUncompressedDimension(readString(file));
+    const auto beginY = getUncompressedDimension(readString(file));
+    const auto beginZ = getUncompressedDimension(readString(file));
     mapInfo.ball = std::make_shared<Ball>(beginX, beginY, beginZ);
 
 
@@ -210,7 +210,7 @@ Map::MapInfo MapGenerator::uncompressMap(std::istringstream& file) {
     };
 
     std::vector<Block_sptr> blocks;
-    for (std::string infoMap = readingString(file); !infoMap.empty(); infoMap = readingString(file)) {
+    for (std::string infoMap = readString(file); !infoMap.empty(); infoMap = readString(file)) {
         if (infoMap.front() == '!') {
             const std::string compressedNoBlocksCounter (infoMap.begin() + 1, infoMap.end());
             const std::string asciiBasedNoBlocksCounter = substractOffset(
@@ -241,7 +241,7 @@ Map::MapInfo MapGenerator::uncompressMap(std::istringstream& file) {
 
             const auto position = Map::getBlockCoords(blockIndexCursor, mapInfo.width, mapInfo.depth);
             for (unsigned char optionType : blockOptions) {
-                const std::string uncompressedString = uncompressString(readingString(file));
+                const std::string uncompressedString = uncompressString(readString(file));
                 if (optionType == 'I') {
                     items = createItems(uncompressedString);
                 } else if (optionType == 'E') {
@@ -253,7 +253,7 @@ Map::MapInfo MapGenerator::uncompressMap(std::istringstream& file) {
                 }
             }
             const std::string properties =  blockHasAnyProperties(blockType)
-                ? uncompressString(readingString(file))
+                ? uncompressString(readString(file))
                 : "";
 
             const auto newBlocks = createBlocks(
@@ -312,7 +312,7 @@ std::string MapGenerator::applyOffset (const std::string& s, int offset) {
     return offsetString;
 }
 
-void MapGenerator::compressNew(std::istringstream& input) {
+void MapGenerator::compressNew(std::ifstream& input) {
     std::ofstream output("outMapNew.txt");
 
     // Compress dimensions
@@ -363,7 +363,7 @@ void MapGenerator::compressNew(std::istringstream& input) {
     const auto writeBlock =
         [&output, &input, &compressAndWrite]() 
     {
-        const std::string blockInfo = readingString(input);
+        const std::string blockInfo = readString(input);
 
         const unsigned char blockType = blockInfo.front();
         verifyBlockType(blockType);
@@ -381,7 +381,7 @@ void MapGenerator::compressNew(std::istringstream& input) {
             : blockOptions.size();
 
         for (unsigned int i = 0; i < numberOfWordsToRead; ++i) {
-            const std::string uncompressedOptionOrProperty = readingString(input);
+            const std::string uncompressedOptionOrProperty = readString(input);
             compressAndWrite(uncompressedOptionOrProperty, output);
         }
     };
@@ -401,7 +401,7 @@ void MapGenerator::compressNew(std::istringstream& input) {
         std::cout << "line " << i << std::endl;
         std::vector<BlockExistence> blocksExistencesRow;
         for (unsigned int j = 0; j < width; ++j) {
-            blocksExistencesRow.push_back(getBlockExistence(readingString(input)));
+            blocksExistencesRow.push_back(getBlockExistence(readString(input)));
         }
 
         for(const BlockExistence& blockExistence: blocksExistencesRow) {
@@ -417,17 +417,30 @@ void MapGenerator::compressNew(std::istringstream& input) {
     output.close();
 }
 
-unsigned int MapGenerator::readUnsignedInt (std::istringstream& input) {
+unsigned int MapGenerator::readUnsignedInt (std::ifstream& input) {
     unsigned int readValue;
     input >> readValue;
     return readValue;
 }
 
-std::string MapGenerator::readingString (std::istringstream& input) {
+std::string MapGenerator::readString (std::ifstream& input) {
     std::string readValue;
     input >> readValue;
     return readValue;
 }
+
+unsigned int MapGenerator::readUnsignedInt(std::istringstream &input) {
+    unsigned int readValue;
+    input >> readValue;
+    return readValue;
+}
+
+std::string MapGenerator::readString(std::istringstream & input) {
+    std::string readValue;
+    input >> readValue;
+    return readValue;
+}
+
 
 void MapGenerator::writeSeparator (std::ofstream& output) {
     output << " ";

@@ -1,6 +1,14 @@
 #ifndef UTILITY_H
 #define UTILITY_H
+
+#ifdef __ANDROID__
 #include <GLES3/gl3.h>
+#define JB_SYSTEM 1
+#else
+#include <glad.h>
+#define JB_SYSTEM 0
+#endif
+
 #include <system/Types.h>
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL

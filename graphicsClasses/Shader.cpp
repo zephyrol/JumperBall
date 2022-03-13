@@ -16,7 +16,7 @@ Shader::Shader(
     _shaderHandle(glCreateShader(shaderType)),
     _shaderType(shaderType),
     _shaderFilename(shaderFilename),
-    _shaderCode(cleanDefines(fileContent.at(shaderFilename), defines)) {
+    _shaderCode(completeShaderCode(fileContent.at(shaderFilename), defines)) {
     if (_shaderHandle == 0) {
         std::cerr << "Error during creation of the shader ..." << std::endl;
         exit(EXIT_FAILURE);
@@ -25,7 +25,6 @@ Shader::Shader(
     constexpr GLsizei numberOfStrings = 1;
     const GLchar*const glCode = _shaderCode.c_str();
 
-    const auto size = _shaderCode.size();
     glShaderSource(_shaderHandle, numberOfStrings, &glCode, nullptr);
     glCompileShader(_shaderHandle);
     verifyCompileStatus(_shaderCode);
@@ -78,8 +77,13 @@ CstShader_uptr Shader::createFragmentShader (
     return std::unique_ptr <const Shader>(new Shader(GL_FRAGMENT_SHADER, fileContent, shaderName, defines));
 }
 
-std::string Shader::cleanDefines(const std::string& shaderCode, const std::vector<std::string> &defines) {
-    std::string finalShader = shaderCode;
+std::string Shader::completeShaderCode(const std::string& shaderCode, const std::vector<std::string> &defines) {
+    const std::map<size_t, std::string> shaderHeader = {
+        { 0, "#version 330 core\n" },
+        { 1, "#version 300 es\nprecision highp float\n" }
+    };
+
+    std::string finalShader = shaderHeader.at(JB_SYSTEM) + shaderCode;
     const std::string ifdefKey = "#ifdef";
     const std::string endifKey = "#endif";
     for (const auto &define: defines) {
