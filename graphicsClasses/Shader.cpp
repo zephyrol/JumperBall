@@ -80,7 +80,7 @@ CstShader_uptr Shader::createFragmentShader (
 std::string Shader::completeShaderCode(const std::string& shaderCode, const std::vector<std::string> &defines) {
     const std::map<size_t, std::string> shaderHeader = {
         { 0, "#version 330 core\n" },
-        { 1, "#version 300 es\nprecision highp float\n" }
+        { 1, "#version 300 es\nprecision highp float;\n" }
     };
 
     std::string finalShader = shaderHeader.at(JB_SYSTEM) + shaderCode;
