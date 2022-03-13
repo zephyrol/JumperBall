@@ -47,11 +47,12 @@ CstShaderProgram_sptr ShaderProgram::createShaderProgram (
     const JBTypes::FileContent& fileContent,
     const std::string& vs,
     const std::string& fs,
-    const std::vector<std::string>& defines
+    const std::vector<std::string>& defines,
+    const std::map<std::string, glm::vec2>& constVec2s
 ) {
     return std::make_shared <const ShaderProgram>(
-        Shader::createVertexShader(fileContent, vs, defines),
-        Shader::createFragmentShader(fileContent, fs, defines)
+        Shader::createVertexShader(fileContent, vs, defines, {}),
+        Shader::createFragmentShader(fileContent, fs, defines, constVec2s)
     );
 }
 

@@ -30,7 +30,8 @@ static CstShaderProgram_sptr createShaderProgram(
     const JBTypes::FileContent& fileContent,
     const std::string& vs,
     const std::string& fs,
-    const std::vector<std::string>& defines = {}
+    const std::vector<std::string>& defines = {},
+    const std::map<std::string, glm::vec2>& constVec2s = {}
 );
 void use() const;
 

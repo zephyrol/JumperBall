@@ -30,7 +30,9 @@ private:
     const CstShaderProgram_sptr _verticalBlurShader;
 
     static CstShaderProgram_sptr createVerticalBlurProcessShaderProgram(
-        const JBTypes::FileContent& fileContent
+        const JBTypes::FileContent& fileContent,
+        GLsizei width,
+        GLsizei height
     ) ;
 };
 

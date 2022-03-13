@@ -20,7 +20,7 @@ HorizontalBlurProcess::HorizontalBlurProcess(
         ))
 ),
     _brightPassTexture(brightPassTexture),
-    _horizontalBlurShader(createHorizontalBlurProcessShaderProgram(fileContent))
+    _horizontalBlurShader(createHorizontalBlurProcessShaderProgram(fileContent, width, height))
 {
 }
 
@@ -44,9 +44,20 @@ void HorizontalBlurProcess::freeGPUMemory() {
 }
 
 CstShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderProgram(
-    const JBTypes::FileContent& fileContent
+    const JBTypes::FileContent& fileContent,
+    GLsizei width,
+    GLsizei height
 ) {
-    auto shader = ShaderProgram::createShaderProgram(fileContent,"basicFboVs.vs", "horizontalBlurFs.fs");
+    auto shader = ShaderProgram::createShaderProgram(
+        fileContent,
+        "basicFboVs.vs",
+        "horizontalBlurFs.fs",
+        {},
+        {{"texelSize", glm::vec2(
+            1.f / static_cast<float>(width),
+            1.f / static_cast<float>(height)
+        )}}
+    );
     shader->use();
     shader->bindUniformTextureIndex("brightPassTexture", 1);
     return shader;

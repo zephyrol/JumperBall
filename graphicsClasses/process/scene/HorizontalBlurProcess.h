@@ -24,7 +24,9 @@ public:
     std::shared_ptr<const GLuint> getRenderTexture() const override;
     vecCstShaderProgram_sptr getShaderPrograms() const override;
     static CstShaderProgram_sptr createHorizontalBlurProcessShaderProgram(
-        const JBTypes::FileContent& fileContent
+        const JBTypes::FileContent& fileContent,
+        GLsizei width,
+        GLsizei height
     );
 
 private:

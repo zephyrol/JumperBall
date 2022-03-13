@@ -11,12 +11,13 @@ Shader::Shader(
     const GLenum& shaderType,
     const JBTypes::FileContent& fileContent,
     const std::string& shaderFilename,
-    const std::vector<std::string>& defines
+    const std::vector<std::string>& defines,
+    const std::map<std::string, glm::vec2>& constVec2s
 ):
     _shaderHandle(glCreateShader(shaderType)),
     _shaderType(shaderType),
     _shaderFilename(shaderFilename),
-    _shaderCode(completeShaderCode(fileContent.at(shaderFilename), defines)) {
+    _shaderCode(completeShaderCode(fileContent.at(shaderFilename), defines, constVec2s)) {
     if (_shaderHandle == 0) {
         std::cerr << "Error during creation of the shader ..." << std::endl;
         exit(EXIT_FAILURE);
@@ -64,26 +65,52 @@ void Shader::freeGPUMemory() const {
 CstShader_uptr Shader::createVertexShader (
     const JBTypes::FileContent& fileContent,
     const std::string& shaderName,
-    const std::vector<std::string>& defines
+    const std::vector<std::string>& defines,
+    const std::map<std::string, glm::vec2>& constVec2s
 ) {
-    return std::unique_ptr <const Shader>(new Shader(GL_VERTEX_SHADER, fileContent, shaderName, defines));
+    return std::unique_ptr <const Shader>(new Shader(
+        GL_VERTEX_SHADER,
+        fileContent,
+        shaderName,
+        defines,
+        constVec2s
+    ));
 }
 
 CstShader_uptr Shader::createFragmentShader (
     const JBTypes::FileContent& fileContent,
     const std::string& shaderName,
-    const std::vector<std::string>& defines
+    const std::vector<std::string>& defines,
+    const std::map<std::string, glm::vec2>& constVec2s
     ) {
-    return std::unique_ptr <const Shader>(new Shader(GL_FRAGMENT_SHADER, fileContent, shaderName, defines));
+    return std::unique_ptr <const Shader>(new Shader(
+        GL_FRAGMENT_SHADER,
+        fileContent,
+        shaderName,
+        defines,
+        constVec2s
+    ));
 }
 
-std::string Shader::completeShaderCode(const std::string& shaderCode, const std::vector<std::string> &defines) {
+std::string Shader::completeShaderCode(
+    const std::string& shaderCode,
+    const std::vector<std::string> &defines,
+    const std::map<std::string, glm::vec2>& constVec2s
+) {
     const std::map<size_t, std::string> shaderHeader = {
         { 0, "#version 330 core\n" },
-        { 1, "#version 300 es\nprecision highp float;\n" }
+        { 1, "#version 300 es\nprecision highp float\n" }
     };
+    std::string finalShader = shaderHeader.at(JB_SYSTEM);
 
-    std::string finalShader = shaderHeader.at(JB_SYSTEM) + shaderCode;
+    for (const auto &item : constVec2s) {
+        const auto& constName = item.first;
+        const auto& constValue = item.second;
+        finalShader += "const vec2 " + constName + " = vec2("
+            + std::to_string(constValue.x) + ", " + std::to_string(constValue.y) + ");\n";
+    }
+    finalShader += shaderCode;
+
     const std::string ifdefKey = "#ifdef";
     const std::string endifKey = "#endif";
     for (const auto &define: defines) {
