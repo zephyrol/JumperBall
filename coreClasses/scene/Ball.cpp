@@ -6,8 +6,6 @@
  */
 
 #include "Ball.h"
-#include <algorithm>
-#include <cmath>
 
 Ball::Ball(unsigned int x, unsigned int y, unsigned int z):
     _pos({x,y,z}),

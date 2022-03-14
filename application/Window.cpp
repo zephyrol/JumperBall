@@ -19,8 +19,8 @@ Window::Window(
     _window(glfwWindow),
     _frameBufferWidth(frameBufferWidth),
     _frameBufferHeight(frameBufferHeight),
-    _windowWidth(windowWidth),
     _windowHeight(windowHeight),
+    _windowWidth(windowWidth),
     _binaryFont(createBinaryFont()),
     _controller(
         _frameBufferWidth,
@@ -74,7 +74,9 @@ JBTypes::FileContent Window::createFilesContent() {
         for(const auto& searchingDir: searchingDirs) {
             if(!foundFile) {
                 inFile.open(searchingDir + path);
-                foundFile = true;
+                if(inFile) {
+                    foundFile = true;
+                }
             }
         }
         if(!foundFile) {
@@ -99,7 +101,9 @@ std::vector<unsigned char> Window::createBinaryFont() {
     for(const auto& searchingDir: searchingDirs) {
         if(!foundFile) {
             fontFile.open(searchingDir + path, std::ios::binary);
-            foundFile = true;
+            if(fontFile) {
+                foundFile = true;
+            }
         }
     }
     if(!foundFile) {
@@ -190,7 +194,7 @@ bool Window::inputManagement() {
 
 
 void Window::run() {
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
     glfwSetInputMode(_window, GLFW_STICKY_KEYS, GL_TRUE);
 
     auto before = JBTypesMethods::getTimePointMSNow();

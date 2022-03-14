@@ -30,8 +30,8 @@ private:
 GLFWwindow*_window;
 int _frameBufferWidth;
 int _frameBufferHeight;
-int _windowWidth;
-int _windowHeight;
+    int _windowHeight;
+    int _windowWidth;
 const std::vector<unsigned char> _binaryFont;
 
 Controller _controller;

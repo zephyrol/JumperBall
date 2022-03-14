@@ -10,9 +10,11 @@
 #include <iostream>
 #include <string>
 #include <math.h>
+#include <iterator>
 #include <vector>
 #include <functional>
 #include <unordered_map>
+#include <algorithm>
 #include <map>
 #include <array>
 #include <memory>
