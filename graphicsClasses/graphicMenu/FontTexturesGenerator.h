@@ -10,6 +10,8 @@
 #include "Utility.h"
 #ifdef __ANDROID__
 #include <include/ft2build.h>
+#elif defined __APPLE_IOS__
+#include <include/ft2build.h>
 #else
 #include <freetype2/ft2build.h>
 #endif

@@ -1,9 +1,12 @@
 #ifndef UTILITY_H
 #define UTILITY_H
-
+#define __APPLE_IOS__
 #ifdef __ANDROID__
 #include <GLES3/gl3.h>
 #define JB_SYSTEM 1
+#elif defined __APPLE_IOS__
+#include <OpenGLES/ES3/gl.h>
+#include <OpenGLES/ES3/glext.h>
 #else
 #include <glad.h>
 #define JB_SYSTEM 0
