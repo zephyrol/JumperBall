@@ -5,8 +5,10 @@
 #include <GLES3/gl3.h>
 #define JB_SYSTEM 1
 #elif defined __APPLE_IOS__
+#define GLES_SILENCE_DEPRECATION
 #include <OpenGLES/ES3/gl.h>
 #include <OpenGLES/ES3/glext.h>
+#define JB_SYSTEM 2
 #else
 #include <glad.h>
 #define JB_SYSTEM 0
