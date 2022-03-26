@@ -70,6 +70,7 @@ void setValidateMouse();
 std::shared_ptr<Viewer> createViewer() const;
 void refreshViewer();
 
+const GLint _defaultFrameBuffer;
 FontTexturesGenerator::FTContent _ftContent;
 Player _player;
 std::shared_ptr <Menu> _menu;

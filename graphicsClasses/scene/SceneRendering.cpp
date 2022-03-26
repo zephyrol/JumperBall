@@ -11,6 +11,7 @@ SceneRendering::SceneRendering(
     const Scene& scene,
     GLsizei width,
     GLsizei height,
+    GLint defaultFrameBuffer,
     const JBTypes::FileContent& fileContent
 ):
     Rendering(width, height),
@@ -66,6 +67,7 @@ SceneRendering::SceneRendering(
         width,
         height,
         *_verticalBlur->getRenderTexture(),
+        defaultFrameBuffer,
         _screen
     )),
     _processes({
@@ -108,6 +110,7 @@ void SceneRendering::update() {
 void SceneRendering::render() const {
 
     _sceneUniformBuffer.bindBufferRange();
+    //_sceneRenderingProcess->render();
     for (const auto &process: _processes) {
         process->render();
     }

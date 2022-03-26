@@ -17,11 +17,12 @@ public:
   Viewer(
       unsigned int resolutionX,
       unsigned int resolutionY,
+      GLint defaultFrameBuffer,
       const Scene& scene,
       const Menu& menu,
       const FontTexturesGenerator::FTContent& ftContent,
       const JBTypes::FileContent& fileContent
-  );
+   );
 
   void update();
   void render() const;
@@ -29,9 +30,11 @@ public:
 
   const unsigned int _resolutionX;
   const unsigned int _resolutionY;
+  const GLint _defaultFrameBuffer;
 
   SceneRendering _sceneRendering;
   MenuRendering _menuRendering;
+
 
 };
 

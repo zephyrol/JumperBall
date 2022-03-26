@@ -26,6 +26,7 @@ SceneRendering(
     const Scene& scene,
     GLsizei width,
     GLsizei height,
+    GLint defaultFrameBuffer,
     const JBTypes::FileContent& fileContent
     );
 

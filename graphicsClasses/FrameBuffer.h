@@ -43,7 +43,7 @@ void clean();
 
 void freeGPUMemory();
 
-static void bindDefaultFrameBuffer();
+static void bindDefaultFrameBuffer(GLint defaultFrameBuffer);
 static void cleanDefaultFrameBuffer();
 static void setViewportSize(GLsizei resolutionX, GLsizei resolutionY);
 static void enableDepthTest();

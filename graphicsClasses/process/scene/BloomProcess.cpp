@@ -9,23 +9,26 @@ BloomProcess::BloomProcess(
     GLsizei width,
     GLsizei height,
     GLuint bluredTexture,
+    GLint defaultFrameBuffer,
     const RenderPass_sptr& screen
 ):
         _width(width),
         _height(height),
         _screen(screen),
         _bluredTexture(bluredTexture),
-        _bloomShader(createBloomProcessShaderProgram(fileContent))
+        _bloomShader(createBloomProcessShaderProgram(fileContent)),
+        _defaultFrameBuffer(defaultFrameBuffer)
 {
 }
 
 void BloomProcess::render() const {
-    FrameBuffer::bindDefaultFrameBuffer();
+    FrameBuffer::bindDefaultFrameBuffer(_defaultFrameBuffer);
     FrameBuffer::setViewportSize(_width, _height);
 
     _bloomShader->use();
     ShaderProgram::bindTexture(_bluredTexture);
     _screen->render(_bloomShader);
+    //FrameBuffer::cleanDefaultFrameBuffer();
 }
 
 void BloomProcess::freeGPUMemory() {

@@ -75,8 +75,8 @@ void FrameBuffer::freeGPUMemory() {
     glDeleteFramebuffers(1, &_fboHandle);
 }
 
-void FrameBuffer::bindDefaultFrameBuffer() {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+void FrameBuffer::bindDefaultFrameBuffer(GLint defaultFrameBuffer) {
+    glBindFramebuffer(GL_FRAMEBUFFER, defaultFrameBuffer);
 }
 
 void FrameBuffer::cleanDefaultFrameBuffer() {

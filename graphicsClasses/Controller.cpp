@@ -15,6 +15,11 @@ Controller::Controller(
         const unsigned char* fontData,
         size_t fontDataSize
         ) :
+        _defaultFrameBuffer([](){
+            GLint defaultFrameBuffer;
+            glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFrameBuffer);
+            return defaultFrameBuffer;
+        }()),
         _ftContent(FontTexturesGenerator::initFreeTypeAndFont(fontData, fontDataSize)),
         _player(),
         _menu(Menu::getJumperBallMenu(
@@ -133,6 +138,7 @@ std::shared_ptr<Viewer> Controller::createViewer() const {
     return std::make_shared<Viewer>(
         _screenWidth,
         _screenHeight,
+        _defaultFrameBuffer,
         *_scene,
         *_menu,
         _ftContent,

@@ -16,6 +16,7 @@ public:
         GLsizei width,
         GLsizei height,
         GLuint bluredTexture,
+        GLint defaultFrameBuffer,
         const RenderPass_sptr& screen
     );
 
@@ -31,6 +32,7 @@ private:
     const RenderPass_sptr _screen;
     const GLuint _bluredTexture;
     const CstShaderProgram_sptr _bloomShader;
+    const GLint _defaultFrameBuffer;
 
     static CstShaderProgram_sptr createBloomProcessShaderProgram(
         const JBTypes::FileContent& fileContent
