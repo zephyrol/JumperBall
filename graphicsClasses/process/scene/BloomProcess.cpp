@@ -28,7 +28,6 @@ void BloomProcess::render() const {
     _bloomShader->use();
     ShaderProgram::bindTexture(_bluredTexture);
     _screen->render(_bloomShader);
-    //FrameBuffer::cleanDefaultFrameBuffer();
 }
 
 void BloomProcess::freeGPUMemory() {
