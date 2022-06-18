@@ -13,49 +13,51 @@ Controller::Controller(
         const size_t& screenHeight,
         const JBTypes::FileContent& filesContent,
         const unsigned char* fontData,
-        size_t fontDataSize
+        size_t fontDataSize,
+        bool isUsingTouchScreen
         ) :
-        _defaultFrameBuffer([](){
+    _defaultFrameBuffer([](){
             GLint defaultFrameBuffer;
             glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFrameBuffer);
             return defaultFrameBuffer;
         }()),
-        _ftContent(FontTexturesGenerator::initFreeTypeAndFont(fontData, fontDataSize)),
-        _player(),
-        _menu(Menu::getJumperBallMenu(
+    _ftContent(FontTexturesGenerator::initFreeTypeAndFont(fontData, fontDataSize)),
+    _player(),
+    _menu(Menu::getJumperBallMenu(
             _player,
             1,
             static_cast<unsigned int>(screenWidth),
             static_cast<unsigned int>(screenHeight)
         )),
-        _buttonsStatus{
+    _buttonsStatus{
         {Controller::Button::Up, Controller::Status::Released},
         {Controller::Button::Down, Controller::Status::Released},
         {Controller::Button::Right, Controller::Status::Released},
         {Controller::Button::Left, Controller::Status::Released},
         {Controller::Button::Escape, Controller::Status::Released},
         {Controller::Button::Validate, Controller::Status::Released}},
-        _currentKey(Scene::ActionKey::Nothing),
-        _filesContent(filesContent),
-        _screenWidth(screenWidth),
-        _screenHeight(screenHeight),
-        _ratio(static_cast<float>(_screenWidth) / static_cast<float>(_screenHeight)),
-        _mousePressingXCoord(0.f),
-        _mousePressingYCoord(0.f),
-        _mouseCurrentXCoord(0.f),
-        _mouseCurrentYCoord(0.f),
-        _mousePreviousXCoord(0.f),
-        _mousePreviousYCoord(0.f),
-        _mouseUpdatingTime(),
-        _mousePressTime(),
-        _currentMovementDir(nullptr),
-        _mouseIsPressed(false),
-        _requestToLeave(false),
-        _scene(std::make_shared<Scene>(
+    _currentKey(Scene::ActionKey::Nothing),
+    _filesContent(filesContent),
+    _isUsingTouchScreen(isUsingTouchScreen),
+    _screenWidth(screenWidth),
+    _screenHeight(screenHeight),
+    _ratio(static_cast<float>(_screenWidth) / static_cast<float>(_screenHeight)),
+    _mousePressingXCoord(0.f),
+    _mousePressingYCoord(0.f),
+    _mouseCurrentXCoord(0.f),
+    _mouseCurrentYCoord(0.f),
+    _mousePreviousXCoord(0.f),
+    _mousePreviousYCoord(0.f),
+    _mouseUpdatingTime(),
+    _mousePressTime(),
+    _currentMovementDir(nullptr),
+    _mouseIsPressed(false),
+    _requestToLeave(false),
+    _scene(std::make_shared<Scene>(
                 filesContent.at("map" + std::to_string(_player.levelProgression()) + ".txt"),
                 _ratio
                 )),
-        _viewer(createViewer())
+    _viewer(createViewer())
 {
     updateSceneMenu();
 }
@@ -119,7 +121,7 @@ void Controller::runGame (size_t level) {
 }
 
 void Controller::setValidateMouse() {
-    if (_player.status() == Player::Status::InGame) {
+    if (_player.status() == Player::Status::InGame && !_isUsingTouchScreen) {
         _currentKey = Scene::ActionKey::Validate;
         return;
     }
@@ -192,7 +194,7 @@ void Controller::setDown (const Controller::Status& status) {
 void Controller::setUp (const Controller::Status& status) {
     if (_player.status() == Player::Status::InGame) {
         if (status == Controller::Status::Pressed) {
-            _currentKey = Scene::ActionKey::Up;
+            _currentKey = _isUsingTouchScreen ? Scene::ActionKey::Validate : Scene::ActionKey::Up;
         }
     }
 }
@@ -255,6 +257,7 @@ void Controller::updateMouse (float posX, float posY) {
         _mouseUpdatingTime = now;
     }
 
+
     _mouseCurrentXCoord = posX;
     _mouseCurrentYCoord = posY;
 
@@ -275,6 +278,15 @@ void Controller::updateMouse (float posX, float posY) {
     }
 
     if(!_currentMovementDir) {
+        constexpr float goAheadDelay = 0.1f;
+        if (_player.status() == Player::Status::InGame
+            && _isUsingTouchScreen
+            && JBTypesMethods::getFloatFromDurationMS(now- _mousePressTime) > goAheadDelay) {
+            if (_player.status() == Player::Status::InGame) {
+                _currentKey = Scene::ActionKey::Up;
+            }
+            return;
+        }
         return;
     }
     if (*_currentMovementDir == Controller::ScreenDirection::North) {

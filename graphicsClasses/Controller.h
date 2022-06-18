@@ -21,14 +21,15 @@ public:
 enum class Status { Pressed, Released };
 enum class Button { Up, Down, Left, Right, Escape, Validate };
 enum class ScreenDirection { North, South, East, West };
-
+enum class Pointer { Mouse, TouchScreen };
 
 Controller(
     const size_t& screenWidth,
     const size_t& screenHeight,
     const JBTypes::FileContent& filesContent,
     const unsigned char* fontData,
-    size_t fontDataSize
+    size_t fontDataSize,
+    bool isUsingTouchScreen
 );
     ~Controller();
 
@@ -78,6 +79,7 @@ std::map <Button, Status> _buttonsStatus;
 Scene::ActionKey _currentKey;
 
 const JBTypes::FileContent _filesContent;
+const bool _isUsingTouchScreen;
 size_t _screenWidth;
 size_t _screenHeight;
 float _ratio;

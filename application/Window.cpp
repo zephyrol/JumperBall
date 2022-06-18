@@ -27,7 +27,8 @@ Window::Window(
         _frameBufferHeight,
         createFilesContent(),
         _binaryFont.data(),
-        _binaryFont.size()
+        _binaryFont.size(),
+       false
     ) {
 }
 
