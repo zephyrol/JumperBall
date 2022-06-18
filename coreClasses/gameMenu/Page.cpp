@@ -57,14 +57,6 @@ bool Page::visibleOnParent() const {
     return _visibleOnParent;
 }
 
-/*CstPage_sptr Page::child (const CstLabel_sptr& label) const {
-    if (_bridges.find(label) != _bridges.end()) {
-        return _bridges.at(label);
-    } else {
-        return nullptr;
-    }
-}*/
-
 Page_sptr Page::child (const Label_sptr& label) {
     //CstPage_sptr cstPage = static_cast <const Page&>(*this).child(label);
     //return std::const_pointer_cast <Page>(cstPage);
@@ -154,7 +146,7 @@ void Page::update (bool isPressed, float screenPosY) {
             _localPosY = -deceleration + _releaseVelocity * t + _localReleasedPosY;
         } else if (
             _releaseVelocity < 0.f &&
-            t < -(_releaseVelocity) / (2.f * decelerationCoefficient / 2.f)
+            t < -(_releaseVelocity) / (decelerationCoefficient)
             ) {
             _localPosY = deceleration + _releaseVelocity * t + _localReleasedPosY;
         }

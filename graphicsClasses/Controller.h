@@ -89,6 +89,7 @@ float _mouseCurrentYCoord;
 float _mousePreviousXCoord;
 float _mousePreviousYCoord;
 JBTypes::timePointMs _mouseUpdatingTime;
+JBTypes::timePointMs _mousePressTime;
 std::shared_ptr<const Controller::ScreenDirection> _currentMovementDir;
 bool _mouseIsPressed;
 bool _requestToLeave;

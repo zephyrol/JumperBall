@@ -47,6 +47,7 @@ Controller::Controller(
         _mousePreviousXCoord(0.f),
         _mousePreviousYCoord(0.f),
         _mouseUpdatingTime(),
+        _mousePressTime(),
         _currentMovementDir(nullptr),
         _mouseIsPressed(false),
         _requestToLeave(false),
@@ -90,14 +91,12 @@ void Controller::interactionMouse (const Status& status, float posX, float posY)
     if (status == Controller::Status::Released) {
         if (_mouseIsPressed) {
             releaseMouse(posX, posY);
-            _mouseIsPressed = false;
         }
         return;
     }
 
     if (!_mouseIsPressed) {
         pressMouse(posX, posY);
-        _mouseIsPressed = true;
         return;
     }
     updateMouse(posX, posY);
@@ -244,6 +243,8 @@ void Controller::pressMouse (float posX, float posY) {
     _mouseCurrentXCoord = posX;
     _mouseCurrentYCoord = posY;
     _mouseUpdatingTime = JBTypesMethods::getTimePointMSNow();
+    _mousePressTime = _mouseUpdatingTime;
+    _mouseIsPressed = true;
 }
 
 void Controller::updateMouse (float posX, float posY) {
@@ -299,9 +300,13 @@ void Controller::releaseMouse (float posX, float posY) {
     constexpr float thresholdMoving = 0.05f;
 
     const float distance = computeDistance(_mousePressingXCoord, _mousePressingYCoord, posX, posY);
-    if (distance < thresholdMoving) {
+    constexpr float pressTimeThreshold = 0.3f;
+    if (distance < thresholdMoving
+        && JBTypesMethods::getTimeSecondsSinceTimePoint(_mousePressTime) < pressTimeThreshold
+    ) {
         setValidateMouse();
     }
+    _mouseIsPressed = false;
 }
 
 bool Controller::requestToLeave() const {
@@ -313,7 +318,9 @@ Controller::~Controller() {
 }
 
 float Controller::computeDistance(float x0, float y0, float x1, float y1) {
-    return sqrtf(powf(x1 - x0, 2.f) + powf(y1 - y0, 2.f));
+    const auto x1MinusX0 = x1 - x0;
+    const auto y1MinusY0 = y1 - y0;
+    return sqrtf(x1MinusX0 * x1MinusX0 + y1MinusY0 * y1MinusY0);
 }
 
 void Controller::refreshViewer() {
