@@ -86,10 +86,10 @@ float Page::height() const {
 Label_sptr Page::matchedLabel(float x, float y ) {
     for (const auto& label : _labels) {
         if (
-            x > (label->positionX() - label->width() / 2.f) &&
-            x < (label->positionX() + label->width() / 2.f) &&
-            y > (label->positionY() + _localPosY - label->height() / 2.f) &&
-            y < (label->positionY() + _localPosY + label->height() / 2.f)
+            x > (label->positionX() - label->width()) &&
+            x < (label->positionX() + label->width()) &&
+            y > (label->positionY() + _localPosY - label->height()) &&
+            y < (label->positionY() + _localPosY + label->height())
             ) {
             return label;
         }

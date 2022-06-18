@@ -125,8 +125,7 @@ void Controller::setValidateMouse() {
         return;
     }
     if (_player.status() == Player::Status::InMenu) {
-        const Menu::MenuAnswer menuAnswer =
-            _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
+        const Menu::MenuAnswer menuAnswer = _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
 
         if (menuAnswer.action == Menu::Action::GoLevel) {
             runGame(menuAnswer.newLevel);

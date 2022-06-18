@@ -76,29 +76,30 @@ void Menu::noPageAsCurrentPage() {
 
 Menu::MenuAnswer Menu::mouseClick (float mouseX, float mouseY) {
     Menu::MenuAnswer menuAnswer;
-    if (_currentPage) {
-        const auto& label = _currentPage->matchedLabel(mouseX, mouseY);
-        if (label) {
-            const Page_sptr newPage = _currentPage->child(label);
-            if (newPage) {
-                _currentPage = newPage;
+    if (!_currentPage) {
+        return menuAnswer;
+    }
+    const auto& label = _currentPage->matchedLabel(mouseX, mouseY);
+    if (label) {
+        const Page_sptr newPage = _currentPage->child(label);
+        if (newPage) {
+            _currentPage = newPage;
+        } else if (
+            const std::shared_ptr <const Label::LabelAnswer>& action =
+                label->action()
+            ) {
+            if (action->typeOfAction == Label::TypeOfAction::GoLevel) {
+                noPageAsCurrentPage();
+                _currentPage = nullptr;
+                menuAnswer.action = Menu::Action::GoLevel;
+                menuAnswer.newLevel = action->chooseLevel + 1;
+                _player.status(Player::Status::InTransition);
             } else if (
-                const std::shared_ptr <const Label::LabelAnswer>& action =
-                    label->action()
-                ) {
-                if (action->typeOfAction == Label::TypeOfAction::GoLevel) {
-                    noPageAsCurrentPage();
-                    _currentPage = nullptr;
-                    menuAnswer.action = Menu::Action::GoLevel;
-                    menuAnswer.newLevel = action->chooseLevel + 1;
-                    _player.status(Player::Status::InTransition);
-                } else if (
-                    action->typeOfAction == Label::TypeOfAction::PredefinedAction) {
-                    if (
-                        action->predefinedAction == Label::PredefinedAction::GoBack) {
-                        parentPageAsCurrentPage();
-                        menuAnswer.action = Menu::Action::GoBack;
-                    }
+                action->typeOfAction == Label::TypeOfAction::PredefinedAction) {
+                if (
+                    action->predefinedAction == Label::PredefinedAction::GoBack) {
+                    parentPageAsCurrentPage();
+                    menuAnswer.action = Menu::Action::GoBack;
                 }
             }
         }
