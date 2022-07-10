@@ -1,6 +1,7 @@
 uniform Scene {
     mat4 VP;
     mat4 VPStar;
+    mat4 VPStar2;
     vec3 cameraPosition;
     vec3 lightDirection;
     vec3 flashColor;
@@ -17,6 +18,7 @@ layout(location = 2) in vec3 vs_vertexNormal;
 #ifdef(LEVEL_PASS)
     out vec3 fs_vertexColor;
     out vec4 fs_vertexDepthMapSpace;
+    out vec4 fs_vertexDepthMap2Space;
     out vec3 fs_vertexNormal;
     out vec3 fs_vertexPositionWorld;
 #endif
@@ -44,17 +46,18 @@ void main() {
 
     #ifdef(LEVEL_PASS)
         fs_vertexColor = vs_vertexColor;
-
-        // TODO: apply scale on normal
-        // mat4 normalTransform = mat4(1.0);
-        // fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, w)).xyz);
         fs_vertexNormal = vs_vertexNormal;
         fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
         fs_vertexDepthMapSpace = VPStar * vertexPositionWorldSpace;
+        fs_vertexDepthMap2Space = VPStar2 * vertexPositionWorldSpace;
         gl_Position = VP * vertexPositionWorldSpace;
     #endif
 
     #ifdef(SHADOW_PASS)
         gl_Position = VPStar * vertexPositionWorldSpace;
+    #endif
+
+    #ifdef(SHADOW_PASS_2)
+        gl_Position = VPStar2 * vertexPositionWorldSpace;
     #endif
 }

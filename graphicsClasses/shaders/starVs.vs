@@ -1,6 +1,7 @@
 uniform Scene {
     mat4 VP;
     mat4 VPStar;
+    mat4 VPStar2;
     vec3 cameraPosition;
     vec3 lightDirection;
     vec3 flashColor;
@@ -13,8 +14,10 @@ layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 4) in vec3 vs_centerToStar;
 layout(location = 5) in vec3 vs_rotationCenter;
 layout(location = 6) in vec3 vs_rotationAxis;
+layout(location = 7) in vec3 vs_color;
 
 out vec2 fs_vertexPosition;
+out vec3 fs_color;
 
 vec4 createRotationQuaternion() {
     const float radiansPerSeconds = 0.6;
@@ -56,6 +59,7 @@ void main() {
     const float starRadius = 5.0;
 
     fs_vertexPosition = vs_vertexPosition.xy;
+    fs_color = vs_color;
 
     gl_Position = VP * starTranslation() * starRotation() *
                   vec4(vs_centerToStar + starRadius * vs_vertexPosition, 1.0);

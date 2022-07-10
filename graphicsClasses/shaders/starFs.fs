@@ -1,6 +1,7 @@
 uniform Scene {
     mat4 VP;
     mat4 VPStar;
+    mat4 VPStar2;
     vec3 cameraPosition;
     vec3 lightDirection;
     vec3 flashColor;
@@ -9,13 +10,14 @@ uniform Scene {
 
 out vec4 pixelColor;
 in vec2 fs_vertexPosition;
+in vec3 fs_color;
 
 void main() {
     const vec4 colorInside = vec4(1.0, 1.0, 1.0, 1.0);
-    const vec4 colorOutside = vec4(0.0, 1.0, 1.0, 0.0);
     const float radiusInside = 0.3f;
     const float radiusOutside = 0.5f;
 
+    vec4 colorOutside = vec4(fs_color, 0.0);
     // Star center at the position 0.f,0.f
     float dx = fs_vertexPosition.x;
     float dy = fs_vertexPosition.y;

@@ -79,65 +79,57 @@ void ShaderProgram::verifyLinkStatus() const {
     }
 }
 
-void ShaderProgram::bindUniform (const std::string& name,
-                                 const glm::mat4& value) const {
+void ShaderProgram::bindUniform (const std::string& name, const glm::mat4& value) const {
 
     const GLuint uniformVariableID = fillCacheAndGet(name);
     glUniformMatrix4fv(uniformVariableID, 1, GL_FALSE, &value[0][0]);
 }
 
-void ShaderProgram::bindUniform (const std::string& name,
-                                 const glm::vec4& value) const {
+void ShaderProgram::bindUniform (const std::string& name, const glm::vec4& value) const {
 
     const GLuint uniformVariableID = fillCacheAndGet(name);
     glUniform4fv(uniformVariableID, 1, &value[0]);
 }
 
-void ShaderProgram::bindUniform (const std::string& name,
-                                 const glm::vec3& value) const {
+void ShaderProgram::bindUniform (const std::string& name, const glm::vec3& value) const {
 
     const GLuint uniformVariableID = fillCacheAndGet(name);
     glUniform3fv(uniformVariableID, 1, &value[0]);
 }
 
-void ShaderProgram::bindUniform (const std::string& name,
-                                 const glm::vec2& value) const {
+void ShaderProgram::bindUniform (const std::string& name, const glm::vec2& value) const {
 
     const GLuint uniformVariableID = fillCacheAndGet(name);
     glUniform2fv(uniformVariableID, 1, &value[0]);
 }
 
-void ShaderProgram::bindUniform (const std::string& name,
-                                 const GLfloat& value) const {
+void ShaderProgram::bindUniform (const std::string& name, const GLfloat& value) const {
 
     const GLuint uniformVariableID = fillCacheAndGet(name);
     glUniform1fv(uniformVariableID, 1, &value);
 }
 
-void ShaderProgram::bindUniform (const std::string& name,
-                                 const bool& value) const {
+void ShaderProgram::bindUniform (const std::string& name, const bool& value) const {
 
     const GLuint uniformVariableID = fillCacheAndGet(name);
     glUniform1i(uniformVariableID, value);
 }
 
 
-void ShaderProgram::bindUniform (const std::string& name,
-                                 const int& value) const {
+void ShaderProgram::bindUniform (const std::string& name, const int& value) const {
 
     const GLuint uniformVariableID = fillCacheAndGet(name);
     glUniform1i(uniformVariableID, value);
 }
 
-void ShaderProgram::bindUniform (const std::string& name,
-                                 const std::vector <int>& value) const {
+void ShaderProgram::bindUniform (const std::string& name, const std::vector <int>& value) const {
     const GLuint uniformVariableID = fillCacheAndGet(name);
-    const GLsizei size = static_cast <GLsizei>(value.size());
+    const GLsizei size = static_cast <GLsizei>(
+        value.size());
     glUniform1iv(uniformVariableID, size, value.data());
 }
 
-void ShaderProgram::bindUniform (const std::string& name,
-                                 const std::vector <float>& value) const {
+void ShaderProgram::bindUniform (const std::string& name, const std::vector <float>& value) const {
     const GLuint uniformVariableID = fillCacheAndGet(name);
     const GLsizei size = static_cast <GLsizei>(value.size());
     glUniform1fv(uniformVariableID, size, value.data());

@@ -51,7 +51,6 @@ const RenderPass_sptr _specials;
 const RenderPass_sptr _ball;
 const RenderPass_sptr _star;
 const RenderPass_sptr _screen;
-
 const vecRenderPass_sptr _renderPasses;
 
 const std::shared_ptr<ShadowProcess> _shadowStar;

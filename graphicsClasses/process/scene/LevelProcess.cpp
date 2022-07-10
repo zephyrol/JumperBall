@@ -53,8 +53,6 @@ void LevelProcess::render() const {
     FrameBuffer::setViewportSize(_width, _height);
     _frameBuffer->bindFrameBuffer();
     _frameBuffer->clean();
-    //FrameBuffer::bindDefaultFrameBuffer();
-    //FrameBuffer::cleanDefaultFrameBuffer();
     ShaderProgram::setActiveTexture(0);
     ShaderProgram::bindTexture(_shadowTexture);
 

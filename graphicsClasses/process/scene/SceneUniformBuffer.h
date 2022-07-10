@@ -18,6 +18,7 @@ public:
     void update(
         const glm::mat4& VP,
         const glm::mat4& VPStar,
+        const glm::mat4& VPStar2,
         const glm::vec3& cameraPosition,
         const glm::vec3& lightDirection,
         const glm::vec3& flashColor,
@@ -27,6 +28,7 @@ public:
 private:
     const std::shared_ptr<glm::mat4> _VP;
     const std::shared_ptr<glm::mat4> _VPStar;
+    const std::shared_ptr<glm::mat4> _VPStar2;
     const std::shared_ptr<glm::vec3> _cameraPosition;
     const std::shared_ptr<glm::vec3> _lightDirection;
     const std::shared_ptr<glm::vec3> _flashColor;
@@ -58,6 +60,7 @@ private:
 
     static const std::string nameVP;
     static const std::string nameVPStar;
+    static const std::string nameVPStar2;
     static const std::string nameCameraPosition;
     static const std::string nameLightDirection;
     static const std::string nameFlashColor;

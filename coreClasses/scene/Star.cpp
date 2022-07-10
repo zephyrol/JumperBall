@@ -8,14 +8,16 @@
 #include "Star.h"
 
 Star::Star(
-    const Map& map,
+    const Map &map,
     float radiusInside,
     float radiusOutside,
     float distance,
     float radius,
-    const JBTypes::vec3f& initialDirection,
-    const JBTypes::vec3f& rotationAxis,
-    float radiansPerSecond):
+    const JBTypes::vec3f &initialDirection,
+    const JBTypes::vec3f &rotationAxis,
+    const JBTypes::vec3f &color,
+    float radiansPerSecond
+) :
     _radiusInside(radiusInside),
     _radiusOutside(radiusOutside),
     _distance(distance),
@@ -25,6 +27,7 @@ Star::Star(
     _rotationCenter(map.getCenterMap()),
     _envSize(map.getLargestSize()),
     _radiansPerSeconds(radiansPerSecond),
+    _color(color),
     _creationTime(JBTypesMethods::getTimePointMSNow()) {
 
 }
@@ -49,32 +52,13 @@ float Star::getTimeSinceCreation() const {
     return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
 
-std::shared_ptr <Star> Star::createBlurStar (const Map& map) {
-    const JBTypes::vec3f initialDirection = { 0.f, 0.f, -1.f };
-    return std::make_shared <Star>(
-        map,
-        0.3f,
-        0.5f,
-        50.f,
-        5.f,
-        initialDirection,
-        JBTypesMethods::normalize({ 0.5f, 1.f, 0.f }),
-        0.6f
-        );
-}
-
-const JBTypes::vec3f& Star::rotationCenter() const {
+const JBTypes::vec3f &Star::rotationCenter() const {
     return _rotationCenter;
 }
 
 float Star::envSize() const {
     return _envSize;
 }
-
-const JBTypes::vec3f& Star::initialDirection() const {
-    return _initialDirection;
-}
-
 
 JBTypes::Quaternion Star::getRotation() const {
     const float angle = getTimeSinceCreation() * _radiansPerSeconds;
@@ -89,9 +73,9 @@ JBTypes::vec3f Star::lightDirection() const {
         JBTypesMethods::scalarApplication(
             sinf(angle),
             JBTypesMethods::cross(_rotationAxis, _initialDirection))
-        );
+    );
 
-    return JBTypesMethods::scalarApplication(-1.f, toStar);
+    return JBTypesMethods::scalarApplication(-2.f, toStar);
 }
 
 JBTypes::vec3f Star::position() const {
@@ -103,13 +87,51 @@ SceneElement::GlobalState Star::getGlobalState() const {
     return SceneElement::GlobalState::United;
 }
 
-SceneElement::StaticValues <JBTypes::vec3f> Star::getStaticVec3fValues() const {
-    return { JBTypesMethods::scalarApplication(_distance,_initialDirection), _rotationCenter, _rotationAxis};
+SceneElement::StaticValues<JBTypes::vec3f> Star::getStaticVec3fValues() const {
+    return {
+        JBTypesMethods::scalarApplication(_distance, _initialDirection),
+        _rotationCenter,
+        _rotationAxis,
+        _color
+    };
 }
 
 SceneElement::DynamicValues<float> Star::getDynamicFloats() const {
     return {
-        { "timeSinceCreation", getTimeSinceCreation() }
+        {"timeSinceCreation", getTimeSinceCreation()}
     };
 }
+
+std::shared_ptr<Star> Star::createBlurStar(const Map &map) {
+    const JBTypes::vec3f initialDirection = {0.f, 0.f, -1.f};
+    const JBTypes::vec3f color = {0.f, 1.f, 1.f};
+    return std::make_shared<Star>(
+        map,
+        0.3f,
+        0.5f,
+        50.f,
+        5.f,
+        initialDirection,
+        JBTypesMethods::normalize({0.5f, 1.f, 0.f}),
+        color,
+        0.6f
+    );
+}
+
+std::shared_ptr<Star> Star::createGreenStar(const Map &map) {
+    const JBTypes::vec3f initialDirection = {0.f, 0.f, -1.f};
+    const JBTypes::vec3f color = {0.f, 1.f, 0.f};
+    return std::make_shared<Star>(
+        map,
+        0.3f,
+        0.5f,
+        55.f,
+        5.f,
+        initialDirection,
+        JBTypesMethods::normalize({0.5f, -1.f, 0.f}),
+        color,
+        1.3f
+    );
+}
+
 
