@@ -22,8 +22,12 @@ in vec3 fs_vertexPositionWorld;
 out vec4 pixelColor;
 
 const vec3 ambientLightIntensity = vec3(0.7, 0.7, 0.7);
-const vec3 diffuseLightIntensity = vec3(0.25, 0.25, 0.25);
-const vec3 specularLightIntensity = vec3(0.25, 0.25, 0.25);
+
+const vec3 diffuseLightIntensity = vec3(0.20, 0.25, 0.25);
+const vec3 specularLightIntensity = vec3(0.0, 0.25, 0.25);
+
+const vec3 diffuseLight2Intensity = vec3(0.25, 0.20, 0.25);
+const vec3 specularLight2Intensity = vec3(0.25, 0.0, 0.25);
 
 vec3 getLightContribution(vec3 toCamera, vec3 lightDir, vec3 diffuseLightInt, vec3 specularLightInt) {
     vec3 toLight = -lightDir;
@@ -79,8 +83,8 @@ void main() {
             composition += getLightContribution(
                 toCamera,
                 light2Direction,
-                diffuseLightIntensity,
-                specularLightIntensity
+                diffuseLight2Intensity,
+                specularLight2Intensity
             );
         }
 

@@ -126,9 +126,9 @@ std::shared_ptr<Star> Star::createBlurStar(const Map &map) {
     );
 }
 
-std::shared_ptr<Star> Star::createGreenStar(const Map &map) {
+std::shared_ptr<Star> Star::createPurpleStar(const Map &map) {
     const JBTypes::vec3f initialDirection = {0.f, 0.f, -1.f};
-    const JBTypes::vec3f color = {0.f, 1.f, 0.f};
+    const JBTypes::vec3f color = {1.f, 0.f, 1.f};
     return std::make_shared<Star>(
         map,
         0.3f,

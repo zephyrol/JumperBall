@@ -10,7 +10,7 @@ Scene::Scene(const std::string &mapContent, float screenRatio) :
     _map(MapGenerator::loadMap(mapContent)),
     _camera(std::make_shared<Camera>(*_map, screenRatio)),
     _star(Star::createBlurStar(*_map)),
-    _star2(Star::createGreenStar(*_map)) {
+    _star2(Star::createPurpleStar(*_map)) {
 }
 
 Player::Status Scene::update(const Player::Status &status, const Scene::ActionKey &key) {
