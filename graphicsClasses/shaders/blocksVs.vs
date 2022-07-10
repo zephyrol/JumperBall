@@ -34,14 +34,13 @@ layout(location = 3) in vec3 vs_blockPosition;
 #endif
 
 
-
 void main() {
     vec3 position = (vs_vertexPosition - vs_blockPosition) * vec3(scale) + vs_blockPosition + translation;
     vec4 positionVec4 = vec4(position, 1.0);
 
     #ifdef(LEVEL_PASS)
         fs_vertexColor = vs_vertexColor;
-        fs_vertexNormal = vs_vertexNormal; // normalize((N * vec4(vs_vertexNormal,1.0)).xyz);
+        fs_vertexNormal = vs_vertexNormal;
         fs_vertexPositionWorld = position;
         fs_vertexDepthMapSpace = biasMatrix * VPStar * positionVec4;
         fs_vertexDepthMap2Space = biasMatrix * VPStar2 * positionVec4;

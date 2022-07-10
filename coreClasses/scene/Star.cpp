@@ -96,6 +96,14 @@ SceneElement::StaticValues<JBTypes::vec3f> Star::getStaticVec3fValues() const {
     };
 }
 
+
+SceneElement::StaticValues<float> Star::getStaticFloatValues() const {
+    return {
+        _radiansPerSeconds
+    };
+}
+
+
 SceneElement::DynamicValues<float> Star::getDynamicFloats() const {
     return {
         {"timeSinceCreation", getTimeSinceCreation()}
@@ -130,8 +138,7 @@ std::shared_ptr<Star> Star::createGreenStar(const Map &map) {
         initialDirection,
         JBTypesMethods::normalize({0.5f, -1.f, 0.f}),
         color,
-        1.3f
+        1.1f
     );
 }
-
 

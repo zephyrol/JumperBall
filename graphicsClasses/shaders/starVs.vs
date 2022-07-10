@@ -12,17 +12,17 @@ uniform Scene {
 uniform float timeSinceCreation;
 
 layout(location = 0) in vec3 vs_vertexPosition;
-layout(location = 4) in vec3 vs_centerToStar;
-layout(location = 5) in vec3 vs_rotationCenter;
-layout(location = 6) in vec3 vs_rotationAxis;
-layout(location = 7) in vec3 vs_color;
+layout(location = 4) in float vs_velocity;
+layout(location = 5) in vec3 vs_centerToStar;
+layout(location = 6) in vec3 vs_rotationCenter;
+layout(location = 7) in vec3 vs_rotationAxis;
+layout(location = 8) in vec3 vs_color;
 
 out vec2 fs_vertexPosition;
 out vec3 fs_color;
 
 vec4 createRotationQuaternion() {
-    const float radiansPerSeconds = 0.6;
-    float angle = radiansPerSeconds * timeSinceCreation;
+    float angle = vs_velocity * timeSinceCreation;
     float angleOverTwo = angle / 2.0;
     return vec4(vec3(sin(angleOverTwo) * vs_rotationAxis), cos(angleOverTwo));
 }

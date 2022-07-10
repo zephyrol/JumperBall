@@ -15,6 +15,7 @@ uniform sampler2D depth2Texture;
 
 in vec3 fs_vertexColor;
 in vec4 fs_vertexDepthMapSpace;
+in vec4 fs_vertexDepthMap2Space;
 in vec3 fs_vertexNormal;
 in vec3 fs_vertexPositionWorld;
 
@@ -40,7 +41,6 @@ vec3 getLightContribution(vec3 toCamera, vec3 lightDir, vec3 diffuseLightInt, ve
 void main() {
 
     float zThreshold = fs_vertexDepthMapSpace.z - 0.001;
-
     bool inFirstShadow;
     if (texture(depthTexture, fs_vertexDepthMapSpace.xy).x < zThreshold) {
         inFirstShadow = true;
@@ -49,7 +49,8 @@ void main() {
     }
 
     bool inSecondShadow;
-    if (texture(depth2Texture, fs_vertexDepthMapSpace.xy).x < zThreshold) {
+    float zThreshold2 = fs_vertexDepthMap2Space.z - 0.001;
+    if (texture(depth2Texture, fs_vertexDepthMap2Space.xy).x < zThreshold2) {
         inSecondShadow = true;
     } else {
         inSecondShadow = false;
@@ -74,14 +75,14 @@ void main() {
             );
         }
 
-        /*if(!inSecondShadow) {
+        if(!inSecondShadow) {
             composition += getLightContribution(
                 toCamera,
                 light2Direction,
                 diffuseLightIntensity,
                 specularLightIntensity
             );
-        }*/
+        }
 
     }
     pixelColor = vec4(composition, 1.0);

@@ -143,7 +143,7 @@ void main() {
         gl_Position = VPStar * vertexPositionWorldSpace;
     #endif
 
-    #ifdef(SHADOW_PASS)
+    #ifdef(SHADOW_PASS_2)
         gl_Position = VPStar2 * vertexPositionWorldSpace;
     #endif
 
