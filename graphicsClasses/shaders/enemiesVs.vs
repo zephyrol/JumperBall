@@ -4,6 +4,7 @@ uniform Scene {
     mat4 VPStar2;
     vec3 cameraPosition;
     vec3 lightDirection;
+    vec3 light2Direction;
     vec3 flashColor;
     float teleportationCoeff;
 };
@@ -21,6 +22,14 @@ layout(location = 2) in vec3 vs_vertexNormal;
     out vec4 fs_vertexDepthMap2Space;
     out vec3 fs_vertexNormal;
     out vec3 fs_vertexPositionWorld;
+
+    const mat4 biasMatrix = mat4(
+        0.5, 0.0, 0.0, 0.0,
+        0.0, 0.5, 0.0, 0.0,
+        0.0, 0.0, 0.5, 0.0,
+        0.5, 0.5, 0.5, 1.0
+    );
+
 #endif
 
 mat4 translate (vec3 translationVec) {
@@ -48,8 +57,8 @@ void main() {
         fs_vertexColor = vs_vertexColor;
         fs_vertexNormal = vs_vertexNormal;
         fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
-        fs_vertexDepthMapSpace = VPStar * vertexPositionWorldSpace;
-        fs_vertexDepthMap2Space = VPStar2 * vertexPositionWorldSpace;
+        fs_vertexDepthMapSpace = biasMatrix * VPStar * vertexPositionWorldSpace;
+        fs_vertexDepthMap2Space = biasMatrix * VPStar2 * vertexPositionWorldSpace;
         gl_Position = VP * vertexPositionWorldSpace;
     #endif
 

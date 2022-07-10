@@ -7,6 +7,7 @@
 
 #ifndef SCENE_RENDERING_H
 #define SCENE_RENDERING_H
+
 #include "componentsGeneration/MeshGenerator.h"
 #include "Rendering.h"
 #include "Scene.h"
@@ -19,56 +20,58 @@
 #include "process/scene/SceneUniformBuffer.h"
 
 
-class SceneRendering:public Rendering {
+class SceneRendering : public Rendering {
 
 public:
-SceneRendering(
-    const Scene& scene,
-    GLsizei width,
-    GLsizei height,
-    GLint defaultFrameBuffer,
-    const JBTypes::FileContent& fileContent
+    SceneRendering(
+        const Scene &scene,
+        GLsizei width,
+        GLsizei height,
+        GLint defaultFrameBuffer,
+        const JBTypes::FileContent &fileContent
     );
 
-void update() override;
-void freeGPUMemory() override;
+    void update() override;
 
-void render() const override;
+    void freeGPUMemory() override;
+
+    void render() const override;
 
 private:
 
-static constexpr size_t heightBloomTexture = 192;
+    static constexpr size_t heightBloomTexture = 192;
 
-const GLsizei _expensivePreprocessWidth;
-const GLsizei _expensivePreprocessHeight;
+    const GLsizei _expensivePreprocessWidth;
+    const GLsizei _expensivePreprocessHeight;
 
-const Scene& _scene;
+    const Scene &_scene;
 
-const RenderPass_sptr _blocks;
-const RenderPass_sptr _items;
-const RenderPass_sptr _enemies;
-const RenderPass_sptr _specials;
-const RenderPass_sptr _ball;
-const RenderPass_sptr _star;
-const RenderPass_sptr _screen;
-const vecRenderPass_sptr _renderPasses;
+    const RenderPass_sptr _blocks;
+    const RenderPass_sptr _items;
+    const RenderPass_sptr _enemies;
+    const RenderPass_sptr _specials;
+    const RenderPass_sptr _ball;
+    const RenderPass_sptr _star;
+    const RenderPass_sptr _screen;
+    const vecRenderPass_sptr _renderPasses;
 
-const std::shared_ptr<ShadowProcess> _shadowStar;
-const std::shared_ptr<LevelProcess> _sceneRenderingProcess;
-const std::shared_ptr<BrightPassFilterProcess> _brightPassFilter;
-const std::shared_ptr<HorizontalBlurProcess> _horizontalBlur;
-const std::shared_ptr<VerticalBlurProcess> _verticalBlur;
-const std::shared_ptr<BloomProcess> _bloom;
-const vecRenderProcess_sptr _processes;
+    const std::shared_ptr<ShadowProcess> _shadowStar;
+    const std::shared_ptr<ShadowProcess> _shadowStar2;
+    const std::shared_ptr<LevelProcess> _sceneRenderingProcess;
+    const std::shared_ptr<BrightPassFilterProcess> _brightPassFilter;
+    const std::shared_ptr<HorizontalBlurProcess> _horizontalBlur;
+    const std::shared_ptr<VerticalBlurProcess> _verticalBlur;
+    const std::shared_ptr<BloomProcess> _bloom;
+    const vecRenderProcess_sptr _processes;
 
-SceneUniformBuffer _sceneUniformBuffer;
+    SceneUniformBuffer _sceneUniformBuffer;
 
-vecCstShaderProgram_sptr getShaderProgramsUsingUniformBuffer() const;
+    vecCstShaderProgram_sptr getShaderProgramsUsingUniformBuffer() const;
 
-static const std::string VPName;
-static const std::string VPStarName;
-static const std::string cameraPositionName;
-static const std::string lightName;
+    static const std::string VPName;
+    static const std::string VPStarName;
+    static const std::string cameraPositionName;
+    static const std::string lightName;
 };
 
 #endif /* SCENE_RENDERING_H */

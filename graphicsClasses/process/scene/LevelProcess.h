@@ -15,6 +15,7 @@ public:
         GLsizei width,
         GLsizei height,
         GLuint shadowTexture,
+        GLuint shadow2Texture,
         const RenderPass_sptr& blocks,
         const RenderPass_sptr& items,
         const RenderPass_sptr& enemies,
@@ -42,6 +43,7 @@ private:
     const RenderPass_sptr _star;
 
     const GLuint _shadowTexture;
+    const GLuint _shadow2Texture;
     const CstShaderProgram_sptr _sceneBlocksShader;
     const CstShaderProgram_sptr _sceneItemsShader;
     const CstShaderProgram_sptr _sceneEnemiesShader;

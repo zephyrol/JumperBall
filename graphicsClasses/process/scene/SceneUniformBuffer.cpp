@@ -16,6 +16,7 @@ SceneUniformBuffer::SceneUniformBuffer(
             nameVPStar2,
             nameCameraPosition,
             nameLightDirection,
+            nameLight2Direction,
             nameFlashColor,
             nameTeleportationCoeff
         }
@@ -25,6 +26,7 @@ SceneUniformBuffer::SceneUniformBuffer(
     _VPStar2(std::make_shared<glm::mat4>()),
     _cameraPosition(std::make_shared<glm::vec3>()),
     _lightDirection(std::make_shared<glm::vec3>()),
+    _light2Direction(std::make_shared<glm::vec3>()),
     _flashColor(std::make_shared<glm::vec3>()),
     _teleportationCoeff(std::make_shared<glm::vec1>()),
     _uniformBufferContent(_bufferSize),
@@ -39,6 +41,7 @@ void SceneUniformBuffer::update(
     const glm::mat4 &VPStar2,
     const glm::vec3 &cameraPosition,
     const glm::vec3 &lightDirection,
+    const glm::vec3 &light2Direction,
     const glm::vec3 &flashColor,
     const glm::vec1 &teleportationCoeff
 ) {
@@ -49,6 +52,7 @@ void SceneUniformBuffer::update(
 
     updateUniformBufferContent(_cameraPosition, cameraPosition, _vec3DataLocations);
     updateUniformBufferContent(_lightDirection, lightDirection, _vec3DataLocations);
+    updateUniformBufferContent(_light2Direction, light2Direction, _vec3DataLocations);
     updateUniformBufferContent(_flashColor, flashColor, _vec3DataLocations);
 
     updateUniformBufferContent(_teleportationCoeff, teleportationCoeff, _vec1DataLocations);
@@ -74,7 +78,12 @@ SceneUniformBuffer::DataLocation<glm::vec3> SceneUniformBuffer::createVec3DataLo
         },
         {
             _lightDirection,
-            {_uniformBufferContent.data() + _fieldOffsets.at(nameLightDirection), &(*_lightDirection)[0]}},
+            {_uniformBufferContent.data() + _fieldOffsets.at(nameLightDirection), &(*_lightDirection)[0]}
+        },
+        {
+            _light2Direction,
+            {_uniformBufferContent.data() + _fieldOffsets.at(nameLight2Direction), &(*_light2Direction)[0]}
+        },
         {
             _flashColor,
             {_uniformBufferContent.data() + _fieldOffsets.at(nameFlashColor),     &(*_flashColor)[0]}
@@ -100,5 +109,6 @@ const std::string SceneUniformBuffer::nameVPStar = "VPStar";
 const std::string SceneUniformBuffer::nameVPStar2 = "VPStar2";
 const std::string SceneUniformBuffer::nameCameraPosition = "cameraPosition";
 const std::string SceneUniformBuffer::nameLightDirection = "lightDirection";
+const std::string SceneUniformBuffer::nameLight2Direction = "light2Direction";
 const std::string SceneUniformBuffer::nameFlashColor = "flashColor";
 const std::string SceneUniformBuffer::nameTeleportationCoeff = "teleportationCoeff";

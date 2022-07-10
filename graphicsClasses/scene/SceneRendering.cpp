@@ -35,13 +35,24 @@ SceneRendering::SceneRendering(
         _items,
         _enemies,
         _specials,
-        _ball
+        _ball,
+        true
+    )),
+    _shadowStar2(std::make_shared<ShadowProcess>(
+        fileContent,
+        _blocks,
+        _items,
+        _enemies,
+        _specials,
+        _ball,
+        false
     )),
     _sceneRenderingProcess(std::make_shared<LevelProcess>(
         fileContent,
         _width,
         _height,
         *_shadowStar->getRenderTexture(),
+        *_shadowStar2->getRenderTexture(),
         _blocks,
         _items,
         _enemies,
@@ -79,6 +90,7 @@ SceneRendering::SceneRendering(
     )),
     _processes({
                    _shadowStar,
+                   _shadowStar2,
                    _sceneRenderingProcess,
                    _brightPassFilter,
                    _horizontalBlur,
@@ -105,6 +117,7 @@ void SceneRendering::update() {
         Camera::genVPMatrixFromStar((*_scene.getStar2())),
         sceneCamera->pos(),
         Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection()),
+        Utility::convertToOpenGLFormat(_scene.getStar2()->lightDirection()),
         Utility::colorAsVec3(sceneBall->getTeleportationColor()),
         glm::vec1(sceneBall->getTeleportationCoefficient())
     );
@@ -136,6 +149,13 @@ void SceneRendering::freeGPUMemory() {
 
 vecCstShaderProgram_sptr SceneRendering::getShaderProgramsUsingUniformBuffer() const {
     auto shadersPrograms = _shadowStar->getShaderPrograms();
+
+    const auto shadowStar2ShaderPrograms = _shadowStar2->getShaderPrograms();
+    shadersPrograms.insert(
+        shadersPrograms.end(),
+        shadowStar2ShaderPrograms.begin(),
+        shadowStar2ShaderPrograms.end()
+    );
 
     const auto levelShaderPrograms = _sceneRenderingProcess->getShaderPrograms();
     shadersPrograms.insert(shadersPrograms.end(), levelShaderPrograms.begin(), levelShaderPrograms.end());

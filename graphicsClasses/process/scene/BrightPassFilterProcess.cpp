@@ -5,25 +5,24 @@
 #include "BrightPassFilterProcess.h"
 
 BrightPassFilterProcess::BrightPassFilterProcess(
-        const JBTypes::FileContent& fileContent,
-        GLsizei width,
-        GLsizei height,
-        GLuint hdrSceneTexture,
-        const RenderPass_sptr& screen
-):
+    const JBTypes::FileContent &fileContent,
+    GLsizei width,
+    GLsizei height,
+    GLuint hdrSceneTexture,
+    const RenderPass_sptr &screen
+) :
     _width(width),
     _height(height),
     _screen(screen),
     _frameBuffer(FrameBuffer_uptr(new FrameBuffer(
-        width,
-        height,
-        FrameBuffer::Content::HDR,
-        false
-        ))
-),
+                     width,
+                     height,
+                     FrameBuffer::Content::HDR,
+                     false
+                 ))
+    ),
     _hdrSceneTexture(hdrSceneTexture),
-    _brightPassFilterShader(createBrightPassFilterProcessShaderProgram(fileContent))
-{
+    _brightPassFilterShader(createBrightPassFilterProcessShaderProgram(fileContent)) {
 }
 
 void BrightPassFilterProcess::render() const {
@@ -46,7 +45,7 @@ void BrightPassFilterProcess::freeGPUMemory() {
 }
 
 CstShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShaderProgram(
-    const JBTypes::FileContent& fileContent
+    const JBTypes::FileContent &fileContent
 ) {
     auto shader = ShaderProgram::createShaderProgram(fileContent, "basicFboVs.vs", "brightPassFilter.fs");
     shader->use();
@@ -55,6 +54,6 @@ CstShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShad
 }
 
 vecCstShaderProgram_sptr BrightPassFilterProcess::getShaderPrograms() const {
-    return { _brightPassFilterShader };
+    return {_brightPassFilterShader};
 }
 
