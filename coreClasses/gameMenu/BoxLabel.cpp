@@ -8,9 +8,9 @@
 #include "BoxLabel.h"
 
 BoxLabel::BoxLabel(
-    const Label::WidthUnit& widthUnit,
-    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    const Label::WidthUnit &widthUnit,
+    const std::function<Label::LabelDimensions(float)> &updateLabelSizesFct,
     float ratio
-):
+) :
     Label(widthUnit, updateLabelSizesFct, ratio) {
 }

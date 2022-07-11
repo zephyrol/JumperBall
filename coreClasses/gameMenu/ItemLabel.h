@@ -7,15 +7,16 @@
 
 #ifndef OBJECTLABEL_H
 #define OBJECTLABEL_H
+
 #include "Label.h"
 
 
-class ItemLabel:public Label {
+class ItemLabel : public Label {
 public:
-ItemLabel(
-    const Label::WidthUnit& widthUnit,
-    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
-    float ratio
+    ItemLabel(
+        const Label::WidthUnit &widthUnit,
+        const std::function<Label::LabelDimensions(float)> &updateLabelSizesFct,
+        float ratio
     );
 
 };

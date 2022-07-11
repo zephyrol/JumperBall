@@ -51,6 +51,7 @@ LevelProcess::LevelProcess(
 
 void LevelProcess::render() const {
 
+    glCullFace(GL_BACK);
     FrameBuffer::setViewportSize(_width, _height);
     _frameBuffer->bindFrameBuffer();
     _frameBuffer->clean();

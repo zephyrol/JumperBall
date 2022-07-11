@@ -8,12 +8,12 @@
 #include "Label.h"
 
 Label::Label(
-    const Label::WidthUnit& widthUnit,
-    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
+    const Label::WidthUnit &widthUnit,
+    const std::function<Label::LabelDimensions(float)> &updateLabelSizesFct,
     float ratio,
     bool activated,
-    const std::shared_ptr <LabelAnswer>& action,
-    bool fixed):
+    const std::shared_ptr<LabelAnswer> &action,
+    bool fixed) :
     _widthUnit(widthUnit),
     _updateLabelSizes(updateLabelSizesFct),
     _dimensions(_updateLabelSizes(ratio)),
@@ -31,7 +31,7 @@ float Label::height() const {
     return _dimensions.height;
 }
 
-const vecCstLabel_sptr& Label::children() const {
+const vecCstLabel_sptr &Label::children() const {
     return _children;
 }
 
@@ -63,7 +63,7 @@ void Label::deactivate() {
     _activated = false;
 }
 
-void Label::updateLabelsLevels (vecLabel_sptr& labels, size_t end) {
+void Label::updateLabelsLevels(vecLabel_sptr &labels, size_t end) {
     for (size_t i = 0; i < labels.size(); i++) {
         if (i < end) {
             labels.at(i)->activate();
@@ -73,11 +73,11 @@ void Label::updateLabelsLevels (vecLabel_sptr& labels, size_t end) {
     }
 }
 
-const std::shared_ptr <Label::LabelAnswer>& Label::action() const {
+const std::shared_ptr<Label::LabelAnswer> &Label::action() const {
     return _action;
 }
 
-const Label::WidthUnit& Label::widthUnit() const {
+const Label::WidthUnit &Label::widthUnit() const {
     return _widthUnit;
 }
 

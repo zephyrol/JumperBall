@@ -7,20 +7,22 @@
 
 #ifndef ARROWLABEL_H
 #define ARROWLABEL_H
+
 #include "Label.h"
 
-class ArrowLabel:public Label {
+class ArrowLabel : public Label {
 public:
-ArrowLabel(
-    const Label::WidthUnit& widthUnit,
-    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
-    float ratio,
-    const std::shared_ptr <LabelAnswer>& action = nullptr,
-    bool activated = true
+    ArrowLabel(
+        const Label::WidthUnit &widthUnit,
+        const std::function<Label::LabelDimensions(float)> &updateLabelSizesFct,
+        float ratio,
+        const std::shared_ptr<LabelAnswer> &action = nullptr,
+        bool activated = true
     );
-virtual ~ArrowLabel() = default;
 
-vecGeometry genGeometries() const override;
+    virtual ~ArrowLabel() = default;
+
+    vecGeometry genGeometries() const override;
 
 private:
 };

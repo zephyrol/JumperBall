@@ -29,6 +29,8 @@ const vec3 specularLightIntensity = vec3(0.0, 0.25, 0.25);
 const vec3 diffuseLight2Intensity = vec3(0.25, 0.20, 0.25);
 const vec3 specularLight2Intensity = vec3(0.25, 0.0, 0.25);
 
+const float shadowTextureSize = 1024.0;
+
 vec3 getLightContribution(vec3 toCamera, vec3 lightDir, vec3 diffuseLightInt, vec3 specularLightInt) {
     vec3 toLight = -lightDir;
     float dotToLightVertexNormal = dot(toLight, fs_vertexNormal);
@@ -42,23 +44,38 @@ vec3 getLightContribution(vec3 toCamera, vec3 lightDir, vec3 diffuseLightInt, ve
     return diffuseComponent + specularComponent;
 }
 
-void main() {
+float evaluateShadowOffset(vec4 vertexDepthMapSpace, float offsetX, float offsetY, int textureNumber) {
+    vec2 shadowCoord = vec2(
+        vertexDepthMapSpace.x + offsetX / shadowTextureSize,
+        vertexDepthMapSpace.y + offsetY / shadowTextureSize
+    );
+    if(textureNumber == 0) {
+        if (texture(depthTexture, shadowCoord.xy).x < vertexDepthMapSpace.z) {
+            return 0.0;
+        }
+        return 0.25;
+    }
+    if (texture(depth2Texture, shadowCoord.xy).x < vertexDepthMapSpace.z) {
+        return 0.0;
+    }
+    return 0.25;
+}
 
-    float zThreshold = fs_vertexDepthMapSpace.z - 0.001;
+float evaluateShadow(vec4 vertexDepthMapSpace, int textureNumber) {
+    float shadowCoeff = 0.0;
+    shadowCoeff += evaluateShadowOffset(vertexDepthMapSpace, 1.0, 1.0, textureNumber);
+    shadowCoeff += evaluateShadowOffset(vertexDepthMapSpace, -1.0, 1.0, textureNumber);
+    shadowCoeff += evaluateShadowOffset(vertexDepthMapSpace, 1.0, -1.0, textureNumber);
+    shadowCoeff += evaluateShadowOffset(vertexDepthMapSpace, -1.0, -1.0, textureNumber);
+    return shadowCoeff;
+}
+
+void main(){
+
     bool inFirstShadow;
-    if (texture(depthTexture, fs_vertexDepthMapSpace.xy).x < zThreshold) {
-        inFirstShadow = true;
-    } else {
-        inFirstShadow = false;
-    }
 
-    bool inSecondShadow;
-    float zThreshold2 = fs_vertexDepthMap2Space.z - 0.001;
-    if (texture(depth2Texture, fs_vertexDepthMap2Space.xy).x < zThreshold2) {
-        inSecondShadow = true;
-    } else {
-        inSecondShadow = false;
-    }
+    float firstShadowCoeff = evaluateShadow(fs_vertexDepthMapSpace, 0);
+    float secondShadowCoeff = evaluateShadow(fs_vertexDepthMap2Space, 1);
 
     const vec3 fireEffet = vec3(10.0, 0.2, 0.0);
 
@@ -67,11 +84,11 @@ void main() {
         (1.0 - burningCoeff) * fs_vertexColor + burningCoeff * fireEffet
     );
 
-    if (!(inFirstShadow && inSecondShadow)) {
+    if (!(firstShadowCoeff == 0.0 && secondShadowCoeff == 0.0)) {
 
         vec3 toCamera = normalize(cameraPosition - fs_vertexPositionWorld);
-        if(!inFirstShadow) {
-            composition += getLightContribution(
+        if(firstShadowCoeff != 0.0) {
+            composition += firstShadowCoeff * getLightContribution(
                 toCamera,
                 lightDirection,
                 diffuseLightIntensity,
@@ -79,8 +96,8 @@ void main() {
             );
         }
 
-        if(!inSecondShadow) {
-            composition += getLightContribution(
+        if(secondShadowCoeff != 0.0) {
+            composition += secondShadowCoeff * getLightContribution(
                 toCamera,
                 light2Direction,
                 diffuseLight2Intensity,

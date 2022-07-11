@@ -121,7 +121,6 @@ GLuint FrameBuffer::getHandle() const {
     return _fboHandle;
 }
 
-
 const glm::vec3 FrameBuffer::backgroundColor { 0.f, 0.f, .1f };
 
 void FrameBuffer::setViewportSize(GLsizei resolutionX, GLsizei resolutionY) {
