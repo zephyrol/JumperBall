@@ -6,10 +6,11 @@
 #define JUMPERBALLAPPLICATION_LEFTNODE_H
 
 
-#include "Node.h"
+#include "FillingNode.h"
 
-class LeftNode: public Node {
-    LeftNode(vecNode_sptr&& children, float ratio);
+class LeftNode: public FillingNode {
+public:
+    LeftNode(const Node_sptr &parent, float ratio);
 };
 
 

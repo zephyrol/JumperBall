@@ -8,11 +8,13 @@
 
 #include "Node.h"
 
-class FillingNode: public Node {
-
-    FillingNode(CstNode_sptr &parent, float ratio);
-
-    Node::LocalProperties computeLocalProperties(const Node* parent) override;
+class FillingNode : public Node {
+public:
+    FillingNode(
+        const Node_sptr &parent,
+        float ratio,
+        const std::function<JBTypes::vec2f(const JBTypes::vec2f &)> &computePositionFromSize
+    );
 };
 
 
