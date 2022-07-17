@@ -84,4 +84,8 @@ CstNode_rptr Node::getClickNode(float screenX, float screenY) {
     return this;
 }
 
+float Node::getScreenSpaceHeight() const {
+    return _screenTransform->height;
+}
+
 

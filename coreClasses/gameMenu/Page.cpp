@@ -10,11 +10,11 @@
  * Created on 28 avril 2020, 18:56
  */
 
-Page::Page(const Page_sptr& parent,
-           const Page::PageFormat& pageFormat,
-           const Page::EscapeAnswer& escapeAnswer,
+Page::Page(const Page_sptr &parent,
+           const Page::PageFormat &pageFormat,
+           const Page::EscapeAnswer &escapeAnswer,
            float height,
-           bool visibleOnParent):
+           bool visibleOnParent) :
     _pageFormat(pageFormat),
     _bridges{},
     _labels{},
@@ -34,11 +34,11 @@ Page::Page(const Page_sptr& parent,
     _releaseVelocity(0.f) {
 }
 
-std::weak_ptr <const Page> Page::parent() const {
+std::weak_ptr<const Page> Page::parent() const {
     return _parent;
 }
 
-std::weak_ptr <Page> Page::parent() {
+std::weak_ptr<Page> Page::parent() {
     return _parent;
 }
 
@@ -46,7 +46,7 @@ float Page::localPosY() const {
     return _localPosY;
 }
 
-void Page::setBridges (std::unordered_map <Label_sptr, Page_sptr>&& bridges) {
+void Page::setBridges(std::unordered_map<Label_sptr, Page_sptr> &&bridges) {
     _bridges = std::move(bridges);
     _labels = createLabels();
     _cstLabels = createCstLabels();
@@ -57,7 +57,7 @@ bool Page::visibleOnParent() const {
     return _visibleOnParent;
 }
 
-Page_sptr Page::child (const Label_sptr& label) {
+Page_sptr Page::child(const Label_sptr &label) {
     //CstPage_sptr cstPage = static_cast <const Page&>(*this).child(label);
     //return std::const_pointer_cast <Page>(cstPage);
     if (_bridges.find(label) != _bridges.end()) {
@@ -67,7 +67,7 @@ Page_sptr Page::child (const Label_sptr& label) {
     }
 }
 
-const vecCstLabel_sptr& Page::labels() const {
+const vecCstLabel_sptr &Page::labels() const {
     return _cstLabels;
 }
 
@@ -75,8 +75,8 @@ float Page::height() const {
     return _height;
 }
 
-Label_sptr Page::matchedLabel(float x, float y ) {
-    for (const auto& label : _labels) {
+Label_sptr Page::matchedLabel(float x, float y) {
+    for (const auto &label: _labels) {
         if (
             x > (label->positionX() - label->width()) &&
             x < (label->positionX() + label->width()) &&
@@ -89,7 +89,7 @@ Label_sptr Page::matchedLabel(float x, float y ) {
     return nullptr;
 }
 
-void Page::update (bool isPressed, float screenPosY) {
+void Page::update(bool isPressed, float screenPosY) {
 
     if (JBTypesMethods::floatsEqual(_height, 1.f)) {
         return;
@@ -109,7 +109,7 @@ void Page::update (bool isPressed, float screenPosY) {
 
     if (_isPressed) {
         constexpr float thresholdDeltaT = 0.1f; // 100 ms
-        std::list <slideState>::iterator it;
+        std::list<slideState>::iterator it;
         for (
             it = _lastSwipeUpdates.begin();
             it != _lastSwipeUpdates.end() &&
@@ -119,14 +119,14 @@ void Page::update (bool isPressed, float screenPosY) {
         }
 
         _lastSwipeUpdates.erase(it, _lastSwipeUpdates.end());
-        _lastSwipeUpdates.push_front({ now, screenPosY });
+        _lastSwipeUpdates.push_front({now, screenPosY});
         _localPosY = _localPressedPosY + (screenPosY - _pressedScreenPosY);
     }
 
     // Release cases
     if (!isPressed && _isPressed && !_lastSwipeUpdates.empty()) {
-        const slideState& lastSlideState = _lastSwipeUpdates.front();
-        const slideState& olderSlideState = _lastSwipeUpdates.back();
+        const slideState &lastSlideState = _lastSwipeUpdates.front();
+        const slideState &olderSlideState = _lastSwipeUpdates.back();
         float deltaT = JBTypesMethods::getFloatFromDurationMS(
             lastSlideState.first - olderSlideState.first);
 
@@ -137,7 +137,7 @@ void Page::update (bool isPressed, float screenPosY) {
         _isPressed = false;
     }
     if (!_isPressed && !_lastSwipeUpdates.empty()) {
-        const slideState& lastSlideState = _lastSwipeUpdates.front();
+        const slideState &lastSlideState = _lastSwipeUpdates.front();
         const float t = JBTypesMethods::getFloatFromDurationMS(
             now - lastSlideState.first);
         const float deceleration = decelerationCoefficient * powf(t, 2.f) / 2.f;
@@ -159,7 +159,7 @@ void Page::update (bool isPressed, float screenPosY) {
 
 vecLabel_sptr Page::createLabels() const {
     vecLabel_sptr labels;
-    for (const auto& bridge : _bridges) {
+    for (const auto &bridge: _bridges) {
         labels.push_back(bridge.first);
     }
     return labels;
@@ -167,20 +167,20 @@ vecLabel_sptr Page::createLabels() const {
 
 vecCstLabel_sptr Page::createCstLabels() const {
     vecCstLabel_sptr cstLabels;
-    for (const auto& label : _labels) {
-        cstLabels.push_back(label) ;
+    for (const auto &label: _labels) {
+        cstLabels.push_back(label);
     }
     return cstLabels;
 }
 
 
-const Page::EscapeAnswer& Page::getEscapeAnswer() const {
+const Page::EscapeAnswer &Page::getEscapeAnswer() const {
     return _escapeAnswer;
 }
 
-std::vector <Page_sptr> Page::createChildren() const {
-    std::vector <Page_sptr> children;
-    for (const auto& bridge : _bridges) {
+std::vector<Page_sptr> Page::createChildren() const {
+    std::vector<Page_sptr> children;
+    for (const auto &bridge: _bridges) {
         if (bridge.second) {
             children.push_back(bridge.second);
         }
@@ -190,11 +190,11 @@ std::vector <Page_sptr> Page::createChildren() const {
 
 
 SceneElement::GlobalState Page::getGlobalState() const {
-    return SceneElement::GlobalState::United; 
+    return SceneElement::GlobalState::United;
 }
 
 void Page::resize(float screenRatio) {
-    for (const auto& label: _labels) {
+    for (const auto &label: _labels) {
         label->resize(screenRatio);
     }
 }

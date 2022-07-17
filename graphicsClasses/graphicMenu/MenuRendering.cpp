@@ -7,12 +7,12 @@
 #include "MenuRendering.h"
 
 MenuRendering::MenuRendering(
-    const Menu& menu,
-    const FontTexturesGenerator::FTContent& ftContent,
+    const Menu &menu,
+    const FontTexturesGenerator::FTContent &ftContent,
     GLsizei width,
     GLsizei height,
-    const JBTypes::FileContent& fileContent
-    ):
+    const JBTypes::FileContent &fileContent
+) :
     Rendering(width, height),
     _menu(menu),
     _graphicAlphabet(FontTexturesGenerator::genGraphicAlphabet(_menu, height, ftContent)),
@@ -21,12 +21,12 @@ MenuRendering::MenuRendering(
     _renderPasses(createRenderPasses()),
     _pagesProcesses(createPagesProcesses(fileContent)),
     _renderProcesses(createRenderProcesses()),
-    _menuUniformBuffer(getShaderProgramsUsingUniformBuffer()){
+    _menuUniformBuffer(getShaderProgramsUsingUniformBuffer()) {
 }
 
 void MenuRendering::update() {
 
-    const auto& currentPage = _menu.currentPage();
+    const auto &currentPage = _menu.currentPage();
     if (!currentPage) {
         return;
     }
@@ -37,12 +37,12 @@ void MenuRendering::update() {
 }
 
 void MenuRendering::render() const {
-    const auto& currentPage = _menu.currentPage();
+    const auto &currentPage = _menu.currentPage();
     if (!currentPage) {
         return;
     }
     _menuUniformBuffer.bindBufferRange();
-    for (const auto& process: _pagesProcesses.at(currentPage)) {
+    for (const auto &process: _pagesProcesses.at(currentPage)) {
         process->render();
     }
 }
@@ -53,7 +53,7 @@ void MenuRendering::freeGPUMemory() {
         renderProcess->freeGPUMemory();
     }
 
-    for(const auto& renderPass: _renderPasses) {
+    for (const auto &renderPass: _renderPasses) {
         renderPass->freeGPUMemory();
     }
     _menuUniformBuffer.freeGPUMemory();
@@ -64,16 +64,16 @@ void MenuRendering::freeGPUMemory() {
 vecRenderProcess_sptr MenuRendering::createRenderProcesses() const {
     vecRenderProcess_sptr renderProcesses;
     for (const auto &pageProcesses: _pagesProcesses) {
-        const auto& processes = pageProcesses.second;
+        const auto &processes = pageProcesses.second;
         renderProcesses.insert(renderProcesses.end(), processes.begin(), processes.end());
     }
     return renderProcesses;
 }
 
 vecCstShaderProgram_sptr MenuRendering::getShaderProgramsUsingUniformBuffer() const {
-    vecCstShaderProgram_sptr shadersPrograms {};
+    vecCstShaderProgram_sptr shadersPrograms{};
     for (const auto &renderProcess: _renderProcesses) {
-        const auto& processShaderPrograms = renderProcess->getShaderPrograms();
+        const auto &processShaderPrograms = renderProcess->getShaderPrograms();
         shadersPrograms.insert(
             shadersPrograms.end(),
             processShaderPrograms.begin(),
@@ -84,38 +84,38 @@ vecCstShaderProgram_sptr MenuRendering::getShaderProgramsUsingUniformBuffer() co
 }
 
 MenuRendering::PagesProcesses MenuRendering::createPagesProcesses(
-    const JBTypes::FileContent& fileContent
+    const JBTypes::FileContent &fileContent
 ) const {
     MenuRendering::PagesProcesses pagesProcesses;
-    for (const auto& page : _menu.pages()) {
+    for (const auto &page: _menu.pages()) {
         pagesProcesses[page] = {};
-        const auto& renderPassLetter = _pageToRenderPassesLetter.find(page);
-        if(renderPassLetter != _pageToRenderPassesLetter.end()) {
+        const auto &renderPassLetter = _pageToRenderPassesLetter.find(page);
+        if (renderPassLetter != _pageToRenderPassesLetter.end()) {
             pagesProcesses[page].push_back(
                 std::make_shared<LettersProcess>(fileContent, _graphicAlphabet, renderPassLetter->second)
             );
         }
-        const auto& renderPassShape = _pageToRenderPassesShape.find(page);
-        if(renderPassShape != _pageToRenderPassesShape.end()) {
+        const auto &renderPassShape = _pageToRenderPassesShape.find(page);
+        if (renderPassShape != _pageToRenderPassesShape.end()) {
             pagesProcesses[page].push_back(
                 std::make_shared<ShapeLabelProcess>(fileContent, renderPassShape->second)
             );
         }
-}
-return pagesProcesses;
+    }
+    return pagesProcesses;
 }
 
 MenuRendering::PagesRenderPassLetters MenuRendering::createPageToRenderPassesLetters() const {
     MenuRendering::PagesRenderPassLetters pagesRenderPassLetters;
     for (const auto &page: _menu.pages()) {
         LettersProcess::RenderPassesLetters renderPassesLetters;
-        const auto lettersMeshes =  MeshGenerator::genLettersLabel(page, _graphicAlphabet);
+        const auto lettersMeshes = MeshGenerator::genLettersLabel(page, _graphicAlphabet);
 
-        for (const auto& letterMeshes : lettersMeshes) {
+        for (const auto &letterMeshes: lettersMeshes) {
             const unsigned char letter = letterMeshes.first;
             const vecMesh_sptr meshes = letterMeshes.second;
             if (!meshes.empty()) {
-                renderPassesLetters[std::make_shared <RenderPass>(meshes)] = letter;
+                renderPassesLetters[std::make_shared<RenderPass>(meshes)] = letter;
             }
         }
         pagesRenderPassLetters[page] = renderPassesLetters;
@@ -124,7 +124,7 @@ MenuRendering::PagesRenderPassLetters MenuRendering::createPageToRenderPassesLet
 }
 
 MenuRendering::PagesRenderPassShapes MenuRendering::createPageToRenderPassesShapes() const {
-    MenuRendering::PagesRenderPassShapes  pagesRenderPassShapes;
+    MenuRendering::PagesRenderPassShapes pagesRenderPassShapes;
     for (const auto &page: _menu.pages()) {
         const auto meshes = MeshGenerator::genShapesLabel(page);
         if (!meshes.empty()) {
@@ -140,7 +140,7 @@ vecRenderPass_sptr MenuRendering::createRenderPasses() const {
         renderPasses.push_back(pageRenderPass.second);
     }
     for (const auto &pageRenderPassesLetters: _pageToRenderPassesLetter) {
-        const auto& renderPassesLetters = pageRenderPassesLetters.second;
+        const auto &renderPassesLetters = pageRenderPassesLetters.second;
         for (const auto &renderPassLetter: renderPassesLetters) {
             renderPasses.push_back(renderPassLetter.first);
         }

@@ -6,9 +6,10 @@
  */
 
 #include "FontTexturesGenerator.h"
+#include "FrameBuffer.h"
 
 FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont(
-    const unsigned char* fontData,
+    const unsigned char *fontData,
     size_t fontDataSize
 ) {
 
@@ -30,47 +31,48 @@ FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont(
         0,
         &ftContent.fontFace
     );
-    if(ftOpenFaceResult != 0) {
+    if (ftOpenFaceResult != 0) {
         std::cerr << "Error: Impossible to init font face ..." << std::endl;
     }
     return ftContent;
 }
 
-void FontTexturesGenerator::clearFreeTypeRessources (FontTexturesGenerator::FTContent& ftContent) {
+void FontTexturesGenerator::clearFreeTypeRessources(FontTexturesGenerator::FTContent &ftContent) {
     FT_Done_Face(ftContent.fontFace);
     FT_Done_FreeType(ftContent.ftLib);
 }
 
 
-FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharacter (
+FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharacter(
     unsigned char character,
-    const std::string& message,
+    const std::string &message,
     float height,
     GLsizei screenHeight,
-    const FontTexturesGenerator::FTContent& ftContent) {
+    const FontTexturesGenerator::FTContent &ftContent) {
 
     FontTexturesGenerator::GraphicCharacter graphicCharacter;
     const auto setPixelSizes =
-        [&ftContent] (FT_UInt heightPixels)->void {
+        [&ftContent](FT_UInt heightPixels) -> void {
             constexpr FT_UInt scalarQuality = 2;
             FT_Set_Pixel_Sizes(ftContent.fontFace, 0, scalarQuality * heightPixels);
         };
     const auto loadCharacter =
-        [&ftContent] (unsigned char character)->void {
+        [&ftContent](unsigned char character) -> void {
             if (const auto callback = FT_Load_Char(ftContent.fontFace, character, FT_LOAD_RENDER)) {
                 std::cerr << "Error " << callback << ": Impossible to load glyph " << character << std::endl;
             }
         };
     const auto getMinHeight =
-        [&loadCharacter] (const std::string& message,
-                          const FT_Face& fontFace)->FT_Pos {
+        [&loadCharacter](const std::string &message,
+                         const FT_Face &fontFace) -> FT_Pos {
             if (message.size() > 0) {
                 loadCharacter(message.at(0));
             } else {
                 return 0;
             }
             FT_Pos minHeight = fontFace->glyph->metrics.height;
-            for (const char character : message) {
+            fontFace->glyph
+            for (const char character: message) {
                 loadCharacter(character);
                 const FT_Pos characterHeight = fontFace->glyph->metrics.height;
                 if (minHeight > characterHeight && characterHeight > 0) {
@@ -80,9 +82,9 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
             return minHeight;
         };
 
-    const auto& glyph = ftContent.fontFace->glyph;
-    const auto& metrics = glyph->metrics;
-    const auto& bitmap = glyph->bitmap;
+    const auto &glyph = ftContent.fontFace->glyph;
+    const auto &metrics = glyph->metrics;
+    const auto &bitmap = glyph->bitmap;
 
     const FT_UInt heightPixels = static_cast <FT_UInt>(screenHeight * height);
 
@@ -102,25 +104,16 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
     const float scaleY = metricsHeight / fMinHeight;
     const float translationY = (bearingY - metricsHeight / 2.f) / fMinHeight - 0.5f;
 
-    const FontTexturesGenerator::CharacterTransform charTransform {
-        { scaleX, scaleY },
-        { 0, translationY }};
+    const FontTexturesGenerator::CharacterLocalTransform charTransform{
+        {scaleX, scaleY},
+        {0,      translationY}};
 
-    graphicCharacter.characterTransform = charTransform;
+    graphicCharacter.transform = charTransform;
 
-    // Texture
-    // TODO: gather this function with FrameBuffer function
-    const std::function <GLuint()> genTexture =
-        [] ()->GLuint {
-            GLuint texture;
-            glGenTextures(1, &texture);
-            return texture;
-        };
     // disable byte-alignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     loadCharacter(character);
-
-    const GLuint textureID = genTexture();
+    const GLuint textureID = FrameBuffer::createTexture();
     glBindTexture(GL_TEXTURE_2D, textureID);
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, bitmap.width, bitmap.rows);
     glTexSubImage2D(
@@ -145,18 +138,18 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::genGraphicCharact
     return graphicCharacter;
 }
 
-FontTexturesGenerator::GraphicAlphabet FontTexturesGenerator::genGraphicAlphabet (
-    const Menu& menu,
+FontTexturesGenerator::GraphicAlphabet FontTexturesGenerator::genGraphicAlphabet(
+    const Menu &menu,
     GLsizei screenHeight,
-    const FontTexturesGenerator::FTContent& ftContent
-    ) {
+    const FontTexturesGenerator::FTContent &ftContent
+) {
     FontTexturesGenerator::GraphicAlphabet graphicAlphabet;
 
     const auto getBiggestHeight =
-        [&menu] () {
+        [&menu]() {
             float biggestHeight = 0.f;
-            for (const auto& page : menu.pages()) {
-                for (const auto& label : page->labels()) {
+            for (const auto &page: menu.pages()) {
+                for (const auto &label: page->labels()) {
                     const float labelHeight = label->height();
                     if (biggestHeight < labelHeight) {
                         biggestHeight = labelHeight;
@@ -167,10 +160,10 @@ FontTexturesGenerator::GraphicAlphabet FontTexturesGenerator::genGraphicAlphabet
         };
     const float height = getBiggestHeight();
 
-    for (const auto& page : menu.pages()) {
-        for (const auto& label : page->labels()) {
+    for (const auto &page: menu.pages()) {
+        for (const auto &label: page->labels()) {
             const std::string message = label->message();
-            for (unsigned char character : message) {
+            for (unsigned char character: message) {
                 if (graphicAlphabet.find(character) == graphicAlphabet.end()) {
                     graphicAlphabet[character] = genGraphicCharacter(
                         character,
@@ -187,10 +180,102 @@ FontTexturesGenerator::GraphicAlphabet FontTexturesGenerator::genGraphicAlphabet
     return graphicAlphabet;
 }
 
-void FontTexturesGenerator::freeGraphicAlphabetGPUMemory(const GraphicAlphabet &graphicAlphabet)
-{
-    for (const auto& character: graphicAlphabet) {
-        const auto& graphicCharacter = character.second; 
+void FontTexturesGenerator::freeGraphicAlphabetGPUMemory(const GraphicAlphabet &graphicAlphabet) {
+    for (const auto &character: graphicAlphabet) {
+        const auto &graphicCharacter = character.second;
         glDeleteTextures(1, &graphicCharacter.textureID);
     }
+}
+
+FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphicCharacter(
+    unsigned char character,
+    FT_UInt pixelHeight
+) {
+
+    FontTexturesGenerator::GraphicCharacterHash hash = std::to_string(pixelHeight) + ",";
+    hash += static_cast<char>(character);
+    const auto &iterator = _graphicAlphabet.find(hash);
+    if (iterator != _graphicAlphabet.end()) {
+        return iterator->second;
+    }
+
+    if (const auto callback = FT_Load_Char(_ftContent.fontFace, character, FT_LOAD_RENDER)) {
+        std::cerr << "Error " << callback << ": Impossible to load glyph " << character << std::endl;
+    }
+
+    const auto &glyph = _ftContent.fontFace->glyph;
+    const auto &bitmap = glyph->bitmap;
+    const auto width = static_cast<GLsizei>(bitmap.width);
+    const auto rows = static_cast<GLsizei>(bitmap.rows);
+
+    const GLuint textureID = FrameBuffer::createTexture();
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, width, rows);
+    glTexSubImage2D(
+        GL_TEXTURE_2D,
+        0,
+        0,
+        0,
+        width,
+        rows,
+        GL_RED,
+        GL_UNSIGNED_BYTE,
+        bitmap.buffer
+    );
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    const FontTexturesGenerator::GraphicCharacter graphicCharacter = {
+        textureID,
+        {
+            glm::ivec2(bitmap.width, bitmap.rows),
+            glm::ivec2(glyph->bitmap_left, glyph->bitmap_top),
+            glyph->advance.x
+        }
+    };
+    _graphicAlphabet[hash] = graphicCharacter;
+    return graphicCharacter;
+}
+
+vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
+    const FontTexturesGenerator::NodeMessageAssociations &nodeToMessage
+) {
+
+    vecMessageLabel_sptr messageLabels{};
+    // disable byte-alignment restriction
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    for (const auto &item: nodeToMessage) {
+        const auto &node = item.first;
+        const float screenSpaceHeight = node->getScreenSpaceHeight();
+        const auto nodePixelHeight = static_cast<FT_UInt>(
+            std::ceil(static_cast<float>(_screenHeight) / screenSpaceHeight)
+        );
+
+        FT_Set_Pixel_Sizes(_ftContent.fontFace, 0, nodePixelHeight);
+        const auto &message = item.second;
+        for (unsigned char c: message) {
+            const auto graphicCharacter = createOrGetGraphicCharacter(c, nodePixelHeight);
+        }
+        messageLabels.push_back(std::make_shared<MessageLabel>(
+            message,
+            node,
+            true // TODO change it
+        ));
+
+    }
+    return messageLabels;
+}
+
+FontTexturesGenerator::FontTexturesGenerator(
+    size_t screenHeight,
+    const FontTexturesGenerator::FTContent &ftContent,
+    const FontTexturesGenerator::NodeMessageAssociations &nodeToMessage
+) : _ftContent(ftContent),
+    _screenHeight(screenHeight),
+    _graphicAlphabet{},
+    _messageLabels(genMessageLabels(nodeToMessage)) {
+
 }

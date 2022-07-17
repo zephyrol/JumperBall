@@ -8,24 +8,30 @@
 
 #ifndef MESSAGELABEL_H
 #define MESSAGELABEL_H
+
 #include "Label.h"
 
-class MessageLabel:public Label {
-public:
-MessageLabel(
-    const Label::WidthUnit& widthUnit,
-    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
-    float ratio,
-    const std::string& message,
-    const std::shared_ptr <LabelAnswer>& action = nullptr,
-    bool activated = true
-    );
-virtual ~MessageLabel() = default;
+class MessageLabel;
 
-std::string message() const override;
+using MessageLabel_sptr = std::shared_ptr<MessageLabel>;
+using CstMessageLabel_sptr = std::shared_ptr<const MessageLabel>;
+using vecCstMessageLabel_sptr = std::vector<CstMessageLabel_sptr>;
+using vecMessageLabel_sptr = std::vector<MessageLabel_sptr>;
+
+class MessageLabel : public Label {
+public:
+    MessageLabel(
+        const std::string &message,
+        const CstNode_sptr &node,
+        bool isActivated = false
+    );
+
+    ~MessageLabel() override = default;
+
+    std::string message() const override;
 
 private:
-const std::string _message;
+    const std::string _message;
 
 };
 

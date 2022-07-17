@@ -11,27 +11,31 @@
 #include "RenderPass.h"
 
 class RenderProcess;
-using RenderProcess_sptr = std::shared_ptr <RenderProcess>;
-using CstRenderProcess_sptr = std::shared_ptr <const RenderProcess>;
-using vecCstRenderProcess_sptr = std::vector <CstRenderProcess_sptr>;
-using vecRenderProcess_sptr = std::vector <RenderProcess_sptr>;
+
+using RenderProcess_sptr = std::shared_ptr<RenderProcess>;
+using CstRenderProcess_sptr = std::shared_ptr<const RenderProcess>;
+using vecCstRenderProcess_sptr = std::vector<CstRenderProcess_sptr>;
+using vecRenderProcess_sptr = std::vector<RenderProcess_sptr>;
 
 class RenderProcess {
 
 public:
 
-RenderProcess(const RenderProcess& renderProcess) = delete;
+    RenderProcess(const RenderProcess &renderProcess) = delete;
 
     RenderProcess() = default;
 
-    RenderProcess& operator= (const RenderProcess&) = delete;
+    RenderProcess &operator=(const RenderProcess &) = delete;
 
-virtual ~RenderProcess() = default;
+    virtual ~RenderProcess() = default;
 
-virtual void render() const = 0;
-virtual void freeGPUMemory() = 0;
-virtual vecCstShaderProgram_sptr getShaderPrograms() const = 0;
-virtual std::shared_ptr<const GLuint> getRenderTexture() const = 0;
+    virtual void render() const = 0;
+
+    virtual void freeGPUMemory() = 0;
+
+    virtual vecCstShaderProgram_sptr getShaderPrograms() const = 0;
+
+    virtual std::shared_ptr<const GLuint> getRenderTexture() const = 0;
 };
 
 #endif

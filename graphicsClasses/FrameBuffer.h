@@ -49,6 +49,8 @@ static void setViewportSize(GLsizei resolutionX, GLsizei resolutionY);
 static void enableDepthTest();
 static void disableDepthTest();
 
+    static GLuint createTexture() ;
+
 private:
 
 const GLuint _fboHandle;
@@ -61,8 +63,8 @@ const std::unique_ptr <const GLuint> _depthBuffer;
 const glm::vec3 _clearColor;
 
 GLuint createFrameBufferObject() const;
-GLuint createRenderTexture() const;
-std::unique_ptr <GLuint> createDepthBuffer() const;
+
+    std::unique_ptr <GLuint> createDepthBuffer() const;
 bool hasDepthBuffer() const;
 static void cleanCurrentFrameBuffer(bool hasDepthBuffer, const glm::vec3& clearColor);
 

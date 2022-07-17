@@ -15,7 +15,7 @@ FrameBuffer::FrameBuffer(
     const glm::vec3& clearColor
 ):
     _fboHandle(createFrameBufferObject()),
-    _renderTexture(createRenderTexture()),
+    _renderTexture(createTexture()),
     _content(content),
     _depthBuffer(hasDepthBuffer ? createDepthBuffer() : nullptr),
     _clearColor(clearColor)
@@ -101,10 +101,10 @@ GLuint FrameBuffer::createFrameBufferObject() const {
     return fbo;
 }
 
-GLuint FrameBuffer::createRenderTexture() const {
-    GLuint renderTexture;
-    glGenTextures(1, &renderTexture);
-    return renderTexture;
+GLuint FrameBuffer::createTexture() {
+    GLuint texture;
+    glGenTextures(1, &texture);
+    return texture;
 }
 
 std::unique_ptr <GLuint> FrameBuffer::createDepthBuffer() const {

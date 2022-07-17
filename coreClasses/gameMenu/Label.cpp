@@ -8,59 +8,27 @@
 #include "Label.h"
 
 Label::Label(
-    const Label::WidthUnit &widthUnit,
-    const std::function<Label::LabelDimensions(float)> &updateLabelSizesFct,
-    float ratio,
-    bool activated,
-    const std::shared_ptr<LabelAnswer> &action,
-    bool fixed) :
-    _widthUnit(widthUnit),
-    _updateLabelSizes(updateLabelSizesFct),
-    _dimensions(_updateLabelSizes(ratio)),
-    _children{},
-    _fixed(fixed),
-    _activated(activated),
-    _action(action) {
-}
-
-float Label::width() const {
-    return _dimensions.width;
-}
-
-float Label::height() const {
-    return _dimensions.height;
-}
-
-const vecCstLabel_sptr &Label::children() const {
-    return _children;
-}
-
-float Label::positionX() const {
-    return _dimensions.positionX;
-}
-
-float Label::positionY() const {
-    return _dimensions.positionY;
+    const CstNode_sptr &node,
+    bool isActivated
+) :
+    _node(node),
+    _isActivated(isActivated) {
 }
 
 std::string Label::message() const {
     return {};
 }
 
-bool Label::isFixed() const {
-    return _fixed;
-}
-
 bool Label::isActivated() const {
-    return _activated;
+    return _isActivated;
 }
 
 void Label::activate() {
-    _activated = true;
+    _isActivated = true;
 }
 
 void Label::deactivate() {
-    _activated = false;
+    _isActivated = false;
 }
 
 void Label::updateLabelsLevels(vecLabel_sptr &labels, size_t end) {
@@ -73,21 +41,8 @@ void Label::updateLabelsLevels(vecLabel_sptr &labels, size_t end) {
     }
 }
 
-const std::shared_ptr<Label::LabelAnswer> &Label::action() const {
-    return _action;
-}
-
-const Label::WidthUnit &Label::widthUnit() const {
-    return _widthUnit;
-}
-
 vecGeometry Label::genGeometries() const {
     return {};
 }
 
-Label::~Label() {
-}
-
-void Label::resize(float screenRatio) {
-    _dimensions = _updateLabelSizes(screenRatio);
-}
+Label::~Label() = default;

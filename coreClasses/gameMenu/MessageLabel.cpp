@@ -7,16 +7,14 @@
 #include "MessageLabel.h"
 
 MessageLabel::MessageLabel(
-    const Label::WidthUnit& widthUnit,
-    const std::function<Label::LabelDimensions(float)>& updateLabelSizesFct,
-    float ratio,
-    const std::string& message,
-    const std::shared_ptr <LabelAnswer>& action,
-    bool activated):
-    Label(widthUnit, updateLabelSizesFct, ratio, activated, action),
+    const std::string &message,
+    const CstNode_sptr &node,
+    bool isActivated
+) : Label(node, isActivated),
     _message(message) {
 }
 
 std::string MessageLabel::message() const {
     return _message;
 }
+

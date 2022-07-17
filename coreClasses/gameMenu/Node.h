@@ -59,6 +59,8 @@ public:
 
     float ratio() const;
 
+    float getScreenSpaceHeight() const;
+
     /**
      * Update screen space transform of the node and for each child.
      * @param parentTransform screen space parent transform
@@ -81,7 +83,7 @@ protected:
 
 private:
 
-    CstNode_sptr _parent;
+    const CstNode_sptr _parent;
 
     /**
      * Local transform (in its parent node space)

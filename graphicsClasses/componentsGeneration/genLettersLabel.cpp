@@ -29,9 +29,9 @@ std::unordered_map <unsigned char, vecMesh_sptr> MeshGenerator::genLettersLabel 
                 lettersMeshes[character] = {};
             }
 
-            const float offsetX = initialOffsetX + i * pitch;
+            const float offsetX = initialOffsetX + static_cast<float>(i) * pitch;
             const auto& graphicCharacter = graphicAlphabet.at(character);
-            const auto& localTransform = graphicCharacter.characterTransform;
+            const auto& localTransform = graphicCharacter.transform;
 
             const auto& localScale = localTransform.localScale;
             const float localScaleX = localScale.x;
