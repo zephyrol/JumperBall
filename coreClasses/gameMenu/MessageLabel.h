@@ -23,29 +23,27 @@ public:
 
     struct CharacterLocalTransform {
         /**
-         * Size of the letter in pixels
+         * Size of the letter in screen space
          */
-        unsigned int width;
-        unsigned int height;
+        float width;
+        float height;
 
         /**
-         * Offset from baseline to left/top of the letter in pixels
+         * Offset from baseline to left/top of the letter in screen space;
          */
-        unsigned int bearingX;
-        unsigned int bearingY;
+        float bearingX;
+        float bearingY;
 
         /**
-         * Offset until the next letter
+         * Offset until the next letter in screen space
          */
-        unsigned int advance;
+        float advance;
     };
 
     MessageLabel(
         const std::string &message,
         std::vector<CharacterLocalTransform>&& transforms,
         const CstNode_sptr &node,
-        size_t screenWidth,
-        size_t screenHeight,
         size_t height,
         bool isActivated = false
     );
@@ -69,8 +67,6 @@ private:
     const std::string _message;
     const std::vector<CharacterLocalTransform> _transforms;
     const size_t _height;
-    const size_t _screenWidth;
-    const size_t _screenHeight;
     const std::vector<std::string> _letterHashes;
 
     std::vector<std::string> createLetterHashes() const;

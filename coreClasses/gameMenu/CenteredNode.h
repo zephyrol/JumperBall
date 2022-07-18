@@ -11,6 +11,7 @@
 class CenteredNode: public FillingNode {
 public:
     CenteredNode(const CstNode_sptr& parent, float ratio);
+    virtual ~CenteredNode() = default;
 };
 
 

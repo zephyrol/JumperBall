@@ -10,16 +10,12 @@ MessageLabel::MessageLabel(
     const std::string &message,
     std::vector<MessageLabel::CharacterLocalTransform>&& transforms,
     const CstNode_sptr &node,
-    size_t screenWidth,
-    size_t screenHeight,
     size_t height,
     bool isActivated
 ) : Label(node, isActivated),
     _message(message),
     _transforms(std::move(transforms)),
     _height(height),
-    _screenWidth(screenWidth),
-    _screenHeight(screenHeight),
     _letterHashes(createLetterHashes()){
 }
 
@@ -30,7 +26,6 @@ std::string MessageLabel::message() const {
 vecGeometry MessageLabel::genGeometries() const {
 
     vecGeometry geometries {};
-
     _node->getScreenSpaceWidth();
     for (const auto &transform: _transforms) {
 

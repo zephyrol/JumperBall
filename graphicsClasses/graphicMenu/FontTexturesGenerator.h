@@ -27,7 +27,9 @@ class FontTexturesGenerator {
 
     struct GraphicCharacter {
         GLuint textureID;
-        MessageLabel::CharacterLocalTransform transform;
+        glm::ivec2 size; // Size of the letter
+        glm::ivec2 bearing; // Offset from baseline to left/top of the letter
+        unsigned int advance; // Offset to advance to next letter
     };
 
     struct FTContent {
@@ -69,27 +71,6 @@ private:
 
     FontTexturesGenerator::GraphicAlphabet _graphicAlphabet;
     const vecMessageLabel_sptr _messageLabels;
-
-    /**
-     * @brief Generate a graphic character
-     *
-     * @param character Letter represented by uchar
-     * @param message Whole message to compare the size between letters. 'character' letter should present
-     * @param height Proportion of the height screen that the letter should cover without aliasing
-     * @param ftContent Object containing the FreeType lib objects
-     * @return GraphicCharacter Texture and local transform of the character
-     */
-    GraphicCharacter genGraphicCharacter(
-        unsigned char character,
-        const std::string &message,
-        float height,
-        GLsizei screenHeight,
-        const FTContent &ftContent
-    );
-
-    FT_Pos getSmallestHight(const std::string &message, const FontTexturesGenerator::FTContent &ftContent);
-
-    GraphicAlphabet genGraphicAlphabet(const Menu &menu, GLsizei screenHeight, const FTContent &ftContent);
 
     /**
      * Create and add in _graphicAlphabet a new graphic character.

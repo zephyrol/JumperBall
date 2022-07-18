@@ -15,6 +15,8 @@ public:
         float ratio,
         const std::function<JBTypes::vec2f(const JBTypes::vec2f &)> &computePositionFromSize
     );
+
+    virtual ~FillingNode() = default;
 };
 
 

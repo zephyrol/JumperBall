@@ -52,6 +52,7 @@ protected:
 
 public:
     Node(const Node_sptr &parent, const Node::Transform &transform, float ratio);
+    virtual ~Node() = default;
 
     const Transform &getLocalTransform() const;
 
@@ -80,7 +81,6 @@ protected:
     static Transform getIdentityTransform();
 
     virtual std::unique_ptr<Node::Transform> getAdditionalLocalTransform();
-
 
 private:
 
