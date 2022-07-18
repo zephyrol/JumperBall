@@ -13,11 +13,8 @@
 class ArrowLabel : public Label {
 public:
     ArrowLabel(
-        const Label::WidthUnit &widthUnit,
-        const std::function<Label::LabelDimensions(float)> &updateLabelSizesFct,
-        float ratio,
-        const std::shared_ptr<LabelAnswer> &action = nullptr,
-        bool activated = true
+        const CstNode_sptr &node,
+        bool isActivated = true
     );
 
     virtual ~ArrowLabel() = default;

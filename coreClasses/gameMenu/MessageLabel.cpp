@@ -26,16 +26,25 @@ std::string MessageLabel::message() const {
 vecGeometry MessageLabel::genGeometries() const {
 
     vecGeometry geometries {};
-    _node->getScreenSpaceWidth();
+    const auto& screenTransform = _node->getScreenTranform();
     for (const auto &transform: _transforms) {
-
+        const Geometry quad(
+            Geometry::Shape::Quad,
+            {
+                screenTransform.positionX + transform.bearingX + transform.advance,
+                screenTransform.positionY + transform.bearingY,
+                0.f
+            },
+            {0.f, 0.f, 0.f},
+            {
+                screenTransform.width * transform.width,
+                screenTransform.height * transform.height,
+                1.f
+            }
+        );
+        geometries.push_back(quad);
     }
-    const Geometry quad(
-        Geometry::Shape::Quad,
-        {0.4f, 0.f, 0.f},
-        {0.f, 0.f, 0.f},
-        {0.6f, 0.5f, 1.f}
-    );
+    return geometries;
 }
 
 const std::vector<std::string>& MessageLabel::getLetterHashes() const {

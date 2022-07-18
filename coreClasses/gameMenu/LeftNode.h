@@ -8,7 +8,7 @@
 
 #include "FillingNode.h"
 
-class LeftNode: public FillingNode {
+class LeftNode : public FillingNode {
 public:
     LeftNode(const Node_sptr &parent, float ratio);
 };

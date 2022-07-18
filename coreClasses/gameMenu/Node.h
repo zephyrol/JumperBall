@@ -57,6 +57,7 @@ public:
     const Transform &getLocalTransform() const;
 
     CstNode_rptr getClickNode(float screenX, float screenY);
+    const Transform& getScreenTranform() const;
 
     float ratio() const;
 
@@ -68,6 +69,11 @@ public:
      * @param parentTransform screen space parent transform
      */
     void updateScreenTransform(const Transform &parentTransform);
+
+    /**
+     * Update screen transform using its parent node one
+     */
+    void updateScreenTransform();
 
 protected:
     /**

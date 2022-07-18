@@ -76,16 +76,7 @@ float Page::height() const {
 }
 
 Label_sptr Page::matchedLabel(float x, float y) {
-    for (const auto &label: _labels) {
-        if (
-            x > (label->positionX() - label->width()) &&
-            x < (label->positionX() + label->width()) &&
-            y > (label->positionY() + _localPosY - label->height()) &&
-            y < (label->positionY() + _localPosY + label->height())
-            ) {
-            return label;
-        }
-    }
+    // TODO
     return nullptr;
 }
 
@@ -195,7 +186,7 @@ SceneElement::GlobalState Page::getGlobalState() const {
 
 void Page::resize(float screenRatio) {
     for (const auto &label: _labels) {
-        label->resize(screenRatio);
+        // label->resize(screenRatio); // TODO
     }
 }
 

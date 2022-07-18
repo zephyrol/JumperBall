@@ -21,7 +21,6 @@ using vecPage_sptr = std::vector<Page_sptr>;
 class Page : public SceneElement {
 public:
 
-// ------------TYPES------------//
 // Slide state => timepoint and yScreenPosition
     using slideState = std::pair<JBTypes::timePointMs, float>;
     enum class PageFormat {
@@ -31,7 +30,6 @@ public:
         QuitGame, GoToParent, GoToPause
     };
 
-// --CONSTRUCTORS & DESTRUCTORS--//
     Page(
         const Page_sptr &parent,
         const Page::PageFormat &pageFormat,

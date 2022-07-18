@@ -4,7 +4,7 @@
 
 #include "CenteredNode.h"
 
-CenteredNode::CenteredNode(const CstNode_sptr& parent, float ratio): FillingNode(
+CenteredNode::CenteredNode(const Node_sptr& parent, float ratio): FillingNode(
     parent,
     ratio,
     [](const JBTypes::vec2f&) -> JBTypes::vec2f {

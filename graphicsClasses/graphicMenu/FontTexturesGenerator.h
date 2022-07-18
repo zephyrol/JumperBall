@@ -42,11 +42,12 @@ class FontTexturesGenerator {
     /**
      * Graphic character key containing the character and its font size in pixels
      */
-    using GraphicAlphabet = std::unordered_map<MessageLabel::LetterHash , GraphicCharacter>>;
+    using GraphicAlphabet = std::unordered_map<MessageLabel::LetterHash, GraphicCharacter>;
 
     using NodeMessageAssociations = std::unordered_map<CstNode_sptr, std::string>;
 
-    vecMessageLabel_sptr genMessageLabels(const NodeMessageAssociations& nodeToMessage);
+    vecMessageLabel_sptr genMessageLabels(const NodeMessageAssociations &nodeToMessage);
+
 
 public:
     FontTexturesGenerator(
@@ -83,6 +84,12 @@ private:
         FT_UInt pixelHeight
     );
 
+    static std::vector<MessageLabel::CharacterLocalTransform> getCharacterLocalTransforms(
+        const std::vector<GraphicCharacter> &graphicCharacters,
+        unsigned int nodePixelWidth,
+        unsigned int nodePixelHeight
+    );
+
     void freeGraphicAlphabetGPUMemory(const GraphicAlphabet &graphicAlphabet);
 
     FTContent initFreeTypeAndFont(
@@ -91,7 +98,7 @@ private:
     );
 
     void clearFreeTypeRessources(FTContent &ftContent);
-}
+};
 
 
 #endif

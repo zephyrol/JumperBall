@@ -44,7 +44,7 @@ public:
         const std::string &message,
         std::vector<CharacterLocalTransform>&& transforms,
         const CstNode_sptr &node,
-        size_t height,
+        size_t height, // TODO: Remove it
         bool isActivated = false
     );
 

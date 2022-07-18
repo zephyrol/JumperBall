@@ -7,14 +7,11 @@
 #include "ArrowLabel.h"
 
 ArrowLabel::ArrowLabel(
-    const Label::WidthUnit &widthUnit,
-    const std::function<Label::LabelDimensions(float)> &updateLabelSizesFct,
-    float ratio,
-    const std::shared_ptr<LabelAnswer> &action,
-    bool activated
-) :
-    Label(widthUnit, updateLabelSizesFct, ratio, activated, action) {
+    const CstNode_sptr &node,
+    bool isActivated
+) : Label(node, isActivated) {
 }
+
 
 vecGeometry ArrowLabel::genGeometries() const {
 
@@ -35,3 +32,4 @@ vecGeometry ArrowLabel::genGeometries() const {
     return {quad, triangle};
 
 }
+

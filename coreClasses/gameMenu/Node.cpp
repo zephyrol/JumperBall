@@ -32,6 +32,12 @@ JBTypes::vec2f Node::computeChildNodeSize(float parentRatio, float childRatio) {
     return {1.f, parentRatio / childRatio};
 }
 
+void Node::updateScreenTransform() {
+    _parent == nullptr
+    ? updateScreenTransform(getIdentityTransform())
+    : updateScreenTransform(_parent->getScreenTranform());
+}
+
 void Node::updateScreenTransform(const Node::Transform &parentTransform) {
 
     const auto additionLocalTransform = getAdditionalLocalTransform();
@@ -90,6 +96,10 @@ float Node::getScreenSpaceHeight() const {
 
 float Node::getScreenSpaceWidth() const {
     return _screenTransform->width;
+}
+
+const Node::Transform &Node::getScreenTranform() const {
+    return *_screenTransform;
 }
 
 

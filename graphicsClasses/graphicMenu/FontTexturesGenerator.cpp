@@ -95,12 +95,13 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphi
     const FontTexturesGenerator::GraphicCharacter graphicCharacter = {
         textureID,
         {bitmap.width, bitmap.rows},
-        { glyph->bitmap_left, glyph->bitmap_top },
+        {glyph->bitmap_left, glyph->bitmap_top},
         static_cast<unsigned int>(advance)
     };
     _graphicAlphabet[hash] = graphicCharacter;
     return graphicCharacter;
 }
+
 
 vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
     const FontTexturesGenerator::NodeMessageAssociations &nodeToMessage
@@ -119,19 +120,21 @@ vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
         FT_Set_Pixel_Sizes(_ftContent.fontFace, 0, nodePixelHeight);
         const auto &message = item.second;
         unsigned int nodePixelWidth = 0;
-        std::vector<MessageLabel::CharacterLocalTransform> transforms;
+        std::vector<FontTexturesGenerator::GraphicCharacter> transforms;
         for (unsigned char c: message) {
             const auto graphicCharacter = createOrGetGraphicCharacter(c, nodePixelHeight);
-            nodePixelWidth += graphicCharacter.transform.advance;
-            transforms.push_back(graphicCharacter.transform);
+            nodePixelWidth += graphicCharacter.advance;
+            transforms.push_back(graphicCharacter);
         }
         const Node_sptr centeredNode = std::make_shared<CenteredNode>(
             node,
             static_cast<float>(nodePixelWidth) / static_cast<float>(nodePixelHeight)
         );
+        centeredNode->updateScreenTransform();
+
         messageLabels.push_back(std::make_shared<MessageLabel>(
             message,
-            std::move(transforms),
+            getCharacterLocalTransforms(transforms, nodePixelWidth, nodePixelWidth),
             centeredNode,
             nodePixelHeight,
             true // TODO change it
@@ -152,4 +155,28 @@ FontTexturesGenerator::FontTexturesGenerator(
     _graphicAlphabet{},
     _messageLabels(genMessageLabels(nodeToMessage)) {
 
+}
+
+std::vector<MessageLabel::CharacterLocalTransform> FontTexturesGenerator::getCharacterLocalTransforms(
+    const std::vector<GraphicCharacter> &graphicCharacters,
+    unsigned int nodePixelWidth,
+    unsigned int nodePixelHeight
+) {
+
+    std::vector<MessageLabel::CharacterLocalTransform> localTransforms {};
+    const auto fNodePixelWidth = static_cast<float>(nodePixelWidth);
+    const auto fNodePixelHeight = static_cast<float>(nodePixelHeight);
+
+    for (const auto &graphicCharacter: graphicCharacters) {
+        localTransforms.push_back(
+            {
+                static_cast<float>(graphicCharacter.size.x) / fNodePixelWidth,
+                static_cast<float>(graphicCharacter.size.y) / fNodePixelHeight,
+                static_cast<float>(graphicCharacter.bearing.x) / fNodePixelWidth,
+                static_cast<float>(graphicCharacter.bearing.y) / fNodePixelHeight,
+                static_cast<float>(graphicCharacter.advance) / fNodePixelWidth
+            }
+        );
+    }
+    return localTransforms;
 }
