@@ -7,6 +7,7 @@
 
 #include "FontTexturesGenerator.h"
 #include "FrameBuffer.h"
+#include "gameMenu/CenteredNode.h"
 
 FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont(
     const unsigned char *fontData,
@@ -192,8 +193,7 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphi
     FT_UInt pixelHeight
 ) {
 
-    FontTexturesGenerator::GraphicCharacterHash hash = std::to_string(pixelHeight) + ",";
-    hash += static_cast<char>(character);
+    const auto hash = MessageLabel::createLetterHash(static_cast<size_t>(pixelHeight), character);
     const auto &iterator = _graphicAlphabet.find(hash);
     if (iterator != _graphicAlphabet.end()) {
         return iterator->second;
@@ -228,12 +228,17 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphi
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+    const auto advance = glyph->advance.x >> 6;
+
+
     const FontTexturesGenerator::GraphicCharacter graphicCharacter = {
         textureID,
         {
-            glm::ivec2(bitmap.width, bitmap.rows),
-            glm::ivec2(glyph->bitmap_left, glyph->bitmap_top),
-            glyph->advance.x
+            bitmap.width,
+            bitmap.rows,
+            static_cast<unsigned int>(glyph->bitmap_left),
+            static_cast<unsigned int>(glyph->bitmap_top),
+            static_cast<unsigned int>(advance)
         }
     };
     _graphicAlphabet[hash] = graphicCharacter;
@@ -256,12 +261,22 @@ vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
 
         FT_Set_Pixel_Sizes(_ftContent.fontFace, 0, nodePixelHeight);
         const auto &message = item.second;
+        unsigned int nodePixelWidth = 0;
+        std::vector<MessageLabel::CharacterLocalTransform> transforms;
         for (unsigned char c: message) {
             const auto graphicCharacter = createOrGetGraphicCharacter(c, nodePixelHeight);
+            nodePixelWidth += graphicCharacter.transform.advance;
+            transforms.push_back(graphicCharacter.transform);
         }
+        const Node_sptr centeredNode = std::make_shared<CenteredNode>(
+            node,
+            static_cast<float>(nodePixelWidth) / static_cast<float>(nodePixelHeight)
+        );
         messageLabels.push_back(std::make_shared<MessageLabel>(
             message,
-            node,
+            std::move(transforms),
+            centeredNode,
+            nodePixelHeight,
             true // TODO change it
         ));
 
@@ -270,10 +285,12 @@ vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
 }
 
 FontTexturesGenerator::FontTexturesGenerator(
+    size_t screenWidth,
     size_t screenHeight,
     const FontTexturesGenerator::FTContent &ftContent,
     const FontTexturesGenerator::NodeMessageAssociations &nodeToMessage
 ) : _ftContent(ftContent),
+    _screenWidth(screenWidth),
     _screenHeight(screenHeight),
     _graphicAlphabet{},
     _messageLabels(genMessageLabels(nodeToMessage)) {

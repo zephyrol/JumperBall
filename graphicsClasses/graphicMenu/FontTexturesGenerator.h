@@ -25,26 +25,9 @@
 
 class FontTexturesGenerator {
 
-    struct CharacterLocalTransform {
-        /**
-         * Size of the letter in pixels
-         */
-        glm::ivec2 size;
-
-        /**
-         * Offset from baseline to left/top of the letter in pixels
-         */
-        glm::ivec2 bearing;
-
-        /**
-         * Offset until the next letter (in 1/64 pixels)
-         */
-        FT_Pos advance;
-    };
-
     struct GraphicCharacter {
         GLuint textureID;
-        CharacterLocalTransform transform;
+        MessageLabel::CharacterLocalTransform transform;
     };
 
     struct FTContent {
@@ -57,8 +40,7 @@ class FontTexturesGenerator {
     /**
      * Graphic character key containing the character and its font size in pixels
      */
-    using GraphicCharacterHash = std::string;
-    using GraphicAlphabet = std::unordered_map<GraphicCharacterHash, GraphicCharacter>>;
+    using GraphicAlphabet = std::unordered_map<MessageLabel::LetterHash , GraphicCharacter>>;
 
     using NodeMessageAssociations = std::unordered_map<CstNode_sptr, std::string>;
 
@@ -66,6 +48,7 @@ class FontTexturesGenerator {
 
 public:
     FontTexturesGenerator(
+        size_t screenWidth,
         size_t screenHeight,
         const FTContent &ftContent,
         const NodeMessageAssociations &nodeToMessage
@@ -73,6 +56,11 @@ public:
 
 private:
     const FTContent &_ftContent;
+
+    /**
+     * Screen width in pixels
+     */
+    const size_t _screenWidth;
 
     /**
      * Screen height in pixels

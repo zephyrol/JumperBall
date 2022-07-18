@@ -88,4 +88,8 @@ float Node::getScreenSpaceHeight() const {
     return _screenTransform->height;
 }
 
+float Node::getScreenSpaceWidth() const {
+    return _screenTransform->width;
+}
+
 

@@ -11,12 +11,15 @@
 class Transformation {
 
 public :
-    enum class Type { Translation, Rotation, Scale };
+    enum class Type {
+        Translation, Rotation, Scale
+    };
 
-    explicit Transformation(const Type& type, const JBTypes::vec3f& value);
+    explicit Transformation(const Type &type, const JBTypes::vec3f &value);
 
-    const Type& type() const;
-    const JBTypes::vec3f& value() const;
+    const Type &type() const;
+
+    const JBTypes::vec3f &value() const;
 
 private:
     const Type _type;

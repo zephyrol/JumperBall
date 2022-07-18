@@ -60,6 +60,7 @@ public:
     float ratio() const;
 
     float getScreenSpaceHeight() const;
+    float getScreenSpaceWidth() const;
 
     /**
      * Update screen space transform of the node and for each child.
