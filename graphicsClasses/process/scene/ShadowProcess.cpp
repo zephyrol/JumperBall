@@ -60,7 +60,7 @@ ShadowProcess::ShadowProcess(
 
 void ShadowProcess::render() const {
 
-    if(_isFirst) {
+    if (_isFirst) {
         glCullFace(GL_FRONT);
         FrameBuffer::enableDepthTest();
         FrameBuffer::setViewportSize(sizeDepthTexture, sizeDepthTexture);

@@ -21,6 +21,8 @@ using vecPage_sptr = std::vector<Page_sptr>;
 class Page : public SceneElement {
 public:
 
+    using NodeMessageAssociations = std::unordered_map<CstNode_sptr, std::string>;
+
 // Slide state => timepoint and yScreenPosition
     using slideState = std::pair<JBTypes::timePointMs, float>;
     enum class PageFormat {
@@ -32,6 +34,7 @@ public:
 
     Page(
         const Page_sptr &parent,
+        NodeMessageAssociations &&nodeToMessage,
         const Page::PageFormat &pageFormat,
         const Page::EscapeAnswer &escapeAnswer,
         float height = 1.f,
@@ -60,6 +63,8 @@ public:
 
     const vecCstLabel_sptr &labels() const;
 
+    const NodeMessageAssociations& nodeToMessage() const;
+
     void pressOnPage();
 
     void release();
@@ -80,6 +85,8 @@ private:
 
     const PageFormat _pageFormat;
     std::unordered_map<Label_sptr, Page_sptr> _bridges;
+
+    const NodeMessageAssociations _nodeToMessage;
 
     vecLabel_sptr _labels;
     vecCstLabel_sptr _cstLabels;

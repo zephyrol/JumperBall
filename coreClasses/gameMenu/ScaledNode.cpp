@@ -4,7 +4,7 @@
 
 #include "ScaledNode.h"
 
-ScaledNode::ScaledNode(const Node_sptr &parent, float scale) : Node(
+ScaledNode::ScaledNode(const CstNode_sptr &parent, float scale) : Node(
     parent,
     {
         scale, scale, 0.f, 0.f

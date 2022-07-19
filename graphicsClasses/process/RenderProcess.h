@@ -17,6 +17,11 @@ using CstRenderProcess_sptr = std::shared_ptr<const RenderProcess>;
 using vecCstRenderProcess_sptr = std::vector<CstRenderProcess_sptr>;
 using vecRenderProcess_sptr = std::vector<RenderProcess_sptr>;
 
+/**
+ * Render process is used to render a specific effect. It may render it into frame buffer of
+ * directly on the screen. It contains a specific shader program. It can create its own render passes
+ * or use shareable render passes.
+ */
 class RenderProcess {
 
 public:

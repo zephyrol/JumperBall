@@ -37,6 +37,8 @@ public:
 
     virtual std::string message() const;
 
+    const CstNode_sptr& getNode() const;
+
     void activate();
 
     void deactivate();

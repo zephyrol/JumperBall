@@ -57,7 +57,7 @@ void MenuRendering::freeGPUMemory() {
         renderPass->freeGPUMemory();
     }
     _menuUniformBuffer.freeGPUMemory();
-    FontTexturesGenerator::freeGraphicAlphabetGPUMemory(_graphicAlphabet);
+    FontTexturesGenerator::freeGPUMemory(_graphicAlphabet);
 }
 
 

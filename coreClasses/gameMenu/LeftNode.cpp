@@ -4,7 +4,7 @@
 
 #include "LeftNode.h"
 
-LeftNode::LeftNode(const Node_sptr &parent, float ratio) : FillingNode(
+LeftNode::LeftNode(const CstNode_sptr &parent, float ratio) : FillingNode(
     parent,
     ratio,
     [](const JBTypes::vec2f &size) -> JBTypes::vec2f {

@@ -5,20 +5,15 @@
 #include "Node.h"
 
 
-Node::Node(const Node_sptr &parent, const Node::Transform &transform, float ratio) :
+Node::Node(const CstNode_sptr &parent, const Node::Transform &transform, float ratio) :
     _parent(parent),
+    _height(parent == nullptr ? 0 : (parent->height() + 1)),
     _localTransform(transform),
-    _ratio(ratio),
-    _children{} {
-    parent->addChild(this);
+    _ratio(ratio) {
 }
 
 const Node::Transform &Node::getLocalTransform() const {
     return _localTransform;
-}
-
-void Node::addChild(Node_rptr child) {
-    _children.push_back(child);
 }
 
 float Node::ratio() const {
@@ -35,7 +30,7 @@ JBTypes::vec2f Node::computeChildNodeSize(float parentRatio, float childRatio) {
 void Node::updateScreenTransform() {
     _parent == nullptr
     ? updateScreenTransform(getIdentityTransform())
-    : updateScreenTransform(_parent->getScreenTranform());
+    : updateScreenTransform(_parent->getScreenTransform());
 }
 
 void Node::updateScreenTransform(const Node::Transform &parentTransform) {
@@ -50,17 +45,14 @@ void Node::updateScreenTransform(const Node::Transform &parentTransform) {
 
     std::unique_ptr<Node::Transform> screenTransform(new Node::Transform(
         {
-            parentTransform.width * _localTransform.width,
-            parentTransform.height * _localTransform.height,
-            parentTransform.positionX + parentTransform.width * _localTransform.positionX,
-            parentTransform.positionY + parentTransform.height * _localTransform.positionY
+            parentTransform.width * localTransform.width,
+            parentTransform.height * localTransform.height,
+            parentTransform.positionX + parentTransform.width * localTransform.positionX,
+            parentTransform.positionY + parentTransform.height * localTransform.positionY
         }
     ));
 
     _screenTransform = std::move(screenTransform);
-    for (const auto &child: _children) {
-        child->updateScreenTransform(*_screenTransform);
-    }
 }
 
 std::unique_ptr<Node::Transform> Node::getAdditionalLocalTransform() {
@@ -71,23 +63,26 @@ Node::Transform Node::getIdentityTransform() {
     return {1.f, 1.f, 0.f, 0.f};
 }
 
-CstNode_rptr Node::getClickNode(float screenX, float screenY) {
+bool Node::intersect(float screenX, float screenY) {
     const auto halfWidth = _screenTransform->width / 2.f;
-    const auto halfHeight = _screenTransform->height/ 2.f;
+    const auto halfHeight = _screenTransform->height / 2.f;
 
-    if (!(screenX < _screenTransform->positionX + halfWidth
-        && screenX > _screenTransform->positionX - halfWidth
-        && screenX < _screenTransform->positionY + halfHeight
-        && screenX > _screenTransform->positionY - halfHeight)) {
-        return nullptr;
+    return screenX < _screenTransform->positionX + halfWidth
+           && screenX > _screenTransform->positionX - halfWidth
+           && screenX < _screenTransform->positionY + halfHeight
+           && screenX > _screenTransform->positionY - halfHeight;
+}
+
+void Node::updateScreenTransforms(const vecNode_sptr& nodes) {
+    auto sortedNodes = nodes;
+    std::sort(
+        sortedNodes.begin(),
+        sortedNodes.end(),
+        [](const Node_sptr &a, const Node_sptr &b) { return a->height() < b->height(); }
+    );
+    for (const auto &node: sortedNodes) {
+        node->updateScreenTransform();
     }
-    for (const auto &child: _children) {
-        const auto& childResult = child->getClickNode(screenX, screenY);
-        if(childResult != nullptr) {
-            return childResult;
-        }
-    }
-    return this;
 }
 
 float Node::getScreenSpaceHeight() const {
@@ -98,8 +93,12 @@ float Node::getScreenSpaceWidth() const {
     return _screenTransform->width;
 }
 
-const Node::Transform &Node::getScreenTranform() const {
+const Node::Transform &Node::getScreenTransform() const {
     return *_screenTransform;
+}
+
+size_t Node::height() const {
+    return _height;
 }
 
 

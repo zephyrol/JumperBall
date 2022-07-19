@@ -10,7 +10,7 @@
 class ScaledNode : public Node {
 public:
     ScaledNode(
-        const Node_sptr &parent,
+        const CstNode_sptr &parent,
         float scale
     );
 };

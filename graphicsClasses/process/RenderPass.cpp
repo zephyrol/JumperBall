@@ -13,9 +13,7 @@ RenderPass::RenderPass(const vecMesh_sptr &meshes) :
     _meshStates(createMeshStates()),
     _unitedMeshesGroup(createUnitedMeshesGroup()),
     _separateMeshGroups(createSeparateMeshGroups()),
-    _renderGroupsUniforms{}
-//_renderPassUniforms()
-{
+    _renderGroupsUniforms{} {
 }
 
 

@@ -5,7 +5,7 @@
 #include "FillingNode.h"
 
 FillingNode::FillingNode(
-    const Node_sptr &parent,
+    const CstNode_sptr &parent,
     float ratio,
     const std::function<JBTypes::vec2f(const JBTypes::vec2f &)> &computePositionFromSize
 ) : Node(

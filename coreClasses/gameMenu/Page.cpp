@@ -11,12 +11,14 @@
  */
 
 Page::Page(const Page_sptr &parent,
+           NodeMessageAssociations&& nodeToMessage,
            const Page::PageFormat &pageFormat,
            const Page::EscapeAnswer &escapeAnswer,
            float height,
            bool visibleOnParent) :
     _pageFormat(pageFormat),
     _bridges{},
+    _nodeToMessage(std::move(nodeToMessage)),
     _labels{},
     _cstLabels{},
     _children{},
@@ -58,8 +60,6 @@ bool Page::visibleOnParent() const {
 }
 
 Page_sptr Page::child(const Label_sptr &label) {
-    //CstPage_sptr cstPage = static_cast <const Page&>(*this).child(label);
-    //return std::const_pointer_cast <Page>(cstPage);
     if (_bridges.find(label) != _bridges.end()) {
         return _bridges.at(label);
     } else {
@@ -91,7 +91,6 @@ void Page::update(bool isPressed, float screenPosY) {
 
     // Press cases
     if (isPressed && !_isPressed) {
-        // _countingUpdates = 0;
         _pressedScreenPosY = screenPosY;
         _localPressedPosY = _localPosY;
         _isPressed = true;
@@ -188,5 +187,9 @@ void Page::resize(float screenRatio) {
     for (const auto &label: _labels) {
         // label->resize(screenRatio); // TODO
     }
+}
+
+const Page::NodeMessageAssociations &Page::nodeToMessage() const {
+    return _nodeToMessage;
 }
 

@@ -26,7 +26,7 @@ std::string MessageLabel::message() const {
 vecGeometry MessageLabel::genGeometries() const {
 
     vecGeometry geometries {};
-    const auto& screenTransform = _node->getScreenTranform();
+    const auto& screenTransform = _node->getScreenTransform();
     for (const auto &transform: _transforms) {
         const Geometry quad(
             Geometry::Shape::Quad,

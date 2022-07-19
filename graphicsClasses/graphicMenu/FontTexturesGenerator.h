@@ -23,6 +23,7 @@
 #include FT_FREETYPE_H
 #include <gameMenu/Menu.h>
 
+// A font textures generator is attached to a page, because only one page is rendered each time.
 class FontTexturesGenerator {
 
     struct GraphicCharacter {
@@ -32,30 +33,27 @@ class FontTexturesGenerator {
         unsigned int advance; // Offset to advance to next letter
     };
 
-    struct FTContent {
-        FT_Library ftLib;
-        FT_Face fontFace;
-    };
-
-    //using GraphicAlphabet = std::unordered_map<unsigned char, GraphicCharacter>;
-
     /**
      * Graphic character key containing the character and its font size in pixels
      */
     using GraphicAlphabet = std::unordered_map<MessageLabel::LetterHash, GraphicCharacter>;
 
-    using NodeMessageAssociations = std::unordered_map<CstNode_sptr, std::string>;
-
-    vecMessageLabel_sptr genMessageLabels(const NodeMessageAssociations &nodeToMessage);
-
 
 public:
+
+    struct FTContent {
+        FT_Library ftLib;
+        FT_Face fontFace;
+    };
+
     FontTexturesGenerator(
         size_t screenWidth,
         size_t screenHeight,
-        const FTContent &ftContent,
-        const NodeMessageAssociations &nodeToMessage
+        const CstPage_sptr &page,
+        const FTContent &ftContent
     );
+
+    void freeGPUMemory();
 
 private:
     const FTContent &_ftContent;
@@ -90,14 +88,14 @@ private:
         unsigned int nodePixelHeight
     );
 
-    void freeGraphicAlphabetGPUMemory(const GraphicAlphabet &graphicAlphabet);
 
-    FTContent initFreeTypeAndFont(
+    vecMessageLabel_sptr genMessageLabels(const CstPage_sptr &page);
+    static FTContent initFreeTypeAndFont(
         const unsigned char *fontData,
         size_t fontDataSize
     );
 
-    void clearFreeTypeRessources(FTContent &ftContent);
+    static void clearFreeTypeRessources(FTContent &ftContent);
 };
 
 

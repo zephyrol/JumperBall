@@ -9,6 +9,19 @@
 #include "FrameBuffer.h"
 #include "gameMenu/CenteredNode.h"
 
+FontTexturesGenerator::FontTexturesGenerator(
+    size_t screenWidth,
+    size_t screenHeight,
+    const CstPage_sptr &page,
+    const FontTexturesGenerator::FTContent &ftContent,
+) : _ftContent(ftContent),
+    _screenWidth(screenWidth),
+    _screenHeight(screenHeight),
+    _graphicAlphabet{},
+    _messageLabels(genMessageLabels(page)) {
+}
+
+
 FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont(
     const unsigned char *fontData,
     size_t fontDataSize
@@ -23,7 +36,7 @@ FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont(
 
     FT_Open_Args openArgs;
     openArgs.flags = FT_OPEN_MEMORY;
-    openArgs.memory_size = fontDataSize;
+    openArgs.memory_size = static_cast<FT_Long>(fontDataSize);
     openArgs.memory_base = fontData;
 
     const auto ftOpenFaceResult = FT_Open_Face(
@@ -43,8 +56,8 @@ void FontTexturesGenerator::clearFreeTypeRessources(FontTexturesGenerator::FTCon
     FT_Done_FreeType(ftContent.ftLib);
 }
 
-void FontTexturesGenerator::freeGraphicAlphabetGPUMemory(const GraphicAlphabet &graphicAlphabet) {
-    for (const auto &character: graphicAlphabet) {
+void FontTexturesGenerator::freeGPUMemory() {
+    for (const auto &character: _graphicAlphabet) {
         const auto &graphicCharacter = character.second;
         glDeleteTextures(1, &graphicCharacter.textureID);
     }
@@ -104,10 +117,11 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphi
 
 
 vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
-    const FontTexturesGenerator::NodeMessageAssociations &nodeToMessage
+    const CstPage_sptr &page
 ) {
 
     vecMessageLabel_sptr messageLabels{};
+    const auto& nodeToMessage = page->nodeToMessage();
     // disable byte-alignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     for (const auto &item: nodeToMessage) {
@@ -144,26 +158,13 @@ vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
     return messageLabels;
 }
 
-FontTexturesGenerator::FontTexturesGenerator(
-    size_t screenWidth,
-    size_t screenHeight,
-    const FontTexturesGenerator::FTContent &ftContent,
-    const FontTexturesGenerator::NodeMessageAssociations &nodeToMessage
-) : _ftContent(ftContent),
-    _screenWidth(screenWidth),
-    _screenHeight(screenHeight),
-    _graphicAlphabet{},
-    _messageLabels(genMessageLabels(nodeToMessage)) {
-
-}
-
 std::vector<MessageLabel::CharacterLocalTransform> FontTexturesGenerator::getCharacterLocalTransforms(
     const std::vector<GraphicCharacter> &graphicCharacters,
     unsigned int nodePixelWidth,
     unsigned int nodePixelHeight
 ) {
 
-    std::vector<MessageLabel::CharacterLocalTransform> localTransforms {};
+    std::vector<MessageLabel::CharacterLocalTransform> localTransforms{};
     const auto fNodePixelWidth = static_cast<float>(nodePixelWidth);
     const auto fNodePixelHeight = static_cast<float>(nodePixelHeight);
 
