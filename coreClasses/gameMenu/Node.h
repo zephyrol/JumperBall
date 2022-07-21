@@ -75,6 +75,8 @@ public:
 
     float getScreenSpaceWidth() const;
 
+
+    // TODO update automatically in constructor, parent is known !!
     /**
      * Update screen transform using its parent node one.
      * Make sure that its node parent was updated before

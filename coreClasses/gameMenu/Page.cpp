@@ -12,11 +12,9 @@
 
 Page::Page(const Page_sptr &parent,
            NodeMessageAssociations&& nodeToMessage,
-           const Page::PageFormat &pageFormat,
            const Page::EscapeAnswer &escapeAnswer,
            float height,
            bool visibleOnParent) :
-    _pageFormat(pageFormat),
     _bridges{},
     _nodeToMessage(std::move(nodeToMessage)),
     _labels{},

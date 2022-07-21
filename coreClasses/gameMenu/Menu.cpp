@@ -152,7 +152,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
     );
 
     const Page_sptr page1 = std::make_shared<Page>(
-        nullptr, Page::PageFormat::Full, Page::EscapeAnswer::QuitGame
+        nullptr, , Page::EscapeAnswer::QuitGame
     );
     return nullptr;
 }

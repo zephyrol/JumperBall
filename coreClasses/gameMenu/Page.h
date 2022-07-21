@@ -1,5 +1,5 @@
 /*
- * File: Map.cpp
+ * File: Page.h
  * Author: Morgenthaler S
  *
  * Created on 28 avril 2020, 18:56
@@ -8,8 +8,8 @@
 #ifndef PAGE_H
 #define PAGE_H
 
-#include <list>
 #include "Label.h"
+#include <list>
 
 class Page;
 
@@ -23,11 +23,8 @@ public:
 
     using NodeMessageAssociations = std::unordered_map<CstNode_sptr, std::string>;
 
-// Slide state => timepoint and yScreenPosition
+    // Slide state => timepoint and yScreenPosition
     using slideState = std::pair<JBTypes::timePointMs, float>;
-    enum class PageFormat {
-        Full, Scroll
-    };
     enum class EscapeAnswer {
         QuitGame, GoToParent, GoToPause
     };
@@ -35,7 +32,6 @@ public:
     Page(
         const Page_sptr &parent,
         NodeMessageAssociations &&nodeToMessage,
-        const Page::PageFormat &pageFormat,
         const Page::EscapeAnswer &escapeAnswer,
         float height = 1.f,
         bool visibleOnParent = false
@@ -63,7 +59,7 @@ public:
 
     const vecCstLabel_sptr &labels() const;
 
-    const NodeMessageAssociations& nodeToMessage() const;
+    const NodeMessageAssociations &nodeToMessage() const;
 
     void pressOnPage();
 
@@ -83,7 +79,6 @@ private:
 
     std::vector<Page_sptr> createChildren() const;
 
-    const PageFormat _pageFormat;
     std::unordered_map<Label_sptr, Page_sptr> _bridges;
 
     const NodeMessageAssociations _nodeToMessage;
