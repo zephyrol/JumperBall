@@ -13,6 +13,10 @@
 #include <gameMenu/ArrowLabel.h>
 #include <player/Player.h>
 
+class Menu;
+using Menu_sptr = std::shared_ptr<Menu>;
+using CstMenu_sptr = std::shared_ptr<const Menu>;
+
 class Menu {
 public:
 

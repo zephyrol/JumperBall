@@ -31,6 +31,7 @@ public:
 
     Page(
         const Page_sptr &parent,
+        // TODO add no message labels ( shapes )
         NodeMessageAssociations &&nodeToMessage,
         const Page::EscapeAnswer &escapeAnswer,
         float height = 1.f,

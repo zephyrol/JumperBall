@@ -6,10 +6,12 @@
 
 LettersProcess::LettersProcess(
     const JBTypes::FileContent& fileContent,
-    const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet,
-    const LettersProcess::RenderPassesLetters& renderPassesLetters
+    const FontTexturesGenerator::FTContent &ftContent,
+    GLsizei width,
+    GLsizei height,
+    const CstPage_sptr &page,
 ):
-    _graphicAlphabet(graphicAlphabet),
+    _fontTexturesGenerator(width, height, page, ftContent),
     _renderPassesLetters(renderPassesLetters),
     _lettersShader(createLettersProcessShaderProgram(fileContent))
 {
@@ -30,6 +32,7 @@ void LettersProcess::render() const {
 
 void LettersProcess::freeGPUMemory() {
     _lettersShader->freeGPUMemory();
+    _fontTexturesGenerator.freeGPUMemory();
 }
 
 std::shared_ptr<const GLuint> LettersProcess::getRenderTexture() const {

@@ -72,7 +72,7 @@ private:
     const vecMessageLabel_sptr _messageLabels;
 
     /**
-     * Create and add in _graphicAlphabet a new graphic character.
+     * Create and add a new graphic character in _graphicAlphabet.
      * @param character Letter character
      * @param pixelHeight Height of the graphic character in pixels
      * @return GraphicCharacter texture added into _graphicAlphabet
@@ -88,8 +88,9 @@ private:
         unsigned int nodePixelHeight
     );
 
-
     vecMessageLabel_sptr genMessageLabels(const CstPage_sptr &page);
+
+public:
     static FTContent initFreeTypeAndFont(
         const unsigned char *fontData,
         size_t fontDataSize

@@ -13,7 +13,7 @@ FontTexturesGenerator::FontTexturesGenerator(
     size_t screenWidth,
     size_t screenHeight,
     const CstPage_sptr &page,
-    const FontTexturesGenerator::FTContent &ftContent,
+    const FontTexturesGenerator::FTContent &ftContent
 ) : _ftContent(ftContent),
     _screenWidth(screenWidth),
     _screenHeight(screenHeight),

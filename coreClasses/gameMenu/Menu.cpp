@@ -151,8 +151,16 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
         4.f
     );
 
+    Page::NodeMessageAssociations nodeToMessage = {
+        {
+            { jumperBallTitle, "Jumper Ball"}
+        }
+    };
+
     const Page_sptr page1 = std::make_shared<Page>(
-        nullptr, , Page::EscapeAnswer::QuitGame
+        nullptr,
+        std::move(nodeToMessage),
+        Page::EscapeAnswer::QuitGame
     );
     return nullptr;
 }

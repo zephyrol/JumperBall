@@ -14,6 +14,10 @@
 #include <scene/Star.h>
 #include "Camera.h"
 
+
+class Scene;
+using Scene_sptr = std::shared_ptr<Scene>;
+using CstScene_sptr = std::shared_ptr<const Scene>;
 class Scene {
 
 public:

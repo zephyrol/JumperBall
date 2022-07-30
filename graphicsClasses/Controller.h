@@ -12,7 +12,7 @@
 #include <scene/MapGenerator.h>
 #include "scene/SceneRendering.h"
 #include "Viewer.h"
-#include "graphicMenu/MenuRendering.h"
+#include "graphicMenu/PageRendering.h"
 
 class Controller {
 
@@ -31,7 +31,6 @@ Controller(
     size_t fontDataSize,
     bool isUsingTouchScreen
 );
-    ~Controller();
 
 void interactionButtons(const Button& button,
                         const Status& status);
@@ -68,11 +67,6 @@ void updateMouse(float posX, float posY);
 void releaseMouse(float posX, float posY);
 void setValidateMouse();
 
-std::shared_ptr<Viewer> createViewer() const;
-void refreshViewer();
-
-const GLint _defaultFrameBuffer;
-FontTexturesGenerator::FTContent _ftContent;
 Player _player;
 std::shared_ptr <Menu> _menu;
 std::map <Button, Status> _buttonsStatus;
@@ -80,8 +74,6 @@ Scene::ActionKey _currentKey;
 
 const JBTypes::FileContent _filesContent;
 const bool _isUsingTouchScreen;
-size_t _screenWidth;
-size_t _screenHeight;
 float _ratio;
 
 float _mousePressingXCoord;

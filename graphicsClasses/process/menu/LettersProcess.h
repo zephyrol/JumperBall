@@ -18,8 +18,10 @@ public:
 
     LettersProcess(
         const JBTypes::FileContent& fileContent,
-        const FontTexturesGenerator::GraphicAlphabet& graphicAlphabet,
-        const LettersProcess::RenderPassesLetters& renderPassesLetters
+        const FontTexturesGenerator::FTContent &ftContent,
+        GLsizei width,
+        GLsizei height,
+        const CstPage_sptr &page
     );
 
     void render() const override;
@@ -28,7 +30,7 @@ public:
     std::shared_ptr<const GLuint> getRenderTexture() const override;
 
 private:
-    const FontTexturesGenerator::GraphicAlphabet& _graphicAlphabet;
+    FontTexturesGenerator _fontTexturesGenerator;
     const RenderPassesLetters _renderPassesLetters;
     const CstShaderProgram_sptr _lettersShader;
 
