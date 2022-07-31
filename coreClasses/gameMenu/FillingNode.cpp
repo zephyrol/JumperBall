@@ -11,8 +11,11 @@ FillingNode::FillingNode(
 ) : Node(
     parent,
     [&ratio, &parent, &computePositionFromSize]() -> Transform {
-        const float parentRatio = parent->ratio();
-        const auto size = Node::computeChildNodeSize(parentRatio, ratio);
+        const auto size = parent != nullptr
+            ? Node::computeChildNodeSize(
+            parent->ratio(),
+            ratio)
+            : JBTypes::vec2f({1.f, 1.f});
         const auto position = computePositionFromSize(size);
         return {size.x, size.y, position.x, position.y};
     }(),

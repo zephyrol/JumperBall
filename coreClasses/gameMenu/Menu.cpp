@@ -26,7 +26,6 @@ Menu::Menu(
     _currentPage(rootPage) {
 }
 
-
 CstPage_sptr Menu::currentPage() const {
     return _currentPage;
 }
@@ -153,7 +152,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
 
     Page::NodeMessageAssociations nodeToMessage = {
         {
-            { jumperBallTitle, "Jumper Ball"}
+            {jumperBallTitle, "Jumper Ball"}
         }
     };
 
@@ -162,7 +161,14 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
         std::move(nodeToMessage),
         Page::EscapeAnswer::QuitGame
     );
-    return nullptr;
+    return std::make_shared<Menu>(
+        player,
+        page1,
+        nullptr,
+        nullptr,
+        nullptr,
+        vecPage_sptr()
+    );
 }
 
 /*std::shared_ptr<Menu> Menu::getJumperBallMenu(
@@ -533,3 +539,4 @@ void Menu::resize(float screenRatio) {
     }
 
 }
+

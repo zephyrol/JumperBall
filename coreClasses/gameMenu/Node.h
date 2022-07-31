@@ -75,8 +75,6 @@ public:
 
     float getScreenSpaceWidth() const;
 
-
-    // TODO update automatically in constructor, parent is known !!
     /**
      * Update screen transform using its parent node one.
      * Make sure that its node parent was updated before
@@ -104,7 +102,7 @@ protected:
      */
     static Transform getIdentityTransform();
 
-    virtual std::unique_ptr<Node::Transform> getAdditionalLocalTransform();
+    virtual std::unique_ptr<Node::Transform> getAdditionalLocalTransform() const;
 
 private:
 
@@ -129,15 +127,14 @@ private:
     const float _ratio;
 
     /**
-     * Node transformation in screen space. May be updated
+     * Node transformation in screen space. May be updated.
      */
     std::unique_ptr<Transform> _screenTransform;
 
     /**
-     * Update screen space transform of the node and for each child.
-     * @param parentTransform screen space parent transform
+     * Compute screen space transform of the node.
      */
-    void updateScreenTransform(const Transform &parentTransform);
+    std::unique_ptr<Transform> computeScreenTransform() const;
 };
 
 

@@ -9,7 +9,8 @@ Node::Node(const CstNode_sptr &parent, const Node::Transform &transform, float r
     _parent(parent),
     _height(parent == nullptr ? 0 : (parent->height() + 1)),
     _localTransform(transform),
-    _ratio(ratio) {
+    _ratio(ratio),
+    _screenTransform(computeScreenTransform()) {
 }
 
 const Node::Transform &Node::getLocalTransform() const {
@@ -28,12 +29,15 @@ JBTypes::vec2f Node::computeChildNodeSize(float parentRatio, float childRatio) {
 }
 
 void Node::updateScreenTransform() {
-    _parent == nullptr
-    ? updateScreenTransform(getIdentityTransform())
-    : updateScreenTransform(_parent->getScreenTransform());
+    _screenTransform = computeScreenTransform();
 }
 
-void Node::updateScreenTransform(const Node::Transform &parentTransform) {
+std::unique_ptr<Node::Transform> Node::computeScreenTransform() const {
+
+    const auto& parentTransform = _parent != nullptr
+                                  ? _parent->getScreenTransform()
+                                  : getIdentityTransform();
+        // screen space parent transform
 
     const auto additionLocalTransform = getAdditionalLocalTransform();
     const Node::Transform &localTransform = additionLocalTransform != nullptr ? Node::Transform{
@@ -52,10 +56,10 @@ void Node::updateScreenTransform(const Node::Transform &parentTransform) {
         }
     ));
 
-    _screenTransform = std::move(screenTransform);
+    return screenTransform;
 }
 
-std::unique_ptr<Node::Transform> Node::getAdditionalLocalTransform() {
+std::unique_ptr<Node::Transform> Node::getAdditionalLocalTransform() const {
     return nullptr;
 }
 
@@ -73,7 +77,7 @@ bool Node::intersect(float screenX, float screenY) {
            && screenX > _screenTransform->positionY - halfHeight;
 }
 
-void Node::updateScreenTransforms(const vecNode_sptr& nodes) {
+void Node::updateScreenTransforms(const vecNode_sptr &nodes) {
     auto sortedNodes = nodes;
     std::sort(
         sortedNodes.begin(),
@@ -100,5 +104,3 @@ const Node::Transform &Node::getScreenTransform() const {
 size_t Node::height() const {
     return _height;
 }
-
-

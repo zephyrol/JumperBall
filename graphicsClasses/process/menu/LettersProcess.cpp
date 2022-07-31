@@ -61,10 +61,16 @@ CstShaderProgram_sptr LettersProcess::createLettersProcessShaderProgram(
 ) {
     auto shader = ShaderProgram::createShaderProgram(
         fileContent,
-        "fontVs.vs",
-        "fontFs.fs"
+        //"fontVs.vs",
+        //"fontFs.fs"
+        "labelVs.vs",
+        "labelFs.fs"
         );
     shader->use();
     shader->bindUniformTextureIndex("characterTexture", 0);
     return shader;
+}
+
+void LettersProcess::update() {
+    _renderPass.update();
 }

@@ -146,7 +146,6 @@ void SceneRendering::freeGPUMemory() {
     _sceneUniformBuffer.freeGPUMemory();
 }
 
-
 vecCstShaderProgram_sptr SceneRendering::getShaderProgramsUsingUniformBuffer() const {
     auto shadersPrograms = _shadowStar->getShaderPrograms();
 

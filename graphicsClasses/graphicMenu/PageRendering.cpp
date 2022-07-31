@@ -23,9 +23,11 @@ PageRendering::PageRendering(
 
 void PageRendering::update() {
     _pageUniformBuffer.update(_page->localPosY());
+    _lettersProcess.update();
 }
 
 void PageRendering::render() const {
+    _pageUniformBuffer.bindBufferRange();
     _lettersProcess.render();
 }
 
