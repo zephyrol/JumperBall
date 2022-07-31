@@ -71,14 +71,7 @@ public:
 
     const vecCstPage_sptr &pages() const;
 
-    static std::shared_ptr<Menu> getJumperBallMenu(
-        Player &player,
-        size_t currentLevel,
-        unsigned int sizeX,
-        unsigned int sizeY
-    );
-
-    void resize(float screenRatio);
+    static std::shared_ptr<Menu> getJumperBallMenu(Player &player, float ratio);
 
 private:
     Player &_player;

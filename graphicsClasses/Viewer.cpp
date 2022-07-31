@@ -56,12 +56,16 @@ void Viewer::freeGPUMemory() {
     _pageRendering->freeGPUMemory();
 }
 
-void Viewer::resize(unsigned int resolutionX, unsigned int resolutionY) {
+void Viewer::resize(
+    unsigned int resolutionX,
+    unsigned int resolutionY,
+    const CstPage_sptr &page
+) {
     _resolutionX = static_cast<GLsizei>(resolutionX);
     _resolutionY = static_cast<GLsizei>(resolutionY);
     freeGPUMemory();
     setSceneRendering(nullptr);
-    setPageRendering(nullptr);
+    setPageRendering(page);
 }
 
 void Viewer::setSceneRendering(const CstScene_sptr& scene) {

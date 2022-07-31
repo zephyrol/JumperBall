@@ -8,6 +8,6 @@ UpNode::UpNode(const Node_sptr &parent, float ratio) : FillingNode(
     parent,
     ratio,
     [](const JBTypes::vec2f &size) -> JBTypes::vec2f {
-        return {size.y + 0.5f, 0.f};
+        return {0.f, size.y + 0.5f};
     }
 ) {}

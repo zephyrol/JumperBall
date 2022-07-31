@@ -181,12 +181,6 @@ SceneElement::GlobalState Page::getGlobalState() const {
     return SceneElement::GlobalState::Separate;
 }
 
-void Page::resize(float screenRatio) {
-    for (const auto &label: _labels) {
-        // label->resize(screenRatio); // TODO
-    }
-}
-
 const Page::NodeMessageAssociations &Page::nodeToMessage() const {
     return _nodeToMessage;
 }

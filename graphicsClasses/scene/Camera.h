@@ -7,6 +7,7 @@
 
 #ifndef CAMERA_H
 #define CAMERA_H
+
 #include <scene/Star.h>
 #include <scene/Map.h>
 #include "player/Player.h"
@@ -15,58 +16,67 @@
 #include <glm/gtx/quaternion.hpp>
 #include "Utility.h"
 
-class Camera: public SceneElement {
+class Camera : public SceneElement {
 
 public:
 
-enum class Movement { TurningAroundMap, FollowingBall, ApproachingBall };
+    enum class Movement {
+        TurningAroundMap, FollowingBall, ApproachingBall
+    };
 
-Camera(const Map& map, float ratio);
+    Camera(const Map &map, float ratio);
 
-static constexpr float zNear = 0.1f;
-static constexpr float zFar = 100.f;
+    static constexpr float zNear = 0.1f;
+    static constexpr float zFar = 100.f;
 
-const glm::vec3& pos() const noexcept;
-glm::mat4 viewProjection() const noexcept;
+    const glm::vec3 &pos() const noexcept;
 
-SceneElement::GlobalState getGlobalState() const override;
+    glm::mat4 viewProjection() const noexcept;
 
-void update(
-    const JBTypes::timePointMs& updatingTime,
-    const Player::Status& status,
-    bool goAbove
-) noexcept;
-const Movement& getMovement() noexcept;
-void setRatio(float ratio);
+    SceneElement::GlobalState getGlobalState() const override;
 
-static glm::mat4 genVPMatrixFromStar(const Star& star);
+    void update(
+        const JBTypes::timePointMs &updatingTime,
+        const Player::Status &status,
+        bool goAbove
+    ) noexcept;
+
+    const Movement &getMovement() noexcept;
+
+    void setRatio(float ratio);
+
+    static glm::mat4 genVPMatrixFromStar(const Star &star);
 
 private:
 
-void turningAroundMapUpdate() noexcept;
-void followingBallUpdate() noexcept;
-bool approachingBallUpdate() noexcept;
+    void turningAroundMapUpdate() noexcept;
 
-static float computeFovy(float ratio) noexcept;
-static float computeLocalOffset(float fovy) noexcept;
+    void followingBallUpdate() noexcept;
 
-const Map& _map;
-const JBTypes::timePointMs _creationTime;
-JBTypes::timePointMs _updatingTime;
-float _fovy;
-float _localOffset;
-Movement _movement;
-glm::vec3 _pos;
-glm::vec3 _center;
-glm::vec3 _up;
-float _timeSinceCreation;
-JBTypes::timePointMs _timePointComeBack;
-JBTypes::timePointMs _timePointGoAbove;
-glm::mat4 _perspectiveMatrix;
+    bool approachingBallUpdate() noexcept;
 
-static constexpr float distBehindBall = 0.5f;
-static constexpr float distAbove = 1.1f;
-static constexpr float distDirPoint = 2.f;
+    static float computeFovY(float ratio) noexcept;
+
+    static float computeLocalOffset(float fovY) noexcept;
+
+    const Map &_map;
+    const JBTypes::timePointMs _creationTime;
+    JBTypes::timePointMs _updatingTime;
+    float _fovY;
+    float _localOffset;
+    Movement _movement;
+    glm::vec3 _pos;
+    glm::vec3 _center;
+    glm::vec3 _up;
+    float _timeSinceCreation;
+    JBTypes::timePointMs _timePointComeBack;
+    JBTypes::timePointMs _timePointGoAbove;
+    glm::mat4 _perspectiveMatrix;
+
+    static constexpr float distBehindBall = 0.5f;
+    static constexpr float distAbove = 1.1f;
+    static constexpr float distDirPoint = 2.f;
 
 };
+
 #endif /* CAMERA_H */

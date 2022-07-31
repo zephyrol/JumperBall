@@ -131,15 +131,10 @@ const vecCstPage_sptr &Menu::pages() const {
     return _cstPages;
 }
 
-std::shared_ptr<Menu> Menu::getJumperBallMenu(
-    Player &player,
-    size_t currentLevel,
-    unsigned int sizeX,
-    unsigned int sizeY
-) {
+std::shared_ptr<Menu> Menu::getJumperBallMenu(Player &player, float ratio) {
     Node_sptr mainNode = std::make_shared<CenteredNode>(
         nullptr,
-        static_cast<float>(sizeX) / static_cast<float>(sizeY)
+        ratio
     );
     Node_sptr mainTitleNode = std::make_shared<CenteredNode>(
         mainNode,
@@ -532,11 +527,3 @@ vecCstPage_sptr Menu::createCstPages() const {
     }
     return cstPages;
 }
-
-void Menu::resize(float screenRatio) {
-    for (const auto &page: _pages) {
-        page->resize(screenRatio);
-    }
-
-}
-

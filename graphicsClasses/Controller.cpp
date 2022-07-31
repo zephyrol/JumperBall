@@ -19,9 +19,7 @@ Controller::Controller(
     _player(),
     _menu(Menu::getJumperBallMenu(
         _player,
-        1,
-        static_cast<unsigned int>(screenWidth),
-        static_cast<unsigned int>(screenHeight)
+        static_cast<float>(screenWidth) /static_cast<float>(screenHeight)
     )),
     _buttonsStatus{
         {Controller::Button::Up,       Controller::Status::Released},
@@ -324,8 +322,11 @@ float Controller::computeDistance(float x0, float y0, float x1, float y1) {
 void Controller::resize(size_t screenWidth, size_t screenHeight) {
     _ratio = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
     _scene->updateScreenRatio(_ratio);
-    _menu->resize(_ratio);
-    _viewer->resize(screenWidth, screenHeight);
+    _menu = Menu::getJumperBallMenu(
+        _player,
+        _ratio
+    );
+    _viewer->resize(screenWidth, screenHeight, _menu->currentPage());
 }
 
 void Controller::updateSceneMenu() {

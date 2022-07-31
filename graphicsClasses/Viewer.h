@@ -28,7 +28,7 @@ public:
 
     void update();
 
-    void resize(unsigned int resolutionX, unsigned int resolutionY);
+    void resize(unsigned int resolutionX, unsigned int resolutionY, const CstPage_sptr &page);
 
     void render() const;
 

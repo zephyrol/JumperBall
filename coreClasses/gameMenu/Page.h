@@ -63,12 +63,9 @@ public:
     const NodeMessageAssociations &nodeToMessage() const;
 
     void pressOnPage();
-
     void release();
 
     void update(bool isPressed, float screenPosY = 0.f);
-
-    void resize(float screenRatio);
 
 private:
 
