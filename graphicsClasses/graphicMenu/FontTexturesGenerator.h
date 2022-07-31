@@ -55,6 +55,8 @@ public:
 
     void freeGPUMemory();
 
+    const vecMessageLabel_sptr& getMessageLabels();
+
 private:
     const FTContent &_ftContent;
 
@@ -69,6 +71,7 @@ private:
     const size_t _screenHeight;
 
     FontTexturesGenerator::GraphicAlphabet _graphicAlphabet;
+
     const vecMessageLabel_sptr _messageLabels;
 
     /**

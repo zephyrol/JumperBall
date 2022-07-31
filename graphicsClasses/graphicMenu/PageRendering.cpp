@@ -17,7 +17,7 @@ PageRendering::PageRendering(
     _page(page),
     _ftContent(ftContent),
     _fileContent(fileContent),
-    _lettersProcess(_fileContent, _ftContent),
+    _lettersProcess(_fileContent, _ftContent, width, height, page),
     _pageUniformBuffer(getShaderProgramsUsingUniformBuffer()) {
 }
 

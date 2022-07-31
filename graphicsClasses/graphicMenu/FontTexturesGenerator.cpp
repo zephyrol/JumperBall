@@ -181,3 +181,7 @@ std::vector<MessageLabel::CharacterLocalTransform> FontTexturesGenerator::getCha
     }
     return localTransforms;
 }
+
+const vecMessageLabel_sptr &FontTexturesGenerator::getMessageLabels() {
+    return _messageLabels;
+}

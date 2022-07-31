@@ -31,7 +31,8 @@ public:
 
 private:
     FontTexturesGenerator _fontTexturesGenerator;
-    const RenderPassesLetters _renderPassesLetters;
+    //const RenderPassesLetters _renderPassesLetters;
+    RenderPass _renderPass;
     const CstShaderProgram_sptr _lettersShader;
 
     static CstShaderProgram_sptr createLettersProcessShaderProgram(

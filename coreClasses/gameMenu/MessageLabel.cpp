@@ -8,7 +8,7 @@
 
 MessageLabel::MessageLabel(
     const std::string &message,
-    std::vector<MessageLabel::CharacterLocalTransform>&& transforms,
+    std::vector<MessageLabel::CharacterLocalTransform> &&transforms,
     const CstNode_sptr &node,
     size_t height,
     bool isActivated
@@ -16,7 +16,7 @@ MessageLabel::MessageLabel(
     _message(message),
     _transforms(std::move(transforms)),
     _height(height),
-    _letterHashes(createLetterHashes()){
+    _letterHashes(createLetterHashes()) {
 }
 
 std::string MessageLabel::message() const {
@@ -25,8 +25,8 @@ std::string MessageLabel::message() const {
 
 vecGeometry MessageLabel::genGeometries() const {
 
-    vecGeometry geometries {};
-    const auto& screenTransform = _node->getScreenTransform();
+    vecGeometry geometries{};
+    const auto &screenTransform = _node->getScreenTransform();
     for (const auto &transform: _transforms) {
         const Geometry quad(
             Geometry::Shape::Quad,
@@ -47,12 +47,12 @@ vecGeometry MessageLabel::genGeometries() const {
     return geometries;
 }
 
-const std::vector<std::string>& MessageLabel::getLetterHashes() const {
+const std::vector<std::string> &MessageLabel::getLetterHashes() const {
     return _letterHashes;
 }
 
 std::vector<std::string> MessageLabel::createLetterHashes() const {
-    std::vector<std::string> letterHashes {};
+    std::vector<std::string> letterHashes{};
     for (unsigned char c: _message) {
         letterHashes.push_back(createLetterHash(_height, c));
     }

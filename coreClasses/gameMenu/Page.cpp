@@ -178,7 +178,7 @@ std::vector<Page_sptr> Page::createChildren() const {
 
 
 SceneElement::GlobalState Page::getGlobalState() const {
-    return SceneElement::GlobalState::United;
+    return SceneElement::GlobalState::Separate;
 }
 
 void Page::resize(float screenRatio) {

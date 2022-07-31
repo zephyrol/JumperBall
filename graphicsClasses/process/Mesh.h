@@ -80,7 +80,8 @@ private:
     template<typename RawType, typename OpenGLType>
     static void convertUniformsToOpenGLFormat(
         const SceneElement::DynamicValues<RawType> &rawValues,
-        Mesh::UniformVariables<OpenGLType> &openGLValues);
+        Mesh::UniformVariables<OpenGLType> &openGLValue
+    );
 
     template<typename T>
     static void concatStateVertexAttribute(
