@@ -48,7 +48,6 @@ void Menu::rootPageAsCurrentPage() {
     _currentPage = _rootPage;
 }
 
-
 bool Menu::parentPageAsCurrentPage() {
     const std::shared_ptr<Page> parent = _currentPage->parent().lock();
     if (parent) {
@@ -526,4 +525,8 @@ vecCstPage_sptr Menu::createCstPages() const {
         cstPages.push_back(pages);
     }
     return cstPages;
+}
+
+void Menu::resize(float ratio) {
+
 }

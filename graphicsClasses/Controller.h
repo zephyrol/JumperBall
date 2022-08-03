@@ -68,13 +68,12 @@ void releaseMouse(float posX, float posY);
 void setValidateMouse();
 
 Player _player;
-std::shared_ptr <Menu> _menu;
+const std::shared_ptr <Menu> _menu;
 std::map <Button, Status> _buttonsStatus;
 Scene::ActionKey _currentKey;
 
 const JBTypes::FileContent _filesContent;
 const bool _isUsingTouchScreen;
-float _ratio;
 
 float _mousePressingXCoord;
 float _mousePressingYCoord;

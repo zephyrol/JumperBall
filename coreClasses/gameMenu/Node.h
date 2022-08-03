@@ -134,7 +134,7 @@ private:
     /**
      * Compute screen space transform of the node.
      */
-    std::unique_ptr<Transform> computeScreenTransform() const;
+    virtual std::unique_ptr<Transform> computeScreenTransform() const;
 };
 
 

@@ -46,11 +46,14 @@ public:
 
     std::shared_ptr<const Star> getStar2() const;
 
+    float getRatio() const;
+
 private:
-    const Map_sptr _map;
+    Map_sptr _map;
     const std::shared_ptr<Camera> _camera;
     const std::shared_ptr<Star> _star;
     const std::shared_ptr<Star> _star2;
+    float _ratio;
 
 };
 

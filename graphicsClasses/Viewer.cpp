@@ -56,35 +56,27 @@ void Viewer::freeGPUMemory() {
     _pageRendering->freeGPUMemory();
 }
 
-void Viewer::resize(
-    unsigned int resolutionX,
-    unsigned int resolutionY,
-    const CstPage_sptr &page
-) {
+void Viewer::resize(unsigned int resolutionX, unsigned int resolutionY) {
     _resolutionX = static_cast<GLsizei>(resolutionX);
     _resolutionY = static_cast<GLsizei>(resolutionY);
-    freeGPUMemory();
-    setSceneRendering(nullptr);
-    setPageRendering(page);
+    resetSceneRendering();
+    resetPageRendering();
 }
 
-void Viewer::setSceneRendering(const CstScene_sptr& scene) {
-    if(scene != nullptr) {
-        _scene = scene;
-    }
-    _sceneRendering = std::unique_ptr<SceneRendering>(new SceneRendering(
-        *_scene,
-        _resolutionX,
-        _resolutionY,
-        _defaultFrameBuffer,
-        _fileContent
-    ));
+void Viewer::setScene(const CstScene_sptr &scene) {
+    _scene = scene;
 }
 
-void Viewer::setPageRendering(const CstPage_sptr& page) {
-    if(page != nullptr) {
-        _page = page;
-    }
+void Viewer::setPage(const CstPage_sptr &page) {
+    _page = page;
+}
+
+Viewer::~Viewer() {
+    FontTexturesGenerator::clearFreeTypeRessources(_ftContent);
+}
+
+void Viewer::resetPageRendering() {
+    _pageRendering->freeGPUMemory();
     _pageRendering = std::unique_ptr<PageRendering>(new PageRendering(
         _page,
         _ftContent,
@@ -94,6 +86,13 @@ void Viewer::setPageRendering(const CstPage_sptr& page) {
     ));
 }
 
-Viewer::~Viewer() {
-    FontTexturesGenerator::clearFreeTypeRessources(_ftContent);
+void Viewer::resetSceneRendering() {
+    _sceneRendering->freeGPUMemory();
+    _sceneRendering = std::unique_ptr<SceneRendering>(new SceneRendering(
+        *_scene,
+        _resolutionX,
+        _resolutionY,
+        _defaultFrameBuffer,
+        _fileContent
+    ));
 }

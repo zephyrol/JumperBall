@@ -34,10 +34,10 @@ void Node::updateScreenTransform() {
 
 std::unique_ptr<Node::Transform> Node::computeScreenTransform() const {
 
+    // screen space parent transform
     const auto& parentTransform = _parent != nullptr
                                   ? _parent->getScreenTransform()
                                   : getIdentityTransform();
-        // screen space parent transform
 
     const auto additionLocalTransform = getAdditionalLocalTransform();
     const Node::Transform &localTransform = additionLocalTransform != nullptr ? Node::Transform{

@@ -10,11 +10,13 @@
  * Created on 28 avril 2020, 18:56
  */
 
-Page::Page(const Page_sptr &parent,
-           NodeMessageAssociations&& nodeToMessage,
-           const Page::EscapeAnswer &escapeAnswer,
-           float height,
-           bool visibleOnParent) :
+Page::Page(
+    const Page_sptr &parent,
+    NodeMessageAssociations &&nodeToMessage,
+    const Page::EscapeAnswer &escapeAnswer,
+    float height,
+    bool visibleOnParent
+) :
     _bridges{},
     _nodeToMessage(std::move(nodeToMessage)),
     _labels{},

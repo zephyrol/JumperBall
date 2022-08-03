@@ -45,6 +45,8 @@ public:
 
     void update(bool isPressed, float screenPosY);
 
+    void resize(float ratio);
+
     void rootPageAsCurrentPage();
 
     void pausePageAsCurrentPage();

@@ -28,15 +28,16 @@ public:
 
     void update();
 
-    void resize(unsigned int resolutionX, unsigned int resolutionY, const CstPage_sptr &page);
+    void resize(unsigned int resolutionX, unsigned int resolutionY);
 
     void render() const;
 
     void freeGPUMemory();
 
-    void setSceneRendering(const CstScene_sptr& scene);
+    void setPage(const CstPage_sptr& page);
 
-    void setPageRendering(const CstPage_sptr& page);
+    void setScene(const CstScene_sptr& scene);
+
 
 private:
 
@@ -52,6 +53,9 @@ private:
 
     std::unique_ptr<SceneRendering> _sceneRendering;
     std::unique_ptr<PageRendering> _pageRendering;
+
+    void resetSceneRendering();
+    void resetPageRendering();
 
 };
 

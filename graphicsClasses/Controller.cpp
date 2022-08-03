@@ -19,7 +19,7 @@ Controller::Controller(
     _player(),
     _menu(Menu::getJumperBallMenu(
         _player,
-        static_cast<float>(screenWidth) /static_cast<float>(screenHeight)
+        static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
     )),
     _buttonsStatus{
         {Controller::Button::Up,       Controller::Status::Released},
@@ -31,7 +31,6 @@ Controller::Controller(
     _currentKey(Scene::ActionKey::Nothing),
     _filesContent(filesContent),
     _isUsingTouchScreen(isUsingTouchScreen),
-    _ratio(static_cast<float>(screenWidth) / static_cast<float>(screenHeight)),
     _mousePressingXCoord(0.f),
     _mousePressingYCoord(0.f),
     _mouseCurrentXCoord(0.f),
@@ -45,7 +44,7 @@ Controller::Controller(
     _requestToLeave(false),
     _scene(std::make_shared<Scene>(
         filesContent.at("map" + std::to_string(_player.levelProgression()) + ".txt"),
-        _ratio
+        static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
     )),
     _viewer(std::make_shared<Viewer>(
         screenWidth,
@@ -113,9 +112,9 @@ void Controller::setValidateButton(const Controller::Status &status) {
 void Controller::runGame(size_t level) {
     _scene = std::make_shared<Scene>(
         _filesContent.at("map" + std::to_string(level) + ".txt"),
-        _ratio
+        _scene->getRatio()
     );
-    _viewer->setSceneRendering(_scene);
+    _viewer->setScene(_scene);
     updateSceneMenu();
 }
 
@@ -320,13 +319,10 @@ float Controller::computeDistance(float x0, float y0, float x1, float y1) {
 }
 
 void Controller::resize(size_t screenWidth, size_t screenHeight) {
-    _ratio = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
-    _scene->updateScreenRatio(_ratio);
-    _menu = Menu::getJumperBallMenu(
-        _player,
-        _ratio
-    );
-    _viewer->resize(screenWidth, screenHeight, _menu->currentPage());
+    float ratio = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
+    _scene->updateScreenRatio(ratio);
+    _menu->resize(ratio);
+    _viewer->resize(screenWidth, screenHeight);
 }
 
 void Controller::updateSceneMenu() {
@@ -341,13 +337,13 @@ void Controller::updateSceneMenu() {
         if (_scene->gameIsWon()) {
             _player.status(Player::Status::InMenu);
             _menu->successPageAsCurrentPage();
-            _viewer->setPageRendering(_menu->currentPage());
+            _viewer->setPage(_menu->currentPage());
             return;
         }
         if (_scene->gameIsLost()) {
             _player.status(Player::Status::InMenu);
             _menu->failurePageAsCurrentPage();
-            _viewer->setPageRendering(_menu->currentPage());
+            _viewer->setPage(_menu->currentPage());
         }
     }
 }
