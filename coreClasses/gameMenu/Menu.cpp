@@ -22,7 +22,6 @@ Menu::Menu(
     _successPage(successPage),
     _failurePage(failurePage),
     _pages(pages),
-    _cstPages(createCstPages()),
     _currentPage(rootPage) {
 }
 
@@ -124,10 +123,6 @@ CstPage_sptr Menu::successPage() const {
 
 CstPage_sptr Menu::failurePage() const {
     return _failurePage;
-}
-
-const vecCstPage_sptr &Menu::pages() const {
-    return _cstPages;
 }
 
 std::shared_ptr<Menu> Menu::getJumperBallMenu(Player &player, float ratio) {
@@ -519,14 +514,8 @@ Menu::MenuAnswer Menu::escapeAction() {
     return menuAnswer;
 }
 
-vecCstPage_sptr Menu::createCstPages() const {
-    vecCstPage_sptr cstPages;
-    for (const auto &pages: _pages) {
-        cstPages.push_back(pages);
-    }
-    return cstPages;
-}
-
 void Menu::resize(float ratio) {
-
+    for (const auto &page: _pages)  {
+        page->resize(ratio);
+    }
 }

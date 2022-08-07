@@ -19,6 +19,13 @@ Page::Page(
 ) :
     _bridges{},
     _nodeToMessage(std::move(nodeToMessage)),
+    _nodes([this]() {
+        vecNode_sptr nodes {};
+        for (const auto &nodeMessage: _nodeToMessage) {
+            nodes.push_back(nodeMessage.first);
+        }
+        return nodes;
+    }()),
     _labels{},
     _cstLabels{},
     _children{},
@@ -185,5 +192,9 @@ SceneElement::GlobalState Page::getGlobalState() const {
 
 const Page::NodeMessageAssociations &Page::nodeToMessage() const {
     return _nodeToMessage;
+}
+
+void Page::resize(float ratio) {
+    Node::updateScreenTransforms(_nodes, ratio);
 }
 

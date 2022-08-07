@@ -21,7 +21,7 @@ using vecPage_sptr = std::vector<Page_sptr>;
 class Page : public SceneElement {
 public:
 
-    using NodeMessageAssociations = std::unordered_map<CstNode_sptr, std::string>;
+    using NodeMessageAssociations = std::unordered_map<Node_sptr, std::string>;
 
     // Slide state => timepoint and yScreenPosition
     using slideState = std::pair<JBTypes::timePointMs, float>;
@@ -67,6 +67,8 @@ public:
 
     void update(bool isPressed, float screenPosY = 0.f);
 
+    void resize(float ratio);
+
 private:
 
     constexpr static float decelerationCoefficient = 10.f; // pagePourcentage /s^2
@@ -80,6 +82,7 @@ private:
     std::unordered_map<Label_sptr, Page_sptr> _bridges;
 
     const NodeMessageAssociations _nodeToMessage;
+    const vecNode_sptr _nodes;
 
     vecLabel_sptr _labels;
     vecCstLabel_sptr _cstLabels;

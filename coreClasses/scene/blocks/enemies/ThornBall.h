@@ -6,28 +6,33 @@
 
 #ifndef ThornBall_h
 #define ThornBall_h
+
 #include "InteractiveEnemy.h"
 
-class ThornBall:public InteractiveEnemy {
+class ThornBall : public InteractiveEnemy {
 public:
-ThornBall(const JBTypes::vec3ui& initialPosition,
-          const JBTypes::Dir& dir,
-          const JBTypes::Dir& movementDirection,
-          size_t movementLength,
-          const Ball_sptr &ball
-          );
+    ThornBall(
+        const JBTypes::vec3ui &initialPosition,
+        const JBTypes::Dir &dir,
+        const JBTypes::Dir &movementDirection,
+        size_t movementLength,
+        const Ball_sptr &ball
+    );
 
-void update() override;
+    void update() override;
 
-const JBTypes::Dir& movementDirection() const ;
-vecCstShape_sptr getShapes() const override;
-virtual ~ThornBall() = default;
-static constexpr float thornBallRadius = 0.1f;
+    const JBTypes::Dir &movementDirection() const;
+
+    vecCstShape_sptr getShapes() const override;
+
+    virtual ~ThornBall() = default;
+
+    static constexpr float thornBallRadius = 0.1f;
 
 private:
-const JBTypes::Dir _movementDirection;
+    const JBTypes::Dir _movementDirection;
 
-bool touchingTest() const override;
+    bool touchingTest() const override;
 };
 
 #endif /* ThornBall_h */

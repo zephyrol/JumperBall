@@ -4,6 +4,3 @@
 
 #include "MainNode.h"
 
-std::unique_ptr<Node::Transform> MainNode::computeScreenTransform() const {
-
-}

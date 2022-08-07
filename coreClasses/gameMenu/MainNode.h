@@ -14,10 +14,6 @@ public:
      */
     MainNode(float ratio);
     virtual ~MainNode() = default;
-
-private:
-    std::unique_ptr<Transform> computeScreenTransform() const override;
-
 };
 
 

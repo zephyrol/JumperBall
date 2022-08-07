@@ -17,9 +17,7 @@ ClassicalMechanics::ClassicalMechanics(float ballRadius) :
     _timesShock{} {
 }
 
-ClassicalMechanics::ClassicalMechanics(float ballRadius,
-                                       float jumpDistance,
-                                       float v0y) :
+ClassicalMechanics::ClassicalMechanics(float ballRadius, float jumpDistance, float v0y) :
     _gravitationalAcceleration{gravitationalAccelerationEarth},
     _jumpDistance{jumpDistance},
     _timeToGetDestinationX(getTimeToGetDestFromV0y(v0y)),
@@ -35,7 +33,6 @@ float ClassicalMechanics::getJumpDistance() const {
 float ClassicalMechanics::getGravitationalAcceleration() const {
     return _gravitationalAcceleration;
 }
-
 
 ClassicalMechanics::physics2DVector ClassicalMechanics::getPosition(float t) const {
     return {getPositionX(t), getPositionY(t)};

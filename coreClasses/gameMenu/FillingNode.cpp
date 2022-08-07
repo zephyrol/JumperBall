@@ -12,9 +12,10 @@ FillingNode::FillingNode(
     parent,
     [&ratio, &parent, &computePositionFromSize]() -> Transform {
         const auto size =
-            Node::computeChildNodeSize(
-            parent->ratio(),
-            ratio);
+            Node::computeNodeSize(
+                parent != nullptr ? parent->ratio() : 1.f,
+                ratio
+            );
         const auto position = computePositionFromSize(size);
         return {size.x, size.y, position.x, position.y};
     }(),

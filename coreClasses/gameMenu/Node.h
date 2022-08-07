@@ -78,14 +78,16 @@ public:
     /**
      * Update screen transform using its parent node one.
      * Make sure that its node parent was updated before
+     * @param rootTransform transform related to the screen format.
      */
-    void updateScreenTransform();
+    void updateScreenTransform(const Node::Transform &rootTransform);
 
     /**
      * Update screen transforms of several nodes considering their height in the tree in account.
      * @param nodes Vector of nodes to update
+     * @param ratio screen ratio
      */
-    static void updateScreenTransforms(const vecNode_sptr &nodes);
+    static void updateScreenTransforms(const vecNode_sptr &nodes, float screenRatio);
 
 protected:
     /**
@@ -94,7 +96,7 @@ protected:
      * @param childRatio Ratio of the inside node (child)
      * @return Width and height as vec2
      */
-    static JBTypes::vec2f computeChildNodeSize(float parentRatio, float childRatio);
+    static JBTypes::vec2f computeNodeSize(float parentRatio, float childRatio);
 
     /**
      * Get identity node transform.
@@ -133,8 +135,12 @@ private:
 
     /**
      * Compute screen space transform of the node.
+     * @param rootTransform transform related to the screen format. This is used only if the node have no
+     * parent
      */
-    virtual std::unique_ptr<Transform> computeScreenTransform() const;
+    std::unique_ptr<Node::Transform> computeScreenTransform(
+        const Node::Transform &rootTransform
+    ) const;
 };
 
 

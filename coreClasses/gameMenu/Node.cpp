@@ -10,7 +10,7 @@ Node::Node(const CstNode_sptr &parent, const Node::Transform &transform, float r
     _height(parent == nullptr ? 0 : (parent->height() + 1)),
     _localTransform(transform),
     _ratio(ratio),
-    _screenTransform(computeScreenTransform()) {
+    _screenTransform(computeScreenTransform(getIdentityTransform())) {
 }
 
 const Node::Transform &Node::getLocalTransform() const {
@@ -21,23 +21,23 @@ float Node::ratio() const {
     return _ratio;
 }
 
-JBTypes::vec2f Node::computeChildNodeSize(float parentRatio, float childRatio) {
+JBTypes::vec2f Node::computeNodeSize(float parentRatio, float childRatio) {
     if (childRatio < parentRatio) {
         return {childRatio / parentRatio, 1.f};
     }
     return {1.f, parentRatio / childRatio};
 }
 
-void Node::updateScreenTransform() {
-    _screenTransform = computeScreenTransform();
+void Node::updateScreenTransform(const Node::Transform &rootTransform) {
+    _screenTransform = computeScreenTransform(rootTransform);
 }
 
-std::unique_ptr<Node::Transform> Node::computeScreenTransform() const {
+std::unique_ptr<Node::Transform> Node::computeScreenTransform(const Node::Transform &rootTransform) const {
 
     // screen space parent transform
     const auto& parentTransform = _parent != nullptr
                                   ? _parent->getScreenTransform()
-                                  : getIdentityTransform();
+                                  : rootTransform;
 
     const auto additionLocalTransform = getAdditionalLocalTransform();
     const Node::Transform &localTransform = additionLocalTransform != nullptr ? Node::Transform{
@@ -77,15 +77,24 @@ bool Node::intersect(float screenX, float screenY) {
            && screenX > _screenTransform->positionY - halfHeight;
 }
 
-void Node::updateScreenTransforms(const vecNode_sptr &nodes) {
+void Node::updateScreenTransforms(const vecNode_sptr &nodes, float screenRatio) {
     auto sortedNodes = nodes;
+
     std::sort(
         sortedNodes.begin(),
         sortedNodes.end(),
         [](const Node_sptr &a, const Node_sptr &b) { return a->height() < b->height(); }
     );
+
+    const Node::Transform rootTransform = [screenRatio]() -> Node::Transform {
+        if (screenRatio > 1.f) {
+            return { 1.f, 1.f / screenRatio, 0.f, 0.f };
+        }
+        return { 1.f / screenRatio, 1.f, 0.f, 0.f };
+    }();
+
     for (const auto &node: sortedNodes) {
-        node->updateScreenTransform();
+        node->updateScreenTransform(rootTransform);
     }
 }
 

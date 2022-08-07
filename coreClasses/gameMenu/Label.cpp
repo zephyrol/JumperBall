@@ -42,7 +42,24 @@ void Label::updateLabelsLevels(vecLabel_sptr &labels, size_t end) {
 }
 
 vecGeometry Label::genGeometries() const {
-    return {};
+    const auto& screenTransform = _node->getScreenTransform();
+    return {
+        Geometry(
+            Geometry::Shape::Quad,
+            {
+                screenTransform.positionX,
+                screenTransform.positionY,
+                0.f
+            },
+            {
+                0.f, 0.f, 0.f
+            },
+            {
+                screenTransform.width,
+                screenTransform.height
+            }
+        )
+    };
 }
 
 const CstNode_sptr &Label::getNode() const {

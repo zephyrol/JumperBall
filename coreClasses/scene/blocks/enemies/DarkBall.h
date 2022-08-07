@@ -11,26 +11,32 @@
 #include "scene/ClassicalMechanics.h"
 #include "InteractiveEnemy.h"
 
-class DarkBall:public InteractiveEnemy{
+class DarkBall : public InteractiveEnemy {
 public:
-DarkBall(const JBTypes::vec3ui& initialPosition,
-         const JBTypes::Dir& dir,
-         const JBTypes::Dir& movementDirection,
-         size_t nbOfJumps,
-         const Ball_sptr &ball
-);
+    DarkBall(
+        const JBTypes::vec3ui &initialPosition,
+        const JBTypes::Dir &dir,
+        const JBTypes::Dir &movementDirection,
+        size_t nbOfJumps,
+        const Ball_sptr &ball
+    );
 
-virtual void update() override;
-const JBTypes::Dir& movementDirection() const;
-virtual ~DarkBall() = default;
-static constexpr float darkBallRadius = 0.2f;
+    virtual void update() override;
 
-vecCstShape_sptr getShapes() const override;
+    const JBTypes::Dir &movementDirection() const;
+
+    virtual ~DarkBall() = default;
+
+    static constexpr float darkBallRadius = 0.2f;
+
+    vecCstShape_sptr getShapes() const override;
 
 private:
-const JBTypes::Dir _movementDirection;
-bool touchingTest() const override;
-static const ClassicalMechanics darkBallClassicalMechanics;
+    const JBTypes::Dir _movementDirection;
+
+    bool touchingTest() const override;
+
+    static const ClassicalMechanics darkBallClassicalMechanics;
 };
 
 #endif /* DarkBall_h */

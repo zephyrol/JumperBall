@@ -121,7 +121,7 @@ vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
 ) {
 
     vecMessageLabel_sptr messageLabels{};
-    const auto& nodeToMessage = page->nodeToMessage();
+    const auto &nodeToMessage = page->nodeToMessage();
     // disable byte-alignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     for (const auto &item: nodeToMessage) {
@@ -144,7 +144,8 @@ vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
             node,
             static_cast<float>(nodePixelWidth) / static_cast<float>(nodePixelHeight)
         );
-        centeredNode->updateScreenTransform();
+
+        centeredNode->updateScreenTransform({0., 0., 0., 0.,});
 
         messageLabels.push_back(std::make_shared<MessageLabel>(
             message,
@@ -168,6 +169,7 @@ std::vector<MessageLabel::CharacterLocalTransform> FontTexturesGenerator::getCha
     const auto fNodePixelWidth = static_cast<float>(nodePixelWidth);
     const auto fNodePixelHeight = static_cast<float>(nodePixelHeight);
 
+    localTransforms.reserve(graphicCharacters.size());
     for (const auto &graphicCharacter: graphicCharacters) {
         localTransforms.push_back(
             {

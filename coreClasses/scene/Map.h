@@ -7,80 +7,86 @@
 
 #ifndef MAP_H
 #define MAP_H
+
 #include "Ball.h"
 #include <fstream>
 
 class Map;
-using Map_sptr = std::shared_ptr <Map>;
-using CstMap_sptr = std::shared_ptr <const Map>;
-using vecCstMap_sptr = std::vector <CstMap_sptr>;
-using vecMap_sptr = std::vector <Map_sptr>;
+
+using Map_sptr = std::shared_ptr<Map>;
+using CstMap_sptr = std::shared_ptr<const Map>;
+using vecCstMap_sptr = std::vector<CstMap_sptr>;
+using vecMap_sptr = std::vector<Map_sptr>;
+
 class Map {
 public:
 
-struct MapInfo { 
-    unsigned int width;
-    unsigned int height;
-    unsigned int depth;
-    unsigned int nbOfKeys;
-    unsigned int nbOfCoins;
-    Ball_sptr ball;
-    vecBlock_sptr blocks;
-};
+    struct MapInfo {
+        unsigned int width;
+        unsigned int height;
+        unsigned int depth;
+        unsigned int nbOfKeys;
+        unsigned int nbOfCoins;
+        Ball_sptr ball;
+        vecBlock_sptr blocks;
+    };
 
-explicit Map(MapInfo&& mapInfo);
+    explicit Map(MapInfo &&mapInfo);
 
-unsigned int width() const;
-unsigned int height() const;
-unsigned int depth() const;
+    unsigned int width() const;
 
-JBTypes::vec3f getCenterMap() const;
-float getLargestSize() const;
+    unsigned int height() const;
 
-float getTimeSinceCreation() const;
+    unsigned int depth() const;
+
+    JBTypes::vec3f getCenterMap() const;
+
+    float getLargestSize() const;
+
+    float getTimeSinceCreation() const;
 
 // TODO: move to special
-static std::map <JBTypes::Color, bool> createSpecialStates() ;
+    static std::map<JBTypes::Color, bool> createSpecialStates();
 
-void update(const JBTypes::timePointMs& updatingTime, const Ball::ActionRequest& action);
+    void update(const JBTypes::timePointMs &updatingTime, const Ball::ActionRequest &action);
 
-CstBall_sptr getBall() const;
+    CstBall_sptr getBall() const;
 
-CstBlock_sptr getBlock(const JBTypes::vec3ui& pos) const;
+    CstBlock_sptr getBlock(const JBTypes::vec3ui &pos) const;
 
-static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int depth);
+    static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int depth);
 
-JBTypes::vec3f getNextLook() const;
+    JBTypes::vec3f getNextLook() const;
 
 private:
 
-static JBTypes::vec3ui stringToPosition(const std::string& stringPosition);
+    static JBTypes::vec3ui stringToPosition(const std::string &stringPosition);
 
-bool ballIsOut() const;
+    bool ballIsOut() const;
 
-std::unordered_map<std::string, Block_sptr> createBlockPositions() const;
-std::vector<Block_sptr> getBlocksToUpdate() const;
+    std::unordered_map<std::string, Block_sptr> createBlockPositions() const;
 
-std::map<BlockDir , BlockDir> createBlocksTeleportations() const;
+    std::vector<Block_sptr> getBlocksToUpdate() const;
 
-const vecBlock_sptr _blocks;
-const std::shared_ptr<const std::unordered_map<std::string,Block_sptr> > _blocksPositions;
-const std::shared_ptr<const vecBlock_sptr> _blocksToUpdate;
-const std::shared_ptr<const std::map<BlockDir, BlockDir> > _blocksTeleportations;
+    std::map<BlockDir, BlockDir> createBlocksTeleportations() const;
 
-const Ball_sptr _ball;
+    const vecBlock_sptr _blocks;
+    const std::shared_ptr<const std::unordered_map<std::string, Block_sptr> > _blocksPositions;
+    const std::shared_ptr<const vecBlock_sptr> _blocksToUpdate;
+    const std::shared_ptr<const std::map<BlockDir, BlockDir> > _blocksTeleportations;
 
-const unsigned int _width;
-const unsigned int _height;
-const unsigned int _depth;
+    const Ball_sptr _ball;
 
-const unsigned int _nbOfKeys;
+    const unsigned int _width;
+    const unsigned int _height;
+    const unsigned int _depth;
 
-const JBTypes::timePointMs _creationTime;
+    const unsigned int _nbOfKeys;
 
-JBTypes::timePointMs _updatingTime;
-bool _isExitUnlocked;
+    const JBTypes::timePointMs _creationTime;
 
+    JBTypes::timePointMs _updatingTime;
+    bool _isExitUnlocked;
 
 
 public :

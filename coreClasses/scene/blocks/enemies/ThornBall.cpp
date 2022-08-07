@@ -7,17 +7,20 @@
 
 #include "ThornBall.h"
 
-ThornBall::ThornBall(const JBTypes::vec3ui& initialPosition,
-                     const JBTypes::Dir& dir,
-                     const JBTypes::Dir& movementDirection,
-                     size_t movementLength,
-                     const Ball_sptr &ball
-                     ):
-    InteractiveEnemy(initialPosition,
-          dir,
-          thornBallRadius,
-          movementLength,
-          ball),
+ThornBall::ThornBall(
+    const JBTypes::vec3ui &initialPosition,
+    const JBTypes::Dir &dir,
+    const JBTypes::Dir &movementDirection,
+    size_t movementLength,
+    const Ball_sptr &ball
+) :
+    InteractiveEnemy(
+        initialPosition,
+        dir,
+        thornBallRadius,
+        movementLength,
+        ball
+    ),
     _movementDirection(movementDirection) {
 }
 
@@ -37,26 +40,29 @@ void ThornBall::update() {
     _position.z = _initialPosition.z + vecDir.z * movementPosition;
 }
 
-const JBTypes::Dir& ThornBall::movementDirection() const {
+const JBTypes::Dir &ThornBall::movementDirection() const {
     return _movementDirection;
 }
 
 bool ThornBall::touchingTest() const {
     const auto ball = _ball.lock();
-    const auto& boundingSpherePosition = ball->get3DPosition();
-    const auto& boundingSphereRadius = ball->getRadius();
+    const auto &boundingSpherePosition = ball->get3DPosition();
+    const auto &boundingSphereRadius = ball->getRadius();
     return JBTypesMethods::distance(boundingSpherePosition, _position) <
-        (boundingSphereRadius + thornBallRadius);
+           (boundingSphereRadius + thornBallRadius);
 }
 
 vecCstShape_sptr ThornBall::getShapes() const {
-    const auto& diameter = this->size();
+    const auto &diameter = this->size();
     const auto thornBallShape = std::make_shared<const Shape>(
         Shape::Aspect::Sphere,
         JBTypes::Color::Red,
-        std::initializer_list<Transformation>({
-            Transformation(Transformation::Type::Scale, { diameter, diameter, diameter })
-        })
+        std::initializer_list<Transformation>(
+            {
+                Transformation(Transformation::Type::Scale,
+                               {diameter, diameter, diameter})
+            }
+        )
     );
-    return { thornBallShape };
+    return {thornBallShape};
 }
