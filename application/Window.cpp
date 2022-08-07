@@ -122,7 +122,14 @@ bool Window::inputManagement() {
     int frameBufferWidth;
     int frameBufferHeight;
     glfwGetFramebufferSize(_window, &frameBufferWidth, &frameBufferHeight);
+    if(frameBufferWidth == 0) {
+        frameBufferWidth = 1;
+    }
+    if(frameBufferHeight == 0) {
+        frameBufferHeight = 1;
+    }
     if (_frameBufferWidth != frameBufferWidth || _frameBufferHeight != frameBufferHeight) {
+
         // Frame buffer resizing
         _frameBufferWidth = frameBufferWidth;
         _frameBufferHeight = frameBufferHeight;
@@ -132,6 +139,13 @@ bool Window::inputManagement() {
         int windowWidth;
         int windowHeight;
         glfwGetWindowSize(_window, &windowWidth, &windowHeight);
+        if(windowWidth == 0) {
+            windowWidth = 1;
+        }
+        if(windowHeight== 0) {
+            windowHeight = 1;
+        }
+
         _windowWidth = windowWidth;
         _windowHeight = windowHeight;
     }
