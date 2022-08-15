@@ -13,19 +13,14 @@
 Page::Page(
     const Page_sptr &parent,
     NodeMessageAssociations &&nodeToMessage,
+    vecNode_sptr &&nodes,
     const Page::EscapeAnswer &escapeAnswer,
     float height,
     bool visibleOnParent
 ) :
     _bridges{},
     _nodeToMessage(std::move(nodeToMessage)),
-    _nodes([this]() {
-        vecNode_sptr nodes {};
-        for (const auto &nodeMessage: _nodeToMessage) {
-            nodes.push_back(nodeMessage.first);
-        }
-        return nodes;
-    }()),
+    _nodes(std::move(nodes)),
     _labels{},
     _cstLabels{},
     _children{},
@@ -195,6 +190,7 @@ const Page::NodeMessageAssociations &Page::nodeToMessage() const {
 }
 
 void Page::resize(float ratio) {
+    std::cout << "ratio " << ratio << std::endl;
     Node::updateScreenTransforms(_nodes, ratio);
 }
 

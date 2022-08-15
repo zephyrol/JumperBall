@@ -4,7 +4,6 @@
 
 #include "Node.h"
 
-
 Node::Node(const CstNode_sptr &parent, const Node::Transform &transform, float ratio) :
     _parent(parent),
     _height(parent == nullptr ? 0 : (parent->height() + 1)),

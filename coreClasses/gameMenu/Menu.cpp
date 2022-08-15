@@ -126,12 +126,8 @@ CstPage_sptr Menu::failurePage() const {
 }
 
 std::shared_ptr<Menu> Menu::getJumperBallMenu(Player &player, float ratio) {
-    Node_sptr mainNode = std::make_shared<CenteredNode>(
-        nullptr,
-        ratio
-    );
     Node_sptr mainTitleNode = std::make_shared<CenteredNode>(
-        mainNode,
+        nullptr,
         9.f / 16.f
     );
     Node_sptr jumperBallTitle = std::make_shared<UpNode>(
@@ -148,15 +144,18 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(Player &player, float ratio) {
     const Page_sptr page1 = std::make_shared<Page>(
         nullptr,
         std::move(nodeToMessage),
+        vecNode_sptr{mainTitleNode, jumperBallTitle},
         Page::EscapeAnswer::QuitGame
     );
+
+    const vecPage_sptr pages{page1};
     return std::make_shared<Menu>(
         player,
         page1,
         nullptr,
         nullptr,
         nullptr,
-        vecPage_sptr()
+        pages
     );
 }
 
@@ -515,7 +514,7 @@ Menu::MenuAnswer Menu::escapeAction() {
 }
 
 void Menu::resize(float ratio) {
-    for (const auto &page: _pages)  {
+    for (const auto &page: _pages) {
         page->resize(ratio);
     }
 }

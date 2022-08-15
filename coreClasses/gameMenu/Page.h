@@ -31,8 +31,8 @@ public:
 
     Page(
         const Page_sptr &parent,
-        // TODO add no message labels ( shapes )
         NodeMessageAssociations &&nodeToMessage,
+        vecNode_sptr &&nodes,
         const Page::EscapeAnswer &escapeAnswer,
         float height = 1.f,
         bool visibleOnParent = false
@@ -63,6 +63,7 @@ public:
     const NodeMessageAssociations &nodeToMessage() const;
 
     void pressOnPage();
+
     void release();
 
     void update(bool isPressed, float screenPosY = 0.f);
