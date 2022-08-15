@@ -25,7 +25,7 @@ std::string MessageLabel::message() const {
 
 vecGeometry MessageLabel::genGeometries() const {
 
-    const auto& screenTransform = _node->getScreenTransform();
+    const auto& screenTransform = _node->getTransform();
     std::cout << screenTransform.width << " " << screenTransform.height << std::endl;
     std::cout << screenTransform.positionX << " " << screenTransform.positionY << std::endl;
     return {

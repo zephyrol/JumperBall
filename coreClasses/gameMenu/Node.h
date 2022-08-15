@@ -51,11 +51,11 @@ protected:
     };
 
 public:
-    Node(const CstNode_sptr &parent, const Node::Transform &transform, float ratio);
+    Node(const Node::Transform &transform);
 
     virtual ~Node() = default;
 
-    const Transform &getLocalTransform() const;
+    const Transform &getTransform() const;
 
     /**
      * Check if picking is on the node
@@ -65,29 +65,11 @@ public:
      */
     bool intersect(float screenX, float screenY);
 
-    const Transform &getScreenTransform() const;
-
     float ratio() const;
-
-    size_t height() const;
-
-    float getScreenSpaceHeight() const;
-
-    float getScreenSpaceWidth() const;
-
-    /**
-     * Update screen transform using its parent node one.
-     * Make sure that its node parent was updated before
-     * @param rootTransform transform related to the screen format.
-     */
-    void updateScreenTransform(const Node::Transform &rootTransform);
-
-    /**
-     * Update screen transforms of several nodes considering their height in the tree in account.
-     * @param nodes Vector of nodes to update
-     * @param ratio screen ratio
-     */
-    static void updateScreenTransforms(const vecNode_sptr &nodes, float screenRatio);
+    float width() const;
+    float height() const;
+    float positionX() const;
+    float positionY() const;
 
 protected:
     /**
@@ -109,38 +91,11 @@ protected:
 private:
 
     /**
-     * Parent node in the tree, may be nullptr
+     * Transform (in screen space)
      */
-    const CstNode_sptr _parent;
+    const Transform _transform;
 
-    /**
-     * Node height in the node tree
-     */
-    const size_t _height;
-
-    /**
-     * Local transform (in its parent node space)
-     */
-    const Transform _localTransform;
-
-    /**
-     * Node ratio (> 1 means horizontal)
-     */
     const float _ratio;
-
-    /**
-     * Node transformation in screen space. May be updated.
-     */
-    std::unique_ptr<Transform> _screenTransform;
-
-    /**
-     * Compute screen space transform of the node.
-     * @param rootTransform transform related to the screen format. This is used only if the node have no
-     * parent
-     */
-    std::unique_ptr<Node::Transform> computeScreenTransform(
-        const Node::Transform &rootTransform
-    ) const;
 };
 
 

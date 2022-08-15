@@ -12,7 +12,6 @@ ArrowLabel::ArrowLabel(
 ) : Label(node, isActivated) {
 }
 
-
 vecGeometry ArrowLabel::genGeometries() const {
 
     const Geometry quad(
@@ -30,6 +29,4 @@ vecGeometry ArrowLabel::genGeometries() const {
     );
 
     return {quad, triangle};
-
 }
-

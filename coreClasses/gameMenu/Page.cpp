@@ -12,15 +12,11 @@
 
 Page::Page(
     const Page_sptr &parent,
-    NodeMessageAssociations &&nodeToMessage,
-    vecNode_sptr &&nodes,
     const Page::EscapeAnswer &escapeAnswer,
     float height,
     bool visibleOnParent
 ) :
     _bridges{},
-    _nodeToMessage(std::move(nodeToMessage)),
-    _nodes(std::move(nodes)),
     _labels{},
     _cstLabels{},
     _children{},
@@ -183,14 +179,5 @@ std::vector<Page_sptr> Page::createChildren() const {
 
 SceneElement::GlobalState Page::getGlobalState() const {
     return SceneElement::GlobalState::Separate;
-}
-
-const Page::NodeMessageAssociations &Page::nodeToMessage() const {
-    return _nodeToMessage;
-}
-
-void Page::resize(float ratio) {
-    std::cout << "ratio " << ratio << std::endl;
-    Node::updateScreenTransforms(_nodes, ratio);
 }
 

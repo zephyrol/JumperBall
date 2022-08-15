@@ -8,6 +8,7 @@
 #include "Menu.h"
 #include "CenteredNode.h"
 #include "UpNode.h"
+#include "TitlePage.h"
 
 Menu::Menu(
     Player &player,
@@ -126,27 +127,8 @@ CstPage_sptr Menu::failurePage() const {
 }
 
 std::shared_ptr<Menu> Menu::getJumperBallMenu(Player &player, float ratio) {
-    Node_sptr mainTitleNode = std::make_shared<CenteredNode>(
-        nullptr,
-        9.f / 16.f
-    );
-    Node_sptr jumperBallTitle = std::make_shared<UpNode>(
-        mainTitleNode,
-        4.f
-    );
 
-    Page::NodeMessageAssociations nodeToMessage = {
-        {
-            {jumperBallTitle, "Jumper Ball"}
-        }
-    };
-
-    const Page_sptr page1 = std::make_shared<Page>(
-        nullptr,
-        std::move(nodeToMessage),
-        vecNode_sptr{mainTitleNode, jumperBallTitle},
-        Page::EscapeAnswer::QuitGame
-    );
+    const Page_sptr page1 = TitlePage::createInstance(ratio);
 
     const vecPage_sptr pages{page1};
     return std::make_shared<Menu>(

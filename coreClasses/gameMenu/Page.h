@@ -31,8 +31,6 @@ public:
 
     Page(
         const Page_sptr &parent,
-        NodeMessageAssociations &&nodeToMessage,
-        vecNode_sptr &&nodes,
         const Page::EscapeAnswer &escapeAnswer,
         float height = 1.f,
         bool visibleOnParent = false
@@ -60,7 +58,7 @@ public:
 
     const vecCstLabel_sptr &labels() const;
 
-    const NodeMessageAssociations &nodeToMessage() const;
+    virtual NodeMessageAssociations nodeToMessage() const = 0;
 
     void pressOnPage();
 
@@ -68,7 +66,10 @@ public:
 
     void update(bool isPressed, float screenPosY = 0.f);
 
-    void resize(float ratio);
+    virtual void resize(float ratio) = 0;
+
+protected:
+    vecNode_sptr _nodes;
 
 private:
 
@@ -81,9 +82,6 @@ private:
     std::vector<Page_sptr> createChildren() const;
 
     std::unordered_map<Label_sptr, Page_sptr> _bridges;
-
-    const NodeMessageAssociations _nodeToMessage;
-    const vecNode_sptr _nodes;
 
     vecLabel_sptr _labels;
     vecCstLabel_sptr _cstLabels;
