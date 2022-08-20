@@ -12,13 +12,11 @@ FillingNode::FillingNode(
     [&ratio, &parent, &computePositionFromSize]() -> Transform {
         const auto localSize =
             Node::computeNodeSize(
-                parent != nullptr ? parent->ratio() : 1.f,
+                parent->ratio(),
                 ratio
             );
         const auto localPosition = computePositionFromSize(localSize);
-        if(parent == nullptr) {
-            return {localSize.x, localSize.y, localPosition.x, localPosition.y};
-        }
+
         const decltype(localSize) screenSize = {
             localSize.x * parent->width(),
             localSize.y * parent->height()
@@ -28,9 +26,8 @@ FillingNode::FillingNode(
             parent->positionX() + parent->width() * localPosition.x,
             parent->positionY() + parent->height() * localPosition.y
         };
-
         return {screenSize.x, screenSize.y, screenPosition.x, screenPosition.y};
-    }()
+    }(),
+    ratio
 ) {
 }
-

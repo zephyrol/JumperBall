@@ -51,7 +51,7 @@ protected:
     };
 
 public:
-    Node(const Node::Transform &transform);
+    Node(const Node::Transform &transform, float ratio);
 
     virtual ~Node() = default;
 
@@ -95,6 +95,9 @@ private:
      */
     const Transform _transform;
 
+    /**
+     * Ratio (in screen space)
+     */
     const float _ratio;
 };
 

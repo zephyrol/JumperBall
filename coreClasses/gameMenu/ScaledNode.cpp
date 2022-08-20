@@ -5,8 +5,15 @@
 #include "ScaledNode.h"
 
 ScaledNode::ScaledNode(const CstNode_sptr &parent, float scale) : Node(
-    {
-        scale, scale, 0.f, 0.f
-    }
-) {
+    [parent, scale]() {
+        const auto parentTransform = parent->getTransform();
+        const decltype(parentTransform) transform{
+            parentTransform.width * scale,
+            parentTransform.height * scale,
+            parentTransform.positionX,
+            parentTransform.positionY
+        };
+        return transform;
+    }(),
+    parent->ratio()) {
 }

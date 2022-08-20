@@ -4,9 +4,9 @@
 
 #include "Node.h"
 
-Node::Node(const Node::Transform &transform) :
+Node::Node(const Node::Transform &transform, float ratio) :
     _transform(transform),
-    _ratio(_transform.width / _transform.height)
+    _ratio(ratio)
 {
 }
 

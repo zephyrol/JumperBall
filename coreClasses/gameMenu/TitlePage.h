@@ -17,9 +17,7 @@ public:
 
     static vecNode_sptr createNodes(float ratio);
 
-    TitlePage(
-        const Node_sptr& jumperBallTitle
-    );
+    TitlePage(const Node_sptr& jumperBallTitle);
 
     NodeMessageAssociations nodeToMessage() const override;
 

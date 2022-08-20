@@ -5,13 +5,15 @@
 #include "TitlePage.h"
 #include "CenteredNode.h"
 #include "UpNode.h"
+#include "ScreenNode.h"
+#include "ScaledNode.h"
 
 TitlePage::TitlePage(
     const Node_sptr &jumperBallTitle
-):
-Page(
+): Page(
     nullptr,
-    Page::EscapeAnswer::QuitGame),
+    Page::EscapeAnswer::QuitGame
+),
     _jumperBallTitle(jumperBallTitle)
 {
 }
@@ -26,12 +28,14 @@ Page_sptr TitlePage::createInstance(float ratio) {
 }
 
 vecNode_sptr TitlePage::createNodes(float ratio) {
-    Node_sptr mainTitleNode = std::make_shared<CenteredNode>(
-        nullptr,
+    const auto screenNode = std::make_shared<ScreenNode>(ratio);
+    const auto resizedScreenNode = std::make_shared<ScaledNode>(screenNode, 0.95f);
+    const auto mainTitleNode = std::make_shared<CenteredNode>(
+        resizedScreenNode,
         9.f / 16.f
     );
 
-    Node_sptr jumperBallTitle = std::make_shared<UpNode>(
+    const auto jumperBallTitle = std::make_shared<UpNode>(
         mainTitleNode,
         4.f
     );

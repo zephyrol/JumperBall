@@ -146,7 +146,6 @@ vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
         );
 
         // centeredNode->updateScreenTransform({0., 0., 0., 0.,});
-
         messageLabels.push_back(std::make_shared<MessageLabel>(
             message,
             getCharacterLocalTransforms(transforms, nodePixelWidth, nodePixelWidth),
