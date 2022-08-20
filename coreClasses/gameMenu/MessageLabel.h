@@ -44,7 +44,7 @@ public:
         const std::string &message,
         std::vector<CharacterLocalTransform>&& transforms,
         const CstNode_sptr &node,
-        size_t height, // TODO: Remove it
+        size_t lettersSize,
         bool isActivated = false
     );
 
@@ -66,7 +66,7 @@ public:
 private:
     const std::string _message;
     const std::vector<CharacterLocalTransform> _transforms;
-    const size_t _height;
+    const size_t _lettersSize;
     const std::vector<std::string> _letterHashes;
 
     std::vector<std::string> createLetterHashes() const;

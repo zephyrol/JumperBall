@@ -7,15 +7,14 @@
 FillingNode::FillingNode(
     const CstNode_sptr &parent,
     float ratio,
-    const std::function<JBTypes::vec2f(const JBTypes::vec2f &)> &computePositionFromSize
+    const std::function<JBTypes::vec2f(const JBTypes::vec2f &)> &computePositionFromLocalSize
 ) : Node(
-    [&ratio, &parent, &computePositionFromSize]() -> Transform {
-        const auto localSize =
-            Node::computeNodeSize(
-                parent->ratio(),
-                ratio
-            );
-        const auto localPosition = computePositionFromSize(localSize);
+    [&ratio, &parent, &computePositionFromLocalSize]() -> Transform {
+        const auto localSize = Node::computeNodeSize(
+            parent->ratio(),
+            ratio
+        );
+        const auto localPosition = computePositionFromLocalSize(localSize);
 
         const decltype(localSize) screenSize = {
             localSize.x * parent->width(),

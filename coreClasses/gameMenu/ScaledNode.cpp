@@ -15,5 +15,6 @@ ScaledNode::ScaledNode(const CstNode_sptr &parent, float scale) : Node(
         };
         return transform;
     }(),
-    parent->ratio()) {
+    parent->ratio()
+) {
 }

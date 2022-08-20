@@ -13,7 +13,7 @@ public:
     FillingNode(
         const CstNode_sptr &parent,
         float ratio,
-        const std::function<JBTypes::vec2f(const JBTypes::vec2f &)> &computePositionFromSize
+        const std::function<JBTypes::vec2f(const JBTypes::vec2f &)> &computePositionFromLocalSize
     );
 
     virtual ~FillingNode() = default;

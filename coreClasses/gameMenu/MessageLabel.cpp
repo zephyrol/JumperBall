@@ -10,12 +10,12 @@ MessageLabel::MessageLabel(
     const std::string &message,
     std::vector<MessageLabel::CharacterLocalTransform> &&transforms,
     const CstNode_sptr &node,
-    size_t height,
+    size_t lettersSize,
     bool isActivated
 ) : Label(node, isActivated),
     _message(message),
     _transforms(std::move(transforms)),
-    _height(height),
+    _lettersSize(lettersSize),
     _letterHashes(createLetterHashes()) {
 }
 
@@ -25,15 +25,14 @@ std::string MessageLabel::message() const {
 
 vecGeometry MessageLabel::genGeometries() const {
 
-    const auto& screenTransform = _node->getTransform();
-    std::cout << screenTransform.width << " " << screenTransform.height << std::endl;
-    std::cout << screenTransform.positionX << " " << screenTransform.positionY << std::endl;
+    /*const auto& screenTransform = _node->getTransform();
     return {
         Geometry(
             Geometry::Shape::Quad,
             {
-                screenTransform.positionX,
-                screenTransform.positionY,
+                // convert to -1,1 space
+                screenTransform.positionX * 2.f,
+                screenTransform.positionY * 2.f,
                 0.f
             },
             {
@@ -44,28 +43,30 @@ vecGeometry MessageLabel::genGeometries() const {
                 screenTransform.height
             }
         )
-    };
+    };*/
 
-    // vecGeometry geometries{};
-    // const auto &screenTransform = _node->getScreenTransform();
-    // for (const auto &transform: _transforms) {
-    //     const Geometry quad(
-    //         Geometry::Shape::Quad,
-    //         {
-    //             screenTransform.positionX + transform.bearingX + transform.advance,
-    //             screenTransform.positionY + transform.bearingY,
-    //             0.f
-    //         },
-    //         {0.f, 0.f, 0.f},
-    //         {
-    //             screenTransform.width * transform.width,
-    //             screenTransform.height * transform.height,
-    //             1.f
-    //         }
-    //     );
-    //     geometries.push_back(quad);
-    // }
-    // return geometries;
+    vecGeometry geometries{};
+    const auto &screenTransform = _node->getTransform();
+    auto baseX = screenTransform.positionX - screenTransform.width / 2.f;
+    const auto baseY = screenTransform.positionY - screenTransform.height / 2.f;
+    for (const auto &transform: _transforms) {
+        const Geometry quad(
+            Geometry::Shape::Quad,
+            {
+                (baseX + transform.bearingX * screenTransform.width) * 2.f,
+                (baseY + transform.bearingY * screenTransform.height) * 2.f,
+                0.f
+            },
+            {0.f, 0.f, 0.f},
+            {
+                screenTransform.width * transform.width,
+                screenTransform.height * transform.height
+            }
+        );
+        geometries.push_back(quad);
+        baseX += (transform.advance * screenTransform.width);
+    }
+    return geometries;
 }
 
 const std::vector<std::string> &MessageLabel::getLetterHashes() const {
@@ -75,7 +76,7 @@ const std::vector<std::string> &MessageLabel::getLetterHashes() const {
 std::vector<std::string> MessageLabel::createLetterHashes() const {
     std::vector<std::string> letterHashes{};
     for (unsigned char c: _message) {
-        letterHashes.push_back(createLetterHash(_height, c));
+        letterHashes.push_back(createLetterHash(_lettersSize, c));
     }
     return letterHashes;
 }

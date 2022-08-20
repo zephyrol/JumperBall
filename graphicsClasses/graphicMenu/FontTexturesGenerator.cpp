@@ -126,9 +126,9 @@ vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     for (const auto &item: nodeToMessage) {
         const auto &node = item.first;
-        const float screenSpaceHeight = node->height();
+        const auto screenSpaceHeight = node->height();
         const auto nodePixelHeight = static_cast<FT_UInt>(
-            std::ceil(static_cast<float>(_screenHeight) / screenSpaceHeight)
+            std::ceil(static_cast<float>(_screenHeight) * screenSpaceHeight)
         );
 
         FT_Set_Pixel_Sizes(_ftContent.fontFace, 0, nodePixelHeight);
@@ -145,10 +145,9 @@ vecMessageLabel_sptr FontTexturesGenerator::genMessageLabels(
             static_cast<float>(nodePixelWidth) / static_cast<float>(nodePixelHeight)
         );
 
-        // centeredNode->updateScreenTransform({0., 0., 0., 0.,});
         messageLabels.push_back(std::make_shared<MessageLabel>(
             message,
-            getCharacterLocalTransforms(transforms, nodePixelWidth, nodePixelWidth),
+            getCharacterLocalTransforms(transforms, nodePixelWidth, nodePixelHeight),
             centeredNode,
             nodePixelHeight,
             true // TODO change it
