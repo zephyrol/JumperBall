@@ -178,6 +178,6 @@ std::vector<Page_sptr> Page::createChildren() const {
 
 
 SceneElement::GlobalState Page::getGlobalState() const {
-    return SceneElement::GlobalState::Separate;
+    return SceneElement::GlobalState::United;
 }
 

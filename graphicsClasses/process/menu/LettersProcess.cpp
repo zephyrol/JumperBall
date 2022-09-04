@@ -12,7 +12,7 @@ LettersProcess::LettersProcess(
     GLsizei height,
     const CstPage_sptr &page
 ):
-    _fontTexturesGenerator(width, height, page, ftContent),
+    _fontTexturesGenerator(FontTexturesGenerator::createInstance(width, height, page, ftContent)),
     _renderPass([this, &page](){
         vecMesh_sptr meshes;
         const auto& messageLabels = _fontTexturesGenerator.getMessageLabels();

@@ -47,6 +47,7 @@ vecGeometry Label::genGeometries() const {
         Geometry(
             Geometry::Shape::Quad,
             {
+                // convert to -1,1 space
                 screenTransform.positionX,
                 screenTransform.positionY,
                 0.f

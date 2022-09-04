@@ -25,26 +25,6 @@ std::string MessageLabel::message() const {
 
 vecGeometry MessageLabel::genGeometries() const {
 
-    /*const auto& screenTransform = _node->getTransform();
-    return {
-        Geometry(
-            Geometry::Shape::Quad,
-            {
-                // convert to -1,1 space
-                screenTransform.positionX * 2.f,
-                screenTransform.positionY * 2.f,
-                0.f
-            },
-            {
-                0.f, 0.f, 0.f
-            },
-            {
-                screenTransform.width,
-                screenTransform.height
-            }
-        )
-    };*/
-
     vecGeometry geometries{};
     const auto &screenTransform = _node->getTransform();
     auto baseX = screenTransform.positionX - screenTransform.width / 2.f;
