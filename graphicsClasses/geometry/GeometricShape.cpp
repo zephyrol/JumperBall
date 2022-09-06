@@ -9,11 +9,13 @@
 
 GeometricShape::GeometricShape(const glm::mat4& modelTransform,
                                const glm::mat4& normalsTransform,
-                               std::vector <glm::vec3>&& customColors
+                               std::vector <glm::vec3>&& customColors,
+                               std::vector <glm::vec2>&& customUvs
                                ):
     _modelTransform(modelTransform),
     _normalsTransform(normalsTransform),
-    _customColors(std::move(customColors)) {
+    _customColors(std::move(customColors)),
+    _customUvs(std::move(customUvs)){
 
 }
 
@@ -44,7 +46,7 @@ GeometricShape::ShapeVertexAttributes GeometricShape::genVertexAttributes() cons
     shapeVertexAttributes.positions = computePositions();
     shapeVertexAttributes.colors = genColors(_customColors);
     shapeVertexAttributes.normals = computeNormals();
-    shapeVertexAttributes.uvCoords = genUvCoords();
+    shapeVertexAttributes.uvCoords = genUvCoords(_customUvs);
     return shapeVertexAttributes;
 }
 
@@ -65,7 +67,8 @@ GeometricShape::ShapeVerticesInfo GeometricShape::genShapeVerticesInfo() const {
 
 void GeometricShape::concatShapeVerticesInfo (
     GeometricShape::ShapeVerticesInfo& current,
-    const GeometricShape::ShapeVerticesInfo& other) {
+    const GeometricShape::ShapeVerticesInfo& other
+    ) {
     GeometricShape::ShapeVertexAttributes& currentShapeVertexAttributes = current.shapeVertexAttributes;
     concatIndices(current.indices, other.indices, currentShapeVertexAttributes.positions.size());
     concatAttributes(currentShapeVertexAttributes, other.shapeVertexAttributes);
@@ -73,7 +76,8 @@ void GeometricShape::concatShapeVerticesInfo (
 
 std::vector <glm::vec3> GeometricShape::createCustomColorBuffer (
     const glm::vec3& customColor,
-    size_t size) {
+    size_t size
+    ) {
     std::vector <glm::vec3> customColorCube(size);
     for (glm::vec3& color : customColorCube) {
         color = customColor;
@@ -110,7 +114,7 @@ std::vector <glm::vec3> GeometricShape::genColors (const std::vector <glm::vec3>
     return {};
 }
 
-std::vector <glm::vec2> GeometricShape::genUvCoords() const {
+std::vector<glm::vec2> GeometricShape::genUvCoords(const std::vector<glm::vec2> &) const {
     return {};
 }
 

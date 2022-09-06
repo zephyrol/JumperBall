@@ -35,7 +35,8 @@ struct ShapeVerticesInfo {
 GeometricShape(
     const glm::mat4& modelTransform,
     const glm::mat4& normalsTransform,
-    std::vector <glm::vec3>&& customColors
+    std::vector <glm::vec3>&& customColors,
+    std::vector <glm::vec2>&& customUvs
     );
 
 // It's useless to have a copy of a shape with exactly the same transform
@@ -66,6 +67,7 @@ private:
 const glm::mat4 _modelTransform;
 const glm::mat4 _normalsTransform;
 const std::vector <glm::vec3> _customColors;
+const std::vector <glm::vec2> _customUvs;
 
 
 ShapeVertexAttributes genVertexAttributes() const;
@@ -83,7 +85,7 @@ virtual std::vector <glm::vec3> genPositions() const = 0;
 
 virtual std::vector <glm::vec3> genNormals() const;
 virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const;
-virtual std::vector <glm::vec2> genUvCoords() const;
+virtual std::vector<glm::vec2> genUvCoords(const std::vector<glm::vec2> &uvs) const;
 
 };
 

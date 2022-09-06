@@ -9,14 +9,14 @@
 
 Pyramid::Pyramid(const glm::mat4& modelTransform,
                  const glm::mat4& normalsTransform)
-    :GeometricShape(modelTransform, normalsTransform, {}) {
+    :GeometricShape(modelTransform, normalsTransform, {}, {}) {
 
 }
 
 Pyramid::Pyramid(const glm::vec3& customColor,
                  const glm::mat4& modelTransform,
                  const glm::mat4& normalsTransform)
-    :GeometricShape(modelTransform, normalsTransform, { customColor }) {
+    :GeometricShape(modelTransform, normalsTransform, { customColor }, {}) {
 
 }
 

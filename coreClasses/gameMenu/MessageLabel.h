@@ -38,6 +38,18 @@ public:
          * Offset until the next letter in screen space
          */
         float advance;
+
+        /**
+         * UV character in texture corresponding to the bottom left corner
+         */
+        float uvMinX;
+        float uvMinY;
+
+        /**
+         * UV character in texture corresponding to the top right corner
+         */
+        float uvMaxX;
+        float uvMaxY;
     };
 
     MessageLabel(

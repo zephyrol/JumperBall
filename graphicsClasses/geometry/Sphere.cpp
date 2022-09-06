@@ -9,13 +9,13 @@
 
 Sphere::Sphere(const glm::mat4& modelTransform,
                const glm::mat4& normalsTransform):
-    GeometricShape(modelTransform, normalsTransform, {}) {
+    GeometricShape(modelTransform, normalsTransform, {}, {}) {
 }
 
 Sphere::Sphere(const glm::vec3& customColor,
                const glm::mat4& modelTransform,
                const glm::mat4& normalsTransform):
-    GeometricShape(modelTransform, normalsTransform, { customColor }) {
+    GeometricShape(modelTransform, normalsTransform, { customColor }, {}) {
 
 }
 
@@ -23,7 +23,7 @@ Sphere::Sphere(const glm::vec3& customColor,
                const glm::vec3& customColor2,
                const glm::mat4& modelTransform,
                const glm::mat4& normalsTransform):
-    GeometricShape(modelTransform, normalsTransform, { customColor, customColor2 }) {
+    GeometricShape(modelTransform, normalsTransform, { customColor, customColor2 }, {}) {
 
 }
 

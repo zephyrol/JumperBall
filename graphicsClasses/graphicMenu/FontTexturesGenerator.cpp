@@ -124,7 +124,11 @@ std::vector<MessageLabel::CharacterLocalTransform> FontTexturesGenerator::getCha
                 static_cast<float>(graphicCharacter.size.y) / fNodePixelHeight,
                 static_cast<float>(graphicCharacter.bearing.x) / fNodePixelWidth,
                 static_cast<float>(graphicCharacter.bearing.y) / fNodePixelHeight,
-                static_cast<float>(graphicCharacter.advance) / fNodePixelWidth
+                static_cast<float>(graphicCharacter.advance) / fNodePixelWidth,
+                static_cast<float>(graphicCharacter.pixelsUvPixelsMin.x) / fNodePixelWidth,
+                static_cast<float>(graphicCharacter.pixelsUvPixelsMin.y) / fNodePixelHeight,
+                static_cast<float>(graphicCharacter.pixelsUvPixelsMax.x) / fNodePixelWidth,
+                static_cast<float>(graphicCharacter.pixelsUvPixelsMax.y) / fNodePixelHeight
             }
         );
     }
@@ -285,4 +289,8 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
         drawingCursor.y
     };
     return {drawingCursor.x, drawingCursor.y, drawingCursor.x + bitmapWidth, drawingCursor.y + bitmapHeight};
+}
+
+GLuint FontTexturesGenerator::getLettersTexture() const {
+    return _lettersTexture.textureID;
 }

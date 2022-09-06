@@ -10,7 +10,7 @@
 Cube::Cube(const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform,
            const std::array <bool, 6>& sides):
-    GeometricShape(modelTransform, normalsTransform, {}),
+    GeometricShape(modelTransform, normalsTransform, {}, {}),
     _sides(sides) {
 }
 
@@ -18,7 +18,7 @@ Cube::Cube(const JBTypes::Color &color,
            const glm::mat4 &modelTransform,
            const glm::mat4 &normalsTransform,
            const std::array<bool, 6> &sides):
-    GeometricShape(modelTransform, normalsTransform, genColors(color)),
+    GeometricShape(modelTransform, normalsTransform, genColors(color), {}),
     _sides(sides) {
 
 }
@@ -27,7 +27,7 @@ Cube::Cube(const glm::vec3& customColor,
            const glm::mat4& modelTransform,
            const glm::mat4& normalsTransform,
            const std::array <bool, 6>& sides):
-    GeometricShape(modelTransform, normalsTransform, { customColor }),
+    GeometricShape(modelTransform, normalsTransform, { customColor }, {}),
     _sides(sides) {
 }
 
@@ -37,7 +37,7 @@ Cube::Cube(std::vector <glm::vec3>&& customColors,
            const glm::mat4& normalsTransform,
            const std::array <bool, 6>& sides
            ):
-    GeometricShape(modelTransform, normalsTransform, std::move(customColors)),
+    GeometricShape(modelTransform, normalsTransform, std::move(customColors), {}),
     _sides(sides) {
 }
 

@@ -39,6 +39,7 @@ void LettersProcess::render() const {
         ShaderProgram::bindTexture(_graphicAlphabet.at(letter).textureID);
         renderPass->render(_lettersShader);
     }*/
+    ShaderProgram::bindTexture(_fontTexturesGenerator.getLettersTexture());
     _renderPass.render(_lettersShader);
 }
 

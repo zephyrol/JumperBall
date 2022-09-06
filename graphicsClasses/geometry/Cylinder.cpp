@@ -11,7 +11,7 @@ Cylinder::Cylinder(
     size_t meriCount,
     const glm::mat4& modelTransform,
     const glm::mat4& normalsTransform):
-    GeometricShape(modelTransform, normalsTransform, {}),
+    GeometricShape(modelTransform, normalsTransform, {}, {}),
     _meriCount(meriCount) {
 }
 
@@ -20,7 +20,7 @@ Cylinder::Cylinder(
     size_t meriCount,
     const glm::mat4& modelTransform,
     const glm::mat4& normalsTransform):
-    GeometricShape(modelTransform, normalsTransform, { customColor }),
+    GeometricShape(modelTransform, normalsTransform, { customColor }, {}),
     _meriCount(meriCount) {
 }
 
@@ -29,7 +29,7 @@ Cylinder::Cylinder(const glm::vec3& customColorCenter,
                    size_t meriCount,
                    const glm::mat4& modelTransform,
                    const glm::mat4& normalsTransform):
-    GeometricShape(modelTransform, normalsTransform, { customColorCenter, customColorEdge }),
+    GeometricShape(modelTransform, normalsTransform, { customColorCenter, customColorEdge }, {}),
     _meriCount(meriCount) {
 }
 

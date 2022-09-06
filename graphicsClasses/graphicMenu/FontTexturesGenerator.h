@@ -15,7 +15,9 @@
 #elif defined __APPLE_IOS__
 #include <include/ft2build.h>
 #else
+
 #include <freetype2/ft2build.h>
+
 #endif
 
 #include FT_FREETYPE_H
@@ -48,7 +50,7 @@ class FontTexturesGenerator {
         /**
          * Current texture data
          */
-        std::vector<unsigned char> lettersData {};
+        std::vector<unsigned char> lettersData{};
 
         /**
          * Current texture width
@@ -68,12 +70,12 @@ class FontTexturesGenerator {
         /**
          * Graphic alphabet
          */
-         GraphicAlphabet graphicAlphabet {};
+        GraphicAlphabet graphicAlphabet{};
 
-         /**
-          * Texture Id
-          */
-          GLuint textureID = 0;
+        /**
+         * Texture Id
+         */
+        GLuint textureID = 0;
     };
 
 public:
@@ -89,11 +91,12 @@ public:
         const CstPage_sptr &page,
         const FontTexturesGenerator::FTContent &ftContent,
         const LettersTexture &lettersTexture,
-        vecMessageLabel_sptr&& messageLabels
+        vecMessageLabel_sptr &&messageLabels
     );
 
-    FontTexturesGenerator(const FontTexturesGenerator& ft) = default;
-    FontTexturesGenerator& operator = (const FontTexturesGenerator& ft) = delete;
+    FontTexturesGenerator(const FontTexturesGenerator &ft) = default;
+
+    FontTexturesGenerator &operator=(const FontTexturesGenerator &ft) = delete;
 
     static FontTexturesGenerator createInstance(
         size_t screenWidth,
@@ -103,6 +106,7 @@ public:
     );
 
     void freeGPUMemory();
+    GLuint getLettersTexture() const;
 
     const vecMessageLabel_sptr &getMessageLabels();
 
@@ -132,11 +136,13 @@ private:
      * is not added yet, currentAlphabet is directly modified.
      * @return GraphicCharacter texture added into currentAlphabet param
      */
-    static FontTexturesGenerator::GraphicCharacter createOrGetGraphicCharacter(size_t screenWidth,
-                                                                               const FontTexturesGenerator::FTContent &ftContent,
-                                                                               FT_UInt pixelHeight,
-                                                                               LettersTexture &lettersTexture,
-                                                                               unsigned char character);
+    static FontTexturesGenerator::GraphicCharacter createOrGetGraphicCharacter(
+        size_t screenWidth,
+        const FontTexturesGenerator::FTContent &ftContent,
+        FT_UInt pixelHeight,
+        LettersTexture &lettersTexture,
+        unsigned char character
+    );
 
     static std::vector<MessageLabel::CharacterLocalTransform> getCharacterLocalTransforms(
         const std::vector<GraphicCharacter> &graphicCharacters,

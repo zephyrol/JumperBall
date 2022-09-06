@@ -9,14 +9,14 @@
 
 Triangle::Triangle(const glm::mat4& modelTransform,
                    const glm::mat4& normalsTransform):
-    GeometricShape(modelTransform, normalsTransform, {}) {
+    GeometricShape(modelTransform, normalsTransform, {}, {}) {
 
 }
 
 Triangle::Triangle(const glm::vec3& customColor,
                    const glm::mat4& modelTransform,
                    const glm::mat4& normalsTransform):
-    GeometricShape(modelTransform, normalsTransform, { customColor }) {
+    GeometricShape(modelTransform, normalsTransform, { customColor }, {}) {
 
 }
 
@@ -59,14 +59,11 @@ std::vector <glm::vec3> Triangle::genNormals() const {
 }
 
 std::vector <glm::vec3> Triangle::genColors (const std::vector <glm::vec3>& colors) const {
-    if (colors.size() > 0) {
-
-    }
     return colors.size() > 0
            ? GeometricShape::createCustomColorBuffer(colors.at(0), basicPositionsTriangle.size())
            : basicColorsTriangle;
 }
 
-std::vector <glm::vec2> Triangle::genUvCoords() const {
+std::vector<glm::vec2> Triangle::genUvCoords(const std::vector<glm::vec2> &) const {
     return basicUVCoordsTriangle;
 }
