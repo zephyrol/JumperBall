@@ -12,11 +12,12 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel(const Label
         [](
             const Geometry::Shape &shape,
             const glm::mat4 &model,
-            const glm::mat4 &normalTransform
+            const glm::mat4 &normalTransform,
+            std::vector<glm::vec2>&& uvs
         ) -> CstGeometricShape_sptr {
             switch (shape) {
                 case Geometry::Shape::Quad:
-                    return std::make_shared<const Quad>(model, normalTransform);
+                    return std::make_shared<const Quad>(model, normalTransform, std::move(uvs));
                     break;
                 case Geometry::Shape::Triangle:
                     return std::make_shared<const Triangle>(model, normalTransform);
@@ -67,9 +68,19 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel(const Label
 
         const glm::mat4 model = localTranslation * localRotation * localScale;
 
+        std::vector<glm::vec2> uvs {};
+        for(const auto& uv: geometry.getCustomUvs()) {
+            // uvs.emplace_back(uv[0], uv[1]);
+        }
+
         // TODO add scale
         const glm::mat4 normalTransf = localRotation;
-        geometricShapes.push_back(genGeometricShape(geometry.getShape(), model, normalTransf));
+        geometricShapes.push_back(genGeometricShape(
+            geometry.getShape(),
+            model,
+            normalTransf,
+            std::move(uvs)
+        ));
     }
 
     return geometricShapes;

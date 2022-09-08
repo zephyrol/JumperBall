@@ -39,6 +39,7 @@ void LettersProcess::render() const {
         ShaderProgram::bindTexture(_graphicAlphabet.at(letter).textureID);
         renderPass->render(_lettersShader);
     }*/
+    _lettersShader->bindUniformTextureIndex("characterTexture", 0);
     ShaderProgram::bindTexture(_fontTexturesGenerator.getLettersTexture());
     _renderPass.render(_lettersShader);
 }
@@ -62,10 +63,10 @@ CstShaderProgram_sptr LettersProcess::createLettersProcessShaderProgram(
 ) {
     auto shader = ShaderProgram::createShaderProgram(
         fileContent,
-        //"fontVs.vs",
-        //"fontFs.fs"
-        "labelVs.vs",
-        "labelFs.fs"
+        "fontVs.vs",
+        "fontFs.fs"
+        //"labelVs.vs",
+        //"labelFs.fs"
         );
     shader->use();
     shader->bindUniformTextureIndex("characterTexture", 0);

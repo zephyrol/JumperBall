@@ -8,29 +8,35 @@
 #include "Geometry.h"
 
 Geometry::Geometry(
-    const Shape& shape,
-    const ShapeTranslation& translation,
-    const ShapeRotation& rotation,
-    const ShapeScale& scale):
+    const Shape &shape,
+    const ShapeTranslation &translation,
+    const ShapeRotation &rotation,
+    const ShapeScale &scale,
+    const CustomUvs &customUvs
+) :
     _shape(shape),
     _translation(translation),
     _rotation(rotation),
-    _scale(scale) {
-
+    _scale(scale),
+    _customUvs(customUvs) {
 }
 
-const Geometry::ShapeTranslation& Geometry::getTranslation() const {
+const Geometry::ShapeTranslation &Geometry::getTranslation() const {
     return _translation;
 }
 
-const Geometry::ShapeRotation& Geometry::getRotation() const {
+const Geometry::ShapeRotation &Geometry::getRotation() const {
     return _rotation;
 }
 
-const Geometry::ShapeScale& Geometry::getScale() const {
+const Geometry::ShapeScale &Geometry::getScale() const {
     return _scale;
 }
 
-const Geometry::Shape& Geometry::getShape() const {
+const Geometry::Shape &Geometry::getShape() const {
     return _shape;
+}
+
+const Geometry::CustomUvs &Geometry::getCustomUvs() const {
+    return _customUvs;
 }

@@ -41,6 +41,10 @@ vecGeometry MessageLabel::genGeometries() const {
             {
                 screenTransform.width * transform.width,
                 screenTransform.height * transform.height
+            },
+            {
+                {transform.uvMinX, transform.uvMinY},
+                {transform.uvMaxX, transform.uvMaxY}
             }
         );
         geometries.push_back(quad);

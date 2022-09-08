@@ -272,7 +272,8 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
     // Write bitmap into texture
     for (unsigned int i = 0; i < bitmapHeight; ++i) {
         for (unsigned int j = 0; j < bitmapWidth; ++j) {
-            const auto baseIndex = getIndex(i, j, bitmapWidth);
+            // First bytes of opengl textures represents the bottom of the texture
+            const auto baseIndex = getIndex(bitmapHeight - i - 1, j, bitmapWidth);
             const auto value = letterBitmap[baseIndex];
             const auto targetIndex = getIndex(
                 drawingCursor.y + i,
