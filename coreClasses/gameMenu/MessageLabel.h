@@ -38,7 +38,15 @@ public:
          * Offset until the next letter in screen space
          */
         float advance;
+    };
 
+
+    /**
+     * Letter hash containing the character and its font size
+     */
+    using LetterHash = std::string;
+
+    struct LetterUv {
         /**
          * UV character in texture corresponding to the bottom left corner
          */
@@ -52,9 +60,14 @@ public:
         float uvMaxY;
     };
 
+    using LettersUvs = std::unordered_map<LetterHash, LetterUv>;
+    using LettersUvs_sptr = std::shared_ptr<LettersUvs>;
+    using CstLettersUvs_sptr = std::shared_ptr<const LettersUvs>;
+
     MessageLabel(
         const std::string &message,
-        std::vector<CharacterLocalTransform>&& transforms,
+        std::vector<CharacterLocalTransform> &&transforms,
+        const LettersUvs_sptr& lettersUvs,
         const CstNode_sptr &node,
         size_t lettersSize,
         bool isActivated = false
@@ -64,11 +77,6 @@ public:
 
     vecGeometry genGeometries() const override;
 
-    /**
-     * Letter hash containing the character and its font size
-     */
-    using LetterHash = std::string;
-
     std::string message() const override;
 
     const std::vector<std::string> &getLetterHashes() const;
@@ -77,6 +85,7 @@ public:
 
 private:
     const std::string _message;
+    const LettersUvs_sptr _lettersUvs;
     const std::vector<CharacterLocalTransform> _transforms;
     const size_t _lettersSize;
     const std::vector<std::string> _letterHashes;

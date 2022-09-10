@@ -9,11 +9,13 @@
 MessageLabel::MessageLabel(
     const std::string &message,
     std::vector<MessageLabel::CharacterLocalTransform> &&transforms,
+    const MessageLabel::LettersUvs_sptr& lettersUvs,
     const CstNode_sptr &node,
     size_t lettersSize,
     bool isActivated
 ) : Label(node, isActivated),
     _message(message),
+    _lettersUvs(lettersUvs),
     _transforms(std::move(transforms)),
     _lettersSize(lettersSize),
     _letterHashes(createLetterHashes()) {
@@ -29,7 +31,9 @@ vecGeometry MessageLabel::genGeometries() const {
     const auto &screenTransform = _node->getTransform();
     auto baseX = screenTransform.positionX - screenTransform.width / 2.f;
     const auto baseY = screenTransform.positionY - screenTransform.height / 2.f;
-    for (const auto &transform: _transforms) {
+    for (size_t i = 0; i < _message.size(); ++i) {
+        const auto& transform = _transforms[i];
+        const auto& uv = _lettersUvs->at(_letterHashes[i]);
         const Geometry quad(
             Geometry::Shape::Quad,
             {
@@ -43,8 +47,8 @@ vecGeometry MessageLabel::genGeometries() const {
                 screenTransform.height * transform.height
             },
             {
-                {transform.uvMinX, transform.uvMinY},
-                {transform.uvMaxX, transform.uvMaxY}
+                {uv.uvMinX, uv.uvMinY},
+                {uv.uvMaxX, uv.uvMaxY}
             }
         );
         geometries.push_back(quad);
@@ -53,6 +57,7 @@ vecGeometry MessageLabel::genGeometries() const {
     return geometries;
 }
 
+// TODO remove _letterHashes if useless
 const std::vector<std::string> &MessageLabel::getLetterHashes() const {
     return _letterHashes;
 }

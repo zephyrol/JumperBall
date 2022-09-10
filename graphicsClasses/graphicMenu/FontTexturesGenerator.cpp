@@ -125,10 +125,10 @@ std::vector<MessageLabel::CharacterLocalTransform> FontTexturesGenerator::getCha
                 static_cast<float>(graphicCharacter.bearing.x) / fNodePixelWidth,
                 static_cast<float>(graphicCharacter.bearing.y) / fNodePixelHeight,
                 static_cast<float>(graphicCharacter.advance) / fNodePixelWidth,
-                static_cast<float>(graphicCharacter.pixelsUvPixelsMin.x) / fNodePixelWidth,
-                static_cast<float>(graphicCharacter.pixelsUvPixelsMin.y) / fNodePixelHeight,
-                static_cast<float>(graphicCharacter.pixelsUvPixelsMax.x) / fNodePixelWidth,
-                static_cast<float>(graphicCharacter.pixelsUvPixelsMax.y) / fNodePixelHeight
+                // static_cast<float>(graphicCharacter.pixelsUvPixelsMin.x),
+                // static_cast<float>(graphicCharacter.pixelsUvPixelsMin.y),
+                // static_cast<float>(graphicCharacter.pixelsUvPixelsMax.x),
+                // static_cast<float>(graphicCharacter.pixelsUvPixelsMax.y)
             }
         );
     }
@@ -150,6 +150,7 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
 
     // 1. Generate message labels
     vecMessageLabel_sptr messageLabels{};
+    auto lettersUvs = std::make_shared<MessageLabel::LettersUvs>();
     const auto &nodeToMessage = page->nodeToMessage();
     // disable byte-alignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -183,11 +184,23 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
         messageLabels.push_back(std::make_shared<MessageLabel>(
             message,
             getCharacterLocalTransforms(transforms, nodePixelWidth, nodePixelHeight),
+            lettersUvs,
             centeredNode,
             nodePixelHeight,
             true // TODO change it
         ));
 
+    }
+
+    for (const auto& letterTransform: lettersTexture.graphicAlphabet) {
+        const auto& letter = letterTransform.first;
+        const auto& transform = letterTransform.second;
+        (*lettersUvs)[letter] = {
+            static_cast<float>(transform.pixelsUvPixelsMin.x) / static_cast<float>(lettersTexture.width),
+            static_cast<float>(transform.pixelsUvPixelsMin.y) / static_cast<float>(lettersTexture.height),
+            static_cast<float>(transform.pixelsUvPixelsMax.x) / static_cast<float>(lettersTexture.width),
+            static_cast<float>(transform.pixelsUvPixelsMax.y) / static_cast<float>(lettersTexture.height)
+        };
     }
 
     lettersTexture.textureID = FrameBuffer::createTexture();

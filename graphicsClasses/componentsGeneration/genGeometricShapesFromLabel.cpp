@@ -70,7 +70,7 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel(const Label
 
         std::vector<glm::vec2> uvs {};
         for(const auto& uv: geometry.getCustomUvs()) {
-            // uvs.emplace_back(uv[0], uv[1]);
+            uvs.emplace_back(uv[0], uv[1]);
         }
 
         // TODO add scale
