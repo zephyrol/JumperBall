@@ -29,10 +29,14 @@ public:
         float height;
 
         /**
-         * Offset from baseline to left/top of the letter in screen space;
+         * Horizontal offset from baseline to left the letter in screen space;
          */
         float bearingX;
-        float bearingY;
+
+        /**
+         * Vertical offset from baseline to the origin in screen space;
+         */
+        float originHeight;
 
         /**
          * Offset until the next letter in screen space

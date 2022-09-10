@@ -26,19 +26,30 @@ std::string MessageLabel::message() const {
 }
 
 vecGeometry MessageLabel::genGeometries() const {
-
     vecGeometry geometries{};
     const auto &screenTransform = _node->getTransform();
     auto baseX = screenTransform.positionX - screenTransform.width / 2.f;
     const auto baseY = screenTransform.positionY - screenTransform.height / 2.f;
+
+    const auto maxOriginHeight = [this](){
+        float maxOrigHeight = 0.f;
+        for(const auto& transform: _transforms) {
+            maxOrigHeight = std::max(maxOrigHeight, transform.originHeight);
+        }
+        return maxOrigHeight;
+    }();
+
     for (size_t i = 0; i < _message.size(); ++i) {
         const auto& transform = _transforms[i];
         const auto& uv = _lettersUvs->at(_letterHashes[i]);
+        const auto letterOffsetOriginHeight = maxOriginHeight - transform.originHeight;
+        const auto xPosition = baseX + (transform.bearingX + transform.width / 2.f) * screenTransform.width;
+        const auto yPosition = baseY + (letterOffsetOriginHeight + transform.height / 2.f) * screenTransform.height;
         const Geometry quad(
             Geometry::Shape::Quad,
             {
-                (baseX + transform.bearingX * screenTransform.width) * 2.f,
-                (baseY + transform.bearingY * screenTransform.height) * 2.f,
+                xPosition * 2.f,
+                yPosition * 2.f,
                 0.f
             },
             {0.f, 0.f, 0.f},

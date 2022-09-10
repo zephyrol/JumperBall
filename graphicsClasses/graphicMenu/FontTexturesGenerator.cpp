@@ -123,12 +123,8 @@ std::vector<MessageLabel::CharacterLocalTransform> FontTexturesGenerator::getCha
                 static_cast<float>(graphicCharacter.size.x) / fNodePixelWidth,
                 static_cast<float>(graphicCharacter.size.y) / fNodePixelHeight,
                 static_cast<float>(graphicCharacter.bearing.x) / fNodePixelWidth,
-                static_cast<float>(graphicCharacter.bearing.y) / fNodePixelHeight,
+                static_cast<float>(graphicCharacter.size.y - graphicCharacter.bearing.y) / fNodePixelHeight,
                 static_cast<float>(graphicCharacter.advance) / fNodePixelWidth,
-                // static_cast<float>(graphicCharacter.pixelsUvPixelsMin.x),
-                // static_cast<float>(graphicCharacter.pixelsUvPixelsMin.y),
-                // static_cast<float>(graphicCharacter.pixelsUvPixelsMax.x),
-                // static_cast<float>(graphicCharacter.pixelsUvPixelsMax.y)
             }
         );
     }
@@ -192,9 +188,9 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
 
     }
 
-    for (const auto& letterTransform: lettersTexture.graphicAlphabet) {
-        const auto& letter = letterTransform.first;
-        const auto& transform = letterTransform.second;
+    for (const auto &letterTransform: lettersTexture.graphicAlphabet) {
+        const auto &letter = letterTransform.first;
+        const auto &transform = letterTransform.second;
         (*lettersUvs)[letter] = {
             static_cast<float>(transform.pixelsUvPixelsMin.x) / static_cast<float>(lettersTexture.width),
             static_cast<float>(transform.pixelsUvPixelsMin.y) / static_cast<float>(lettersTexture.height),
