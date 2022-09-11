@@ -8,16 +8,22 @@
 #include "Page.h"
 
 
+class LevelsPage;
+using LevelsPage_sptr = std::shared_ptr<LevelsPage>;
 class LevelsPage : public Page {
 public:
-    static Page_sptr createInstance(
+    static LevelsPage_sptr createInstance(
+        Player_sptr player,
         const Page_sptr &parent,
         float ratio
     );
 
     void resize(float ratio) override;
 
+    Page_sptr click(float mouseX, float mouseY) override;
+
     LevelsPage(
+        Player_sptr&& player,
         Node_sptr &&levelsTitle,
         std::vector<Node_sptr> &&levels,
         const Page_sptr &parent

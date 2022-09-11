@@ -59,11 +59,11 @@ public:
 
     /**
      * Check if picking is on the node
-     * @param screenX X coordinate in screen space
-     * @param screenY Y coordinate in screen space
+     * @param mouseX X coordinate in screen space
+     * @param mouseY Y coordinate in screen space
      * @return true if picking is on the node, else false
      */
-    bool intersect(float screenX, float screenY);
+    bool intersect(float mouseX, float mouseY) const;
 
     float ratio() const;
     float width() const;

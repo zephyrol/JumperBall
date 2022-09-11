@@ -11,13 +11,11 @@
 #include "TitlePage.h"
 
 Menu::Menu(
-    Player &player,
     const Page_sptr &rootPage,
     const Page_sptr &pausePage,
     const Page_sptr &successPage,
     const Page_sptr &failurePage,
     const vecPage_sptr &pages) :
-    _player(player),
     _rootPage(rootPage),
     _pausePage(pausePage),
     _successPage(successPage),
@@ -48,16 +46,6 @@ void Menu::rootPageAsCurrentPage() {
     _currentPage = _rootPage;
 }
 
-bool Menu::parentPageAsCurrentPage() {
-    const std::shared_ptr<Page> parent = _currentPage->parent().lock();
-    if (parent) {
-        _currentPage = parent;
-        return true;
-    } else {
-        return false;
-    }
-}
-
 void Menu::pausePageAsCurrentPage() {
     _currentPage = _pausePage;
 }
@@ -70,19 +58,15 @@ void Menu::failurePageAsCurrentPage() {
     _currentPage = _failurePage;
 }
 
-void Menu::noPageAsCurrentPage() {
-    _currentPage = nullptr;
-}
-
-Menu::MenuAnswer Menu::mouseClick(float mouseX, float mouseY) {
-    Menu::MenuAnswer menuAnswer;
-    if (!_currentPage) {
-        return menuAnswer;
+std::unique_ptr<size_t> Menu::mouseClick(float mouseX, float mouseY) {
+    const auto matchedPage = _currentPage->click(mouseX, mouseY);
+    if(matchedPage != nullptr) {
+        _currentPage = matchedPage;
     }
-    const auto& label = _currentPage->matchedLabel(mouseX, mouseY);
 
+    return nullptr;
     /* TODO
-    const auto& label = _currentPage->matchedLabel(mouseX, mouseY);
+    const auto& label = _currentPage->matchNode(mouseX, mouseY);
     if (label) {
         const Page_sptr newPage = _currentPage->child(label);
         if (newPage) {
@@ -108,7 +92,6 @@ Menu::MenuAnswer Menu::mouseClick(float mouseX, float mouseY) {
         }
     }
      */
-    return menuAnswer;
 }
 
 CstPage_sptr Menu::rootPage() const {
@@ -127,13 +110,12 @@ CstPage_sptr Menu::failurePage() const {
     return _failurePage;
 }
 
-std::shared_ptr<Menu> Menu::getJumperBallMenu(Player &player, float ratio) {
+std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr &player, float ratio) {
 
-    const Page_sptr page1 = TitlePage::createInstance(ratio);
+    const Page_sptr page1 = TitlePage::createInstance(player, ratio);
 
     const vecPage_sptr pages{page1};
     return std::make_shared<Menu>(
-        player,
         page1,
         nullptr,
         nullptr,

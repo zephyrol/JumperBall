@@ -79,11 +79,6 @@ vecGeometry MessageLabel::genGeometries() const {
     return geometries;
 }
 
-// TODO remove _letterHashes if useless
-const std::vector<std::string> &MessageLabel::getLetterHashes() const {
-    return _letterHashes;
-}
-
 std::vector<std::string> MessageLabel::createLetterHashes() const {
     std::vector<std::string> letterHashes{};
     for (unsigned char c: _message) {

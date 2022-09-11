@@ -16,7 +16,7 @@ Controller::Controller(
     size_t fontDataSize,
     bool isUsingTouchScreen
 ) :
-    _player(),
+    _player(std::make_shared<Player>()),
     _menu(Menu::getJumperBallMenu(
         _player,
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
@@ -43,7 +43,7 @@ Controller::Controller(
     _mouseIsPressed(false),
     _requestToLeave(false),
     _scene(std::make_shared<Scene>(
-        filesContent.at("map" + std::to_string(_player.levelProgression()) + ".txt"),
+        filesContent.at("map" + std::to_string(_player->levelProgression()) + ".txt"),
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
     )),
     _viewer(std::make_shared<Viewer>(
@@ -102,7 +102,7 @@ void Controller::interactionMouse(const Status &status, float posX, float posY) 
 }
 
 void Controller::setValidateButton(const Controller::Status &status) {
-    if (_player.status() == Player::Status::InGame) {
+    if (_player->status() == Player::Status::InGame) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Validate;
         }
@@ -119,21 +119,26 @@ void Controller::runGame(size_t level) {
 }
 
 void Controller::setValidateMouse() {
-    if (_player.status() == Player::Status::InGame && !_isUsingTouchScreen) {
+    if (_player->status() == Player::Status::InGame && !_isUsingTouchScreen) {
         _currentKey = Scene::ActionKey::Validate;
         return;
     }
-    if (_player.status() == Player::Status::InMenu) {
-        const Menu::MenuAnswer menuAnswer = _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
-
-        if (menuAnswer.action == Menu::Action::GoLevel) {
-            runGame(menuAnswer.newLevel);
-        }
+    if (_player->status() != Player::Status::InMenu) {
+        return;
     }
+    const auto newLevel = _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
+    if(_player->wantsToQuit()) {
+        _requestToLeave = true;
+        return;
+    }
+    if (newLevel == nullptr) {
+        return;
+    }
+    runGame(*newLevel);
 }
 
 void Controller::setEscape(const Controller::Status &status) {
-    if (_player.status() == Player::Status::InMenu) {
+    if (_player->status() == Player::Status::InMenu) {
         if (
             status == Controller::Status::Released &&
             _buttonsStatus.at(Button::Escape) == Status::Pressed
@@ -145,16 +150,16 @@ void Controller::setEscape(const Controller::Status &status) {
         return;
     }
 
-    if (_player.status() == Player::Status::InGame
+    if (_player->status() == Player::Status::InGame
         && status == Controller::Status::Released
         && _buttonsStatus.at(Button::Escape) == Status::Pressed) {
-            _menu->pausePageAsCurrentPage();
-            _player.status(Player::Status::InMenu);
+        _menu->pausePageAsCurrentPage();
+        _player->status(Player::Status::InMenu);
     }
 }
 
 void Controller::setRight(const Controller::Status &status) {
-    if (_player.status() == Player::Status::InGame) {
+    if (_player->status() == Player::Status::InGame) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Right;
         }
@@ -162,7 +167,7 @@ void Controller::setRight(const Controller::Status &status) {
 }
 
 void Controller::setLeft(const Status &status) {
-    if (_player.status() == Player::Status::InGame) {
+    if (_player->status() == Player::Status::InGame) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Left;
         }
@@ -170,7 +175,7 @@ void Controller::setLeft(const Status &status) {
 }
 
 void Controller::setDown(const Controller::Status &status) {
-    if (_player.status() == Player::Status::InGame) {
+    if (_player->status() == Player::Status::InGame) {
         if (status == Controller::Status::Pressed) {
             _currentKey = Scene::ActionKey::Down;
         }
@@ -178,7 +183,7 @@ void Controller::setDown(const Controller::Status &status) {
 }
 
 void Controller::setUp(const Controller::Status &status) {
-    if (_player.status() == Player::Status::InGame) {
+    if (_player->status() == Player::Status::InGame) {
         if (status == Controller::Status::Pressed) {
             _currentKey = _isUsingTouchScreen ? Scene::ActionKey::Validate : Scene::ActionKey::Up;
         }
@@ -189,34 +194,35 @@ Controller::ScreenDirection Controller::nearestDirection(float posX, float posY)
 
     Controller::ScreenDirection nearestDir = Controller::ScreenDirection::North;
     float computedDistance;
-    float nearestDistance = computeDistance(_mousePreviousXCoord,
-                                            _mousePreviousYCoord + 1.f,
-                                            posX, posY);
-    if (
-        (computedDistance = computeDistance(_mousePreviousXCoord,
-                                            _mousePreviousYCoord - 1.f,
-                                            posX, posY))
-        < nearestDistance
-        ) {
+    float nearestDistance = computeDistance(
+        _mousePreviousXCoord,
+        _mousePreviousYCoord + 1.f,
+        posX,
+        posY
+    );
+    if ((computedDistance = computeDistance(
+        _mousePreviousXCoord,
+        _mousePreviousYCoord - 1.f,
+        posX,
+        posY)) < nearestDistance) {
         nearestDistance = computedDistance;
         nearestDir = Controller::ScreenDirection::South;
     }
     if (
-        (computedDistance = computeDistance(_mousePreviousXCoord + 1.f,
-                                            _mousePreviousYCoord,
-                                            posX, posY))
-        < nearestDistance
-        ) {
+        (computedDistance = computeDistance(
+            _mousePreviousXCoord + 1.f,
+            _mousePreviousYCoord,
+            posX,
+            posY)) < nearestDistance) {
         nearestDistance = computedDistance;
         nearestDir = Controller::ScreenDirection::East;
     }
-    if (
-        (computedDistance = computeDistance(_mousePreviousXCoord - 1.f,
-                                            _mousePreviousYCoord,
-                                            posX, posY))
-        < nearestDistance
-        ) {
-        nearestDistance = computedDistance;
+    if (computeDistance(
+        _mousePreviousXCoord - 1.f,
+        _mousePreviousYCoord,
+        posX,
+        posY
+    ) < nearestDistance) {
         nearestDir = Controller::ScreenDirection::West;
     }
     return nearestDir;
@@ -243,7 +249,6 @@ void Controller::updateMouse(float posX, float posY) {
         _mouseUpdatingTime = now;
     }
 
-
     _mouseCurrentXCoord = posX;
     _mouseCurrentYCoord = posY;
 
@@ -266,10 +271,10 @@ void Controller::updateMouse(float posX, float posY) {
 
     if (!_currentMovementDir) {
         constexpr float goAheadDelay = 0.1f;
-        if (_player.status() == Player::Status::InGame
+        if (_player->status() == Player::Status::InGame
             && _isUsingTouchScreen
             && JBTypesMethods::getFloatFromDurationMS(now - _mousePressTime) > goAheadDelay) {
-            if (_player.status() == Player::Status::InGame) {
+            if (_player->status() == Player::Status::InGame) {
                 _currentKey = Scene::ActionKey::Up;
             }
             return;
@@ -327,24 +332,25 @@ void Controller::resize(size_t screenWidth, size_t screenHeight) {
 
 void Controller::updateSceneMenu() {
 
-    _player.status(_scene->update(_player.status(), _currentKey));
+    _player->status(_scene->update(_player->status(), _currentKey));
     _currentKey = Scene::ActionKey::Nothing;
-    if (_player.status() == Player::Status::InMenu) {
+    if (_player->status() == Player::Status::InMenu) {
         _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
         return;
     }
-    if (_player.status() == Player::Status::InGame) {
-        if (_scene->gameIsWon()) {
-            _player.status(Player::Status::InMenu);
-            _menu->successPageAsCurrentPage();
-            _viewer->setPage(_menu->currentPage());
-            return;
-        }
-        if (_scene->gameIsLost()) {
-            _player.status(Player::Status::InMenu);
-            _menu->failurePageAsCurrentPage();
-            _viewer->setPage(_menu->currentPage());
-        }
+    if (_player->status() != Player::Status::InGame) {
+        return;
+    }
+    if (_scene->gameIsWon()) {
+        _player->status(Player::Status::InMenu);
+        _menu->successPageAsCurrentPage();
+        _viewer->setPage(_menu->currentPage());
+        return;
+    }
+    if (_scene->gameIsLost()) {
+        _player->status(Player::Status::InMenu);
+        _menu->failurePageAsCurrentPage();
+        _viewer->setPage(_menu->currentPage());
     }
 }
 

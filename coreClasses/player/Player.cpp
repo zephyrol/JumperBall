@@ -6,9 +6,10 @@
  */
 #include "Player.h"
 
-Player::Player():
+Player::Player() :
     _status(Player::Status::InMenu),
     _levelProgression(1),
+    _currentLevel(_levelProgression),
     _money(0),
     _diamonds(false),
     _diamondsCounter(0),
@@ -17,8 +18,10 @@ Player::Player():
     _fireResistanceLevel(1),
     _timeLevel(1),
     _clockItemLevel(1),
-    _bonusLevel(1) {
+    _bonusLevel(1),
+    _wantsToQuit(false) {
 }
+
 
 size_t Player::levelProgression() const {
     return _levelProgression;
@@ -28,7 +31,7 @@ void Player::unlockNewLevel() {
     ++_levelProgression;
 }
 
-void Player::decreaseMoney (unsigned int value) {
+void Player::decreaseMoney(unsigned int value) {
     if (_money < value) {
         std::cerr << "Error ... negative value ! ... Cropped to 0";
         _money = 0;
@@ -37,7 +40,7 @@ void Player::decreaseMoney (unsigned int value) {
     }
 }
 
-void Player::decreaseDiamonds (unsigned int value) {
+void Player::decreaseDiamonds(unsigned int value) {
     if (_diamondsCounter < value) {
         std::cerr << "Error ... negative value ! ... Cropped to 0";
         _diamondsCounter = 0;
@@ -50,7 +53,7 @@ void Player::addDiamond() {
     _diamondsCounter++;
 }
 
-void Player::increaseMoney (unsigned int value) {
+void Player::increaseMoney(unsigned int value) {
     _money += value;
 }
 
@@ -62,7 +65,7 @@ Player::Status Player::status() const {
     return _status;
 }
 
-void Player::status (const Player::Status& s) {
+void Player::status(const Player::Status &s) {
     _status = s;
 }
 
@@ -88,4 +91,20 @@ void Player::gravityLevelUp() {
 
 void Player::speedLevelUp() {
     _speedLevel++;
+}
+
+void Player::setCurrentLevel(size_t levelNumber) {
+    _currentLevel = levelNumber;
+}
+
+size_t Player::getCurrentLevel() const {
+    return _currentLevel;
+}
+
+bool Player::wantsToQuit() const {
+    return _wantsToQuit;
+}
+
+void Player::requestQuit() {
+    _wantsToQuit = true;
 }

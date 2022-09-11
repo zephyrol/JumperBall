@@ -71,7 +71,7 @@ public:
     MessageLabel(
         std::string message,
         std::vector<CharacterLocalTransform> &&transforms,
-        LettersUvs_sptr  lettersUvs,
+        LettersUvs_sptr lettersUvs,
         const CstNode_sptr &node,
         size_t lettersSize,
         bool isActivated = false
@@ -80,8 +80,6 @@ public:
     vecGeometry genGeometries() const override;
 
     std::string message() const override;
-
-    const std::vector<std::string> &getLetterHashes() const;
 
     static LetterHash createLetterHash(size_t fontSize, unsigned char letter);
 

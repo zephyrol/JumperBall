@@ -49,12 +49,12 @@ float Node::positionY() const {
     return _transform.positionY;
 }
 
-// bool Node::intersect(float screenX, float screenY) {
-//     const auto halfWidth = _transform->width / 2.f;
-//     const auto halfHeight = _transform->height / 2.f;
-//
-//     return screenX < _transform->positionX + halfWidth
-//            && screenX > _transform->positionX - halfWidth
-//            && screenX < _transform->positionY + halfHeight
-//            && screenX > _transform->positionY - halfHeight;
-// }
+bool Node::intersect(float mouseX, float mouseY) const {
+     const auto halfWidth = _transform.width / 2.f;
+     const auto halfHeight = _transform.height / 2.f;
+
+     return mouseX < _transform.positionX + halfWidth
+            && mouseX > _transform.positionX - halfWidth
+            && mouseY < _transform.positionY + halfHeight
+            && mouseY > _transform.positionY - halfHeight;
+}

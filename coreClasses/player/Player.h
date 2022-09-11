@@ -7,53 +7,79 @@
 
 #ifndef PLAYER_H
 #define PLAYER_H
+
 #include "scene/Ball.h"
+
+
+class Player;
+
+using Player_sptr = std::shared_ptr<Player>;
 
 class Player {
 public:
-Player();
+    Player();
 
-enum class Status { InGame, InMenu, InTransition };
+    enum class Status {
+        InGame, InMenu, InTransition
+    };
 
-size_t levelProgression() const;
-unsigned int getMoney() const;
+    size_t levelProgression() const;
 
-void unlockNewLevel();
+    void setCurrentLevel(size_t levelNumber);
 
-void increaseMoney(unsigned int value);
-void decreaseMoney(unsigned int value);
+    size_t getCurrentLevel() const;
 
-void decreaseDiamonds(unsigned int value);
-void addDiamond();
+    unsigned int getMoney() const;
 
-void speedLevelUp();
-void gravityLevelUp();
-void fireResistanceLevelUp();
+    void unlockNewLevel();
 
-void timeLevelUp();
-void clockItemLevelUp();
-void bonusLevelUp();
+    void increaseMoney(unsigned int value);
 
-Status status() const;
-void status(const Status& s);
+    void decreaseMoney(unsigned int value);
+
+    void decreaseDiamonds(unsigned int value);
+
+    void addDiamond();
+
+    void speedLevelUp();
+
+    void gravityLevelUp();
+
+    void fireResistanceLevelUp();
+
+    void timeLevelUp();
+
+    void clockItemLevelUp();
+
+    void bonusLevelUp();
+
+    bool wantsToQuit() const;
+
+    void requestQuit();
+
+    Status status() const;
+
+    void status(const Status &s);
 
 private:
 
-Status _status;
-size_t _levelProgression;
+    Status _status;
+    size_t _levelProgression;
+    size_t _currentLevel;
 
-unsigned int _money;
-std::vector <bool> _diamonds;
+    unsigned int _money;
+    std::vector<bool> _diamonds;
 
-unsigned int _diamondsCounter;
+    unsigned int _diamondsCounter;
 
-unsigned int _speedLevel;
-unsigned int _gravityLevel;
-unsigned int _fireResistanceLevel;
+    unsigned int _speedLevel;
+    unsigned int _gravityLevel;
+    unsigned int _fireResistanceLevel;
 
-unsigned int _timeLevel;
-unsigned int _clockItemLevel;
-unsigned int _bonusLevel;
+    unsigned int _timeLevel;
+    unsigned int _clockItemLevel;
+    unsigned int _bonusLevel;
+    bool _wantsToQuit;
 
 };
 

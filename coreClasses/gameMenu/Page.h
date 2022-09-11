@@ -9,6 +9,7 @@
 #define PAGE_H
 
 #include "Label.h"
+#include "player/Player.h"
 #include <list>
 
 class Page;
@@ -21,12 +22,12 @@ using vecPage_sptr = std::vector<Page_sptr>;
 class Page : public SceneElement {
 public:
 
-    using NodeMessageAssociations = std::unordered_map<Node_sptr, std::string>;
 
     // Slide state => timepoint and yScreenPosition
     using slideState = std::pair<JBTypes::timePointMs, float>;
 
     explicit Page(
+        Player_sptr&& player,
         const Page_sptr &parent,
         float height = 1.f
     );
@@ -35,25 +36,25 @@ public:
 
     std::weak_ptr<Page> parent();
 
-    Label_sptr matchedLabel(float x, float y);
+    /**
+     * Click on the page. Check if the mouse is on a node and activate the node action.
+     * Return a target page linked to this node if its exist else nullptr
+     * @param mouseX Screen mouse x coordinate
+     * @param mouseY Screen mouse y coordinate
+     * @return Target page or nullptr
+     */
+    virtual Page_sptr click(float mouseX, float mouseY) = 0;
 
     float height() const;
 
     float localPosY() const;
 
-    void setBridges(std::unordered_map<Label_sptr, Page_sptr> &&bridges);
-
     SceneElement::GlobalState getGlobalState() const override;
 
-    Page_sptr child(const Label_sptr &label);
+    virtual vecCstLabel_sptr labels() const;
 
-    const vecCstLabel_sptr &labels() const;
-
+    using NodeMessageAssociations = std::unordered_map<Node_sptr, std::string>;
     virtual NodeMessageAssociations nodeToMessage() const = 0;
-
-    void pressOnPage();
-
-    void release();
 
     void update(bool isPressed, float screenPosY = 0.f);
 
@@ -64,18 +65,12 @@ private:
 
     constexpr static float decelerationCoefficient = 10.f; // pagePourcentage /s^2
 
-    vecLabel_sptr createLabels() const;
 
-    vecCstLabel_sptr createCstLabels() const;
+protected:
+    const Player_sptr _player;
 
-    std::vector<Page_sptr> createChildren() const;
+private:
 
-    std::unordered_map<Label_sptr, Page_sptr> _bridges;
-
-    vecLabel_sptr _labels;
-    vecCstLabel_sptr _cstLabels;
-
-    std::vector<Page_sptr> _children;
     const std::weak_ptr<Page> _parent;
     const float _height;
     float _localPosY; // Page position

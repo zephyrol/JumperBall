@@ -11,13 +11,11 @@
  */
 
 Page::Page(
+    Player_sptr&& player,
     const Page_sptr &parent,
     float height
 ) :
-    _bridges{},
-    _labels{},
-    _cstLabels{},
-    _children{},
+    _player(std::move(player)),
     _parent(parent),
     _height(height),
     _localPosY(0.f),
@@ -42,30 +40,8 @@ float Page::localPosY() const {
     return _localPosY;
 }
 
-void Page::setBridges(std::unordered_map<Label_sptr, Page_sptr> &&bridges) {
-    _bridges = std::move(bridges);
-    _labels = createLabels();
-    _cstLabels = createCstLabels();
-    _children = createChildren();
-}
-
-Page_sptr Page::child(const Label_sptr &label) {
-    return _bridges.find(label) != _bridges.end()
-        ? _bridges.at(label)
-        : nullptr;
-}
-
-const vecCstLabel_sptr &Page::labels() const {
-    return _cstLabels;
-}
-
 float Page::height() const {
     return _height;
-}
-
-Label_sptr Page::matchedLabel(float x, float y) {
-    // TODO
-    return nullptr;
 }
 
 void Page::update(bool isPressed, float screenPosY) {
@@ -135,33 +111,12 @@ void Page::update(bool isPressed, float screenPosY) {
 
 }
 
-vecLabel_sptr Page::createLabels() const {
-    vecLabel_sptr labels;
-    for (const auto &bridge: _bridges) {
-        labels.push_back(bridge.first);
-    }
-    return labels;
-}
-
-vecCstLabel_sptr Page::createCstLabels() const {
-    vecCstLabel_sptr cstLabels;
-    for (const auto &label: _labels) {
-        cstLabels.push_back(label);
-    }
-    return cstLabels;
-}
-
-std::vector<Page_sptr> Page::createChildren() const {
-    std::vector<Page_sptr> children;
-    for (const auto &bridge: _bridges) {
-        if (bridge.second) {
-            children.push_back(bridge.second);
-        }
-    }
-    return children;
-}
-
+// TODO: Useless ?
 SceneElement::GlobalState Page::getGlobalState() const {
     return SceneElement::GlobalState::United;
+}
+
+vecCstLabel_sptr Page::labels() const {
+    return {};
 }
 

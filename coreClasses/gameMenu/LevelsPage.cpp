@@ -8,29 +8,32 @@
 #include "ScaledNode.h"
 #include "UpNode.h"
 
-Page_sptr LevelsPage::createInstance(
+LevelsPage::LevelsPage(
+    Player_sptr &&player,
+    Node_sptr &&levelsTitle,
+    std::vector<Node_sptr> &&levels,
+    const Page_sptr &parent
+) : Page(
+    std::move(player),
+    parent
+),
+    _levelsTitle(std::move(levelsTitle)),
+    _levels(std::move(levels)) {
+}
+
+LevelsPage_sptr LevelsPage::createInstance(
+    Player_sptr player,
     const Page_sptr &parent,
     float ratio
 ) {
     auto levelsNode = createLevelsNodes(ratio);
     auto levelsTitleNode = createLevelsTitleNode(ratio);
     return std::make_shared<LevelsPage>(
+        std::move(player),
         std::move(levelsTitleNode),
         std::move(levelsNode),
         parent
     );
-}
-
-
-LevelsPage::LevelsPage(
-    Node_sptr &&levelsTitle,
-    std::vector<Node_sptr> &&levels,
-    const Page_sptr &parent
-) : Page(
-    parent
-),
-    _levelsTitle(std::move(levelsTitle)),
-    _levels(std::move(levels)) {
 }
 
 Node_sptr LevelsPage::createLevelsTitleNode(float ratio) {
@@ -68,10 +71,14 @@ const size_t LevelsPage::numberOfLevels = 100;
 Page::NodeMessageAssociations LevelsPage::nodeToMessage() const {
     Page::NodeMessageAssociations nodeMessageAssociations;
 
-    for(size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
+    for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
         // nodeMessageAssociations[_levels[i]] = (i < 10 ? "0" : "") + std::to_string(i);
     }
 
     nodeMessageAssociations[_levelsTitle] = "Levels";
     return nodeMessageAssociations;
+}
+
+Page_sptr LevelsPage::click(float mouseX, float mouseY) {
+    return nullptr;
 }

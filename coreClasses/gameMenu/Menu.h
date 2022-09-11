@@ -16,16 +16,7 @@
 class Menu {
 public:
 
-    enum class Action {
-        None, GoLevel
-    };
-    struct MenuAnswer {
-        Menu::Action action = Menu::Action::None;
-        size_t newLevel = 0;
-    };
-
     Menu(
-        Player &player,
         const Page_sptr &rootPage,
         const Page_sptr &pausePage,
         const Page_sptr &successPage,
@@ -49,17 +40,13 @@ public:
 
     void failurePageAsCurrentPage();
 
-    void noPageAsCurrentPage();
-
-    bool parentPageAsCurrentPage();
-
     /**
      * Action escape operation.
      * @return true if the game is the game is ended.
      */
     bool escapeAction();
 
-    Menu::MenuAnswer mouseClick(float mouseX, float mouseY);
+    std::unique_ptr<size_t> mouseClick(float mouseX, float mouseY);
 
     CstPage_sptr rootPage() const;
 
@@ -69,12 +56,11 @@ public:
 
     CstPage_sptr failurePage() const;
 
-    static std::shared_ptr<Menu> getJumperBallMenu(Player &player, float ratio);
+    static std::shared_ptr<Menu> getJumperBallMenu(const Player_sptr &player, float ratio);
 
     void resize(float screenRatio);
 
 private:
-    Player &_player;
     const Page_sptr _rootPage;
     const Page_sptr _pausePage;
     const Page_sptr _successPage;

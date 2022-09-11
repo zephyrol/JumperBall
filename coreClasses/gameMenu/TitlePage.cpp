@@ -10,33 +10,37 @@
 #include "DownNode.h"
 
 TitlePage::TitlePage(
+    Player_sptr &&player,
     Node_sptr &&jumperBallTitle,
     Node_sptr &&play,
     Node_sptr &&store,
-    Node_sptr &&exit,
+    Node_sptr &&exitNode,
     Node_sptr &&author
 ) : Page(
+    std::move(player),
     nullptr
 ),
     _jumperBallTitle(std::move(jumperBallTitle)),
     _play(std::move(play)),
     _store(std::move(store)),
-    _exit(std::move(exit)),
-    _author(std::move(author)){
+    _exitNode(std::move(exitNode)),
+    _author(std::move(author)),
+    _levelsPage(nullptr) {
 }
 
 void TitlePage::resize(float ratio) {
-    const auto& nodes = createNodes(ratio);
+    const auto &nodes = createNodes(ratio);
     _jumperBallTitle = nodes.at(0);
     _play = nodes.at(1);
     _store = nodes.at(2);
-    _exit = nodes.at(3);
+    _exitNode = nodes.at(3);
     _author = nodes.at(4);
 }
 
-Page_sptr TitlePage::createInstance(float ratio) {
+TitlePage_sptr TitlePage::createInstance(Player_sptr player, float ratio) {
     auto nodes = createNodes(ratio);
     return std::make_shared<TitlePage>(
+        std::move(player),
         std::move(nodes.at(0)),
         std::move(nodes.at(1)),
         std::move(nodes.at(2)),
@@ -89,10 +93,27 @@ vecNode_sptr TitlePage::createNodes(float ratio) {
 Page::NodeMessageAssociations TitlePage::nodeToMessage() const {
     return {
         {_jumperBallTitle, "Jumper Ball"},
-        {_play, "Play"},
-        {_store, "Store"},
-        {_exit, "Exit"},
-        {_author, "Created by S.Morgenthaler"}
+        {_play,            "Play"},
+        {_store,           "Store"},
+        {_exitNode,        "Exit"},
+        {_author,          "Created by S.Morgenthaler"}
     };
+}
+
+Page_sptr TitlePage::click(float mouseX, float mouseY) {
+    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
+        return node->intersect(mouseX, mouseY);
+    };
+    if (intersectTest(_play)) {
+        return _levelsPage;
+    }
+    if (intersectTest(_exitNode)) {
+        _player->requestQuit();
+    }
+    return nullptr;
+}
+
+void TitlePage::setLevelsPage(Page_sptr levelsPage) {
+    _levelsPage = std::move(levelsPage);
 }
 
