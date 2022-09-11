@@ -88,7 +88,7 @@ bool _mouseIsPressed;
 bool _requestToLeave;
 
 std::shared_ptr <Scene> _scene;
-std::shared_ptr<Viewer> _viewer;
+const std::shared_ptr<Viewer> _viewer;
 
 };
 

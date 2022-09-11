@@ -69,6 +69,7 @@ void Viewer::setScene(const CstScene_sptr &scene) {
 
 void Viewer::setPage(const CstPage_sptr &page) {
     _page = page;
+    resetPageRendering();
 }
 
 Viewer::~Viewer() {

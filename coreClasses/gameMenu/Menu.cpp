@@ -59,7 +59,11 @@ void Menu::failurePageAsCurrentPage() {
 }
 
 std::unique_ptr<size_t> Menu::mouseClick(float mouseX, float mouseY) {
-    const auto matchedPage = _currentPage->click(mouseX, mouseY);
+    const auto matchedPage = _currentPage->click(
+        // Positions have to be centered
+        mouseX - 0.5f,
+        mouseY - 0.5f
+        );
     if(matchedPage != nullptr) {
         _currentPage = matchedPage;
     }
