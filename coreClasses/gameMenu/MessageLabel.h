@@ -69,15 +69,13 @@ public:
     using CstLettersUvs_sptr = std::shared_ptr<const LettersUvs>;
 
     MessageLabel(
-        const std::string &message,
+        std::string message,
         std::vector<CharacterLocalTransform> &&transforms,
-        const LettersUvs_sptr& lettersUvs,
+        LettersUvs_sptr  lettersUvs,
         const CstNode_sptr &node,
         size_t lettersSize,
         bool isActivated = false
     );
-
-    ~MessageLabel() override = default;
 
     vecGeometry genGeometries() const override;
 

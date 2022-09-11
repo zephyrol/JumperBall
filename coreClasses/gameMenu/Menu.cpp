@@ -79,6 +79,7 @@ Menu::MenuAnswer Menu::mouseClick(float mouseX, float mouseY) {
     if (!_currentPage) {
         return menuAnswer;
     }
+    const auto& label = _currentPage->matchedLabel(mouseX, mouseY);
 
     /* TODO
     const auto& label = _currentPage->matchedLabel(mouseX, mouseY);
@@ -481,18 +482,13 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(Player &player, float ratio) {
     return std::make_shared<Menu>(player, page1, page4, page5, page3, pages);
 } */
 
-Menu::MenuAnswer Menu::escapeAction() {
-    const Page::EscapeAnswer &escapeAnswer = _currentPage->getEscapeAnswer();
-    Menu::MenuAnswer menuAnswer;
-    if (escapeAnswer == Page::EscapeAnswer::QuitGame) {
-        menuAnswer.action = Menu::Action::QuitGame;
-    } else if (escapeAnswer == Page::EscapeAnswer::GoToParent) {
-        menuAnswer.action = Menu::Action::GoBack;
-        parentPageAsCurrentPage();
-    } else {
-        menuAnswer.action = Menu::Action::None;
+bool Menu::escapeAction() {
+    const auto& parent = _currentPage->parent().lock();
+    if(parent == nullptr) {
+        return true;
     }
-    return menuAnswer;
+    _currentPage = parent;
+    return false;
 }
 
 void Menu::resize(float ratio) {

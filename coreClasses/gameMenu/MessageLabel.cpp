@@ -5,17 +5,18 @@
  * Created on 28 avril 2020, 19:43
  */
 #include "MessageLabel.h"
+#include <utility>
 
 MessageLabel::MessageLabel(
-    const std::string &message,
+    std::string message,
     std::vector<MessageLabel::CharacterLocalTransform> &&transforms,
-    const MessageLabel::LettersUvs_sptr& lettersUvs,
+    MessageLabel::LettersUvs_sptr lettersUvs,
     const CstNode_sptr &node,
     size_t lettersSize,
     bool isActivated
 ) : Label(node, isActivated),
-    _message(message),
-    _lettersUvs(lettersUvs),
+    _message(std::move(message)),
+    _lettersUvs(std::move(lettersUvs)),
     _transforms(std::move(transforms)),
     _lettersSize(lettersSize),
     _letterHashes(createLetterHashes()) {

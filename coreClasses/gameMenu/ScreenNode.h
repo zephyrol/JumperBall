@@ -9,7 +9,7 @@
 
 class ScreenNode : public Node {
 public:
-    ScreenNode(float screenRatio);
+    explicit ScreenNode(float screenRatio);
 };
 
 

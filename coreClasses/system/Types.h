@@ -9,7 +9,7 @@
 #define TYPES_H
 #include <iostream>
 #include <string>
-#include <math.h>
+#include <cmath>
 #include <iterator>
 #include <vector>
 #include <functional>

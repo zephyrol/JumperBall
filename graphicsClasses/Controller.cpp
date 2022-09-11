@@ -138,18 +138,18 @@ void Controller::setEscape(const Controller::Status &status) {
             status == Controller::Status::Released &&
             _buttonsStatus.at(Button::Escape) == Status::Pressed
             ) {
-            if (_menu->escapeAction().action == Menu::Action::QuitGame) {
+            if (_menu->escapeAction()) {
                 _requestToLeave = true;
             }
         }
-    } else if (_player.status() == Player::Status::InGame) {
-        if (
-            status == Controller::Status::Released &&
-            _buttonsStatus.at(Button::Escape) == Status::Pressed
-            ) {
+        return;
+    }
+
+    if (_player.status() == Player::Status::InGame
+        && status == Controller::Status::Released
+        && _buttonsStatus.at(Button::Escape) == Status::Pressed) {
             _menu->pausePageAsCurrentPage();
             _player.status(Player::Status::InMenu);
-        }
     }
 }
 
@@ -360,5 +360,4 @@ void Controller::update() {
     updateSceneMenu();
     updateViewer();
 }
-
 

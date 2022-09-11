@@ -1,5 +1,5 @@
 #include "Page.h"
-#include <math.h>
+#include <cmath>
 #include <algorithm>
 
 
@@ -12,18 +12,14 @@
 
 Page::Page(
     const Page_sptr &parent,
-    const Page::EscapeAnswer &escapeAnswer,
-    float height,
-    bool visibleOnParent
+    float height
 ) :
     _bridges{},
     _labels{},
     _cstLabels{},
     _children{},
     _parent(parent),
-    _visibleOnParent(visibleOnParent),
     _height(height),
-    _escapeAnswer(escapeAnswer),
     _localPosY(0.f),
     _localPressedPosY(0.f),
     _localReleasedPosY(0.f),
@@ -53,16 +49,10 @@ void Page::setBridges(std::unordered_map<Label_sptr, Page_sptr> &&bridges) {
     _children = createChildren();
 }
 
-bool Page::visibleOnParent() const {
-    return _visibleOnParent;
-}
-
 Page_sptr Page::child(const Label_sptr &label) {
-    if (_bridges.find(label) != _bridges.end()) {
-        return _bridges.at(label);
-    } else {
-        return nullptr;
-    }
+    return _bridges.find(label) != _bridges.end()
+        ? _bridges.at(label)
+        : nullptr;
 }
 
 const vecCstLabel_sptr &Page::labels() const {
@@ -161,11 +151,6 @@ vecCstLabel_sptr Page::createCstLabels() const {
     return cstLabels;
 }
 
-
-const Page::EscapeAnswer &Page::getEscapeAnswer() const {
-    return _escapeAnswer;
-}
-
 std::vector<Page_sptr> Page::createChildren() const {
     std::vector<Page_sptr> children;
     for (const auto &bridge: _bridges) {
@@ -175,7 +160,6 @@ std::vector<Page_sptr> Page::createChildren() const {
     }
     return children;
 }
-
 
 SceneElement::GlobalState Page::getGlobalState() const {
     return SceneElement::GlobalState::United;

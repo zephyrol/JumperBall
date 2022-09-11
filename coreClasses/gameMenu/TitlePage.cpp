@@ -10,20 +10,19 @@
 #include "DownNode.h"
 
 TitlePage::TitlePage(
-    const Node_sptr &jumperBallTitle,
-    const Node_sptr &play,
-    const Node_sptr &store,
-    const Node_sptr &exit,
-    const Node_sptr &author
+    Node_sptr &&jumperBallTitle,
+    Node_sptr &&play,
+    Node_sptr &&store,
+    Node_sptr &&exit,
+    Node_sptr &&author
 ) : Page(
-    nullptr,
-    Page::EscapeAnswer::QuitGame
+    nullptr
 ),
-    _jumperBallTitle(jumperBallTitle),
-    _play(play),
-    _store(store),
-    _exit(exit),
-    _author(author){
+    _jumperBallTitle(std::move(jumperBallTitle)),
+    _play(std::move(play)),
+    _store(std::move(store)),
+    _exit(std::move(exit)),
+    _author(std::move(author)){
 }
 
 void TitlePage::resize(float ratio) {
@@ -36,13 +35,13 @@ void TitlePage::resize(float ratio) {
 }
 
 Page_sptr TitlePage::createInstance(float ratio) {
-    const auto nodes = createNodes(ratio);
+    auto nodes = createNodes(ratio);
     return std::make_shared<TitlePage>(
-        nodes.at(0),
-        nodes.at(1),
-        nodes.at(2),
-        nodes.at(3),
-        nodes.at(4)
+        std::move(nodes.at(0)),
+        std::move(nodes.at(1)),
+        std::move(nodes.at(2)),
+        std::move(nodes.at(3)),
+        std::move(nodes.at(4))
     );
 }
 

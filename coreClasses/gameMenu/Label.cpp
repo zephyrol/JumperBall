@@ -66,5 +66,3 @@ vecGeometry Label::genGeometries() const {
 const CstNode_sptr &Label::getNode() const {
     return _node;
 }
-
-Label::~Label() = default;

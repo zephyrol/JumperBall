@@ -27,11 +27,7 @@ public:
         bool isActivated = false
     );
 
-    virtual ~Label() = 0;
-
     virtual vecGeometry genGeometries() const;
-
-    bool isFixed() const;
 
     bool isActivated() const;
 
@@ -49,7 +45,6 @@ protected:
     const CstNode_sptr _node;
 private:
     bool _isActivated;
-
 };
 
 #endif /* LABEL_H */

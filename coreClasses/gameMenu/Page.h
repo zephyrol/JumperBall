@@ -25,22 +25,15 @@ public:
 
     // Slide state => timepoint and yScreenPosition
     using slideState = std::pair<JBTypes::timePointMs, float>;
-    enum class EscapeAnswer {
-        QuitGame, GoToParent, GoToPause
-    };
 
-    Page(
+    explicit Page(
         const Page_sptr &parent,
-        const Page::EscapeAnswer &escapeAnswer,
-        float height = 1.f,
-        bool visibleOnParent = false
+        float height = 1.f
     );
 
     std::weak_ptr<const Page> parent() const;
 
     std::weak_ptr<Page> parent();
-
-    bool visibleOnParent() const;
 
     Label_sptr matchedLabel(float x, float y);
 
@@ -49,8 +42,6 @@ public:
     float localPosY() const;
 
     void setBridges(std::unordered_map<Label_sptr, Page_sptr> &&bridges);
-
-    const Page::EscapeAnswer &getEscapeAnswer() const;
 
     SceneElement::GlobalState getGlobalState() const override;
 
@@ -68,8 +59,6 @@ public:
 
     virtual void resize(float ratio) = 0;
 
-protected:
-    vecNode_sptr _nodes;
 
 private:
 
@@ -88,9 +77,7 @@ private:
 
     std::vector<Page_sptr> _children;
     const std::weak_ptr<Page> _parent;
-    const bool _visibleOnParent;
     const float _height;
-    const Page::EscapeAnswer _escapeAnswer;
     float _localPosY; // Page position
     float _localPressedPosY;
     float _localReleasedPosY;

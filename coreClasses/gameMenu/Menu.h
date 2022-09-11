@@ -7,6 +7,7 @@
 
 #ifndef MENU_H
 #define MENU_H
+
 #include <gameMenu/Page.h>
 #include <gameMenu/MessageLabel.h>
 #include <gameMenu/ArrowLabel.h>
@@ -15,52 +16,71 @@
 class Menu {
 public:
 
-enum class Action { None, QuitGame, GoBack, GoLevel };
-struct MenuAnswer {
-    Menu::Action action = Menu::Action::None;
-    size_t newLevel = 0;
-};
+    enum class Action {
+        None, GoLevel
+    };
+    struct MenuAnswer {
+        Menu::Action action = Menu::Action::None;
+        size_t newLevel = 0;
+    };
 
-Menu(
-    Player& player,
-    const Page_sptr& rootPage,
-    const Page_sptr& pausePage,
-    const Page_sptr& successPage,
-    const Page_sptr& failurePage,
-    const vecPage_sptr& pages
+    Menu(
+        Player &player,
+        const Page_sptr &rootPage,
+        const Page_sptr &pausePage,
+        const Page_sptr &successPage,
+        const Page_sptr &failurePage,
+        const vecPage_sptr &pages
     );
 
-Page_sptr currentPage();
-CstPage_sptr currentPage() const;
-void currentPage(const Page_sptr& page);
+    Page_sptr currentPage();
 
-void update(bool isPressed, float screenPosY);
+    CstPage_sptr currentPage() const;
 
-void rootPageAsCurrentPage();
-void pausePageAsCurrentPage();
-void successPageAsCurrentPage();
-void failurePageAsCurrentPage();
-void noPageAsCurrentPage();
-bool parentPageAsCurrentPage();
-Menu::MenuAnswer escapeAction();
+    void currentPage(const Page_sptr &page);
 
-Menu::MenuAnswer mouseClick(float mouseX, float mouseY);
+    void update(bool isPressed, float screenPosY);
 
-CstPage_sptr rootPage() const;
-CstPage_sptr pausePage() const;
-CstPage_sptr successPage() const;
-CstPage_sptr failurePage() const;
-static std::shared_ptr<Menu> getJumperBallMenu(Player &player, float ratio);
-void resize(float screenRatio);
+    void rootPageAsCurrentPage();
+
+    void pausePageAsCurrentPage();
+
+    void successPageAsCurrentPage();
+
+    void failurePageAsCurrentPage();
+
+    void noPageAsCurrentPage();
+
+    bool parentPageAsCurrentPage();
+
+    /**
+     * Action escape operation.
+     * @return true if the game is the game is ended.
+     */
+    bool escapeAction();
+
+    Menu::MenuAnswer mouseClick(float mouseX, float mouseY);
+
+    CstPage_sptr rootPage() const;
+
+    CstPage_sptr pausePage() const;
+
+    CstPage_sptr successPage() const;
+
+    CstPage_sptr failurePage() const;
+
+    static std::shared_ptr<Menu> getJumperBallMenu(Player &player, float ratio);
+
+    void resize(float screenRatio);
 
 private:
-Player& _player;
-const Page_sptr _rootPage;
-const Page_sptr _pausePage;
-const Page_sptr _successPage;
-const Page_sptr _failurePage;
-const vecPage_sptr _pages;
-Page_sptr _currentPage;
+    Player &_player;
+    const Page_sptr _rootPage;
+    const Page_sptr _pausePage;
+    const Page_sptr _successPage;
+    const Page_sptr _failurePage;
+    const vecPage_sptr _pages;
+    Page_sptr _currentPage;
 
 };
 
