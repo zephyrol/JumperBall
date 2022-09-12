@@ -3,11 +3,11 @@
 //
 
 #include "TitlePage.h"
-#include "CenteredNode.h"
-#include "UpNode.h"
-#include "ScreenNode.h"
-#include "ScaledNode.h"
-#include "DownNode.h"
+#include "gameMenu/nodes/CenteredNode.h"
+#include "gameMenu/nodes/UpNode.h"
+#include "gameMenu/nodes/ScreenNode.h"
+#include "gameMenu/nodes/ScaledNode.h"
+#include "gameMenu/nodes/DownNode.h"
 
 TitlePage::TitlePage(
     Player_sptr &&player,

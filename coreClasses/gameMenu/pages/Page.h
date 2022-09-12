@@ -8,7 +8,7 @@
 #ifndef PAGE_H
 #define PAGE_H
 
-#include "Label.h"
+#include "gameMenu/labels/Label.h"
 #include "player/Player.h"
 #include <list>
 

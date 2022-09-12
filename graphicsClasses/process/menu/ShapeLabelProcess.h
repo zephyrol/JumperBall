@@ -7,7 +7,7 @@
 
 
 #include "process/RenderProcess.h"
-#include "gameMenu/Page.h"
+#include "gameMenu/pages/Page.h"
 
 class ShapeLabelProcess: public RenderProcess {
 public:

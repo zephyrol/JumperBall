@@ -6,9 +6,9 @@
  */
 
 #include "Menu.h"
-#include "CenteredNode.h"
-#include "UpNode.h"
-#include "TitlePage.h"
+#include "gameMenu/nodes/CenteredNode.h"
+#include "gameMenu/nodes/UpNode.h"
+#include "gameMenu/pages/TitlePage.h"
 
 Menu::Menu(
     const Page_sptr &rootPage,

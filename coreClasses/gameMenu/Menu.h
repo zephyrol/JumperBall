@@ -8,9 +8,9 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include <gameMenu/Page.h>
-#include <gameMenu/MessageLabel.h>
-#include <gameMenu/ArrowLabel.h>
+#include "gameMenu/pages/Page.h"
+#include "gameMenu/labels/MessageLabel.h"
+#include "gameMenu/labels/ArrowLabel.h"
 #include <player/Player.h>
 
 class Menu {

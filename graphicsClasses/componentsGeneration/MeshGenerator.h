@@ -15,7 +15,7 @@
 #include <scene/blocks/enemies/Enemy.h>
 #include <scene/blocks/special/Special.h>
 #include <scene/Star.h>
-#include <gameMenu/Page.h>
+#include "gameMenu/pages/Page.h"
 #include "geometry/Cylinder.h"
 #include "geometry/Pyramid.h"
 #include "geometry/Sphere.h"

@@ -10,7 +10,7 @@
 
 #include "system/Geometry.h"
 #include "scene/SceneElement.h"
-#include "Node.h"
+#include "gameMenu/nodes/Node.h"
 #include <fstream>
 
 class Label;

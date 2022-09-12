@@ -3,10 +3,10 @@
 //
 
 #include "LevelsPage.h"
-#include "ScreenNode.h"
-#include "CenteredNode.h"
-#include "ScaledNode.h"
-#include "UpNode.h"
+#include "gameMenu/nodes/ScreenNode.h"
+#include "gameMenu/nodes/CenteredNode.h"
+#include "gameMenu/nodes/ScaledNode.h"
+#include "gameMenu/nodes/UpNode.h"
 
 LevelsPage::LevelsPage(
     Player_sptr &&player,

@@ -7,7 +7,7 @@
 
 #include "FontTexturesGenerator.h"
 #include "FrameBuffer.h"
-#include "gameMenu/CenteredNode.h"
+#include "gameMenu/nodes/CenteredNode.h"
 
 FontTexturesGenerator::FontTexturesGenerator(
     size_t screenWidth, size_t screenHeight,
