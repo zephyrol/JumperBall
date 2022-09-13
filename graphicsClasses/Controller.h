@@ -32,10 +32,8 @@ Controller(
     bool isUsingTouchScreen
 );
 
-void interactionButtons(const Button& button,
-                        const Status& status);
-void interactionMouse(const Status& status,
-                      float posX, float posY);
+void interactionButtons( const Button& button, const Status& status );
+void interactionMouse( const Status& status, float posX, float posY );
 
 void update();
 void render() const;
@@ -70,10 +68,8 @@ void setValidateMouse();
 Player_sptr _player;
 const std::shared_ptr <Menu> _menu;
 std::map <Button, Status> _buttonsStatus;
-Scene::ActionKey _currentKey;
 
 const JBTypes::FileContent _filesContent;
-const bool _isUsingTouchScreen;
 
 float _mousePressingXCoord;
 float _mousePressingYCoord;

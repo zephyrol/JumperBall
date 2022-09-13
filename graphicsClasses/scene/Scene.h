@@ -16,8 +16,10 @@
 
 
 class Scene;
+
 using Scene_sptr = std::shared_ptr<Scene>;
 using CstScene_sptr = std::shared_ptr<const Scene>;
+
 class Scene {
 
 public:
@@ -26,15 +28,14 @@ public:
         Up, Down, Left, Right, Validate, Nothing
     };
 
-    Scene(const std::string &mapContent, float screenRatio);
+    Scene(const std::string &mapContent, float screenRatio, Player_sptr player, bool isUsingTouchScreen);
 
-    Player::Status update(const Player::Status &status, const ActionKey &key);
+    void setValidate();
+    void setValidateMouse();
+
+    void update();
 
     void updateScreenRatio(float ratio);
-
-    bool gameIsLost() const;
-
-    bool gameIsWon() const;
 
     CstMap_sptr getMap() const;
 
@@ -48,12 +49,19 @@ public:
 
     float getRatio() const;
 
+    bool isUsingTouchScreen() const;
+
 private:
     Map_sptr _map;
+    ActionKey _currentKey;
     const std::shared_ptr<Camera> _camera;
     const std::shared_ptr<Star> _star;
     const std::shared_ptr<Star> _star2;
+    const Player_sptr _player;
     float _ratio;
+    const bool _isUsingTouchScreen;
+
+    bool isInGame() const;
 
 };
 

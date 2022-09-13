@@ -28,9 +28,7 @@ Controller::Controller(
         {Controller::Button::Left,     Controller::Status::Released},
         {Controller::Button::Escape,   Controller::Status::Released},
         {Controller::Button::Validate, Controller::Status::Released}},
-    _currentKey(Scene::ActionKey::Nothing),
     _filesContent(filesContent),
-    _isUsingTouchScreen(isUsingTouchScreen),
     _mousePressingXCoord(0.f),
     _mousePressingYCoord(0.f),
     _mouseCurrentXCoord(0.f),
@@ -44,7 +42,9 @@ Controller::Controller(
     _requestToLeave(false),
     _scene(std::make_shared<Scene>(
         filesContent.at("map" + std::to_string(_player->levelProgression()) + ".txt"),
-        static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
+        static_cast<float>(screenWidth) / static_cast<float>(screenHeight),
+        _player,
+        isUsingTouchScreen
     )),
     _viewer(std::make_shared<Viewer>(
         screenWidth,
@@ -102,32 +102,30 @@ void Controller::interactionMouse(const Status &status, float posX, float posY) 
 }
 
 void Controller::setValidateButton(const Controller::Status &status) {
-    if (_player->status() == Player::Status::InGame) {
-        if (status == Controller::Status::Pressed) {
-            _currentKey = Scene::ActionKey::Validate;
-        }
+    if (status != Controller::Status::Pressed) {
+        return;
     }
+    _scene->setValidate();
 }
 
 void Controller::runGame(size_t level) {
     _scene = std::make_shared<Scene>(
         _filesContent.at("map" + std::to_string(level) + ".txt"),
-        _scene->getRatio()
+        _scene->getRatio(),
+        _player,
+        _scene->isUsingTouchScreen()
     );
     _viewer->setScene(_scene);
     updateSceneMenu();
 }
 
 void Controller::setValidateMouse() {
-    if (_player->status() == Player::Status::InGame && !_isUsingTouchScreen) {
-        _currentKey = Scene::ActionKey::Validate;
-        return;
-    }
+    _scene->setValidateMouse();
     if (_player->status() != Player::Status::InMenu) {
         return;
     }
     const auto newLevel = _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
-    if(_player->wantsToQuit()) {
+    if (_player->wantsToQuit()) {
         _requestToLeave = true;
         return;
     }
@@ -138,14 +136,9 @@ void Controller::setValidateMouse() {
 }
 
 void Controller::setEscape(const Controller::Status &status) {
-    if (_player->status() == Player::Status::InMenu) {
-        if (
-            status == Controller::Status::Released &&
-            _buttonsStatus.at(Button::Escape) == Status::Pressed
-            ) {
-            if (_menu->escapeAction()) {
-                _requestToLeave = true;
-            }
+    if (status == Controller::Status::Released && _buttonsStatus.at(Button::Escape) == Status::Pressed) {
+        if (_menu->escapeAction()) {
+            _requestToLeave = true;
         }
         return;
     }
@@ -332,26 +325,20 @@ void Controller::resize(size_t screenWidth, size_t screenHeight) {
 
 void Controller::updateSceneMenu() {
 
-    _player->status(_scene->update(_player->status(), _currentKey));
+    _scene->update();
     _currentKey = Scene::ActionKey::Nothing;
-    if (_player->status() == Player::Status::InMenu) {
-        _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
-        return;
-    }
-    if (_player->status() != Player::Status::InGame) {
-        return;
-    }
-    if (_scene->gameIsWon()) {
-        _player->status(Player::Status::InMenu);
-        _menu->successPageAsCurrentPage();
-        _viewer->setPage(_menu->currentPage());
-        return;
-    }
-    if (_scene->gameIsLost()) {
-        _player->status(Player::Status::InMenu);
-        _menu->failurePageAsCurrentPage();
-        _viewer->setPage(_menu->currentPage());
-    }
+    _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
+    // if (_scene->gameIsWon()) {
+    //     _player->status(Player::Status::InMenu);
+    //     _menu->successPageAsCurrentPage();
+    //     _viewer->setPage(_menu->currentPage());
+    //     return;
+    // }
+    // if (_scene->gameIsLost()) {
+    //     _player->status(Player::Status::InMenu);
+    //     _menu->failurePageAsCurrentPage();
+    //     _viewer->setPage(_menu->currentPage());
+    // }
 }
 
 void Controller::updateViewer() {

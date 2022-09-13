@@ -6,18 +6,22 @@
  */
 #include "Scene.h"
 
-Scene::Scene(const std::string &mapContent, float screenRatio) :
+Scene::Scene(const std::string &mapContent, float screenRatio, Player_sptr player, bool isUsingTouchScreen) :
     _map(MapGenerator::loadMap(mapContent)),
+    _currentKey(Scene::ActionKey::Nothing),
     _camera(std::make_shared<Camera>(*_map, screenRatio)),
     _star(Star::createBlurStar(*_map)),
     _star2(Star::createPurpleStar(*_map)),
-    _ratio(screenRatio){
+    _player(std::move(player)),
+    _ratio(screenRatio),
+    _isUsingTouchScreen(isUsingTouchScreen) {
 }
 
-Player::Status Scene::update(const Player::Status &status, const Scene::ActionKey &key) {
+void Scene::update() {
 
+    const auto &status = _player->status();
     Ball::ActionRequest actionRequest;
-    switch (key) {
+    switch (_currentKey) {
         case Scene::ActionKey::Nothing: {
             actionRequest = Ball::ActionRequest::Nothing;
             break;
@@ -54,22 +58,19 @@ Player::Status Scene::update(const Player::Status &status, const Scene::ActionKe
     _camera->update(updatingTime, status, actionRequest == Ball::ActionRequest::MoveCamera);
 
     if (_camera->getMovement() == Camera::Movement::FollowingBall) {
-        return Player::Status::InGame;
+        _player->status(Player::Status::InGame);
+    }
+    if (_player->status() != Player::Status::InGame) {
+        return;
+    }
+    if (_map->gameIsLost()) {
+        _player->status(Player::Status::InMenu);
+    }
+    if (_map->gameIsWon()) {
+        _player->status(Player::Status::InMenu);
     }
 
-    return status;
 }
-
-bool Scene::gameIsLost() const {
-    // TODO: call function gameIsLost in map
-    return _map->getBall()->stateOfLife() == Ball::StateOfLife::Dead;
-}
-
-bool Scene::gameIsWon() const {
-    // TODO: call function gameIsLost in map
-    return _map->getBall()->stateOfLife() == Ball::StateOfLife::Winner;
-}
-
 
 CstMap_sptr Scene::getMap() const {
     return _map;
@@ -99,5 +100,29 @@ void Scene::updateScreenRatio(float ratio) {
 
 float Scene::getRatio() const {
     return _ratio;
+}
+
+void Scene::setValidate() {
+    if (!isInGame()) {
+        return;
+    }
+    _currentKey = Scene::ActionKey::Validate;
+}
+
+void Scene::setValidateMouse() {
+    if(!isInGame()) {
+        return;
+    }
+    if(!_isUsingTouchScreen) {
+        _currentKey = Scene::ActionKey::Validate;
+    }
+}
+
+bool Scene::isInGame() const {
+    return _player->status() == Player::Status::InGame;
+}
+
+bool Scene::isUsingTouchScreen() const {
+    return _isUsingTouchScreen;
 }
 

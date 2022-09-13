@@ -58,6 +58,10 @@ public:
 
     JBTypes::vec3f getNextLook() const;
 
+    bool gameIsLost() const;
+
+    bool gameIsWon() const;
+
 private:
 
     static JBTypes::vec3ui stringToPosition(const std::string &stringPosition);

@@ -196,3 +196,11 @@ std::map<BlockDir, BlockDir> Map::createBlocksTeleportations() const {
 
     return teleportationBlocks;
 }
+
+bool Map::gameIsLost() const {
+    return _ball->stateOfLife() == Ball::StateOfLife::Dead;
+}
+
+bool Map::gameIsWon() const {
+    return _ball->stateOfLife() == Ball::StateOfLife::Winner;
+}

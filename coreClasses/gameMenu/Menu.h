@@ -17,11 +17,12 @@ class Menu {
 public:
 
     Menu(
+        Player_sptr player,
         const Page_sptr &rootPage,
-        const Page_sptr &pausePage,
-        const Page_sptr &successPage,
-        const Page_sptr &failurePage,
-        const vecPage_sptr &pages
+        Page_sptr pausePage,
+        Page_sptr successPage,
+        Page_sptr failurePage,
+        vecPage_sptr pages
     );
 
     Page_sptr currentPage();
@@ -61,6 +62,7 @@ public:
     void resize(float screenRatio);
 
 private:
+    const Player_sptr _player;
     const Page_sptr _rootPage;
     const Page_sptr _pausePage;
     const Page_sptr _successPage;
