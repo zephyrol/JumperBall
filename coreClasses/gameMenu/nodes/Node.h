@@ -30,22 +30,22 @@ protected:
     struct Transform {
 
         /**
-         * Width between 0.f and 1.f
+         * Width (Screen space is between 0.f and 1.f)
          */
         float width;
 
         /**
-         * Height between 0.f and 1.f
+         * Height (Screen space is between 0.f and 1.f)
          */
         float height;
 
         /**
-         * Horizontal position between -0.5f, and 0.5f
+         * Horizontal position (Screen space is between -0.5f, and 0.5f)
          */
         float positionX;
 
         /**
-         * Vertical position between -0.5f, and 0.5f
+         * Vertical position (Screen space is between -0.5f, and 0.5f)
          */
         float positionY;
     };

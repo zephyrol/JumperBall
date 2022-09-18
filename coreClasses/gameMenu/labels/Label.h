@@ -41,6 +41,8 @@ public:
 
     static void updateLabelsLevels(vecLabel_sptr &labels, size_t end);
 
+    virtual ~Label() = default;
+
 protected:
     const CstNode_sptr _node;
 private:

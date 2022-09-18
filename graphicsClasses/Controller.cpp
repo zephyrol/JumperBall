@@ -125,11 +125,11 @@ void Controller::setValidateMouse() {
         return;
     }
 
-    const auto& currentPage = _menu->currentPage();
+    const auto &currentPage = _menu->currentPage();
     _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
-    const auto& newPage = _menu->currentPage();
+    const auto &newPage = _menu->currentPage();
 
-    if(newPage != currentPage) {
+    if (newPage != currentPage) {
         _viewer->setPage(newPage);
     }
 
@@ -137,7 +137,7 @@ void Controller::setValidateMouse() {
         _requestToLeave = true;
         return;
     }
-    if(_player->status() != Player::Status::InMenu) {
+    if (_player->status() != Player::Status::InMenu) {
         runGame(_player->getCurrentLevel());
         return;
     }
@@ -145,24 +145,17 @@ void Controller::setValidateMouse() {
 
 void Controller::setEscape(const Controller::Status &status) {
     if (status == Controller::Status::Released && _buttonsStatus.at(Button::Escape) == Status::Pressed) {
-        const auto& currentPage = _menu->currentPage();
+        const auto &currentPage = _menu->currentPage();
         if (_menu->escapeAction()) {
             _requestToLeave = true;
             return;
         }
 
-        const auto& newPage = _menu->currentPage();
+        const auto &newPage = _menu->currentPage();
 
-        if(newPage != currentPage) {
+        if (newPage != currentPage) {
             _viewer->setPage(newPage);
         }
-    }
-
-    if (_player->status() == Player::Status::InGame
-        && status == Controller::Status::Released
-        && _buttonsStatus.at(Button::Escape) == Status::Pressed) {
-        _menu->pausePageAsCurrentPage();
-        _player->status(Player::Status::InMenu);
     }
 }
 

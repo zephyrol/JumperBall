@@ -18,73 +18,93 @@ class Controller {
 
 public:
 
-enum class Status { Pressed, Released };
-enum class Button { Up, Down, Left, Right, Escape, Validate };
-enum class ScreenDirection { North, South, East, West };
-enum class Pointer { Mouse, TouchScreen };
+    enum class Status {
+        Pressed, Released
+    };
+    enum class Button {
+        Up, Down, Left, Right, Escape, Validate
+    };
+    enum class ScreenDirection {
+        North, South, East, West
+    };
+    enum class Pointer {
+        Mouse, TouchScreen
+    };
 
-Controller(
-    const size_t& screenWidth,
-    const size_t& screenHeight,
-    const JBTypes::FileContent& filesContent,
-    const unsigned char* fontData,
-    size_t fontDataSize,
-    bool isUsingTouchScreen
-);
+    Controller(
+        const size_t &screenWidth,
+        const size_t &screenHeight,
+        const JBTypes::FileContent &filesContent,
+        const unsigned char *fontData,
+        size_t fontDataSize,
+        bool isUsingTouchScreen
+    );
 
-void interactionButtons( const Button& button, const Status& status );
-void interactionMouse( const Status& status, float posX, float posY );
+    void interactionButtons(const Button &button, const Status &status);
 
-void update();
-void render() const;
+    void interactionMouse(const Status &status, float posX, float posY);
 
-bool requestToLeave() const;
+    void update();
 
-void resize(size_t screenWidth, size_t screenHeight);
+    void render() const;
+
+    bool requestToLeave() const;
+
+    void resize(size_t screenWidth, size_t screenHeight);
 
 private:
 
-void updateViewer();
-void updateSceneMenu();
+    void updateViewer();
 
-ScreenDirection nearestDirection(float posX, float posY) const;
+    void updateSceneMenu();
 
-static float computeDistance(float x0, float y0, float x1, float y1);
+    ScreenDirection nearestDirection(float posX, float posY) const;
 
-void setUp(const Status& status);
-void setDown(const Status& status);
-void setRight(const Status& status);
-void setLeft(const Status& status);
-void setEscape(const Status& status);
-void setValidateButton(const Status& status);
-void runGame(size_t level);
+    static float computeDistance(float x0, float y0, float x1, float y1);
+
+    void setUp(const Status &status);
+
+    void setDown(const Status &status);
+
+    void setRight(const Status &status);
+
+    void setLeft(const Status &status);
+
+    void setEscape(const Status &status);
+
+    void setValidateButton(const Status &status);
+
+    void runGame(size_t level);
 
 // Mouse/TouchPad/TouchScreen
-void pressMouse(float posX, float posY);
-void updateMouse(float posX, float posY);
-void releaseMouse(float posX, float posY);
-void setValidateMouse();
+    void pressMouse(float posX, float posY);
 
-const Player_sptr _player;
-const std::shared_ptr <Menu> _menu;
-std::map <Button, Status> _buttonsStatus;
+    void updateMouse(float posX, float posY);
 
-const JBTypes::FileContent _filesContent;
+    void releaseMouse(float posX, float posY);
 
-float _mousePressingXCoord;
-float _mousePressingYCoord;
-float _mouseCurrentXCoord;
-float _mouseCurrentYCoord;
-float _mousePreviousXCoord;
-float _mousePreviousYCoord;
-JBTypes::timePointMs _mouseUpdatingTime;
-JBTypes::timePointMs _mousePressTime;
-std::shared_ptr<const Controller::ScreenDirection> _currentMovementDir;
-bool _mouseIsPressed;
-bool _requestToLeave;
+    void setValidateMouse();
 
-std::shared_ptr <Scene> _scene;
-const std::shared_ptr<Viewer> _viewer;
+    const Player_sptr _player;
+    const std::shared_ptr<Menu> _menu;
+    std::map<Button, Status> _buttonsStatus;
+
+    const JBTypes::FileContent _filesContent;
+
+    float _mousePressingXCoord;
+    float _mousePressingYCoord;
+    float _mouseCurrentXCoord;
+    float _mouseCurrentYCoord;
+    float _mousePreviousXCoord;
+    float _mousePreviousYCoord;
+    JBTypes::timePointMs _mouseUpdatingTime;
+    JBTypes::timePointMs _mousePressTime;
+    std::shared_ptr<const Controller::ScreenDirection> _currentMovementDir;
+    bool _mouseIsPressed;
+    bool _requestToLeave;
+
+    std::shared_ptr<Scene> _scene;
+    const std::shared_ptr<Viewer> _viewer;
 
 };
 

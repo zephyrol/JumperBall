@@ -10,15 +10,9 @@
 #include "gameMenu/nodes/CenteredNode.h"
 
 FontTexturesGenerator::FontTexturesGenerator(
-    size_t screenWidth, size_t screenHeight,
-    const CstPage_sptr &page,
-    const FontTexturesGenerator::FTContent &ftContent,
     const FontTexturesGenerator::LettersTexture &lettersTexture,
     vecMessageLabel_sptr &&messageLabels
-) : _ftContent(ftContent),
-    _screenWidth(screenWidth),
-    _screenHeight(screenHeight),
-    _lettersTexture(lettersTexture),
+) : _lettersTexture(lettersTexture),
     _messageLabels(std::move(messageLabels)) {
 }
 
@@ -225,15 +219,10 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    return FontTexturesGenerator(
-        screenWidth,
-        screenHeight,
-        page,
-        ftContent,
+    return {
         lettersTexture,
         std::move(messageLabels)
-    );
-
+    };
 }
 
 

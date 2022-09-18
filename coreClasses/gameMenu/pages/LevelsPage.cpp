@@ -7,6 +7,10 @@
 #include "gameMenu/nodes/CenteredNode.h"
 #include "gameMenu/nodes/ScaledNode.h"
 #include "gameMenu/nodes/UpNode.h"
+#include "gameMenu/nodes/VerticalNode.h"
+#include "gameMenu/nodes/DownNode.h"
+#include "gameMenu/nodes/LeftNode.h"
+#include "gameMenu/nodes/RightNode.h"
 
 LevelsPage::LevelsPage(
     Player_sptr &&player,
@@ -26,8 +30,9 @@ LevelsPage_sptr LevelsPage::createInstance(
     const Page_sptr &parent,
     float ratio
 ) {
-    auto levelsNode = createLevelsNodes(ratio);
-    auto levelsTitleNode = createLevelsTitleNode(ratio);
+    const auto levelsPageNode = getCommonNode(ratio);
+    auto levelsNode = createLevelsNodes(ratio, levelsPageNode);
+    auto levelsTitleNode = createLevelsTitleNode(ratio, levelsPageNode);
     return std::make_shared<LevelsPage>(
         std::move(player),
         std::move(levelsTitleNode),
@@ -36,25 +41,42 @@ LevelsPage_sptr LevelsPage::createInstance(
     );
 }
 
-Node_sptr LevelsPage::createLevelsTitleNode(float ratio) {
-    const auto levelsPageNode = getCommonNode(ratio);
-    const auto levelsTitle = std::make_shared<UpNode>(
-        levelsPageNode,
-        4.f
-    );
-    return levelsTitle;
+Node_sptr LevelsPage::createLevelsTitleNode(float ratio, const Node_sptr &commonNode) {
+    return std::make_shared<UpNode>(commonNode, 4.f);
 }
 
-vecNode_sptr LevelsPage::createLevelsNodes(float ratio) {
-    const auto levelsPageNode = getCommonNode(ratio);
-    return {};
+vecNode_sptr LevelsPage::createLevelsNodes(float ratio, const Node_sptr &commonNode) {
+    vecNode_sptr levelsNodes;
+    const auto levelsMainNode = std::make_shared<DownNode>(commonNode, 9.f / 18.f);
+    const auto numberOfLevelsFloat = static_cast<float>(LevelsPage::numberOfLevels);
+    for (size_t i = 0; i < LevelsPage::numberOfLevels; i += 3) {
+        constexpr auto positionFactor = 4.f;
+        const auto positionY = static_cast<float>(i) / numberOfLevelsFloat;
+        const auto verticalNode = std::make_shared<VerticalNode>(
+            levelsMainNode,
+            5.f,
+            1.f - positionY * positionFactor
+        );
+
+        auto leftLevel = LevelsPage::createLevelNode<LeftNode>(verticalNode);
+        levelsNodes.push_back(std::move(leftLevel));
+
+        auto middleLevel = LevelsPage::createLevelNode<CenteredNode>(verticalNode);
+        levelsNodes.push_back(std::move(middleLevel));
+
+        auto rightLevel = LevelsPage::createLevelNode<RightNode>(verticalNode);
+        levelsNodes.push_back(std::move(rightLevel));
+    }
+
+    return levelsNodes;
 }
 
 void LevelsPage::resize(float ratio) {
-    auto levelsNode = createLevelsNodes(ratio);
-    auto levelsTitleNode = createLevelsTitleNode(ratio);
-    _levels = std::move(levelsNode);
+    const auto levelsPageNode = getCommonNode(ratio);
+    auto levelsNode = createLevelsNodes(ratio, levelsPageNode);
+    auto levelsTitleNode = createLevelsTitleNode(ratio, levelsPageNode);
     _levelsTitle = std::move(levelsTitleNode);
+    _levels = std::move(levelsNode);
 }
 
 Node_sptr LevelsPage::getCommonNode(float ratio) {
@@ -62,18 +84,18 @@ Node_sptr LevelsPage::getCommonNode(float ratio) {
     const auto resizedScreenNode = std::make_shared<ScaledNode>(screenNode, 0.95f);
     const auto levelsPageNode = std::make_shared<CenteredNode>(
         resizedScreenNode,
-        9.f / 16.f
+        9.f / 22.f
     );
     return levelsPageNode;
 }
 
-const size_t LevelsPage::numberOfLevels = 100;
 
 Page::NodeMessageAssociations LevelsPage::nodeToMessage() const {
     Page::NodeMessageAssociations nodeMessageAssociations;
 
     for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
-        // nodeMessageAssociations[_levels[i]] = (i < 10 ? "0" : "") + std::to_string(i);
+        const auto levelNumber = i + 1;
+        nodeMessageAssociations[_levels[i]] = (levelNumber < 10 ? "0" : "") + std::to_string(levelNumber);
     }
 
     nodeMessageAssociations[_levelsTitle] = "Levels";
@@ -83,3 +105,4 @@ Page::NodeMessageAssociations LevelsPage::nodeToMessage() const {
 Page_sptr LevelsPage::click(float mouseX, float mouseY) {
     return nullptr;
 }
+

@@ -5,12 +5,11 @@
 #ifndef JUMPERBALLAPPLICATION_LEFTNODE_H
 #define JUMPERBALLAPPLICATION_LEFTNODE_H
 
-
 #include "FillingNode.h"
 
 class LeftNode : public FillingNode {
 public:
-    LeftNode(const CstNode_sptr &parent, float ratio);
+    explicit LeftNode(const CstNode_sptr &localSize, float ratio);
 };
 
 

@@ -36,11 +36,20 @@ private:
     Node_sptr _levelsTitle;
     std::vector<Node_sptr> _levels;
 
-    static vecNode_sptr createLevelsNodes(float ratio);
-    static Node_sptr createLevelsTitleNode(float ratio);
+    template<class T>
+    static std::shared_ptr<T> createLevelNode(const Node_sptr& parent);
+
+    static vecNode_sptr createLevelsNodes(float ratio, const Node_sptr &commonNode);
+    static Node_sptr createLevelsTitleNode(float ratio, const Node_sptr &commonNode);
     static Node_sptr getCommonNode(float ratio);
-    static const size_t numberOfLevels;
+    static constexpr size_t numberOfLevels = 100;
 };
+
+template<class T>
+std::shared_ptr<T> LevelsPage::createLevelNode(const Node_sptr &parent) {
+    constexpr float levelNodeRatio = 1.f;
+    return std::make_shared<T>(parent, levelNodeRatio);
+}
 
 
 #endif //JUMPERBALLAPPLICATION_LEVELSPAGE_H

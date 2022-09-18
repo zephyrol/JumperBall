@@ -86,10 +86,6 @@ public:
     };
 
     FontTexturesGenerator(
-        size_t screenWidth,
-        size_t screenHeight,
-        const CstPage_sptr &page,
-        const FontTexturesGenerator::FTContent &ftContent,
         const LettersTexture &lettersTexture,
         vecMessageLabel_sptr &&messageLabels
     );
@@ -106,22 +102,12 @@ public:
     );
 
     void freeGPUMemory();
+
     GLuint getLettersTexture() const;
 
     const vecMessageLabel_sptr &getMessageLabels();
 
 private:
-    const FTContent &_ftContent;
-
-    /**
-     * Screen width in pixels
-     */
-    const size_t _screenWidth;
-
-    /**
-     * Screen height in pixels
-     */
-    const size_t _screenHeight;
 
     const LettersTexture _lettersTexture;
 
