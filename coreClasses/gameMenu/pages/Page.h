@@ -15,6 +15,7 @@
 class Page;
 
 using Page_sptr = std::shared_ptr<Page>;
+using Page_wptr= std::weak_ptr<Page>;
 using CstPage_sptr = std::shared_ptr<const Page>;
 using vecCstPage_sptr = std::vector<CstPage_sptr>;
 using vecPage_sptr = std::vector<Page_sptr>;
@@ -38,7 +39,7 @@ public:
 
     /**
      * Click on the page. Check if the mouse is on a node and activate the node action.
-     * Return a target page linked to this node if its exist else nullptr
+     * Return a target page linked to this node if it exists else nullptr
      * @param mouseX Screen mouse x coordinate
      * @param mouseY Screen mouse y coordinate
      * @return Target page or nullptr

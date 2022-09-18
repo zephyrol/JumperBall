@@ -25,7 +25,7 @@ TitlePage::TitlePage(
     _store(std::move(store)),
     _exitNode(std::move(exitNode)),
     _author(std::move(author)),
-    _levelsPage(nullptr) {
+    _levelsPage() {
 }
 
 void TitlePage::resize(float ratio) {

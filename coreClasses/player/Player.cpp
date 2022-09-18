@@ -108,3 +108,9 @@ bool Player::wantsToQuit() const {
 void Player::requestQuit() {
     _wantsToQuit = true;
 }
+
+void Player::escapeAction() {
+    if(_status == Player::Status::InGame)  {
+        _status = Player::Status::InMenu;
+    }
+}

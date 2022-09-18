@@ -64,6 +64,7 @@ Node_sptr LevelsPage::getCommonNode(float ratio) {
         resizedScreenNode,
         9.f / 16.f
     );
+    return levelsPageNode;
 }
 
 const size_t LevelsPage::numberOfLevels = 100;

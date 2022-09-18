@@ -57,6 +57,8 @@ public:
 
     void requestQuit();
 
+    void escapeAction();
+
     Status status() const;
 
     void status(const Status &s);

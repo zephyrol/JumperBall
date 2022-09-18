@@ -47,7 +47,7 @@ public:
      */
     bool escapeAction();
 
-    std::unique_ptr<size_t> mouseClick(float mouseX, float mouseY);
+    void mouseClick(float mouseX, float mouseY);
 
     CstPage_sptr rootPage() const;
 

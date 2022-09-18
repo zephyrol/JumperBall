@@ -11,6 +11,7 @@
 #include "gameMenu/nodes/CenteredNode.h"
 #include "gameMenu/nodes/UpNode.h"
 #include "gameMenu/pages/TitlePage.h"
+#include "gameMenu/pages/LevelsPage.h"
 
 Menu::Menu(
     Player_sptr player,
@@ -64,7 +65,7 @@ void Menu::failurePageAsCurrentPage() {
     _currentPage = _failurePage;
 }
 
-std::unique_ptr<size_t> Menu::mouseClick(float mouseX, float mouseY) {
+void Menu::mouseClick(float mouseX, float mouseY) {
     const auto matchedPage = _currentPage->click(
         // Positions have to be centered
         mouseX - 0.5f,
@@ -74,7 +75,6 @@ std::unique_ptr<size_t> Menu::mouseClick(float mouseX, float mouseY) {
         _currentPage = matchedPage;
     }
 
-    return nullptr;
     /* TODO
     const auto& label = _currentPage->matchNode(mouseX, mouseY);
     if (label) {
@@ -122,12 +122,14 @@ CstPage_sptr Menu::failurePage() const {
 
 std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr &player, float ratio) {
 
-    const Page_sptr page1 = TitlePage::createInstance(player, ratio);
+    const auto titlePage = TitlePage::createInstance(player, ratio);
+    const auto levelsPage = LevelsPage::createInstance(player, titlePage, ratio);
+    titlePage->setLevelsPage(levelsPage);
 
-    const vecPage_sptr pages{page1};
+    const vecPage_sptr pages{titlePage};
     return std::make_shared<Menu>(
         player,
-        page1,
+        titlePage,
         nullptr,
         nullptr,
         nullptr,
@@ -136,9 +138,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr &player, float r
 }
 
 bool Menu::escapeAction() {
-    if(_player->status() != Player::Status::InMenu) {
-        return false;
-    }
+    _player->escapeAction();
     const auto& parent = _currentPage->parent().lock();
     if(parent == nullptr) {
         return true;

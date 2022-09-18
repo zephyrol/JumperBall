@@ -65,7 +65,7 @@ void updateMouse(float posX, float posY);
 void releaseMouse(float posX, float posY);
 void setValidateMouse();
 
-Player_sptr _player;
+const Player_sptr _player;
 const std::shared_ptr <Menu> _menu;
 std::map <Button, Status> _buttonsStatus;
 

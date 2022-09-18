@@ -124,23 +124,38 @@ void Controller::setValidateMouse() {
     if (_player->status() != Player::Status::InMenu) {
         return;
     }
-    const auto newLevel = _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
+
+    const auto& currentPage = _menu->currentPage();
+    _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
+    const auto& newPage = _menu->currentPage();
+
+    if(newPage != currentPage) {
+        _viewer->setPage(newPage);
+    }
+
     if (_player->wantsToQuit()) {
         _requestToLeave = true;
         return;
     }
-    if (newLevel == nullptr) {
+    if(_player->status() != Player::Status::InMenu) {
+        runGame(_player->getCurrentLevel());
         return;
     }
-    runGame(*newLevel);
 }
 
 void Controller::setEscape(const Controller::Status &status) {
     if (status == Controller::Status::Released && _buttonsStatus.at(Button::Escape) == Status::Pressed) {
+        const auto& currentPage = _menu->currentPage();
         if (_menu->escapeAction()) {
             _requestToLeave = true;
+            return;
         }
-        return;
+
+        const auto& newPage = _menu->currentPage();
+
+        if(newPage != currentPage) {
+            _viewer->setPage(newPage);
+        }
     }
 
     if (_player->status() == Player::Status::InGame

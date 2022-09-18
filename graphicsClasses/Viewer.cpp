@@ -25,20 +25,20 @@ Viewer::Viewer(
     }()),
     _resolutionX(static_cast<GLsizei>(resolutionX)),
     _resolutionY(static_cast<GLsizei>(resolutionY)),
-    _sceneRendering(std::unique_ptr<SceneRendering>(new SceneRendering(
+    _sceneRendering(new SceneRendering(
         *scene,
         _resolutionX,
         _resolutionY,
         _defaultFrameBuffer,
         fileContent
-    ))),
-    _pageRendering(std::unique_ptr<PageRendering>(new PageRendering(
+    )),
+    _pageRendering(new PageRendering(
         _page,
         _ftContent,
         _resolutionX,
         _resolutionY,
         fileContent
-    ))) {
+    )) {
 }
 
 void Viewer::update() {
