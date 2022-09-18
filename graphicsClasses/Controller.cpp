@@ -152,34 +152,26 @@ void Controller::setEscape(const Controller::Status &status) {
 }
 
 void Controller::setRight(const Controller::Status &status) {
-    if (_player->status() == Player::Status::InGame) {
-        if (status == Controller::Status::Pressed) {
-            _currentKey = Scene::ActionKey::Right;
-        }
+    if (status == Controller::Status::Pressed) {
+        _scene->setRight();
     }
 }
 
 void Controller::setLeft(const Status &status) {
-    if (_player->status() == Player::Status::InGame) {
-        if (status == Controller::Status::Pressed) {
-            _currentKey = Scene::ActionKey::Left;
-        }
+    if (status == Controller::Status::Pressed) {
+        _scene->setLeft();
     }
 }
 
 void Controller::setDown(const Controller::Status &status) {
-    if (_player->status() == Player::Status::InGame) {
-        if (status == Controller::Status::Pressed) {
-            _currentKey = Scene::ActionKey::Down;
-        }
+    if (status == Controller::Status::Pressed) {
+        _scene->setDown();
     }
 }
 
 void Controller::setUp(const Controller::Status &status) {
-    if (_player->status() == Player::Status::InGame) {
-        if (status == Controller::Status::Pressed) {
-            _currentKey = _isUsingTouchScreen ? Scene::ActionKey::Validate : Scene::ActionKey::Up;
-        }
+    if (status == Controller::Status::Pressed) {
+        _scene->setUp();
     }
 }
 

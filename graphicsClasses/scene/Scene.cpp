@@ -109,6 +109,34 @@ void Scene::setValidate() {
     _currentKey = Scene::ActionKey::Validate;
 }
 
+void Scene::setRight() {
+    if (!isInGame()) {
+        return;
+    }
+    _currentKey = Scene::ActionKey::Right;
+}
+
+void Scene::setLeft() {
+    if (!isInGame()) {
+        return;
+    }
+    _currentKey = Scene::ActionKey::Left;
+}
+
+void Scene::setUp() {
+    if (!isInGame()) {
+        return;
+    }
+    _currentKey = _isUsingTouchScreen ? Scene::ActionKey::Validate : Scene::ActionKey::Up;
+}
+
+void Scene::setDown() {
+    if (!isInGame()) {
+        return;
+    }
+}
+
+
 void Scene::setValidateMouse() {
     if(!isInGame()) {
         return;

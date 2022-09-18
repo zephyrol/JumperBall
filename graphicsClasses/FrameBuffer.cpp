@@ -107,14 +107,14 @@ GLuint FrameBuffer::createTexture() {
     return texture;
 }
 
-std::unique_ptr <GLuint> FrameBuffer::createDepthBuffer() const {
+std::unique_ptr <GLuint> FrameBuffer::createDepthBuffer() {
     GLuint depthBuffer;
     glGenRenderbuffers(1, &depthBuffer);
     return std::unique_ptr <GLuint>(new GLuint(depthBuffer));
 }
 
 bool FrameBuffer::hasDepthBuffer() const {
-    return _depthBuffer ? true : false;
+    return _depthBuffer != nullptr;
 }
 
 GLuint FrameBuffer::getHandle() const {
