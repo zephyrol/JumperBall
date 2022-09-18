@@ -57,6 +57,8 @@ void Scene::update() {
     _map->update(updatingTime, actionRequest);
     _camera->update(updatingTime, status, actionRequest == Ball::ActionRequest::MoveCamera);
 
+    _currentKey = Scene::ActionKey::Nothing;
+
     if (_camera->getMovement() == Camera::Movement::FollowingBall) {
         _player->status(Player::Status::InGame);
     }
@@ -153,4 +155,12 @@ bool Scene::isInGame() const {
 bool Scene::isUsingTouchScreen() const {
     return _isUsingTouchScreen;
 }
+
+void Scene::mouseSetUp() {
+    if(!isInGame() || !_isUsingTouchScreen) {
+        return;
+    }
+    _currentKey = Scene::ActionKey::Up;
+}
+
 

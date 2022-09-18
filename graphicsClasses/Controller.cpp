@@ -246,7 +246,7 @@ void Controller::updateMouse(float posX, float posY) {
             nearestDirection(posX, posY));
     }
 
-    constexpr float updatingMouseThreshold = 300.f; // 0.3 secondes
+    constexpr float updatingMouseThreshold = 300.f; // 0.3 seconds
     if (JBTypesMethods::getFloatFromDurationMS(now - _mouseUpdatingTime) > updatingMouseThreshold
         || movementIsDetected) {
         _mouseUpdatingTime = now;
@@ -256,13 +256,8 @@ void Controller::updateMouse(float posX, float posY) {
 
     if (!_currentMovementDir) {
         constexpr float goAheadDelay = 0.1f;
-        if (_player->status() == Player::Status::InGame
-            && _isUsingTouchScreen
-            && JBTypesMethods::getFloatFromDurationMS(now - _mousePressTime) > goAheadDelay) {
-            if (_player->status() == Player::Status::InGame) {
-                _currentKey = Scene::ActionKey::Up;
-            }
-            return;
+        if (JBTypesMethods::getFloatFromDurationMS(now - _mousePressTime) > goAheadDelay) {
+            _scene->mouseSetUp();
         }
         return;
     }
@@ -318,7 +313,6 @@ void Controller::resize(size_t screenWidth, size_t screenHeight) {
 void Controller::updateSceneMenu() {
 
     _scene->update();
-    _currentKey = Scene::ActionKey::Nothing;
     _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
     // if (_scene->gameIsWon()) {
     //     _player->status(Player::Status::InMenu);

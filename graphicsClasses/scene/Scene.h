@@ -40,6 +40,8 @@ public:
 
     void setUp();
 
+    void mouseSetUp();
+
     void setDown();
 
     void update();
