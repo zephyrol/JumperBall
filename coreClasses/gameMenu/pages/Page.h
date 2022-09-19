@@ -52,6 +52,7 @@ public:
 
     SceneElement::GlobalState getGlobalState() const override;
 
+
     virtual vecCstLabel_sptr labels() const;
 
     using NodeMessageAssociations = std::unordered_map<Node_sptr, std::string>;

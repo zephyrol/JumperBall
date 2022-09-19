@@ -7,9 +7,9 @@
 #include "ArrowLabel.h"
 
 ArrowLabel::ArrowLabel(
-    const CstNode_sptr &node,
+    CstNode_sptr node,
     bool isActivated
-) : Label(node, isActivated) {
+) : Label(std::move(node), isActivated) {
 }
 
 vecGeometry ArrowLabel::genGeometries() const {

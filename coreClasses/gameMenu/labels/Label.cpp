@@ -7,11 +7,13 @@
 
 #include "Label.h"
 
+#include <utility>
+
 Label::Label(
-    const CstNode_sptr &node,
+    CstNode_sptr node,
     bool isActivated
 ) :
-    _node(node),
+    _node(std::move(node)),
     _isActivated(isActivated) {
 }
 

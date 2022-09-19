@@ -6,6 +6,7 @@
 #define JUMPERBALLAPPLICATION_LEVELSPAGE_H
 
 #include "Page.h"
+#include "gameMenu/labels/ArrowLabel.h"
 
 
 class LevelsPage;
@@ -23,24 +24,30 @@ public:
     Page_sptr click(float mouseX, float mouseY) override;
 
     LevelsPage(
-        Player_sptr&& player,
+        Player_sptr &&player,
         Node_sptr &&levelsTitle,
         std::vector<Node_sptr> &&levels,
+        std::shared_ptr<ArrowLabel>&& arrowLabel,
         const Page_sptr &parent
     );
 
     NodeMessageAssociations nodeToMessage() const override;
 
+    vecCstLabel_sptr labels() const override;
+
 private:
 
     Node_sptr _levelsTitle;
     std::vector<Node_sptr> _levels;
+    std::shared_ptr<ArrowLabel> _arrowLabel;
 
     template<class T>
     static std::shared_ptr<T> createLevelNode(const Node_sptr& parent);
 
     static vecNode_sptr createLevelsNodes(float ratio, const Node_sptr &commonNode);
-    static Node_sptr createLevelsTitleNode(float ratio, const Node_sptr &commonNode);
+    static Node_sptr createHeaderNode(const Node_sptr &commonNode);
+    static Node_sptr createLevelsTitleNode(const Node_sptr &headerNode);
+    static std::shared_ptr<ArrowLabel> createArrowLabel(const Node_sptr &headerNode);
     static Node_sptr getCommonNode(float ratio);
     static constexpr size_t numberOfLevels = 100;
 };

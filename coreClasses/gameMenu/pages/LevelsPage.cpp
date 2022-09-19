@@ -16,13 +16,15 @@ LevelsPage::LevelsPage(
     Player_sptr &&player,
     Node_sptr &&levelsTitle,
     std::vector<Node_sptr> &&levels,
+    std::shared_ptr<ArrowLabel>&& arrowLabel,
     const Page_sptr &parent
-) : Page(
+    ) : Page(
     std::move(player),
     parent
 ),
     _levelsTitle(std::move(levelsTitle)),
-    _levels(std::move(levels)) {
+    _levels(std::move(levels)),
+    _arrowLabel(std::move(arrowLabel)){
 }
 
 LevelsPage_sptr LevelsPage::createInstance(
@@ -32,16 +34,20 @@ LevelsPage_sptr LevelsPage::createInstance(
 ) {
     const auto levelsPageNode = getCommonNode(ratio);
     auto levelsNode = createLevelsNodes(ratio, levelsPageNode);
-    auto levelsTitleNode = createLevelsTitleNode(ratio, levelsPageNode);
+    const auto headerNode = createHeaderNode(levelsPageNode);
+    auto levelsTitleNode = createLevelsTitleNode(headerNode);
+    auto arrowLabel = createArrowLabel(headerNode);
+
     return std::make_shared<LevelsPage>(
         std::move(player),
         std::move(levelsTitleNode),
         std::move(levelsNode),
+        std::move(arrowLabel),
         parent
     );
 }
 
-Node_sptr LevelsPage::createLevelsTitleNode(float ratio, const Node_sptr &commonNode) {
+Node_sptr LevelsPage::createHeaderNode(const Node_sptr &commonNode) {
     return std::make_shared<UpNode>(commonNode, 4.f);
 }
 
@@ -74,9 +80,12 @@ vecNode_sptr LevelsPage::createLevelsNodes(float ratio, const Node_sptr &commonN
 void LevelsPage::resize(float ratio) {
     const auto levelsPageNode = getCommonNode(ratio);
     auto levelsNode = createLevelsNodes(ratio, levelsPageNode);
-    auto levelsTitleNode = createLevelsTitleNode(ratio, levelsPageNode);
+    const auto headerNode = createHeaderNode(levelsPageNode);
+    auto levelsTitleNode = createLevelsTitleNode(headerNode);
+    auto arrowLabel = createArrowLabel(headerNode);
     _levelsTitle = std::move(levelsTitleNode);
     _levels = std::move(levelsNode);
+    _arrowLabel = std::move(arrowLabel);
 }
 
 Node_sptr LevelsPage::getCommonNode(float ratio) {
@@ -106,3 +115,16 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
     return nullptr;
 }
 
+vecCstLabel_sptr LevelsPage::labels() const {
+    return {_arrowLabel};
+}
+
+Node_sptr LevelsPage::createLevelsTitleNode(const Node_sptr &headerNode) {
+    return std::make_shared<RightNode>(headerNode, 2.5f);
+}
+
+std::shared_ptr<ArrowLabel> LevelsPage::createArrowLabel(const Node_sptr &headerNode) {
+    const auto leftNode = std::make_shared<LeftNode>(headerNode, 1.f);
+    auto arrowLabel = std::make_shared<ArrowLabel>(leftNode);
+    return arrowLabel;
+}

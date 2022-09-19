@@ -23,7 +23,7 @@ class Label {
 public:
 
     explicit Label(
-        const CstNode_sptr &node,
+        CstNode_sptr node,
         bool isActivated = false
     );
 
