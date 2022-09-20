@@ -66,10 +66,10 @@ void Scene::update() {
         return;
     }
     if (_map->gameIsLost()) {
-        _player->status(Player::Status::InMenu);
+        _player->setAsLoser();
     }
     if (_map->gameIsWon()) {
-        _player->status(Player::Status::InMenu);
+        _player->setAsWinner();
     }
 
 }
@@ -78,7 +78,6 @@ CstMap_sptr Scene::getMap() const {
     return _map;
 }
 
-// TODO: useless method, remove it
 std::shared_ptr<const Ball> Scene::getBall() const {
     return _map->getBall();
 }
@@ -137,7 +136,6 @@ void Scene::setDown() {
         return;
     }
 }
-
 
 void Scene::setValidateMouse() {
     if(!isInGame()) {

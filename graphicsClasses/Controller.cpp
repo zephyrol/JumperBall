@@ -55,7 +55,6 @@ Controller::Controller(
         fontData,
         fontDataSize
     )) {
-    updateSceneMenu();
 }
 
 void Controller::interactionButtons(const Controller::Button &button, const Controller::Status &status) {
@@ -116,7 +115,6 @@ void Controller::runGame(size_t level) {
         _scene->isUsingTouchScreen()
     );
     _viewer->setScene(_scene);
-    updateSceneMenu();
 }
 
 void Controller::setValidateMouse() {
@@ -124,8 +122,8 @@ void Controller::setValidateMouse() {
 
     const auto &currentPage = _menu->currentPage();
     _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
-    const auto &newPage = _menu->currentPage();
 
+    const auto &newPage = _menu->currentPage();
     if (newPage != currentPage) {
         _viewer->setPage(newPage);
     }
@@ -315,33 +313,22 @@ void Controller::resize(size_t screenWidth, size_t screenHeight) {
     _viewer->resize(screenWidth, screenHeight);
 }
 
-void Controller::updateSceneMenu() {
-
-    _scene->update();
-    _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
-    // if (_scene->gameIsWon()) {
-    //     _player->status(Player::Status::InMenu);
-    //     _menu->successPageAsCurrentPage();
-    //     _viewer->setPage(_menu->currentPage());
-    //     return;
-    // }
-    // if (_scene->gameIsLost()) {
-    //     _player->status(Player::Status::InMenu);
-    //     _menu->failurePageAsCurrentPage();
-    //     _viewer->setPage(_menu->currentPage());
-    // }
-}
-
-void Controller::updateViewer() {
-    _viewer->update();
-}
-
 void Controller::render() const {
     _viewer->render();
 }
 
 void Controller::update() {
-    updateSceneMenu();
-    updateViewer();
-}
 
+    // 1. Update scene and menu
+    const auto &currentPage = _menu->currentPage();
+    _scene->update();
+    _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
+
+    // 2. Update viewer
+    const auto &newPage = _menu->currentPage();
+    if (newPage != currentPage) {
+        _viewer->setPage(newPage);
+    }
+
+    _viewer->update();
+}

@@ -53,11 +53,6 @@ public:
     void resize(size_t screenWidth, size_t screenHeight);
 
 private:
-
-    void updateViewer();
-
-    void updateSceneMenu();
-
     ScreenDirection nearestDirection(float posX, float posY) const;
 
     static float computeDistance(float x0, float y0, float x1, float y1);
@@ -76,7 +71,7 @@ private:
 
     void runGame(size_t level);
 
-// Mouse/TouchPad/TouchScreen
+    // Mouse/TouchPad/TouchScreen
     void pressMouse(float posX, float posY);
 
     void updateMouse(float posX, float posY);

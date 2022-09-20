@@ -16,16 +16,14 @@
 class Menu {
 public:
 
-    Menu(
+    explicit Menu(
         Player_sptr player,
+        Page_sptr successPage,
+        Page_sptr failurePage,
         vecPage_sptr pages
     );
 
     Page_sptr currentPage();
-
-    CstPage_sptr currentPage() const;
-
-    void currentPage(const Page_sptr &page);
 
     void update(bool isPressed, float screenPosY);
 
@@ -44,6 +42,8 @@ public:
 private:
     const Player_sptr _player;
     const vecPage_sptr _pages;
+    const Page_sptr _successPage;
+    const Page_sptr _failurePage;
     Page_sptr _currentPage;
 
 };

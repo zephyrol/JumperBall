@@ -23,6 +23,10 @@ public:
         InGame, InMenu, InTransition
     };
 
+    enum class GameStatus {
+        None, Winner, Loser
+    };
+
     size_t levelProgression() const;
 
     void setCurrentLevel(size_t levelNumber);
@@ -63,9 +67,16 @@ public:
 
     void status(const Status &s);
 
+    void setAsWinner();
+    bool isAWinner() const;
+    void setAsLoser();
+    bool isALoser() const;
+    void resetGameStatus();
+
 private:
 
     Status _status;
+    GameStatus _gameStatus;
     size_t _levelProgression;
     size_t _currentLevel;
 

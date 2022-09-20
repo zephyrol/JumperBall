@@ -8,6 +8,7 @@
 
 Player::Player() :
     _status(Player::Status::InMenu),
+    _gameStatus(Player::GameStatus::None),
     _levelProgression(1),
     _currentLevel(_levelProgression),
     _money(0),
@@ -114,4 +115,24 @@ void Player::escapeAction() {
     if(_status == Player::Status::InGame)  {
         _status = Player::Status::InMenu;
     }
+}
+
+void Player::setAsWinner() {
+    _status = Player::Status::InMenu;
+    _gameStatus = GameStatus::Winner;
+}
+bool Player::isAWinner() const {
+    return _gameStatus == GameStatus::Winner;
+}
+void Player::setAsLoser() {
+    _status = Player::Status::InMenu;
+    _gameStatus = GameStatus::Loser;
+}
+
+bool Player::isALoser() const {
+    return _gameStatus == GameStatus::Loser;
+}
+
+void Player::resetGameStatus() {
+    _gameStatus = GameStatus::None;
 }

@@ -11,31 +11,35 @@
 #include "gameMenu/pages/TitlePage.h"
 #include "gameMenu/pages/LevelsPage.h"
 #include "gameMenu/pages/InGamePage.h"
+#include "gameMenu/pages/SuccessPage.h"
 
 Menu::Menu(
     Player_sptr player,
+    Page_sptr successPage,
+    Page_sptr failurePage,
     vecPage_sptr pages
 ) :
     _player(std::move(player)),
     _pages(std::move(pages)),
-    _currentPage(_pages.at(0)) {
-}
-
-CstPage_sptr Menu::currentPage() const {
-    return _currentPage;
+    _successPage(std::move(successPage)),
+    _failurePage(std::move(failurePage)),
+    _currentPage(_pages.at(0)){
 }
 
 Page_sptr Menu::currentPage() {
     return _currentPage;
 }
 
-void Menu::currentPage(const Page_sptr &page) {
-    _currentPage = page;
-}
-
 void Menu::update(bool isPressed, float screenPosY) {
     if (_player->status() != Player::Status::InMenu) {
         return;
+    }
+    if(_player->isAWinner()) {
+        _currentPage = _successPage;
+        _player->resetGameStatus();
+    } else if (_player->isALoser()) {
+        _currentPage = _failurePage;
+        _player->resetGameStatus();
     }
     _currentPage->update(isPressed, screenPosY);
 }
@@ -56,6 +60,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr &player, float r
     const auto titlePage = TitlePage::createInstance(player, ratio);
     const auto levelsPage = LevelsPage::createInstance(player, titlePage, ratio);
     const auto inGamePage = std::make_shared<InGamePage>(player);
+    const auto successPage = SuccessPage::createInstance(player, titlePage, ratio);
 
     titlePage->setLevelsPage(levelsPage);
     levelsPage->setInGamePage(inGamePage);
@@ -63,6 +68,8 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr &player, float r
     const vecPage_sptr pages{titlePage, levelsPage};
     return std::make_shared<Menu>(
         player,
+        successPage,
+        nullptr,
         pages
     );
 }
