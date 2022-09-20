@@ -135,6 +135,7 @@ void Scene::setDown() {
     if (!isInGame()) {
         return;
     }
+    _currentKey = Scene::ActionKey::Down;
 }
 
 void Scene::setValidateMouse() {
