@@ -10,6 +10,7 @@
 #include <utility>
 #include "gameMenu/pages/TitlePage.h"
 #include "gameMenu/pages/LevelsPage.h"
+#include "gameMenu/pages/InGamePage.h"
 
 Menu::Menu(
     Player_sptr player,
@@ -54,7 +55,10 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr &player, float r
 
     const auto titlePage = TitlePage::createInstance(player, ratio);
     const auto levelsPage = LevelsPage::createInstance(player, titlePage, ratio);
+    const auto inGamePage = std::make_shared<InGamePage>(player);
+
     titlePage->setLevelsPage(levelsPage);
+    levelsPage->setInGamePage(inGamePage);
 
     const vecPage_sptr pages{titlePage, levelsPage};
     return std::make_shared<Menu>(

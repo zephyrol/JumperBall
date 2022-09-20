@@ -17,8 +17,7 @@ TitlePage::TitlePage(
     Node_sptr &&exitNode,
     Node_sptr &&author
 ) : Page(
-    std::move(player),
-    nullptr
+    std::move(player)
 ),
     _jumperBallTitle(std::move(jumperBallTitle)),
     _play(std::move(play)),

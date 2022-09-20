@@ -29,13 +29,10 @@ public:
 
     explicit Page(
         Player_sptr&& player,
-        const Page_sptr &parent,
         float height = 1.f
     );
 
-    std::weak_ptr<const Page> parent() const;
-
-    std::weak_ptr<Page> parent();
+    virtual Page_wptr parent();
 
     /**
      * Click on the page. Check if the mouse is on a node and activate the node action.
@@ -51,7 +48,6 @@ public:
     float localPosY() const;
 
     SceneElement::GlobalState getGlobalState() const override;
-
 
     virtual vecCstLabel_sptr labels() const;
 
@@ -73,7 +69,6 @@ protected:
 
 private:
 
-    const std::weak_ptr<Page> _parent;
     const float _height;
     float _localPosY; // Page position
     float _localPressedPosY;

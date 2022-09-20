@@ -19,12 +19,13 @@ LevelsPage::LevelsPage(
     std::shared_ptr<ArrowLabel>&& arrowLabel,
     const Page_sptr &parent
     ) : Page(
-    std::move(player),
-    parent
+    std::move(player)
 ),
+    _parent(parent),
     _levelsTitle(std::move(levelsTitle)),
     _levels(std::move(levels)),
-    _arrowLabel(std::move(arrowLabel)){
+    _arrowLabel(std::move(arrowLabel)),
+    _inGamePage(nullptr){
 }
 
 LevelsPage_sptr LevelsPage::createInstance(
@@ -112,6 +113,18 @@ Page::NodeMessageAssociations LevelsPage::nodeToMessage() const {
 }
 
 Page_sptr LevelsPage::click(float mouseX, float mouseY) {
+
+    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
+        return node->intersect(mouseX, mouseY);
+    };
+
+    for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
+        if(intersectTest(_levels[i])){
+            const auto levelNumber = i + 1;
+            _player->setCurrentLevel(levelNumber);
+            return _inGamePage;
+        }
+    }
     return nullptr;
 }
 
@@ -127,4 +140,12 @@ std::shared_ptr<ArrowLabel> LevelsPage::createArrowLabel(const Node_sptr &header
     const auto leftNode = std::make_shared<LeftNode>(headerNode, 1.f);
     auto arrowLabel = std::make_shared<ArrowLabel>(leftNode);
     return arrowLabel;
+}
+
+Page_wptr LevelsPage::parent() {
+    return _parent;
+}
+
+void LevelsPage::setInGamePage(Page_sptr inGamePage) {
+    _inGamePage = std::move(inGamePage);
 }

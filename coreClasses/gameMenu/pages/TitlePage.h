@@ -15,7 +15,7 @@ public:
     static TitlePage_sptr createInstance(Player_sptr player, float ratio);
     void resize(float ratio) override;
 
-    TitlePage(
+    explicit TitlePage(
         Player_sptr&& player,
         Node_sptr &&jumperBallTitle,
         Node_sptr &&play,

@@ -121,9 +121,6 @@ void Controller::runGame(size_t level) {
 
 void Controller::setValidateMouse() {
     _scene->setValidateMouse();
-    if (_player->status() != Player::Status::InMenu) {
-        return;
-    }
 
     const auto &currentPage = _menu->currentPage();
     _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
@@ -137,7 +134,7 @@ void Controller::setValidateMouse() {
         _requestToLeave = true;
         return;
     }
-    if (_player->status() != Player::Status::InMenu) {
+    if (_player->status() == Player::Status::InTransition) {
         runGame(_player->getCurrentLevel());
         return;
     }

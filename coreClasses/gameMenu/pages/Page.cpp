@@ -12,11 +12,9 @@
 
 Page::Page(
     Player_sptr&& player,
-    const Page_sptr &parent,
     float height
 ) :
     _player(std::move(player)),
-    _parent(parent),
     _height(height),
     _localPosY(0.f),
     _localPressedPosY(0.f),
@@ -28,12 +26,8 @@ Page::Page(
     _releaseVelocity(0.f) {
 }
 
-std::weak_ptr<const Page> Page::parent() const {
-    return _parent;
-}
-
-std::weak_ptr<Page> Page::parent() {
-    return _parent;
+Page_wptr Page::parent() {
+    return {};
 }
 
 float Page::localPosY() const {
@@ -92,8 +86,7 @@ void Page::update(bool isPressed, float screenPosY) {
     }
     if (!_isPressed && !_lastSwipeUpdates.empty()) {
         const slideState &lastSlideState = _lastSwipeUpdates.front();
-        const float t = JBTypesMethods::getFloatFromDurationMS(
-            now - lastSlideState.first);
+        const float t = JBTypesMethods::getFloatFromDurationMS(now - lastSlideState.first);
         const float deceleration = decelerationCoefficient * powf(t, 2.f) / 2.f;
 
         if (_releaseVelocity > 0.f && t < -(_releaseVelocity) / (2.f * -decelerationCoefficient / 2.f)) {

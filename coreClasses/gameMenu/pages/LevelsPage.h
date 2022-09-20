@@ -33,13 +33,20 @@ public:
 
     NodeMessageAssociations nodeToMessage() const override;
 
+    Page_wptr parent() override;
+
     vecCstLabel_sptr labels() const override;
+
+    void setInGamePage(Page_sptr inGamePage);
 
 private:
 
+    const Page_wptr _parent;
     Node_sptr _levelsTitle;
+
     std::vector<Node_sptr> _levels;
     std::shared_ptr<ArrowLabel> _arrowLabel;
+    Page_sptr _inGamePage;
 
     template<class T>
     static std::shared_ptr<T> createLevelNode(const Node_sptr& parent);
