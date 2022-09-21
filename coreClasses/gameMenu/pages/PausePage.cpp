@@ -14,20 +14,18 @@ PausePage::PausePage(
     Node_sptr &&jumperBallTitleNode,
     Node_sptr &&resumeNode,
     Node_sptr &&exitNode,
-    const Page_sptr &titlePage,
     const Page_sptr &parent
 ) : Page(std::move(player)),
     _parent(parent),
-    _titlePage(titlePage),
+    _inGamePage(nullptr),
     _jumperBallTitleNode(std::move(jumperBallTitleNode)),
     _resumeNode(std::move(resumeNode)),
-    _exitNode(std::move(exitNode)) {
+    _exitNode(std::move(exitNode)){
 }
 
 PausePage_sptr PausePage::createInstance(
     Player_sptr player,
     const Page_sptr &parent,
-    const Page_sptr &titlePage,
     float ratio
 ) {
     auto nodes = createNodes(ratio);
@@ -36,9 +34,12 @@ PausePage_sptr PausePage::createInstance(
         std::move(nodes.at(0)),
         std::move(nodes.at(1)),
         std::move(nodes.at(2)),
-        titlePage,
         parent
     );
+}
+
+void PausePage::setInGamePage(Page_sptr inGamePage) {
+    _inGamePage = std::move(inGamePage);
 }
 
 vecNode_sptr PausePage::createNodes(float ratio) {
@@ -99,10 +100,11 @@ Page_sptr PausePage::click(float mouseX, float mouseY) {
         return node->intersect(mouseX, mouseY);
     };
     if (intersectTest(_exitNode)) {
-        return _titlePage.lock();
+        return _parent.lock();
     }
     if (intersectTest(_resumeNode)) {
-        return _parent.lock();
+        _player->status(Player::Status::InGame);
+        return _inGamePage;
     }
     return nullptr;
 }
