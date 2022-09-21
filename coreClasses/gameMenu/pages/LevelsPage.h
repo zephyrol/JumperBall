@@ -10,7 +10,9 @@
 
 
 class LevelsPage;
+
 using LevelsPage_sptr = std::shared_ptr<LevelsPage>;
+
 class LevelsPage : public Page {
 public:
     static LevelsPage_sptr createInstance(
@@ -27,7 +29,7 @@ public:
         Player_sptr &&player,
         Node_sptr &&levelsTitle,
         std::vector<Node_sptr> &&levels,
-        std::shared_ptr<ArrowLabel>&& arrowLabel,
+        std::shared_ptr<ArrowLabel> &&arrowLabel,
         const Page_sptr &parent
     );
 
@@ -49,13 +51,18 @@ private:
     Page_sptr _inGamePage;
 
     template<class T>
-    static std::shared_ptr<T> createLevelNode(const Node_sptr& parent);
+    static std::shared_ptr<T> createLevelNode(const Node_sptr &parent);
 
     static vecNode_sptr createLevelsNodes(float ratio, const Node_sptr &commonNode);
+
     static Node_sptr createHeaderNode(const Node_sptr &commonNode);
+
     static Node_sptr createLevelsTitleNode(const Node_sptr &headerNode);
+
     static std::shared_ptr<ArrowLabel> createArrowLabel(const Node_sptr &headerNode);
+
     static Node_sptr getCommonNode(float ratio);
+
     static constexpr size_t numberOfLevels = 100;
 };
 

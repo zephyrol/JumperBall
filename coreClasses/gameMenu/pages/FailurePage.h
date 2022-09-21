@@ -4,9 +4,11 @@
 
 #ifndef JUMPERBALLAPPLICATION_FAILUREPAGE_H
 #define JUMPERBALLAPPLICATION_FAILUREPAGE_H
+
 #include "Page.h"
 
 class FailurePage;
+
 using FailurePage_sptr = std::shared_ptr<FailurePage>;
 
 class FailurePage : public Page {

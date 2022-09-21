@@ -15,7 +15,7 @@
 class Page;
 
 using Page_sptr = std::shared_ptr<Page>;
-using Page_wptr= std::weak_ptr<Page>;
+using Page_wptr = std::weak_ptr<Page>;
 using CstPage_sptr = std::shared_ptr<const Page>;
 using vecCstPage_sptr = std::vector<CstPage_sptr>;
 using vecPage_sptr = std::vector<Page_sptr>;
@@ -28,7 +28,7 @@ public:
     using slideState = std::pair<JBTypes::timePointMs, float>;
 
     explicit Page(
-        Player_sptr&& player,
+        Player_sptr &&player,
         float height = 1.f
     );
 
@@ -52,6 +52,7 @@ public:
     virtual vecCstLabel_sptr labels() const;
 
     using NodeMessageAssociations = std::unordered_map<Node_sptr, std::string>;
+
     virtual NodeMessageAssociations nodeToMessage() const = 0;
 
     void update(bool isPressed, float screenPosY = 0.f);

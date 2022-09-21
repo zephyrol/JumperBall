@@ -68,12 +68,12 @@ vecNode_sptr FailurePage::createNodes(float ratio) {
         optionsNodeRatio
     );
 
-    return {goodGameTitle, continueNode, exitNode };
+    return {goodGameTitle, continueNode, exitNode};
 
 }
 
 void FailurePage::resize(float ratio) {
-    const auto& nodes = createNodes(ratio);
+    const auto &nodes = createNodes(ratio);
     _failureNode = nodes.at(0);
     _retryNode = nodes.at(1);
     _exitNode = nodes.at(2);
@@ -99,10 +99,10 @@ Page_sptr FailurePage::click(float mouseX, float mouseY) {
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
         return node->intersect(mouseX, mouseY);
     };
-    if(intersectTest(_exitNode)) {
+    if (intersectTest(_exitNode)) {
         return _parent.lock();
     }
-    if(intersectTest(_retryNode)) {
+    if (intersectTest(_retryNode)) {
         _player->setCurrentLevel(_player->getCurrentLevel());
         return _inGamePage;
     }

@@ -9,36 +9,39 @@
 #define WINDOW_H
 #define RESOLUTION_X 1024
 #define RESOLUTION_Y 768
+
 #include <Controller.h>
 #include <GLFW/glfw3.h>
 
 class Window {
 public:
 
-Window(
-    GLFWwindow*glfwWindow,
-    int frameBufferWidth,
-    int frameBufferHeight,
-    int windowWidth,
-    int windowHeight
-);
+    Window(
+        GLFWwindow *glfwWindow,
+        int frameBufferWidth,
+        int frameBufferHeight,
+        int windowWidth,
+        int windowHeight
+    );
 
-void run();
+    void run();
 
 private:
 
-GLFWwindow*_window;
-int _frameBufferWidth;
-int _frameBufferHeight;
+    GLFWwindow *_window;
+    int _frameBufferWidth;
+    int _frameBufferHeight;
     int _windowHeight;
     int _windowWidth;
-const std::vector<unsigned char> _binaryFont;
+    const std::vector<unsigned char> _binaryFont;
 
-Controller _controller;
+    Controller _controller;
 
-bool inputManagement();
-static JBTypes::FileContent createFilesContent();
-static std::vector<unsigned char> createBinaryFont();
+    bool inputManagement();
+
+    static JBTypes::FileContent createFilesContent();
+
+    static std::vector<unsigned char> createBinaryFont();
 
 };
 

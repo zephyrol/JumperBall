@@ -8,7 +8,7 @@
 
 #include "Page.h"
 
-class InGamePage: public Page {
+class InGamePage : public Page {
 
 public:
     explicit InGamePage(
@@ -16,6 +16,7 @@ public:
     );
 
     void setParent(Page_sptr parent);
+
     Page_wptr parent() override;
 
     Page_sptr click(float mouseX, float mouseY) override;

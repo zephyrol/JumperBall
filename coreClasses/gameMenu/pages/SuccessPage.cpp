@@ -30,11 +30,11 @@ SuccessPage_sptr SuccessPage::createInstance(
 ) {
     auto nodes = createNodes(ratio);
     return std::make_shared<SuccessPage>(
-       std::move(player),
-       std::move(nodes.at(0)),
-       std::move(nodes.at(1)),
-       std::move(nodes.at(2)),
-       parent
+        std::move(player),
+        std::move(nodes.at(0)),
+        std::move(nodes.at(1)),
+        std::move(nodes.at(2)),
+        parent
     );
 }
 
@@ -68,12 +68,12 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
         optionsNodeRatio
     );
 
-    return {goodGameTitle, continueNode, exitNode };
+    return {goodGameTitle, continueNode, exitNode};
 
 }
 
 void SuccessPage::resize(float ratio) {
-    const auto& nodes = createNodes(ratio);
+    const auto &nodes = createNodes(ratio);
     _goodGameNode = nodes.at(0);
     _continueNode = nodes.at(1);
     _exitNode = nodes.at(2);
@@ -99,10 +99,10 @@ Page_sptr SuccessPage::click(float mouseX, float mouseY) {
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
         return node->intersect(mouseX, mouseY);
     };
-    if(intersectTest(_exitNode)) {
+    if (intersectTest(_exitNode)) {
         return _parent.lock();
     }
-    if(intersectTest(_continueNode)) {
+    if (intersectTest(_continueNode)) {
         _player->setCurrentLevel(_player->getCurrentLevel() + 1);
         return _inGamePage;
     }

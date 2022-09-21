@@ -16,16 +16,16 @@ LevelsPage::LevelsPage(
     Player_sptr &&player,
     Node_sptr &&levelsTitle,
     std::vector<Node_sptr> &&levels,
-    std::shared_ptr<ArrowLabel>&& arrowLabel,
+    std::shared_ptr<ArrowLabel> &&arrowLabel,
     const Page_sptr &parent
-    ) : Page(
+) : Page(
     std::move(player)
 ),
     _parent(parent),
     _levelsTitle(std::move(levelsTitle)),
     _levels(std::move(levels)),
     _arrowLabel(std::move(arrowLabel)),
-    _inGamePage(nullptr){
+    _inGamePage(nullptr) {
 }
 
 LevelsPage_sptr LevelsPage::createInstance(
@@ -119,7 +119,7 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
     };
 
     for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
-        if(intersectTest(_levels[i])){
+        if (intersectTest(_levels[i])) {
             const auto levelNumber = i + 1;
             _player->setCurrentLevel(levelNumber);
             return _inGamePage;

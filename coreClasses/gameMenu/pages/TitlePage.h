@@ -4,19 +4,22 @@
 
 #ifndef JUMPERBALLAPPLICATION_TITLEPAGE_H
 #define JUMPERBALLAPPLICATION_TITLEPAGE_H
+
 #include "Page.h"
 
 class TitlePage;
+
 using TitlePage_sptr = std::shared_ptr<TitlePage>;
 
 class TitlePage : public Page {
 public:
 
     static TitlePage_sptr createInstance(Player_sptr player, float ratio);
+
     void resize(float ratio) override;
 
     explicit TitlePage(
-        Player_sptr&& player,
+        Player_sptr &&player,
         Node_sptr &&jumperBallTitle,
         Node_sptr &&play,
         Node_sptr &&store,

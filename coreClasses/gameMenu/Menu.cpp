@@ -24,7 +24,7 @@ Menu::Menu(
     _pages(std::move(pages)),
     _successPage(std::move(successPage)),
     _failurePage(std::move(failurePage)),
-    _currentPage(_pages.at(0)){
+    _currentPage(_pages.at(0)) {
 }
 
 Page_sptr Menu::currentPage() {
@@ -35,7 +35,7 @@ void Menu::update(bool isPressed, float screenPosY) {
     if (_player->status() != Player::Status::InMenu) {
         return;
     }
-    if(_player->isAWinner()) {
+    if (_player->isAWinner()) {
         _currentPage = _successPage;
         _player->resetGameStatus();
     } else if (_player->isALoser()) {

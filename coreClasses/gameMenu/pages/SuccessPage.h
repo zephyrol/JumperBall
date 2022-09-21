@@ -8,6 +8,7 @@
 #include "Page.h"
 
 class SuccessPage;
+
 using SuccessPage_sptr = std::shared_ptr<SuccessPage>;
 
 class SuccessPage : public Page {

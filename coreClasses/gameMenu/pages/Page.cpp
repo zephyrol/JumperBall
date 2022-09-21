@@ -11,7 +11,7 @@
  */
 
 Page::Page(
-    Player_sptr&& player,
+    Player_sptr &&player,
     float height
 ) :
     _player(std::move(player)),
