@@ -1,44 +1,47 @@
 //
-// Created by S.Morgenthaler on 20/09/2022.
+// Created by S.Morgenthaler on 21/09/22.
 //
 
-#include "SuccessPage.h"
+#include "PausePage.h"
 #include "gameMenu/nodes/ScreenNode.h"
 #include "gameMenu/nodes/ScaledNode.h"
 #include "gameMenu/nodes/CenteredNode.h"
 #include "gameMenu/nodes/UpNode.h"
 #include "gameMenu/nodes/DownNode.h"
 
-SuccessPage::SuccessPage(
+PausePage::PausePage(
     Player_sptr &&player,
-    Node_sptr &&goodGameNode,
-    Node_sptr &&continueNode,
+    Node_sptr &&jumperBallTitleNode,
+    Node_sptr &&resumeNode,
     Node_sptr &&exitNode,
+    const Page_sptr &titlePage,
     const Page_sptr &parent
 ) : Page(std::move(player)),
     _parent(parent),
-    _goodGameNode(std::move(goodGameNode)),
-    _continueNode(std::move(continueNode)),
-    _exitNode(std::move(exitNode)),
-    _inGamePage(nullptr) {
+    _titlePage(titlePage),
+    _jumperBallTitleNode(std::move(jumperBallTitleNode)),
+    _resumeNode(std::move(resumeNode)),
+    _exitNode(std::move(exitNode)) {
 }
 
-SuccessPage_sptr SuccessPage::createInstance(
+PausePage_sptr PausePage::createInstance(
     Player_sptr player,
     const Page_sptr &parent,
+    const Page_sptr &titlePage,
     float ratio
 ) {
     auto nodes = createNodes(ratio);
-    return std::make_shared<SuccessPage>(
+    return std::make_shared<PausePage>(
         std::move(player),
         std::move(nodes.at(0)),
         std::move(nodes.at(1)),
         std::move(nodes.at(2)),
+        titlePage,
         parent
     );
 }
 
-vecNode_sptr SuccessPage::createNodes(float ratio) {
+vecNode_sptr PausePage::createNodes(float ratio) {
 
     const auto screenNode = std::make_shared<ScreenNode>(ratio);
     const auto resizedScreenNode = std::make_shared<ScaledNode>(screenNode, 0.95f);
@@ -47,7 +50,7 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
         9.f / 16.f
     );
 
-    const auto goodGameTitle = std::make_shared<UpNode>(
+    const auto jumperBallTitle = std::make_shared<UpNode>(
         mainTitleNode,
         4.f
     );
@@ -58,7 +61,7 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
     );
     constexpr float optionsNodeRatio = 7.f;
 
-    const auto continueNode = std::make_shared<UpNode>(
+    const auto resumeNode = std::make_shared<UpNode>(
         optionsParentNode,
         optionsNodeRatio
     );
@@ -68,43 +71,38 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
         optionsNodeRatio
     );
 
-    return {goodGameTitle, continueNode, exitNode};
+    return {jumperBallTitle, resumeNode, exitNode};
 
 }
 
-void SuccessPage::resize(float ratio) {
+void PausePage::resize(float ratio) {
     const auto &nodes = createNodes(ratio);
-    _goodGameNode = nodes.at(0);
-    _continueNode = nodes.at(1);
+    _jumperBallTitleNode = nodes.at(0);
+    _resumeNode = nodes.at(1);
     _exitNode = nodes.at(2);
 }
 
-Page_wptr SuccessPage::parent() {
+Page_wptr PausePage::parent() {
     return _parent;
 }
 
-void SuccessPage::setInGamePage(Page_sptr inGamePage) {
-    _inGamePage = std::move(inGamePage);
-}
-
-Page::NodeMessageAssociations SuccessPage::nodeToMessage() const {
+Page::NodeMessageAssociations PausePage::nodeToMessage() const {
     return {
-        {_goodGameNode, "Good game!"},
-        {_continueNode, "Next level"},
-        {_exitNode,     "Exit"},
+        {_jumperBallTitleNode, "Jumper Ball"},
+        {_resumeNode,          "Resume"},
+        {_exitNode,            "Exit"},
     };
 }
 
-Page_sptr SuccessPage::click(float mouseX, float mouseY) {
+Page_sptr PausePage::click(float mouseX, float mouseY) {
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
         return node->intersect(mouseX, mouseY);
     };
     if (intersectTest(_exitNode)) {
-        return _parent.lock();
+        return _titlePage.lock();
     }
-    if (intersectTest(_continueNode)) {
-        _player->setCurrentLevel(_player->getCurrentLevel() + 1);
-        return _inGamePage;
+    if (intersectTest(_resumeNode)) {
+        return _parent.lock();
     }
     return nullptr;
 }

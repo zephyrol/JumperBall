@@ -17,9 +17,9 @@ FailurePage::FailurePage(
     const Page_sptr &parent
 ) : Page(std::move(player)),
     _parent(parent),
-    _failureNode(failureNode),
-    _retryNode(retryNode),
-    _exitNode(exitNode),
+    _failureNode(std::move(failureNode)),
+    _retryNode(std::move(retryNode)),
+    _exitNode(std::move(exitNode)),
     _inGamePage(nullptr) {
 }
 
