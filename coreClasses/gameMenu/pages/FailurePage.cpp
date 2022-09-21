@@ -1,44 +1,44 @@
 //
-// Created by S.Morgenthaler on 20/09/2022.
+// Created by S.Morgenthaler on 21/09/22.
 //
 
-#include "SuccessPage.h"
+#include "FailurePage.h"
 #include "gameMenu/nodes/ScreenNode.h"
 #include "gameMenu/nodes/ScaledNode.h"
 #include "gameMenu/nodes/CenteredNode.h"
 #include "gameMenu/nodes/UpNode.h"
 #include "gameMenu/nodes/DownNode.h"
 
-SuccessPage::SuccessPage(
+FailurePage::FailurePage(
     Player_sptr &&player,
-    Node_sptr &&goodGameNode,
-    Node_sptr &&continueNode,
+    Node_sptr &&failureNode,
+    Node_sptr &&retryNode,
     Node_sptr &&exitNode,
     const Page_sptr &parent
 ) : Page(std::move(player)),
     _parent(parent),
-    _goodGameNode(goodGameNode),
-    _continueNode(continueNode),
+    _failureNode(failureNode),
+    _retryNode(retryNode),
     _exitNode(exitNode),
     _inGamePage(nullptr) {
 }
 
-SuccessPage_sptr SuccessPage::createInstance(
+FailurePage_sptr FailurePage::createInstance(
     Player_sptr player,
     const Page_sptr &parent,
     float ratio
 ) {
     auto nodes = createNodes(ratio);
-    return std::make_shared<SuccessPage>(
-       std::move(player),
-       std::move(nodes.at(0)),
-       std::move(nodes.at(1)),
-       std::move(nodes.at(2)),
-       parent
+    return std::make_shared<FailurePage>(
+        std::move(player),
+        std::move(nodes.at(0)),
+        std::move(nodes.at(1)),
+        std::move(nodes.at(2)),
+        parent
     );
 }
 
-vecNode_sptr SuccessPage::createNodes(float ratio) {
+vecNode_sptr FailurePage::createNodes(float ratio) {
 
     const auto screenNode = std::make_shared<ScreenNode>(ratio);
     const auto resizedScreenNode = std::make_shared<ScaledNode>(screenNode, 0.95f);
@@ -72,38 +72,38 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
 
 }
 
-void SuccessPage::resize(float ratio) {
+void FailurePage::resize(float ratio) {
     const auto& nodes = createNodes(ratio);
-    _goodGameNode = nodes.at(0);
-    _continueNode = nodes.at(1);
+    _failureNode = nodes.at(0);
+    _retryNode = nodes.at(1);
     _exitNode = nodes.at(2);
 }
 
-Page_wptr SuccessPage::parent() {
+Page_wptr FailurePage::parent() {
     return _parent;
 }
 
-void SuccessPage::setInGamePage(Page_sptr inGamePage) {
+void FailurePage::setInGamePage(Page_sptr inGamePage) {
     _inGamePage = std::move(inGamePage);
 }
 
-Page::NodeMessageAssociations SuccessPage::nodeToMessage() const {
+Page::NodeMessageAssociations FailurePage::nodeToMessage() const {
     return {
-        {_goodGameNode, "Good game!"},
-        {_continueNode, "Next level"},
-        {_exitNode,     "Exit"},
+        {_failureNode, "You lost!"},
+        {_retryNode,   "Retry"},
+        {_exitNode,    "Exit"},
     };
 }
 
-Page_sptr SuccessPage::click(float mouseX, float mouseY) {
+Page_sptr FailurePage::click(float mouseX, float mouseY) {
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
         return node->intersect(mouseX, mouseY);
     };
     if(intersectTest(_exitNode)) {
         return _parent.lock();
     }
-    if(intersectTest(_continueNode)) {
-        _player->setCurrentLevel(_player->getCurrentLevel() + 1);
+    if(intersectTest(_retryNode)) {
+        _player->setCurrentLevel(_player->getCurrentLevel());
         return _inGamePage;
     }
     return nullptr;

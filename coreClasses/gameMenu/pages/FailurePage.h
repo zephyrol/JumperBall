@@ -1,27 +1,26 @@
 //
-// Created by S.Morgenthaler on 20/09/2022.
+// Created by sebastien on 21/09/22.
 //
 
-#ifndef JUMPERBALLAPPLICATION_SUCCESSPAGE_H
-#define JUMPERBALLAPPLICATION_SUCCESSPAGE_H
-
+#ifndef JUMPERBALLAPPLICATION_FAILUREPAGE_H
+#define JUMPERBALLAPPLICATION_FAILUREPAGE_H
 #include "Page.h"
 
-class SuccessPage;
-using SuccessPage_sptr = std::shared_ptr<SuccessPage>;
+class FailurePage;
+using FailurePage_sptr = std::shared_ptr<FailurePage>;
 
-class SuccessPage : public Page {
+class FailurePage : public Page {
 public:
-    static SuccessPage_sptr createInstance(
+    static FailurePage_sptr createInstance(
         Player_sptr player,
         const Page_sptr &parent,
         float ratio
     );
 
-    SuccessPage(
+    FailurePage(
         Player_sptr &&player,
-        Node_sptr &&goodGameNode,
-        Node_sptr &&continueNode,
+        Node_sptr &&failureNode,
+        Node_sptr &&retryNode,
         Node_sptr &&exitNode,
         const Page_sptr &parent
     );
@@ -38,8 +37,8 @@ public:
 
 private:
     const Page_wptr _parent;
-    Node_sptr _goodGameNode;
-    Node_sptr _continueNode;
+    Node_sptr _failureNode;
+    Node_sptr _retryNode;
     Node_sptr _exitNode;
 
     Page_sptr _inGamePage;
@@ -48,4 +47,4 @@ private:
 };
 
 
-#endif //JUMPERBALLAPPLICATION_SUCCESSPAGE_H
+#endif //JUMPERBALLAPPLICATION_FAILUREPAGE_H
