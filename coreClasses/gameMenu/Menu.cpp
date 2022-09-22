@@ -61,16 +61,17 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr &player, float r
 
     const auto titlePage = TitlePage::createInstance(player, ratio);
     const auto levelsPage = LevelsPage::createInstance(player, titlePage, ratio);
-    const auto inGamePage = std::make_shared<InGamePage>(player);
+    const auto pausePage = PausePage::createInstance(player, titlePage, ratio);
+    const auto inGamePage = std::make_shared<InGamePage>(player, pausePage);
     const auto successPage = SuccessPage::createInstance(player, titlePage, ratio);
     const auto failurePage = FailurePage::createInstance(player, titlePage, ratio);
-    const auto pausePage = PausePage::createInstance(player, inGamePage, titlePage, ratio);
 
     titlePage->setLevelsPage(levelsPage);
     levelsPage->setInGamePage(inGamePage);
     successPage->setInGamePage(inGamePage);
     failurePage->setInGamePage(inGamePage);
-    inGamePage->setParent(pausePage);
+    pausePage->setInGamePage(inGamePage);
+
 
     const vecPage_sptr pages{titlePage, levelsPage};
     return std::make_shared<Menu>(

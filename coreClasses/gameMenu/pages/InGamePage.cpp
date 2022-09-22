@@ -8,13 +8,9 @@ Page_wptr InGamePage::parent() {
     return _parent;
 }
 
-void InGamePage::setParent(Page_sptr parent) {
-    _parent = std::move(parent);
-}
-
-InGamePage::InGamePage(Player_sptr player) :
+InGamePage::InGamePage(Player_sptr player, Page_sptr parent) :
     Page(std::move(player)),
-    _parent(nullptr) {
+    _parent(std::move(parent)) {
 
 }
 

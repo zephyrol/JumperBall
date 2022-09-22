@@ -205,8 +205,7 @@ bool Window::inputManagement() {
     const float posY = 1.f - posXY.second / static_cast <float>(_windowHeight);
     _controller.interactionMouse(mouseButton1Status, posX, posY);
 
-    const bool exit = glfwWindowShouldClose(_window) != 0 || _controller.requestToLeave();
-    return exit;
+    return glfwWindowShouldClose(_window) != 0 || _controller.requestToLeave();
 }
 
 

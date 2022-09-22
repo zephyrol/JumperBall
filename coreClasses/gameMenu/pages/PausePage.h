@@ -17,7 +17,6 @@ public:
     static PausePage_sptr createInstance(
         Player_sptr player,
         const Page_sptr &parent,
-        const Page_sptr &titlePage,
         float ratio
     );
 
@@ -26,7 +25,6 @@ public:
         Node_sptr &&jumperBallTitleNode,
         Node_sptr &&resumeNode,
         Node_sptr &&exitNode,
-        const Page_sptr &titlePage,
         const Page_sptr &parent
     );
 
@@ -36,11 +34,13 @@ public:
 
     Page_wptr parent() override;
 
+    void setInGamePage(Page_sptr inGamePage);
+
     NodeMessageAssociations nodeToMessage() const override;
 
 private:
     const Page_wptr _parent;
-    const Page_wptr _titlePage;
+    Page_sptr _inGamePage;
     Node_sptr _jumperBallTitleNode;
     Node_sptr _resumeNode;
     Node_sptr _exitNode;
