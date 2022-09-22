@@ -68,3 +68,7 @@ vecGeometry Label::genGeometries() const {
 const CstNode_sptr &Label::getNode() const {
     return _node;
 }
+
+SceneElement::GlobalState Label::getGlobalState() const {
+    return GlobalState::United;
+}

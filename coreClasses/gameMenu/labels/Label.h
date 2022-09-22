@@ -19,9 +19,9 @@ using CstLabel_sptr = std::shared_ptr<const Label>;
 using vecCstLabel_sptr = std::vector<CstLabel_sptr>;
 using vecLabel_sptr = std::vector<Label_sptr>;
 
-class Label {
-public:
+class Label: public SceneElement {
 
+public:
     explicit Label(
         CstNode_sptr node,
         bool isActivated = false
@@ -35,18 +35,24 @@ public:
 
     const CstNode_sptr& getNode() const;
 
+    virtual StaticValues <JBTypes::vec2f> getStaticVec2fValues() const override = 0;
+
     void activate();
 
     void deactivate();
 
     static void updateLabelsLevels(vecLabel_sptr &labels, size_t end);
 
+    GlobalState getGlobalState() const override;
+
     virtual ~Label() = default;
 
 protected:
     const CstNode_sptr _node;
+
 private:
     bool _isActivated;
+
 };
 
 #endif /* LABEL_H */

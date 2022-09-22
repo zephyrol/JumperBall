@@ -16,7 +16,6 @@ RenderPass::RenderPass(const vecMesh_sptr &meshes) :
     _renderGroupsUniforms{} {
 }
 
-
 void RenderPass::update() {
 
     const auto updateRenderGroupUniforms =

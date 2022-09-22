@@ -93,3 +93,7 @@ MessageLabel::LetterHash MessageLabel::createLetterHash(size_t fontSize, unsigne
     return hash;
 }
 
+SceneElement::StaticValues <JBTypes::vec2f> MessageLabel::getStaticVec2fValues() const {
+    return {{1.f, }};
+}
+

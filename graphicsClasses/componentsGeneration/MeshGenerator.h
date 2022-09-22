@@ -46,17 +46,6 @@ namespace MeshGenerator {
 
     vecMesh_sptr genScreen();
 
-
-    Mesh_sptr genLetterLabel(
-        const CstPage_sptr &page,
-        const JBTypes::vec2f &position,
-        float width,
-        float height,
-        const glm::vec3 &color
-    );
-
-    vecMesh_sptr genShapesLabel(const CstPage_sptr &page);
-
     Mesh_sptr genBlock(const CstMap_sptr &map, const CstBlock_sptr &block);
 
     Mesh_sptr genItem(const std::shared_ptr<const Item> &item);

@@ -20,7 +20,7 @@ using CstPage_sptr = std::shared_ptr<const Page>;
 using vecCstPage_sptr = std::vector<CstPage_sptr>;
 using vecPage_sptr = std::vector<Page_sptr>;
 
-class Page : public SceneElement {
+class Page {
 public:
 
 
@@ -46,8 +46,6 @@ public:
     float height() const;
 
     float localPosY() const;
-
-    SceneElement::GlobalState getGlobalState() const override;
 
     virtual vecCstLabel_sptr labels() const;
 

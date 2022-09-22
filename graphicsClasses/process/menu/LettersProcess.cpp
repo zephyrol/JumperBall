@@ -18,7 +18,7 @@ LettersProcess::LettersProcess(
         const auto& messageLabels = _fontTexturesGenerator.getMessageLabels();
         for(const auto& messageLabel: messageLabels) {
             const Mesh_sptr mesh = std::make_shared<Mesh>(
-                page, MeshGenerator::genGeometricShapesFromLabel(*messageLabel)
+                messageLabel, MeshGenerator::genGeometricShapesFromLabel(*messageLabel)
             );
             meshes.push_back(mesh);
         }

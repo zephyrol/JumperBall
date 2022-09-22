@@ -104,11 +104,6 @@ void Page::update(bool isPressed, float screenPosY) {
 
 }
 
-// TODO: Useless ?
-SceneElement::GlobalState Page::getGlobalState() const {
-    return SceneElement::GlobalState::United;
-}
-
 vecCstLabel_sptr Page::labels() const {
     return {};
 }

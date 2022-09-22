@@ -70,12 +70,16 @@ private:
     size_t computeNumberOfVertices() const;
 
     template<typename T>
-    void duplicateStateVertexAttribute(std::vector<std::vector<T> > &attributes,
-                                       const std::vector<T> &values) const;
+    void duplicateStateVertexAttribute(
+        std::vector<std::vector<T> > &attributes,
+        const std::vector<T> &values
+    ) const;
 
     template<typename RawType, typename OpenGLType>
     static void convertAttributesToOpenGLFormat(
-        const SceneElement::StaticValues<RawType> &rawValues, std::vector<OpenGLType> &openGLValues);
+        const SceneElement::StaticValues<RawType> &rawValues,
+        std::vector<OpenGLType> &openGLValues
+    );
 
     template<typename RawType, typename OpenGLType>
     static void convertUniformsToOpenGLFormat(
@@ -89,8 +93,10 @@ private:
         const std::vector<std::vector<T> > &other
     );
 
-    static void
-    concatStateVertexAttributes(StateVertexAttributes &current, const StateVertexAttributes &other);
+    static void concatStateVertexAttributes(
+        StateVertexAttributes &current,
+        const StateVertexAttributes &other
+    );
 
     const CstSceneElement_sptr _sceneElement;
     const vecCstGeometricShape_sptr _shapes;
