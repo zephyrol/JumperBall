@@ -33,7 +33,7 @@ public:
         const Page_sptr &parent
     );
 
-    NodeMessageAssociations nodeToMessage() const override;
+    vecCstTextNode_uptr genTextNodes() const override;
 
     Page_wptr parent() override;
 

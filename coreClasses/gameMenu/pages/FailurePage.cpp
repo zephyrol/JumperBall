@@ -87,14 +87,6 @@ void FailurePage::setInGamePage(Page_sptr inGamePage) {
     _inGamePage = std::move(inGamePage);
 }
 
-Page::NodeMessageAssociations FailurePage::nodeToMessage() const {
-    return {
-        {_failureNode, "You lost!"},
-        {_retryNode,   "Retry"},
-        {_exitNode,    "Exit"},
-    };
-}
-
 Page_sptr FailurePage::click(float mouseX, float mouseY) {
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
         return node->intersect(mouseX, mouseY);
@@ -107,4 +99,12 @@ Page_sptr FailurePage::click(float mouseX, float mouseY) {
         return _inGamePage;
     }
     return nullptr;
+}
+
+vecCstTextNode_uptr FailurePage::genTextNodes() const {
+    vecCstTextNode_uptr textNodes;
+    textNodes.emplace_back(new TextNode(_failureNode, "You lost!"));
+    textNodes.emplace_back(new TextNode(_retryNode, "Retry"));
+    textNodes.emplace_back(new TextNode(_exitNode, "Exit"));
+    return textNodes;
 }

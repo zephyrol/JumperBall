@@ -29,7 +29,7 @@ public:
 
     void setLevelsPage(Page_sptr levelsPage);
 
-    NodeMessageAssociations nodeToMessage() const override;
+    vecCstTextNode_uptr genTextNodes() const override;
 
     Page_sptr click(float mouseX, float mouseY) override;
 

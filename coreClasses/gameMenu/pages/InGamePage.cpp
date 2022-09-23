@@ -18,9 +18,9 @@ Page_sptr InGamePage::click(float, float) {
     return nullptr;
 }
 
-Page::NodeMessageAssociations InGamePage::nodeToMessage() const {
-    return {};
+void InGamePage::resize(float) {
 }
 
-void InGamePage::resize(float) {
+vecCstTextNode_uptr InGamePage::genTextNodes() const {
+    return {};
 }

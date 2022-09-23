@@ -10,6 +10,7 @@
 #define MESSAGELABEL_H
 
 #include "Label.h"
+#include "gameMenu/nodes/TextNode.h"
 
 class MessageLabel;
 
@@ -69,12 +70,12 @@ public:
     using CstLettersUvs_sptr = std::shared_ptr<const LettersUvs>;
 
     MessageLabel(
-        std::string message,
-        std::vector<CharacterLocalTransform> &&transforms,
+        CstTextNode_uptr &&textNode,
+        const Node_sptr& suitedNode,
         LettersUvs_sptr lettersUvs,
-        const CstNode_sptr &node,
+        std::vector<CharacterLocalTransform> &&transforms,
         size_t lettersSize,
-        bool isActivated = false
+        bool isActivated
     );
 
     vecGeometry genGeometries() const override;
@@ -86,7 +87,7 @@ public:
     static LetterHash createLetterHash(size_t fontSize, unsigned char letter);
 
 private:
-    const std::string _message;
+    const CstTextNode_uptr _textNode;
     const LettersUvs_sptr _lettersUvs;
     const std::vector<CharacterLocalTransform> _transforms;
     const size_t _lettersSize;

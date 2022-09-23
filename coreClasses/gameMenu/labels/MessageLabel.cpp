@@ -8,14 +8,14 @@
 #include <utility>
 
 MessageLabel::MessageLabel(
-    std::string message,
-    std::vector<MessageLabel::CharacterLocalTransform> &&transforms,
-    MessageLabel::LettersUvs_sptr lettersUvs,
-    const CstNode_sptr &node,
+    CstTextNode_uptr &&textNode,
+    const Node_sptr& suitedNode,
+    LettersUvs_sptr lettersUvs,
+    std::vector<CharacterLocalTransform> &&transforms,
     size_t lettersSize,
     bool isActivated
-) : Label(node, isActivated),
-    _message(std::move(message)),
+) : Label(suitedNode, isActivated),
+    _textNode(std::move(textNode)),
     _lettersUvs(std::move(lettersUvs)),
     _transforms(std::move(transforms)),
     _lettersSize(lettersSize),
@@ -23,7 +23,7 @@ MessageLabel::MessageLabel(
 }
 
 std::string MessageLabel::message() const {
-    return _message;
+    return _textNode->text();
 }
 
 vecGeometry MessageLabel::genGeometries() const {
@@ -32,20 +32,21 @@ vecGeometry MessageLabel::genGeometries() const {
     auto baseX = screenTransform.positionX - screenTransform.width / 2.f;
     const auto baseY = screenTransform.positionY - screenTransform.height / 2.f;
 
-    const auto maxOriginHeight = [this](){
+    const auto maxOriginHeight = [this]() {
         float maxOrigHeight = 0.f;
-        for(const auto& transform: _transforms) {
+        for (const auto &transform: _transforms) {
             maxOrigHeight = std::max(maxOrigHeight, transform.originHeight);
         }
         return maxOrigHeight;
     }();
 
-    for (size_t i = 0; i < _message.size(); ++i) {
-        const auto& transform = _transforms[i];
-        const auto& uv = _lettersUvs->at(_letterHashes[i]);
+    for (size_t i = 0; i < _textNode->text().size(); ++i) {
+        const auto &transform = _transforms[i];
+        const auto &uv = _lettersUvs->at(_letterHashes[i]);
         const auto letterOffsetOriginHeight = maxOriginHeight - transform.originHeight;
         const auto xPosition = baseX + (transform.bearingX + transform.width / 2.f) * screenTransform.width;
-        const auto yPosition = baseY + (letterOffsetOriginHeight + transform.height / 2.f) * screenTransform.height;
+        const auto yPosition =
+            baseY + (letterOffsetOriginHeight + transform.height / 2.f) * screenTransform.height;
         const Geometry quad(
             Geometry::Shape::Quad,
             {
@@ -81,7 +82,7 @@ vecGeometry MessageLabel::genGeometries() const {
 
 std::vector<std::string> MessageLabel::createLetterHashes() const {
     std::vector<std::string> letterHashes{};
-    for (unsigned char c: _message) {
+    for (unsigned char c: _textNode->text()) {
         letterHashes.push_back(createLetterHash(_lettersSize, c));
     }
     return letterHashes;
@@ -93,7 +94,7 @@ MessageLabel::LetterHash MessageLabel::createLetterHash(size_t fontSize, unsigne
     return hash;
 }
 
-SceneElement::StaticValues <JBTypes::vec2f> MessageLabel::getStaticVec2fValues() const {
-    return {{1.f, }};
+SceneElement::StaticValues<JBTypes::vec2f> MessageLabel::getStaticVec2fValues() const {
+    ;
 }
 

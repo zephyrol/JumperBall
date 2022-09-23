@@ -35,7 +35,7 @@ public:
 
     const CstNode_sptr& getNode() const;
 
-    virtual StaticValues <JBTypes::vec2f> getStaticVec2fValues() const override = 0;
+    StaticValues <JBTypes::vec2f> getStaticVec2fValues() const override = 0;
 
     void activate();
 

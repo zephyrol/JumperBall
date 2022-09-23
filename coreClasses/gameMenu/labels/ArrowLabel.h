@@ -12,12 +12,14 @@
 
 class ArrowLabel : public Label {
 public:
-    ArrowLabel(
+    explicit ArrowLabel(
         CstNode_sptr node,
         bool isActivated = true
     );
 
-    virtual ~ArrowLabel() = default;
+    StaticValues <JBTypes::vec2f> getStaticVec2fValues() const override;
+
+    ~ArrowLabel() override = default;
 
     vecGeometry genGeometries() const override;
 

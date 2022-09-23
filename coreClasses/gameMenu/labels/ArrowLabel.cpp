@@ -30,3 +30,7 @@ vecGeometry ArrowLabel::genGeometries() const {
 
     return {quad, triangle};
 }
+
+SceneElement::StaticValues <JBTypes::vec2f> ArrowLabel::getStaticVec2fValues() const {
+    return { { 0.f, 0.f } };
+}

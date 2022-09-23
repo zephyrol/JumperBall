@@ -87,14 +87,6 @@ void SuccessPage::setInGamePage(Page_sptr inGamePage) {
     _inGamePage = std::move(inGamePage);
 }
 
-Page::NodeMessageAssociations SuccessPage::nodeToMessage() const {
-    return {
-        {_goodGameNode, "Good game!"},
-        {_continueNode, "Next level"},
-        {_exitNode,     "Exit"},
-    };
-}
-
 Page_sptr SuccessPage::click(float mouseX, float mouseY) {
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
         return node->intersect(mouseX, mouseY);
@@ -107,4 +99,12 @@ Page_sptr SuccessPage::click(float mouseX, float mouseY) {
         return _inGamePage;
     }
     return nullptr;
+}
+
+vecCstTextNode_uptr SuccessPage::genTextNodes() const {
+    vecCstTextNode_uptr textNodes;
+    textNodes.emplace_back(new TextNode(_goodGameNode, "Good game!"));
+    textNodes.emplace_back(new TextNode(_continueNode, "Next level"));
+    textNodes.emplace_back(new TextNode(_exitNode, "Exit"));
+    return textNodes;
 }

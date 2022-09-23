@@ -89,16 +89,6 @@ vecNode_sptr TitlePage::createNodes(float ratio) {
     return {jumperBallTitle, playNode, storeNode, exitNode, authorNode};
 }
 
-Page::NodeMessageAssociations TitlePage::nodeToMessage() const {
-    return {
-        {_jumperBallTitle, "Jumper Ball"},
-        {_play,            "Play"},
-        {_store,           "Store"},
-        {_exitNode,        "Exit"},
-        {_author,          "Created by S.Morgenthaler"}
-    };
-}
-
 Page_sptr TitlePage::click(float mouseX, float mouseY) {
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
         return node->intersect(mouseX, mouseY);
@@ -114,5 +104,15 @@ Page_sptr TitlePage::click(float mouseX, float mouseY) {
 
 void TitlePage::setLevelsPage(Page_sptr levelsPage) {
     _levelsPage = std::move(levelsPage);
+}
+
+vecCstTextNode_uptr TitlePage::genTextNodes() const {
+    vecCstTextNode_uptr textNodes;
+    textNodes.emplace_back(new TextNode(_jumperBallTitle, "Jumper Ball"));
+    textNodes.emplace_back(new TextNode(_play, "Play"));
+    textNodes.emplace_back(new TextNode(_store, "Store"));
+    textNodes.emplace_back(new TextNode(_exitNode, "Exit"));
+    textNodes.emplace_back(new TextNode(_author, "Created by S.Morgenthaler"));
+    return textNodes;
 }
 

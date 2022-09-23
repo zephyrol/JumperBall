@@ -17,7 +17,7 @@ public:
 
     Page_sptr click(float mouseX, float mouseY) override;
 
-    NodeMessageAssociations nodeToMessage() const override;
+    vecCstTextNode_uptr genTextNodes() const override;
 
     void resize(float ratio) override;
 

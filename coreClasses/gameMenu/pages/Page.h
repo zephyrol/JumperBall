@@ -10,6 +10,7 @@
 
 #include "gameMenu/labels/Label.h"
 #include "player/Player.h"
+#include "gameMenu/nodes/TextNode.h"
 #include <list>
 
 class Page;
@@ -49,9 +50,7 @@ public:
 
     virtual vecCstLabel_sptr labels() const;
 
-    using NodeMessageAssociations = std::unordered_map<Node_sptr, std::string>;
-
-    virtual NodeMessageAssociations nodeToMessage() const = 0;
+    virtual vecCstTextNode_uptr genTextNodes() const = 0;
 
     void update(bool isPressed, float screenPosY = 0.f);
 

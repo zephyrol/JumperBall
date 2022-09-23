@@ -141,18 +141,18 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
     // 1. Generate message labels
     vecMessageLabel_sptr messageLabels{};
     auto lettersUvs = std::make_shared<MessageLabel::LettersUvs>();
-    const auto &nodeToMessage = page->nodeToMessage();
+    auto textNodes = page->genTextNodes();
     // disable byte-alignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    for (const auto &item: nodeToMessage) {
-        const auto &node = item.first;
+    for (auto &textNode: textNodes) {
+        const auto &node = textNode->node();
         const auto screenSpaceHeight = node->height();
         const auto nodePixelHeight = static_cast<FT_UInt>(
             std::ceil(static_cast<float>(screenHeight) * screenSpaceHeight)
         );
 
         FT_Set_Pixel_Sizes(ftContent.fontFace, 0, nodePixelHeight);
-        const auto &message = item.second;
+        const auto &message = textNode->text();
         unsigned int nodePixelWidth = 0;
         std::vector<FontTexturesGenerator::GraphicCharacter> transforms;
         for (unsigned char c: message) {
@@ -172,10 +172,10 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
         );
 
         messageLabels.push_back(std::make_shared<MessageLabel>(
-            message,
-            getCharacterLocalTransforms(transforms, nodePixelWidth, nodePixelHeight),
-            lettersUvs,
+            std::move(textNode),
             centeredNode,
+            lettersUvs,
+            getCharacterLocalTransforms(transforms, nodePixelWidth, nodePixelHeight),
             nodePixelHeight,
             true // TODO change it
         ));

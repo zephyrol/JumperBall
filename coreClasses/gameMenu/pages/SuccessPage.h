@@ -35,7 +35,7 @@ public:
 
     void setInGamePage(Page_sptr inGamePage);
 
-    NodeMessageAssociations nodeToMessage() const override;
+    vecCstTextNode_uptr genTextNodes() const override;
 
 private:
     const Page_wptr _parent;

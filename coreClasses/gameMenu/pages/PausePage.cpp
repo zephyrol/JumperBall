@@ -20,7 +20,7 @@ PausePage::PausePage(
     _inGamePage(nullptr),
     _jumperBallTitleNode(std::move(jumperBallTitleNode)),
     _resumeNode(std::move(resumeNode)),
-    _exitNode(std::move(exitNode)){
+    _exitNode(std::move(exitNode)) {
 }
 
 PausePage_sptr PausePage::createInstance(
@@ -87,14 +87,6 @@ Page_wptr PausePage::parent() {
     return _parent;
 }
 
-Page::NodeMessageAssociations PausePage::nodeToMessage() const {
-    return {
-        {_jumperBallTitleNode, "Jumper Ball"},
-        {_resumeNode,          "Resume"},
-        {_exitNode,            "Exit"},
-    };
-}
-
 Page_sptr PausePage::click(float mouseX, float mouseY) {
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
         return node->intersect(mouseX, mouseY);
@@ -107,4 +99,12 @@ Page_sptr PausePage::click(float mouseX, float mouseY) {
         return _inGamePage;
     }
     return nullptr;
+}
+
+vecCstTextNode_uptr PausePage::genTextNodes() const {
+    vecCstTextNode_uptr textNodes;
+    textNodes.emplace_back(new TextNode(_jumperBallTitleNode, "Jumper Ball"));
+    textNodes.emplace_back(new TextNode(_resumeNode, "Resume"));
+    textNodes.emplace_back(new TextNode(_exitNode, "Exit"));
+    return textNodes;
 }

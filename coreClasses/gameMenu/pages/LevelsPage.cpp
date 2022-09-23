@@ -100,18 +100,6 @@ Node_sptr LevelsPage::getCommonNode(float ratio) {
 }
 
 
-Page::NodeMessageAssociations LevelsPage::nodeToMessage() const {
-    Page::NodeMessageAssociations nodeMessageAssociations;
-
-    for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
-        const auto levelNumber = i + 1;
-        nodeMessageAssociations[_levels[i]] = (levelNumber < 10 ? "0" : "") + std::to_string(levelNumber);
-    }
-
-    nodeMessageAssociations[_levelsTitle] = "Levels";
-    return nodeMessageAssociations;
-}
-
 Page_sptr LevelsPage::click(float mouseX, float mouseY) {
 
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
@@ -148,4 +136,20 @@ Page_wptr LevelsPage::parent() {
 
 void LevelsPage::setInGamePage(Page_sptr inGamePage) {
     _inGamePage = std::move(inGamePage);
+}
+
+vecCstTextNode_uptr LevelsPage::genTextNodes() const {
+    decltype(genTextNodes()) textNodes;
+
+    for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
+        const auto levelNumber = i + 1;
+        textNodes.push_back(
+            CstTextNode_uptr(new TextNode(_levels[i], (levelNumber < 10 ? "0" : "") + std::to_string(levelNumber)))
+        );
+    }
+
+    textNodes.push_back(
+        CstTextNode_uptr(new TextNode(_levelsTitle ,"Levels"))
+    );
+    return textNodes;
 }
