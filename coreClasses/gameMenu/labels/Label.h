@@ -50,6 +50,18 @@ public:
 protected:
     const CstNode_sptr _node;
 
+    /**
+     * Apply node transform on a scale transform
+     * @return The new scale
+     */
+    Geometry::ShapeScale transformScale(const Geometry::ShapeScale &scale) const;
+
+    /**
+     * Apply node transform on a translate transform
+     * @return The new translation
+     */
+    Geometry::ShapeTranslation transformTranslate(const Geometry::ShapeTranslation &translation) const;
+
 private:
     bool _isActivated;
 

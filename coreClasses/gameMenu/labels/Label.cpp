@@ -72,3 +72,16 @@ const CstNode_sptr &Label::getNode() const {
 SceneElement::GlobalState Label::getGlobalState() const {
     return GlobalState::United;
 }
+
+Geometry::ShapeScale Label::transformScale(const Geometry::ShapeScale &scale) const {
+    return { scale.at(0) * _node->width(), scale.at(1) * _node->height(), scale.at(2) };
+}
+
+Geometry::ShapeTranslation Label::transformTranslate(const Geometry::ShapeTranslation &translation) const {
+    return {
+        translation.at(0) * _node->width() + _node->positionX() * 2.f,
+        translation.at(1) * _node->height() + _node->positionY() * 2.f,
+        translation.at(2)
+    };
+}
+

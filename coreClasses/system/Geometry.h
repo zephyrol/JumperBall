@@ -27,10 +27,10 @@ public:
 
     Geometry(
         const Shape &shape,
-        const ShapeTranslation &translation,
-        const ShapeRotation &rotation,
-        const ShapeScale &scale,
-        const CustomUvs &customUvs = {}
+        ShapeTranslation &&translation,
+        ShapeRotation &&rotation,
+        ShapeScale &&scale,
+        CustomUvs&& customUvs = {}
     );
 
     const Shape &getShape() const;

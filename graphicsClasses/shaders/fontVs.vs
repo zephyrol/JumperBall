@@ -1,6 +1,4 @@
-uniform Menu {
-    float positionY;
-};
+uniform float positionY;
 
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;

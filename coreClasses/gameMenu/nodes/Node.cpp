@@ -25,14 +25,6 @@ JBTypes::vec2f Node::computeNodeSize(float parentRatio, float childRatio) {
     return {1.f, parentRatio / childRatio};
 }
 
-std::unique_ptr<Node::Transform> Node::getAdditionalLocalTransform() const {
-    return nullptr;
-}
-
-Node::Transform Node::getIdentityTransform() {
-    return {1.f, 1.f, 0.f, 0.f};
-}
-
 float Node::width() const {
     return _transform.width;
 }

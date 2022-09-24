@@ -33,6 +33,7 @@ public:
 
     Page_sptr click(float mouseX, float mouseY) override;
 
+
 private:
     Node_sptr _jumperBallTitle;
     Node_sptr _play;

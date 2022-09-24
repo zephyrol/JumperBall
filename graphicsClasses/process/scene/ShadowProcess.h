@@ -13,11 +13,11 @@ public:
 
     ShadowProcess(
         const JBTypes::FileContent &fileContent,
-        const RenderPass_sptr &blocks,
-        const RenderPass_sptr &items,
-        const RenderPass_sptr &enemies,
-        const RenderPass_sptr &specials,
-        const RenderPass_sptr &ball,
+        RenderPass_sptr blocks,
+        RenderPass_sptr items,
+        RenderPass_sptr enemies,
+        RenderPass_sptr specials,
+        RenderPass_sptr ball,
         bool isFirst
     );
 

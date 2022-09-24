@@ -95,6 +95,6 @@ MessageLabel::LetterHash MessageLabel::createLetterHash(size_t fontSize, unsigne
 }
 
 SceneElement::StaticValues<JBTypes::vec2f> MessageLabel::getStaticVec2fValues() const {
-    ;
+    return {_textNode->staticProperty()};
 }
 

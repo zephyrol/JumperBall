@@ -1,6 +1,6 @@
 /*
  * File: PageRendering.cpp
- * Author: Morgenthaler S
+ * Author: S.Morgenthaler
  *
  * Created on 21 avril 2020, 14:50
  */
@@ -17,25 +17,21 @@ PageRendering::PageRendering(
     _page(page),
     _ftContent(ftContent),
     _fileContent(fileContent),
-    _lettersProcess(_fileContent, _ftContent, width, height, page),
-    _pageUniformBuffer(getShaderProgramsUsingUniformBuffer()) {
+    _lettersProcess(_fileContent, _ftContent, width, height, page)
+{
 }
 
 void PageRendering::update() {
-    _pageUniformBuffer.update(_page->localPosY());
+    // _pageUniformBuffer.update(_page->localPosY());
     _lettersProcess.update();
 }
 
 void PageRendering::render() const {
-    _pageUniformBuffer.bindBufferRange();
+    // _pageUniformBuffer.bindBufferRange();
     _lettersProcess.render();
 }
 
 void PageRendering::freeGPUMemory() {
     _lettersProcess.freeGPUMemory();
-    _pageUniformBuffer.freeGPUMemory();
-}
-
-vecCstShaderProgram_sptr PageRendering::getShaderProgramsUsingUniformBuffer() const {
-    return {_lettersProcess.getShaderPrograms() };
+    // _pageUniformBuffer.freeGPUMemory();
 }

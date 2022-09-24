@@ -1,6 +1,6 @@
 /*
  * File: PageRendering.h
- * Author: Morgenthaler S
+ * Author: S.Morgenthaler
  *
  * Created on 21 avril 2020, 14:50
  */
@@ -11,8 +11,7 @@
 #include "Rendering.h"
 #include "FontTexturesGenerator.h"
 #include "componentsGeneration/MeshGenerator.h"
-#include "process/menu/LettersProcess.h"
-#include "process/menu/ShapeLabelProcess.h"
+#include "process/menu/LabelsProcess.h"
 #include "process/menu/MenuUniformBuffer.h"
 
 class PageRendering : public Rendering {
@@ -39,14 +38,8 @@ private:
     const FontTexturesGenerator::FTContent &_ftContent;
     const JBTypes::FileContent &_fileContent;
 
-    const CstPage_sptr _currentPage;
-    LettersProcess _lettersProcess;
+    LabelsProcess _lettersProcess;
 
-    MenuUniformBuffer _pageUniformBuffer;
-
-    vecRenderProcess_sptr createRenderProcesses() const;
-
-    vecCstShaderProgram_sptr getShaderProgramsUsingUniformBuffer() const;
 };
 
 

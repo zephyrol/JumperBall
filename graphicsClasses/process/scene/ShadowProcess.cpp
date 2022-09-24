@@ -4,13 +4,15 @@
 
 #include "ShadowProcess.h"
 
+#include <utility>
+
 ShadowProcess::ShadowProcess(
     const JBTypes::FileContent &fileContent,
-    const RenderPass_sptr &blocks,
-    const RenderPass_sptr &items,
-    const RenderPass_sptr &enemies,
-    const RenderPass_sptr &specials,
-    const RenderPass_sptr &ball,
+    RenderPass_sptr blocks,
+    RenderPass_sptr items,
+    RenderPass_sptr enemies,
+    RenderPass_sptr specials,
+    RenderPass_sptr ball,
     bool isFirst
 ) : _frameBuffer(
     new FrameBuffer(
@@ -21,11 +23,11 @@ ShadowProcess::ShadowProcess(
         {1.f, 1.f, 1.f}
     )),
     _isFirst(isFirst),
-    _blocks(blocks),
-    _items(items),
-    _enemies(enemies),
-    _specials(specials),
-    _ball(ball),
+    _blocks(std::move(blocks)),
+    _items(std::move(items)),
+    _enemies(std::move(enemies)),
+    _specials(std::move(specials)),
+    _ball(std::move(ball)),
     _shadowBlocksShader(ShaderProgram::createShaderProgram(
         fileContent,
         "blocksVs.vs",

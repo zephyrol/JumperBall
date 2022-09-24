@@ -80,14 +80,6 @@ protected:
      */
     static JBTypes::vec2f computeNodeSize(float parentRatio, float childRatio);
 
-    /**
-     * Get identity node transform.
-     * @return Identity transform
-     */
-    static Transform getIdentityTransform();
-
-    virtual std::unique_ptr<Node::Transform> getAdditionalLocalTransform() const;
-
 private:
 
     /**

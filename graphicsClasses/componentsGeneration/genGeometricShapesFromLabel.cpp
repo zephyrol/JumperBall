@@ -74,11 +74,11 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel(const Label
         }
 
         // TODO add scale
-        const glm::mat4 normalTransf = localRotation;
+        const glm::mat4 normalTransform = localRotation;
         geometricShapes.push_back(genGeometricShape(
             geometry.getShape(),
             model,
-            normalTransf,
+            normalTransform,
             std::move(uvs)
         ));
     }

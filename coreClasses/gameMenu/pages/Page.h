@@ -28,10 +28,9 @@ public:
     // Slide state => timepoint and yScreenPosition
     using slideState = std::pair<JBTypes::timePointMs, float>;
 
-    explicit Page(
-        Player_sptr &&player,
-        float height = 1.f
-    );
+    explicit Page(Player_sptr &&player);
+
+    virtual ~Page() = default;
 
     virtual Page_wptr parent();
 
@@ -44,38 +43,18 @@ public:
      */
     virtual Page_sptr click(float mouseX, float mouseY) = 0;
 
-    float height() const;
-
-    float localPosY() const;
+    virtual float localPosY() const;
 
     virtual vecCstLabel_sptr labels() const;
 
     virtual vecCstTextNode_uptr genTextNodes() const = 0;
 
-    void update(bool isPressed, float screenPosY = 0.f);
+    virtual void update(bool isPressed, float screenPosY);
 
     virtual void resize(float ratio) = 0;
 
-
-private:
-
-    constexpr static float decelerationCoefficient = 10.f; // pagePourcentage /s^2
-
-
 protected:
     const Player_sptr _player;
-
-private:
-
-    const float _height;
-    float _localPosY; // Page position
-    float _localPressedPosY;
-    float _localReleasedPosY;
-    bool _isPressed;
-    float _pressedScreenPosY;
-    JBTypes::timePointMs _lastUpdate;
-    std::list<slideState> _lastSwipeUpdates;
-    float _releaseVelocity;
 };
 
 #endif // PAGE_H

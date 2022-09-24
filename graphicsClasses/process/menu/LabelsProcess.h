@@ -1,22 +1,20 @@
 //
-// Created by Sébastien Morgenthaler on 26/01/2022.
+// Created by S.Morgenthaler on 26/01/2022.
 //
 
-#ifndef JUMPERBALLAPPLICATION_LETTERSPROCESS_H
-#define JUMPERBALLAPPLICATION_LETTERSPROCESS_H
+#ifndef JUMPERBALLAPPLICATION_LABELSPROCESS_H
+#define JUMPERBALLAPPLICATION_LABELSPROCESS_H
 
 
 #include "process/RenderProcess.h"
 #include "gameMenu/pages/Page.h"
 #include "graphicMenu/FontTexturesGenerator.h"
 
-class LettersProcess: public RenderProcess {
+class LabelsProcess: public RenderProcess {
 
 public:
 
-    using RenderPassesLetters = std::unordered_map <RenderPass_sptr, unsigned char>;
-
-    LettersProcess(
+    LabelsProcess(
         const JBTypes::FileContent& fileContent,
         const FontTexturesGenerator::FTContent &ftContent,
         GLsizei width,
@@ -32,9 +30,8 @@ public:
 
 private:
     FontTexturesGenerator _fontTexturesGenerator;
-    //const RenderPassesLetters _renderPassesLetters;
     RenderPass _renderPass;
-    const CstShaderProgram_sptr _lettersShader;
+    const CstShaderProgram_sptr _labelsShader;
 
     static CstShaderProgram_sptr createLettersProcessShaderProgram(
         const JBTypes::FileContent& fileContent
@@ -42,4 +39,4 @@ private:
 };
 
 
-#endif //JUMPERBALLAPPLICATION_LETTERSPROCESS_H
+#endif //JUMPERBALLAPPLICATION_LABELSPROCESS_H

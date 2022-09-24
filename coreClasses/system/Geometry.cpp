@@ -7,18 +7,20 @@
 
 #include "Geometry.h"
 
+#include <utility>
+
 Geometry::Geometry(
     const Shape &shape,
-    const ShapeTranslation &translation,
-    const ShapeRotation &rotation,
-    const ShapeScale &scale,
-    const CustomUvs &customUvs
+    ShapeTranslation &&translation,
+    ShapeRotation &&rotation,
+    ShapeScale &&scale,
+    CustomUvs&& customUvs
 ) :
     _shape(shape),
     _translation(translation),
     _rotation(rotation),
     _scale(scale),
-    _customUvs(customUvs) {
+    _customUvs(std::move(customUvs)) {
 }
 
 const Geometry::ShapeTranslation &Geometry::getTranslation() const {
