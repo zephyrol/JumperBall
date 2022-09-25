@@ -34,7 +34,7 @@ LevelsPage_sptr LevelsPage::createInstance(
     float ratio
 ) {
     const auto levelsPageNode = getCommonNode(ratio);
-    auto levelsNode = createLevelsNodes(ratio, levelsPageNode);
+    auto levelsNode = createLevelsNodes(levelsPageNode);
     const auto headerNode = createHeaderNode(levelsPageNode);
     auto levelsTitleNode = createLevelsTitleNode(headerNode);
     auto arrowLabel = createArrowLabel(headerNode);
@@ -52,7 +52,7 @@ Node_sptr LevelsPage::createHeaderNode(const Node_sptr &commonNode) {
     return std::make_shared<UpNode>(commonNode, 4.f);
 }
 
-vecNode_sptr LevelsPage::createLevelsNodes(float ratio, const Node_sptr &commonNode) {
+vecNode_sptr LevelsPage::createLevelsNodes(const Node_sptr &commonNode) {
     vecNode_sptr levelsNodes;
     const auto levelsMainNode = std::make_shared<DownNode>(commonNode, 9.f / 18.f);
     const auto numberOfLevelsFloat = static_cast<float>(LevelsPage::numberOfLevels);
@@ -80,7 +80,7 @@ vecNode_sptr LevelsPage::createLevelsNodes(float ratio, const Node_sptr &commonN
 
 void LevelsPage::resize(float ratio) {
     const auto levelsPageNode = getCommonNode(ratio);
-    auto levelsNode = createLevelsNodes(ratio, levelsPageNode);
+    auto levelsNode = createLevelsNodes(levelsPageNode);
     const auto headerNode = createHeaderNode(levelsPageNode);
     auto levelsTitleNode = createLevelsTitleNode(headerNode);
     auto arrowLabel = createArrowLabel(headerNode);

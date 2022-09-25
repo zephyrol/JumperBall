@@ -53,7 +53,7 @@ private:
     template<class T>
     static std::shared_ptr<T> createLevelNode(const Node_sptr &parent);
 
-    static vecNode_sptr createLevelsNodes(float ratio, const Node_sptr &commonNode);
+    static vecNode_sptr createLevelsNodes(const Node_sptr &commonNode);
 
     static Node_sptr createHeaderNode(const Node_sptr &commonNode);
 

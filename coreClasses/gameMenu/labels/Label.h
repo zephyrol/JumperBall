@@ -51,7 +51,7 @@ protected:
     const CstNode_sptr _node;
 
     /**
-     * Apply node transform on a scale transform
+     * Apply node transform on a scale transform.
      * @return The new scale
      */
     Geometry::ShapeScale transformScale(const Geometry::ShapeScale &scale) const;

@@ -18,7 +18,7 @@ public:
     explicit TextNode(
         Node_sptr node,
         std::string &&text,
-        const JBTypes::vec2f &staticProperty = {0.f, 0.f}
+        const JBTypes::vec2f &staticProperty = {1.f, 0.f}
     );
 
     const JBTypes::vec2f &staticProperty() const;

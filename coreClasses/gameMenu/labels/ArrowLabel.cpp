@@ -14,12 +14,11 @@ ArrowLabel::ArrowLabel(
 
 vecGeometry ArrowLabel::genGeometries() const {
 
-    const auto& nodeWidth = _node->width();
     const Geometry quad(
         Geometry::Shape::Quad,
         transformTranslate({0.4f, 0.f, 0.f}),
         {0.f, 0.f, 0.f},
-        transformScale({0.6f, 0.5f, 1.f})
+        transformScale({0.6f, 0.3f, 1.f})
     );
 
     const Geometry triangle(
