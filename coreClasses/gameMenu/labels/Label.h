@@ -23,7 +23,7 @@ class Label: public SceneElement {
 
 public:
     explicit Label(
-        CstNode_sptr node,
+        Node_sptr node,
         bool isActivated = false
     );
 
@@ -33,7 +33,7 @@ public:
 
     virtual std::string message() const;
 
-    const CstNode_sptr& getNode() const;
+    const Node_sptr& getNode();
 
     StaticValues <JBTypes::vec2f> getStaticVec2fValues() const override = 0;
 
@@ -48,7 +48,7 @@ public:
     virtual ~Label() = default;
 
 protected:
-    const CstNode_sptr _node;
+    const Node_sptr _node;
 
     /**
      * Apply node transform on a scale transform.

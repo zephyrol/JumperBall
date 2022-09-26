@@ -10,7 +10,7 @@
 #include <utility>
 
 Label::Label(
-    CstNode_sptr node,
+    Node_sptr node,
     bool isActivated
 ) :
     _node(std::move(node)),
@@ -65,7 +65,7 @@ vecGeometry Label::genGeometries() const {
     };
 }
 
-const CstNode_sptr &Label::getNode() const {
+const Node_sptr &Label::getNode() {
     return _node;
 }
 

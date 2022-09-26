@@ -13,7 +13,7 @@
 class ArrowLabel : public Label {
 public:
     explicit ArrowLabel(
-        CstNode_sptr node,
+        Node_sptr node,
         bool isActivated = true
     );
 

@@ -113,6 +113,9 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
             return _inGamePage;
         }
     }
+    if(intersectTest(_arrowLabel->getNode())) {
+        return _parent.lock();
+    }
     return nullptr;
 }
 

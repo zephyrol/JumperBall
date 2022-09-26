@@ -7,7 +7,7 @@
 #include "ArrowLabel.h"
 
 ArrowLabel::ArrowLabel(
-    CstNode_sptr node,
+    Node_sptr node,
     bool isActivated
 ) : Label(std::move(node), isActivated) {
 }
