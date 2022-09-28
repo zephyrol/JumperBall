@@ -68,8 +68,9 @@ CstShaderProgram_sptr LabelsProcess::createLettersProcessShaderProgram(
     return shader;
 }
 
-void LabelsProcess::update(float pagePositionY) {
+void LabelsProcess::update(float pagePositionY, float levelProgression) {
     _labelsShader->use();
     _labelsShader->bindUniform("positionY", pagePositionY);
+    _labelsShader->bindUniform("levelProgression", levelProgression);
     _renderPass.update();
 }

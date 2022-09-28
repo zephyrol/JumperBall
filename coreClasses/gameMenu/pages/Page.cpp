@@ -28,3 +28,7 @@ vecCstLabel_sptr Page::labels() const {
     return {};
 }
 
+const Player_sptr &Page::player() const {
+    return _player;
+}
+

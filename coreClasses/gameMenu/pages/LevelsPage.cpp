@@ -114,7 +114,7 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
             return _inGamePage;
         }
     }
-    if(intersectTest(_arrowLabel->getNode())) {
+    if (intersectTest(_arrowLabel->getNode())) {
         return _parent.lock();
     }
     return nullptr;
@@ -147,13 +147,15 @@ vecCstTextNode_uptr LevelsPage::genTextNodes() const {
 
     for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
         const auto levelNumber = i + 1;
-        textNodes.push_back(
-            CstTextNode_uptr(new TextNode(_levels[i], (levelNumber < 10 ? "0" : "") + std::to_string(levelNumber)))
-        );
+        textNodes.push_back(CstTextNode_uptr(new TextNode(
+            _levels[i],
+            (levelNumber < 10 ? "0" : "") + std::to_string(levelNumber),
+            {1.f, static_cast<float>(levelNumber)}
+        )));
     }
 
     textNodes.push_back(
-        CstTextNode_uptr(new TextNode(_levelsTitle ,"Levels"))
+        CstTextNode_uptr(new TextNode(_levelsTitle, "Levels"))
     );
     return textNodes;
 }

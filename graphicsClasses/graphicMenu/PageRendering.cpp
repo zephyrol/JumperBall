@@ -22,8 +22,7 @@ PageRendering::PageRendering(
 }
 
 void PageRendering::update() {
-    // _pageUniformBuffer.update(_page->localPosY());
-    _lettersProcess.update(_page->localPosY());
+    _lettersProcess.update(_page->localPosY(), static_cast<float>(_page->player()->levelProgression()));
 }
 
 void PageRendering::render() const {
@@ -33,5 +32,4 @@ void PageRendering::render() const {
 
 void PageRendering::freeGPUMemory() {
     _lettersProcess.freeGPUMemory();
-    // _pageUniformBuffer.freeGPUMemory();
 }

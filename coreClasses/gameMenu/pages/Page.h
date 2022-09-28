@@ -49,6 +49,8 @@ public:
 
     virtual vecCstTextNode_uptr genTextNodes() const = 0;
 
+    const Player_sptr& player() const;
+
     virtual void update(bool isPressed, float screenPosY);
 
     virtual void resize(float ratio) = 0;
