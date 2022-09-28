@@ -23,7 +23,7 @@ PageRendering::PageRendering(
 
 void PageRendering::update() {
     // _pageUniformBuffer.update(_page->localPosY());
-    _lettersProcess.update();
+    _lettersProcess.update(_page->localPosY());
 }
 
 void PageRendering::render() const {

@@ -5,15 +5,15 @@
 #ifndef JUMPERBALLAPPLICATION_LEVELSPAGE_H
 #define JUMPERBALLAPPLICATION_LEVELSPAGE_H
 
-#include "Page.h"
 #include "gameMenu/labels/ArrowLabel.h"
+#include "ScrollablePage.h"
 
 
 class LevelsPage;
 
 using LevelsPage_sptr = std::shared_ptr<LevelsPage>;
 
-class LevelsPage : public Page {
+class LevelsPage : public ScrollablePage {
 public:
     static LevelsPage_sptr createInstance(
         Player_sptr player,

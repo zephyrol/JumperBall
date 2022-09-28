@@ -18,8 +18,9 @@ LevelsPage::LevelsPage(
     std::vector<Node_sptr> &&levels,
     std::shared_ptr<ArrowLabel> &&arrowLabel,
     const Page_sptr &parent
-) : Page(
-    std::move(player)
+) : ScrollablePage(
+    std::move(player),
+    5.f
 ),
     _parent(parent),
     _levelsTitle(std::move(levelsTitle)),
