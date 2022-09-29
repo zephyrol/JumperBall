@@ -13,9 +13,9 @@ void main() {
         ? 1.0
         : texture(characterTexture, vec2(fs_vertexUVs.x, fs_vertexUVs.y)).x;
 
-    vec3 color = fs_labelType.x == 1.0 && fs_labelType.y > 0 && fs_labelType.y > levelProgression
+    vec3 color = fs_labelType.x == 1.0 && fs_labelType.y > 0.0 && fs_labelType.y > levelProgression
         ? fs_vertexColor * 0.2
-        : fs_vertexColor
+        : fs_vertexColor;
 
-    pixelColor = vec4(fs_vertexColor, alpha);
+    pixelColor = vec4(color, alpha);
 }
