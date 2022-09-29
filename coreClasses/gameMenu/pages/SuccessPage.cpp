@@ -95,7 +95,11 @@ Page_sptr SuccessPage::click(float mouseX, float mouseY) {
         return _parent.lock();
     }
     if (intersectTest(_continueNode)) {
-        _player->setCurrentLevel(_player->getCurrentLevel() + 1);
+        const unsigned int nextLevel = _player->getCurrentLevel() + 1;
+        if(nextLevel > Player::maxLevel) {
+            return nullptr;
+        }
+        _player->setCurrentLevel(nextLevel);
         return _inGamePage;
     }
     return nullptr;

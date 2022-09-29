@@ -20,7 +20,7 @@ LevelsPage::LevelsPage(
     const Page_sptr &parent
 ) : ScrollablePage(
     std::move(player),
-    3.2f
+    3.f
 ),
     _parent(parent),
     _levelsTitle(std::move(levelsTitle)),
@@ -110,6 +110,9 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
     for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
         if (intersectTest(_levels[i])) {
             const auto levelNumber = i + 1;
+            if(levelNumber > _player->levelProgression()) {
+                return nullptr;
+            }
             _player->setCurrentLevel(levelNumber);
             return _inGamePage;
         }

@@ -63,7 +63,7 @@ private:
 
     static Node_sptr getCommonNode(float ratio);
 
-    static constexpr size_t numberOfLevels = 100;
+    static constexpr size_t numberOfLevels = 99;
 };
 
 template<class T>

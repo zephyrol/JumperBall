@@ -97,6 +97,11 @@ void Player::speedLevelUp() {
 void Player::setCurrentLevel(size_t levelNumber) {
     _currentLevel = levelNumber;
     _status = Player::Status::InTransition;
+
+    // Update level number
+    if(levelNumber > _levelProgression) {
+        _levelProgression = levelNumber;
+    }
 }
 
 size_t Player::getCurrentLevel() const {

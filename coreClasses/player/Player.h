@@ -73,6 +73,8 @@ public:
     bool isALoser() const;
     void resetGameStatus();
 
+    static constexpr unsigned int maxLevel = 2;
+
 private:
 
     Status _status;
@@ -93,7 +95,6 @@ private:
     unsigned int _clockItemLevel;
     unsigned int _bonusLevel;
     bool _wantsToQuit;
-
 };
 
 #endif /* PLAYER_H */
