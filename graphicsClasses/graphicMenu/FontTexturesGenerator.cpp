@@ -233,16 +233,21 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
     unsigned int bitmapWidth,
     unsigned int bitmapHeight
 ) {
+
+    // Add a blank line and column to avoid neighbor pixel picking through linear
+    const auto extendedWidth = bitmapWidth + 1;
+    const auto extendedHeight = bitmapHeight + 1;
+
     const auto drawingCursor = [&]() -> glm::ivec2 {
-        if (lettersTexture.cursor.x + bitmapWidth > screenWidth) {
+        if (lettersTexture.cursor.x + extendedWidth > screenWidth) {
             return {0.f, lettersTexture.height};
         }
         return lettersTexture.cursor;
     }();
 
     const glm::ivec2 outputSize = {
-        std::max(lettersTexture.width, drawingCursor.x + bitmapWidth),
-        std::max(lettersTexture.height, drawingCursor.y + bitmapHeight)
+        std::max(lettersTexture.width, drawingCursor.x + extendedWidth),
+        std::max(lettersTexture.height, drawingCursor.y + extendedHeight)
     };
 
     const auto getIndex = [](unsigned int line, unsigned int column, unsigned int width) {
@@ -284,10 +289,15 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
 
     // Update cursor
     lettersTexture.cursor = {
-        drawingCursor.x + bitmapWidth,
+        drawingCursor.x + extendedWidth,
         drawingCursor.y
     };
-    return {drawingCursor.x, drawingCursor.y, drawingCursor.x + bitmapWidth, drawingCursor.y + bitmapHeight};
+    return {
+        drawingCursor.x,
+        drawingCursor.y,
+        drawingCursor.x + bitmapWidth,
+        drawingCursor.y + bitmapHeight
+    };
 }
 
 GLuint FontTexturesGenerator::getLettersTexture() const {

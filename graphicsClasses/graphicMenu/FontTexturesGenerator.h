@@ -136,6 +136,15 @@ private:
         unsigned int nodePixelHeight
     );
 
+    /**
+     * Insert bitmap character into letters texture.
+     * @param screenWidth Width of the screen.
+     * @param lettersTexture Current letters texture reference. This is directly modified (side effect).
+     * @param letterBitmap Buffer containing letter.
+     * @param bitmapWidth Width of the letter in pixels.
+     * @param bitmapHeight Height of the letter in pixels.
+     * @return vec4 containing uvMinX, uvMinY, uvMaxX, uvMaxY of the letter in the texture (in pixels).
+     */
     static glm::ivec4 insertCharacterToTexture(
         size_t screenWidth,
         FontTexturesGenerator::LettersTexture &lettersTexture,
