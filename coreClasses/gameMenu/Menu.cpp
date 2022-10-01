@@ -73,7 +73,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr &player, float r
     pausePage->setInGamePage(inGamePage);
 
 
-    const vecPage_sptr pages{titlePage, levelsPage};
+    const vecPage_sptr pages{titlePage, levelsPage, pausePage, inGamePage, successPage, failurePage};
     return std::make_shared<Menu>(
         player,
         successPage,

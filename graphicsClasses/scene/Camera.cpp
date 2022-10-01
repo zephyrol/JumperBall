@@ -294,10 +294,10 @@ void Camera::setRatio(float ratio) {
 }
 
 float Camera::computeFovY(float ratio) noexcept {
-    constexpr float defaultFovy = 1.22173f;// 70 degrees;
+    constexpr float defaultFovY = 1.22173f;// 70 degrees;
     return ratio > 1.f
-           ? defaultFovy
-           : 2.f * atanf((1.f / ratio) * tanf(defaultFovy / 2.f));
+           ? defaultFovY
+           : 2.f * atanf((1.f / ratio) * tanf(defaultFovY / 2.f));
 }
 
 float Camera::computeLocalOffset(float fovY) noexcept {
