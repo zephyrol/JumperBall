@@ -22,7 +22,7 @@
 #include "geometry/Cube.h"
 #include "geometry/Quad.h"
 #include "geometry/Triangle.h"
-#include "system/Geometry.h"
+#include "gameMenu/Geometry.h"
 #include "FrameBuffer.h"
 #include "process/Mesh.h"
 #include "graphicMenu/FontTexturesGenerator.h"

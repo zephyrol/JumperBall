@@ -8,12 +8,11 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
-#include "Types.h"
+#include "system/Types.h"
 
 class Geometry;
 
 using vecGeometry = std::vector<Geometry>;
-
 
 class Geometry {
 public:

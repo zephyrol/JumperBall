@@ -8,7 +8,7 @@
 #ifndef LABEL_H
 #define LABEL_H
 
-#include "system/Geometry.h"
+#include "gameMenu/Geometry.h"
 #include "scene/SceneElement.h"
 #include "gameMenu/nodes/Node.h"
 #include <fstream>

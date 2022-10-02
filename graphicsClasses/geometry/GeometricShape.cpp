@@ -100,8 +100,9 @@ void GeometricShape::concatIndices (
     size_t offset
     ) {
     IndicesBuffer newIndices = otherIndices;
-    for (GLushort& newIndice : newIndices) {
-        newIndice += static_cast <GLushort>(offset);
+    const auto ushortOffset = static_cast<GLushort>(offset);
+    for (GLushort& newIndex : newIndices) {
+        newIndex += ushortOffset;
     }
     Utility::concatVector(currentIndices, newIndices);
 }
