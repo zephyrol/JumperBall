@@ -17,9 +17,7 @@ using vecGeometry = std::vector<Geometry>;
 
 class Geometry {
 public:
-    enum class Shape {
-        Triangle, Quad, Cube, Sphere, Cylinder, Pyramid, Socle
-    };
+    enum class Shape { Triangle, Quad };
     using ShapeTranslation = std::array<float, 3>;
     using ShapeRotation = std::array<float, 3>;
     using ShapeScale = std::array<float, 3>;

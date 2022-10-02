@@ -9,7 +9,7 @@
 #define MENU_H
 
 #include "gameMenu/pages/Page.h"
-#include "gameMenu/labels/MessageLabel.h"
+#include "gameMenu/labels/TextLabel.h"
 #include "gameMenu/labels/ArrowLabel.h"
 #include <player/Player.h>
 

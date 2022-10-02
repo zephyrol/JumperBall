@@ -44,25 +44,7 @@ void Label::updateLabelsLevels(vecLabel_sptr &labels, size_t end) {
 }
 
 vecGeometry Label::genGeometries() const {
-    const auto& screenTransform = _node->getTransform();
-    return {
-        Geometry(
-            Geometry::Shape::Quad,
-            {
-                // convert to -1,1 space
-                screenTransform.positionX,
-                screenTransform.positionY,
-                0.f
-            },
-            {
-                0.f, 0.f, 0.f
-            },
-            {
-                screenTransform.width,
-                screenTransform.height
-            }
-        )
-    };
+    return {};
 }
 
 const Node_sptr &Label::getNode() {
@@ -73,15 +55,54 @@ SceneElement::GlobalState Label::getGlobalState() const {
     return GlobalState::United;
 }
 
-Geometry::ShapeScale Label::transformScale(const Geometry::ShapeScale &scale) const {
-    return { scale.at(0) * _node->width(), scale.at(1) * _node->height(), scale.at(2) };
+Geometry Label::createDisplayableTriangle(
+    float localX,
+    float localY,
+    const JBTypes::Direction &dir,
+    float triangleWidth
+) const {
+
+    const auto getRotation = [&dir]() -> Geometry::ShapeRotation {
+        if (dir == JBTypes::Direction::East) {
+            return {0.f, 0.f, static_cast<float>(-M_PI_2)};
+        }
+        if (dir == JBTypes::Direction::West) {
+            return {0.f, 0.f, static_cast<float>(M_PI_2)};
+        }
+        if (dir == JBTypes::Direction::South) {
+            return {0.f, 0.f, static_cast<float>(M_PI)};
+        }
+        return {0.f, 0.f, 0.f};
+    };
+
+    return Geometry(
+        Geometry::Shape::Triangle,
+        {
+            (_node->positionX() + localX * _node->width()) * 2.f,
+            (_node->positionY() + localY * _node->height()) * 2.f,
+            0.f
+        },
+        getRotation(),
+        {_node->width() * triangleWidth, _node->height(), 1.f}
+    );
 }
 
-Geometry::ShapeTranslation Label::transformTranslate(const Geometry::ShapeTranslation &translation) const {
-    return {
-        translation.at(0) * _node->width() + _node->positionX() * 2.f,
-        translation.at(1) * _node->height() + _node->positionY() * 2.f,
-        translation.at(2)
-    };
+Geometry Label::createDisplayableQuad(
+    float localX,
+    float localY,
+    float quadScaleX,
+    float quadScaleY
+) const {
+    return Geometry(
+        Geometry::Shape::Quad,
+        {
+            (_node->positionX() + localX * _node->width()) * 2.f,
+            (_node->positionY() + localY * _node->height()) * 2.f,
+            0.f
+        },
+        { 0.f, 0.f, 0.f },
+        {_node->width() * quadScaleX, _node->height() * quadScaleY, 1.f}
+    );
 }
+
 

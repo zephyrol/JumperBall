@@ -1,25 +1,25 @@
 /*
- * File: MessageLabel.h
+ * File: TextLabel.h
  * Author: Morgenthaler S
  *
  * Created on 28 avril 2020, 19:43
  */
 
 
-#ifndef MESSAGELABEL_H
-#define MESSAGELABEL_H
+#ifndef TEXTLABEL_H
+#define TEXTLABEL_H
 
 #include "Label.h"
 #include "gameMenu/nodes/TextNode.h"
 
-class MessageLabel;
+class TextLabel;
 
-using MessageLabel_sptr = std::shared_ptr<MessageLabel>;
-using CstMessageLabel_sptr = std::shared_ptr<const MessageLabel>;
-using vecCstMessageLabel_sptr = std::vector<CstMessageLabel_sptr>;
-using vecMessageLabel_sptr = std::vector<MessageLabel_sptr>;
+using TextLabel_sptr = std::shared_ptr<TextLabel>;
+using CstTextLabel_sptr = std::shared_ptr<const TextLabel>;
+using vecCstTextLabel_sptr = std::vector<CstTextLabel_sptr>;
+using vecTextLabel_sptr = std::vector<TextLabel_sptr>;
 
-class MessageLabel : public Label {
+class TextLabel : public Label {
 public:
 
     struct CharacterLocalTransform {
@@ -69,7 +69,7 @@ public:
     using LettersUvs_sptr = std::shared_ptr<LettersUvs>;
     using CstLettersUvs_sptr = std::shared_ptr<const LettersUvs>;
 
-    MessageLabel(
+    TextLabel(
         CstTextNode_uptr &&textNode,
         const Node_sptr& suitedNode,
         LettersUvs_sptr lettersUvs,
@@ -97,4 +97,4 @@ private:
 
 };
 
-#endif // MESSAGELABEL_H
+#endif // TEXTLABEL_H

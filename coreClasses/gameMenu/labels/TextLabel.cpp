@@ -1,13 +1,13 @@
 /*
- * File: MessageLabel.cpp
+ * File: TextLabel.cpp
  * Author: Morgenthaler S
  *
  * Created on 28 avril 2020, 19:43
  */
-#include "MessageLabel.h"
+#include "TextLabel.h"
 #include <utility>
 
-MessageLabel::MessageLabel(
+TextLabel::TextLabel(
     CstTextNode_uptr &&textNode,
     const Node_sptr& suitedNode,
     LettersUvs_sptr lettersUvs,
@@ -22,11 +22,11 @@ MessageLabel::MessageLabel(
     _letterHashes(createLetterHashes()) {
 }
 
-std::string MessageLabel::message() const {
+std::string TextLabel::message() const {
     return _textNode->text();
 }
 
-vecGeometry MessageLabel::genGeometries() const {
+vecGeometry TextLabel::genGeometries() const {
     vecGeometry geometries{};
     const auto &screenTransform = _node->getTransform();
     auto baseX = screenTransform.positionX - screenTransform.width / 2.f;
@@ -80,7 +80,7 @@ vecGeometry MessageLabel::genGeometries() const {
     return geometries;
 }
 
-std::vector<std::string> MessageLabel::createLetterHashes() const {
+std::vector<std::string> TextLabel::createLetterHashes() const {
     std::vector<std::string> letterHashes{};
     for (unsigned char c: _textNode->text()) {
         letterHashes.push_back(createLetterHash(_lettersSize, c));
@@ -88,13 +88,13 @@ std::vector<std::string> MessageLabel::createLetterHashes() const {
     return letterHashes;
 }
 
-MessageLabel::LetterHash MessageLabel::createLetterHash(size_t fontSize, unsigned char letter) {
-    MessageLabel::LetterHash hash = std::to_string(fontSize) + ",";
+TextLabel::LetterHash TextLabel::createLetterHash(size_t fontSize, unsigned char letter) {
+    TextLabel::LetterHash hash = std::to_string(fontSize) + ",";
     hash += static_cast<char>(letter);
     return hash;
 }
 
-SceneElement::StaticValues<JBTypes::vec2f> MessageLabel::getStaticVec2fValues() const {
+SceneElement::StaticValues<JBTypes::vec2f> TextLabel::getStaticVec2fValues() const {
     return {_textNode->staticProperty()};
 }
 

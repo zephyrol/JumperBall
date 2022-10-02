@@ -51,16 +51,34 @@ protected:
     const Node_sptr _node;
 
     /**
-     * Apply node transform on a scale transform.
-     * @return The new scale
+     * Create a displayable triangle geometry respecting the node position and scale.
+     *  @param localX X position in range [-0.5, 0.5]
+     *  @param localY Y position in range [-0.5, 0.5]
+     *  @param dir Triangle direction
+     *  @param triangleWidth Triangle width. Width = 1 means that the triangle covers the entire node space.
+     *  @return Geometry to display in menu
      */
-    Geometry::ShapeScale transformScale(const Geometry::ShapeScale &scale) const;
+    Geometry createDisplayableTriangle(
+        float localX,
+        float localY,
+        const JBTypes::Direction &dir,
+        float triangleWidth
+    ) const;
 
     /**
-     * Apply node transform on a translate transform
-     * @return The new translation
+     * Create a displayable quad geometry respecting the node position and scale.
+     *  @param localX X position in range [-0.5, 0.5]
+     *  @param localY Y position in range [-0.5, 0.5]
+     *  @param quadScaleX Quad X scale. Scale = 1 means that the quad covers the entire node space.
+     *  @param quadScaleY Quad X scale. Scale = 1 means that the quad covers the entire node space.
+     *  @return Geometry to display in menu
      */
-    Geometry::ShapeTranslation transformTranslate(const Geometry::ShapeTranslation &translation) const;
+    Geometry createDisplayableQuad(
+        float localX,
+        float localY,
+        float quadScaleX,
+        float quadScaleY
+    ) const;
 
 private:
     bool _isActivated;
