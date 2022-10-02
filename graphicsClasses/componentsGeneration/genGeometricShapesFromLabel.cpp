@@ -22,21 +22,6 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel(const Label
                 case Geometry::Shape::Triangle:
                     return std::make_shared<const Triangle>(model, normalTransform);
                     break;
-                case Geometry::Shape::Cube:
-                    return std::make_shared<const Cube>(model, normalTransform);
-                    break;
-                case Geometry::Shape::Cylinder:
-                    return std::make_shared<const Cylinder>(60, model, normalTransform);
-                    break;
-                case Geometry::Shape::Socle:
-                    return std::make_shared<const Cylinder>(4, model, normalTransform);
-                    break;
-                case Geometry::Shape::Pyramid:
-                    return std::make_shared<const Pyramid>(model, normalTransform);
-                    break;
-                case Geometry::Shape::Sphere:
-                    return std::make_shared<const Sphere>(model, normalTransform);
-                    break;
                 default:
                     return std::make_shared<const Quad>(model, normalTransform);
                     break;

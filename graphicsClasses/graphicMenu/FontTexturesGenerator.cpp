@@ -11,7 +11,7 @@
 
 FontTexturesGenerator::FontTexturesGenerator(
     const FontTexturesGenerator::LettersTexture &lettersTexture,
-    vecMessageLabel_sptr &&messageLabels
+    vecTextLabel_sptr &&messageLabels
 ) : _lettersTexture(lettersTexture),
     _messageLabels(std::move(messageLabels)) {
 }
@@ -64,7 +64,7 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphi
     unsigned char character
 ) {
 
-    const auto hash = MessageLabel::createLetterHash(static_cast<size_t>(pixelHeight), character);
+    const auto hash = TextLabel::createLetterHash(static_cast<size_t>(pixelHeight), character);
     const auto &iterator = lettersTexture.graphicAlphabet.find(hash);
     if (iterator != lettersTexture.graphicAlphabet.end()) {
         return iterator->second;
@@ -100,13 +100,13 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphi
     return graphicCharacter;
 }
 
-std::vector<MessageLabel::CharacterLocalTransform> FontTexturesGenerator::getCharacterLocalTransforms(
+std::vector<TextLabel::CharacterLocalTransform> FontTexturesGenerator::getCharacterLocalTransforms(
     const std::vector<GraphicCharacter> &graphicCharacters,
     unsigned int nodePixelWidth,
     unsigned int nodePixelHeight
 ) {
 
-    std::vector<MessageLabel::CharacterLocalTransform> localTransforms{};
+    std::vector<TextLabel::CharacterLocalTransform> localTransforms{};
     const auto fNodePixelWidth = static_cast<float>(nodePixelWidth);
     const auto fNodePixelHeight = static_cast<float>(nodePixelHeight);
 
@@ -125,7 +125,7 @@ std::vector<MessageLabel::CharacterLocalTransform> FontTexturesGenerator::getCha
     return localTransforms;
 }
 
-const vecMessageLabel_sptr &FontTexturesGenerator::getMessageLabels() {
+const vecTextLabel_sptr &FontTexturesGenerator::getMessageLabels() {
     return _messageLabels;
 }
 
@@ -139,8 +139,8 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
     FontTexturesGenerator::LettersTexture lettersTexture;
 
     // 1. Generate message labels
-    vecMessageLabel_sptr messageLabels{};
-    auto lettersUvs = std::make_shared<MessageLabel::LettersUvs>();
+    vecTextLabel_sptr messageLabels{};
+    auto lettersUvs = std::make_shared<TextLabel::LettersUvs>();
     auto textNodes = page->genTextNodes();
     // disable byte-alignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -171,7 +171,7 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
             static_cast<float>(nodePixelWidth) / static_cast<float>(nodePixelHeight)
         );
 
-        messageLabels.push_back(std::make_shared<MessageLabel>(
+        messageLabels.push_back(std::make_shared<TextLabel>(
             std::move(textNode),
             centeredNode,
             lettersUvs,

@@ -26,7 +26,7 @@ GeometricShape::ShapeVertexAttributes GeometricShape::genVertexAttributes() cons
 
             const std::vector <glm::vec3> positions = genPositions();
             for (const glm::vec3& position : positions) {
-                computedPositions.push_back(_modelTransform * glm::vec4(position, 1.f));
+                computedPositions.emplace_back(_modelTransform * glm::vec4(position, 1.f));
             }
             return computedPositions;
         };
@@ -37,7 +37,7 @@ GeometricShape::ShapeVertexAttributes GeometricShape::genVertexAttributes() cons
 
             const std::vector <glm::vec3> normals = genNormals();
             for (const glm::vec3& normal : normals) {
-                computedNormals.push_back(_normalsTransform * glm::vec4(normal, 1.f));
+                computedNormals.emplace_back(_normalsTransform * glm::vec4(normal, 1.f));
             }
             return computedNormals;
         };

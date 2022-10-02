@@ -59,7 +59,7 @@ std::vector <glm::vec3> Triangle::genNormals() const {
 }
 
 std::vector <glm::vec3> Triangle::genColors (const std::vector <glm::vec3>& colors) const {
-    return colors.size() > 0
+    return !colors.empty()
            ? GeometricShape::createCustomColorBuffer(colors.at(0), basicPositionsTriangle.size())
            : basicColorsTriangle;
 }

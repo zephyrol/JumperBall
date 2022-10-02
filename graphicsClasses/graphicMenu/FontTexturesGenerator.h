@@ -40,7 +40,7 @@ class FontTexturesGenerator {
     /**
      * Graphic character key containing the character and its font size in pixels
      */
-    using GraphicAlphabet = std::unordered_map<MessageLabel::LetterHash, GraphicCharacter>;
+    using GraphicAlphabet = std::unordered_map<TextLabel::LetterHash, GraphicCharacter>;
 
     /**
      * Struct containing letters texture state
@@ -87,7 +87,7 @@ public:
 
     FontTexturesGenerator(
         const LettersTexture &lettersTexture,
-        vecMessageLabel_sptr &&messageLabels
+        vecTextLabel_sptr &&messageLabels
     );
 
     FontTexturesGenerator(const FontTexturesGenerator &ft) = default;
@@ -105,13 +105,13 @@ public:
 
     GLuint getLettersTexture() const;
 
-    const vecMessageLabel_sptr &getMessageLabels();
+    const vecTextLabel_sptr &getMessageLabels();
 
 private:
 
     const LettersTexture _lettersTexture;
 
-    const vecMessageLabel_sptr _messageLabels;
+    const vecTextLabel_sptr _messageLabels;
 
 
     /**
@@ -130,7 +130,7 @@ private:
         unsigned char character
     );
 
-    static std::vector<MessageLabel::CharacterLocalTransform> getCharacterLocalTransforms(
+    static std::vector<TextLabel::CharacterLocalTransform> getCharacterLocalTransforms(
         const std::vector<GraphicCharacter> &graphicCharacters,
         unsigned int nodePixelWidth,
         unsigned int nodePixelHeight
