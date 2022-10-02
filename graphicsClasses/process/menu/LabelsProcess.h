@@ -23,18 +23,22 @@ public:
     );
 
     void render() const override;
-    void update(float pagePositionY, float levelProgression);
+    void update();
     void freeGPUMemory() override;
     vecCstShaderProgram_sptr getShaderPrograms() const override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
 
 private:
+    const CstPage_sptr _page;
+    const std::vector<std::string> _uniformNames;
     FontTexturesGenerator _fontTexturesGenerator;
     RenderPass _renderPass;
     const CstShaderProgram_sptr _labelsShader;
 
-    static CstShaderProgram_sptr createLettersProcessShaderProgram(
-        const JBTypes::FileContent& fileContent
+    static CstShaderProgram_sptr
+    createLettersProcessShaderProgram(
+        const JBTypes::FileContent &fileContent,
+        const CstPage_sptr &page
     );
 };
 

@@ -34,11 +34,10 @@ public:
 
 private:
 
-    const CstPage_sptr& _page;
     const FontTexturesGenerator::FTContent &_ftContent;
     const JBTypes::FileContent &_fileContent;
 
-    LabelsProcess _lettersProcess;
+    LabelsProcess _labelsProcess;
 
 };
 

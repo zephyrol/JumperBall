@@ -14,22 +14,20 @@ PageRendering::PageRendering(
     const JBTypes::FileContent &fileContent
 ) :
     Rendering(width, height),
-    _page(page),
     _ftContent(ftContent),
     _fileContent(fileContent),
-    _lettersProcess(_fileContent, _ftContent, width, height, page)
+    _labelsProcess(_fileContent, _ftContent, width, height, page)
 {
 }
 
 void PageRendering::update() {
-    _lettersProcess.update(_page->localPosY(), static_cast<float>(_page->player()->levelProgression()));
+    _labelsProcess.update();
 }
 
 void PageRendering::render() const {
-    // _pageUniformBuffer.bindBufferRange();
-    _lettersProcess.render();
+    _labelsProcess.render();
 }
 
 void PageRendering::freeGPUMemory() {
-    _lettersProcess.freeGPUMemory();
+    _labelsProcess.freeGPUMemory();
 }

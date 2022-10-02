@@ -4,22 +4,29 @@
 
 #ifndef JUMPERBALLAPPLICATION_SCROLLABLEPAGE_H
 #define JUMPERBALLAPPLICATION_SCROLLABLEPAGE_H
+
 #include "Page.h"
 
 
-class ScrollablePage: public Page {
+class ScrollablePage : public Page {
 
 public:
+    // Slide state => timepoint and yScreenPosition
+    using slideState = std::pair<JBTypes::timePointMs, float>;
 
     explicit ScrollablePage(
         Player_sptr &&player,
         float height
     );
 
-    float localPosY() const override;
 
     void update(bool isPressed, float screenPosY) override;
 
+    std::string shaderDefine() const override;
+
+    std::vector<std::string> getUniformNames() const override;
+
+    std::vector<float> getUniformValues() const override;
 
 private:
     constexpr static float decelerationCoefficient = 10.f; // pagePourcentage /s^2

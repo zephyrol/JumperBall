@@ -12,6 +12,8 @@ LabelsProcess::LabelsProcess(
     GLsizei height,
     const CstPage_sptr &page
 ) :
+    _page(page),
+    _uniformNames(_page->getUniformNames()),
     _fontTexturesGenerator(FontTexturesGenerator::createInstance(width, height, page, ftContent)),
     _renderPass([this, &page]() {
         vecMesh_sptr meshes;
@@ -29,7 +31,7 @@ LabelsProcess::LabelsProcess(
         }
         return meshes;
     }()),
-    _labelsShader(createLettersProcessShaderProgram(fileContent)) {
+    _labelsShader(createLettersProcessShaderProgram(fileContent, _page)) {
 }
 
 void LabelsProcess::render() const {
@@ -55,22 +57,37 @@ vecCstShaderProgram_sptr LabelsProcess::getShaderPrograms() const {
 }
 
 
-CstShaderProgram_sptr LabelsProcess::createLettersProcessShaderProgram(
-    const JBTypes::FileContent &fileContent
+CstShaderProgram_sptr
+LabelsProcess::createLettersProcessShaderProgram(
+    const JBTypes::FileContent &fileContent,
+    const CstPage_sptr &page
 ) {
+    const auto shaderDefine = page->shaderDefine();
+
+    const auto getDefines = [&shaderDefine]() -> std::vector<std::string> {
+        if (shaderDefine.empty()) {
+            return {};
+        }
+        return {shaderDefine};
+    };
     auto shader = ShaderProgram::createShaderProgram(
         fileContent,
         "fontVs.vs",
-        "fontFs.fs"
+        "fontFs.fs",
+        getDefines()
         //"labelVs.vs",
         //"labelFs.fs"
     );
     return shader;
 }
 
-void LabelsProcess::update(float pagePositionY, float levelProgression) {
+void LabelsProcess::update() {
     _labelsShader->use();
-    _labelsShader->bindUniform("positionY", pagePositionY);
-    _labelsShader->bindUniform("levelProgression", levelProgression);
+
+    const auto uniformValues = _page->getUniformValues();
+    for (size_t i = 0; i < _uniformNames.size(); ++i) {
+        _labelsShader->bindUniform(_uniformNames[i], uniformValues[i]);
+    }
+
     _renderPass.update();
 }

@@ -24,10 +24,6 @@ using vecPage_sptr = std::vector<Page_sptr>;
 class Page {
 public:
 
-
-    // Slide state => timepoint and yScreenPosition
-    using slideState = std::pair<JBTypes::timePointMs, float>;
-
     explicit Page(Player_sptr &&player);
 
     virtual ~Page() = default;
@@ -43,13 +39,14 @@ public:
      */
     virtual Page_sptr click(float mouseX, float mouseY) = 0;
 
-    virtual float localPosY() const;
-
     virtual vecCstLabel_sptr labels() const;
 
-    virtual vecCstTextNode_uptr genTextNodes() const = 0;
+    virtual std::string shaderDefine() const;
 
-    const Player_sptr& player() const;
+    virtual std::vector<std::string> getUniformNames() const;
+    virtual std::vector<float> getUniformValues() const;
+
+    virtual vecCstTextNode_uptr genTextNodes() const = 0;
 
     virtual void update(bool isPressed, float screenPosY);
 

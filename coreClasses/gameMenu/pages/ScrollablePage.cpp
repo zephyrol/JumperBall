@@ -17,10 +17,6 @@ ScrollablePage::ScrollablePage(Player_sptr &&player, float height) :
     _releaseVelocity(0.f) {
 }
 
-float ScrollablePage::localPosY() const {
-    return _localPosY;
-}
-
 void ScrollablePage::update(bool isPressed, float screenPosY) {
 
     const auto now = JBTypesMethods::getTimePointMSNow();
@@ -81,4 +77,16 @@ void ScrollablePage::update(bool isPressed, float screenPosY) {
         else if (_localPosY > _height - 1.f) _localPosY = _height - 1.f;
     }
 
+}
+
+std::string ScrollablePage::shaderDefine() const {
+    return "SCROLLABLE";
+}
+
+std::vector<std::string> ScrollablePage::getUniformNames() const {
+    return {"positionY", "levelProgression"};
+}
+
+std::vector<float> ScrollablePage::getUniformValues() const {
+    return {_localPosY, static_cast<float>(_player->levelProgression())};
 }

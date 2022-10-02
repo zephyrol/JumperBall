@@ -16,11 +16,6 @@ Page_wptr Page::parent() {
     return {};
 }
 
-float Page::localPosY() const {
-    return 0.f;
-}
-
-
 void Page::update(bool, float) {
 }
 
@@ -28,7 +23,15 @@ vecCstLabel_sptr Page::labels() const {
     return {};
 }
 
-const Player_sptr &Page::player() const {
-    return _player;
+std::string Page::shaderDefine() const {
+    return "";
+}
+
+std::vector<std::string> Page::getUniformNames() const {
+    return {};
+}
+
+std::vector<float> Page::getUniformValues() const {
+    return {};
 }
 

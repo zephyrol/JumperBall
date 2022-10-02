@@ -1,4 +1,6 @@
-uniform float positionY;
+#ifdef(SCROLLABLE)
+    uniform float positionY;
+#endif
 
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
@@ -14,5 +16,10 @@ void main() {
     fs_vertexColor = vs_vertexColor;
     fs_labelType = vs_labelType;
 
-    gl_Position = vec4(vs_vertexPosition.xy + vec2(0.0, positionY), 0.0, 1.0);
+    vec2 positionXY = vs_vertexPosition.xy;
+    #ifdef(SCROLLABLE)
+        positionXY += vec2(0.0, positionY);
+    #endif
+
+    gl_Position = vec4(positionXY, 0.0, 1.0);
 }
