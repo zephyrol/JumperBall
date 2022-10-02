@@ -9,7 +9,7 @@
 #include "blocks/Transformation.h"
 #include <list>
 
-// TODO: merge it with Geometry class
+// TODO: merge it with LabelGeometry class
 
 class Shape;
 using Shape_sptr = std::shared_ptr <Shape>;

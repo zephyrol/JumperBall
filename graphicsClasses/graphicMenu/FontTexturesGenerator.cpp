@@ -11,9 +11,9 @@
 
 FontTexturesGenerator::FontTexturesGenerator(
     const FontTexturesGenerator::LettersTexture &lettersTexture,
-    vecTextLabel_sptr &&messageLabels
+    vecTextLabel_sptr &&textLabels
 ) : _lettersTexture(lettersTexture),
-    _messageLabels(std::move(messageLabels)) {
+    _messageLabels(std::move(textLabels)) {
 }
 
 
@@ -125,7 +125,7 @@ std::vector<TextLabel::CharacterLocalTransform> FontTexturesGenerator::getCharac
     return localTransforms;
 }
 
-const vecTextLabel_sptr &FontTexturesGenerator::getMessageLabels() {
+const vecTextLabel_sptr &FontTexturesGenerator::getTextLabels() {
     return _messageLabels;
 }
 
@@ -139,7 +139,7 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
     FontTexturesGenerator::LettersTexture lettersTexture;
 
     // 1. Generate message labels
-    vecTextLabel_sptr messageLabels{};
+    vecTextLabel_sptr textLabels{};
     auto lettersUvs = std::make_shared<TextLabel::LettersUvs>();
     auto textNodes = page->genTextNodes();
     // disable byte-alignment restriction
@@ -171,13 +171,13 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
             static_cast<float>(nodePixelWidth) / static_cast<float>(nodePixelHeight)
         );
 
-        messageLabels.push_back(std::make_shared<TextLabel>(
+        textLabels.push_back(std::make_shared<TextLabel>(
             std::move(textNode),
             centeredNode,
             lettersUvs,
             getCharacterLocalTransforms(transforms, nodePixelWidth, nodePixelHeight),
             nodePixelHeight,
-            true // TODO change it
+            JBTypes::Color::Blue
         ));
 
     }
@@ -221,7 +221,7 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
 
     return {
         lettersTexture,
-        std::move(messageLabels)
+        std::move(textLabels)
     };
 }
 

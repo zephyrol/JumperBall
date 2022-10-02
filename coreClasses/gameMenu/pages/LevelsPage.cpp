@@ -103,8 +103,8 @@ Node_sptr LevelsPage::getCommonNode(float ratio) {
 
 Page_sptr LevelsPage::click(float mouseX, float mouseY) {
 
-    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
-        return node->intersect(mouseX, mouseY);
+    const auto intersectTest = [this, &mouseX, &mouseY](const Node_sptr &node) {
+        return node->intersect(mouseX, mouseY - getOffsetY());
     };
 
     for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
@@ -133,7 +133,10 @@ Node_sptr LevelsPage::createLevelsTitleNode(const Node_sptr &headerNode) {
 
 std::shared_ptr<ArrowLabel> LevelsPage::createArrowLabel(const Node_sptr &headerNode) {
     const auto leftNode = std::make_shared<LeftNode>(headerNode, 1.f);
-    auto arrowLabel = std::make_shared<ArrowLabel>(leftNode);
+    auto arrowLabel = std::make_shared<ArrowLabel>(
+        leftNode,
+        JBTypes::Color::Blue
+    );
     return arrowLabel;
 }
 

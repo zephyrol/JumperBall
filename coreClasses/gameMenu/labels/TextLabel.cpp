@@ -9,12 +9,12 @@
 
 TextLabel::TextLabel(
     CstTextNode_uptr &&textNode,
-    const Node_sptr& suitedNode,
+    const Node_sptr &suitedNode,
     LettersUvs_sptr lettersUvs,
     std::vector<CharacterLocalTransform> &&transforms,
     size_t lettersSize,
-    bool isActivated
-) : Label(suitedNode, isActivated),
+    const JBTypes::Color &color
+) : Label(suitedNode, color),
     _textNode(std::move(textNode)),
     _lettersUvs(std::move(lettersUvs)),
     _transforms(std::move(transforms)),
@@ -26,8 +26,8 @@ std::string TextLabel::message() const {
     return _textNode->text();
 }
 
-vecGeometry TextLabel::genGeometries() const {
-    vecGeometry geometries{};
+vecLabelGeometry TextLabel::genGeometries() const {
+    vecLabelGeometry geometries{};
     const auto &screenTransform = _node->getTransform();
     auto baseX = screenTransform.positionX - screenTransform.width / 2.f;
     const auto baseY = screenTransform.positionY - screenTransform.height / 2.f;
@@ -47,8 +47,8 @@ vecGeometry TextLabel::genGeometries() const {
         const auto xPosition = baseX + (transform.bearingX + transform.width / 2.f) * screenTransform.width;
         const auto yPosition =
             baseY + (letterOffsetOriginHeight + transform.height / 2.f) * screenTransform.height;
-        const Geometry quad(
-            Geometry::Shape::Quad,
+        const LabelGeometry quad(
+            LabelGeometry::Shape::Quad,
             {
                 xPosition * 2.f,
                 yPosition * 2.f,
@@ -59,6 +59,7 @@ vecGeometry TextLabel::genGeometries() const {
                 screenTransform.width * transform.width,
                 screenTransform.height * transform.height
             },
+            _color,
             {
                 // Up left
                 {uv.uvMinX, uv.uvMaxY},

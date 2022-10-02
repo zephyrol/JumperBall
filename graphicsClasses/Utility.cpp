@@ -10,15 +10,15 @@
 #include <fstream>
 
 
-const glm::mat3 Utility::RGBToXYZ { 2.7689, 1.7517, 1.1302,
-                                    1.0000, 4.5907, 0.060100,
-                                    0.0000, 0.056508, 5.5943 };
+const glm::mat3 Utility::RGBToXYZ{2.7689, 1.7517, 1.1302,
+                                  1.0000, 4.5907, 0.060100,
+                                  0.0000, 0.056508, 5.5943};
 
 const glm::mat3 Utility::XYZToRGB = glm::inverse(Utility::XYZToRGB);
 
 
-std::vector <GLfloat> Utility::uniColorsCube (const glm::vec3& color) {
-    std::vector <GLfloat> colors;
+std::vector<GLfloat> Utility::uniColorsCube(const glm::vec3 &color) {
+    std::vector<GLfloat> colors;
     for (unsigned int i = 0; i < 36; ++i) {
         colors.push_back(color.r);
         colors.push_back(color.g);
@@ -27,9 +27,9 @@ std::vector <GLfloat> Utility::uniColorsCube (const glm::vec3& color) {
     return colors;
 }
 
-std::vector <GLfloat> Utility::computeNormals (const std::vector <GLfloat>&
-                                               positions) {
-    std::vector <GLfloat> normals;
+std::vector<GLfloat> Utility::computeNormals(const std::vector<GLfloat> &
+positions) {
+    std::vector<GLfloat> normals;
     constexpr unsigned int offsetPointA = 0;
     constexpr unsigned int offsetPointB = 3;
     constexpr unsigned int offsetPointC = 6;
@@ -50,7 +50,7 @@ std::vector <GLfloat> Utility::computeNormals (const std::vector <GLfloat>&
                     positions.at(offsetPointA + offsetCoordY),
                     positions.at(offsetPointB + offsetCoordZ) -
                     positions.at(offsetPointA + offsetCoordZ)
-                    ),
+                ),
                 glm::vec3(
                     positions.at(offsetPointC + offsetCoordX) -
                     positions.at(offsetPointB + offsetCoordX),
@@ -58,7 +58,7 @@ std::vector <GLfloat> Utility::computeNormals (const std::vector <GLfloat>&
                     positions.at(offsetPointB + offsetCoordY),
                     positions.at(offsetPointC + offsetCoordZ) -
                     positions.at(offsetPointB + offsetCoordZ)
-                    )));
+                )));
 
         glm::normalize(normal);
         for (unsigned int j = 0; j < pointsPerTriangles; j++) {
@@ -71,10 +71,9 @@ std::vector <GLfloat> Utility::computeNormals (const std::vector <GLfloat>&
 }
 
 
-
-std::vector <glm::vec3> Utility::GLfloatListToGlmVec3 (
-    const std::vector <GLfloat>& list) {
-    std::vector <glm::vec3> vecList;
+std::vector<glm::vec3> Utility::GLfloatListToGlmVec3(
+    const std::vector<GLfloat> &list) {
+    std::vector<glm::vec3> vecList;
     if ((list.size() % 3) != 0) {
         std::cerr << "Error ... Trying to convert a vector with a wrong size"
                   << std::endl;
@@ -86,9 +85,9 @@ std::vector <glm::vec3> Utility::GLfloatListToGlmVec3 (
     return vecList;
 }
 
-std::vector <glm::vec2> Utility::GLfloatListToGlmVec2 (
-    const std::vector <GLfloat>& list) {
-    std::vector <glm::vec2> vecList;
+std::vector<glm::vec2> Utility::GLfloatListToGlmVec2(
+    const std::vector<GLfloat> &list) {
+    std::vector<glm::vec2> vecList;
     if ((list.size() % 2) != 0) {
         std::cerr << "Error ... Trying to convert a vector with a wrong size"
                   << std::endl;
@@ -101,8 +100,7 @@ std::vector <glm::vec2> Utility::GLfloatListToGlmVec2 (
 }
 
 
-
-glm::mat4 Utility::rotationUpToDir (JBTypes::Dir dir) {
+glm::mat4 Utility::rotationUpToDir(JBTypes::Dir dir) {
 
     constexpr auto fPI = static_cast <float>(M_PI);
     constexpr auto fPI2 = static_cast <float>(M_PI_2);
@@ -126,14 +124,14 @@ glm::mat4 Utility::rotationUpToDir (JBTypes::Dir dir) {
 }
 
 
-float Utility::evalGauss1D (float x, float sigma) {
+float Utility::evalGauss1D(float x, float sigma) {
     return static_cast <float>(
         exp((-pow(x, 2.)) / (2. * pow(sigma, 2.))) / (sqrt(2. * M_PI * pow(sigma, 2.))));
 }
 
 
-std::vector <GLfloat> Utility::genGaussBuffer (size_t patchSize, float sigma) {
-    std::vector <GLfloat> gaussBuffer;
+std::vector<GLfloat> Utility::genGaussBuffer(size_t patchSize, float sigma) {
+    std::vector<GLfloat> gaussBuffer;
     int patchSizeInteger = static_cast <int>(patchSize);
     for (int i = -patchSizeInteger / 2; i <= patchSizeInteger / 2; i++) {
         gaussBuffer.push_back(evalGauss1D(static_cast <float>(i), sigma));
@@ -141,78 +139,100 @@ std::vector <GLfloat> Utility::genGaussBuffer (size_t patchSize, float sigma) {
     return gaussBuffer;
 }
 
-void Utility::printMatrix (const glm::mat4& m) {
+void Utility::printMatrix(const glm::mat4 &m) {
 
     std::cout <<
-        m[0][0] << " " << m[0][1] << " " << m[0][2] <<
-        " " << m[0][3] << std::endl <<
-        m[1][0] << " " << m[1][1] << " " << m[1][2] <<
-        " " << m[1][3] << std::endl <<
-        m[2][0] << " " << m[2][1] << " " << m[2][2] <<
-        " " << m[2][3] << std::endl <<
-        m[3][0] << " " << m[3][1] << " " << m[3][2] <<
-        " " << m[3][3] << std::endl <<
-        std::endl;
+              m[0][0] << " " << m[0][1] << " " << m[0][2] <<
+              " " << m[0][3] << std::endl <<
+              m[1][0] << " " << m[1][1] << " " << m[1][2] <<
+              " " << m[1][3] << std::endl <<
+              m[2][0] << " " << m[2][1] << " " << m[2][2] <<
+              " " << m[2][3] << std::endl <<
+              m[3][0] << " " << m[3][1] << " " << m[3][2] <<
+              " " << m[3][3] << std::endl <<
+              std::endl;
 
 }
 
-glm::vec3 Utility::convertCIExyYToRGB (const glm::vec3& CIExyYColor) {
+glm::vec3 Utility::convertCIExyYToRGB(const glm::vec3 &CIExyYColor) {
     const float scalar = CIExyYColor.z / CIExyYColor.y;
-    const glm::vec3 CIEXYZ { scalar*CIExyYColor.x,
-                             CIExyYColor.z,
-                             scalar*(1.f - CIExyYColor.x - CIExyYColor.y) };
+    const glm::vec3 CIEXYZ{scalar * CIExyYColor.x,
+                           CIExyYColor.z,
+                           scalar * (1.f - CIExyYColor.x - CIExyYColor.y)};
     return Utility::XYZToRGB * CIEXYZ;
 }
 
-glm::vec3 Utility::convertRBGToCIExyY (const glm::vec3& rbgColor) {
+glm::vec3 Utility::convertRBGToCIExyY(const glm::vec3 &rbgColor) {
     const glm::vec3 CIEXYZ = Utility::RGBToXYZ * rbgColor;
     const float sumXYZ = CIEXYZ.x + CIEXYZ.y + CIEXYZ.z;
     return {CIEXYZ.x / sumXYZ, CIEXYZ.y / sumXYZ, CIEXYZ.y};
 }
 
-float Utility::getLuminance (const glm::vec3& rgbColor) {
+float Utility::getLuminance(const glm::vec3 &rgbColor) {
     const glm::vec3 CIExyYColor = convertRBGToCIExyY(rgbColor);
     return CIExyYColor.z;
 }
 
-glm::vec3 Utility::colorAsVec3 (const JBTypes::Color& color) {
+glm::vec3 Utility::colorAsVec3(const JBTypes::Color &color) {
     switch (color) {
-        case JBTypes::Color::None: return {0.f, 0.f, 0.f}; break;
-        case JBTypes::Color::Red: return {1.f, 0.f, 0.f}; break;
-        case JBTypes::Color::Green: return {0.f, 1.f, 0.f}; break;
-        case JBTypes::Color::Blue: return {0.f, 0.f, 1.f}; break;
-        case JBTypes::Color::Yellow: return {1.f, 1.f, 0.f}; break;
-        case JBTypes::Color::Orange: return {1.f, 0.4f, 0.f}; break;
-        case JBTypes::Color::Purple: return {0.4f, 0.f, 0.4f}; break;
-        case JBTypes::Color::ShinyRed: return {1.f, 0.f, 0.f}; break;
-        case JBTypes::Color::ShinyGreen: return {0.f, 1.f, 0.f}; break;
-        case JBTypes::Color::ShinyBlue: return {0.f, 0.f, 1.f}; break;
-        default: return {0.f, 0.f, 0.f}; break;
+        case JBTypes::Color::None:
+            return {0.f, 0.f, 0.f};
+            break;
+        case JBTypes::Color::Red:
+            return {1.f, 0.f, 0.f};
+            break;
+        case JBTypes::Color::Green:
+            return {0.f, 1.f, 0.f};
+            break;
+        case JBTypes::Color::Blue:
+            return {0.f, 0.f, 1.f};
+            break;
+        case JBTypes::Color::Yellow:
+            return {1.f, 1.f, 0.f};
+            break;
+        case JBTypes::Color::Orange:
+            return {1.f, 0.4f, 0.f};
+            break;
+        case JBTypes::Color::Purple:
+            return {0.4f, 0.f, 0.4f};
+            break;
+        case JBTypes::Color::ShinyRed:
+            return {1.f, 0.f, 0.f};
+            break;
+        case JBTypes::Color::ShinyGreen:
+            return {0.f, 1.f, 0.f};
+            break;
+        case JBTypes::Color::ShinyBlue:
+            return {0.f, 0.f, 1.f};
+            break;
+        default:
+            return {0.f, 0.f, 0.f};
+            break;
     }
     return {0.f, 0.f, 0.f};
 }
 
-glm::vec3 Utility::convertToOpenGLFormat (const JBTypes::vec3f& vec3f) {
+glm::vec3 Utility::convertToOpenGLFormat(const JBTypes::vec3f &vec3f) {
     return {vec3f.x, vec3f.y, vec3f.z};
 }
 
-glm::vec4 Utility::convertToOpenGLFormat (const JBTypes::Quaternion& q) {
+glm::vec4 Utility::convertToOpenGLFormat(const JBTypes::Quaternion &q) {
     return glm::vec4(Utility::convertToOpenGLFormat(q.v), q.w);
 }
 
-GLfloat Utility::convertToOpenGLFormat (const float& f) {
+GLfloat Utility::convertToOpenGLFormat(const float &f) {
     return static_cast <GLfloat>(f);
 }
 
-glm::vec2 Utility::convertToOpenGLFormat (const JBTypes::vec2f& vec2f) {
+glm::vec2 Utility::convertToOpenGLFormat(const JBTypes::vec2f &vec2f) {
     return {vec2f.x, vec2f.y};
 }
 
-GLubyte Utility::convertToOpenGLFormat (unsigned char uChar) {
+GLubyte Utility::convertToOpenGLFormat(unsigned char uChar) {
     return static_cast <GLubyte>(uChar);
 }
 
-float Utility::menuPositionToOpenGLScreenFormat (float value) {
+float Utility::menuPositionToOpenGLScreenFormat(float value) {
     return 2.f * value - 1.f;
 }
 

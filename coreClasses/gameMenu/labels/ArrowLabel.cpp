@@ -6,17 +6,15 @@
  */
 #include "ArrowLabel.h"
 
-ArrowLabel::ArrowLabel(
-    Node_sptr node,
-    bool isActivated
-) : Label(std::move(node), isActivated) {
+ArrowLabel::ArrowLabel(Node_sptr node, const JBTypes::Color &color) :
+    Label(std::move(node), color) {
 }
 
-vecGeometry ArrowLabel::genGeometries() const {
+vecLabelGeometry ArrowLabel::genGeometries() const {
 
     return {
         createDisplayableQuad(0.25f, 0.f, 0.5f, 0.3f),
-        createDisplayableTriangle(0.f, 0.f, JBTypes::Direction::West, 0.5f),
+        createDisplayableTriangle(0.f, 0.f, 0.5f, 0.6f, JBTypes::Direction::West),
     };
 }
 

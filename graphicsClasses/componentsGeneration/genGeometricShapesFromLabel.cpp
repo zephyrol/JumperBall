@@ -8,19 +8,23 @@
 
 vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel(const Label &label) {
 
+    const glm::vec3 color = label.color() == JBTypes::Color::Blue
+            ? decltype(color)(0.f, 1.f, 1.f)
+            : decltype(color)(1.f, 1.f, 1.f);
+
     const auto genGeometricShape =
-        [](
-            const Geometry::Shape &shape,
+        [&color](
+            const LabelGeometry::Shape &shape,
             const glm::mat4 &model,
             const glm::mat4 &normalTransform,
             std::vector<glm::vec2>&& uvs
         ) -> CstGeometricShape_sptr {
             switch (shape) {
-                case Geometry::Shape::Quad:
-                    return std::make_shared<const Quad>(model, normalTransform, std::move(uvs));
+                case LabelGeometry::Shape::Quad:
+                    return std::make_shared<const Quad>(color, model, normalTransform, std::move(uvs));
                     break;
-                case Geometry::Shape::Triangle:
-                    return std::make_shared<const Triangle>(model, normalTransform);
+                case LabelGeometry::Shape::Triangle:
+                    return std::make_shared<const Triangle>(color, model, normalTransform);
                     break;
                 default:
                     return std::make_shared<const Quad>(model, normalTransform);
@@ -32,11 +36,11 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel(const Label
 
     vecCstGeometricShape_sptr geometricShapes;
 
-    const vecGeometry geometries = label.genGeometries();
-    for (const Geometry &geometry: geometries) {
-        const Geometry::ShapeTranslation &shapeTranslation = geometry.getTranslation();
-        const Geometry::ShapeRotation &shapeRotation = geometry.getRotation();
-        const Geometry::ShapeScale &shapeScale = geometry.getScale();
+    const vecLabelGeometry geometries = label.genGeometries();
+    for (const LabelGeometry &geometry: geometries) {
+        const LabelGeometry::ShapeTranslation &shapeTranslation = geometry.getTranslation();
+        const LabelGeometry::ShapeRotation &shapeRotation = geometry.getRotation();
+        const LabelGeometry::ShapeScale &shapeScale = geometry.getScale();
 
         const glm::mat4 localTranslation = glm::translate(
             glm::vec3(shapeTranslation.at(0), shapeTranslation.at(1), shapeTranslation.at(2))
@@ -51,7 +55,8 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel(const Label
             glm::vec3(shapeScale.at(0), shapeScale.at(1), shapeScale.at(2))
         );
 
-        const glm::mat4 model = localTranslation * localRotation * localScale;
+        // We apply rotation because scale
+        const glm::mat4 model = localTranslation * localScale * localRotation;
 
         std::vector<glm::vec2> uvs {};
         for(const auto& uv: geometry.getCustomUvs()) {

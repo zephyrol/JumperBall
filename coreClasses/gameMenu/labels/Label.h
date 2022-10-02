@@ -8,61 +8,59 @@
 #ifndef LABEL_H
 #define LABEL_H
 
-#include "gameMenu/Geometry.h"
+#include "gameMenu/LabelGeometry.h"
 #include "scene/SceneElement.h"
 #include "gameMenu/nodes/Node.h"
 #include <fstream>
 
 class Label;
+
 using Label_sptr = std::shared_ptr<Label>;
 using CstLabel_sptr = std::shared_ptr<const Label>;
 using vecCstLabel_sptr = std::vector<CstLabel_sptr>;
 using vecLabel_sptr = std::vector<Label_sptr>;
 
-class Label: public SceneElement {
+class Label : public SceneElement {
 
 public:
     explicit Label(
         Node_sptr node,
-        bool isActivated = false
+        const JBTypes::Color& color
     );
 
-    virtual vecGeometry genGeometries() const;
-
-    bool isActivated() const;
+    virtual vecLabelGeometry genGeometries() const;
 
     virtual std::string message() const;
 
-    const Node_sptr& getNode();
+    const Node_sptr &getNode();
+
+    const JBTypes::Color& color() const;
 
     StaticValues <JBTypes::vec2f> getStaticVec2fValues() const override = 0;
 
-    void activate();
-
-    void deactivate();
-
-    static void updateLabelsLevels(vecLabel_sptr &labels, size_t end);
-
     GlobalState getGlobalState() const override;
 
-    virtual ~Label() = default;
+    ~Label() override = default;
 
 protected:
     const Node_sptr _node;
+    const JBTypes::Color _color;
 
     /**
      * Create a displayable triangle geometry respecting the node position and scale.
      *  @param localX X position in range [-0.5, 0.5]
      *  @param localY Y position in range [-0.5, 0.5]
      *  @param dir Triangle direction
-     *  @param triangleWidth Triangle width. Width = 1 means that the triangle covers the entire node space.
-     *  @return Geometry to display in menu
+     *  @param triangleScaleX Triangle width. Width = 1 means the triangle covers the entire node space.
+     *  @param triangleScaleY Triangle height. Height = 1 means the triangle covers the entire node space.
+     *  @return LabelGeometry to display in menu
      */
-    Geometry createDisplayableTriangle(
+    LabelGeometry createDisplayableTriangle(
         float localX,
         float localY,
-        const JBTypes::Direction &dir,
-        float triangleWidth
+        float triangleScaleX,
+        float triangleScaleY,
+        const JBTypes::Direction &dir
     ) const;
 
     /**
@@ -71,17 +69,15 @@ protected:
      *  @param localY Y position in range [-0.5, 0.5]
      *  @param quadScaleX Quad X scale. Scale = 1 means that the quad covers the entire node space.
      *  @param quadScaleY Quad X scale. Scale = 1 means that the quad covers the entire node space.
-     *  @return Geometry to display in menu
+     *  @param color Triangle color.
+     *  @return LabelGeometry to display in menu
      */
-    Geometry createDisplayableQuad(
+    LabelGeometry createDisplayableQuad(
         float localX,
         float localY,
         float quadScaleX,
         float quadScaleY
     ) const;
-
-private:
-    bool _isActivated;
 
 };
 

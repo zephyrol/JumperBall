@@ -18,9 +18,10 @@ Quad::Quad(
 Quad::Quad(
     const glm::vec3 &customColor,
     const glm::mat4 &modelTransform,
-    const glm::mat4 &normalsTransform
+    const glm::mat4 &normalsTransform,
+    std::vector<glm::vec2> &&uvs
 ) :
-    GeometricShape(modelTransform, normalsTransform, {customColor}, {}) {
+    GeometricShape(modelTransform, normalsTransform, {customColor}, std::move(uvs)) {
 
 }
 
@@ -31,7 +32,6 @@ Quad::Quad(
     const glm::mat4 &normalsTransform
 ) :
     GeometricShape(modelTransform, normalsTransform, {customColor1, customColor2}, {}) {
-
 }
 
 std::vector<glm::vec3> Quad::createCustomDoubleColors(
@@ -40,7 +40,6 @@ std::vector<glm::vec3> Quad::createCustomDoubleColors(
                                              customColor2.r, customColor2.g, customColor2.b,
                                              customColor1.r, customColor1.g, customColor1.b,
                                              customColor2.r, customColor2.g, customColor2.b,
-
                                              customColor2.r, customColor2.g, customColor2.b,
                                              customColor2.r, customColor2.g, customColor2.b,
                                              customColor1.r, customColor1.g, customColor1.b

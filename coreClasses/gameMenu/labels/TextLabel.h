@@ -71,14 +71,14 @@ public:
 
     TextLabel(
         CstTextNode_uptr &&textNode,
-        const Node_sptr& suitedNode,
+        const Node_sptr &suitedNode,
         LettersUvs_sptr lettersUvs,
         std::vector<CharacterLocalTransform> &&transforms,
         size_t lettersSize,
-        bool isActivated
+        const JBTypes::Color &color
     );
 
-    vecGeometry genGeometries() const override;
+    vecLabelGeometry genGeometries() const override;
 
     StaticValues <JBTypes::vec2f> getStaticVec2fValues() const override;
 

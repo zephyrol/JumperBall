@@ -18,7 +18,7 @@ LabelsProcess::LabelsProcess(
     _renderPass([this, &page]() {
         vecMesh_sptr meshes;
         auto labels = page->labels();
-        auto messageLabels = _fontTexturesGenerator.getMessageLabels();
+        auto messageLabels = _fontTexturesGenerator.getTextLabels();
         labels.insert(
             labels.end(),
             std::make_move_iterator(messageLabels.begin()),

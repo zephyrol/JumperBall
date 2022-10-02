@@ -1,5 +1,5 @@
 /*
- * File:   Geometry.h
+ * File:   LabelGeometry.h
  * Author: Morgenthaler S
  *
  * Created on April 27, 2021, 8:20 PM
@@ -10,11 +10,11 @@
 
 #include "system/Types.h"
 
-class Geometry;
+class LabelGeometry;
 
-using vecGeometry = std::vector<Geometry>;
+using vecLabelGeometry = std::vector<LabelGeometry>;
 
-class Geometry {
+class LabelGeometry {
 public:
     enum class Shape { Triangle, Quad };
     using ShapeTranslation = std::array<float, 3>;
@@ -22,11 +22,12 @@ public:
     using ShapeScale = std::array<float, 3>;
     using CustomUvs = std::vector<std::array<float, 2> >;
 
-    Geometry(
+    LabelGeometry(
         const Shape &shape,
         ShapeTranslation &&translation,
         ShapeRotation &&rotation,
         ShapeScale &&scale,
+        const JBTypes::Color& color,
         CustomUvs&& customUvs = {}
     );
 
@@ -40,9 +41,12 @@ public:
 
     const CustomUvs &getCustomUvs() const;
 
+    const JBTypes::Color &getColor() const;
+
 
 private:
     const Shape _shape;
+    const JBTypes::Color _color;
     const ShapeTranslation _translation;
     const ShapeRotation _rotation;
     const ShapeScale _scale;

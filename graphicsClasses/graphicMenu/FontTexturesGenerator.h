@@ -87,7 +87,7 @@ public:
 
     FontTexturesGenerator(
         const LettersTexture &lettersTexture,
-        vecTextLabel_sptr &&messageLabels
+        vecTextLabel_sptr &&textLabels
     );
 
     FontTexturesGenerator(const FontTexturesGenerator &ft) = default;
@@ -105,7 +105,7 @@ public:
 
     GLuint getLettersTexture() const;
 
-    const vecTextLabel_sptr &getMessageLabels();
+    const vecTextLabel_sptr &getTextLabels();
 
 private:
 

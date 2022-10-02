@@ -28,6 +28,9 @@ public:
 
     std::vector<float> getUniformValues() const override;
 
+protected:
+    float getOffsetY() const;
+
 private:
     constexpr static float decelerationCoefficient = 10.f; // pagePourcentage /s^2
     const float _height;
