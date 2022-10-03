@@ -730,7 +730,7 @@ float Ball::getTimeToGetDestination() const {
     return getMechanicsJumping().getTimeToGetDestination();
 }
 
-SceneElement::DynamicValues<float> Ball::getDynamicFloats() const {
+Displayable::DynamicValues<float> Ball::getDynamicFloats() const {
 
     const auto getStateOfLifeStatus = [this]() {
         if (
@@ -755,27 +755,27 @@ SceneElement::DynamicValues<float> Ball::getDynamicFloats() const {
     };
 }
 
-SceneElement::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fs() const {
+Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fs() const {
     return {
         {"sideDir",  currentSideAsVector()},
         {"position", get3DPosition()}
     };
 }
 
-SceneElement::DynamicValues<JBTypes::Quaternion> Ball::getDynamicQuaternions() const {
+Displayable::DynamicValues<JBTypes::Quaternion> Ball::getDynamicQuaternions() const {
     return {
         {"quaternion", getCoveredRotation()}
     };
 }
 
-SceneElement::GlobalState Ball::getGlobalState() const {
+Displayable::GlobalState Ball::getGlobalState() const {
     if (_stateOfLife == Ball::StateOfLife::Bursting) {
-        return SceneElement::GlobalState::Separate;
+        return Displayable::GlobalState::Separate;
     }
     if (_stateOfLife == Ball::StateOfLife::Dead) {
-        return SceneElement::GlobalState::Dead;
+        return Displayable::GlobalState::Dead;
     }
-    return SceneElement::GlobalState::United;
+    return Displayable::GlobalState::United;
 }
 
 const JBTypes::vec3ui &Ball::getPosition() const noexcept {

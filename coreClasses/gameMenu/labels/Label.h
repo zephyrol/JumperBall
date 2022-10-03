@@ -9,7 +9,7 @@
 #define LABEL_H
 
 #include "gameMenu/LabelGeometry.h"
-#include "scene/SceneElement.h"
+#include "scene/Displayable.h"
 #include "gameMenu/nodes/Node.h"
 #include <fstream>
 
@@ -20,7 +20,7 @@ using CstLabel_sptr = std::shared_ptr<const Label>;
 using vecCstLabel_sptr = std::vector<CstLabel_sptr>;
 using vecLabel_sptr = std::vector<Label_sptr>;
 
-class Label : public SceneElement {
+class Label : public Displayable {
 
 public:
     explicit Label(

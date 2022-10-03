@@ -283,8 +283,8 @@ glm::mat4 Camera::viewProjection() const noexcept {
     return _perspectiveMatrix * viewMatrix;
 }
 
-SceneElement::GlobalState Camera::getGlobalState() const {
-    return SceneElement::GlobalState::United;
+Displayable::GlobalState Camera::getGlobalState() const {
+    return Displayable::GlobalState::United;
 }
 
 void Camera::setRatio(float ratio) {

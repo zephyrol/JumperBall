@@ -68,7 +68,7 @@ void GhostBlock::update(const JBTypes::timePointMs &updatingTime) {
     _localTranslation = { translation, translation, translation };
 }
 
-SceneElement::GlobalState GhostBlock::getGlobalState() const {
-    return SceneElement::GlobalState::Separate;
+Displayable::GlobalState GhostBlock::getGlobalState() const {
+    return Displayable::GlobalState::Separate;
 }
 

@@ -22,7 +22,7 @@ using Ball_wptr = std::weak_ptr<Ball>;
 using CstBall_sptr = std::shared_ptr<const Ball>;
 using CstBall_wptr = std::weak_ptr<const Ball>;
 
-class Ball : public SceneElement {
+class Ball : public Displayable {
 public:
 
     Ball(unsigned int x, unsigned int y, unsigned int z);
@@ -115,13 +115,13 @@ public:
 
     float getTimeToGetDestination() const;
 
-    SceneElement::DynamicValues<float> getDynamicFloats() const override;
+    Displayable::DynamicValues<float> getDynamicFloats() const override;
 
-    SceneElement::DynamicValues<JBTypes::vec3f> getDynamicVec3fs() const override;
+    Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fs() const override;
 
-    SceneElement::DynamicValues<JBTypes::Quaternion> getDynamicQuaternions() const override;
+    Displayable::DynamicValues<JBTypes::Quaternion> getDynamicQuaternions() const override;
 
-    SceneElement::GlobalState getGlobalState() const override;
+    Displayable::GlobalState getGlobalState() const override;
 
     CstBlock_sptr getBlock(const JBTypes::vec3ui &pos) const;
 

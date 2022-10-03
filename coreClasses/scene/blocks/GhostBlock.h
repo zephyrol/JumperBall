@@ -24,7 +24,7 @@ public:
     void update(const JBTypes::timePointMs &updatingTime) override;
     bool mayDisappear() const override;
     JBTypes::Color getColor() const override;
-    SceneElement::GlobalState getGlobalState() const override;
+    Displayable::GlobalState getGlobalState() const override;
 
 
 private:

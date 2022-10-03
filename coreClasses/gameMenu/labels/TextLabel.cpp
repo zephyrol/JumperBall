@@ -95,7 +95,7 @@ TextLabel::LetterHash TextLabel::createLetterHash(size_t fontSize, unsigned char
     return hash;
 }
 
-SceneElement::StaticValues<JBTypes::vec2f> TextLabel::getStaticVec2fValues() const {
+Displayable::StaticValues<JBTypes::vec2f> TextLabel::getStaticVec2fValues() const {
     return {_textNode->staticProperty()};
 }
 

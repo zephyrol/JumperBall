@@ -10,6 +10,6 @@
 Screen::Screen() {
 }
 
-SceneElement::GlobalState Screen::getGlobalState() const {
-    return SceneElement::GlobalState::United;
+Displayable::GlobalState Screen::getGlobalState() const {
+    return Displayable::GlobalState::United;
 }

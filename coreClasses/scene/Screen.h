@@ -7,15 +7,15 @@
 
 #ifndef SCREEN_H  
 #define SCREEN_H 
-#include <scene/SceneElement.h>
+#include <scene/Displayable.h>
 
-class Screen : public SceneElement {
+class Screen : public Displayable {
 
 public : 
 
 Screen();
 
-SceneElement::GlobalState getGlobalState() const override;
+Displayable::GlobalState getGlobalState() const override;
 };
 
 

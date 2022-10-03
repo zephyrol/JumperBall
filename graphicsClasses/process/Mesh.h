@@ -10,7 +10,7 @@
 
 #include "ShaderProgram.h"
 #include "geometry/GeometricShape.h"
-#include "scene/SceneElement.h"
+#include "scene/Displayable.h"
 
 class Mesh;
 
@@ -22,7 +22,7 @@ using vecMesh_sptr = std::vector<Mesh_sptr>;
 class Mesh {
 
 public:
-    Mesh(const CstSceneElement_sptr &sceneElement, vecCstGeometricShape_sptr &&shapes);
+    Mesh(const CstDisplayable_sptr &displayable, vecCstGeometricShape_sptr &&shapes);
 
     struct StateVertexAttributes {
         std::vector<std::vector<GLfloat> > staticFloats = {};
@@ -52,7 +52,7 @@ public:
         UniformVariables<GLuint> uniformTextures = {};
     };
 
-    SceneElement::GlobalState getGlobalState() const;
+    Displayable::GlobalState getGlobalState() const;
 
     size_t numberOfVertices() const;
 
@@ -77,13 +77,13 @@ private:
 
     template<typename RawType, typename OpenGLType>
     static void convertAttributesToOpenGLFormat(
-        const SceneElement::StaticValues<RawType> &rawValues,
+        const Displayable::StaticValues<RawType> &rawValues,
         std::vector<OpenGLType> &openGLValues
     );
 
     template<typename RawType, typename OpenGLType>
     static void convertUniformsToOpenGLFormat(
-        const SceneElement::DynamicValues<RawType> &rawValues,
+        const Displayable::DynamicValues<RawType> &rawValues,
         Mesh::UniformVariables<OpenGLType> &openGLValue
     );
 
@@ -98,7 +98,7 @@ private:
         const StateVertexAttributes &other
     );
 
-    const CstSceneElement_sptr _sceneElement;
+    const CstDisplayable_sptr _displayable;
     const vecCstGeometricShape_sptr _shapes;
     const size_t _numberOfVertices;
     const bool _updatingIsUseless;

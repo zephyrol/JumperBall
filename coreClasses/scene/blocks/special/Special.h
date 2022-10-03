@@ -7,7 +7,7 @@
 #ifndef __SPECIAL_H__
 #define __SPECIAL_H__
 #include <scene/Shape.h>
-#include "scene/SceneElement.h"
+#include "scene/Displayable.h"
 
 class Special;
 using Special_sptr = std::shared_ptr <Special>;
@@ -16,7 +16,7 @@ using vecCstSpecial_sptr = std::vector <CstSpecial_sptr>;
 using vecSpecial_sptr = std::vector <Special_sptr>;
 using Special_uptr = std::unique_ptr <Special>;
 
-class Special: public SceneElement {
+class Special: public Displayable {
 public:
 
 Special(
@@ -37,12 +37,12 @@ virtual void applySpecialEffect() = 0;
 void switchOnOff();
 
 virtual vecCstShape_sptr getShapes() const = 0;
-SceneElement::StaticValues <float> getStaticFloatValues() const override;
-SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+Displayable::StaticValues <float> getStaticFloatValues() const override;
+Displayable::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
 
-SceneElement::DynamicValues <float> getDynamicFloats() const override;
+Displayable::DynamicValues <float> getDynamicFloats() const override;
 
-SceneElement::GlobalState getGlobalState() const override;
+Displayable::GlobalState getGlobalState() const override;
 
 private:
 const JBTypes::timePointMs _creationTime;

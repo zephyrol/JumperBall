@@ -8,7 +8,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 #include "system/Types.h"
-#include "scene/SceneElement.h"
+#include "scene/Displayable.h"
 #include <scene/Shape.h>
 
 class Item;
@@ -18,7 +18,7 @@ using vecCstItem_sptr = std::vector <CstItem_sptr>;
 using vecItem_sptr = std::vector <Item_sptr>;
 using Item_uptr = std::unique_ptr <Item>;
 
-class Item : public SceneElement{
+class Item : public Displayable{
 public:
 
 Item(const JBTypes::vec3ui& position, const JBTypes::Dir& direction);
@@ -35,11 +35,11 @@ virtual vecCstShape_sptr getShapes() const = 0;
 
 static constexpr float itemBoundingSphereRadius = 0.15f;
 
-SceneElement::StaticValues <float> getStaticFloatValues() const override;
-SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
-SceneElement::DynamicValues <float> getDynamicFloats() const override;
+Displayable::StaticValues <float> getStaticFloatValues() const override;
+Displayable::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+Displayable::DynamicValues <float> getDynamicFloats() const override;
 
-SceneElement::GlobalState getGlobalState() const override;
+Displayable::GlobalState getGlobalState() const override;
 bool globalStateMayChange() const override;
 
 void setAsGotten();

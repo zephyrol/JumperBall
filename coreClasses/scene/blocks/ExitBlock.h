@@ -24,7 +24,7 @@ public:
 
     vecCstShape_sptr getExtraShapes() const override;
     void unlockExit() override;
-    SceneElement::GlobalState getGlobalState() const override;
+    Displayable::GlobalState getGlobalState() const override;
 
     const JBTypes::Direction _exitDir;
     const bool _isUnlockModel;

@@ -26,7 +26,7 @@ void setFallDirection(JBTypes::Direction direction);
 void update(const JBTypes::timePointMs &updatingTime) override;
 
 Block::Effect detectionEvent() override;
-SceneElement::GlobalState getGlobalState() const override;
+Displayable::GlobalState getGlobalState() const override;
 bool globalStateMayChange() const override;
 
 bool mayDisappear() const override;

@@ -30,7 +30,7 @@ const Node_sptr &Label::getNode() {
     return _node;
 }
 
-SceneElement::GlobalState Label::getGlobalState() const {
+Displayable::GlobalState Label::getGlobalState() const {
     return GlobalState::United;
 }
 

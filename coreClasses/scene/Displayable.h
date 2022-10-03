@@ -1,22 +1,21 @@
 /*
- * File: SceneElement.h
+ * File: Displayable.h
  * Author: Morgenthaler S
  *
  * Created on 31 janvier 2021, 18h52
  */
-#ifndef SCENE_ELEMENT_H 
-#define SCENE_ELEMENT_H 
+#ifndef DISPLAYABLE_H
+#define DISPLAYABLE_H
 #include "system/Types.h"
 
-class SceneElement;
-using SceneElement_sptr = std::shared_ptr <SceneElement>;
-using CstSceneElement_sptr = std::shared_ptr <const SceneElement>;
-using vecCstSceneElement_sptr = std::vector <CstSceneElement_sptr>;
-using vecSceneElement_sptr = std::vector <SceneElement_sptr>;
-using SceneElement_uptr = std::unique_ptr <SceneElement>;
+class Displayable;
+using Displayable_sptr = std::shared_ptr <Displayable>;
+using CstDisplayable_sptr = std::shared_ptr <const Displayable>;
+using vecCstDisplayable_sptr = std::vector <CstDisplayable_sptr>;
+using vecDisplayable_sptr = std::vector <Displayable_sptr>;
+using Displayable_uptr = std::unique_ptr <Displayable>;
 
-// TODO: rename to displayable
-class SceneElement {
+class Displayable {
 
 public:
 
@@ -24,9 +23,9 @@ template<typename T> using StaticValues = std::vector <T>;
 template<typename T> using DynamicValues = std::unordered_map <std::string, T>;
 enum class GlobalState { United, Separate, Dead };
 
-SceneElement();
+Displayable();
 
-virtual ~SceneElement() = default;
+virtual ~Displayable() = default;
 
 virtual StaticValues <float> getStaticFloatValues() const;
 virtual StaticValues <JBTypes::vec2f> getStaticVec2fValues() const;
@@ -42,4 +41,4 @@ virtual bool globalStateMayChange() const;
 
 };
 
-#endif // SCENE_ELEMENT_H 
+#endif // DISPLAYABLE_ELEMENT_H

@@ -12,7 +12,7 @@
 #include <scene/blocks/special/Special.h>
 #include <scene/blocks/items/Item.h>
 #include "system/Types.h"
-#include "scene/SceneElement.h"
+#include "scene/Displayable.h"
 
 class Block;
 using Block_sptr = std::shared_ptr <Block>;
@@ -21,7 +21,7 @@ using vecCstBlock_sptr = std::vector <CstBlock_sptr>;
 using vecBlock_sptr = std::vector <Block_sptr>;
 using BlockDir = std::pair<Block_sptr, JBTypes::Dir>;
 
-class Block: public SceneElement {
+class Block: public Displayable {
 public:
 
 Block(
@@ -63,9 +63,9 @@ virtual bool mayDisappear() const;
 
 const JBTypes::vec3ui& position() const;
 
-SceneElement::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
-SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
-SceneElement::GlobalState getGlobalState() const override;
+Displayable::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+Displayable::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+Displayable::GlobalState getGlobalState() const override;
 
 static std::string positionToString(const JBTypes::vec3ui& position);
 

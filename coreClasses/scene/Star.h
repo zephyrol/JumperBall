@@ -10,7 +10,7 @@
 
 #include "Map.h"
 
-class Star : public SceneElement {
+class Star : public Displayable {
 public:
     Star(
         const Map &map,
@@ -42,13 +42,13 @@ public:
 
     JBTypes::vec3f position() const;
 
-    SceneElement::GlobalState getGlobalState() const override;
+    Displayable::GlobalState getGlobalState() const override;
 
     StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
 
     StaticValues <float> getStaticFloatValues() const override;
 
-    SceneElement::DynamicValues<float> getDynamicFloats() const override;
+    Displayable::DynamicValues<float> getDynamicFloats() const override;
 
     static std::shared_ptr<Star> createBlurStar(const Map &map);
 

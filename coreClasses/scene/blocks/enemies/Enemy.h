@@ -8,7 +8,7 @@
 #define Enemy_hpp
 
 #include <scene/Shape.h>
-#include "scene/SceneElement.h"
+#include "scene/Displayable.h"
 
 class Enemy;
 using Enemy_sptr = std::shared_ptr <Enemy>;
@@ -17,7 +17,7 @@ using vecCstEnemy_sptr = std::vector <CstEnemy_sptr>;
 using vecEnemy_sptr = std::vector <Enemy_sptr>;
 using Enemy_uptr = std::unique_ptr <Enemy>;
 
-class Enemy : public SceneElement{
+class Enemy : public Displayable{
 public:
     enum class Effect { Nothing, Burst };
 
@@ -35,9 +35,9 @@ const JBTypes::Dir& direction() const;
 float size() const;
 size_t length() const;
 
-SceneElement::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
+Displayable::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
 
-SceneElement::GlobalState getGlobalState() const override;
+Displayable::GlobalState getGlobalState() const override;
 
 virtual vecCstShape_sptr getShapes() const = 0;
 virtual bool touchingTest() const = 0;

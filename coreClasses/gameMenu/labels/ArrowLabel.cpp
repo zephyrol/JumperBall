@@ -18,6 +18,6 @@ vecLabelGeometry ArrowLabel::genGeometries() const {
     };
 }
 
-SceneElement::StaticValues<JBTypes::vec2f> ArrowLabel::getStaticVec2fValues() const {
+Displayable::StaticValues<JBTypes::vec2f> ArrowLabel::getStaticVec2fValues() const {
     return {{0.f, 0.f}};
 }

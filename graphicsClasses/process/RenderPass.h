@@ -59,14 +59,14 @@ private:
 
     vecMesh_sptr createUpdatableMeshes() const;
 
-    std::map<Mesh_sptr, SceneElement::GlobalState> createMeshStates() const;
+    std::map<Mesh_sptr, Displayable::GlobalState> createMeshStates() const;
 
     std::shared_ptr<RenderGroup> createUnitedMeshesGroup() const;
 
 
     const vecMesh_sptr _meshes;
     const vecMesh_sptr _updatableMeshes;
-    std::map<Mesh_sptr, SceneElement::GlobalState> _meshStates;
+    std::map<Mesh_sptr, Displayable::GlobalState> _meshStates;
 
     std::shared_ptr<RenderGroup> _unitedMeshesGroup;
     std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > _separateMeshGroups;

@@ -83,11 +83,11 @@ JBTypes::vec3f Star::position() const {
     return JBTypesMethods::rotateVector(initialPosition, getRotation());
 }
 
-SceneElement::GlobalState Star::getGlobalState() const {
-    return SceneElement::GlobalState::United;
+Displayable::GlobalState Star::getGlobalState() const {
+    return Displayable::GlobalState::United;
 }
 
-SceneElement::StaticValues<JBTypes::vec3f> Star::getStaticVec3fValues() const {
+Displayable::StaticValues<JBTypes::vec3f> Star::getStaticVec3fValues() const {
     return {
         JBTypesMethods::scalarApplication(_distance, _initialDirection),
         _rotationCenter,
@@ -97,14 +97,14 @@ SceneElement::StaticValues<JBTypes::vec3f> Star::getStaticVec3fValues() const {
 }
 
 
-SceneElement::StaticValues<float> Star::getStaticFloatValues() const {
+Displayable::StaticValues<float> Star::getStaticFloatValues() const {
     return {
         _radiansPerSeconds
     };
 }
 
 
-SceneElement::DynamicValues<float> Star::getDynamicFloats() const {
+Displayable::DynamicValues<float> Star::getDynamicFloats() const {
     return {
         {"timeSinceCreation", getTimeSinceCreation()}
     };

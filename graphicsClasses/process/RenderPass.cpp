@@ -58,7 +58,7 @@ void RenderPass::upsertUniforms(const std::unordered_map<std::string, T> &unifor
 std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > RenderPass::createSeparateMeshGroups() const {
     std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > separateMeshGroups;
     for (const Mesh_sptr &mesh: _meshes) {
-        if (mesh->getGlobalState() == SceneElement::GlobalState::Separate) {
+        if (mesh->getGlobalState() == Displayable::GlobalState::Separate) {
             separateMeshGroups[mesh] = std::make_shared<RenderGroup>(
                 std::initializer_list<Mesh_sptr>({mesh})
             );
@@ -112,8 +112,8 @@ vecMesh_sptr RenderPass::createUpdatableMeshes() const {
     return updatableMeshes;
 }
 
-std::map<Mesh_sptr, SceneElement::GlobalState> RenderPass::createMeshStates() const {
-    std::map<Mesh_sptr, SceneElement::GlobalState> meshStates{};
+std::map<Mesh_sptr, Displayable::GlobalState> RenderPass::createMeshStates() const {
+    std::map<Mesh_sptr, Displayable::GlobalState> meshStates{};
     for (const auto &updatableMesh: _updatableMeshes) {
         meshStates[updatableMesh] = updatableMesh->getGlobalState();
     }
@@ -123,7 +123,7 @@ std::map<Mesh_sptr, SceneElement::GlobalState> RenderPass::createMeshStates() co
 std::shared_ptr<RenderGroup> RenderPass::createUnitedMeshesGroup() const {
     vecMesh_sptr unitedMeshes{};
     for (const auto &mesh: _meshes) {
-        if (mesh->getGlobalState() == SceneElement::GlobalState::United) {
+        if (mesh->getGlobalState() == Displayable::GlobalState::United) {
             unitedMeshes.push_back(mesh);
         }
     }

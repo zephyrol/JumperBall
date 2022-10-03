@@ -48,15 +48,15 @@ void Special::switchOnOff() {
     _isActivated = !_isActivated;
 }
 
-SceneElement::GlobalState Special::getGlobalState() const {
-    return SceneElement::GlobalState::United;
+Displayable::GlobalState Special::getGlobalState() const {
+    return Displayable::GlobalState::United;
 }
 
-SceneElement::StaticValues <float> Special::getStaticFloatValues() const {
+Displayable::StaticValues <float> Special::getStaticFloatValues() const {
     return { static_cast<float>(_direction), static_cast<float>(_color), static_cast<float>(isAnimated()) };
 }
 
-SceneElement::StaticValues <JBTypes::vec3f> Special::getStaticVec3fValues() const {
+Displayable::StaticValues <JBTypes::vec3f> Special::getStaticVec3fValues() const {
     const JBTypes::vec3f position = {
         static_cast <float>(_position.at(0)),
         static_cast <float>(_position.at(1)),
@@ -65,7 +65,7 @@ SceneElement::StaticValues <JBTypes::vec3f> Special::getStaticVec3fValues() cons
     return { position };
 }
 
-SceneElement::DynamicValues <float> Special::getDynamicFloats() const {
+Displayable::DynamicValues <float> Special::getDynamicFloats() const {
     return {
         { "creationTime", getTimeSinceCreation()},
         { _colorAttributeName, _isActivated }

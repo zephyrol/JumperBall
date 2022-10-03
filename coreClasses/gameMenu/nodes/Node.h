@@ -5,7 +5,7 @@
 #ifndef JUMPERBALLAPPLICATION_NODE_H
 #define JUMPERBALLAPPLICATION_NODE_H
 
-#include "scene/SceneElement.h"
+#include "scene/Displayable.h"
 
 class Node;
 

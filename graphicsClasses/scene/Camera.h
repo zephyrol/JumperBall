@@ -16,7 +16,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include "Utility.h"
 
-class Camera : public SceneElement {
+class Camera : public Displayable {
 
 public:
 
@@ -33,7 +33,7 @@ public:
 
     glm::mat4 viewProjection() const noexcept;
 
-    SceneElement::GlobalState getGlobalState() const override;
+    Displayable::GlobalState getGlobalState() const override;
 
     void update(
         const JBTypes::timePointMs &updatingTime,

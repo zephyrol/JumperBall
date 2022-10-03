@@ -42,15 +42,15 @@ float Item::getTimeSinceCreation() const {
     return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
 
-SceneElement::StaticValues <float> Item::getStaticFloatValues() const {
+Displayable::StaticValues <float> Item::getStaticFloatValues() const {
     return { static_cast<float>(_direction) };
 }
 
-SceneElement::StaticValues <JBTypes::vec3f> Item::getStaticVec3fValues() const {
+Displayable::StaticValues <JBTypes::vec3f> Item::getStaticVec3fValues() const {
     return { _3Dposition };
 }
 
-SceneElement::DynamicValues <float> Item::getDynamicFloats() const {
+Displayable::DynamicValues <float> Item::getDynamicFloats() const {
     return {
         { "creationTime", getTimeSinceCreation()},
         { "obtainingTime", getTimeSinceObtaining()}
@@ -58,17 +58,17 @@ SceneElement::DynamicValues <float> Item::getDynamicFloats() const {
 
 }
 
-SceneElement::GlobalState Item::getGlobalState() const {
+Displayable::GlobalState Item::getGlobalState() const {
     const float timeSinceObtaining = getTimeSinceObtaining();
 
     if (isGotten()) {
         constexpr float thresholdThirdStep = 1.5f;
         constexpr float durationThirdStep = 0.2f;
         return timeSinceObtaining < thresholdThirdStep + durationThirdStep
-               ? SceneElement::GlobalState::Separate
-               : SceneElement::GlobalState::Dead;
+               ? Displayable::GlobalState::Separate
+               : Displayable::GlobalState::Dead;
     }
-    return SceneElement::GlobalState::United;
+    return Displayable::GlobalState::United;
 }
 
 JBTypes::vec3f Item::compute3DPosition() const {

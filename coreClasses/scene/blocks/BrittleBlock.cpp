@@ -92,8 +92,8 @@ void BrittleBlock::update(const JBTypes::timePointMs &updatingTime) {
     }
 }
 
-SceneElement::GlobalState BrittleBlock::getGlobalState() const {
-    return _stillThere ? SceneElement::GlobalState::United: SceneElement::GlobalState::Separate;
+Displayable::GlobalState BrittleBlock::getGlobalState() const {
+    return _stillThere ? Displayable::GlobalState::United: Displayable::GlobalState::Separate;
 }
 
 bool BrittleBlock::globalStateMayChange() const {
