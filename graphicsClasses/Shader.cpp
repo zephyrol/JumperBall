@@ -8,12 +8,12 @@
 #include "Shader.h"
 
 Shader::Shader(
-    const GLenum& shaderType,
-    const JBTypes::FileContent& fileContent,
-    const std::string& shaderFilename,
-    const std::vector<std::string>& defines,
-    const std::map<std::string, glm::vec2>& constVec2s
-):
+    const GLenum &shaderType,
+    const JBTypes::FileContent &fileContent,
+    const std::string &shaderFilename,
+    const std::vector<std::string> &defines,
+    const std::map<std::string, glm::vec2> &constVec2s
+) :
     _shaderHandle(glCreateShader(shaderType)),
     _shaderType(shaderType),
     _shaderFilename(shaderFilename),
@@ -24,14 +24,14 @@ Shader::Shader(
     }
 
     constexpr GLsizei numberOfStrings = 1;
-    const GLchar*const glCode = _shaderCode.c_str();
+    const GLchar *const glCode = _shaderCode.c_str();
 
     glShaderSource(_shaderHandle, numberOfStrings, &glCode, nullptr);
     glCompileShader(_shaderHandle);
     verifyCompileStatus(_shaderCode);
 }
 
-void Shader::verifyCompileStatus(const std::string& shaderCode) const {
+void Shader::verifyCompileStatus(const std::string &shaderCode) const {
 
     GLint status;
     glGetShaderiv(_shaderHandle, GL_COMPILE_STATUS, &status);
@@ -62,13 +62,13 @@ void Shader::freeGPUMemory() const {
     glDeleteShader(_shaderHandle);
 }
 
-CstShader_uptr Shader::createVertexShader (
-    const JBTypes::FileContent& fileContent,
-    const std::string& shaderName,
-    const std::vector<std::string>& defines,
-    const std::map<std::string, glm::vec2>& constVec2s
+CstShader_uptr Shader::createVertexShader(
+    const JBTypes::FileContent &fileContent,
+    const std::string &shaderName,
+    const std::vector<std::string> &defines,
+    const std::map<std::string, glm::vec2> &constVec2s
 ) {
-    return std::unique_ptr <const Shader>(new Shader(
+    return std::unique_ptr<const Shader>(new Shader(
         GL_VERTEX_SHADER,
         fileContent,
         shaderName,
@@ -77,13 +77,13 @@ CstShader_uptr Shader::createVertexShader (
     ));
 }
 
-CstShader_uptr Shader::createFragmentShader (
-    const JBTypes::FileContent& fileContent,
-    const std::string& shaderName,
-    const std::vector<std::string>& defines,
-    const std::map<std::string, glm::vec2>& constVec2s
-    ) {
-    return std::unique_ptr <const Shader>(new Shader(
+CstShader_uptr Shader::createFragmentShader(
+    const JBTypes::FileContent &fileContent,
+    const std::string &shaderName,
+    const std::vector<std::string> &defines,
+    const std::map<std::string, glm::vec2> &constVec2s
+) {
+    return std::unique_ptr<const Shader>(new Shader(
         GL_FRAGMENT_SHADER,
         fileContent,
         shaderName,
@@ -93,39 +93,48 @@ CstShader_uptr Shader::createFragmentShader (
 }
 
 std::string Shader::completeShaderCode(
-    const std::string& shaderCode,
+    const std::string &shaderCode,
     const std::vector<std::string> &defines,
-    const std::map<std::string, glm::vec2>& constVec2s
+    const std::map<std::string, glm::vec2> &constVec2s
 ) {
     const std::map<size_t, std::string> shaderHeader = {
-        { 0, "#version 330 core\n" },
-        { 1, "#version 300 es\nprecision highp float;\n" },
-        { 2, "#version 300 es\nprecision highp float;\n" }
+        {0, "#version 330 core\n"},
+        {1, "#version 300 es\nprecision highp float;\n"},
+        {2, "#version 300 es\nprecision highp float;\n"}
     };
     std::string finalShader = shaderHeader.at(JB_SYSTEM);
 
-    for (const auto &item : constVec2s) {
-        const auto& constName = item.first;
-        const auto& constValue = item.second;
+    for (const auto &item: constVec2s) {
+        const auto &constName = item.first;
+        const auto &constValue = item.second;
         finalShader += "const vec2 " + constName + " = vec2("
-            + std::to_string(constValue.x) + ", " + std::to_string(constValue.y) + ");\n";
+                       + std::to_string(constValue.x) + ", " + std::to_string(constValue.y) + ");\n";
     }
     finalShader += shaderCode;
 
     const std::string ifdefKey = "#ifdef";
     const std::string endifKey = "#endif";
-    for (const auto &define: defines) {
-        const std::string defineKey = ifdefKey + "(" + define + ")";
-        size_t index;
-        while((index = finalShader.find(defineKey)) != std::string::npos) {
-            finalShader.replace(index, defineKey.length(),"");
-        }
-        while((index = finalShader.find(ifdefKey)) != std::string::npos) {
-            const auto endifPos = finalShader.find(endifKey, index);
-            finalShader.replace(index, endifPos - index,"");
-        }
-        while((index = finalShader.find(endifKey)) != std::string::npos) {
-            finalShader.replace(index, endifKey.length(), "");
+
+    size_t index;
+    while ((index = finalShader.find(ifdefKey)) != std::string::npos) {
+        const auto defineIndex = index + ifdefKey.length() + 1; // 1 for (
+
+        const auto closedBracketIndex = finalShader.find(')', defineIndex);
+        const auto defineValue = std::string(
+            finalShader.begin() + defineIndex,
+            finalShader.begin() + closedBracketIndex
+        );
+        const auto isMatchingAnyDefines = std::any_of(
+            defines.begin(),
+            defines.end(),
+            [&defineValue](const std::string &define) { return define == defineValue; }
+        );
+        if(isMatchingAnyDefines) {
+            finalShader.replace(index, closedBracketIndex - index + 1, ""); // +1 to include closed bracket
+            const auto endifIndex = finalShader.find(endifKey);
+            finalShader.replace(endifIndex, endifKey.length(), "");
+        } else {
+            finalShader.replace(index, finalShader.find(endifKey) + endifKey.length() - index, "");
         }
     }
     return finalShader;

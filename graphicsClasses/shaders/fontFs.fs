@@ -6,7 +6,9 @@ in vec2 fs_labelType;
 
 out vec4 pixelColor;
 
-uniform float levelProgression;
+#ifdef(SCROLLABLE)
+    uniform float levelProgression;
+#endif
 
 void main() {
 
@@ -14,10 +16,11 @@ void main() {
         ? 1.0
         : texture(characterTexture, vec2(fs_vertexUVs.x, fs_vertexUVs.y)).x;
 
-    vec3 color;
-    color = fs_labelType.x == 1.0 && fs_labelType.y > 0.0 && fs_labelType.y > levelProgression
+    vec3 color = fs_vertexColor;
+    #ifdef(SCROLLABLE)
+        color = fs_labelType.x == 1.0 && fs_labelType.y > 0.0 && fs_labelType.y > levelProgression
             ? fs_vertexColor * 0.2
             : fs_vertexColor;
-
+    #endif
     pixelColor = vec4(color, alpha);
 }

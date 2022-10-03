@@ -7,7 +7,9 @@ out vec2 fs_vertexUVs;
 out vec3 fs_vertexColor;
 out vec2 fs_labelType;
 
-uniform float positionY;
+#ifdef(SCROLLABLE)
+    uniform float positionY;
+#endif
 
 
 void main() {
@@ -16,7 +18,8 @@ void main() {
     fs_labelType = vs_labelType;
 
     vec2 positionXY = vs_vertexPosition.xy;
-    positionXY += vec2(0.0, positionY);
-
+    #ifdef(SCROLLABLE)
+        positionXY += vec2(0.0, positionY);
+    #endif
     gl_Position = vec4(positionXY, 0.0, 1.0);
 }
