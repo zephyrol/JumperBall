@@ -11,7 +11,7 @@
 class InGamePage : public Page {
 
 public:
-    explicit InGamePage(Player_sptr player, Page_sptr parent);
+    explicit InGamePage(Player_sptr player, const Page_sptr& parent);
 
     Page_wptr parent() override;
 
@@ -23,7 +23,7 @@ public:
 
 private:
 
-    Page_sptr _parent;
+    Page_wptr _parent;
 };
 
 
