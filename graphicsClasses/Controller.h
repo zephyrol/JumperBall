@@ -57,17 +57,7 @@ private:
 
     static float computeDistance(float x0, float y0, float x1, float y1);
 
-    void setUp(const Status &status);
-
-    void setDown(const Status &status);
-
-    void setRight(const Status &status);
-
-    void setLeft(const Status &status);
-
     void setEscape(const Status &status);
-
-    void setValidateButton(const Status &status);
 
     void runGame(size_t level);
 
@@ -83,6 +73,7 @@ private:
     const Player_sptr _player;
     const std::shared_ptr<Menu> _menu;
     std::map<Button, Status> _buttonsStatus;
+    const std::map<Button, std::function<void()> > _actionsWhenPressed;
 
     const JBTypes::FileContent _filesContent;
 

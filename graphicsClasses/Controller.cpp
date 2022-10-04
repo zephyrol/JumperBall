@@ -27,7 +27,15 @@ Controller::Controller(
         {Controller::Button::Right,    Controller::Status::Released},
         {Controller::Button::Left,     Controller::Status::Released},
         {Controller::Button::Escape,   Controller::Status::Released},
-        {Controller::Button::Validate, Controller::Status::Released}},
+        {Controller::Button::Validate, Controller::Status::Released}
+    },
+    _actionsWhenPressed{
+        {Controller::Button::Up, [this]() { _scene->setUp(); }},
+        {Controller::Button::Down, [this]() { _scene->setDown(); }},
+        {Controller::Button::Left, [this]() { _scene->setLeft(); }},
+        {Controller::Button::Right, [this]() { _scene->setRight(); }},
+        {Controller::Button::Validate, [this]() { _scene->setValidate(); }},
+    },
     _filesContent(filesContent),
     _mousePressingXCoord(0.f),
     _mousePressingYCoord(0.f),
@@ -58,32 +66,8 @@ Controller::Controller(
 }
 
 void Controller::interactionButtons(const Controller::Button &button, const Controller::Status &status) {
-
-    switch (button) {
-        case Controller::Button::Up:
-            setUp(status);
-            break;
-        case Controller::Button::Down:
-            setDown(status);
-            break;
-        case Controller::Button::Left:
-            setLeft(status);
-            break;
-        case Controller::Button::Right:
-            setRight(status);
-            break;
-        case Controller::Button::Validate:
-            setValidateButton(status);
-            break;
-        case Controller::Button::Escape:
-            setEscape(status);
-            break;
-        default:
-            break;
-    }
     _buttonsStatus[button] = status;
 }
-
 
 void Controller::interactionMouse(const Status &status, float posX, float posY) {
     if (status == Controller::Status::Released) {
@@ -98,13 +82,6 @@ void Controller::interactionMouse(const Status &status, float posX, float posY) 
         return;
     }
     updateMouse(posX, posY);
-}
-
-void Controller::setValidateButton(const Controller::Status &status) {
-    if (status != Controller::Status::Pressed) {
-        return;
-    }
-    _scene->setValidate();
 }
 
 void Controller::runGame(size_t level) {
@@ -151,30 +128,6 @@ void Controller::setEscape(const Controller::Status &status) {
         if (newPage != currentPage) {
             _viewer->setPage(newPage);
         }
-    }
-}
-
-void Controller::setRight(const Controller::Status &status) {
-    if (status == Controller::Status::Pressed) {
-        _scene->setRight();
-    }
-}
-
-void Controller::setLeft(const Status &status) {
-    if (status == Controller::Status::Pressed) {
-        _scene->setLeft();
-    }
-}
-
-void Controller::setDown(const Controller::Status &status) {
-    if (status == Controller::Status::Pressed) {
-        _scene->setDown();
-    }
-}
-
-void Controller::setUp(const Controller::Status &status) {
-    if (status == Controller::Status::Pressed) {
-        _scene->setUp();
     }
 }
 
@@ -319,12 +272,19 @@ void Controller::render() const {
 
 void Controller::update() {
 
-    // 1. Update scene and menu
+    // 1. Update controls
+    for (const auto &buttonFunction: _actionsWhenPressed) {
+        if(_buttonsStatus[buttonFunction.first] == Controller::Status::Pressed) {
+            buttonFunction.second();
+        }
+    }
+
+    // 2. Update scene and menu
     const auto &currentPage = _menu->currentPage();
     _scene->update();
     _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
 
-    // 2. Update viewer
+    // 3. Update viewer
     const auto &newPage = _menu->currentPage();
     if (newPage != currentPage) {
         _viewer->setPage(newPage);
