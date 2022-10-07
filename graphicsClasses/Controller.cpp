@@ -37,6 +37,12 @@ Controller::Controller(
         {Controller::Button::Right, [this]() { _scene->setRight(); }},
         {Controller::Button::Validate, [this]() { _scene->setValidate(); }},
     },
+    _actionsMouseDirection{
+        {Controller::ScreenDirection::North, _actionsWhenPressed.at(Controller::Button::Up)},
+        {Controller::ScreenDirection::South, _actionsWhenPressed.at(Controller::Button::Down)},
+        {Controller::ScreenDirection::West, _actionsWhenPressed.at(Controller::Button::Left)},
+        {Controller::ScreenDirection::East, _actionsWhenPressed.at(Controller::Button::Right)},
+    },
     _filesContent(filesContent),
     _mousePressingXCoord(0.f),
     _mousePressingYCoord(0.f),
@@ -222,22 +228,7 @@ void Controller::updateMouse(float posX, float posY) {
         }
         return;
     }
-    if (*_currentMovementDir == Controller::ScreenDirection::North) {
-        _scene->setUp();
-        return;
-    }
-    if (*_currentMovementDir == Controller::ScreenDirection::South) {
-        _scene->setDown();
-        return;
-    }
-    if (*_currentMovementDir == Controller::ScreenDirection::East) {
-        _scene->setRight();
-        return;
-    }
-    if (*_currentMovementDir == Controller::ScreenDirection::West) {
-        _scene->setLeft();
-        return;
-    }
+    _actionsMouseDirection.at(*_currentMovementDir)();
 }
 
 void Controller::releaseMouse(float posX, float posY) {

@@ -77,6 +77,7 @@ private:
     Status _currentEscapeStatus;
 
     const std::map<Button, std::function<void()> > _actionsWhenPressed;
+    const std::map<ScreenDirection, std::function<void()> > _actionsMouseDirection;
 
     const JBTypes::FileContent _filesContent;
 
