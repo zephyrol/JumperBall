@@ -31,10 +31,10 @@ Controller::Controller(
     },
     _currentEscapeStatus(Controller::Status::Released),
     _actionsWhenPressed{
-        {Controller::Button::Up, [this]() { _scene->setUp(); }},
-        {Controller::Button::Down, [this]() { _scene->setDown(); }},
-        {Controller::Button::Left, [this]() { _scene->setLeft(); }},
-        {Controller::Button::Right, [this]() { _scene->setRight(); }},
+        {Controller::Button::Up,       [this]() { _scene->setUp(); }},
+        {Controller::Button::Down,     [this]() { _scene->setDown(); }},
+        {Controller::Button::Left,     [this]() { _scene->setLeft(); }},
+        {Controller::Button::Right,    [this]() { _scene->setRight(); }},
         {Controller::Button::Validate, [this]() { _scene->setValidate(); }},
     },
     _actionsMouseDirection{
@@ -124,8 +124,8 @@ void Controller::setValidateMouse() {
 
 void Controller::escapeAction() {
 
-    const auto& escapeStatus = _buttonsStatus.at(Button::Escape);
-    if (escapeStatus == Controller::Status::Released && _currentEscapeStatus == Status::Pressed ) {
+    const auto &escapeStatus = _buttonsStatus.at(Button::Escape);
+    if (escapeStatus == Controller::Status::Released && _currentEscapeStatus == Status::Pressed) {
 
         const auto &currentPage = _menu->currentPage();
         if (_menu->escapeAction()) {
@@ -144,37 +144,27 @@ void Controller::escapeAction() {
 
 Controller::ScreenDirection Controller::nearestDirection(float posX, float posY) const {
 
+    const auto getDistance = [&posX, &posY, this](float offsetX, float offsetY) {
+        return computeDistance(
+            _mousePreviousXCoord + offsetX,
+            _mousePreviousYCoord + offsetY,
+            posX,
+            posY
+        );
+    };
+
     Controller::ScreenDirection nearestDir = Controller::ScreenDirection::North;
     float computedDistance;
-    float nearestDistance = computeDistance(
-        _mousePreviousXCoord,
-        _mousePreviousYCoord + 1.f,
-        posX,
-        posY
-    );
-    if ((computedDistance = computeDistance(
-        _mousePreviousXCoord,
-        _mousePreviousYCoord - 1.f,
-        posX,
-        posY)) < nearestDistance) {
+    float nearestDistance = getDistance(0.f, 1.f);
+    if ((computedDistance = getDistance(0.f, -1.f)) < nearestDistance) {
         nearestDistance = computedDistance;
         nearestDir = Controller::ScreenDirection::South;
     }
-    if (
-        (computedDistance = computeDistance(
-            _mousePreviousXCoord + 1.f,
-            _mousePreviousYCoord,
-            posX,
-            posY)) < nearestDistance) {
+    if ((computedDistance = getDistance(1.f, 0.f)) < nearestDistance) {
         nearestDistance = computedDistance;
         nearestDir = Controller::ScreenDirection::East;
     }
-    if (computeDistance(
-        _mousePreviousXCoord - 1.f,
-        _mousePreviousYCoord,
-        posX,
-        posY
-    ) < nearestDistance) {
+    if (getDistance(-1.f, 0.f) < nearestDistance) {
         nearestDir = Controller::ScreenDirection::West;
     }
     return nearestDir;
@@ -237,7 +227,8 @@ void Controller::releaseMouse(float posX, float posY) {
 
     const float distance = computeDistance(_mousePressingXCoord, _mousePressingYCoord, posX, posY);
     constexpr float pressTimeThreshold = 0.3f;
-    if (distance < thresholdMoving
+    if (
+        distance < thresholdMoving
         && JBTypesMethods::getTimeSecondsSinceTimePoint(_mousePressTime) < pressTimeThreshold
         ) {
         setValidateMouse();
@@ -270,7 +261,7 @@ void Controller::update() {
 
     // 1. Update controls
     for (const auto &buttonFunction: _actionsWhenPressed) {
-        if(_buttonsStatus[buttonFunction.first] == Controller::Status::Pressed) {
+        if (_buttonsStatus[buttonFunction.first] == Controller::Status::Pressed) {
             buttonFunction.second();
         }
     }
