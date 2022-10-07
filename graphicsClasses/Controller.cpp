@@ -29,6 +29,7 @@ Controller::Controller(
         {Controller::Button::Escape,   Controller::Status::Released},
         {Controller::Button::Validate, Controller::Status::Released}
     },
+    _currentEscapeStatus(Controller::Status::Released),
     _actionsWhenPressed{
         {Controller::Button::Up, [this]() { _scene->setUp(); }},
         {Controller::Button::Down, [this]() { _scene->setDown(); }},
@@ -115,8 +116,11 @@ void Controller::setValidateMouse() {
     }
 }
 
-void Controller::setEscape(const Controller::Status &status) {
-    if (status == Controller::Status::Released && _buttonsStatus.at(Button::Escape) == Status::Pressed) {
+void Controller::escapeAction() {
+
+    const auto& escapeStatus = _buttonsStatus.at(Button::Escape);
+    if (escapeStatus == Controller::Status::Released && _currentEscapeStatus == Status::Pressed ) {
+
         const auto &currentPage = _menu->currentPage();
         if (_menu->escapeAction()) {
             _requestToLeave = true;
@@ -129,6 +133,7 @@ void Controller::setEscape(const Controller::Status &status) {
             _viewer->setPage(newPage);
         }
     }
+    _currentEscapeStatus = escapeStatus;
 }
 
 Controller::ScreenDirection Controller::nearestDirection(float posX, float posY) const {
@@ -218,19 +223,19 @@ void Controller::updateMouse(float posX, float posY) {
         return;
     }
     if (*_currentMovementDir == Controller::ScreenDirection::North) {
-        setUp(Controller::Status::Pressed);
+        _scene->setUp();
         return;
     }
     if (*_currentMovementDir == Controller::ScreenDirection::South) {
-        setDown(Controller::Status::Pressed);
+        _scene->setDown();
         return;
     }
     if (*_currentMovementDir == Controller::ScreenDirection::East) {
-        setRight(Controller::Status::Pressed);
+        _scene->setRight();
         return;
     }
     if (*_currentMovementDir == Controller::ScreenDirection::West) {
-        setLeft(Controller::Status::Pressed);
+        _scene->setLeft();
         return;
     }
 }
@@ -278,6 +283,7 @@ void Controller::update() {
             buttonFunction.second();
         }
     }
+    escapeAction();
 
     // 2. Update scene and menu
     const auto &currentPage = _menu->currentPage();

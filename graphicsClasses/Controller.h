@@ -57,7 +57,7 @@ private:
 
     static float computeDistance(float x0, float y0, float x1, float y1);
 
-    void setEscape(const Status &status);
+    void escapeAction();
 
     void runGame(size_t level);
 
@@ -72,7 +72,10 @@ private:
 
     const Player_sptr _player;
     const std::shared_ptr<Menu> _menu;
+
     std::map<Button, Status> _buttonsStatus;
+    Status _currentEscapeStatus;
+
     const std::map<Button, std::function<void()> > _actionsWhenPressed;
 
     const JBTypes::FileContent _filesContent;
