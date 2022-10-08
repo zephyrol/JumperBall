@@ -8,8 +8,8 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <player/Player.h>
-#include <scene/MapGenerator.h>
+#include "player/Player.h"
+#include "scene/MapGenerator.h"
 #include "scene/SceneRendering.h"
 #include "Viewer.h"
 #include "graphicMenu/PageRendering.h"
@@ -20,12 +20,6 @@ public:
 
     enum class Status {
         Pressed, Released
-    };
-    enum class Button {
-        Up, Down, Left, Right, Escape, Validate
-    };
-    enum class ScreenDirection {
-        North, South, East, West
     };
     enum class Pointer {
         Mouse, TouchScreen
@@ -53,16 +47,10 @@ public:
     void resize(size_t screenWidth, size_t screenHeight);
 
 private:
-    ScreenDirection nearestDirection(float posX, float posY) const;
-
-    static float computeDistance(float x0, float y0, float x1, float y1);
 
     void escapeAction();
 
     void runGame(size_t level);
-
-    // Mouse/TouchPad/TouchScreen
-    void pressMouse(float posX, float posY);
 
     void updateMouse(float posX, float posY);
 
@@ -73,7 +61,6 @@ private:
     const Player_sptr _player;
     const std::shared_ptr<Menu> _menu;
 
-    std::map<Button, Status> _buttonsStatus;
     Status _currentEscapeStatus;
 
     const std::map<Button, std::function<void()> > _actionsWhenPressed;
@@ -81,16 +68,6 @@ private:
 
     const JBTypes::FileContent _filesContent;
 
-    float _mousePressingXCoord;
-    float _mousePressingYCoord;
-    float _mouseCurrentXCoord;
-    float _mouseCurrentYCoord;
-    float _mousePreviousXCoord;
-    float _mousePreviousYCoord;
-    JBTypes::timePointMs _mouseUpdatingTime;
-    JBTypes::timePointMs _mousePressTime;
-    std::shared_ptr<const Controller::ScreenDirection> _currentMovementDir;
-    bool _mouseIsPressed;
     bool _requestToLeave;
 
     std::shared_ptr<Scene> _scene;

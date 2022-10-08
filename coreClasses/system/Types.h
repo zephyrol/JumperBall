@@ -7,6 +7,7 @@
 
 #ifndef TYPES_H
 #define TYPES_H
+
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -19,6 +20,7 @@
 #include <array>
 #include <memory>
 #include <chrono>
+
 #define EPSILON_F 0.0001f
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -32,89 +34,119 @@ namespace JBTypes {
 
 
     using FileContent = std::map<std::string, std::string>;
-enum class Direction { North, South, East, West, Up, Down };
+    enum class Direction {
+        North, South, East, West, Up, Down
+    };
 
-enum class Color {
-    None,
-    Red,
-    Green,
-    Blue,
-    Yellow,
-    Orange,
-    Purple,
-    ShinyRed,
-    ShinyGreen,
-    ShinyBlue
-};
+    enum class Color {
+        None,
+        Red,
+        Green,
+        Blue,
+        Yellow,
+        Orange,
+        Purple,
+        ShinyRed,
+        ShinyGreen,
+        ShinyBlue
+    };
 
-using Dir = Direction;
+    using Dir = Direction;
 
-struct vec3f { float x; float y; float z; };
-struct vec2f { float x; float y; };
+    struct vec3f {
+        float x;
+        float y;
+        float z;
+    };
+    struct vec2f {
+        float x;
+        float y;
+    };
 
-using vec3ui = std::array <unsigned int, 3>;
-using vec3i = std::array <int, 3>;
+    using vec3ui = std::array<unsigned int, 3>;
+    using vec3i = std::array<int, 3>;
 
-using timePointMs = std::chrono::time_point <
-    std::chrono::system_clock,
-    std::chrono::duration < long int, std::ratio <1, 1000> >
->;
-using durationMs = std::chrono::duration <long int, std::ratio <1, 1000> >;
-struct Quaternion { JBTypes::vec3f v; float w; };
+    using timePointMs = std::chrono::time_point<
+        std::chrono::system_clock,
+        std::chrono::duration<long int, std::ratio<1, 1000> >
+    >;
+    using durationMs = std::chrono::duration<long int, std::ratio<1, 1000> >;
+    struct Quaternion {
+        JBTypes::vec3f v;
+        float w;
+    };
 }
 
 namespace JBTypesMethods {
-JBTypes::vec3f directionAsVector(JBTypes::Dir dir);
-JBTypes::vec3f rotationVectorUpToDir (const JBTypes::Dir& dir);
+    JBTypes::vec3f directionAsVector(JBTypes::Dir dir);
 
-JBTypes::Dir integerAsDirection(unsigned int number);
-JBTypes::Dir charAsDirection(unsigned char dirChar);
-JBTypes::Dir vectorAsDirection(const JBTypes::vec3f& vec);
-unsigned int directionAsInteger(JBTypes::Dir dir);
-std::array<bool,6> strDirAsArray(const std::string& directions);
+    JBTypes::vec3f rotationVectorUpToDir(const JBTypes::Dir &dir);
 
-JBTypes::timePointMs getTimePointMSNow() noexcept;
+    JBTypes::Dir integerAsDirection(unsigned int number);
 
-float getTimeSecondsSinceTimePoint(const JBTypes::timePointMs& timePoint) noexcept;
+    JBTypes::Dir charAsDirection(unsigned char dirChar);
 
-float getFloatFromDurationMS(const JBTypes::durationMs& dms);
+    JBTypes::Dir vectorAsDirection(const JBTypes::vec3f &vec);
 
-JBTypes::timePointMs getTimePointMsFromTimePoint(
-    const std::chrono::time_point <std::chrono::system_clock>& timePoint
+    unsigned int directionAsInteger(JBTypes::Dir dir);
+
+    std::array<bool, 6> strDirAsArray(const std::string &directions);
+
+    JBTypes::timePointMs getTimePointMSNow() noexcept;
+
+    float getTimeSecondsSinceTimePoint(const JBTypes::timePointMs &timePoint) noexcept;
+
+    float getFloatFromDurationMS(const JBTypes::durationMs &dms);
+
+    JBTypes::timePointMs getTimePointMsFromTimePoint(
+        const std::chrono::time_point<std::chrono::system_clock> &timePoint
     ) noexcept;
 
 
-float dot(const JBTypes::vec3f& a, const JBTypes::vec3f& b);
-JBTypes::vec3f cross(const JBTypes::vec3f& a, const JBTypes::vec3f& b);
-JBTypes::vec3f add(const JBTypes::vec3f& a, const JBTypes::vec3f& b);
-JBTypes::vec3f scalarApplication(float scalar, const JBTypes::vec3f& vec);
-float distance(const JBTypes::vec3f& a, const JBTypes::vec3f& b);
-float length(const JBTypes::vec3f& vec);
-JBTypes::vec3f normalize(const JBTypes::vec3f& vec);
+    float dot(const JBTypes::vec3f &a, const JBTypes::vec3f &b);
 
-JBTypes::Quaternion createQuaternion(const JBTypes::vec3f& v, float w);
-JBTypes::Quaternion multiply(const JBTypes::Quaternion& q1, const JBTypes::Quaternion& q2);
-JBTypes::Quaternion q2q1(
-    const JBTypes::Quaternion& q1q2,
-    const JBTypes::Quaternion& q1,
-    const JBTypes::Quaternion& q2
+    JBTypes::vec3f cross(const JBTypes::vec3f &a, const JBTypes::vec3f &b);
+
+    JBTypes::vec3f add(const JBTypes::vec3f &a, const JBTypes::vec3f &b);
+
+    JBTypes::vec3f scalarApplication(float scalar, const JBTypes::vec3f &vec);
+
+    float distance(const JBTypes::vec3f &a, const JBTypes::vec3f &b);
+
+    float length(const JBTypes::vec3f &vec);
+
+    JBTypes::vec3f normalize(const JBTypes::vec3f &vec);
+
+    JBTypes::Quaternion createQuaternion(const JBTypes::vec3f &v, float w);
+
+    JBTypes::Quaternion multiply(const JBTypes::Quaternion &q1, const JBTypes::Quaternion &q2);
+
+    JBTypes::Quaternion q2q1(
+        const JBTypes::Quaternion &q1q2,
+        const JBTypes::Quaternion &q1,
+        const JBTypes::Quaternion &q2
     );
-JBTypes::Quaternion inverse(const JBTypes::Quaternion& q);
-JBTypes::Quaternion createRotationQuaternion(const JBTypes::vec3f& axis, float angle);
 
-JBTypes::vec3f rotateVector(const JBTypes::vec3f& v, const JBTypes::Quaternion& q);
+    JBTypes::Quaternion inverse(const JBTypes::Quaternion &q);
 
-void displayInstallError();
+    JBTypes::Quaternion createRotationQuaternion(const JBTypes::vec3f &axis, float angle);
 
-std::string colorToString(const JBTypes::Color& color);
-JBTypes::Color colorToShiny(const JBTypes::Color& color);
-JBTypes::Color charAsColor(unsigned char charColor);
+    JBTypes::vec3f rotateVector(const JBTypes::vec3f &v, const JBTypes::Quaternion &q);
 
-template<typename K, typename V> std::unordered_map <K, V> createMap(std::vector <K> keys, std::vector <V> values);
+    void displayInstallError();
 
-JBTypes::vec3i directionAsVectorInt(JBTypes::Dir dir);
+    std::string colorToString(const JBTypes::Color &color);
 
-bool floatsEqual(float a, float b);
+    JBTypes::Color colorToShiny(const JBTypes::Color &color);
+
+    JBTypes::Color charAsColor(unsigned char charColor);
+
+    template<typename K, typename V>
+    std::unordered_map<K, V> createMap(std::vector<K> keys, std::vector<V> values);
+
+    JBTypes::vec3i directionAsVectorInt(JBTypes::Dir dir);
+
+    bool floatsEqual(float a, float b);
 
 }
 

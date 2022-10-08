@@ -21,14 +21,6 @@ Controller::Controller(
         _player,
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
     )),
-    _buttonsStatus{
-        {Controller::Button::Up,       Controller::Status::Released},
-        {Controller::Button::Down,     Controller::Status::Released},
-        {Controller::Button::Right,    Controller::Status::Released},
-        {Controller::Button::Left,     Controller::Status::Released},
-        {Controller::Button::Escape,   Controller::Status::Released},
-        {Controller::Button::Validate, Controller::Status::Released}
-    },
     _currentEscapeStatus(Controller::Status::Released),
     _actionsWhenPressed{
         {Controller::Button::Up,       [this]() { _scene->setUp(); }},
@@ -44,16 +36,6 @@ Controller::Controller(
         {Controller::ScreenDirection::East, _actionsWhenPressed.at(Controller::Button::Right)},
     },
     _filesContent(filesContent),
-    _mousePressingXCoord(0.f),
-    _mousePressingYCoord(0.f),
-    _mouseCurrentXCoord(0.f),
-    _mouseCurrentYCoord(0.f),
-    _mousePreviousXCoord(0.f),
-    _mousePreviousYCoord(0.f),
-    _mouseUpdatingTime(),
-    _mousePressTime(),
-    _currentMovementDir(nullptr),
-    _mouseIsPressed(false),
     _requestToLeave(false),
     _scene(std::make_shared<Scene>(
         filesContent.at("map" + std::to_string(_player->levelProgression()) + ".txt"),
@@ -77,6 +59,11 @@ void Controller::interactionButtons(const Controller::Button &button, const Cont
 }
 
 void Controller::interactionMouse(const Status &status, float posX, float posY) {
+    _mouseStatus = status;
+    _mouseCurrentXCoord = posX;
+    _mouseCurrentXCoord = posX;
+    return;
+
     if (status == Controller::Status::Released) {
         if (_mouseIsPressed) {
             releaseMouse(posX, posY);
@@ -142,47 +129,6 @@ void Controller::escapeAction() {
     _currentEscapeStatus = escapeStatus;
 }
 
-Controller::ScreenDirection Controller::nearestDirection(float posX, float posY) const {
-
-    const auto getDistance = [&posX, &posY, this](float offsetX, float offsetY) {
-        return computeDistance(
-            _mousePreviousXCoord + offsetX,
-            _mousePreviousYCoord + offsetY,
-            posX,
-            posY
-        );
-    };
-
-    Controller::ScreenDirection nearestDir = Controller::ScreenDirection::North;
-    float computedDistance;
-    float nearestDistance = getDistance(0.f, 1.f);
-    if ((computedDistance = getDistance(0.f, -1.f)) < nearestDistance) {
-        nearestDistance = computedDistance;
-        nearestDir = Controller::ScreenDirection::South;
-    }
-    if ((computedDistance = getDistance(1.f, 0.f)) < nearestDistance) {
-        nearestDistance = computedDistance;
-        nearestDir = Controller::ScreenDirection::East;
-    }
-    if (getDistance(-1.f, 0.f) < nearestDistance) {
-        nearestDir = Controller::ScreenDirection::West;
-    }
-    return nearestDir;
-}
-
-void Controller::pressMouse(float posX, float posY) {
-    _currentMovementDir = nullptr;
-    _mousePressingXCoord = posX;
-    _mousePressingYCoord = posY;
-    _mousePreviousXCoord = posX;
-    _mousePreviousYCoord = posY;
-    _mouseCurrentXCoord = posX;
-    _mouseCurrentYCoord = posY;
-    _mouseUpdatingTime = JBTypesMethods::getTimePointMSNow();
-    _mousePressTime = _mouseUpdatingTime;
-    _mouseIsPressed = true;
-}
-
 void Controller::updateMouse(float posX, float posY) {
 
     const auto now = JBTypesMethods::getTimePointMSNow();
@@ -238,12 +184,6 @@ void Controller::releaseMouse(float posX, float posY) {
 
 bool Controller::requestToLeave() const {
     return _requestToLeave;
-}
-
-float Controller::computeDistance(float x0, float y0, float x1, float y1) {
-    const auto x1MinusX0 = x1 - x0;
-    const auto y1MinusY0 = y1 - y0;
-    return sqrtf(x1MinusX0 * x1MinusX0 + y1MinusY0 * y1MinusY0);
 }
 
 void Controller::resize(size_t screenWidth, size_t screenHeight) {
