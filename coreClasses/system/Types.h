@@ -78,6 +78,7 @@ namespace JBTypes {
 }
 
 namespace JBTypesMethods {
+
     JBTypes::vec3f directionAsVector(JBTypes::Dir dir);
 
     JBTypes::vec3f rotationVectorUpToDir(const JBTypes::Dir &dir);

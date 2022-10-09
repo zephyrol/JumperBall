@@ -17,7 +17,7 @@ Scene::Scene(const std::string &mapContent, float screenRatio, Player_sptr playe
     _isUsingTouchScreen(isUsingTouchScreen) {
 }
 
-void Scene::update() {
+void Scene::update(const JBTypes::timePointMs &updatingTime) {
 
     const auto &status = _player->status();
     Ball::ActionRequest actionRequest;
@@ -51,8 +51,6 @@ void Scene::update() {
             break;
         }
     }
-
-    const auto updatingTime = JBTypesMethods::getTimePointMSNow();
 
     _map->update(updatingTime, actionRequest);
     _camera->update(updatingTime, status, actionRequest == Ball::ActionRequest::MoveCamera);

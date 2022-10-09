@@ -3,7 +3,6 @@
 //
 
 #include "ScrollablePage.h"
-#include "system/Mouse.h"
 
 ScrollablePage::ScrollablePage(Player_sptr &&player, float height) :
     Page(std::move(player)),
@@ -65,7 +64,7 @@ void ScrollablePage::update(const Mouse &mouse, const JBTypes::timePointMs &upda
 
         if (_releaseVelocity > 0.f && t < -(_releaseVelocity) / (2.f * -decelerationCoefficient / 2.f)) {
             _localPosY = -deceleration + _releaseVelocity * t + _localReleasedPosY;
-        } else if ( _releaseVelocity < 0.f && t < -(_releaseVelocity) / (decelerationCoefficient) ) {
+        } else if (_releaseVelocity < 0.f && t < -(_releaseVelocity) / (decelerationCoefficient)) {
             _localPosY = deceleration + _releaseVelocity * t + _localReleasedPosY;
         }
 

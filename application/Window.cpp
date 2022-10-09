@@ -152,58 +152,59 @@ bool Window::inputManagement() {
         _windowHeight = windowHeight;
     }
 
-    const std::function<Controller::Status(const std::vector<unsigned int> &&)>
-        getButtonStatus = [this](const std::vector<unsigned int> &&keys) -> Controller::Status {
+    const std::function<KeyboardKey::Status(const std::vector<unsigned int> &&)>
+        getButtonStatus = [this](const std::vector<unsigned int> &&keys) -> KeyboardKey::Status {
         for (unsigned int key: keys) {
-            if (glfwGetKey(_window, key) == GLFW_PRESS) {
-                return Controller::Status::Pressed;
+            if (glfwGetKey(_window, static_cast<int>(key)) == GLFW_PRESS) {
+                return KeyboardKey::Status::Pressed;
             }
         }
-        return Controller::Status::Released;
+        return KeyboardKey::Status::Released;
     };
 
     // ESCAPE
-    const Controller::Status escapeStatus = getButtonStatus({GLFW_KEY_ESCAPE});
-    _controller.interactionButtons(Controller::Button::Escape, escapeStatus);
+    const KeyboardKey::Status escapeStatus = getButtonStatus({GLFW_KEY_ESCAPE});
+    _controller.interactionButtons(KeyboardKey::Button::Escape, escapeStatus);
 
     // VALIDATE
-    const Controller::Status validateStatus = getButtonStatus({GLFW_KEY_ENTER, GLFW_KEY_SPACE});
-    _controller.interactionButtons(Controller::Button::Validate, validateStatus);
+    const KeyboardKey::Status validateStatus = getButtonStatus({GLFW_KEY_ENTER, GLFW_KEY_SPACE});
+    _controller.interactionButtons(KeyboardKey::Button::Validate, validateStatus);
 
     // RIGHT
-    const Controller::Status rightStatus = getButtonStatus({GLFW_KEY_RIGHT, GLFW_KEY_L});
-    _controller.interactionButtons(Controller::Button::Right, rightStatus);
+    const KeyboardKey::Status rightStatus = getButtonStatus({GLFW_KEY_RIGHT, GLFW_KEY_L});
+    _controller.interactionButtons(KeyboardKey::Button::Right, rightStatus);
 
     // LEFT
-    const Controller::Status leftStatus = getButtonStatus({GLFW_KEY_LEFT, GLFW_KEY_H});
-    _controller.interactionButtons(Controller::Button::Left, leftStatus);
+    const KeyboardKey::Status leftStatus = getButtonStatus({GLFW_KEY_LEFT, GLFW_KEY_H});
+    _controller.interactionButtons(KeyboardKey::Button::Left, leftStatus);
 
     // UP
-    const Controller::Status upStatus = getButtonStatus({GLFW_KEY_UP, GLFW_KEY_K});
-    _controller.interactionButtons(Controller::Button::Up, upStatus);
+    const KeyboardKey::Status upStatus = getButtonStatus({GLFW_KEY_UP, GLFW_KEY_K});
+    _controller.interactionButtons(KeyboardKey::Button::Up, upStatus);
 
     // Down
-    const Controller::Status downStatus = getButtonStatus({GLFW_KEY_DOWN, GLFW_KEY_J});
-    _controller.interactionButtons(Controller::Button::Down, downStatus);
+    const KeyboardKey::Status downStatus = getButtonStatus({GLFW_KEY_DOWN, GLFW_KEY_J});
+    _controller.interactionButtons(KeyboardKey::Button::Down, downStatus);
 
     // MOUSE BUTTON 1;
-    const Controller::Status mouseButton1Status =
-        glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS
-        ? Controller::Status::Pressed
-        : Controller::Status::Released;
+    const bool isMousePressed = glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS;
 
-    const auto getPosXY = [this]() -> std::pair<float, float> {
-        double posX, posY;
-        glfwGetCursorPos(_window, &posX, &posY);
-        return {static_cast <float>(posX), static_cast <float>(posY)};
-    };
-    const std::pair<float, float> posXY = getPosXY();
+    if(isMousePressed) {
+        const auto getPosXY = [this]() -> std::pair<float, float> {
+            double posX, posY;
+            glfwGetCursorPos(_window, &posX, &posY);
+            return {static_cast <float>(posX), static_cast <float>(posY)};
+        };
+        const std::pair<float, float> posXY = getPosXY();
 
-    const float posX = posXY.first / static_cast <float>(_windowWidth);
+        const float posX = posXY.first / static_cast <float>(_windowWidth);
 
-    // GLFW defines y=0 as the top
-    const float posY = 1.f - posXY.second / static_cast <float>(_windowHeight);
-    _controller.interactionMouse(mouseButton1Status, posX, posY);
+        // GLFW defines y=0 as the top
+        const float posY = 1.f - posXY.second / static_cast <float>(_windowHeight);
+        _controller.pressMouse(posX, posY);
+    } else {
+        _controller.releaseMouse();
+    }
 
     return glfwWindowShouldClose(_window) != 0 || _controller.requestToLeave();
 }

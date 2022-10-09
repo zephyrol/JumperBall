@@ -18,8 +18,8 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z) :
     _mechanicsPatternJumping(getRadius()),
     _mechanicsPatternLongJumping(getRadius(), 3.f, 4.2f),
     _mechanicsPatternFalling(getRadius(), 0.f, 0.f),
-    _timeAction(std::chrono::system_clock::now()),
-    _timeStateOfLife(std::chrono::system_clock::now()),
+    _timeAction(JBTypesMethods::getTimePointMSNow()),
+    _timeStateOfLife(JBTypesMethods::getTimePointMSNow()),
     _burnCoefficientTrigger(0.f),
     _burnCoefficientCurrent(0.f),
     _teleportationColor(JBTypes::Color::None),
@@ -141,7 +141,7 @@ void Ball::doAction(Ball::ActionRequest action) {
                 jump();
             } else {
                 _jumpRequest = true;
-                _timeJumpRequest = JBTypesMethods::getTimePointMSNow();
+                _timeJumpRequest = _updatingTime;
             }
             break;
         default:
@@ -348,15 +348,11 @@ JBTypes::Dir Ball::lookTowards() const {
 }
 
 float Ball::getTimeSecondsSinceAction() const noexcept {
-    const JBTypes::timePointMs timeNowMs = JBTypesMethods::getTimePointMSNow();
-    const JBTypes::timePointMs timeActionMs = getTimeActionMs();
-    return JBTypesMethods::getFloatFromDurationMS(timeNowMs - timeActionMs);
+    return JBTypesMethods::getFloatFromDurationMS(_updatingTime - _timeAction);
 }
 
 float Ball::getTimeSecondsSinceStateOfLife() const noexcept {
-    const JBTypes::timePointMs timeNowMs = JBTypesMethods::getTimePointMSNow();
-    const JBTypes::timePointMs timeStateOfLifeMs = getTimeStateOfLifeMs();
-    return JBTypesMethods::getFloatFromDurationMS(timeNowMs - timeStateOfLifeMs);
+    return JBTypesMethods::getFloatFromDurationMS(_updatingTime - _timeStateOfLife);
 }
 
 JBTypes::vec3f Ball::lookTowardsAsVector() const {
@@ -416,8 +412,8 @@ void Ball::blockEvent() noexcept {
         setTimeLifeNow();
         return;
     }
-    const auto hasToJump = _jumpRequest && JBTypesMethods::getTimeSecondsSinceTimePoint(_timeJumpRequest)
-                                           < timeToGetNextBlock;
+    const auto hasToJump = _jumpRequest
+        && JBTypesMethods::getFloatFromDurationMS(_updatingTime - _timeJumpRequest) < timeToGetNextBlock;
     if (hasToJump) {
         _jumpRequest = false;
         jump();
@@ -923,5 +919,3 @@ unsigned int Ball::numberOfKeys() const {
 unsigned int Ball::numberOfCoins() const {
     return _nbOfCoins;
 }
-
-

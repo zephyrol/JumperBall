@@ -21,7 +21,7 @@ public:
         const Ball_sptr &ball
     );
 
-    virtual void update() override;
+    virtual void update(const JBTypes::timePointMs &updatingTime) override;
 
     const JBTypes::Dir &movementDirection() const;
 

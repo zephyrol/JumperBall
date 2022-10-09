@@ -29,7 +29,7 @@ const JBTypes::Dir& direction() const;
 bool isGotten() const;
 float getTimeSinceObtaining() const;
 float getTimeSinceCreation() const;
-virtual void catchingTest() = 0;
+virtual void catchingTest(const JBTypes::timePointMs &updatingTime) = 0;
 
 virtual vecCstShape_sptr getShapes() const = 0;
 
@@ -42,7 +42,7 @@ Displayable::DynamicValues <float> getDynamicFloats() const override;
 Displayable::GlobalState getGlobalState() const override;
 bool globalStateMayChange() const override;
 
-void setAsGotten();
+void setAsGotten(const JBTypes::timePointMs &updatingTime);
 
 private:
 

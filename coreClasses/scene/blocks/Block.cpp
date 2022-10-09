@@ -136,7 +136,7 @@ std::string Block::positionToString(const JBTypes::vec3ui& position) {
 void Block::update(const JBTypes::timePointMs &updatingTime) {
     _updatingTime = updatingTime;
     for(const auto& enemy : _enemies) {
-        enemy->update();
+        enemy->update(_updatingTime);
     }
 }
 

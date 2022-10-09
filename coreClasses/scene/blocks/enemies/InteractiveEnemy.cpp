@@ -11,7 +11,6 @@ InteractiveEnemy::InteractiveEnemy(
     size_t length,
     const Ball_sptr &ball,
     bool isActivated
-):
-Enemy(initialPosition, direction, size, length, isActivated),
-_ball(ball) {
+) : Enemy(initialPosition, direction, size, length, isActivated),
+    _ball(ball) {
 }

@@ -9,11 +9,11 @@
 #include <scene/Ball.h>
 #include "Enemy.h"
 
-class InteractiveEnemy: public Enemy{
+class InteractiveEnemy : public Enemy {
 public:
     InteractiveEnemy(
-        const JBTypes::vec3ui& initialPosition,
-        const JBTypes::Dir& direction,
+        const JBTypes::vec3ui &initialPosition,
+        const JBTypes::Dir &direction,
         float size,
         size_t length,
         const Ball_sptr &ball,

@@ -108,8 +108,8 @@ const JBTypes::Dir &Item::direction() const {
     return _direction;
 }
 
-void Item::setAsGotten() {
-    _obtainingTime = JBTypesMethods::getTimePointMSNow();
+void Item::setAsGotten(const JBTypes::timePointMs &updatingTime) {
+    _obtainingTime = updatingTime;
     _gotten = true;
 }
 

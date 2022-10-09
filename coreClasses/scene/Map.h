@@ -43,8 +43,6 @@ public:
 
     float getLargestSize() const;
 
-    float getTimeSinceCreation() const;
-
 // TODO: move to special
     static std::map<JBTypes::Color, bool> createSpecialStates();
 

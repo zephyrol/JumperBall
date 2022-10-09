@@ -8,12 +8,12 @@
 #include "Enemy.h"
 
 Enemy::Enemy(
-    const JBTypes::vec3ui& initialPosition,
-    const JBTypes::Dir& direction,
+    const JBTypes::vec3ui &initialPosition,
+    const JBTypes::Dir &direction,
     float size,
     size_t length,
     bool isActivated
-):
+) :
     _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(direction),
     _size(size),
@@ -21,15 +21,14 @@ Enemy::Enemy(
     _initialPosition(init3DPosition(initialPosition)),
     _position(_initialPosition),
     _isActivated(isActivated),
-    _scale(isActivated ? scaleActivated : scaleDisable )
-{
+    _scale(isActivated ? scaleActivated : scaleDisable) {
 }
 
 JBTypes::Color Enemy::getColor() const {
     return JBTypes::Color::None;
 }
 
-const JBTypes::timePointMs& Enemy::creationTime() const {
+const JBTypes::timePointMs &Enemy::creationTime() const {
     return _creationTime;
 }
 
@@ -44,12 +43,12 @@ size_t Enemy::length() const {
 void Enemy::switchOnOff() {
 }
 
-JBTypes::vec3f Enemy::init3DPosition(const JBTypes::vec3ui & initialPosition) const {
+JBTypes::vec3f Enemy::init3DPosition(const JBTypes::vec3ui &initialPosition) const {
 
-    const JBTypes::Dir& currentDir = _direction;
+    const JBTypes::Dir &currentDir = _direction;
     const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
 
-    const JBTypes::vec3f posWorld = { 
+    const JBTypes::vec3f posWorld = {
         static_cast <float>(initialPosition.at(0)),
         static_cast <float>(initialPosition.at(1)),
         static_cast <float>(initialPosition.at(2))
@@ -64,18 +63,18 @@ JBTypes::vec3f Enemy::init3DPosition(const JBTypes::vec3ui & initialPosition) co
     };
 }
 
-const JBTypes::vec3f& Enemy::position() const {
+const JBTypes::vec3f &Enemy::position() const {
     return _position;
 }
 
-const JBTypes::Dir& Enemy::direction() const {
+const JBTypes::Dir &Enemy::direction() const {
     return _direction;
 }
 
-Displayable::DynamicValues <JBTypes::vec3f> Enemy::getDynamicVec3fs() const {
+Displayable::DynamicValues<JBTypes::vec3f> Enemy::getDynamicVec3fs() const {
     return {
-        { "translation", { _position.x, _position.y, _position.z }},
-        { "scale", _scale }
+        {"translation", {_position.x, _position.y, _position.z}},
+        {"scale",       _scale}
     };
 }
 
@@ -83,8 +82,8 @@ Displayable::GlobalState Enemy::getGlobalState() const {
     return Displayable::GlobalState::Separate;
 }
 
-void Enemy::update() {
+void Enemy::update(const JBTypes::timePointMs &) {
 }
 
-const JBTypes::vec3f Enemy::scaleActivated = { 1.f, 1.f, 1.f };
-const JBTypes::vec3f Enemy::scaleDisable = { 0.f, 0.f, 0.f };
+const JBTypes::vec3f Enemy::scaleActivated = {1.f, 1.f, 1.f};
+const JBTypes::vec3f Enemy::scaleDisable = {0.f, 0.f, 0.f};

@@ -13,7 +13,7 @@ InteractiveItem::InteractiveItem(
 {
 }
 
-void InteractiveItem::catchingTest () {
+void InteractiveItem::catchingTest(const JBTypes::timePointMs &updatingTime) {
     if (isGotten()) {
         return;
     }
@@ -22,7 +22,7 @@ void InteractiveItem::catchingTest () {
     const auto& boundingSphereRadius = ball->getRadius();
     const float distance = JBTypesMethods::distance(get3DPosition(), boundingSpherePosition);
     if (distance < boundingSphereRadius + itemBoundingSphereRadius) {
-        setAsGotten();
+        setAsGotten(updatingTime);
         catchItem();
     }
 }

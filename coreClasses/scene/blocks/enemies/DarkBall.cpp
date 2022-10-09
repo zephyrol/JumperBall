@@ -23,10 +23,9 @@ DarkBall::DarkBall(
     _movementDirection(movementDirection) {
 }
 
-void DarkBall::update() {
+void DarkBall::update(const JBTypes::timePointMs &updatingTime) {
     const ClassicalMechanics &mechanics = darkBallClassicalMechanics;
-    const float timeSinceCreation =
-        JBTypesMethods::getTimeSecondsSinceTimePoint(creationTime());
+    const float timeSinceCreation = JBTypesMethods::getFloatFromDurationMS(updatingTime - creationTime());
 
     const JBTypes::vec3f vecDirMovement = JBTypesMethods::directionAsVector(_movementDirection);
 

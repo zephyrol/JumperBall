@@ -44,7 +44,7 @@ public:
 
     void setDown();
 
-    void update();
+    void update(const JBTypes::timePointMs &updatingTime);
 
     void updateScreenRatio(float ratio);
 

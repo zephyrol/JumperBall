@@ -7,29 +7,34 @@
 
 #ifndef Laser_h
 #define Laser_h
+
 #include "InteractiveEnemy.h"
 
-class Laser:public InteractiveEnemy {
+class Laser : public InteractiveEnemy {
 public:
 
-Laser(const JBTypes::Color& color,
-      const JBTypes::vec3ui& initialPosition,
-      const JBTypes::Dir& dir,
-      size_t length,
-      const Ball_sptr &ball,
-      bool isActivated = true
-      );
+    Laser(
+        const JBTypes::Color &color,
+        const JBTypes::vec3ui &initialPosition,
+        const JBTypes::Dir &dir,
+        size_t length,
+        const Ball_sptr &ball,
+        bool isActivated = true
+    );
 
-virtual JBTypes::Color getColor() const override;
-vecCstShape_sptr getShapes() const override;
-void switchOnOff() override;
-virtual ~Laser() = default;
+    virtual JBTypes::Color getColor() const override;
+
+    vecCstShape_sptr getShapes() const override;
+
+    void switchOnOff() override;
+
+    virtual ~Laser() = default;
 
 private:
-const JBTypes::Color _color;
-static constexpr float laserRadius = 0.05f;
+    const JBTypes::Color _color;
+    static constexpr float laserRadius = 0.05f;
 
-bool touchingTest() const override;
+    bool touchingTest() const override;
 };
 
 #endif /* Laser_h */

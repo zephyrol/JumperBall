@@ -171,13 +171,17 @@ private:
     const ClassicalMechanics _mechanicsPatternLongJumping;
     const ClassicalMechanics _mechanicsPatternFalling;
 
-    std::chrono::time_point<std::chrono::system_clock> _timeAction;
-    std::chrono::time_point<std::chrono::system_clock> _timeStateOfLife;
+    JBTypes::timePointMs _timeAction;
+    JBTypes::timePointMs _timeStateOfLife;
 
-// BurnCoefficient at the last state change
+    /**
+     * BurnCoefficient at the last state change
+     */
     float _burnCoefficientTrigger;
 
-// current burnCoefficient
+    /**
+     * Current burnCoefficient
+     */
     float _burnCoefficientCurrent;
 
     JBTypes::Color _teleportationColor;
@@ -216,7 +220,6 @@ private:
     float getJumpingPosX() const noexcept;
 
     float getFallingPosX() const noexcept;
-
 
     Block_sptr getCurrentBlock();
 
@@ -265,7 +268,6 @@ private:
     void deteleportingUpdate() noexcept;
 
     void doAction(ActionRequest action);
-
 
     std::shared_ptr<const JBTypes::vec3ui> intersectBlock() const;
 

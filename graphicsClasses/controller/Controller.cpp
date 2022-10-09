@@ -193,8 +193,8 @@ void Controller::update() {
 
     // 2. Update scene and menu
     const auto &currentPage = _menu->currentPage();
-    _scene->update();
-    _menu->update(_mouse, JBTypes::timePointMs());
+    _scene->update(updatingTime);
+    _menu->update(_mouse, updatingTime);
 
     // 3. Update viewer
     const auto &newPage = _menu->currentPage();

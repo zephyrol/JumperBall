@@ -19,7 +19,7 @@ InteractiveBlock::InteractiveBlock(
 
 void InteractiveBlock::catchItem() {
     for (const Item_sptr& item : _items) {
-        item->catchingTest();
+        item->catchingTest(_updatingTime);
     }
 }
 

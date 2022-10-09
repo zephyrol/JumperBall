@@ -24,15 +24,16 @@ ThornBall::ThornBall(
     _movementDirection(movementDirection) {
 }
 
-void ThornBall::update() {
+void ThornBall::update(const JBTypes::timePointMs &updatingTime) {
     constexpr float movementDuration = 2.f;
-    const float timeSinceCreation = JBTypesMethods::getTimeSecondsSinceTimePoint(creationTime());
+    const float timeSinceCreation = JBTypesMethods::getFloatFromDurationMS(updatingTime - creationTime());
 
     const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(_movementDirection);
 
     const auto movementLength = static_cast <float>(length());
     const float localMovement = (1.f - cosf(2.f * static_cast <float>(M_PI) *
-                                            (timeSinceCreation / movementDuration))) / 2.f;
+                                            (timeSinceCreation / movementDuration))
+                                ) / 2.f;
     const float movementPosition = localMovement * movementLength;
 
     _position.x = _initialPosition.x + vecDir.x * movementPosition;

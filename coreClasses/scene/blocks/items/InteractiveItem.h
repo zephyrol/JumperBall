@@ -16,7 +16,7 @@ public:
         const Ball_sptr &ball
     );
 
-void catchingTest() override;
+void catchingTest(const JBTypes::timePointMs &updatingTime) override;
 virtual void catchItem();
 
 protected:

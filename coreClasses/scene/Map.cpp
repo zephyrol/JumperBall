@@ -105,10 +105,6 @@ float Map::getLargestSize() const {
     return boundingBoxMax;
 }
 
-float Map::getTimeSinceCreation() const {
-    return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
-}
-
 void Map::update(const JBTypes::timePointMs &updatingTime, const Ball::ActionRequest &action) {
 
     _updatingTime = updatingTime;
