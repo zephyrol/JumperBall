@@ -32,7 +32,7 @@ Page_sptr Menu::currentPage() {
     return _currentPage;
 }
 
-void Menu::update(bool isPressed, float screenPosY) {
+void Menu::update(const Mouse &mouse, const JBTypes::timePointMs &updatingTime) {
     if (_player->status() != Player::Status::InMenu) {
         return;
     }
@@ -43,7 +43,7 @@ void Menu::update(bool isPressed, float screenPosY) {
         _currentPage = _failurePage;
         _player->resetGameStatus();
     }
-    _currentPage->update(isPressed, screenPosY);
+    _currentPage->update(mouse, updatingTime);
 }
 
 void Menu::mouseClick(float mouseX, float mouseY) {

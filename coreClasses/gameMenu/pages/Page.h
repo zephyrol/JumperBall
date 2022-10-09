@@ -11,6 +11,7 @@
 #include "gameMenu/labels/Label.h"
 #include "player/Player.h"
 #include "gameMenu/nodes/TextNode.h"
+#include "system/Mouse.h"
 #include <list>
 
 class Page;
@@ -48,7 +49,7 @@ public:
 
     virtual vecCstTextNode_uptr genTextNodes() const = 0;
 
-    virtual void update(bool isPressed, float screenPosY);
+    virtual void update(const Mouse &mouse, const JBTypes::timePointMs &updatingTime);
 
     virtual void resize(float ratio) = 0;
 

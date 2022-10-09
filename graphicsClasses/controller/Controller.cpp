@@ -21,20 +21,6 @@ Controller::Controller(
         _player,
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
     )),
-    _currentEscapeStatus(Controller::Status::Released),
-    _actionsWhenPressed{
-        {Controller::Button::Up,       [this]() { _scene->setUp(); }},
-        {Controller::Button::Down,     [this]() { _scene->setDown(); }},
-        {Controller::Button::Left,     [this]() { _scene->setLeft(); }},
-        {Controller::Button::Right,    [this]() { _scene->setRight(); }},
-        {Controller::Button::Validate, [this]() { _scene->setValidate(); }},
-    },
-    _actionsMouseDirection{
-        {Controller::ScreenDirection::North, _actionsWhenPressed.at(Controller::Button::Up)},
-        {Controller::ScreenDirection::South, _actionsWhenPressed.at(Controller::Button::Down)},
-        {Controller::ScreenDirection::West, _actionsWhenPressed.at(Controller::Button::Left)},
-        {Controller::ScreenDirection::East, _actionsWhenPressed.at(Controller::Button::Right)},
-    },
     _filesContent(filesContent),
     _requestToLeave(false),
     _scene(std::make_shared<Scene>(
@@ -51,31 +37,37 @@ Controller::Controller(
         _filesContent,
         fontData,
         fontDataSize
-    )) {
+    )),
+    _keyboardKey({
+                     {KeyboardKey::Button::Up,       [this]() { _scene->setUp(); }},
+                     {KeyboardKey::Button::Down,     [this]() { _scene->setDown(); }},
+                     {KeyboardKey::Button::Left,     [this]() { _scene->setLeft(); }},
+                     {KeyboardKey::Button::Right,    [this]() { _scene->setRight(); }},
+                     {KeyboardKey::Button::Validate, [this]() { _scene->setValidate(); }},
+                     {KeyboardKey::Button::Escape,   [this]() { escapeAction(); }},
+                 }),
+    _mouse(
+        [this]() { _scene->setUp(); },
+        [this]() { _scene->setDown(); },
+        [this]() { _scene->setRight(); },
+        [this]() { _scene->setLeft(); },
+        [this](float mouseX, float mouseY) { setValidateMouse(mouseX, mouseY); },
+        [this]() { _scene->mouseSetUp(); }
+    ) {
 }
 
-void Controller::interactionButtons(const Controller::Button &button, const Controller::Status &status) {
-    _buttonsStatus[button] = status;
+void Controller::interactionButtons(const KeyboardKey::Button &button, const KeyboardKey::Status &status) {
+    status == KeyboardKey::Status::Pressed
+    ? _keyboardKey.press(button)
+    : _keyboardKey.release(button);
 }
 
-void Controller::interactionMouse(const Status &status, float posX, float posY) {
-    _mouseStatus = status;
-    _mouseCurrentXCoord = posX;
-    _mouseCurrentXCoord = posX;
-    return;
+void Controller::pressMouse(float posX, float posY) {
+    _mouse.press(posX, posY);
+}
 
-    if (status == Controller::Status::Released) {
-        if (_mouseIsPressed) {
-            releaseMouse(posX, posY);
-        }
-        return;
-    }
-
-    if (!_mouseIsPressed) {
-        pressMouse(posX, posY);
-        return;
-    }
-    updateMouse(posX, posY);
+void Controller::releaseMouse() {
+    _mouse.release();
 }
 
 void Controller::runGame(size_t level) {
@@ -88,11 +80,11 @@ void Controller::runGame(size_t level) {
     _viewer->setScene(_scene);
 }
 
-void Controller::setValidateMouse() {
+void Controller::setValidateMouse(float mouseX, float mouseY) {
     _scene->setValidateMouse();
 
     const auto &currentPage = _menu->currentPage();
-    _menu->mouseClick(_mousePreviousXCoord, _mousePreviousYCoord);
+    _menu->mouseClick(mouseX, mouseY);
 
     const auto &newPage = _menu->currentPage();
     if (newPage != currentPage) {
@@ -111,76 +103,70 @@ void Controller::setValidateMouse() {
 
 void Controller::escapeAction() {
 
-    const auto &escapeStatus = _buttonsStatus.at(Button::Escape);
-    if (escapeStatus == Controller::Status::Released && _currentEscapeStatus == Status::Pressed) {
-
-        const auto &currentPage = _menu->currentPage();
-        if (_menu->escapeAction()) {
-            _requestToLeave = true;
-            return;
-        }
-
-        const auto &newPage = _menu->currentPage();
-
-        if (newPage != currentPage) {
-            _viewer->setPage(newPage);
-        }
-    }
-    _currentEscapeStatus = escapeStatus;
-}
-
-void Controller::updateMouse(float posX, float posY) {
-
-    const auto now = JBTypesMethods::getTimePointMSNow();
-    if (!JBTypesMethods::floatsEqual(posX, _mouseCurrentXCoord)
-        || !JBTypesMethods::floatsEqual(posY, _mouseCurrentYCoord)) {
-        _mouseUpdatingTime = now;
-    }
-
-    _mouseCurrentXCoord = posX;
-    _mouseCurrentYCoord = posY;
-
-    constexpr float thresholdMoving = 0.05f;
-    const float distance = computeDistance(_mousePreviousXCoord, _mousePreviousYCoord, posX, posY);
-
-    const auto movementIsDetected = distance > thresholdMoving;
-    if (movementIsDetected) {
-        _currentMovementDir = std::make_shared<const Controller::ScreenDirection>(
-            nearestDirection(posX, posY));
-    }
-
-    constexpr float updatingMouseThreshold = 300.f; // 0.3 seconds
-    if (JBTypesMethods::getFloatFromDurationMS(now - _mouseUpdatingTime) > updatingMouseThreshold
-        || movementIsDetected) {
-        _mouseUpdatingTime = now;
-        _mousePreviousXCoord = posX;
-        _mousePreviousYCoord = posY;
-    }
-
-    if (!_currentMovementDir) {
-        constexpr float goAheadDelay = 0.1f;
-        if (JBTypesMethods::getFloatFromDurationMS(now - _mousePressTime) > goAheadDelay) {
-            _scene->mouseSetUp();
-        }
+    const auto &currentPage = _menu->currentPage();
+    if (_menu->escapeAction()) {
+        _requestToLeave = true;
         return;
     }
-    _actionsMouseDirection.at(*_currentMovementDir)();
-}
+    const auto &newPage = _menu->currentPage();
 
-void Controller::releaseMouse(float posX, float posY) {
-
-    constexpr float thresholdMoving = 0.05f;
-
-    const float distance = computeDistance(_mousePressingXCoord, _mousePressingYCoord, posX, posY);
-    constexpr float pressTimeThreshold = 0.3f;
-    if (
-        distance < thresholdMoving
-        && JBTypesMethods::getTimeSecondsSinceTimePoint(_mousePressTime) < pressTimeThreshold
-        ) {
-        setValidateMouse();
+    if (newPage != currentPage) {
+        _viewer->setPage(newPage);
     }
-    _mouseIsPressed = false;
 }
+
+// void Controller::updateMouse(float posX, float posY) {
+//
+//     const auto now = JBTypesMethods::getTimePointMSNow();
+//     if (!JBTypesMethods::floatsEqual(posX, _mouseCurrentXCoord)
+//         || !JBTypesMethods::floatsEqual(posY, _mouseCurrentYCoord)) {
+//         _mouseUpdatingTime = now;
+//     }
+//
+//     _mouseCurrentXCoord = posX;
+//     _mouseCurrentYCoord = posY;
+//
+//     constexpr float thresholdMoving = 0.05f;
+//     const float distance = computeDistance(_mousePreviousXCoord, _mousePreviousYCoord, posX, posY);
+//
+//     const auto movementIsDetected = distance > thresholdMoving;
+//     if (movementIsDetected) {
+//         _currentMovementDir = std::make_shared<const Controller::ScreenDirection>(
+//             nearestDirection(posX, posY));
+//     }
+//
+//     constexpr float updatingMouseThreshold = 300.f; // 0.3 seconds
+//     if (JBTypesMethods::getFloatFromDurationMS(now - _mouseUpdatingTime) > updatingMouseThreshold
+//         || movementIsDetected) {
+//         _mouseUpdatingTime = now;
+//         _mousePreviousXCoord = posX;
+//         _mousePreviousYCoord = posY;
+//     }
+//
+//     if (!_currentMovementDir) {
+//         constexpr float goAheadDelay = 0.1f;
+//         if (JBTypesMethods::getFloatFromDurationMS(now - _mousePressTime) > goAheadDelay) {
+//             _scene->mouseSetUp();
+//         }
+//         return;
+//     }
+//     _actionsMouseDirection.at(*_currentMovementDir)();
+// }
+
+// void Controller::releaseMouse(float posX, float posY) {
+//
+//     constexpr float thresholdMoving = 0.05f;
+//
+//     const float distance = computeDistance(_mousePressingXCoord, _mousePressingYCoord, posX, posY);
+//     constexpr float pressTimeThreshold = 0.3f;
+//     if (
+//         distance < thresholdMoving
+//         && JBTypesMethods::getTimeSecondsSinceTimePoint(_mousePressTime) < pressTimeThreshold
+//         ) {
+//         setValidateMouse();
+//     }
+//     _mouseIsPressed = false;
+// }
 
 bool Controller::requestToLeave() const {
     return _requestToLeave;
@@ -199,18 +185,16 @@ void Controller::render() const {
 
 void Controller::update() {
 
+    const auto updatingTime = JBTypesMethods::getTimePointMSNow();
+
     // 1. Update controls
-    for (const auto &buttonFunction: _actionsWhenPressed) {
-        if (_buttonsStatus[buttonFunction.first] == Controller::Status::Pressed) {
-            buttonFunction.second();
-        }
-    }
-    escapeAction();
+    _keyboardKey.update();
+    _mouse.update(updatingTime);
 
     // 2. Update scene and menu
     const auto &currentPage = _menu->currentPage();
     _scene->update();
-    _menu->update(_mouseIsPressed, _mouseCurrentYCoord);
+    _menu->update(_mouse, JBTypes::timePointMs());
 
     // 3. Update viewer
     const auto &newPage = _menu->currentPage();

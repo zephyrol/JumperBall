@@ -11,6 +11,7 @@
 #include "gameMenu/pages/Page.h"
 #include "gameMenu/labels/TextLabel.h"
 #include "gameMenu/labels/ArrowLabel.h"
+#include "system/Mouse.h"
 #include <player/Player.h>
 
 class Menu {
@@ -25,7 +26,7 @@ public:
 
     Page_sptr currentPage();
 
-    void update(bool isPressed, float screenPosY);
+    void update(const Mouse &mouse, const JBTypes::timePointMs &updatingTime);
 
     /**
      * Action escape operation.

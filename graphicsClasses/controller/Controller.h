@@ -13,14 +13,13 @@
 #include "scene/SceneRendering.h"
 #include "Viewer.h"
 #include "graphicMenu/PageRendering.h"
+#include "system/KeyboardKey.h"
+#include "system/Mouse.h"
 
 class Controller {
 
 public:
 
-    enum class Status {
-        Pressed, Released
-    };
     enum class Pointer {
         Mouse, TouchScreen
     };
@@ -34,9 +33,10 @@ public:
         bool isUsingTouchScreen
     );
 
-    void interactionButtons(const Button &button, const Status &status);
+    void interactionButtons(const KeyboardKey::Button &button, const KeyboardKey::Status &status);
 
-    void interactionMouse(const Status &status, float posX, float posY);
+    void pressMouse(float posX, float posY);
+    void releaseMouse();
 
     void update();
 
@@ -49,22 +49,12 @@ public:
 private:
 
     void escapeAction();
-
     void runGame(size_t level);
 
-    void updateMouse(float posX, float posY);
-
-    void releaseMouse(float posX, float posY);
-
-    void setValidateMouse();
+    void setValidateMouse(float mouseX, float mouseY);
 
     const Player_sptr _player;
     const std::shared_ptr<Menu> _menu;
-
-    Status _currentEscapeStatus;
-
-    const std::map<Button, std::function<void()> > _actionsWhenPressed;
-    const std::map<ScreenDirection, std::function<void()> > _actionsMouseDirection;
 
     const JBTypes::FileContent _filesContent;
 
@@ -72,6 +62,9 @@ private:
 
     std::shared_ptr<Scene> _scene;
     const std::shared_ptr<Viewer> _viewer;
+
+    KeyboardKey _keyboardKey;
+    Mouse _mouse;
 
 };
 

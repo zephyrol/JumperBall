@@ -24,7 +24,6 @@ public :
 
     void update();
 
-
 private:
     using KeyStatus = std::unordered_map<Button, Status>;
 

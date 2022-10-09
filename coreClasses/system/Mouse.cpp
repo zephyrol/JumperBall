@@ -91,15 +91,17 @@ void Mouse::pressedMouseUpdate() {
     }
 
     constexpr float movingThreshold = 0.05f;
-    _currentMovementDir = nearestCardinal.distance < movingThreshold
+    _currentMovementDir = nearestCardinal.distance > movingThreshold
                           ? nullptr
                           : std::make_shared<ScreenDirection>(nearestCardinal.direction);
 
     constexpr float pressingDetectionThreshold = 100.f; // 0.1 seconds
-    if (!_currentMovementDir && JBTypesMethods::getFloatFromDurationMS(
-        updatingTime - _pressingState.updatingTime
-    ) > pressingDetectionThreshold) {
-        _longPressActionFunction();
+    if(!_currentMovementDir) {
+        if(JBTypesMethods::getFloatFromDurationMS(
+            updatingTime - _pressingState.updatingTime
+         ) > pressingDetectionThreshold) {
+            _longPressActionFunction();
+        }
         return;
     }
     _directionActionFunctions.at(*_currentMovementDir)();
@@ -141,5 +143,13 @@ float Mouse::computeDistance(float x0, float y0, float x1, float y1) {
     const auto x1MinusX0 = x1 - x0;
     const auto y1MinusY0 = y1 - y0;
     return sqrtf(x1MinusX0 * x1MinusX0 + y1MinusY0 * y1MinusY0);
+}
+
+float Mouse::currentYCoord() const {
+    return _currentState.mouseCoords ? _currentState.mouseCoords->yCoord : 0.f;
+}
+
+bool Mouse::isPressed() const {
+    return _currentState.mouseCoords != nullptr;
 }
 

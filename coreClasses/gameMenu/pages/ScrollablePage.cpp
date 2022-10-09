@@ -3,6 +3,7 @@
 //
 
 #include "ScrollablePage.h"
+#include "system/Mouse.h"
 
 ScrollablePage::ScrollablePage(Player_sptr &&player, float height) :
     Page(std::move(player)),
@@ -12,15 +13,14 @@ ScrollablePage::ScrollablePage(Player_sptr &&player, float height) :
     _localReleasedPosY(0.f),
     _isPressed(false),
     _pressedScreenPosY(0.f),
-    _lastUpdate{},
     _lastSwipeUpdates{},
     _releaseVelocity(0.f) {
 }
 
-void ScrollablePage::update(bool isPressed, float screenPosY) {
+void ScrollablePage::update(const Mouse &mouse, const JBTypes::timePointMs &updatingTime) {
 
-    const auto now = JBTypesMethods::getTimePointMSNow();
-    _lastUpdate = now;
+    const auto isPressed = mouse.isPressed();
+    const auto screenPosY = mouse.currentYCoord();
 
     // Press cases
     if (isPressed && !_isPressed) {
@@ -36,13 +36,13 @@ void ScrollablePage::update(bool isPressed, float screenPosY) {
         for (
             it = _lastSwipeUpdates.begin();
             it != _lastSwipeUpdates.end() &&
-            JBTypesMethods::getFloatFromDurationMS(now - it->first) < thresholdDeltaT;
+            JBTypesMethods::getFloatFromDurationMS(updatingTime - it->first) < thresholdDeltaT;
             ++it
             ) {
         }
 
         _lastSwipeUpdates.erase(it, _lastSwipeUpdates.end());
-        _lastSwipeUpdates.push_front({now, screenPosY});
+        _lastSwipeUpdates.push_front({updatingTime, screenPosY});
         _localPosY = _localPressedPosY + (screenPosY - _pressedScreenPosY);
     }
 
@@ -50,10 +50,9 @@ void ScrollablePage::update(bool isPressed, float screenPosY) {
     if (!isPressed && _isPressed && !_lastSwipeUpdates.empty()) {
         const slideState &lastSlideState = _lastSwipeUpdates.front();
         const slideState &olderSlideState = _lastSwipeUpdates.back();
-        float deltaT = JBTypesMethods::getFloatFromDurationMS(
-            lastSlideState.first - olderSlideState.first);
+        float deltaT = JBTypesMethods::getFloatFromDurationMS(lastSlideState.first - olderSlideState.first);
 
-        // the velocity is the position derivative (pourcentagePage / ms)
+        // the velocity is the position derivative (% page / ms)
         _releaseVelocity = (lastSlideState.second - olderSlideState.second) / deltaT;
 
         _localReleasedPosY = _localPosY;
@@ -61,22 +60,21 @@ void ScrollablePage::update(bool isPressed, float screenPosY) {
     }
     if (!_isPressed && !_lastSwipeUpdates.empty()) {
         const slideState &lastSlideState = _lastSwipeUpdates.front();
-        const float t = JBTypesMethods::getFloatFromDurationMS(now - lastSlideState.first);
+        const float t = JBTypesMethods::getFloatFromDurationMS(updatingTime - lastSlideState.first);
         const float deceleration = decelerationCoefficient * powf(t, 2.f) / 2.f;
 
         if (_releaseVelocity > 0.f && t < -(_releaseVelocity) / (2.f * -decelerationCoefficient / 2.f)) {
             _localPosY = -deceleration + _releaseVelocity * t + _localReleasedPosY;
-        } else if (
-            _releaseVelocity < 0.f &&
-            t < -(_releaseVelocity) / (decelerationCoefficient)
-            ) {
+        } else if ( _releaseVelocity < 0.f && t < -(_releaseVelocity) / (decelerationCoefficient) ) {
             _localPosY = deceleration + _releaseVelocity * t + _localReleasedPosY;
         }
 
-        if (_localPosY < 0.f) _localPosY = 0.f;
-        else if (_localPosY > _height - 1.f) _localPosY = _height - 1.f;
+        if (_localPosY < 0.f) {
+            _localPosY = 0.f;
+        } else if (_localPosY > _height - 1.f) {
+            _localPosY = _height - 1.f;
+        }
     }
-
 }
 
 std::string ScrollablePage::shaderDefine() const {
@@ -89,7 +87,7 @@ std::vector<std::string> ScrollablePage::getUniformNames() const {
 
 std::vector<float> ScrollablePage::getUniformValues() const {
     return {
-        _localPosY * 2.f , // Convert to OpenGL format
+        _localPosY * 2.f, // Convert to OpenGL format
         static_cast<float>(_player->levelProgression())
     };
 }

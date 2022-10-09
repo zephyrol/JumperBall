@@ -9,6 +9,8 @@
 
 class Mouse {
 
+public:
+
     enum class ScreenDirection {
         North, South, East, West
     };
@@ -24,8 +26,12 @@ class Mouse {
     );
 
     void press(float posX, float posY);
-
     void release();
+
+
+    bool isPressed() const;
+    float currentYCoord() const;
+
 
     void update(const JBTypes::timePointMs &updatingTime);
 

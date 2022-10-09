@@ -29,11 +29,11 @@ void KeyboardKey::update() {
     for (const auto &keyState: _currentStatus) {
         const auto &key = keyState.first;
         const auto &status = keyState.second;
-        if (key != KeyboardKey::Button::Validate) {
+        if (key != KeyboardKey::Button::Escape) {
             if (status == KeyboardKey::Status::Pressed) {
                 _actionFunctions.at(key)();
             }
-        } else if (_previousStatus.at(KeyboardKey::Button::Validate) == KeyboardKey::Status::Pressed
+        } else if (_previousStatus.at(KeyboardKey::Button::Escape) == KeyboardKey::Status::Pressed
                    && status == KeyboardKey::Status::Released) {
             _actionFunctions.at(key)();
         }
