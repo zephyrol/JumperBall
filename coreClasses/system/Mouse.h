@@ -30,7 +30,9 @@ public:
 
 
     bool isPressed() const;
+    bool wasPressed() const;
     float currentYCoord() const;
+    float previousYCoord() const;
 
 
     void update(const JBTypes::timePointMs &updatingTime);

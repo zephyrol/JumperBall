@@ -117,7 +117,7 @@ void Player::requestQuit() {
 }
 
 void Player::escapeAction() {
-    if(_status == Player::Status::InGame)  {
+    if(_status != Player::Status::InMenu)  {
         _status = Player::Status::InMenu;
     }
 }

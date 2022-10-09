@@ -19,7 +19,12 @@ ScrollablePage::ScrollablePage(Player_sptr &&player, float height) :
 void ScrollablePage::update(const Mouse &mouse, const JBTypes::timePointMs &updatingTime) {
 
     const auto isPressed = mouse.isPressed();
-    const auto screenPosY = mouse.currentYCoord();
+    auto screenPosY = 0.f;
+    if (isPressed) {
+        screenPosY = mouse.currentYCoord();
+    } else if (mouse.wasPressed()) {
+        screenPosY = mouse.previousYCoord();
+    }
 
     // Press cases
     if (isPressed && !_isPressed) {

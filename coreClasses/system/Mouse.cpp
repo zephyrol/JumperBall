@@ -54,13 +54,10 @@ void Mouse::pressedMouseUpdate() {
     const auto &updatingTime = _currentState.updatingTime;
 
     constexpr float updatingDirectionDetectionThreshold = 0.3f; // 0.3 seconds
-    const auto diff = JBTypesMethods::getFloatFromDurationMS(
-        updatingTime - _directionDetectionState.updatingTime)
-    ;
-    std::cout << diff << std::endl;
-    if (!_previousState.mouseCoords || diff > updatingDirectionDetectionThreshold) {
+    if (!_previousState.mouseCoords ||  JBTypesMethods::getFloatFromDurationMS(
+        updatingTime - _directionDetectionState.updatingTime
+        )> updatingDirectionDetectionThreshold) {
         _directionDetectionState = _currentState;
-        std::cout << "update" << std::endl;
     }
 
     const auto computeCardinalDistance = [this](
@@ -154,10 +151,18 @@ float Mouse::computeDistance(float x0, float y0, float x1, float y1) {
 }
 
 float Mouse::currentYCoord() const {
-    return _currentState.mouseCoords ? _currentState.mouseCoords->yCoord : 0.f;
+    return _currentState.mouseCoords->yCoord;
 }
 
 bool Mouse::isPressed() const {
     return _currentState.mouseCoords != nullptr;
+}
+
+float Mouse::previousYCoord() const {
+    return _previousState.mouseCoords->yCoord;
+}
+
+bool Mouse::wasPressed() const {
+    return _previousState.mouseCoords != nullptr;
 }
 
