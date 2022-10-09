@@ -29,40 +29,6 @@ Mouse::Mouse(
     _currentMovementDir(nullptr) {
 }
 
-// Mouse::ScreenDirection Mouse::nearestDirection(float posX, float posY) const {
-//
-//
-//     const auto getDistance = [&posX, &posY, this](float offsetX, float offsetY) {
-//         const auto x1 =
-//         const auto x1MinusX0 = x1 - x0;
-//         const auto y1MinusY0 = y1 - y0;
-//         return sqrtf(x1MinusX0 * x1MinusX0 + y1MinusY0 * y1MinusY0);
-//
-//         return computeDistance(
-//             _previousState.xCoord + offsetX,
-//             _previousState.yCoord + offsetY,
-//             posX,
-//             posY
-//         );
-//     };
-//
-//     Mouse::ScreenDirection nearestDir = Mouse::ScreenDirection::North;
-//     float computedDistance;
-//     float nearestDistance = getDistance(0.f, 1.f);
-//     if ((computedDistance = getDistance(0.f, -1.f)) < nearestDistance) {
-//         nearestDistance = computedDistance;
-//         nearestDir = Mouse::ScreenDirection::South;
-//     }
-//     if ((computedDistance = getDistance(1.f, 0.f)) < nearestDistance) {
-//         nearestDistance = computedDistance;
-//         nearestDir = Mouse::ScreenDirection::East;
-//     }
-//     if (getDistance(-1.f, 0.f) < nearestDistance) {
-//         nearestDir = Mouse::ScreenDirection::West;
-//     }
-//     return nearestDir;
-// }
-
 void Mouse::press(float posX, float posY) {
     _mouseCoords = std::make_shared<Mouse::MouseCoords>();
     _mouseCoords->xCoord = posX;
@@ -154,7 +120,7 @@ void Mouse::releasedMouseUpdate() {
         pressingStateCoords->xCoord,
         pressingStateCoords->yCoord
     );
-    constexpr float pressTimeThreshold = 0.3f;
+    constexpr float pressTimeThreshold = 300.f; // 0.3 seconds
     if (
         distance < thresholdMoving &&
         JBTypesMethods::getFloatFromDurationMS(
