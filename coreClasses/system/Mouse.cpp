@@ -53,22 +53,25 @@ void Mouse::pressedMouseUpdate() {
 
     const auto &updatingTime = _currentState.updatingTime;
 
-    constexpr float updatingDirectionDetectionThreshold = 300.f; // 0.3 seconds
-    if (!_previousState.mouseCoords || JBTypesMethods::getFloatFromDurationMS(
-        updatingTime - _directionDetectionState.updatingTime
-    ) < updatingDirectionDetectionThreshold) {
+    constexpr float updatingDirectionDetectionThreshold = 0.3f; // 0.3 seconds
+    const auto diff = JBTypesMethods::getFloatFromDurationMS(
+        updatingTime - _directionDetectionState.updatingTime)
+    ;
+    std::cout << diff << std::endl;
+    if (!_previousState.mouseCoords || diff > updatingDirectionDetectionThreshold) {
         _directionDetectionState = _currentState;
+        std::cout << "update" << std::endl;
     }
 
     const auto computeCardinalDistance = [this](
         const Mouse::CardinalPoint &cardinalPoint
     ) -> CardinalDistance {
-        const auto &pressingStateCoords = _directionDetectionState.mouseCoords;
+        const auto &directionStateCoords = _directionDetectionState.mouseCoords;
         const auto &currentStateCoords = _currentState.mouseCoords;
         const auto &point = cardinalPoint.point;
         return {cardinalPoint.direction, computeDistance(
-            pressingStateCoords->xCoord + point.first,
-            pressingStateCoords->yCoord + point.second,
+            directionStateCoords->xCoord + point.first,
+            directionStateCoords->yCoord + point.second,
             currentStateCoords->xCoord,
             currentStateCoords->yCoord
         )};
@@ -89,17 +92,21 @@ void Mouse::pressedMouseUpdate() {
             nearestCardinal = cardinal;
         }
     }
+    constexpr auto movingThreshold = 0.05f;
+    if (computeDistance(
+        _currentState.mouseCoords->xCoord,
+        _currentState.mouseCoords->yCoord,
+        _directionDetectionState.mouseCoords->xCoord,
+        _directionDetectionState.mouseCoords->yCoord
+    ) > movingThreshold) {
+        _currentMovementDir = std::make_shared<ScreenDirection>(nearestCardinal.direction);
+    }
 
-    constexpr float movingThreshold = 0.05f;
-    _currentMovementDir = nearestCardinal.distance > movingThreshold
-                          ? nullptr
-                          : std::make_shared<ScreenDirection>(nearestCardinal.direction);
-
-    constexpr float pressingDetectionThreshold = 100.f; // 0.1 seconds
-    if(!_currentMovementDir) {
-        if(JBTypesMethods::getFloatFromDurationMS(
+    constexpr auto pressingDetectionThreshold = 0.1f; // 0.1 seconds
+    if (!_currentMovementDir) {
+        if (JBTypesMethods::getFloatFromDurationMS(
             updatingTime - _pressingState.updatingTime
-         ) > pressingDetectionThreshold) {
+        ) > pressingDetectionThreshold) {
             _longPressActionFunction();
         }
         return;
@@ -109,12 +116,13 @@ void Mouse::pressedMouseUpdate() {
 
 void Mouse::releasedMouseUpdate() {
 
+    _currentMovementDir  = nullptr;
     const auto &previousStateCoords = _previousState.mouseCoords;
     if (!previousStateCoords) {
         return;
     }
     constexpr float thresholdMoving = 0.05f;
-    const auto &pressingStateCoords = _directionDetectionState.mouseCoords;
+    const auto &pressingStateCoords = _pressingState.mouseCoords;
 
     const float distance = computeDistance(
         previousStateCoords->xCoord,
