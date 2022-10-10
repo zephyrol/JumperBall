@@ -66,11 +66,6 @@ namespace JBTypes {
     using vec3ui = std::array<unsigned int, 3>;
     using vec3i = std::array<int, 3>;
 
-    using timePointMs = std::chrono::time_point<
-        std::chrono::system_clock,
-        std::chrono::duration<long int, std::ratio<1, 1000> >
-    >;
-    using durationMs = std::chrono::duration<long int, std::ratio<1, 1000> >;
     struct Quaternion {
         JBTypes::vec3f v;
         float w;
@@ -93,12 +88,8 @@ namespace JBTypesMethods {
 
     std::array<bool, 6> strDirAsArray(const std::string &directions);
 
-    JBTypes::timePointMs getTimePointMSNow() noexcept;
 
     float getTimeSecondsSinceTimePoint(const JBTypes::timePointMs &timePoint) noexcept;
-
-    float getFloatFromDurationMS(const JBTypes::durationMs &dms);
-
     JBTypes::timePointMs getTimePointMsFromTimePoint(
         const std::chrono::time_point<std::chrono::system_clock> &timePoint
     ) noexcept;
