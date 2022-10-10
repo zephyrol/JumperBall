@@ -6,7 +6,8 @@
  */
 #include "Player.h"
 
-Player::Player() :
+Player::Player(CstChronometer_sptr chronometer) :
+    _chronometer(std::move(chronometer)),
     _status(Player::Status::InMenu),
     _gameStatus(Player::GameStatus::None),
     _levelProgression(1),
@@ -140,4 +141,8 @@ bool Player::isALoser() const {
 
 void Player::resetGameStatus() {
     _gameStatus = GameStatus::None;
+}
+
+const CstChronometer_sptr &Player::getChronometer() const {
+    return _chronometer;
 }

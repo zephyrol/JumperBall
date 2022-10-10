@@ -70,7 +70,7 @@ void Chronometer::trigger() {
     _requestTrigger = true;
 }
 
-float Chronometer::getTimeSinceCreation() const {
+float Chronometer::timeSinceCreation() const {
     return _msCreation;
 }
 

@@ -6,12 +6,16 @@
 #define JUMPERBALLAPPLICATION_CHRONOMETER_H
 #include "system/Types.h"
 
+class Chronometer;
+using Chronometer_sptr = std::shared_ptr<Chronometer>;
+using CstChronometer_sptr = std::shared_ptr<const Chronometer>;
+
 class Chronometer {
 
 public:
     Chronometer();
 
-    float getTimeSinceCreation() const;
+    float timeSinceCreation() const;
     void reset();
     void update();
     void stop();

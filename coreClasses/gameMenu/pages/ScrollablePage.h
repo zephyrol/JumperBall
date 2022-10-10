@@ -33,6 +33,7 @@ protected:
 
 private:
     constexpr static float decelerationCoefficient = 10.f; // pagePourcentage /s^2
+    const CstChronometer_sptr _chronometer;
     const float _height;
     float _localPosY; // Page position
     float _localPressedPosY;

@@ -7,7 +7,8 @@
 
 #include "Ball.h"
 
-Ball::Ball(unsigned int x, unsigned int y, unsigned int z) :
+Ball::Ball(unsigned int x, unsigned int y, unsigned int z, CstChronometer_sptr chronometer):
+    _chronometer(std::move(chronometer)),
     _pos({x, y, z}),
     _currentSide(JBTypes::Dir::Up),
     _lookTowards(JBTypes::Dir::North),
@@ -18,14 +19,14 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z) :
     _mechanicsPatternJumping(getRadius()),
     _mechanicsPatternLongJumping(getRadius(), 3.f, 4.2f),
     _mechanicsPatternFalling(getRadius(), 0.f, 0.f),
-    _timeAction(0.f),
-    _timeStateOfLife(0.f),
+    _actionTime(0.f),
+    _stateOfLifeTime(0.f),
     _burnCoefficientTrigger(0.f),
     _burnCoefficientCurrent(0.f),
     _teleportationColor(JBTypes::Color::None),
     _teleportationCoefficient(0.f),
     _jumpRequest(false),
-    _timeJumpRequest(),
+    _jumpRequestTime(),
     _currentCoveredRotation(JBTypesMethods::createQuaternion({0.f, 0.f, 0.f}, 1.f)),
     _currentCrushing(0.f),
     _turnLeftMovement(),
@@ -132,7 +133,7 @@ void Ball::doAction(Ball::ActionRequest action) {
                 jump();
             } else {
                 _jumpRequest = true;
-                _timeJumpRequest = _updatingTime;
+                _jumpRequestTime = _chronometer->timeSinceCreation();
             }
             break;
         default:
@@ -388,7 +389,7 @@ void Ball::blockEvent() noexcept {
         return;
     }
     const auto hasToJump = _jumpRequest
-        && JBTypesMethods::getFloatFromDurationMS(_updatingTime - _timeJumpRequest) < timeToGetNextBlock;
+        && (_chronometer->timeSinceCreation() - _jumpRequestTime) < timeToGetNextBlock;
     if (hasToJump) {
         _jumpRequest = false;
         jump();
@@ -892,4 +893,16 @@ unsigned int Ball::numberOfKeys() const {
 
 unsigned int Ball::numberOfCoins() const {
     return _nbOfCoins;
+}
+
+const CstChronometer_sptr &Ball::getChronometer() const {
+    return _chronometer;
+}
+
+float Ball::getTimeSecondsSinceStateOfLife() const {
+    return _chronometer->timeSinceCreation() - _stateOfLifeTime;
+}
+
+float Ball::getTimeSecondsSinceAction() const {
+    return _chronometer->timeSinceCreation() - _actionTime;
 }

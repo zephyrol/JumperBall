@@ -17,7 +17,7 @@ using Player_sptr = std::shared_ptr<Player>;
 
 class Player {
 public:
-    Player();
+    Player(CstChronometer_sptr chronometer);
 
     enum class Status {
         InGame, InMenu, InTransition
@@ -26,6 +26,8 @@ public:
     enum class GameStatus {
         None, Winner, Loser
     };
+
+    const CstChronometer_sptr& getChronometer() const;
 
     size_t levelProgression() const;
 
@@ -77,6 +79,7 @@ public:
 
 private:
 
+    const CstChronometer_sptr _chronometer;
     Status _status;
     GameStatus _gameStatus;
     size_t _levelProgression;

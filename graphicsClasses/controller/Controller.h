@@ -20,10 +20,6 @@ class Controller {
 
 public:
 
-    enum class Pointer {
-        Mouse, TouchScreen
-    };
-
     Controller(
         const size_t &screenWidth,
         const size_t &screenHeight,
@@ -36,6 +32,7 @@ public:
     void interactionButtons(const KeyboardKey::Button &button, const KeyboardKey::Status &status);
 
     void pressMouse(float posX, float posY);
+
     void releaseMouse();
 
     void update();
@@ -49,10 +46,12 @@ public:
 private:
 
     void escapeAction();
+
     void runGame(size_t level);
 
     void setValidateMouse(float mouseX, float mouseY);
 
+    const Chronometer_sptr _chronometer;
     const Player_sptr _player;
     const std::shared_ptr<Menu> _menu;
 

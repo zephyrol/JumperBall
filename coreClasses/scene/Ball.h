@@ -13,6 +13,7 @@
 #include "movements/TurnRight.h"
 #include "movements/TurnBack.h"
 #include "movements/NextBlock.h"
+#include "system/Chronometer.h"
 #include <scene/blocks/Block.h>
 
 class Ball;
@@ -25,7 +26,12 @@ using CstBall_wptr = std::weak_ptr<const Ball>;
 class Ball : public Displayable {
 public:
 
-    Ball(unsigned int x, unsigned int y, unsigned int z);
+    Ball(
+        unsigned int x,
+        unsigned int y,
+        unsigned int z,
+        CstChronometer_sptr chronometer
+    );
 
     static constexpr float timeToGetNextBlock = 0.25f;
     static constexpr float timeToTurn = 0.3f;
@@ -107,6 +113,10 @@ public:
 
     float getTimeToGetDestination() const;
 
+    float getTimeSecondsSinceAction() const;
+
+    float getTimeSecondsSinceStateOfLife() const;
+
     Displayable::DynamicValues<float> getDynamicFloats() const override;
 
     Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fs() const override;
@@ -146,7 +156,11 @@ public:
 
     unsigned int numberOfCoins() const;
 
+    const CstChronometer_sptr &getChronometer() const;
+
 private:
+
+    const CstChronometer_sptr _chronometer;
 
     JBTypes::vec3ui _pos;
 
@@ -163,8 +177,8 @@ private:
     const ClassicalMechanics _mechanicsPatternLongJumping;
     const ClassicalMechanics _mechanicsPatternFalling;
 
-    float _timeAction;
-    float _timeStateOfLife;
+    float _actionTime;
+    float _stateOfLifeTime;
 
     /**
      * BurnCoefficient at the last state change
@@ -180,7 +194,7 @@ private:
     float _teleportationCoefficient;
 
     bool _jumpRequest;
-    float _timeJumpRequest;
+    float _jumpRequestTime;
 
     JBTypes::Quaternion _currentCoveredRotation;
     float _currentCrushing;

@@ -16,7 +16,8 @@ Controller::Controller(
     size_t fontDataSize,
     bool isUsingTouchScreen
 ) :
-    _player(std::make_shared<Player>()),
+    _chronometer(std::make_shared<Chronometer>()),
+    _player(std::make_shared<Player>(_chronometer)),
     _menu(Menu::getJumperBallMenu(
         _player,
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
@@ -185,18 +186,19 @@ void Controller::render() const {
 
 void Controller::update() {
 
-    const auto updatingTime = JBTypesMethods::getTimePointMSNow();
+    // 1. Update chronometer
+    _chronometer->update();
 
-    // 1. Update controls
+    // 2. Update controls
     _keyboardKey.update();
-    _mouse.update(updatingTime);
+    _mouse.update();
 
-    // 2. Update scene and menu
+    // 3. Update scene and menu
     const auto &currentPage = _menu->currentPage();
-    _scene->update(updatingTime);
+    _scene->update();
     _menu->update(_mouse);
 
-    // 3. Update viewer
+    // 4. Update viewer
     const auto &newPage = _menu->currentPage();
     if (newPage != currentPage) {
         _viewer->setPage(newPage);
