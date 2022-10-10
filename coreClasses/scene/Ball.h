@@ -91,14 +91,6 @@ public:
 
     float burnCoefficient() const;
 
-    float getTimeSecondsSinceAction() const noexcept;
-
-    JBTypes::timePointMs getTimeActionMs() const noexcept;
-
-    float getTimeSecondsSinceStateOfLife() const noexcept;
-
-    JBTypes::timePointMs getTimeStateOfLifeMs() const noexcept;
-
     const ClassicalMechanics &getMechanicsJumping() const noexcept;
 
     const ClassicalMechanics &getMechanicsFalling() const noexcept;
@@ -127,7 +119,7 @@ public:
 
     JBTypes::vec3f getNextLook() const;
 
-    void update(const JBTypes::timePointMs &updatingTime, const Ball::ActionRequest &action) noexcept;
+    void update(const Ball::ActionRequest &action) noexcept;
 
     void setBlockPositions(
         const std::shared_ptr<const std::unordered_map<std::string, Block_sptr> > &blocksPositions);
@@ -171,8 +163,8 @@ private:
     const ClassicalMechanics _mechanicsPatternLongJumping;
     const ClassicalMechanics _mechanicsPatternFalling;
 
-    JBTypes::timePointMs _timeAction;
-    JBTypes::timePointMs _timeStateOfLife;
+    float _timeAction;
+    float _timeStateOfLife;
 
     /**
      * BurnCoefficient at the last state change
@@ -187,10 +179,8 @@ private:
     JBTypes::Color _teleportationColor;
     float _teleportationCoefficient;
 
-    JBTypes::timePointMs _updatingTime;
-
     bool _jumpRequest;
-    JBTypes::timePointMs _timeJumpRequest;
+    float _timeJumpRequest;
 
     JBTypes::Quaternion _currentCoveredRotation;
     float _currentCrushing;

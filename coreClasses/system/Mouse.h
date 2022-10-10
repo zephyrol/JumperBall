@@ -34,8 +34,7 @@ public:
     float currentYCoord() const;
     float previousYCoord() const;
 
-
-    void update(const JBTypes::timePointMs &updatingTime);
+    void update();
 
 private:
 
@@ -49,7 +48,7 @@ private:
 
     struct MouseState {
         std::shared_ptr<MouseCoords> mouseCoords;
-        JBTypes::timePointMs updatingTime;
+        float updatingTime;
     };
 
     struct CardinalDistance {

@@ -16,7 +16,7 @@ ScrollablePage::ScrollablePage(Player_sptr &&player, float height) :
     _releaseVelocity(0.f) {
 }
 
-void ScrollablePage::update(const Mouse &mouse, const JBTypes::timePointMs &updatingTime) {
+void ScrollablePage::update(const Mouse &mouse) {
 
     const auto isPressed = mouse.isPressed();
     auto screenPosY = 0.f;
@@ -54,7 +54,7 @@ void ScrollablePage::update(const Mouse &mouse, const JBTypes::timePointMs &upda
     if (!isPressed && _isPressed && !_lastSwipeUpdates.empty()) {
         const slideState &lastSlideState = _lastSwipeUpdates.front();
         const slideState &olderSlideState = _lastSwipeUpdates.back();
-        float deltaT = JBTypesMethods::getFloatFromDurationMS(lastSlideState.first - olderSlideState.first);
+        float deltaT = lastSlideState.first - olderSlideState.first;
 
         // the velocity is the position derivative (% page / ms)
         _releaseVelocity = (lastSlideState.second - olderSlideState.second) / deltaT;

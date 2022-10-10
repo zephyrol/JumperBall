@@ -18,13 +18,12 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z) :
     _mechanicsPatternJumping(getRadius()),
     _mechanicsPatternLongJumping(getRadius(), 3.f, 4.2f),
     _mechanicsPatternFalling(getRadius(), 0.f, 0.f),
-    _timeAction(JBTypesMethods::getTimePointMSNow()),
-    _timeStateOfLife(JBTypesMethods::getTimePointMSNow()),
+    _timeAction(0.f),
+    _timeStateOfLife(0.f),
     _burnCoefficientTrigger(0.f),
     _burnCoefficientCurrent(0.f),
     _teleportationColor(JBTypes::Color::None),
     _teleportationCoefficient(0.f),
-    _updatingTime(),
     _jumpRequest(false),
     _timeJumpRequest(),
     _currentCoveredRotation(JBTypesMethods::createQuaternion({0.f, 0.f, 0.f}, 1.f)),
@@ -101,14 +100,6 @@ void Ball::move() noexcept {
         _state = Ball::State::Moving;
         setTimeActionNow();
     }
-}
-
-void Ball::setTimeActionNow() noexcept {
-    _timeAction = _updatingTime;
-}
-
-void Ball::setTimeLifeNow() noexcept {
-    _timeStateOfLife = _updatingTime;
 }
 
 void Ball::doAction(Ball::ActionRequest action) {
@@ -311,14 +302,6 @@ void Ball::isFallingIntersectionBlock() noexcept {
     internalUpdate();
 }
 
-JBTypes::timePointMs Ball::getTimeActionMs() const noexcept {
-    return std::chrono::time_point_cast<std::chrono::milliseconds>(_timeAction);
-}
-
-JBTypes::timePointMs Ball::getTimeStateOfLifeMs() const noexcept {
-    return std::chrono::time_point_cast<std::chrono::milliseconds>(_timeStateOfLife);
-}
-
 JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const {
     const float offsetRealPosition = 0.5f + getRadius();
 
@@ -345,14 +328,6 @@ JBTypes::Dir Ball::currentSide() const {
 
 JBTypes::Dir Ball::lookTowards() const {
     return _lookTowards;
-}
-
-float Ball::getTimeSecondsSinceAction() const noexcept {
-    return JBTypesMethods::getFloatFromDurationMS(_updatingTime - _timeAction);
-}
-
-float Ball::getTimeSecondsSinceStateOfLife() const noexcept {
-    return JBTypesMethods::getFloatFromDurationMS(_updatingTime - _timeStateOfLife);
 }
 
 JBTypes::vec3f Ball::lookTowardsAsVector() const {
@@ -694,8 +669,7 @@ float Ball::getFallingPosX() const noexcept {
     return getMechanicsFalling().getPosition(getTimeSecondsSinceAction()).x;
 }
 
-void Ball::update(const JBTypes::timePointMs &updatingTime, const Ball::ActionRequest &action) noexcept {
-    _updatingTime = updatingTime;
+void Ball::update(const Ball::ActionRequest &action) noexcept {
     doAction(action);
     internalUpdate();
 }

@@ -14,7 +14,6 @@ Enemy::Enemy(
     size_t length,
     bool isActivated
 ) :
-    _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(direction),
     _size(size),
     _length(length),
@@ -26,10 +25,6 @@ Enemy::Enemy(
 
 JBTypes::Color Enemy::getColor() const {
     return JBTypes::Color::None;
-}
-
-const JBTypes::timePointMs &Enemy::creationTime() const {
-    return _creationTime;
 }
 
 float Enemy::size() const {
@@ -82,7 +77,7 @@ Displayable::GlobalState Enemy::getGlobalState() const {
     return Displayable::GlobalState::Separate;
 }
 
-void Enemy::update(const JBTypes::timePointMs &) {
+void Enemy::update() {
 }
 
 const JBTypes::vec3f Enemy::scaleActivated = {1.f, 1.f, 1.f};

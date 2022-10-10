@@ -16,16 +16,19 @@ public:
         const vecItem_sptr &items,
         const vecEnemy_sptr &enemies,
         const vecSpecial_sptr &specials,
-        const Ball_sptr& ball,
+        const Ball_sptr &ball,
         bool alwaysHasInteractions = false
     );
 
-void update(const JBTypes::timePointMs &updatingTime) override;
-Block::Effect detectionEvent() override;
-Block::Effect interaction() const override;
+    void update() override;
+
+    Block::Effect detectionEvent() override;
+
+    Block::Effect interaction() const override;
 
 protected:
     void catchItem();
+
     const CstBall_wptr _ball;
 
 };

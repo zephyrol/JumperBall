@@ -5,8 +5,12 @@
 #include "Chronometer.h"
 
 Chronometer::Chronometer():
-_currentSessionBeginningTimePoint(getTimePointMSNow()),
 _currentSession(Chronometer::TimeSession::Run),
+_updatingTimePoint(),
+_currentSessionBeginningTimePoint(getTimePointMSNow()),
+_msPreviousRunSessionsCreation(0.f),
+_msCurrentSession(0.f),
+_msCreation(0.f),
 _requestStop(false),
 _requestReset(false),
 _requestTrigger(false)
@@ -29,6 +33,15 @@ void Chronometer::reset() {
 
 void Chronometer::update() {
     _updatingTimePoint = getTimePointMSNow();
+    if(_requestReset) {
+        _currentSessionBeginningTimePoint = _updatingTimePoint;
+        _msCreation = 0.f;
+        _msPreviousRunSessionsCreation = 0.f;
+        _msCurrentSession = 0.f;
+        _requestReset = false;
+        return;
+    }
+
     _msCurrentSession = getFloatFromDurationMS(_updatingTimePoint - _currentSessionBeginningTimePoint);
 
     if(_requestStop && _currentSession == TimeSession::Run) {

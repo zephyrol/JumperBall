@@ -24,7 +24,7 @@ ThornBall::ThornBall(
     _movementDirection(movementDirection) {
 }
 
-void ThornBall::update(const JBTypes::timePointMs &updatingTime) {
+void ThornBall::update() {
     constexpr float movementDuration = 2.f;
     const float timeSinceCreation = JBTypesMethods::getFloatFromDurationMS(updatingTime - creationTime());
 

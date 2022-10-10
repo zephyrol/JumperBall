@@ -12,7 +12,6 @@ Special::Special(
     const JBTypes::vec3ui &position,
     bool isActivated
 ) :
-    _creationTime(JBTypesMethods::getTimePointMSNow()),
     _direction(dir),
     _color(color),
     _colorAttributeName("is" + JBTypesMethods::colorToString(_color) + "Activated"),
@@ -22,10 +21,6 @@ Special::Special(
 
 const JBTypes::Color &Special::getColor() const {
     return _color;
-}
-
-float Special::getTimeSinceCreation() const {
-    return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
 }
 
 const JBTypes::Dir &Special::direction() const {

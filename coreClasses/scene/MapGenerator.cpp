@@ -23,7 +23,7 @@
 #include "blocks/GhostBlock.h"
 
 std::shared_ptr<Map> MapGenerator::loadMap(const std::string &mapContent) {
-    std::istringstream sst (mapContent.c_str());
+    std::istringstream sst (mapContent);
     return std::make_shared<Map>(uncompressMap(sst));
 }
 

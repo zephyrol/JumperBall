@@ -27,8 +27,7 @@ Star::Star(
     _rotationCenter(map.getCenterMap()),
     _envSize(map.getLargestSize()),
     _radiansPerSeconds(radiansPerSecond),
-    _color(color),
-    _creationTime(JBTypesMethods::getTimePointMSNow()) {
+    _color(color) {
 
 }
 
@@ -48,10 +47,6 @@ float Star::radius() const {
     return _radius;
 }
 
-float Star::getTimeSinceCreation() const {
-    return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
-}
-
 const JBTypes::vec3f &Star::rotationCenter() const {
     return _rotationCenter;
 }
@@ -64,7 +59,6 @@ JBTypes::Quaternion Star::getRotation() const {
     const float angle = getTimeSinceCreation() * _radiansPerSeconds;
     return JBTypesMethods::createRotationQuaternion(_rotationAxis, angle);
 }
-
 
 JBTypes::vec3f Star::lightDirection() const {
     const float angle = getTimeSinceCreation() * _radiansPerSeconds;

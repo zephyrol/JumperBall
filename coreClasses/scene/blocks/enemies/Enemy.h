@@ -32,11 +32,9 @@ public:
         bool isActivated
     );
 
-    virtual void update(const JBTypes::timePointMs &updatingTime);
+    virtual void update();
 
     virtual JBTypes::Color getColor() const;
-
-    const JBTypes::timePointMs &creationTime() const;
 
     const JBTypes::vec3f &position() const;
 
@@ -59,7 +57,6 @@ public:
     virtual ~Enemy() = default;
 
 private:
-    const JBTypes::timePointMs _creationTime;
     const JBTypes::Dir _direction;
     const float _size;
     const size_t _length;

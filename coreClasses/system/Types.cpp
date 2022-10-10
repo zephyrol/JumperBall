@@ -112,29 +112,6 @@ JBTypes::Dir JBTypesMethods::integerAsDirection(unsigned int number) {
     return dir;
 }
 
-
-float JBTypesMethods::getTimeSecondsSinceTimePoint(const JBTypes::timePointMs &timePoint) noexcept {
-
-    const JBTypes::timePointMs timeNowMs = JBTypesMethods::getTimePointMSNow();
-    const JBTypes::durationMs timeNowSinceEpoch = timeNowMs.time_since_epoch();
-
-    const JBTypes::timePointMs timeActionMs = timePoint;
-    const JBTypes::durationMs timeActionSinceEpoch = timeActionMs.time_since_epoch();
-
-    const JBTypes::durationMs difference = timeNowSinceEpoch - timeActionSinceEpoch;
-    const std::chrono::duration<float> durationFloatDifference = difference;
-    const float fDifference = durationFloatDifference.count();
-
-    return fDifference;
-}
-
-
-JBTypes::timePointMs JBTypesMethods::getTimePointMsFromTimePoint
-    (const std::chrono::time_point<std::chrono::system_clock> &timePoint) noexcept {
-
-    return std::chrono::time_point_cast<std::chrono::milliseconds>(timePoint);
-}
-
 unsigned int JBTypesMethods::directionAsInteger(JBTypes::Dir dir) {
 
     unsigned int number;

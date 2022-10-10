@@ -46,7 +46,7 @@ public:
 // TODO: move to special
     static std::map<JBTypes::Color, bool> createSpecialStates();
 
-    void update(const JBTypes::timePointMs &updatingTime, const Ball::ActionRequest &action);
+    void update(const Ball::ActionRequest &action);
 
     CstBall_sptr getBall() const;
 
@@ -85,9 +85,6 @@ private:
 
     const unsigned int _nbOfKeys;
 
-    const JBTypes::timePointMs _creationTime;
-
-    JBTypes::timePointMs _updatingTime;
     bool _isExitUnlocked;
 
 

@@ -12,7 +12,7 @@ class ScrollablePage : public Page {
 
 public:
     // Slide state => time point and yScreenPosition
-    using slideState = std::pair<JBTypes::timePointMs, float>;
+    using slideState = std::pair<float, float>;
 
     explicit ScrollablePage(
         Player_sptr &&player,
@@ -20,7 +20,7 @@ public:
     );
 
 
-    void update(const Mouse &mouse, const JBTypes::timePointMs &updatingTime) override;
+    void update(const Mouse &mouse) override;
 
     std::string shaderDefine() const override;
 

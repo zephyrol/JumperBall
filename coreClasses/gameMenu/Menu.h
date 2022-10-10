@@ -26,7 +26,7 @@ public:
 
     Page_sptr currentPage();
 
-    void update(const Mouse &mouse, const JBTypes::timePointMs &updatingTime);
+    void update(const Mouse &mouse);
 
     /**
      * Action escape operation.

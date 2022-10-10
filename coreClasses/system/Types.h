@@ -88,13 +88,6 @@ namespace JBTypesMethods {
 
     std::array<bool, 6> strDirAsArray(const std::string &directions);
 
-
-    float getTimeSecondsSinceTimePoint(const JBTypes::timePointMs &timePoint) noexcept;
-    JBTypes::timePointMs getTimePointMsFromTimePoint(
-        const std::chrono::time_point<std::chrono::system_clock> &timePoint
-    ) noexcept;
-
-
     float dot(const JBTypes::vec3f &a, const JBTypes::vec3f &b);
 
     JBTypes::vec3f cross(const JBTypes::vec3f &a, const JBTypes::vec3f &b);

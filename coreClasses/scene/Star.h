@@ -66,9 +66,6 @@ private:
     const float _envSize;
     const float _radiansPerSeconds;
     const JBTypes::vec3f _color;
-    const JBTypes::timePointMs _creationTime;
-
-    float getTimeSinceCreation() const;
 
 };
 

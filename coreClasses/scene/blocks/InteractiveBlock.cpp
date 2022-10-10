@@ -11,20 +11,19 @@ InteractiveBlock::InteractiveBlock(
     const vecSpecial_sptr &specials,
     const Ball_sptr &ball,
     bool alwaysHasInteractions
-):
-    Block(position,items,enemies,specials,alwaysHasInteractions),
-    _ball(ball)
-{
+) :
+    Block(position, items, enemies, specials, alwaysHasInteractions),
+    _ball(ball) {
 }
 
 void InteractiveBlock::catchItem() {
-    for (const Item_sptr& item : _items) {
-        item->catchingTest(_updatingTime);
+    for (const Item_sptr &item: _items) {
+        item->catchingTest();
     }
 }
 
 Block::Effect InteractiveBlock::interaction() const {
-    for (const auto& enemy : _cstEnemies) {
+    for (const auto &enemy: _cstEnemies) {
         const bool isTouching = enemy->touchingTest();
         if (isTouching) {
             return Block::Effect::Burst;
@@ -33,13 +32,13 @@ Block::Effect InteractiveBlock::interaction() const {
     return Block::Effect::Nothing;
 }
 
-void InteractiveBlock::update(const JBTypes::timePointMs &updatingTime){
-    Block::update(updatingTime);
+void InteractiveBlock::update() {
+    Block::update();
     catchItem();
 }
 
 Block::Effect InteractiveBlock::detectionEvent() {
-    for (const auto& special: _specials) {
+    for (const auto &special: _specials) {
         if (special->direction() == _ball.lock()->currentSide()) {
             special->applySpecialEffect();
         }

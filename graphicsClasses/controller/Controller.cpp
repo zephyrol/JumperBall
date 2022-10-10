@@ -194,7 +194,7 @@ void Controller::update() {
     // 2. Update scene and menu
     const auto &currentPage = _menu->currentPage();
     _scene->update(updatingTime);
-    _menu->update(_mouse, updatingTime);
+    _menu->update(_mouse);
 
     // 3. Update viewer
     const auto &newPage = _menu->currentPage();

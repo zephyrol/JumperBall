@@ -15,81 +15,98 @@
 #include "scene/Displayable.h"
 
 class Block;
-using Block_sptr = std::shared_ptr <Block>;
-using CstBlock_sptr = std::shared_ptr <const Block>;
-using vecCstBlock_sptr = std::vector <CstBlock_sptr>;
-using vecBlock_sptr = std::vector <Block_sptr>;
+
+using Block_sptr = std::shared_ptr<Block>;
+using CstBlock_sptr = std::shared_ptr<const Block>;
+using vecCstBlock_sptr = std::vector<CstBlock_sptr>;
+using vecBlock_sptr = std::vector<Block_sptr>;
 using BlockDir = std::pair<Block_sptr, JBTypes::Dir>;
 
-class Block: public Displayable {
+class Block : public Displayable {
 public:
 
-Block(
-    const JBTypes::vec3ui& position,
-    const vecItem_sptr& items,
-    const vecEnemy_sptr& enemies,
-    const vecSpecial_sptr& specials,
-    bool alwaysHasInteractions
-);
+    Block(
+        const JBTypes::vec3ui &position,
+        const vecItem_sptr &items,
+        const vecEnemy_sptr &enemies,
+        const vecSpecial_sptr &specials,
+        bool alwaysHasInteractions
+    );
 
-virtual ~Block() = default;
-enum class Effect { Nothing, Burst, Burn, Slide, Jump, FinishLevel };
+    virtual ~Block() = default;
 
-virtual Block::Effect detectionEvent() = 0;
+    enum class Effect {
+        Nothing, Burst, Burn, Slide, Jump, FinishLevel
+    };
 
-static constexpr size_t itemsNumber = 6;
+    virtual Block::Effect detectionEvent() = 0;
 
-virtual std::array <bool, 6> faceInfo() const;
-virtual bool isExists() const;
-virtual JBTypes::Color getColor() const;
+    static constexpr size_t itemsNumber = 6;
 
-const JBTypes::vec3f& localScale() const;
-const JBTypes::vec3f& localTranslation() const;
+    virtual std::array<bool, 6> faceInfo() const;
 
-const vecCstItem_sptr& getItems() const;
-const vecCstEnemy_sptr& getEnemies() const;
-const vecCstSpecial_sptr& getSpecials() const;
+    virtual bool isExists() const;
 
-bool hasInteraction() const;
+    virtual JBTypes::Color getColor() const;
 
-virtual void update(const JBTypes::timePointMs &updatingTime);
-virtual void unlockExit();
-virtual Effect interaction() const = 0;
+    const JBTypes::vec3f &localScale() const;
 
-std::unordered_map<CstItem_sptr ,vecCstShape_sptr> getItemShapes() const;
-virtual vecCstShape_sptr getExtraShapes() const;
+    const JBTypes::vec3f &localTranslation() const;
 
-virtual bool mayDisappear() const;
+    const vecCstItem_sptr &getItems() const;
 
-const JBTypes::vec3ui& position() const;
+    const vecCstEnemy_sptr &getEnemies() const;
 
-Displayable::StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
-Displayable::DynamicValues <JBTypes::vec3f> getDynamicVec3fs() const override;
-Displayable::GlobalState getGlobalState() const override;
+    const vecCstSpecial_sptr &getSpecials() const;
 
-static std::string positionToString(const JBTypes::vec3ui& position);
+    bool hasInteraction() const;
 
-vecCstItem_sptr getCstItems() const;
-vecCstEnemy_sptr getCstEnemies() const;
-vecCstSpecial_sptr getCstSpecials() const;
+    virtual void update();
 
-vecItem_sptr getItems();
-vecEnemy_sptr getEnemies();
-vecSpecial_sptr getSpecials();
+    virtual void unlockExit();
+
+    virtual Effect interaction() const = 0;
+
+    std::unordered_map<CstItem_sptr, vecCstShape_sptr> getItemShapes() const;
+
+    virtual vecCstShape_sptr getExtraShapes() const;
+
+    virtual bool mayDisappear() const;
+
+    const JBTypes::vec3ui &position() const;
+
+    Displayable::StaticValues<JBTypes::vec3f> getStaticVec3fValues() const override;
+
+    Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fs() const override;
+
+    Displayable::GlobalState getGlobalState() const override;
+
+    static std::string positionToString(const JBTypes::vec3ui &position);
+
+    vecCstItem_sptr getCstItems() const;
+
+    vecCstEnemy_sptr getCstEnemies() const;
+
+    vecCstSpecial_sptr getCstSpecials() const;
+
+    vecItem_sptr getItems();
+
+    vecEnemy_sptr getEnemies();
+
+    vecSpecial_sptr getSpecials();
 
 
 protected:
-const JBTypes::vec3ui _position;
-const vecItem_sptr _items;
-const vecCstItem_sptr _cstItems;
-const vecEnemy_sptr _enemies;
-const vecCstEnemy_sptr _cstEnemies;
-const vecSpecial_sptr _specials;
-const vecCstSpecial_sptr _cstSpecials;
-const bool _hasInteraction;
-JBTypes::timePointMs _updatingTime;
-JBTypes::vec3f _localScale;
-JBTypes::vec3f _localTranslation;
+    const JBTypes::vec3ui _position;
+    const vecItem_sptr _items;
+    const vecCstItem_sptr _cstItems;
+    const vecEnemy_sptr _enemies;
+    const vecCstEnemy_sptr _cstEnemies;
+    const vecSpecial_sptr _specials;
+    const vecCstSpecial_sptr _cstSpecials;
+    const bool _hasInteraction;
+    JBTypes::vec3f _localScale;
+    JBTypes::vec3f _localTranslation;
 };
 
 #endif /* BLOCK_H */

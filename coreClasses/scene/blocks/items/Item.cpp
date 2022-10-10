@@ -8,24 +8,22 @@
 #include "Item.h"
 
 Item::Item(
-    const JBTypes::vec3ui& position,
-    const JBTypes::Dir& direction
-    ):
+    const JBTypes::vec3ui &position,
+    const JBTypes::Dir &direction
+) :
     _position(position),
     _direction(direction),
-    _3Dposition(compute3DPosition()),
+    _3DPosition(compute3DPosition()),
     _gotten(false),
-    _creationTime(JBTypesMethods::getTimePointMSNow()),
-    _obtainingTime()
-{
+    _obtainingTime(0.f) {
 }
 
-const JBTypes::vec3ui& Item::position() const {
+const JBTypes::vec3ui &Item::position() const {
     return _position;
 }
 
-const JBTypes::vec3f& Item::get3DPosition() const {
-    return _3Dposition;
+const JBTypes::vec3f &Item::get3DPosition() const {
+    return _3DPosition;
 }
 
 bool Item::isGotten() const {
@@ -38,22 +36,18 @@ float Item::getTimeSinceObtaining() const {
            : 0;
 }
 
-float Item::getTimeSinceCreation() const {
-    return JBTypesMethods::getTimeSecondsSinceTimePoint(_creationTime);
+Displayable::StaticValues<float> Item::getStaticFloatValues() const {
+    return {static_cast<float>(_direction)};
 }
 
-Displayable::StaticValues <float> Item::getStaticFloatValues() const {
-    return { static_cast<float>(_direction) };
+Displayable::StaticValues<JBTypes::vec3f> Item::getStaticVec3fValues() const {
+    return {_3DPosition};
 }
 
-Displayable::StaticValues <JBTypes::vec3f> Item::getStaticVec3fValues() const {
-    return { _3Dposition };
-}
-
-Displayable::DynamicValues <float> Item::getDynamicFloats() const {
+Displayable::DynamicValues<float> Item::getDynamicFloats() const {
     return {
-        { "creationTime", getTimeSinceCreation()},
-        { "obtainingTime", getTimeSinceObtaining()}
+        {"creationTime",  getTimeSinceCreation()},
+        {"obtainingTime", getTimeSinceObtaining()}
     };
 
 }
@@ -77,38 +71,37 @@ JBTypes::vec3f Item::compute3DPosition() const {
     auto y = static_cast <float>(_position.at(1));
     auto z = static_cast <float>(_position.at(2));
 
-    switch (_direction)
-    {
-    case JBTypes::Dir::North:
-        z -= offsetPosition;
-        break;
-    case JBTypes::Dir::South:
-        z += offsetPosition;
-        break;
-    case JBTypes::Dir::East:
-        x += offsetPosition;
-        break;
-    case JBTypes::Dir::West:
-        x -= offsetPosition;
-        break;
-    case JBTypes::Dir::Up:
-        y += offsetPosition;
-        break;
-    case JBTypes::Dir::Down:
-        y -= offsetPosition;
-        break;
-    default:
-        break;
+    switch (_direction) {
+        case JBTypes::Dir::North:
+            z -= offsetPosition;
+            break;
+        case JBTypes::Dir::South:
+            z += offsetPosition;
+            break;
+        case JBTypes::Dir::East:
+            x += offsetPosition;
+            break;
+        case JBTypes::Dir::West:
+            x -= offsetPosition;
+            break;
+        case JBTypes::Dir::Up:
+            y += offsetPosition;
+            break;
+        case JBTypes::Dir::Down:
+            y -= offsetPosition;
+            break;
+        default:
+            break;
     }
 
-    return JBTypes::vec3f { x, y, z };
+    return JBTypes::vec3f{x, y, z};
 }
 
 const JBTypes::Dir &Item::direction() const {
     return _direction;
 }
 
-void Item::setAsGotten(const JBTypes::timePointMs &updatingTime) {
+void Item::setAsGotten() {
     _obtainingTime = updatingTime;
     _gotten = true;
 }

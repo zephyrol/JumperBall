@@ -52,7 +52,7 @@ void Scene::update(const JBTypes::timePointMs &updatingTime) {
         }
     }
 
-    _map->update(updatingTime, actionRequest);
+    _map->update(actionRequest);
     _camera->update(updatingTime, status, actionRequest == Ball::ActionRequest::MoveCamera);
 
     _currentKey = Scene::ActionKey::Nothing;

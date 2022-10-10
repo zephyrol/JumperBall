@@ -30,8 +30,6 @@ public:
 
     const JBTypes::Color &getColor() const;
 
-    float getTimeSinceCreation() const;
-
     const JBTypes::Dir &direction() const;
 
     const JBTypes::vec3ui &position() const;
@@ -55,7 +53,6 @@ public:
     Displayable::GlobalState getGlobalState() const override;
 
 private:
-    const JBTypes::timePointMs _creationTime;
     const JBTypes::Dir _direction;
     const JBTypes::Color _color;
     const std::string _colorAttributeName;

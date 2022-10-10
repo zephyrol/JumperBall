@@ -49,7 +49,7 @@ public:
 
     virtual vecCstTextNode_uptr genTextNodes() const = 0;
 
-    virtual void update(const Mouse &mouse, const JBTypes::timePointMs &updatingTime);
+    virtual void update(const Mouse &mouse);
 
     virtual void resize(float ratio) = 0;
 

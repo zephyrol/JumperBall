@@ -15,7 +15,7 @@ Page_wptr Page::parent() {
     return {};
 }
 
-void Page::update(const Mouse &, const JBTypes::timePointMs &) {
+void Page::update(const Mouse &mouse) {
 }
 
 vecCstLabel_sptr Page::labels() const {

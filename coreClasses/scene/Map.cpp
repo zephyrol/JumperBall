@@ -20,8 +20,6 @@ Map::Map(Map::MapInfo &&mapInfo) :
     _height(mapInfo.height),
     _depth(mapInfo.depth),
     _nbOfKeys(mapInfo.nbOfKeys),
-    _creationTime(JBTypesMethods::getTimePointMSNow()),
-    _updatingTime(),
     _isExitUnlocked(false) {
     _ball->setBlockPositions(_blocksPositions);
     _ball->setBlockWithInteractions(_blocksToUpdate);
@@ -105,13 +103,12 @@ float Map::getLargestSize() const {
     return boundingBoxMax;
 }
 
-void Map::update(const JBTypes::timePointMs &updatingTime, const Ball::ActionRequest &action) {
+void Map::update(const Ball::ActionRequest &action) {
 
-    _updatingTime = updatingTime;
-    _ball->update(updatingTime, action);
+    _ball->update(action);
 
     for (const auto &block: *_blocksToUpdate) {
-        block->update(_updatingTime);
+        block->update();
     }
 
     if (ballIsOut()) {

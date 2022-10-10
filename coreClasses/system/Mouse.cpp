@@ -39,10 +39,9 @@ void Mouse::release() {
     _mouseCoords = nullptr;
 }
 
-void Mouse::update(const JBTypes::timePointMs &updatingTime) {
+void Mouse::update() {
     _previousState = _currentState;
     _currentState.mouseCoords = _mouseCoords;
-    _currentState.updatingTime = updatingTime;
     !_mouseCoords ? releasedMouseUpdate() : pressedMouseUpdate();
 }
 

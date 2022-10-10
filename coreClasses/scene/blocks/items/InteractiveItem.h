@@ -8,16 +8,17 @@
 
 #include "scene/Ball.h"
 
-class InteractiveItem: public Item {
+class InteractiveItem : public Item {
 public:
     InteractiveItem(
-        const JBTypes::vec3ui& position,
-        const JBTypes::Dir& direction,
+        const JBTypes::vec3ui &position,
+        const JBTypes::Dir &direction,
         const Ball_sptr &ball
     );
 
-void catchingTest(const JBTypes::timePointMs &updatingTime) override;
-virtual void catchItem();
+    void catchingTest() override;
+
+    virtual void catchItem();
 
 protected:
     const Ball_wptr _ball;
