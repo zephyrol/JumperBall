@@ -4,7 +4,7 @@
 
 #include "KeyboardKey.h"
 
-KeyboardKey::KeyboardKey(std::unordered_map<KeyboardKey::Button, std::function<void()>> &&actionFunctions) :
+KeyboardKey::KeyboardKey(std::map<Button, std::function<void()>> &&actionFunctions) :
     _actionFunctions(std::move(actionFunctions)),
     _currentStatus{
         {KeyboardKey::Button::Up,       KeyboardKey::Status::Released},

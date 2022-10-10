@@ -62,7 +62,7 @@ private:
         std::pair<float, float> point;
     };
 
-    const std::unordered_map<ScreenDirection, std::function<void()> > _directionActionFunctions;
+    const std::map<ScreenDirection, std::function<void()> > _directionActionFunctions;
     const std::function<void(float mouseX, float mouseY)> _validateActionFunction;
     const std::function<void()> _longPressActionFunction;
 

@@ -17,7 +17,7 @@ public :
         Up, Down, Left, Right, Escape, Validate
     };
 
-    explicit KeyboardKey(std::unordered_map<Button, std::function<void()> > &&actionFunctions);
+    explicit KeyboardKey(std::map<Button, std::function<void()> > &&actionFunctions);
 
     void press(const Button& button);
     void release(const Button& button);
@@ -25,9 +25,9 @@ public :
     void update();
 
 private:
-    using KeyStatus = std::unordered_map<Button, Status>;
+    using KeyStatus = std::map<Button, Status>;
 
-    const std::unordered_map<Button, std::function<void()> > _actionFunctions;
+    const std::map<Button, std::function<void()> > _actionFunctions;
     KeyStatus _currentStatus;
     KeyStatus _previousStatus;
 };
