@@ -7,7 +7,8 @@
 #include "Scene.h"
 
 Scene::Scene(const std::string &mapContent, float screenRatio, Player_sptr player, bool isUsingTouchScreen) :
-    _map(MapGenerator::loadMap(mapContent)),
+    _chronometer(player->getChronometer()),
+    _map(MapGenerator::loadMap(mapContent, _chronometer)),
     _currentKey(Scene::ActionKey::Nothing),
     _camera(std::make_shared<Camera>(*_map, screenRatio)),
     _star(Star::createBlurStar(*_map)),
@@ -17,7 +18,7 @@ Scene::Scene(const std::string &mapContent, float screenRatio, Player_sptr playe
     _isUsingTouchScreen(isUsingTouchScreen) {
 }
 
-void Scene::update(const JBTypes::timePointMs &updatingTime) {
+void Scene::update() {
 
     const auto &status = _player->status();
     Ball::ActionRequest actionRequest;
@@ -53,7 +54,7 @@ void Scene::update(const JBTypes::timePointMs &updatingTime) {
     }
 
     _map->update(actionRequest);
-    _camera->update(updatingTime, status, actionRequest == Ball::ActionRequest::MoveCamera);
+    _camera->update(status, actionRequest == Ball::ActionRequest::MoveCamera);
 
     _currentKey = Scene::ActionKey::Nothing;
 

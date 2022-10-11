@@ -36,7 +36,6 @@ public:
     Displayable::GlobalState getGlobalState() const override;
 
     void update(
-        const JBTypes::timePointMs &updatingTime,
         const Player::Status &status,
         bool goAbove
     ) noexcept;
@@ -60,17 +59,15 @@ private:
     static float computeLocalOffset(float fovY) noexcept;
 
     const Map &_map;
-    const JBTypes::timePointMs _creationTime;
-    JBTypes::timePointMs _updatingTime;
+    const CstChronometer_sptr _chronometer;
     float _fovY;
     float _localOffset;
     Movement _movement;
     glm::vec3 _pos;
     glm::vec3 _center;
     glm::vec3 _up;
-    float _timeSinceCreation;
-    JBTypes::timePointMs _timePointComeBack;
-    JBTypes::timePointMs _timePointGoAbove;
+    float _timePointComeBack;
+    float _timePointGoAbove;
     glm::mat4 _perspectiveMatrix;
 
     static constexpr float distBehindBall = 0.5f;

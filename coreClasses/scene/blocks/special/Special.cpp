@@ -7,11 +7,13 @@
 #include "Special.h"
 
 Special::Special(
+    CstChronometer_sptr chronometer,
     const JBTypes::Color &color,
     const JBTypes::Dir &dir,
     const JBTypes::vec3ui &position,
     bool isActivated
 ) :
+    _chronometer(std::move(chronometer)),
     _direction(dir),
     _color(color),
     _colorAttributeName("is" + JBTypesMethods::colorToString(_color) + "Activated"),
@@ -62,7 +64,7 @@ Displayable::StaticValues<JBTypes::vec3f> Special::getStaticVec3fValues() const 
 
 Displayable::DynamicValues<float> Special::getDynamicFloats() const {
     return {
-        {"creationTime",      getTimeSinceCreation()},
+        {"creationTime",      _chronometer->timeSinceCreation()},
         {_colorAttributeName, _isActivated}
     };
 }

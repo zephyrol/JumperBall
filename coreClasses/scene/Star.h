@@ -56,6 +56,7 @@ public:
 
 private:
 
+    const CstChronometer_sptr _chronometer;
     const float _radiusInside;
     const float _radiusOutside;
     const float _distance;

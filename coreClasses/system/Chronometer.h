@@ -4,9 +4,11 @@
 
 #ifndef JUMPERBALLAPPLICATION_CHRONOMETER_H
 #define JUMPERBALLAPPLICATION_CHRONOMETER_H
+
 #include "system/Types.h"
 
 class Chronometer;
+
 using Chronometer_sptr = std::shared_ptr<Chronometer>;
 using CstChronometer_sptr = std::shared_ptr<const Chronometer>;
 
@@ -16,20 +18,29 @@ public:
     Chronometer();
 
     float timeSinceCreation() const;
-    void reset();
-    void update();
-    void stop();
-    void trigger();
 
-private:
+    void reset();
+
+    void update();
+
+    void stop();
+
+    void trigger();
 
     using TimePointMs = std::chrono::time_point<
         std::chrono::system_clock,
         std::chrono::duration<long int, std::ratio<1, 1000> >
     >;
+
+    static TimePointMs getTimePointMSNow() noexcept;
+
+private:
+
     using DurationMs = std::chrono::duration<long int, std::ratio<1, 1000> >;
 
-    enum class TimeSession { Run , Stop };
+    enum class TimeSession {
+        Run, Stop
+    };
 
     /**
      * Current session (Run if the chronometer is running, else Stop)
@@ -63,7 +74,6 @@ private:
     bool _requestReset;
     bool _requestTrigger;
 
-    static TimePointMs getTimePointMSNow() noexcept;
     static float getFloatFromDurationMS(const DurationMs &dms) noexcept;
 
 };

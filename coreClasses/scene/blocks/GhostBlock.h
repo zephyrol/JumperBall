@@ -33,6 +33,7 @@ public:
 
 
 private:
+    const CstChronometer_sptr _chronometer;
     const float _periodicity;
     bool _isThere;
 };

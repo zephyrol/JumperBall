@@ -6,7 +6,7 @@
 
 ScrollablePage::ScrollablePage(Player_sptr &&player, float height) :
     Page(std::move(player)),
-    _chronometer(player->getChronometer()),
+    _chronometer(_player->getChronometer()),
     _height(height),
     _localPosY(0.f),
     _localPressedPosY(0.f),

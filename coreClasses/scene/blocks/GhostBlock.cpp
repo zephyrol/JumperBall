@@ -16,6 +16,7 @@ GhostBlock::GhostBlock(
     float periodicity
 ) :
     InteractiveBlock(position, items, enemies, specials, ball, true),
+    _chronometer(ball->getChronometer()),
     _periodicity(periodicity),
     _isThere(true) {
 }
@@ -35,6 +36,8 @@ JBTypes::Color GhostBlock::getColor() const {
 void GhostBlock::update() {
     InteractiveBlock::update();
 
+    // TODO: Update time since creation to game time.
+    const auto fPassedTime = _chronometer->timeSinceCreation();
     const auto nbOfSwitching = static_cast <unsigned int>(fPassedTime / _periodicity);
     _isThere = nbOfSwitching % 2 == 0;
 

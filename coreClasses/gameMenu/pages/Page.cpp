@@ -15,7 +15,7 @@ Page_wptr Page::parent() {
     return {};
 }
 
-void Page::update(const Mouse &mouse) {
+void Page::update(const Mouse &) {
 }
 
 vecCstLabel_sptr Page::labels() const {

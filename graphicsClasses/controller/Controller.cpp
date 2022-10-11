@@ -116,59 +116,6 @@ void Controller::escapeAction() {
     }
 }
 
-// void Controller::updateMouse(float posX, float posY) {
-//
-//     const auto now = JBTypesMethods::getTimePointMSNow();
-//     if (!JBTypesMethods::floatsEqual(posX, _mouseCurrentXCoord)
-//         || !JBTypesMethods::floatsEqual(posY, _mouseCurrentYCoord)) {
-//         _mouseUpdatingTime = now;
-//     }
-//
-//     _mouseCurrentXCoord = posX;
-//     _mouseCurrentYCoord = posY;
-//
-//     constexpr float thresholdMoving = 0.05f;
-//     const float distance = computeDistance(_mousePreviousXCoord, _mousePreviousYCoord, posX, posY);
-//
-//     const auto movementIsDetected = distance > thresholdMoving;
-//     if (movementIsDetected) {
-//         _currentMovementDir = std::make_shared<const Controller::ScreenDirection>(
-//             nearestDirection(posX, posY));
-//     }
-//
-//     constexpr float updatingMouseThreshold = 300.f; // 0.3 seconds
-//     if (JBTypesMethods::getFloatFromDurationMS(now - _mouseUpdatingTime) > updatingMouseThreshold
-//         || movementIsDetected) {
-//         _mouseUpdatingTime = now;
-//         _mousePreviousXCoord = posX;
-//         _mousePreviousYCoord = posY;
-//     }
-//
-//     if (!_currentMovementDir) {
-//         constexpr float goAheadDelay = 0.1f;
-//         if (JBTypesMethods::getFloatFromDurationMS(now - _mousePressTime) > goAheadDelay) {
-//             _scene->mouseSetUp();
-//         }
-//         return;
-//     }
-//     _actionsMouseDirection.at(*_currentMovementDir)();
-// }
-
-// void Controller::releaseMouse(float posX, float posY) {
-//
-//     constexpr float thresholdMoving = 0.05f;
-//
-//     const float distance = computeDistance(_mousePressingXCoord, _mousePressingYCoord, posX, posY);
-//     constexpr float pressTimeThreshold = 0.3f;
-//     if (
-//         distance < thresholdMoving
-//         && JBTypesMethods::getTimeSecondsSinceTimePoint(_mousePressTime) < pressTimeThreshold
-//         ) {
-//         setValidateMouse();
-//     }
-//     _mouseIsPressed = false;
-// }
-
 bool Controller::requestToLeave() const {
     return _requestToLeave;
 }

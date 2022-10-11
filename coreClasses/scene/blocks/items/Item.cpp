@@ -7,10 +7,8 @@
 
 #include "Item.h"
 
-Item::Item(
-    const JBTypes::vec3ui &position,
-    const JBTypes::Dir &direction
-) :
+Item::Item(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, CstChronometer_sptr chronometer) :
+    _chronometer(std::move(chronometer)),
     _position(position),
     _direction(direction),
     _3DPosition(compute3DPosition()),
@@ -32,7 +30,7 @@ bool Item::isGotten() const {
 
 float Item::getTimeSinceObtaining() const {
     return _gotten
-           ? JBTypesMethods::getTimeSecondsSinceTimePoint(_obtainingTime)
+           ? _chronometer->timeSinceCreation() - _obtainingTime
            : 0;
 }
 
@@ -46,7 +44,7 @@ Displayable::StaticValues<JBTypes::vec3f> Item::getStaticVec3fValues() const {
 
 Displayable::DynamicValues<float> Item::getDynamicFloats() const {
     return {
-        {"creationTime",  getTimeSinceCreation()},
+        {"creationTime",  _chronometer->timeSinceCreation()},
         {"obtainingTime", getTimeSinceObtaining()}
     };
 
@@ -102,7 +100,7 @@ const JBTypes::Dir &Item::direction() const {
 }
 
 void Item::setAsGotten() {
-    _obtainingTime = updatingTime;
+    _obtainingTime = _chronometer->timeSinceCreation();
     _gotten = true;
 }
 

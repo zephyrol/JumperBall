@@ -37,6 +37,8 @@ public:
     JBTypes::Color getColor() const override;
 
 private:
+
+    const CstChronometer_sptr _chronometer;
     bool _stillThere;
     bool _isGoingToBreak;
     float _collisionTime;

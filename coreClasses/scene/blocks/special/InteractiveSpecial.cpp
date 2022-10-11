@@ -10,7 +10,7 @@ InteractiveSpecial::InteractiveSpecial(
     const JBTypes::Dir &direction,
     const Ball_sptr &ball,
     bool isActivated
-    ): Special(color, direction, position, isActivated),
+    ): Special(ball->getChronometer(), color, direction, position, isActivated),
     _ball(ball){
 
 }

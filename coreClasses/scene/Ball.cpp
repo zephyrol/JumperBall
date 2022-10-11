@@ -44,13 +44,13 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z, CstChronometer_sptr c
 void Ball::turnLeft() noexcept {
     _lookTowards = _turnLeftMovement.evaluate({_currentSide, _lookTowards});
     _state = Ball::State::TurningLeft;
-    setTimeActionNow();
+    setActionTimeNow();
 }
 
 void Ball::turnRight() noexcept {
     _lookTowards = _turnRightMovement.evaluate({_currentSide, _lookTowards});
     _state = Ball::State::TurningRight;
-    setTimeActionNow();
+    setActionTimeNow();
 }
 
 const JBTypes::vec3f &Ball::get3DPosition() const noexcept {
@@ -67,7 +67,7 @@ void Ball::goStraightAhead() noexcept {
 
 void Ball::jump() noexcept {
     _state = Ball::State::Jumping;
-    setTimeActionNow();
+    setActionTimeNow();
     isGoingStraightAheadIntersectBlock();
 }
 
@@ -75,23 +75,23 @@ void Ball::stay() noexcept {
     _jumpingType = Ball::JumpingType::Short;
     _state = Ball::State::Staying;
     _3DPos = get3DPosStayingBall();
-    setTimeActionNow();
+    setActionTimeNow();
 }
 
 void Ball::fall() noexcept {
     _state = Ball::State::Falling;
-    setTimeActionNow();
+    setActionTimeNow();
 }
 
 void Ball::teleport(const JBTypes::Color &col) noexcept {
     _state = Ball::State::Teleporting;
     _teleportationColor = col;
-    setTimeActionNow();
+    setActionTimeNow();
 }
 
 void Ball::deteleport() noexcept {
     _state = Ball::State::Deteleporting;
-    setTimeActionNow();
+    setActionTimeNow();
 }
 
 void Ball::move() noexcept {
@@ -99,7 +99,7 @@ void Ball::move() noexcept {
     updateMovements();
     if (_movementDestination.nextLocal != Ball::NextDestination::None) {
         _state = Ball::State::Moving;
-        setTimeActionNow();
+        setActionTimeNow();
     }
 }
 
@@ -385,7 +385,7 @@ void Ball::blockEvent() noexcept {
         _burnCoefficientCurrent += .2f;
         _burnCoefficientTrigger = _burnCoefficientCurrent;
         _stateOfLife = StateOfLife::Burning;
-        setTimeLifeNow();
+        setLifeTimeNow();
         return;
     }
     const auto hasToJump = _jumpRequest
@@ -397,7 +397,7 @@ void Ball::blockEvent() noexcept {
     if (effect == Block::Effect::Slide) {
         _burnCoefficientTrigger = 0.f;
         _stateOfLife = StateOfLife::Sliding;
-        setTimeLifeNow();
+        setLifeTimeNow();
         if (!hasToJump) {
             move();
         }
@@ -514,14 +514,14 @@ void Ball::burningUpdate() noexcept {
         _burnCoefficientCurrent = _burnCoefficientTrigger + (time / timeToBurn);
         if (_burnCoefficientCurrent > 1.f) {
             _stateOfLife = StateOfLife::Bursting;
-            setTimeLifeNow();
+            setLifeTimeNow();
         }
         return;
     }
     // the ball is cooling down
     if (_stateOfLife == StateOfLife::Burning) {
         _stateOfLife = StateOfLife::Normal;
-        setTimeLifeNow();
+        setLifeTimeNow();
         _burnCoefficientTrigger = _burnCoefficientCurrent;
     }
     _burnCoefficientCurrent = _burnCoefficientTrigger - (time / timeToBurn);
@@ -768,7 +768,7 @@ void Ball::interaction() {
     }
     if (finalBlockEffect == Block::Effect::Burst) {
         _stateOfLife = Ball::StateOfLife::Bursting;
-        setTimeLifeNow();
+        setLifeTimeNow();
         internalUpdate();
     }
 }
@@ -905,4 +905,18 @@ float Ball::getTimeSecondsSinceStateOfLife() const {
 
 float Ball::getTimeSecondsSinceAction() const {
     return _chronometer->timeSinceCreation() - _actionTime;
+}
+
+float Ball::getActionTime() const {
+    return _actionTime;
+}
+
+void Ball::setActionTimeNow() noexcept {
+    // TODO: replace by in game time
+    _actionTime = _chronometer->timeSinceCreation();
+}
+
+void Ball::setLifeTimeNow() noexcept {
+    // TODO: replace by in game time
+    _actionTime = _chronometer->timeSinceCreation();
 }

@@ -20,6 +20,7 @@ DarkBall::DarkBall(
         darkBallRadius,
         nbOfJumps,
         ball),
+    _chronometer(ball->getChronometer()),
     _movementDirection(movementDirection) {
 }
 
@@ -30,9 +31,11 @@ void DarkBall::update() {
 
     const JBTypes::vec3f vecDirSide = JBTypesMethods::directionAsVector(direction());
 
+    const auto timeSinceCreation = _chronometer->timeSinceCreation();
+    // TODO: replace time since creation by time in game
     const auto nbOfJumpsDone = static_cast <size_t>(timeSinceCreation / mechanics.getTimeToGetDestination());
 
-    const float distanceAlreadyTravelled = nbOfJumpsDone * mechanics.getJumpDistance();
+    const float distanceAlreadyTravelled = static_cast<float>(nbOfJumpsDone) * mechanics.getJumpDistance();
 
     const std::function<float(float, float)> getRemainder =
         [](float dividend, float divisor)
@@ -61,8 +64,7 @@ void DarkBall::update() {
 
             return ((nbOfjumps / length) % 2) == 0
                    ? (nbOfjumps % length) * jumpDistance + reminder
-                   : length * jumpDistance -
-                     ((nbOfjumps % length) * jumpDistance + reminder);
+                   : length * jumpDistance - ((nbOfjumps % length) * jumpDistance + reminder);
         };
 
     const float movementPosition = getMovementPosition(
@@ -86,8 +88,9 @@ bool DarkBall::touchingTest() const {
     const auto &boundingSpherePosition = ball->get3DPosition();
     const auto &boundingSphereRadius = ball->getRadius();
 
-    return JBTypesMethods::distance(boundingSpherePosition, _position) <
-           (boundingSphereRadius + darkBallRadius);
+    return JBTypesMethods::distance(
+        boundingSpherePosition, _position
+    ) < (boundingSphereRadius + darkBallRadius);
 }
 
 const ClassicalMechanics DarkBall::darkBallClassicalMechanics(DarkBall::darkBallRadius);

@@ -44,7 +44,7 @@ public:
 
     void setDown();
 
-    void update(const JBTypes::timePointMs &updatingTime);
+    void update();
 
     void updateScreenRatio(float ratio);
 
@@ -63,6 +63,7 @@ public:
     bool isUsingTouchScreen() const;
 
 private:
+    const CstChronometer_sptr _chronometer;
     Map_sptr _map;
     ActionKey _currentKey;
     const std::shared_ptr<Camera> _camera;

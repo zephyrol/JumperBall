@@ -7,22 +7,24 @@
 
 #ifndef BONUS_H
 #define BONUS_H
+
 #include "InteractiveItem.h"
 
-class Bonus:public InteractiveItem {
+class Bonus : public InteractiveItem {
 public:
-Bonus(
-    const JBTypes::vec3ui& position,
-    const JBTypes::Dir& direction,
-    unsigned int value,
-    const Ball_sptr &ball
+    Bonus(
+        const JBTypes::vec3ui &position,
+        const JBTypes::Dir &direction,
+        unsigned int value,
+        const Ball_sptr &ball
     );
 
-unsigned int value() const;
+    unsigned int value() const;
 
-virtual ~Bonus() = 0;
+    virtual ~Bonus() = 0;
+
 private:
-unsigned int _value;
+    unsigned int _value;
 
 };
 

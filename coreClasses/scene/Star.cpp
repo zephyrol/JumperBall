@@ -18,6 +18,7 @@ Star::Star(
     const JBTypes::vec3f &color,
     float radiansPerSecond
 ) :
+    _chronometer(map.getBall()->getChronometer()),
     _radiusInside(radiusInside),
     _radiusOutside(radiusOutside),
     _distance(distance),
@@ -56,17 +57,18 @@ float Star::envSize() const {
 }
 
 JBTypes::Quaternion Star::getRotation() const {
-    const float angle = getTimeSinceCreation() * _radiansPerSeconds;
+    const float angle = _chronometer->timeSinceCreation() * _radiansPerSeconds;
     return JBTypesMethods::createRotationQuaternion(_rotationAxis, angle);
 }
 
 JBTypes::vec3f Star::lightDirection() const {
-    const float angle = getTimeSinceCreation() * _radiansPerSeconds;
+    const float angle = _chronometer->timeSinceCreation() * _radiansPerSeconds;
     const JBTypes::vec3f toStar = JBTypesMethods::add(
         JBTypesMethods::scalarApplication(cosf(angle), _initialDirection),
         JBTypesMethods::scalarApplication(
             sinf(angle),
-            JBTypesMethods::cross(_rotationAxis, _initialDirection))
+            JBTypesMethods::cross(_rotationAxis, _initialDirection)
+        )
     );
 
     return JBTypesMethods::scalarApplication(-2.f, toStar);
@@ -100,7 +102,7 @@ Displayable::StaticValues<float> Star::getStaticFloatValues() const {
 
 Displayable::DynamicValues<float> Star::getDynamicFloats() const {
     return {
-        {"timeSinceCreation", getTimeSinceCreation()}
+        {"timeSinceCreation", _chronometer->timeSinceCreation()}
     };
 }
 

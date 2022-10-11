@@ -7,12 +7,14 @@
 
 #ifndef COIN_H
 #define COIN_H
+
 #include "Bonus.h"
 
-class Coin:public Bonus {
+class Coin : public Bonus {
 public:
-Coin(const JBTypes::vec3ui& position, const JBTypes::Dir& direction, const Ball_sptr &ball);
-vecCstShape_sptr getShapes() const override;
+    Coin(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, const Ball_sptr &ball);
+
+    vecCstShape_sptr getShapes() const override;
 
 private:
     void catchItem() override;

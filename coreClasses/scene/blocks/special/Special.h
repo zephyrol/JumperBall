@@ -9,6 +9,7 @@
 
 #include <scene/Shape.h>
 #include "scene/Displayable.h"
+#include "system/Chronometer.h"
 
 class Special;
 
@@ -22,6 +23,7 @@ class Special : public Displayable {
 public:
 
     Special(
+        CstChronometer_sptr chronometer,
         const JBTypes::Color &color,
         const JBTypes::Dir &dir,
         const JBTypes::vec3ui &position,
@@ -53,6 +55,7 @@ public:
     Displayable::GlobalState getGlobalState() const override;
 
 private:
+    const CstChronometer_sptr _chronometer;
     const JBTypes::Dir _direction;
     const JBTypes::Color _color;
     const std::string _colorAttributeName;

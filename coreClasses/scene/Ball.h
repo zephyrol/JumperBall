@@ -142,6 +142,8 @@ public:
 
     const std::shared_ptr<const vecBlock_sptr> &getBlocksWithInteraction();
 
+    float getActionTime() const;
+
     void updateMovements();
 
     void obtainKey();
@@ -243,9 +245,9 @@ private:
 
     void deteleport() noexcept;
 
-    void setTimeActionNow() noexcept;
+    void setActionTimeNow() noexcept;
 
-    void setTimeLifeNow() noexcept;
+    void setLifeTimeNow() noexcept;
 
     void blockEvent() noexcept;
 

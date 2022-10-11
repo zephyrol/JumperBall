@@ -32,6 +32,7 @@ public:
     vecCstShape_sptr getShapes() const override;
 
 private:
+    const CstChronometer_sptr _chronometer;
     const JBTypes::Dir _movementDirection;
 
     bool touchingTest() const override;

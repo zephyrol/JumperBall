@@ -8,7 +8,7 @@ InteractiveItem::InteractiveItem(
     const JBTypes::vec3ui &position,
     const JBTypes::Dir &direction,
     const Ball_sptr &ball
-) : Item(position, direction),
+) : Item(position, direction, ball->getChronometer()),
     _ball(ball) {
 }
 

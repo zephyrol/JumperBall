@@ -10,6 +10,7 @@
 
 #include "system/Types.h"
 #include "scene/Displayable.h"
+#include "system/Chronometer.h"
 #include <scene/Shape.h>
 
 class Item;
@@ -23,7 +24,7 @@ using Item_uptr = std::unique_ptr<Item>;
 class Item : public Displayable {
 public:
 
-    Item(const JBTypes::vec3ui &position, const JBTypes::Dir &direction);
+    Item(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, CstChronometer_sptr chronometer);
 
     const JBTypes::vec3ui &position() const;
 
@@ -57,6 +58,7 @@ private:
 
     JBTypes::vec3f compute3DPosition() const;
 
+    const CstChronometer_sptr _chronometer;
     const JBTypes::vec3ui _position;
     const JBTypes::Dir _direction;
     const JBTypes::vec3f _3DPosition;

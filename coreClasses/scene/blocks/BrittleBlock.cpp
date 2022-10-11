@@ -15,6 +15,7 @@ BrittleBlock::BrittleBlock(
     const Ball_sptr &ball
 ) :
     InteractiveBlock(position, items, enemies, specials, ball, true),
+    _chronometer(ball->getChronometer()),
     _stillThere(true),
     _isGoingToBreak(false),
     _collisionTime(0.f),
@@ -54,7 +55,7 @@ Block::Effect BrittleBlock::detectionEvent() {
 
     if (!_isGoingToBreak) {
         const auto ball = _ball.lock();
-        _collisionTime = ball->getTimeActionMs();
+        _collisionTime = ball->getActionTime();
         setFallDirection(ball->currentSide());
         _isGoingToBreak = true;
     }
@@ -74,9 +75,9 @@ void BrittleBlock::update() {
 
     constexpr float timeToFall = 1.f;
     if (_isGoingToBreak && _stillThere) {
-        JBTypes::durationMs diff = _updatingTime - _collisionTime;
-        const float diffF = JBTypesMethods::getFloatFromDurationMS(diff);
-        if (diffF > timeToFall) {
+        // TODO Use in game time
+        const auto diff = _chronometer->timeSinceCreation() - _collisionTime;
+        if (diff > timeToFall) {
             _stillThere = false;
         }
     }
@@ -84,9 +85,10 @@ void BrittleBlock::update() {
     constexpr float fallSpeed = 20.f;
     if (!_stillThere) {
         const JBTypes::vec3f dirVec = JBTypesMethods::directionAsVector(_fallDirection);
-        const JBTypes::durationMs diff = _updatingTime - _collisionTime;
-        const float diffF = JBTypesMethods::getFloatFromDurationMS(diff) - timeToFall;
-        const float distanceTraveled = diffF * fallSpeed;
+        // TODO Use in game time
+        const auto diff = _chronometer->timeSinceCreation() - _collisionTime;
+        const float diffTimeToFall = diff - timeToFall;
+        const float distanceTraveled = diffTimeToFall * fallSpeed;
         _localTranslation.x = dirVec.x * distanceTraveled;
         _localTranslation.y = dirVec.y * distanceTraveled;
         _localTranslation.z = dirVec.z * distanceTraveled;

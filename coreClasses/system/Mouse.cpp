@@ -53,9 +53,8 @@ void Mouse::pressedMouseUpdate() {
     const auto &updatingTime = _currentState.updatingTime;
 
     constexpr float updatingDirectionDetectionThreshold = 0.3f; // 0.3 seconds
-    if (!_previousState.mouseCoords ||  JBTypesMethods::getFloatFromDurationMS(
-        updatingTime - _directionDetectionState.updatingTime
-        )> updatingDirectionDetectionThreshold) {
+    if (!_previousState.mouseCoords
+        || (updatingTime - _directionDetectionState.updatingTime) > updatingDirectionDetectionThreshold) {
         _directionDetectionState = _currentState;
     }
 
@@ -100,9 +99,7 @@ void Mouse::pressedMouseUpdate() {
 
     constexpr auto pressingDetectionThreshold = 0.1f; // 0.1 seconds
     if (!_currentMovementDir) {
-        if (JBTypesMethods::getFloatFromDurationMS(
-            updatingTime - _pressingState.updatingTime
-        ) > pressingDetectionThreshold) {
+        if ((updatingTime - _pressingState.updatingTime) > pressingDetectionThreshold) {
             _longPressActionFunction();
         }
         return;
@@ -112,7 +109,7 @@ void Mouse::pressedMouseUpdate() {
 
 void Mouse::releasedMouseUpdate() {
 
-    _currentMovementDir  = nullptr;
+    _currentMovementDir = nullptr;
     const auto &previousStateCoords = _previousState.mouseCoords;
     if (!previousStateCoords) {
         return;
@@ -128,10 +125,8 @@ void Mouse::releasedMouseUpdate() {
     );
     constexpr float pressTimeThreshold = 300.f; // 0.3 seconds
     if (
-        distance < thresholdMoving &&
-        JBTypesMethods::getFloatFromDurationMS(
-            _currentState.updatingTime - _pressingState.updatingTime
-        ) < pressTimeThreshold) {
+        distance < thresholdMoving
+        && (_currentState.updatingTime - _pressingState.updatingTime) < pressTimeThreshold) {
         _validateActionFunction(pressingStateCoords->xCoord, previousStateCoords->yCoord);
     }
 }

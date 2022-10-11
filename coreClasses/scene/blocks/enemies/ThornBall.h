@@ -30,6 +30,7 @@ public:
     static constexpr float thornBallRadius = 0.1f;
 
 private:
+    const CstChronometer_sptr _chronometer;
     const JBTypes::Dir _movementDirection;
 
     bool touchingTest() const override;

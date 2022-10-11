@@ -9,22 +9,19 @@
 
 Camera::Camera(const Map &map, float ratio) :
     _map(map),
-    _creationTime(JBTypesMethods::getTimePointMSNow()),
-    _updatingTime(_creationTime),
+    _chronometer(map.getBall()->getChronometer()),
     _fovY(computeFovY(ratio)),
     _localOffset(computeLocalOffset(_fovY)),
     _movement(Camera::Movement::TurningAroundMap),
     _pos(1.f, 0.f, 0.f),
     _center(0.f, 0.f, 0.f),
     _up(0.f, 1.f, 0.f),
-    _timeSinceCreation(0),
-    _timePointComeBack(_creationTime),
-    _timePointGoAbove(_creationTime),
+    _timePointComeBack(0.f),
+    _timePointGoAbove(0.f),
     _perspectiveMatrix(glm::perspective(_fovY, ratio, zNear, zFar)) {
 }
 
 void Camera::update(
-    const JBTypes::timePointMs &updatingTime,
     const Player::Status &status,
     bool goAbove
 ) noexcept {
@@ -37,13 +34,13 @@ void Camera::update(
         _movement = Camera::Movement::ApproachingBall;
     }
 
-    _updatingTime = updatingTime;
+    // TODO : Replace by in game time
+    const auto updatingTime = _chronometer->timeSinceCreation();
     if (goAbove && _timePointComeBack >= _timePointGoAbove) {
-        _timePointGoAbove = _updatingTime;
+        _timePointGoAbove = updatingTime;
     } else if (!goAbove && _timePointGoAbove >= _timePointComeBack) {
-        _timePointComeBack = _updatingTime;
+        _timePointComeBack = updatingTime;
     }
-    _timeSinceCreation = JBTypesMethods::getFloatFromDurationMS(_updatingTime - _creationTime);
     if (_movement == Camera::Movement::TurningAroundMap) {
         turningAroundMapUpdate();
         return;
@@ -108,21 +105,21 @@ void Camera::followingBallUpdate() noexcept {
     }
 
     float cameraAboveWay;
+    // TODO: Replace by in game time.
+    const auto updatingTime = _chronometer->timeSinceCreation();
     if (_timePointGoAbove > _timePointComeBack) {
-        const float initialOffset = std::min(JBTypesMethods::getFloatFromDurationMS(
-            _timePointGoAbove - _timePointComeBack
-        ) / durationMoveAbove, 1.f);
-        const float aboveCoeff = std::min(JBTypesMethods::getFloatFromDurationMS(
-            _updatingTime - _timePointGoAbove
-        ) / durationMoveAbove, 1.f);
+        const float initialOffset = std::min(
+            (_timePointGoAbove - _timePointComeBack) / durationMoveAbove,
+            1.f
+        );
+        const float aboveCoeff = std::min((updatingTime - _timePointGoAbove) / durationMoveAbove, 1.f);
         cameraAboveWay = -(std::min(initialOffset - aboveCoeff, 1.f) - 1.f);
     } else {
-        const float initialOffset = std::min(JBTypesMethods::getFloatFromDurationMS(
-            _timePointComeBack - _timePointGoAbove
-        ) / durationMoveAbove, 1.f);
-        const float comingBackCoeff = std::min(JBTypesMethods::getFloatFromDurationMS(
-            _updatingTime - _timePointComeBack
-        ) / durationMoveAbove, 1.f);
+        const float initialOffset = std::min(
+            (_timePointComeBack - _timePointGoAbove) / durationMoveAbove,
+            1.f
+        );
+        const float comingBackCoeff = std::min((updatingTime - _timePointComeBack) / durationMoveAbove, 1.f);
         cameraAboveWay = std::max(initialOffset - comingBackCoeff, 0.f);
     }
 
@@ -166,18 +163,18 @@ void Camera::turningAroundMapUpdate() noexcept {
 
     const float cameraDistanceNear = distanceMax * 1.f;
     const float cameraDistanceFar = distanceMax * 1.3f;
-    const float diffF = _timeSinceCreation;
     const float distanceX = cameraDistanceNear +
                             (cameraDistanceFar - cameraDistanceNear) *
-                            ((-cosf(diffF) + 1.f) / 2.f);
+                            ((-cosf(_chronometer->timeSinceCreation()) + 1.f) / 2.f);
 
     const float distanceZ = distanceX;
 
     const glm::mat4 translation = glm::translate(glm::vec3(distanceX, 0, distanceZ));
 
+    const auto timeSinceCreation = _chronometer->timeSinceCreation();
     const glm::mat4 rotation = glm::rotate(
-        1.5f * diffF,
-        glm::vec3(0.f, 1.f + sinf(diffF / 5.f), 1.f + sinf(diffF / 3.f))
+        1.5f * timeSinceCreation,
+        glm::vec3(0.f, 1.f + sinf(timeSinceCreation / 5.f), 1.f + sinf(timeSinceCreation / 3.f))
     );
     const glm::mat4 transform = rotation * translation;
 
@@ -198,9 +195,9 @@ bool Camera::approachingBallUpdate() noexcept {
 
     const JBTypes::vec3f &position = _map.getBall()->get3DPosition();
 
-    const float diffF = _timeSinceCreation;
     constexpr float transitionDuration = 2.f;
-    float t = diffF / transitionDuration;
+
+    float t = _chronometer->timeSinceCreation() / transitionDuration;
 
     constexpr float distanceXStarting = 10.f;
     constexpr float distanceYStarting = 5.f;

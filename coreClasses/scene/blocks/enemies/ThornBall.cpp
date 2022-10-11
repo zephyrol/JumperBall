@@ -21,18 +21,19 @@ ThornBall::ThornBall(
         movementLength,
         ball
     ),
+    _chronometer(ball->getChronometer()),
     _movementDirection(movementDirection) {
 }
 
 void ThornBall::update() {
     constexpr float movementDuration = 2.f;
-    const float timeSinceCreation = JBTypesMethods::getFloatFromDurationMS(updatingTime - creationTime());
 
     const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(_movementDirection);
 
     const auto movementLength = static_cast <float>(length());
     const float localMovement = (1.f - cosf(2.f * static_cast <float>(M_PI) *
-                                            (timeSinceCreation / movementDuration))
+        //TODO replace by in game time
+                                            (_chronometer->timeSinceCreation()/ movementDuration))
                                 ) / 2.f;
     const float movementPosition = localMovement * movementLength;
 
