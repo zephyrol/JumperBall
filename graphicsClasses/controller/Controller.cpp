@@ -72,6 +72,7 @@ void Controller::releaseMouse() {
 }
 
 void Controller::runGame(size_t level) {
+    _chronometer->reset();
     _scene = std::make_shared<Scene>(
         _filesContent.at("map" + std::to_string(level) + ".txt"),
         _scene->getRatio(),

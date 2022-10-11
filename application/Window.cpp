@@ -214,7 +214,7 @@ void Window::run() {
     glfwSwapInterval(1);
     glfwSetInputMode(_window, GLFW_STICKY_KEYS, GL_TRUE);
 
-    auto before = JBTypesMethods::getTimePointMSNow();
+    auto before = Chronometer::getTimePointMSNow();
     unsigned int counter = 0;
     while (!inputManagement()) {
 
@@ -224,7 +224,7 @@ void Window::run() {
         glfwPollEvents();
 
         ++counter;
-        const auto after = JBTypesMethods::getTimePointMSNow();
+        const auto after = Chronometer::getTimePointMSNow();
         auto diff = after - before;
         const std::chrono::duration<float> durationFloatDifference = diff;
         const float diffF = durationFloatDifference.count();
