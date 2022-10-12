@@ -12,7 +12,6 @@ _msPreviousRunSessionsCreation(0.f),
 _msCurrentSession(0.f),
 _msCreation(0.f),
 _requestStop(false),
-_requestReset(false),
 _requestTrigger(false)
 {
 }
@@ -28,20 +27,14 @@ float Chronometer::getFloatFromDurationMS(const Chronometer::DurationMs &dms) no
 }
 
 void Chronometer::reset() {
-    _requestReset = true;
+    _currentSessionBeginningTimePoint = _updatingTimePoint;
+    _msCreation = 0.f;
+    _msPreviousRunSessionsCreation = 0.f;
+    _msCurrentSession = 0.f;
 }
 
 void Chronometer::update() {
     _updatingTimePoint = getTimePointMSNow();
-    if(_requestReset) {
-        _currentSessionBeginningTimePoint = _updatingTimePoint;
-        _msCreation = 0.f;
-        _msPreviousRunSessionsCreation = 0.f;
-        _msCurrentSession = 0.f;
-        _requestReset = false;
-        return;
-    }
-
     _msCurrentSession = getFloatFromDurationMS(_updatingTimePoint - _currentSessionBeginningTimePoint);
 
     if(_requestStop && _currentSession == TimeSession::Run) {
@@ -66,7 +59,7 @@ void Chronometer::stop() {
     _requestStop = true;
 }
 
-void Chronometer::trigger() {
+void Chronometer::resume() {
     _requestTrigger = true;
 }
 

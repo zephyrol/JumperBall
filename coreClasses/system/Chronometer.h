@@ -25,7 +25,7 @@ public:
 
     void stop();
 
-    void trigger();
+    void resume();
 
     using TimePointMs = std::chrono::time_point<
         std::chrono::system_clock,
@@ -71,7 +71,6 @@ private:
     float _msCreation;
 
     bool _requestStop;
-    bool _requestReset;
     bool _requestTrigger;
 
     static float getFloatFromDurationMS(const DurationMs &dms) noexcept;

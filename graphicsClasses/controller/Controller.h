@@ -2,7 +2,7 @@
 // Controller.hpp
 // JumperBallGraphic
 //
-// Created by S Morgenthaler on 25/05/2020.
+// Created by S.Morgenthaler on 25/05/2020.
 //
 
 #ifndef CONTROLLER_H
@@ -42,6 +42,10 @@ public:
     bool requestToLeave() const;
 
     void resize(size_t screenWidth, size_t screenHeight);
+
+    void stop();
+
+    void resume();
 
 private:
 

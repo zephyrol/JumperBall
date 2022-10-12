@@ -918,5 +918,5 @@ void Ball::setActionTimeNow() noexcept {
 
 void Ball::setLifeTimeNow() noexcept {
     // TODO: replace by in game time
-    _actionTime = _chronometer->timeSinceCreation();
+    _stateOfLifeTime = _chronometer->timeSinceCreation();
 }

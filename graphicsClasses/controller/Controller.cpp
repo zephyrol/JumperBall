@@ -2,7 +2,7 @@
 // Controller.cpp
 // JumperBallApplication
 //
-// Created by Sebastien Morgenthaler on 25/05/2020.
+// Created by S.Morgenthaler on 25/05/2020.
 //
 
 #include "Controller.h"
@@ -72,6 +72,7 @@ void Controller::releaseMouse() {
 }
 
 void Controller::runGame(size_t level) {
+    // TODO: uncomment
     _chronometer->reset();
     _scene = std::make_shared<Scene>(
         _filesContent.at("map" + std::to_string(level) + ".txt"),
@@ -153,4 +154,12 @@ void Controller::update() {
     }
 
     _viewer->update();
+}
+
+void Controller::stop() {
+    _chronometer->stop();
+}
+
+void Controller::resume() {
+    _chronometer->resume();
 }
