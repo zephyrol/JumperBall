@@ -7,8 +7,10 @@
 
 #include "RenderPass.h"
 
-RenderPass::RenderPass(const vecMesh_sptr &meshes) :
-    _meshes(meshes),
+#include <utility>
+
+RenderPass::RenderPass(vecMesh_sptr meshes) :
+    _meshes(std::move(meshes)),
     _updatableMeshes(createUpdatableMeshes()),
     _meshStates(createMeshStates()),
     _unitedMeshesGroup(createUnitedMeshesGroup()),

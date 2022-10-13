@@ -186,6 +186,8 @@ bool Window::inputManagement() {
     const KeyboardKey::Status downStatus = getButtonStatus({GLFW_KEY_DOWN, GLFW_KEY_J});
     _controller.interactionButtons(KeyboardKey::Button::Down, downStatus);
 
+
+    /* For debugging only
     const KeyboardKey::Status stopStatus= getButtonStatus({GLFW_KEY_S});
     if(stopStatus == KeyboardKey::Status::Pressed) {
         _controller.stop();
@@ -195,6 +197,7 @@ bool Window::inputManagement() {
     if(resumeStatus == KeyboardKey::Status::Pressed) {
         _controller.resume();
     }
+     */
 
     // MOUSE BUTTON 1;
     const bool isMousePressed = glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS;

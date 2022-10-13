@@ -27,7 +27,7 @@ class RenderPass {
 
 public:
 
-    RenderPass(const vecMesh_sptr &meshes);
+    RenderPass(vecMesh_sptr meshes);
 
     RenderPass(const RenderPass &renderPass) = delete;
 

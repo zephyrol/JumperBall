@@ -5,14 +5,15 @@
 #include "Chronometer.h"
 
 Chronometer::Chronometer():
-_currentSession(Chronometer::TimeSession::Run),
-_updatingTimePoint(),
-_currentSessionBeginningTimePoint(getTimePointMSNow()),
-_msPreviousRunSessionsCreation(0.f),
-_msCurrentSession(0.f),
-_msCreation(0.f),
-_requestStop(false),
-_requestTrigger(false)
+    _currentSession(Chronometer::TimeSession::Run),
+    _updatingTimePoint(),
+    _currentSessionBeginningTimePoint(getTimePointMSNow()),
+    _msPreviousRunSessionsCreation(0.f),
+    _msCurrentSession(0.f),
+    _msCreation(0.f),
+    _requestStop(false),
+    _requestResume(false),
+    _isStopped(false)
 {
 }
 
@@ -42,12 +43,14 @@ void Chronometer::update() {
         _msPreviousRunSessionsCreation += _msCurrentSession;
         _currentSessionBeginningTimePoint = _updatingTimePoint;
         _requestStop = false;
+        _isStopped = true;
         return;
     }
-    if(_requestTrigger && _currentSession == TimeSession::Stop) {
+    if(_requestResume && _currentSession == TimeSession::Stop) {
         _currentSession = TimeSession::Run;
-        _requestTrigger = false;
+        _requestResume = false;
         _currentSessionBeginningTimePoint = _updatingTimePoint;
+        _isStopped = false;
         return;
     }
     if(_currentSession == TimeSession::Run) {
@@ -60,10 +63,14 @@ void Chronometer::stop() {
 }
 
 void Chronometer::resume() {
-    _requestTrigger = true;
+    _requestResume = true;
 }
 
 float Chronometer::timeSinceCreation() const {
     return _msCreation;
+}
+
+bool Chronometer::isStopped() const {
+    return _isStopped;
 }
 

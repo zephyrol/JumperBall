@@ -23,6 +23,8 @@ public:
 
     void update();
 
+    bool isStopped() const;
+
     void stop();
 
     void resume();
@@ -71,7 +73,8 @@ private:
     float _msCreation;
 
     bool _requestStop;
-    bool _requestTrigger;
+    bool _requestResume;
+    bool _isStopped;
 
     static float getFloatFromDurationMS(const DurationMs &dms) noexcept;
 
