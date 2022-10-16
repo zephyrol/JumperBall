@@ -133,7 +133,7 @@ void Controller::render() const {
     _viewer->render();
 }
 
-void Controller::update() {
+std::string Controller::update() {
 
     // 1. Update chronometer
     _chronometer->update();
@@ -144,6 +144,7 @@ void Controller::update() {
 
     // 3. Update scene and menu
     const auto &currentPage = _menu->currentPage();
+
     _scene->update();
     _menu->update(_mouse);
 
@@ -154,6 +155,8 @@ void Controller::update() {
     }
 
     _viewer->update();
+
+    return _player->moveUpdateOutput();
 }
 
 void Controller::stop() {

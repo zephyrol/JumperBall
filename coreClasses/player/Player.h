@@ -17,7 +17,7 @@ using Player_sptr = std::shared_ptr<Player>;
 
 class Player {
 public:
-    Player(CstChronometer_sptr chronometer);
+    explicit Player(CstChronometer_sptr chronometer);
 
     enum class Status {
         InGame, InMenu, InTransition
@@ -27,7 +27,9 @@ public:
         None, Winner, Loser
     };
 
-    const CstChronometer_sptr& getChronometer() const;
+    const CstChronometer_sptr &getChronometer() const;
+
+    std::string &&moveUpdateOutput();
 
     size_t levelProgression() const;
 
@@ -70,20 +72,27 @@ public:
     void status(const Status &s);
 
     void setAsWinner();
+
     bool isAWinner() const;
+
     void setAsLoser();
+
     bool isALoser() const;
+
     void resetGameStatus();
 
     static constexpr unsigned int maxLevel = 2;
 
 private:
 
+    std::string generateSaveContent() const;
+
     const CstChronometer_sptr _chronometer;
     Status _status;
     GameStatus _gameStatus;
     size_t _levelProgression;
     size_t _currentLevel;
+    std::string _updateOutput;
 
     unsigned int _money;
     std::vector<bool> _diamonds;

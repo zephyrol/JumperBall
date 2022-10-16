@@ -12,6 +12,7 @@ Player::Player(CstChronometer_sptr chronometer) :
     _gameStatus(Player::GameStatus::None),
     _levelProgression(1),
     _currentLevel(_levelProgression),
+    _updateOutput(),
     _money(0),
     _diamonds(false),
     _diamondsCounter(0),
@@ -34,21 +35,11 @@ void Player::unlockNewLevel() {
 }
 
 void Player::decreaseMoney(unsigned int value) {
-    if (_money < value) {
-        std::cerr << "Error ... negative value ! ... Cropped to 0";
-        _money = 0;
-    } else {
-        _money -= value;
-    }
+    _money -= value;
 }
 
 void Player::decreaseDiamonds(unsigned int value) {
-    if (_diamondsCounter < value) {
-        std::cerr << "Error ... negative value ! ... Cropped to 0";
-        _diamondsCounter = 0;
-    } else {
-        _diamondsCounter -= value;
-    }
+    _diamondsCounter -= value;
 }
 
 void Player::addDiamond() {
@@ -100,7 +91,7 @@ void Player::setCurrentLevel(size_t levelNumber) {
     _status = Player::Status::InTransition;
 
     // Update level number
-    if(levelNumber > _levelProgression) {
+    if (levelNumber > _levelProgression) {
         _levelProgression = levelNumber;
     }
 }
@@ -118,7 +109,7 @@ void Player::requestQuit() {
 }
 
 void Player::escapeAction() {
-    if(_status != Player::Status::InMenu)  {
+    if (_status != Player::Status::InMenu) {
         _status = Player::Status::InMenu;
     }
 }
@@ -127,9 +118,11 @@ void Player::setAsWinner() {
     _status = Player::Status::InMenu;
     _gameStatus = GameStatus::Winner;
 }
+
 bool Player::isAWinner() const {
     return _gameStatus == GameStatus::Winner;
 }
+
 void Player::setAsLoser() {
     _status = Player::Status::InMenu;
     _gameStatus = GameStatus::Loser;
@@ -145,4 +138,12 @@ void Player::resetGameStatus() {
 
 const CstChronometer_sptr &Player::getChronometer() const {
     return _chronometer;
+}
+
+std::string &&Player::moveUpdateOutput() {
+    return std::move(_updateOutput);
+}
+
+std::string Player::generateSaveContent() const {
+    return std::to_string(_money) + std::to_string(_levelProgression);
 }

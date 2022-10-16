@@ -35,7 +35,7 @@ public:
 
     void releaseMouse();
 
-    void update();
+    std::string update();
 
     void render() const;
 
