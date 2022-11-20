@@ -309,12 +309,12 @@ JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const {
     const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
     const JBTypes::vec3f lookVec = JBTypesMethods::directionAsVector(_lookTowards);
 
-    const float x = static_cast <float>(_pos.at(0)) +
+    const auto x = static_cast <float>(_pos.at(0)) +
                     sideVec.x * (offsetRealPosition + p2D.y) + lookVec.x * p2D.x;
-    const float y = static_cast <float>(_pos.at(1)) +
+    const auto y = static_cast <float>(_pos.at(1)) +
                     sideVec.y * (offsetRealPosition + p2D.y) + lookVec.y * p2D.x;
-    const float z = static_cast <float>(_pos.at(2)) +
-                    sideVec.z * (offsetRealPosition + p2D.y) + lookVec.z * p2D.x;
+    const auto z = static_cast <float>(_pos.at(2)) +
+                   sideVec.z * (offsetRealPosition + p2D.y) + lookVec.z * p2D.x;
 
     return JBTypes::vec3f{x, y, z};
 }

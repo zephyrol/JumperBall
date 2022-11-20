@@ -11,29 +11,28 @@ SharpBlock::SharpBlock(const JBTypes::vec3ui &position,
                        const vecItem_sptr &items,
                        const vecEnemy_sptr &enemies,
                        const vecSpecial_sptr &specials,
-                       const Ball_sptr& ball,
-                       const std::array<bool, 6> &facesSharps):
-                       InteractiveBlock(position, items, enemies, specials, ball, true),
-                       _facesSharps((facesSharps)),
-                       _sharpBoundingBoxes(computeSharpBoundingBoxes()){
+                       const Ball_sptr &ball,
+                       const std::array<bool, 6> &facesSharps) :
+    InteractiveBlock(position, items, enemies, specials, ball, true),
+    _facesSharps((facesSharps)),
+    _sharpBoundingBoxes(computeSharpBoundingBoxes()) {
 
 }
 
-Block::Effect SharpBlock::interaction () const {
+Block::Effect SharpBlock::interaction() const {
 
     const auto isInSharpZone =
-    []( const JBTypes::vec3f &position,
-            float x_min, float x_max,
-            float y_min, float y_max,
-            float z_min, float z_max
-    )
-    {
-        return position.x > x_min && position.x < x_max &&
-               position.y > y_min && position.y < y_max &&
-               position.z > z_min && position.z < z_max;
-    };
+        [](const JBTypes::vec3f &position,
+           float x_min, float x_max,
+           float y_min, float y_max,
+           float z_min, float z_max
+        ) {
+            return position.x > x_min && position.x < x_max &&
+                   position.y > y_min && position.y < y_max &&
+                   position.z > z_min && position.z < z_max;
+        };
 
-    for (const auto& boundingBox: _sharpBoundingBoxes) {
+    for (const auto &boundingBox: _sharpBoundingBoxes) {
         const auto ball = _ball.lock();
         if (isInSharpZone(
             ball->get3DPosition(),
@@ -50,17 +49,16 @@ Block::Effect SharpBlock::interaction () const {
     return InteractiveBlock::interaction();
 }
 
-std::array <bool, 6> SharpBlock::faceInfo() const {
+std::array<bool, 6> SharpBlock::faceInfo() const {
     return _facesSharps;
 }
 
 vecCstShape_sptr SharpBlock::getExtraShapes() const {
 
+    vecCstShape_sptr shapes{};
+    const std::array<float, 7> scales{.2f, .1f, .05f, .1f, .075f, .15f, .175f};
 
-    vecCstShape_sptr shapes {};
-    const std::array <float, 7> scales { .2f, .1f, .05f, .1f, .075f, .15f, .175f };
-
-    const std::array <JBTypes::vec2f, 7> translationFloorFactor {
+    const std::array<JBTypes::vec2f, 7> translationFloorFactor{
         JBTypes::vec2f{0.f, 0.f}, JBTypes::vec2f{-0.6f, -0.4f}, JBTypes::vec2f{0.6f, -0.6f},
         JBTypes::vec2f{0.2f, 0.6f}, JBTypes::vec2f{-0.2f, -0.6f}, JBTypes::vec2f{0.6f, 0.6f},
         JBTypes::vec2f{-0.6f, 0.6f}
@@ -77,13 +75,13 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
                 static_cast <unsigned int>(i)
             );
 
-            const JBTypes::vec3f translationOnBlock {
+            const JBTypes::vec3f translationOnBlock{
                 0.f,
                 offset,
                 0.f
             };
 
-            const JBTypes::vec3f translationPosition {
+            const JBTypes::vec3f translationPosition{
                 static_cast<float>(_position.at(0)),
                 static_cast<float>(_position.at(1)),
                 static_cast<float>(_position.at(2))
@@ -91,9 +89,9 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
 
 
             for (size_t j = 0; j < scales.size(); j++) {
-                const JBTypes::vec3f localScale { scales.at(j), 0.5f, scales.at(j) };
+                const JBTypes::vec3f localScale{scales.at(j), 0.5f, scales.at(j)};
 
-                const JBTypes::vec3f translationFloor {
+                const JBTypes::vec3f translationFloor{
                     offset * translationFloorFactor.at(j).x,
                     0.f,
                     offset * translationFloorFactor.at(j).y
@@ -109,12 +107,20 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
                 shapes.push_back(std::make_shared<const Shape>(
                     Shape::Aspect::Pyramid,
                     JBTypes::Color::None,
-                    std::initializer_list<Transformation>({
-                        Transformation(Transformation::Type::Scale, localScale),
-                        Transformation(Transformation::Type::Translation, localTranslation),
-                        Transformation(Transformation::Type::Rotation, directionRotation),
-                        Transformation(Transformation::Type::Translation, translationPosition)
-                    })
+                    std::initializer_list<Transformation>(
+                        {
+                            Transformation(Transformation::Type::Scale,
+                                           localScale),
+                            Transformation(
+                                Transformation::Type::Translation,
+                                localTranslation),
+                            Transformation(Transformation::Type::Rotation,
+                                           directionRotation),
+                            Transformation(
+                                Transformation::Type::Translation,
+                                translationPosition)
+                        }
+                    )
                 ));
             }
         }
@@ -166,10 +172,12 @@ std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > SharpBlock::computeSharp
                     posBlockfZMax += sizeSharp;
                 }
             }
-            boundingBoxes.push_back( {
-                { posBlockfXMin, posBlockfYMin, posBlockfZMin },
-                { posBlockfXMax, posBlockfYMax, posBlockfZMax }
-            });
+            boundingBoxes.push_back(
+                {
+                    {posBlockfXMin, posBlockfYMin, posBlockfZMin},
+                    {posBlockfXMax, posBlockfYMax, posBlockfZMax}
+                }
+            );
         }
     }
 

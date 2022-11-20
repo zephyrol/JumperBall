@@ -107,6 +107,7 @@ void Map::update(const Ball::ActionRequest &action) {
 
     _ball->update(action);
 
+
     for (const auto &block: *_blocksToUpdate) {
         block->update();
     }
@@ -123,9 +124,7 @@ void Map::update(const Ball::ActionRequest &action) {
     }
 }
 
-JBTypes::vec3ui Map::getBlockCoords(size_t index,
-                                    unsigned int width,
-                                    unsigned int depth) {
+JBTypes::vec3ui Map::getBlockCoords(size_t index, unsigned int width, unsigned int depth) {
     const auto uIntIndex = static_cast <unsigned int>(index);
     const unsigned int widthDepth = width * depth;
     return {uIntIndex % width, uIntIndex / widthDepth, (uIntIndex % widthDepth) / width};

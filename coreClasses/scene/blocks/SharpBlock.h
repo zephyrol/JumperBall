@@ -11,28 +11,29 @@
 #include "Block.h"
 #include "InteractiveBlock.h"
 
-class SharpBlock:public InteractiveBlock {
+class SharpBlock : public InteractiveBlock {
 public:
 
     SharpBlock(
-        const JBTypes::vec3ui& position,
-        const vecItem_sptr& items,
-        const vecEnemy_sptr& enemies,
-        const vecSpecial_sptr& specials,
-        const Ball_sptr& ball,
-        const std::array <bool, 6>& facesSharps
+        const JBTypes::vec3ui &position,
+        const vecItem_sptr &items,
+        const vecEnemy_sptr &enemies,
+        const vecSpecial_sptr &specials,
+        const Ball_sptr &ball,
+        const std::array<bool, 6> &facesSharps
     );
 
-    std::array <bool, 6> faceInfo() const override;
+    std::array<bool, 6> faceInfo() const override;
 
-Block::Effect interaction() const override;
+    Block::Effect interaction() const override;
 
-vecCstShape_sptr getExtraShapes() const override;
-std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > computeSharpBoundingBoxes() const;
+    vecCstShape_sptr getExtraShapes() const override;
+
+    std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > computeSharpBoundingBoxes() const;
 
 private:
-const std::array <bool, 6> _facesSharps;
-const std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > _sharpBoundingBoxes;
+    const std::array<bool, 6> _facesSharps;
+    const std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > _sharpBoundingBoxes;
 };
 
 #endif /* SHARPBLOCK_H */

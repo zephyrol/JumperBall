@@ -9,31 +9,31 @@
 Displayable::Displayable() {
 }
 
-std::vector <float> Displayable::getStaticFloatValues() const {
+std::vector<float> Displayable::getStaticFloatValues() const {
     return {};
 }
 
-std::vector <JBTypes::vec2f> Displayable::getStaticVec2fValues() const {
+std::vector<JBTypes::vec2f> Displayable::getStaticVec2fValues() const {
     return {};
 }
 
-std::vector <JBTypes::vec3f> Displayable::getStaticVec3fValues() const {
+std::vector<JBTypes::vec3f> Displayable::getStaticVec3fValues() const {
     return {};
 }
 
-std::unordered_map <std::string, float> Displayable::getDynamicFloats() const {
+std::unordered_map<std::string, float> Displayable::getDynamicFloats() const {
     return {};
 }
 
-std::unordered_map <std::string, JBTypes::vec2f> Displayable::getDynamicVec2fs() const {
+std::unordered_map<std::string, JBTypes::vec2f> Displayable::getDynamicVec2fs() const {
     return {};
 }
 
-std::unordered_map <std::string, JBTypes::vec3f> Displayable::getDynamicVec3fs() const {
+std::unordered_map<std::string, JBTypes::vec3f> Displayable::getDynamicVec3fs() const {
     return {};
 }
 
-std::unordered_map <std::string, JBTypes::Quaternion> Displayable::getDynamicQuaternions() const {
+std::unordered_map<std::string, JBTypes::Quaternion> Displayable::getDynamicQuaternions() const {
     return {};
 }
 

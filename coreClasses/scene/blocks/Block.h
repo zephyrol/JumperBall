@@ -33,7 +33,7 @@ public:
         bool alwaysHasInteractions
     );
 
-    virtual ~Block() = default;
+    ~Block() override = default;
 
     enum class Effect {
         Nothing, Burst, Burn, Slide, Jump, FinishLevel

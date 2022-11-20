@@ -208,12 +208,12 @@ bool Window::inputManagement() {
             glfwGetCursorPos(_window, &posX, &posY);
             return {static_cast <float>(posX), static_cast <float>(posY)};
         };
-        const std::pair<float, float> posXY = getPosXY();
+        const auto posXY = getPosXY();
 
-        const float posX = posXY.first / static_cast <float>(_windowWidth);
+        const auto posX = posXY.first / static_cast <float>(_windowWidth);
 
         // GLFW defines y=0 as the top
-        const float posY = 1.f - posXY.second / static_cast <float>(_windowHeight);
+        const auto posY = 1.f - posXY.second / static_cast <float>(_windowHeight);
         _controller.pressMouse(posX, posY);
     } else {
         _controller.releaseMouse();
