@@ -145,7 +145,7 @@ std::string Controller::update() {
     // 3. Update scene and menu
     const auto &currentPage = _menu->currentPage();
 
-    _scene->update();
+    const auto sceneUpdateOutput = _scene->update();
     _menu->update(_mouse);
 
     // 4. Update viewer
@@ -156,7 +156,7 @@ std::string Controller::update() {
 
     _viewer->update();
 
-    return _player->moveUpdateOutput();
+    return sceneUpdateOutput + _player->genSaveContent();
 }
 
 void Controller::stop() {

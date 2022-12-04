@@ -129,7 +129,7 @@ std::string Shader::completeShaderCode(
             defines.end(),
             [&defineValue](const std::string &define) { return define == defineValue; }
         );
-        if(isMatchingAnyDefines) {
+        if (isMatchingAnyDefines) {
             finalShader.replace(index, closedBracketIndex - index + 1, ""); // +1 to include closed bracket
             const auto endifIndex = finalShader.find(endifKey);
             finalShader.replace(endifIndex, endifKey.length(), "");

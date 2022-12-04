@@ -9,6 +9,7 @@
 #define PLAYER_H
 
 #include "scene/Ball.h"
+#include "system/UpdateOutput.h"
 
 
 class Player;
@@ -29,7 +30,7 @@ public:
 
     const CstChronometer_sptr &getChronometer() const;
 
-    std::string &&moveUpdateOutput();
+    vecCstUpdateOutput_sptr&& retrieveUpdateOutput();
 
     size_t levelProgression() const;
 
@@ -81,18 +82,19 @@ public:
 
     void resetGameStatus();
 
+    std::string genSaveContent();
+
     static constexpr unsigned int maxLevel = 2;
 
 private:
 
-    std::string generateSaveContent() const;
 
     const CstChronometer_sptr _chronometer;
     Status _status;
     GameStatus _gameStatus;
     size_t _levelProgression;
     size_t _currentLevel;
-    std::string _updateOutput;
+    vecCstUpdateOutput_sptr _updateOutputs;
 
     unsigned int _money;
     std::vector<bool> _diamonds;
@@ -107,6 +109,7 @@ private:
     unsigned int _clockItemLevel;
     unsigned int _bonusLevel;
     bool _wantsToQuit;
+    bool _needsSaveFile;
 };
 
 #endif /* PLAYER_H */

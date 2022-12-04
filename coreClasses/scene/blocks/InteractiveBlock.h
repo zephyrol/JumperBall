@@ -29,7 +29,7 @@ public:
 protected:
     void catchItem();
 
-    const CstBall_wptr _ball;
+    const Ball_wptr _ball;
 
 };
 

@@ -7,16 +7,17 @@
 
 #ifndef ICEBLOCK_H
 #define ICEBLOCK_H
+
 #include "InteractiveBlock.h"
 
-class IceBlock:public InteractiveBlock {
+class IceBlock : public InteractiveBlock {
 public:
     IceBlock(
-        const JBTypes::vec3ui& position,
-        const vecItem_sptr& items,
-        const vecEnemy_sptr& enemies,
-        const vecSpecial_sptr& specials,
-        const Ball_sptr& ball
+        const JBTypes::vec3ui &position,
+        const vecItem_sptr &items,
+        const vecEnemy_sptr &enemies,
+        const vecSpecial_sptr &specials,
+        const Ball_sptr &ball
     );
 
     Effect detectionEvent() override;

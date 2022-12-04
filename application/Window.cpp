@@ -231,7 +231,10 @@ void Window::run() {
     unsigned int counter = 0;
     while (!inputManagement()) {
 
-        _controller.update();
+        const auto result = _controller.update();
+        if(!result.empty()) {
+            std::cout << result << std::endl;
+        }
         _controller.render();
         glfwSwapBuffers(_window);
         glfwPollEvents();

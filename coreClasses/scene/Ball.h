@@ -14,6 +14,7 @@
 #include "movements/TurnBack.h"
 #include "movements/NextBlock.h"
 #include "system/Chronometer.h"
+#include "system/UpdateOutput.h"
 #include <scene/blocks/Block.h>
 
 class Ball;
@@ -74,8 +75,6 @@ public:
         NextDestination nextLocal;
         JBTypes::vec3ui pos;
     };
-
-    using shock = std::array<unsigned int, 3>;
 
     const JBTypes::vec3f &get3DPosition() const noexcept;
 
@@ -160,6 +159,10 @@ public:
 
     const CstChronometer_sptr &getChronometer() const;
 
+    void addUpdateOutput(CstUpdateOutput_sptr &&updateOutput);
+
+    vecCstUpdateOutput_sptr &&retrieveUpdateOutput();
+
 private:
 
     const CstChronometer_sptr _chronometer;
@@ -214,6 +217,8 @@ private:
 
     unsigned int _nbOfKeys;
     unsigned int _nbOfCoins;
+
+    vecCstUpdateOutput_sptr _updateOutputs;
 
     JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 

@@ -6,6 +6,7 @@
  */
 
 #include "BrittleBlock.h"
+#include "system/SoundOutput.h"
 
 BrittleBlock::BrittleBlock(
     const JBTypes::vec3ui &position,
@@ -58,6 +59,7 @@ Block::Effect BrittleBlock::detectionEvent() {
         _collisionTime = ball->getActionTime();
         setFallDirection(ball->currentSide());
         _isGoingToBreak = true;
+        ball->addUpdateOutput(std::make_shared<SoundOutput>("blockIsGoingToFall"));
     }
     return Effect::Nothing;
 }
@@ -79,6 +81,7 @@ void BrittleBlock::update() {
         const auto diff = _chronometer->timeSinceCreation() - _collisionTime;
         if (diff > timeToFall) {
             _stillThere = false;
+            _ball.lock()->addUpdateOutput(std::make_shared<SoundOutput>("blockIsFalling"));
         }
     }
 

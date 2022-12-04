@@ -46,7 +46,7 @@ public:
 // TODO: move to special
     static std::map<JBTypes::Color, bool> createSpecialStates();
 
-    void update(const Ball::ActionRequest &action);
+    std::string update(const Ball::ActionRequest &action);
 
     CstBall_sptr getBall() const;
 

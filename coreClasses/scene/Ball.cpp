@@ -6,6 +6,7 @@
  */
 
 #include "Ball.h"
+#include "system/SoundOutput.h"
 
 Ball::Ball(unsigned int x, unsigned int y, unsigned int z, CstChronometer_sptr chronometer):
     _chronometer(std::move(chronometer)),
@@ -38,7 +39,9 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z, CstChronometer_sptr c
     _blockWithInteractions(nullptr),
     _blocksTeleportations(nullptr),
     _nbOfKeys(0),
-    _nbOfCoins(0) {
+    _nbOfCoins(0),
+    _updateOutputs{}
+    {
 }
 
 void Ball::turnLeft() noexcept {
@@ -768,6 +771,7 @@ void Ball::interaction() {
     }
     if (finalBlockEffect == Block::Effect::Burst) {
         _stateOfLife = Ball::StateOfLife::Bursting;
+        addUpdateOutput(std::make_shared<SoundOutput>("ballIsBursting"));
         setLifeTimeNow();
         internalUpdate();
     }
@@ -880,10 +884,12 @@ const std::shared_ptr<const vecBlock_sptr> &Ball::getBlocksWithInteraction() {
 }
 
 void Ball::obtainKey() {
+    _updateOutputs.push_back(std::make_shared<SoundOutput>("keyIsObtained"));
     ++_nbOfKeys;
 }
 
 void Ball::obtainCoin() {
+    _updateOutputs.push_back(std::make_shared<SoundOutput>("coinIsObtained"));
     ++_nbOfCoins;
 }
 
@@ -919,4 +925,12 @@ void Ball::setActionTimeNow() noexcept {
 void Ball::setLifeTimeNow() noexcept {
     // TODO: replace by in game time
     _stateOfLifeTime = _chronometer->timeSinceCreation();
+}
+
+void Ball::addUpdateOutput(CstUpdateOutput_sptr &&updateOutput) {
+    _updateOutputs.push_back(std::move(updateOutput));
+}
+
+vecCstUpdateOutput_sptr &&Ball::retrieveUpdateOutput() {
+    return std::move(_updateOutputs);
 }

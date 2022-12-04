@@ -44,7 +44,7 @@ public:
 
     void setDown();
 
-    void update();
+    std::string update();
 
     void updateScreenRatio(float ratio);
 

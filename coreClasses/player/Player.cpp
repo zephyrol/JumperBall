@@ -5,6 +5,7 @@
  * Created on 10 mai 2020, 11:40
  */
 #include "Player.h"
+#include "system/SaveFileOutput.h"
 
 Player::Player(CstChronometer_sptr chronometer) :
     _chronometer(std::move(chronometer)),
@@ -12,7 +13,7 @@ Player::Player(CstChronometer_sptr chronometer) :
     _gameStatus(Player::GameStatus::None),
     _levelProgression(1),
     _currentLevel(_levelProgression),
-    _updateOutput(),
+    _updateOutputs{},
     _money(0),
     _diamonds(false),
     _diamondsCounter(0),
@@ -22,7 +23,8 @@ Player::Player(CstChronometer_sptr chronometer) :
     _timeLevel(1),
     _clockItemLevel(1),
     _bonusLevel(1),
-    _wantsToQuit(false) {
+    _wantsToQuit(false),
+    _needsSaveFile(false) {
 }
 
 
@@ -115,6 +117,7 @@ void Player::escapeAction() {
 }
 
 void Player::setAsWinner() {
+    _needsSaveFile = true;
     _status = Player::Status::InMenu;
     _gameStatus = GameStatus::Winner;
 }
@@ -124,6 +127,7 @@ bool Player::isAWinner() const {
 }
 
 void Player::setAsLoser() {
+    _needsSaveFile = true;
     _status = Player::Status::InMenu;
     _gameStatus = GameStatus::Loser;
 }
@@ -140,10 +144,16 @@ const CstChronometer_sptr &Player::getChronometer() const {
     return _chronometer;
 }
 
-std::string &&Player::moveUpdateOutput() {
-    return std::move(_updateOutput);
+std::string Player::genSaveContent() {
+    if (!_needsSaveFile) {
+        return "";
+    }
+    _needsSaveFile = false;
+    return SaveFileOutput(
+        std::to_string(_money) + "." + std::to_string(_levelProgression)
+    ).getOutput();
 }
 
-std::string Player::generateSaveContent() const {
-    return std::to_string(_money) + std::to_string(_levelProgression);
+vecCstUpdateOutput_sptr &&Player::retrieveUpdateOutput() {
+    return std::move(_updateOutputs);
 }

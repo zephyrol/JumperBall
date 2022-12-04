@@ -3,6 +3,7 @@
 //
 
 #include "ExitBlock.h"
+#include "system/SoundOutput.h"
 
 ExitBlock::ExitBlock(const JBTypes::vec3ui &position,
                      const vecItem_sptr &items,
@@ -72,10 +73,14 @@ void ExitBlock::unlockExit() {
     _localScale.x = 0.f;
     _localScale.y = 0.f;
     _localScale.z = 0.f;
+    _ball.lock()->addUpdateOutput(std::make_shared<SoundOutput>("exitIsUnlocked"));
 }
 
 Block::Effect ExitBlock::detectionEvent() {
     const auto ball = _ball.lock();
+    if(_isUnlockModel) {
+        ball->addUpdateOutput(std::make_shared<SoundOutput>("hasWon"));
+    }
     return _isUnlocked && ball->currentSide() == _exitDir
         ? Block::Effect::FinishLevel
         : Block::Effect::Nothing;

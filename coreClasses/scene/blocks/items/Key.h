@@ -10,15 +10,15 @@
 
 #include "InteractiveItem.h"
 
-class Key: public InteractiveItem {
+class Key : public InteractiveItem {
 public:
-Key(
-    const JBTypes::vec3ui& position,
-    const JBTypes::Dir& direction,
-    const Ball_sptr &ball
-);
+    Key(
+        const JBTypes::vec3ui &position,
+        const JBTypes::Dir &direction,
+        const Ball_sptr &ball
+    );
 
-vecCstShape_sptr getShapes() const override;
+    vecCstShape_sptr getShapes() const override;
 
 private:
     void catchItem() override;

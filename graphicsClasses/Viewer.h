@@ -34,9 +34,9 @@ public:
 
     void freeGPUMemory();
 
-    void setPage(const CstPage_sptr& page);
+    void setPage(const CstPage_sptr &page);
 
-    void setScene(const CstScene_sptr& scene);
+    void setScene(const CstScene_sptr &scene);
 
 
 private:
@@ -55,6 +55,7 @@ private:
     std::unique_ptr<PageRendering> _pageRendering;
 
     void resetSceneRendering();
+
     void resetPageRendering();
 
 };

@@ -18,7 +18,7 @@ Scene::Scene(const std::string &mapContent, float screenRatio, Player_sptr playe
     _isUsingTouchScreen(isUsingTouchScreen) {
 }
 
-void Scene::update() {
+std::string Scene::update() {
 
     const auto &status = _player->status();
     Ball::ActionRequest actionRequest;
@@ -53,7 +53,7 @@ void Scene::update() {
         }
     }
 
-    _map->update(actionRequest);
+    auto mapUpdateOutput = _map->update(actionRequest);
     _camera->update(status, actionRequest == Ball::ActionRequest::MoveCamera);
 
     _currentKey = Scene::ActionKey::Nothing;
@@ -61,16 +61,15 @@ void Scene::update() {
     if (_camera->getMovement() == Camera::Movement::FollowingBall) {
         _player->status(Player::Status::InGame);
     }
-    if (_player->status() != Player::Status::InGame) {
-        return;
+    if (_player->status() == Player::Status::InGame) {
+        if (_map->gameIsLost()) {
+            _player->setAsLoser();
+        }
+        if (_map->gameIsWon()) {
+            _player->setAsWinner();
+        }
     }
-    if (_map->gameIsLost()) {
-        _player->setAsLoser();
-    }
-    if (_map->gameIsWon()) {
-        _player->setAsWinner();
-    }
-
+    return mapUpdateOutput;
 }
 
 CstMap_sptr Scene::getMap() const {

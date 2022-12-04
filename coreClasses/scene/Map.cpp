@@ -103,10 +103,9 @@ float Map::getLargestSize() const {
     return boundingBoxMax;
 }
 
-void Map::update(const Ball::ActionRequest &action) {
+std::string Map::update(const Ball::ActionRequest &action) {
 
     _ball->update(action);
-
 
     for (const auto &block: *_blocksToUpdate) {
         block->update();
@@ -122,6 +121,8 @@ void Map::update(const Ball::ActionRequest &action) {
         }
         _isExitUnlocked = true;
     }
+
+    return UpdateOutput::combineUpdateOutputs(_ball->retrieveUpdateOutput());
 }
 
 JBTypes::vec3ui Map::getBlockCoords(size_t index, unsigned int width, unsigned int depth) {
