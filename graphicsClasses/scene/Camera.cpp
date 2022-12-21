@@ -122,6 +122,7 @@ void Camera::followingBallUpdate() noexcept {
         const float comingBackCoeff = std::min((updatingTime - _timePointComeBack) / durationMoveAbove, 1.f);
         cameraAboveWay = std::max(initialOffset - comingBackCoeff, 0.f);
     }
+    cameraAboveWay = std::min(std::max(cameraAboveWay, 0.f), 1.f);
 
     const glm::vec3 axisRotation = glm::cross(vecLookingDirection, toSkyVec3);
     const glm::vec3 eulerAngles = cameraAboveWay * static_cast <float>(-M_PI / 2.75) * axisRotation;
