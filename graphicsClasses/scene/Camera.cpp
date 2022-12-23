@@ -192,7 +192,6 @@ void Camera::turningAroundMapUpdate() noexcept {
 }
 
 bool Camera::approachingBallUpdate() noexcept {
-    bool animationIsFinished;
 
     const JBTypes::vec3f &position = _map.getBall()->get3DPosition();
 
@@ -204,6 +203,7 @@ bool Camera::approachingBallUpdate() noexcept {
     constexpr float distanceYStarting = 5.f;
     constexpr float distanceZStarting = 10.f;
 
+    bool animationIsFinished;
     if (t > 1.f) {
         t = 1.f;
         animationIsFinished = true;

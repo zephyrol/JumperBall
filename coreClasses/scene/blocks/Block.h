@@ -49,10 +49,6 @@ public:
 
     virtual JBTypes::Color getColor() const;
 
-    const JBTypes::vec3f &localScale() const;
-
-    const JBTypes::vec3f &localTranslation() const;
-
     const vecCstItem_sptr &getItems() const;
 
     const vecCstEnemy_sptr &getEnemies() const;
@@ -79,6 +75,8 @@ public:
 
     Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fs() const override;
 
+    DynamicValues <JBTypes::vec2f> getDynamicVec2fs() const override;
+
     Displayable::GlobalState getGlobalState() const override;
 
     static std::string positionToString(const JBTypes::vec3ui &position);
@@ -95,6 +93,19 @@ public:
 
     vecSpecial_sptr getSpecials();
 
+private:
+
+    struct Rotation {
+        /**
+         *
+         */
+        float axis;
+
+        /**
+         * Rotation angle in radians.
+         */
+        float angle;
+    };
 
 protected:
     const JBTypes::vec3ui _position;
@@ -107,6 +118,14 @@ protected:
     const bool _hasInteraction;
     JBTypes::vec3f _localScale;
     JBTypes::vec3f _localTranslation;
+
+    /**
+     * X value: 0.f means X axis, 1.f means Y axis  and 2.f means Z axis.
+     * Y value: rotation angle value.
+     * That allows to don't make cast for each frame.
+     */
+    JBTypes::vec2f _localRotation;
+
 };
 
 #endif /* BLOCK_H */

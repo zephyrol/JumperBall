@@ -24,7 +24,8 @@ Block::Block(
     _cstSpecials(getCstSpecials()),
     _hasInteraction(alwaysHasInteractions || !items.empty() || !enemies.empty() || !specials.empty()),
     _localScale{1.f, 1.f, 1.f},
-    _localTranslation{0.f, 0.f, 0.f} {
+    _localTranslation{0.f, 0.f, 0.f},
+    _localRotation{0.f, 0.f} {
 }
 
 std::array<bool, 6> Block::faceInfo() const {
@@ -33,14 +34,6 @@ std::array<bool, 6> Block::faceInfo() const {
 
 bool Block::isExists() const {
     return true;
-}
-
-const JBTypes::vec3f &Block::localScale() const {
-    return _localScale;
-}
-
-const JBTypes::vec3f &Block::localTranslation() const {
-    return _localTranslation;
 }
 
 const vecCstItem_sptr &Block::getItems() const {
@@ -134,7 +127,7 @@ std::string Block::positionToString(const JBTypes::vec3ui &position) {
 
 void Block::update() {
     for (const auto &enemy: _enemies) {
-       enemy->update();
+        enemy->update();
     }
 }
 
@@ -153,3 +146,6 @@ vecSpecial_sptr Block::getSpecials() {
 void Block::unlockExit() {
 }
 
+Displayable::DynamicValues<JBTypes::vec2f> Block::getDynamicVec2fs() const {
+    return {{"rotation", _localRotation}};
+}

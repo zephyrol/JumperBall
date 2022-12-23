@@ -9,6 +9,7 @@ uniform Scene {
     float teleportationCoeff;
 };
 
+uniform vec2 rotation;
 uniform vec3 scale;
 uniform vec3 translation;
 
@@ -33,15 +34,50 @@ layout(location = 3) in vec3 vs_blockPosition;
 
 #endif
 
+mat4 rotationX (float angle) {
+    float cosAngle = cos(angle);
+    float sinAngle = sin(angle);
+    return mat4(1.0, 0.0, 0.0, 0.0,
+    0.0, cosAngle, sinAngle, 0.0,
+    0.0, -sinAngle, cosAngle, 0.0,
+    0.0, 0.0, 0.0, 1.0);
+}
+
+mat4 rotationY (float angle) {
+    float cosAngle = cos(angle);
+    float sinAngle = sin(angle);
+    return mat4(cosAngle, 0.0, -sinAngle, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    sinAngle, 0.0, cosAngle, 0.0,
+    0.0, 0.0, 0.0, 1.0);
+}
+
+mat4 rotationZ (float angle) {
+    float cosAngle = cos(angle);
+    float sinAngle = sin(angle);
+    return mat4(cosAngle, sinAngle, 0.0, 0.0,
+    -sinAngle, cosAngle, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0);
+}
 
 void main() {
-    vec3 position = (vs_vertexPosition - vs_blockPosition) * vec3(scale) + vs_blockPosition + translation;
-    vec4 positionVec4 = vec4(position, 1.0);
+
+    vec4 positionVec4 = vec4(scale * (vs_vertexPosition - vs_blockPosition), 1.0);
+    if(rotation.x == 1.0) {
+        positionVec4 = rotationX(rotation.y) * positionVec4;
+    } else if(rotation.x == 2.0) {
+        positionVec4 = rotationY(rotation.y) * positionVec4;
+    } else if(rotation.x == 3.0){
+        positionVec4 = rotationZ(rotation.y) * positionVec4;
+    }
+
+    positionVec4 = vec4(positionVec4.xyz + vs_blockPosition + translation, 1.f);
 
     #ifdef(LEVEL_PASS)
         fs_vertexColor = vs_vertexColor;
         fs_vertexNormal = vs_vertexNormal;
-        fs_vertexPositionWorld = position;
+        fs_vertexPositionWorld = vec3(positionVec4);
         fs_vertexDepthMapSpace = biasMatrix * VPStar * positionVec4;
         fs_vertexDepthMap2Space = biasMatrix * VPStar2 * positionVec4;
         gl_Position = VP * positionVec4;

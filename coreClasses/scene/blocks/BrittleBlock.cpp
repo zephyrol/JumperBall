@@ -59,6 +59,18 @@ Block::Effect BrittleBlock::detectionEvent() {
         _collisionTime = ball->getActionTime();
         setFallDirection(ball->currentSide());
         _isGoingToBreak = true;
+
+        const auto lookTowardsVec = ball->lookTowardsAsVector();
+        _localRotation.x = [&lookTowardsVec]() {
+            if (!JBTypesMethods::floatsEqual(lookTowardsVec.x, 0.f)) {
+                return 1.f;
+            }
+            if (!JBTypesMethods::floatsEqual(lookTowardsVec.y, 0.f)) {
+                return 2.f;
+            }
+            return 3.f;
+        }();
+
         ball->addUpdateOutput(std::make_shared<SoundOutput>("blockIsGoingToFall"));
     }
     return Effect::Nothing;
@@ -79,9 +91,15 @@ void BrittleBlock::update() {
     if (_isGoingToBreak && _stillThere) {
         // TODO Use in game time
         const auto diff = _chronometer->timeSinceCreation() - _collisionTime;
+        constexpr auto shakingTime = 0.15f; // in seconds
+        const auto shakingPeriod = sinf(diff * 2.f * static_cast<float>(M_PI) / shakingTime);
+        constexpr auto maxAngle = 0.08f; // in radians
         if (diff > timeToFall) {
+            _localRotation = {0.f, 0.f};
             _stillThere = false;
             _ball.lock()->addUpdateOutput(std::make_shared<SoundOutput>("blockIsFalling"));
+        } else {
+            _localRotation.y = shakingPeriod * maxAngle;
         }
     }
 
@@ -99,7 +117,7 @@ void BrittleBlock::update() {
 }
 
 Displayable::GlobalState BrittleBlock::getGlobalState() const {
-    return _stillThere ? Displayable::GlobalState::United : Displayable::GlobalState::Separate;
+    return !_isGoingToBreak ? Displayable::GlobalState::United : Displayable::GlobalState::Separate;
 }
 
 bool BrittleBlock::globalStateMayChange() const {
