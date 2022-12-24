@@ -90,7 +90,7 @@ void BrittleBlock::update() {
     constexpr float timeToFall = 1.f;
     if (_isGoingToBreak && _stillThere) {
         // TODO Use in game time
-        const auto diff = _chronometer->timeSinceCreation() - _collisionTime;
+        const auto diff = _chronometer->getTime() - _collisionTime;
         constexpr auto shakingTime = 0.15f; // in seconds
         const auto shakingPeriod = sinf(diff * 2.f * static_cast<float>(M_PI) / shakingTime);
         constexpr auto maxAngle = 0.08f; // in radians
@@ -107,7 +107,7 @@ void BrittleBlock::update() {
     if (!_stillThere) {
         const JBTypes::vec3f dirVec = JBTypesMethods::directionAsVector(_fallDirection);
         // TODO Use in game time
-        const auto diff = _chronometer->timeSinceCreation() - _collisionTime;
+        const auto diff = _chronometer->getTime() - _collisionTime;
         const float diffTimeToFall = diff - timeToFall;
         const float distanceTraveled = diffTimeToFall * fallSpeed;
         _localTranslation.x = dirVec.x * distanceTraveled;

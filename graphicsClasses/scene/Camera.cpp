@@ -35,7 +35,7 @@ void Camera::update(
     }
 
     // TODO : Replace by in game time
-    const auto updatingTime = _chronometer->timeSinceCreation();
+    const auto updatingTime = _chronometer->getTime();
     if (goAbove && _timePointComeBack >= _timePointGoAbove) {
         _timePointGoAbove = updatingTime;
     } else if (!goAbove && _timePointGoAbove >= _timePointComeBack) {
@@ -106,7 +106,7 @@ void Camera::followingBallUpdate() noexcept {
 
     float cameraAboveWay;
     // TODO: Replace by in game time.
-    const auto updatingTime = _chronometer->timeSinceCreation();
+    const auto updatingTime = _chronometer->getTime();
     if (_timePointGoAbove > _timePointComeBack) {
         const float initialOffset = std::min(
             (_timePointGoAbove - _timePointComeBack) / durationMoveAbove,
@@ -166,13 +166,13 @@ void Camera::turningAroundMapUpdate() noexcept {
     const float cameraDistanceFar = distanceMax * 1.3f;
     const float distanceX = cameraDistanceNear +
                             (cameraDistanceFar - cameraDistanceNear) *
-                            ((-cosf(_chronometer->timeSinceCreation()) + 1.f) / 2.f);
+                            ((-cosf(_chronometer->getTime()) + 1.f) / 2.f);
 
     const float distanceZ = distanceX;
 
     const glm::mat4 translation = glm::translate(glm::vec3(distanceX, 0, distanceZ));
 
-    const auto timeSinceCreation = _chronometer->timeSinceCreation();
+    const auto timeSinceCreation = _chronometer->getTime();
     const glm::mat4 rotation = glm::rotate(
         1.5f * timeSinceCreation,
         glm::vec3(0.f, 1.f + sinf(timeSinceCreation / 5.f), 1.f + sinf(timeSinceCreation / 3.f))
@@ -197,7 +197,7 @@ bool Camera::approachingBallUpdate() noexcept {
 
     constexpr float transitionDuration = 2.f;
 
-    float t = _chronometer->timeSinceCreation() / transitionDuration;
+    float t = _chronometer->getTime() / transitionDuration;
 
     constexpr float distanceXStarting = 10.f;
     constexpr float distanceYStarting = 5.f;

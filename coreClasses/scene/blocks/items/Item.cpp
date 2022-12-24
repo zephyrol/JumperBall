@@ -30,7 +30,7 @@ bool Item::isGotten() const {
 
 float Item::getTimeSinceObtaining() const {
     return _gotten
-           ? _chronometer->timeSinceCreation() - _obtainingTime
+           ? _chronometer->getTime() - _obtainingTime
            : 0;
 }
 
@@ -44,7 +44,7 @@ Displayable::StaticValues<JBTypes::vec3f> Item::getStaticVec3fValues() const {
 
 Displayable::DynamicValues<float> Item::getDynamicFloats() const {
     return {
-        {"creationTime",  _chronometer->timeSinceCreation()},
+        {"creationTime", _chronometer->getTime()},
         {"obtainingTime", getTimeSinceObtaining()}
     };
 
@@ -100,7 +100,7 @@ const JBTypes::Dir &Item::direction() const {
 }
 
 void Item::setAsGotten() {
-    _obtainingTime = _chronometer->timeSinceCreation();
+    _obtainingTime = _chronometer->getTime();
     _gotten = true;
 }
 

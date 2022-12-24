@@ -8,25 +8,41 @@
 #include "system/Types.h"
 
 class Chronometer;
-
 using Chronometer_sptr = std::shared_ptr<Chronometer>;
 using CstChronometer_sptr = std::shared_ptr<const Chronometer>;
 
+/**
+ * Ms Chronometer
+ */
 class Chronometer {
 
 public:
     Chronometer();
 
-    float timeSinceCreation() const;
+    /**
+     * Get chronometer time in ms.
+     * @return Passed time in ms
+     */
+    float getTime() const;
 
+    /**
+     * Reset the chronometer to 0
+     */
     void reset();
 
+    /**
+     * Update the chronometer.
+     */
     void update();
 
-    bool isStopped() const;
-
+    /**
+     * Freeze the chronometer.
+     */
     void stop();
 
+    /**
+     * Resume the chronometer.
+     */
     void resume();
 
     using TimePointMs = std::chrono::time_point<
@@ -57,7 +73,7 @@ private:
 
     /**
      * Sum of the cumulated previous run sessions since creation.
-     * A session if over when the chronometer is stopped.
+     * A session is over when the chronometer is stopped.
      */
     float _msPreviousRunSessionsCreation;
 
@@ -70,7 +86,7 @@ private:
     /*
      * Sum of previous sessions and the current one.
      */
-    float _msCreation;
+    float _msTime;
 
     bool _requestStop;
     bool _requestResume;

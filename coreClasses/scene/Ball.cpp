@@ -136,7 +136,7 @@ void Ball::doAction(Ball::ActionRequest action) {
                 jump();
             } else {
                 _jumpRequest = true;
-                _jumpRequestTime = _chronometer->timeSinceCreation();
+                _jumpRequestTime = _chronometer->getTime();
             }
             break;
         default:
@@ -392,7 +392,7 @@ void Ball::blockEvent() noexcept {
         return;
     }
     const auto hasToJump = _jumpRequest
-        && (_chronometer->timeSinceCreation() - _jumpRequestTime) < timeToGetNextBlock;
+        && (_chronometer->getTime() - _jumpRequestTime) < timeToGetNextBlock;
     if (hasToJump) {
         _jumpRequest = false;
         jump();
@@ -906,11 +906,11 @@ const CstChronometer_sptr &Ball::getChronometer() const {
 }
 
 float Ball::getTimeSecondsSinceStateOfLife() const {
-    return _chronometer->timeSinceCreation() - _stateOfLifeTime;
+    return _chronometer->getTime() - _stateOfLifeTime;
 }
 
 float Ball::getTimeSecondsSinceAction() const {
-    return _chronometer->timeSinceCreation() - _actionTime;
+    return _chronometer->getTime() - _actionTime;
 }
 
 float Ball::getActionTime() const {
@@ -919,12 +919,12 @@ float Ball::getActionTime() const {
 
 void Ball::setActionTimeNow() noexcept {
     // TODO: replace by in game time
-    _actionTime = _chronometer->timeSinceCreation();
+    _actionTime = _chronometer->getTime();
 }
 
 void Ball::setLifeTimeNow() noexcept {
     // TODO: replace by in game time
-    _stateOfLifeTime = _chronometer->timeSinceCreation();
+    _stateOfLifeTime = _chronometer->getTime();
 }
 
 void Ball::addUpdateOutput(CstUpdateOutput_sptr &&updateOutput) {

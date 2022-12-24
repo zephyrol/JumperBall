@@ -64,7 +64,7 @@ Displayable::StaticValues<JBTypes::vec3f> Special::getStaticVec3fValues() const 
 
 Displayable::DynamicValues<float> Special::getDynamicFloats() const {
     return {
-        {"creationTime",      _chronometer->timeSinceCreation()},
+        {"creationTime", _chronometer->getTime()},
         {_colorAttributeName, _isActivated}
     };
 }

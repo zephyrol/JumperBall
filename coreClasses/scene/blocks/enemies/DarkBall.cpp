@@ -31,7 +31,7 @@ void DarkBall::update() {
 
     const JBTypes::vec3f vecDirSide = JBTypesMethods::directionAsVector(direction());
 
-    const auto timeSinceCreation = _chronometer->timeSinceCreation();
+    const auto timeSinceCreation = _chronometer->getTime();
     // TODO: replace time since creation by time in game
     const auto nbOfJumpsDone = static_cast <size_t>(timeSinceCreation / mechanics.getTimeToGetDestination());
 

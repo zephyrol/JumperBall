@@ -4,17 +4,16 @@
 
 #include "Chronometer.h"
 
-Chronometer::Chronometer():
+Chronometer::Chronometer() :
     _currentSession(Chronometer::TimeSession::Run),
     _updatingTimePoint(),
     _currentSessionBeginningTimePoint(getTimePointMSNow()),
     _msPreviousRunSessionsCreation(0.f),
     _msCurrentSession(0.f),
-    _msCreation(0.f),
+    _msTime(0.f),
     _requestStop(false),
     _requestResume(false),
-    _isStopped(false)
-{
+    _isStopped(false) {
 }
 
 Chronometer::TimePointMs Chronometer::getTimePointMSNow() noexcept {
@@ -29,7 +28,7 @@ float Chronometer::getFloatFromDurationMS(const Chronometer::DurationMs &dms) no
 
 void Chronometer::reset() {
     _currentSessionBeginningTimePoint = _updatingTimePoint;
-    _msCreation = 0.f;
+    _msTime = 0.f;
     _msPreviousRunSessionsCreation = 0.f;
     _msCurrentSession = 0.f;
 }
@@ -38,7 +37,7 @@ void Chronometer::update() {
     _updatingTimePoint = getTimePointMSNow();
     _msCurrentSession = getFloatFromDurationMS(_updatingTimePoint - _currentSessionBeginningTimePoint);
 
-    if(_requestStop && _currentSession == TimeSession::Run) {
+    if (_requestStop && _currentSession == TimeSession::Run) {
         _currentSession = TimeSession::Stop;
         _msPreviousRunSessionsCreation += _msCurrentSession;
         _currentSessionBeginningTimePoint = _updatingTimePoint;
@@ -46,15 +45,15 @@ void Chronometer::update() {
         _isStopped = true;
         return;
     }
-    if(_requestResume && _currentSession == TimeSession::Stop) {
+    if (_requestResume && _currentSession == TimeSession::Stop) {
         _currentSession = TimeSession::Run;
         _requestResume = false;
         _currentSessionBeginningTimePoint = _updatingTimePoint;
         _isStopped = false;
         return;
     }
-    if(_currentSession == TimeSession::Run) {
-        _msCreation = _msPreviousRunSessionsCreation + _msCurrentSession;
+    if (_currentSession == TimeSession::Run) {
+        _msTime = _msPreviousRunSessionsCreation + _msCurrentSession;
     }
 }
 
@@ -66,11 +65,6 @@ void Chronometer::resume() {
     _requestResume = true;
 }
 
-float Chronometer::timeSinceCreation() const {
-    return _msCreation;
+float Chronometer::getTime() const {
+    return _msTime;
 }
-
-bool Chronometer::isStopped() const {
-    return _isStopped;
-}
-

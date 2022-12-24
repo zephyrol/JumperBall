@@ -33,7 +33,7 @@ void ThornBall::update() {
     const auto movementLength = static_cast <float>(length());
     const float localMovement = (1.f - cosf(2.f * static_cast <float>(M_PI) *
         //TODO replace by in game time
-                                            (_chronometer->timeSinceCreation()/ movementDuration))
+                                            (_chronometer->getTime() / movementDuration))
                                 ) / 2.f;
     const float movementPosition = localMovement * movementLength;
 

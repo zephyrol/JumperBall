@@ -37,7 +37,7 @@ void GhostBlock::update() {
     InteractiveBlock::update();
 
     // TODO: Update time since creation to game time.
-    const auto fPassedTime = _chronometer->timeSinceCreation();
+    const auto fPassedTime = _chronometer->getTime();
     const auto nbOfSwitching = static_cast <unsigned int>(fPassedTime / _periodicity);
     _isThere = nbOfSwitching % 2 == 0;
 
