@@ -19,7 +19,7 @@ using Player_sptr = std::shared_ptr<Player>;
 
 class Player {
 public:
-    explicit Player(CstDoubleChronometer_sptr doubleChronometer);
+    explicit Player(DoubleChronometer_sptr doubleChronometer);
 
     enum class Status {
         InGame, InMenu, InTransition
@@ -29,9 +29,9 @@ public:
         None, Winner, Loser
     };
 
-    const CstDoubleChronometer_sptr &getDoubleChronometer() const;
+    CstDoubleChronometer_sptr getDoubleChronometer() const;
 
-    const CstChronometer_sptr &getCreationChronometer() const;
+    CstChronometer_sptr getCreationChronometer() const;
 
     vecCstUpdateOutput_sptr &&retrieveUpdateOutput();
 
@@ -73,7 +73,7 @@ public:
 
     Status status() const;
 
-    void status(const Status &s);
+    void setAsInGame();
 
     void setAsWinner();
 
@@ -91,8 +91,9 @@ public:
 
 private:
 
+    void setAsInMenu();
 
-    const CstDoubleChronometer_sptr _doubleChronometer;
+    const DoubleChronometer_sptr _doubleChronometer;
     Status _status;
     GameStatus _gameStatus;
     size_t _levelProgression;

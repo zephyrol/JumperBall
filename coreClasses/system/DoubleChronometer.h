@@ -15,7 +15,7 @@ using CstDoubleChronometer_sptr = std::shared_ptr<const DoubleChronometer>;
 class DoubleChronometer {
 
 public:
-    DoubleChronometer(bool firstChronometerStartDirectly, bool secondChronometerStartDirectly);
+    DoubleChronometer(bool firstAutoStart, bool secondAutoStart);
 
     /**
      * Update both chronometers.
@@ -71,11 +71,11 @@ public:
 
     const CstChronometer_sptr &second() const;
 
-private:
-
     const Chronometer_sptr &first();
 
     const Chronometer_sptr &second();
+
+private:
 
     const std::array<Chronometer_sptr, 2> _chronometers;
     const Chronometer_sptr &_first;

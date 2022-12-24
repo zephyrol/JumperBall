@@ -5,12 +5,12 @@
 #include "DoubleChronometer.h"
 
 DoubleChronometer::DoubleChronometer(
-    bool firstChronometerStartDirectly,
-    bool secondChronometerStartDirectly
+    bool firstAutoStart,
+    bool secondAutoStart
 ) :
     _chronometers{
-        std::make_shared<Chronometer>(firstChronometerStartDirectly),
-        std::make_shared<Chronometer>(secondChronometerStartDirectly),
+        std::make_shared<Chronometer>(firstAutoStart),
+        std::make_shared<Chronometer>(secondAutoStart),
     },
     _first(_chronometers.front()),
     _second(_chronometers.back()),
@@ -36,6 +36,7 @@ void DoubleChronometer::stopFirst() {
 }
 
 void DoubleChronometer::stopSecond() {
+    std::cout << "stop" << std::endl;
     second()->stop();
 }
 

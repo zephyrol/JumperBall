@@ -58,7 +58,7 @@ std::string Scene::update() {
     _currentKey = Scene::ActionKey::Nothing;
 
     if (_camera->getMovement() == Camera::Movement::FollowingBall) {
-        _player->status(Player::Status::InGame);
+        _player->setAsInGame();
     }
     if (_player->status() == Player::Status::InGame) {
         if (_map->gameIsLost()) {

@@ -4,8 +4,9 @@
 
 #include "Chronometer.h"
 
-Chronometer::Chronometer(bool startDirectly) :
-    _currentSession(startDirectly ? Chronometer::TimeSession::Run: Chronometer::TimeSession::Stop),
+Chronometer::Chronometer(bool autoStart) :
+    _autoStart(autoStart),
+    _currentSession(_autoStart ? Chronometer::TimeSession::Run : Chronometer::TimeSession::Stop),
     _updatingTimePoint(),
     _currentSessionBeginningTimePoint(getTimePointMSNow()),
     _msPreviousRunSessionsCreation(0.f),
@@ -27,6 +28,7 @@ float Chronometer::getFloatFromDurationMS(const Chronometer::DurationMs &dms) no
 }
 
 void Chronometer::reset() {
+    _currentSession = _autoStart ? Chronometer::TimeSession::Run : Chronometer::TimeSession::Stop;
     _currentSessionBeginningTimePoint = _updatingTimePoint;
     _msTime = 0.f;
     _msPreviousRunSessionsCreation = 0.f;

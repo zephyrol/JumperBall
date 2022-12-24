@@ -7,11 +7,11 @@
 #include "Player.h"
 #include "system/SaveFileOutput.h"
 
-Player::Player(CstDoubleChronometer_sptr doubleChronometer) :
+Player::Player(DoubleChronometer_sptr doubleChronometer) :
     _doubleChronometer(std::move(doubleChronometer)),
     _status(Player::Status::InMenu),
     _gameStatus(Player::GameStatus::None),
-    _levelProgression(1),
+    _levelProgression(2),
     _currentLevel(_levelProgression),
     _updateOutputs{},
     _money(0),
@@ -58,10 +58,6 @@ unsigned int Player::getMoney() const {
 
 Player::Status Player::status() const {
     return _status;
-}
-
-void Player::status(const Player::Status &s) {
-    _status = s;
 }
 
 void Player::bonusLevelUp() {
@@ -112,13 +108,13 @@ void Player::requestQuit() {
 
 void Player::escapeAction() {
     if (_status != Player::Status::InMenu) {
-        _status = Player::Status::InMenu;
+        setAsInMenu();
     }
 }
 
 void Player::setAsWinner() {
     _needsSaveFile = true;
-    _status = Player::Status::InMenu;
+    setAsInMenu();
     _gameStatus = GameStatus::Winner;
 }
 
@@ -128,7 +124,7 @@ bool Player::isAWinner() const {
 
 void Player::setAsLoser() {
     _needsSaveFile = true;
-    _status = Player::Status::InMenu;
+    setAsInMenu();
     _gameStatus = GameStatus::Loser;
 }
 
@@ -140,7 +136,7 @@ void Player::resetGameStatus() {
     _gameStatus = GameStatus::None;
 }
 
-const CstDoubleChronometer_sptr &Player::getDoubleChronometer() const {
+CstDoubleChronometer_sptr Player::getDoubleChronometer() const {
     return _doubleChronometer;
 }
 
@@ -158,6 +154,16 @@ vecCstUpdateOutput_sptr &&Player::retrieveUpdateOutput() {
     return std::move(_updateOutputs);
 }
 
-const CstChronometer_sptr &Player::getCreationChronometer() const {
+CstChronometer_sptr Player::getCreationChronometer() const {
     return _doubleChronometer->first();
+}
+
+void Player::setAsInGame() {
+    _status = Player::Status::InGame;
+    _doubleChronometer->resumeSecond();
+}
+
+void Player::setAsInMenu() {
+    _status = Player::Status::InMenu;
+    _doubleChronometer->stopSecond();
 }

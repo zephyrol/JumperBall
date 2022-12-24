@@ -95,7 +95,7 @@ Page_sptr PausePage::click(float mouseX, float mouseY) {
         return _parent.lock();
     }
     if (intersectTest(_resumeNode)) {
-        _player->status(Player::Status::InGame);
+        _player->setAsInGame();
         return _inGamePage;
     }
     return nullptr;

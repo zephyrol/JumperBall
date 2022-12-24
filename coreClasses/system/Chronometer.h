@@ -17,7 +17,11 @@ using CstChronometer_sptr = std::shared_ptr<const Chronometer>;
 class Chronometer {
 
 public:
-    Chronometer(bool startDirectly);
+    /**
+     * @param autoStart If true, the chronometer is running directly after its creation
+     * and after each reset.
+     */
+    explicit Chronometer(bool autoStart);
 
     /**
      * Get chronometer time in ms.
@@ -60,6 +64,8 @@ private:
     enum class TimeSession {
         Run, Stop
     };
+
+    const bool _autoStart;
 
     /**
      * Current session (Run if the chronometer is running, else Stop)
