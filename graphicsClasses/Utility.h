@@ -9,51 +9,63 @@
 #include <OpenGLES/ES3/glext.h>
 #define JB_SYSTEM 2
 #else
+
 #include <glad.h>
+
 #define JB_SYSTEM 0
 #endif
 
 #include <system/Types.h>
 #include <glm/glm.hpp>
+
 #define GLM_ENABLE_EXPERIMENTAL
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
 namespace Utility {
 
-void printMatrix(const glm::mat4& m);
-std::vector <GLfloat> computeNormals(const std::vector <GLfloat>& positions);
-glm::mat4 rotationUpToDir(JBTypes::Dir dir);
+    std::vector<GLfloat> computeNormals(const std::vector<GLfloat> &positions);
 
-float evalGauss1D(float x, float sigma);
-std::vector <GLfloat> genGaussBuffer(size_t patchSize, float sigma);
+    glm::mat4 rotationUpToDir(JBTypes::Dir dir);
 
-glm::vec3 convertRBGToCIExyY(const glm::vec3& rbgColor);
-glm::vec3 convertCIExyYToRGB(const glm::vec3& CIExyYColor);
+    float evalGauss1D(float x, float sigma);
 
-glm::vec3 colorAsVec3(const JBTypes::Color& color);
+    std::vector<GLfloat> genGaussBuffer(size_t patchSize, float sigma);
 
-float getLuminance(const glm::vec3& rgbColor);
-std::vector <GLfloat> uniColorsCube(const glm::vec3& color);
+    glm::vec3 convertRBGToCIExyY(const glm::vec3 &rbgColor);
 
-std::vector <glm::vec3> GLfloatListToGlmVec3(const std::vector <GLfloat>& list);
+    glm::vec3 convertCIExyYToRGB(const glm::vec3 &CIExyYColor);
 
-std::vector <glm::vec2> GLfloatListToGlmVec2(const std::vector <GLfloat>& list);
+    glm::vec3 colorAsVec3(const JBTypes::Color &color);
 
-glm::vec4 convertToOpenGLFormat(const JBTypes::Quaternion& q);
-glm::vec3 convertToOpenGLFormat(const JBTypes::vec3f& vec3f);
-glm::vec2 convertToOpenGLFormat(const JBTypes::vec2f& vec2f);
-GLfloat convertToOpenGLFormat(const float& f);
-GLubyte convertToOpenGLFormat(unsigned char uChar);
+    float getLuminance(const glm::vec3 &rgbColor);
 
-template<typename T> void concatVector (std::vector <T>& current, const std::vector <T>& other) {
-    current.insert(current.end(), other.begin(), other.end());
-}
+    std::vector<GLfloat> uniColorsCube(const glm::vec3 &color);
 
-float menuPositionToOpenGLScreenFormat(float value);
+    std::vector<glm::vec3> GLfloatListToGlmVec3(const std::vector<GLfloat> &list);
 
-extern const glm::mat3 XYZToRGB;
-extern const glm::mat3 RGBToXYZ;
+    std::vector<glm::vec2> GLfloatListToGlmVec2(const std::vector<GLfloat> &list);
+
+    glm::vec4 convertToOpenGLFormat(const JBTypes::Quaternion &q);
+
+    glm::vec3 convertToOpenGLFormat(const JBTypes::vec3f &vec3f);
+
+    glm::vec2 convertToOpenGLFormat(const JBTypes::vec2f &vec2f);
+
+    GLfloat convertToOpenGLFormat(const float &f);
+
+    GLubyte convertToOpenGLFormat(unsigned char uChar);
+
+    template<typename T>
+    void concatVector(std::vector<T> &current, const std::vector<T> &other) {
+        current.insert(current.end(), other.begin(), other.end());
+    }
+
+    float menuPositionToOpenGLScreenFormat(float value);
+
+    extern const glm::mat3 XYZToRGB;
+    extern const glm::mat3 RGBToXYZ;
 
 }
 

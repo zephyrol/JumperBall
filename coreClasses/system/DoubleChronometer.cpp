@@ -36,7 +36,6 @@ void DoubleChronometer::stopFirst() {
 }
 
 void DoubleChronometer::stopSecond() {
-    std::cout << "stop" << std::endl;
     second()->stop();
 }
 

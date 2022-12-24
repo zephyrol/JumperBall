@@ -65,6 +65,10 @@ private:
         Run, Stop
     };
 
+    enum class Request {
+        Resume, Stop, None
+    };
+
     const bool _autoStart;
 
     /**
@@ -95,9 +99,7 @@ private:
      */
     float _msTime;
 
-    bool _requestStop;
-    bool _requestResume;
-
+    Request _request;
     static float getFloatFromDurationMS(const DurationMs &dms) noexcept;
 
 };

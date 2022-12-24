@@ -12,8 +12,7 @@ Chronometer::Chronometer(bool autoStart) :
     _msPreviousRunSessionsCreation(0.f),
     _msCurrentSession(0.f),
     _msTime(0.f),
-    _requestStop(false),
-    _requestResume(false)
+    _request(Chronometer::Request::None)
 {
 }
 
@@ -39,17 +38,17 @@ void Chronometer::update(const Chronometer::TimePointMs& updatingTime) {
     _updatingTimePoint = updatingTime;
     _msCurrentSession = getFloatFromDurationMS(_updatingTimePoint - _currentSessionBeginningTimePoint);
 
-    if (_requestStop && _currentSession == TimeSession::Run) {
+    if (_request == Chronometer::Request::Stop && _currentSession == TimeSession::Run) {
         _currentSession = TimeSession::Stop;
         _msPreviousRunSessionsCreation += _msCurrentSession;
         _currentSessionBeginningTimePoint = _updatingTimePoint;
-        _requestStop = false;
+        _request = Chronometer::Request::None;
         return;
     }
-    if (_requestResume && _currentSession == TimeSession::Stop) {
+    if (_request == Chronometer::Request::Resume && _currentSession == TimeSession::Stop) {
         _currentSession = TimeSession::Run;
-        _requestResume = false;
         _currentSessionBeginningTimePoint = _updatingTimePoint;
+        _request = Chronometer::Request::None;
         return;
     }
     if (_currentSession == TimeSession::Run) {
@@ -58,11 +57,11 @@ void Chronometer::update(const Chronometer::TimePointMs& updatingTime) {
 }
 
 void Chronometer::stop() {
-    _requestStop = true;
+    _request = Chronometer::Request::Stop;
 }
 
 void Chronometer::resume() {
-    _requestResume = true;
+    _request = Chronometer::Request::Resume;
 }
 
 float Chronometer::getTime() const {

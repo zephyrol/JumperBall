@@ -159,11 +159,15 @@ CstChronometer_sptr Player::getCreationChronometer() const {
 }
 
 void Player::setAsInGame() {
-    _status = Player::Status::InGame;
-    _doubleChronometer->resumeSecond();
+    if(_status != Player::Status::InGame) {
+        _status = Player::Status::InGame;
+        _doubleChronometer->resumeSecond();
+    }
 }
 
 void Player::setAsInMenu() {
-    _status = Player::Status::InMenu;
-    _doubleChronometer->stopSecond();
+    if(_status != Player::Status::InMenu) {
+        _status = Player::Status::InMenu;
+        _doubleChronometer->stopSecond();
+    }
 }
