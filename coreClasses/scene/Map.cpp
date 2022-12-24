@@ -10,7 +10,8 @@
 Map::Map(Map::MapInfo &&mapInfo) :
     _blocks(std::move(mapInfo.blocks)),
     _blocksPositions(
-        std::make_shared<const std::unordered_map<std::string, Block_sptr> >(createBlockPositions())),
+        std::make_shared<const std::unordered_map<std::string, Block_sptr> >(createBlockPositions())
+    ),
     _blocksToUpdate(std::make_shared<const vecBlock_sptr>(getBlocksToUpdate())),
     _blocksTeleportations(
         std::make_shared<const std::map<BlockDir, BlockDir> >(createBlocksTeleportations())

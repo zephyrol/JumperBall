@@ -4,16 +4,16 @@
 
 #include "Chronometer.h"
 
-Chronometer::Chronometer() :
-    _currentSession(Chronometer::TimeSession::Run),
+Chronometer::Chronometer(bool startDirectly) :
+    _currentSession(startDirectly ? Chronometer::TimeSession::Run: Chronometer::TimeSession::Stop),
     _updatingTimePoint(),
     _currentSessionBeginningTimePoint(getTimePointMSNow()),
     _msPreviousRunSessionsCreation(0.f),
     _msCurrentSession(0.f),
     _msTime(0.f),
     _requestStop(false),
-    _requestResume(false),
-    _isStopped(false) {
+    _requestResume(false)
+{
 }
 
 Chronometer::TimePointMs Chronometer::getTimePointMSNow() noexcept {
@@ -33,8 +33,8 @@ void Chronometer::reset() {
     _msCurrentSession = 0.f;
 }
 
-void Chronometer::update() {
-    _updatingTimePoint = getTimePointMSNow();
+void Chronometer::update(const Chronometer::TimePointMs& updatingTime) {
+    _updatingTimePoint = updatingTime;
     _msCurrentSession = getFloatFromDurationMS(_updatingTimePoint - _currentSessionBeginningTimePoint);
 
     if (_requestStop && _currentSession == TimeSession::Run) {
@@ -42,14 +42,12 @@ void Chronometer::update() {
         _msPreviousRunSessionsCreation += _msCurrentSession;
         _currentSessionBeginningTimePoint = _updatingTimePoint;
         _requestStop = false;
-        _isStopped = true;
         return;
     }
     if (_requestResume && _currentSession == TimeSession::Stop) {
         _currentSession = TimeSession::Run;
         _requestResume = false;
         _currentSessionBeginningTimePoint = _updatingTimePoint;
-        _isStopped = false;
         return;
     }
     if (_currentSession == TimeSession::Run) {

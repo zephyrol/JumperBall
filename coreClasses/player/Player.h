@@ -10,6 +10,7 @@
 
 #include "scene/Ball.h"
 #include "system/UpdateOutput.h"
+#include "system/DoubleChronometer.h"
 
 
 class Player;
@@ -18,7 +19,7 @@ using Player_sptr = std::shared_ptr<Player>;
 
 class Player {
 public:
-    explicit Player(CstChronometer_sptr chronometer);
+    explicit Player(CstDoubleChronometer_sptr doubleChronometer);
 
     enum class Status {
         InGame, InMenu, InTransition
@@ -28,9 +29,11 @@ public:
         None, Winner, Loser
     };
 
-    const CstChronometer_sptr &getChronometer() const;
+    const CstDoubleChronometer_sptr &getDoubleChronometer() const;
 
-    vecCstUpdateOutput_sptr&& retrieveUpdateOutput();
+    const CstChronometer_sptr &getCreationChronometer() const;
+
+    vecCstUpdateOutput_sptr &&retrieveUpdateOutput();
 
     size_t levelProgression() const;
 
@@ -89,7 +92,7 @@ public:
 private:
 
 
-    const CstChronometer_sptr _chronometer;
+    const CstDoubleChronometer_sptr _doubleChronometer;
     Status _status;
     GameStatus _gameStatus;
     size_t _levelProgression;

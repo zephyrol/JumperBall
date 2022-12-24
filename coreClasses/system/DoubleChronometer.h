@@ -5,9 +5,7 @@
 #ifndef JUMPERBALLAPPLICATION_DOUBLECHRONOMETER_H
 #define JUMPERBALLAPPLICATION_DOUBLECHRONOMETER_H
 
-
 #include "Chronometer.h"
-
 
 class DoubleChronometer;
 
@@ -17,7 +15,7 @@ using CstDoubleChronometer_sptr = std::shared_ptr<const DoubleChronometer>;
 class DoubleChronometer {
 
 public:
-    DoubleChronometer();
+    DoubleChronometer(bool firstChronometerStartDirectly, bool secondChronometerStartDirectly);
 
     /**
      * Update both chronometers.
@@ -69,19 +67,21 @@ public:
      */
     float getSecondTimer() const;
 
+    const CstChronometer_sptr &first() const;
+
+    const CstChronometer_sptr &second() const;
+
 private:
 
-    const Chronometer &getFirst() const;
+    const Chronometer_sptr &first();
 
-    const Chronometer &getSecond() const;
+    const Chronometer_sptr &second();
 
-    const DoubleChronometer &getConstThis();
-
-    Chronometer &getFirst();
-
-    Chronometer &getSecond();
-
-    std::array<Chronometer, 2> _chronometers;
+    const std::array<Chronometer_sptr, 2> _chronometers;
+    const Chronometer_sptr &_first;
+    const Chronometer_sptr &_second;
+    const CstChronometer_sptr _cstFirst;
+    const CstChronometer_sptr _cstSecond;
 
 };
 

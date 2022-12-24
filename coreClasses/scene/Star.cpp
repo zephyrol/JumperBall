@@ -18,7 +18,7 @@ Star::Star(
     const JBTypes::vec3f &color,
     float radiansPerSecond
 ) :
-    _chronometer(map.getBall()->getChronometer()),
+    _chronometer(map.getBall()->getCreationChronometer()),
     _radiusInside(radiusInside),
     _radiusOutside(radiusOutside),
     _distance(distance),

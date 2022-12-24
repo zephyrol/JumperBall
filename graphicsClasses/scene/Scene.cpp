@@ -7,8 +7,7 @@
 #include "Scene.h"
 
 Scene::Scene(const std::string &mapContent, float screenRatio, Player_sptr player, bool isUsingTouchScreen) :
-    _chronometer(player->getChronometer()),
-    _map(MapGenerator::loadMap(mapContent, _chronometer)),
+    _map(MapGenerator::loadMap(mapContent, player->getDoubleChronometer())),
     _currentKey(Scene::ActionKey::Nothing),
     _camera(std::make_shared<Camera>(*_map, screenRatio)),
     _star(Star::createBlurStar(*_map)),

@@ -22,12 +22,12 @@
 #include "blocks/JumpBlock.h"
 #include "blocks/GhostBlock.h"
 
-std::shared_ptr<Map> MapGenerator::loadMap(const std::string &mapContent, CstChronometer_sptr chronometer) {
+std::shared_ptr<Map> MapGenerator::loadMap(const std::string &mapContent, const CstDoubleChronometer_sptr& doubleChronometer) {
     std::istringstream sst (mapContent);
-    return std::make_shared<Map>(uncompressMap(sst, std::move(chronometer)));
+    return std::make_shared<Map>(uncompressMap(sst, doubleChronometer));
 }
 
-Map::MapInfo MapGenerator::uncompressMap(std::istringstream &file, CstChronometer_sptr chronometer) {
+Map::MapInfo MapGenerator::uncompressMap(std::istringstream &file, const CstDoubleChronometer_sptr& doubleChronometer) {
 
     Map::MapInfo mapInfo {};
 
@@ -46,7 +46,7 @@ Map::MapInfo MapGenerator::uncompressMap(std::istringstream &file, CstChronomete
     const auto beginX = getUncompressedDimension(readString(file));
     const auto beginY = getUncompressedDimension(readString(file));
     const auto beginZ = getUncompressedDimension(readString(file));
-    mapInfo.ball = std::make_shared<Ball>(beginX, beginY, beginZ, std::move(chronometer));
+    mapInfo.ball = std::make_shared<Ball>(beginX, beginY, beginZ, doubleChronometer);
 
 
     const auto getTypeOptions = [](

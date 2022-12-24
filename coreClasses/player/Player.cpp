@@ -7,8 +7,8 @@
 #include "Player.h"
 #include "system/SaveFileOutput.h"
 
-Player::Player(CstChronometer_sptr chronometer) :
-    _chronometer(std::move(chronometer)),
+Player::Player(CstDoubleChronometer_sptr doubleChronometer) :
+    _doubleChronometer(std::move(doubleChronometer)),
     _status(Player::Status::InMenu),
     _gameStatus(Player::GameStatus::None),
     _levelProgression(1),
@@ -140,8 +140,8 @@ void Player::resetGameStatus() {
     _gameStatus = GameStatus::None;
 }
 
-const CstChronometer_sptr &Player::getChronometer() const {
-    return _chronometer;
+const CstDoubleChronometer_sptr &Player::getDoubleChronometer() const {
+    return _doubleChronometer;
 }
 
 std::string Player::genSaveContent() {
@@ -156,4 +156,8 @@ std::string Player::genSaveContent() {
 
 vecCstUpdateOutput_sptr &&Player::retrieveUpdateOutput() {
     return std::move(_updateOutputs);
+}
+
+const CstChronometer_sptr &Player::getCreationChronometer() const {
+    return _doubleChronometer->first();
 }

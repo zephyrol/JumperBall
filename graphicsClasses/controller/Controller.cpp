@@ -16,8 +16,13 @@ Controller::Controller(
     size_t fontDataSize,
     bool isUsingTouchScreen
 ) :
-    _chronometer(std::make_shared<Chronometer>()),
-    _player(std::make_shared<Player>(_chronometer)),
+    _doubleChronometer(std::make_shared<DoubleChronometer>(
+        // The chronometer tracking creation time needs to be started directly
+        true,
+        // The chronometer tracking in game time needs to be started later
+        false)
+    ),
+    _player(std::make_shared<Player>(_doubleChronometer)),
     _menu(Menu::getJumperBallMenu(
         _player,
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
@@ -73,7 +78,7 @@ void Controller::releaseMouse() {
 
 void Controller::runGame(size_t level) {
     // TODO: uncomment
-    _chronometer->reset();
+    _doubleChronometer->reset();
     _scene = std::make_shared<Scene>(
         _filesContent.at("map" + std::to_string(level) + ".txt"),
         _scene->getRatio(),
@@ -138,7 +143,7 @@ void Controller::render() const {
 std::string Controller::update() {
 
     // 1. Update chronometer
-    _chronometer->update();
+    _doubleChronometer->update();
 
     // 2. Update controls
     _keyboardKey.update();
@@ -162,9 +167,9 @@ std::string Controller::update() {
 }
 
 void Controller::stop() {
-    _chronometer->stop();
+    _doubleChronometer->stopBoth();
 }
 
 void Controller::resume() {
-    _chronometer->resume();
+    _doubleChronometer->resumeFirst();
 }

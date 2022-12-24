@@ -8,8 +8,9 @@
 #include "Ball.h"
 #include "system/SoundOutput.h"
 
-Ball::Ball(unsigned int x, unsigned int y, unsigned int z, CstChronometer_sptr chronometer):
-    _chronometer(std::move(chronometer)),
+Ball::Ball(unsigned int x, unsigned int y, unsigned int z, const CstDoubleChronometer_sptr &doubleChronometer):
+    _creationChronometer(doubleChronometer->first()),
+    _inGameChronometer(doubleChronometer->second()),
     _pos({x, y, z}),
     _currentSide(JBTypes::Dir::Up),
     _lookTowards(JBTypes::Dir::North),
@@ -136,7 +137,7 @@ void Ball::doAction(Ball::ActionRequest action) {
                 jump();
             } else {
                 _jumpRequest = true;
-                _jumpRequestTime = _chronometer->getTime();
+                _jumpRequestTime = _inGameChronometer->getTime();
             }
             break;
         default:
@@ -392,7 +393,7 @@ void Ball::blockEvent() noexcept {
         return;
     }
     const auto hasToJump = _jumpRequest
-        && (_chronometer->getTime() - _jumpRequestTime) < timeToGetNextBlock;
+        && (_inGameChronometer->getTime() - _jumpRequestTime) < timeToGetNextBlock;
     if (hasToJump) {
         _jumpRequest = false;
         jump();
@@ -901,16 +902,20 @@ unsigned int Ball::numberOfCoins() const {
     return _nbOfCoins;
 }
 
-const CstChronometer_sptr &Ball::getChronometer() const {
-    return _chronometer;
+const CstChronometer_sptr &Ball::getCreationChronometer() const {
+    return _creationChronometer;
+}
+
+const CstChronometer_sptr &Ball::getInGameChronometer() const {
+    return _inGameChronometer;
 }
 
 float Ball::getTimeSecondsSinceStateOfLife() const {
-    return _chronometer->getTime() - _stateOfLifeTime;
+    return _inGameChronometer->getTime() - _stateOfLifeTime;
 }
 
 float Ball::getTimeSecondsSinceAction() const {
-    return _chronometer->getTime() - _actionTime;
+    return _inGameChronometer->getTime() - _actionTime;
 }
 
 float Ball::getActionTime() const {
@@ -918,13 +923,11 @@ float Ball::getActionTime() const {
 }
 
 void Ball::setActionTimeNow() noexcept {
-    // TODO: replace by in game time
-    _actionTime = _chronometer->getTime();
+    _actionTime = _inGameChronometer->getTime();
 }
 
 void Ball::setLifeTimeNow() noexcept {
-    // TODO: replace by in game time
-    _stateOfLifeTime = _chronometer->getTime();
+    _stateOfLifeTime = _inGameChronometer->getTime();
 }
 
 void Ball::addUpdateOutput(CstUpdateOutput_sptr &&updateOutput) {

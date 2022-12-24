@@ -15,6 +15,7 @@
 #include "graphicMenu/PageRendering.h"
 #include "system/KeyboardKey.h"
 #include "system/Mouse.h"
+#include "system/DoubleChronometer.h"
 
 class Controller {
 
@@ -55,7 +56,7 @@ private:
 
     void setValidateMouse(float mouseX, float mouseY);
 
-    const Chronometer_sptr _chronometer;
+    const DoubleChronometer_sptr _doubleChronometer;
     const Player_sptr _player;
     const std::shared_ptr<Menu> _menu;
 

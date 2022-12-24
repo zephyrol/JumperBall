@@ -63,7 +63,6 @@ public:
     bool isUsingTouchScreen() const;
 
 private:
-    const CstChronometer_sptr _chronometer;
     Map_sptr _map;
     ActionKey _currentKey;
     const std::shared_ptr<Camera> _camera;

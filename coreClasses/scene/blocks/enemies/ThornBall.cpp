@@ -21,7 +21,7 @@ ThornBall::ThornBall(
         movementLength,
         ball
     ),
-    _chronometer(ball->getChronometer()),
+    _chronometer(ball->getInGameChronometer()),
     _movementDirection(movementDirection) {
 }
 

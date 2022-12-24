@@ -16,7 +16,7 @@ GhostBlock::GhostBlock(
     float periodicity
 ) :
     InteractiveBlock(position, items, enemies, specials, ball, true),
-    _chronometer(ball->getChronometer()),
+    _chronometer(ball->getInGameChronometer()),
     _periodicity(periodicity),
     _isThere(true) {
 }

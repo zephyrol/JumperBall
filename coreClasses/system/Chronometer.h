@@ -17,7 +17,7 @@ using CstChronometer_sptr = std::shared_ptr<const Chronometer>;
 class Chronometer {
 
 public:
-    Chronometer();
+    Chronometer(bool startDirectly);
 
     /**
      * Get chronometer time in ms.
@@ -30,10 +30,16 @@ public:
      */
     void reset();
 
+    using TimePointMs = std::chrono::time_point<
+        std::chrono::system_clock,
+        std::chrono::duration<long int, std::ratio<1, 1000> >
+    >;
+
     /**
      * Update the chronometer.
+     * @param updatingTime Time point representing the updating time
      */
-    void update();
+    void update(const Chronometer::TimePointMs& updatingTime);
 
     /**
      * Freeze the chronometer.
@@ -44,11 +50,6 @@ public:
      * Resume the chronometer.
      */
     void resume();
-
-    using TimePointMs = std::chrono::time_point<
-        std::chrono::system_clock,
-        std::chrono::duration<long int, std::ratio<1, 1000> >
-    >;
 
     static TimePointMs getTimePointMSNow() noexcept;
 
@@ -90,7 +91,6 @@ private:
 
     bool _requestStop;
     bool _requestResume;
-    bool _isStopped;
 
     static float getFloatFromDurationMS(const DurationMs &dms) noexcept;
 

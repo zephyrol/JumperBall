@@ -4,76 +4,81 @@
 
 #include "DoubleChronometer.h"
 
-DoubleChronometer::DoubleChronometer() : _chronometers() {
-
+DoubleChronometer::DoubleChronometer(
+    bool firstChronometerStartDirectly,
+    bool secondChronometerStartDirectly
+) :
+    _chronometers{
+        std::make_shared<Chronometer>(firstChronometerStartDirectly),
+        std::make_shared<Chronometer>(secondChronometerStartDirectly),
+    },
+    _first(_chronometers.front()),
+    _second(_chronometers.back()),
+    _cstFirst(_first),
+    _cstSecond(_second) {
 }
 
 void DoubleChronometer::update() {
+    const auto updatingTime = Chronometer::getTimePointMSNow();
     for (auto &chronometer: _chronometers) {
-        chronometer.update();
+        chronometer->update(updatingTime);
     }
 }
 
 void DoubleChronometer::reset() {
     for (auto &chronometer: _chronometers) {
-        chronometer.reset();
+        chronometer->reset();
     }
 }
 
 void DoubleChronometer::stopFirst() {
-    getFirst().stop();
+    first()->stop();
 }
 
 void DoubleChronometer::stopSecond() {
-    getSecond().stop();
+    second()->stop();
 }
 
 void DoubleChronometer::stopBoth() {
     for (auto &chronometer: _chronometers) {
-        chronometer.stop();
+        chronometer->stop();
     }
 }
 
 void DoubleChronometer::resumeFirst() {
-    getFirst().resume();
+    first()->resume();
 }
 
 void DoubleChronometer::resumeSecond() {
-    getSecond().resume();
+    second()->resume();
 }
 
 void DoubleChronometer::resumeBoth() {
     for (auto &chronometer: _chronometers) {
-        chronometer.resume();
+        chronometer->resume();
     }
 }
 
 float DoubleChronometer::getFirstTimer() const {
-    return getFirst().getTime();
+    return first()->getTime();
 }
 
 float DoubleChronometer::getSecondTimer() const {
-    return getSecond().getTime();
+    return second()->getTime();
 }
 
-const Chronometer &DoubleChronometer::getFirst() const {
-    return _chronometers.front();
+const CstChronometer_sptr &DoubleChronometer::first() const {
+    return _cstFirst;
 }
 
-const Chronometer &DoubleChronometer::getSecond() const {
-    return _chronometers.back();
+const CstChronometer_sptr &DoubleChronometer::second() const {
+    return _cstSecond;
 }
 
-const DoubleChronometer &DoubleChronometer::getConstThis() {
-    return static_cast <const DoubleChronometer &>(*this);
+const Chronometer_sptr &DoubleChronometer::first() {
+    return _first;
 }
 
-Chronometer &DoubleChronometer::getFirst() {
-    // Scott Meyer's advice to avoid code duplication
-    return const_cast <Chronometer &>(getConstThis().getFirst());
-}
-
-Chronometer &DoubleChronometer::getSecond() {
-    // Scott Meyer's advice to avoid code duplication
-    return const_cast <Chronometer &>(getConstThis().getSecond());
+const Chronometer_sptr &DoubleChronometer::second() {
+    return _second;
 }

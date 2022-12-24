@@ -16,7 +16,7 @@ BrittleBlock::BrittleBlock(
     const Ball_sptr &ball
 ) :
     InteractiveBlock(position, items, enemies, specials, ball, true),
-    _chronometer(ball->getChronometer()),
+    _chronometer(ball->getInGameChronometer()),
     _stillThere(true),
     _isGoingToBreak(false),
     _collisionTime(0.f),

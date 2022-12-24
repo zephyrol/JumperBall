@@ -15,6 +15,7 @@
 #include "movements/NextBlock.h"
 #include "system/Chronometer.h"
 #include "system/UpdateOutput.h"
+#include "system/DoubleChronometer.h"
 #include <scene/blocks/Block.h>
 
 class Ball;
@@ -31,7 +32,7 @@ public:
         unsigned int x,
         unsigned int y,
         unsigned int z,
-        CstChronometer_sptr chronometer
+        const CstDoubleChronometer_sptr &doubleChronometer
     );
 
     static constexpr float timeToGetNextBlock = 0.25f;
@@ -157,7 +158,8 @@ public:
 
     unsigned int numberOfCoins() const;
 
-    const CstChronometer_sptr &getChronometer() const;
+    const CstChronometer_sptr &getCreationChronometer() const;
+    const CstChronometer_sptr &getInGameChronometer() const;
 
     void addUpdateOutput(CstUpdateOutput_sptr &&updateOutput);
 
@@ -165,7 +167,8 @@ public:
 
 private:
 
-    const CstChronometer_sptr _chronometer;
+    const CstChronometer_sptr _creationChronometer;
+    const CstChronometer_sptr _inGameChronometer;
 
     JBTypes::vec3ui _pos;
 
