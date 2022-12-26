@@ -11,7 +11,7 @@ Player::Player(DoubleChronometer_sptr doubleChronometer) :
     _doubleChronometer(std::move(doubleChronometer)),
     _status(Player::Status::InMenu),
     _gameStatus(Player::GameStatus::None),
-    _levelProgression(2),
+    _levelProgression(1),
     _currentLevel(_levelProgression),
     _updateOutputs{},
     _money(0),

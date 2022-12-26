@@ -171,5 +171,9 @@ void Controller::stop() {
 }
 
 void Controller::resume() {
-    _doubleChronometer->resumeFirst();
+    if(_player->status() != Player::Status::InGame) {
+        _doubleChronometer->resumeFirst();
+        return;
+    }
+    _doubleChronometer->resumeBoth();
 }
