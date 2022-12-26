@@ -205,7 +205,7 @@ std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color& c
         return { glm::vec3 (1.f, 1.f, 0.f), glm::vec3(1.f, 150.f / 255.f, 0.f)};
     }
     if (color == JBTypes::Color::White) {
-        return { glm::vec3 (1.f, 1.f, 1.f), glm::vec3(0.8f, 0.8f, 0.8f)};
+        return { glm::vec3 (0.8f, 0.8f, 0.8f), glm::vec3(0.6f, 0.6f, 0.6f)};
     }
 
     constexpr float laserIntensity = 1.5f;

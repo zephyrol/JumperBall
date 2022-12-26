@@ -13,30 +13,42 @@ Clock::Clock(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, con
 
 vecCstShape_sptr Clock::getShapes() const {
 
-    const auto createClockBase = [](JBTypes::Color color, float radius) {
+    const auto createClockBase = [](
+        JBTypes::Color color,
+        float radius,
+        float thickness
+    ) {
         return std::make_shared<const Shape>(
             Shape::Aspect::Cylinder,
-            JBTypes::Color::Orange,
+            color,
             std::initializer_list<Transformation>(
                 {
                     Transformation(Transformation::Type::Translation,
                                    {0.f, -0.5f, 0.f}),
                     Transformation(Transformation::Type::Scale,
-                                   {0.4f, 0.05f, 0.4f}),
+                                   {radius, thickness, radius}),
                     Transformation(Transformation::Type::Rotation,
                                    {static_cast<float>(M_PI / 2), 0.f, 0.f})
                 }
             )
         );
     };
-
-    const std::vector<std::pair<JBTypes::Color, float> > colorsRadii = {
-        {JBTypes::Color::White, 0.4f},
-        {JBTypes::Color::Blue,  0.5f}
+    struct ColorRadiusThickness {
+        JBTypes::Color color;
+        float radius;
+        float thickness;
+    };
+    const std::vector<ColorRadiusThickness > colorsRadiiThickness {
+        {JBTypes::Color::White, 0.4f, 0.055f},
+        {JBTypes::Color::Blue,  0.5f, 0.05f}
     };
     std::vector<CstShape_sptr> shapes{};
-    for (const auto &colorRadius: colorsRadii) {
-        shapes.push_back(createClockBase(colorRadius.first, colorRadius.second));
+    for (const auto &colorRadiusThickness: colorsRadiiThickness) {
+        shapes.push_back( createClockBase(
+            colorRadiusThickness.color,
+            colorRadiusThickness.radius,
+            colorRadiusThickness.thickness
+        ));
     }
 
     shapes.push_back(std::make_shared<const Shape>(
@@ -45,24 +57,51 @@ vecCstShape_sptr Clock::getShapes() const {
         std::initializer_list<Transformation>(
             {
                 Transformation(Transformation::Type::Scale,
-                               {0.05f, 0.3f, 0.050f}),
+                               {0.03f, 0.2f, 0.02f}),
                 Transformation(Transformation::Type::Translation,
-                               {0.f, -0.025f, 0.f})
+                               {0.f, 0.08f, 0.02f})
             }
         )
     ));
 
     shapes.push_back(std::make_shared<const Shape>(
         Shape::Aspect::Cube,
-        JBTypes::Color::Yellow,
+        JBTypes::Color::Black,
         std::initializer_list<Transformation>(
             {
                 Transformation(Transformation::Type::Scale,
-                               {0.1f, 0.05f, 0.05f}),
+                               {0.15f, 0.04f, 0.02f}),
                 Transformation(Transformation::Type::Translation,
-                               {0.025f, -0.05f, 0.f})
+                               {0.08f, 0.f, 0.02f})
             }
         )
     ));
+
+    shapes.push_back(std::make_shared<const Shape>(
+        Shape::Aspect::Cube,
+        JBTypes::Color::Black,
+        std::initializer_list<Transformation>(
+            {
+                Transformation(Transformation::Type::Scale,
+                               {0.03f, 0.2f, 0.02f}),
+                Transformation(Transformation::Type::Translation,
+                               {0.f, 0.08f, -0.02f})
+            }
+        )
+    ));
+
+    shapes.push_back(std::make_shared<const Shape>(
+        Shape::Aspect::Cube,
+        JBTypes::Color::Black,
+        std::initializer_list<Transformation>(
+            {
+                Transformation(Transformation::Type::Scale,
+                               {0.15f, 0.04f, 0.02f}),
+                Transformation(Transformation::Type::Translation,
+                               {-0.08f, 0.f, -0.02f})
+            }
+        )
+    ));
+
     return shapes;
 }

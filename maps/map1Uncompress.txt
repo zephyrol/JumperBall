@@ -38,6 +38,6 @@
 . . X X . N N
 . X X X . I N N
 . . . X . E S
-. X . . . N
+. X . . . NI CD
 . . . . .
 
