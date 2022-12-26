@@ -46,6 +46,8 @@ namespace JBTypes {
         Yellow,
         Orange,
         Purple,
+        White,
+        Black,
         ShinyRed,
         ShinyGreen,
         ShinyBlue

@@ -248,6 +248,10 @@ std::string JBTypesMethods::colorToString(const JBTypes::Color &color) {
             return "Green";
         case JBTypes::Color::Orange:
             return "Orange";
+        case JBTypes::Color::White:
+            return "White";
+        case JBTypes::Color::Black:
+            return "Black";
         case JBTypes::Color::None:
             return "None";
         case JBTypes::Color::Purple:

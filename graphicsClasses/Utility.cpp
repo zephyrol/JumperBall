@@ -181,6 +181,12 @@ glm::vec3 Utility::colorAsVec3(const JBTypes::Color &color) {
         case JBTypes::Color::Purple:
             return {0.4f, 0.f, 0.4f};
             break;
+        case JBTypes::Color::White:
+            return {1.f, 1.f, 1.f};
+            break;
+        case JBTypes::Color::Black:
+            return {0.f, 0.f, 0.f};
+            break;
         case JBTypes::Color::ShinyRed:
             return {1.f, 0.f, 0.f};
             break;

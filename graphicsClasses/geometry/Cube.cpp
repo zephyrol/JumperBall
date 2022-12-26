@@ -312,13 +312,20 @@ std::vector<glm::vec3> Cube::genColors(const JBTypes::Color &color) {
             0.8f * 1.5f, 0.f, 0.8f * 1.5f, 0.3f, 0.f, 0.5f, 0.8f * 1.5f, 0.f, 0.8f * 1.5f
         });
     }
-    if (color == JBTypes::Color::Yellow) {
-        std::vector<GLfloat> yellowColorFloats {};
-        const std::vector<GLfloat> yellowColor { 1.f, 215.f / 255.f, 0.f };
+    const auto getColorVec = [](const std::vector<GLfloat>& color) {
+        std::vector<GLfloat> colorFloats {};
         for (size_t i = 0; i < 36; ++i) {
-            yellowColorFloats.insert(yellowColorFloats.end(), yellowColor.begin(), yellowColor.end());
+            colorFloats.insert(colorFloats.end(), color.begin(), color.end());
         }
-        return Utility::GLfloatListToGlmVec3(yellowColorFloats);
+        return Utility::GLfloatListToGlmVec3(colorFloats);
+    };
+
+    if (color == JBTypes::Color::Yellow) {
+        return getColorVec({ 1.f, 215.f / 255.f, 0.f });
+    }
+
+    if (color == JBTypes::Color::Black) {
+        return getColorVec({ 0.f, 0.f, 0.f });
     }
 
     return basicColorsCube;
