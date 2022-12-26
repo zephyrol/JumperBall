@@ -41,6 +41,7 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z, const CstDoubleChrono
     _blocksTeleportations(nullptr),
     _nbOfKeys(0),
     _nbOfCoins(0),
+    _nbOfClocks(0),
     _updateOutputs{}
     {
 }
@@ -819,7 +820,6 @@ void Ball::internalUpdate() noexcept {
     if (isBurstingFinished()) {
         die();
     }
-
 }
 
 void Ball::setBlockPositions(
@@ -936,4 +936,12 @@ void Ball::addUpdateOutput(CstUpdateOutput_sptr &&updateOutput) {
 
 vecCstUpdateOutput_sptr &&Ball::retrieveUpdateOutput() {
     return std::move(_updateOutputs);
+}
+
+unsigned int Ball::numberOfClocks() const {
+    return _nbOfClocks;
+}
+
+void Ball::obtainClock() {
+    ++_nbOfClocks;
 }

@@ -60,11 +60,13 @@ public:
 
     bool gameIsWon() const;
 
+    float remainingTime() const;
+
 private:
 
     static JBTypes::vec3ui stringToPosition(const std::string &stringPosition);
 
-    bool ballIsOut() const;
+    bool isBallsOut() const;
 
     std::unordered_map<std::string, Block_sptr> createBlockPositions() const;
 
@@ -82,6 +84,8 @@ private:
     const unsigned int _width;
     const unsigned int _height;
     const unsigned int _depth;
+    const float _timeToFinish;
+    float _remainingTime;
 
     const unsigned int _nbOfKeys;
 

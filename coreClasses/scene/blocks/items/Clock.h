@@ -17,6 +17,8 @@ public:
 
     vecCstShape_sptr getShapes() const override;
 
+private:
+    void catchItem() override;
 };
 
 #endif /* CLOCK_H */

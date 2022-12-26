@@ -150,6 +150,8 @@ public:
 
     void obtainCoin();
 
+    void obtainClock();
+
     void die() noexcept;
 
     void teleport(const JBTypes::Color &col) noexcept;
@@ -157,6 +159,8 @@ public:
     unsigned int numberOfKeys() const;
 
     unsigned int numberOfCoins() const;
+
+    unsigned int numberOfClocks() const;
 
     const CstChronometer_sptr &getCreationChronometer() const;
     const CstChronometer_sptr &getInGameChronometer() const;
@@ -220,6 +224,7 @@ private:
 
     unsigned int _nbOfKeys;
     unsigned int _nbOfCoins;
+    unsigned int _nbOfClocks;
 
     vecCstUpdateOutput_sptr _updateOutputs;
 

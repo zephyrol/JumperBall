@@ -105,3 +105,8 @@ vecCstShape_sptr Clock::getShapes() const {
 
     return shapes;
 }
+
+void Clock::catchItem() {
+    const auto ball = _ball.lock();
+    ball->obtainClock();
+}

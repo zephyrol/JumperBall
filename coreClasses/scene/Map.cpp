@@ -20,6 +20,8 @@ Map::Map(Map::MapInfo &&mapInfo) :
     _width(mapInfo.width),
     _height(mapInfo.height),
     _depth(mapInfo.depth),
+    _timeToFinish(10.f),
+    _remainingTime(_timeToFinish),
     _nbOfKeys(mapInfo.nbOfKeys),
     _isExitUnlocked(false) {
     _ball->setBlockPositions(_blocksPositions);
@@ -112,7 +114,11 @@ std::string Map::update(const Ball::ActionRequest &action) {
         block->update();
     }
 
-    if (ballIsOut()) {
+    _remainingTime = _timeToFinish + static_cast<float>(
+        _ball->numberOfClocks() * 10
+    ) - _ball->getInGameChronometer()->getTime();
+
+    if (isBallsOut() || _remainingTime < 0.f) {
         _ball->die();
     }
 
@@ -132,7 +138,7 @@ JBTypes::vec3ui Map::getBlockCoords(size_t index, unsigned int width, unsigned i
     return {uIntIndex % width, uIntIndex / widthDepth, (uIntIndex % widthDepth) / width};
 }
 
-bool Map::ballIsOut() const {
+bool Map::isBallsOut() const {
 
     const auto ballPosition = _ball->get3DPosition();
     constexpr float thresholdOut = 5.f;
@@ -197,4 +203,8 @@ bool Map::gameIsLost() const {
 
 bool Map::gameIsWon() const {
     return _ball->stateOfLife() == Ball::StateOfLife::Winner;
+}
+
+float Map::remainingTime() const {
+    return _remainingTime;
 }
