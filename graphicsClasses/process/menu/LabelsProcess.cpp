@@ -84,7 +84,7 @@ LabelsProcess::createLettersProcessShaderProgram(
 void LabelsProcess::update() {
     _labelsShader->use();
 
-    const auto uniformValues = _page->getUniformValues();
+    const auto uniformValues = _page->getUniformValues(nullptr);
     for (size_t i = 0; i < _uniformNames.size(); ++i) {
         _labelsShader->bindUniform(_uniformNames[i], uniformValues[i]);
     }

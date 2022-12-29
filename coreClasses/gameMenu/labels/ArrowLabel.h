@@ -10,6 +10,9 @@
 
 #include "Label.h"
 
+class ArrowLabel;
+using ArrowLabel_sptr = std::shared_ptr<ArrowLabel>;
+
 class ArrowLabel : public Label {
 public:
     explicit ArrowLabel(Node_sptr node, const JBTypes::Color &color);

@@ -6,6 +6,7 @@
 #define JUMPERBALLAPPLICATION_SCROLLABLEPAGE_H
 
 #include "Page.h"
+#include "scene/Map.h"
 
 
 class ScrollablePage : public Page {
@@ -26,7 +27,7 @@ public:
 
     std::vector<std::string> getUniformNames() const override;
 
-    std::vector<float> getUniformValues() const override;
+    std::vector<float> getUniformValues(const CstMap_sptr& map) const override;
 
 protected:
     float getOffsetY() const;

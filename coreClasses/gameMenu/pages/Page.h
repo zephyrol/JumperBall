@@ -12,6 +12,7 @@
 #include "player/Player.h"
 #include "gameMenu/nodes/TextNode.h"
 #include "system/Mouse.h"
+#include "scene/Map.h"
 #include <list>
 
 class Page;
@@ -45,7 +46,7 @@ public:
     virtual std::string shaderDefine() const;
 
     virtual std::vector<std::string> getUniformNames() const;
-    virtual std::vector<float> getUniformValues() const;
+    virtual std::vector<float> getUniformValues(const std::shared_ptr<const Map> &map) const;
 
     virtual vecCstTextNode_uptr genTextNodes() const = 0;
 

@@ -7,11 +7,30 @@
 
 
 #include "Page.h"
+#include "gameMenu/labels/ArrowLabel.h"
+#include "scene/Map.h"
+
+class InGamePage;
+
+using InGamePage_sptr = std::shared_ptr<InGamePage>;
 
 class InGamePage : public Page {
 
 public:
-    explicit InGamePage(Player_sptr player, const Page_sptr& parent);
+    explicit InGamePage(
+        Player_sptr &&player,
+        ArrowLabel_sptr &&arrowLabel,
+        Node_sptr &&leftDigitNode,
+        Node_sptr &&middleDigitNode,
+        Node_sptr &&rightDigitNode,
+        const Page_sptr &parent
+    );
+
+    static InGamePage_sptr createInstance(
+        Player_sptr player,
+        const Page_sptr &parent,
+        float ratio
+    );
 
     Page_wptr parent() override;
 
@@ -21,9 +40,21 @@ public:
 
     void resize(float ratio) override;
 
+    std::string shaderDefine() const override;
+
+    std::vector<std::string> getUniformNames() const override;
+
+    std::vector<float> getUniformValues(const CstMap_sptr &map) const override;
+
 private:
 
     Page_wptr _parent;
+    ArrowLabel_sptr _arrowLabel;
+    Node_sptr _leftDigitNode;
+    Node_sptr _middleDigitNode;
+    Node_sptr _rightDigitNode;
+
+    static vecNode_sptr createNodes(float ratio);
 };
 
 

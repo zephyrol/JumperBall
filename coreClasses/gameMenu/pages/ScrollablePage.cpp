@@ -90,7 +90,7 @@ std::vector<std::string> ScrollablePage::getUniformNames() const {
     return {"positionY", "levelProgression"};
 }
 
-std::vector<float> ScrollablePage::getUniformValues() const {
+std::vector<float> ScrollablePage::getUniformValues(const CstMap_sptr&) const {
     return {
         _localPosY * 2.f, // Convert to OpenGL format
         static_cast<float>(_player->levelProgression())

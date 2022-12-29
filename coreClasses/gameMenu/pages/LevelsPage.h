@@ -47,7 +47,7 @@ private:
     Node_sptr _levelsTitle;
 
     std::vector<Node_sptr> _levels;
-    std::shared_ptr<ArrowLabel> _arrowLabel;
+    ArrowLabel_sptr _arrowLabel;
     Page_sptr _inGamePage;
 
     template<class T>

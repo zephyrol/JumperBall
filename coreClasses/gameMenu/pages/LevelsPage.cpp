@@ -110,7 +110,7 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
     for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
         if (intersectTest(_levels[i])) {
             const auto levelNumber = i + 1;
-            if(levelNumber > _player->levelProgression()) {
+            if (levelNumber > _player->levelProgression()) {
                 return nullptr;
             }
             _player->setCurrentLevel(levelNumber);

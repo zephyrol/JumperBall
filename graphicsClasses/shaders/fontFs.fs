@@ -10,9 +10,15 @@ out vec4 pixelColor;
     uniform float levelProgression;
 #endif
 
+#ifdef(TIMER)
+    uniform float leftDigit;
+    uniform float middleDigit;
+    uniform float rightDigit;
+#endif
+
 void main() {
 
-    float alpha = fs_labelType.x == 0.0
+    float alpha = fs_labelType.x != 1.0
         ? 1.0
         : texture(characterTexture, vec2(fs_vertexUVs.x, fs_vertexUVs.y)).x;
 

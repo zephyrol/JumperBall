@@ -30,7 +30,7 @@ std::vector<std::string> Page::getUniformNames() const {
     return {};
 }
 
-std::vector<float> Page::getUniformValues() const {
+std::vector<float> Page::getUniformValues(const std::shared_ptr<const Map> &map) const {
     return {};
 }
 
