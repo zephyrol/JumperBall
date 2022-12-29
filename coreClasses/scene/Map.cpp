@@ -20,7 +20,7 @@ Map::Map(Map::MapInfo &&mapInfo) :
     _width(mapInfo.width),
     _height(mapInfo.height),
     _depth(mapInfo.depth),
-    _timeToFinish(10.f),
+    _timeToFinish(30.f),
     _remainingTime(_timeToFinish),
     _nbOfKeys(mapInfo.nbOfKeys),
     _isExitUnlocked(false) {

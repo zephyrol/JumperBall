@@ -12,7 +12,6 @@
 #include "scene/MapGenerator.h"
 #include "scene/SceneRendering.h"
 #include "Viewer.h"
-#include "graphicMenu/PageRendering.h"
 #include "system/KeyboardKey.h"
 #include "system/Mouse.h"
 #include "system/DoubleChronometer.h"

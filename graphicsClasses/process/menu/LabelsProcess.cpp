@@ -10,8 +10,9 @@ LabelsProcess::LabelsProcess(
     const FontTexturesGenerator::FTContent &ftContent,
     GLsizei width,
     GLsizei height,
-    const CstPage_sptr &page
-) :
+    const CstPage_sptr &page,
+    CstMap_sptr map
+) : Rendering(width, height),
     _page(page),
     _uniformNames(_page->getUniformNames()),
     _fontTexturesGenerator(FontTexturesGenerator::createInstance(width, height, page, ftContent)),
@@ -31,7 +32,8 @@ LabelsProcess::LabelsProcess(
         }
         return meshes;
     }()),
-    _labelsShader(createLettersProcessShaderProgram(fileContent, _page)) {
+    _labelsShader(createLettersProcessShaderProgram(fileContent, _page)),
+    _map(std::move(map)){
 }
 
 void LabelsProcess::render() const {
@@ -57,8 +59,7 @@ vecCstShaderProgram_sptr LabelsProcess::getShaderPrograms() const {
 }
 
 
-CstShaderProgram_sptr
-LabelsProcess::createLettersProcessShaderProgram(
+CstShaderProgram_sptr LabelsProcess::createLettersProcessShaderProgram(
     const JBTypes::FileContent &fileContent,
     const CstPage_sptr &page
 ) {
@@ -84,10 +85,14 @@ LabelsProcess::createLettersProcessShaderProgram(
 void LabelsProcess::update() {
     _labelsShader->use();
 
-    const auto uniformValues = _page->getUniformValues(nullptr);
+    const auto uniformValues = _page->getUniformValues(_map);
     for (size_t i = 0; i < _uniformNames.size(); ++i) {
         _labelsShader->bindUniform(_uniformNames[i], uniformValues[i]);
     }
 
     _renderPass.update();
+}
+
+void LabelsProcess::setMap(CstMap_sptr map) {
+    _map = std::move(map);
 }

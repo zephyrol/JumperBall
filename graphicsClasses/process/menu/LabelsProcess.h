@@ -9,8 +9,9 @@
 #include "process/RenderProcess.h"
 #include "gameMenu/pages/Page.h"
 #include "graphicMenu/FontTexturesGenerator.h"
+#include "Rendering.h"
 
-class LabelsProcess: public RenderProcess {
+class LabelsProcess: public RenderProcess, Rendering {
 
 public:
 
@@ -19,11 +20,13 @@ public:
         const FontTexturesGenerator::FTContent &ftContent,
         GLsizei width,
         GLsizei height,
-        const CstPage_sptr &page
+        const CstPage_sptr &page,
+        CstMap_sptr map
     );
 
+    void setMap(CstMap_sptr map);
     void render() const override;
-    void update();
+    void update() override;
     void freeGPUMemory() override;
     vecCstShaderProgram_sptr getShaderPrograms() const override;
     std::shared_ptr<const GLuint> getRenderTexture() const override;
@@ -34,6 +37,7 @@ private:
     FontTexturesGenerator _fontTexturesGenerator;
     RenderPass _renderPass;
     const CstShaderProgram_sptr _labelsShader;
+    CstMap_sptr _map;
 
     static CstShaderProgram_sptr
     createLettersProcessShaderProgram(

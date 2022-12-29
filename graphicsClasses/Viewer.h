@@ -9,7 +9,7 @@
 #include <player/Player.h>
 #include <scene/MapGenerator.h>
 #include "scene/SceneRendering.h"
-#include "graphicMenu/PageRendering.h"
+#include "process/menu/LabelsProcess.h"
 
 class Viewer {
 
@@ -52,7 +52,7 @@ private:
     GLsizei _resolutionY;
 
     std::unique_ptr<SceneRendering> _sceneRendering;
-    std::unique_ptr<PageRendering> _pageRendering;
+    std::unique_ptr<LabelsProcess> _pageRendering;
 
     void resetSceneRendering();
 

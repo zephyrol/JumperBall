@@ -59,13 +59,13 @@ void InGamePage::resize(float ratio) {
 vecCstTextNode_uptr InGamePage::genTextNodes() const {
     decltype(genTextNodes()) textNodes;
 
-    auto digitId = 1.f;
+    auto digitId = 2.f;
     for (const auto &node: std::vector<Node_sptr>{_leftDigitNode, _middleDigitNode, _rightDigitNode}) {
         for (unsigned int i = 0; i < 10; ++i) {
             textNodes.push_back(CstTextNode_uptr(new TextNode(
                 node,
                 std::to_string(i),
-                {1.f, digitId}
+                {digitId, static_cast<float>(i)}
             )));
         }
         digitId += 1.f;
@@ -78,17 +78,13 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
 
     const auto screenNode = std::make_shared<ScreenNode>(ratio);
     const auto resizedScreenNode = std::make_shared<ScaledNode>(screenNode, 0.95f);
-    // const auto mainTitleNode = std::make_shared<CenteredNode>(
-    //     resizedScreenNode,
-    //     9.f / 16.f
-    // );
-    const auto notchNode = std::make_shared<UpNode>(resizedScreenNode, 8.f);
+    const auto notchNode = std::make_shared<UpNode>(resizedScreenNode, 6.f);
 
     constexpr auto sideNodesRatio = 1.f;
     const auto arrowNode = std::make_shared<LeftNode>(notchNode, sideNodesRatio);
 
     const auto timerNode = std::make_shared<RightNode>(notchNode, sideNodesRatio);
-    const auto digitsNode = std::make_shared<CenteredNode>(notchNode, 3.f);
+    const auto digitsNode = std::make_shared<UpNode>(timerNode, 2.f);
     constexpr auto digitNodesRatio = 1.f;
     const auto leftDigitNode = std::make_shared<LeftNode>(digitsNode, digitNodesRatio);
     const auto middleDigitNode = std::make_shared<CenteredNode>(digitsNode, digitNodesRatio);

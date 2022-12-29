@@ -32,12 +32,13 @@ Viewer::Viewer(
         _defaultFrameBuffer,
         fileContent
     )),
-    _pageRendering(new PageRendering(
-        _page,
+    _pageRendering(new LabelsProcess(
+        fileContent,
         _ftContent,
         _resolutionX,
         _resolutionY,
-        fileContent
+        _page,
+        scene->getMap()
     )) {
 }
 
@@ -79,12 +80,13 @@ Viewer::~Viewer() {
 
 void Viewer::resetPageRendering() {
     _pageRendering->freeGPUMemory();
-    _pageRendering = std::unique_ptr<PageRendering>(new PageRendering(
-        _page,
+    _pageRendering = std::unique_ptr<LabelsProcess>(new LabelsProcess(
+        _fileContent,
         _ftContent,
         _resolutionX,
         _resolutionY,
-        _fileContent
+        _page,
+        _scene->getMap()
     ));
 }
 
@@ -97,4 +99,5 @@ void Viewer::resetSceneRendering() {
         _defaultFrameBuffer,
         _fileContent
     ));
+    _pageRendering->setMap(_scene->getMap());
 }

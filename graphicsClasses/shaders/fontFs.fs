@@ -4,23 +4,26 @@ in vec3 fs_vertexColor;
 in vec2 fs_vertexUVs;
 in vec2 fs_labelType;
 
+#ifdef(TIMER)
+    in float fs_needsDiscard;
+#endif
+
 out vec4 pixelColor;
 
 #ifdef(SCROLLABLE)
     uniform float levelProgression;
 #endif
 
-#ifdef(TIMER)
-    uniform float leftDigit;
-    uniform float middleDigit;
-    uniform float rightDigit;
-#endif
-
 void main() {
-
-    float alpha = fs_labelType.x != 1.0
+    float alpha = fs_labelType.x < 1.0
         ? 1.0
         : texture(characterTexture, vec2(fs_vertexUVs.x, fs_vertexUVs.y)).x;
+
+    #ifdef(TIMER)
+        if(fs_needsDiscard == 1.0) {
+            discard;
+        }
+    #endif
 
     vec3 color = fs_vertexColor;
     #ifdef(SCROLLABLE)
