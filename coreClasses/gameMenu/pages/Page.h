@@ -43,12 +43,14 @@ public:
 
     virtual vecCstLabel_sptr labels() const;
 
-    virtual std::string shaderDefine() const;
+    virtual std::vector<std::string> shaderDefines() const;
 
     virtual std::vector<std::string> getUniformNames() const;
     virtual std::vector<float> getUniformValues(const CstMap_sptr &map) const;
 
     virtual vecCstTextNode_uptr genTextNodes() const = 0;
+
+    virtual std::string getVertexShaderName() const = 0;
 
     virtual void update(const Mouse &mouse);
 

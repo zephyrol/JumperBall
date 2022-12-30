@@ -9,9 +9,10 @@
 
 #include <utility>
 
-Label::Label(Node_sptr node, const JBTypes::Color &color) :
+Label::Label(Node_sptr node, const JBTypes::Color &color, float id) :
     _node(std::move(node)),
-    _color(color) {
+    _color(color),
+    _id(id){
 }
 
 std::string Label::message() const {
@@ -87,4 +88,6 @@ LabelGeometry Label::createDisplayableQuad(
     );
 }
 
-
+Displayable::StaticValues<float> Label::getStaticFloatValues() const {
+    return {_id};
+}

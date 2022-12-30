@@ -6,8 +6,8 @@
  */
 #include "ArrowLabel.h"
 
-ArrowLabel::ArrowLabel(Node_sptr node, const JBTypes::Color &color) :
-    Label(std::move(node), color) {
+ArrowLabel::ArrowLabel(Node_sptr node, const JBTypes::Color &color, float id) :
+    Label(std::move(node), color, id) {
 }
 
 vecLabelGeometry ArrowLabel::genGeometries() const {
@@ -16,8 +16,4 @@ vecLabelGeometry ArrowLabel::genGeometries() const {
         createDisplayableQuad(0.25f, 0.f, 0.5f, 0.3f),
         createDisplayableTriangle(0.f, 0.f, 0.5f, 0.6f, JBTypes::Direction::West),
     };
-}
-
-Displayable::StaticValues<JBTypes::vec2f> ArrowLabel::getStaticVec2fValues() const {
-    return {{0.f, 0.f}};
 }

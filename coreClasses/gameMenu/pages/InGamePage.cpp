@@ -33,7 +33,11 @@ InGamePage::InGamePage(
 
 InGamePage_sptr InGamePage::createInstance(Player_sptr player, const Page_sptr &parent, float ratio) {
     auto nodes = createNodes(ratio);
-    auto arrowLabel = std::make_shared<ArrowLabel>(nodes[0], JBTypes::Color::Blue);
+    auto arrowLabel = std::make_shared<ArrowLabel>(
+        nodes[0],
+        JBTypes::Color::Blue,
+        InGamePage::arrowLabelId
+    );
     return std::make_shared<InGamePage>(
         std::move(player),
         std::move(arrowLabel),
@@ -50,7 +54,7 @@ Page_sptr InGamePage::click(float, float) {
 
 void InGamePage::resize(float ratio) {
     const auto nodes = createNodes(ratio);
-    _arrowLabel = std::make_shared<ArrowLabel>(nodes[0], JBTypes::Color::Blue);
+    _arrowLabel = std::make_shared<ArrowLabel>(nodes[0], JBTypes::Color::Blue, InGamePage::arrowLabelId);
     _leftDigitNode = nodes[1];
     _middleDigitNode = nodes[2];
     _rightDigitNode = nodes[3];
@@ -59,16 +63,16 @@ void InGamePage::resize(float ratio) {
 vecCstTextNode_uptr InGamePage::genTextNodes() const {
     decltype(genTextNodes()) textNodes;
 
-    auto digitId = 2.f;
+    auto nodeCount = 0.f;
     for (const auto &node: std::vector<Node_sptr>{_leftDigitNode, _middleDigitNode, _rightDigitNode}) {
         for (unsigned int i = 0; i < 10; ++i) {
             textNodes.push_back(CstTextNode_uptr(new TextNode(
                 node,
                 std::to_string(i),
-                {digitId, static_cast<float>(i)}
+                nodeCount
             )));
+            nodeCount += 1.f;
         }
-        digitId += 1.f;
     }
 
     return textNodes;
@@ -94,8 +98,8 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
 
 }
 
-std::string InGamePage::shaderDefine() const {
-    return "TIMER";
+std::vector<std::string> InGamePage::shaderDefines() const {
+    return {"DISCARDING", "TEST_ALPHA_TEXTURE"};
 }
 
 std::vector<std::string> InGamePage::getUniformNames() const {
@@ -110,3 +114,8 @@ std::vector<float> InGamePage::getUniformValues(const CstMap_sptr &map) const {
     return {static_cast<float>(leftDigit), static_cast<float>(middleDigit), static_cast<float>(rightDigit)};
 }
 
+const float InGamePage::arrowLabelId = 30.f;
+
+std::string InGamePage::getVertexShaderName() const {
+    return "";
+}

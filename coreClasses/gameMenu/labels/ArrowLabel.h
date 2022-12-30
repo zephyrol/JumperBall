@@ -15,15 +15,11 @@ using ArrowLabel_sptr = std::shared_ptr<ArrowLabel>;
 
 class ArrowLabel : public Label {
 public:
-    explicit ArrowLabel(Node_sptr node, const JBTypes::Color &color);
-
-    StaticValues <JBTypes::vec2f> getStaticVec2fValues() const override;
+    ArrowLabel(Node_sptr node, const JBTypes::Color &color, float id);
 
     ~ArrowLabel() override = default;
 
     vecLabelGeometry genGeometries() const override;
-
-private:
 };
 
 #endif // ARROWLABEL_H

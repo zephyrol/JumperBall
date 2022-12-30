@@ -15,13 +15,9 @@ using vecCstTextNode_uptr = std::vector<CstTextNode_uptr>;
 class TextNode {
 
 public:
-    explicit TextNode(
-        Node_sptr node,
-        std::string &&text,
-        const JBTypes::vec2f &staticProperty = {1.f, 0.f}
-    );
+    explicit TextNode(Node_sptr node, std::string &&text, float id);
 
-    const JBTypes::vec2f &staticProperty() const;
+    float getId() const;
 
     const Node_sptr &node() const;
 
@@ -30,7 +26,7 @@ public:
 private:
     const Node_sptr _node;
     const std::string _text;
-    const JBTypes::vec2f _staticProperty;
+    const float _id;
 };
 
 

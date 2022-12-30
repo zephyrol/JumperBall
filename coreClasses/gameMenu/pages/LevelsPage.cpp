@@ -135,7 +135,8 @@ std::shared_ptr<ArrowLabel> LevelsPage::createArrowLabel(const Node_sptr &header
     const auto leftNode = std::make_shared<LeftNode>(headerNode, 1.f);
     auto arrowLabel = std::make_shared<ArrowLabel>(
         leftNode,
-        JBTypes::Color::Blue
+        JBTypes::Color::Blue,
+        200.f
     );
     return arrowLabel;
 }
@@ -156,12 +157,16 @@ vecCstTextNode_uptr LevelsPage::genTextNodes() const {
         textNodes.push_back(CstTextNode_uptr(new TextNode(
             _levels[i],
             (levelNumber < 10 ? "0" : "") + std::to_string(levelNumber),
-            {1.f, static_cast<float>(levelNumber)}
+            static_cast<float>(i)
         )));
     }
 
     textNodes.push_back(
-        CstTextNode_uptr(new TextNode(_levelsTitle, "Levels"))
+        CstTextNode_uptr(new TextNode(_levelsTitle, "Levels", -1.f))
     );
     return textNodes;
+}
+
+std::string LevelsPage::getVertexShaderName() const {
+    return "levelsPageVs.vs";
 }

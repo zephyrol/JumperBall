@@ -33,6 +33,8 @@ public:
         const Page_sptr &parent
     );
 
+    std::string getVertexShaderName() const override;
+
     vecCstTextNode_uptr genTextNodes() const override;
 
     Page_wptr parent() override;

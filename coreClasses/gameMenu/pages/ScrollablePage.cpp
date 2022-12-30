@@ -47,7 +47,7 @@ void ScrollablePage::update(const Mouse &mouse) {
         }
 
         _lastSwipeUpdates.erase(it, _lastSwipeUpdates.end());
-        _lastSwipeUpdates.push_front({_chronometer->getTime(), screenPosY});
+        _lastSwipeUpdates.emplace_front(_chronometer->getTime(), screenPosY);
         _localPosY = _localPressedPosY + (screenPosY - _pressedScreenPosY);
     }
 
@@ -80,10 +80,6 @@ void ScrollablePage::update(const Mouse &mouse) {
             _localPosY = _height - 1.f;
         }
     }
-}
-
-std::string ScrollablePage::shaderDefine() const {
-    return "SCROLLABLE";
 }
 
 std::vector<std::string> ScrollablePage::getUniformNames() const {

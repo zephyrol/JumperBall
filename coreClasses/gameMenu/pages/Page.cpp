@@ -22,8 +22,8 @@ vecCstLabel_sptr Page::labels() const {
     return {};
 }
 
-std::string Page::shaderDefine() const {
-    return "";
+std::vector<std::string> Page::shaderDefines() const {
+    return {};
 }
 
 std::vector<std::string> Page::getUniformNames() const {

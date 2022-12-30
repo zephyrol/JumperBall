@@ -14,12 +14,13 @@ TextLabel::TextLabel(
     std::vector<CharacterLocalTransform> &&transforms,
     size_t lettersSize,
     const JBTypes::Color &color
-) : Label(suitedNode, color),
+) : Label(suitedNode, color, textNode->getId()),
     _textNode(std::move(textNode)),
     _lettersUvs(std::move(lettersUvs)),
     _transforms(std::move(transforms)),
     _lettersSize(lettersSize),
-    _letterHashes(createLetterHashes()) {
+    _letterHashes(createLetterHashes())
+{
 }
 
 std::string TextLabel::message() const {
@@ -94,8 +95,3 @@ TextLabel::LetterHash TextLabel::createLetterHash(size_t fontSize, unsigned char
     hash += static_cast<char>(letter);
     return hash;
 }
-
-Displayable::StaticValues<JBTypes::vec2f> TextLabel::getStaticVec2fValues() const {
-    return {_textNode->staticProperty()};
-}
-

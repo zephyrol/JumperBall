@@ -16,6 +16,7 @@ using InGamePage_sptr = std::shared_ptr<InGamePage>;
 
 class InGamePage : public Page {
 
+
 public:
     explicit InGamePage(
         Player_sptr &&player,
@@ -40,9 +41,11 @@ public:
 
     void resize(float ratio) override;
 
-    std::string shaderDefine() const override;
+    std::vector<std::string> shaderDefines() const override;
 
     std::vector<std::string> getUniformNames() const override;
+
+    std::string getVertexShaderName() const override;
 
     std::vector<float> getUniformValues(const CstMap_sptr &map) const override;
 
@@ -54,6 +57,7 @@ private:
     Node_sptr _middleDigitNode;
     Node_sptr _rightDigitNode;
 
+    static const float arrowLabelId;
     static vecNode_sptr createNodes(float ratio);
 };
 

@@ -23,8 +23,6 @@ public:
 
     void update(const Mouse &mouse) override;
 
-    std::string shaderDefine() const override;
-
     std::vector<std::string> getUniformNames() const override;
 
     std::vector<float> getUniformValues(const CstMap_sptr& map) const override;

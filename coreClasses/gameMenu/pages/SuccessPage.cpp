@@ -107,8 +107,12 @@ Page_sptr SuccessPage::click(float mouseX, float mouseY) {
 
 vecCstTextNode_uptr SuccessPage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
-    textNodes.emplace_back(new TextNode(_goodGameNode, "Good game!"));
-    textNodes.emplace_back(new TextNode(_continueNode, "Next level"));
-    textNodes.emplace_back(new TextNode(_exitNode, "Exit"));
+    textNodes.emplace_back(new TextNode(_goodGameNode, "Good game!", 0));
+    textNodes.emplace_back(new TextNode(_continueNode, "Next level", 0));
+    textNodes.emplace_back(new TextNode(_exitNode, "Exit", 0));
     return textNodes;
+}
+
+std::string SuccessPage::getVertexShaderName() const {
+    return "successPageVs.vs";
 }

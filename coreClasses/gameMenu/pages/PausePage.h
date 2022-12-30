@@ -38,6 +38,8 @@ public:
 
     vecCstTextNode_uptr genTextNodes() const override;
 
+    std::string getVertexShaderName() const override;
+
 private:
     const Page_wptr _parent;
     Page_sptr _inGamePage;

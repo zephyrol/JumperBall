@@ -33,6 +33,9 @@ public:
 
     Page_sptr click(float mouseX, float mouseY) override;
 
+    std::string getVertexShaderName() const override;
+
+    std::vector<std::string> shaderDefines() const override;
 
 private:
     Node_sptr _jumperBallTitle;

@@ -66,6 +66,7 @@ private:
     const std::function<void()> _longPressActionFunction;
 
     std::shared_ptr<MouseCoords> _mouseCoords;
+    std::shared_ptr<MouseCoords> _pressMouseCoords;
     MouseState _currentState;
     MouseState _pressingState;
     MouseState _directionDetectionState;

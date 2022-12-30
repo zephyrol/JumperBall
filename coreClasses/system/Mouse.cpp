@@ -22,6 +22,7 @@ Mouse::Mouse(
     _validateActionFunction(std::move(validateActionFunc)),
     _longPressActionFunction(std::move(longPressActionFunc)),
     _mouseCoords(nullptr),
+    _pressMouseCoords(nullptr),
     _currentState(),
     _pressingState(),
     _directionDetectionState(),
@@ -31,12 +32,17 @@ Mouse::Mouse(
 
 void Mouse::press(float posX, float posY) {
     _mouseCoords = std::make_shared<Mouse::MouseCoords>();
-    _mouseCoords->xCoord = posX;
-    _mouseCoords->yCoord = posY;
+    _pressMouseCoords = std::make_shared<Mouse::MouseCoords>();
+    for(const auto& coords: {_mouseCoords, _pressMouseCoords})  {
+        coords->xCoord = posX;
+        coords->yCoord = posY;
+    }
+
 }
 
 void Mouse::release() {
     _mouseCoords = nullptr;
+    _pressMouseCoords = nullptr;
 }
 
 void Mouse::update() {

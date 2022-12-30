@@ -108,11 +108,19 @@ void TitlePage::setLevelsPage(Page_sptr levelsPage) {
 
 vecCstTextNode_uptr TitlePage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
-    textNodes.emplace_back(new TextNode(_jumperBallTitle, "Jumper Ball"));
-    textNodes.emplace_back(new TextNode(_play, "Play"));
-    textNodes.emplace_back(new TextNode(_store, "Store"));
-    textNodes.emplace_back(new TextNode(_exitNode, "Exit"));
-    textNodes.emplace_back(new TextNode(_author, "Created by S.Morgenthaler"));
+    textNodes.emplace_back(new TextNode(_jumperBallTitle, "Jumper Ball", 0));
+    textNodes.emplace_back(new TextNode(_play, "Play", 0));
+    textNodes.emplace_back(new TextNode(_store, "Store", 0));
+    textNodes.emplace_back(new TextNode(_exitNode, "Exit", 0));
+    textNodes.emplace_back(new TextNode(_author, "Created by S.Morgenthaler", 0));
     return textNodes;
+}
+
+std::string TitlePage::getVertexShaderName() const {
+    return "inGamePageVs.vs";
+}
+
+std::vector<std::string> TitlePage::shaderDefines() const {
+    return { "ALWAYS_ALPHA_TEXTURE" };
 }
 

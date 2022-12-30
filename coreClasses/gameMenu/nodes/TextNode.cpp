@@ -4,15 +4,10 @@
 
 #include "TextNode.h"
 
-TextNode::TextNode(Node_sptr node, std::string &&text, const JBTypes::vec2f &staticProperty) :
+TextNode::TextNode(Node_sptr node, std::string &&text, float id) :
     _node(std::move(node)),
     _text(std::move(text)),
-    _staticProperty(staticProperty) {
-
-}
-
-const JBTypes::vec2f &TextNode::staticProperty() const {
-    return _staticProperty;
+    _id(id) {
 }
 
 const Node_sptr &TextNode::node() const {
@@ -21,4 +16,8 @@ const Node_sptr &TextNode::node() const {
 
 const std::string &TextNode::text() const {
     return _text;
+}
+
+float TextNode::getId() const {
+    return _id;
 }

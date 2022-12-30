@@ -35,6 +35,8 @@ public:
 
     void setInGamePage(Page_sptr inGamePage);
 
+    std::string getVertexShaderName() const override;
+
     vecCstTextNode_uptr genTextNodes() const override;
 
 private:

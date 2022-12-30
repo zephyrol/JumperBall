@@ -80,8 +80,6 @@ public:
 
     vecLabelGeometry genGeometries() const override;
 
-    StaticValues <JBTypes::vec2f> getStaticVec2fValues() const override;
-
     std::string message() const override;
 
     static LetterHash createLetterHash(size_t fontSize, unsigned char letter);

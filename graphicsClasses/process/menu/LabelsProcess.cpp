@@ -63,7 +63,7 @@ CstShaderProgram_sptr LabelsProcess::createLettersProcessShaderProgram(
     const JBTypes::FileContent &fileContent,
     const CstPage_sptr &page
 ) {
-    const auto shaderDefine = page->shaderDefine();
+    const auto shaderDefine = page->shaderDefines();
 
     const auto getDefines = [&shaderDefine]() -> std::vector<std::string> {
         if (shaderDefine.empty()) {
@@ -73,8 +73,8 @@ CstShaderProgram_sptr LabelsProcess::createLettersProcessShaderProgram(
     };
     auto shader = ShaderProgram::createShaderProgram(
         fileContent,
-        "fontVs.vs",
-        "fontFs.fs",
+        page->getVertexShaderName(),
+        "labelFs.fs",
         getDefines()
         //"labelVs.vs",
         //"labelFs.fs"
