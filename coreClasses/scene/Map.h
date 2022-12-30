@@ -27,6 +27,7 @@ public:
         unsigned int depth;
         unsigned int nbOfKeys;
         unsigned int nbOfCoins;
+        unsigned int timeToFinish;
         Ball_sptr ball;
         vecBlock_sptr blocks;
     };

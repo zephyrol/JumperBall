@@ -49,6 +49,7 @@ MapGenerator::uncompressMap(std::istringstream &file, const CstDoubleChronometer
     const auto beginY = getUncompressedDimension(readString(file));
     const auto beginZ = getUncompressedDimension(readString(file));
     mapInfo.ball = std::make_shared<Ball>(beginX, beginY, beginZ, doubleChronometer);
+    mapInfo.timeToFinish = getUncompressedDimension(readString(file));
 
 
     const auto getTypeOptions = [](
@@ -337,9 +338,11 @@ void MapGenerator::compressNew(std::ifstream &input) {
     const std::string beginX = getCompressedDimension(readUnsignedInt(input));
     const std::string beginZ = getCompressedDimension(readUnsignedInt(input));
     const std::string beginY = getCompressedDimension(readUnsignedInt(input));
+    const unsigned int timeToFinish = readUnsignedInt(input);
+    const std::string compressedTimeToFinish = getCompressedDimension(timeToFinish);
 
     for (const std::string &dimension: {
-        compressedWidth, compressedDepth, compressedHeight, beginX, beginY, beginZ
+        compressedWidth, compressedDepth, compressedHeight, beginX, beginY, beginZ, compressedTimeToFinish
     }) {
         output << dimension;
         writeSeparator(output);
