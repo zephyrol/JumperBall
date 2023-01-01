@@ -215,6 +215,10 @@ GLfloat Utility::convertToOpenGLFormat(const float &f) {
     return static_cast <GLfloat>(f);
 }
 
+GLint Utility::convertToOpenGLFormat(const int &i) {
+    return static_cast <GLint>(i);
+}
+
 glm::vec2 Utility::convertToOpenGLFormat(const JBTypes::vec2f &vec2f) {
     return {vec2f.x, vec2f.y};
 }

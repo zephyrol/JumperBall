@@ -6,7 +6,10 @@
  */
 #include "Displayable.h"
 
-Displayable::Displayable() {
+Displayable::Displayable() = default;
+
+std::vector<int> Displayable::getStaticIntValues() const {
+    return {};
 }
 
 std::vector<float> Displayable::getStaticFloatValues() const {
@@ -18,6 +21,10 @@ std::vector<JBTypes::vec2f> Displayable::getStaticVec2fValues() const {
 }
 
 std::vector<JBTypes::vec3f> Displayable::getStaticVec3fValues() const {
+    return {};
+}
+
+std::unordered_map<std::string, int> Displayable::getDynamicInts() const {
     return {};
 }
 

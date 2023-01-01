@@ -74,6 +74,7 @@ void RenderPass::bindUniforms(
     const CstShaderProgram_sptr &shaderProgram
 ) const {
 
+    bindUniformVariables(uniforms.uniformInts, shaderProgram);
     bindUniformVariables(uniforms.uniformFloats, shaderProgram);
     bindUniformVariables(uniforms.uniformVec2s, shaderProgram);
     bindUniformVariables(uniforms.uniformVec3s, shaderProgram);

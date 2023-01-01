@@ -25,6 +25,7 @@ public:
     Mesh(const CstDisplayable_sptr &displayable, vecCstGeometricShape_sptr &&shapes);
 
     struct StateVertexAttributes {
+        std::vector<std::vector<GLint> > staticInts = {};
         std::vector<std::vector<GLfloat> > staticFloats = {};
         std::vector<std::vector<glm::vec3> > staticVec3s = {};
         std::vector<std::vector<glm::vec2> > staticVec2s = {};
@@ -44,6 +45,7 @@ public:
     );
 
     struct Uniforms {
+        UniformVariables<GLint> uniformInts = {};
         UniformVariables<GLfloat> uniformFloats = {};
         UniformVariables<glm::vec2> uniformVec2s = {};
         UniformVariables<glm::vec3> uniformVec3s = {};

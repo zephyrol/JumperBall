@@ -31,11 +31,15 @@ public:
 
     virtual ~Displayable() = default;
 
+    virtual StaticValues<int> getStaticIntValues() const;
+
     virtual StaticValues<float> getStaticFloatValues() const;
 
     virtual StaticValues<JBTypes::vec2f> getStaticVec2fValues() const;
 
     virtual StaticValues<JBTypes::vec3f> getStaticVec3fValues() const;
+
+    virtual DynamicValues<int> getDynamicInts() const;
 
     virtual DynamicValues<float> getDynamicFloats() const;
 

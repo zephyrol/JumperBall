@@ -56,6 +56,8 @@ size_t Mesh::computeNumberOfVertices() const {
 
 Mesh::Uniforms Mesh::genUniformsValues() const {
     Mesh::Uniforms uniforms;
+    convertUniformsToOpenGLFormat(_displayable->getDynamicInts(), uniforms.uniformInts);
+    convertUniformsToOpenGLFormat(_displayable->getDynamicFloats(), uniforms.uniformFloats);
     convertUniformsToOpenGLFormat(_displayable->getDynamicFloats(), uniforms.uniformFloats);
     convertUniformsToOpenGLFormat(_displayable->getDynamicVec2fs(), uniforms.uniformVec2s);
     convertUniformsToOpenGLFormat(_displayable->getDynamicVec3fs(), uniforms.uniformVec3s);
@@ -74,11 +76,14 @@ Mesh::MeshVerticesInfo Mesh::genMeshVerticesInfo() const {
     std::vector <glm::vec3> glmVec3s {};
     std::vector <glm::vec2> glmVec2s {};
     std::vector <GLfloat> glFloats {};
+    std::vector <GLint> glInts{};
 
+    convertAttributesToOpenGLFormat(_displayable->getStaticIntValues(), glInts);
     convertAttributesToOpenGLFormat(_displayable->getStaticFloatValues(), glFloats);
     convertAttributesToOpenGLFormat(_displayable->getStaticVec2fValues(), glmVec2s);
     convertAttributesToOpenGLFormat(_displayable->getStaticVec3fValues(), glmVec3s);
 
+    duplicateStateVertexAttribute(stateVertexAttributes.staticInts, glInts);
     duplicateStateVertexAttribute(stateVertexAttributes.staticFloats, glFloats);
     duplicateStateVertexAttribute(stateVertexAttributes.staticVec2s, glmVec2s);
     duplicateStateVertexAttribute(stateVertexAttributes.staticVec3s, glmVec3s);

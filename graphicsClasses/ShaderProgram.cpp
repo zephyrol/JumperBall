@@ -80,62 +80,61 @@ void ShaderProgram::verifyLinkStatus() const {
 
 void ShaderProgram::bindUniform(const std::string &name, const glm::mat4 &value) const {
 
-    const GLuint uniformVariableID = fillCacheAndGet(name);
+    const auto uniformVariableID = fillCacheAndGet(name);
     glUniformMatrix4fv(uniformVariableID, 1, GL_FALSE, &value[0][0]);
 }
 
 void ShaderProgram::bindUniform(const std::string &name, const glm::vec4 &value) const {
 
-    const GLuint uniformVariableID = fillCacheAndGet(name);
+    const auto uniformVariableID = fillCacheAndGet(name);
     glUniform4fv(uniformVariableID, 1, &value[0]);
 }
 
 void ShaderProgram::bindUniform(const std::string &name, const glm::vec3 &value) const {
 
-    const GLuint uniformVariableID = fillCacheAndGet(name);
+    const auto uniformVariableID = fillCacheAndGet(name);
     glUniform3fv(uniformVariableID, 1, &value[0]);
 }
 
 void ShaderProgram::bindUniform(const std::string &name, const glm::vec2 &value) const {
 
-    const GLuint uniformVariableID = fillCacheAndGet(name);
+    const auto uniformVariableID = fillCacheAndGet(name);
     glUniform2fv(uniformVariableID, 1, &value[0]);
 }
 
 void ShaderProgram::bindUniform(const std::string &name, const GLfloat &value) const {
 
-    const GLuint uniformVariableID = fillCacheAndGet(name);
+    const auto uniformVariableID = fillCacheAndGet(name);
     glUniform1fv(uniformVariableID, 1, &value);
 }
 
 void ShaderProgram::bindUniform(const std::string &name, const bool &value) const {
 
-    const GLuint uniformVariableID = fillCacheAndGet(name);
+    const auto uniformVariableID = fillCacheAndGet(name);
     glUniform1i(uniformVariableID, value);
 }
 
 
 void ShaderProgram::bindUniform(const std::string &name, const int &value) const {
 
-    const GLuint uniformVariableID = fillCacheAndGet(name);
+    const auto uniformVariableID = fillCacheAndGet(name);
     glUniform1i(uniformVariableID, value);
 }
 
 void ShaderProgram::bindUniform(const std::string &name, const std::vector<int> &value) const {
-    const GLuint uniformVariableID = fillCacheAndGet(name);
-    const GLsizei size = static_cast <GLsizei>(
-        value.size());
+    const auto uniformVariableID = fillCacheAndGet(name);
+    const auto size = static_cast <GLsizei>(value.size());
     glUniform1iv(uniformVariableID, size, value.data());
 }
 
 void ShaderProgram::bindUniform(const std::string &name, const std::vector<float> &value) const {
-    const GLuint uniformVariableID = fillCacheAndGet(name);
-    const GLsizei size = static_cast <GLsizei>(value.size());
+    const auto uniformVariableID = fillCacheAndGet(name);
+    const auto size = static_cast <GLsizei>(value.size());
     glUniform1fv(uniformVariableID, size, value.data());
 }
 
 void ShaderProgram::bindUniformTextureIndex(const std::string &name, int textureNumber) const {
-    const GLuint uniformVariableID = fillCacheAndGet(name);
+    const auto uniformVariableID = fillCacheAndGet(name);
     glUniform1i(uniformVariableID, textureNumber);
 }
 
@@ -147,10 +146,10 @@ void ShaderProgram::bindTexture(GLuint textureID) {
     glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
-GLuint ShaderProgram::fillCacheAndGet(const std::string &name) const {
+GLint ShaderProgram::fillCacheAndGet(const std::string &name) const {
     const auto uniformIterator = _cacheUniformLocation.find(name);
     if (uniformIterator == _cacheUniformLocation.end()) {
-        const GLuint uniformLocation = glGetUniformLocation(getHandle(), name.c_str());
+        const auto uniformLocation = glGetUniformLocation(getHandle(), name.c_str());
         _cacheUniformLocation[name] = uniformLocation;
         return uniformLocation;
     }

@@ -73,7 +73,7 @@ private:
 // TODO: define the list of uniform in constructor
     mutable std::unordered_map<std::string, GLint> _cacheUniformLocation;
 
-    GLuint fillCacheAndGet(const std::string &name) const;
+    GLint fillCacheAndGet(const std::string &name) const;
 
     void verifyLinkStatus() const;
 

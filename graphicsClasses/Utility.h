@@ -55,6 +55,8 @@ namespace Utility {
 
     GLfloat convertToOpenGLFormat(const float &f);
 
+    GLint convertToOpenGLFormat(const int &i);
+
     GLubyte convertToOpenGLFormat(unsigned char uChar);
 
     template<typename T>
