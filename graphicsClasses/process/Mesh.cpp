@@ -107,6 +107,7 @@ template<typename T> void Mesh::concatStateVertexAttribute (std::vector <std::ve
 }
 
 void Mesh::concatStateVertexAttributes (StateVertexAttributes& current, const StateVertexAttributes& other) {
+    concatStateVertexAttribute(current.staticInts, other.staticInts);
     concatStateVertexAttribute(current.staticFloats, other.staticFloats);
     concatStateVertexAttribute(current.staticVec2s, other.staticVec2s);
     concatStateVertexAttribute(current.staticVec3s, other.staticVec3s);

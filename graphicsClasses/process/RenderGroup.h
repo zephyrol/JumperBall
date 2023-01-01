@@ -13,7 +13,7 @@ class RenderGroup {
 
 public:
 
-RenderGroup(const vecMesh_sptr& meshes);
+RenderGroup(vecMesh_sptr  meshes);
 RenderGroup(const RenderGroup& renderGroup) = delete;
 RenderGroup& operator= (const RenderGroup& renderGroup) = delete;
 RenderGroup(RenderGroup&& renderGroup) = default;

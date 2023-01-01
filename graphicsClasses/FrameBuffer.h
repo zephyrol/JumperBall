@@ -62,7 +62,7 @@ const std::unique_ptr <const GLuint> _depthBuffer;
 
 const glm::vec3 _clearColor;
 
-GLuint createFrameBufferObject() const;
+static GLuint createFrameBufferObject() ;
 
     static std::unique_ptr <GLuint> createDepthBuffer() ;
 bool hasDepthBuffer() const;

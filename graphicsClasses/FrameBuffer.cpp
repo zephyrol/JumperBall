@@ -95,7 +95,7 @@ void FrameBuffer::cleanCurrentFrameBuffer (bool hasDepthBuffer, const glm::vec3&
     }
 }
 
-GLuint FrameBuffer::createFrameBufferObject() const {
+GLuint FrameBuffer::createFrameBufferObject() {
     GLuint fbo;
     glGenFramebuffers(1, &fbo);
     return fbo;

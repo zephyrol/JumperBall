@@ -62,7 +62,6 @@ public:
 
     MeshVerticesInfo genMeshVerticesInfo() const;
 
-
     bool updatingIsUseless() const;
 
     static void concatMeshVerticesInfo(MeshVerticesInfo &current, const MeshVerticesInfo &other);
