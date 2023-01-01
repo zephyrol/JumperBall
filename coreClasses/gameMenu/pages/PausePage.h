@@ -40,6 +40,8 @@ public:
 
     std::string getVertexShaderName() const override;
 
+    std::vector<std::string> shaderDefines() const override;
+
 private:
     const Page_wptr _parent;
     Page_sptr _inGamePage;

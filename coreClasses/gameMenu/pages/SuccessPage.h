@@ -39,6 +39,8 @@ public:
 
     vecCstTextNode_uptr genTextNodes() const override;
 
+    std::vector<std::string> shaderDefines() const override;
+
 private:
     const Page_wptr _parent;
     Node_sptr _goodGameNode;

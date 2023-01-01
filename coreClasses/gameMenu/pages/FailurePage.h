@@ -37,6 +37,8 @@ public:
 
     vecCstTextNode_uptr genTextNodes() const override;
 
+    std::vector<std::string> shaderDefines() const override;
+
     std::string getVertexShaderName() const override;
 
 private:

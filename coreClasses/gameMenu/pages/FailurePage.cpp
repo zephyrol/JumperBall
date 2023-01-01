@@ -110,5 +110,9 @@ vecCstTextNode_uptr FailurePage::genTextNodes() const {
 }
 
 std::string FailurePage::getVertexShaderName() const {
-    return "failurePageVs.vs";
+    return "titlePageVs.vs";
+}
+
+std::vector<std::string> FailurePage::shaderDefines() const {
+    return { "ALWAYS_ALPHA_TEXTURE" };
 }

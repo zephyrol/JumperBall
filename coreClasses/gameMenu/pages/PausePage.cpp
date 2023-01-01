@@ -109,6 +109,10 @@ vecCstTextNode_uptr PausePage::genTextNodes() const {
     return textNodes;
 }
 
+std::vector<std::string> PausePage::shaderDefines() const {
+    return { "ALWAYS_ALPHA_TEXTURE" };
+}
+
 std::string PausePage::getVertexShaderName() const {
-    return "pausePageVs.vs";
+    return "titlePageVs.vs";
 }

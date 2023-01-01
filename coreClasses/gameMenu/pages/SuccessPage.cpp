@@ -113,6 +113,10 @@ vecCstTextNode_uptr SuccessPage::genTextNodes() const {
     return textNodes;
 }
 
+std::vector<std::string> SuccessPage::shaderDefines() const {
+    return { "ALWAYS_ALPHA_TEXTURE" };
+}
+
 std::string SuccessPage::getVertexShaderName() const {
-    return "successPageVs.vs";
+    return "titlePageVs.vs";
 }
