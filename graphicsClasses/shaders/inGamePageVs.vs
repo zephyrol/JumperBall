@@ -1,65 +1,33 @@
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 3) in vec2 vs_vertexUVs;
-layout(location = 4) in vec2 vs_labelType;
+layout(location = 4) in float vs_labelId;
 
 out vec2 fs_vertexUVs;
 out vec3 fs_vertexColor;
-out vec2 fs_labelType;
+out float fs_isLetter;
+out float fs_needsDiscard;
 
-#ifdef(TIMER)
-    out float fs_needsDiscard;
-#endif
+uniform float leftDigit;
+uniform float middleDigit;
+uniform float rightDigit;
 
-#ifdef(SCROLLABLE)
-    uniform float positionY;
-#endif
-
-#ifdef(TIMER)
-    uniform float leftDigit;
-    uniform float middleDigit;
-    uniform float rightDigit;
-#endif
-
-#ifdef(TIMER)
-    float needsDiscard() {
-
-        if(fs_labelType.x == 2.0) {
-            if (leftDigit != 0 && fs_labelType.y == leftDigit) {
-                return 0.0;
-            }
-            return 1.0;
-        }
-
-        if(fs_labelType.x == 3.0) {
-            if (fs_labelType.y == middleDigit && (leftDigit != 0 || middleDigit != 0)) {
-                return 0.0;
-            }
-            return 1.0;
-        }
-        if(fs_labelType.x == 4.0) {
-            if (fs_labelType.y == rightDigit) {
-                return 0.0;
-            }
-            return 1.0;
-        }
-        return 0.0;
+float needsDiscard() {
+    if(vs_labelId == leftDigit && leftDigit != 0.0
+       || vs_labelId == middleDigit && (middleDigit != 10.0 || leftDigit != 0.0)
+       || vs_labelId == rightDigit) {
+        return -1.0;
     }
-
-#endif
+    return 1.0;
+}
 
 void main() {
     fs_vertexUVs = vs_vertexUVs;
     fs_vertexColor = vs_vertexColor;
-    fs_labelType = vs_labelType;
+    fs_isLetter = vs_labelId < 0.0
+        ? -1.0
+        : 1.0;
 
-    #ifdef(TIMER)
-        fs_needsDiscard = needsDiscard();
-    #endif
-
-    vec2 positionXY = vs_vertexPosition.xy;
-    #ifdef(SCROLLABLE)
-        positionXY += vec2(0.0, positionY);
-    #endif
-    gl_Position = vec4(positionXY, 0.0, 1.0);
+    fs_needsDiscard = needsDiscard();
+    gl_Position = vec4(vs_vertexPosition.xy, 0.0, 1.0);
 }

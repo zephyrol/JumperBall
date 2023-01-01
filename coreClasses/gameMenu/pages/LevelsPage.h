@@ -43,6 +43,8 @@ public:
 
     void setInGamePage(Page_sptr inGamePage);
 
+    std::vector<std::string> shaderDefines() const override;
+
 private:
 
     const Page_wptr _parent;

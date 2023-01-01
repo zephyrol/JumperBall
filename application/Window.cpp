@@ -45,17 +45,17 @@ JBTypes::FileContent Window::createFilesContent() {
         "brightPassFilter.fs",
         "depthFs.fs",
         "enemiesVs.vs",
-        "labelFs.fs",
-        "titlePageVs.vs",
-        "inGamePageVs.vs",
         "horizontalBlurFs.fs",
+        "inGamePageVs.vs",
         "itemsMapVs.vs",
         "labelFs.fs",
+        "levelFs.fs",
+        "levelsPageVs.vs",
         "specialsVs.vs",
         "starFs.fs",
         "starVs.vs",
-        "verticalBlurFs.fs",
-        "levelFs.fs"
+        "titlePageVs.vs",
+        "verticalBlurFs.fs"
     }) {
         fileDistPath[shader] = "shaders/" + shader;
     }

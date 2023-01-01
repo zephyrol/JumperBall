@@ -14,15 +14,13 @@ in vec2 fs_vertexUVs;
 out vec4 pixelColor;
 
 void main() {
-
     #ifdef(DISCARDING)
         if(fs_needsDiscard > 0.0) {
             discard;
         }
     #endif
-
     #ifdef(TEST_ALPHA_TEXTURE)
-        float alpha = isLetter < 0.0
+        float alpha = fs_isLetter < 0.0
             ? 1.0
             : texture(characterTexture, fs_vertexUVs).x;
     #endif

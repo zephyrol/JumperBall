@@ -111,11 +111,17 @@ std::vector<float> InGamePage::getUniformValues(const CstMap_sptr &map) const {
     const auto leftDigit = remainingTime / 100;
     const auto middleDigit = (remainingTime % 100) / 10;
     const auto rightDigit = remainingTime % 10;
-    return {static_cast<float>(leftDigit), static_cast<float>(middleDigit), static_cast<float>(rightDigit)};
+    constexpr auto middleDigitIdOffset = 10.f;
+    constexpr auto rightDigitIdOffset = middleDigitIdOffset + 10.f;
+    return {
+        static_cast<float>(leftDigit),
+        static_cast<float>(middleDigit) + middleDigitIdOffset,
+        static_cast<float>(rightDigit) + rightDigitIdOffset
+    };
 }
 
-const float InGamePage::arrowLabelId = 30.f;
+const float InGamePage::arrowLabelId = -1.f;
 
 std::string InGamePage::getVertexShaderName() const {
-    return "";
+    return "inGamePageVs.vs";
 }
