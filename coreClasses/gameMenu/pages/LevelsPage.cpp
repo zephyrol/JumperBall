@@ -136,7 +136,7 @@ std::shared_ptr<ArrowLabel> LevelsPage::createArrowLabel(const Node_sptr &header
     auto arrowLabel = std::make_shared<ArrowLabel>(
         leftNode,
         JBTypes::Color::Blue,
-        -1.f
+        -1
     );
     return arrowLabel;
 }
@@ -153,11 +153,11 @@ vecCstTextNode_uptr LevelsPage::genTextNodes() const {
     decltype(genTextNodes()) textNodes;
 
     for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
-        const auto levelNumber = i + 1;
+        const auto levelNumber = static_cast<int> (i) + 1;
         textNodes.push_back(CstTextNode_uptr(new TextNode(
             _levels[i],
             (levelNumber < 10 ? "0" : "") + std::to_string(levelNumber),
-            static_cast<float>(levelNumber)
+            levelNumber
         )));
     }
 
@@ -173,4 +173,12 @@ std::string LevelsPage::getVertexShaderName() const {
 
 std::vector<std::string> LevelsPage::shaderDefines() const {
     return {"TEST_ALPHA_TEXTURE"};
+}
+
+std::vector<std::string> LevelsPage::getUniformIntNames() const {
+    return {"levelProgression"};
+}
+
+std::vector<int> LevelsPage::getUniformIntValues(const CstMap_sptr &map) const {
+    return {static_cast<int>(_player->levelProgression())};
 }

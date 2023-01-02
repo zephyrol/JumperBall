@@ -33,7 +33,8 @@ public:
 
 private:
     const CstPage_sptr _page;
-    const std::vector<std::string> _uniformNames;
+    const std::vector<std::string> _uniformFloatNames;
+    const std::vector<std::string> _uniformIntNames;
     FontTexturesGenerator _fontTexturesGenerator;
     RenderPass _renderPass;
     const CstShaderProgram_sptr _labelsShader;

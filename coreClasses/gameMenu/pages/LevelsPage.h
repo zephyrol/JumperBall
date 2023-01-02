@@ -37,6 +37,10 @@ public:
 
     vecCstTextNode_uptr genTextNodes() const override;
 
+    std::vector<std::string> getUniformIntNames() const override;
+
+    std::vector<int> getUniformIntValues(const CstMap_sptr &map) const override;
+
     Page_wptr parent() override;
 
     vecCstLabel_sptr labels() const override;

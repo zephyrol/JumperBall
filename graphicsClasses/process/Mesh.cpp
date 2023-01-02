@@ -91,7 +91,6 @@ Mesh::MeshVerticesInfo Mesh::genMeshVerticesInfo() const {
     Mesh::MeshVerticesInfo meshVerticesInfo;
     meshVerticesInfo.shapeVerticesInfo = gatheredShapeVerticesInfo;
     meshVerticesInfo.stateVertexAttributes = stateVertexAttributes;
-
     return meshVerticesInfo;
 }
 

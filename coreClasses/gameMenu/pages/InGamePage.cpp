@@ -102,25 +102,21 @@ std::vector<std::string> InGamePage::shaderDefines() const {
     return {"DISCARDING", "TEST_ALPHA_TEXTURE"};
 }
 
-std::vector<std::string> InGamePage::getUniformNames() const {
+std::vector<std::string> InGamePage::getUniformIntNames() const {
     return {"leftDigit", "middleDigit", "rightDigit"};
 }
 
-std::vector<float> InGamePage::getUniformValues(const CstMap_sptr &map) const {
-    const auto remainingTime = static_cast<unsigned int> (std::ceilf(map->remainingTime()));
+std::vector<int> InGamePage::getUniformIntValues(const CstMap_sptr &map) const {
+    const auto remainingTime = static_cast<int> (std::ceilf(map->remainingTime()));
     const auto leftDigit = remainingTime / 100;
     const auto middleDigit = (remainingTime % 100) / 10;
     const auto rightDigit = remainingTime % 10;
-    constexpr auto middleDigitIdOffset = 10.f;
-    constexpr auto rightDigitIdOffset = middleDigitIdOffset + 10.f;
-    return {
-        static_cast<float>(leftDigit),
-        static_cast<float>(middleDigit) + middleDigitIdOffset,
-        static_cast<float>(rightDigit) + rightDigitIdOffset
-    };
+    constexpr auto middleDigitIdOffset = 10;
+    constexpr auto rightDigitIdOffset = middleDigitIdOffset + 10;
+    return { leftDigit, middleDigit + middleDigitIdOffset, rightDigit + rightDigitIdOffset};
 }
 
-const float InGamePage::arrowLabelId = -1.f;
+const int InGamePage::arrowLabelId = -1;
 
 std::string InGamePage::getVertexShaderName() const {
     return "inGamePageVs.vs";

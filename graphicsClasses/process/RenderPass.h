@@ -27,14 +27,13 @@ class RenderPass {
 
 public:
 
-    RenderPass(vecMesh_sptr meshes);
+    explicit RenderPass(vecMesh_sptr meshes);
 
     RenderPass(const RenderPass &renderPass) = delete;
 
     RenderPass &operator=(const RenderPass &renderPass) = delete;
 
     RenderPass(RenderPass &&renderPass) = default;
-
 
     void render(const CstShaderProgram_sptr &shaderProgram) const;
 

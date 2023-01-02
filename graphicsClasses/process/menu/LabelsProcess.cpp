@@ -14,7 +14,8 @@ LabelsProcess::LabelsProcess(
     CstMap_sptr map
 ) : Rendering(width, height),
     _page(page),
-    _uniformNames(_page->getUniformNames()),
+    _uniformFloatNames(_page->getUniformFloatNames()),
+    _uniformIntNames(_page->getUniformIntNames()),
     _fontTexturesGenerator(FontTexturesGenerator::createInstance(width, height, page, ftContent)),
     _renderPass([this, &page]() {
         vecMesh_sptr meshes;
@@ -76,8 +77,6 @@ CstShaderProgram_sptr LabelsProcess::createLettersProcessShaderProgram(
         page->getVertexShaderName(),
         "labelFs.fs",
         getDefines()
-        //"labelVs.vs",
-        //"labelFs.fs"
     );
     return shader;
 }
@@ -85,9 +84,14 @@ CstShaderProgram_sptr LabelsProcess::createLettersProcessShaderProgram(
 void LabelsProcess::update() {
     _labelsShader->use();
 
-    const auto uniformValues = _page->getUniformValues(_map);
-    for (size_t i = 0; i < _uniformNames.size(); ++i) {
-        _labelsShader->bindUniform(_uniformNames[i], uniformValues[i]);
+    const auto uniformFloatValues = _page->getUniformFloatValues(_map);
+    for (size_t i = 0; i < _uniformFloatNames.size(); ++i) {
+        _labelsShader->bindUniform(_uniformFloatNames[i], uniformFloatValues[i]);
+    }
+
+    const auto uniformIntValues = _page->getUniformIntValues(_map);
+    for (size_t i = 0; i < _uniformIntNames.size(); ++i) {
+        _labelsShader->bindUniform(_uniformIntNames[i], uniformIntValues[i]);
     }
 
     _renderPass.update();
