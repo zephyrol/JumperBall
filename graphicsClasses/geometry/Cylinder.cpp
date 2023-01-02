@@ -9,34 +9,40 @@
 
 Cylinder::Cylinder(
     size_t meriCount,
-    const glm::mat4& modelTransform,
-    const glm::mat4& normalsTransform):
+    const glm::mat4 &modelTransform,
+    const glm::mat4 &normalsTransform
+) :
     GeometricShape(modelTransform, normalsTransform, {}, {}),
     _meriCount(meriCount) {
 }
 
 Cylinder::Cylinder(
-    const glm::vec3& customColor,
+    const glm::vec3 &customColor,
     size_t meriCount,
-    const glm::mat4& modelTransform,
-    const glm::mat4& normalsTransform):
-    GeometricShape(modelTransform, normalsTransform, { customColor }, {}),
+    const glm::mat4 &modelTransform,
+    const glm::mat4 &normalsTransform
+) :
+    GeometricShape(modelTransform, normalsTransform, {customColor}, {}),
     _meriCount(meriCount) {
 }
 
-Cylinder::Cylinder(const glm::vec3& customColorCenter,
-                   const glm::vec3& customColorEdge,
-                   size_t meriCount,
-                   const glm::mat4& modelTransform,
-                   const glm::mat4& normalsTransform):
-    GeometricShape(modelTransform, normalsTransform, { customColorCenter, customColorEdge }, {}),
+Cylinder::Cylinder(
+    const glm::vec3 &customColorCenter,
+    const glm::vec3 &customColorEdge,
+    size_t meriCount,
+    const glm::mat4 &modelTransform,
+    const glm::mat4 &normalsTransform
+) :
+    GeometricShape(modelTransform, normalsTransform, {customColorCenter, customColorEdge}, {}),
     _meriCount(meriCount) {
 }
 
-Cylinder::Cylinder(const JBTypes::Color &color,
-                   size_t meriCount,
-                   const glm::mat4 &modelTransform,
-                   const glm::mat4 &normalsTransform):
+Cylinder::Cylinder(
+    const JBTypes::Color &color,
+    size_t meriCount,
+    const glm::mat4 &modelTransform,
+    const glm::mat4 &normalsTransform
+) :
     Cylinder(
         getCenterAndEdgeColor(color).at(0),
         getCenterAndEdgeColor(color).at(1),
@@ -47,7 +53,7 @@ Cylinder::Cylinder(const JBTypes::Color &color,
 
 }
 
-GeometricShape::ShapeVerticesInfo Cylinder::computeBasicInfoCylinder (size_t meriCount) {
+GeometricShape::ShapeVerticesInfo Cylinder::computeBasicInfoCylinder(size_t meriCount) {
 
     GeometricShape::ShapeVertexAttributes infoAttributesCylinder;
     GeometricShape::IndicesBuffer indices;
@@ -141,12 +147,13 @@ GeometricShape::ShapeVerticesInfo Cylinder::computeBasicInfoCylinder (size_t mer
 }
 
 
-std::vector <glm::vec3> Cylinder::createCenterAndEdgeColorBuffer (
-    const glm::vec3& customColorCenter,
-    const glm::vec3& customColorEdge,
-    size_t size) {
+std::vector<glm::vec3> Cylinder::createCenterAndEdgeColorBuffer(
+    const glm::vec3 &customColorCenter,
+    const glm::vec3 &customColorEdge,
+    size_t size
+) {
 
-    std::vector <glm::vec3> customColorCube;
+    std::vector<glm::vec3> customColorCube;
     customColorCube.push_back(customColorCenter);
     customColorCube.push_back(customColorCenter);
     for (size_t i = 2; i < size; ++i) {
@@ -159,53 +166,53 @@ size_t Cylinder::levelOfDetail() const {
     return _meriCount;
 }
 
-std::vector <glm::vec3> Cylinder::genColors (const std::vector <glm::vec3>& colors) const {
+std::vector<glm::vec3> Cylinder::genColors(const std::vector<glm::vec3> &colors) const {
     if (colors.size() == 2) {
         return createCenterAndEdgeColorBuffer(
             colors.at(0),    // customColorCenter
             colors.at(1),    // customColorEdge
             computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.colors.size()
-            );
+        );
     }
     if (colors.size() == 1) {
         return GeometricShape::createCustomColorBuffer(
             colors.at(0), // customColor
             computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.colors.size()
-            );
+        );
     }
     return computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.colors;
 }
 
-std::vector <GLushort> Cylinder::genIndices() const {
+std::vector<GLushort> Cylinder::genIndices() const {
     return computeBasicInfoCylinder(_meriCount).indices;
 }
 
-std::vector <glm::vec3> Cylinder::genNormals() const {
+std::vector<glm::vec3> Cylinder::genNormals() const {
     return computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.normals;
 }
 
-std::vector <glm::vec3> Cylinder::genPositions() const {
+std::vector<glm::vec3> Cylinder::genPositions() const {
     return computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.positions;
 }
 
-std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color& color) {
+std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color &color) {
     if (color == JBTypes::Color::Red) {
-        return { glm::vec3 (1.f, 0.f, 0.f), glm::vec3 (0.5f, 0.f, 0.f) };
+        return {glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.5f, 0.f, 0.f)};
     }
     if (color == JBTypes::Color::Green) {
-        return { glm::vec3 (0.f, 1.f, 0.f), glm::vec3 (0.f, 0.5f, 0.f) };
+        return {glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.5f, 0.f)};
     }
     if (color == JBTypes::Color::Blue) {
-        return { glm::vec3 (0.f, 0.f, 1.f), glm::vec3 (0.f, 0.f, 0.5f) };
+        return {glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 0.f, 0.5f)};
     }
     if (color == JBTypes::Color::Orange) {
-        return { glm::vec3 (1.f, 215.f / 255.f, 0.f), glm::vec3(150.f / 255.f, 75.f / 255.f, 0.f)};
+        return {glm::vec3(1.f, 215.f / 255.f, 0.f), glm::vec3(150.f / 255.f, 75.f / 255.f, 0.f)};
     }
     if (color == JBTypes::Color::Yellow) {
-        return { glm::vec3 (1.f, 1.f, 0.f), glm::vec3(1.f, 150.f / 255.f, 0.f)};
+        return {glm::vec3(1.f, 1.f, 0.f), glm::vec3(1.f, 150.f / 255.f, 0.f)};
     }
     if (color == JBTypes::Color::White) {
-        return { glm::vec3 (0.8f, 0.8f, 0.8f), glm::vec3(0.6f, 0.6f, 0.6f)};
+        return {glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(0.6f, 0.6f, 0.6f)};
     }
 
     constexpr float laserIntensity = 1.5f;
@@ -216,7 +223,7 @@ std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color& c
     constexpr float blueConeSensibilityCoeff = 0.11f;
     if (color == JBTypes::Color::ShinyRed) {
         const auto redColor = laserIntensity * glm::vec3(1.f / redConeSensibilityCoeff, 0.f, 0.f);
-        return { redColor, redColor };
+        return {redColor, redColor};
     }
     if (color == JBTypes::Color::ShinyBlue) {
         const auto blueColor = laserIntensity * glm::vec3(
@@ -224,11 +231,11 @@ std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color& c
             1.f / greenConeSensibilityCoeff,
             1.f / blueConeSensibilityCoeff
         );
-        return { blueColor, blueColor };
+        return {blueColor, blueColor};
     }
     if (color == JBTypes::Color::ShinyGreen) {
         const auto greenColor = laserIntensity * glm::vec3(0.f, 1.f / greenConeSensibilityCoeff, 0.f);
-        return { greenColor, greenColor };
+        return {greenColor, greenColor};
     }
     return {glm::vec3(0.f), glm::vec3(0.f)};
 }

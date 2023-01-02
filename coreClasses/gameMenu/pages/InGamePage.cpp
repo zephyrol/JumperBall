@@ -63,7 +63,7 @@ void InGamePage::resize(float ratio) {
 vecCstTextNode_uptr InGamePage::genTextNodes() const {
     decltype(genTextNodes()) textNodes;
 
-    auto nodeCount = 0.f;
+    int nodeCount = 0;
     for (const auto &node: std::vector<Node_sptr>{_leftDigitNode, _middleDigitNode, _rightDigitNode}) {
         for (unsigned int i = 0; i < 10; ++i) {
             textNodes.push_back(CstTextNode_uptr(new TextNode(
@@ -71,7 +71,7 @@ vecCstTextNode_uptr InGamePage::genTextNodes() const {
                 std::to_string(i),
                 nodeCount
             )));
-            nodeCount += 1.f;
+            ++nodeCount;
         }
     }
 

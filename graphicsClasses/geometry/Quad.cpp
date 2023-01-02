@@ -35,40 +35,47 @@ Quad::Quad(
 }
 
 std::vector<glm::vec3> Quad::createCustomDoubleColors(
-    const glm::vec3 &customColor1, const glm::vec3 &customColor2) {
-    return Utility::GLfloatListToGlmVec3({
-                                             customColor2.r, customColor2.g, customColor2.b,
-                                             customColor1.r, customColor1.g, customColor1.b,
-                                             customColor2.r, customColor2.g, customColor2.b,
-                                             customColor2.r, customColor2.g, customColor2.b,
-                                             customColor2.r, customColor2.g, customColor2.b,
-                                             customColor1.r, customColor1.g, customColor1.b
-                                         });
+    const glm::vec3 &customColor1, const glm::vec3 &customColor2
+) {
+    return Utility::GLfloatListToGlmVec3(
+        {
+            customColor2.r, customColor2.g, customColor2.b,
+            customColor1.r, customColor1.g, customColor1.b,
+            customColor2.r, customColor2.g, customColor2.b,
+            customColor2.r, customColor2.g, customColor2.b,
+            customColor2.r, customColor2.g, customColor2.b,
+            customColor1.r, customColor1.g, customColor1.b
+        }
+    );
 }
 
-const std::vector<glm::vec3> Quad::basicPositionsQuad =
-    Utility::GLfloatListToGlmVec3({
-                                      -1.f, 1.f, 0.f, -1.f, -1.f, 0.f, 1.f, -1.f, 0.f,
-                                      -1.f, 1.f, 0.f, 1.f, -1.f, 0.f, 1.f, 1.f, 0.f
-                                  });
+const std::vector<glm::vec3> Quad::basicPositionsQuad = Utility::GLfloatListToGlmVec3(
+    {
+        -1.f, 1.f, 0.f, -1.f, -1.f, 0.f, 1.f, -1.f, 0.f,
+        -1.f, 1.f, 0.f, 1.f, -1.f, 0.f, 1.f, 1.f, 0.f
+    }
+);
 
-const std::vector<glm::vec3> Quad::basicNormalsQuad =
-    Utility::GLfloatListToGlmVec3({
-                                      0.f, 0.f, -1.f, 0.f, 0.f, -1.f, 0.f, 0.f, -1.f,
-                                      0.f, 0.f, -1.f, 0.f, 0.f, -1.f, 0.f, 0.f, -1.f
-                                  });
+const std::vector<glm::vec3> Quad::basicNormalsQuad = Utility::GLfloatListToGlmVec3(
+    {
+        0.f, 0.f, -1.f, 0.f, 0.f, -1.f, 0.f, 0.f, -1.f,
+        0.f, 0.f, -1.f, 0.f, 0.f, -1.f, 0.f, 0.f, -1.f
+    }
+);
 
-const std::vector<glm::vec3> Quad::basicColorsQuad =
-    Utility::GLfloatListToGlmVec3({
-                                      1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f,
-                                      1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f
-                                  });
+const std::vector<glm::vec3> Quad::basicColorsQuad = Utility::GLfloatListToGlmVec3(
+    {
+        1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f,
+        1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f
+    }
+);
 
-const std::vector<glm::vec2> Quad::basicUVCoordsQuad =
-    Utility::GLfloatListToGlmVec2({
-                                      0.f, 1.f, 0.f, 0.f, 1.f, 0.f,
-                                      0.f, 1.f, 1.f, 0.f, 1.f, 1.f
-                                  });
+const std::vector<glm::vec2> Quad::basicUVCoordsQuad = Utility::GLfloatListToGlmVec2(
+    {
+        0.f, 1.f, 0.f, 0.f, 1.f, 0.f,
+        0.f, 1.f, 1.f, 0.f, 1.f, 1.f
+    }
+);
 
 std::vector<glm::vec3> Quad::genPositions() const {
     return basicPositionsQuad;

@@ -23,7 +23,7 @@ using vecLabel_sptr = std::vector<Label_sptr>;
 class Label : public Displayable {
 
 public:
-    Label(Node_sptr node, const JBTypes::Color &color, float id);
+    Label(Node_sptr node, const JBTypes::Color &color, int id);
 
     virtual vecLabelGeometry genGeometries() const;
 
@@ -33,7 +33,7 @@ public:
 
     const JBTypes::Color& color() const;
 
-    StaticValues<float> getStaticFloatValues() const override;
+    StaticValues<int> getStaticIntValues() const override;
 
     GlobalState getGlobalState() const override;
 
@@ -42,7 +42,7 @@ public:
 protected:
     const Node_sptr _node;
     const JBTypes::Color _color;
-    const float _id;
+    const int _id;
 
     /**
      * Create a displayable triangle geometry respecting the node position and scale.

@@ -43,7 +43,8 @@ public:
 private:
     static std::vector<glm::vec3> createCustomDoubleColors(
         const glm::vec3 &customColor1,
-        const glm::vec3 &customColor2);
+        const glm::vec3 &customColor2
+    );
 
 // TODO gen those basic properties on the fly
     static const std::vector<glm::vec3> basicPositionsQuad;

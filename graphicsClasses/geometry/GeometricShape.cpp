@@ -7,36 +7,37 @@
 
 #include "GeometricShape.h"
 
-GeometricShape::GeometricShape(const glm::mat4& modelTransform,
-                               const glm::mat4& normalsTransform,
-                               std::vector <glm::vec3>&& customColors,
-                               std::vector <glm::vec2>&& customUvs
-                               ):
+GeometricShape::GeometricShape(
+    const glm::mat4 &modelTransform,
+    const glm::mat4 &normalsTransform,
+    std::vector<glm::vec3> &&customColors,
+    std::vector<glm::vec2> &&customUvs
+) :
     _modelTransform(modelTransform),
     _normalsTransform(normalsTransform),
     _customColors(std::move(customColors)),
-    _customUvs(std::move(customUvs)){
+    _customUvs(std::move(customUvs)) {
 
 }
 
 GeometricShape::ShapeVertexAttributes GeometricShape::genVertexAttributes() const {
     const auto computePositions =
-        [this] ()->std::vector <glm::vec3> {
-            std::vector <glm::vec3> computedPositions;
+        [this]() -> std::vector<glm::vec3> {
+            std::vector<glm::vec3> computedPositions;
 
-            const std::vector <glm::vec3> positions = genPositions();
-            for (const glm::vec3& position : positions) {
+            const std::vector<glm::vec3> positions = genPositions();
+            for (const glm::vec3 &position: positions) {
                 computedPositions.emplace_back(_modelTransform * glm::vec4(position, 1.f));
             }
             return computedPositions;
         };
 
     const auto computeNormals =
-        [this] ()->std::vector <glm::vec3> {
-            std::vector <glm::vec3> computedNormals;
+        [this]() -> std::vector<glm::vec3> {
+            std::vector<glm::vec3> computedNormals;
 
-            const std::vector <glm::vec3> normals = genNormals();
-            for (const glm::vec3& normal : normals) {
+            const std::vector<glm::vec3> normals = genNormals();
+            for (const glm::vec3 &normal: normals) {
                 computedNormals.emplace_back(_normalsTransform * glm::vec4(normal, 1.f));
             }
             return computedNormals;
@@ -65,53 +66,53 @@ GeometricShape::ShapeVerticesInfo GeometricShape::genShapeVerticesInfo() const {
     return shapeVerticesInfo;
 }
 
-void GeometricShape::concatShapeVerticesInfo (
-    GeometricShape::ShapeVerticesInfo& current,
-    const GeometricShape::ShapeVerticesInfo& other
-    ) {
-    GeometricShape::ShapeVertexAttributes& currentShapeVertexAttributes = current.shapeVertexAttributes;
+void GeometricShape::concatShapeVerticesInfo(
+    GeometricShape::ShapeVerticesInfo &current,
+    const GeometricShape::ShapeVerticesInfo &other
+) {
+    GeometricShape::ShapeVertexAttributes &currentShapeVertexAttributes = current.shapeVertexAttributes;
     concatIndices(current.indices, other.indices, currentShapeVertexAttributes.positions.size());
     concatAttributes(currentShapeVertexAttributes, other.shapeVertexAttributes);
 }
 
-std::vector <glm::vec3> GeometricShape::createCustomColorBuffer (
-    const glm::vec3& customColor,
+std::vector<glm::vec3> GeometricShape::createCustomColorBuffer(
+    const glm::vec3 &customColor,
     size_t size
-    ) {
-    std::vector <glm::vec3> customColorCube(size);
-    for (glm::vec3& color : customColorCube) {
+) {
+    std::vector<glm::vec3> customColorCube(size);
+    for (glm::vec3 &color: customColorCube) {
         color = customColor;
     }
     return customColorCube;
 }
 
-std::vector <GLushort> GeometricShape::genIndices() const {
+std::vector<GLushort> GeometricShape::genIndices() const {
     const size_t nbOfVertices = numberOfVertices();
-    std::vector <GLushort> indices(nbOfVertices);
+    std::vector<GLushort> indices(nbOfVertices);
     for (size_t i = 0; i < nbOfVertices; ++i) {
         indices.at(i) = i;
     }
     return indices;
 }
 
-void GeometricShape::concatIndices (
-    IndicesBuffer& currentIndices,
-    const IndicesBuffer& otherIndices,
+void GeometricShape::concatIndices(
+    IndicesBuffer &currentIndices,
+    const IndicesBuffer &otherIndices,
     size_t offset
-    ) {
+) {
     IndicesBuffer newIndices = otherIndices;
     const auto ushortOffset = static_cast<GLushort>(offset);
-    for (GLushort& newIndex : newIndices) {
+    for (GLushort &newIndex: newIndices) {
         newIndex += ushortOffset;
     }
     Utility::concatVector(currentIndices, newIndices);
 }
 
-std::vector <glm::vec3> GeometricShape::genNormals() const {
+std::vector<glm::vec3> GeometricShape::genNormals() const {
     return {};
 }
 
-std::vector <glm::vec3> GeometricShape::genColors (const std::vector <glm::vec3>&) const {
+std::vector<glm::vec3> GeometricShape::genColors(const std::vector<glm::vec3> &) const {
     return {};
 }
 
@@ -119,9 +120,10 @@ std::vector<glm::vec2> GeometricShape::genUvCoords(const std::vector<glm::vec2> 
     return {};
 }
 
-void GeometricShape::concatAttributes (
-    GeometricShape::ShapeVertexAttributes& current,
-    const GeometricShape::ShapeVertexAttributes& other) {
+void GeometricShape::concatAttributes(
+    GeometricShape::ShapeVertexAttributes &current,
+    const GeometricShape::ShapeVertexAttributes &other
+) {
     Utility::concatVector(current.positions, other.positions);
     Utility::concatVector(current.normals, other.normals);
     Utility::concatVector(current.colors, other.colors);

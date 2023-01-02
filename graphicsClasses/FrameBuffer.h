@@ -7,66 +7,81 @@
 
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
+
 #include "ShaderProgram.h"
 
 class FrameBuffer;
-using FrameBuffer_uptr = std::unique_ptr <FrameBuffer>;
-using CstFrameBuffer_uptr = std::unique_ptr <const FrameBuffer>;
+
+using FrameBuffer_uptr = std::unique_ptr<FrameBuffer>;
+using CstFrameBuffer_uptr = std::unique_ptr<const FrameBuffer>;
 
 class FrameBuffer {
 
 private:
-static const glm::vec3 backgroundColor;
+    static const glm::vec3 backgroundColor;
 
 public:
-enum class Content { SDR, HDR, Depth };
+    enum class Content {
+        SDR, HDR, Depth
+    };
 
-FrameBuffer(
-    GLsizei resolutionX,
-    GLsizei resolutionY,
-    Content content = Content::SDR,
-    bool hasDepthBuffer = true,
-    const glm::vec3& clearColor = backgroundColor
-);
+    FrameBuffer(
+        GLsizei resolutionX,
+        GLsizei resolutionY,
+        Content content = Content::SDR,
+        bool hasDepthBuffer = true,
+        const glm::vec3 &clearColor = backgroundColor
+    );
 
-FrameBuffer(const FrameBuffer& frameBuffer) = delete;
-FrameBuffer& operator= (const FrameBuffer&) = delete;
+    FrameBuffer(const FrameBuffer &frameBuffer) = delete;
 
-~FrameBuffer() = default;
+    FrameBuffer &operator=(const FrameBuffer &) = delete;
 
-static constexpr float luminanceKey = 0.4f;
+    ~FrameBuffer() = default;
 
-GLuint getHandle() const;
-void bindFrameBuffer() const;
-GLuint getRenderTexture() const;
-void clean();
+    static constexpr float luminanceKey = 0.4f;
 
-void freeGPUMemory();
+    GLuint getHandle() const;
 
-static void bindDefaultFrameBuffer(GLint defaultFrameBuffer);
-static void cleanDefaultFrameBuffer();
-static void setViewportSize(GLsizei resolutionX, GLsizei resolutionY);
-static void enableDepthTest();
-static void disableDepthTest();
+    void bindFrameBuffer() const;
 
-    static GLuint createTexture() ;
+    GLuint getRenderTexture() const;
+
+    void clean();
+
+    void freeGPUMemory();
+
+    static void bindDefaultFrameBuffer(GLint defaultFrameBuffer);
+
+    static void cleanDefaultFrameBuffer();
+
+    static void setViewportSize(GLsizei resolutionX, GLsizei resolutionY);
+
+    static void enableDepthTest();
+
+    static void disableDepthTest();
+
+    static GLuint createTexture();
 
 private:
 
-const GLuint _fboHandle;
+    const GLuint _fboHandle;
 
-const GLuint _renderTexture;
-const Content _content;
+    const GLuint _renderTexture;
 
-const std::unique_ptr <const GLuint> _depthBuffer;
+    const Content _content;
 
-const glm::vec3 _clearColor;
+    const std::unique_ptr<const GLuint> _depthBuffer;
 
-static GLuint createFrameBufferObject() ;
+    const glm::vec3 _clearColor;
 
-    static std::unique_ptr <GLuint> createDepthBuffer() ;
-bool hasDepthBuffer() const;
-static void cleanCurrentFrameBuffer(bool hasDepthBuffer, const glm::vec3& clearColor);
+    static GLuint createFrameBufferObject();
+
+    static std::unique_ptr<GLuint> createDepthBuffer();
+
+    bool hasDepthBuffer() const;
+
+    static void cleanCurrentFrameBuffer(bool hasDepthBuffer, const glm::vec3 &clearColor);
 
 };
 

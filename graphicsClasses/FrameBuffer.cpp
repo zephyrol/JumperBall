@@ -12,14 +12,13 @@ FrameBuffer::FrameBuffer(
     GLsizei resolutionY,
     FrameBuffer::Content content,
     bool hasDepthBuffer,
-    const glm::vec3& clearColor
-):
+    const glm::vec3 &clearColor
+) :
     _fboHandle(createFrameBufferObject()),
     _renderTexture(createTexture()),
     _content(content),
     _depthBuffer(hasDepthBuffer ? createDepthBuffer() : nullptr),
-    _clearColor(clearColor)
-{
+    _clearColor(clearColor) {
 
     glBindFramebuffer(GL_FRAMEBUFFER, _fboHandle);
     glActiveTexture(GL_TEXTURE0);
@@ -27,15 +26,15 @@ FrameBuffer::FrameBuffer(
 
     const auto getDataFormat =
         [](const FrameBuffer::Content Content) -> GLenum {
-        if (Content == FrameBuffer::Content::SDR) {
-            return GL_RGB8;
-        }
-        if (Content == FrameBuffer::Content::HDR) {
-            return GL_RGB16F;
-        }
-        // Depth Map
-        return GL_R16F;
-    };
+            if (Content == FrameBuffer::Content::SDR) {
+                return GL_RGB8;
+            }
+            if (Content == FrameBuffer::Content::HDR) {
+                return GL_RGB16F;
+            }
+            // Depth Map
+            return GL_R16F;
+        };
 
     constexpr GLsizei levelTexture = 1;
     const GLenum dataFormat = getDataFormat(_content);
@@ -69,7 +68,7 @@ GLuint FrameBuffer::getRenderTexture() const {
 
 void FrameBuffer::freeGPUMemory() {
     glDeleteTextures(1, &_renderTexture);
-    if(_depthBuffer) {
+    if (_depthBuffer) {
         glDeleteRenderbuffers(1, _depthBuffer.get());
     }
     glDeleteFramebuffers(1, &_fboHandle);
@@ -87,7 +86,7 @@ void FrameBuffer::clean() {
     cleanCurrentFrameBuffer(hasDepthBuffer(), _clearColor);
 }
 
-void FrameBuffer::cleanCurrentFrameBuffer (bool hasDepthBuffer, const glm::vec3& clearColor) {
+void FrameBuffer::cleanCurrentFrameBuffer(bool hasDepthBuffer, const glm::vec3 &clearColor) {
     glClearColor(clearColor.r, clearColor.g, clearColor.z, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     if (hasDepthBuffer) {
@@ -107,10 +106,10 @@ GLuint FrameBuffer::createTexture() {
     return texture;
 }
 
-std::unique_ptr <GLuint> FrameBuffer::createDepthBuffer() {
+std::unique_ptr<GLuint> FrameBuffer::createDepthBuffer() {
     GLuint depthBuffer;
     glGenRenderbuffers(1, &depthBuffer);
-    return std::unique_ptr <GLuint>(new GLuint(depthBuffer));
+    return std::unique_ptr<GLuint>(new GLuint(depthBuffer));
 }
 
 bool FrameBuffer::hasDepthBuffer() const {
@@ -121,7 +120,7 @@ GLuint FrameBuffer::getHandle() const {
     return _fboHandle;
 }
 
-const glm::vec3 FrameBuffer::backgroundColor { 0.f, 0.f, .1f };
+const glm::vec3 FrameBuffer::backgroundColor{0.f, 0.f, .1f};
 
 void FrameBuffer::setViewportSize(GLsizei resolutionX, GLsizei resolutionY) {
     glViewport(0, 0, resolutionX, resolutionY);

@@ -7,40 +7,55 @@
 
 #ifndef SPHERE_H
 #define SPHERE_H
+
 #include "GeometricShape.h"
 
 
-class Sphere:public GeometricShape {
+class Sphere : public GeometricShape {
 public:
 
-Sphere(const glm::mat4& modelTransform = glm::mat4(1.f),
-       const glm::mat4& normalsTransform = glm::mat4(1.f));
-Sphere(const glm::vec3& customColor,
-       const glm::mat4& modelTransform = glm::mat4(1.f),
-       const glm::mat4& normalsTransform = glm::mat4(1.f));
-    Sphere(const JBTypes::Color& color,
-           const glm::mat4& modelTransform = glm::mat4(1.f),
-           const glm::mat4& normalsTransform = glm::mat4(1.f));
-Sphere(const glm::vec3& customColor,
-       const glm::vec3& customColor2,
-       const glm::mat4& modelTransform = glm::mat4(1.f),
-       const glm::mat4& normalsTransform = glm::mat4(1.f));
+    explicit Sphere(
+        const glm::mat4 &modelTransform = glm::mat4(1.f),
+        const glm::mat4 &normalsTransform = glm::mat4(1.f)
+    );
 
-virtual std::vector <glm::vec3> genPositions() const override;
-virtual std::vector <glm::vec3> genNormals() const override;
-virtual std::vector <glm::vec3> genColors(const std::vector <glm::vec3>& colors) const override;
-virtual std::vector <GLushort> genIndices() const override;
+    explicit Sphere(
+        const glm::vec3 &customColor,
+        const glm::mat4 &modelTransform = glm::mat4(1.f),
+        const glm::mat4 &normalsTransform = glm::mat4(1.f)
+    );
+
+    explicit Sphere(
+        const JBTypes::Color &color,
+        const glm::mat4 &modelTransform = glm::mat4(1.f),
+        const glm::mat4 &normalsTransform = glm::mat4(1.f)
+    );
+
+    Sphere(
+        const glm::vec3 &customColor,
+        const glm::vec3 &customColor2,
+        const glm::mat4 &modelTransform = glm::mat4(1.f),
+        const glm::mat4 &normalsTransform = glm::mat4(1.f)
+    );
+
+    virtual std::vector<glm::vec3> genPositions() const override;
+
+    virtual std::vector<glm::vec3> genNormals() const override;
+
+    virtual std::vector<glm::vec3> genColors(const std::vector<glm::vec3> &colors) const override;
+
+    virtual std::vector<GLushort> genIndices() const override;
 
 private:
 
-static const GeometricShape::ShapeVerticesInfo basicInfoSphere;
+    static const GeometricShape::ShapeVerticesInfo basicInfoSphere;
 
-static glm::vec3 getSphereColor(const JBTypes::Color& color);
+    static glm::vec3 getSphereColor(const JBTypes::Color &color);
 
-static GeometricShape::ShapeVerticesInfo computeBasicInfoSphere(
-    bool useCustomColors = false,
-    const glm::vec3& firstColor = glm::vec3(0.f),
-    const glm::vec3& secondColor = glm::vec3(0.f)
+    static GeometricShape::ShapeVerticesInfo computeBasicInfoSphere(
+        bool useCustomColors = false,
+        const glm::vec3 &firstColor = glm::vec3(0.f),
+        const glm::vec3 &secondColor = glm::vec3(0.f)
     );
 };
 

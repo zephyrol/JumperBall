@@ -51,9 +51,7 @@ int main (int argc, char**argv) {
     if (argc == 3) {
 
         std::ifstream file;
-        const std::string fileToOpen = argc > 1
-                                       ? argv[1]
-                                       : "maps/map1.txt";
+        const std::string fileToOpen = argv[1];
         file.open(fileToOpen); // Opening file to read
         if (!file) {
             std::cerr << "ERROR: Opening " << fileToOpen << " impossible .."

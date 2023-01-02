@@ -4,7 +4,7 @@
 
 #include "TextNode.h"
 
-TextNode::TextNode(Node_sptr node, std::string &&text, float id) :
+TextNode::TextNode(Node_sptr node, std::string &&text, int id) :
     _node(std::move(node)),
     _text(std::move(text)),
     _id(id) {
@@ -18,6 +18,6 @@ const std::string &TextNode::text() const {
     return _text;
 }
 
-float TextNode::getId() const {
+int TextNode::getId() const {
     return _id;
 }

@@ -6,7 +6,7 @@
  */
 #include "ArrowLabel.h"
 
-ArrowLabel::ArrowLabel(Node_sptr node, const JBTypes::Color &color, float id) :
+ArrowLabel::ArrowLabel(Node_sptr node, const JBTypes::Color &color, int id) :
     Label(std::move(node), color, id) {
 }
 

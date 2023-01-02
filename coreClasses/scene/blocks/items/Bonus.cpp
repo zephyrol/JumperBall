@@ -17,9 +17,6 @@ Bonus::Bonus(
     _value(value) {
 }
 
-Bonus::~Bonus() {
-}
-
 unsigned int Bonus::value() const {
     return _value;
 }

@@ -21,7 +21,7 @@ public:
 
     unsigned int value() const;
 
-    virtual ~Bonus() = 0;
+    virtual ~Bonus() = default;
 
 private:
     unsigned int _value;
