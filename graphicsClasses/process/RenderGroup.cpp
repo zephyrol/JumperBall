@@ -57,7 +57,8 @@ template<typename T>
 void RenderGroup::fillStateVertexAttributesVBOsList(
     std::vector<GLuint> &vboList,
     const std::vector<std::vector<T> > &stateVertexAttributes,
-    size_t attributesOffset) const {
+    size_t attributesOffset
+) const {
     for (const std::vector<T> &stateVertexAttribute: stateVertexAttributes) {
         fillVBOsList(vboList, stateVertexAttribute, attributesOffset);
     }
@@ -113,32 +114,36 @@ RenderGroup::BufferObjects RenderGroup::createBufferObjects() const {
 }
 
 template<typename T>
-void RenderGroup::activateVertexAttribute(const std::vector<T> &,
-                                          GLuint attributeNumber) const {
+void RenderGroup::activateVertexAttribute(
+    const std::vector<T> &,
+    GLuint attributeNumber
+) const {
     const size_t numberOfGLFloats = sizeof(T) / sizeof(GLfloat);
     glEnableVertexAttribArray(attributeNumber);
     glVertexAttribPointer(attributeNumber, numberOfGLFloats, GL_FLOAT, GL_FALSE, 0, nullptr);
 }
 
 template<>
-void RenderGroup::activateVertexAttribute(const std::vector<int> &,
-                                          GLuint attributeNumber) const {
+void RenderGroup::activateVertexAttribute(
+    const std::vector<int> &,
+    GLuint attributeNumber
+) const {
     constexpr size_t numberOfInt = 1;
     glEnableVertexAttribArray(attributeNumber);
     glVertexAttribPointer(attributeNumber, numberOfInt, GL_INT, GL_FALSE, 0, nullptr);
 }
 
 template<typename T>
-size_t RenderGroup::updateBufferObjectData(
+bool RenderGroup::updateBufferObjectData(
     GLuint bo,
     const std::vector<T> &bufferObjectData,
     GLenum target
 ) const {
     if (!bufferObjectData.empty()) {
         fillBufferObjectData(bo, bufferObjectData, target);
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 template<typename T>
@@ -167,9 +172,11 @@ size_t RenderGroup::updateStateVBOsData(
 }
 
 template<typename T>
-size_t RenderGroup::updateShapeVBOsData(const std::vector<GLuint> &vbosList,
-                                        const std::vector<T> &bufferObjectsData,
-                                        size_t attributesOffset) const {
+size_t RenderGroup::updateShapeVBOsData(
+    const std::vector<GLuint> &vbosList,
+    const std::vector<T> &bufferObjectsData,
+    size_t attributesOffset
+) const {
     if (attributesOffset < vbosList.size()) {
         const GLuint vbo = vbosList.at(attributesOffset);
         if (updateBufferObjectData(vbo, bufferObjectsData, GL_ARRAY_BUFFER)) {
@@ -180,11 +187,12 @@ size_t RenderGroup::updateShapeVBOsData(const std::vector<GLuint> &vbosList,
     return 0;
 }
 
-
 template<typename T>
-void RenderGroup::fillBufferObjectData(GLuint bo,
-                                       const std::vector<T> &bufferObjectData,
-                                       GLenum target) const {
+void RenderGroup::fillBufferObjectData(
+    GLuint bo,
+    const std::vector<T> &bufferObjectData,
+    GLenum target
+) const {
     glBindBuffer(target, bo);
     glBufferData(target, bufferObjectData.size() * sizeof(T), bufferObjectData.data(), GL_STATIC_DRAW);
 }
@@ -215,7 +223,6 @@ std::shared_ptr<GLuint> RenderGroup::initializeEBO(const std::vector<GLushort> &
 
 void RenderGroup::render() const {
     glBindVertexArray(_vertexArrayObject);
-
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _bufferObjects.elementBufferObject);
     const auto numberOfIndices = static_cast<GLsizei>(_meshesVerticesInfo.shapeVerticesInfo.indices.size());
     glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, nullptr);

@@ -92,7 +92,7 @@ private:
     ) const;
 
     template<typename T>
-    size_t updateBufferObjectData(
+    bool updateBufferObjectData(
         GLuint bo,
         const std::vector<T> &bufferObjectData,
         GLenum target
