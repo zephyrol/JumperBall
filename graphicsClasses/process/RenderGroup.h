@@ -8,7 +8,7 @@
 #ifndef RENDERGROUP_H
 #define RENDERGROUP_H
 
-#include "process/Mesh.h"
+#include "process/mesh/Mesh.h"
 
 class RenderGroup {
 
@@ -102,10 +102,10 @@ private:
 
     static GLuint genBufferObject();
 
-    Mesh::MeshVerticesInfo createMeshesVerticesInfo() const;
+    Mesh::MeshGeometry createMeshesVerticesInfo() const;
 
     const vecMesh_sptr _meshes;
-    const Mesh::MeshVerticesInfo _meshesVerticesInfo;
+    const Mesh::MeshGeometry _meshesVerticesInfo;
     const GLuint _vertexArrayObject;
     const BufferObjects _bufferObjects;
 };

@@ -52,9 +52,14 @@ private:
     const size_t _meriCount;
     const std::vector<glm::vec3> _customColors;
 
-    size_t levelOfDetail() const override;
+    struct BasicInfo {
+        std::vector<glm::vec3> positions {};
+        std::vector<glm::vec3> normals {};
+        std::vector<glm::vec3> colors {};
+        std::vector<GLushort> indices {};
+    };
 
-    static GeometricShape::ShapeVerticesInfo computeBasicInfoCylinder(size_t meriCount = defaultMeriCount);
+    static BasicInfo computeBasicInfoCylinder(size_t meriCount = defaultMeriCount);
 
     static std::vector<glm::vec3> createCenterAndEdgeColorBuffer(
         const glm::vec3 &customColorCenter,

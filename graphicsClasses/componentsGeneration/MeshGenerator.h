@@ -24,7 +24,7 @@
 #include "geometry/Triangle.h"
 #include "gameMenu/LabelGeometry.h"
 #include "FrameBuffer.h"
-#include "process/Mesh.h"
+#include "process/mesh/Mesh.h"
 #include "graphicMenu/FontTexturesGenerator.h"
 
 

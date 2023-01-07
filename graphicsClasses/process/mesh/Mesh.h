@@ -11,9 +11,9 @@
 #include "ShaderProgram.h"
 #include "geometry/GeometricShape.h"
 #include "scene/Displayable.h"
+#include "MeshGeometry.h"
 
 class Mesh;
-
 using Mesh_sptr = std::shared_ptr<Mesh>;
 using CstMesh_sptr = std::shared_ptr<const Mesh>;
 using vecCstMesh_sptr = std::vector<CstMesh_sptr>;
@@ -23,18 +23,6 @@ class Mesh {
 
 public:
     Mesh(const CstDisplayable_sptr &displayable, vecCstGeometricShape_sptr &&shapes);
-
-    struct StateVertexAttributes {
-        std::vector<std::vector<GLint> > staticInts = {};
-        std::vector<std::vector<GLfloat> > staticFloats = {};
-        std::vector<std::vector<glm::vec3> > staticVec3s = {};
-        std::vector<std::vector<glm::vec2> > staticVec2s = {};
-    };
-
-    struct MeshVerticesInfo {
-        GeometricShape::ShapeVerticesInfo shapeVerticesInfo;
-        Mesh::StateVertexAttributes stateVertexAttributes;
-    };
 
     template<typename T> using UniformVariables = std::unordered_map<std::string, T>;
     template<typename T> using UniformVariables_uptr = std::unique_ptr<UniformVariables<T> >;
@@ -60,43 +48,20 @@ public:
 
     Uniforms genUniformsValues() const;
 
-    MeshVerticesInfo genMeshVerticesInfo() const;
+    MeshGeometry genMeshGeometry() const;
 
     bool updatingIsUseless() const;
 
-    static void concatMeshVerticesInfo(MeshVerticesInfo &current, const MeshVerticesInfo &other);
+    static void concatMeshVerticesInfo(MeshGeometry &current, const MeshGeometry &other);
 
 private:
 
     size_t computeNumberOfVertices() const;
 
-    template<typename T>
-    void duplicateStateVertexAttribute(
-        std::vector<std::vector<T> > &attributes,
-        const std::vector<T> &values
-    ) const;
-
-    template<typename RawType, typename OpenGLType>
-    static void convertAttributesToOpenGLFormat(
-        const Displayable::StaticValues<RawType> &rawValues,
-        std::vector<OpenGLType> &openGLValues
-    );
-
     template<typename RawType, typename OpenGLType>
     static void convertUniformsToOpenGLFormat(
         const Displayable::DynamicValues<RawType> &rawValues,
         Mesh::UniformVariables<OpenGLType> &openGLValue
-    );
-
-    template<typename T>
-    static void concatStateVertexAttribute(
-        std::vector<std::vector<T> > &current,
-        const std::vector<std::vector<T> > &other
-    );
-
-    static void concatStateVertexAttributes(
-        StateVertexAttributes &current,
-        const StateVertexAttributes &other
     );
 
     const CstDisplayable_sptr _displayable;

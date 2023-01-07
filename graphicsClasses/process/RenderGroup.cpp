@@ -30,10 +30,10 @@ GLuint RenderGroup::genBufferObject() {
     return bo;
 }
 
-Mesh::MeshVerticesInfo RenderGroup::createMeshesVerticesInfo() const {
-    Mesh::MeshVerticesInfo meshesVerticesInfo;
+Mesh::MeshGeometry RenderGroup::createMeshesVerticesInfo() const {
+    Mesh::MeshGeometry meshesVerticesInfo;
     for (const auto &mesh: _meshes) {
-        Mesh::concatMeshVerticesInfo(meshesVerticesInfo, mesh->genMeshVerticesInfo());
+        Mesh::concatMeshVerticesInfo(meshesVerticesInfo, mesh->genMeshGeometry());
     }
     return meshesVerticesInfo;
 }
@@ -86,7 +86,7 @@ RenderGroup::BufferObjects RenderGroup::createBufferObjects() const {
     fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticVec2s, attributesOffset);
     fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticVec3s, attributesOffset);
 
-    const auto ebo = initializeEBO(shapeVerticesInfo.indices);
+    const auto ebo = initializeEBO(shapeVerticesInfo.moveIndices);
     bufferObjects.elementBufferObject = ebo
                                         ? *ebo
                                         : 0;
@@ -107,7 +107,7 @@ RenderGroup::BufferObjects RenderGroup::createBufferObjects() const {
     nbOfStates += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticVec2s, nbOfShapes, nbOfStates);
     updateStateVBOsData(stateVBOs, stateVertexAttributes.staticVec3s, nbOfShapes, nbOfStates);
 
-    const auto &indices = shapeVerticesInfo.indices;
+    const auto &indices = shapeVerticesInfo.moveIndices;
     updateBufferObjectData(*ebo, indices, GL_ELEMENT_ARRAY_BUFFER);
 
     return bufferObjects;
@@ -224,7 +224,7 @@ std::shared_ptr<GLuint> RenderGroup::initializeEBO(const std::vector<GLushort> &
 void RenderGroup::render() const {
     glBindVertexArray(_vertexArrayObject);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _bufferObjects.elementBufferObject);
-    const auto numberOfIndices = static_cast<GLsizei>(_meshesVerticesInfo.shapeVerticesInfo.indices.size());
+    const auto numberOfIndices = static_cast<GLsizei>(_meshesVerticesInfo.shapeVerticesInfo.moveIndices.size());
     glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, nullptr);
 }
 

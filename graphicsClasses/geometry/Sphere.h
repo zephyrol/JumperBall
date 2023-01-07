@@ -48,11 +48,18 @@ public:
 
 private:
 
-    static const GeometricShape::ShapeVerticesInfo basicInfoSphere;
+    struct BasicInfo {
+        std::vector<glm::vec3> positions {};
+        std::vector<glm::vec3> normals {};
+        std::vector<glm::vec3> colors {};
+        std::vector<GLushort> indices {};
+    };
+
+    static const Sphere::BasicInfo basicInfoSphere;
 
     static glm::vec3 getSphereColor(const JBTypes::Color &color);
 
-    static GeometricShape::ShapeVerticesInfo computeBasicInfoSphere(
+    static Sphere::BasicInfo computeBasicInfoSphere(
         bool useCustomColors = false,
         const glm::vec3 &firstColor = glm::vec3(0.f),
         const glm::vec3 &secondColor = glm::vec3(0.f)

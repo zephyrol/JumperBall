@@ -53,48 +53,39 @@ Cylinder::Cylinder(
 
 }
 
-GeometricShape::ShapeVerticesInfo Cylinder::computeBasicInfoCylinder(size_t meriCount) {
+Cylinder::BasicInfo Cylinder::computeBasicInfoCylinder(size_t meriCount) {
 
-    GeometricShape::ShapeVertexAttributes infoAttributesCylinder;
-    GeometricShape::IndicesBuffer indices;
+    Cylinder::BasicInfo basicInfo;
     constexpr float r = 0.5f;
-    // Create a Cylinder --------------------------------------------------------
 
     const float a2 = (360.0f / static_cast <float>(meriCount - 1)) *
                      static_cast <float>(M_PI) / 180.0f;
 
-    infoAttributesCylinder.positions.emplace_back(0.f, 0.f, 0.f);
-    infoAttributesCylinder.normals.emplace_back(0.f, -1.f, 0.f);
-    infoAttributesCylinder.colors.emplace_back(1.f, 0.f, 0.f);
-    infoAttributesCylinder.uvCoords.emplace_back(0.f, 0.f);
+    basicInfo.positions.emplace_back(0.f, 0.f, 0.f);
+    basicInfo.normals.emplace_back(0.f, -1.f, 0.f);
+    basicInfo.colors.emplace_back(1.f, 0.f, 0.f);
 
-    infoAttributesCylinder.positions.emplace_back(0.f, 1.f, 0.f);
-    infoAttributesCylinder.normals.emplace_back(0.f, 1.f, 0.f);
-    infoAttributesCylinder.colors.emplace_back(0.f, 1.f, 0.f);
-    infoAttributesCylinder.uvCoords.emplace_back(0.f, 0.f);
+    basicInfo.positions.emplace_back(0.f, 1.f, 0.f);
+    basicInfo.normals.emplace_back(0.f, 1.f, 0.f);
+    basicInfo.colors.emplace_back(0.f, 1.f, 0.f);
 
 
     const glm::vec3 initialPositionBase(r, 0.f, 0.f);
     const glm::vec3 initialPositionTop(r, 1.f, 0.f);
-    infoAttributesCylinder.positions.push_back(initialPositionBase);
-    infoAttributesCylinder.positions.push_back(initialPositionTop);
-    infoAttributesCylinder.positions.push_back(initialPositionBase);
-    infoAttributesCylinder.positions.push_back(initialPositionTop);
+    basicInfo.positions.push_back(initialPositionBase);
+    basicInfo.positions.push_back(initialPositionTop);
+    basicInfo.positions.push_back(initialPositionBase);
+    basicInfo.positions.push_back(initialPositionTop);
 
-    infoAttributesCylinder.colors.emplace_back(1.f, 0.f, 0.f);
-    infoAttributesCylinder.colors.emplace_back(0.f, 1.f, 0.f);
-    infoAttributesCylinder.colors.emplace_back(1.f, 0.f, 0.f);
-    infoAttributesCylinder.colors.emplace_back(0.f, 1.f, 0.f);
+    basicInfo.colors.emplace_back(1.f, 0.f, 0.f);
+    basicInfo.colors.emplace_back(0.f, 1.f, 0.f);
+    basicInfo.colors.emplace_back(1.f, 0.f, 0.f);
+    basicInfo.colors.emplace_back(0.f, 1.f, 0.f);
 
-    infoAttributesCylinder.normals.push_back(glm::normalize(initialPositionBase));
-    infoAttributesCylinder.normals.push_back(glm::normalize(initialPositionBase));
-    infoAttributesCylinder.normals.emplace_back(0.f, -1.f, 0.f);
-    infoAttributesCylinder.normals.emplace_back(0.f, 1.f, 0.f);
-
-    infoAttributesCylinder.uvCoords.emplace_back(initialPositionBase.x, initialPositionBase.z);
-    infoAttributesCylinder.uvCoords.emplace_back(initialPositionTop.x, initialPositionTop.z);
-    infoAttributesCylinder.uvCoords.emplace_back(initialPositionBase.x, initialPositionBase.z);
-    infoAttributesCylinder.uvCoords.emplace_back(initialPositionTop.x, initialPositionTop.z);
+    basicInfo.normals.push_back(glm::normalize(initialPositionBase));
+    basicInfo.normals.push_back(glm::normalize(initialPositionBase));
+    basicInfo.normals.emplace_back(0.f, -1.f, 0.f);
+    basicInfo.normals.emplace_back(0.f, 1.f, 0.f);
 
     for (unsigned int i = 1; i < meriCount; ++i) {
         const glm::mat4 rotation = glm::rotate(
@@ -106,44 +97,38 @@ GeometricShape::ShapeVerticesInfo Cylinder::computeBasicInfoCylinder(size_t meri
         const glm::vec3 positionTop(positionBase.x, 1.f, positionBase.z);
 
         for (unsigned int j = 0; j < 2; j++) {
-            infoAttributesCylinder.positions.push_back(positionBase);
-            infoAttributesCylinder.positions.push_back(positionTop);
+            basicInfo.positions.push_back(positionBase);
+            basicInfo.positions.push_back(positionTop);
 
-            infoAttributesCylinder.colors.emplace_back(1.f, 0.f, 0.f);
-            infoAttributesCylinder.colors.emplace_back(0.f, 1.f, 0.f);
-
-            infoAttributesCylinder.uvCoords.emplace_back(positionBase.x, positionBase.z);
-            infoAttributesCylinder.uvCoords.emplace_back(positionTop.x, positionTop.z);
+            basicInfo.colors.emplace_back(1.f, 0.f, 0.f);
+            basicInfo.colors.emplace_back(0.f, 1.f, 0.f);
         }
 
-        infoAttributesCylinder.normals.push_back(glm::normalize(positionBase));
-        infoAttributesCylinder.normals.push_back(glm::normalize(positionBase));
-        infoAttributesCylinder.normals.emplace_back(0.f, -1.f, 0.f);
-        infoAttributesCylinder.normals.emplace_back(0.f, 1.f, 0.f);
+        basicInfo.normals.push_back(glm::normalize(positionBase));
+        basicInfo.normals.push_back(glm::normalize(positionBase));
+        basicInfo.normals.emplace_back(0.f, -1.f, 0.f);
+        basicInfo.normals.emplace_back(0.f, 1.f, 0.f);
     }
 
     for (unsigned int i = 0; i < (meriCount - 1); ++i) {
-        indices.push_back(0);
-        indices.push_back(2 + (i + 1) * 4 + 2);
-        indices.push_back(2 + i * 4 + 2);
+        basicInfo.indices.push_back(0);
+        basicInfo.indices.push_back(2 + (i + 1) * 4 + 2);
+        basicInfo.indices.push_back(2 + i * 4 + 2);
 
-        indices.push_back(1);
-        indices.push_back(2 + i * 4 + 2 + 1);
-        indices.push_back(2 + (i + 1) * 4 + 2 + 1);
+        basicInfo.indices.push_back(1);
+        basicInfo.indices.push_back(2 + i * 4 + 2 + 1);
+        basicInfo.indices.push_back(2 + (i + 1) * 4 + 2 + 1);
 
-        indices.push_back(2 + i * 4);
-        indices.push_back(2 + (i + 1) * 4);
-        indices.push_back(2 + i * 4 + 1);
+        basicInfo.indices.push_back(2 + i * 4);
+        basicInfo.indices.push_back(2 + (i + 1) * 4);
+        basicInfo.indices.push_back(2 + i * 4 + 1);
 
-        indices.push_back(2 + (i + 1) * 4);
-        indices.push_back(2 + (i + 1) * 4 + 1);
-        indices.push_back(2 + i * 4 + 1);
+        basicInfo.indices.push_back(2 + (i + 1) * 4);
+        basicInfo.indices.push_back(2 + (i + 1) * 4 + 1);
+        basicInfo.indices.push_back(2 + i * 4 + 1);
     }
 
-    GeometricShape::ShapeVerticesInfo verticesInfo;
-    verticesInfo.shapeVertexAttributes = infoAttributesCylinder;
-    verticesInfo.indices = indices;
-    return verticesInfo;
+    return basicInfo;
 }
 
 
@@ -162,25 +147,21 @@ std::vector<glm::vec3> Cylinder::createCenterAndEdgeColorBuffer(
     return customColorCube;
 }
 
-size_t Cylinder::levelOfDetail() const {
-    return _meriCount;
-}
-
 std::vector<glm::vec3> Cylinder::genColors(const std::vector<glm::vec3> &colors) const {
     if (colors.size() == 2) {
         return createCenterAndEdgeColorBuffer(
             colors.at(0),    // customColorCenter
             colors.at(1),    // customColorEdge
-            computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.colors.size()
+            computeBasicInfoCylinder(_meriCount).colors.size()
         );
     }
     if (colors.size() == 1) {
         return GeometricShape::createCustomColorBuffer(
             colors.at(0), // customColor
-            computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.colors.size()
+            computeBasicInfoCylinder(_meriCount).colors.size()
         );
     }
-    return computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.colors;
+    return computeBasicInfoCylinder(_meriCount).colors;
 }
 
 std::vector<GLushort> Cylinder::genIndices() const {
@@ -188,11 +169,11 @@ std::vector<GLushort> Cylinder::genIndices() const {
 }
 
 std::vector<glm::vec3> Cylinder::genNormals() const {
-    return computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.normals;
+    return computeBasicInfoCylinder(_meriCount).normals;
 }
 
 std::vector<glm::vec3> Cylinder::genPositions() const {
-    return computeBasicInfoCylinder(_meriCount).shapeVertexAttributes.positions;
+    return computeBasicInfoCylinder(_meriCount).positions;
 }
 
 std::array<glm::vec3, 2> Cylinder::getCenterAndEdgeColor(const JBTypes::Color &color) {
