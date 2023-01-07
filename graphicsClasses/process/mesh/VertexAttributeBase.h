@@ -24,6 +24,9 @@ class VertexAttributeBase {
 public:
     explicit VertexAttributeBase(GLenum dataType);
 
+    VertexAttributeBase(const VertexAttributeBase& vertexAttributeBase) = delete;
+    VertexAttributeBase& operator=(const VertexAttributeBase& vertexAttributeBase) = delete;
+
     GLenum getDataType() const;
 
     /**
@@ -31,6 +34,8 @@ public:
      * @param other The other that will be moved into the current one.
      */
     virtual void merge(VertexAttributeBase_uptr &&other);
+
+    virtual void createDataOnGpu() const = 0;
 
     virtual size_t dataLength() const = 0;
 
@@ -42,6 +47,8 @@ public:
     static vecVertexAttributeBase_uptr genAndFilterVertexAttributes(
         const std::vector<std::function<VertexAttributeBase_uptr()> > &vertexAttributeGenerationFunction
     );
+
+    static size_t getNumberOfVertices(const vecVertexAttributeBase_uptr& vertexAttributes);
 
 private:
 

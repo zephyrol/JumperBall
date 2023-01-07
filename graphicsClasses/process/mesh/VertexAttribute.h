@@ -34,6 +34,8 @@ public:
 
     size_t dataLength() const override;
 
+    void createDataOnGpu() const override;
+
 private:
     std::vector<T> &getDataRef();
 
@@ -44,14 +46,19 @@ private:
 };
 
 template<class T>
-size_t VertexAttribute<T>::dataLength() const {
-    return _data.size();
-}
-
-template<class T>
 VertexAttribute<T>::VertexAttribute(std::vector<T> &&data, GLenum dataType):
     VertexAttributeBase(dataType),
     _data(std::move(data)) {
+}
+
+template<class T>
+void VertexAttribute<T>::createDataOnGpu() const {
+    glBufferData(GL_ARRAY_BUFFER, _data.size() * sizeof(T), _data.data(), GL_STATIC_DRAW);
+}
+
+template<class T>
+size_t VertexAttribute<T>::dataLength() const {
+    return _data.size();
 }
 
 template<class T>

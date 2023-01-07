@@ -13,7 +13,18 @@ class MeshGeometry {
 
 public:
 
-    explicit MeshGeometry(const CstDisplayable_sptr &displayable, const vecCstGeometricShape_sptr &shapes);
+    explicit MeshGeometry(
+        vecVertexAttributeBase_uptr vertexAttributes,
+        GeometricShape::IndicesBuffer indices
+    );
+
+    MeshGeometry(MeshGeometry&& meshGeometry) = default;
+    MeshGeometry& operator=(MeshGeometry&& meshGeometry) = default;
+
+    static MeshGeometry createInstance(
+        const CstDisplayable_sptr &displayable,
+        const vecCstGeometricShape_sptr &shapes
+    );
 
     /**
      * Merge a mesh geometry into the current one moving it.
@@ -21,31 +32,18 @@ public:
      */
     void merge(MeshGeometry &&other);
 
+    const vecVertexAttributeBase_uptr &vertexAttributes();
+
+    const GeometricShape::IndicesBuffer &indices() const;
+
 private:
 
+    GeometricShape::IndicesBuffer &&moveIndices();
 
-    static vecVertexAttributeBase_uptr genVertexAttributes(
-        const CstDisplayable_sptr &displayable,
-        const vecCstGeometricShape_sptr &shapes
-    );
-
-    static GeometricShape::IndicesBuffer genIndices(
-        const vecCstGeometricShape_sptr &shapes,
-        const vecVertexAttributeBase_uptr& vertexAttributes
-    );
-
-    GeometricShape::IndicesBuffer && moveIndices();
-
-    vecVertexAttributeBase_uptr && moveVertexAttributes();
+    vecVertexAttributeBase_uptr &&moveVertexAttributes();
 
     vecVertexAttributeBase_uptr _vertexAttributes;
     GeometricShape::IndicesBuffer _indices;
-
-    template<typename RawType, typename OpenGLType>
-    static void convertAttributesToOpenGLFormat(
-        const Displayable::StaticValues<RawType> &rawValues,
-        std::vector<OpenGLType> &openGLValues
-    );
 
     template<typename OpenGLType, typename RawType>
     static VertexAttribute_uptr<OpenGLType> genStaticVertexAttribute(

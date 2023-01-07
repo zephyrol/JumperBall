@@ -14,13 +14,17 @@ class RenderGroup {
 
 public:
 
-    explicit RenderGroup(vecMesh_sptr meshes);
+    explicit RenderGroup(
+        vecMesh_sptr meshes,
+        GLuint vertexArrayObject,
+        std::vector<GLuint> vertexBufferObjects,
+        GLuint elementBufferObject,
+        GLsizei numberOfIndices
+    );
 
-    RenderGroup(const RenderGroup &renderGroup) = delete;
-
+    RenderGroup(const RenderGroup& renderGroup) = delete;
     RenderGroup &operator=(const RenderGroup &renderGroup) = delete;
-
-    RenderGroup(RenderGroup &&renderGroup) = default;
+    RenderGroup(RenderGroup&& renderGroup) = default;
 
     void freeGPUMemory();
 
@@ -28,68 +32,21 @@ public:
 
     CstMesh_sptr getHeadMesh() const;
 
+    static RenderGroup createInstance(vecMesh_sptr meshes);
 
 private:
 
-    struct BufferObjects {
-        std::vector<GLuint> shapeVertexBufferObjects;
-        std::vector<GLuint> stateVertexBufferObjects;
-        GLuint elementBufferObject;
-    };
-
     template<typename T>
-    void fillBufferObjectData(
+    static void fillBufferObjectData(
         GLuint bo,
         const std::vector<T> &bufferObjectData,
         GLenum target
-    ) const;
-
-    template<typename T>
-    std::shared_ptr<GLuint> initializeBO(
-        const std::vector<T> &bufferObjectData,
-        GLenum target
-    ) const;
-
-    template<typename T>
-    std::shared_ptr<GLuint> initializeVBO(const std::vector<T> &attributeData) const;
-
-    std::shared_ptr<GLuint> initializeEBO(const std::vector<GLushort> &indicesData) const;
-
-    template<typename T>
-    void fillVBOsList(
-        std::vector<GLuint> &vboList,
-        const std::vector<T> &attributeData,
-        size_t attributesOffset = 0
-    ) const;
-
-    template<typename T>
-    void fillStateVertexAttributesVBOsList(
-        std::vector<GLuint> &vboList,
-        const std::vector<std::vector<T> > &stateVertexAttributes,
-        size_t attributesOffset
-    ) const;
-
-    BufferObjects createBufferObjects() const;
+    );
 
     template<typename T>
     void activateVertexAttribute(
         const std::vector<T> &attributeData,
         GLuint attributeNumber) const;
-
-    template<typename T>
-    size_t updateStateVBOsData(
-        const std::vector<GLuint> &vbosList,
-        const std::vector<std::vector<T> > &bufferObjectsData,
-        size_t nbOfShapeVbos,
-        size_t attributesOffset
-    ) const;
-
-    template<typename T>
-    size_t updateShapeVBOsData(
-        const std::vector<GLuint> &vbosList,
-        const std::vector<T> &bufferObjectsData,
-        size_t attributesOffset
-    ) const;
 
     template<typename T>
     bool updateBufferObjectData(
@@ -98,16 +55,11 @@ private:
         GLenum target
     ) const;
 
-    static GLuint genVertexArrayObject();
-
-    static GLuint genBufferObject();
-
-    Mesh::MeshGeometry createMeshesVerticesInfo() const;
-
     const vecMesh_sptr _meshes;
-    const Mesh::MeshGeometry _meshesVerticesInfo;
     const GLuint _vertexArrayObject;
-    const BufferObjects _bufferObjects;
+    const std::vector<GLuint> _vertexBufferObjects;
+    const GLuint _elementBufferObject;
+    const GLsizei _numberOfIndices;
 };
 
 

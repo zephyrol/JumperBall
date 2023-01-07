@@ -5,112 +5,24 @@
  * Created on 20 mars 2021, 16:30
  */
 #include "process/RenderGroup.h"
+#include <Utility.h>
 
-#include <utility>
-
-RenderGroup::RenderGroup(vecMesh_sptr meshes) :
+RenderGroup::RenderGroup(
+    vecMesh_sptr meshes,
+    GLuint vertexArrayObject,
+    std::vector<GLuint> vertexBufferObjects,
+    GLuint elementBufferObject,
+    GLsizei numberOfIndices
+) :
     _meshes(std::move(meshes)),
-    _meshesVerticesInfo(createMeshesVerticesInfo()),
-    _vertexArrayObject(genVertexArrayObject()),
-    _bufferObjects(createBufferObjects()) {}
+    _vertexArrayObject(vertexArrayObject),
+    _vertexBufferObjects(std::move(vertexBufferObjects)),
+    _elementBufferObject(elementBufferObject),
+    _numberOfIndices(numberOfIndices) {
+}
 
 CstMesh_sptr RenderGroup::getHeadMesh() const {
     return _meshes.at(0);
-}
-
-GLuint RenderGroup::genVertexArrayObject() {
-    GLuint vao;
-    glGenVertexArrays(1, &vao);
-    return vao;
-}
-
-GLuint RenderGroup::genBufferObject() {
-    GLuint bo;
-    glGenBuffers(1, &bo);
-    return bo;
-}
-
-Mesh::MeshGeometry RenderGroup::createMeshesVerticesInfo() const {
-    Mesh::MeshGeometry meshesVerticesInfo;
-    for (const auto &mesh: _meshes) {
-        Mesh::concatMeshVerticesInfo(meshesVerticesInfo, mesh->genMeshGeometry());
-    }
-    return meshesVerticesInfo;
-}
-
-
-template<typename T>
-void RenderGroup::fillVBOsList(
-    std::vector<GLuint> &vboList,
-    const std::vector<T> &attributeData,
-    size_t attributesOffset
-) const {
-    const std::shared_ptr<GLuint> vertexBufferObject = initializeVBO(attributeData);
-    if (vertexBufferObject) {
-        const auto attributeNumber = static_cast<GLuint>(vboList.size() + attributesOffset);
-        activateVertexAttribute(attributeData, attributeNumber);
-        vboList.push_back(*vertexBufferObject);
-    }
-}
-
-template<typename T>
-void RenderGroup::fillStateVertexAttributesVBOsList(
-    std::vector<GLuint> &vboList,
-    const std::vector<std::vector<T> > &stateVertexAttributes,
-    size_t attributesOffset
-) const {
-    for (const std::vector<T> &stateVertexAttribute: stateVertexAttributes) {
-        fillVBOsList(vboList, stateVertexAttribute, attributesOffset);
-    }
-}
-
-RenderGroup::BufferObjects RenderGroup::createBufferObjects() const {
-
-    glBindVertexArray(_vertexArrayObject);
-    RenderGroup::BufferObjects bufferObjects;
-
-    std::vector<GLuint> &shapeVBOs = bufferObjects.shapeVertexBufferObjects;
-    const auto &shapeVerticesInfo = _meshesVerticesInfo.shapeVerticesInfo;
-    const auto &shapeVertexAttributes = shapeVerticesInfo.shapeVertexAttributes;
-    fillVBOsList(shapeVBOs, shapeVertexAttributes.positions);
-    fillVBOsList(shapeVBOs, shapeVertexAttributes.colors);
-    fillVBOsList(shapeVBOs, shapeVertexAttributes.normals);
-    fillVBOsList(shapeVBOs, shapeVertexAttributes.uvCoords);
-
-    const size_t attributesOffset = shapeVBOs.size();
-    std::vector<GLuint> &stateVBOs = bufferObjects.stateVertexBufferObjects;
-    const auto &stateVertexAttributes = _meshesVerticesInfo.stateVertexAttributes;
-
-    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticInts, attributesOffset);
-    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticFloats, attributesOffset);
-    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticVec2s, attributesOffset);
-    fillStateVertexAttributesVBOsList(stateVBOs, stateVertexAttributes.staticVec3s, attributesOffset);
-
-    const auto ebo = initializeEBO(shapeVerticesInfo.moveIndices);
-    bufferObjects.elementBufferObject = ebo
-                                        ? *ebo
-                                        : 0;
-
-    const auto &positions = shapeVertexAttributes.positions;
-    const auto &colors = shapeVertexAttributes.colors;
-    const auto &normals = shapeVertexAttributes.normals;
-    const auto &uvCoords = shapeVertexAttributes.uvCoords;
-    size_t nbOfShapes = 0;
-    nbOfShapes += updateShapeVBOsData(shapeVBOs, positions, nbOfShapes);
-    nbOfShapes += updateShapeVBOsData(shapeVBOs, colors, nbOfShapes);
-    nbOfShapes += updateShapeVBOsData(shapeVBOs, normals, nbOfShapes);
-    nbOfShapes += updateShapeVBOsData(shapeVBOs, uvCoords, nbOfShapes);
-
-    size_t nbOfStates = 0;
-    nbOfStates += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticInts, nbOfShapes, nbOfStates);
-    nbOfStates += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticFloats, nbOfShapes, nbOfStates);
-    nbOfStates += updateStateVBOsData(stateVBOs, stateVertexAttributes.staticVec2s, nbOfShapes, nbOfStates);
-    updateStateVBOsData(stateVBOs, stateVertexAttributes.staticVec3s, nbOfShapes, nbOfStates);
-
-    const auto &indices = shapeVerticesInfo.moveIndices;
-    updateBufferObjectData(*ebo, indices, GL_ELEMENT_ARRAY_BUFFER);
-
-    return bufferObjects;
 }
 
 template<typename T>
@@ -147,94 +59,88 @@ bool RenderGroup::updateBufferObjectData(
 }
 
 template<typename T>
-size_t RenderGroup::updateStateVBOsData(
-    const std::vector<GLuint> &vbosList,
-    const std::vector<std::vector<T> > &bufferObjectsData,
-    size_t nbOfShapeVbos,
-    size_t attributesOffset
-) const {
-    size_t vbosDataUpdated = 0;
-    for (size_t i = 0; i < bufferObjectsData.size(); ++i) {
-        const auto &bufferObjectData = bufferObjectsData.at(i);
-
-        const size_t stateVboNumber = i + attributesOffset;
-        const auto &vbo = vbosList.at(stateVboNumber);
-
-        if (updateBufferObjectData(vbo, bufferObjectData, GL_ARRAY_BUFFER)) {
-            const auto vertexAttributeNumber = static_cast<GLuint>(
-                nbOfShapeVbos + attributesOffset + vbosDataUpdated
-            );
-            activateVertexAttribute(bufferObjectData, vertexAttributeNumber);
-            ++vbosDataUpdated;
-        }
-    }
-    return vbosDataUpdated;
-}
-
-template<typename T>
-size_t RenderGroup::updateShapeVBOsData(
-    const std::vector<GLuint> &vbosList,
-    const std::vector<T> &bufferObjectsData,
-    size_t attributesOffset
-) const {
-    if (attributesOffset < vbosList.size()) {
-        const GLuint vbo = vbosList.at(attributesOffset);
-        if (updateBufferObjectData(vbo, bufferObjectsData, GL_ARRAY_BUFFER)) {
-            activateVertexAttribute(bufferObjectsData, static_cast<GLuint>(attributesOffset));
-            return 1;
-        }
-    }
-    return 0;
-}
-
-template<typename T>
 void RenderGroup::fillBufferObjectData(
     GLuint bo,
     const std::vector<T> &bufferObjectData,
     GLenum target
-) const {
+) {
     glBindBuffer(target, bo);
     glBufferData(target, bufferObjectData.size() * sizeof(T), bufferObjectData.data(), GL_STATIC_DRAW);
 }
 
-template<typename T>
-std::shared_ptr<GLuint> RenderGroup::initializeBO(
-    const std::vector<T> &bufferObjectData,
-    GLenum target
-) const {
-    std::shared_ptr<GLuint> bo = nullptr;
-    if (!bufferObjectData.empty()) {
-        bo = std::make_shared<GLuint>(genBufferObject());
-        fillBufferObjectData(*bo, bufferObjectData, target);
-    }
-    return bo;
-}
-
-template<typename T>
-std::shared_ptr<GLuint> RenderGroup::initializeVBO(
-    const std::vector<T> &attributeData
-) const {
-    return initializeBO(attributeData, GL_ARRAY_BUFFER);
-}
-
-std::shared_ptr<GLuint> RenderGroup::initializeEBO(const std::vector<GLushort> &indicesData) const {
-    return initializeBO(indicesData, GL_ELEMENT_ARRAY_BUFFER);
-}
-
 void RenderGroup::render() const {
     glBindVertexArray(_vertexArrayObject);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _bufferObjects.elementBufferObject);
-    const auto numberOfIndices = static_cast<GLsizei>(_meshesVerticesInfo.shapeVerticesInfo.moveIndices.size());
-    glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, nullptr);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elementBufferObject);
+    glDrawElements(GL_TRIANGLES, _numberOfIndices, GL_UNSIGNED_SHORT, nullptr);
 }
 
 void RenderGroup::freeGPUMemory() {
-    glDeleteBuffers(1, &_bufferObjects.elementBufferObject);
-    for (const auto &shapeVBO: _bufferObjects.shapeVertexBufferObjects) {
-        glDeleteBuffers(1, &shapeVBO);
-    }
-    for (const auto &stateVBO: _bufferObjects.stateVertexBufferObjects) {
-        glDeleteBuffers(1, &stateVBO);
+    glDeleteBuffers(1, &_elementBufferObject);
+    for (const auto &vertexBufferObject: _vertexBufferObjects) {
+        glDeleteBuffers(1, &vertexBufferObject);
     }
     glDeleteVertexArrays(1, &_vertexArrayObject);
 }
+
+RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
+
+    // 1. VAO
+    const auto genVertexArrayObject = []() {
+        GLuint vao;
+        glGenVertexArrays(1, &vao);
+        return vao;
+    };
+
+    const auto vertexArrayObject = genVertexArrayObject();
+    glBindVertexArray(vertexArrayObject);
+
+    // 2. VBOs
+    auto groupGeometry = std::accumulate(
+        meshes.begin() + 1,
+        meshes.end(),
+        meshes.front()->genMeshGeometry(),
+        [](MeshGeometry &current, const CstMesh_sptr &other) {
+            current.merge(other->genMeshGeometry());
+            return std::move(current);
+        });
+
+    const auto& vertexAttributes = groupGeometry.vertexAttributes();
+    std::vector<GLuint> vertexBufferObjects(vertexAttributes.size());
+
+    const auto genAndBindBufferObject = []() {
+        GLuint bo;
+        glGenBuffers(1, &bo);
+        glBindBuffer(GL_ARRAY_BUFFER, bo);
+        return bo;
+    };
+
+    std::transform(
+        vertexAttributes.cbegin(),
+        vertexAttributes.cend(),
+        vertexBufferObjects.begin(),
+        [&genAndBindBufferObject](const VertexAttributeBase_uptr &vertexAttribute) {
+            const auto vbo = genAndBindBufferObject();
+            vertexAttribute->createDataOnGpu();
+            return vbo;
+        }
+    );
+
+    // EBO
+    const auto indices = groupGeometry.indices();
+    const auto elementBufferObject = genAndBindBufferObject();
+    glBufferData(
+        GL_ELEMENT_ARRAY_BUFFER,
+        static_cast<GLsizeiptr>(indices.size() * sizeof(decltype(indices.front()))),
+        indices.data(),
+        GL_STATIC_DRAW
+    );
+
+    return RenderGroup(
+        std::move(meshes),
+        vertexArrayObject,
+        vertexBufferObjects,
+        elementBufferObject,
+        static_cast<GLsizei>(indices.size())
+    );
+}
+

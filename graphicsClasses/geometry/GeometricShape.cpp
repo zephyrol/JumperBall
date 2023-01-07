@@ -5,7 +5,6 @@
  * Created on 29 mars 2020, 09:07
  */
 
-#include <numeric>
 #include "GeometricShape.h"
 
 GeometricShape::GeometricShape(
@@ -44,9 +43,9 @@ vecVertexAttributeBase_uptr GeometricShape::genVertexAttributes() const {
 
     const std::vector<std::function<VertexAttributeBase_uptr()> > vertexAttributeGenerationFunctions{
         [&computePositions]() { return genVertexAttribute(computePositions()); },
-        [this]() { return genVertexAttribute(genColors(_customColors)); },
-        [&computeNormals]() { return genVertexAttribute(computeNormals()); },
-        [this]() { return genVertexAttribute(genUvCoords(_customUvs)); }
+        [this]() { return genVertexAttribute(genColors(_customColors)); }
+        //[&computeNormals]() { return genVertexAttribute(computeNormals()); },
+        //[this]() { return genVertexAttribute(genUvCoords(_customUvs)); }
     };
 
     return VertexAttributeBase::genAndFilterVertexAttributes(vertexAttributeGenerationFunctions);
@@ -67,7 +66,7 @@ std::vector<GLushort> GeometricShape::genIndices() const {
     const size_t nbOfVertices = genPositions().size();
     std::vector<GLushort> indices(nbOfVertices);
     for (size_t i = 0; i < nbOfVertices; ++i) {
-        indices.at(i) = i;
+        indices[i] = i;
     }
     return indices;
 }

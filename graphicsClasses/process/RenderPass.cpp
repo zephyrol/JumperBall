@@ -62,7 +62,7 @@ std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > RenderPass::createS
     for (const Mesh_sptr &mesh: _meshes) {
         if (mesh->getGlobalState() == Displayable::GlobalState::Separate) {
             separateMeshGroups[mesh] = std::make_shared<RenderGroup>(
-                std::initializer_list<Mesh_sptr>({mesh})
+                RenderGroup::createInstance(std::initializer_list<Mesh_sptr>({mesh}))
             );
         }
     }
@@ -129,7 +129,9 @@ std::shared_ptr<RenderGroup> RenderPass::createUnitedMeshesGroup() const {
             unitedMeshes.push_back(mesh);
         }
     }
-    return !unitedMeshes.empty() ? std::make_shared<RenderGroup>(unitedMeshes) : nullptr;
+    return !unitedMeshes.empty()
+           ? std::make_shared<RenderGroup>(RenderGroup::createInstance(std::move(unitedMeshes)))
+           : nullptr;
 }
 
 void RenderPass::freeGPUMemory() {

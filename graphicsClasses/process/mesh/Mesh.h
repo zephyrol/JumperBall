@@ -44,19 +44,13 @@ public:
 
     Displayable::GlobalState getGlobalState() const;
 
-    size_t numberOfVertices() const;
-
     Uniforms genUniformsValues() const;
 
     MeshGeometry genMeshGeometry() const;
 
     bool updatingIsUseless() const;
 
-    static void concatMeshVerticesInfo(MeshGeometry &current, const MeshGeometry &other);
-
 private:
-
-    size_t computeNumberOfVertices() const;
 
     template<typename RawType, typename OpenGLType>
     static void convertUniformsToOpenGLFormat(
@@ -66,7 +60,6 @@ private:
 
     const CstDisplayable_sptr _displayable;
     const vecCstGeometricShape_sptr _shapes;
-    const size_t _numberOfVertices;
     const bool _updatingIsUseless;
 };
 

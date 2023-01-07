@@ -20,6 +20,7 @@
 #include <array>
 #include <memory>
 #include <chrono>
+#include <numeric>
 
 #define EPSILON_F 0.0001f
 #ifndef M_PI

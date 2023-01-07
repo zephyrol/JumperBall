@@ -2,7 +2,6 @@
 // Created by Sebastien Morgenthaler on 04/01/2023.
 //
 
-#include <numeric>
 #include "VertexAttributeBase.h"
 
 VertexAttributeBase::VertexAttributeBase(GLenum dataType):
@@ -14,7 +13,8 @@ GLenum VertexAttributeBase::getDataType() const {
     return _dataType;
 }
 
-void VertexAttributeBase::merge(VertexAttributeBase_uptr &&other) {
+void VertexAttributeBase::merge(VertexAttributeBase_uptr &&) {
+    std::cerr << "Error" << std::endl;
 }
 
 vecVertexAttributeBase_uptr VertexAttributeBase::filterUnusedAttributes(
@@ -37,4 +37,9 @@ vecVertexAttributeBase_uptr VertexAttributeBase::genAndFilterVertexAttributes(
         vecVertexAttributeBase_uptr{},
         VertexAttributeBase::filterUnusedAttributes
     );
+}
+
+size_t VertexAttributeBase::getNumberOfVertices(const vecVertexAttributeBase_uptr &vertexAttributes) {
+    // The first vertex attribute is always the position that corresponds to the number of vertices
+    return vertexAttributes.front()->dataLength() ;
 }

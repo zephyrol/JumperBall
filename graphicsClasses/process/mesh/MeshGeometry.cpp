@@ -2,23 +2,15 @@
 // Created by Sebastien Morgenthaler on 03/01/2023.
 //
 
-#include <numeric>
 #include "MeshGeometry.h"
 
-MeshGeometry::MeshGeometry(const CstDisplayable_sptr &displayable, const vecCstGeometricShape_sptr &shapes) :
-    _vertexAttributes(genVertexAttributes(displayable, shapes)),
-    _indices(genIndices(shapes, _vertexAttributes)) {
-}
 
-template<typename RawType, typename OpenGLType>
-void MeshGeometry::convertAttributesToOpenGLFormat(
-    const Displayable::StaticValues<RawType> &rawValues,
-    std::vector<OpenGLType> &openGLValues
-) {
-    for (const RawType &rawValue: rawValues) {
-        const OpenGLType openGLValue = Utility::convertToOpenGLFormat(rawValue);
-        openGLValues.push_back(openGLValue);
-    }
+MeshGeometry::MeshGeometry(
+    vecVertexAttributeBase_uptr vertexAttributes,
+    GeometricShape::IndicesBuffer indices
+) :
+    _vertexAttributes(std::move(vertexAttributes)),
+    _indices(std::move(indices)) {
 }
 
 void MeshGeometry::merge(MeshGeometry &&other) {
@@ -29,12 +21,12 @@ void MeshGeometry::merge(MeshGeometry &&other) {
     );
 
     vecVertexAttributeBase_uptr vertexAttributesOther(other.moveVertexAttributes());
-    for(size_t i = 0; i < _vertexAttributes.size(); ++i) {
+    for (size_t i = 0; i < _vertexAttributes.size(); ++i) {
         _vertexAttributes[i]->merge(std::move(vertexAttributesOther[i]));
     }
 
     GeometricShape::IndicesBuffer indicesOther(other.moveIndices());
-    for(auto& index: indicesOther) {
+    for (auto &index: indicesOther) {
         index += indicesOffset;
     }
 }
@@ -47,30 +39,45 @@ GeometricShape::IndicesBuffer &&MeshGeometry::moveIndices() {
     return std::move(_indices);
 }
 
-vecVertexAttributeBase_uptr MeshGeometry::genVertexAttributes(
+const GeometricShape::IndicesBuffer &MeshGeometry::indices() const {
+    return _indices;
+}
+
+const vecVertexAttributeBase_uptr &MeshGeometry::vertexAttributes() {
+    return _vertexAttributes;
+}
+
+MeshGeometry MeshGeometry::createInstance(
     const CstDisplayable_sptr &displayable,
     const vecCstGeometricShape_sptr &shapes
 ) {
-    vecVertexAttributeBase_uptr verticesAttributes{};
 
-    // 1. Merging the shapes vertex attributes together.
-    const auto mergeVertexAttributes = [](
-        vecVertexAttributeBase_uptr &current,
-        const CstGeometricShape_sptr &shape
-    ) {
-        auto shapeVertexAttributes = shape->genVertexAttributes();
-        for (size_t i = 0; i < current.size(); ++i) {
-            current[i]->merge(std::move(shapeVertexAttributes[i]));
+    const auto &headShape = shapes.front();
+
+    vecVertexAttributeBase_uptr vertexAttributes = headShape->genVertexAttributes();
+
+    GeometricShape::IndicesBuffer indices = headShape->genIndices();
+    GeometricShape::IndexType indicesOffset = VertexAttributeBase::getNumberOfVertices(vertexAttributes);
+
+    // 1. Merging the shapes vertex attributes and the concat indices together.
+    for (auto it = shapes.begin() + 1; it < shapes.end(); ++it) {
+        const auto &shape = *it;
+
+        // Concat indices
+        auto shapeIndices = shape->genIndices();
+        for (auto &index: shapeIndices) {
+            index += indicesOffset;
         }
-        return std::move(current);
-    };
 
-    auto vertexAttributes = std::accumulate(
-        shapes.begin() + 1,
-        shapes.end(),
-        vecVertexAttributeBase_uptr{shapes.front()->genVertexAttributes()},
-        mergeVertexAttributes
-    );
+        // Look the number of vertices on the current shape and increase the offset for the next loop turn.
+        auto shapeVertexAttributes = shape->genVertexAttributes();
+        indicesOffset += VertexAttributeBase::getNumberOfVertices(shapeVertexAttributes);
+
+        // Merge vertex attributes.
+        for (size_t i = 0; i < vertexAttributes.size(); ++i) {
+            vertexAttributes[i]->merge(std::move(shapeVertexAttributes[i]));
+        }
+    }
 
     // 2. Generate states vertex attributes.
     const std::vector<std::function<VertexAttributeBase_uptr()> > vertexAttributeGenerationFunctions{
@@ -105,40 +112,11 @@ vecVertexAttributeBase_uptr MeshGeometry::genVertexAttributes(
         stateVertexAttributes.begin(),
         std::make_move_iterator(stateVertexAttributes.begin()),
         std::make_move_iterator(stateVertexAttributes.end())
-        );
-    return vertexAttributes;
+    );
+
+    return MeshGeometry(std::move(vertexAttributes), std::move(indices));
 }
 
-GeometricShape::IndicesBuffer MeshGeometry::genIndices(
-    const vecCstGeometricShape_sptr &shapes,
-    const vecVertexAttributeBase_uptr &vertexAttributes
-) {
-    const auto getNumberOfVertices = [](const VertexAttributeBase_uptr &vertexAttribute) {
-        return static_cast<GeometricShape::IndexType>(vertexAttribute->dataLength()) ;
-    };
-
-    // The first vertex attribute is always the position. The number of vertices is the data length.
-    auto indicesOffset = getNumberOfVertices(vertexAttributes.front());
-
-    auto indices = shapes.front()->genIndices();
-    for (auto it = shapes.begin() + 1; it != shapes.end(); ++it) {
-        auto shapeIndices = (*it)->genIndices();
-
-        for (auto &index: shapeIndices) {
-            index += indicesOffset;
-        }
-
-        const auto treatedShapes = it - shapes.begin();
-        indicesOffset += getNumberOfVertices(vertexAttributes.at(treatedShapes));
-        indices.insert(
-            indices.end(),
-            std::make_move_iterator(shapeIndices.begin()),
-            std::make_move_iterator(shapeIndices.end())
-        );
-    }
-
-    return indices;
-}
 
 template<typename OpenGLType, typename RawType>
 VertexAttribute_uptr<OpenGLType> MeshGeometry::genStaticVertexAttribute(
