@@ -21,7 +21,7 @@ GeometricShape::GeometricShape(
 
 }
 
-GeometricShape::VertexAttributes GeometricShape::genVertexAttributes() const {
+VertexAttributes GeometricShape::genVertexAttributes() const {
     const auto computePositions = [this]() {
         std::vector<glm::vec3> computedPositions;
 
@@ -42,22 +42,22 @@ GeometricShape::VertexAttributes GeometricShape::genVertexAttributes() const {
         return computedNormals;
     };
 
-    std::vector<std::function<VertexAttributeVec3_uptr()> > attributesVec3GenerationFunctions{
-        [&computePositions]() { return genVertexAttribute(computePositions()); },
-        [this]() { return genVertexAttribute(genColors(_customColors)); },
-        [&computeNormals]() { return genVertexAttribute(computeNormals()); }
+    const std::vector<std::function<VertexAttributeVec3_uptr()> > attributesVec3GenerationFunctions{
+        [&computePositions]() { return VertexAttributes::genVertexAttribute(computePositions()); },
+        [this]() { return VertexAttributes::genVertexAttribute(genColors(_customColors)); },
+        [&computeNormals]() { return VertexAttributes::genVertexAttribute(computeNormals()); }
     };
 
-    std::vector<std::function<VertexAttributeVec2_uptr()> > attributesVec2GenerationFunctions{
-        [this]() { return genVertexAttribute(genUvCoords(_customUvs)); }
+    const std::vector<std::function<VertexAttributeVec2_uptr()> > attributesVec2GenerationFunctions{
+        [this]() { return VertexAttributes::genVertexAttribute(genUvCoords(_customUvs)); }
     };
 
-    return {
-        {},
-        {},
-        VertexAttributeBase::genAndFilter(attributesVec2GenerationFunctions),
+    return VertexAttributes(
         VertexAttributeBase::genAndFilter(attributesVec3GenerationFunctions),
-    };
+        VertexAttributeBase::genAndFilter(attributesVec2GenerationFunctions),
+        {},
+        {}
+    );
 }
 
 std::vector<glm::vec3> GeometricShape::createCustomColorBuffer(
@@ -90,20 +90,4 @@ std::vector<glm::vec3> GeometricShape::genColors(const std::vector<glm::vec3> &)
 
 std::vector<glm::vec2> GeometricShape::genUvCoords(const std::vector<glm::vec2> &) const {
     return {};
-}
-
-VertexAttributeVec3_uptr GeometricShape::genVertexAttribute(std::vector<glm::vec3> &&vertexAttributeData) {
-    // Return null if the vertex attribute does not need to be created.
-    if (vertexAttributeData.empty()) {
-        return nullptr;
-    }
-    return std::unique_ptr<VertexAttributeVec3>(new VertexAttributeVec3(std::move(vertexAttributeData)));
-}
-
-VertexAttributeVec2_uptr GeometricShape::genVertexAttribute(std::vector<glm::vec2> &&vertexAttributeData) {
-    // Return null if the vertex attribute does not need to be created.
-    if (vertexAttributeData.empty()) {
-        return nullptr;
-    }
-    return std::unique_ptr<VertexAttributeVec2>(new VertexAttributeVec2(std::move(vertexAttributeData)));
 }

@@ -14,12 +14,13 @@ class MeshGeometry {
 public:
 
     explicit MeshGeometry(
-        vecVertexAttributeBase_uptr vertexAttributes,
+        VertexAttributes vertexAttributes,
         GeometricShape::IndicesBuffer indices
     );
 
-    MeshGeometry(MeshGeometry&& meshGeometry) = default;
-    MeshGeometry& operator=(MeshGeometry&& meshGeometry) = default;
+    MeshGeometry(MeshGeometry &&meshGeometry) = default;
+
+    MeshGeometry &operator=(MeshGeometry &&meshGeometry) = default;
 
     static MeshGeometry createInstance(
         const CstDisplayable_sptr &displayable,
@@ -32,7 +33,7 @@ public:
      */
     void merge(MeshGeometry &&other);
 
-    const vecVertexAttributeBase_uptr &vertexAttributes();
+    const VertexAttributes &vertexAttributes();
 
     const GeometricShape::IndicesBuffer &indices() const;
 
@@ -40,16 +41,27 @@ private:
 
     GeometricShape::IndicesBuffer &&moveIndices();
 
-    vecVertexAttributeBase_uptr &&moveVertexAttributes();
+    VertexAttributes &&moveVertexAttributes();
 
-    vecVertexAttributeBase_uptr _vertexAttributes;
+    VertexAttributes _vertexAttributes;
     GeometricShape::IndicesBuffer _indices;
 
-    template<typename OpenGLType, typename RawType>
-    static VertexAttributeBase_uptr genStaticVertexAttribute(
-        const Displayable::StaticValues<RawType> &staticVertexAttributeData
+    /**
+     * For a specific type of static vertex (for example vec2, or int), get several functions used to
+     * generate vertex attribute pointers. A function is created for each static value of the same type.
+     * @tparam VertexAttribute Type of the vertex attributes created by the generation functions.
+     * @tparam StaticValues Type of the static values.
+     * @param numberOfVertices For N vertices, each static value is duplicated N times in the vertex
+     *  attributes.
+     * @param staticValues Vector containing static values.
+     * @return The list of functions used to generate the vertex attributes.
+     */
+    template<typename VertexAttribute, typename StaticValues>
+    static std::vector<std::function<std::unique_ptr<VertexAttribute>()> >
+    createStaticVertexAttributeGenerationFunctions(
+        size_t numberOfVertices,
+        const StaticValues &staticValues
     );
-
 };
 
 

@@ -35,8 +35,6 @@ public:
 
     virtual ~VertexAttributeBase() = default;
 
-    static size_t getNumberOfVertices(const vecVertexAttributeBase_uptr& vertexAttributes);
-
     /**
      * Use vertex attribute generation functions to gen them and filter the unused ones
      */

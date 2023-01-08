@@ -9,11 +9,7 @@
 #define GEOMETRICSHAPE_H
 
 #include "Shader.h"
-#include "process/mesh/vertexAttribute/VertexAttribute.h"
-#include "process/mesh/vertexAttribute/VertexAttributeVec3.h"
-#include "process/mesh/vertexAttribute/VertexAttributeInt.h"
-#include "process/mesh/vertexAttribute/VertexAttributeFloat.h"
-#include "process/mesh/vertexAttribute/VertexAttributeVec2.h"
+#include "process/mesh/vertexAttribute/VertexAttributes.h"
 
 class GeometricShape;
 
@@ -42,28 +38,17 @@ public:
 
     virtual ~GeometricShape() = default;
 
-    struct VertexAttributes {
-        vecVertexAttributeInt_uptr attributesInt;
-        vecVertexAttributeFloat_uptr attributesFloat;
-        vecVertexAttributeVec2_uptr attributesVec2;
-        vecVertexAttributeVec3_uptr attributesVec3;
-    };
-
-    GeometricShape::VertexAttributes genVertexAttributes() const;
-
-    static VertexAttributeVec3_uptr genVertexAttribute(std::vector<glm::vec3> &&vertexAttributeData);
-    static VertexAttributeVec2_uptr genVertexAttribute(std::vector<glm::vec2> &&vertexAttributeData);
+    VertexAttributes genVertexAttributes() const;
 
     using IndexType = GLushort;
-
     virtual std::vector<IndexType> genIndices() const;
-
 
 protected:
 
     static std::vector<glm::vec3> createCustomColorBuffer(
         const glm::vec3 &customColor,
-        size_t size);
+        size_t size
+    );
 
 private:
 

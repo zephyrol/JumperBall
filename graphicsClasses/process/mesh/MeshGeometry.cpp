@@ -6,7 +6,7 @@
 
 
 MeshGeometry::MeshGeometry(
-    vecVertexAttributeBase_uptr vertexAttributes,
+    VertexAttributes vertexAttributes,
     GeometricShape::IndicesBuffer indices
 ) :
     _vertexAttributes(std::move(vertexAttributes)),
@@ -17,21 +17,20 @@ void MeshGeometry::merge(MeshGeometry &&other) {
 
     // Number of positions corresponds to the number of vertices.
     const auto indicesOffset = static_cast<GeometricShape::IndexType>(
-        _vertexAttributes.front()->dataLength()
+        _vertexAttributes.getNumberOfVertices()
     );
 
-    vecVertexAttributeBase_uptr vertexAttributesOther(other.moveVertexAttributes());
-    for (size_t i = 0; i < _vertexAttributes.size(); ++i) {
-        _vertexAttributes[i]->merge(std::move(vertexAttributesOther[i]));
-    }
+    // Merge vertex attributes.
+    _vertexAttributes.merge(other.moveVertexAttributes());
 
+    // Concat indices.
     GeometricShape::IndicesBuffer indicesOther(other.moveIndices());
     for (auto &index: indicesOther) {
         index += indicesOffset;
     }
 }
 
-vecVertexAttributeBase_uptr &&MeshGeometry::moveVertexAttributes() {
+VertexAttributes &&MeshGeometry::moveVertexAttributes() {
     return std::move(_vertexAttributes);
 }
 
@@ -43,7 +42,7 @@ const GeometricShape::IndicesBuffer &MeshGeometry::indices() const {
     return _indices;
 }
 
-const vecVertexAttributeBase_uptr &MeshGeometry::vertexAttributes() {
+const VertexAttributes &MeshGeometry::vertexAttributes() {
     return _vertexAttributes;
 }
 
@@ -54,10 +53,10 @@ MeshGeometry MeshGeometry::createInstance(
 
     const auto &headShape = shapes.front();
 
-    vecVertexAttributeBase_uptr vertexAttributes = headShape->genVertexAttributes();
+    auto vertexAttributes = headShape->genVertexAttributes();
 
     GeometricShape::IndicesBuffer indices = headShape->genIndices();
-    GeometricShape::IndexType indicesOffset = VertexAttributeBase::getNumberOfVertices(vertexAttributes);
+    GeometricShape::IndexType indicesOffset = vertexAttributes.getNumberOfVertices();
 
     // 1. Merging the shapes vertex attributes and the concat indices together.
     for (auto it = shapes.begin() + 1; it < shapes.end(); ++it) {
@@ -71,62 +70,60 @@ MeshGeometry MeshGeometry::createInstance(
 
         // Look the number of vertices on the current shape and increase the offset for the next loop turn.
         auto shapeVertexAttributes = shape->genVertexAttributes();
-        indicesOffset += VertexAttributeBase::getNumberOfVertices(shapeVertexAttributes);
+        indicesOffset += shapeVertexAttributes.getNumberOfVertices();
 
         // Merge vertex attributes.
-        for (size_t i = 0; i < vertexAttributes.size(); ++i) {
-            vertexAttributes[i]->merge(std::move(shapeVertexAttributes[i]));
-        }
+        vertexAttributes.merge(std::move(shapeVertexAttributes));
     }
 
+
+    const auto numberOfVertices = vertexAttributes.getNumberOfVertices();
+
     // 2. Generate states vertex attributes.
-    const std::vector<std::function<VertexAttributeBase_uptr()> > vertexAttributeGenerationFunctions{
-        // [&displayable]() {
-        //     return genStaticVertexAttribute<decltype(
-        //     Utility::convertToOpenGLFormat(displayable->getStaticIntValues().front())
-        //     )>(displayable->getStaticIntValues());
-        // },
-        // [&displayable]() {
-        //     return genStaticVertexAttribute<decltype(
-        //     Utility::convertToOpenGLFormat(displayable->getStaticFloatValues().front())
-        //     )>(displayable->getStaticFloatValues());
-        // },
-        // [&displayable]() {
-        //     return genStaticVertexAttribute<decltype(
-        //     Utility::convertToOpenGLFormat(displayable->getStaticVec2fValues().front())
-        //     )>(displayable->getStaticVec2fValues());
-        // },
-        [&displayable]() {
-            return genStaticVertexAttribute<decltype(
-            Utility::convertToOpenGLFormat(displayable->getStaticVec3fValues().front())
-            )>(displayable->getStaticVec3fValues());
-        }
+    const auto staticVec3AttributesGeneration = createStaticVertexAttributeGenerationFunctions<
+        VertexAttributeVec3
+    >(numberOfVertices, displayable->getStaticVec3fValues());
+
+    const auto staticVec2AttributesGeneration = createStaticVertexAttributeGenerationFunctions<
+        VertexAttributeVec2
+    >(numberOfVertices, displayable->getStaticVec2fValues());
+
+    const auto staticFloatAttributesGeneration = createStaticVertexAttributeGenerationFunctions<
+        VertexAttributeFloat
+    >(numberOfVertices, displayable->getStaticFloatValues());
+
+    const auto staticIntAttributesGeneration = createStaticVertexAttributeGenerationFunctions<
+        VertexAttributeInt
+    >(numberOfVertices, displayable->getStaticIntValues());
+
+    VertexAttributes stateVertexAttributes{
+        VertexAttributeBase::genAndFilter(staticVec3AttributesGeneration),
+        VertexAttributeBase::genAndFilter(staticVec2AttributesGeneration),
+        VertexAttributeBase::genAndFilter(staticFloatAttributesGeneration),
+        VertexAttributeBase::genAndFilter(staticIntAttributesGeneration)
     };
-
-    auto stateVertexAttributes = VertexAttributeBase::genAndFilterVertexAttributes(
-        vertexAttributeGenerationFunctions
-    );
-
-    // Concatenate shape and state vertex attributes.
-    vertexAttributes.insert(
-        vertexAttributes.begin(),
-        std::make_move_iterator(stateVertexAttributes.begin()),
-        std::make_move_iterator(stateVertexAttributes.end())
-    );
 
     return MeshGeometry(std::move(vertexAttributes), std::move(indices));
 }
 
-template<typename OpenGLType, typename RawType>
-VertexAttributeBase_uptr MeshGeometry::genStaticVertexAttribute(
-    const Displayable::StaticValues<RawType> &staticVertexAttributeData
+template<typename VertexAttribute, typename StaticValues>
+std::vector<std::function<std::unique_ptr<VertexAttribute>()> >
+MeshGeometry::createStaticVertexAttributeGenerationFunctions(
+    size_t numberOfVertices,
+    const StaticValues &staticValues
 ) {
-    // Convert data to open gl format
-    std::vector<OpenGLType> openGLVertexAttributeData;
-    for (const auto &rawValue: staticVertexAttributeData) {
-        openGLVertexAttributeData.emplace_back(Utility::convertToOpenGLFormat(rawValue));
-    }
+    std::vector<std::function<std::unique_ptr<VertexAttribute>()> > staticVertexAttributeGenerationFunctions;
+    for (const auto &staticValue: staticValues) {
 
-    // Create the vertex attribute
-    return GeometricShape::genVertexAttribute(std::move(openGLVertexAttributeData));
+        // Values are passed by copy, because the function will be called after the end of this current
+        // function execution
+        staticVertexAttributeGenerationFunctions.emplace_back([numberOfVertices, staticValue]() {
+            std::vector<decltype(Utility::convertToOpenGLFormat(staticValue))> openGlVec3(
+                numberOfVertices,
+                Utility::convertToOpenGLFormat(staticValue)
+            );
+            return VertexAttributes::genVertexAttribute(std::move(openGlVec3));
+        });
+    }
+    return staticVertexAttributeGenerationFunctions;
 }

@@ -13,11 +13,6 @@ GLenum VertexAttributeBase::getDataType() const {
     return _dataType;
 }
 
-size_t VertexAttributeBase::getNumberOfVertices(const vecVertexAttributeBase_uptr &vertexAttributes) {
-    // The first vertex attribute is always the position that corresponds to the number of vertices
-    return vertexAttributes.front()->dataLength();
-}
-
 template<typename T>
 std::vector<std::unique_ptr<T>>
 VertexAttributeBase::filterUnused(
