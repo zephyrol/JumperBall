@@ -30,15 +30,15 @@ class VertexAttribute : public VertexAttributeBase {
 public:
     explicit VertexAttribute(std::vector<T> &&data, GLenum dataType);
 
-    void merge(VertexAttribute_uptr<T> &&other);
+    //void merge(VertexAttribute_uptr<T> &&other) override;
 
     size_t dataLength() const override;
 
     void createDataOnGpu() const override;
 
-private:
     std::vector<T> &getDataRef();
 
+private:
     /**
      * The data contained in a VBO is a list of T values (one T value per Vertex)
      */
@@ -61,15 +61,15 @@ size_t VertexAttribute<T>::dataLength() const {
     return _data.size();
 }
 
-template<class T>
-void VertexAttribute<T>::merge(VertexAttribute_uptr<T> &&other) {
-    auto &otherData = other->getDataRef();
-    _data.insert(
-        _data.end(),
-        std::make_move_iterator(otherData.begin()),
-        std::make_move_iterator(otherData.end())
-    );
-}
+// template<class T>
+// void VertexAttribute<T>::merge(VertexAttribute_uptr<T> &&other) {
+//     auto &otherData = other->getDataRef();
+//     _data.insert(
+//         _data.end(),
+//         std::make_move_iterator(otherData.begin()),
+//         std::make_move_iterator(otherData.end())
+//     );
+// }
 
 template<class T>
 std::vector<T> &VertexAttribute<T>::getDataRef() {

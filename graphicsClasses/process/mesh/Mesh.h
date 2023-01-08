@@ -14,6 +14,7 @@
 #include "MeshGeometry.h"
 
 class Mesh;
+
 using Mesh_sptr = std::shared_ptr<Mesh>;
 using CstMesh_sptr = std::shared_ptr<const Mesh>;
 using vecCstMesh_sptr = std::vector<CstMesh_sptr>;
@@ -23,6 +24,10 @@ class Mesh {
 
 public:
     Mesh(const CstDisplayable_sptr &displayable, vecCstGeometricShape_sptr &&shapes);
+
+    Mesh(const Mesh &mesh) = delete;
+
+    Mesh &operator=(const Mesh &mesh) = delete;
 
     template<typename T> using UniformVariables = std::unordered_map<std::string, T>;
     template<typename T> using UniformVariables_uptr = std::unique_ptr<UniformVariables<T> >;

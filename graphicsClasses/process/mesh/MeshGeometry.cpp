@@ -22,7 +22,7 @@ void MeshGeometry::merge(MeshGeometry &&other) {
 
     vecVertexAttributeBase_uptr vertexAttributesOther(other.moveVertexAttributes());
     for (size_t i = 0; i < _vertexAttributes.size(); ++i) {
-        _vertexAttributes[i]->merge(std::move(vertexAttributesOther[i]));
+        // VertexAttributeBase::merge(_vertexAttributes[i], std::move(vertexAttributesOther[i]));
     }
 
     GeometricShape::IndicesBuffer indicesOther(other.moveIndices());
@@ -75,7 +75,7 @@ MeshGeometry MeshGeometry::createInstance(
 
         // Merge vertex attributes.
         for (size_t i = 0; i < vertexAttributes.size(); ++i) {
-            vertexAttributes[i]->merge(std::move(shapeVertexAttributes[i]));
+            VertexAttributeBase::merge(vertexAttributes[i], std::move(shapeVertexAttributes[i]));
         }
     }
 

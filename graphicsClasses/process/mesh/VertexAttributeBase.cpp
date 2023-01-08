@@ -13,10 +13,6 @@ GLenum VertexAttributeBase::getDataType() const {
     return _dataType;
 }
 
-void VertexAttributeBase::merge(VertexAttributeBase_uptr &&) {
-    std::cerr << "Error" << std::endl;
-}
-
 vecVertexAttributeBase_uptr VertexAttributeBase::filterUnusedAttributes(
     vecVertexAttributeBase_uptr &current,
     const std::function<VertexAttributeBase_uptr()> &vertexAttributeGenerationFunction
@@ -43,3 +39,4 @@ size_t VertexAttributeBase::getNumberOfVertices(const vecVertexAttributeBase_upt
     // The first vertex attribute is always the position that corresponds to the number of vertices
     return vertexAttributes.front()->dataLength() ;
 }
+

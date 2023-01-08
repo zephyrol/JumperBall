@@ -33,13 +33,15 @@ public:
      * Merge a vertex attribute geometry into the current one moving it.
      * @param other The other that will be moved into the current one.
      */
-    virtual void merge(VertexAttributeBase_uptr &&other);
+    // virtual void merge(VertexAttributeBase_uptr &&other) = 0;
 
     virtual void createDataOnGpu() const = 0;
 
     virtual size_t dataLength() const = 0;
 
     virtual ~VertexAttributeBase() = default;
+
+    virtual void getMergeData(std::vector<void>&& other) = 0;
 
     /**
      * Use vertex attribute generation functions to gen them and filter the unused ones
@@ -49,6 +51,12 @@ public:
     );
 
     static size_t getNumberOfVertices(const vecVertexAttributeBase_uptr& vertexAttributes);
+
+    template<typename T1, typename T2>
+    static void merge(const std::unique_ptr<T1>& vertexAttributeA , std::unique_ptr<T2>&& vertexAttributeB);
+
+    template<typename T>
+    static void merge(const std::unique_ptr<T>& vertexAttributeA , std::unique_ptr<T>&& vertexAttributeB);
 
 private:
 
@@ -64,5 +72,22 @@ private:
 
 };
 
+template<typename T>
+void VertexAttributeBase::merge(const std::unique_ptr<T> &vertexAttributeA,
+                                std::unique_ptr<T> &&vertexAttributeB) {
+    auto &dataA = vertexAttributeA->getDataRef();
+    auto &dataB = vertexAttributeB->getDataRef();
+    dataA.insert(
+        dataA.end(),
+        std::make_move_iterator(dataB.begin()),
+        std::make_move_iterator(dataB.end())
+    );
+}
+
+template<typename T1, typename T2>
+void VertexAttributeBase::merge(const std::unique_ptr<T1> &,
+                                std::unique_ptr<T2> &&) {
+    std::cerr << "Error: Both vertex attribute don't contain the same attribute type" << std::endl;
+}
 
 #endif //JUMPERBALLAPPLICATION_VERTEXATTRIBUTEBASE_H
