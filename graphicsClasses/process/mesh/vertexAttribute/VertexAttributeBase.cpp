@@ -4,8 +4,8 @@
 
 #include "VertexAttributeBase.h"
 
-VertexAttributeBase::VertexAttributeBase(GLenum dataType):
-_dataType(dataType){
+VertexAttributeBase::VertexAttributeBase(GLenum dataType) :
+    _dataType(dataType) {
 
 }
 
@@ -13,9 +13,16 @@ GLenum VertexAttributeBase::getDataType() const {
     return _dataType;
 }
 
-vecVertexAttributeBase_uptr VertexAttributeBase::filterUnusedAttributes(
-    vecVertexAttributeBase_uptr &current,
-    const std::function<VertexAttributeBase_uptr()> &vertexAttributeGenerationFunction
+size_t VertexAttributeBase::getNumberOfVertices(const vecVertexAttributeBase_uptr &vertexAttributes) {
+    // The first vertex attribute is always the position that corresponds to the number of vertices
+    return vertexAttributes.front()->dataLength();
+}
+
+template<typename T>
+std::vector<std::unique_ptr<T>>
+VertexAttributeBase::filterUnused(
+    std::vector<std::unique_ptr<T>> &current,
+    const std::function<std::unique_ptr<T>()> &vertexAttributeGenerationFunction
 ) {
     auto vertexAttribute = vertexAttributeGenerationFunction();
     if (vertexAttribute != nullptr) {
@@ -24,19 +31,15 @@ vecVertexAttributeBase_uptr VertexAttributeBase::filterUnusedAttributes(
     return std::move(current);
 }
 
-vecVertexAttributeBase_uptr VertexAttributeBase::genAndFilterVertexAttributes(
-    const std::vector<std::function<VertexAttributeBase_uptr()> > &vertexAttributeGenerationFunctions
+template<typename T>
+std::vector<std::unique_ptr<T>> VertexAttributeBase::genAndFilter(
+    const std::vector<std::function<std::unique_ptr<T>()>> &vertexAttributeGenerationFunctions
 ) {
     return std::accumulate(
         vertexAttributeGenerationFunctions.begin(),
         vertexAttributeGenerationFunctions.end(),
-        vecVertexAttributeBase_uptr{},
-        VertexAttributeBase::filterUnusedAttributes
+        std::vector<std::unique_ptr<T>>{},
+        VertexAttributeBase::filterUnused<T>
     );
-}
-
-size_t VertexAttributeBase::getNumberOfVertices(const vecVertexAttributeBase_uptr &vertexAttributes) {
-    // The first vertex attribute is always the position that corresponds to the number of vertices
-    return vertexAttributes.front()->dataLength() ;
 }
 

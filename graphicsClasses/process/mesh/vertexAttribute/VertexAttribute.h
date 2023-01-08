@@ -18,6 +18,9 @@ template<typename T>
 using CstVertexAttribute_uptr = std::unique_ptr<const VertexAttribute<T>>;
 
 template<typename T>
+using vecVertexAttribute_uptr = std::vector<VertexAttribute_uptr<T>>;
+
+template<typename T>
 using VertexAttribute_sptr = std::shared_ptr<VertexAttribute<T>>;
 
 template<typename T>
@@ -30,20 +33,66 @@ class VertexAttribute : public VertexAttributeBase {
 public:
     explicit VertexAttribute(std::vector<T> &&data, GLenum dataType);
 
-    //void merge(VertexAttribute_uptr<T> &&other) override;
-
     size_t dataLength() const override;
 
     void createDataOnGpu() const override;
 
     std::vector<T> &getDataRef();
 
-private:
+    /**
+     * Merge a vertex attribute geometry into the current one moving it.
+     * @param other The other that will be moved into the current one.
+     */
+    void merge(VertexAttribute_uptr<T> &&other);
+
+protected:
     /**
      * The data contained in a VBO is a list of T values (one T value per Vertex)
      */
     std::vector<T> _data;
+
+    /**
+     * Use vertex attribute generation functions to gen them and filter the unused ones
+     */
+    static vecVertexAttribute_uptr<T> genAndFilterVertexAttributes(
+        const std::vector<std::function<VertexAttribute_uptr<T>()> > &vertexAttributeGenerationFunctions
+    );
+
+private:
+    /**
+     * Binary operation function usually used in reduce function to filter the unused vertex attributes
+     */
+    static vecVertexAttribute_uptr<T> filterUnused(
+        vecVertexAttribute_uptr<T> &current,
+        const std::function<VertexAttribute_uptr<T>()> &vertexAttributeGenerationFunction
+    );
+
 };
+
+template<class T>
+vecVertexAttribute_uptr<T> VertexAttribute<T>::filterUnused(
+    vecVertexAttribute_uptr<T> &current,
+    const std::function<VertexAttribute_uptr<T>()> &vertexAttributeGenerationFunction
+) {
+    auto vertexAttribute = vertexAttributeGenerationFunction();
+    if (vertexAttribute != nullptr) {
+        current.emplace_back(std::move(vertexAttribute));
+    }
+    return std::move(current);
+}
+
+template<class T>
+vecVertexAttribute_uptr<T> VertexAttribute<T>::genAndFilterVertexAttributes(
+    const std::vector<std::function<VertexAttribute_uptr<T>()> > &vertexAttributeGenerationFunctions
+) {
+    return std::accumulate(
+        vertexAttributeGenerationFunctions.begin(),
+        vertexAttributeGenerationFunctions.end(),
+        vecVertexAttribute_uptr<T>{},
+        VertexAttribute<T>::filterUnused
+    );
+}
+
 
 template<class T>
 VertexAttribute<T>::VertexAttribute(std::vector<T> &&data, GLenum dataType):
@@ -61,15 +110,15 @@ size_t VertexAttribute<T>::dataLength() const {
     return _data.size();
 }
 
-// template<class T>
-// void VertexAttribute<T>::merge(VertexAttribute_uptr<T> &&other) {
-//     auto &otherData = other->getDataRef();
-//     _data.insert(
-//         _data.end(),
-//         std::make_move_iterator(otherData.begin()),
-//         std::make_move_iterator(otherData.end())
-//     );
-// }
+template<class T>
+void VertexAttribute<T>::merge(VertexAttribute_uptr<T> &&other) {
+    auto &otherData = other->getDataRef();
+    _data.insert(
+        _data.end(),
+        std::make_move_iterator(otherData.begin()),
+        std::make_move_iterator(otherData.end())
+    );
+}
 
 template<class T>
 std::vector<T> &VertexAttribute<T>::getDataRef() {

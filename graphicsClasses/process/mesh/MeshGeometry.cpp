@@ -22,7 +22,7 @@ void MeshGeometry::merge(MeshGeometry &&other) {
 
     vecVertexAttributeBase_uptr vertexAttributesOther(other.moveVertexAttributes());
     for (size_t i = 0; i < _vertexAttributes.size(); ++i) {
-        // VertexAttributeBase::merge(_vertexAttributes[i], std::move(vertexAttributesOther[i]));
+        _vertexAttributes[i]->merge(std::move(vertexAttributesOther[i]));
     }
 
     GeometricShape::IndicesBuffer indicesOther(other.moveIndices());
@@ -75,31 +75,31 @@ MeshGeometry MeshGeometry::createInstance(
 
         // Merge vertex attributes.
         for (size_t i = 0; i < vertexAttributes.size(); ++i) {
-            VertexAttributeBase::merge(vertexAttributes[i], std::move(shapeVertexAttributes[i]));
+            vertexAttributes[i]->merge(std::move(shapeVertexAttributes[i]));
         }
     }
 
     // 2. Generate states vertex attributes.
     const std::vector<std::function<VertexAttributeBase_uptr()> > vertexAttributeGenerationFunctions{
-        [&displayable]() {
-            return genStaticVertexAttribute<decltype(
-            Utility::convertToOpenGLFormat(displayable->getStaticIntValues().front())
-            )>(displayable->getStaticIntValues(), GL_INT);
-        },
-        [&displayable]() {
-            return genStaticVertexAttribute<decltype(
-            Utility::convertToOpenGLFormat(displayable->getStaticFloatValues().front())
-            )>(displayable->getStaticFloatValues(), GL_FLOAT);
-        },
-        [&displayable]() {
-            return genStaticVertexAttribute<decltype(
-            Utility::convertToOpenGLFormat(displayable->getStaticVec2fValues().front())
-            )>(displayable->getStaticVec2fValues(), GL_FLOAT);
-        },
+        // [&displayable]() {
+        //     return genStaticVertexAttribute<decltype(
+        //     Utility::convertToOpenGLFormat(displayable->getStaticIntValues().front())
+        //     )>(displayable->getStaticIntValues());
+        // },
+        // [&displayable]() {
+        //     return genStaticVertexAttribute<decltype(
+        //     Utility::convertToOpenGLFormat(displayable->getStaticFloatValues().front())
+        //     )>(displayable->getStaticFloatValues());
+        // },
+        // [&displayable]() {
+        //     return genStaticVertexAttribute<decltype(
+        //     Utility::convertToOpenGLFormat(displayable->getStaticVec2fValues().front())
+        //     )>(displayable->getStaticVec2fValues());
+        // },
         [&displayable]() {
             return genStaticVertexAttribute<decltype(
             Utility::convertToOpenGLFormat(displayable->getStaticVec3fValues().front())
-            )>(displayable->getStaticVec3fValues(), GL_FLOAT);
+            )>(displayable->getStaticVec3fValues());
         }
     };
 
@@ -109,7 +109,7 @@ MeshGeometry MeshGeometry::createInstance(
 
     // Concatenate shape and state vertex attributes.
     vertexAttributes.insert(
-        stateVertexAttributes.begin(),
+        vertexAttributes.begin(),
         std::make_move_iterator(stateVertexAttributes.begin()),
         std::make_move_iterator(stateVertexAttributes.end())
     );
@@ -117,17 +117,10 @@ MeshGeometry MeshGeometry::createInstance(
     return MeshGeometry(std::move(vertexAttributes), std::move(indices));
 }
 
-
 template<typename OpenGLType, typename RawType>
-VertexAttribute_uptr<OpenGLType> MeshGeometry::genStaticVertexAttribute(
-    const Displayable::StaticValues<RawType> &staticVertexAttributeData,
-    GLenum glTypeEnum
+VertexAttributeBase_uptr MeshGeometry::genStaticVertexAttribute(
+    const Displayable::StaticValues<RawType> &staticVertexAttributeData
 ) {
-    // Return null if the vertex attribute does not need to be created.
-    if (staticVertexAttributeData.empty()) {
-        return nullptr;
-    }
-
     // Convert data to open gl format
     std::vector<OpenGLType> openGLVertexAttributeData;
     for (const auto &rawValue: staticVertexAttributeData) {
@@ -135,8 +128,5 @@ VertexAttribute_uptr<OpenGLType> MeshGeometry::genStaticVertexAttribute(
     }
 
     // Create the vertex attribute
-    return std::unique_ptr<VertexAttribute<OpenGLType>>(
-        new VertexAttribute<OpenGLType>(std::move(openGLVertexAttributeData), glTypeEnum)
-    );
+    return GeometricShape::genVertexAttribute(std::move(openGLVertexAttributeData));
 }
-

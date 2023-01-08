@@ -46,9 +46,8 @@ private:
     GeometricShape::IndicesBuffer _indices;
 
     template<typename OpenGLType, typename RawType>
-    static VertexAttribute_uptr<OpenGLType> genStaticVertexAttribute(
-        const Displayable::StaticValues<RawType> &staticVertexAttributeData,
-        GLenum glTypeEnum
+    static VertexAttributeBase_uptr genStaticVertexAttribute(
+        const Displayable::StaticValues<RawType> &staticVertexAttributeData
     );
 
 };
