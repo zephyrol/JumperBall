@@ -42,10 +42,6 @@ const GeometricShape::IndicesBuffer &MeshGeometry::indices() const {
     return _indices;
 }
 
-const VertexAttributes &MeshGeometry::vertexAttributes() {
-    return _vertexAttributes;
-}
-
 MeshGeometry MeshGeometry::createInstance(
     const CstDisplayable_sptr &displayable,
     const vecCstGeometricShape_sptr &shapes
@@ -104,6 +100,10 @@ MeshGeometry MeshGeometry::createInstance(
     };
 
     return MeshGeometry(std::move(vertexAttributes), std::move(indices));
+}
+
+vecVertexAttributeBase_uptr MeshGeometry::extractVertexAttributes() {
+    return _vertexAttributes.extractVertexAttributes();
 }
 
 template<typename VertexAttribute, typename StaticValues>

@@ -27,7 +27,6 @@ public:
 
     size_t getNumberOfVertices() const;
 
-
     static VertexAttributeVec3_uptr genVertexAttribute(std::vector<glm::vec3> &&vertexAttributeData);
 
     static VertexAttributeVec2_uptr genVertexAttribute(std::vector<glm::vec2> &&vertexAttributeData);
@@ -35,6 +34,13 @@ public:
     static VertexAttributeFloat_uptr genVertexAttribute(std::vector<GLfloat> &&vertexAttributeData);
 
     static VertexAttributeInt_uptr genVertexAttribute(std::vector<GLint> &&vertexAttributeData);
+
+
+    /**
+     * Extract the vertex attributes. Warning this is a side effect, the vertex attributes won't
+     * exist anymore in the Vertex Attributes object.
+     */
+    vecVertexAttributeBase_uptr extractVertexAttributes();
 
 private:
 
@@ -53,6 +59,19 @@ private:
      */
     template<typename T>
     void mergeVertexAttributes(T &own, T &&other);
+
+
+    /**
+     * Gather two list of vertex attributes moving the second one into the first one.
+     * @tparam T The specific type of vertex attributes that extends VertexAttributeBase.
+     * @param current List of VertexAttributeBase.
+     * @param vertexAttributes List of specific vertex attributes.
+     */
+    template<typename T>
+    void gatherVertexAttributes(
+        vecVertexAttributeBase_uptr& current,
+        std::vector<std::unique_ptr<T>>&& vertexAttributes
+    );
 
     vecVertexAttributeVec3_uptr &&moveAttributesVec3();
 

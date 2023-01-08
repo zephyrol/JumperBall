@@ -22,10 +22,10 @@ size_t VertexAttributes::getNumberOfVertices() const {
 }
 
 void VertexAttributes::merge(VertexAttributes &&other) {
-    mergeVertexAttributes(_attributesVec3, moveAttributesVec3());
-    mergeVertexAttributes(_attributesVec2, moveAttributesVec2());
-    mergeVertexAttributes(_attributesFloat, moveAttributesFloat());
-    mergeVertexAttributes(_attributesInt, moveAttributesInt());
+    mergeVertexAttributes(_attributesVec3, other.moveAttributesVec3());
+    mergeVertexAttributes(_attributesVec2, other.moveAttributesVec2());
+    mergeVertexAttributes(_attributesFloat, other.moveAttributesFloat());
+    mergeVertexAttributes(_attributesInt, other.moveAttributesInt());
 }
 
 vecVertexAttributeVec3_uptr &&VertexAttributes::moveAttributesVec3() {
@@ -67,6 +67,27 @@ VertexAttributeInt_uptr VertexAttributes::genVertexAttribute(std::vector<GLint> 
     return genVertexAttributeCore<VertexAttributeInt>(std::move(vertexAttributeData));
 }
 
+vecVertexAttributeBase_uptr VertexAttributes::extractVertexAttributes() {
+    vecVertexAttributeBase_uptr extractedVertexAttributes;
+    gatherVertexAttributes(extractedVertexAttributes, moveAttributesVec3());
+    gatherVertexAttributes(extractedVertexAttributes, moveAttributesVec2());
+    gatherVertexAttributes(extractedVertexAttributes, moveAttributesFloat());
+    gatherVertexAttributes(extractedVertexAttributes, moveAttributesInt());
+    return extractedVertexAttributes;
+}
+
+template<typename T>
+void VertexAttributes::gatherVertexAttributes(
+    vecVertexAttributeBase_uptr &current,
+    std::vector<std::unique_ptr<T>> &&vertexAttributes
+) {
+    current.insert(
+        current.begin(),
+        std::make_move_iterator(vertexAttributes.begin()),
+        std::make_move_iterator(vertexAttributes.end())
+    );
+}
+
 template<typename VertexAttributeType, typename VertexAttributeData>
 std::unique_ptr<VertexAttributeType> VertexAttributes::genVertexAttributeCore(
     VertexAttributeData &&vertexAttributeData
@@ -79,5 +100,3 @@ std::unique_ptr<VertexAttributeType> VertexAttributes::genVertexAttributeCore(
         new VertexAttributeType(std::forward<VertexAttributeData>(vertexAttributeData))
     );
 }
-
-

@@ -33,7 +33,11 @@ public:
      */
     void merge(MeshGeometry &&other);
 
-    const VertexAttributes &vertexAttributes();
+    /**
+     * Extract the vertex attributes. Warning this is a side effect, the vertex attributes won't
+     * exist anymore in the MeshGeometry
+     */
+    vecVertexAttributeBase_uptr extractVertexAttributes();
 
     const GeometricShape::IndicesBuffer &indices() const;
 

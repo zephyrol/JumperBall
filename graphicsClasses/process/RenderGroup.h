@@ -22,9 +22,11 @@ public:
         GLsizei numberOfIndices
     );
 
-    RenderGroup(const RenderGroup& renderGroup) = delete;
+    RenderGroup(const RenderGroup &renderGroup) = delete;
+
     RenderGroup &operator=(const RenderGroup &renderGroup) = delete;
-    RenderGroup(RenderGroup&& renderGroup) = default;
+
+    RenderGroup(RenderGroup &&renderGroup) = default;
 
     void freeGPUMemory();
 
@@ -46,7 +48,8 @@ private:
     template<typename T>
     void activateVertexAttribute(
         const std::vector<T> &attributeData,
-        GLuint attributeNumber) const;
+        GLuint attributeNumber
+    ) const;
 
     template<typename T>
     bool updateBufferObjectData(

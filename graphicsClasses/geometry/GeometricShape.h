@@ -41,6 +41,7 @@ public:
     VertexAttributes genVertexAttributes() const;
 
     using IndexType = GLushort;
+
     virtual std::vector<IndexType> genIndices() const;
 
 protected:

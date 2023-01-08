@@ -51,13 +51,6 @@ protected:
      */
     std::vector<T> _data;
 
-    /**
-     * Use vertex attribute generation functions to gen them and filter the unused ones
-     */
-    static vecVertexAttribute_uptr<T> genAndFilterVertexAttributes(
-        const std::vector<std::function<VertexAttribute_uptr<T>()> > &vertexAttributeGenerationFunctions
-    );
-
 private:
     /**
      * Binary operation function usually used in reduce function to filter the unused vertex attributes
@@ -80,19 +73,6 @@ vecVertexAttribute_uptr<T> VertexAttribute<T>::filterUnused(
     }
     return std::move(current);
 }
-
-template<class T>
-vecVertexAttribute_uptr<T> VertexAttribute<T>::genAndFilterVertexAttributes(
-    const std::vector<std::function<VertexAttribute_uptr<T>()> > &vertexAttributeGenerationFunctions
-) {
-    return std::accumulate(
-        vertexAttributeGenerationFunctions.begin(),
-        vertexAttributeGenerationFunctions.end(),
-        vecVertexAttribute_uptr<T>{},
-        VertexAttribute<T>::filterUnused
-    );
-}
-
 
 template<class T>
 VertexAttribute<T>::VertexAttribute(std::vector<T> &&data, GLenum dataType):
@@ -124,6 +104,5 @@ template<class T>
 std::vector<T> &VertexAttribute<T>::getDataRef() {
     return _data;
 }
-
 
 #endif //JUMPERBALLAPPLICATION_VERTEXATTRIBUTE_H

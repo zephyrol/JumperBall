@@ -104,7 +104,7 @@ RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
             return std::move(current);
         });
 
-    const auto& vertexAttributes = groupGeometry.vertexAttributes();
+    const auto vertexAttributes = groupGeometry.extractVertexAttributes();
     std::vector<GLuint> vertexBufferObjects(vertexAttributes.size());
 
     const auto genAndBindBufferObject = []() {

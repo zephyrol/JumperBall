@@ -24,8 +24,9 @@ class VertexAttributeBase {
 public:
     explicit VertexAttributeBase(GLenum dataType);
 
-    VertexAttributeBase(const VertexAttributeBase& vertexAttributeBase) = delete;
-    VertexAttributeBase& operator=(const VertexAttributeBase& vertexAttributeBase) = delete;
+    VertexAttributeBase(const VertexAttributeBase &vertexAttributeBase) = delete;
+
+    VertexAttributeBase &operator=(const VertexAttributeBase &vertexAttributeBase) = delete;
 
     GLenum getDataType() const;
 
