@@ -1,0 +1,14 @@
+//
+// Created by Sebastien Morgenthaler on 08/01/2023.
+//
+
+#ifndef JUMPERBALLAPPLICATION_VERTEXATTRIBUTEDATABASE_H
+#define JUMPERBALLAPPLICATION_VERTEXATTRIBUTEDATABASE_H
+#include "Utility.h"
+
+class VertexAttributeDataBase {
+
+};
+
+
+#endif //JUMPERBALLAPPLICATION_VERTEXATTRIBUTEDATABASE_H

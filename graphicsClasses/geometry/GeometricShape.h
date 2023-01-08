@@ -9,7 +9,7 @@
 #define GEOMETRICSHAPE_H
 
 #include "Shader.h"
-#include "process/mesh/VertexAttribute.h"
+#include "process/mesh/vertexAttribute/VertexAttribute.h"
 
 class GeometricShape;
 
