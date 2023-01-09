@@ -13,6 +13,8 @@ using vecVertexAttributeVec2_uptr = std::vector<VertexAttributeVec2_uptr>;
 class VertexAttributeVec2: public VertexAttribute<glm::vec2> {
 public:
     explicit VertexAttributeVec2(std::vector<glm::vec2> &&data);
+
+    GLint numberOfComponents() const override;
 };
 
 #endif //JUMPERBALLAPPLICATION_VERTEXATTRIBUTEVEC2_H

@@ -21,7 +21,7 @@ void MeshGeometry::merge(MeshGeometry &&other) {
     );
 
     // Merge vertex attributes.
-    _vertexAttributes.merge(other.moveVertexAttributes());
+    _vertexAttributes*=(other.moveVertexAttributes());
 
     // Concat indices.
     GeometricShape::IndicesBuffer indicesOther(other.moveIndices());
@@ -69,7 +69,7 @@ MeshGeometry MeshGeometry::createInstance(
         indicesOffset += shapeVertexAttributes.getNumberOfVertices();
 
         // Merge vertex attributes.
-        vertexAttributes.merge(std::move(shapeVertexAttributes));
+        vertexAttributes*=(std::move(shapeVertexAttributes));
     }
 
 
@@ -92,13 +92,16 @@ MeshGeometry MeshGeometry::createInstance(
         VertexAttributeInt
     >(numberOfVertices, displayable->getStaticIntValues());
 
-    VertexAttributes stateVertexAttributes{
+    vertexAttributes += VertexAttributes {
         VertexAttributeBase::genAndFilter(staticVec3AttributesGeneration),
         VertexAttributeBase::genAndFilter(staticVec2AttributesGeneration),
         VertexAttributeBase::genAndFilter(staticFloatAttributesGeneration),
         VertexAttributeBase::genAndFilter(staticIntAttributesGeneration)
     };
 
+
+    // TODO: Il y a deux choses differentes comme merging. Merge de geometric shape n'a rien a voir avec
+    // une fusion des shapes et states attributes !
     return MeshGeometry(std::move(vertexAttributes), std::move(indices));
 }
 

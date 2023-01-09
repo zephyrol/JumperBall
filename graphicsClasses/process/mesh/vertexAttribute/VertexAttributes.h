@@ -23,7 +23,23 @@ public:
         vecVertexAttributeInt_uptr attributesInt
     );
 
-    void merge(VertexAttributes &&other);
+    /**
+     * Move other vertex attributes into this one.
+     * For two Vertex attributes:
+     * this =(VA1 (a,b,c,d), VA2 (e,f,g,h)), other = (VA1 (i,j,k,l), VA2 (m,n,o,p))
+     * The concatenation gives this result:
+     * this = (VA1 (a,b,c,d), VA2 (e,f,g,h)), VA3 (i,j,k,l), VA4 (m,n,o,p)), other = ()
+     */
+    void operator +=(VertexAttributes&& other);
+
+    /**
+     * Merge other vertex attributes into this one.
+     * For two Vertex attributes:
+     * this =(VA1 (a,b,c,d), VA2 (e,f,g,h)), other = (VA1 (i,j,k,l), VA2 (m,n,o,p))
+     * The concatenation gives this result:
+     * this = (VA1 (a,b,c,d,i,k,l), VA2 (e,f,g,h,m,n,o,p))), other = ()
+     */
+    void operator *=(VertexAttributes&& other);
 
     size_t getNumberOfVertices() const;
 
@@ -50,8 +66,8 @@ private:
     );
 
     /**
-     * Merge a list of vertex attributes that have the same content (cf vec3, vec2, float, int) between
-     * two VertexAttributes objects.
+     * Merge a list of separated vertex attributes that have the same content (cf vec3, vec2, float, int)
+     * between two VertexAttributes objects.
      * This method has to be called for each type of vertex attributes.
      * @tparam T The type of vertex attributes.
      * @param own The vertex attributes list that is the target of merging.
@@ -59,6 +75,16 @@ private:
      */
     template<typename T>
     void mergeVertexAttributes(T &own, T &&other);
+
+    /**
+     * Concat a list of seperated vertex attributes that have the same content (cf vec3, vec2, float, int)
+     * between two VertexAttributes objects
+     * @tparam T The type of vertex attributes.
+     * @param own The vertex attributes list that is the target of concatenation.
+     * @param other The vertex attributes list that will be move into the own one.
+     */
+    template<typename T>
+    void concatVertexAttributes(std::vector<T> &own, std::vector<T> &&other);
 
 
     /**
@@ -86,6 +112,46 @@ private:
     vecVertexAttributeFloat_uptr _attributesFloat;
     vecVertexAttributeInt_uptr _attributesInt;
 };
+
+template<typename T>
+void VertexAttributes::gatherVertexAttributes(
+    vecVertexAttributeBase_uptr &current,
+    std::vector<std::unique_ptr<T>> &&vertexAttributes
+) {
+    current.insert(
+        current.begin(),
+        std::make_move_iterator(vertexAttributes.begin()),
+        std::make_move_iterator(vertexAttributes.end())
+    );
+}
+
+template<typename VertexAttributeType, typename VertexAttributeData>
+std::unique_ptr<VertexAttributeType> VertexAttributes::genVertexAttributeCore(
+    VertexAttributeData &&vertexAttributeData
+) {
+    // Return null if the vertex attribute does not need to be created.
+    if (vertexAttributeData.empty()) {
+        return nullptr;
+    }
+    return std::unique_ptr<VertexAttributeType>(
+        new VertexAttributeType(std::forward<VertexAttributeData>(vertexAttributeData))
+    );
+}
+
+template<typename T>
+void VertexAttributes::mergeVertexAttributes(T &own, T &&other) {
+    for (size_t i = 0; i < own.size(); ++i) {
+        own[i]->merge(std::move(*other[i]));
+    }
+}
+
+template<typename T>
+void VertexAttributes::concatVertexAttributes(std::vector<T> &own, std::vector<T> &&other) {
+    for(auto& vertexAttribute: other){
+        own.push_back(std::forward<T>(vertexAttribute));
+    }
+}
+
 
 
 #endif //JUMPERBALLAPPLICATION_VERTEXATTRIBUTES_H

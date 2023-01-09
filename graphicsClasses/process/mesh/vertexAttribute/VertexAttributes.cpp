@@ -21,13 +21,6 @@ size_t VertexAttributes::getNumberOfVertices() const {
     return _attributesVec3.front()->dataLength();
 }
 
-void VertexAttributes::merge(VertexAttributes &&other) {
-    mergeVertexAttributes(_attributesVec3, other.moveAttributesVec3());
-    mergeVertexAttributes(_attributesVec2, other.moveAttributesVec2());
-    mergeVertexAttributes(_attributesFloat, other.moveAttributesFloat());
-    mergeVertexAttributes(_attributesInt, other.moveAttributesInt());
-}
-
 vecVertexAttributeVec3_uptr &&VertexAttributes::moveAttributesVec3() {
     return std::move(_attributesVec3);
 }
@@ -42,13 +35,6 @@ vecVertexAttributeFloat_uptr &&VertexAttributes::moveAttributesFloat() {
 
 vecVertexAttributeInt_uptr &&VertexAttributes::moveAttributesInt() {
     return std::move(_attributesInt);
-}
-
-template<typename T>
-void VertexAttributes::mergeVertexAttributes(T &own, T &&other) {
-    for (size_t i = 0; i < own.size(); ++i) {
-        own[i]->merge(std::move(other[i]));
-    }
 }
 
 VertexAttributeVec3_uptr VertexAttributes::genVertexAttribute(std::vector<glm::vec3> &&vertexAttributeData) {
@@ -76,27 +62,16 @@ vecVertexAttributeBase_uptr VertexAttributes::extractVertexAttributes() {
     return extractedVertexAttributes;
 }
 
-template<typename T>
-void VertexAttributes::gatherVertexAttributes(
-    vecVertexAttributeBase_uptr &current,
-    std::vector<std::unique_ptr<T>> &&vertexAttributes
-) {
-    current.insert(
-        current.begin(),
-        std::make_move_iterator(vertexAttributes.begin()),
-        std::make_move_iterator(vertexAttributes.end())
-    );
+void VertexAttributes::operator+=(VertexAttributes &&other) {
+    concatVertexAttributes(_attributesVec3, other.moveAttributesVec3());
+    concatVertexAttributes(_attributesVec2, other.moveAttributesVec2());
+    concatVertexAttributes(_attributesFloat, other.moveAttributesFloat());
+    concatVertexAttributes(_attributesInt, other.moveAttributesInt());
 }
 
-template<typename VertexAttributeType, typename VertexAttributeData>
-std::unique_ptr<VertexAttributeType> VertexAttributes::genVertexAttributeCore(
-    VertexAttributeData &&vertexAttributeData
-) {
-    // Return null if the vertex attribute does not need to be created.
-    if (vertexAttributeData.empty()) {
-        return nullptr;
-    }
-    return std::unique_ptr<VertexAttributeType>(
-        new VertexAttributeType(std::forward<VertexAttributeData>(vertexAttributeData))
-    );
+void VertexAttributes::operator*=(VertexAttributes &&other) {
+    mergeVertexAttributes(_attributesVec3, other.moveAttributesVec3());
+    mergeVertexAttributes(_attributesVec2, other.moveAttributesVec2());
+    mergeVertexAttributes(_attributesFloat, other.moveAttributesFloat());
+    mergeVertexAttributes(_attributesInt, other.moveAttributesInt());
 }

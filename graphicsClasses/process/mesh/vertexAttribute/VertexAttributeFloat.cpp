@@ -7,3 +7,7 @@
 VertexAttributeFloat::VertexAttributeFloat(std::vector<GLfloat> &&data)
     : VertexAttribute(std::move(data), GL_FLOAT) {
 }
+
+GLint VertexAttributeFloat::numberOfComponents() const {
+    return 1;
+}

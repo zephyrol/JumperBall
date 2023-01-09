@@ -43,7 +43,7 @@ public:
      * Merge a vertex attribute geometry into the current one moving it.
      * @param other The other that will be moved into the current one.
      */
-    void merge(VertexAttribute_uptr<T> &&other);
+    void merge(VertexAttribute<T> &&other);
 
 protected:
     /**
@@ -91,8 +91,8 @@ size_t VertexAttribute<T>::dataLength() const {
 }
 
 template<class T>
-void VertexAttribute<T>::merge(VertexAttribute_uptr<T> &&other) {
-    auto &otherData = other->getDataRef();
+void VertexAttribute<T>::merge(VertexAttribute<T> &&other) {
+    auto &otherData = other.getDataRef();
     _data.insert(
         _data.end(),
         std::make_move_iterator(otherData.begin()),

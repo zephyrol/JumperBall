@@ -61,7 +61,7 @@ std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > RenderPass::createS
     std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > separateMeshGroups;
     for (const Mesh_sptr &mesh: _meshes) {
         if (mesh->getGlobalState() == Displayable::GlobalState::Separate) {
-            separateMeshGroups[mesh] = std::make_shared<RenderGroup>(
+            separateMeshGroups[mesh] =  std::make_shared<RenderGroup>(
                 RenderGroup::createInstance(std::initializer_list<Mesh_sptr>({mesh}))
             );
         }

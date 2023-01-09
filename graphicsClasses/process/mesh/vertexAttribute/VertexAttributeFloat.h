@@ -13,6 +13,8 @@ using vecVertexAttributeFloat_uptr = std::vector<VertexAttributeFloat_uptr>;
 class VertexAttributeFloat: public VertexAttribute<GLfloat> {
 public:
     explicit VertexAttributeFloat(std::vector<GLfloat> &&data);
+
+    GLint numberOfComponents() const override;
 };
 
 

@@ -13,6 +13,8 @@ using vecVertexAttributeInt_uptr = std::vector<VertexAttributeInt_uptr>;
 class VertexAttributeInt: public VertexAttribute<GLint> {
 public:
     explicit VertexAttributeInt(std::vector<GLint> &&data);
+
+    GLint numberOfComponents() const override;
 };
 
 

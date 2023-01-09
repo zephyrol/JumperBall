@@ -8,3 +8,7 @@ VertexAttributeVec2::VertexAttributeVec2(std::vector<glm::vec2> &&data)
     : VertexAttribute(std::move(data), GL_FLOAT) {
 }
 
+GLint VertexAttributeVec2::numberOfComponents() const {
+    return 2;
+}
+

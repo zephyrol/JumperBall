@@ -30,6 +30,8 @@ public:
 
     GLenum getDataType() const;
 
+    virtual GLint numberOfComponents() const = 0;
+
     virtual void createDataOnGpu() const = 0;
 
     virtual size_t dataLength() const = 0;
@@ -55,8 +57,35 @@ private:
         const std::function<std::unique_ptr<T>()> &vertexAttributeGenerationFunction
     );
 
+
     const GLenum _dataType;
 
 };
+
+template<typename T>
+std::vector<std::unique_ptr<T>>
+VertexAttributeBase::filterUnused(
+    std::vector<std::unique_ptr<T>> &current,
+    const std::function<std::unique_ptr<T>()> &vertexAttributeGenerationFunction
+) {
+    auto vertexAttribute = vertexAttributeGenerationFunction();
+    if (vertexAttribute != nullptr) {
+        current.emplace_back(std::move(vertexAttribute));
+    }
+    return std::move(current);
+}
+
+template<typename T>
+std::vector<std::unique_ptr<T>> VertexAttributeBase::genAndFilter(
+    const std::vector<std::function<std::unique_ptr<T>()>> &vertexAttributeGenerationFunctions
+) {
+    return std::accumulate(
+        vertexAttributeGenerationFunctions.begin(),
+        vertexAttributeGenerationFunctions.end(),
+        std::vector<std::unique_ptr<T>>{},
+        VertexAttributeBase::filterUnused<T>
+    );
+}
+
 
 #endif //JUMPERBALLAPPLICATION_VERTEXATTRIBUTEBASE_H
