@@ -19,7 +19,7 @@ class GpuVertexAttributes {
 public:
     GpuVertexAttributes(
         GLuint vertexBufferObject,
-        CstVertexAttributeBase_uptr vertexAttribute,
+        const CstVertexAttributeBase_uptr& vertexAttribute,
         GLuint index
     );
 
@@ -34,7 +34,8 @@ public:
 private:
 
     const GLuint _vertexBufferObject;
-    CstVertexAttributeBase_uptr _vertexAttribute;
+    const GLint _numberOfComponents;
+    const GLenum _dataType;
     const GLuint _index;
 };
 

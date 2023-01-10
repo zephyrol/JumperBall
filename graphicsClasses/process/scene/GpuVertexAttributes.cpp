@@ -6,11 +6,12 @@
 
 GpuVertexAttributes::GpuVertexAttributes(
     GLuint vertexBufferObject,
-    CstVertexAttributeBase_uptr vertexAttribute,
+    const CstVertexAttributeBase_uptr& vertexAttribute,
     GLuint index
 ) :
     _vertexBufferObject(vertexBufferObject),
-    _vertexAttribute(std::move(vertexAttribute)),
+    _numberOfComponents(vertexAttribute->numberOfComponents()),
+    _dataType(vertexAttribute->getDataType()),
     _index(index) {
 }
 
@@ -22,8 +23,8 @@ void GpuVertexAttributes::bind() const {
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
     glVertexAttribPointer(
         _index,
-        _vertexAttribute->numberOfComponents(),
-        _vertexAttribute->getDataType(),
+        _numberOfComponents,
+        _dataType,
         GL_FALSE,
         0,
         nullptr
