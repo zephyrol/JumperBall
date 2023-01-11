@@ -23,8 +23,6 @@ public:
         GLuint index
     );
 
-    GpuVertexAttributes(GpuVertexAttributes&& gpuVertexAttributes) = default;
-
     void freeGPUMemory();
 
     void bind() const;

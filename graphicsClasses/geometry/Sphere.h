@@ -38,32 +38,17 @@ public:
         const glm::mat4 &normalsTransform = glm::mat4(1.f)
     );
 
-    virtual std::vector<glm::vec3> genPositions() const override;
+    std::vector<glm::vec3> genPositions() const override;
 
-    virtual std::vector<glm::vec3> genNormals() const override;
+    std::vector<glm::vec3> genNormals() const override;
 
-    virtual std::vector<glm::vec3> genColors(const std::vector<glm::vec3> &colors) const override;
+    std::vector<glm::vec3> genColors(const std::vector<glm::vec3> &colors) const override;
 
-    virtual std::vector<GLushort> genIndices() const override;
+    std::vector<GLushort> genIndices() const override;
 
 private:
 
-    struct BasicInfo {
-        std::vector<glm::vec3> positions {};
-        std::vector<glm::vec3> normals {};
-        std::vector<glm::vec3> colors {};
-        std::vector<GLushort> indices {};
-    };
-
-    static const Sphere::BasicInfo basicInfoSphere;
-
     static glm::vec3 getSphereColor(const JBTypes::Color &color);
-
-    static Sphere::BasicInfo computeBasicInfoSphere(
-        bool useCustomColors = false,
-        const glm::vec3 &firstColor = glm::vec3(0.f),
-        const glm::vec3 &secondColor = glm::vec3(0.f)
-    );
 };
 
 #endif /* SPHERE_H */

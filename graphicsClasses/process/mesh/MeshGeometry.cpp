@@ -28,6 +28,11 @@ void MeshGeometry::merge(MeshGeometry &&other) {
     for (auto &index: indicesOther) {
         index += indicesOffset;
     }
+    _indices.insert(
+        _indices.end(),
+        std::make_move_iterator(indicesOther.begin()),
+        std::make_move_iterator(indicesOther.end())
+    );
 }
 
 VertexAttributes &&MeshGeometry::moveVertexAttributes() {
@@ -63,9 +68,14 @@ MeshGeometry MeshGeometry::createInstance(
         for (auto &index: shapeIndices) {
             index += indicesOffset;
         }
-
+        indices.insert(
+            indices.end(),
+            std::make_move_iterator(shapeIndices.begin()),
+            std::make_move_iterator(shapeIndices.end())
+        );
         // Look the number of vertices on the current shape and increase the offset for the next loop turn.
         auto shapeVertexAttributes = shape->genVertexAttributes();
+
         indicesOffset += shapeVertexAttributes.getNumberOfVertices();
 
         // Merge vertex attributes.

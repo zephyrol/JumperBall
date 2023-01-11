@@ -34,8 +34,6 @@ public:
 
     virtual std::vector<glm::vec3> genPositions() const override;
 
-    virtual std::vector<glm::vec3> genNormals() const override;
-
     virtual std::vector<glm::vec3> genColors(const std::vector<glm::vec3> &colors) const override;
 
     virtual std::vector<glm::vec2> genUvCoords(const std::vector<glm::vec2> &uvs) const override;
@@ -45,12 +43,6 @@ private:
         const glm::vec3 &customColor1,
         const glm::vec3 &customColor2
     );
-
-// TODO gen those basic properties on the fly
-    static const std::vector<glm::vec3> basicPositionsQuad;
-    static const std::vector<glm::vec3> basicColorsQuad;
-    static const std::vector<glm::vec3> basicNormalsQuad;
-    static const std::vector<glm::vec2> basicUVCoordsQuad;
 };
 
 

@@ -15,8 +15,8 @@ uniform float obtainingTime;
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec3 vs_vertexNormal;
-layout(location = 3) in float vs_itemDirection;
-layout(location = 4) in vec3 vs_itemPosition;
+layout(location = 3) in vec3 vs_itemPosition;
+layout(location = 4) in float vs_itemDirection;
 
 #ifdef(LEVEL_PASS)
     out vec3 fs_vertexColor;

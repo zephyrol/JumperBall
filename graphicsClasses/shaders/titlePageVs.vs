@@ -1,7 +1,7 @@
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
-layout(location = 3) in vec2 vs_vertexUVs;
-layout(location = 4) in float vs_labelId;
+layout(location = 2) in vec2 vs_vertexUVs;
+layout(location = 3) in float vs_labelId;
 
 out vec2 fs_vertexUVs;
 out vec3 fs_vertexColor;

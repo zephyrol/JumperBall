@@ -12,11 +12,12 @@ uniform Scene {
 uniform float timeSinceCreation;
 
 layout(location = 0) in vec3 vs_vertexPosition;
-layout(location = 4) in float vs_velocity;
-layout(location = 5) in vec3 vs_centerToStar;
-layout(location = 6) in vec3 vs_rotationCenter;
-layout(location = 7) in vec3 vs_rotationAxis;
-layout(location = 8) in vec3 vs_color;
+layout(location = 1) in vec3 vs_centerToStar;
+layout(location = 2) in vec3 vs_rotationCenter;
+layout(location = 3) in vec3 vs_rotationAxis;
+layout(location = 4) in vec3 vs_color;
+// Location 5 is uvs ...
+layout(location = 6) in float vs_velocity;
 
 out vec2 fs_vertexPosition;
 out vec3 fs_color;

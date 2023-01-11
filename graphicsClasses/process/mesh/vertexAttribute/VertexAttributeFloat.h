@@ -15,6 +15,8 @@ public:
     explicit VertexAttributeFloat(std::vector<GLfloat> &&data);
 
     GLint numberOfComponents() const override;
+
+    ~VertexAttributeFloat() override = default;
 };
 
 

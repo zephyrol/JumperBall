@@ -22,7 +22,6 @@ Quad::Quad(
     std::vector<glm::vec2> &&uvs
 ) :
     GeometricShape(modelTransform, normalsTransform, {customColor}, std::move(uvs)) {
-
 }
 
 Quad::Quad(
@@ -49,40 +48,14 @@ std::vector<glm::vec3> Quad::createCustomDoubleColors(
     );
 }
 
-const std::vector<glm::vec3> Quad::basicPositionsQuad = Utility::GLfloatListToGlmVec3(
-    {
-        -1.f, 1.f, 0.f, -1.f, -1.f, 0.f, 1.f, -1.f, 0.f,
-        -1.f, 1.f, 0.f, 1.f, -1.f, 0.f, 1.f, 1.f, 0.f
-    }
-);
-
-const std::vector<glm::vec3> Quad::basicNormalsQuad = Utility::GLfloatListToGlmVec3(
-    {
-        0.f, 0.f, -1.f, 0.f, 0.f, -1.f, 0.f, 0.f, -1.f,
-        0.f, 0.f, -1.f, 0.f, 0.f, -1.f, 0.f, 0.f, -1.f
-    }
-);
-
-const std::vector<glm::vec3> Quad::basicColorsQuad = Utility::GLfloatListToGlmVec3(
-    {
-        1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f,
-        1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f
-    }
-);
-
-const std::vector<glm::vec2> Quad::basicUVCoordsQuad = Utility::GLfloatListToGlmVec2(
-    {
-        0.f, 1.f, 0.f, 0.f, 1.f, 0.f,
-        0.f, 1.f, 1.f, 0.f, 1.f, 1.f
-    }
-);
 
 std::vector<glm::vec3> Quad::genPositions() const {
-    return basicPositionsQuad;
-}
-
-std::vector<glm::vec3> Quad::genNormals() const {
-    return basicNormalsQuad;
+    return Utility::GLfloatListToGlmVec3(
+        {
+            -1.f, 1.f, 0.f, -1.f, -1.f, 0.f, 1.f, -1.f, 0.f,
+            -1.f, 1.f, 0.f, 1.f, -1.f, 0.f, 1.f, 1.f, 0.f
+        }
+    );
 }
 
 std::vector<glm::vec3> Quad::genColors(const std::vector<glm::vec3> &colors) const {
@@ -90,13 +63,18 @@ std::vector<glm::vec3> Quad::genColors(const std::vector<glm::vec3> &colors) con
         return createCustomDoubleColors(colors.at(0), colors.at(1));
     }
     if (colors.size() == 1) {
-        return GeometricShape::createCustomColorBuffer(colors.at(0), basicPositionsQuad.size());
+        constexpr size_t numberOfFloatPositions = 18;
+        return GeometricShape::createCustomColorBuffer(colors.at(0), numberOfFloatPositions);
     }
-    return basicColorsQuad;
+    return {};
 }
 
 std::vector<glm::vec2> Quad::genUvCoords(const std::vector<glm::vec2> &uvs) const {
     return uvs.empty()
-           ? basicUVCoordsQuad
+           ? Utility::GLfloatListToGlmVec2(
+            {
+                0.f, 1.f, 0.f, 0.f, 1.f, 0.f,
+                0.f, 1.f, 1.f, 0.f, 1.f, 1.f
+            })
            : uvs;
 }

@@ -21,8 +21,8 @@ uniform vec4 quaternion;
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec3 vs_vertexNormal;
+layout(location = 3) in vec3 vs_objectPosition;
 layout(location = 4) in float vs_objectDirection;
-layout(location = 5) in vec3 vs_objectPosition;
 
 #ifdef(LEVEL_PASS)
     out vec3 fs_vertexColor;

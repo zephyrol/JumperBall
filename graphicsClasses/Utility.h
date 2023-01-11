@@ -59,11 +59,6 @@ namespace Utility {
 
     GLubyte convertToOpenGLFormat(unsigned char uChar);
 
-    template<typename T>
-    void concatVector(std::vector<T> &current, const std::vector<T> &other) {
-        current.insert(current.end(), other.begin(), other.end());
-    }
-
     float menuPositionToOpenGLScreenFormat(float value);
 
     extern const glm::mat3 XYZToRGB;

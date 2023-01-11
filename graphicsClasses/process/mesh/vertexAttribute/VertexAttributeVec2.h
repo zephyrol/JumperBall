@@ -15,6 +15,8 @@ public:
     explicit VertexAttributeVec2(std::vector<glm::vec2> &&data);
 
     GLint numberOfComponents() const override;
+
+    ~VertexAttributeVec2() override = default;
 };
 
 #endif //JUMPERBALLAPPLICATION_VERTEXATTRIBUTEVEC2_H

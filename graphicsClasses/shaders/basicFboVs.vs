@@ -1,5 +1,5 @@
 layout(location = 0) in vec3 vs_vertexPosition;
-layout(location = 3) in vec2 vs_vertexUVs;
+layout(location = 1) in vec2 vs_vertexUVs;
 
 out vec2 fs_vertexUVs;
 

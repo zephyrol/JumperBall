@@ -19,10 +19,10 @@ uniform float isYellowActivated;
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec3 vs_vertexNormal;
-layout(location = 3) in float vs_specialDirection;
-layout(location = 4) in float vs_specialColor;
-layout(location = 5) in float vs_isAnimated;
-layout(location = 6) in vec3 vs_specialPosition;
+layout(location = 3) in vec3 vs_specialPosition;
+layout(location = 4) in float vs_specialDirection;
+layout(location = 5) in float vs_specialColor;
+layout(location = 6) in float vs_isAnimated;
 
 #ifdef(LEVEL_PASS)
     out vec3 fs_vertexColor;

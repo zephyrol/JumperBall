@@ -57,23 +57,21 @@ private:
     const std::array<bool, 6> _sides;
 
     template<typename T>
-    static std::vector<T> getBasicElements(const std::vector<T> &basicElements,
-                                           const std::array<bool, 6> &sides);
+    static std::vector<T> getBasicElements(
+        const std::vector<T> &basicElements,
+        const std::array<bool, 6> &sides
+    );
 
     static std::vector<glm::vec3> getBasicPosCube(const std::array<bool, 6> &sides);
+    static std::vector<glm::vec3> getBasicPosFullyCube();
 
     static std::vector<glm::vec3> getBasicNormalsCube(const std::array<bool, 6> &sides);
+    static std::vector<glm::vec3> getBasicNormalsFullyCube();
 
     static std::vector<glm::vec3> getBasicColorsCube(const std::array<bool, 6> &sides);
-
-    static std::vector<glm::vec2> getBasicUVCoordsCube(const std::array<bool, 6> &sides);
+    static std::vector<glm::vec3> getBasicColorsFullyCube();
 
     static std::vector<glm::vec3> genColors(const JBTypes::Color &color);
-
-    static const std::vector<glm::vec3> basicPositionsCube;
-    static const std::vector<glm::vec3> basicNormalsCube;
-    static const std::vector<glm::vec2> basicUVCoordsCube;
-    static const std::vector<glm::vec3> basicColorsCube;
 };
 
 #endif /* CUBE_H */

@@ -119,7 +119,7 @@ void VertexAttributes::gatherVertexAttributes(
     std::vector<std::unique_ptr<T>> &&vertexAttributes
 ) {
     current.insert(
-        current.begin(),
+        current.end(),
         std::make_move_iterator(vertexAttributes.begin()),
         std::make_move_iterator(vertexAttributes.end())
     );

@@ -15,6 +15,8 @@ public:
     explicit VertexAttributeInt(std::vector<GLint> &&data);
 
     GLint numberOfComponents() const override;
+
+    ~VertexAttributeInt() override = default;
 };
 
 
