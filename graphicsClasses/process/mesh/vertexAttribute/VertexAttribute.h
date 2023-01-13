@@ -31,7 +31,7 @@ template<class T>
 class VertexAttribute : public VertexAttributeBase {
 
 public:
-    explicit VertexAttribute(std::vector<T> &&data, GLenum dataType);
+    explicit VertexAttribute(std::vector<T> &&data);
 
     size_t dataLength() const override;
 
@@ -55,8 +55,8 @@ protected:
 };
 
 template<class T>
-VertexAttribute<T>::VertexAttribute(std::vector<T> &&data, GLenum dataType):
-    VertexAttributeBase(dataType),
+VertexAttribute<T>::VertexAttribute(std::vector<T> &&data):
+    VertexAttributeBase(),
     _data(std::move(data)) {
 }
 

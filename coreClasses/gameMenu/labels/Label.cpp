@@ -88,6 +88,6 @@ LabelGeometry Label::createDisplayableQuad(
     );
 }
 
-std::vector<short> Label::getStaticIntValues() const {
+std::vector<short> Label::getStaticShortValues() const {
     return {_id};
 }

@@ -5,10 +5,18 @@
 #include "VertexAttributeVec2.h"
 
 VertexAttributeVec2::VertexAttributeVec2(std::vector<glm::vec2> &&data)
-    : VertexAttribute(std::move(data), GL_FLOAT) {
+    : VertexAttribute(std::move(data)) {
 }
 
-GLint VertexAttributeVec2::numberOfComponents() const {
-    return 2;
+std::function<void(GLuint)> VertexAttributeVec2::getVertexAttribPointerFunc() const {
+    return [](GLuint index) {
+        return glVertexAttribPointer(
+            index, // Vertex attribute index
+            2, // Number of components (two floats)
+            GL_FLOAT, // Data type
+            GL_FALSE,
+            0,
+            nullptr
+        );
+    };
 }
-

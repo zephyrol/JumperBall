@@ -7,7 +7,7 @@
 
 #include "process/mesh/vertexAttribute/VertexAttribute.h"
 #include "process/mesh/vertexAttribute/VertexAttributeVec3.h"
-#include "process/mesh/vertexAttribute/VertexAttributeInt.h"
+#include "process/mesh/vertexAttribute/VertexAttributeShort.h"
 #include "process/mesh/vertexAttribute/VertexAttributeFloat.h"
 #include "process/mesh/vertexAttribute/VertexAttributeVec2.h"
 
@@ -20,7 +20,7 @@ public:
         vecVertexAttributeVec3_uptr attributesVec3,
         vecVertexAttributeVec2_uptr attributesVec2,
         vecVertexAttributeFloat_uptr attributesFloat,
-        vecVertexAttributeInt_uptr attributesInt
+        vecVertexAttributeShort_uptr attributesShort
     );
 
     /**
@@ -49,7 +49,7 @@ public:
 
     static VertexAttributeFloat_uptr genVertexAttribute(std::vector<GLfloat> &&vertexAttributeData);
 
-    static VertexAttributeInt_uptr genVertexAttribute(std::vector<GLshort> &&vertexAttributeData);
+    static VertexAttributeShort_uptr genVertexAttribute(std::vector<GLshort> &&vertexAttributeData);
 
 
     /**
@@ -105,12 +105,12 @@ private:
 
     vecVertexAttributeFloat_uptr &&moveAttributesFloat();
 
-    vecVertexAttributeInt_uptr &&moveAttributesInt();
+    vecVertexAttributeShort_uptr &&moveAttributesShort();
 
     vecVertexAttributeVec3_uptr _attributesVec3;
     vecVertexAttributeVec2_uptr _attributesVec2;
     vecVertexAttributeFloat_uptr _attributesFloat;
-    vecVertexAttributeInt_uptr _attributesInt;
+    vecVertexAttributeShort_uptr _attributesShort;
 };
 
 template<typename T>

@@ -10,8 +10,8 @@ GpuVertexAttributes::GpuVertexAttributes(
     GLuint index
 ) :
     _vertexBufferObject(vertexBufferObject),
-    _vertexAttribPointerFunc(vertexAttribute->getVertexAttribPointerFunc()),
-    _index(index) {
+    _index(index),
+    _vertexAttribPointerFunc(vertexAttribute->getVertexAttribPointerFunc()) {
 }
 
 void GpuVertexAttributes::freeGPUMemory() {
@@ -20,24 +20,7 @@ void GpuVertexAttributes::freeGPUMemory() {
 
 void GpuVertexAttributes::bind() const {
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
-    if(_dataType == GL_FLOAT) {
-        glVertexAttribPointer(
-            _index,
-            _numberOfComponents,
-            _dataType,
-            GL_FALSE,
-            0,
-            nullptr
-        );
-    } else if (_dataType == GL_SHORT){
-        glVertexAttribIPointer(
-            _index,
-            _numberOfComponents,
-            _dataType,
-            0,
-            nullptr
-        );
-    }
+    _vertexAttribPointerFunc(_index);
     glEnableVertexAttribArray(_index);
 }
 

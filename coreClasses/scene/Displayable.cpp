@@ -8,7 +8,7 @@
 
 Displayable::Displayable() = default;
 
-std::vector<short> Displayable::getStaticIntValues() const {
+std::vector<short> Displayable::getStaticShortValues() const {
     return {};
 }
 

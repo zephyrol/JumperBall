@@ -33,7 +33,7 @@ public:
 
     const JBTypes::Color& color() const;
 
-    std::vector<short> getStaticIntValues() const override;
+    std::vector<short> getStaticShortValues() const override;
 
     GlobalState getGlobalState() const override;
 

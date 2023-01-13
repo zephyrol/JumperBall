@@ -5,10 +5,19 @@
 #include "VertexAttributeVec3.h"
 
 VertexAttributeVec3::VertexAttributeVec3(std::vector<glm::vec3> &&data)
-    : VertexAttribute(std::move(data), GL_FLOAT) {
+    : VertexAttribute(std::move(data)) {
 }
 
-GLint VertexAttributeVec3::numberOfComponents() const {
-    return 3;
+std::function<void(GLuint)> VertexAttributeVec3::getVertexAttribPointerFunc() const {
+    return [](GLuint index) {
+        return glVertexAttribPointer(
+            index, // Vertex attribute index
+            3, // Number of components (three floats)
+            GL_FLOAT, // Data type
+            GL_FALSE,
+            0,
+            nullptr
+        );
+    };
 }
 

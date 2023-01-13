@@ -99,8 +99,8 @@ MeshGeometry MeshGeometry::createInstance(
     >(numberOfVertices, displayable->getStaticFloatValues());
 
     const auto staticIntAttributesGeneration = createStaticVertexAttributeGenerationFunctions<
-        VertexAttributeInt
-    >(numberOfVertices, displayable->getStaticIntValues());
+        VertexAttributeShort
+    >(numberOfVertices, displayable->getStaticShortValues());
 
     vertexAttributes += VertexAttributes {
         VertexAttributeBase::genAndFilter(staticVec3AttributesGeneration),

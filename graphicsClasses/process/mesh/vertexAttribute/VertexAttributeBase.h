@@ -22,22 +22,18 @@ using vecVertexAttributeBase_uptr = std::vector<VertexAttributeBase_uptr>;
 class VertexAttributeBase {
 
 public:
-    explicit VertexAttributeBase(GLenum dataType);
+    VertexAttributeBase() = default;
 
     VertexAttributeBase(const VertexAttributeBase &vertexAttributeBase) = delete;
 
     VertexAttributeBase &operator=(const VertexAttributeBase &vertexAttributeBase) = delete;
-
-    GLenum getDataType() const;
-
-    virtual GLint numberOfComponents() const = 0;
 
     virtual void createDataOnGpu() const = 0;
 
     virtual size_t dataLength() const = 0;
 
     /**
-     * Get a function that defines a vertex attribute data information on GPU
+     * Get a function that defines a vertex attribute data information on GPU.
      * The parameter of this output function is the index (vertex attribute number)
      */
     virtual std::function<void(GLuint)> getVertexAttribPointerFunc() const = 0;
@@ -62,10 +58,6 @@ private:
         std::vector<std::unique_ptr<T> > &current,
         const std::function<std::unique_ptr<T>()> &vertexAttributeGenerationFunction
     );
-
-
-    const GLenum _dataType;
-
 };
 
 template<typename T>
