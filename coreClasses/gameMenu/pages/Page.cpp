@@ -38,7 +38,7 @@ std::vector<std::string> Page::getUniformIntNames() const {
     return {};
 }
 
-std::vector<int> Page::getUniformIntValues(const CstMap_sptr &map) const {
+std::vector<int> Page::getUniformIntValues(const CstMap_sptr &) const {
     return {};
 }
 

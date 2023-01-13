@@ -179,6 +179,6 @@ std::vector<std::string> LevelsPage::getUniformIntNames() const {
     return {"levelProgression"};
 }
 
-std::vector<int> LevelsPage::getUniformIntValues(const CstMap_sptr &map) const {
+std::vector<int> LevelsPage::getUniformIntValues(const CstMap_sptr &) const {
     return {static_cast<int>(_player->levelProgression())};
 }
