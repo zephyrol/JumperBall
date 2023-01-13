@@ -36,6 +36,12 @@ public:
 
     virtual size_t dataLength() const = 0;
 
+    /**
+     * Get a function that defines a vertex attribute data information on GPU
+     * The parameter of this output function is the index (vertex attribute number)
+     */
+    virtual std::function<void(GLuint)> getVertexAttribPointerFunc() const = 0;
+
     virtual ~VertexAttributeBase() = default;
 
     /**

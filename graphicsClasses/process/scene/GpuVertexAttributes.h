@@ -30,11 +30,9 @@ public:
     void unbind() const;
 
 private:
-
     const GLuint _vertexBufferObject;
-    const GLint _numberOfComponents;
-    const GLenum _dataType;
     const GLuint _index;
+    const std::function<void(GLuint)> _vertexAttribPointerFunc;
 };
 
 

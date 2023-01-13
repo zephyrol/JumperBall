@@ -53,6 +53,8 @@ namespace Utility {
 
     glm::vec2 convertToOpenGLFormat(const JBTypes::vec2f &vec2f);
 
+    GLshort convertToOpenGLFormat(const short &s);
+
     GLfloat convertToOpenGLFormat(const float &f);
 
     GLint convertToOpenGLFormat(const int &i);

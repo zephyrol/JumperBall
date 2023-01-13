@@ -14,7 +14,7 @@ class VertexAttributeVec2: public VertexAttribute<glm::vec2> {
 public:
     explicit VertexAttributeVec2(std::vector<glm::vec2> &&data);
 
-    GLint numberOfComponents() const override;
+    std::function<void(GLuint)> getVertexAttribPointerFunc() const override;
 
     ~VertexAttributeVec2() override = default;
 };

@@ -8,6 +8,14 @@ VertexAttributeFloat::VertexAttributeFloat(std::vector<GLfloat> &&data)
     : VertexAttribute(std::move(data), GL_FLOAT) {
 }
 
-GLint VertexAttributeFloat::numberOfComponents() const {
-    return 1;
+std::function<void(GLuint)> VertexAttributeFloat::getVertexAttribPointerFunc() const {
+    return [](GLuint index) {
+        return glVertexAttribPointer(
+            _index, // Index
+            1, // Number of components
+            GL_FLOAT, // Data type
+            0,
+            nullptr
+        );
+    };
 }

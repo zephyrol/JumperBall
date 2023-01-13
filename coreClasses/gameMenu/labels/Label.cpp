@@ -9,7 +9,7 @@
 
 #include <utility>
 
-Label::Label(Node_sptr node, const JBTypes::Color &color, int id) :
+Label::Label(Node_sptr node, const JBTypes::Color &color, short id) :
     _node(std::move(node)),
     _color(color),
     _id(id){
@@ -88,6 +88,6 @@ LabelGeometry Label::createDisplayableQuad(
     );
 }
 
-Displayable::StaticValues<int> Label::getStaticIntValues() const {
+std::vector<short> Label::getStaticIntValues() const {
     return {_id};
 }

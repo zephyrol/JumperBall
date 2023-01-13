@@ -4,8 +4,8 @@
 
 #include "VertexAttributeInt.h"
 
-VertexAttributeInt::VertexAttributeInt(std::vector<GLint> &&data)
-    : VertexAttribute(std::move(data), GL_INT) {
+VertexAttributeInt::VertexAttributeInt(std::vector<GLshort> &&data)
+    : VertexAttribute(std::move(data), GL_SHORT) {
 }
 
 GLint VertexAttributeInt::numberOfComponents() const {

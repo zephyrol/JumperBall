@@ -10,9 +10,9 @@ class VertexAttributeInt;
 using VertexAttributeInt_uptr = std::unique_ptr<VertexAttributeInt>;
 using vecVertexAttributeInt_uptr = std::vector<VertexAttributeInt_uptr>;
 
-class VertexAttributeInt: public VertexAttribute<GLint> {
+class VertexAttributeInt: public VertexAttribute<GLshort> {
 public:
-    explicit VertexAttributeInt(std::vector<GLint> &&data);
+    explicit VertexAttributeInt(std::vector<GLshort> &&data);
 
     GLint numberOfComponents() const override;
 

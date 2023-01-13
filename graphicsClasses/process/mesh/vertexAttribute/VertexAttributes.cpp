@@ -49,7 +49,7 @@ VertexAttributeFloat_uptr VertexAttributes::genVertexAttribute(std::vector<GLflo
     return genVertexAttributeCore<VertexAttributeFloat>(std::move(vertexAttributeData));
 }
 
-VertexAttributeInt_uptr VertexAttributes::genVertexAttribute(std::vector<GLint> &&vertexAttributeData) {
+VertexAttributeInt_uptr VertexAttributes::genVertexAttribute(std::vector<GLshort> &&vertexAttributeData) {
     return genVertexAttributeCore<VertexAttributeInt>(std::move(vertexAttributeData));
 }
 

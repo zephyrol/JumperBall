@@ -211,6 +211,10 @@ glm::vec4 Utility::convertToOpenGLFormat(const JBTypes::Quaternion &q) {
     return glm::vec4(Utility::convertToOpenGLFormat(q.v), q.w);
 }
 
+GLshort Utility::convertToOpenGLFormat(const short &s) {
+    return static_cast<GLshort>(s);
+}
+
 GLfloat Utility::convertToOpenGLFormat(const float &f) {
     return static_cast <GLfloat>(f);
 }

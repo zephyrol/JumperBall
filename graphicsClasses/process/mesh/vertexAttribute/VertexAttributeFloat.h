@@ -14,9 +14,9 @@ class VertexAttributeFloat: public VertexAttribute<GLfloat> {
 public:
     explicit VertexAttributeFloat(std::vector<GLfloat> &&data);
 
-    GLint numberOfComponents() const override;
-
     ~VertexAttributeFloat() override = default;
+
+    std::function<void(GLuint)> getVertexAttribPointerFunc() const override;
 };
 
 

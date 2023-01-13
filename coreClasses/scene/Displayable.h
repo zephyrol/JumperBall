@@ -31,7 +31,7 @@ public:
 
     virtual ~Displayable() = default;
 
-    virtual StaticValues<int> getStaticIntValues() const;
+    virtual std::vector<short> getStaticIntValues() const;
 
     virtual StaticValues<float> getStaticFloatValues() const;
 

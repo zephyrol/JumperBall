@@ -49,7 +49,7 @@ public:
 
     static VertexAttributeFloat_uptr genVertexAttribute(std::vector<GLfloat> &&vertexAttributeData);
 
-    static VertexAttributeInt_uptr genVertexAttribute(std::vector<GLint> &&vertexAttributeData);
+    static VertexAttributeInt_uptr genVertexAttribute(std::vector<GLshort> &&vertexAttributeData);
 
 
     /**
