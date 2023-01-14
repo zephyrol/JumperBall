@@ -49,8 +49,12 @@ Displayable::GlobalState Special::getGlobalState() const {
     return Displayable::GlobalState::United;
 }
 
-Displayable::StaticValues<float> Special::getStaticFloatValues() const {
-    return {static_cast<float>(_direction), static_cast<float>(_color), static_cast<float>(isAnimated())};
+std::vector<unsigned char> Special::getStaticUnsignedByteValues() const {
+    return {
+        static_cast<unsigned char>(_direction),
+        static_cast<unsigned char>(_color),
+        static_cast<unsigned char>(isAnimated())
+    };
 }
 
 Displayable::StaticValues<JBTypes::vec3f> Special::getStaticVec3fValues() const {
@@ -68,3 +72,4 @@ Displayable::DynamicValues<float> Special::getDynamicFloats() const {
         {_colorAttributeName, _isActivated}
     };
 }
+

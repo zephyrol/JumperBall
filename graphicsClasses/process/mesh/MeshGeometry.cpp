@@ -115,9 +115,6 @@ MeshGeometry MeshGeometry::createInstance(
         VertexAttributeBase::genAndFilter(staticUnsignedByteAttributesGeneration)
     };
 
-
-    // TODO: Il y a deux choses differentes comme merging. Merge de geometric shape n'a rien a voir avec
-    // une fusion des shapes et states attributes !
     return MeshGeometry(std::move(vertexAttributes), std::move(indices));
 }
 

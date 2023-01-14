@@ -20,9 +20,9 @@ layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec3 vs_vertexNormal;
 layout(location = 3) in vec3 vs_specialPosition;
-layout(location = 4) in float vs_specialDirection;
-layout(location = 5) in float vs_specialColor;
-layout(location = 6) in float vs_isAnimated;
+layout(location = 4) in int vs_specialDirection;
+layout(location = 5) in int vs_specialColor;
+layout(location = 6) in int vs_isAnimated;
 
 #ifdef(LEVEL_PASS)
     out vec3 fs_vertexColor;
@@ -108,40 +108,40 @@ mat4 getUpToDown() {
     return rotationX(PI);
 }
 
-mat4 rotationUpToDir (float direction) {
+mat4 rotationUpToDir () {
     // Cast to int does not work on Apple M1...
-    if (direction == 0.0) {
+    if (vs_specialDirection == 0) {
         return getUpToNorth();
     }
-    if (direction == 1.0) {
+    if (vs_specialDirection == 1) {
         return getUpToSouth();
     }
-    if (direction == 2.0) {
+    if (vs_specialDirection == 2) {
         return getUpToEast();
     }
-    if (direction == 3.0) {
+    if (vs_specialDirection == 3) {
         return getUpToWest();
     }
-    if (direction == 4.0) {
+    if (vs_specialDirection == 4) {
         return getUpToUp();
     }
-    if (direction == 5.0) {
+    if (vs_specialDirection == 5) {
         return getUpToDown();
     }
     return getUpToUp();
 }
 
 bool isColorActivated() {
-    if (vs_specialColor == 1.0) {
+    if (vs_specialColor == 1) {
         return isRedActivated == 1.0;
     }
-    if (vs_specialColor == 2.0) {
+    if (vs_specialColor == 2) {
         return isGreenActivated == 1.0;
     }
-    if (vs_specialColor == 3.0) {
+    if (vs_specialColor == 3) {
         return isBlueActivated == 1.0;
     }
-    if (vs_specialColor == 4.0) {
+    if (vs_specialColor == 4) {
         return isYellowActivated == 1.0;
     }
     return false;
@@ -156,12 +156,10 @@ mat4 specialScale (bool isActivated) {
 }
 
 mat4 specialRotation (bool isActivated) {
-    int intAnimated = int(vs_isAnimated);
-    int intDirection = int(vs_specialDirection);
     const float speedCoefficient = 5.0;
     float angle = creationTime * speedCoefficient;
 
-    if (intAnimated == 1 && isActivated) {
+    if (vs_isAnimated == 1 && isActivated) {
         return rotationY(angle);
     }
     return mat4(1.0);
@@ -175,7 +173,7 @@ void main() {
                                          0.0, 0.5, 0.0, 1.0);
 
     mat4 translationToBlock = translate(vs_specialPosition);
-    mat4 initialRotation = rotationUpToDir(vs_specialDirection);
+    mat4 initialRotation = rotationUpToDir();
 
     bool isActivated = isColorActivated();
 
