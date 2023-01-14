@@ -42,7 +42,7 @@ public:
 
     static constexpr float itemBoundingSphereRadius = 0.15f;
 
-    Displayable::StaticValues<float> getStaticFloatValues() const override;
+    Displayable::StaticValues<unsigned char> getStaticUnsignedByteValues() const override;
 
     Displayable::StaticValues<JBTypes::vec3f> getStaticVec3fValues() const override;
 

@@ -56,6 +56,7 @@ VertexAttributes GeometricShape::genVertexAttributes() const {
         VertexAttributeBase::genAndFilter(attributesVec3GenerationFunctions),
         VertexAttributeBase::genAndFilter(attributesVec2GenerationFunctions),
         {},
+        {},
         {}
     );
 }

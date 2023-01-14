@@ -31,6 +31,8 @@ public:
 
     virtual ~Displayable() = default;
 
+    virtual std::vector<unsigned char> getStaticUnsignedByteValues() const;
+
     virtual std::vector<short> getStaticShortValues() const;
 
     virtual StaticValues<float> getStaticFloatValues() const;

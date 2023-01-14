@@ -3,6 +3,7 @@
 //
 
 #include "MeshGeometry.h"
+#include "process/mesh/vertexAttribute/VertexAttributeUnsignedByte.h"
 
 
 MeshGeometry::MeshGeometry(
@@ -98,15 +99,20 @@ MeshGeometry MeshGeometry::createInstance(
         VertexAttributeFloat
     >(numberOfVertices, displayable->getStaticFloatValues());
 
-    const auto staticIntAttributesGeneration = createStaticVertexAttributeGenerationFunctions<
+    const auto staticShortAttributesGeneration = createStaticVertexAttributeGenerationFunctions<
         VertexAttributeShort
     >(numberOfVertices, displayable->getStaticShortValues());
+
+    const auto staticUnsignedByteAttributesGeneration = createStaticVertexAttributeGenerationFunctions<
+        VertexAttributeUnsignedByte
+    >(numberOfVertices, displayable->getStaticUnsignedByteValues());
 
     vertexAttributes += VertexAttributes {
         VertexAttributeBase::genAndFilter(staticVec3AttributesGeneration),
         VertexAttributeBase::genAndFilter(staticVec2AttributesGeneration),
         VertexAttributeBase::genAndFilter(staticFloatAttributesGeneration),
-        VertexAttributeBase::genAndFilter(staticIntAttributesGeneration)
+        VertexAttributeBase::genAndFilter(staticShortAttributesGeneration),
+        VertexAttributeBase::genAndFilter(staticUnsignedByteAttributesGeneration)
     };
 
 
@@ -127,15 +133,14 @@ MeshGeometry::createStaticVertexAttributeGenerationFunctions(
 ) {
     std::vector<std::function<std::unique_ptr<VertexAttribute>()> > staticVertexAttributeGenerationFunctions;
     for (const auto &staticValue: staticValues) {
-
         // Values are passed by copy, because the function will be called after the end of this current
         // function execution
         staticVertexAttributeGenerationFunctions.emplace_back([numberOfVertices, staticValue]() {
-            std::vector<decltype(Utility::convertToOpenGLFormat(staticValue))> openGlVec3(
+            std::vector<decltype(Utility::convertToOpenGLFormat(staticValue))> openGlValue(
                 numberOfVertices,
                 Utility::convertToOpenGLFormat(staticValue)
             );
-            return VertexAttributes::genVertexAttribute(std::move(openGlVec3));
+            return VertexAttributes::genVertexAttribute(std::move(openGlValue));
         });
     }
     return staticVertexAttributeGenerationFunctions;

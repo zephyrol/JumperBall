@@ -69,7 +69,6 @@ RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
             return std::move(current);
         });
 
-
     // 3. Create gpu vertex attributes
     const auto genBufferObject = []() {
         GLuint bo;

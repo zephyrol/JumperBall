@@ -16,7 +16,7 @@ layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec3 vs_vertexNormal;
 layout(location = 3) in vec3 vs_itemPosition;
-layout(location = 4) in float vs_itemDirection;
+layout(location = 4) in int vs_itemDirection;
 
 #ifdef(LEVEL_PASS)
     out vec3 fs_vertexColor;
@@ -103,23 +103,22 @@ mat4 itemScale() {
 }
 
 mat4 computeRotationMatrix(float angle) {
-    // Cast to int does not work on Apple M1...
-    if (vs_itemDirection == 0.0) {
+    if (vs_itemDirection == 0) {
         return rotationZ(-angle);
     }
-    if (vs_itemDirection == 1.0) {
+    if (vs_itemDirection == 1) {
         return rotationZ(angle);
     }
-    if (vs_itemDirection == 2.0) {
+    if (vs_itemDirection == 2) {
         return rotationX(angle);
     }
-    if (vs_itemDirection == 3.0) {
+    if (vs_itemDirection == 3) {
         return rotationX(-angle);
     }
-    if (vs_itemDirection == 4.0) {
+    if (vs_itemDirection == 4) {
         return rotationY(angle);
     }
-    if (vs_itemDirection == 5.0) {
+    if (vs_itemDirection == 5) {
         return rotationY(-angle);
     }
     return rotationY(angle);
@@ -134,41 +133,27 @@ mat4 itemRotation() {
     return computeRotationMatrix(pow(obtainingTime, speedPow));
 }
 
-vec3 dirToVec() {
-    if (vs_itemDirection == 0.0) {
-        return vec3(0.0, 0.0, -1.0);
-    }
-    if (vs_itemDirection == 1.0) {
-        return vec3(0.0, 0.0, 1.0);
-    }
-    if (vs_itemDirection == 2.0) {
-        return vec3(1.0, 0.0, 0.0);
-    }
-    if (vs_itemDirection == 3.0) {
-        return vec3(-1.0, 0.0, 0.0);
-    }
-    if (vs_itemDirection == 4.0) {
-        return vec3(0.0, 1.0, 0.0);
-    }
-    if (vs_itemDirection == 5.0) {
-        return vec3(0.0, -1.0, 0.0);
-    }
-    return vec3(0.0, 1.0, 0.0);
-}
+const vec3 dirToVec[6] = vec3[](
+    vec3(0.0, 0.0, -1.0),
+    vec3(0.0, 0.0, 1.0),
+    vec3(1.0, 0.0, 0.0),
+    vec3(-1.0, 0.0, 0.0),
+    vec3(0.0, 1.0, 0.0),
+    vec3(0.0, -1.0, 0.0)
+);
 
 mat4 itemTranslation() {
     if (!itemIsGotten()) {
         return mat4(1.0);
     }
     float translateCoeff = 0.0;
-    vec3 wayDir = 0.7 * dirToVec();
+    vec3 wayDir = 0.7 * dirToVec[vs_itemDirection];
     if (obtainingTime < thresholdSecondStep) {
         translateCoeff = obtainingTime / thresholdSecondStep;
         return translate(translateCoeff * wayDir);
     }
     return translate(wayDir);
 }
-
 
 void main() {
 

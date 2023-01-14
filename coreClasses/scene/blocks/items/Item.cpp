@@ -34,8 +34,8 @@ float Item::getTimeSinceObtaining() const {
            : 0;
 }
 
-Displayable::StaticValues<float> Item::getStaticFloatValues() const {
-    return {static_cast<float>(_direction)};
+Displayable::StaticValues<unsigned char> Item::getStaticUnsignedByteValues() const {
+    return {static_cast<unsigned char>(_direction)};
 }
 
 Displayable::StaticValues<JBTypes::vec3f> Item::getStaticVec3fValues() const {
@@ -107,3 +107,4 @@ void Item::setAsGotten() {
 bool Item::globalStateMayChange() const {
     return true;
 }
+

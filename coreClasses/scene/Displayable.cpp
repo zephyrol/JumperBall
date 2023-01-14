@@ -8,6 +8,11 @@
 
 Displayable::Displayable() = default;
 
+
+std::vector<unsigned char> Displayable::getStaticUnsignedByteValues() const {
+    return {};
+}
+
 std::vector<short> Displayable::getStaticShortValues() const {
     return {};
 }

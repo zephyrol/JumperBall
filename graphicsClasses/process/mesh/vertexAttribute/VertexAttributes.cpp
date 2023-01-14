@@ -1,5 +1,5 @@
 //
-// Created by Sebastien Morgenthaler on 08/01/2023.
+// Created by S.Morgenthaler on 08/01/2023.
 //
 
 #include "VertexAttributes.h"
@@ -8,12 +8,14 @@ VertexAttributes::VertexAttributes(
     vecVertexAttributeVec3_uptr attributesVec3,
     vecVertexAttributeVec2_uptr attributesVec2,
     vecVertexAttributeFloat_uptr attributesFloat,
-    vecVertexAttributeShort_uptr attributesShort
+    vecVertexAttributeShort_uptr attributesShort,
+    vecVertexAttributeUnsignedByte_uptr attributesUnsignedByte
 ) :
     _attributesVec3(std::move(attributesVec3)),
     _attributesVec2(std::move(attributesVec2)),
     _attributesFloat(std::move(attributesFloat)),
-    _attributesShort(std::move(attributesShort)) {
+    _attributesShort(std::move(attributesShort)),
+    _attributesUnsignedByte(std::move(attributesUnsignedByte)){
 }
 
 size_t VertexAttributes::getNumberOfVertices() const {
@@ -37,6 +39,11 @@ vecVertexAttributeShort_uptr &&VertexAttributes::moveAttributesShort() {
     return std::move(_attributesShort);
 }
 
+vecVertexAttributeUnsignedByte_uptr &&VertexAttributes::moveAttributesUnsignedByte() {
+    return std::move(_attributesUnsignedByte);
+}
+
+
 VertexAttributeVec3_uptr VertexAttributes::genVertexAttribute(std::vector<glm::vec3> &&vertexAttributeData) {
     return genVertexAttributeCore<VertexAttributeVec3>(std::move(vertexAttributeData));
 }
@@ -53,12 +60,19 @@ VertexAttributeShort_uptr VertexAttributes::genVertexAttribute(std::vector<GLsho
     return genVertexAttributeCore<VertexAttributeShort>(std::move(vertexAttributeData));
 }
 
+VertexAttributeUnsignedByte_uptr VertexAttributes::genVertexAttribute(
+    std::vector<GLubyte> &&vertexAttributeData
+) {
+    return genVertexAttributeCore<VertexAttributeUnsignedByte>(std::move(vertexAttributeData));
+}
+
 vecVertexAttributeBase_uptr VertexAttributes::extractVertexAttributes() {
     vecVertexAttributeBase_uptr extractedVertexAttributes;
     gatherVertexAttributes(extractedVertexAttributes, moveAttributesVec3());
     gatherVertexAttributes(extractedVertexAttributes, moveAttributesVec2());
     gatherVertexAttributes(extractedVertexAttributes, moveAttributesFloat());
     gatherVertexAttributes(extractedVertexAttributes, moveAttributesShort());
+    gatherVertexAttributes(extractedVertexAttributes, moveAttributesUnsignedByte());
     return extractedVertexAttributes;
 }
 
@@ -67,6 +81,7 @@ void VertexAttributes::operator+=(VertexAttributes &&other) {
     concatVertexAttributes(_attributesVec2, other.moveAttributesVec2());
     concatVertexAttributes(_attributesFloat, other.moveAttributesFloat());
     concatVertexAttributes(_attributesShort, other.moveAttributesShort());
+    concatVertexAttributes(_attributesUnsignedByte, other.moveAttributesUnsignedByte());
 }
 
 void VertexAttributes::operator*=(VertexAttributes &&other) {
@@ -74,4 +89,6 @@ void VertexAttributes::operator*=(VertexAttributes &&other) {
     mergeVertexAttributes(_attributesVec2, other.moveAttributesVec2());
     mergeVertexAttributes(_attributesFloat, other.moveAttributesFloat());
     mergeVertexAttributes(_attributesShort, other.moveAttributesShort());
+    mergeVertexAttributes(_attributesUnsignedByte, other.moveAttributesUnsignedByte());
 }
+

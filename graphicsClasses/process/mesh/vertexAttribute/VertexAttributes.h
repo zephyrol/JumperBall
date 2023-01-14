@@ -1,5 +1,5 @@
 //
-// Created by Sebastien Morgenthaler on 08/01/2023.
+// Created by S.Morgenthaler on 08/01/2023.
 //
 
 #ifndef JUMPERBALLAPPLICATION_VERTEXATTRIBUTES_H
@@ -10,6 +10,7 @@
 #include "process/mesh/vertexAttribute/VertexAttributeShort.h"
 #include "process/mesh/vertexAttribute/VertexAttributeFloat.h"
 #include "process/mesh/vertexAttribute/VertexAttributeVec2.h"
+#include "process/mesh/vertexAttribute/VertexAttributeUnsignedByte.h"
 
 
 class VertexAttributes {
@@ -20,7 +21,8 @@ public:
         vecVertexAttributeVec3_uptr attributesVec3,
         vecVertexAttributeVec2_uptr attributesVec2,
         vecVertexAttributeFloat_uptr attributesFloat,
-        vecVertexAttributeShort_uptr attributesShort
+        vecVertexAttributeShort_uptr attributesShort,
+        vecVertexAttributeUnsignedByte_uptr attributesUnsignedByte
     );
 
     /**
@@ -51,6 +53,7 @@ public:
 
     static VertexAttributeShort_uptr genVertexAttribute(std::vector<GLshort> &&vertexAttributeData);
 
+    static VertexAttributeUnsignedByte_uptr genVertexAttribute(std::vector<GLubyte> &&vertexAttributeData);
 
     /**
      * Extract the vertex attributes. Warning this is a side effect, the vertex attributes won't
@@ -107,10 +110,13 @@ private:
 
     vecVertexAttributeShort_uptr &&moveAttributesShort();
 
+    vecVertexAttributeUnsignedByte_uptr &&moveAttributesUnsignedByte();
+
     vecVertexAttributeVec3_uptr _attributesVec3;
     vecVertexAttributeVec2_uptr _attributesVec2;
     vecVertexAttributeFloat_uptr _attributesFloat;
     vecVertexAttributeShort_uptr _attributesShort;
+    vecVertexAttributeUnsignedByte_uptr _attributesUnsignedByte;
 };
 
 template<typename T>
