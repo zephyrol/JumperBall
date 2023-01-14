@@ -22,7 +22,11 @@ class Displayable {
 public:
 
     template<typename T> using StaticValues = std::vector<T>;
-    template<typename T> using DynamicValues = std::unordered_map<std::string, T>;
+
+    template<typename T> using DynamicValues = std::vector<T>;
+
+    using DynamicNames = std::vector<std::string>;
+
     enum class GlobalState {
         United, Separate, Dead
     };
@@ -41,15 +45,20 @@ public:
 
     virtual StaticValues<JBTypes::vec3f> getStaticVec3fValues() const;
 
-    virtual DynamicValues<int> getDynamicInts() const;
+    virtual DynamicNames getDynamicIntNames() const;
+    virtual DynamicValues<int> getDynamicIntValues() const;
 
-    virtual DynamicValues<float> getDynamicFloats() const;
+    virtual DynamicNames getDynamicFloatNames() const;
+    virtual DynamicValues<float> getDynamicFloatValues() const;
 
-    virtual DynamicValues<JBTypes::vec2f> getDynamicVec2fs() const;
+    virtual DynamicNames getDynamicVec2fNames() const;
+    virtual DynamicValues<JBTypes::vec2f> getDynamicVec2fValues() const;
 
-    virtual DynamicValues<JBTypes::vec3f> getDynamicVec3fs() const;
+    virtual DynamicNames getDynamicVec3fNames() const;
+    virtual DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const;
 
-    virtual DynamicValues<JBTypes::Quaternion> getDynamicQuaternions() const;
+    virtual DynamicNames getDynamicQuaternionNames() const;
+    virtual DynamicValues<JBTypes::Quaternion> getDynamicQuaternionValues() const;
 
     virtual GlobalState getGlobalState() const = 0;
 

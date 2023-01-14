@@ -43,16 +43,14 @@ public:
 
 private:
 
-    void bindUniforms(const Mesh::Uniforms &uniforms, const CstShaderProgram_sptr &shaderProgram) const;
+    void bindUniforms(const Mesh::UniformsValues &uniforms, const CstShaderProgram_sptr &shaderProgram) const;
 
     template<typename T>
     void bindUniformVariables(
-        Mesh::UniformVariables<T> uniforms,
-        const CstShaderProgram_sptr &shaderProgram
+        const CstShaderProgram_sptr &shaderProgram,
+        const Mesh::GpuUniformNames &uniformsNames,
+        const Mesh::GpuUniformValues<T> &uniformsValues
     ) const;
-
-    template<typename T>
-    void upsertUniforms(const std::unordered_map<std::string, T> &uniformsData);
 
     std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > createSeparateMeshGroups() const;
 
@@ -64,14 +62,25 @@ private:
 
 
     const vecMesh_sptr _meshes;
+    const Mesh::UniformsNames _uniformsNames;
     const vecMesh_sptr _updatableMeshes;
     std::map<Mesh_sptr, Displayable::GlobalState> _meshStates;
 
     std::shared_ptr<RenderGroup> _unitedMeshesGroup;
     std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > _separateMeshGroups;
 
-    std::unordered_map<std::shared_ptr<RenderGroup>, Mesh::Uniforms> _renderGroupsUniforms;
+    std::unordered_map<std::shared_ptr<RenderGroup>, Mesh::UniformsValues> _renderGroupsUniforms;
 };
 
+template<typename T>
+void RenderPass::bindUniformVariables(
+    const CstShaderProgram_sptr &shaderProgram,
+    const Mesh::GpuUniformNames &uniformsNames,
+    const Mesh::GpuUniformValues<T> &uniformsValues
+) const {
+    for (size_t i = 0; i < uniformsNames.size(); ++i) {
+        shaderProgram->bindUniform(uniformsNames[i], uniformsValues[i]);
+    }
+}
 
 #endif /* RENDER_PASS_H */

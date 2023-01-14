@@ -99,11 +99,12 @@ Displayable::StaticValues<float> Star::getStaticFloatValues() const {
     };
 }
 
+Displayable::DynamicNames Star::getDynamicFloatNames() const {
+    return {"timeSinceCreation"};
+}
 
-Displayable::DynamicValues<float> Star::getDynamicFloats() const {
-    return {
-        {"timeSinceCreation", _chronometer->getTime()}
-    };
+Displayable::DynamicValues<float> Star::getDynamicFloatValues() const {
+    return {_chronometer->getTime()};
 }
 
 std::shared_ptr<Star> Star::createBlurStar(const Map &map) {
@@ -137,4 +138,3 @@ std::shared_ptr<Star> Star::createPurpleStar(const Map &map) {
         1.1f
     );
 }
-

@@ -46,7 +46,9 @@ public:
 
     Displayable::StaticValues<JBTypes::vec3f> getStaticVec3fValues() const override;
 
-    Displayable::DynamicValues<float> getDynamicFloats() const override;
+    Displayable::DynamicNames getDynamicFloatNames() const override;
+
+    Displayable::DynamicValues<float> getDynamicFloatValues() const override;
 
     Displayable::GlobalState getGlobalState() const override;
 

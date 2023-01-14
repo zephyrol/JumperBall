@@ -66,11 +66,12 @@ const JBTypes::Dir &Enemy::direction() const {
     return _direction;
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> Enemy::getDynamicVec3fs() const {
-    return {
-        {"translation", {_position.x, _position.y, _position.z}},
-        {"scale",       _scale}
-    };
+Displayable::DynamicNames Enemy::getDynamicVec3fNames() const {
+    return {"translation", "scale"};
+}
+
+Displayable::DynamicValues<JBTypes::vec3f> Enemy::getDynamicVec3fValues() const {
+    return { _position, _scale };
 }
 
 Displayable::GlobalState Enemy::getGlobalState() const {
@@ -82,3 +83,4 @@ void Enemy::update() {
 
 const JBTypes::vec3f Enemy::scaleActivated = {1.f, 1.f, 1.f};
 const JBTypes::vec3f Enemy::scaleDisable = {0.f, 0.f, 0.f};
+

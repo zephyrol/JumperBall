@@ -117,11 +117,17 @@ public:
 
     float getTimeSecondsSinceStateOfLife() const;
 
-    Displayable::DynamicValues<float> getDynamicFloats() const override;
+    DynamicNames getDynamicFloatNames() const override;
 
-    Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fs() const override;
+    DynamicNames getDynamicVec3fNames() const override;
 
-    Displayable::DynamicValues<JBTypes::Quaternion> getDynamicQuaternions() const override;
+    DynamicNames getDynamicQuaternionNames() const override;
+
+    Displayable::DynamicValues<float> getDynamicFloatValues() const override;
+
+    Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
+
+    Displayable::DynamicValues<JBTypes::Quaternion> getDynamicQuaternionValues() const override;
 
     Displayable::GlobalState getGlobalState() const override;
 
@@ -163,6 +169,7 @@ public:
     unsigned int numberOfClocks() const;
 
     const CstChronometer_sptr &getCreationChronometer() const;
+
     const CstChronometer_sptr &getInGameChronometer() const;
 
     void addUpdateOutput(CstUpdateOutput_sptr &&updateOutput);

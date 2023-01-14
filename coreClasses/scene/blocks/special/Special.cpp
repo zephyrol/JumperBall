@@ -66,10 +66,13 @@ Displayable::StaticValues<JBTypes::vec3f> Special::getStaticVec3fValues() const 
     return {position};
 }
 
-Displayable::DynamicValues<float> Special::getDynamicFloats() const {
-    return {
-        {"creationTime", _chronometer->getTime()},
-        {_colorAttributeName, _isActivated}
-    };
+Displayable::DynamicNames Special::getDynamicFloatNames() const {
+    return { "creationTime", _colorAttributeName };
 }
 
+Displayable::DynamicValues<float> Special::getDynamicFloatValues() const {
+    return {
+        _chronometer->getTime(),
+        static_cast<float>(_isActivated) // TODO Use dynamic int ?
+    };
+}

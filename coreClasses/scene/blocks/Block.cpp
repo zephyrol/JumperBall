@@ -65,9 +65,12 @@ Displayable::StaticValues<JBTypes::vec3f> Block::getStaticVec3fValues() const {
             }};
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> Block::getDynamicVec3fs() const {
-    return {{"translation", _localTranslation},
-            {"scale",       _localScale}};
+Displayable::DynamicNames Block::getDynamicVec3fNames() const {
+    return {"translation", "scale"};
+}
+
+Displayable::DynamicValues<JBTypes::vec3f> Block::getDynamicVec3fValues() const {
+    return {_localTranslation, _localScale};
 }
 
 Displayable::GlobalState Block::getGlobalState() const {
@@ -146,6 +149,10 @@ vecSpecial_sptr Block::getSpecials() {
 void Block::unlockExit() {
 }
 
-Displayable::DynamicValues<JBTypes::vec2f> Block::getDynamicVec2fs() const {
-    return {{"rotation", _localRotation}};
+Displayable::DynamicNames Block::getDynamicVec2fNames() const {
+    return {"rotation"};
+}
+
+Displayable::DynamicValues<JBTypes::vec2f> Block::getDynamicVec2fValues() const {
+    return {_localRotation};
 }

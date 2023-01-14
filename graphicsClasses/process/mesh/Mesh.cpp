@@ -10,7 +10,7 @@ Mesh::Mesh(const std::shared_ptr<const Displayable> &displayable, vecCstGeometri
     _displayable(displayable),
     _shapes(std::move(shapes)),
     _updatingIsUseless(!_displayable->globalStateMayChange()) {
-    if(_shapes[0] == nullptr) {
+    if (_shapes[0] == nullptr) {
         std::cout << "null" << std::endl;
     }
 }
@@ -19,24 +19,13 @@ Displayable::GlobalState Mesh::getGlobalState() const {
     return _displayable->getGlobalState();
 }
 
-template<typename RawType, typename OpenGLType>
-void Mesh::convertUniformsToOpenGLFormat(
-    const Displayable::DynamicValues<RawType> &rawValues,
-    Mesh::UniformVariables<OpenGLType> &openGLValues) {
-    for (const auto &rawValue: rawValues) {
-        const OpenGLType openGLValue = Utility::convertToOpenGLFormat(rawValue.second);
-        openGLValues[rawValue.first] = openGLValue;
-    }
-}
-
-Mesh::Uniforms Mesh::genUniformsValues() const {
-    Mesh::Uniforms uniforms;
-    convertUniformsToOpenGLFormat(_displayable->getDynamicInts(), uniforms.uniformInts);
-    convertUniformsToOpenGLFormat(_displayable->getDynamicFloats(), uniforms.uniformFloats);
-    convertUniformsToOpenGLFormat(_displayable->getDynamicFloats(), uniforms.uniformFloats);
-    convertUniformsToOpenGLFormat(_displayable->getDynamicVec2fs(), uniforms.uniformVec2s);
-    convertUniformsToOpenGLFormat(_displayable->getDynamicVec3fs(), uniforms.uniformVec3s);
-    convertUniformsToOpenGLFormat(_displayable->getDynamicQuaternions(), uniforms.uniformVec4s);
+Mesh::UniformsValues Mesh::genUniformsValues() const {
+    Mesh::UniformsValues uniforms;
+    convertUniformsToOpenGLFormat(_displayable->getDynamicIntValues(), uniforms.uniformInts);
+    convertUniformsToOpenGLFormat(_displayable->getDynamicFloatValues(), uniforms.uniformFloats);
+    convertUniformsToOpenGLFormat(_displayable->getDynamicVec2fValues(), uniforms.uniformVec2s);
+    convertUniformsToOpenGLFormat(_displayable->getDynamicVec3fValues(), uniforms.uniformVec3s);
+    convertUniformsToOpenGLFormat(_displayable->getDynamicQuaternionValues(), uniforms.uniformVec4s);
     return uniforms;
 }
 
@@ -44,18 +33,16 @@ MeshGeometry Mesh::genMeshGeometry() const {
     return MeshGeometry::createInstance(_displayable, _shapes);
 }
 
-
-// void Mesh::concatMeshVerticesInfo(
-//     Mesh::MeshGeometry &current,
-//     const Mesh::MeshGeometry &other
-// ) {
-//     GeometricShape::concatShapeVerticesInfo(current.shapeVerticesInfo, other.shapeVerticesInfo);
-//
-//     Mesh::StateVertexAttributes &currentStateVertexAttributes = current.stateVertexAttributes;
-//     const Mesh::StateVertexAttributes &otherStateVertexAttributes = other.stateVertexAttributes;
-//     concatStateVertexAttributes(currentStateVertexAttributes, otherStateVertexAttributes);
-// }
-
 bool Mesh::updatingIsUseless() const {
     return _updatingIsUseless;
+}
+
+Mesh::UniformsNames Mesh::genUniformsNames() const {
+    Mesh::UniformsNames uniformsNames;
+    uniformsNames.uniformsInts = _displayable->getDynamicIntNames();
+    uniformsNames.uniformFloats = _displayable->getDynamicFloatNames();
+    uniformsNames.uniformVec2s = _displayable->getDynamicVec2fNames();
+    uniformsNames.uniformVec3s = _displayable->getDynamicVec3fNames();
+    uniformsNames.uniformVec4s = _displayable->getDynamicQuaternionNames();
+    return uniformsNames;
 }

@@ -11,6 +11,7 @@
 
 RenderPass::RenderPass(vecMesh_sptr meshes) :
     _meshes(std::move(meshes)),
+    _uniformsNames(_meshes.empty() ? Mesh::UniformsNames() : _meshes.front()->genUniformsNames()),
     _updatableMeshes(createUpdatableMeshes()),
     _meshStates(createMeshStates()),
     _unitedMeshesGroup(createUnitedMeshesGroup()),
@@ -50,18 +51,11 @@ void RenderPass::update() {
     }
 }
 
-template<typename T>
-void RenderPass::upsertUniforms(const std::unordered_map<std::string, T> &uniformsData) {
-    for (const auto &uniform: uniformsData) {
-        upsertUniform(uniform.first, uniform.second);
-    }
-}
-
 std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > RenderPass::createSeparateMeshGroups() const {
     std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > separateMeshGroups;
     for (const Mesh_sptr &mesh: _meshes) {
         if (mesh->getGlobalState() == Displayable::GlobalState::Separate) {
-            separateMeshGroups[mesh] =  std::make_shared<RenderGroup>(
+            separateMeshGroups[mesh] = std::make_shared<RenderGroup>(
                 RenderGroup::createInstance(std::initializer_list<Mesh_sptr>({mesh}))
             );
         }
@@ -70,25 +64,14 @@ std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > RenderPass::createS
 }
 
 void RenderPass::bindUniforms(
-    const Mesh::Uniforms &uniforms,
+    const Mesh::UniformsValues &uniforms,
     const CstShaderProgram_sptr &shaderProgram
 ) const {
-    bindUniformVariables(uniforms.uniformInts, shaderProgram);
-    bindUniformVariables(uniforms.uniformFloats, shaderProgram);
-    bindUniformVariables(uniforms.uniformVec2s, shaderProgram);
-    bindUniformVariables(uniforms.uniformVec3s, shaderProgram);
-    bindUniformVariables(uniforms.uniformVec4s, shaderProgram);
-    bindUniformVariables(uniforms.uniformMat4s, shaderProgram);
-}
-
-template<typename T>
-void RenderPass::bindUniformVariables(
-    Mesh::UniformVariables<T> uniforms,
-    const CstShaderProgram_sptr &shaderProgram
-) const {
-    for (const auto &uniform: uniforms) {
-        shaderProgram->bindUniform(uniform.first, uniform.second);
-    }
+    bindUniformVariables(shaderProgram, _uniformsNames.uniformsInts, uniforms.uniformInts);
+    bindUniformVariables(shaderProgram, _uniformsNames.uniformFloats, uniforms.uniformFloats);
+    bindUniformVariables(shaderProgram, _uniformsNames.uniformVec2s, uniforms.uniformVec2s);
+    bindUniformVariables(shaderProgram, _uniformsNames.uniformVec3s, uniforms.uniformVec3s);
+    bindUniformVariables(shaderProgram, _uniformsNames.uniformVec4s, uniforms.uniformVec4s);
 }
 
 void RenderPass::render(const CstShaderProgram_sptr &shaderProgram) const {
@@ -143,5 +126,4 @@ void RenderPass::freeGPUMemory() {
         renderGroup->freeGPUMemory();
     }
 }
-
 

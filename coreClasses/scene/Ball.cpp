@@ -8,7 +8,8 @@
 #include "Ball.h"
 #include "system/SoundOutput.h"
 
-Ball::Ball(unsigned int x, unsigned int y, unsigned int z, const CstDoubleChronometer_sptr &doubleChronometer):
+Ball::Ball(unsigned int x, unsigned int y, unsigned int z, const CstDoubleChronometer_sptr &doubleChronometer)
+    :
     _creationChronometer(doubleChronometer->first()),
     _inGameChronometer(doubleChronometer->second()),
     _pos({x, y, z}),
@@ -42,8 +43,7 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z, const CstDoubleChrono
     _nbOfKeys(0),
     _nbOfCoins(0),
     _nbOfClocks(0),
-    _updateOutputs{}
-    {
+    _updateOutputs{} {
 }
 
 void Ball::turnLeft() noexcept {
@@ -315,9 +315,9 @@ JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const {
     const JBTypes::vec3f lookVec = JBTypesMethods::directionAsVector(_lookTowards);
 
     const auto x = static_cast <float>(_pos.at(0)) +
-                    sideVec.x * (offsetRealPosition + p2D.y) + lookVec.x * p2D.x;
+                   sideVec.x * (offsetRealPosition + p2D.y) + lookVec.x * p2D.x;
     const auto y = static_cast <float>(_pos.at(1)) +
-                    sideVec.y * (offsetRealPosition + p2D.y) + lookVec.y * p2D.x;
+                   sideVec.y * (offsetRealPosition + p2D.y) + lookVec.y * p2D.x;
     const auto z = static_cast <float>(_pos.at(2)) +
                    sideVec.z * (offsetRealPosition + p2D.y) + lookVec.z * p2D.x;
 
@@ -394,7 +394,7 @@ void Ball::blockEvent() noexcept {
         return;
     }
     const auto hasToJump = _jumpRequest
-        && (_inGameChronometer->getTime() - _jumpRequestTime) < timeToGetNextBlock;
+                           && (_inGameChronometer->getTime() - _jumpRequestTime) < timeToGetNextBlock;
     if (hasToJump) {
         _jumpRequest = false;
         jump();
@@ -706,7 +706,11 @@ float Ball::getTimeToGetDestination() const {
     return getMechanicsJumping().getTimeToGetDestination();
 }
 
-Displayable::DynamicValues<float> Ball::getDynamicFloats() const {
+Displayable::DynamicNames Ball::getDynamicFloatNames() const {
+    return {"ballRadius", "crushingCoeff", "status", "timeStateOfLife", "burningCoeff"};
+}
+
+Displayable::DynamicValues<float> Ball::getDynamicFloatValues() const {
 
     const auto getStateOfLifeStatus = [this]() {
         if (
@@ -723,25 +727,28 @@ Displayable::DynamicValues<float> Ball::getDynamicFloats() const {
     };
 
     return {
-        {"ballRadius",      getRadius()},
-        {"crushingCoeff",   _currentCrushing},
-        {"status",          getStateOfLifeStatus()},
-        {"timeStateOfLife", getTimeSecondsSinceStateOfLife()},
-        {"burningCoeff",    burnCoefficient()}
+        getRadius(),
+        _currentCrushing,
+        getStateOfLifeStatus(),
+        getTimeSecondsSinceStateOfLife(),
+        burnCoefficient()
     };
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fs() const {
-    return {
-        {"sideDir",  currentSideAsVector()},
-        {"position", get3DPosition()}
-    };
+Displayable::DynamicNames Ball::getDynamicVec3fNames() const {
+    return {"sideDir", "position"};
 }
 
-Displayable::DynamicValues<JBTypes::Quaternion> Ball::getDynamicQuaternions() const {
-    return {
-        {"quaternion", getCoveredRotation()}
-    };
+Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
+    return {currentSideAsVector(), get3DPosition()};
+}
+
+Displayable::DynamicNames Ball::getDynamicQuaternionNames() const {
+    return {"quaternion"};
+}
+
+Displayable::DynamicValues<JBTypes::Quaternion> Ball::getDynamicQuaternionValues() const {
+    return {getCoveredRotation()};
 }
 
 Displayable::GlobalState Ball::getGlobalState() const {
@@ -945,3 +952,4 @@ unsigned int Ball::numberOfClocks() const {
 void Ball::obtainClock() {
     ++_nbOfClocks;
 }
+

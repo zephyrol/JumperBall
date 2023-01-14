@@ -42,12 +42,12 @@ Displayable::StaticValues<JBTypes::vec3f> Item::getStaticVec3fValues() const {
     return {_3DPosition};
 }
 
-Displayable::DynamicValues<float> Item::getDynamicFloats() const {
-    return {
-        {"creationTime", _chronometer->getTime()},
-        {"obtainingTime", getTimeSinceObtaining()}
-    };
+Displayable::DynamicNames Item::getDynamicFloatNames() const {
+    return {"creationTime", "obtainingTime"};
+}
 
+Displayable::DynamicValues<float> Item::getDynamicFloatValues() const {
+    return {_chronometer->getTime(), getTimeSinceObtaining()};
 }
 
 Displayable::GlobalState Item::getGlobalState() const {

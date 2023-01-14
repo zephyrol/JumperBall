@@ -73,9 +73,13 @@ public:
 
     Displayable::StaticValues<JBTypes::vec3f> getStaticVec3fValues() const override;
 
-    Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fs() const override;
+    Displayable::DynamicNames getDynamicVec3fNames() const override;
 
-    DynamicValues <JBTypes::vec2f> getDynamicVec2fs() const override;
+    Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
+
+    Displayable::DynamicNames getDynamicVec2fNames() const override;
+
+    Displayable::DynamicValues<JBTypes::vec2f> getDynamicVec2fValues() const override;
 
     Displayable::GlobalState getGlobalState() const override;
 

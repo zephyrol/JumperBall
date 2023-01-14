@@ -29,27 +29,39 @@ public:
 
     Mesh &operator=(const Mesh &mesh) = delete;
 
-    template<typename T> using UniformVariables = std::unordered_map<std::string, T>;
-    template<typename T> using UniformVariables_uptr = std::unique_ptr<UniformVariables<T> >;
+    template<typename T> using GpuUniformValues = std::vector<T>;
+    using GpuUniformNames = std::vector<std::string>;
 
     template<typename T>
     static std::vector<T> extractUniformVariablesValues(
-        const UniformVariables<T> &uniformVariables
+        const GpuUniformValues<T> &uniformVariables
     );
 
-    struct Uniforms {
-        UniformVariables<GLint> uniformInts = {};
-        UniformVariables<GLfloat> uniformFloats = {};
-        UniformVariables<glm::vec2> uniformVec2s = {};
-        UniformVariables<glm::vec3> uniformVec3s = {};
-        UniformVariables<glm::vec4> uniformVec4s = {};
-        UniformVariables<glm::mat4> uniformMat4s = {};
-        UniformVariables<GLuint> uniformTextures = {};
+    struct UniformsValues {
+        GpuUniformValues<GLint> uniformInts = {};
+        GpuUniformValues<GLfloat> uniformFloats = {};
+        GpuUniformValues<glm::vec2> uniformVec2s = {};
+        GpuUniformValues<glm::vec3> uniformVec3s = {};
+        GpuUniformValues<glm::vec4> uniformVec4s = {};
+        GpuUniformValues<glm::mat4> uniformMat4s = {};
+        GpuUniformValues<GLuint> uniformTextures = {};
+    };
+
+    struct UniformsNames {
+        GpuUniformNames uniformsInts = {};
+        GpuUniformNames uniformFloats = {};
+        GpuUniformNames uniformVec2s = {};
+        GpuUniformNames uniformVec3s = {};
+        GpuUniformNames uniformVec4s = {};
+        GpuUniformNames uniformMat4s = {};
+        GpuUniformNames uniformTextures = {};
     };
 
     Displayable::GlobalState getGlobalState() const;
 
-    Uniforms genUniformsValues() const;
+    UniformsValues genUniformsValues() const;
+
+    UniformsNames genUniformsNames() const;
 
     MeshGeometry genMeshGeometry() const;
 
@@ -60,7 +72,7 @@ private:
     template<typename RawType, typename OpenGLType>
     static void convertUniformsToOpenGLFormat(
         const Displayable::DynamicValues<RawType> &rawValues,
-        Mesh::UniformVariables<OpenGLType> &openGLValue
+        Mesh::GpuUniformValues<OpenGLType> &openGLValue
     );
 
     const CstDisplayable_sptr _displayable;
@@ -70,7 +82,7 @@ private:
 
 template<typename T>
 std::vector<T> Mesh::extractUniformVariablesValues(
-    const UniformVariables<T> &uniformVariables
+    const GpuUniformValues<T> &uniformVariables
 ) {
     std::vector<T> uniformVariablesValues;
     for (const auto &uniformVariable: uniformVariables) {
@@ -79,6 +91,16 @@ std::vector<T> Mesh::extractUniformVariablesValues(
     }
 
     return uniformVariablesValues;
+}
+
+template<typename RawType, typename OpenGLType>
+void Mesh::convertUniformsToOpenGLFormat(
+    const Displayable::DynamicValues<RawType> &rawValues,
+    Mesh::GpuUniformValues<OpenGLType> &openGLValues) {
+    for(const auto & rawValue: rawValues) {
+        const OpenGLType openGLValue = Utility::convertToOpenGLFormat(rawValue);
+        openGLValues.push_back(openGLValue);
+    }
 }
 
 
