@@ -34,7 +34,7 @@ public:
 private:
     static constexpr size_t sizeDepthTexture = 1024;
 
-    const std::vector<std::string> &getShadowDefines() const;
+    std::vector<std::string> getShadowDefines() const;
 
     const FrameBuffer_uptr _frameBuffer;
     const bool _isFirst;

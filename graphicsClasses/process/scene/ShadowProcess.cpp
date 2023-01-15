@@ -28,34 +28,39 @@ ShadowProcess::ShadowProcess(
     _enemies(std::move(enemies)),
     _specials(std::move(specials)),
     _ball(std::move(ball)),
-    _shadowBlocksShader(ShaderProgram::createShaderProgram(
+    _shadowBlocksShader(ShaderProgram::createInstance(
         fileContent,
         "blocksVs.vs",
         depthFs,
+        _blocks->genUniformNames(),
         getShadowDefines()
     )),
-    _shadowItemsShader(ShaderProgram::createShaderProgram(
+    _shadowItemsShader(ShaderProgram::createInstance(
         fileContent,
         "itemsMapVs.vs",
         depthFs,
+        _items->genUniformNames(),
         getShadowDefines()
     )),
-    _shadowEnemiesShader(ShaderProgram::createShaderProgram(
+    _shadowEnemiesShader(ShaderProgram::createInstance(
         fileContent,
         "enemiesVs.vs",
         depthFs,
+        _enemies->genUniformNames(),
         getShadowDefines()
     )),
-    _shadowSpecialsShader(ShaderProgram::createShaderProgram(
+    _shadowSpecialsShader(ShaderProgram::createInstance(
         fileContent,
         "specialsVs.vs",
         depthFs,
+        _specials->genUniformNames(),
         getShadowDefines()
     )),
-    _shadowBallShader(ShaderProgram::createShaderProgram(
+    _shadowBallShader(ShaderProgram::createInstance(
         fileContent,
         "ballVs.vs",
         depthFs,
+        _ball->genUniformNames(),
         getShadowDefines()
     )) {
 }
@@ -113,6 +118,6 @@ vecCstShaderProgram_sptr ShadowProcess::getShaderPrograms() const {
     };
 }
 
-const std::vector<std::string> &ShadowProcess::getShadowDefines() const {
-    return _isFirst ? shadowDefines : shadow2Defines;
+std::vector<std::string> ShadowProcess::getShadowDefines() const {
+    return _isFirst ? std::vector<std::string>{"SHADOW_PASS"} : std::vector<std::string>{"SHADOW_PASS_2"};
 }

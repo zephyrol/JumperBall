@@ -127,3 +127,11 @@ void RenderPass::freeGPUMemory() {
     }
 }
 
+std::vector<std::string> RenderPass::genUniformNames() const {
+    if(_meshes.empty()) {
+        return {};
+    }
+    // Every mesh defines the same uniforms.
+    return _meshes.front()->genGatheredUniformsNames();
+}
+

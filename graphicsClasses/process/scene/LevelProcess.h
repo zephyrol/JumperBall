@@ -16,12 +16,12 @@ public:
         GLsizei height,
         GLuint shadowTexture,
         GLuint shadow2Texture,
-        const RenderPass_sptr& blocks,
-        const RenderPass_sptr& items,
-        const RenderPass_sptr& enemies,
-        const RenderPass_sptr& specials,
-        const RenderPass_sptr& ball,
-        const RenderPass_sptr& star
+        RenderPass_sptr  blocks,
+        RenderPass_sptr  items,
+        RenderPass_sptr  enemies,
+        RenderPass_sptr  specials,
+        RenderPass_sptr  ball,
+        RenderPass_sptr  star
     );
 
     void render() const override;
@@ -51,15 +51,14 @@ private:
     const CstShaderProgram_sptr _sceneBallShader;
     const CstShaderProgram_sptr _sceneStarShader;
 
-    const std::map<CstShaderProgram_sptr, RenderPass_sptr> _shadersRenderPasses;
+    const std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr> > _shadersRenderPasses;
 
-    static CstShaderProgram_sptr createLevelProcessShaderProgram(
-        const JBTypes::FileContent& fileContent,
-        const std::string& vs
-    ) ;
-
-    static const std::string levelFs;
-    static const std::vector<std::string> levelDefines;
+    static CstShaderProgram_sptr
+    createLevelProcessShaderProgram(
+        const JBTypes::FileContent &fileContent,
+        const std::string &vs,
+        std::vector<std::string>&& uniformNames
+    );
 };
 
 #endif //JUMPERBALLAPPLICATION_LEVELPROCESS_H

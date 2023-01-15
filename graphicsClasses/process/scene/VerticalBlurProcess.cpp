@@ -4,24 +4,25 @@
 
 #include "VerticalBlurProcess.h"
 
+#include <utility>
+
 VerticalBlurProcess::VerticalBlurProcess(
-        const JBTypes::FileContent& fileContent,
-        GLsizei width,
-        GLsizei height,
-        GLuint horizontalBlurTexture,
-        const RenderPass_sptr& screen
-):
-    _screen(screen),
+    const JBTypes::FileContent &fileContent,
+    GLsizei width,
+    GLsizei height,
+    GLuint horizontalBlurTexture,
+    RenderPass_sptr screen
+) :
+    _screen(std::move(screen)),
     _frameBuffer(FrameBuffer_uptr(new FrameBuffer(
-        width,
-        height,
-        FrameBuffer::Content::SDR,
-        false
-    ))
-),
+                     width,
+                     height,
+                     FrameBuffer::Content::SDR,
+                     false
+                 ))
+    ),
     _horizontalBlurTexture(horizontalBlurTexture),
-    _verticalBlurShader(createVerticalBlurProcessShaderProgram(fileContent, width, height))
-{
+    _verticalBlurShader(createVerticalBlurProcessShaderProgram(fileContent, width, height)) {
 }
 
 void VerticalBlurProcess::render() const {
@@ -43,26 +44,30 @@ void VerticalBlurProcess::freeGPUMemory() {
 }
 
 CstShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgram(
-    const JBTypes::FileContent& fileContent,
+    const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height
 ) {
-    auto shader = ShaderProgram::createShaderProgram(
+    constexpr auto horizontalBlurTextureName = "horizontalBlurTexture";
+    auto shader = ShaderProgram::createInstance(
         fileContent,
         "basicFboVs.vs",
         "verticalBlurFs.fs",
+        {horizontalBlurTextureName},
         {},
-        {{"texelSize", glm::vec2(
-            1.f / static_cast<float>(width),
-            1.f / static_cast<float>(height)
-        )}}
+        {{
+             "texelSize", glm::vec2(
+                1.f / static_cast<float>(width),
+                1.f / static_cast<float>(height)
+            )}
+        }
     );
     shader->use();
-    shader->bindUniformTextureIndex("horizontalBlurTexture", 1);
+    shader->bindUniformTextureIndex(horizontalBlurTextureName, 1);
     return shader;
 }
 
 vecCstShaderProgram_sptr VerticalBlurProcess::getShaderPrograms() const {
-    return {_verticalBlurShader };
+    return {_verticalBlurShader};
 }
 

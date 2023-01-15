@@ -63,6 +63,8 @@ public:
 
     UniformsNames genUniformsNames() const;
 
+    std::vector<std::string> genGatheredUniformsNames() const;
+
     MeshGeometry genMeshGeometry() const;
 
     bool updatingIsUseless() const;

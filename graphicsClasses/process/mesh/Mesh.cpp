@@ -46,3 +46,29 @@ Mesh::UniformsNames Mesh::genUniformsNames() const {
     uniformsNames.uniformVec4s = _displayable->getDynamicQuaternionNames();
     return uniformsNames;
 }
+
+std::vector<std::string> Mesh::genGatheredUniformsNames() const {
+    auto uniformNames = genUniformsNames();
+    std::vector<std::string> gatheredUniformNames (std::move(uniformNames.uniformsInts));
+    gatheredUniformNames.insert(
+        gatheredUniformNames.end(),
+        std::make_move_iterator(uniformNames.uniformFloats.begin()),
+        std::make_move_iterator(uniformNames.uniformFloats.end())
+        );
+    gatheredUniformNames.insert(
+        gatheredUniformNames.end(),
+        std::make_move_iterator(uniformNames.uniformVec2s.begin()),
+        std::make_move_iterator(uniformNames.uniformVec2s.end())
+    );
+    gatheredUniformNames.insert(
+        gatheredUniformNames.end(),
+        std::make_move_iterator(uniformNames.uniformVec3s.begin()),
+        std::make_move_iterator(uniformNames.uniformVec3s.end())
+    );
+    gatheredUniformNames.insert(
+        gatheredUniformNames.end(),
+        std::make_move_iterator(uniformNames.uniformVec4s.begin()),
+        std::make_move_iterator(uniformNames.uniformVec4s.end())
+    );
+    return gatheredUniformNames;
+}

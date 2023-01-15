@@ -47,9 +47,15 @@ void BrightPassFilterProcess::freeGPUMemory() {
 CstShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShaderProgram(
     const JBTypes::FileContent &fileContent
 ) {
-    auto shader = ShaderProgram::createShaderProgram(fileContent, "basicFboVs.vs", "brightPassFilter.fs");
+    constexpr auto textureSceneUniformName = "textureScene";
+    auto shader = ShaderProgram::createInstance(
+        fileContent,
+        "basicFboVs.vs",
+        "brightPassFilter.fs",
+        { textureSceneUniformName }
+        );
     shader->use();
-    shader->bindUniformTextureIndex("textureScene", 0);
+    shader->bindUniformTextureIndex(textureSceneUniformName, 0);
     return shader;
 }
 

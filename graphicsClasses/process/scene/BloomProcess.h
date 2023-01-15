@@ -8,21 +8,24 @@
 
 #include "process/RenderProcess.h"
 
-class BloomProcess: public RenderProcess {
+class BloomProcess : public RenderProcess {
 
 public:
     BloomProcess(
-        const JBTypes::FileContent& fileContent,
+        const JBTypes::FileContent &fileContent,
         GLsizei width,
         GLsizei height,
-        GLuint bluredTexture,
+        GLuint blurTexture,
         GLint defaultFrameBuffer,
-        const RenderPass_sptr& screen
+        RenderPass_sptr screen
     );
 
     void render() const override;
+
     void freeGPUMemory() override;
+
     vecCstShaderProgram_sptr getShaderPrograms() const override;
+
     std::shared_ptr<const GLuint> getRenderTexture() const override;
 
 private:
@@ -30,12 +33,12 @@ private:
     GLsizei _width;
     GLsizei _height;
     const RenderPass_sptr _screen;
-    const GLuint _bluredTexture;
+    const GLuint _blurTexture;
     const CstShaderProgram_sptr _bloomShader;
     const GLint _defaultFrameBuffer;
 
     static CstShaderProgram_sptr createBloomProcessShaderProgram(
-        const JBTypes::FileContent& fileContent
+        const JBTypes::FileContent &fileContent
     );
 };
 

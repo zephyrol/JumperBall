@@ -4,21 +4,22 @@
 
 #include "BloomProcess.h"
 
+#include <utility>
+
 BloomProcess::BloomProcess(
-    const JBTypes::FileContent& fileContent,
+    const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height,
-    GLuint bluredTexture,
+    GLuint blurTexture,
     GLint defaultFrameBuffer,
-    const RenderPass_sptr& screen
-):
-        _width(width),
-        _height(height),
-        _screen(screen),
-        _bluredTexture(bluredTexture),
-        _bloomShader(createBloomProcessShaderProgram(fileContent)),
-        _defaultFrameBuffer(defaultFrameBuffer)
-{
+    RenderPass_sptr screen
+) :
+    _width(width),
+    _height(height),
+    _screen(std::move(screen)),
+    _blurTexture(blurTexture),
+    _bloomShader(createBloomProcessShaderProgram(fileContent)),
+    _defaultFrameBuffer(defaultFrameBuffer) {
 }
 
 void BloomProcess::render() const {
@@ -26,7 +27,7 @@ void BloomProcess::render() const {
     FrameBuffer::setViewportSize(_width, _height);
 
     _bloomShader->use();
-    ShaderProgram::bindTexture(_bluredTexture);
+    ShaderProgram::bindTexture(_blurTexture);
     _screen->render(_bloomShader);
 }
 
@@ -39,9 +40,14 @@ std::shared_ptr<const GLuint> BloomProcess::getRenderTexture() const {
 }
 
 CstShaderProgram_sptr BloomProcess::createBloomProcessShaderProgram(
-    const JBTypes::FileContent& fileContent
+    const JBTypes::FileContent &fileContent
 ) {
-    auto shader = ShaderProgram::createShaderProgram(fileContent,"basicFboVs.vs", "bloomFs.fs");
+    auto shader = ShaderProgram::createInstance(
+        fileContent,
+        "basicFboVs.vs",
+        "bloomFs.fs",
+        {"frameSceneHDRTexture", "frameBluredTexture"}
+    );
     shader->use();
     shader->bindUniformTextureIndex("frameSceneHDRTexture", 0);
     shader->bindUniformTextureIndex("frameBluredTexture", 1);
@@ -49,6 +55,5 @@ CstShaderProgram_sptr BloomProcess::createBloomProcessShaderProgram(
 }
 
 vecCstShaderProgram_sptr BloomProcess::getShaderPrograms() const {
-    return { _bloomShader };
+    return {_bloomShader};
 }
-

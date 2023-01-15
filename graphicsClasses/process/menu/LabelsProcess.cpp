@@ -41,7 +41,6 @@ void LabelsProcess::render() const {
 
     _labelsShader->use();
     ShaderProgram::setActiveTexture(0);
-    _labelsShader->bindUniformTextureIndex("characterTexture", 0);
     ShaderProgram::bindTexture(_fontTexturesGenerator.getLettersTexture());
     _renderPass.render(_labelsShader);
 }
@@ -72,12 +71,29 @@ CstShaderProgram_sptr LabelsProcess::createLettersProcessShaderProgram(
         }
         return {shaderDefine};
     };
-    auto shader = ShaderProgram::createShaderProgram(
+    constexpr auto characterTextureUniformName = "characterTexture";
+    std::vector<std::string> uniformsNames = {characterTextureUniformName};
+    auto uniformFloatNames = page->getUniformFloatNames();
+    uniformsNames.insert(
+        uniformsNames.end(),
+        std::make_move_iterator(uniformFloatNames.begin()),
+        std::make_move_iterator(uniformFloatNames.end())
+    );
+    auto uniformIntNames = page->getUniformIntNames();
+    uniformsNames.insert(
+        uniformsNames.end(),
+        std::make_move_iterator(uniformIntNames.begin()),
+        std::make_move_iterator(uniformIntNames.end())
+    );
+    auto shader = ShaderProgram::createInstance(
         fileContent,
         page->getVertexShaderName(),
         "labelFs.fs",
+        uniformsNames,
         getDefines()
     );
+    shader->use();
+    shader->bindUniformTextureIndex(characterTextureUniformName, 0);
     return shader;
 }
 

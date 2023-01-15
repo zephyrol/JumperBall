@@ -19,7 +19,18 @@ using vecCstShaderProgram_sptr = std::vector<CstShaderProgram_sptr>;
 class ShaderProgram {
 
 public:
-    ShaderProgram(CstShader_uptr &&vertexShader, CstShader_uptr &&fragmentShader);
+
+    struct UniformLocation {
+        std::string name;
+        GLint location;
+    };
+
+    ShaderProgram(
+        CstShader_uptr &&vertexShader,
+        CstShader_uptr &&fragmentShader,
+        GLuint shaderProgramHandle,
+        std::vector<UniformLocation>&& uniformLocations
+    );
 
     ShaderProgram(const ShaderProgram &shaderProgram) = delete;
 
@@ -31,10 +42,11 @@ public:
 
     void freeGPUMemory() const;
 
-    static CstShaderProgram_sptr createShaderProgram(
+    static CstShaderProgram_sptr createInstance(
         const JBTypes::FileContent &fileContent,
         const std::string &vs,
         const std::string &fs,
+        const std::vector<std::string> &uniformNames,
         const std::vector<std::string> &defines = {},
         const std::map<std::string, glm::vec2> &constVec2s = {}
     );
@@ -69,13 +81,11 @@ private:
     const GLuint _shaderProgramHandle;
     const CstShader_uptr _vertexShader;
     const CstShader_uptr _fragmentShader;
+    const std::vector<UniformLocation> _uniformLocations;
 
-// TODO: define the list of uniform in constructor
-    mutable std::unordered_map<std::string, GLint> _cacheUniformLocation;
+    static void verifyLinkStatus(GLuint shaderProgramHandle);
 
-    GLint fillCacheAndGet(const std::string &name) const;
-
-    void verifyLinkStatus() const;
+    GLint getLocation(const std::string& uniformName) const;
 
 };
 

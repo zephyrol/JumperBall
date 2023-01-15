@@ -41,6 +41,8 @@ public:
 
     void freeGPUMemory();
 
+    std::vector<std::string> genUniformNames() const;
+
 private:
 
     void bindUniforms(const Mesh::UniformsValues &uniforms, const CstShaderProgram_sptr &shaderProgram) const;

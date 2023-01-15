@@ -4,14 +4,16 @@
 
 #include "HorizontalBlurProcess.h"
 
+#include <utility>
+
 HorizontalBlurProcess::HorizontalBlurProcess(
         const JBTypes::FileContent& fileContent,
         GLsizei width,
         GLsizei height,
         GLuint brightPassTexture,
-        const RenderPass_sptr& screen
+        RenderPass_sptr screen
 ):
-    _screen(screen),
+    _screen(std::move(screen)),
     _frameBuffer(FrameBuffer_uptr(new FrameBuffer(
         width,
         height,
@@ -48,10 +50,12 @@ CstShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderPr
     GLsizei width,
     GLsizei height
 ) {
-    auto shader = ShaderProgram::createShaderProgram(
+    constexpr auto brightPassTextureUniformName = "brightPassTexture";
+    auto shader = ShaderProgram::createInstance(
         fileContent,
         "basicFboVs.vs",
         "horizontalBlurFs.fs",
+        {brightPassTextureUniformName},
         {},
         {{"texelSize", glm::vec2(
             1.f / static_cast<float>(width),
@@ -59,7 +63,7 @@ CstShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderPr
         )}}
     );
     shader->use();
-    shader->bindUniformTextureIndex("brightPassTexture", 1);
+    shader->bindUniformTextureIndex(brightPassTextureUniformName, 1);
     return shader;
 }
 

@@ -16,7 +16,7 @@ public:
         GLsizei width,
         GLsizei height,
         GLuint brightPassTexture,
-        const RenderPass_sptr& screen
+        RenderPass_sptr  screen
     );
 
     void render() const override;
