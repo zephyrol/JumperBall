@@ -86,7 +86,7 @@ public:
     };
 
     FontTexturesGenerator(
-        const LettersTexture &lettersTexture,
+        LettersTexture lettersTexture,
         vecTextLabel_sptr &&textLabels
     );
 
@@ -159,7 +159,7 @@ public:
         size_t fontDataSize
     );
 
-    static void clearFreeTypeRessources(FTContent &ftContent);
+    static void clearFreeTypeResources(FTContent &ftContent);
 };
 
 

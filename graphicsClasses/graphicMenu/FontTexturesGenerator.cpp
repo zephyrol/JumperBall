@@ -6,13 +6,15 @@
  */
 
 #include "FontTexturesGenerator.h"
+
+#include <utility>
 #include "FrameBuffer.h"
 #include "gameMenu/nodes/CenteredNode.h"
 
 FontTexturesGenerator::FontTexturesGenerator(
-    const FontTexturesGenerator::LettersTexture &lettersTexture,
+    FontTexturesGenerator::LettersTexture lettersTexture,
     vecTextLabel_sptr &&textLabels
-) : _lettersTexture(lettersTexture),
+) : _lettersTexture(std::move(lettersTexture)),
     _messageLabels(std::move(textLabels)) {
 }
 
@@ -22,7 +24,7 @@ FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont(
     size_t fontDataSize
 ) {
 
-    FontTexturesGenerator::FTContent ftContent;
+    FontTexturesGenerator::FTContent ftContent{};
 
     if (FT_Init_FreeType(&ftContent.ftLib)) {
         std::cerr << "Error: Impossible to init FreeType Lib..." << std::endl;
@@ -46,7 +48,7 @@ FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont(
     return ftContent;
 }
 
-void FontTexturesGenerator::clearFreeTypeRessources(FontTexturesGenerator::FTContent &ftContent) {
+void FontTexturesGenerator::clearFreeTypeResources(FontTexturesGenerator::FTContent &ftContent) {
     FT_Done_Face(ftContent.fontFace);
     FT_Done_FreeType(ftContent.ftLib);
 }

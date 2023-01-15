@@ -25,7 +25,7 @@ Viewer::Viewer(
     }()),
     _resolutionX(static_cast<GLsizei>(resolutionX)),
     _resolutionY(static_cast<GLsizei>(resolutionY)),
-    _sceneRendering(new SceneRendering(
+    _sceneRendering(SceneRendering::createInstance(
         *scene,
         _resolutionX,
         _resolutionY,
@@ -75,7 +75,7 @@ void Viewer::setPage(const CstPage_sptr &page) {
 }
 
 Viewer::~Viewer() {
-    FontTexturesGenerator::clearFreeTypeRessources(_ftContent);
+    FontTexturesGenerator::clearFreeTypeResources(_ftContent);
 }
 
 void Viewer::resetPageRendering() {
@@ -92,12 +92,12 @@ void Viewer::resetPageRendering() {
 
 void Viewer::resetSceneRendering() {
     _sceneRendering->freeGPUMemory();
-    _sceneRendering = std::unique_ptr<SceneRendering>(new SceneRendering(
+    _sceneRendering = SceneRendering::createInstance(
         *_scene,
         _resolutionX,
         _resolutionY,
         _defaultFrameBuffer,
         _fileContent
-    ));
+    );
     _pageRendering->setMap(_scene->getMap());
 }

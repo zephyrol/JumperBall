@@ -11,7 +11,7 @@
 class SceneUniformBuffer : public UniformBuffer {
 public:
 
-    SceneUniformBuffer(
+    explicit SceneUniformBuffer(
         const vecCstShaderProgram_sptr &sceneShaderPrograms
     );
 

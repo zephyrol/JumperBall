@@ -74,11 +74,11 @@ SceneUniformBuffer::DataLocation<glm::vec3> SceneUniformBuffer::createVec3DataLo
     return {
         {
             _cameraPosition,
-            {_uniformBufferContent.data() + _fieldOffsets.at(nameCameraPosition), &(*_cameraPosition)[0]}
+            {_uniformBufferContent.data() + _fieldOffsets.at(nameCameraPosition),  &(*_cameraPosition)[0]}
         },
         {
             _lightDirection,
-            {_uniformBufferContent.data() + _fieldOffsets.at(nameLightDirection), &(*_lightDirection)[0]}
+            {_uniformBufferContent.data() + _fieldOffsets.at(nameLightDirection),  &(*_lightDirection)[0]}
         },
         {
             _light2Direction,
@@ -86,7 +86,7 @@ SceneUniformBuffer::DataLocation<glm::vec3> SceneUniformBuffer::createVec3DataLo
         },
         {
             _flashColor,
-            {_uniformBufferContent.data() + _fieldOffsets.at(nameFlashColor),     &(*_flashColor)[0]}
+            {_uniformBufferContent.data() + _fieldOffsets.at(nameFlashColor),      &(*_flashColor)[0]}
         }
     };
 }
