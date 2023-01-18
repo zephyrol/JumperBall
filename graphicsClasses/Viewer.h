@@ -18,7 +18,7 @@ public:
         unsigned int resolutionX,
         unsigned int resolutionY,
         const CstScene_sptr &scene,
-        const CstPage_sptr &page,
+        CstPage_sptr page,
         const JBTypes::FileContent &fileContent,
         const unsigned char *fontData,
         size_t fontDataSize

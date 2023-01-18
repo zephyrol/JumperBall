@@ -5,17 +5,19 @@
 
 #include "Viewer.h"
 
+#include <utility>
+
 Viewer::Viewer(
     unsigned int resolutionX,
     unsigned int resolutionY,
     const CstScene_sptr &scene,
-    const CstPage_sptr &page,
+    CstPage_sptr page,
     const JBTypes::FileContent &fileContent,
     const unsigned char *fontData,
     size_t fontDataSize
 ) :
     _scene(scene),
-    _page(page),
+    _page(std::move(page)),
     _ftContent(FontTexturesGenerator::initFreeTypeAndFont(fontData, fontDataSize)),
     _fileContent(fileContent),
     _defaultFrameBuffer([]() {
@@ -32,7 +34,7 @@ Viewer::Viewer(
         _defaultFrameBuffer,
         fileContent
     )),
-    _pageRendering(new LabelsProcess(
+    _pageRendering(LabelsProcess::createInstance(
         fileContent,
         _ftContent,
         _resolutionX,
@@ -67,6 +69,7 @@ void Viewer::resize(unsigned int resolutionX, unsigned int resolutionY) {
 void Viewer::setScene(const CstScene_sptr &scene) {
     _scene = scene;
     resetSceneRendering();
+    resetPageRendering();
 }
 
 void Viewer::setPage(const CstPage_sptr &page) {
@@ -80,7 +83,7 @@ Viewer::~Viewer() {
 
 void Viewer::resetPageRendering() {
     _pageRendering->freeGPUMemory();
-    _pageRendering = std::unique_ptr<LabelsProcess>(new LabelsProcess(
+    _pageRendering = std::unique_ptr<LabelsProcess>(LabelsProcess::createInstance(
         _fileContent,
         _ftContent,
         _resolutionX,
@@ -99,5 +102,4 @@ void Viewer::resetSceneRendering() {
         _defaultFrameBuffer,
         _fileContent
     );
-    _pageRendering->setMap(_scene->getMap());
 }

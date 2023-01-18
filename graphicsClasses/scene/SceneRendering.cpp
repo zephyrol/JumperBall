@@ -53,7 +53,8 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
     const auto specials = std::make_shared<RenderPass>(MeshGenerator::genSpecials(scene.getMap()));
     const auto ball = std::make_shared<RenderPass>(MeshGenerator::genBall(scene.getBall()));
     const auto star = std::make_shared<RenderPass>(
-        MeshGenerator::genStars(scene.getStar(), scene.getStar2()));
+        MeshGenerator::genStars(scene.getStar(), scene.getStar2())
+    );
     const auto screen = std::make_shared<RenderPass>(MeshGenerator::genScreen());
 
 

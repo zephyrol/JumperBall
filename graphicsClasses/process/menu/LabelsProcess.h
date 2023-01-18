@@ -14,8 +14,7 @@
 class LabelsProcess: public RenderProcess, Rendering {
 
 public:
-
-    LabelsProcess(
+    static std::unique_ptr<LabelsProcess> createInstance(
         const JBTypes::FileContent& fileContent,
         const FontTexturesGenerator::FTContent &ftContent,
         GLsizei width,
@@ -24,7 +23,16 @@ public:
         CstMap_sptr map
     );
 
-    void setMap(CstMap_sptr map);
+    explicit LabelsProcess(
+        GLsizei width,
+        GLsizei height,
+        CstPage_sptr page,
+        const FontTexturesGenerator& fontTexturesGenerator,
+        RenderPass renderPass,
+        CstShaderProgram_sptr labelsShader,
+        CstMap_sptr map
+    );
+
     void render() const override;
     void update() override;
     void freeGPUMemory() override;
@@ -33,18 +41,12 @@ public:
 
 private:
     const CstPage_sptr _page;
-    const std::vector<std::string> _uniformFloatNames;
-    const std::vector<std::string> _uniformIntNames;
     FontTexturesGenerator _fontTexturesGenerator;
     RenderPass _renderPass;
     const CstShaderProgram_sptr _labelsShader;
+    const std::vector<std::string> _uniformFloatNames;
+    const std::vector<std::string> _uniformIntNames;
     CstMap_sptr _map;
-
-    static CstShaderProgram_sptr
-    createLettersProcessShaderProgram(
-        const JBTypes::FileContent &fileContent,
-        const CstPage_sptr &page
-    );
 };
 
 
