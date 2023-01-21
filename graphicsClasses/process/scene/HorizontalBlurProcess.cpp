@@ -1,5 +1,5 @@
 //
-// Created by Sébastien Morgenthaler on 26/01/2022.
+// Created by S.Morgenthaler on 26/01/2022.
 //
 
 #include "HorizontalBlurProcess.h"
@@ -7,23 +7,21 @@
 #include <utility>
 
 HorizontalBlurProcess::HorizontalBlurProcess(
-        const JBTypes::FileContent& fileContent,
-        GLsizei width,
-        GLsizei height,
-        GLuint brightPassTexture,
-        RenderPass_sptr screen
-):
+    const JBTypes::FileContent &fileContent,
+    GLsizei width,
+    GLsizei height,
+    GLuint brightPassTexture,
+    RenderPass_sptr screen
+) :
     _screen(std::move(screen)),
-    _frameBuffer(FrameBuffer_uptr(new FrameBuffer(
+    _frameBuffer(ColorableFrameBuffer::createInstance(
         width,
         height,
-        FrameBuffer::Content::HDR,
+        true,
         false
-        ))
-),
+    )),
     _brightPassTexture(brightPassTexture),
-    _horizontalBlurShader(createHorizontalBlurProcessShaderProgram(fileContent, width, height))
-{
+    _horizontalBlurShader(createHorizontalBlurProcessShaderProgram(fileContent, width, height)) {
 }
 
 void HorizontalBlurProcess::render() const {
@@ -46,7 +44,7 @@ void HorizontalBlurProcess::freeGPUMemory() {
 }
 
 CstShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderProgram(
-    const JBTypes::FileContent& fileContent,
+    const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height
 ) {
@@ -68,6 +66,6 @@ CstShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderPr
 }
 
 vecCstShaderProgram_sptr HorizontalBlurProcess::getShaderPrograms() const {
-    return { _horizontalBlurShader };
+    return {_horizontalBlurShader};
 }
 

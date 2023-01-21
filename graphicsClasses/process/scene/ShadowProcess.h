@@ -6,6 +6,7 @@
 #define JUMPERBALLAPPLICATION_SHADOWPROCESS_H
 
 #include "process/RenderProcess.h"
+#include "frameBuffer/DepthFrameBuffer.h"
 
 
 class ShadowProcess : public RenderProcess {
@@ -36,7 +37,7 @@ private:
 
     std::vector<std::string> getShadowDefines() const;
 
-    const FrameBuffer_uptr _frameBuffer;
+    const DepthFrameBuffer_uptr _frameBuffer;
     const bool _isFirst;
 
     const RenderPass_sptr _blocks;

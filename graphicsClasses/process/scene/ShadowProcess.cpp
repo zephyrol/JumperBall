@@ -14,13 +14,9 @@ ShadowProcess::ShadowProcess(
     RenderPass_sptr specials,
     RenderPass_sptr ball,
     bool isFirst
-) : _frameBuffer(
-    new FrameBuffer(
+) : _frameBuffer(DepthFrameBuffer::createInstance(
         sizeDepthTexture,
-        sizeDepthTexture,
-        FrameBuffer::Content::Depth,
-        true,
-        {1.f, 1.f, 1.f}
+        sizeDepthTexture
     )),
     _isFirst(isFirst),
     _blocks(std::move(blocks)),
@@ -73,7 +69,7 @@ void ShadowProcess::render() const {
         FrameBuffer::setViewportSize(sizeDepthTexture, sizeDepthTexture);
     }
     _frameBuffer->bindFrameBuffer();
-    _frameBuffer->clean();
+    _frameBuffer->clear();
 
     _shadowBlocksShader->use();
     _blocks->render(_shadowBlocksShader);

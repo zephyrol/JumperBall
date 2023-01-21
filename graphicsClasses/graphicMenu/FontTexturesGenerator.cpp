@@ -8,7 +8,7 @@
 #include "FontTexturesGenerator.h"
 
 #include <utility>
-#include "FrameBuffer.h"
+#include "frameBuffer/FrameBuffer.h"
 #include "gameMenu/nodes/CenteredNode.h"
 
 FontTexturesGenerator::FontTexturesGenerator(

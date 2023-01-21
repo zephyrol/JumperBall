@@ -7,6 +7,7 @@
 
 
 #include "process/RenderProcess.h"
+#include "frameBuffer/ColorableFrameBuffer.h"
 
 class VerticalBlurProcess: public RenderProcess {
 
@@ -25,7 +26,7 @@ public:
 
 private:
     const RenderPass_sptr _screen;
-    const FrameBuffer_uptr _frameBuffer;
+    const ColorableFrameBuffer_uptr _frameBuffer;
     const GLuint _horizontalBlurTexture;
     const CstShaderProgram_sptr _verticalBlurShader;
 

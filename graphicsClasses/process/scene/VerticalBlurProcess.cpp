@@ -14,13 +14,12 @@ VerticalBlurProcess::VerticalBlurProcess(
     RenderPass_sptr screen
 ) :
     _screen(std::move(screen)),
-    _frameBuffer(FrameBuffer_uptr(new FrameBuffer(
-                     width,
-                     height,
-                     FrameBuffer::Content::SDR,
-                     false
-                 ))
-    ),
+    _frameBuffer(ColorableFrameBuffer::createInstance(
+        width,
+        height,
+        false,
+        false
+    )),
     _horizontalBlurTexture(horizontalBlurTexture),
     _verticalBlurShader(createVerticalBlurProcessShaderProgram(fileContent, width, height)) {
 }

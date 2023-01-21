@@ -8,7 +8,7 @@
 #ifndef RENDER_PASS_H
 #define RENDER_PASS_H
 
-#include "FrameBuffer.h"
+#include "frameBuffer/FrameBuffer.h"
 #include "RenderGroup.h"
 
 class RenderPass;

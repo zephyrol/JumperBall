@@ -4,36 +4,41 @@
 
 #ifndef JUMPERBALLAPPLICATION_LEVELPROCESS_H
 #define JUMPERBALLAPPLICATION_LEVELPROCESS_H
+
 #include "process/RenderProcess.h"
+#include "frameBuffer/ColorableFrameBuffer.h"
 
 
-class LevelProcess: public RenderProcess {
+class LevelProcess : public RenderProcess {
 public:
 
     LevelProcess(
-        const JBTypes::FileContent& fileContent,
+        const JBTypes::FileContent &fileContent,
         GLsizei width,
         GLsizei height,
         GLuint shadowTexture,
         GLuint shadow2Texture,
-        RenderPass_sptr  blocks,
-        RenderPass_sptr  items,
-        RenderPass_sptr  enemies,
-        RenderPass_sptr  specials,
-        RenderPass_sptr  ball,
-        RenderPass_sptr  star
+        RenderPass_sptr blocks,
+        RenderPass_sptr items,
+        RenderPass_sptr enemies,
+        RenderPass_sptr specials,
+        RenderPass_sptr ball,
+        RenderPass_sptr star
     );
 
     void render() const override;
+
     void freeGPUMemory() override;
+
     vecCstShaderProgram_sptr getShaderPrograms() const override;
+
     std::shared_ptr<const GLuint> getRenderTexture() const override;
 
 private:
 
     GLsizei _width;
     GLsizei _height;
-    const FrameBuffer_uptr _frameBuffer;
+    const ColorableFrameBuffer_uptr _frameBuffer;
 
     const RenderPass_sptr _blocks;
     const RenderPass_sptr _items;
@@ -57,7 +62,7 @@ private:
     createLevelProcessShaderProgram(
         const JBTypes::FileContent &fileContent,
         const std::string &vs,
-        std::vector<std::string>&& uniformNames
+        std::vector<std::string> &&uniformNames
     );
 };
 

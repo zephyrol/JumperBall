@@ -4,23 +4,24 @@
 
 #include "BrightPassFilterProcess.h"
 
+#include <utility>
+
 BrightPassFilterProcess::BrightPassFilterProcess(
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height,
     GLuint hdrSceneTexture,
-    const RenderPass_sptr &screen
+    RenderPass_sptr screen
 ) :
     _width(width),
     _height(height),
-    _screen(screen),
-    _frameBuffer(FrameBuffer_uptr(new FrameBuffer(
-                     width,
-                     height,
-                     FrameBuffer::Content::HDR,
-                     false
-                 ))
-    ),
+    _screen(std::move(screen)),
+    _frameBuffer(ColorableFrameBuffer::createInstance(
+        width,
+        height,
+        true,
+        false
+    )),
     _hdrSceneTexture(hdrSceneTexture),
     _brightPassFilterShader(createBrightPassFilterProcessShaderProgram(fileContent)) {
 }

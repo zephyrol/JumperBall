@@ -20,13 +20,13 @@ LevelProcess::LevelProcess(
     RenderPass_sptr star
 ) : _width(width),
     _height(height),
-    _frameBuffer(
-        new FrameBuffer(
-            _width,
-            _height,
-            FrameBuffer::Content::HDR,
-            true
-        )),
+    _frameBuffer(ColorableFrameBuffer::createInstance(
+        _width,
+        _height,
+        true,
+        true,
+        std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f))
+    )),
     _blocks(std::move(blocks)),
     _items(std::move(items)),
     _enemies(std::move(enemies)),
@@ -86,7 +86,7 @@ void LevelProcess::render() const {
     glCullFace(GL_BACK);
     FrameBuffer::setViewportSize(_width, _height);
     _frameBuffer->bindFrameBuffer();
-    _frameBuffer->clean();
+    _frameBuffer->clear();
 
     ShaderProgram::setActiveTexture(1);
     ShaderProgram::bindTexture(_shadow2Texture);

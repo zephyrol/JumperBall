@@ -7,6 +7,7 @@
 
 
 #include "process/RenderProcess.h"
+#include "frameBuffer/ColorableFrameBuffer.h"
 
 class BrightPassFilterProcess: public RenderProcess {
 
@@ -16,7 +17,7 @@ public:
         GLsizei width,
         GLsizei height,
         GLuint hdrSceneTexture,
-        const RenderPass_sptr& screen
+        RenderPass_sptr  screen
     );
 
     void render() const override;
@@ -31,7 +32,7 @@ private:
     const GLsizei _width;
     const GLsizei _height;
     const RenderPass_sptr _screen;
-    const FrameBuffer_uptr _frameBuffer;
+    const ColorableFrameBuffer_uptr _frameBuffer;
     const GLuint _hdrSceneTexture;
     const CstShaderProgram_sptr _brightPassFilterShader;
 };

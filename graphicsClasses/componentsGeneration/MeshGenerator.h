@@ -23,7 +23,7 @@
 #include "geometry/Quad.h"
 #include "geometry/Triangle.h"
 #include "gameMenu/LabelGeometry.h"
-#include "FrameBuffer.h"
+#include "frameBuffer/FrameBuffer.h"
 #include "process/mesh/Mesh.h"
 #include "graphicMenu/FontTexturesGenerator.h"
 
