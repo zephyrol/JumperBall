@@ -1,5 +1,5 @@
 //
-// Created by Sébastien Morgenthaler on 26/01/2022.
+// Created by S.Morgenthaler on 26/01/2022.
 //
 
 #ifndef JUMPERBALLAPPLICATION_SHADOWPROCESS_H
@@ -8,17 +8,25 @@
 #include "process/RenderProcess.h"
 #include "frameBuffer/DepthFrameBuffer.h"
 
+class ShadowProcess;
+using ShadowProcess_sptr = std::shared_ptr<ShadowProcess>;
 
 class ShadowProcess : public RenderProcess {
 public:
 
-    ShadowProcess(
+    static ShadowProcess_sptr createInstance(
         const JBTypes::FileContent &fileContent,
         RenderPass_sptr blocks,
         RenderPass_sptr items,
         RenderPass_sptr enemies,
         RenderPass_sptr specials,
         RenderPass_sptr ball,
+        bool isFirst
+    );
+
+    ShadowProcess(
+        DepthFrameBuffer_uptr frameBuffer,
+        std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr> >&& shadersRenderPasses,
         bool isFirst
     );
 
@@ -30,30 +38,13 @@ public:
 
     std::shared_ptr<const GLuint> getRenderTexture() const override;
 
-    virtual ~ShadowProcess() = default;
+    ~ShadowProcess() override = default;
 
 private:
     static constexpr size_t sizeDepthTexture = 1024;
-
-    std::vector<std::string> getShadowDefines() const;
-
     const DepthFrameBuffer_uptr _frameBuffer;
+    const std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr> > _shadersRenderPasses;
     const bool _isFirst;
-
-    const RenderPass_sptr _blocks;
-    const RenderPass_sptr _items;
-    const RenderPass_sptr _enemies;
-    const RenderPass_sptr _specials;
-    const RenderPass_sptr _ball;
-    const CstShaderProgram_sptr _shadowBlocksShader;
-    const CstShaderProgram_sptr _shadowItemsShader;
-    const CstShaderProgram_sptr _shadowEnemiesShader;
-    const CstShaderProgram_sptr _shadowSpecialsShader;
-    const CstShaderProgram_sptr _shadowBallShader;
-
-    static const std::string depthFs;
-    static const std::vector<std::string> shadowDefines;
-    static const std::vector<std::string> shadow2Defines;
 };
 
 #endif //JUMPERBALLAPPLICATION_SHADOWPROCESS_H

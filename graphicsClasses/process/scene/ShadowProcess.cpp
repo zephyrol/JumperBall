@@ -1,12 +1,23 @@
 //
-// Created by Sébastien Morgenthaler on 26/01/2022.
+// Created by S.Morgenthaler on 26/01/2022.
 //
 
 #include "ShadowProcess.h"
 
 #include <utility>
 
+
 ShadowProcess::ShadowProcess(
+    DepthFrameBuffer_uptr frameBuffer,
+    std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr>> &&shadersRenderPasses,
+    bool isFirst
+) :
+    _frameBuffer(std::move(frameBuffer)),
+    _shadersRenderPasses(std::move(shadersRenderPasses)),
+    _isFirst(isFirst) {
+}
+
+ShadowProcess_sptr ShadowProcess::createInstance(
     const JBTypes::FileContent &fileContent,
     RenderPass_sptr blocks,
     RenderPass_sptr items,
@@ -14,51 +25,43 @@ ShadowProcess::ShadowProcess(
     RenderPass_sptr specials,
     RenderPass_sptr ball,
     bool isFirst
-) : _frameBuffer(DepthFrameBuffer::createInstance(
-        sizeDepthTexture,
-        sizeDepthTexture
-    )),
-    _isFirst(isFirst),
-    _blocks(std::move(blocks)),
-    _items(std::move(items)),
-    _enemies(std::move(enemies)),
-    _specials(std::move(specials)),
-    _ball(std::move(ball)),
-    _shadowBlocksShader(ShaderProgram::createInstance(
-        fileContent,
-        "blocksVs.vs",
-        depthFs,
-        _blocks->genUniformNames(),
-        getShadowDefines()
-    )),
-    _shadowItemsShader(ShaderProgram::createInstance(
-        fileContent,
-        "itemsMapVs.vs",
-        depthFs,
-        _items->genUniformNames(),
-        getShadowDefines()
-    )),
-    _shadowEnemiesShader(ShaderProgram::createInstance(
-        fileContent,
-        "enemiesVs.vs",
-        depthFs,
-        _enemies->genUniformNames(),
-        getShadowDefines()
-    )),
-    _shadowSpecialsShader(ShaderProgram::createInstance(
-        fileContent,
-        "specialsVs.vs",
-        depthFs,
-        _specials->genUniformNames(),
-        getShadowDefines()
-    )),
-    _shadowBallShader(ShaderProgram::createInstance(
-        fileContent,
-        "ballVs.vs",
-        depthFs,
-        _ball->genUniformNames(),
-        getShadowDefines()
-    )) {
+) {
+
+    const auto shadowDefines =
+        isFirst
+        ? std::vector<std::string>{"SHADOW_PASS"}
+        : std::vector<std::string>{"SHADOW_PASS_2"};
+
+    std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr> > shadersRenderPasses{};
+    std::vector<std::pair<std::string, RenderPass_sptr> > vertexShaderFilesRenderPasses{
+        {"blocksVs.vs",   std::move(blocks)},
+        {"itemsMapVs.vs", std::move(items)},
+        {"enemiesVs.vs",  std::move(enemies)},
+        {"specialsVs.vs", std::move(specials)},
+        {"ballVs.vs",     std::move(ball)}
+    };
+    for (auto &vertexShaderFileRenderPass: vertexShaderFilesRenderPasses) {
+        const auto &vertexShaderFile = vertexShaderFileRenderPass.first;
+        auto &renderPass = vertexShaderFileRenderPass.second;
+        shadersRenderPasses.emplace_back(
+            ShaderProgram::createInstance(
+                fileContent,
+                vertexShaderFile,
+                "depthFs.fs",
+                renderPass->genUniformNames(),
+                shadowDefines
+            ),
+            std::move(renderPass)
+        );
+    }
+    return std::make_shared<ShadowProcess>(
+        DepthFrameBuffer::createInstance(
+            sizeDepthTexture,
+            sizeDepthTexture
+        ),
+        std::move(shadersRenderPasses),
+        isFirst
+    );
 }
 
 void ShadowProcess::render() const {
@@ -71,49 +74,32 @@ void ShadowProcess::render() const {
     _frameBuffer->bindFrameBuffer();
     _frameBuffer->clear();
 
-    _shadowBlocksShader->use();
-    _blocks->render(_shadowBlocksShader);
-
-    _shadowItemsShader->use();
-    _items->render(_shadowItemsShader);
-
-    _shadowEnemiesShader->use();
-    _enemies->render(_shadowEnemiesShader);
-
-    _shadowSpecialsShader->use();
-    _specials->render(_shadowSpecialsShader);
-
-    _shadowBallShader->use();
-    _ball->render(_shadowBallShader);
+    for (const auto &shaderRenderPass: _shadersRenderPasses) {
+        const auto &shader = shaderRenderPass.first;
+        const auto &renderPass = shaderRenderPass.second;
+        shader->use();
+        renderPass->render(shader);
+    }
 }
 
 void ShadowProcess::freeGPUMemory() {
     _frameBuffer->freeGPUMemory();
-    _shadowBlocksShader->freeGPUMemory();
-    _shadowEnemiesShader->freeGPUMemory();
-    _shadowItemsShader->freeGPUMemory();
-    _shadowSpecialsShader->freeGPUMemory();
-    _shadowBallShader->freeGPUMemory();
+    for(auto& shaderRenderPass: _shadersRenderPasses) {
+        auto& shader = shaderRenderPass.first;
+        shader->freeGPUMemory();
+    }
 }
-
-const std::string ShadowProcess::depthFs = "depthFs.fs";
-const std::vector<std::string> ShadowProcess::shadowDefines = {"SHADOW_PASS"};
-const std::vector<std::string> ShadowProcess::shadow2Defines = {"SHADOW_PASS_2"};
 
 std::shared_ptr<const GLuint> ShadowProcess::getRenderTexture() const {
     return std::make_shared<const GLuint>(_frameBuffer->getRenderTexture());
 }
 
 vecCstShaderProgram_sptr ShadowProcess::getShaderPrograms() const {
-    return {
-        _shadowBlocksShader,
-        _shadowItemsShader,
-        _shadowEnemiesShader,
-        _shadowSpecialsShader,
-        _shadowBallShader
-    };
+    vecCstShaderProgram_sptr shaderPrograms;
+    for(auto& shaderRenderPass: _shadersRenderPasses) {
+        auto& shader = shaderRenderPass.first;
+        shaderPrograms.push_back(shader);
+    }
+    return shaderPrograms;
 }
 
-std::vector<std::string> ShadowProcess::getShadowDefines() const {
-    return _isFirst ? std::vector<std::string>{"SHADOW_PASS"} : std::vector<std::string>{"SHADOW_PASS_2"};
-}

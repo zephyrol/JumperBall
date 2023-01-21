@@ -61,7 +61,7 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
     std::vector<std::shared_ptr<ShadowProcess> > shadowProcesses{};
     for (const auto order: {true, false}) {
         shadowProcesses.emplace_back(
-            std::make_shared<ShadowProcess>(
+            ShadowProcess::createInstance(
                 fileContent,
                 blocks,
                 items,

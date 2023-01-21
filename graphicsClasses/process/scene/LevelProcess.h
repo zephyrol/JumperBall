@@ -1,5 +1,5 @@
 //
-// Created by Sébastien Morgenthaler on 26/01/2022.
+// Created by S.Morgenthaler on 26/01/2022.
 //
 
 #ifndef JUMPERBALLAPPLICATION_LEVELPROCESS_H
@@ -10,7 +10,6 @@
 
 
 class LevelProcess;
-using LevelProcess_uptr = std::unique_ptr<LevelProcess>;
 using LevelProcess_sptr = std::shared_ptr<LevelProcess>;
 
 class LevelProcess : public RenderProcess {
