@@ -12,54 +12,37 @@
 RenderPass::RenderPass(vecMesh_sptr meshes) :
     _meshes(std::move(meshes)),
     _uniformsNames(_meshes.empty() ? Mesh::UniformsNames() : _meshes.front()->genUniformsNames()),
-    _updatableMeshes(createUpdatableMeshes()),
-    _meshStates(createMeshStates()),
-    _unitedMeshesGroup(createUnitedMeshesGroup()),
-    _separateMeshGroups(createSeparateMeshGroups()),
-    _renderGroupsUniforms{} {
+    _updatableMeshesStates(std::accumulate(
+        _meshes.begin(),
+        _meshes.end(),
+        std::vector<RenderPass::UpdatableMeshState>(),
+        [](std::vector<RenderPass::UpdatableMeshState> &updatableMeshes, const Mesh_sptr &mesh) {
+            if (!mesh->updatingIsUseless()) {
+                updatableMeshes.push_back({mesh, mesh->getGlobalState()});
+            }
+            return updatableMeshes;
+        })),
+    _drawCallDefinitions(createDrawCallDefinitions())
+{
 }
 
 void RenderPass::update() {
 
     bool needsGroupsRedefinition = false;
-    for (const auto &updatableMesh: _updatableMeshes) {
-        if (updatableMesh->getGlobalState() != _meshStates.at(updatableMesh)) {
+    for (const auto &updatableMeshState: _updatableMeshesStates) {
+        if (updatableMeshState.mesh->getGlobalState() != updatableMeshState.currentState) {
             needsGroupsRedefinition = true;
         }
     }
     if (needsGroupsRedefinition) {
         freeGPUMemory();
-        _meshStates = createMeshStates();
-        _unitedMeshesGroup = createUnitedMeshesGroup();
-        _separateMeshGroups = createSeparateMeshGroups();
-        _renderGroupsUniforms.clear();
+        _drawCallDefinitions = createDrawCallDefinitions();
     }
 
-    const auto updateRenderGroupUniforms =
-        [this](const std::shared_ptr<RenderGroup> &renderGroup) {
-            const CstMesh_sptr headMesh = renderGroup->getHeadMesh();
-            _renderGroupsUniforms[renderGroup] = headMesh->genUniformsValues();
-        };
-
-    if (_unitedMeshesGroup) {
-        updateRenderGroupUniforms(_unitedMeshesGroup);
+    for(auto& drawCallDefinition: _drawCallDefinitions) {
+        drawCallDefinition.uniformsValues = drawCallDefinition.renderGroup->genUniformValues();
     }
 
-    for(const auto& separateMeshGroup: _separateMeshGroups) {
-        updateRenderGroupUniforms(separateMeshGroup);
-    }
-}
-
-std::vector<std::shared_ptr<RenderGroup> > RenderPass::createSeparateMeshGroups() const {
-    std::vector<std::shared_ptr<RenderGroup> > separateMeshGroups;
-    for (const Mesh_sptr &mesh: _meshes) {
-        if (mesh->getGlobalState() == Displayable::GlobalState::Separate) {
-            separateMeshGroups.emplace_back(std::make_shared<RenderGroup>(
-                RenderGroup::createInstance(std::initializer_list<Mesh_sptr>({mesh}))
-            ));
-        }
-    }
-    return separateMeshGroups;
 }
 
 void RenderPass::bindUniforms(
@@ -74,61 +57,58 @@ void RenderPass::bindUniforms(
 }
 
 void RenderPass::render(const CstShaderProgram_sptr &shaderProgram) const {
-
-    if (_unitedMeshesGroup) {
-        bindUniforms(_renderGroupsUniforms.at(_unitedMeshesGroup), shaderProgram);
-        _unitedMeshesGroup->render();
+    for(const auto& drawCallDefinition: _drawCallDefinitions) {
+        bindUniforms(drawCallDefinition.uniformsValues, shaderProgram);
+        drawCallDefinition.renderGroup->render();
     }
-    for (const auto &renderGroup: _separateMeshGroups) {
-        bindUniforms(_renderGroupsUniforms.at(renderGroup), shaderProgram);
-        renderGroup->render();
-    }
-}
-
-vecMesh_sptr RenderPass::createUpdatableMeshes() const {
-    vecMesh_sptr updatableMeshes{};
-    for (const auto &mesh: _meshes) {
-        if (!mesh->updatingIsUseless()) {
-            updatableMeshes.push_back(mesh);
-        }
-    }
-    return updatableMeshes;
-}
-
-std::map<Mesh_sptr, Displayable::GlobalState> RenderPass::createMeshStates() const {
-    std::map<Mesh_sptr, Displayable::GlobalState> meshStates{};
-    for (const auto &updatableMesh: _updatableMeshes) {
-        meshStates[updatableMesh] = updatableMesh->getGlobalState();
-    }
-    return meshStates;
-}
-
-std::shared_ptr<RenderGroup> RenderPass::createUnitedMeshesGroup() const {
-    vecMesh_sptr unitedMeshes{};
-    for (const auto &mesh: _meshes) {
-        if (mesh->getGlobalState() == Displayable::GlobalState::United) {
-            unitedMeshes.push_back(mesh);
-        }
-    }
-    return !unitedMeshes.empty()
-           ? std::make_shared<RenderGroup>(RenderGroup::createInstance(std::move(unitedMeshes)))
-           : nullptr;
 }
 
 void RenderPass::freeGPUMemory() {
-    if (_unitedMeshesGroup) {
-        _unitedMeshesGroup->freeGPUMemory();
-    }
-    for (const auto &renderGroup: _separateMeshGroups) {
-        renderGroup->freeGPUMemory();
+    for(const auto& drawCallDefinition: _drawCallDefinitions) {
+        drawCallDefinition.renderGroup->freeGPUMemory();
     }
 }
 
 std::vector<std::string> RenderPass::genUniformNames() const {
-    if(_meshes.empty()) {
+    if (_meshes.empty()) {
         return {};
     }
     // Every mesh defines the same uniforms.
     return _meshes.front()->genGatheredUniformsNames();
+}
+
+std::vector<RenderPass::DrawCallDefinition> RenderPass::createDrawCallDefinitions() const {
+    std::vector<RenderPass::DrawCallDefinition> drawCallDefinitions;
+
+    vecMesh_sptr unitedMeshes{};
+    vecMesh_sptr separatedMeshes{};
+    for (const auto &mesh: _meshes) {
+        if (mesh->getGlobalState() == Displayable::GlobalState::United) {
+            unitedMeshes.push_back(mesh);
+        } else if (mesh->getGlobalState() == Displayable::GlobalState::Separate) {
+            separatedMeshes.push_back(mesh);
+        }
+    }
+
+    // 1. Create united meshes group
+    if(!unitedMeshes.empty()) {
+        const CstMesh_sptr headMesh = unitedMeshes.front();
+        drawCallDefinitions.push_back({
+            std::make_shared<RenderGroup>(RenderGroup::createInstance(std::move(unitedMeshes))),
+            headMesh->genUniformsValues()
+        });
+    }
+
+    // 2. Create separated mesh groups
+    for(const auto& separatedMesh: separatedMeshes) {
+        drawCallDefinitions.push_back({
+            std::make_shared<RenderGroup>(
+                RenderGroup::createInstance(std::initializer_list<Mesh_sptr>({separatedMesh}))
+            ),
+            separatedMesh->genUniformsValues()
+        });
+    }
+
+    return drawCallDefinitions;
 }
 

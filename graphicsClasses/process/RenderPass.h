@@ -45,6 +45,21 @@ public:
 
 private:
 
+    const vecMesh_sptr _meshes;
+    const Mesh::UniformsNames _uniformsNames;
+
+    struct UpdatableMeshState {
+        Mesh_sptr mesh;
+        Displayable::GlobalState currentState;
+    };
+    std::vector<RenderPass::UpdatableMeshState> _updatableMeshesStates;
+
+    struct DrawCallDefinition {
+        std::shared_ptr<RenderGroup> renderGroup;
+        Mesh::UniformsValues uniformsValues;
+    };
+    std::vector<RenderPass::DrawCallDefinition> _drawCallDefinitions;
+
     void bindUniforms(const Mesh::UniformsValues &uniforms, const CstShaderProgram_sptr &shaderProgram) const;
 
     template<typename T>
@@ -54,24 +69,7 @@ private:
         const Mesh::GpuUniformValues<T> &uniformsValues
     ) const;
 
-    std::vector<std::shared_ptr<RenderGroup> > createSeparateMeshGroups() const;
-
-    vecMesh_sptr createUpdatableMeshes() const;
-
-    std::map<Mesh_sptr, Displayable::GlobalState> createMeshStates() const;
-
-    std::shared_ptr<RenderGroup> createUnitedMeshesGroup() const;
-
-
-    const vecMesh_sptr _meshes;
-    const Mesh::UniformsNames _uniformsNames;
-    const vecMesh_sptr _updatableMeshes;
-    std::map<Mesh_sptr, Displayable::GlobalState> _meshStates;
-
-    std::shared_ptr<RenderGroup> _unitedMeshesGroup;
-    std::vector<std::shared_ptr<RenderGroup> > _separateMeshGroups;
-
-    std::unordered_map<std::shared_ptr<RenderGroup>, Mesh::UniformsValues> _renderGroupsUniforms;
+    std::vector<RenderPass::DrawCallDefinition> createDrawCallDefinitions() const;
 };
 
 template<typename T>

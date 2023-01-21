@@ -10,9 +10,6 @@ Mesh::Mesh(const std::shared_ptr<const Displayable> &displayable, vecCstGeometri
     _displayable(displayable),
     _shapes(std::move(shapes)),
     _updatingIsUseless(!_displayable->globalStateMayChange()) {
-    if (_shapes[0] == nullptr) {
-        std::cout << "null" << std::endl;
-    }
 }
 
 Displayable::GlobalState Mesh::getGlobalState() const {

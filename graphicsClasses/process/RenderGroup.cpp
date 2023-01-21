@@ -21,8 +21,8 @@ RenderGroup::RenderGroup(
     _numberOfIndices(numberOfIndices) {
 }
 
-CstMesh_sptr RenderGroup::getHeadMesh() const {
-    return _meshes.at(0);
+Mesh::UniformsValues RenderGroup::genUniformValues() const {
+    return _meshes.front()->genUniformsValues();
 }
 
 void RenderGroup::render() const {

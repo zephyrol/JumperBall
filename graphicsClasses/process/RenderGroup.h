@@ -33,7 +33,7 @@ public:
 
     void render() const;
 
-    CstMesh_sptr getHeadMesh() const;
+    Mesh::UniformsValues genUniformValues() const;
 
     static RenderGroup createInstance(vecMesh_sptr meshes);
 
