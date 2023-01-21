@@ -20,16 +20,10 @@ public:
 
     DepthFrameBuffer(
         GLuint fboHandle,
-        GLuint renderTexture,
-        GLuint depthBuffer
+        GLuint renderTexture
     );
 
-    void freeGPUMemory() override;
-
     void clear() override;
-
-private:
-    const GLuint _depthBuffer;
 };
 
 
