@@ -138,7 +138,8 @@ public:
     void update(const Ball::ActionRequest &action) noexcept;
 
     void setBlockPositions(
-        const std::shared_ptr<const std::unordered_map<std::string, Block_sptr> > &blocksPositions);
+        const std::shared_ptr<const std::unordered_map<std::string, Block_sptr> > &blocksPositions
+    );
 
     void setBlockWithInteractions(const std::shared_ptr<const vecBlock_sptr> &blocksWithInterraction);
 

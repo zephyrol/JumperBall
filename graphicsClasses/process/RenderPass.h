@@ -54,7 +54,7 @@ private:
         const Mesh::GpuUniformValues<T> &uniformsValues
     ) const;
 
-    std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > createSeparateMeshGroups() const;
+    std::vector<std::shared_ptr<RenderGroup> > createSeparateMeshGroups() const;
 
     vecMesh_sptr createUpdatableMeshes() const;
 
@@ -69,7 +69,7 @@ private:
     std::map<Mesh_sptr, Displayable::GlobalState> _meshStates;
 
     std::shared_ptr<RenderGroup> _unitedMeshesGroup;
-    std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > _separateMeshGroups;
+    std::vector<std::shared_ptr<RenderGroup> > _separateMeshGroups;
 
     std::unordered_map<std::shared_ptr<RenderGroup>, Mesh::UniformsValues> _renderGroupsUniforms;
 };

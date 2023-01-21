@@ -21,12 +21,6 @@ RenderPass::RenderPass(vecMesh_sptr meshes) :
 
 void RenderPass::update() {
 
-    const auto updateRenderGroupUniforms =
-        [this](const std::shared_ptr<RenderGroup> &renderGroup) {
-            const CstMesh_sptr headMesh = renderGroup->getHeadMesh();
-            _renderGroupsUniforms[renderGroup] = headMesh->genUniformsValues();
-        };
-
     bool needsGroupsRedefinition = false;
     for (const auto &updatableMesh: _updatableMeshes) {
         if (updatableMesh->getGlobalState() != _meshStates.at(updatableMesh)) {
@@ -41,23 +35,28 @@ void RenderPass::update() {
         _renderGroupsUniforms.clear();
     }
 
+    const auto updateRenderGroupUniforms =
+        [this](const std::shared_ptr<RenderGroup> &renderGroup) {
+            const CstMesh_sptr headMesh = renderGroup->getHeadMesh();
+            _renderGroupsUniforms[renderGroup] = headMesh->genUniformsValues();
+        };
+
     if (_unitedMeshesGroup) {
         updateRenderGroupUniforms(_unitedMeshesGroup);
     }
 
-    for (const auto &separateMeshGroup: _separateMeshGroups) {
-        const std::shared_ptr<RenderGroup> &separateRenderGroup = separateMeshGroup.second;
-        updateRenderGroupUniforms(separateRenderGroup);
+    for(const auto& separateMeshGroup: _separateMeshGroups) {
+        updateRenderGroupUniforms(separateMeshGroup);
     }
 }
 
-std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > RenderPass::createSeparateMeshGroups() const {
-    std::unordered_map<Mesh_sptr, std::shared_ptr<RenderGroup> > separateMeshGroups;
+std::vector<std::shared_ptr<RenderGroup> > RenderPass::createSeparateMeshGroups() const {
+    std::vector<std::shared_ptr<RenderGroup> > separateMeshGroups;
     for (const Mesh_sptr &mesh: _meshes) {
         if (mesh->getGlobalState() == Displayable::GlobalState::Separate) {
-            separateMeshGroups[mesh] = std::make_shared<RenderGroup>(
+            separateMeshGroups.emplace_back(std::make_shared<RenderGroup>(
                 RenderGroup::createInstance(std::initializer_list<Mesh_sptr>({mesh}))
-            );
+            ));
         }
     }
     return separateMeshGroups;
@@ -81,15 +80,14 @@ void RenderPass::render(const CstShaderProgram_sptr &shaderProgram) const {
         _unitedMeshesGroup->render();
     }
     for (const auto &renderGroup: _separateMeshGroups) {
-        bindUniforms(_renderGroupsUniforms.at(renderGroup.second), shaderProgram);
-        renderGroup.second->render();
+        bindUniforms(_renderGroupsUniforms.at(renderGroup), shaderProgram);
+        renderGroup->render();
     }
 }
 
 vecMesh_sptr RenderPass::createUpdatableMeshes() const {
     vecMesh_sptr updatableMeshes{};
     for (const auto &mesh: _meshes) {
-        updatableMeshes.push_back(mesh);
         if (!mesh->updatingIsUseless()) {
             updatableMeshes.push_back(mesh);
         }
@@ -121,8 +119,7 @@ void RenderPass::freeGPUMemory() {
     if (_unitedMeshesGroup) {
         _unitedMeshesGroup->freeGPUMemory();
     }
-    for (const auto &separateMeshGroup: _separateMeshGroups) {
-        const auto &renderGroup = separateMeshGroup.second;
+    for (const auto &renderGroup: _separateMeshGroups) {
         renderGroup->freeGPUMemory();
     }
 }
