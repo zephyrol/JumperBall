@@ -44,9 +44,6 @@ public:
 
     float getLargestSize() const;
 
-// TODO: move to special
-    static std::map<JBTypes::Color, bool> createSpecialStates();
-
     std::string update(const Ball::ActionRequest &action);
 
     CstBall_sptr getBall() const;

@@ -129,9 +129,6 @@ namespace JBTypesMethods {
 
     JBTypes::Color charAsColor(unsigned char charColor);
 
-    template<typename K, typename V>
-    std::unordered_map<K, V> createMap(std::vector<K> keys, std::vector<V> values);
-
     JBTypes::vec3i directionAsVectorInt(JBTypes::Dir dir);
 
     bool floatsEqual(float a, float b);

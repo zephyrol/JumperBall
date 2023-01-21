@@ -59,19 +59,6 @@ std::vector<Block_sptr> Map::getBlocksToUpdate() const {
     return blocksWithInteraction;
 }
 
-// TODO: move to special class
-std::map<JBTypes::Color, bool> Map::createSpecialStates() {
-    constexpr bool defaultStateValue = true;
-    return {
-        {
-            {JBTypes::Color::Red, defaultStateValue},
-            {JBTypes::Color::Green, defaultStateValue},
-            {JBTypes::Color::Blue, defaultStateValue},
-            {JBTypes::Color::Yellow, defaultStateValue}
-        }
-    };
-}
-
 unsigned int Map::width() const {
     return _width;
 }

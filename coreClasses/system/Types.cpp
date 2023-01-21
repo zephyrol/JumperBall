@@ -331,16 +331,6 @@ JBTypes::vec3f JBTypesMethods::rotateVector(const JBTypes::vec3f &v, const JBTyp
     return JBTypesMethods::add(JBTypesMethods::add(vPart, qvPart), qvCrosVPart);
 }
 
-template<typename K, typename V>
-std::unordered_map<K, V>
-JBTypesMethods::createMap(std::vector<K> keys, std::vector<V> values) {
-    std::unordered_map<K, V> mapKV;
-    for (size_t i = 0; i < keys.size(); ++i) {
-        mapKV[keys.at(i)] = values.at(i);
-    }
-    return mapKV;
-}
-
 JBTypes::Dir JBTypesMethods::charAsDirection(unsigned char dirChar) {
 
     JBTypes::Dir dir;
