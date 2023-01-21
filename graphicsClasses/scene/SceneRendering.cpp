@@ -174,7 +174,7 @@ void SceneRendering::update() {
 
 void SceneRendering::render() const {
 
-    _sceneUniformBuffer.bindBufferRange();
+    // _sceneUniformBuffer.bindBufferRange();
     for (const auto &process: _processes) {
         process->render();
     }

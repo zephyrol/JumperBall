@@ -7,32 +7,21 @@
 SceneUniformBuffer::SceneUniformBuffer(
     const vecCstShaderProgram_sptr &sceneShaderPrograms
 ) :
-    UniformBuffer(
+    _uniformBufferBase(UniformBufferBase::createInstance(
         "Scene",
         sceneShaderPrograms,
         {
-            nameVP,
-            nameVPStar,
-            nameVPStar2,
-            nameCameraPosition,
-            nameLightDirection,
-            nameLight2Direction,
-            nameFlashColor,
-            nameTeleportationCoeff
+            "VP",
+            "VPStar",
+            "VPStar2",
+            "cameraPosition",
+            "lightDirection",
+            "light2Direction",
+            "flashColor",
+            "teleportationCoeff"
         }
-    ),
-    _VP(std::make_shared<glm::mat4>()),
-    _VPStar(std::make_shared<glm::mat4>()),
-    _VPStar2(std::make_shared<glm::mat4>()),
-    _cameraPosition(std::make_shared<glm::vec3>()),
-    _lightDirection(std::make_shared<glm::vec3>()),
-    _light2Direction(std::make_shared<glm::vec3>()),
-    _flashColor(std::make_shared<glm::vec3>()),
-    _teleportationCoeff(std::make_shared<glm::vec1>()),
-    _uniformBufferContent(_bufferSize),
-    _mat4DataLocations(createMat4DataLocation()),
-    _vec3DataLocations(createVec3DataLocation()),
-    _vec1DataLocations(createVec1DataLocation()) {
+    ))
+{
 }
 
 void SceneUniformBuffer::update(
@@ -46,69 +35,21 @@ void SceneUniformBuffer::update(
     const glm::vec1 &teleportationCoeff
 ) {
 
-    updateUniformBufferContent(_VP, VP, _mat4DataLocations);
-    updateUniformBufferContent(_VPStar, VPStar, _mat4DataLocations);
-    updateUniformBufferContent(_VPStar2, VPStar2, _mat4DataLocations);
+    _uniformBufferBase.updateField(0, VP);
+    _uniformBufferBase.updateField(1, VPStar);
+    _uniformBufferBase.updateField(2, VPStar2);
+    _uniformBufferBase.updateField(3, cameraPosition);
+    _uniformBufferBase.updateField(4, lightDirection);
+    _uniformBufferBase.updateField(5, light2Direction);
+    _uniformBufferBase.updateField(6, flashColor);
+    _uniformBufferBase.updateField(7, teleportationCoeff);
 
-    updateUniformBufferContent(_cameraPosition, cameraPosition, _vec3DataLocations);
-    updateUniformBufferContent(_lightDirection, lightDirection, _vec3DataLocations);
-    updateUniformBufferContent(_light2Direction, light2Direction, _vec3DataLocations);
-    updateUniformBufferContent(_flashColor, flashColor, _vec3DataLocations);
-
-    updateUniformBufferContent(_teleportationCoeff, teleportationCoeff, _vec1DataLocations);
-
-    bindBufferRange();
-    fillBufferData(_uniformBufferContent);
+    _uniformBufferBase.bindBufferRange();
+    _uniformBufferBase.updateBufferOnGPU();
 }
 
-SceneUniformBuffer::DataLocation<glm::mat4> SceneUniformBuffer::createMat4DataLocation() {
-    return {
-        {_VP,      {_uniformBufferContent.data() + _fieldOffsets.at(nameVP),      &(*_VP)[0][0]}},
-        {_VPStar,  {_uniformBufferContent.data() + _fieldOffsets.at(nameVPStar),  &(*_VPStar)[0][0]}},
-        {_VPStar2, {_uniformBufferContent.data() + _fieldOffsets.at(nameVPStar2), &(*_VPStar2)[0][0]}}
-    };
-
-}
-
-SceneUniformBuffer::DataLocation<glm::vec3> SceneUniformBuffer::createVec3DataLocation() {
-    return {
-        {
-            _cameraPosition,
-            {_uniformBufferContent.data() + _fieldOffsets.at(nameCameraPosition),  &(*_cameraPosition)[0]}
-        },
-        {
-            _lightDirection,
-            {_uniformBufferContent.data() + _fieldOffsets.at(nameLightDirection),  &(*_lightDirection)[0]}
-        },
-        {
-            _light2Direction,
-            {_uniformBufferContent.data() + _fieldOffsets.at(nameLight2Direction), &(*_light2Direction)[0]}
-        },
-        {
-            _flashColor,
-            {_uniformBufferContent.data() + _fieldOffsets.at(nameFlashColor),      &(*_flashColor)[0]}
-        }
-    };
-}
-
-SceneUniformBuffer::DataLocation<glm::vec1> SceneUniformBuffer::createVec1DataLocation() {
-    return {
-        {
-            _teleportationCoeff,
-            {
-                _uniformBufferContent.data() + _fieldOffsets.at(nameTeleportationCoeff),
-                &(*_teleportationCoeff)[0]
-            }
-        },
-    };
+void SceneUniformBuffer::freeGPUMemory() {
+    _uniformBufferBase.freeGPUMemory();
 }
 
 
-const std::string SceneUniformBuffer::nameVP = "VP";
-const std::string SceneUniformBuffer::nameVPStar = "VPStar";
-const std::string SceneUniformBuffer::nameVPStar2 = "VPStar2";
-const std::string SceneUniformBuffer::nameCameraPosition = "cameraPosition";
-const std::string SceneUniformBuffer::nameLightDirection = "lightDirection";
-const std::string SceneUniformBuffer::nameLight2Direction = "light2Direction";
-const std::string SceneUniformBuffer::nameFlashColor = "flashColor";
-const std::string SceneUniformBuffer::nameTeleportationCoeff = "teleportationCoeff";
