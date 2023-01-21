@@ -149,7 +149,7 @@ void ShaderProgram::bindTexture(GLuint textureID) {
 
 GLint ShaderProgram::getLocation(const std::string &uniformName) const {
     // Usually, there is a few of uniforms, so sequential research is faster than binary search
-    // or ordered map using.
+    // , map or ordered map using.
     return std::find_if(
         _uniformLocations.begin(),
         _uniformLocations.end(),

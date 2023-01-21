@@ -45,12 +45,12 @@ Controller::Controller(
         fontDataSize
     )),
     _keyboardKey({
-                     {KeyboardKey::Button::Up,       [this]() { _scene->setUp(); }},
-                     {KeyboardKey::Button::Down,     [this]() { _scene->setDown(); }},
-                     {KeyboardKey::Button::Left,     [this]() { _scene->setLeft(); }},
-                     {KeyboardKey::Button::Right,    [this]() { _scene->setRight(); }},
-                     {KeyboardKey::Button::Validate, [this]() { _scene->setValidate(); }},
-                     {KeyboardKey::Button::Escape,   [this]() { escapeAction(); }},
+                     [this]() { _scene->setUp(); },
+                     [this]() { _scene->setDown(); },
+                     [this]() { _scene->setLeft(); },
+                     [this]() { _scene->setRight(); },
+                     [this]() { escapeAction(); },
+                     [this]() { _scene->setValidate(); },
                  }),
     _mouse(
         [this]() { _scene->setUp(); },
@@ -171,7 +171,7 @@ void Controller::stop() {
 }
 
 void Controller::resume() {
-    if(_player->status() != Player::Status::InGame) {
+    if (_player->status() != Player::Status::InGame) {
         _doubleChronometer->resumeFirst();
         return;
     }

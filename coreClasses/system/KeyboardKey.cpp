@@ -4,39 +4,44 @@
 
 #include "KeyboardKey.h"
 
-KeyboardKey::KeyboardKey(std::map<Button, std::function<void()>> &&actionFunctions) :
+KeyboardKey::KeyboardKey(std::vector<std::function<void()>> &&actionFunctions) :
     _actionFunctions(std::move(actionFunctions)),
-    _currentStatus{
-        {KeyboardKey::Button::Up,       KeyboardKey::Status::Released},
-        {KeyboardKey::Button::Down,     KeyboardKey::Status::Released},
-        {KeyboardKey::Button::Right,    KeyboardKey::Status::Released},
-        {KeyboardKey::Button::Left,     KeyboardKey::Status::Released},
-        {KeyboardKey::Button::Escape,   KeyboardKey::Status::Released},
-        {KeyboardKey::Button::Validate, KeyboardKey::Status::Released}
-    },
+    _currentStatus(6, KeyboardKey::Status::Released),
     _previousStatus(_currentStatus) {
 }
 
 void KeyboardKey::press(const KeyboardKey::Button &button) {
-    _currentStatus.at(button) = Status::Pressed;
+    _currentStatus.at(static_cast<size_t>(button)) = Status::Pressed;
 }
 
 void KeyboardKey::release(const KeyboardKey::Button &button) {
-    _currentStatus.at(button) = Status::Released;
+    _currentStatus.at(static_cast<size_t>(button)) = Status::Released;
 }
 
 void KeyboardKey::update() {
-    for (const auto &keyState: _currentStatus) {
-        const auto &key = keyState.first;
-        const auto &status = keyState.second;
-        if (key != KeyboardKey::Button::Escape) {
+    for(size_t i = 0; i < _currentStatus.size(); ++i) {
+        constexpr auto escapeButtonIndex = static_cast<size_t>(KeyboardKey::Button::Escape);
+        const auto &status = _currentStatus.at(i);
+        if (i != escapeButtonIndex) {
             if (status == KeyboardKey::Status::Pressed) {
-                _actionFunctions.at(key)();
+                _actionFunctions.at(i)();
             }
-        } else if (_previousStatus.at(KeyboardKey::Button::Escape) == KeyboardKey::Status::Pressed
+        } else if (_previousStatus.at(escapeButtonIndex) == KeyboardKey::Status::Pressed
                    && status == KeyboardKey::Status::Released) {
-            _actionFunctions.at(key)();
+            _actionFunctions.at(i)();
         }
     }
+    // for (const auto &keyState: _currentStatus) {
+    //     const auto &key = keyState.first;
+    //     const auto &status = keyState.second;
+    //     if (key != KeyboardKey::Button::Escape) {
+    //         if (status == KeyboardKey::Status::Pressed) {
+    //             _actionFunctions.at(static_cast<size_t>(key))();
+    //         }
+    //     } else if (_previousStatus.at(KeyboardKey::Button::Escape) == KeyboardKey::Status::Pressed
+    //                && status == KeyboardKey::Status::Released) {
+    //         _actionFunctions.at(static_cast<size_t>(key))();
+    //     }
+    // }
     _previousStatus = _currentStatus;
 }

@@ -13,12 +13,7 @@ Mouse::Mouse(
     std::function<void(float mouseX, float mouseY)> validateActionFunc,
     std::function<void()> longPressActionFunc
 ) :
-    _directionActionFunctions{
-        {ScreenDirection::North, northActionFunc},
-        {ScreenDirection::South, southActionFunc},
-        {ScreenDirection::East,  eastActionFunc},
-        {ScreenDirection::West,  westActionFunc},
-    },
+    _directionActionFunctions{ {northActionFunc}, {southActionFunc}, {eastActionFunc}, {westActionFunc} },
     _validateActionFunction(std::move(validateActionFunc)),
     _longPressActionFunction(std::move(longPressActionFunc)),
     _mouseCoords(nullptr),
@@ -110,7 +105,7 @@ void Mouse::pressedMouseUpdate() {
         }
         return;
     }
-    _directionActionFunctions.at(*_currentMovementDir)();
+    _directionActionFunctions.at(static_cast<size_t>(*_currentMovementDir))();
 }
 
 void Mouse::releasedMouseUpdate() {
