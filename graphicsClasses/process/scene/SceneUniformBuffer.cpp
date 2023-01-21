@@ -44,7 +44,6 @@ void SceneUniformBuffer::update(
     _uniformBufferBase.updateField(6, flashColor);
     _uniformBufferBase.updateField(7, teleportationCoeff);
 
-    _uniformBufferBase.bindBufferRange();
     _uniformBufferBase.updateBufferOnGPU();
 }
 

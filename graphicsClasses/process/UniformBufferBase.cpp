@@ -13,20 +13,19 @@ UniformBufferBase::UniformBufferBase(
 ) : _uniformBufferSize(bufferSize),
     _uniformBufferContent(_uniformBufferSize),
     _fieldDataLocations(std::accumulate(
-            fieldOffsets.begin(),
-            fieldOffsets.end(),
-            std::vector<GLubyte*>(),
-            [this](std::vector<GLubyte *>& current, GLint offset) {
-                current.emplace_back(_uniformBufferContent.data() + offset);
-                return current;
-            })),
-    _ubo(ubo)
- {
+        fieldOffsets.begin(),
+        fieldOffsets.end(),
+        std::vector<GLubyte *>(),
+        [this](std::vector<GLubyte *> &current, GLint offset) {
+            current.emplace_back(_uniformBufferContent.data() + offset);
+            return current;
+        })),
+    _ubo(ubo) {
 }
 
 
 UniformBufferBase UniformBufferBase::createInstance(
-    const std::string& name,
+    const std::string &name,
     const vecCstShaderProgram_sptr &shaderPrograms,
     const std::vector<std::string> &fieldNames
 ) {
@@ -71,15 +70,14 @@ UniformBufferBase UniformBufferBase::createInstance(
     glBufferData(GL_UNIFORM_BUFFER, bufferSize, nullptr, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
+    // Binding the ubo to the binding point number 0.
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, bufferSize);
+
     return {
         bufferSize,
         offsets,
         ubo
     };
-}
-
-void UniformBufferBase::bindBufferRange() const {
-    glBindBufferRange(GL_UNIFORM_BUFFER, 0, _ubo, 0, _uniformBufferSize);
 }
 
 void UniformBufferBase::freeGPUMemory() {

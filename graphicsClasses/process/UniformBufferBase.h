@@ -9,10 +9,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-class UniformBufferBase;
-
-using UniformBufferBase_uptr = std::unique_ptr<UniformBufferBase>;
-
 class UniformBufferBase {
 
 public:
@@ -28,8 +24,6 @@ public:
         const vecCstShaderProgram_sptr &shaderPrograms,
         const std::vector<std::string> &fieldNames
     );
-
-    void bindBufferRange() const;
 
     // The UniformBufferBase cannot be copied, because the ubo is a unique id
     UniformBufferBase(const UniformBufferBase& uniformBufferBase) = delete;
