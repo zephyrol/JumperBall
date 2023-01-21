@@ -72,7 +72,7 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
             )
         );
     }
-    const auto sceneRenderingProcess = std::make_shared<LevelProcess>(
+    const auto sceneRenderingProcess = LevelProcess::createInstance(
         fileContent,
         width,
         height,

@@ -6,7 +6,24 @@
 
 #include <utility>
 
+
 LevelProcess::LevelProcess(
+    GLsizei width,
+    GLsizei height,
+    ColorableFrameBuffer_uptr frameBuffer,
+    GLuint shadowTexture,
+    GLuint shadow2Texture,
+    std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr>> &&shadersRenderPasses
+) :
+    _width(width),
+    _height(height),
+    _frameBuffer(std::move(frameBuffer)),
+    _shadowTexture(shadowTexture),
+    _shadow2Texture(shadow2Texture),
+    _shadersRenderPasses(std::move(shadersRenderPasses)) {
+}
+
+LevelProcess_sptr LevelProcess::createInstance(
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height,
@@ -18,67 +35,43 @@ LevelProcess::LevelProcess(
     RenderPass_sptr specials,
     RenderPass_sptr ball,
     RenderPass_sptr star
-) : _width(width),
-    _height(height),
-    _frameBuffer(ColorableFrameBuffer::createInstance(
-        _width,
-        _height,
-        true,
-        true,
-        std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f))
-    )),
-    _blocks(std::move(blocks)),
-    _items(std::move(items)),
-    _enemies(std::move(enemies)),
-    _specials(std::move(specials)),
-    _ball(std::move(ball)),
-    _star(std::move(star)),
-    _shadowTexture(shadowTexture),
-    _shadow2Texture(shadow2Texture),
-    _sceneBlocksShader(createLevelProcessShaderProgram(
-        fileContent,
-        "blocksVs.vs",
-        _blocks->genUniformNames()
-        ) ),
-    _sceneItemsShader(createLevelProcessShaderProgram(
-        fileContent,
-        "itemsMapVs.vs",
-        _items->genUniformNames()
-        )),
-    _sceneEnemiesShader(
-        createLevelProcessShaderProgram(
-            fileContent,
-            "enemiesVs.vs",
-            _enemies->genUniformNames()
-            )),
-    _sceneSpecialsShader(
-        createLevelProcessShaderProgram(
-            fileContent,
-            "specialsVs.vs",
-            _specials->genUniformNames()
-            )),
-    _sceneBallShader(
-        createLevelProcessShaderProgram(
-            fileContent,
-            "ballVs.vs",
-            _ball->genUniformNames()
-        )),
-    _sceneStarShader(ShaderProgram::createInstance(
-        fileContent,
-        "starVs.vs",
-        "starFs.fs",
-        _star->genUniformNames())
-    ),
-    _shadersRenderPasses(
-        {
-            {_sceneBlocksShader,   _blocks},
-            {_sceneItemsShader,    _items},
-            {_sceneEnemiesShader,  _enemies},
-            {_sceneSpecialsShader, _specials},
-            {_sceneBallShader,     _ball},
-            {_sceneStarShader,     _star}
-        }
-    ) {
+) {
+
+    std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr> > shadersRenderPasses{};
+    std::vector<std::pair<std::string, RenderPass_sptr> > vertexShaderFilesRenderPasses{
+        {"blocksVs.vs",   std::move(blocks)},
+        {"itemsMapVs.vs", std::move(items)},
+        {"enemiesVs.vs",  std::move(enemies)},
+        {"specialsVs.vs", std::move(specials)},
+        {"ballVs.vs",     std::move(ball)}
+    };
+    for (auto &vertexShaderFileRenderPass: vertexShaderFilesRenderPasses) {
+        const auto &vertexShaderFile = vertexShaderFileRenderPass.first;
+        auto &renderPass = vertexShaderFileRenderPass.second;
+        shadersRenderPasses.emplace_back(
+            createLevelProcessShaderProgram(fileContent, vertexShaderFile, renderPass->genUniformNames()),
+            std::move(renderPass)
+        );
+    }
+    shadersRenderPasses.emplace_back(
+        ShaderProgram::createInstance(fileContent, "starVs.vs", "starFs.fs", star->genUniformNames()),
+        std::move(star)
+    );
+
+    return std::make_shared<LevelProcess>(
+        width,
+        height,
+        ColorableFrameBuffer::createInstance(
+            width,
+            height,
+            true,
+            true,
+            std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f))
+        ),
+        shadowTexture,
+        shadow2Texture,
+        std::move(shadersRenderPasses)
+    );
 }
 
 void LevelProcess::render() const {
@@ -104,12 +97,10 @@ void LevelProcess::render() const {
 
 void LevelProcess::freeGPUMemory() {
     _frameBuffer->freeGPUMemory();
-    _sceneBlocksShader->freeGPUMemory();
-    _sceneEnemiesShader->freeGPUMemory();
-    _sceneItemsShader->freeGPUMemory();
-    _sceneBallShader->freeGPUMemory();
-    _sceneSpecialsShader->freeGPUMemory();
-    _sceneStarShader->freeGPUMemory();
+    for(auto& shaderRenderPass: _shadersRenderPasses) {
+        auto& shader = shaderRenderPass.first;
+        shader->freeGPUMemory();
+    }
 }
 
 std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
@@ -119,7 +110,7 @@ std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
 CstShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
     const JBTypes::FileContent &fileContent,
     const std::string &vs,
-    std::vector<std::string>&& uniformNames
+    std::vector<std::string> &&uniformNames
 ) {
     constexpr auto depthTextureName = "depthTexture";
     constexpr auto depth2TextureName = "depth2Texture";
@@ -140,13 +131,11 @@ CstShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
 }
 
 vecCstShaderProgram_sptr LevelProcess::getShaderPrograms() const {
-    return {
-        _sceneBlocksShader,
-        _sceneItemsShader,
-        _sceneEnemiesShader,
-        _sceneSpecialsShader,
-        _sceneBallShader,
-        _sceneStarShader
-    };
+    vecCstShaderProgram_sptr shaderPrograms;
+    for(auto& shaderRenderPass: _shadersRenderPasses) {
+        auto& shader = shaderRenderPass.first;
+        shaderPrograms.push_back(shader);
+    }
+    return shaderPrograms;
 }
 
