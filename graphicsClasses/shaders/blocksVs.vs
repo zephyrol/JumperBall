@@ -31,7 +31,6 @@ layout(location = 3) in vec3 vs_blockPosition;
         0.0, 0.0, 0.5, 0.0,
         0.5, 0.5, 0.5, 1.0
     );
-
 #endif
 
 mat4 rotationX (float angle) {

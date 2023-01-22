@@ -45,6 +45,8 @@ public:
 
     virtual StaticValues<JBTypes::vec3f> getStaticVec3fValues() const;
 
+    DynamicNames getDynamicNames() const;
+
     virtual DynamicNames getDynamicIntNames() const;
     virtual DynamicValues<int> getDynamicIntValues() const;
 

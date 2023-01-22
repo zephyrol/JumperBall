@@ -22,7 +22,7 @@ RenderGroup::RenderGroup(
 }
 
 Mesh::UniformsValues RenderGroup::genUniformValues() const {
-    return _meshes.front()->genUniformsValues();
+    return _meshes.front()->genMeshUniforms();
 }
 
 void RenderGroup::render() const {

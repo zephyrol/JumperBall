@@ -10,16 +10,29 @@
 template<class T>
 class Uniform : public UniformBase {
 public:
-    Uniform(const CstShaderProgram_sptr &shaderProgram, const std::string &name);
+    Uniform(const T &value, const CstShaderProgram_sptr &shaderProgram, const std::string &name);
 
-    virtual void update(const T &value) = 0;
+    void update(const T &value);
+    const T& getValue() const;
+
+private:
+    T _value;
 };
 
 template<class T>
-Uniform<T>::Uniform(const CstShaderProgram_sptr &shaderProgram, const std::string &name):
-    UniformBase(shaderProgram, name) {
-
+const T &Uniform<T>::getValue() const {
+    return _value;
 }
 
+template<class T>
+void Uniform<T>::update(const T &value) {
+    _value = value;
+}
+
+template<class T>
+Uniform<T>::Uniform(const T &value, const CstShaderProgram_sptr &shaderProgram, const std::string &name):
+    UniformBase(shaderProgram, name),
+    _value(value) {
+}
 
 #endif //JUMPERBALLAPPLICATION_UNIFORM_H

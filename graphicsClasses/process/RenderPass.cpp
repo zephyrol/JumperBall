@@ -74,7 +74,7 @@ std::vector<std::string> RenderPass::genUniformNames() const {
         return {};
     }
     // Every mesh defines the same uniforms.
-    return _meshes.front()->genGatheredUniformsNames();
+    return _meshes.front()->genUniformsNames();
 }
 
 std::vector<RenderPass::DrawCallDefinition> RenderPass::createDrawCallDefinitions() const {
@@ -95,7 +95,7 @@ std::vector<RenderPass::DrawCallDefinition> RenderPass::createDrawCallDefinition
         const CstMesh_sptr headMesh = unitedMeshes.front();
         drawCallDefinitions.push_back({
             std::make_shared<RenderGroup>(RenderGroup::createInstance(std::move(unitedMeshes))),
-            headMesh->genUniformsValues()
+            headMesh->genMeshUniforms()
         });
     }
 
@@ -105,7 +105,7 @@ std::vector<RenderPass::DrawCallDefinition> RenderPass::createDrawCallDefinition
             std::make_shared<RenderGroup>(
                 RenderGroup::createInstance(std::initializer_list<Mesh_sptr>({separatedMesh}))
             ),
-            separatedMesh->genUniformsValues()
+            separatedMesh->genMeshUniforms()
         });
     }
 

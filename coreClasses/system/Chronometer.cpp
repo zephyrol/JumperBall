@@ -1,5 +1,5 @@
 //
-// Created by Sebastien Morgenthaler on 10/10/2022.
+// Created by S.Morgenthaler on 10/10/2022.
 //
 
 #include "Chronometer.h"
