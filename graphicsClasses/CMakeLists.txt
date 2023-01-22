@@ -28,6 +28,7 @@ FILE(GLOB SOURCE_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/process/menu/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/vertexAttribute/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/uniform/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/componentsGeneration/*.cpp)
 
 
@@ -44,6 +45,7 @@ FILE(GLOB HEADER_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/process/menu/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/vertexAttribute/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/uniform/*.h
 	${CMAKE_CURRENT_SOURCE_DIR}/scene/*.h)
 
 INSTALL (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR}/bin)
