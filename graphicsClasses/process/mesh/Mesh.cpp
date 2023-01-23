@@ -17,7 +17,7 @@ Displayable::GlobalState Mesh::getGlobalState() const {
 }
 
 MeshUniforms Mesh::genMeshUniforms(CstShaderProgram_sptr shaderProgram) const {
-    return MeshUniforms::createInstance(_displayable, shaderProgram)
+    return MeshUniforms::createInstance(_displayable, shaderProgram);
 }
 
 MeshGeometry Mesh::genMeshGeometry() const {

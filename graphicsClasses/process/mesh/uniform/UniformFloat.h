@@ -10,8 +10,8 @@
 
 class UniformFloat;
 
-using UniformFloat_uptr = std::unique_ptr<UniformFloat>;
-using vecUniformFloat_uptr = std::vector<UniformFloat_uptr>;
+using UniformFloat_sptr = std::shared_ptr<UniformFloat>;
+using vecUniformFloat_sptr = std::vector<UniformFloat_sptr>;
 
 class UniformFloat : public Uniform<GLfloat> {
 public:

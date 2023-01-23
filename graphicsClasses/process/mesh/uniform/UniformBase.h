@@ -8,6 +8,10 @@
 #include "Utility.h"
 #include "ShaderProgram.h"
 
+class UniformBase;
+using UniformBase_sptr = std::shared_ptr<UniformBase>;
+using vecUniformBase_sptr = std::vector<UniformBase_sptr>;
+
 class UniformBase {
 public:
     /**

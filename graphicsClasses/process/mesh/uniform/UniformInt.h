@@ -9,8 +9,8 @@
 
 class UniformInt;
 
-using UniformInt_uptr = std::unique_ptr<UniformInt>;
-using vecUniformInt_uptr = std::vector<UniformInt_uptr>;
+using UniformInt_sptr = std::shared_ptr<UniformInt>;
+using vecUniformInt_sptr = std::vector<UniformInt_sptr>;
 
 class UniformInt : public Uniform<GLint> {
 

@@ -18,7 +18,8 @@ RenderGroup::RenderGroup(
     _vertexArrayObject(vertexArrayObject),
     _gpuVertexAttributes(std::move(gpuVertexAttributes)),
     _elementBufferObject(elementBufferObject),
-    _numberOfIndices(numberOfIndices) {
+    _numberOfIndices(numberOfIndices),
+{
 }
 
 Mesh::UniformsValues RenderGroup::genUniformValues() const {
@@ -108,5 +109,9 @@ RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
         elementBufferObject,
         static_cast<GLsizei>(indices.size())
     );
+}
+
+MeshUniforms RenderGroup::genUniforms(CstShaderProgram_sptr shaderProgram) const {
+    return _meshes.front()->genMeshUniforms(shaderProgram);
 }
 

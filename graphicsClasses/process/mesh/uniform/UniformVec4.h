@@ -9,8 +9,8 @@
 
 class UniformVec4;
 
-using UniformVec4_uptr = std::unique_ptr<UniformVec4>;
-using vecUniformVec4_uptr = std::vector<UniformVec4_uptr>;
+using UniformVec4_sptr = std::shared_ptr<UniformVec4>;
+using vecUniformVec4_sptr = std::vector<UniformVec4_sptr>;
 
 class UniformVec4 : public Uniform<glm::vec4> {
 

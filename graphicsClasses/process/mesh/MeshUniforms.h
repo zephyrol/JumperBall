@@ -16,6 +16,7 @@ public:
     );
 
     explicit MeshUniforms(Uniforms uniforms);
+    void bind();
 
 private:
     Uniforms _uniforms;
@@ -24,7 +25,6 @@ private:
     static std::vector<std::unique_ptr<UniformType>> createUniformsFromDynamics(
         std::vector<DynamicType> dynamics,
         const std::vector<std::string> &uniformNames,
-        size_t &uniformNamesOffset,
         const CstShaderProgram_sptr &shaderProgram
     );
 };
@@ -33,18 +33,17 @@ template<typename UniformType, typename DynamicType>
 std::vector<std::unique_ptr<UniformType>> MeshUniforms::createUniformsFromDynamics(
     std::vector<DynamicType> dynamics,
     const std::vector<std::string> &uniformNames,
-    size_t &uniformNamesOffset,
     const CstShaderProgram_sptr &shaderProgram
 ) {
     std::vector<std::unique_ptr<UniformType>> uniforms;
 
-    for (const auto &dynamic: dynamics) {
+    for(size_t i = 0; i < dynamics.size(); ++i) {
         uniforms.emplace_back(std::unique_ptr<UniformType>(new UniformType(
-            Utility::convertToOpenGLFormat(dynamic),
-            shaderProgram, uniformNames[uniformNamesOffset++]
+            Utility::convertToOpenGLFormat(dynamics[i]),
+            shaderProgram,
+            uniformNames[i]
         )));
     }
-
     return uniforms;
 }
 

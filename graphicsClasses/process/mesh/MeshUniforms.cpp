@@ -6,7 +6,6 @@
 
 MeshUniforms::MeshUniforms(Uniforms uniforms) :
     _uniforms(std::move(uniforms)) {
-
 }
 
 MeshUniforms MeshUniforms::createInstance(
@@ -14,41 +13,33 @@ MeshUniforms MeshUniforms::createInstance(
     const CstShaderProgram_sptr &shaderProgram
 ) {
 
-    const auto uniformNames = displayable->getDynamicNames();
-    size_t uniformCount = 0;
-
     auto uniformVec4s = createUniformsFromDynamics<UniformVec4>(
         displayable->getDynamicQuaternionValues(),
-        uniformNames,
-        uniformCount,
+        displayable->getDynamicQuaternionNames(),
         shaderProgram
     );
 
     auto uniformVec3s = createUniformsFromDynamics<UniformVec3>(
         displayable->getDynamicVec3fValues(),
-        uniformNames,
-        uniformCount,
+        displayable->getDynamicVec3fNames(),
         shaderProgram
     );
 
     auto uniformVec2s = createUniformsFromDynamics<UniformVec2>(
         displayable->getDynamicVec2fValues(),
-        uniformNames,
-        uniformCount,
+        displayable->getDynamicVec2fNames(),
         shaderProgram
     );
 
     auto uniformFloats = createUniformsFromDynamics<UniformFloat>(
         displayable->getDynamicFloatValues(),
-        uniformNames,
-        uniformCount,
+        displayable->getDynamicFloatNames(),
         shaderProgram
     );
 
     auto uniformInts = createUniformsFromDynamics<UniformInt>(
         displayable->getDynamicIntValues(),
-        uniformNames,
-        uniformCount,
+        displayable->getDynamicIntNames(),
         shaderProgram
     );
 

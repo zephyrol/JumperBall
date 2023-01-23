@@ -33,7 +33,7 @@ public:
 
     void render() const;
 
-    Mesh::UniformsValues genUniformValues() const;
+    MeshUniforms genUniforms(CstShaderProgram_sptr shaderProgram) const;
 
     static RenderGroup createInstance(vecMesh_sptr meshes);
 

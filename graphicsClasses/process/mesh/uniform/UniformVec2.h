@@ -10,8 +10,8 @@
 
 class UniformVec2;
 
-using UniformVec2_uptr = std::unique_ptr<UniformVec2>;
-using vecUniformVec2_uptr = std::vector<UniformVec2_uptr>;
+using UniformVec2_sptr = std::shared_ptr<UniformVec2>;
+using vecUniformVec2_sptr = std::vector<UniformVec2_sptr>;
 
 class UniformVec2 : public Uniform<glm::vec2> {
 public:

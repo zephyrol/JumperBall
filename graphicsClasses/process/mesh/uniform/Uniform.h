@@ -7,6 +7,16 @@
 
 #include "UniformBase.h"
 
+
+template<class T>
+class Uniform;
+
+template<class T>
+using Uniform_ptr = std::shared_ptr<Uniform<T>>;
+
+template<class T>
+using vecUniform_sptr = std::vector<Uniform_ptr<T> >;
+
 template<class T>
 class Uniform : public UniformBase {
 public:
@@ -15,7 +25,7 @@ public:
     void update(const T &value);
     const T& getValue() const;
 
-private:
+protected:
     T _value;
 };
 
