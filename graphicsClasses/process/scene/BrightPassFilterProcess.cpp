@@ -11,19 +11,22 @@ BrightPassFilterProcess::BrightPassFilterProcess(
     GLsizei width,
     GLsizei height,
     GLuint hdrSceneTexture,
-    RenderPass_sptr screen
+    const CstRenderGroupsManager_sptr &screen
 ) :
     _width(width),
     _height(height),
-    _screen(std::move(screen)),
+    _screenRenderPass(
+        createBrightPassFilterProcessShaderProgram(fileContent),
+        screen
+    ),
+    _brightPassFilterShader(_screenRenderPass.shaderProgram()),
     _frameBuffer(ColorableFrameBuffer::createInstance(
         width,
         height,
         true,
         false
     )),
-    _hdrSceneTexture(hdrSceneTexture),
-    _brightPassFilterShader(createBrightPassFilterProcessShaderProgram(fileContent)) {
+    _hdrSceneTexture(hdrSceneTexture) {
 }
 
 void BrightPassFilterProcess::render() const {
@@ -33,7 +36,7 @@ void BrightPassFilterProcess::render() const {
 
     _brightPassFilterShader->use();
     ShaderProgram::bindTexture(_hdrSceneTexture);
-    _screen->render(_brightPassFilterShader);
+    _screenRenderPass.render();
 }
 
 std::shared_ptr<const GLuint> BrightPassFilterProcess::getRenderTexture() const {
@@ -53,8 +56,8 @@ CstShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShad
         fileContent,
         "basicFboVs.vs",
         "brightPassFilter.fs",
-        { textureSceneUniformName }
-        );
+        {textureSceneUniformName}
+    );
     shader->use();
     shader->bindUniformTextureIndex(textureSceneUniformName, 0);
     return shader;

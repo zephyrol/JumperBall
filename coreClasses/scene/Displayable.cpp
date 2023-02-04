@@ -6,8 +6,6 @@
  */
 #include "Displayable.h"
 
-Displayable::Displayable() = default;
-
 
 std::vector<unsigned char> Displayable::getStaticUnsignedByteValues() const {
     return {};
@@ -71,33 +69,4 @@ Displayable::DynamicNames Displayable::getDynamicVec3fNames() const {
 
 Displayable::DynamicNames Displayable::getDynamicQuaternionNames() const {
     return {};
-}
-
-Displayable::DynamicNames Displayable::getDynamicNames() const {
-    auto dynamicNames = getDynamicQuaternionNames();
-    auto dynamicVec3fNames = getDynamicVec3fNames();
-    dynamicNames.insert(
-        dynamicNames.end(),
-        std::make_move_iterator(dynamicVec3fNames.begin()),
-        std::make_move_iterator(dynamicVec3fNames.end())
-    );
-    auto dynamicVec2fNames = getDynamicVec2fNames();
-    dynamicNames.insert(
-        dynamicNames.end(),
-        std::make_move_iterator(dynamicVec2fNames.begin()),
-        std::make_move_iterator(dynamicVec2fNames.end())
-    );
-    auto dynamicFloatNames = getDynamicFloatNames();
-    dynamicNames.insert(
-        dynamicNames.end(),
-        std::make_move_iterator(dynamicFloatNames.begin()),
-        std::make_move_iterator(dynamicFloatNames.end())
-    );
-    auto dynamicIntNames = getDynamicIntNames();
-    dynamicNames.insert(
-        dynamicNames.end(),
-        std::make_move_iterator(dynamicIntNames.begin()),
-        std::make_move_iterator(dynamicIntNames.end())
-    );
-    return dynamicNames;
 }

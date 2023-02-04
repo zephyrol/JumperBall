@@ -23,9 +23,8 @@ public:
 
     void update(const Mouse &mouse) override;
 
-    std::vector<std::string> getUniformFloatNames() const override;
-
-    std::vector<float> getUniformFloatValues(const CstMap_sptr& map) const override;
+    DynamicNames getDynamicFloatNames() const override;
+    DynamicValues<float> getDynamicFloatValues() const override;
 
 protected:
     float getOffsetY() const;

@@ -10,13 +10,11 @@
 ShaderProgram::ShaderProgram(
     CstShader_uptr &&vertexShader,
     CstShader_uptr &&fragmentShader,
-    GLuint shaderProgramHandle,
-    std::vector<UniformLocation> &&uniformLocations
+    GLuint shaderProgramHandle
 ) :
     _shaderProgramHandle(shaderProgramHandle),
     _vertexShader(std::move(vertexShader)),
-    _fragmentShader(std::move(fragmentShader)),
-    _uniformLocations(std::move(uniformLocations)) {
+    _fragmentShader(std::move(fragmentShader)) {
 
 }
 
@@ -34,7 +32,6 @@ CstShaderProgram_sptr ShaderProgram::createInstance(
     const JBTypes::FileContent &fileContent,
     const std::string &vs,
     const std::string &fs,
-    const std::vector<std::string> &uniformNames,
     const std::vector<std::string> &defines,
     const std::map<std::string, glm::vec2> &constVec2s
 ) {
@@ -59,17 +56,10 @@ CstShaderProgram_sptr ShaderProgram::createInstance(
     glDeleteShader(vertexShader->getHandle());
     glDeleteShader(fragmentShader->getHandle());
 
-    std::vector<ShaderProgram::UniformLocation> uniformLocations;
-    for (const std::string &name: uniformNames) {
-        const auto location = glGetUniformLocation(shaderProgramHandle, name.c_str());
-        uniformLocations.push_back({name, location});
-    }
-
     return std::make_shared<const ShaderProgram>(
         std::move(vertexShader),
         std::move(fragmentShader),
-        shaderProgramHandle,
-        std::move(uniformLocations)
+        shaderProgramHandle
     );
 }
 
@@ -96,64 +86,48 @@ void ShaderProgram::verifyLinkStatus(GLuint shaderProgramHandle) {
     }
 }
 
-void ShaderProgram::bindUniform(const std::string &name, const glm::mat4 &value) const {
-    glUniformMatrix4fv(getLocation(name), 1, GL_FALSE, &value[0][0]);
-}
-
-void ShaderProgram::bindUniform(const std::string &name, const glm::vec4 &value) const {
-    glUniform4fv(getLocation(name), 1, &value[0]);
-}
-
-void ShaderProgram::bindUniform(const std::string &name, const glm::vec3 &value) const {
-    glUniform3fv(getLocation(name), 1, &value[0]);
-}
-
-void ShaderProgram::bindUniform(const std::string &name, const glm::vec2 &value) const {
-    glUniform2fv(getLocation(name), 1, &value[0]);
-}
-
-void ShaderProgram::bindUniform(const std::string &name, const GLfloat &value) const {
-    glUniform1fv(getLocation(name), 1, &value);
-}
-
-void ShaderProgram::bindUniform(const std::string &name, const bool &value) const {
-    glUniform1i(getLocation(name), value);
-}
-
-
-void ShaderProgram::bindUniform(const std::string &name, const int &value) const {
-    glUniform1i(getLocation(name), value);
-}
-
-void ShaderProgram::bindUniform(const std::string &name, const std::vector<int> &value) const {
-    const auto size = static_cast <GLsizei>(value.size());
-    glUniform1iv(getLocation(name), size, value.data());
-}
-
-void ShaderProgram::bindUniform(const std::string &name, const std::vector<float> &value) const {
-    const auto size = static_cast <GLsizei>(value.size());
-    glUniform1fv(getLocation(name), size, value.data());
-}
-
-void ShaderProgram::bindUniformTextureIndex(const std::string &name, int textureNumber) const {
-    glUniform1i(getLocation(name), textureNumber);
-}
-
-void ShaderProgram::setActiveTexture(int textureNumber) {
-    glActiveTexture(GL_TEXTURE0 + textureNumber);
-}
-
-void ShaderProgram::bindTexture(GLuint textureID) {
-    glBindTexture(GL_TEXTURE_2D, textureID);
-}
-
-GLint ShaderProgram::getLocation(const std::string &uniformName) const {
-    // Usually, there is a few of uniforms, so sequential research is faster than binary search
-    // , map or ordered map using.
-    return std::find_if(
-        _uniformLocations.begin(),
-        _uniformLocations.end(),
-        [&uniformName](const UniformLocation& uniformLocation) {
-            return uniformLocation.name == uniformName;
-        })->location;
-}
+// void ShaderProgram::bindUniform(const std::string &name, const glm::mat4 &value) const {
+//     glUniformMatrix4fv(getLocation(name), 1, GL_FALSE, &value[0][0]);
+// }
+//
+// void ShaderProgram::bindUniform(const std::string &name, const glm::vec4 &value) const {
+//     glUniform4fv(getLocation(name), 1, &value[0]);
+// }
+//
+// void ShaderProgram::bindUniform(const std::string &name, const glm::vec3 &value) const {
+//     glUniform3fv(getLocation(name), 1, &value[0]);
+// }
+//
+// void ShaderProgram::bindUniform(const std::string &name, const glm::vec2 &value) const {
+//     glUniform2fv(getLocation(name), 1, &value[0]);
+// }
+//
+// void ShaderProgram::bindUniform(const std::string &name, const GLfloat &value) const {
+//     glUniform1fv(getLocation(name), 1, &value);
+// }
+//
+// void ShaderProgram::bindUniform(const std::string &name, const bool &value) const {
+//     glUniform1i(getLocation(name), value);
+// }
+//
+// void ShaderProgram::bindUniform(const std::string &name, const int &value) const {
+//     glUniform1i(getLocation(name), value);
+// }
+//
+// void ShaderProgram::bindUniform(const std::string &name, const std::vector<int> &value) const {
+//     const auto size = static_cast <GLsizei>(value.size());
+//     glUniform1iv(getLocation(name), size, value.data());
+// }
+//
+// void ShaderProgram::bindUniform(const std::string &name, const std::vector<float> &value) const {
+//     const auto size = static_cast <GLsizei>(value.size());
+//     glUniform1fv(getLocation(name), size, value.data());
+// }
+//
+// void ShaderProgram::bindUniformTextureIndex(const std::string &name, int textureNumber) const {
+//     glUniform1i(getLocation(name), textureNumber);
+// }
+//
+// void ShaderProgram::bindTexture(GLuint textureID) {
+//     glBindTexture(GL_TEXTURE_2D, textureID);
+// }

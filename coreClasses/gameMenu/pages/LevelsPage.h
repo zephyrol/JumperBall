@@ -37,9 +37,9 @@ public:
 
     vecCstTextNode_uptr genTextNodes() const override;
 
-    std::vector<std::string> getUniformIntNames() const override;
+    DynamicNames getDynamicIntNames() const override;
 
-    std::vector<int> getUniformIntValues(const CstMap_sptr &map) const override;
+    DynamicValues<int> getDynamicIntValues() const override;
 
     Page_wptr parent() override;
 

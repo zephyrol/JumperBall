@@ -16,7 +16,7 @@ Displayable::GlobalState Mesh::getGlobalState() const {
     return _displayable->getGlobalState();
 }
 
-MeshUniforms Mesh::genMeshUniforms(CstShaderProgram_sptr shaderProgram) const {
+MeshUniforms Mesh::genMeshUniforms(const CstShaderProgram_sptr& shaderProgram) const {
     return MeshUniforms::createInstance(_displayable, shaderProgram);
 }
 
@@ -26,8 +26,4 @@ MeshGeometry Mesh::genMeshGeometry() const {
 
 bool Mesh::updatingIsUseless() const {
     return _updatingIsUseless;
-}
-
-std::vector<std::string> Mesh::genUniformsNames() const {
-    _displayable->getDynamicNames();
 }

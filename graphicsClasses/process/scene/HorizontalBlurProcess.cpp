@@ -3,6 +3,7 @@
 //
 
 #include "HorizontalBlurProcess.h"
+#include "frameBuffer/TextureSampler.h"
 
 #include <utility>
 
@@ -11,27 +12,30 @@ HorizontalBlurProcess::HorizontalBlurProcess(
     GLsizei width,
     GLsizei height,
     GLuint brightPassTexture,
-    RenderPass_sptr screen
+    const RenderGroupsManager_sptr& screen
 ) :
-    _screen(std::move(screen)),
+    _screenRenderPass(
+        createHorizontalBlurProcessShaderProgram(fileContent, width, height),
+        screen
+    ),
+    _horizontalBlurShader(_screenRenderPass.shaderProgram()),
     _frameBuffer(ColorableFrameBuffer::createInstance(
         width,
         height,
         true,
         false
     )),
-    _brightPassTexture(brightPassTexture),
-    _horizontalBlurShader(createHorizontalBlurProcessShaderProgram(fileContent, width, height)) {
+    _brightPassTexture(brightPassTexture)
+
 }
 
 void HorizontalBlurProcess::render() const {
     _frameBuffer->bindFrameBuffer();
     _horizontalBlurShader->use();
 
-    ShaderProgram::setActiveTexture(1);
+    TextureSampler::setActiveTexture(1);
     ShaderProgram::bindTexture(_brightPassTexture);
-
-    _screen->render(_horizontalBlurShader);
+    _screenRenderPass.render();
 }
 
 std::shared_ptr<const GLuint> HorizontalBlurProcess::getRenderTexture() const {
@@ -53,7 +57,6 @@ CstShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderPr
         fileContent,
         "basicFboVs.vs",
         "horizontalBlurFs.fs",
-        {brightPassTextureUniformName},
         {},
         {{"texelSize", glm::vec2(
             1.f / static_cast<float>(width),

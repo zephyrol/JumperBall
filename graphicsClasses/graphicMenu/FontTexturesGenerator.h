@@ -23,7 +23,9 @@
 #include FT_FREETYPE_H
 #include <gameMenu/Menu.h>
 
-// A font textures generator is attached to a page, because only one page is rendered each time.
+/**
+ * A font textures generator is attached to a page, because only one page is rendered on the same time.
+ */
 class FontTexturesGenerator {
 
     struct GraphicCharacter {

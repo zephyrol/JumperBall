@@ -26,19 +26,15 @@ std::vector<std::string> Page::shaderDefines() const {
     return {};
 }
 
-std::vector<std::string> Page::getUniformFloatNames() const {
-    return {};
-}
-
 std::vector<float> Page::getUniformFloatValues(const CstMap_sptr &) const {
-    return {};
-}
-
-std::vector<std::string> Page::getUniformIntNames() const {
     return {};
 }
 
 std::vector<int> Page::getUniformIntValues(const CstMap_sptr &) const {
     return {};
+}
+
+Displayable::GlobalState Page::getGlobalState() const {
+    return GlobalState::United;
 }
 

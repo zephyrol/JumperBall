@@ -17,7 +17,7 @@ public:
         GLsizei width,
         GLsizei height,
         GLuint hdrSceneTexture,
-        RenderPass_sptr  screen
+        const CstRenderGroupsManager_sptr& screen
     );
 
     void render() const override;
@@ -31,10 +31,10 @@ public:
 private:
     const GLsizei _width;
     const GLsizei _height;
-    const RenderPass_sptr _screen;
+    RenderPass _screenRenderPass;
+    const CstShaderProgram_sptr& _brightPassFilterShader;
     const ColorableFrameBuffer_uptr _frameBuffer;
     const GLuint _hdrSceneTexture;
-    const CstShaderProgram_sptr _brightPassFilterShader;
 };
 
 

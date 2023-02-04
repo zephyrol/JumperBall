@@ -17,13 +17,13 @@ SceneRendering::SceneRendering(
     const Scene &scene,
     GLsizei width,
     GLsizei height,
-    vecRenderPass_sptr &&renderPasses,
+    vecRenderGroupsManager_sptr &&renderGroupsManagers,
     vecRenderProcess_sptr &&processes,
     SceneUniformBuffer &&sceneUniformBuffer
 ) :
     Rendering(width, height),
     _scene(scene),
-    _renderPasses(std::move(renderPasses)),
+    _renderGroupManagers(std::move(renderGroupsManagers)),
     _processes(std::move(processes)),
     _sceneUniformBuffer(std::move(sceneUniformBuffer)) {
 }
@@ -47,15 +47,15 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         static_cast<float>(expensivePreprocessHeight)
         * static_cast<float>(width) / static_cast<float>(height)
     );
-    const auto blocks = std::make_shared<RenderPass>(MeshGenerator::genBlocks(scene.getMap()));
-    const auto items = std::make_shared<RenderPass>(MeshGenerator::genItems(scene.getMap()));
-    const auto enemies = std::make_shared<RenderPass>(MeshGenerator::genEnemies(scene.getMap()));
-    const auto specials = std::make_shared<RenderPass>(MeshGenerator::genSpecials(scene.getMap()));
-    const auto ball = std::make_shared<RenderPass>(MeshGenerator::genBall(scene.getBall()));
-    const auto star = std::make_shared<RenderPass>(
+    const auto blocks = std::make_shared<RenderGroupsManager>(MeshGenerator::genBlocks(scene.getMap()));
+    const auto items = std::make_shared<RenderGroupsManager>(MeshGenerator::genItems(scene.getMap()));
+    const auto enemies = std::make_shared<RenderGroupsManager>(MeshGenerator::genEnemies(scene.getMap()));
+    const auto specials = std::make_shared<RenderGroupsManager>(MeshGenerator::genSpecials(scene.getMap()));
+    const auto ball = std::make_shared<RenderGroupsManager>(MeshGenerator::genBall(scene.getBall()));
+    const auto star = std::make_shared<RenderGroupsManager>(
         MeshGenerator::genStars(scene.getStar(), scene.getStar2())
     );
-    const auto screen = std::make_shared<RenderPass>(MeshGenerator::genScreen());
+    const auto screen = std::make_shared<RenderGroupsManager>(MeshGenerator::genScreen());
 
 
     std::vector<std::shared_ptr<ShadowProcess> > shadowProcesses{};
@@ -136,7 +136,9 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         scene,
         width,
         height,
-        std::initializer_list<RenderPass_sptr>({blocks, items, enemies, specials, ball, star, screen}),
+        std::initializer_list<RenderGroupsManager_sptr>(
+            {blocks, items, enemies, specials, ball, star, screen}
+        ),
         std::initializer_list<RenderProcess_sptr>(
             {
                 shadowProcesses.front(),
@@ -167,7 +169,7 @@ void SceneRendering::update() {
         glm::vec1(sceneBall->getTeleportationCoefficient())
     );
 
-    for (const auto &renderPass: _renderPasses) {
+    for (const auto &renderPass: _renderGroupManagers) {
         renderPass->update();
     }
 }
@@ -181,7 +183,7 @@ void SceneRendering::render() const {
 
 void SceneRendering::freeGPUMemory() {
 
-    for (const auto &renderPass: _renderPasses) {
+    for (const auto &renderPass: _renderGroupManagers) {
         renderPass->freeGPUMemory();
     }
     for (const auto &process: _processes) {

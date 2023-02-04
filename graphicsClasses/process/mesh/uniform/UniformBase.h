@@ -39,6 +39,8 @@ public:
      */
     virtual void bind() = 0;
 
+    virtual ~UniformBase() = default;
+
 protected:
     /*
      * Uniform location in the referenced shader program.

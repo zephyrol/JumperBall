@@ -5,7 +5,6 @@
  * Created on 20 mars 2021, 16:30
  */
 #include "process/RenderGroup.h"
-#include <Utility.h>
 
 RenderGroup::RenderGroup(
     vecMesh_sptr meshes,
@@ -18,12 +17,8 @@ RenderGroup::RenderGroup(
     _vertexArrayObject(vertexArrayObject),
     _gpuVertexAttributes(std::move(gpuVertexAttributes)),
     _elementBufferObject(elementBufferObject),
-    _numberOfIndices(numberOfIndices),
+    _numberOfIndices(numberOfIndices)
 {
-}
-
-Mesh::UniformsValues RenderGroup::genUniformValues() const {
-    return _meshes.front()->genMeshUniforms();
 }
 
 void RenderGroup::render() const {
@@ -111,7 +106,7 @@ RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
     );
 }
 
-MeshUniforms RenderGroup::genUniforms(CstShaderProgram_sptr shaderProgram) const {
+MeshUniforms RenderGroup::genUniforms(const CstShaderProgram_sptr& shaderProgram) const {
     return _meshes.front()->genMeshUniforms(shaderProgram);
 }
 

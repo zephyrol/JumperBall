@@ -23,7 +23,7 @@ using CstPage_sptr = std::shared_ptr<const Page>;
 using vecCstPage_sptr = std::vector<CstPage_sptr>;
 using vecPage_sptr = std::vector<Page_sptr>;
 
-class Page {
+class Page: public Displayable {
 public:
 
     explicit Page(Player_sptr &&player);
@@ -45,11 +45,7 @@ public:
 
     virtual std::vector<std::string> shaderDefines() const;
 
-    virtual std::vector<std::string> getUniformFloatNames() const;
-
     virtual std::vector<float> getUniformFloatValues(const CstMap_sptr &map) const;
-
-    virtual std::vector<std::string> getUniformIntNames() const;
 
     virtual std::vector<int> getUniformIntValues(const CstMap_sptr &map) const;
 
@@ -60,6 +56,8 @@ public:
     virtual void update(const Mouse &mouse);
 
     virtual void resize(float ratio) = 0;
+
+    GlobalState getGlobalState() const override;
 
 protected:
     const Player_sptr _player;

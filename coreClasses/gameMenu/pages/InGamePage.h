@@ -43,11 +43,14 @@ public:
 
     std::vector<std::string> shaderDefines() const override;
 
-    std::vector<std::string> getUniformIntNames() const override;
+    DynamicNames getDynamicIntNames() const override;
+
+    DynamicValues<int> getDynamicIntValues() const override;
+
+    // TODO: Adapt !
     std::vector<int> getUniformIntValues(const CstMap_sptr &map) const override;
 
     std::string getVertexShaderName() const override;
-
 
 private:
 

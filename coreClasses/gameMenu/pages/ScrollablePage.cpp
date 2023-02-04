@@ -82,16 +82,16 @@ void ScrollablePage::update(const Mouse &mouse) {
     }
 }
 
-std::vector<std::string> ScrollablePage::getUniformFloatNames() const {
+float ScrollablePage::getOffsetY() const {
+    return _localPosY;
+}
+
+Displayable::DynamicNames ScrollablePage::getDynamicFloatNames() const {
     return {"positionY"};
 }
 
-std::vector<float> ScrollablePage::getUniformFloatValues(const CstMap_sptr &) const {
+Displayable::DynamicValues<float> ScrollablePage::getDynamicFloatValues() const {
     return {
         _localPosY * 2.f // Convert to OpenGL format
     };
-}
-
-float ScrollablePage::getOffsetY() const {
-    return _localPosY;
 }

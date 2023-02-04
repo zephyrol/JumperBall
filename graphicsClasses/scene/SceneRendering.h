@@ -13,7 +13,6 @@
 #include "Scene.h"
 #include "process/scene/SceneUniformBuffer.h"
 #include "process/RenderProcess.h"
-#include "process/RenderPass.h"
 
 
 class SceneRendering : public Rendering {
@@ -24,7 +23,7 @@ public:
         const Scene &scene,
         GLsizei width,
         GLsizei height,
-        vecRenderPass_sptr&& renderPasses,
+        vecRenderGroupsManager_sptr && renderGroupsManagers,
         vecRenderProcess_sptr&& processes,
         SceneUniformBuffer&& sceneUniformBuffer
     );
@@ -47,7 +46,7 @@ private:
 
     const Scene &_scene;
 
-    const vecRenderPass_sptr _renderPasses;
+    const vecRenderGroupsManager_sptr _renderGroupManagers;
     const vecRenderProcess_sptr _processes;
 
     SceneUniformBuffer _sceneUniformBuffer;

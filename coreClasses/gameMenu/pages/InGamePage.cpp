@@ -102,10 +102,6 @@ std::vector<std::string> InGamePage::shaderDefines() const {
     return {"DISCARDING", "TEST_ALPHA_TEXTURE"};
 }
 
-std::vector<std::string> InGamePage::getUniformIntNames() const {
-    return {"leftDigit", "middleDigit", "rightDigit"};
-}
-
 std::vector<int> InGamePage::getUniformIntValues(const CstMap_sptr &map) const {
     const auto remainingTime = static_cast<int> (std::ceilf(map->remainingTime()));
     const auto leftDigit = remainingTime / 100;
@@ -120,4 +116,12 @@ const int InGamePage::arrowLabelId = -1;
 
 std::string InGamePage::getVertexShaderName() const {
     return "inGamePageVs.vs";
+}
+
+Displayable::DynamicNames InGamePage::getDynamicIntNames() const {
+    return {"leftDigit", "middleDigit", "rightDigit"};
+}
+
+Displayable::DynamicValues<int> InGamePage::getDynamicIntValues() const {
+    return Displayable::getDynamicIntValues();
 }

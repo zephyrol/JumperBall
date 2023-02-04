@@ -1,5 +1,5 @@
 //
-// Created by Sébastien Morgenthaler on 26/01/2022.
+// Created by S.Morgenthaler on 26/01/2022.
 //
 
 #ifndef JUMPERBALLAPPLICATION_BLOOMPROCESS_H
@@ -7,6 +7,7 @@
 
 
 #include "process/RenderProcess.h"
+#include "frameBuffer/TextureSampler.h"
 
 class BloomProcess : public RenderProcess {
 
@@ -15,14 +16,13 @@ public:
         const JBTypes::FileContent &fileContent,
         GLsizei width,
         GLsizei height,
+        GLuint sceneHdrTexture,
         GLuint blurTexture,
         GLint defaultFrameBuffer,
-        RenderPass_sptr screen
+        const CstRenderGroupsManager_sptr& screen
     );
 
     void render() const override;
-
-    void freeGPUMemory() override;
 
     vecCstShaderProgram_sptr getShaderPrograms() const override;
 
@@ -32,9 +32,10 @@ private:
 
     GLsizei _width;
     GLsizei _height;
-    const RenderPass_sptr _screen;
-    const GLuint _blurTexture;
-    const CstShaderProgram_sptr _bloomShader;
+    RenderPass _screenRenderPass;
+    const CstShaderProgram_sptr& _bloomShader;
+    TextureSampler _sceneHdrTextureSampler;
+    TextureSampler _blurTextureSampler;
     const GLint _defaultFrameBuffer;
 
     static CstShaderProgram_sptr createBloomProcessShaderProgram(

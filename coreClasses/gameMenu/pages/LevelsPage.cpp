@@ -175,10 +175,10 @@ std::vector<std::string> LevelsPage::shaderDefines() const {
     return {"TEST_ALPHA_TEXTURE"};
 }
 
-std::vector<std::string> LevelsPage::getUniformIntNames() const {
+Displayable::DynamicNames LevelsPage::getDynamicIntNames() const {
     return {"levelProgression"};
 }
 
-std::vector<int> LevelsPage::getUniformIntValues(const CstMap_sptr &) const {
+Displayable::DynamicValues<int> LevelsPage::getDynamicIntValues() const {
     return {static_cast<int>(_player->levelProgression())};
 }

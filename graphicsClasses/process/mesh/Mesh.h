@@ -12,7 +12,6 @@
 #include "geometry/GeometricShape.h"
 #include "scene/Displayable.h"
 #include "MeshGeometry.h"
-#include "process/mesh/uniform/Uniforms.h"
 #include "MeshUniforms.h"
 
 class Mesh;
@@ -33,9 +32,7 @@ public:
 
     Displayable::GlobalState getGlobalState() const;
 
-    MeshUniforms genMeshUniforms(CstShaderProgram_sptr shaderProgram) const;
-
-    std::vector<std::string> genUniformsNames() const;
+    MeshUniforms genMeshUniforms(const CstShaderProgram_sptr& shaderProgram) const;
 
     MeshGeometry genMeshGeometry() const;
 

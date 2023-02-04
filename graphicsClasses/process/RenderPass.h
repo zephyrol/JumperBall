@@ -10,6 +10,7 @@
 
 #include "frameBuffer/FrameBuffer.h"
 #include "RenderGroup.h"
+#include "RenderGroupsManager.h"
 
 class RenderPass;
 
@@ -19,15 +20,18 @@ using vecCstRenderPass_sptr = std::vector<CstRenderPass_sptr>;
 using vecRenderPass_sptr = std::vector<RenderPass_sptr>;
 
 /**
- * Render passes is used to render meshes. They are usable and shareable between some render processes.
- * (and so with different shaders). It doesn't contain any shader programs but we need to specify it
- * during the rendering.
+ * Render passes is used to render meshes with a specific shader.
+ * During rendering, every render groups (through render groups manager) are rendered with the same shader.
+ * The render groups manager may be shared with other render passes.
  */
 class RenderPass {
 
 public:
 
-    explicit RenderPass(vecMesh_sptr meshes);
+    explicit RenderPass(
+        CstShaderProgram_sptr shaderProgram,
+        CstRenderGroupsManager_sptr renderGroupsManager
+    );
 
     RenderPass(const RenderPass &renderPass) = delete;
 
@@ -35,52 +39,28 @@ public:
 
     RenderPass(RenderPass &&renderPass) = default;
 
-    void render(const CstShaderProgram_sptr &shaderProgram) const;
+    void render() const;
 
     void update();
 
-    void freeGPUMemory();
-
-    std::vector<std::string> genUniformNames() const;
+    const CstShaderProgram_sptr& shaderProgram() const;
 
 private:
 
-    const vecMesh_sptr _meshes;
-    const Mesh::UniformsNames _uniformsNames;
+    const CstShaderProgram_sptr _shaderProgram;
+    const CstRenderGroupsManager_sptr _renderGroupsManager;
 
-    struct UpdatableMeshState {
-        Mesh_sptr mesh;
-        Displayable::GlobalState currentState;
-    };
-    std::vector<RenderPass::UpdatableMeshState> _updatableMeshesStates;
+    /**
+     * This pointer contains a list of render group reflecting the group manager state.
+     * The uniforms needs to be recreated if the rendering manager has changed its definition
+     * of its render group. This pointer is used to check if manager has made a redefinition.
+     */
+    std::shared_ptr<const std::vector<RenderGroup>> _currentRenderGroups;
 
-    struct DrawCallDefinition {
-        std::shared_ptr<RenderGroup> renderGroup;
-        Mesh::UniformsValues uniformsValues;
-    };
-    std::vector<RenderPass::DrawCallDefinition> _drawCallDefinitions;
+    std::vector<MeshUniforms> _uniforms;
 
-    void bindUniforms(const Mesh::UniformsValues &uniforms, const CstShaderProgram_sptr &shaderProgram) const;
+    void bindUniforms() const;
 
-    template<typename T>
-    void bindUniformVariables(
-        const CstShaderProgram_sptr &shaderProgram,
-        const Mesh::GpuUniformNames &uniformsNames,
-        const Mesh::GpuUniformValues<T> &uniformsValues
-    ) const;
-
-    std::vector<RenderPass::DrawCallDefinition> createDrawCallDefinitions() const;
 };
-
-template<typename T>
-void RenderPass::bindUniformVariables(
-    const CstShaderProgram_sptr &shaderProgram,
-    const Mesh::GpuUniformNames &uniformsNames,
-    const Mesh::GpuUniformValues<T> &uniformsValues
-) const {
-    for (size_t i = 0; i < uniformsNames.size(); ++i) {
-        shaderProgram->bindUniform(uniformsNames[i], uniformsValues[i]);
-    }
-}
 
 #endif /* RENDER_PASS_H */

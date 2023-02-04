@@ -10,6 +10,7 @@
 #include "gameMenu/pages/Page.h"
 #include "graphicMenu/FontTexturesGenerator.h"
 #include "Rendering.h"
+#include "frameBuffer/TextureSampler.h"
 
 class LabelsProcess: public RenderProcess, Rendering {
 
@@ -28,6 +29,8 @@ public:
         GLsizei height,
         CstPage_sptr page,
         const FontTexturesGenerator& fontTexturesGenerator,
+        TextureSampler textureSampler,
+        RenderGroupsManager_sptr renderGroupsManager,
         RenderPass renderPass,
         CstShaderProgram_sptr labelsShader,
         CstMap_sptr map
@@ -42,10 +45,10 @@ public:
 private:
     const CstPage_sptr _page;
     FontTexturesGenerator _fontTexturesGenerator;
+    TextureSampler _characterTextureSampler;
+    RenderGroupsManager_sptr _renderGroupsManager;
     RenderPass _renderPass;
     const CstShaderProgram_sptr _labelsShader;
-    const std::vector<std::string> _uniformFloatNames;
-    const std::vector<std::string> _uniformIntNames;
     CstMap_sptr _map;
 };
 

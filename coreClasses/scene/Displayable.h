@@ -31,8 +31,6 @@ public:
         United, Separate, Dead
     };
 
-    Displayable();
-
     virtual ~Displayable() = default;
 
     virtual std::vector<unsigned char> getStaticUnsignedByteValues() const;
@@ -45,21 +43,24 @@ public:
 
     virtual StaticValues<JBTypes::vec3f> getStaticVec3fValues() const;
 
-    DynamicNames getDynamicNames() const;
-
     virtual DynamicNames getDynamicIntNames() const;
+
     virtual DynamicValues<int> getDynamicIntValues() const;
 
     virtual DynamicNames getDynamicFloatNames() const;
+
     virtual DynamicValues<float> getDynamicFloatValues() const;
 
     virtual DynamicNames getDynamicVec2fNames() const;
+
     virtual DynamicValues<JBTypes::vec2f> getDynamicVec2fValues() const;
 
     virtual DynamicNames getDynamicVec3fNames() const;
+
     virtual DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const;
 
     virtual DynamicNames getDynamicQuaternionNames() const;
+
     virtual DynamicValues<JBTypes::Quaternion> getDynamicQuaternionValues() const;
 
     virtual GlobalState getGlobalState() const = 0;

@@ -11,6 +11,11 @@
 #include "process/mesh/Mesh.h"
 #include "process/scene/GpuVertexAttributes.h"
 
+class RenderGroup;
+using RenderGroup_sptr = std::shared_ptr<RenderGroup>;
+using CstRenderGroup_sptr = std::shared_ptr<const RenderGroup>;
+using vecRenderGroup_sptr = std::vector<RenderGroup_sptr>;
+using vecCstRenderGroup_sptr = std::vector<CstRenderGroup_sptr>;
 class RenderGroup {
 
 public:
@@ -33,7 +38,7 @@ public:
 
     void render() const;
 
-    MeshUniforms genUniforms(CstShaderProgram_sptr shaderProgram) const;
+    MeshUniforms genUniforms(const CstShaderProgram_sptr& shaderProgram) const;
 
     static RenderGroup createInstance(vecMesh_sptr meshes);
 

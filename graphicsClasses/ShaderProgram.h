@@ -20,16 +20,10 @@ class ShaderProgram {
 
 public:
 
-    struct UniformLocation {
-        std::string name;
-        GLint location;
-    };
-
     ShaderProgram(
         CstShader_uptr &&vertexShader,
         CstShader_uptr &&fragmentShader,
-        GLuint shaderProgramHandle,
-        std::vector<UniformLocation>&& uniformLocations
+        GLuint shaderProgramHandle
     );
 
     ShaderProgram(const ShaderProgram &shaderProgram) = delete;
@@ -46,46 +40,18 @@ public:
         const JBTypes::FileContent &fileContent,
         const std::string &vs,
         const std::string &fs,
-        const std::vector<std::string> &uniformNames,
         const std::vector<std::string> &defines = {},
         const std::map<std::string, glm::vec2> &constVec2s = {}
     );
 
     void use() const;
 
-    void bindUniform(const std::string &name, const glm::mat4 &value) const;
-
-    void bindUniform(const std::string &name, const glm::vec4 &value) const;
-
-    void bindUniform(const std::string &name, const glm::vec3 &value) const;
-
-    void bindUniform(const std::string &name, const glm::vec2 &value) const;
-
-    void bindUniform(const std::string &name, const GLfloat &value) const;
-
-    void bindUniform(const std::string &name, const bool &value) const;
-
-    void bindUniform(const std::string &name, const int &value) const;
-
-    void bindUniform(const std::string &name, const std::vector<int> &value) const;
-
-    void bindUniform(const std::string &name, const std::vector<float> &value) const;
-
-    void bindUniformTextureIndex(const std::string &name, int textureNumber) const;
-
-    static void setActiveTexture(int textureNumber);
-
-    static void bindTexture(GLuint textureID);
-
 private:
     const GLuint _shaderProgramHandle;
     const CstShader_uptr _vertexShader;
     const CstShader_uptr _fragmentShader;
-    const std::vector<UniformLocation> _uniformLocations;
 
     static void verifyLinkStatus(GLuint shaderProgramHandle);
-
-    GLint getLocation(const std::string& uniformName) const;
 
 };
 

@@ -1,24 +1,34 @@
 //
-// Created by Sébastien Morgenthaler on 26/01/2022.
+// Created by S.Morgenthaler on 26/01/2022.
 //
 
 #include "BloomProcess.h"
-
-#include <utility>
 
 BloomProcess::BloomProcess(
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height,
+    GLuint sceneHdrTexture,
     GLuint blurTexture,
     GLint defaultFrameBuffer,
-    RenderPass_sptr screen
+    const CstRenderGroupsManager_sptr &screen
 ) :
     _width(width),
     _height(height),
-    _screen(std::move(screen)),
-    _blurTexture(blurTexture),
-    _bloomShader(createBloomProcessShaderProgram(fileContent)),
+    _screenRenderPass(createBloomProcessShaderProgram(fileContent), screen),
+    _bloomShader(_screenRenderPass.shaderProgram()),
+    _sceneHdrTextureSampler(TextureSampler::createInstance(
+        sceneHdrTexture,
+        0,
+        _bloomShader,
+        "frameSceneHDRTexture"
+    )),
+    _blurTextureSampler(TextureSampler::createInstance(
+        blurTexture,
+        1,
+        _bloomShader,
+        "frameBluredTexture")
+    ),
     _defaultFrameBuffer(defaultFrameBuffer) {
 }
 
@@ -27,12 +37,12 @@ void BloomProcess::render() const {
     FrameBuffer::setViewportSize(_width, _height);
 
     _bloomShader->use();
-    ShaderProgram::bindTexture(_blurTexture);
-    _screen->render(_bloomShader);
-}
 
-void BloomProcess::freeGPUMemory() {
-    _bloomShader->freeGPUMemory();
+    // Perf: hdr texture is already bound in the previous preprocess
+    static_cast<void>(_sceneHdrTextureSampler);
+
+    _blurTextureSampler.bind();
+    _screenRenderPass.render();
 }
 
 std::shared_ptr<const GLuint> BloomProcess::getRenderTexture() const {
@@ -45,12 +55,9 @@ CstShaderProgram_sptr BloomProcess::createBloomProcessShaderProgram(
     auto shader = ShaderProgram::createInstance(
         fileContent,
         "basicFboVs.vs",
-        "bloomFs.fs",
-        {"frameSceneHDRTexture", "frameBluredTexture"}
+        "bloomFs.fs"
     );
     shader->use();
-    shader->bindUniformTextureIndex("frameSceneHDRTexture", 0);
-    shader->bindUniformTextureIndex("frameBluredTexture", 1);
     return shader;
 }
 
