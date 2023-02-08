@@ -1,5 +1,5 @@
 //
-// Created by Sébastien Morgenthaler on 26/01/2022.
+// Created by S.Morgenthaler on 26/01/2022.
 //
 
 #include "BrightPassFilterProcess.h"
@@ -26,7 +26,13 @@ BrightPassFilterProcess::BrightPassFilterProcess(
         true,
         false
     )),
-    _hdrSceneTexture(hdrSceneTexture) {
+    _hdrSceneTextureSampler(
+        TextureSampler::createInstance(
+            hdrSceneTexture,
+            0,
+            _brightPassFilterShader,
+            "textureScene"
+        )) {
 }
 
 void BrightPassFilterProcess::render() const {
@@ -35,7 +41,7 @@ void BrightPassFilterProcess::render() const {
     FrameBuffer::setViewportSize(_width, _height);
 
     _brightPassFilterShader->use();
-    ShaderProgram::bindTexture(_hdrSceneTexture);
+    _hdrSceneTextureSampler.bind();
     _screenRenderPass.render();
 }
 
@@ -51,15 +57,12 @@ void BrightPassFilterProcess::freeGPUMemory() {
 CstShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShaderProgram(
     const JBTypes::FileContent &fileContent
 ) {
-    constexpr auto textureSceneUniformName = "textureScene";
     auto shader = ShaderProgram::createInstance(
         fileContent,
         "basicFboVs.vs",
-        "brightPassFilter.fs",
-        {textureSceneUniformName}
+        "brightPassFilter.fs"
     );
     shader->use();
-    shader->bindUniformTextureIndex(textureSceneUniformName, 0);
     return shader;
 }
 

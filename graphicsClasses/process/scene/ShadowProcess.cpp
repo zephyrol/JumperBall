@@ -48,7 +48,6 @@ ShadowProcess_sptr ShadowProcess::createInstance(
                 fileContent,
                 vertexShaderFile,
                 "depthFs.fs",
-                renderPass->genUniformNames(),
                 shadowDefines
             ),
             std::move(renderPass)

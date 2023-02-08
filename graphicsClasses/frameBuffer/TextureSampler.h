@@ -38,6 +38,7 @@ public:
 
     static void setActiveTexture(GLint index);
 
+private:
     const GLuint _textureId;
 
 };

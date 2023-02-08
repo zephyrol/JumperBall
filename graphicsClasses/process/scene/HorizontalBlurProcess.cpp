@@ -12,7 +12,7 @@ HorizontalBlurProcess::HorizontalBlurProcess(
     GLsizei width,
     GLsizei height,
     GLuint brightPassTexture,
-    const RenderGroupsManager_sptr& screen
+    const RenderGroupsManager_sptr &screen
 ) :
     _screenRenderPass(
         createHorizontalBlurProcessShaderProgram(fileContent, width, height),
@@ -25,8 +25,12 @@ HorizontalBlurProcess::HorizontalBlurProcess(
         true,
         false
     )),
-    _brightPassTexture(brightPassTexture)
-
+    _brightPassTextureSampler(TextureSampler::createInstance(
+        brightPassTexture,
+        1,
+        _horizontalBlurShader,
+        "brightPassTexture"
+        )) {
 }
 
 void HorizontalBlurProcess::render() const {
@@ -34,7 +38,7 @@ void HorizontalBlurProcess::render() const {
     _horizontalBlurShader->use();
 
     TextureSampler::setActiveTexture(1);
-    ShaderProgram::bindTexture(_brightPassTexture);
+    _brightPassTextureSampler.bind();
     _screenRenderPass.render();
 }
 
@@ -52,7 +56,6 @@ CstShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderPr
     GLsizei width,
     GLsizei height
 ) {
-    constexpr auto brightPassTextureUniformName = "brightPassTexture";
     auto shader = ShaderProgram::createInstance(
         fileContent,
         "basicFboVs.vs",
@@ -64,7 +67,6 @@ CstShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderPr
         )}}
     );
     shader->use();
-    shader->bindUniformTextureIndex(brightPassTextureUniformName, 1);
     return shader;
 }
 

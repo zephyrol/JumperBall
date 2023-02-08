@@ -20,17 +20,22 @@ VerticalBlurProcess::VerticalBlurProcess(
         false,
         false
     )),
-    _horizontalBlurTexture(horizontalBlurTexture),
-    _verticalBlurShader(createVerticalBlurProcessShaderProgram(fileContent, width, height)) {
+    _verticalBlurShader(createVerticalBlurProcessShaderProgram(fileContent, width, height)),
+    _horizontalBlurTextureSampler(TextureSampler::createInstance(
+        horizontalBlurTexture,
+        1,
+        _verticalBlurShader,
+        "horizontalBlurTexture"
+    )) {
 }
 
 void VerticalBlurProcess::render() const {
     _frameBuffer->bindFrameBuffer();
 
     _verticalBlurShader->use();
-    ShaderProgram::bindTexture(_horizontalBlurTexture);
+    _horizontalBlurTextureSampler.bind();
 
-    _screen->render(_verticalBlurShader);
+    _screen->render();
 }
 
 std::shared_ptr<const GLuint> VerticalBlurProcess::getRenderTexture() const {
@@ -47,12 +52,10 @@ CstShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgra
     GLsizei width,
     GLsizei height
 ) {
-    constexpr auto horizontalBlurTextureName = "horizontalBlurTexture";
     auto shader = ShaderProgram::createInstance(
         fileContent,
         "basicFboVs.vs",
         "verticalBlurFs.fs",
-        {horizontalBlurTextureName},
         {},
         {{
              "texelSize", glm::vec2(
@@ -62,7 +65,6 @@ CstShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgra
         }
     );
     shader->use();
-    shader->bindUniformTextureIndex(horizontalBlurTextureName, 1);
     return shader;
 }
 
