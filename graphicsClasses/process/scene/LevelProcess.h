@@ -7,6 +7,7 @@
 
 #include "process/RenderProcess.h"
 #include "frameBuffer/ColorableFrameBuffer.h"
+#include "frameBuffer/TextureSampler.h"
 
 
 class LevelProcess;
@@ -21,12 +22,12 @@ public:
         GLsizei height,
         GLuint shadowTexture,
         GLuint shadow2Texture,
-        RenderPass_sptr blocks,
-        RenderPass_sptr items,
-        RenderPass_sptr enemies,
-        RenderPass_sptr specials,
-        RenderPass_sptr ball,
-        RenderPass_sptr star
+        CstRenderGroupsManager_sptr blocks,
+        CstRenderGroupsManager_sptr items,
+        CstRenderGroupsManager_sptr enemies,
+        CstRenderGroupsManager_sptr specials,
+        CstRenderGroupsManager_sptr ball,
+        CstRenderGroupsManager_sptr star
     );
 
     LevelProcess(
@@ -35,7 +36,7 @@ public:
         ColorableFrameBuffer_uptr frameBuffer,
         GLuint shadowTexture,
         GLuint shadow2Texture,
-        std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr> >&& shadersRenderPasses
+        std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> >&& shadersRenderPasses
     );
 
 
@@ -55,12 +56,11 @@ private:
     const GLuint _shadowTexture;
     const GLuint _shadow2Texture;
 
-    const std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr> > _shadersRenderPasses;
+    const std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > _shadersRenderPasses;
 
-    static CstShaderProgram_sptr createLevelProcessShaderProgram(
+    static ShaderProgram_sptr createLevelProcessShaderProgram(
         const JBTypes::FileContent &fileContent,
-        const std::string &vs,
-        std::vector<std::string> &&uniformNames
+        const std::string &vs
     );
 };
 

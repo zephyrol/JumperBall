@@ -34,9 +34,16 @@ public:
 
     GLuint getHandle() const;
 
-    void freeGPUMemory() const;
+    /**
+     * For a uniform sampler variable representing by its name, set a
+     * texture index (The number of the active texture).
+     * Warning: don't forget to call ShaderProgram::use() method before!
+     */
+    void setTextureIndex(const std::string &name, GLint index);
 
-    static CstShaderProgram_sptr createInstance(
+    void freeGPUMemory();
+
+    static ShaderProgram_sptr createInstance(
         const JBTypes::FileContent &fileContent,
         const std::string &vs,
         const std::string &fs,

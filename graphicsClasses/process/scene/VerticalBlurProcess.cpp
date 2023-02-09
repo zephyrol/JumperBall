@@ -11,31 +11,26 @@ VerticalBlurProcess::VerticalBlurProcess(
     GLsizei width,
     GLsizei height,
     GLuint horizontalBlurTexture,
-    RenderPass_sptr screen
+    const CstRenderGroupsManager_sptr &screen
 ) :
-    _screen(std::move(screen)),
+    _verticalBlurShader(createVerticalBlurProcessShaderProgram(fileContent, width, height)),
+    _screenRenderPass(_verticalBlurShader, screen),
     _frameBuffer(ColorableFrameBuffer::createInstance(
         width,
         height,
         false,
         false
     )),
-    _verticalBlurShader(createVerticalBlurProcessShaderProgram(fileContent, width, height)),
-    _horizontalBlurTextureSampler(TextureSampler::createInstance(
-        horizontalBlurTexture,
-        1,
-        _verticalBlurShader,
-        "horizontalBlurTexture"
-    )) {
+    _horizontalBlurTexture(horizontalBlurTexture) {
 }
 
 void VerticalBlurProcess::render() const {
     _frameBuffer->bindFrameBuffer();
 
     _verticalBlurShader->use();
-    _horizontalBlurTextureSampler.bind();
+    TextureSampler::bind(_horizontalBlurTexture);
 
-    _screen->render();
+    _screenRenderPass.render();
 }
 
 std::shared_ptr<const GLuint> VerticalBlurProcess::getRenderTexture() const {
@@ -47,7 +42,7 @@ void VerticalBlurProcess::freeGPUMemory() {
     _verticalBlurShader->freeGPUMemory();
 }
 
-CstShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgram(
+ShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgram(
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height
@@ -65,6 +60,7 @@ CstShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgra
         }
     );
     shader->use();
+    shader->setTextureIndex("horizontalBlurTexture", 1);
     return shader;
 }
 

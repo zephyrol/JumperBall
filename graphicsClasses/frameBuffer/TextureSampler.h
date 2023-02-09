@@ -7,41 +7,24 @@
 #include "ShaderProgram.h"
 
 
-class TextureSampler {
-public:
-
-    static TextureSampler createInstance(
-        GLuint textureId,
-        GLint index,
-        const CstShaderProgram_sptr &shaderProgram,
-        const std::string &name
-    );
-
-private:
-    explicit TextureSampler(
-        GLuint textureId
-    );
-public:
-
-    TextureSampler(const TextureSampler& textureSampler) = delete;
-    TextureSampler& operator=(const TextureSampler& textureSampler) = delete;
-
-    TextureSampler(TextureSampler&& textureSampler) = default;
+namespace TextureSampler {
 
     /**
-     * Bind the texture.
+     * Bind a texture from its id.
      * Warning: Ensure that TextureSampler::setActiveTexture was previously called with
-     * the index corresponding to one was used during the texture creation.
-     * (index parameter passed to createInstance)
+     * the index corresponding to one was used during the texture registration in shader program.
+     * (using ShaderProgram::setTextureIndex)
      */
-    void bind() const;
+    void bind(GLuint textureId);
 
-    static void setActiveTexture(GLint index);
+    /**
+     * Set the current active texture.
+     * After this call, the TextureSampler.bind() function will bind a texture id to
+     * this specified index.
+     */
+    void setActiveTexture(GLint index);
 
-private:
-    const GLuint _textureId;
-
-};
+}
 
 
 #endif //JUMPERBALLAPPLICATION_TEXTURESAMPLER_H

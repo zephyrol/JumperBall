@@ -22,13 +22,13 @@ GLuint ShaderProgram::getHandle() const {
     return _shaderProgramHandle;
 }
 
-void ShaderProgram::freeGPUMemory() const {
+void ShaderProgram::freeGPUMemory() {
     _vertexShader->freeGPUMemory();
     _fragmentShader->freeGPUMemory();
     glDeleteProgram(_shaderProgramHandle);
 }
 
-CstShaderProgram_sptr ShaderProgram::createInstance(
+ShaderProgram_sptr ShaderProgram::createInstance(
     const JBTypes::FileContent &fileContent,
     const std::string &vs,
     const std::string &fs,
@@ -56,7 +56,7 @@ CstShaderProgram_sptr ShaderProgram::createInstance(
     glDeleteShader(vertexShader->getHandle());
     glDeleteShader(fragmentShader->getHandle());
 
-    return std::make_shared<const ShaderProgram>(
+    return std::make_shared<ShaderProgram>(
         std::move(vertexShader),
         std::move(fragmentShader),
         shaderProgramHandle
@@ -84,6 +84,14 @@ void ShaderProgram::verifyLinkStatus(GLuint shaderProgramHandle) {
         }
         exit(EXIT_FAILURE);
     }
+}
+
+void ShaderProgram::setTextureIndex(const std::string &name, GLint index) {
+    const auto location = glGetUniformLocation(
+        _shaderProgramHandle,
+        name.c_str()
+    );
+    glUniform1i(location, index);
 }
 
 // void ShaderProgram::bindUniform(const std::string &name, const glm::mat4 &value) const {

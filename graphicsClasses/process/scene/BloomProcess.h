@@ -16,13 +16,14 @@ public:
         const JBTypes::FileContent &fileContent,
         GLsizei width,
         GLsizei height,
-        GLuint sceneHdrTexture,
         GLuint blurTexture,
         GLint defaultFrameBuffer,
         const CstRenderGroupsManager_sptr& screen
     );
 
     void render() const override;
+
+    void freeGPUMemory() override;
 
     vecCstShaderProgram_sptr getShaderPrograms() const override;
 
@@ -32,13 +33,12 @@ private:
 
     GLsizei _width;
     GLsizei _height;
+    ShaderProgram_sptr _bloomShader;
     RenderPass _screenRenderPass;
-    const CstShaderProgram_sptr& _bloomShader;
-    TextureSampler _sceneHdrTextureSampler;
-    TextureSampler _blurTextureSampler;
+    GLuint _blurTexture;
     const GLint _defaultFrameBuffer;
 
-    static CstShaderProgram_sptr createBloomProcessShaderProgram(
+    static ShaderProgram_sptr createBloomProcessShaderProgram(
         const JBTypes::FileContent &fileContent
     );
 };

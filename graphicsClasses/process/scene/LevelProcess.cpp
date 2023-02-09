@@ -13,7 +13,7 @@ LevelProcess::LevelProcess(
     ColorableFrameBuffer_uptr frameBuffer,
     GLuint shadowTexture,
     GLuint shadow2Texture,
-    std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr>> &&shadersRenderPasses
+    std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr>> &&shadersRenderPasses
 ) :
     _width(width),
     _height(height),
@@ -29,33 +29,37 @@ LevelProcess_sptr LevelProcess::createInstance(
     GLsizei height,
     GLuint shadowTexture,
     GLuint shadow2Texture,
-    RenderPass_sptr blocks,
-    RenderPass_sptr items,
-    RenderPass_sptr enemies,
-    RenderPass_sptr specials,
-    RenderPass_sptr ball,
-    RenderPass_sptr star
+    CstRenderGroupsManager_sptr blocks,
+    CstRenderGroupsManager_sptr items,
+    CstRenderGroupsManager_sptr enemies,
+    CstRenderGroupsManager_sptr specials,
+    CstRenderGroupsManager_sptr ball,
+    CstRenderGroupsManager_sptr star
 ) {
 
-    std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr> > shadersRenderPasses{};
-    std::vector<std::pair<std::string, RenderPass_sptr> > vertexShaderFilesRenderPasses{
+    std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > shadersRenderPasses{};
+    std::vector<std::pair<std::string, CstRenderGroupsManager_sptr> > vertexShaderFilesGroupsManagers{
         {"blocksVs.vs",   std::move(blocks)},
         {"itemsMapVs.vs", std::move(items)},
         {"enemiesVs.vs",  std::move(enemies)},
         {"specialsVs.vs", std::move(specials)},
         {"ballVs.vs",     std::move(ball)}
     };
-    for (auto &vertexShaderFileRenderPass: vertexShaderFilesRenderPasses) {
-        const auto &vertexShaderFile = vertexShaderFileRenderPass.first;
-        auto &renderPass = vertexShaderFileRenderPass.second;
+    for (auto &vertexShaderFileGroupsManager: vertexShaderFilesGroupsManagers) {
+        const auto &vertexShaderFile = vertexShaderFileGroupsManager.first;
+        const auto &groupsManager = vertexShaderFileGroupsManager.second;
+
+        const auto shaderProgram = createLevelProcessShaderProgram(fileContent, vertexShaderFile);
         shadersRenderPasses.emplace_back(
-            createLevelProcessShaderProgram(fileContent, vertexShaderFile, renderPass->genUniformNames()),
-            std::move(renderPass)
+            shaderProgram,
+            std::make_shared<RenderPass>(shaderProgram, groupsManager)
         );
     }
+
+    const auto starShaderProgram = ShaderProgram::createInstance(fileContent, "starVs.vs", "starFs.fs");
     shadersRenderPasses.emplace_back(
-        ShaderProgram::createInstance(fileContent, "starVs.vs", "starFs.fs", star->genUniformNames()),
-        std::move(star)
+        starShaderProgram,
+        std::make_shared<RenderPass>(starShaderProgram, std::move(star))
     );
 
     return std::make_shared<LevelProcess>(
@@ -81,24 +85,25 @@ void LevelProcess::render() const {
     _frameBuffer->bindFrameBuffer();
     _frameBuffer->clear();
 
-    ShaderProgram::setActiveTexture(1);
-    ShaderProgram::bindTexture(_shadow2Texture);
+    // TODO: save the first set active texture call
+    TextureSampler::setActiveTexture(1);
+    TextureSampler::bind(_shadow2Texture);
 
-    ShaderProgram::setActiveTexture(0);
-    ShaderProgram::bindTexture(_shadowTexture);
+    TextureSampler::setActiveTexture(0);
+    TextureSampler::bind(_shadowTexture);
 
     for (const auto &shaderRenderPass: _shadersRenderPasses) {
         const auto &shader = shaderRenderPass.first;
         const auto &renderPass = shaderRenderPass.second;
         shader->use();
-        renderPass->render(shader);
+        renderPass->render();
     }
 }
 
 void LevelProcess::freeGPUMemory() {
     _frameBuffer->freeGPUMemory();
-    for(auto& shaderRenderPass: _shadersRenderPasses) {
-        auto& shader = shaderRenderPass.first;
+    for (auto &shaderRenderPass: _shadersRenderPasses) {
+        auto &shader = shaderRenderPass.first;
         shader->freeGPUMemory();
     }
 }
@@ -107,33 +112,26 @@ std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
     return std::make_shared<const GLuint>(_frameBuffer->getRenderTexture());
 }
 
-CstShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
+ShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
     const JBTypes::FileContent &fileContent,
-    const std::string &vs,
-    std::vector<std::string> &&uniformNames
+    const std::string &vs
 ) {
-    constexpr auto depthTextureName = "depthTexture";
-    constexpr auto depth2TextureName = "depth2Texture";
-
-    uniformNames.emplace_back(depthTextureName);
-    uniformNames.emplace_back(depth2TextureName);
     auto shader = ShaderProgram::createInstance(
         fileContent,
         vs,
         "levelFs.fs",
-        uniformNames,
         {"LEVEL_PASS"}
     );
     shader->use();
-    shader->bindUniformTextureIndex(depthTextureName, 0);
-    shader->bindUniformTextureIndex(depth2TextureName, 1);
+    shader->setTextureIndex("depthTexture", 0);
+    shader->setTextureIndex("depth2Texture", 1);
     return shader;
 }
 
 vecCstShaderProgram_sptr LevelProcess::getShaderPrograms() const {
     vecCstShaderProgram_sptr shaderPrograms;
-    for(auto& shaderRenderPass: _shadersRenderPasses) {
-        auto& shader = shaderRenderPass.first;
+    for (auto &shaderRenderPass: _shadersRenderPasses) {
+        auto &shader = shaderRenderPass.first;
         shaderPrograms.push_back(shader);
     }
     return shaderPrograms;

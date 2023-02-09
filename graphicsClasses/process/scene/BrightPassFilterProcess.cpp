@@ -15,24 +15,15 @@ BrightPassFilterProcess::BrightPassFilterProcess(
 ) :
     _width(width),
     _height(height),
-    _screenRenderPass(
-        createBrightPassFilterProcessShaderProgram(fileContent),
-        screen
-    ),
-    _brightPassFilterShader(_screenRenderPass.shaderProgram()),
+    _brightPassFilterShader(createBrightPassFilterProcessShaderProgram(fileContent)),
+    _screenRenderPass(_brightPassFilterShader, screen),
     _frameBuffer(ColorableFrameBuffer::createInstance(
         width,
         height,
         true,
         false
     )),
-    _hdrSceneTextureSampler(
-        TextureSampler::createInstance(
-            hdrSceneTexture,
-            0,
-            _brightPassFilterShader,
-            "textureScene"
-        )) {
+    _hdrSceneTexture(hdrSceneTexture) {
 }
 
 void BrightPassFilterProcess::render() const {
@@ -41,7 +32,7 @@ void BrightPassFilterProcess::render() const {
     FrameBuffer::setViewportSize(_width, _height);
 
     _brightPassFilterShader->use();
-    _hdrSceneTextureSampler.bind();
+    TextureSampler::bind(_hdrSceneTexture);
     _screenRenderPass.render();
 }
 
@@ -54,7 +45,7 @@ void BrightPassFilterProcess::freeGPUMemory() {
     _brightPassFilterShader->freeGPUMemory();
 }
 
-CstShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShaderProgram(
+ShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShaderProgram(
     const JBTypes::FileContent &fileContent
 ) {
     auto shader = ShaderProgram::createInstance(
@@ -63,6 +54,7 @@ CstShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShad
         "brightPassFilter.fs"
     );
     shader->use();
+    shader->setTextureIndex("textureScene", 0);
     return shader;
 }
 

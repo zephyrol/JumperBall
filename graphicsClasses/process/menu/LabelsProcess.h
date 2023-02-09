@@ -29,10 +29,10 @@ public:
         GLsizei height,
         CstPage_sptr page,
         const FontTexturesGenerator& fontTexturesGenerator,
-        TextureSampler textureSampler,
+        GLuint textureId,
         RenderGroupsManager_sptr renderGroupsManager,
         RenderPass renderPass,
-        CstShaderProgram_sptr labelsShader,
+        ShaderProgram_sptr labelsShader,
         CstMap_sptr map
     );
 
@@ -45,10 +45,10 @@ public:
 private:
     const CstPage_sptr _page;
     FontTexturesGenerator _fontTexturesGenerator;
-    TextureSampler _characterTextureSampler;
+    GLuint _characterTexture;
     RenderGroupsManager_sptr _renderGroupsManager;
     RenderPass _renderPass;
-    const CstShaderProgram_sptr _labelsShader;
+    const ShaderProgram_sptr _labelsShader;
     CstMap_sptr _map;
 };
 

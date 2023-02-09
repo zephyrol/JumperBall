@@ -12,16 +12,16 @@ LabelsProcess::LabelsProcess(
     GLsizei height,
     CstPage_sptr page,
     const FontTexturesGenerator &fontTexturesGenerator,
-    TextureSampler textureSampler,
+    GLuint textureId,
     RenderGroupsManager_sptr renderGroupsManager,
     RenderPass renderPass,
-    CstShaderProgram_sptr labelsShader,
+    ShaderProgram_sptr labelsShader,
     CstMap_sptr map
 ) :
     Rendering(width, height),
     _page(std::move(page)),
     _fontTexturesGenerator(fontTexturesGenerator),
-    _characterTextureSampler(std::move(textureSampler)),
+    _characterTexture(textureId),
     _renderGroupsManager(std::move(renderGroupsManager)),
     _renderPass(std::move(renderPass)),
     _labelsShader(std::move(labelsShader)),
@@ -65,19 +65,14 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     auto renderGroupsManager = std::make_shared<RenderGroupsManager>(meshes);
     RenderPass renderPass(labelsShader, renderGroupsManager);
 
-    auto characterTextureSampler = TextureSampler::createInstance(
-        fontTexturesGenerator.getLettersTexture(),
-        0,
-        labelsShader,
-        "characterTexture"
-    );
+    labelsShader->setTextureIndex("characterTexture", 0);
 
     return std::unique_ptr<LabelsProcess>(new LabelsProcess(
         width,
         height,
         page,
         fontTexturesGenerator,
-        std::move(characterTextureSampler),
+        fontTexturesGenerator.getLettersTexture(),
         renderGroupsManager,
         std::move(renderPass),
         std::move(labelsShader),
@@ -88,7 +83,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
 void LabelsProcess::render() const {
     _labelsShader->use();
     TextureSampler::setActiveTexture(0);
-    _characterTextureSampler.bind();
+    TextureSampler::bind(_characterTexture);
     _renderPass.render();
 }
 

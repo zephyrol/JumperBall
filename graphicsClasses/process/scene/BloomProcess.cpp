@@ -8,27 +8,15 @@ BloomProcess::BloomProcess(
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height,
-    GLuint sceneHdrTexture,
     GLuint blurTexture,
     GLint defaultFrameBuffer,
     const CstRenderGroupsManager_sptr &screen
 ) :
     _width(width),
     _height(height),
-    _screenRenderPass(createBloomProcessShaderProgram(fileContent), screen),
-    _bloomShader(_screenRenderPass.shaderProgram()),
-    _sceneHdrTextureSampler(TextureSampler::createInstance(
-        sceneHdrTexture,
-        0,
-        _bloomShader,
-        "frameSceneHDRTexture"
-    )),
-    _blurTextureSampler(TextureSampler::createInstance(
-        blurTexture,
-        1,
-        _bloomShader,
-        "frameBluredTexture")
-    ),
+    _bloomShader(createBloomProcessShaderProgram(fileContent)),
+    _screenRenderPass(_bloomShader, screen),
+    _blurTexture(blurTexture),
     _defaultFrameBuffer(defaultFrameBuffer) {
 }
 
@@ -37,11 +25,7 @@ void BloomProcess::render() const {
     FrameBuffer::setViewportSize(_width, _height);
 
     _bloomShader->use();
-
-    // Perf: hdr texture is already bound in the previous preprocess
-    static_cast<void>(_sceneHdrTextureSampler);
-
-    _blurTextureSampler.bind();
+    TextureSampler::bind(_blurTexture);
     _screenRenderPass.render();
 }
 
@@ -49,7 +33,7 @@ std::shared_ptr<const GLuint> BloomProcess::getRenderTexture() const {
     return nullptr;
 }
 
-CstShaderProgram_sptr BloomProcess::createBloomProcessShaderProgram(
+ShaderProgram_sptr BloomProcess::createBloomProcessShaderProgram(
     const JBTypes::FileContent &fileContent
 ) {
     auto shader = ShaderProgram::createInstance(
@@ -58,7 +42,13 @@ CstShaderProgram_sptr BloomProcess::createBloomProcessShaderProgram(
         "bloomFs.fs"
     );
     shader->use();
+    shader->setTextureIndex("frameSceneHDRTexture", 0);
+    shader->setTextureIndex("frameBluredTexture", 1);
     return shader;
+}
+
+void BloomProcess::freeGPUMemory() {
+    _bloomShader->freeGPUMemory();
 }
 
 vecCstShaderProgram_sptr BloomProcess::getShaderPrograms() const {

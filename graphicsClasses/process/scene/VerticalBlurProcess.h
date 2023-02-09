@@ -18,7 +18,7 @@ public:
         GLsizei width,
         GLsizei height,
         GLuint horizontalBlurTexture,
-        RenderPass_sptr screen
+        const CstRenderGroupsManager_sptr &screen
     );
 
     void render() const override;
@@ -30,12 +30,12 @@ public:
     std::shared_ptr<const GLuint> getRenderTexture() const override;
 
 private:
-    const RenderPass_sptr _screen;
+    const ShaderProgram_sptr _verticalBlurShader;
+    RenderPass _screenRenderPass;
     const ColorableFrameBuffer_uptr _frameBuffer;
-    const CstShaderProgram_sptr _verticalBlurShader;
-    const TextureSampler _horizontalBlurTextureSampler;
+    const GLuint _horizontalBlurTexture;
 
-    static CstShaderProgram_sptr createVerticalBlurProcessShaderProgram(
+    static ShaderProgram_sptr createVerticalBlurProcessShaderProgram(
         const JBTypes::FileContent &fileContent,
         GLsizei width,
         GLsizei height

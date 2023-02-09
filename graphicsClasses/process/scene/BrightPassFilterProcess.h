@@ -29,17 +29,17 @@ public:
 
     vecCstShaderProgram_sptr getShaderPrograms() const override;
 
-    static CstShaderProgram_sptr createBrightPassFilterProcessShaderProgram(
+    static ShaderProgram_sptr createBrightPassFilterProcessShaderProgram(
         const JBTypes::FileContent &fileContent
     );
 
 private:
     const GLsizei _width;
     const GLsizei _height;
+    const ShaderProgram_sptr _brightPassFilterShader;
     RenderPass _screenRenderPass;
-    const CstShaderProgram_sptr &_brightPassFilterShader;
     const ColorableFrameBuffer_uptr _frameBuffer;
-    const TextureSampler _hdrSceneTextureSampler;
+    const GLuint _hdrSceneTexture;
 };
 
 

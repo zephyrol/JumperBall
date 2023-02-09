@@ -16,17 +16,17 @@ public:
 
     static ShadowProcess_sptr createInstance(
         const JBTypes::FileContent &fileContent,
-        RenderPass_sptr blocks,
-        RenderPass_sptr items,
-        RenderPass_sptr enemies,
-        RenderPass_sptr specials,
-        RenderPass_sptr ball,
+        CstRenderGroupsManager_sptr blocks,
+        CstRenderGroupsManager_sptr items,
+        CstRenderGroupsManager_sptr enemies,
+        CstRenderGroupsManager_sptr specials,
+        CstRenderGroupsManager_sptr ball,
         bool isFirst
     );
 
     ShadowProcess(
         DepthFrameBuffer_uptr frameBuffer,
-        std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr> >&& shadersRenderPasses,
+        std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> >&& shadersRenderPasses,
         bool isFirst
     );
 
@@ -43,7 +43,7 @@ public:
 private:
     static constexpr size_t sizeDepthTexture = 1024;
     const DepthFrameBuffer_uptr _frameBuffer;
-    const std::vector<std::pair<CstShaderProgram_sptr, RenderPass_sptr> > _shadersRenderPasses;
+    const std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > _shadersRenderPasses;
     const bool _isFirst;
 };
 
