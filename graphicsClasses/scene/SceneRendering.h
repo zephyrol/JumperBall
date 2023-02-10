@@ -46,7 +46,7 @@ private:
 
     const Scene &_scene;
 
-    const vecRenderGroupsManager_sptr _renderGroupManagers;
+    const vecRenderGroupsManager_sptr _renderGroupsManagers;
     const vecRenderProcess_sptr _processes;
 
     SceneUniformBuffer _sceneUniformBuffer;

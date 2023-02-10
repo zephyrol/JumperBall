@@ -83,6 +83,13 @@ void ShadowProcess::render() const {
     }
 }
 
+void ShadowProcess::update() {
+    for (const auto &shaderRenderPass: _shadersRenderPasses) {
+        const auto &renderPass = shaderRenderPass.second;
+        renderPass->update();
+    }
+}
+
 void ShadowProcess::freeGPUMemory() {
     _frameBuffer->freeGPUMemory();
     for (auto &shaderRenderPass: _shadersRenderPasses) {

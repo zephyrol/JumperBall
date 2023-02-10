@@ -85,7 +85,6 @@ void LevelProcess::render() const {
     _frameBuffer->bindFrameBuffer();
     _frameBuffer->clear();
 
-    // TODO: save the first set active texture call
     TextureSampler::setActiveTexture(1);
     TextureSampler::bind(_shadow2Texture);
 
@@ -99,6 +98,14 @@ void LevelProcess::render() const {
         renderPass->render();
     }
 }
+
+void LevelProcess::update() {
+    for (const auto &shaderRenderPass: _shadersRenderPasses) {
+        const auto &renderPass = shaderRenderPass.second;
+        renderPass->update();
+    }
+}
+
 
 void LevelProcess::freeGPUMemory() {
     _frameBuffer->freeGPUMemory();

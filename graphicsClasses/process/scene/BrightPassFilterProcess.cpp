@@ -61,4 +61,3 @@ ShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShaderP
 vecCstShaderProgram_sptr BrightPassFilterProcess::getShaderPrograms() const {
     return {_brightPassFilterShader};
 }
-

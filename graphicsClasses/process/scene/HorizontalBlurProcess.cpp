@@ -69,4 +69,3 @@ ShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderProgr
 vecCstShaderProgram_sptr HorizontalBlurProcess::getShaderPrograms() const {
     return {_horizontalBlurShader};
 }
-

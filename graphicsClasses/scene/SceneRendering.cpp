@@ -23,7 +23,7 @@ SceneRendering::SceneRendering(
 ) :
     Rendering(width, height),
     _scene(scene),
-    _renderGroupManagers(std::move(renderGroupsManagers)),
+    _renderGroupsManagers(std::move(renderGroupsManagers)),
     _processes(std::move(processes)),
     _sceneUniformBuffer(std::move(sceneUniformBuffer)) {
 }
@@ -169,9 +169,14 @@ void SceneRendering::update() {
         glm::vec1(sceneBall->getTeleportationCoefficient())
     );
 
-    for (const auto &renderPass: _renderGroupManagers) {
-        renderPass->update();
+    for (const auto &renderGroupsManager: _renderGroupsManagers) {
+        renderGroupsManager->update();
     }
+
+    for (const auto &process: _processes) {
+        process->update();
+    }
+
 }
 
 void SceneRendering::render() const {
@@ -183,7 +188,7 @@ void SceneRendering::render() const {
 
 void SceneRendering::freeGPUMemory() {
 
-    for (const auto &renderPass: _renderGroupManagers) {
+    for (const auto &renderPass: _renderGroupsManagers) {
         renderPass->freeGPUMemory();
     }
     for (const auto &process: _processes) {

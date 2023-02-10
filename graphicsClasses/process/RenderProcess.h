@@ -34,6 +34,8 @@ public:
 
     virtual ~RenderProcess() = default;
 
+    virtual void update();
+
     virtual void render() const = 0;
 
     virtual void freeGPUMemory() = 0;

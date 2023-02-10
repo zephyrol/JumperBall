@@ -39,6 +39,7 @@ public:
         std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> >&& shadersRenderPasses
     );
 
+    void update() override;
 
     void render() const override;
 
