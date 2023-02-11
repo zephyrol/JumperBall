@@ -86,8 +86,6 @@ MeshUniforms MeshUniforms::createInstance(
 }
 
 void MeshUniforms::update() {
-    _uniformsToBind.clear();
-
     updateUniforms(_displayable->getDynamicQuaternionValues(), _uniformsVec4);
     updateUniforms(_displayable->getDynamicVec3fValues(), _uniformsVec3);
     updateUniforms(_displayable->getDynamicVec2fValues(), _uniformsVec2);

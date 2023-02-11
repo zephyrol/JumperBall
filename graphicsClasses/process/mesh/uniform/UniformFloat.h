@@ -18,7 +18,7 @@ public:
 
     UniformFloat(GLfloat value, const CstShaderProgram_sptr &shaderProgram, const std::string &name);
 
-    void bind() override;
+    void bind() const override;
 };
 
 

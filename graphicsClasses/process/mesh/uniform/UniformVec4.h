@@ -17,7 +17,7 @@ class UniformVec4 : public Uniform<glm::vec4> {
 public:
     UniformVec4(const glm::vec4 &value, const CstShaderProgram_sptr &shaderProgram, const std::string &name);
 
-    void bind() override;
+    void bind() const override;
 };
 
 #endif //JUMPERBALLAPPLICATION_UNIFORMVEC4_H

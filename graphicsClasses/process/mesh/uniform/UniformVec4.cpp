@@ -11,6 +11,6 @@ UniformVec4::UniformVec4(
 ) : Uniform(value, shaderProgram, name) {
 }
 
-void UniformVec4::bind() {
+void UniformVec4::bind() const {
     glUniform4fv(_location, 1, &_value[0]);
 }

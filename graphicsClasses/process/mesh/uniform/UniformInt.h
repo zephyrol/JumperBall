@@ -17,7 +17,7 @@ class UniformInt : public Uniform<GLint> {
 public:
     UniformInt(GLint value, const CstShaderProgram_sptr &shaderProgram, const std::string &name);
 
-    void bind() override;
+    void bind() const override;
 };
 
 

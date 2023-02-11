@@ -11,6 +11,6 @@ UniformFloat::UniformFloat(
 ) : Uniform(value, shaderProgram, name) {
 }
 
-void UniformFloat::bind() {
+void UniformFloat::bind() const {
     glUniform1fv(_location, 1, &_value);
 }

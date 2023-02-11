@@ -12,7 +12,10 @@ RenderPass::RenderPass(
     CstRenderGroupsManager_sptr renderGroupsManager
 ) :
     _shaderProgram(std::move(shaderProgram)),
-    _renderGroupsManager(std::move(renderGroupsManager)) {
+    _renderGroupsManager(std::move(renderGroupsManager)),
+    _currentRenderGroups(_renderGroupsManager->getRenderGroups()),
+    _uniforms(_renderGroupsManager->genUniforms(_shaderProgram))
+{
 }
 
 void RenderPass::update() {
@@ -27,17 +30,13 @@ void RenderPass::update() {
     }
 }
 
-void RenderPass::bindUniforms() const {
-    for (const auto &meshUniforms: _uniforms) {
-        meshUniforms.bind();
-    }
-}
-
 void RenderPass::render() const {
-    bindUniforms();
-    _renderGroupsManager->render();
-}
+    const auto& currentRenderGroups = *_currentRenderGroups;
+    for(size_t i = 0; i < currentRenderGroups.size(); ++i){
+        // Bind the uniforms related to the group
+       _uniforms[i].bind();
 
-const CstShaderProgram_sptr &RenderPass::shaderProgram() const {
-    return _shaderProgram;
+       // Render the group
+       currentRenderGroups[i].render();
+    }
 }

@@ -43,8 +43,6 @@ public:
 
     void update();
 
-    const CstShaderProgram_sptr& shaderProgram() const;
-
 private:
 
     const CstShaderProgram_sptr _shaderProgram;
@@ -58,8 +56,6 @@ private:
     std::shared_ptr<const std::vector<RenderGroup>> _currentRenderGroups;
 
     std::vector<MeshUniforms> _uniforms;
-
-    void bindUniforms() const;
 
 };
 

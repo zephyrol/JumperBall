@@ -10,6 +10,6 @@ UniformVec3::UniformVec3(
 ) : Uniform(value, shaderProgram, name) {
 }
 
-void UniformVec3::bind() {
+void UniformVec3::bind() const {
     glUniform3fv(_location, 1, &_value[0]);
 }

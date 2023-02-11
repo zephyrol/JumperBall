@@ -11,6 +11,6 @@ UniformInt::UniformInt(
 ) : Uniform(value, shaderProgram, name) {
 }
 
-void UniformInt::bind() {
+void UniformInt::bind() const {
     glUniform1iv(_location, 1, &_value);
 }

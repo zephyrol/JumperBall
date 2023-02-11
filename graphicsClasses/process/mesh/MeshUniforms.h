@@ -40,7 +40,7 @@ private:
     const vecUniformVec2_sptr _uniformsVec2;
     const vecUniformFloat_sptr _uniformsFloat;
     const vecUniformInt_sptr _uniformsInt;
-    vecUniformBase_sptr _uniformsToBind;
+    const vecUniformBase_sptr _uniformsToBind;
 
     template<typename UniformType, typename DynamicType>
     static std::vector<std::shared_ptr<UniformType>> createUniformsFromDynamics(
@@ -80,10 +80,7 @@ void MeshUniforms::updateUniforms(const std::vector<T1> &newValues, T2 &currentU
     for (size_t i = 0; i < currentUniforms.size(); ++i) {
         auto &currentUniform = currentUniforms[i];
         const auto newValue = Utility::convertToOpenGLFormat(newValues[i]);
-        if (newValue != currentUniform->getValue()) {
-            currentUniform->update(newValue);
-            _uniformsToBind.push_back(currentUniform);
-        }
+        currentUniform->update(newValue);
     }
 }
 

@@ -37,7 +37,7 @@ public:
      * Use this function only if the value has changed.
      * Warning: The referenced shader program needs to be used before calling this method!
      */
-    virtual void bind() = 0;
+    virtual void bind() const = 0;
 
     virtual ~UniformBase() = default;
 

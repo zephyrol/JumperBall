@@ -11,8 +11,8 @@
 #include "Window.h"
 
 
-GLFWwindow*initLibraries() {
-    GLFWwindow*window;
+GLFWwindow *initLibraries() {
+    GLFWwindow *window;
     if (!glfwInit()) {
         std::cerr << "Failed to init glfw" << std::endl;
     }
@@ -46,7 +46,7 @@ void cleanLibraries() {
     glfwTerminate();
 }
 
-int main (int argc, char**argv) {
+int main(int argc, char **argv) {
 
     if (argc == 3) {
 
@@ -62,10 +62,6 @@ int main (int argc, char**argv) {
         const std::string arg(argv[2]);
         if (arg == "-compress") {
             MapGenerator::compressNew(file);
-            //std::ifstream mapFile("outMap.txt");
-            //std::ifstream mapFile2(fileToOpen);
-            //Map map(MapGenerator::createMapInfo(mapFile));
-            //MapGenerator::verificationMap(mapFile2, map);
         } else {
             std::cerr << "ERROR: Unknown option" << std::endl;
             return EXIT_FAILURE;
@@ -73,7 +69,7 @@ int main (int argc, char**argv) {
         return EXIT_SUCCESS;
     }
 
-    GLFWwindow*glfwWindow = initLibraries();
+    GLFWwindow *glfwWindow = initLibraries();
 
     int frameBufferWidth;
     int frameBufferHeight;

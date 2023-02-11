@@ -38,8 +38,6 @@ public:
 
     void freeGPUMemory();
 
-    void render() const;
-
     std::shared_ptr<const std::vector<RenderGroup>> getRenderGroups() const;
 
     /**

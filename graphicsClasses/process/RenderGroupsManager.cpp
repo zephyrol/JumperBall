@@ -4,7 +4,7 @@
 
 #include "RenderGroupsManager.h"
 
-RenderGroupsManager::RenderGroupsManager(vecMesh_sptr meshes):
+RenderGroupsManager::RenderGroupsManager(vecMesh_sptr meshes) :
     _meshes(std::move(meshes)),
     _updatableMeshesStates(std::accumulate(
         _meshes.begin(),
@@ -16,16 +16,17 @@ RenderGroupsManager::RenderGroupsManager(vecMesh_sptr meshes):
             }
             return updatableMeshes;
         })),
-    _renderGroups(generateRenderGroups())
-{
+    _renderGroups(generateRenderGroups()) {
 }
 
 void RenderGroupsManager::update() {
     bool needsGroupsRedefinition = false;
 
-    for (const auto &updatableMeshState: _updatableMeshesStates) {
-        if (updatableMeshState.mesh->getGlobalState() != updatableMeshState.currentState) {
+    for (auto &updatableMeshState: _updatableMeshesStates) {
+        const auto newMeshGlobalState = updatableMeshState.mesh->getGlobalState();
+        if (newMeshGlobalState != updatableMeshState.currentState) {
             needsGroupsRedefinition = true;
+            updatableMeshState.currentState = newMeshGlobalState;
         }
     }
 
@@ -36,7 +37,7 @@ void RenderGroupsManager::update() {
 }
 
 void RenderGroupsManager::freeGPUMemory() {
-    for(auto& renderGroup: *_renderGroups) {
+    for (auto &renderGroup: *_renderGroups) {
         renderGroup.freeGPUMemory();
     }
 }
@@ -55,13 +56,12 @@ std::shared_ptr<std::vector<RenderGroup>> RenderGroupsManager::generateRenderGro
     }
 
     // 1. Create united meshes group
-    if(!unitedMeshes.empty()) {
-        const CstMesh_sptr headMesh = unitedMeshes.front();
+    if (!unitedMeshes.empty()) {
         renderGroups.emplace_back(RenderGroup::createInstance(std::move(unitedMeshes)));
     }
 
     // 2. Create separated mesh groups
-    for(const auto& separatedMesh: separatedMeshes) {
+    for (const auto &separatedMesh: separatedMeshes) {
         renderGroups.emplace_back(
             RenderGroup::createInstance(std::initializer_list<Mesh_sptr>({separatedMesh}))
         );
@@ -74,16 +74,10 @@ std::shared_ptr<const std::vector<RenderGroup>> RenderGroupsManager::getRenderGr
     return _renderGroups;
 }
 
-std::vector<MeshUniforms> RenderGroupsManager::genUniforms(const CstShaderProgram_sptr& shaderProgram) const {
+std::vector<MeshUniforms> RenderGroupsManager::genUniforms(const CstShaderProgram_sptr &shaderProgram) const {
     decltype(genUniforms(shaderProgram)) meshUniforms;
-    for (const auto& renderGroup: *_renderGroups) {
+    for (const auto &renderGroup: *_renderGroups) {
         meshUniforms.emplace_back(renderGroup.genUniforms(shaderProgram));
     }
     return meshUniforms;
-}
-
-void RenderGroupsManager::render() const {
-    for(const auto& renderGroup: *_renderGroups) {
-       renderGroup.render();
-    }
 }

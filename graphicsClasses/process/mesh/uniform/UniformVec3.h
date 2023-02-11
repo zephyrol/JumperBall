@@ -17,7 +17,7 @@ class UniformVec3 : public Uniform<glm::vec3> {
 public:
     UniformVec3(const glm::vec3 &value, const CstShaderProgram_sptr &shaderProgram, const std::string &name);
 
-    void bind() override;
+    void bind() const override;
 };
 
 #endif //JUMPERBALLAPPLICATION_UNIFORMVEC3_H
