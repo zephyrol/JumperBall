@@ -58,7 +58,7 @@ void DarkBall::update() {
         [&getRemainder](float distanceTravelled,
                         float jumpDistance,
                         size_t length) -> float {
-            const unsigned int nbOfjumps =
+            const auto nbOfjumps =
                 static_cast <size_t>(distanceTravelled / jumpDistance);
             const float reminder = getRemainder(distanceTravelled, jumpDistance);
 

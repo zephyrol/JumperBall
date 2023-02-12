@@ -41,7 +41,7 @@ public:
 
     bool requestToLeave() const;
 
-    void resize(size_t screenWidth, size_t screenHeight);
+    void resize(int screenWidth, int screenHeight);
 
     void stop();
 

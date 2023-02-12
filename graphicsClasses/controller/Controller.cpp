@@ -129,7 +129,7 @@ bool Controller::requestToLeave() const {
     return _requestToLeave;
 }
 
-void Controller::resize(size_t screenWidth, size_t screenHeight) {
+void Controller::resize(int screenWidth, int screenHeight) {
     float ratio = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
     _scene->updateScreenRatio(ratio);
     _menu->resize(ratio);
