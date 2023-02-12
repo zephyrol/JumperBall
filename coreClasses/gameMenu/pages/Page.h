@@ -45,10 +45,6 @@ public:
 
     virtual std::vector<std::string> shaderDefines() const;
 
-    virtual std::vector<float> getUniformFloatValues(const CstMap_sptr &map) const;
-
-    virtual std::vector<int> getUniformIntValues(const CstMap_sptr &map) const;
-
     virtual vecCstTextNode_uptr genTextNodes() const = 0;
 
     virtual std::string getVertexShaderName() const = 0;

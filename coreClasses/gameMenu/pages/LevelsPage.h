@@ -29,7 +29,7 @@ public:
         Player_sptr &&player,
         Node_sptr &&levelsTitle,
         std::vector<Node_sptr> &&levels,
-        std::shared_ptr<ArrowLabel> &&arrowLabel,
+        std::shared_ptr<ArrowLabel> arrowLabel,
         const Page_sptr &parent
     );
 

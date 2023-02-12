@@ -17,10 +17,6 @@ using vecNode_sptr = std::vector<Node_sptr>;
 using CstNode_wptr = std::weak_ptr<const Node>;
 using vecCstNode_wptr = std::vector<CstNode_wptr>;
 
-using Node_rptr = Node *;
-using CstNode_rptr = const Node *;
-using vecNode_rptr = std::vector<Node_rptr>;
-
 class Node {
 protected:
 

@@ -23,7 +23,11 @@ using vecLabel_sptr = std::vector<Label_sptr>;
 class Label : public Displayable {
 
 public:
-    Label(Node_sptr node, const JBTypes::Color &color, short id);
+    Label(
+        Node_sptr node,
+        const JBTypes::Color &color,
+        short id
+    );
 
     virtual vecLabelGeometry genGeometries() const;
 
@@ -31,9 +35,24 @@ public:
 
     const Node_sptr &getNode();
 
+    /**
+     * Indicates the page containing the label.
+     * Every label in a page shared the same dynamic uniform values, so the parent page
+     * is used to access them.
+     */
+    void setPage(const CstDisplayable_sptr& page);
+
     const JBTypes::Color& color() const;
 
     std::vector<short> getStaticShortValues() const override;
+
+    DynamicNames getDynamicIntNames() const override;
+
+    DynamicValues<int> getDynamicIntValues() const override;
+
+    DynamicNames getDynamicFloatNames() const override;
+
+    DynamicValues<float> getDynamicFloatValues() const override;
 
     GlobalState getGlobalState() const override;
 
@@ -41,6 +60,14 @@ public:
 
 protected:
     const Node_sptr _node;
+
+    /**
+     * Reference to the page containing the label.
+     * Every label in a page shared the same dynamic uniform values, so the parent page
+     * is used to access them.
+     */
+    CstDisplayable_wptr _page;
+
     const JBTypes::Color _color;
     const short _id;
 

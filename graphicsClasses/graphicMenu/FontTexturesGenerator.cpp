@@ -173,15 +173,16 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
             static_cast<float>(nodePixelWidth) / static_cast<float>(nodePixelHeight)
         );
 
-        textLabels.push_back(std::make_shared<TextLabel>(
+        auto textLabel =  std::make_shared<TextLabel>(
             std::move(textNode),
             centeredNode,
             lettersUvs,
             getCharacterLocalTransforms(transforms, nodePixelWidth, nodePixelHeight),
             nodePixelHeight,
             JBTypes::Color::Blue
-        ));
-
+        );
+        textLabel->setPage(page);
+        textLabels.push_back(std::move(textLabel));
     }
 
     for (const auto &letterTransform: lettersTexture.graphicAlphabet) {

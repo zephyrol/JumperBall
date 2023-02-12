@@ -15,9 +15,9 @@ using vecCstTextNode_uptr = std::vector<CstTextNode_uptr>;
 class TextNode {
 
 public:
-    explicit TextNode(Node_sptr node, std::string &&text, int id);
+    explicit TextNode(Node_sptr node, std::string &&text, short id);
 
-    int getId() const;
+    short getId() const;
 
     const Node_sptr &node() const;
 
@@ -26,7 +26,7 @@ public:
 private:
     const Node_sptr _node;
     const std::string _text;
-    const int _id;
+    const short _id;
 };
 
 

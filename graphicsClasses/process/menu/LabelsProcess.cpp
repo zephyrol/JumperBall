@@ -28,7 +28,6 @@ LabelsProcess::LabelsProcess(
     _map(std::move(map)) {
 }
 
-
 std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     const JBTypes::FileContent &fileContent,
     const FontTexturesGenerator::FTContent &ftContent,

@@ -15,7 +15,7 @@ using Displayable_sptr = std::shared_ptr<Displayable>;
 using CstDisplayable_sptr = std::shared_ptr<const Displayable>;
 using vecCstDisplayable_sptr = std::vector<CstDisplayable_sptr>;
 using vecDisplayable_sptr = std::vector<Displayable_sptr>;
-using Displayable_uptr = std::unique_ptr<Displayable>;
+using CstDisplayable_wptr = std::weak_ptr<const Displayable>;
 
 class Displayable {
 

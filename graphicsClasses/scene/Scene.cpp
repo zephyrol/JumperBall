@@ -53,6 +53,8 @@ std::string Scene::update() {
     }
 
     auto mapUpdateOutput = _map->update(actionRequest);
+    _player->setRemainingTime(_map->remainingTime());
+
     _camera->update(status, actionRequest == Ball::ActionRequest::MoveCamera);
 
     _currentKey = Scene::ActionKey::Nothing;

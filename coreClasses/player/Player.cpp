@@ -23,6 +23,7 @@ Player::Player(DoubleChronometer_sptr doubleChronometer) :
     _timeLevel(1),
     _clockItemLevel(1),
     _bonusLevel(1),
+    _remainingTime(0.f),
     _wantsToQuit(false),
     _needsSaveFile(false) {
 }
@@ -170,4 +171,12 @@ void Player::setAsInMenu() {
         _status = Player::Status::InMenu;
         _doubleChronometer->stopSecond();
     }
+}
+
+void Player::setRemainingTime(float remainingTime) {
+    _remainingTime = remainingTime;
+}
+
+float Player::getRemainingTime() const {
+    return _remainingTime;
 }

@@ -9,10 +9,16 @@
 
 #include <utility>
 
-Label::Label(Node_sptr node, const JBTypes::Color &color, short id) :
+Label::Label(
+    Node_sptr node,
+    const JBTypes::Color &color,
+    short id
+) :
     _node(std::move(node)),
+    _page(),
     _color(color),
-    _id(id){
+    _id(id)
+{
 }
 
 std::string Label::message() const {
@@ -90,4 +96,24 @@ LabelGeometry Label::createDisplayableQuad(
 
 std::vector<short> Label::getStaticShortValues() const {
     return {_id};
+}
+
+void Label::setPage(const CstDisplayable_sptr &page) {
+    _page = page;
+}
+
+Displayable::DynamicNames Label::getDynamicIntNames() const {
+    return _page.lock()->getDynamicIntNames();
+}
+
+Displayable::DynamicValues<int> Label::getDynamicIntValues() const {
+    return _page.lock()->getDynamicIntValues();
+}
+
+Displayable::DynamicNames Label::getDynamicFloatNames() const {
+    return _page.lock()->getDynamicFloatNames();
+}
+
+Displayable::DynamicValues<float> Label::getDynamicFloatValues() const {
+    return _page.lock()->getDynamicFloatValues();
 }

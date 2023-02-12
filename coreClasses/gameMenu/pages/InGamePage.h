@@ -20,7 +20,7 @@ class InGamePage : public Page {
 public:
     explicit InGamePage(
         Player_sptr &&player,
-        ArrowLabel_sptr &&arrowLabel,
+        ArrowLabel_sptr arrowLabel,
         Node_sptr &&leftDigitNode,
         Node_sptr &&middleDigitNode,
         Node_sptr &&rightDigitNode,
@@ -46,9 +46,6 @@ public:
     DynamicNames getDynamicIntNames() const override;
 
     DynamicValues<int> getDynamicIntValues() const override;
-
-    // TODO: Adapt !
-    std::vector<int> getUniformIntValues(const CstMap_sptr &map) const override;
 
     std::string getVertexShaderName() const override;
 

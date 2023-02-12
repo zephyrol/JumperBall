@@ -7,7 +7,6 @@
 #include "gameMenu/nodes/ScaledNode.h"
 #include "gameMenu/nodes/CenteredNode.h"
 #include "gameMenu/nodes/UpNode.h"
-#include "gameMenu/nodes/DownNode.h"
 #include "gameMenu/nodes/LeftNode.h"
 #include "gameMenu/nodes/RightNode.h"
 
@@ -17,7 +16,7 @@ Page_wptr InGamePage::parent() {
 
 InGamePage::InGamePage(
     Player_sptr &&player,
-    ArrowLabel_sptr &&arrowLabel,
+    ArrowLabel_sptr arrowLabel,
     Node_sptr &&leftDigitNode,
     Node_sptr &&middleDigitNode,
     Node_sptr &&rightDigitNode,
@@ -30,7 +29,6 @@ InGamePage::InGamePage(
     _rightDigitNode(std::move(rightDigitNode)) {
 }
 
-
 InGamePage_sptr InGamePage::createInstance(Player_sptr player, const Page_sptr &parent, float ratio) {
     auto nodes = createNodes(ratio);
     auto arrowLabel = std::make_shared<ArrowLabel>(
@@ -38,14 +36,16 @@ InGamePage_sptr InGamePage::createInstance(Player_sptr player, const Page_sptr &
         JBTypes::Color::Blue,
         InGamePage::arrowLabelId
     );
-    return std::make_shared<InGamePage>(
+    auto inGamePage = std::make_shared<InGamePage>(
         std::move(player),
-        std::move(arrowLabel),
+        arrowLabel,
         std::move(nodes[1]),
         std::move(nodes[2]),
         std::move(nodes[3]),
         parent
     );
+    arrowLabel->setPage(inGamePage);
+    return inGamePage;
 }
 
 Page_sptr InGamePage::click(float, float) {
@@ -63,7 +63,7 @@ void InGamePage::resize(float ratio) {
 vecCstTextNode_uptr InGamePage::genTextNodes() const {
     decltype(genTextNodes()) textNodes;
 
-    int nodeCount = 0;
+    short nodeCount = 0;
     for (const auto &node: std::vector<Node_sptr>{_leftDigitNode, _middleDigitNode, _rightDigitNode}) {
         for (unsigned int i = 0; i < 10; ++i) {
             textNodes.push_back(CstTextNode_uptr(new TextNode(
@@ -102,16 +102,6 @@ std::vector<std::string> InGamePage::shaderDefines() const {
     return {"DISCARDING", "TEST_ALPHA_TEXTURE"};
 }
 
-std::vector<int> InGamePage::getUniformIntValues(const CstMap_sptr &map) const {
-    const auto remainingTime = static_cast<int> (std::ceilf(map->remainingTime()));
-    const auto leftDigit = remainingTime / 100;
-    const auto middleDigit = (remainingTime % 100) / 10;
-    const auto rightDigit = remainingTime % 10;
-    constexpr auto middleDigitIdOffset = 10;
-    constexpr auto rightDigitIdOffset = middleDigitIdOffset + 10;
-    return { leftDigit, middleDigit + middleDigitIdOffset, rightDigit + rightDigitIdOffset};
-}
-
 const int InGamePage::arrowLabelId = -1;
 
 std::string InGamePage::getVertexShaderName() const {
@@ -123,5 +113,11 @@ Displayable::DynamicNames InGamePage::getDynamicIntNames() const {
 }
 
 Displayable::DynamicValues<int> InGamePage::getDynamicIntValues() const {
-    return Displayable::getDynamicIntValues();
+    const auto remainingTime = static_cast<int> (std::ceilf(_player->getRemainingTime()));
+    const auto leftDigit = remainingTime / 100;
+    const auto middleDigit = (remainingTime % 100) / 10;
+    const auto rightDigit = remainingTime % 10;
+    constexpr auto middleDigitIdOffset = 10;
+    constexpr auto rightDigitIdOffset = middleDigitIdOffset + 10;
+    return { leftDigit, middleDigit + middleDigitIdOffset, rightDigit + rightDigitIdOffset};
 }

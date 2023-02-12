@@ -8,7 +8,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "scene/Ball.h"
 #include "system/UpdateOutput.h"
 #include "system/DoubleChronometer.h"
 
@@ -71,6 +70,10 @@ public:
 
     void escapeAction();
 
+    void setRemainingTime(float remainingTime);
+
+    float getRemainingTime() const;
+
     Status status() const;
 
     void setAsInGame();
@@ -112,6 +115,8 @@ private:
     unsigned int _timeLevel;
     unsigned int _clockItemLevel;
     unsigned int _bonusLevel;
+
+    float _remainingTime;
     bool _wantsToQuit;
     bool _needsSaveFile;
 };

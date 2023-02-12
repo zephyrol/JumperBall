@@ -16,7 +16,7 @@ LevelsPage::LevelsPage(
     Player_sptr &&player,
     Node_sptr &&levelsTitle,
     std::vector<Node_sptr> &&levels,
-    std::shared_ptr<ArrowLabel> &&arrowLabel,
+    std::shared_ptr<ArrowLabel> arrowLabel,
     const Page_sptr &parent
 ) : ScrollablePage(
     std::move(player),
@@ -40,13 +40,15 @@ LevelsPage_sptr LevelsPage::createInstance(
     auto levelsTitleNode = createLevelsTitleNode(headerNode);
     auto arrowLabel = createArrowLabel(headerNode);
 
-    return std::make_shared<LevelsPage>(
+    auto levelsPage = std::make_shared<LevelsPage>(
         std::move(player),
         std::move(levelsTitleNode),
         std::move(levelsNode),
-        std::move(arrowLabel),
+        arrowLabel,
         parent
     );
+    arrowLabel->setPage(levelsPage);
+    return levelsPage;
 }
 
 Node_sptr LevelsPage::createHeaderNode(const Node_sptr &commonNode) {

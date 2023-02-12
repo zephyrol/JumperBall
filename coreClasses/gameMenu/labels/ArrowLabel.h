@@ -15,7 +15,11 @@ using ArrowLabel_sptr = std::shared_ptr<ArrowLabel>;
 
 class ArrowLabel : public Label {
 public:
-    ArrowLabel(Node_sptr node, const JBTypes::Color &color, int id);
+    ArrowLabel(
+        Node_sptr node,
+        const JBTypes::Color &color,
+        short id
+    );
 
     ~ArrowLabel() override = default;
 
