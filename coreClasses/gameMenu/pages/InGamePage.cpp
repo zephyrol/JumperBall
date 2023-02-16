@@ -44,7 +44,6 @@ InGamePage_sptr InGamePage::createInstance(Player_sptr player, const Page_sptr &
         std::move(nodes[3]),
         parent
     );
-    arrowLabel->setPage(inGamePage);
     return inGamePage;
 }
 

@@ -181,7 +181,6 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
             nodePixelHeight,
             JBTypes::Color::Blue
         );
-        textLabel->setPage(page);
         textLabels.push_back(std::move(textLabel));
     }
 

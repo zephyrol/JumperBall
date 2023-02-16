@@ -6,13 +6,13 @@
 
 #include <utility>
 #include "componentsGeneration/MeshGenerator.h"
+#include "gameMenu/labels/RenderableLabel.h"
 
 LabelsProcess::LabelsProcess(
     GLsizei width,
     GLsizei height,
     CstPage_sptr page,
     const FontTexturesGenerator &fontTexturesGenerator,
-    GLuint textureId,
     RenderGroupsManager_sptr renderGroupsManager,
     RenderPass renderPass,
     ShaderProgram_sptr labelsShader,
@@ -21,7 +21,6 @@ LabelsProcess::LabelsProcess(
     Rendering(width, height),
     _page(std::move(page)),
     _fontTexturesGenerator(fontTexturesGenerator),
-    _characterTexture(textureId),
     _renderGroupsManager(std::move(renderGroupsManager)),
     _renderPass(std::move(renderPass)),
     _labelsShader(std::move(labelsShader)),
@@ -49,7 +48,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     );
     for (const auto &label: labels) {
         meshes.push_back(std::make_shared<Mesh>(
-            label, MeshGenerator::genGeometricShapesFromLabel(*label)
+            std::make_shared<RenderableLabel>(label, page), MeshGenerator::genGeometricShapesFromLabel(*label)
         ));
     }
 
@@ -71,7 +70,6 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
         height,
         page,
         fontTexturesGenerator,
-        fontTexturesGenerator.getLettersTexture(),
         renderGroupsManager,
         std::move(renderPass),
         std::move(labelsShader),
@@ -82,7 +80,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
 void LabelsProcess::render() const {
     _labelsShader->use();
     TextureSampler::setActiveTexture(0);
-    TextureSampler::bind(_characterTexture);
+    TextureSampler::bind(_fontTexturesGenerator.getLettersTexture());
     _renderPass.render();
 }
 

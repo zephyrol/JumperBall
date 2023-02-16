@@ -29,7 +29,6 @@ public:
         GLsizei height,
         CstPage_sptr page,
         const FontTexturesGenerator& fontTexturesGenerator,
-        GLuint textureId,
         RenderGroupsManager_sptr renderGroupsManager,
         RenderPass renderPass,
         ShaderProgram_sptr labelsShader,
@@ -45,7 +44,6 @@ public:
 private:
     const CstPage_sptr _page;
     FontTexturesGenerator _fontTexturesGenerator;
-    GLuint _characterTexture;
     RenderGroupsManager_sptr _renderGroupsManager;
     RenderPass _renderPass;
     const ShaderProgram_sptr _labelsShader;

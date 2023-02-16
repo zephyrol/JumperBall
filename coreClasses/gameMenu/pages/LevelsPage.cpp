@@ -40,15 +40,13 @@ LevelsPage_sptr LevelsPage::createInstance(
     auto levelsTitleNode = createLevelsTitleNode(headerNode);
     auto arrowLabel = createArrowLabel(headerNode);
 
-    auto levelsPage = std::make_shared<LevelsPage>(
+    return std::make_shared<LevelsPage>(
         std::move(player),
         std::move(levelsTitleNode),
         std::move(levelsNode),
         arrowLabel,
         parent
     );
-    arrowLabel->setPage(levelsPage);
-    return levelsPage;
 }
 
 Node_sptr LevelsPage::createHeaderNode(const Node_sptr &commonNode) {
