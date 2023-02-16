@@ -292,7 +292,7 @@ void Camera::setRatio(float ratio) {
 }
 
 float Camera::computeFovY(float ratio) noexcept {
-    constexpr float defaultFovY = 1.22173f;// 70 degrees;
+    constexpr float defaultFovY = static_cast<float>(65 * M_PI) / 180.f;// 65 degrees;
     return ratio > 1.f
            ? defaultFovY
            : 2.f * atanf((1.f / ratio) * tanf(defaultFovY / 2.f));
