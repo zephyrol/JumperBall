@@ -5,6 +5,6 @@
 #include "SaveFileOutput.h"
 
 SaveFileOutput::SaveFileOutput(std::string &&saveContent)
-    : UpdateOutput("Save", std::move(saveContent)) {
+    : UpdateOutput("save", std::move(saveContent)) {
 
 }

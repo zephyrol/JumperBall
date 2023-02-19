@@ -66,7 +66,8 @@ JBTypes::FileContent Window::createFilesContent() {
         fileDistPath[mapName] = "maps/" + mapName;
     }
 
-    fileDistPath["save"] = "save/save.txt";
+    constexpr auto saveFileName = "save.txt";
+    fileDistPath[saveFileName] = std::string("save/") + saveFileName;
 
     JBTypes::FileContent filesContent;
     for (const auto &item: fileDistPath) {
@@ -122,7 +123,7 @@ void Window::writeSaveFile(const std::string& updateOutput) {
     bool foundFile = false;
     const auto searchingDirs = {"./", "bin/"};
     std::ofstream outFile;
-    const std::string fileName = "save.txt";
+    const std::string fileName = "save/save.txt";
     for (const auto &searchingDir: searchingDirs) {
         if (!foundFile) {
             outFile.open(searchingDir + fileName, std::ofstream::out | std::ofstream::trunc);
@@ -277,8 +278,11 @@ void Window::run() {
     unsigned int counter = 0;
     while (!inputManagement()) {
 
-        _controller.update();
+        const auto updateOutput = _controller.update();
         _controller.render();
+
+        writeSaveFile(updateOutput);
+
         glfwSwapBuffers(_window);
         glfwPollEvents();
 

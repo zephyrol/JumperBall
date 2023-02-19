@@ -5,6 +5,6 @@
 #include "SoundOutput.h"
 
 SoundOutput::SoundOutput(std::string &&soundName)
-    : UpdateOutput("Sound", std::move(soundName)) {
+    : UpdateOutput("sound", std::move(soundName)) {
 
 }

@@ -37,7 +37,7 @@ public:
         unsigned int bonusLevel,
         std::vector<bool> ballSkins,
         unsigned int currentBallSkin,
-        bool frenchLangageIsActivated
+        bool frenchLanguageIsActivated
     );
 
     static Player_sptr createInstance(
@@ -57,13 +57,13 @@ public:
 
     CstChronometer_sptr getCreationChronometer() const;
 
-    vecCstUpdateOutput_sptr &&retrieveUpdateOutput();
-
     size_t levelProgression() const;
 
     void setCurrentLevel(size_t levelNumber);
 
     size_t getCurrentLevel() const;
+
+    unsigned int getRollSpeedLevel() const;
 
     unsigned int getMoney() const;
 
@@ -80,8 +80,6 @@ public:
     void speedLevelUp();
 
     void gravityLevelUp();
-
-    void fireResistanceLevelUp();
 
     void timeLevelUp();
 
@@ -107,6 +105,8 @@ public:
 
     bool isAWinner() const;
 
+    unsigned int getCurrentBallSkin() const;
+
     void setAsLoser();
 
     bool isALoser() const;
@@ -116,7 +116,6 @@ public:
     std::string genSaveContent();
 
     static constexpr unsigned int maxLevel = 2;
-
 
     template<typename T>
     static T readValue(std::istringstream& stream);
@@ -154,7 +153,7 @@ private:
     std::vector<bool> _ballSkins;
     unsigned int _currentBallSkin;
 
-    bool _frenchLangageIsActivated;
+    bool _frenchLanguageIsActivated;
 
     size_t _currentLevel;
     float _remainingTime;

@@ -27,7 +27,7 @@ Player::Player(
     unsigned int bonusLevel,
     std::vector<bool> ballSkins,
     unsigned int currentBallSkin,
-    bool frenchLangageIsActivated
+    bool frenchLanguageIsActivated
 ) :
     _doubleChronometer(std::move(doubleChronometer)),
     _status(Player::Status::InMenu),
@@ -39,7 +39,7 @@ Player::Player(
     _diamondsCounter(diamondsCounter),
     _crystals(std::move(crystals)),
     _crystalsCounter(crystalsCounter),
-    _rollSpeedLevel(currentRollSpeed),
+    _rollSpeedLevel(rollSpeedLevel),
     _currentRollSpeed(currentRollSpeed),
     _jumpSpeedLevel(jumpSpeedLevel),
     _currentJumpSpeed(currentJumpSpeed),
@@ -50,7 +50,7 @@ Player::Player(
     _bonusLevel(bonusLevel),
     _ballSkins(std::move(ballSkins)),
     _currentBallSkin(currentBallSkin),
-    _frenchLangageIsActivated(frenchLangageIsActivated),
+    _frenchLanguageIsActivated(frenchLanguageIsActivated),
     _currentLevel(_levelProgression),
     _remainingTime(0.f),
     _wantsToQuit(false),
@@ -62,7 +62,6 @@ size_t Player::levelProgression() const {
 }
 
 void Player::unlockNewLevel() {
-    ++_levelProgression;
 }
 
 void Player::decreaseMoney(unsigned int value) {
@@ -79,6 +78,10 @@ void Player::addDiamond() {
 
 void Player::increaseMoney(unsigned int value) {
     _money += value;
+}
+
+unsigned int Player::getCurrentBallSkin() const {
+    return _currentBallSkin;
 }
 
 unsigned int Player::getMoney() const {
@@ -112,11 +115,6 @@ void Player::speedLevelUp() {
 void Player::setCurrentLevel(size_t levelNumber) {
     _currentLevel = levelNumber;
     _status = Player::Status::InTransition;
-
-    // Update level number
-    if (levelNumber > _levelProgression) {
-        _levelProgression = levelNumber;
-    }
 }
 
 size_t Player::getCurrentLevel() const {
@@ -140,6 +138,9 @@ void Player::escapeAction() {
 void Player::setAsWinner() {
     _needsSaveFile = true;
     setAsInMenu();
+    if (_currentLevel == _levelProgression) {
+        ++_levelProgression;
+    }
     _gameStatus = GameStatus::Winner;
 }
 
@@ -182,31 +183,28 @@ std::string Player::genSaveContent() {
     };
 
     std::string saveContent =
-        std::to_string(_money)
-        + boolVectorToString(_diamonds)
-        + std::to_string(_diamondsCounter)
-        + boolVectorToString(_crystals)
-        + std::to_string(_crystalsCounter)
-        + std::to_string(_rollSpeedLevel)
-        + std::to_string(_currentRollSpeed)
-        + std::to_string(_jumpSpeedLevel)
-        + std::to_string(_currentJumpSpeed)
-        + std::to_string(_jumpSpeedLevel)
-        + std::to_string(_currentJumpSpeed)
-        + std::to_string(_turningSpeedLevel)
-        + std::to_string(_currentTurningSpeed)
-        + std::to_string(_timeLevel)
-        + std::to_string(_clockItemLevel)
-        + std::to_string(_bonusLevel)
-        + boolVectorToString(_ballSkins)
-        + std::to_string(_currentJumpSpeed)
-        + (_frenchLangageIsActivated ? "1" : "0");
+        std::to_string(_money) + " "
+        + std::to_string(_levelProgression) + " "
+        + boolVectorToString(_diamonds) + " "
+        + std::to_string(_diamondsCounter) + " "
+        + boolVectorToString(_crystals) + " "
+        + std::to_string(_crystalsCounter) + " "
+        + std::to_string(_rollSpeedLevel) + " "
+        + std::to_string(_currentRollSpeed) + " "
+        + std::to_string(_jumpSpeedLevel) + " "
+        + std::to_string(_currentJumpSpeed) + " "
+        + std::to_string(_jumpSpeedLevel) + " "
+        + std::to_string(_currentJumpSpeed) + " "
+        + std::to_string(_turningSpeedLevel) + " "
+        + std::to_string(_currentTurningSpeed) + " "
+        + std::to_string(_timeLevel) + " "
+        + std::to_string(_clockItemLevel) + " "
+        + std::to_string(_bonusLevel) + " "
+        + boolVectorToString(_ballSkins) + " "
+        + std::to_string(_currentJumpSpeed) + " "
+        + (_frenchLanguageIsActivated ? "1" : "0");
 
     return SaveFileOutput(std::move(saveContent)).getOutput();
-}
-
-vecCstUpdateOutput_sptr &&Player::retrieveUpdateOutput() {
-    return std::move(_updateOutputs);
 }
 
 CstChronometer_sptr Player::getCreationChronometer() const {
@@ -274,4 +272,8 @@ Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, con
             return w.front() == '1';
         }() // frenchLangageIsActivated
     );
+}
+
+unsigned int Player::getRollSpeedLevel() const {
+    return _rollSpeedLevel;
 }
