@@ -41,6 +41,19 @@ private:
 
     static JBTypes::FileContent createFilesContent();
 
+    /**
+     * Read a file in the current or binary directories.
+     * @param fileName Name of the file
+     * @return The content of the file as string.
+     */
+    static std::string readFile(const std::string& fileName);
+
+    static std::string readSaveFile();
+
+    static std::string extractSpecificPartOfOutput(const std::string& updateOutput, const std::string& key);
+
+    static void writeSaveFile(const std::string& updateOutput);
+
     static std::vector<unsigned char> createBinaryFont();
 
 };

@@ -10,7 +10,7 @@ UpdateOutput::UpdateOutput(std::string &&base, std::string &&meta) :
 }
 
 std::string UpdateOutput::getOutput() const {
-    return _base + "," + _meta + ";";
+    return _base + _meta + ";";
 }
 
 std::string UpdateOutput::combineUpdateOutputs(vecCstUpdateOutput_sptr &&updateOutputs) {

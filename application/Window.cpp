@@ -66,32 +66,80 @@ JBTypes::FileContent Window::createFilesContent() {
         fileDistPath[mapName] = "maps/" + mapName;
     }
 
-    const auto searchingDirs = {"./", "bin/"};
     JBTypes::FileContent filesContent;
-
     for (const auto &item: fileDistPath) {
         const auto &fileName = item.first;
         const auto &path = item.second;
-        bool foundFile = false;
-        std::ifstream inFile;
-        for (const auto &searchingDir: searchingDirs) {
-            if (!foundFile) {
-                inFile.open(searchingDir + path);
-                if (inFile) {
-                    foundFile = true;
-                }
-            }
-        }
-        if (!foundFile) {
-            std::cerr << "ERROR: Opening " << fileName << " impossible .." << std::endl;
-            JBTypesMethods::displayInstallError();
-            exit(EXIT_FAILURE);
-        }
-        std::stringstream strStream;
-        strStream << inFile.rdbuf();
-        filesContent[fileName] = strStream.str();
+        filesContent[fileName] = readFile(path);
     }
     return filesContent;
+}
+
+
+std::string Window::readFile(const std::string& fileName) {
+
+    bool foundFile = false;
+    const auto searchingDirs = {"./", "bin/"};
+    std::ifstream inFile;
+    for (const auto &searchingDir: searchingDirs) {
+        if (!foundFile) {
+            inFile.open(searchingDir + fileName);
+            if (inFile) {
+                foundFile = true;
+            }
+        }
+    }
+    if (!foundFile) {
+        std::cerr << "ERROR: Opening " << fileName << " impossible .." << std::endl;
+        JBTypesMethods::displayInstallError();
+        exit(EXIT_FAILURE);
+    }
+    std::stringstream strStream;
+    strStream << inFile.rdbuf();
+    inFile.close();
+    return strStream.str();
+}
+
+std::string Window::readSaveFile() {
+    return readFile("save.txt");
+}
+
+std::string Window::extractSpecificPartOfOutput(const std::string &updateOutput, const std::string &key) {
+    const auto offset = updateOutput.find(key);
+    if(offset == std::string::npos) {
+        return "";
+    }
+    const auto partBeginIterator = updateOutput.begin() + static_cast<int>(offset + key.length());
+    const auto partEndIterator = std::find(partBeginIterator, updateOutput.end(), ';');
+    std::string fromBeginToEnd( partBeginIterator, partEndIterator);
+    return fromBeginToEnd;
+}
+
+void Window::writeSaveFile(const std::string& updateOutput) {
+    const std::string saveFileContent = extractSpecificPartOfOutput(updateOutput, "save");
+    if(saveFileContent.empty()) {
+        return;
+    }
+
+    bool foundFile = false;
+    const auto searchingDirs = {"./", "bin/"};
+    std::ofstream outFile;
+    const std::string fileName = "save.txt";
+    for (const auto &searchingDir: searchingDirs) {
+        if (!foundFile) {
+            outFile.open(searchingDir + fileName, std::ofstream::out | std::ofstream::trunc);
+            if (outFile) {
+                foundFile = true;
+            }
+        }
+    }
+    if (!foundFile) {
+        std::cerr << "ERROR: Opening " << fileName << " impossible .." << std::endl;
+        JBTypesMethods::displayInstallError();
+        exit(EXIT_FAILURE);
+    }
+    outFile << saveFileContent;
+    outFile.close();
 }
 
 std::vector<unsigned char> Window::createBinaryFont() {
@@ -115,8 +163,8 @@ std::vector<unsigned char> Window::createBinaryFont() {
         exit(EXIT_FAILURE);
     }
     std::vector<unsigned char> buffer(std::istreambuf_iterator<char>(fontFile), {});
+    fontFile.close();
     return buffer;
-
 }
 
 bool Window::inputManagement() {
