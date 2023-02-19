@@ -18,7 +18,32 @@ using Player_sptr = std::shared_ptr<Player>;
 
 class Player {
 public:
-    explicit Player(DoubleChronometer_sptr doubleChronometer);
+    explicit Player(
+        DoubleChronometer_sptr doubleChronometer,
+        unsigned int money,
+        size_t levelProgression,
+        std::vector<bool> diamonds,
+        unsigned int diamondsCounter,
+        std::vector<bool> crystals,
+        unsigned int crystalsCounter,
+        unsigned int rollSpeedLevel,
+        unsigned int currentRollSpeed,
+        unsigned int jumpSpeedLevel,
+        unsigned int currentJumpSpeed,
+        unsigned int turningSpeedLevel,
+        unsigned int currentTurningSpeed,
+        unsigned int timeLevel,
+        unsigned int clockItemLevel,
+        unsigned int bonusLevel,
+        std::vector<bool> ballSkins,
+        unsigned int currentBallSkin,
+        bool frenchLangageIsActivated
+    );
+
+    static Player_sptr createInstance(
+        DoubleChronometer_sptr doubleChronometer,
+        const std::string &saveFile
+    );
 
     enum class Status {
         InGame, InMenu, InTransition
@@ -92,33 +117,57 @@ public:
 
     static constexpr unsigned int maxLevel = 2;
 
-private:
 
+    template<typename T>
+    static T readValue(std::istringstream& stream);
+
+private:
     void setAsInMenu();
 
     const DoubleChronometer_sptr _doubleChronometer;
     Status _status;
     GameStatus _gameStatus;
-    size_t _levelProgression;
-    size_t _currentLevel;
     vecCstUpdateOutput_sptr _updateOutputs;
 
     unsigned int _money;
-    std::vector<bool> _diamonds;
+    size_t _levelProgression;
 
+    std::vector<bool> _diamonds;
     unsigned int _diamondsCounter;
 
-    unsigned int _speedLevel;
-    unsigned int _gravityLevel;
-    unsigned int _fireResistanceLevel;
+    std::vector<bool> _crystals;
+    unsigned int _crystalsCounter;
+
+    unsigned int _rollSpeedLevel;
+    unsigned int _currentRollSpeed;
+
+    unsigned int _jumpSpeedLevel;
+    unsigned int _currentJumpSpeed;
+
+    unsigned int _turningSpeedLevel;
+    unsigned int _currentTurningSpeed;
 
     unsigned int _timeLevel;
     unsigned int _clockItemLevel;
     unsigned int _bonusLevel;
 
+    std::vector<bool> _ballSkins;
+    unsigned int _currentBallSkin;
+
+    bool _frenchLangageIsActivated;
+
+    size_t _currentLevel;
     float _remainingTime;
     bool _wantsToQuit;
     bool _needsSaveFile;
 };
+
+template<typename T>
+T Player::readValue(std::istringstream& stream) {
+    T value;
+    stream >> value;
+    return value;
+}
+
 
 #endif /* PLAYER_H */

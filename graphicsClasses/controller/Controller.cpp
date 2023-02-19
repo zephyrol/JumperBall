@@ -22,7 +22,7 @@ Controller::Controller(
         // The chronometer tracking in game time needs to be started later
         false)
     ),
-    _player(std::make_shared<Player>(_doubleChronometer)),
+    _player(Player::createInstance(_doubleChronometer, filesContent.at("save.txt"))),
     _menu(Menu::getJumperBallMenu(
         _player,
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight)

@@ -48,8 +48,6 @@ private:
      */
     static std::string readFile(const std::string& fileName);
 
-    static std::string readSaveFile();
-
     static std::string extractSpecificPartOfOutput(const std::string& updateOutput, const std::string& key);
 
     static void writeSaveFile(const std::string& updateOutput);

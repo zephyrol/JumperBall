@@ -66,6 +66,8 @@ JBTypes::FileContent Window::createFilesContent() {
         fileDistPath[mapName] = "maps/" + mapName;
     }
 
+    fileDistPath["save"] = "save/save.txt";
+
     JBTypes::FileContent filesContent;
     for (const auto &item: fileDistPath) {
         const auto &fileName = item.first;
@@ -98,10 +100,6 @@ std::string Window::readFile(const std::string& fileName) {
     strStream << inFile.rdbuf();
     inFile.close();
     return strStream.str();
-}
-
-std::string Window::readSaveFile() {
-    return readFile("save.txt");
 }
 
 std::string Window::extractSpecificPartOfOutput(const std::string &updateOutput, const std::string &key) {
