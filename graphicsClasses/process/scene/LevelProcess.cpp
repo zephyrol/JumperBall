@@ -38,6 +38,13 @@ LevelProcess_sptr LevelProcess::createInstance(
 ) {
 
     std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > shadersRenderPasses{};
+
+    const auto starShaderProgram = ShaderProgram::createInstance(fileContent, "starVs.vs", "starFs.fs");
+    shadersRenderPasses.emplace_back(
+        starShaderProgram,
+        std::make_shared<RenderPass>(starShaderProgram, std::move(star))
+    );
+
     std::vector<std::pair<std::string, CstRenderGroupsManager_sptr> > vertexShaderFilesGroupsManagers{
         {"blocksVs.vs",   std::move(blocks)},
         {"itemsMapVs.vs", std::move(items)},
@@ -45,6 +52,7 @@ LevelProcess_sptr LevelProcess::createInstance(
         {"specialsVs.vs", std::move(specials)},
         {"ballVs.vs",     std::move(ball)}
     };
+
     for (auto &vertexShaderFileGroupsManager: vertexShaderFilesGroupsManagers) {
         const auto &vertexShaderFile = vertexShaderFileGroupsManager.first;
         const auto &groupsManager = vertexShaderFileGroupsManager.second;
@@ -55,12 +63,6 @@ LevelProcess_sptr LevelProcess::createInstance(
             std::make_shared<RenderPass>(shaderProgram, groupsManager)
         );
     }
-
-    const auto starShaderProgram = ShaderProgram::createInstance(fileContent, "starVs.vs", "starFs.fs");
-    shadersRenderPasses.emplace_back(
-        starShaderProgram,
-        std::make_shared<RenderPass>(starShaderProgram, std::move(star))
-    );
 
     return std::make_shared<LevelProcess>(
         width,
@@ -91,12 +93,23 @@ void LevelProcess::render() const {
     TextureSampler::setActiveTexture(0);
     TextureSampler::bind(_shadowTexture);
 
-    for (const auto &shaderRenderPass: _shadersRenderPasses) {
-        const auto &shader = shaderRenderPass.first;
-        const auto &renderPass = shaderRenderPass.second;
+    // Render star
+    FrameBuffer::disableDepthTest();
+    const auto& starShaderRenderPass = _shadersRenderPasses.front();
+    const auto &starShader = starShaderRenderPass.first;
+    const auto &starRenderPass = starShaderRenderPass.second;
+    starShader->use();
+    starRenderPass->render();
+
+    // Render others
+    FrameBuffer::enableDepthTest();
+    for (auto it = _shadersRenderPasses.begin() + 1; it != _shadersRenderPasses.end(); ++it) {
+        const auto &shader = it->first;
+        const auto &renderPass = it->second;
         shader->use();
         renderPass->render();
     }
+
 }
 
 void LevelProcess::update() {

@@ -33,9 +33,15 @@ public:
 
     Page_sptr click(float mouseX, float mouseY) override;
 
+    void update(const Mouse &mouse) override;
+
     std::string getVertexShaderName() const override;
 
     std::vector<std::string> shaderDefines() const override;
+
+    DynamicNames getDynamicIntNames() const override;
+
+    DynamicValues<int> getDynamicIntValues() const override;
 
 private:
     Node_sptr _jumperBallTitle;
@@ -45,6 +51,11 @@ private:
     Node_sptr _author;
 
     Page_sptr _levelsPage;
+    int _currentSelectedLabel;
+
+    static constexpr int playLabelId = 1;
+    static constexpr int storeLabelId = 2;
+    static constexpr int exitLabelId = 3;
 
     static vecNode_sptr createNodes(float ratio);
 

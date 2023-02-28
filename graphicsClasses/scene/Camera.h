@@ -27,7 +27,6 @@ public:
     Camera(const Map &map, float ratio);
 
     static constexpr float zNear = 0.1f;
-    static constexpr float zFar = 100.f;
 
     const glm::vec3 &pos() const noexcept;
 
@@ -60,6 +59,7 @@ private:
 
     const Map &_map;
     const CstChronometer_sptr _chronometer;
+    const float _zFar;
     float _fovY;
     float _localOffset;
     Movement _movement;

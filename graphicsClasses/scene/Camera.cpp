@@ -10,6 +10,7 @@
 Camera::Camera(const Map &map, float ratio) :
     _map(map),
     _chronometer(map.getBall()->getCreationChronometer()),
+    _zFar(3.f * map.getLargestSize()),
     _fovY(computeFovY(ratio)),
     _localOffset(computeLocalOffset(_fovY)),
     _movement(Camera::Movement::TurningAroundMap),
@@ -18,7 +19,7 @@ Camera::Camera(const Map &map, float ratio) :
     _up(0.f, 1.f, 0.f),
     _timePointComeBack(0.f),
     _timePointGoAbove(0.f),
-    _perspectiveMatrix(glm::perspective(_fovY, ratio, zNear, zFar)) {
+    _perspectiveMatrix(glm::perspective(_fovY, ratio, zNear, _zFar)) {
 }
 
 void Camera::update(
@@ -169,7 +170,6 @@ void Camera::turningAroundMapUpdate() noexcept {
                             ((-cosf(_chronometer->getTime()) + 1.f) / 2.f);
 
     const float distanceZ = distanceX;
-
     const glm::mat4 translation = glm::translate(glm::vec3(distanceX, 0, distanceZ));
 
     const auto timeSinceCreation = _chronometer->getTime();
@@ -288,7 +288,7 @@ Displayable::GlobalState Camera::getGlobalState() const {
 void Camera::setRatio(float ratio) {
     _fovY = computeFovY(ratio);
     _localOffset = computeLocalOffset(_fovY);
-    _perspectiveMatrix = glm::perspective(_fovY, ratio, zNear, zFar);
+    _perspectiveMatrix = glm::perspective(_fovY, ratio, zNear, _zFar);
 }
 
 float Camera::computeFovY(float ratio) noexcept {

@@ -58,11 +58,15 @@ mat4 starRotation() {
 
 void main() {
 
-    const float starRadius = 5.0;
+    const float starRadius = 50.0;
 
     fs_vertexPosition = vs_vertexPosition.xy;
     fs_color = vs_color;
+    vec4 projectedPosition = VP * starTranslation() * starRotation() * vec4(
+        vs_centerToStar + starRadius * vs_vertexPosition, 1.0
+    );
 
-    gl_Position = VP * starTranslation() * starRotation() *
-                  vec4(vs_centerToStar + starRadius * vs_vertexPosition, 1.0);
+    // Z is cropped to 0 to display the star in all cases
+    // Z Buffer must be disabled before!
+    gl_Position = vec4(projectedPosition.x, projectedPosition.y, 0.0, projectedPosition.w);
 }

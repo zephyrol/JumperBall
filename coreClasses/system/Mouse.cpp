@@ -145,6 +145,10 @@ float Mouse::computeDistance(float x0, float y0, float x1, float y1) {
     return sqrtf(x1MinusX0 * x1MinusX0 + y1MinusY0 * y1MinusY0);
 }
 
+float Mouse::currentXCoord() const {
+    return _currentState.mouseCoords->xCoord;
+}
+
 float Mouse::currentYCoord() const {
     return _currentState.mouseCoords->yCoord;
 }

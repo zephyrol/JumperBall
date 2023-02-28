@@ -31,6 +31,7 @@ public:
 
     bool isPressed() const;
     bool wasPressed() const;
+    float currentXCoord() const;
     float currentYCoord() const;
     float previousYCoord() const;
 

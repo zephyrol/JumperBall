@@ -8,7 +8,9 @@
 #include "Page.h"
 #include <algorithm>
 
-Page::Page(Player_sptr &&player) : _player(std::move(player)) {}
+Page::Page(Player_sptr &&player) :
+    _player(std::move(player)) {
+}
 
 Page_wptr Page::parent() {
     return {};

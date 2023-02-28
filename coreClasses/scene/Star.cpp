@@ -9,20 +9,14 @@
 
 Star::Star(
     const Map &map,
-    float radiusInside,
-    float radiusOutside,
     float distance,
-    float radius,
     const JBTypes::vec3f &initialDirection,
     const JBTypes::vec3f &rotationAxis,
     const JBTypes::vec3f &color,
     float radiansPerSecond
 ) :
     _chronometer(map.getBall()->getCreationChronometer()),
-    _radiusInside(radiusInside),
-    _radiusOutside(radiusOutside),
     _distance(distance),
-    _radius(radius),
     _initialDirection(initialDirection),
     _rotationAxis(rotationAxis),
     _rotationCenter(map.getCenterMap()),
@@ -32,20 +26,8 @@ Star::Star(
 
 }
 
-float Star::radiusInside() const {
-    return _radiusInside;
-}
-
-float Star::radiusOutside() const {
-    return _radiusOutside;
-}
-
 float Star::distance() const {
     return _distance;
-}
-
-float Star::radius() const {
-    return _radius;
 }
 
 const JBTypes::vec3f &Star::rotationCenter() const {
@@ -112,10 +94,7 @@ std::shared_ptr<Star> Star::createBlurStar(const Map &map) {
     const JBTypes::vec3f color = {0.f, 1.f, 1.f};
     return std::make_shared<Star>(
         map,
-        0.3f,
-        0.5f,
-        50.f,
-        5.f,
+        500.f,
         initialDirection,
         JBTypesMethods::normalize({0.5f, 1.f, 0.f}),
         color,
@@ -128,10 +107,7 @@ std::shared_ptr<Star> Star::createPurpleStar(const Map &map) {
     const JBTypes::vec3f color = {1.f, 0.f, 1.f};
     return std::make_shared<Star>(
         map,
-        0.3f,
-        0.5f,
-        55.f,
-        5.f,
+        550.f,
         initialDirection,
         JBTypesMethods::normalize({0.5f, -1.f, 0.f}),
         color,

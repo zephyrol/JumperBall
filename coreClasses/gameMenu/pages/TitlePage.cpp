@@ -24,7 +24,8 @@ TitlePage::TitlePage(
     _store(std::move(store)),
     _exitNode(std::move(exitNode)),
     _author(std::move(author)),
-    _levelsPage() {
+    _levelsPage(),
+    _currentSelectedLabel(-1) {
 }
 
 void TitlePage::resize(float ratio) {
@@ -109,18 +110,48 @@ void TitlePage::setLevelsPage(Page_sptr levelsPage) {
 vecCstTextNode_uptr TitlePage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     textNodes.emplace_back(new TextNode(_jumperBallTitle, "Jumper Ball", 0));
-    textNodes.emplace_back(new TextNode(_play, "Play", 0));
-    textNodes.emplace_back(new TextNode(_store, "Store", 0));
-    textNodes.emplace_back(new TextNode(_exitNode, "Exit", 0));
+    textNodes.emplace_back(new TextNode(_play, "Play", playLabelId));
+    textNodes.emplace_back(new TextNode(_store, "Store", storeLabelId));
+    textNodes.emplace_back(new TextNode(_exitNode, "Exit", exitLabelId));
     textNodes.emplace_back(new TextNode(_author, "Created by S.Morgenthaler", 0));
     return textNodes;
 }
 
 std::string TitlePage::getVertexShaderName() const {
-    return "inGamePageVs.vs";
+    return "titlePageVs.vs";
 }
 
 std::vector<std::string> TitlePage::shaderDefines() const {
-    return { "ALWAYS_ALPHA_TEXTURE" };
+    return {"ALWAYS_ALPHA_TEXTURE"};
 }
 
+void TitlePage::update(const Mouse &mouse) {
+    if(!mouse.isPressed()) {
+        _currentSelectedLabel = 0;
+        return;
+    }
+
+    // Positions have to be centered
+    const auto mouseX = mouse.currentXCoord() - 0.5f;
+    const auto mouseY = mouse.currentYCoord() - 0.5f;
+    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
+        return node->intersect(mouseX, mouseY);
+    };
+    if (intersectTest(_play)) {
+        _currentSelectedLabel = playLabelId;
+    } else if (intersectTest(_exitNode)) {
+        _currentSelectedLabel = exitLabelId;
+    } else if (intersectTest(_store)) {
+        _currentSelectedLabel = storeLabelId;
+    } else {
+        _currentSelectedLabel = 0;
+    }
+}
+
+Displayable::DynamicNames TitlePage::getDynamicIntNames() const {
+    return {"selectedLabel"};
+}
+
+Displayable::DynamicValues<int> TitlePage::getDynamicIntValues() const {
+    return {_currentSelectedLabel};
+}

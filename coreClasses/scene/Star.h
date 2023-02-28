@@ -14,10 +14,7 @@ class Star : public Displayable {
 public:
     Star(
         const Map &map,
-        float radiusInside,
-        float radiusOutside,
         float distance,
-        float radius,
         const JBTypes::vec3f &initialDirection,
         const JBTypes::vec3f &rotationAxis,
         const JBTypes::vec3f &color,
@@ -59,10 +56,7 @@ public:
 private:
 
     const CstChronometer_sptr _chronometer;
-    const float _radiusInside;
-    const float _radiusOutside;
     const float _distance;
-    const float _radius;
     const JBTypes::vec3f _initialDirection;
     const JBTypes::vec3f _rotationAxis;
     const JBTypes::vec3f _rotationCenter;
