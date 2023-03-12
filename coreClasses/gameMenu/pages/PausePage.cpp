@@ -103,14 +103,15 @@ Page_sptr PausePage::click(float mouseX, float mouseY) {
 
 vecCstTextNode_uptr PausePage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
+    const auto english = _player->isUsingEnglishLanguage();
     textNodes.emplace_back(new TextNode(_jumperBallTitleNode, "Jumper Ball", 0));
-    textNodes.emplace_back(new TextNode(_resumeNode, "Resume", resumeLabelId));
-    textNodes.emplace_back(new TextNode(_exitNode, "Exit", exitLabelId));
+    textNodes.emplace_back(new TextNode(_resumeNode, english ? "Resume" : "Reprendre", resumeLabelId));
+    textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Sortir", exitLabelId));
     return textNodes;
 }
 
 std::vector<std::string> PausePage::shaderDefines() const {
-    return { "ALWAYS_ALPHA_TEXTURE" };
+    return {"ALWAYS_ALPHA_TEXTURE"};
 }
 
 std::string PausePage::getVertexShaderName() const {
@@ -119,7 +120,7 @@ std::string PausePage::getVertexShaderName() const {
 
 void PausePage::update(const Mouse &mouse) {
 
-    if(!mouse.isPressed()) {
+    if (!mouse.isPressed()) {
         _currentSelectedLabel = 0;
         return;
     }

@@ -93,10 +93,14 @@ void Controller::setValidateMouse(float mouseX, float mouseY) {
     _scene->setValidateMouse();
 
     const auto &currentPage = _menu->currentPage();
+    const auto &currentLanguage = _player->isUsingEnglishLanguage();
     _menu->mouseClick(mouseX, mouseY);
 
+    // Reset the viewer if the language has changed.
     const auto &newPage = _menu->currentPage();
-    if (newPage != currentPage) {
+    const auto &newLanguage = _player->isUsingEnglishLanguage();
+
+    if (newPage != currentPage || newLanguage != currentLanguage) {
         _viewer->setPage(newPage);
     }
 

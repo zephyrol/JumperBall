@@ -57,8 +57,8 @@ vecNode_sptr LevelsPage::createLevelsNodes(const Node_sptr &commonNode) {
     vecNode_sptr levelsNodes;
     const auto levelsMainNode = std::make_shared<DownNode>(commonNode, 9.f / 18.f);
     const auto numberOfLevelsFloat = static_cast<float>(LevelsPage::numberOfLevels);
+    constexpr auto positionFactor = 4.f;
     for (size_t i = 0; i < LevelsPage::numberOfLevels; i += 3) {
-        constexpr auto positionFactor = 4.f;
         const auto positionY = static_cast<float>(i) / numberOfLevelsFloat;
         const auto verticalNode = std::make_shared<VerticalNode>(
             levelsMainNode,
@@ -127,7 +127,7 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
 void LevelsPage::update(const Mouse &mouse) {
     ScrollablePage::update(mouse);
 
-    if(!mouse.isPressed()) {
+    if (!mouse.isPressed()) {
         _currentSelectedLabel = 0;
         return;
     }
@@ -166,7 +166,7 @@ std::shared_ptr<ArrowLabel> LevelsPage::createArrowLabel(const Node_sptr &header
     auto arrowLabel = std::make_shared<ArrowLabel>(
         leftNode,
         JBTypes::Color::Blue,
-       LevelsPage::arrowLabelId
+        LevelsPage::arrowLabelId
     );
     return arrowLabel;
 }
@@ -193,7 +193,11 @@ vecCstTextNode_uptr LevelsPage::genTextNodes() const {
 
     constexpr int levelsTitleLabelId = -2;
     textNodes.push_back(
-        CstTextNode_uptr(new TextNode(_levelsTitle, "Levels", levelsTitleLabelId))
+        CstTextNode_uptr(new TextNode(
+            _levelsTitle,
+            _player->isUsingEnglishLanguage() ? "Levels" : "Niveaux",
+            levelsTitleLabelId)
+        )
     );
     return textNodes;
 }

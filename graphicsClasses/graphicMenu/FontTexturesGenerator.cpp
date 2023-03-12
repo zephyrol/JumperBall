@@ -72,7 +72,14 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphi
         return iterator->second;
     }
 
-    if (const auto callback = FT_Load_Char(ftContent.fontFace, character, FT_LOAD_RENDER)) {
+    const auto getCharCode = [character]() -> FT_ULong  {
+        if(character == ';') {
+            return 233; // e with a ' (french)
+        }
+        return character;
+    };
+
+    if (const auto callback = FT_Load_Char(ftContent.fontFace, getCharCode(), FT_LOAD_RENDER)) {
         std::cerr << "Error " << callback << ": Impossible to load glyph " << character << std::endl;
     }
 

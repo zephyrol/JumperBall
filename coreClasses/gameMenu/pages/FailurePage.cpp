@@ -47,7 +47,7 @@ vecNode_sptr FailurePage::createNodes(float ratio) {
         9.f / 16.f
     );
 
-    const auto goodGameTitle = std::make_shared<UpNode>(
+    const auto youLostTitle = std::make_shared<UpNode>(
         mainTitleNode,
         4.f
     );
@@ -68,7 +68,7 @@ vecNode_sptr FailurePage::createNodes(float ratio) {
         optionsNodeRatio
     );
 
-    return {goodGameTitle, continueNode, exitNode};
+    return {youLostTitle, continueNode, exitNode};
 
 }
 
@@ -103,9 +103,10 @@ Page_sptr FailurePage::click(float mouseX, float mouseY) {
 
 vecCstTextNode_uptr FailurePage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
-    textNodes.emplace_back(new TextNode(_failureNode, "You lost!", 0));
-    textNodes.emplace_back(new TextNode(_retryNode, "Retry", retryLabelId));
-    textNodes.emplace_back(new TextNode(_exitNode, "Exit", exitLabelId));
+    const auto english = _player->isUsingEnglishLanguage();
+    textNodes.emplace_back(new TextNode(_failureNode, english ? "You lost!" : "Perdu!", 0));
+    textNodes.emplace_back(new TextNode(_retryNode, english ? "Retry" : "R;essayer", retryLabelId));
+    textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Sortir", exitLabelId));
     return textNodes;
 }
 
@@ -114,12 +115,12 @@ std::string FailurePage::getVertexShaderName() const {
 }
 
 std::vector<std::string> FailurePage::shaderDefines() const {
-    return { "ALWAYS_ALPHA_TEXTURE" };
+    return {"ALWAYS_ALPHA_TEXTURE"};
 }
 
 void FailurePage::update(const Mouse &mouse) {
 
-    if(!mouse.isPressed()) {
+    if (!mouse.isPressed()) {
         _currentSelectedLabel = 0;
         return;
     }

@@ -87,6 +87,10 @@ public:
 
     void bonusLevelUp();
 
+    void switchLangage();
+
+    bool isUsingEnglishLanguage() const;
+
     bool wantsToQuit() const;
 
     void requestQuit();

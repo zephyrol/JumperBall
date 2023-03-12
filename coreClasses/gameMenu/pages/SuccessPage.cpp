@@ -96,7 +96,7 @@ Page_sptr SuccessPage::click(float mouseX, float mouseY) {
     }
     if (intersectTest(_continueNode)) {
         const auto nextLevel = _player->getCurrentLevel() + 1;
-        if(nextLevel > Player::maxLevel) {
+        if (nextLevel > Player::maxLevel) {
             return nullptr;
         }
         _player->setCurrentLevel(nextLevel);
@@ -107,14 +107,19 @@ Page_sptr SuccessPage::click(float mouseX, float mouseY) {
 
 vecCstTextNode_uptr SuccessPage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
-    textNodes.emplace_back(new TextNode(_goodGameNode, "Good game!", 0));
-    textNodes.emplace_back(new TextNode(_continueNode, "Next level", continueLabelId));
-    textNodes.emplace_back(new TextNode(_exitNode, "Exit", exitLabelId));
+    const auto english = _player->isUsingEnglishLanguage();
+    textNodes.emplace_back(new TextNode(_goodGameNode, english ? "Good game!" : "Bien jou;!", 0));
+    textNodes.emplace_back(new TextNode(
+        _continueNode,
+        english ? "Next level" : "Niveau suivant",
+        continueLabelId
+    ));
+    textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Sortir", exitLabelId));
     return textNodes;
 }
 
 std::vector<std::string> SuccessPage::shaderDefines() const {
-    return { "ALWAYS_ALPHA_TEXTURE" };
+    return {"ALWAYS_ALPHA_TEXTURE"};
 }
 
 std::string SuccessPage::getVertexShaderName() const {
@@ -123,7 +128,7 @@ std::string SuccessPage::getVertexShaderName() const {
 
 void SuccessPage::update(const Mouse &mouse) {
 
-    if(!mouse.isPressed()) {
+    if (!mouse.isPressed()) {
         _currentSelectedLabel = 0;
         return;
     }

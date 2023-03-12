@@ -8,47 +8,62 @@
 #include "gameMenu/nodes/ScreenNode.h"
 #include "gameMenu/nodes/ScaledNode.h"
 #include "gameMenu/nodes/DownNode.h"
+#include "gameMenu/nodes/VerticalNode.h"
 
 TitlePage::TitlePage(
     Player_sptr &&player,
     Node_sptr &&jumperBallTitle,
     Node_sptr &&play,
     Node_sptr &&store,
+    Node_sptr &&language,
     Node_sptr &&exitNode,
-    Node_sptr &&author
+    Node_sptr &&author,
+    float currentRatio
 ) : Page(
     std::move(player)
 ),
     _jumperBallTitle(std::move(jumperBallTitle)),
     _play(std::move(play)),
     _store(std::move(store)),
+    _language(std::move(language)),
     _exitNode(std::move(exitNode)),
     _author(std::move(author)),
-    _levelsPage() {
+    _levelsPage(),
+    _currentRatio(currentRatio){
 }
 
 void TitlePage::resize(float ratio) {
-    const auto &nodes = createNodes(ratio);
+    _currentRatio = ratio;
+    resetNodes();
+}
+
+void TitlePage::resetNodes() {
+    const auto &nodes = createNodes(_currentRatio, _player->isUsingEnglishLanguage());
     _jumperBallTitle = nodes.at(0);
     _play = nodes.at(1);
     _store = nodes.at(2);
-    _exitNode = nodes.at(3);
-    _author = nodes.at(4);
+    _language = nodes.at(3);
+    _exitNode = nodes.at(4);
+    _author = nodes.at(5);
 }
 
+
 TitlePage_sptr TitlePage::createInstance(Player_sptr player, float ratio) {
-    auto nodes = createNodes(ratio);
+    auto nodes = createNodes(ratio, player->isUsingEnglishLanguage());
     return std::make_shared<TitlePage>(
         std::move(player),
         std::move(nodes.at(0)),
         std::move(nodes.at(1)),
         std::move(nodes.at(2)),
         std::move(nodes.at(3)),
-        std::move(nodes.at(4))
+        std::move(nodes.at(4)),
+        std::move(nodes.at(5)),
+        ratio
     );
 }
 
-vecNode_sptr TitlePage::createNodes(float ratio) {
+vecNode_sptr TitlePage::createNodes(float ratio, bool english) {
+
     const auto screenNode = std::make_shared<ScreenNode>(ratio);
     const auto resizedScreenNode = std::make_shared<ScaledNode>(screenNode, 0.95f);
     const auto mainTitleNode = std::make_shared<CenteredNode>(
@@ -70,23 +85,50 @@ vecNode_sptr TitlePage::createNodes(float ratio) {
         mainTitleNode,
         1.5f
     );
+
     constexpr float optionsNodeRatio = 7.f;
-    const auto playNode = std::make_shared<UpNode>(
+    const auto playNode = std::make_shared<VerticalNode>(
         optionsParentNode,
-        optionsNodeRatio
+        optionsNodeRatio,
+        english ? 1.05f : 1.1f // Because p creates an offset
     );
 
-    const auto storeNode = std::make_shared<CenteredNode>(
+    const auto storeNode = std::make_shared<VerticalNode>(
         optionsParentNode,
-        optionsNodeRatio
+        optionsNodeRatio,
+        english ? 0.6f : 0.55f // Because q creates an offset
     );
 
-    const auto exitNode = std::make_shared<DownNode>(
+    const auto languageNode = std::make_shared<VerticalNode>(
         optionsParentNode,
-        optionsNodeRatio
+        optionsNodeRatio,
+        0.03f // Because g letter creates an offset
     );
 
-    return {jumperBallTitle, playNode, storeNode, exitNode, authorNode};
+    const auto exitNode = std::make_shared<VerticalNode>(
+        optionsParentNode,
+        optionsNodeRatio,
+        english ? -0.4f : -0.45f // Because Q creates an offset
+    );
+
+
+    // constexpr float optionsNodeRatio = 7.f;
+    // const auto playNode = std::make_shared<UpNode>(
+    //     optionsParentNode,
+    //     optionsNodeRatio
+    // );
+
+    // const auto storeNode = std::make_shared<CenteredNode>(
+    //     optionsParentNode,
+    //     optionsNodeRatio
+    // );
+
+    // const auto exitNode = std::make_shared<DownNode>(
+    //     optionsParentNode,
+    //     optionsNodeRatio
+    // );
+
+    return {jumperBallTitle, playNode, storeNode, languageNode, exitNode, authorNode};
 }
 
 Page_sptr TitlePage::click(float mouseX, float mouseY) {
@@ -95,6 +137,10 @@ Page_sptr TitlePage::click(float mouseX, float mouseY) {
     };
     if (intersectTest(_play)) {
         return _levelsPage;
+    }
+    if (intersectTest(_language)) {
+        _player->switchLangage();
+        resetNodes();
     }
     if (intersectTest(_exitNode)) {
         _player->requestQuit();
@@ -108,11 +154,19 @@ void TitlePage::setLevelsPage(Page_sptr levelsPage) {
 
 vecCstTextNode_uptr TitlePage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
+    const auto english = _player->isUsingEnglishLanguage();
     textNodes.emplace_back(new TextNode(_jumperBallTitle, "Jumper Ball", 0));
-    textNodes.emplace_back(new TextNode(_play, "Play", playLabelId));
-    textNodes.emplace_back(new TextNode(_store, "Store", storeLabelId));
-    textNodes.emplace_back(new TextNode(_exitNode, "Exit", exitLabelId));
-    textNodes.emplace_back(new TextNode(_author, "Created by S.Morgenthaler", 0));
+    textNodes.emplace_back(new TextNode(_play, english ? "Play" : "Jouer", playLabelId));
+    textNodes.emplace_back(new TextNode(_store, english ? "Store" : "Boutique", storeLabelId));
+    textNodes.emplace_back(
+        new TextNode(_language, english ? "Change language" : "Changer de langue", languageLabelId)
+    );
+    textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Quitter", exitLabelId));
+    textNodes.emplace_back(new TextNode(
+        _author,
+        std::string(english ? "Created by" : "Cr;; par") + std::string(" S.Morgenthaler"),
+        0
+    ));
     return textNodes;
 }
 
@@ -142,6 +196,8 @@ void TitlePage::update(const Mouse &mouse) {
         _currentSelectedLabel = exitLabelId;
     } else if (intersectTest(_store)) {
         _currentSelectedLabel = storeLabelId;
+    } else if (intersectTest(_language)) {
+        _currentSelectedLabel = languageLabelId;
     } else {
         _currentSelectedLabel = -1;
     }

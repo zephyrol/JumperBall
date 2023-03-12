@@ -193,8 +193,6 @@ std::string Player::genSaveContent() {
         + std::to_string(_currentRollSpeed) + " "
         + std::to_string(_jumpSpeedLevel) + " "
         + std::to_string(_currentJumpSpeed) + " "
-        + std::to_string(_jumpSpeedLevel) + " "
-        + std::to_string(_currentJumpSpeed) + " "
         + std::to_string(_turningSpeedLevel) + " "
         + std::to_string(_currentTurningSpeed) + " "
         + std::to_string(_timeLevel) + " "
@@ -205,32 +203,6 @@ std::string Player::genSaveContent() {
         + (_frenchLanguageIsActivated ? "1" : "0");
 
     return SaveFileOutput(std::move(saveContent)).getOutput();
-}
-
-CstChronometer_sptr Player::getCreationChronometer() const {
-    return _doubleChronometer->first();
-}
-
-void Player::setAsInGame() {
-    if (_status != Player::Status::InGame) {
-        _status = Player::Status::InGame;
-        _doubleChronometer->resumeSecond();
-    }
-}
-
-void Player::setAsInMenu() {
-    if (_status != Player::Status::InMenu) {
-        _status = Player::Status::InMenu;
-        _doubleChronometer->stopSecond();
-    }
-}
-
-void Player::setRemainingTime(float remainingTime) {
-    _remainingTime = remainingTime;
-}
-
-float Player::getRemainingTime() const {
-    return _remainingTime;
 }
 
 Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, const std::string &saveFile) {
@@ -270,10 +242,47 @@ Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, con
             std::string w;
             iss >> w;
             return w.front() == '1';
-        }() // frenchLangageIsActivated
+        }() // frenchLanguageIsActivated
     );
+}
+
+
+CstChronometer_sptr Player::getCreationChronometer() const {
+    return _doubleChronometer->first();
+}
+
+void Player::setAsInGame() {
+    if (_status != Player::Status::InGame) {
+        _status = Player::Status::InGame;
+        _doubleChronometer->resumeSecond();
+    }
+}
+
+void Player::setAsInMenu() {
+    if (_status != Player::Status::InMenu) {
+        _status = Player::Status::InMenu;
+        _doubleChronometer->stopSecond();
+    }
+}
+
+void Player::setRemainingTime(float remainingTime) {
+    _remainingTime = remainingTime;
+}
+
+float Player::getRemainingTime() const {
+    return _remainingTime;
+}
+
+
+void Player::switchLangage() {
+    _needsSaveFile = true;
+    _frenchLanguageIsActivated = !_frenchLanguageIsActivated;
 }
 
 unsigned int Player::getRollSpeedLevel() const {
     return _rollSpeedLevel;
+}
+
+bool Player::isUsingEnglishLanguage() const {
+    return !_frenchLanguageIsActivated;
 }

@@ -16,6 +16,8 @@ public:
 
     static TitlePage_sptr createInstance(Player_sptr player, float ratio);
 
+    void resetNodes();
+
     void resize(float ratio) override;
 
     explicit TitlePage(
@@ -23,8 +25,10 @@ public:
         Node_sptr &&jumperBallTitle,
         Node_sptr &&play,
         Node_sptr &&store,
+        Node_sptr &&language,
         Node_sptr &&exitNode,
-        Node_sptr &&author
+        Node_sptr &&author,
+        float currentRatio
     );
 
     void setLevelsPage(Page_sptr levelsPage);
@@ -43,16 +47,20 @@ private:
     Node_sptr _jumperBallTitle;
     Node_sptr _play;
     Node_sptr _store;
+    Node_sptr _language;
     Node_sptr _exitNode;
     Node_sptr _author;
 
     Page_sptr _levelsPage;
 
+    float _currentRatio;
+
     static constexpr int playLabelId = 1;
     static constexpr int storeLabelId = 2;
-    static constexpr int exitLabelId = 3;
+    static constexpr int languageLabelId = 3;
+    static constexpr int exitLabelId = 4;
 
-    static vecNode_sptr createNodes(float ratio);
+    static vecNode_sptr createNodes(float ratio, bool english);
 
 };
 
