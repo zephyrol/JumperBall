@@ -123,6 +123,36 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
     return nullptr;
 }
 
+
+void LevelsPage::update(const Mouse &mouse) {
+    ScrollablePage::update(mouse);
+
+    if(!mouse.isPressed()) {
+        _currentSelectedLabel = 0;
+        return;
+    }
+
+    // Positions have to be centered
+    const auto mouseX = mouse.currentXCoord() - 0.5f;
+    const auto mouseY = mouse.currentYCoord() - 0.5f;
+
+    const auto intersectTest = [this, &mouseX, &mouseY](const Node_sptr &node) {
+        return node->intersect(mouseX, mouseY - getOffsetY());
+    };
+
+    for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
+        if (intersectTest(_levels[i])) {
+            const auto levelNumber = i + 1;
+            if (levelNumber <= _player->levelProgression()) {
+                _currentSelectedLabel = levelNumber;
+            }
+        }
+    }
+    if (intersectTest(_arrowLabel->getNode())) {
+        _currentSelectedLabel = LevelsPage::arrowLabelId;
+    }
+}
+
 vecCstLabel_sptr LevelsPage::labels() const {
     return {_arrowLabel};
 }
@@ -136,7 +166,7 @@ std::shared_ptr<ArrowLabel> LevelsPage::createArrowLabel(const Node_sptr &header
     auto arrowLabel = std::make_shared<ArrowLabel>(
         leftNode,
         JBTypes::Color::Blue,
-        -1
+       LevelsPage::arrowLabelId
     );
     return arrowLabel;
 }
@@ -161,8 +191,9 @@ vecCstTextNode_uptr LevelsPage::genTextNodes() const {
         )));
     }
 
+    constexpr int levelsTitleLabelId = -2;
     textNodes.push_back(
-        CstTextNode_uptr(new TextNode(_levelsTitle, "Levels", 0.f))
+        CstTextNode_uptr(new TextNode(_levelsTitle, "Levels", levelsTitleLabelId))
     );
     return textNodes;
 }
@@ -176,9 +207,15 @@ std::vector<std::string> LevelsPage::shaderDefines() const {
 }
 
 Displayable::DynamicNames LevelsPage::getDynamicIntNames() const {
-    return {"levelProgression"};
+    auto dynamicIntNames = Page::getDynamicIntNames();
+    dynamicIntNames.emplace_back("levelProgression");
+    return dynamicIntNames;
 }
 
 Displayable::DynamicValues<int> LevelsPage::getDynamicIntValues() const {
-    return {static_cast<int>(_player->levelProgression())};
+    auto dynamicIntValues = Page::getDynamicIntValues();
+    dynamicIntValues.emplace_back(static_cast<int>(_player->levelProgression()));
+    return dynamicIntValues;
 }
+
+const int LevelsPage::arrowLabelId = -1;

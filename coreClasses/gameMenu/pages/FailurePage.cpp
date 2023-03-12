@@ -104,8 +104,8 @@ Page_sptr FailurePage::click(float mouseX, float mouseY) {
 vecCstTextNode_uptr FailurePage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     textNodes.emplace_back(new TextNode(_failureNode, "You lost!", 0));
-    textNodes.emplace_back(new TextNode(_retryNode, "Retry", 0));
-    textNodes.emplace_back(new TextNode(_exitNode, "Exit", 0));
+    textNodes.emplace_back(new TextNode(_retryNode, "Retry", retryLabelId));
+    textNodes.emplace_back(new TextNode(_exitNode, "Exit", exitLabelId));
     return textNodes;
 }
 
@@ -115,4 +115,26 @@ std::string FailurePage::getVertexShaderName() const {
 
 std::vector<std::string> FailurePage::shaderDefines() const {
     return { "ALWAYS_ALPHA_TEXTURE" };
+}
+
+void FailurePage::update(const Mouse &mouse) {
+
+    if(!mouse.isPressed()) {
+        _currentSelectedLabel = 0;
+        return;
+    }
+
+    // Positions have to be centered
+    const auto mouseX = mouse.currentXCoord() - 0.5f;
+    const auto mouseY = mouse.currentYCoord() - 0.5f;
+    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
+        return node->intersect(mouseX, mouseY);
+    };
+    if (intersectTest(_retryNode)) {
+        _currentSelectedLabel = retryLabelId;
+    } else if (intersectTest(_exitNode)) {
+        _currentSelectedLabel = exitLabelId;
+    } else {
+        _currentSelectedLabel = 0;
+    }
 }

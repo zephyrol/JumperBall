@@ -39,10 +39,6 @@ public:
 
     std::vector<std::string> shaderDefines() const override;
 
-    DynamicNames getDynamicIntNames() const override;
-
-    DynamicValues<int> getDynamicIntValues() const override;
-
 private:
     Node_sptr _jumperBallTitle;
     Node_sptr _play;
@@ -51,7 +47,6 @@ private:
     Node_sptr _author;
 
     Page_sptr _levelsPage;
-    int _currentSelectedLabel;
 
     static constexpr int playLabelId = 1;
     static constexpr int storeLabelId = 2;

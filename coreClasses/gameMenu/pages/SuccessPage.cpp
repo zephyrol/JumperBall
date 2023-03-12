@@ -108,8 +108,8 @@ Page_sptr SuccessPage::click(float mouseX, float mouseY) {
 vecCstTextNode_uptr SuccessPage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     textNodes.emplace_back(new TextNode(_goodGameNode, "Good game!", 0));
-    textNodes.emplace_back(new TextNode(_continueNode, "Next level", 0));
-    textNodes.emplace_back(new TextNode(_exitNode, "Exit", 0));
+    textNodes.emplace_back(new TextNode(_continueNode, "Next level", continueLabelId));
+    textNodes.emplace_back(new TextNode(_exitNode, "Exit", exitLabelId));
     return textNodes;
 }
 
@@ -119,4 +119,26 @@ std::vector<std::string> SuccessPage::shaderDefines() const {
 
 std::string SuccessPage::getVertexShaderName() const {
     return "titlePageVs.vs";
+}
+
+void SuccessPage::update(const Mouse &mouse) {
+
+    if(!mouse.isPressed()) {
+        _currentSelectedLabel = 0;
+        return;
+    }
+
+    // Positions have to be centered
+    const auto mouseX = mouse.currentXCoord() - 0.5f;
+    const auto mouseY = mouse.currentYCoord() - 0.5f;
+    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
+        return node->intersect(mouseX, mouseY);
+    };
+    if (intersectTest(_continueNode)) {
+        _currentSelectedLabel = continueLabelId;
+    } else if (intersectTest(_exitNode)) {
+        _currentSelectedLabel = exitLabelId;
+    } else {
+        _currentSelectedLabel = 0;
+    }
 }

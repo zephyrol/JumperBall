@@ -24,8 +24,7 @@ TitlePage::TitlePage(
     _store(std::move(store)),
     _exitNode(std::move(exitNode)),
     _author(std::move(author)),
-    _levelsPage(),
-    _currentSelectedLabel(-1) {
+    _levelsPage() {
 }
 
 void TitlePage::resize(float ratio) {
@@ -126,7 +125,7 @@ std::vector<std::string> TitlePage::shaderDefines() const {
 }
 
 void TitlePage::update(const Mouse &mouse) {
-    if(!mouse.isPressed()) {
+    if (!mouse.isPressed()) {
         _currentSelectedLabel = 0;
         return;
     }
@@ -144,14 +143,7 @@ void TitlePage::update(const Mouse &mouse) {
     } else if (intersectTest(_store)) {
         _currentSelectedLabel = storeLabelId;
     } else {
-        _currentSelectedLabel = 0;
+        _currentSelectedLabel = -1;
     }
 }
 
-Displayable::DynamicNames TitlePage::getDynamicIntNames() const {
-    return {"selectedLabel"};
-}
-
-Displayable::DynamicValues<int> TitlePage::getDynamicIntValues() const {
-    return {_currentSelectedLabel};
-}

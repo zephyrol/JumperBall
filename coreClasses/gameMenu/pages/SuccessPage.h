@@ -27,6 +27,8 @@ public:
         const Page_sptr &parent
     );
 
+    void update(const Mouse &mouse) override;
+
     Page_sptr click(float mouseX, float mouseY) override;
 
     void resize(float ratio) override;
@@ -48,6 +50,9 @@ private:
     Node_sptr _exitNode;
 
     Page_sptr _inGamePage;
+
+    static constexpr int continueLabelId = 1;
+    static constexpr int exitLabelId = 2;
 
     static vecNode_sptr createNodes(float ratio);
 };

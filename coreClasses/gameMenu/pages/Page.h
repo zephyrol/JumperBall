@@ -53,10 +53,17 @@ public:
 
     virtual void resize(float ratio) = 0;
 
+    DynamicNames getDynamicIntNames() const override;
+
+    DynamicValues<int> getDynamicIntValues() const override;
+
+
     GlobalState getGlobalState() const override;
 
 protected:
     const Player_sptr _player;
+    int _currentSelectedLabel;
+
 };
 
 #endif // PAGE_H

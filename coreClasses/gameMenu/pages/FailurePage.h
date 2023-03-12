@@ -41,6 +41,8 @@ public:
 
     std::string getVertexShaderName() const override;
 
+    void update(const Mouse &mouse) override;
+
 private:
     const Page_wptr _parent;
     Node_sptr _failureNode;
@@ -48,6 +50,9 @@ private:
     Node_sptr _exitNode;
 
     Page_sptr _inGamePage;
+
+    static constexpr int retryLabelId = 1;
+    static constexpr int exitLabelId = 2;
 
     static vecNode_sptr createNodes(float ratio);
 };

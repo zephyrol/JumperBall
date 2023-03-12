@@ -9,7 +9,9 @@
 #include <algorithm>
 
 Page::Page(Player_sptr &&player) :
-    _player(std::move(player)) {
+    _player(std::move(player)),
+    _currentSelectedLabel(0) // id 0 means "no selection"
+{
 }
 
 Page_wptr Page::parent() {
@@ -31,3 +33,10 @@ Displayable::GlobalState Page::getGlobalState() const {
     return GlobalState::United;
 }
 
+Displayable::DynamicNames Page::getDynamicIntNames() const {
+    return {"selectedLabel"};
+}
+
+Displayable::DynamicValues<int> Page::getDynamicIntValues() const {
+    return {_currentSelectedLabel};
+}

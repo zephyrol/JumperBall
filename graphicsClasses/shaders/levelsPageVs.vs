@@ -9,14 +9,20 @@ out float fs_isLetter;
 
 uniform float positionY;
 uniform int levelProgression;
+uniform int selectedLabel;
 
 void main() {
     fs_vertexUVs = vs_vertexUVs;
-    fs_vertexColor = vs_labelId < 1 || vs_labelId <= levelProgression
-        ? vs_vertexColor
-        : vs_vertexColor * 0.2;
 
-    fs_isLetter = vs_labelId < 0
+    if(vs_labelId > levelProgression) {
+       fs_vertexColor = vs_vertexColor * 0.2;
+    } else if (vs_labelId == selectedLabel) {
+        fs_vertexColor = vec3(1.0);
+    } else {
+        fs_vertexColor = vs_vertexColor;
+    }
+
+    fs_isLetter = vs_labelId == -1
         ? -1.0
         : 1.0;
 
