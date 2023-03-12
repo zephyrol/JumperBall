@@ -104,8 +104,8 @@ Page_sptr PausePage::click(float mouseX, float mouseY) {
 vecCstTextNode_uptr PausePage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     textNodes.emplace_back(new TextNode(_jumperBallTitleNode, "Jumper Ball", 0));
-    textNodes.emplace_back(new TextNode(_resumeNode, "Resume", 0));
-    textNodes.emplace_back(new TextNode(_exitNode, "Exit", 0));
+    textNodes.emplace_back(new TextNode(_resumeNode, "Resume", resumeLabelId));
+    textNodes.emplace_back(new TextNode(_exitNode, "Exit", exitLabelId));
     return textNodes;
 }
 
@@ -115,4 +115,26 @@ std::vector<std::string> PausePage::shaderDefines() const {
 
 std::string PausePage::getVertexShaderName() const {
     return "titlePageVs.vs";
+}
+
+void PausePage::update(const Mouse &mouse) {
+
+    if(!mouse.isPressed()) {
+        _currentSelectedLabel = 0;
+        return;
+    }
+
+    // Positions have to be centered
+    const auto mouseX = mouse.currentXCoord() - 0.5f;
+    const auto mouseY = mouse.currentYCoord() - 0.5f;
+    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
+        return node->intersect(mouseX, mouseY);
+    };
+    if (intersectTest(_resumeNode)) {
+        _currentSelectedLabel = resumeLabelId;
+    } else if (intersectTest(_exitNode)) {
+        _currentSelectedLabel = exitLabelId;
+    } else {
+        _currentSelectedLabel = 0;
+    }
 }

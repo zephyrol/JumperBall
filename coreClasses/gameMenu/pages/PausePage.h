@@ -42,12 +42,17 @@ public:
 
     std::vector<std::string> shaderDefines() const override;
 
+    void update(const Mouse &mouse) override;
+
 private:
     const Page_wptr _parent;
     Page_sptr _inGamePage;
     Node_sptr _jumperBallTitleNode;
     Node_sptr _resumeNode;
     Node_sptr _exitNode;
+
+    static constexpr int resumeLabelId = 1;
+    static constexpr int exitLabelId = 2;
 
     static vecNode_sptr createNodes(float ratio);
 };
