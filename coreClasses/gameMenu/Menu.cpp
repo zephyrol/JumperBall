@@ -14,6 +14,7 @@
 #include "gameMenu/pages/SuccessPage.h"
 #include "gameMenu/pages/FailurePage.h"
 #include "gameMenu/pages/PausePage.h"
+#include "gameMenu/pages/CreditsPage.h"
 
 Menu::Menu(
     Player_sptr player,
@@ -65,14 +66,25 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr &player, float r
     const auto inGamePage = InGamePage::createInstance(player, pausePage, ratio);
     const auto successPage = SuccessPage::createInstance(player, titlePage, ratio);
     const auto failurePage = FailurePage::createInstance(player, titlePage, ratio);
+    const auto creditsPage = CreditsPage::createInstance(player, titlePage, ratio);
 
     titlePage->setLevelsPage(levelsPage);
+    titlePage->setCreditsPage(creditsPage);
     levelsPage->setInGamePage(inGamePage);
     successPage->setInGamePage(inGamePage);
     failurePage->setInGamePage(inGamePage);
     pausePage->setInGamePage(inGamePage);
 
-    const vecPage_sptr pages{titlePage, levelsPage, pausePage, inGamePage, successPage, failurePage};
+    const vecPage_sptr pages{
+        titlePage,
+        levelsPage,
+        pausePage,
+        inGamePage,
+        successPage,
+        failurePage,
+        creditsPage
+    };
+
     return std::make_shared<Menu>(
         player,
         successPage,

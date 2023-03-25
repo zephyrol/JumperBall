@@ -1,5 +1,5 @@
 //
-// Created by Morgenthaler Sébastien on 15/08/22.
+// Created by Morgenthaler S on 15/08/22.
 //
 
 #ifndef JUMPERBALLAPPLICATION_TITLEPAGE_H
@@ -26,12 +26,15 @@ public:
         Node_sptr &&play,
         Node_sptr &&store,
         Node_sptr &&language,
+        Node_sptr &&credits,
         Node_sptr &&exitNode,
         Node_sptr &&author,
         float currentRatio
     );
 
     void setLevelsPage(Page_sptr levelsPage);
+
+    void setCreditsPage(Page_sptr creditsPage);
 
     vecCstTextNode_uptr genTextNodes() const override;
 
@@ -48,17 +51,20 @@ private:
     Node_sptr _play;
     Node_sptr _store;
     Node_sptr _language;
+    Node_sptr _credits;
     Node_sptr _exitNode;
     Node_sptr _author;
 
     Page_sptr _levelsPage;
+    Page_sptr _creditsPage;
 
     float _currentRatio;
 
     static constexpr int playLabelId = 1;
     static constexpr int storeLabelId = 2;
     static constexpr int languageLabelId = 3;
-    static constexpr int exitLabelId = 4;
+    static constexpr int creditsLabelId = 4;
+    static constexpr int exitLabelId = 5;
 
     static vecNode_sptr createNodes(float ratio, bool english);
 
