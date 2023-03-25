@@ -6,6 +6,7 @@ layout(location = 3) in int vs_labelId;
 out vec2 fs_vertexUVs;
 out vec3 fs_vertexColor;
 out float fs_isLetter;
+out float fs_needsDiscard;
 
 uniform float positionY;
 uniform int levelProgression;
@@ -26,6 +27,14 @@ void main() {
         ? -1.0
         : 1.0;
 
-    vec2 positionXY = vs_vertexPosition.xy + vec2(0.0, positionY);
+    vec2 positionXY = vs_vertexPosition.xy;
+    fs_needsDiscard = -1.0;
+    if(vs_labelId > 0) {
+        positionXY +=  vec2(0.0, positionY);
+        if(positionXY.y > heightThreshold) {
+            fs_needsDiscard = 1.0;
+        }
+    }
+
     gl_Position = vec4(positionXY, 0.0, 1.0);
 }

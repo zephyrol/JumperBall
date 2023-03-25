@@ -48,7 +48,8 @@ public:
         const std::string &vs,
         const std::string &fs,
         const std::vector<std::string> &defines = {},
-        const std::map<std::string, glm::vec2> &constVec2s = {}
+        const std::vector<std::pair<std::string, GLfloat>> &constFloats = {},
+        const std::vector<std::pair<std::string, glm::vec2>> &constVec2s = {}
     );
 
     void use() const;

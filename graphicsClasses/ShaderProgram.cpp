@@ -33,7 +33,8 @@ ShaderProgram_sptr ShaderProgram::createInstance(
     const std::string &vs,
     const std::string &fs,
     const std::vector<std::string> &defines,
-    const std::map<std::string, glm::vec2> &constVec2s
+    const std::vector<std::pair<std::string, GLfloat>> &constFloats,
+    const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
 ) {
     const auto shaderProgramHandle = glCreateProgram();
     if (shaderProgramHandle == 0) {
@@ -41,8 +42,8 @@ ShaderProgram_sptr ShaderProgram::createInstance(
                   << std::endl;
         exit(EXIT_FAILURE);
     }
-    auto vertexShader = Shader::createVertexShader(fileContent, vs, defines, {});
-    auto fragmentShader = Shader::createFragmentShader(fileContent, fs, defines, constVec2s);
+    auto vertexShader = Shader::createVertexShader(fileContent, vs, defines, constFloats, constVec2s);
+    auto fragmentShader = Shader::createFragmentShader(fileContent, fs, defines, constFloats, constVec2s);
 
     glAttachShader(shaderProgramHandle, vertexShader->getHandle());
     glAttachShader(shaderProgramHandle, fragmentShader->getHandle());
@@ -93,49 +94,3 @@ void ShaderProgram::setTextureIndex(const std::string &name, GLint index) {
     );
     glUniform1i(location, index);
 }
-
-// void ShaderProgram::bindUniform(const std::string &name, const glm::mat4 &value) const {
-//     glUniformMatrix4fv(getLocation(name), 1, GL_FALSE, &value[0][0]);
-// }
-//
-// void ShaderProgram::bindUniform(const std::string &name, const glm::vec4 &value) const {
-//     glUniform4fv(getLocation(name), 1, &value[0]);
-// }
-//
-// void ShaderProgram::bindUniform(const std::string &name, const glm::vec3 &value) const {
-//     glUniform3fv(getLocation(name), 1, &value[0]);
-// }
-//
-// void ShaderProgram::bindUniform(const std::string &name, const glm::vec2 &value) const {
-//     glUniform2fv(getLocation(name), 1, &value[0]);
-// }
-//
-// void ShaderProgram::bindUniform(const std::string &name, const GLfloat &value) const {
-//     glUniform1fv(getLocation(name), 1, &value);
-// }
-//
-// void ShaderProgram::bindUniform(const std::string &name, const bool &value) const {
-//     glUniform1i(getLocation(name), value);
-// }
-//
-// void ShaderProgram::bindUniform(const std::string &name, const int &value) const {
-//     glUniform1i(getLocation(name), value);
-// }
-//
-// void ShaderProgram::bindUniform(const std::string &name, const std::vector<int> &value) const {
-//     const auto size = static_cast <GLsizei>(value.size());
-//     glUniform1iv(getLocation(name), size, value.data());
-// }
-//
-// void ShaderProgram::bindUniform(const std::string &name, const std::vector<float> &value) const {
-//     const auto size = static_cast <GLsizei>(value.size());
-//     glUniform1fv(getLocation(name), size, value.data());
-// }
-//
-// void ShaderProgram::bindUniformTextureIndex(const std::string &name, int textureNumber) const {
-//     glUniform1i(getLocation(name), textureNumber);
-// }
-//
-// void ShaderProgram::bindTexture(GLuint textureID) {
-//     glBindTexture(GL_TEXTURE_2D, textureID);
-// }

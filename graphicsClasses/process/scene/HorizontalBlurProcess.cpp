@@ -56,6 +56,7 @@ ShaderProgram_sptr HorizontalBlurProcess::createHorizontalBlurProcessShaderProgr
         "basicFboVs.vs",
         "horizontalBlurFs.fs",
         {},
+        {},
         {{"texelSize", glm::vec2(
             1.f / static_cast<float>(width),
             1.f / static_cast<float>(height)

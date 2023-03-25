@@ -24,7 +24,8 @@ public:
         const JBTypes::FileContent &fileContent,
         const std::string &shaderFilename,
         const std::vector<std::string> &defines,
-        const std::map<std::string, glm::vec2> &constVec2s
+        const std::vector<std::pair<std::string, GLfloat>> &constFloats,
+        const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
     );
 
     Shader(const Shader &shader) = delete;
@@ -43,14 +44,16 @@ public:
         const JBTypes::FileContent &fileContent,
         const std::string &shaderName,
         const std::vector<std::string> &defines,
-        const std::map<std::string, glm::vec2> &constVec2s
+        const std::vector<std::pair<std::string, GLfloat>> &constFloats,
+        const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
     );
 
     static CstShader_uptr createFragmentShader(
         const JBTypes::FileContent &fileContent,
         const std::string &shaderName,
         const std::vector<std::string> &defines,
-        const std::map<std::string, glm::vec2> &constVec2s
+        const std::vector<std::pair<std::string, GLfloat>> &constFloats,
+        const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
     );
 
 private:
@@ -58,7 +61,8 @@ private:
     static std::string completeShaderCode(
         const std::string &shaderCode,
         const std::vector<std::string> &defines,
-        const std::map<std::string, glm::vec2> &constVec2s
+        const std::vector<std::pair<std::string, GLfloat>> &constFloats,
+        const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
     );
 
     const GLuint _shaderHandle;

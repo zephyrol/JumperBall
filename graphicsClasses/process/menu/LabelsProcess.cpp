@@ -52,11 +52,17 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
         ));
     }
 
+    std::vector<std::pair<std::string, GLfloat>> glFloatConsts{};
+    for(const auto& item: page->getVertexShaderConstants()) {
+       glFloatConsts.emplace_back(item.first, Utility::convertToOpenGLFormat(item.second));
+    }
+
     auto labelsShader = ShaderProgram::createInstance(
         fileContent,
         page->getVertexShaderName(),
         "labelFs.fs",
-        page->shaderDefines()
+        page->shaderDefines(),
+        glFloatConsts
     );
     labelsShader->use();
 

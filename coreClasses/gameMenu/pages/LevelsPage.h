@@ -14,7 +14,6 @@ class LevelsPage;
 using LevelsPage_sptr = std::shared_ptr<LevelsPage>;
 
 
-
 class LevelsPage : public ScrollablePage {
 public:
     static LevelsPage_sptr createInstance(
@@ -51,16 +50,22 @@ public:
 
     std::vector<std::string> shaderDefines() const override;
 
+    std::vector<std::pair<std::string, float>> getVertexShaderConstants() const override;
+
     void update(const Mouse &mouse) override;
 
 private:
 
     const Page_wptr _parent;
+
     Node_sptr _levelsTitle;
+    float _heightThreshold;
 
     std::vector<Node_sptr> _levels;
     ArrowLabel_sptr _arrowLabel;
     Page_sptr _inGamePage;
+
+    float computeHeightThreshold() const;
 
 
     template<class T>

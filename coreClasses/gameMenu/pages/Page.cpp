@@ -40,3 +40,7 @@ Displayable::DynamicNames Page::getDynamicIntNames() const {
 Displayable::DynamicValues<int> Page::getDynamicIntValues() const {
     return {_currentSelectedLabel};
 }
+
+std::vector<std::pair<std::string, float> > Page::getVertexShaderConstants() const {
+    return {};
+}

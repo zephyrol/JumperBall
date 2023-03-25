@@ -52,6 +52,7 @@ ShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgram(
         "basicFboVs.vs",
         "verticalBlurFs.fs",
         {},
+        {},
         {{
              "texelSize", glm::vec2(
                 1.f / static_cast<float>(width),

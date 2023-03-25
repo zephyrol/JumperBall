@@ -49,6 +49,8 @@ public:
 
     virtual std::string getVertexShaderName() const = 0;
 
+    virtual std::vector<std::pair<std::string, float> > getVertexShaderConstants() const;
+
     virtual void update(const Mouse &mouse);
 
     virtual void resize(float ratio) = 0;

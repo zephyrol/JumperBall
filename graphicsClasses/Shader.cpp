@@ -12,12 +12,13 @@ Shader::Shader(
     const JBTypes::FileContent &fileContent,
     const std::string &shaderFilename,
     const std::vector<std::string> &defines,
-    const std::map<std::string, glm::vec2> &constVec2s
+    const std::vector<std::pair<std::string, GLfloat>> &constFloats,
+    const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
 ) :
     _shaderHandle(glCreateShader(shaderType)),
     _shaderType(shaderType),
     _shaderFilename(shaderFilename),
-    _shaderCode(completeShaderCode(fileContent.at(shaderFilename), defines, constVec2s)) {
+    _shaderCode(completeShaderCode(fileContent.at(shaderFilename), defines, constFloats, constVec2s)) {
     if (_shaderHandle == 0) {
         std::cerr << "Error during creation of the shader ..." << std::endl;
         exit(EXIT_FAILURE);
@@ -66,13 +67,15 @@ CstShader_uptr Shader::createVertexShader(
     const JBTypes::FileContent &fileContent,
     const std::string &shaderName,
     const std::vector<std::string> &defines,
-    const std::map<std::string, glm::vec2> &constVec2s
+    const std::vector<std::pair<std::string, GLfloat>> &constFloats,
+    const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
 ) {
     return std::unique_ptr<const Shader>(new Shader(
         GL_VERTEX_SHADER,
         fileContent,
         shaderName,
         defines,
+        constFloats,
         constVec2s
     ));
 }
@@ -81,13 +84,15 @@ CstShader_uptr Shader::createFragmentShader(
     const JBTypes::FileContent &fileContent,
     const std::string &shaderName,
     const std::vector<std::string> &defines,
-    const std::map<std::string, glm::vec2> &constVec2s
+    const std::vector<std::pair<std::string, GLfloat>> &constFloats,
+    const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
 ) {
     return std::unique_ptr<const Shader>(new Shader(
         GL_FRAGMENT_SHADER,
         fileContent,
         shaderName,
         defines,
+        constFloats,
         constVec2s
     ));
 }
@@ -95,7 +100,8 @@ CstShader_uptr Shader::createFragmentShader(
 std::string Shader::completeShaderCode(
     const std::string &shaderCode,
     const std::vector<std::string> &defines,
-    const std::map<std::string, glm::vec2> &constVec2s
+    const std::vector<std::pair<std::string, GLfloat>> &constFloats,
+    const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
 ) {
     const std::map<size_t, std::string> shaderHeader = {
         {0, "#version 330 core\n"},
@@ -103,6 +109,12 @@ std::string Shader::completeShaderCode(
         {2, "#version 300 es\nprecision highp float;\n"}
     };
     std::string finalShader = shaderHeader.at(JB_SYSTEM);
+
+    for (const auto &item: constFloats) {
+        const auto &constName = item.first;
+        const auto &constValue = item.second;
+        finalShader += "const float " + constName + " = " + std::to_string(constValue) + ";\n";
+    }
 
     for (const auto &item: constVec2s) {
         const auto &constName = item.first;

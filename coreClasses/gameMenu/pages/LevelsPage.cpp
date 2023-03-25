@@ -24,6 +24,7 @@ LevelsPage::LevelsPage(
 ),
     _parent(parent),
     _levelsTitle(std::move(levelsTitle)),
+    _heightThreshold(computeHeightThreshold()),
     _levels(std::move(levels)),
     _arrowLabel(std::move(arrowLabel)),
     _inGamePage(nullptr) {
@@ -86,6 +87,7 @@ void LevelsPage::resize(float ratio) {
     auto levelsTitleNode = createLevelsTitleNode(headerNode);
     auto arrowLabel = createArrowLabel(headerNode);
     _levelsTitle = std::move(levelsTitleNode);
+    _heightThreshold = computeHeightThreshold();
     _levels = std::move(levelsNode);
     _arrowLabel = std::move(arrowLabel);
 }
@@ -104,7 +106,7 @@ Node_sptr LevelsPage::getCommonNode(float ratio) {
 Page_sptr LevelsPage::click(float mouseX, float mouseY) {
 
     const auto intersectTest = [this, &mouseX, &mouseY](const Node_sptr &node) {
-        return node->intersect(mouseX, mouseY - getOffsetY());
+        return mouseY < _heightThreshold && node->intersect(mouseX, mouseY - getOffsetY());
     };
 
     for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
@@ -117,7 +119,7 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
             return _inGamePage;
         }
     }
-    if (intersectTest(_arrowLabel->getNode())) {
+    if (_arrowLabel->getNode()->intersect(mouseX, mouseY)) {
         return _parent.lock();
     }
     return nullptr;
@@ -148,7 +150,7 @@ void LevelsPage::update(const Mouse &mouse) {
             }
         }
     }
-    if (intersectTest(_arrowLabel->getNode())) {
+    if (_arrowLabel->getNode()->intersect(mouseX, mouseY)) {
         _currentSelectedLabel = LevelsPage::arrowLabelId;
     }
 }
@@ -207,7 +209,7 @@ std::string LevelsPage::getVertexShaderName() const {
 }
 
 std::vector<std::string> LevelsPage::shaderDefines() const {
-    return {"TEST_ALPHA_TEXTURE"};
+    return {"TEST_ALPHA_TEXTURE", "DISCARDING"};
 }
 
 Displayable::DynamicNames LevelsPage::getDynamicIntNames() const {
@@ -223,3 +225,15 @@ Displayable::DynamicValues<int> LevelsPage::getDynamicIntValues() const {
 }
 
 const int LevelsPage::arrowLabelId = -1;
+
+std::vector<std::pair<std::string, float>> LevelsPage::getVertexShaderConstants() const {
+    return {{
+                "heightThreshold",
+                // Convert to OpenGL format
+                _heightThreshold * 2.f
+            }};
+}
+
+float LevelsPage::computeHeightThreshold() const {
+    return (_levelsTitle->positionY() - _levelsTitle->height() * 0.5f);
+}
