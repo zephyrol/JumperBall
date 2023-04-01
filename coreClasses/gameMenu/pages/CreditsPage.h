@@ -22,6 +22,8 @@ public:
 
     void resize(float ratio) override;
 
+    Page_wptr parent() override;
+
     explicit CreditsPage(
         Player_sptr &&player,
         Node_sptr&& credits,
@@ -47,6 +49,8 @@ private:
     const Page_wptr _parent;
     Node_sptr _credits;
     Node_sptr _developmentAndDesign;
+    Node_sptr _selectNameToGo;
+    Node_sptr _toPersonalPage;
     Node_sptr _mainAuthor;
     Node_sptr _musicAndSoundsEffects;
     Node_sptr _secondAuthor;

@@ -95,31 +95,31 @@ vecNode_sptr TitlePage::createNodes(float ratio, bool english) {
     const auto playNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
-        english ? 1.05f : 1.1f // Because p creates an offset
+        english ? 1.35f : 1.4f // Because p creates an offset
     );
 
     const auto storeNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
-        english ? 0.6f : 0.55f // Because q creates an offset
+        english ? 0.9f : 0.85f // Because q creates an offset
     );
 
     const auto languageNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
-        0.03f // Because g letter creates an offset
+        0.33f // Because g letter creates an offset
     );
 
     const auto creditsNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
-        0.03f // Because g letter creates an offset
+        -0.1f
     );
 
     const auto exitNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
-        english ? -0.4f : -0.45f // Because Q creates an offset
+        english ? -0.6f : -0.65f // Because Q creates an offset
     );
 
     return {jumperBallTitle, playNode, storeNode, languageNode, creditsNode, exitNode, authorNode};
@@ -138,6 +138,9 @@ Page_sptr TitlePage::click(float mouseX, float mouseY) {
     }
     if (intersectTest(_exitNode)) {
         _player->requestQuit();
+    }
+    if (intersectTest(_credits)) {
+        return _creditsPage;
     }
     return nullptr;
 }
@@ -198,6 +201,8 @@ void TitlePage::update(const Mouse &mouse) {
         _currentSelectedLabel = storeLabelId;
     } else if (intersectTest(_language)) {
         _currentSelectedLabel = languageLabelId;
+    } else if (intersectTest(_credits)) {
+        _currentSelectedLabel = creditsLabelId;
     } else {
         _currentSelectedLabel = -1;
     }

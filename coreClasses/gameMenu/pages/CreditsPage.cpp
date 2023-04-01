@@ -116,7 +116,7 @@ Page_sptr CreditsPage::click(float mouseX, float mouseY) {
         return node->intersect(mouseX, mouseY);
     };
     if (intersectTest(_exitNode)) {
-        _player->requestQuit();
+        return _parent.lock();
     }
     return nullptr;
 }
@@ -124,7 +124,7 @@ Page_sptr CreditsPage::click(float mouseX, float mouseY) {
 vecCstTextNode_uptr CreditsPage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     const auto english = _player->isUsingEnglishLanguage();
-    textNodes.emplace_back(new TextNode(_credits, "Credits", 0));
+    textNodes.emplace_back(new TextNode(_credits, english ? "Credits" : "Cr;dits", 0));
     textNodes.emplace_back(new TextNode(
         _developmentAndDesign,
         english ? "Development, Design:" : "Developpement, Design:",
@@ -134,7 +134,7 @@ vecCstTextNode_uptr CreditsPage::genTextNodes() const {
     textNodes.emplace_back(
         new TextNode(
             _musicAndSoundsEffects,
-            english ? "Music and sound effects:" : "Musiques et sons", musicAndSoundsEffectsLabelId)
+            english ? "Music and sound effects:" : "Musiques et sons:", musicAndSoundsEffectsLabelId)
     );
     textNodes.emplace_back(new TextNode( _secondAuthor, "Julien Goettelmann", secondAuthorLabelId));
     textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Quitter", exitNodeLabelId));
@@ -174,5 +174,9 @@ void CreditsPage::update(const Mouse &mouse) {
     } else {
         _currentSelectedLabel = -1;
     }
+}
+
+Page_wptr CreditsPage::parent() {
+    return _parent;
 }
 
