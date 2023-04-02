@@ -29,6 +29,7 @@ public:
         Node_sptr &&credits,
         Node_sptr &&exitNode,
         Node_sptr &&author,
+        Label_sptr &&backgroundLabel,
         float currentRatio
     );
 
@@ -46,6 +47,8 @@ public:
 
     std::vector<std::string> shaderDefines() const override;
 
+    vecCstLabel_sptr labels() const override;
+
 private:
     Node_sptr _jumperBallTitle;
     Node_sptr _play;
@@ -54,6 +57,8 @@ private:
     Node_sptr _credits;
     Node_sptr _exitNode;
     Node_sptr _author;
+
+    Label_sptr _backgroundLabel;
 
     Page_sptr _levelsPage;
     Page_sptr _creditsPage;
@@ -67,6 +72,8 @@ private:
     static constexpr int exitLabelId = 5;
 
     static vecNode_sptr createNodes(float ratio, bool english);
+
+    static Label_sptr createBackgroundLabel(Node_sptr node);
 
 };
 

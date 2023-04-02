@@ -25,7 +25,7 @@ std::string Label::message() const {
 }
 
 vecLabelGeometry Label::genGeometries() const {
-    return {};
+    return {createDisplayableQuad(0.f, 0.f, 1.f, 1.f)};
 }
 
 const JBTypes::Color& Label::color() const {

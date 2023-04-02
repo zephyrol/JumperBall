@@ -19,6 +19,7 @@ TitlePage::TitlePage(
     Node_sptr &&credits,
     Node_sptr &&exitNode,
     Node_sptr &&author,
+    Label_sptr &&backgroundLabel,
     float currentRatio
 ) : Page(
     std::move(player)
@@ -30,6 +31,7 @@ TitlePage::TitlePage(
     _credits(std::move(credits)),
     _exitNode(std::move(exitNode)),
     _author(std::move(author)),
+    _backgroundLabel(std::move(backgroundLabel)),
     _levelsPage(nullptr),
     _creditsPage(nullptr),
     _currentRatio(currentRatio) {
@@ -49,6 +51,7 @@ void TitlePage::resetNodes() {
     _credits = nodes.at(4);
     _exitNode = nodes.at(5);
     _author = nodes.at(6);
+    _backgroundLabel = createBackgroundLabel(nodes.at(7));
 }
 
 
@@ -63,6 +66,7 @@ TitlePage_sptr TitlePage::createInstance(Player_sptr player, float ratio) {
         std::move(nodes.at(4)),
         std::move(nodes.at(5)),
         std::move(nodes.at(6)),
+        createBackgroundLabel(std::move(nodes.at(7))),
         ratio
     );
 }
@@ -122,7 +126,16 @@ vecNode_sptr TitlePage::createNodes(float ratio, bool english) {
         english ? -0.6f : -0.65f // Because Q creates an offset
     );
 
-    return {jumperBallTitle, playNode, storeNode, languageNode, creditsNode, exitNode, authorNode};
+    return {
+        jumperBallTitle,
+        playNode,
+        storeNode,
+        languageNode,
+        creditsNode,
+        exitNode,
+        authorNode,
+        mainTitleNode
+    };
 }
 
 Page_sptr TitlePage::click(float mouseX, float mouseY) {
@@ -178,7 +191,7 @@ std::string TitlePage::getVertexShaderName() const {
 }
 
 std::vector<std::string> TitlePage::shaderDefines() const {
-    return {"ALWAYS_ALPHA_TEXTURE"};
+    return {"TRANSPARENT_BACKGROUND"};
 }
 
 void TitlePage::update(const Mouse &mouse) {
@@ -206,4 +219,17 @@ void TitlePage::update(const Mouse &mouse) {
     } else {
         _currentSelectedLabel = -1;
     }
+}
+
+vecCstLabel_sptr TitlePage::labels() const {
+    return {_backgroundLabel};
+}
+
+Label_sptr TitlePage::createBackgroundLabel(Node_sptr node) {
+    static constexpr int transparentLabelId = 1000;
+    return std::make_shared<Label>(
+        std::move(node),
+        JBTypes::Color::White,
+        transparentLabelId
+    );
 }
