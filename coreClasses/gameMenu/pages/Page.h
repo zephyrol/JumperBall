@@ -13,6 +13,7 @@
 #include "gameMenu/nodes/TextNode.h"
 #include "system/Mouse.h"
 #include "scene/Map.h"
+#include "gameMenu/labels/ArrowLabel.h"
 #include <list>
 
 class Page;
@@ -23,7 +24,7 @@ using CstPage_sptr = std::shared_ptr<const Page>;
 using vecCstPage_sptr = std::vector<CstPage_sptr>;
 using vecPage_sptr = std::vector<Page_sptr>;
 
-class Page: public Displayable {
+class Page : public Displayable {
 public:
 
     explicit Page(Player_sptr &&player);
@@ -65,6 +66,9 @@ public:
 protected:
     const Player_sptr _player;
     int _currentSelectedLabel;
+
+    static std::shared_ptr<ArrowLabel>
+    createArrowLabel(const Node_sptr &headerNode, int labelId, bool onUp, float ratio);
 
 };
 

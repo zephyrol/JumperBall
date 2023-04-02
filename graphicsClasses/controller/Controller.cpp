@@ -77,7 +77,6 @@ void Controller::releaseMouse() {
 }
 
 void Controller::runGame(size_t level) {
-    // TODO: uncomment
     _doubleChronometer->reset();
     _scene = std::make_shared<Scene>(
         _filesContent.at("map" + std::to_string(level) + ".txt"),

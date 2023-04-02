@@ -119,13 +119,14 @@ public:
 
     std::string genSaveContent();
 
+    void setAsInMenu();
+
     static constexpr unsigned int maxLevel = 2;
 
     template<typename T>
     static T readValue(std::istringstream& stream);
 
 private:
-    void setAsInMenu();
 
     const DoubleChronometer_sptr _doubleChronometer;
     Status _status;

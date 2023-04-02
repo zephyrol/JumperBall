@@ -7,26 +7,32 @@
 
 #include "Cube.h"
 
-Cube::Cube(const glm::mat4 &modelTransform,
-           const glm::mat4 &normalsTransform,
-           const std::array<bool, 6> &sides) :
+Cube::Cube(
+    const glm::mat4 &modelTransform,
+    const glm::mat4 &normalsTransform,
+    const std::array<bool, 6> &sides
+) :
     GeometricShape(modelTransform, normalsTransform, {}, {}),
     _sides(sides) {
 }
 
-Cube::Cube(const JBTypes::Color &color,
-           const glm::mat4 &modelTransform,
-           const glm::mat4 &normalsTransform,
-           const std::array<bool, 6> &sides) :
+Cube::Cube(
+    const JBTypes::Color &color,
+    const glm::mat4 &modelTransform,
+    const glm::mat4 &normalsTransform,
+    const std::array<bool, 6> &sides
+) :
     GeometricShape(modelTransform, normalsTransform, genColors(color), {}),
     _sides(sides) {
 
 }
 
-Cube::Cube(const glm::vec3 &customColor,
-           const glm::mat4 &modelTransform,
-           const glm::mat4 &normalsTransform,
-           const std::array<bool, 6> &sides) :
+Cube::Cube(
+    const glm::vec3 &customColor,
+    const glm::mat4 &modelTransform,
+    const glm::mat4 &normalsTransform,
+    const std::array<bool, 6> &sides
+) :
     GeometricShape(modelTransform, normalsTransform, {customColor}, {}),
     _sides(sides) {
 }

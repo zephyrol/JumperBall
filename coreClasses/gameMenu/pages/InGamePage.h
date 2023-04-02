@@ -33,11 +33,18 @@ public:
         float ratio
     );
 
+
+    static std::shared_ptr<ArrowLabel> createInGameArrowLabel(const Node_sptr &headerNode);
+
     Page_wptr parent() override;
+
+    vecCstLabel_sptr labels() const override;
 
     Page_sptr click(float mouseX, float mouseY) override;
 
     vecCstTextNode_uptr genTextNodes() const override;
+
+    void update(const Mouse &mouse) override;
 
     void resize(float ratio) override;
 
@@ -58,6 +65,7 @@ private:
     Node_sptr _rightDigitNode;
 
     static const int arrowLabelId;
+
     static vecNode_sptr createNodes(float ratio);
 };
 

@@ -46,6 +46,8 @@ public:
 
     vecCstLabel_sptr labels() const override;
 
+    static std::shared_ptr<ArrowLabel> createLevelsArrowLabel(const Node_sptr &headerNode);
+
     void setInGamePage(Page_sptr inGamePage);
 
     std::vector<std::string> shaderDefines() const override;
@@ -77,7 +79,7 @@ private:
 
     static Node_sptr createLevelsTitleNode(const Node_sptr &headerNode);
 
-    static std::shared_ptr<ArrowLabel> createArrowLabel(const Node_sptr &headerNode);
+    static Node_sptr createArrowNode(const Node_sptr &headerNode);
 
     static Node_sptr getCommonNode(float ratio);
 

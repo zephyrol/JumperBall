@@ -6,6 +6,9 @@
  */
 
 #include "Page.h"
+#include "gameMenu/nodes/LeftNode.h"
+#include "gameMenu/nodes/UpNode.h"
+#include "gameMenu/nodes/DownNode.h"
 #include <algorithm>
 
 Page::Page(Player_sptr &&player) :
@@ -43,4 +46,25 @@ Displayable::DynamicValues<int> Page::getDynamicIntValues() const {
 
 std::vector<std::pair<std::string, float> > Page::getVertexShaderConstants() const {
     return {};
+}
+
+std::shared_ptr<ArrowLabel> Page::createArrowLabel(
+    const Node_sptr &headerNode,
+    int labelId,
+    bool onUp,
+    float ratio
+) {
+    const auto leftNode = std::make_shared<LeftNode>(headerNode, 1.f);
+    Node_sptr node;
+    if (onUp) {
+        node = std::make_shared<UpNode>(leftNode, ratio);
+    } else {
+        node = std::make_shared<DownNode>(leftNode, ratio);
+    }
+    auto arrowLabel = std::make_shared<ArrowLabel>(
+        node,
+        JBTypes::Color::Blue,
+        labelId
+    );
+    return arrowLabel;
 }

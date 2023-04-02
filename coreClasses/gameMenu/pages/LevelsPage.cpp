@@ -39,7 +39,7 @@ LevelsPage_sptr LevelsPage::createInstance(
     auto levelsNode = createLevelsNodes(levelsPageNode);
     const auto headerNode = createHeaderNode(levelsPageNode);
     auto levelsTitleNode = createLevelsTitleNode(headerNode);
-    auto arrowLabel = createArrowLabel(headerNode);
+    auto arrowLabel = createLevelsArrowLabel(createArrowNode(headerNode));
 
     return std::make_shared<LevelsPage>(
         std::move(player),
@@ -85,7 +85,9 @@ void LevelsPage::resize(float ratio) {
     auto levelsNode = createLevelsNodes(levelsPageNode);
     const auto headerNode = createHeaderNode(levelsPageNode);
     auto levelsTitleNode = createLevelsTitleNode(headerNode);
-    auto arrowLabel = createArrowLabel(headerNode);
+    auto arrowLabel = createLevelsArrowLabel(
+        createArrowNode(headerNode)
+    );
     _levelsTitle = std::move(levelsTitleNode);
     _heightThreshold = computeHeightThreshold();
     _levels = std::move(levelsNode);
@@ -146,7 +148,7 @@ void LevelsPage::update(const Mouse &mouse) {
         if (intersectTest(_levels[i])) {
             const auto levelNumber = i + 1;
             if (levelNumber <= _player->levelProgression()) {
-                _currentSelectedLabel = levelNumber;
+                _currentSelectedLabel = static_cast<int>(levelNumber);
             }
         }
     }
@@ -163,14 +165,8 @@ Node_sptr LevelsPage::createLevelsTitleNode(const Node_sptr &headerNode) {
     return std::make_shared<RightNode>(headerNode, 2.5f);
 }
 
-std::shared_ptr<ArrowLabel> LevelsPage::createArrowLabel(const Node_sptr &headerNode) {
-    const auto leftNode = std::make_shared<LeftNode>(headerNode, 1.f);
-    auto arrowLabel = std::make_shared<ArrowLabel>(
-        leftNode,
-        JBTypes::Color::Blue,
-        LevelsPage::arrowLabelId
-    );
-    return arrowLabel;
+Node_sptr LevelsPage::createArrowNode(const Node_sptr &headerNode) {
+    return std::make_shared<DownNode>(headerNode, 4.f);
 }
 
 Page_wptr LevelsPage::parent() {
@@ -189,7 +185,7 @@ vecCstTextNode_uptr LevelsPage::genTextNodes() const {
         textNodes.push_back(CstTextNode_uptr(new TextNode(
             _levels[i],
             (levelNumber < 10 ? "0" : "") + std::to_string(levelNumber),
-            levelNumber
+            static_cast<short>(levelNumber)
         )));
     }
 
@@ -236,4 +232,8 @@ std::vector<std::pair<std::string, float>> LevelsPage::getVertexShaderConstants(
 
 float LevelsPage::computeHeightThreshold() const {
     return (_levelsTitle->positionY() - _levelsTitle->height() * 0.5f);
+}
+
+std::shared_ptr<ArrowLabel> LevelsPage::createLevelsArrowLabel(const Node_sptr &headerNode) {
+    return createArrowLabel(headerNode, LevelsPage::arrowLabelId, false, 1.1f);
 }

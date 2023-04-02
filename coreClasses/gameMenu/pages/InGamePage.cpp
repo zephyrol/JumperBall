@@ -10,10 +10,6 @@
 #include "gameMenu/nodes/LeftNode.h"
 #include "gameMenu/nodes/RightNode.h"
 
-Page_wptr InGamePage::parent() {
-    return _parent;
-}
-
 InGamePage::InGamePage(
     Player_sptr &&player,
     ArrowLabel_sptr arrowLabel,
@@ -31,11 +27,7 @@ InGamePage::InGamePage(
 
 InGamePage_sptr InGamePage::createInstance(Player_sptr player, const Page_sptr &parent, float ratio) {
     auto nodes = createNodes(ratio);
-    auto arrowLabel = std::make_shared<ArrowLabel>(
-        nodes[0],
-        JBTypes::Color::Blue,
-        InGamePage::arrowLabelId
-    );
+    auto arrowLabel = createInGameArrowLabel(nodes[0]);
     auto inGamePage = std::make_shared<InGamePage>(
         std::move(player),
         arrowLabel,
@@ -47,13 +39,21 @@ InGamePage_sptr InGamePage::createInstance(Player_sptr player, const Page_sptr &
     return inGamePage;
 }
 
-Page_sptr InGamePage::click(float, float) {
+Page_wptr InGamePage::parent() {
+    return _parent;
+}
+
+Page_sptr InGamePage::click(float mouseX, float mouseY) {
+    if (_arrowLabel->getNode()->intersect(mouseX, mouseY)) {
+        _player->setAsInMenu();
+        return _parent.lock();
+    }
     return nullptr;
 }
 
 void InGamePage::resize(float ratio) {
     const auto nodes = createNodes(ratio);
-    _arrowLabel = std::make_shared<ArrowLabel>(nodes[0], JBTypes::Color::Blue, InGamePage::arrowLabelId);
+    _arrowLabel = createInGameArrowLabel(nodes[0]);
     _leftDigitNode = nodes[1];
     _middleDigitNode = nodes[2];
     _rightDigitNode = nodes[3];
@@ -108,15 +108,58 @@ std::string InGamePage::getVertexShaderName() const {
 }
 
 Displayable::DynamicNames InGamePage::getDynamicIntNames() const {
-    return {"leftDigit", "middleDigit", "rightDigit"};
+    decltype(getDynamicIntNames()) dynamicNames{"leftDigit", "middleDigit", "rightDigit"};
+    auto pageDynamicNames = Page::getDynamicIntNames();
+    dynamicNames.insert(
+        dynamicNames.end(),
+        std::make_move_iterator(pageDynamicNames.begin()),
+        std::make_move_iterator(pageDynamicNames.end())
+    );
+    return dynamicNames;
 }
 
 Displayable::DynamicValues<int> InGamePage::getDynamicIntValues() const {
+
     const auto remainingTime = static_cast<int> (std::ceilf(_player->getRemainingTime()));
     const auto leftDigit = remainingTime / 100;
     const auto middleDigit = (remainingTime % 100) / 10;
     const auto rightDigit = remainingTime % 10;
     constexpr auto middleDigitIdOffset = 10;
     constexpr auto rightDigitIdOffset = middleDigitIdOffset + 10;
-    return { leftDigit, middleDigit + middleDigitIdOffset, rightDigit + rightDigitIdOffset};
+    decltype(getDynamicIntValues()) dynamicInts{
+        leftDigit,
+        middleDigit + middleDigitIdOffset,
+        rightDigit + rightDigitIdOffset
+    };
+
+    auto pageDynamicInts = Page::getDynamicIntValues();
+    dynamicInts.insert(
+        dynamicInts.end(),
+        std::make_move_iterator(pageDynamicInts.begin()),
+        std::make_move_iterator(pageDynamicInts.end())
+    );
+    return dynamicInts;
+}
+
+vecCstLabel_sptr InGamePage::labels() const {
+    return {_arrowLabel};
+}
+
+void InGamePage::update(const Mouse &mouse) {
+    if (!mouse.isPressed()) {
+        _currentSelectedLabel = 0;
+        return;
+    }
+
+    // Positions have to be centered
+    const auto mouseX = mouse.currentXCoord() - 0.5f;
+    const auto mouseY = mouse.currentYCoord() - 0.5f;
+
+    if (_arrowLabel->getNode()->intersect(mouseX, mouseY)) {
+        _currentSelectedLabel = InGamePage::arrowLabelId;
+    }
+}
+
+std::shared_ptr<ArrowLabel> InGamePage::createInGameArrowLabel(const Node_sptr &headerNode) {
+    return createArrowLabel(headerNode, InGamePage::arrowLabelId, true, 1.5f);
 }

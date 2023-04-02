@@ -11,6 +11,7 @@ out float fs_needsDiscard;
 uniform int leftDigit;
 uniform int middleDigit;
 uniform int rightDigit;
+uniform int selectedLabel;
 
 float needsDiscard() {
     if(vs_labelId == leftDigit && leftDigit != 0
@@ -23,11 +24,17 @@ float needsDiscard() {
 
 void main() {
     fs_vertexUVs = vs_vertexUVs;
-    fs_vertexColor = vs_vertexColor;
-    fs_isLetter = vs_labelId < 0
-        ? -1.0
-        : 1.0;
-
-    fs_needsDiscard = needsDiscard();
+    if(selectedLabel < 0 && selectedLabel == vs_labelId) {
+        fs_vertexColor = vec3(1.0);
+    } else {
+        fs_vertexColor = vs_vertexColor;
+    }
+    if(vs_labelId < 0) {
+        fs_isLetter = -1.0;
+        fs_needsDiscard = -1.0;
+    } else {
+        fs_isLetter = 1.0;
+        fs_needsDiscard = needsDiscard();
+    }
     gl_Position = vec4(vs_vertexPosition.xy, 0.0, 1.0);
 }
