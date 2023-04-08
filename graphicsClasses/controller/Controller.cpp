@@ -101,6 +101,7 @@ void Controller::setValidateMouse(float mouseX, float mouseY) {
 
     if (newPage != currentPage || newLanguage != currentLanguage) {
         _viewer->setPage(newPage);
+        _scene->setNoAction();
     }
 
     if (_player->wantsToQuit()) {

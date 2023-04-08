@@ -19,11 +19,11 @@ void main() {
         fs_vertexColor = vec3(0.0, 1.0, 1.0);
     }
     if(vs_labelId == 1000) {
-        fs_isLetter = -1.f;
-        fs_needsTransparentBackground = 1.f;
+        fs_isLetter = -1.0;
+        fs_needsTransparentBackground = 1.0;
     } else {
-        fs_isLetter = 1.f;
-        fs_needsTransparentBackground = -1.f;
+        fs_isLetter = 1.0;
+        fs_needsTransparentBackground = -1.0;
     }
     gl_Position = vec4(vs_vertexPosition.xy, 0.0, 1.0);
 }

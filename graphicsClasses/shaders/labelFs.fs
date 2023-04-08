@@ -30,7 +30,6 @@ void main() {
         if(fs_needsTransparentBackground > 0.0) {
             float distUv = length(fs_vertexUVs - vec2(0.5));
             alpha = min(1.0 - (distUv * 2.0), 0.4);
-            // alpha = 0.9;
             color = vec3(0.0);
         }
     #endif

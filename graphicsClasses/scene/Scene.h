@@ -30,6 +30,8 @@ public:
 
     Scene(const std::string &mapContent, float screenRatio, Player_sptr player, bool isUsingTouchScreen);
 
+    void setNoAction();
+
     void setValidate();
 
     void setValidateMouse();

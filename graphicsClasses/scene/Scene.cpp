@@ -109,6 +109,10 @@ void Scene::setValidate() {
     _currentKey = Scene::ActionKey::Validate;
 }
 
+void Scene::setNoAction() {
+    _currentKey = Scene::ActionKey::Nothing;
+}
+
 void Scene::setRight() {
     if (!isInGame()) {
         return;
