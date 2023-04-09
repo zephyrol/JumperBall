@@ -224,12 +224,3 @@ void TitlePage::update(const Mouse &mouse) {
 vecCstLabel_sptr TitlePage::labels() const {
     return {_backgroundLabel};
 }
-
-Label_sptr TitlePage::createBackgroundLabel(Node_sptr node) {
-    static constexpr int transparentLabelId = 1000;
-    return std::make_shared<Label>(
-        std::move(node),
-        JBTypes::Color::White,
-        transparentLabelId
-    );
-}

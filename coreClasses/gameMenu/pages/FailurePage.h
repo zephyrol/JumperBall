@@ -24,6 +24,7 @@ public:
         Node_sptr &&failureNode,
         Node_sptr &&retryNode,
         Node_sptr &&exitNode,
+        Label_sptr &&backgroundLabel,
         const Page_sptr &parent
     );
 
@@ -43,11 +44,15 @@ public:
 
     void update(const Mouse &mouse) override;
 
+    vecCstLabel_sptr labels() const override;
+
 private:
     const Page_wptr _parent;
     Node_sptr _failureNode;
     Node_sptr _retryNode;
     Node_sptr _exitNode;
+
+    Label_sptr _backgroundLabel;
 
     Page_sptr _inGamePage;
 

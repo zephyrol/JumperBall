@@ -72,9 +72,6 @@ private:
     static constexpr int exitLabelId = 5;
 
     static vecNode_sptr createNodes(float ratio, bool english);
-
-    static Label_sptr createBackgroundLabel(Node_sptr node);
-
 };
 
 

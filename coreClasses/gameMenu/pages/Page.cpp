@@ -68,3 +68,12 @@ std::shared_ptr<ArrowLabel> Page::createArrowLabel(
     );
     return arrowLabel;
 }
+
+Label_sptr Page::createBackgroundLabel(Node_sptr node) {
+    static constexpr int transparentLabelId = 1000;
+    return std::make_shared<Label>(
+        std::move(node),
+        JBTypes::Color::White,
+        transparentLabelId
+    );
+}

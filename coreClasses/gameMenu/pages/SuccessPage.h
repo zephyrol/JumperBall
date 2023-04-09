@@ -24,6 +24,7 @@ public:
         Node_sptr &&goodGameNode,
         Node_sptr &&continueNode,
         Node_sptr &&exitNode,
+        Label_sptr &&backgroundLabel,
         const Page_sptr &parent
     );
 
@@ -43,11 +44,15 @@ public:
 
     std::vector<std::string> shaderDefines() const override;
 
+    vecCstLabel_sptr labels() const override;
+
 private:
     const Page_wptr _parent;
     Node_sptr _goodGameNode;
     Node_sptr _continueNode;
     Node_sptr _exitNode;
+
+    Label_sptr _backgroundLabel;
 
     Page_sptr _inGamePage;
 

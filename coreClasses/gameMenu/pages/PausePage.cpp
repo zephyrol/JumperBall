@@ -14,12 +14,14 @@ PausePage::PausePage(
     Node_sptr &&jumperBallTitleNode,
     Node_sptr &&resumeNode,
     Node_sptr &&exitNode,
+    Label_sptr &&backgroundLabel,
     const Page_sptr &parent
 ) : Page(std::move(player)),
     _parent(parent),
     _inGamePage(nullptr),
     _jumperBallTitleNode(std::move(jumperBallTitleNode)),
     _resumeNode(std::move(resumeNode)),
+    _backgroundLabel(std::move(backgroundLabel)),
     _exitNode(std::move(exitNode)) {
 }
 
@@ -34,6 +36,7 @@ PausePage_sptr PausePage::createInstance(
         std::move(nodes.at(0)),
         std::move(nodes.at(1)),
         std::move(nodes.at(2)),
+        createBackgroundLabel(std::move(nodes.at(3))),
         parent
     );
 }
@@ -72,7 +75,7 @@ vecNode_sptr PausePage::createNodes(float ratio) {
         optionsNodeRatio
     );
 
-    return {jumperBallTitle, resumeNode, exitNode};
+    return {jumperBallTitle, resumeNode, exitNode, optionsParentNode};
 
 }
 
@@ -81,6 +84,7 @@ void PausePage::resize(float ratio) {
     _jumperBallTitleNode = nodes.at(0);
     _resumeNode = nodes.at(1);
     _exitNode = nodes.at(2);
+    _backgroundLabel = createBackgroundLabel(nodes.at(3));
 }
 
 Page_wptr PausePage::parent() {
@@ -111,7 +115,7 @@ vecCstTextNode_uptr PausePage::genTextNodes() const {
 }
 
 std::vector<std::string> PausePage::shaderDefines() const {
-    return {"ALWAYS_ALPHA_TEXTURE"};
+    return {"TRANSPARENT_BACKGROUND"};
 }
 
 std::string PausePage::getVertexShaderName() const {
@@ -138,4 +142,8 @@ void PausePage::update(const Mouse &mouse) {
     } else {
         _currentSelectedLabel = 0;
     }
+}
+
+vecCstLabel_sptr PausePage::labels() const {
+    return {_backgroundLabel};
 }

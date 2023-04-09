@@ -14,12 +14,14 @@ FailurePage::FailurePage(
     Node_sptr &&failureNode,
     Node_sptr &&retryNode,
     Node_sptr &&exitNode,
+    Label_sptr &&backgroundLabel,
     const Page_sptr &parent
 ) : Page(std::move(player)),
     _parent(parent),
     _failureNode(std::move(failureNode)),
     _retryNode(std::move(retryNode)),
     _exitNode(std::move(exitNode)),
+    _backgroundLabel(std::move(backgroundLabel)),
     _inGamePage(nullptr) {
 }
 
@@ -34,6 +36,7 @@ FailurePage_sptr FailurePage::createInstance(
         std::move(nodes.at(0)),
         std::move(nodes.at(1)),
         std::move(nodes.at(2)),
+        createBackgroundLabel(nodes.at(3)),
         parent
     );
 }
@@ -68,7 +71,7 @@ vecNode_sptr FailurePage::createNodes(float ratio) {
         optionsNodeRatio
     );
 
-    return {youLostTitle, continueNode, exitNode};
+    return {youLostTitle, continueNode, exitNode, optionsParentNode};
 
 }
 
@@ -77,6 +80,7 @@ void FailurePage::resize(float ratio) {
     _failureNode = nodes.at(0);
     _retryNode = nodes.at(1);
     _exitNode = nodes.at(2);
+    _backgroundLabel = createBackgroundLabel(nodes.at(3));
 }
 
 Page_wptr FailurePage::parent() {
@@ -115,7 +119,7 @@ std::string FailurePage::getVertexShaderName() const {
 }
 
 std::vector<std::string> FailurePage::shaderDefines() const {
-    return {"ALWAYS_ALPHA_TEXTURE"};
+    return {"TRANSPARENT_BACKGROUND"};
 }
 
 void FailurePage::update(const Mouse &mouse) {
@@ -138,4 +142,8 @@ void FailurePage::update(const Mouse &mouse) {
     } else {
         _currentSelectedLabel = 0;
     }
+}
+
+vecCstLabel_sptr FailurePage::labels() const {
+    return {_backgroundLabel};
 }

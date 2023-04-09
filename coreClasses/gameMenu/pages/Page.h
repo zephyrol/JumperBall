@@ -70,6 +70,8 @@ protected:
     static std::shared_ptr<ArrowLabel>
     createArrowLabel(const Node_sptr &headerNode, int labelId, bool onUp, float ratio);
 
+    static Label_sptr createBackgroundLabel(Node_sptr node);
+
 };
 
 #endif // PAGE_H

@@ -25,6 +25,7 @@ public:
         Node_sptr &&jumperBallTitleNode,
         Node_sptr &&resumeNode,
         Node_sptr &&exitNode,
+        Label_sptr &&backgroundLabel,
         const Page_sptr &parent
     );
 
@@ -44,12 +45,16 @@ public:
 
     void update(const Mouse &mouse) override;
 
+    vecCstLabel_sptr labels() const override;
+
 private:
     const Page_wptr _parent;
     Page_sptr _inGamePage;
     Node_sptr _jumperBallTitleNode;
     Node_sptr _resumeNode;
     Node_sptr _exitNode;
+
+    Label_sptr _backgroundLabel;
 
     static constexpr int resumeLabelId = 1;
     static constexpr int exitLabelId = 2;

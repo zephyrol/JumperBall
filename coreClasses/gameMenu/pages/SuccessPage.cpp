@@ -14,12 +14,14 @@ SuccessPage::SuccessPage(
     Node_sptr &&goodGameNode,
     Node_sptr &&continueNode,
     Node_sptr &&exitNode,
+    Label_sptr &&backgroundLabel,
     const Page_sptr &parent
 ) : Page(std::move(player)),
     _parent(parent),
     _goodGameNode(std::move(goodGameNode)),
     _continueNode(std::move(continueNode)),
     _exitNode(std::move(exitNode)),
+    _backgroundLabel(std::move(backgroundLabel)),
     _inGamePage(nullptr) {
 }
 
@@ -34,6 +36,7 @@ SuccessPage_sptr SuccessPage::createInstance(
         std::move(nodes.at(0)),
         std::move(nodes.at(1)),
         std::move(nodes.at(2)),
+        createBackgroundLabel(std::move(nodes.at(3))),
         parent
     );
 }
@@ -68,7 +71,7 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
         optionsNodeRatio
     );
 
-    return {goodGameTitle, continueNode, exitNode};
+    return {goodGameTitle, continueNode, exitNode, optionsParentNode};
 
 }
 
@@ -77,6 +80,7 @@ void SuccessPage::resize(float ratio) {
     _goodGameNode = nodes.at(0);
     _continueNode = nodes.at(1);
     _exitNode = nodes.at(2);
+    _backgroundLabel = createBackgroundLabel(nodes.at(3));
 }
 
 Page_wptr SuccessPage::parent() {
@@ -119,7 +123,7 @@ vecCstTextNode_uptr SuccessPage::genTextNodes() const {
 }
 
 std::vector<std::string> SuccessPage::shaderDefines() const {
-    return {"ALWAYS_ALPHA_TEXTURE"};
+    return {"TRANSPARENT_BACKGROUND"};
 }
 
 std::string SuccessPage::getVertexShaderName() const {
@@ -146,4 +150,8 @@ void SuccessPage::update(const Mouse &mouse) {
     } else {
         _currentSelectedLabel = 0;
     }
+}
+
+vecCstLabel_sptr SuccessPage::labels() const {
+    return {_backgroundLabel};
 }
