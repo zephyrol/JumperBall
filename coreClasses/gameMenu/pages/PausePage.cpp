@@ -21,8 +21,8 @@ PausePage::PausePage(
     _inGamePage(nullptr),
     _jumperBallTitleNode(std::move(jumperBallTitleNode)),
     _resumeNode(std::move(resumeNode)),
-    _backgroundLabel(std::move(backgroundLabel)),
-    _exitNode(std::move(exitNode)) {
+    _exitNode(std::move(exitNode)),
+    _backgroundLabel(std::move(backgroundLabel)) {
 }
 
 PausePage_sptr PausePage::createInstance(
