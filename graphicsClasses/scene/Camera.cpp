@@ -292,9 +292,10 @@ void Camera::setRatio(float ratio) {
 }
 
 float Camera::computeFovY(float ratio) noexcept {
-    constexpr float defaultHorizontalModeFovY = static_cast<float>(60 * M_PI) / 180.f;// 65 degrees;
-    constexpr float defaultVerticalModeFovY = static_cast<float>(55 * M_PI) / 180.f;// 55 degrees;
-    return ratio > 0.9f
+    constexpr auto defaultHorizontalModeFovY = static_cast<float>(60 * M_PI) / 180.f;// 65 degrees;
+    constexpr auto defaultVerticalModeFovY = static_cast<float>(55 * M_PI) / 180.f;// 55 degrees;
+    constexpr auto changingFovThreshold = 0.9f;
+    return ratio > changingFovThreshold
            ? defaultHorizontalModeFovY
            : 2.f * atanf((1.f / ratio) * tanf(defaultVerticalModeFovY/ 2.f));
 }
