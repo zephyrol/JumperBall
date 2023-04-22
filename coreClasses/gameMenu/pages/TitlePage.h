@@ -33,7 +33,7 @@ public:
         float currentRatio
     );
 
-    void setLevelsPage(Page_sptr levelsPage);
+void setLevelsPage(Page_sptr levelsPage);
 
     void setCreditsPage(Page_sptr creditsPage);
 

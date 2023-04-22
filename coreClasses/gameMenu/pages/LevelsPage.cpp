@@ -16,6 +16,7 @@ LevelsPage::LevelsPage(
     Player_sptr &&player,
     Node_sptr &&levelsTitle,
     std::vector<Node_sptr> &&levels,
+    Label_sptr &&backgroundLabel,
     std::shared_ptr<ArrowLabel> arrowLabel,
     const Page_sptr &parent
 ) : ScrollablePage(
@@ -26,6 +27,7 @@ LevelsPage::LevelsPage(
     _levelsTitle(std::move(levelsTitle)),
     _heightThreshold(computeHeightThreshold()),
     _levels(std::move(levels)),
+    _backgroundLabel(std::move(backgroundLabel)),
     _arrowLabel(std::move(arrowLabel)),
     _inGamePage(nullptr) {
 }
@@ -45,6 +47,7 @@ LevelsPage_sptr LevelsPage::createInstance(
         std::move(player),
         std::move(levelsTitleNode),
         std::move(levelsNode),
+        createBackgroundLabel(std::move(levelsPageNode)),
         arrowLabel,
         parent
     );
@@ -92,6 +95,7 @@ void LevelsPage::resize(float ratio) {
     _heightThreshold = computeHeightThreshold();
     _levels = std::move(levelsNode);
     _arrowLabel = std::move(arrowLabel);
+    _backgroundLabel = createBackgroundLabel(levelsPageNode);
 }
 
 Node_sptr LevelsPage::getCommonNode(float ratio) {
@@ -158,7 +162,7 @@ void LevelsPage::update(const Mouse &mouse) {
 }
 
 vecCstLabel_sptr LevelsPage::labels() const {
-    return {_arrowLabel};
+    return {_arrowLabel, _backgroundLabel};
 }
 
 Node_sptr LevelsPage::createLevelsTitleNode(const Node_sptr &headerNode) {
@@ -205,7 +209,7 @@ std::string LevelsPage::getVertexShaderName() const {
 }
 
 std::vector<std::string> LevelsPage::shaderDefines() const {
-    return {"TEST_ALPHA_TEXTURE", "DISCARDING"};
+    return {"TEST_ALPHA_TEXTURE", "DISCARDING", "TRANSPARENT_BACKGROUND"};
 }
 
 Displayable::DynamicNames LevelsPage::getDynamicIntNames() const {

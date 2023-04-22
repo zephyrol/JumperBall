@@ -30,6 +30,7 @@ public:
         Player_sptr &&player,
         Node_sptr &&levelsTitle,
         std::vector<Node_sptr> &&levels,
+        Label_sptr &&backgroundLabel,
         std::shared_ptr<ArrowLabel> arrowLabel,
         const Page_sptr &parent
     );
@@ -64,6 +65,9 @@ private:
     float _heightThreshold;
 
     std::vector<Node_sptr> _levels;
+
+    Label_sptr _backgroundLabel;
+
     ArrowLabel_sptr _arrowLabel;
     Page_sptr _inGamePage;
 
