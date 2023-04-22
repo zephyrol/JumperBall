@@ -292,25 +292,27 @@ void Camera::setRatio(float ratio) {
 }
 
 float Camera::computeFovY(float ratio) noexcept {
-    constexpr float defaultFovY = static_cast<float>(65 * M_PI) / 180.f;// 65 degrees;
-    return ratio > 1.f
-           ? defaultFovY
-           : 2.f * atanf((1.f / ratio) * tanf(defaultFovY / 2.f));
+    constexpr float defaultHorizontalModeFovY = static_cast<float>(60 * M_PI) / 180.f;// 65 degrees;
+    constexpr float defaultVerticalModeFovY = static_cast<float>(55 * M_PI) / 180.f;// 55 degrees;
+    return ratio > 0.9f
+           ? defaultHorizontalModeFovY
+           : 2.f * atanf((1.f / ratio) * tanf(defaultVerticalModeFovY/ 2.f));
 }
 
 float Camera::computeLocalOffset(float fovY) noexcept {
-    const float beta = atanf((distBehindBall + distDirPoint) / distAbove);
-    const float halfFovY = fovY / 2.f;
+    const auto beta = atanf((distBehindBall + distDirPoint) / distAbove);
+    const auto halfFovY = fovY / 2.f;
+    constexpr auto fPI = static_cast<float>(M_PI);
     if (beta < halfFovY) {
-        const float alpha = static_cast<float>(M_PI) - halfFovY;
-        const float gamma = static_cast<float>(M_PI) - alpha - beta;
+        const auto alpha = fPI - halfFovY;
+        const auto gamma = fPI - alpha - beta;
 
         // Sines law
         return distAbove * sinf(gamma) / sinf(alpha);
     }
 
-    const float alpha = static_cast<float>(M_PI) - beta;
-    const float gamma = static_cast<float>(M_PI) - halfFovY - alpha;
+    const auto alpha = fPI - beta;
+    const auto gamma = fPI - halfFovY - alpha;
     // Sines law
     return -distAbove * sinf(gamma) / sinf(halfFovY); // minus because the camera is behind
 }

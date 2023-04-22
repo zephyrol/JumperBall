@@ -70,7 +70,7 @@ private:
     float _timePointGoAbove;
     glm::mat4 _perspectiveMatrix;
 
-    static constexpr float distBehindBall = 0.5f;
+    static constexpr float distBehindBall = 0.4f;
     static constexpr float distAbove = 1.1f;
     static constexpr float distDirPoint = 2.f;
 
