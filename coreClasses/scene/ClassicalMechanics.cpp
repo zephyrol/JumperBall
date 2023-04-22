@@ -8,49 +8,40 @@
 #include "ClassicalMechanics.h"
 
 
-ClassicalMechanics::ClassicalMechanics(float ballRadius) :
-    _gravitationalAcceleration{gravitationalAccelerationEarth},
+ClassicalMechanics::ClassicalMechanics(float ballRadius, float speedCoefficient) :
     _jumpDistance{basicJumpDistance},
     _timeToGetDestinationX(getTimeToGetDestFromV0y(basicV0y)),
     _v0{getV0xToRespectDistanceAndTime(), basicV0y},
     _ballRadius(ballRadius),
-    _timesShock{} {
+    _speedCoefficient(speedCoefficient),
+    _timesShock{}
+    {
 }
 
-ClassicalMechanics::ClassicalMechanics(float ballRadius, float jumpDistance, float v0y) :
-    _gravitationalAcceleration{gravitationalAccelerationEarth},
+ClassicalMechanics::ClassicalMechanics(float ballRadius, float jumpDistance, float v0y, float speedCoefficient) :
     _jumpDistance{jumpDistance},
     _timeToGetDestinationX(getTimeToGetDestFromV0y(v0y)),
     _v0{getV0xToRespectDistanceAndTime(), v0y},
     _ballRadius(ballRadius),
-    _timesShock{} {
+    _speedCoefficient(speedCoefficient),
+    _timesShock{}{
 }
 
 float ClassicalMechanics::getJumpDistance() const {
     return _jumpDistance;
 }
 
-float ClassicalMechanics::getGravitationalAcceleration() const {
-    return _gravitationalAcceleration;
-}
-
 ClassicalMechanics::physics2DVector ClassicalMechanics::getPosition(float t) const {
-    return {getPositionX(t), getPositionY(t)};
+    return {getPositionX(t * _speedCoefficient), getPositionY(t * _speedCoefficient)};
 }
 
 ClassicalMechanics::physics2DVector ClassicalMechanics::getVelocity(float t) const {
-    return {getVelocityX(t), getVelocityY(t)};
-}
-
-ClassicalMechanics::physics2DVector ClassicalMechanics::getAcceleration(float t) const {
-    return {getAccelerationX(t), getAccelerationY(t)};
+    return {getVelocityX(t * _speedCoefficient), getVelocityY(t * _speedCoefficient)};
 }
 
 float ClassicalMechanics::evalPositionX(float t) const {
     const float posX = t < _timeToGetDestinationX
-                       ? _v0.x * _timeToGetDestinationX * t - _v0.x * static_cast <float>(
-            powf(t, 2.f)
-        ) / 2.f
+                       ? _v0.x * _timeToGetDestinationX * t - _v0.x * powf(t, 2.f) / 2.f
                        : _jumpDistance;
     return posX;
 }
@@ -134,19 +125,8 @@ float ClassicalMechanics::getVelocityY(float t) const {
     return -gravitationalAccelerationEarth * t + _v0.y;
 }
 
-float ClassicalMechanics::getAccelerationX(float t) const {
-    const float accelerationX = t < _timeToGetDestinationX
-                                ? -_v0.x
-                                : 0.f;
-    return accelerationX;
-}
-
-float ClassicalMechanics::getAccelerationY(float) {
-    return -gravitationalAccelerationEarth;
-}
-
 float ClassicalMechanics::getTimeToGetDestination() const {
-    return _timeToGetDestinationX;
+    return _timeToGetDestinationX / _speedCoefficient;
 }
 
 std::pair<float, float> ClassicalMechanics::solveQuadraticEquation(float a, float b, float c) {
@@ -185,10 +165,6 @@ float ClassicalMechanics::getTimeToGetDestFromV0y(float v0y) {
     return times.first > 0.f
            ? times.first
            : times.second;
-}
-
-const std::vector<float> &ClassicalMechanics::timesShock() {
-    return _timesShock;
 }
 
 void ClassicalMechanics::timesShock(const std::vector<float> &v) {

@@ -93,7 +93,7 @@ bool DarkBall::touchingTest() const {
     ) < (boundingSphereRadius + darkBallRadius);
 }
 
-const ClassicalMechanics DarkBall::darkBallClassicalMechanics(DarkBall::darkBallRadius);
+const ClassicalMechanics DarkBall::darkBallClassicalMechanics(DarkBall::darkBallRadius, 1.f);
 
 vecCstShape_sptr DarkBall::getShapes() const {
     const auto &diameter = this->size();

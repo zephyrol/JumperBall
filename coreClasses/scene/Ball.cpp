@@ -19,9 +19,9 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z, const CstDoubleChrono
     _state(Ball::State::Staying),
     _stateOfLife(Ball::StateOfLife::Normal),
     _jumpingType(Ball::JumpingType::Short),
-    _mechanicsPatternJumping(getRadius()),
-    _mechanicsPatternLongJumping(getRadius(), 3.f, 4.2f),
-    _mechanicsPatternFalling(getRadius(), 0.f, 0.f),
+    _mechanicsPatternJumping(getRadius(), jumpSpeedCoefficient),
+    _mechanicsPatternLongJumping(getRadius(), 3.f, 4.2f, jumpSpeedCoefficient),
+    _mechanicsPatternFalling(getRadius(), 0.f, 0.f, jumpSpeedCoefficient),
     _actionTime(0.f),
     _stateOfLifeTime(0.f),
     _burnCoefficientTrigger(0.f),
@@ -700,10 +700,6 @@ float Ball::burnCoefficient() const {
 
 void Ball::die() noexcept {
     _stateOfLife = Ball::StateOfLife::Dead;
-}
-
-float Ball::getTimeToGetDestination() const {
-    return getMechanicsJumping().getTimeToGetDestination();
 }
 
 Displayable::DynamicNames Ball::getDynamicFloatNames() const {

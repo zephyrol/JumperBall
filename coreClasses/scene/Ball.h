@@ -35,6 +35,7 @@ public:
         const CstDoubleChronometer_sptr &doubleChronometer
     );
 
+    static constexpr float jumpSpeedCoefficient = 1.2f;
     static constexpr float timeToGetNextBlock = 0.25f;
     static constexpr float timeToTurn = 0.3f;
     static constexpr float timeToBurn = 2.f;
