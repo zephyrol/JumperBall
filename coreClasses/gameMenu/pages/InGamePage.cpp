@@ -9,6 +9,7 @@
 #include "gameMenu/nodes/UpNode.h"
 #include "gameMenu/nodes/LeftNode.h"
 #include "gameMenu/nodes/RightNode.h"
+#include "gameMenu/nodes/DownNode.h"
 
 InGamePage::InGamePage(
     Player_sptr &&player,
@@ -16,6 +17,9 @@ InGamePage::InGamePage(
     Node_sptr &&leftDigitNode,
     Node_sptr &&middleDigitNode,
     Node_sptr &&rightDigitNode,
+    Label_sptr key1,
+    Label_sptr key2,
+    Label_sptr key3,
     const Page_sptr &parent,
     CstItemsContainer_sptr itemsContainer
 ) : Page(std::move(player)),
@@ -24,8 +28,10 @@ InGamePage::InGamePage(
     _leftDigitNode(std::move(leftDigitNode)),
     _middleDigitNode(std::move(middleDigitNode)),
     _rightDigitNode(std::move(rightDigitNode)),
-    _itemsContainer(std::move(itemsContainer))
-{
+    _key1(std::move(key1)),
+    _key2(std::move(key2)),
+    _key3(std::move(key3)),
+    _itemsContainer(std::move(itemsContainer)) {
 }
 
 InGamePage_sptr InGamePage::createInstance(
@@ -42,6 +48,9 @@ InGamePage_sptr InGamePage::createInstance(
         std::move(nodes[1]),
         std::move(nodes[2]),
         std::move(nodes[3]),
+        std::make_shared<Label>(std::move(nodes[4]), JBTypes::Color::Yellow, key1LabelId),
+        std::make_shared<Label>(std::move(nodes[5]), JBTypes::Color::Yellow, key2LabelId),
+        std::make_shared<Label>(std::move(nodes[6]), JBTypes::Color::Yellow, key3LabelId),
         parent,
         std::move(itemsContainer)
     );
@@ -66,6 +75,9 @@ void InGamePage::resize(float ratio) {
     _leftDigitNode = nodes[1];
     _middleDigitNode = nodes[2];
     _rightDigitNode = nodes[3];
+    _key1 = std::make_shared<Label>(nodes[4], JBTypes::Color::Yellow, key1LabelId);
+    _key2 = std::make_shared<Label>(nodes[5], JBTypes::Color::Yellow, key2LabelId);
+    _key3 = std::make_shared<Label>(nodes[6], JBTypes::Color::Yellow, key3LabelId);
 }
 
 vecCstTextNode_uptr InGamePage::genTextNodes() const {
@@ -102,15 +114,26 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
     const auto middleDigitNode = std::make_shared<CenteredNode>(digitsNode, digitNodesRatio);
     const auto rightDigitNode = std::make_shared<RightNode>(digitsNode, digitNodesRatio);
 
-    return {arrowNode, leftDigitNode, middleDigitNode, rightDigitNode};
+    const auto footNode = std::make_shared<DownNode>(resizedScreenNode, 10.f);
+    constexpr auto keysNodeRatio = 2.f;
+    const auto keysNode = std::make_shared<RightNode>(footNode, keysNodeRatio);
 
+    constexpr auto keyNodesRatio = 1.f;
+    const auto leftKeyNode = std::make_shared<LeftNode>(keysNode, keyNodesRatio);
+    const auto middleKeyNode = std::make_shared<CenteredNode>(keysNode, keyNodesRatio);
+    const auto rightKeyNode = std::make_shared<RightNode>(keysNode, keyNodesRatio);
+
+    return {arrowNode, leftDigitNode, middleDigitNode, rightDigitNode, leftKeyNode, middleKeyNode, rightKeyNode};
 }
 
 std::vector<std::string> InGamePage::shaderDefines() const {
-    return {"DISCARDING", "TEST_ALPHA_TEXTURE"};
+    return {"DISCARDING", "TEST_KEY"};
 }
 
 const int InGamePage::arrowLabelId = -1;
+const int InGamePage::key1LabelId = 501;
+const int InGamePage::key2LabelId = 502;
+const int InGamePage::key3LabelId = 503;
 
 std::string InGamePage::getVertexShaderName() const {
     return "inGamePageVs.vs";
@@ -159,7 +182,7 @@ Displayable::DynamicValues<int> InGamePage::getDynamicIntValues() const {
 }
 
 vecCstLabel_sptr InGamePage::labels() const {
-    return {_arrowLabel};
+    return {_arrowLabel, _key1, _key2, _key3};
 }
 
 void InGamePage::setItemsContainer(CstItemsContainer_sptr itemsContainer) {

@@ -24,6 +24,9 @@ public:
         Node_sptr &&leftDigitNode,
         Node_sptr &&middleDigitNode,
         Node_sptr &&rightDigitNode,
+        Label_sptr key1,
+        Label_sptr key2,
+        Label_sptr key3,
         const Page_sptr &parent,
         CstItemsContainer_sptr itemsContainer
     );
@@ -67,9 +70,16 @@ private:
     Node_sptr _leftDigitNode;
     Node_sptr _middleDigitNode;
     Node_sptr _rightDigitNode;
+    Label_sptr _key1;
+    Label_sptr _key2;
+    Label_sptr _key3;
+
     CstItemsContainer_sptr _itemsContainer;
 
     static const int arrowLabelId;
+    static const int key1LabelId;
+    static const int key2LabelId;
+    static const int key3LabelId;
 
     static vecNode_sptr createNodes(float ratio);
 };

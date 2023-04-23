@@ -13,7 +13,39 @@ in float fs_isLetter;
     in float fs_needsTransparentBackground;
 #endif
 
+#ifdef(TEST_KEY)
+    in float fs_needsCheckingKey;
+    in vec3 fs_keyColor;
+#endif
+
 out vec4 pixelColor;
+
+#ifdef(TEST_KEY)
+    bool isInKey() {
+        float x = fs_vertexUVs.x;
+        float y = fs_vertexUVs.y;
+        const float rightKeyBody = 0.55;
+        const float rightKeyEnd = 0.75;
+        if(x > 0.45 && x < rightKeyBody && y < 0.8) {
+            return true;
+        }
+        if(x > rightKeyBody && x < rightKeyEnd ) {
+            if(y < 0.1) {
+                return true;
+            }
+            if(y > 0.2 && y < 0.3) {
+                return true;
+            }
+        }
+        const float headRadius = 0.2;
+        const vec2 headCenter = vec2(0.5, 1.0 - headRadius);
+        vec2 centerToUv = fs_vertexUVs - headCenter;
+        if(length(centerToUv) < headRadius) {
+            return true;
+        }
+        return false;
+    }
+#endif
 
 void main() {
     #ifdef(DISCARDING)
@@ -21,11 +53,21 @@ void main() {
             discard;
         }
     #endif
+
+    vec3 color = fs_vertexColor;
+    #ifdef(TEST_KEY)
+        if(fs_needsCheckingKey > 0.0) {
+            if (!isInKey()) {
+                discard;
+            }
+            color = fs_keyColor;
+        }
+    #endif
+
     float alpha = fs_isLetter < 0.0
         ? 1.0
         : texture(characterTexture, fs_vertexUVs).x;
 
-    vec3 color = fs_vertexColor;
     #ifdef(TRANSPARENT_BACKGROUND)
         if(fs_needsTransparentBackground > 0.0) {
             float distUv = length(fs_vertexUVs - vec2(0.5));

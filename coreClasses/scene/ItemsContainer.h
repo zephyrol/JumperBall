@@ -6,12 +6,14 @@
 #define JUMPERBALLAPPLICATION_ITEMSCONTAINER_H
 
 class ItemsContainer;
+
 using CstItemsContainer_sptr = std::shared_ptr<ItemsContainer const>;
 
 class ItemsContainer {
 
 public:
     virtual unsigned int getCurrentNumberOfKeys() const = 0;
+
     virtual unsigned int getMaxNumberOfKeys() const = 0;
 
     virtual ~ItemsContainer() = default;
