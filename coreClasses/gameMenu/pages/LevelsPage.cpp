@@ -47,7 +47,7 @@ LevelsPage_sptr LevelsPage::createInstance(
         std::move(player),
         std::move(levelsTitleNode),
         std::move(levelsNode),
-        createBackgroundLabel(std::move(levelsPageNode)),
+        createBackgroundLabel(levelsPageNode),
         arrowLabel,
         parent
     );

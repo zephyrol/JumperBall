@@ -16,16 +16,24 @@ InGamePage::InGamePage(
     Node_sptr &&leftDigitNode,
     Node_sptr &&middleDigitNode,
     Node_sptr &&rightDigitNode,
-    const Page_sptr &parent
+    const Page_sptr &parent,
+    CstItemsContainer_sptr itemsContainer
 ) : Page(std::move(player)),
     _parent(parent),
     _arrowLabel(std::move(arrowLabel)),
     _leftDigitNode(std::move(leftDigitNode)),
     _middleDigitNode(std::move(middleDigitNode)),
-    _rightDigitNode(std::move(rightDigitNode)) {
+    _rightDigitNode(std::move(rightDigitNode)),
+    _itemsContainer(std::move(itemsContainer))
+{
 }
 
-InGamePage_sptr InGamePage::createInstance(Player_sptr player, const Page_sptr &parent, float ratio) {
+InGamePage_sptr InGamePage::createInstance(
+    Player_sptr player,
+    const Page_sptr &parent,
+    float ratio,
+    CstItemsContainer_sptr itemsContainer
+) {
     auto nodes = createNodes(ratio);
     auto arrowLabel = createInGameArrowLabel(nodes[0]);
     auto inGamePage = std::make_shared<InGamePage>(
@@ -34,7 +42,8 @@ InGamePage_sptr InGamePage::createInstance(Player_sptr player, const Page_sptr &
         std::move(nodes[1]),
         std::move(nodes[2]),
         std::move(nodes[3]),
-        parent
+        parent,
+        std::move(itemsContainer)
     );
     return inGamePage;
 }
@@ -108,7 +117,13 @@ std::string InGamePage::getVertexShaderName() const {
 }
 
 Displayable::DynamicNames InGamePage::getDynamicIntNames() const {
-    decltype(getDynamicIntNames()) dynamicNames{"leftDigit", "middleDigit", "rightDigit"};
+    decltype(getDynamicIntNames()) dynamicNames{
+        "leftDigit",
+        "middleDigit",
+        "rightDigit",
+        "currentNumberOfKeys",
+        "maxNumberOfKeys"
+    };
     auto pageDynamicNames = Page::getDynamicIntNames();
     dynamicNames.insert(
         dynamicNames.end(),
@@ -129,7 +144,9 @@ Displayable::DynamicValues<int> InGamePage::getDynamicIntValues() const {
     decltype(getDynamicIntValues()) dynamicInts{
         leftDigit,
         middleDigit + middleDigitIdOffset,
-        rightDigit + rightDigitIdOffset
+        rightDigit + rightDigitIdOffset,
+        static_cast<int>(_itemsContainer->getCurrentNumberOfKeys()),
+        static_cast<int>(_itemsContainer->getMaxNumberOfKeys()),
     };
 
     auto pageDynamicInts = Page::getDynamicIntValues();
@@ -143,6 +160,10 @@ Displayable::DynamicValues<int> InGamePage::getDynamicIntValues() const {
 
 vecCstLabel_sptr InGamePage::labels() const {
     return {_arrowLabel};
+}
+
+void InGamePage::setItemsContainer(CstItemsContainer_sptr itemsContainer) {
+    _itemsContainer = std::move(itemsContainer);
 }
 
 void InGamePage::update(const Mouse &mouse) {

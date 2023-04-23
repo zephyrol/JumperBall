@@ -52,7 +52,7 @@ public:
 
     CstMap_sptr getMap() const;
 
-    std::shared_ptr<const Ball> getBall() const;
+    CstBall_sptr getBall() const;
 
     std::shared_ptr<const Camera> getCamera() const;
 

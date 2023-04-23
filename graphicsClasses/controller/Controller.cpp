@@ -6,7 +6,6 @@
 //
 
 #include "Controller.h"
-#include "cmath"
 
 Controller::Controller(
     const size_t &screenWidth,
@@ -23,10 +22,6 @@ Controller::Controller(
         false)
     ),
     _player(Player::createInstance(_doubleChronometer, filesContent.at("save.txt"))),
-    _menu(Menu::getJumperBallMenu(
-        _player,
-        static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
-    )),
     _filesContent(filesContent),
     _requestToLeave(false),
     _scene(std::make_shared<Scene>(
@@ -34,6 +29,11 @@ Controller::Controller(
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight),
         _player,
         isUsingTouchScreen
+    )),
+    _menu(Menu::getJumperBallMenu(
+        _player,
+        _scene->getMap(),
+        static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
     )),
     _viewer(std::make_shared<Viewer>(
         screenWidth,
@@ -84,6 +84,7 @@ void Controller::runGame(size_t level) {
         _player,
         _scene->isUsingTouchScreen()
     );
+    _menu->setItemsContainers(_scene->getMap());
     _viewer->setScene(_scene);
 }
 

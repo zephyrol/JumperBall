@@ -10,7 +10,6 @@
 #include <utility>
 #include "gameMenu/pages/TitlePage.h"
 #include "gameMenu/pages/LevelsPage.h"
-#include "gameMenu/pages/InGamePage.h"
 #include "gameMenu/pages/SuccessPage.h"
 #include "gameMenu/pages/FailurePage.h"
 #include "gameMenu/pages/PausePage.h"
@@ -20,12 +19,14 @@ Menu::Menu(
     Player_sptr player,
     Page_sptr successPage,
     Page_sptr failurePage,
+    InGamePage_sptr inGamePage,
     vecPage_sptr pages
 ) :
     _player(std::move(player)),
     _pages(std::move(pages)),
     _successPage(std::move(successPage)),
     _failurePage(std::move(failurePage)),
+    _inGamePage(std::move(inGamePage)),
     _currentPage(_pages.at(0)) {
 }
 
@@ -58,12 +59,16 @@ void Menu::mouseClick(float mouseX, float mouseY) {
     }
 }
 
-std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr &player, float ratio) {
+std::shared_ptr<Menu> Menu::getJumperBallMenu(
+    const Player_sptr &player,
+    CstItemsContainer_sptr itemsContainer,
+    float ratio
+) {
 
     const auto titlePage = TitlePage::createInstance(player, ratio);
     const auto levelsPage = LevelsPage::createInstance(player, titlePage, ratio);
     const auto pausePage = PausePage::createInstance(player, titlePage, ratio);
-    const auto inGamePage = InGamePage::createInstance(player, pausePage, ratio);
+    const auto inGamePage = InGamePage::createInstance(player, pausePage, ratio, std::move(itemsContainer));
     const auto successPage = SuccessPage::createInstance(player, titlePage, ratio);
     const auto failurePage = FailurePage::createInstance(player, titlePage, ratio);
     const auto creditsPage = CreditsPage::createInstance(player, titlePage, ratio);
@@ -89,6 +94,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr &player, float r
         player,
         successPage,
         failurePage,
+        inGamePage,
         pages
     );
 }
@@ -108,3 +114,8 @@ void Menu::resize(float ratio) {
         page->resize(ratio);
     }
 }
+
+void Menu::setItemsContainers(CstItemsContainer_sptr itemsContainer) {
+    _inGamePage->setItemsContainer(std::move(itemsContainer));
+}
+

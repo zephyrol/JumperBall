@@ -7,7 +7,7 @@
 
 #include "MeshGenerator.h"
 
-vecMesh_sptr MeshGenerator::genBall (const std::shared_ptr<const Ball>& ball) {
+vecMesh_sptr MeshGenerator::genBall (const CstBall_sptr& ball) {
 
     const CstGeometricShape_sptr sphere = std::make_shared <const Sphere>();
     vecCstGeometricShape_sptr geometricShapes { sphere };

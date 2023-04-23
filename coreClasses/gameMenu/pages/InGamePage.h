@@ -8,7 +8,7 @@
 
 #include "Page.h"
 #include "gameMenu/labels/ArrowLabel.h"
-#include "scene/Map.h"
+#include "scene/ItemsContainer.h"
 
 class InGamePage;
 
@@ -24,13 +24,15 @@ public:
         Node_sptr &&leftDigitNode,
         Node_sptr &&middleDigitNode,
         Node_sptr &&rightDigitNode,
-        const Page_sptr &parent
+        const Page_sptr &parent,
+        CstItemsContainer_sptr itemsContainer
     );
 
     static InGamePage_sptr createInstance(
         Player_sptr player,
         const Page_sptr &parent,
-        float ratio
+        float ratio,
+        CstItemsContainer_sptr itemsContainer
     );
 
 
@@ -48,6 +50,8 @@ public:
 
     void resize(float ratio) override;
 
+    void setItemsContainer(CstItemsContainer_sptr itemsContainer);
+
     std::vector<std::string> shaderDefines() const override;
 
     DynamicNames getDynamicIntNames() const override;
@@ -63,6 +67,7 @@ private:
     Node_sptr _leftDigitNode;
     Node_sptr _middleDigitNode;
     Node_sptr _rightDigitNode;
+    CstItemsContainer_sptr _itemsContainer;
 
     static const int arrowLabelId;
 

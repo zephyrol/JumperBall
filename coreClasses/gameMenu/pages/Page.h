@@ -12,7 +12,6 @@
 #include "player/Player.h"
 #include "gameMenu/nodes/TextNode.h"
 #include "system/Mouse.h"
-#include "scene/Map.h"
 #include "gameMenu/labels/ArrowLabel.h"
 #include <list>
 

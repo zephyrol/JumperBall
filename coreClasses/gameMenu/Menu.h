@@ -12,6 +12,7 @@
 #include "gameMenu/labels/TextLabel.h"
 #include "gameMenu/labels/ArrowLabel.h"
 #include "system/Mouse.h"
+#include "gameMenu/pages/InGamePage.h"
 #include <player/Player.h>
 
 class Menu {
@@ -21,6 +22,7 @@ public:
         Player_sptr player,
         Page_sptr successPage,
         Page_sptr failurePage,
+        InGamePage_sptr inGamePage,
         vecPage_sptr pages
     );
 
@@ -36,8 +38,13 @@ public:
 
     void mouseClick(float mouseX, float mouseY);
 
-    static std::shared_ptr<Menu> getJumperBallMenu(const Player_sptr &player, float ratio);
+    static std::shared_ptr<Menu> getJumperBallMenu(
+        const Player_sptr &player,
+        CstItemsContainer_sptr itemsContainer,
+        float ratio
+    );
 
+    void setItemsContainers(CstItemsContainer_sptr itemsContainer);
     void resize(float screenRatio);
 
 private:
@@ -45,6 +52,7 @@ private:
     const vecPage_sptr _pages;
     const Page_sptr _successPage;
     const Page_sptr _failurePage;
+    const InGamePage_sptr _inGamePage;
     Page_sptr _currentPage;
 
 };

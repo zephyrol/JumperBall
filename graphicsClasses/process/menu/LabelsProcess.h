@@ -11,6 +11,7 @@
 #include "graphicMenu/FontTexturesGenerator.h"
 #include "Rendering.h"
 #include "frameBuffer/TextureSampler.h"
+#include "scene/Map.h"
 
 class LabelsProcess: public RenderProcess, Rendering {
 

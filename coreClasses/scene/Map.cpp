@@ -195,3 +195,11 @@ bool Map::gameIsWon() const {
 float Map::remainingTime() const {
     return _remainingTime;
 }
+
+unsigned int Map::getCurrentNumberOfKeys() const {
+    return _ball->numberOfKeys();
+}
+
+unsigned int Map::getMaxNumberOfKeys() const {
+    return _nbOfKeys;
+}

@@ -57,13 +57,13 @@ private:
 
     const DoubleChronometer_sptr _doubleChronometer;
     const Player_sptr _player;
-    const std::shared_ptr<Menu> _menu;
 
     const JBTypes::FileContent _filesContent;
 
     bool _requestToLeave;
 
     std::shared_ptr<Scene> _scene;
+    const std::shared_ptr<Menu> _menu;
     const std::shared_ptr<Viewer> _viewer;
 
     KeyboardKey _keyboardKey;

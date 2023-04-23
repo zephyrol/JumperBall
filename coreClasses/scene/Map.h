@@ -9,6 +9,7 @@
 #define MAP_H
 
 #include "Ball.h"
+#include "ItemsContainer.h"
 #include <fstream>
 
 class Map;
@@ -18,7 +19,7 @@ using CstMap_sptr = std::shared_ptr<const Map>;
 using vecCstMap_sptr = std::vector<CstMap_sptr>;
 using vecMap_sptr = std::vector<Map_sptr>;
 
-class Map {
+class Map: public ItemsContainer {
 public:
 
     struct MapInfo {
@@ -59,6 +60,10 @@ public:
     bool gameIsWon() const;
 
     float remainingTime() const;
+
+    unsigned int getCurrentNumberOfKeys() const override;
+
+    unsigned int getMaxNumberOfKeys() const override;
 
 private:
 
