@@ -113,15 +113,6 @@ vecCstShape_sptr Block::getExtraShapes() const {
     return {};
 }
 
-std::unordered_map<CstItem_sptr, vecCstShape_sptr> Block::getItemShapes() const {
-    std::unordered_map<CstItem_sptr, vecCstShape_sptr> itemShapes{};
-    for (const auto &item: _items) {
-        itemShapes[item] = item->getShapes();
-    }
-    return itemShapes;
-}
-
-
 std::string Block::positionToString(const JBTypes::vec3ui &position) {
     return std::to_string(position.at(0)) + "," +
            std::to_string(position.at(1)) + "," +

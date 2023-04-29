@@ -52,6 +52,20 @@ namespace MeshGenerator {
 
     vecCstGeometricShape_sptr genGeometricShapesFromLabel(const Label &label);
 
+    template<typename T>
+    vecMesh_sptr genMeshes(const T& shapesGenerator);
+
+}
+
+template<typename T>
+vecMesh_sptr MeshGenerator::genMeshes(const T& shapesGenerator) {
+    vecMesh_sptr meshes;
+    vecCstGeometricShape_sptr geometricShapes;
+    for(const auto& shape: shapesGenerator->getShapes()) {
+        geometricShapes.push_back(createGeometricShape(shape));
+    }
+    meshes.push_back(std::make_shared <Mesh>(shapesGenerator, std::move(geometricShapes)));
+    return meshes;
 }
 
 #endif /* MESHGENERATOR_H */

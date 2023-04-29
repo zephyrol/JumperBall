@@ -22,6 +22,7 @@ public:
 
 protected:
     const Ball_wptr _ball;
+
 };
 
 

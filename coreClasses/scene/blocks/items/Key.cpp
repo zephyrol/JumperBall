@@ -14,6 +14,11 @@ Key::Key(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, const B
 
 vecCstShape_sptr Key::getShapes() const {
 
+    const auto rotation = Transformation(
+        Transformation::Type::Rotation,
+        JBTypesMethods::rotationVectorUpToDir(direction())
+    );
+
     const auto sphereHead = std::make_shared<const Shape>(
         Shape::Aspect::Sphere,
         JBTypes::Color::Yellow,
@@ -22,7 +27,8 @@ vecCstShape_sptr Key::getShapes() const {
                 Transformation(Transformation::Type::Scale,
                                {0.09f, 0.075f, 0.050f}),
                 Transformation(Transformation::Type::Translation,
-                               {0.f, 0.175f, 0.f})
+                               {0.f, 0.175f, 0.f}),
+                               rotation
             }
         )
     );
@@ -35,7 +41,8 @@ vecCstShape_sptr Key::getShapes() const {
                 Transformation(Transformation::Type::Scale,
                                {0.05f, 0.3f, 0.050f}),
                 Transformation(Transformation::Type::Translation,
-                               {0.f, -0.025f, 0.f})
+                               {0.f, -0.025f, 0.f}),
+                rotation
             }
         )
     );
@@ -48,7 +55,8 @@ vecCstShape_sptr Key::getShapes() const {
                 Transformation(Transformation::Type::Scale,
                                {0.1f, 0.05f, 0.05f}),
                 Transformation(Transformation::Type::Translation,
-                               {0.025f, -0.05f, 0.f})
+                               {0.025f, -0.05f, 0.f}),
+                rotation
             }
         )
     );
@@ -61,7 +69,8 @@ vecCstShape_sptr Key::getShapes() const {
                 Transformation(Transformation::Type::Scale,
                                {0.1f, 0.05f, 0.05f}),
                 Transformation(Transformation::Type::Translation,
-                               {0.025f, -0.15f, 0.f})
+                               {0.025f, -0.15f, 0.f}),
+                rotation
             }
         )
     );

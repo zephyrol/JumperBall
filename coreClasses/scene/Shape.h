@@ -32,6 +32,8 @@ public:
     const JBTypes::Color& color() const;
     const std::vector<Transformation>& transformations() const;
 
+    static Transformation getVerticalCylinderRotation(const JBTypes::Dir &direction);
+
 private:
     const Aspect _aspect;
     const JBTypes::Color _color;

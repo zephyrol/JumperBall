@@ -63,8 +63,6 @@ public:
 
     virtual Effect interaction() const = 0;
 
-    std::unordered_map<CstItem_sptr, vecCstShape_sptr> getItemShapes() const;
-
     virtual vecCstShape_sptr getExtraShapes() const;
 
     virtual bool mayDisappear() const;

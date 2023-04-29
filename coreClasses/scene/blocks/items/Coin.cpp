@@ -26,8 +26,7 @@ vecCstShape_sptr Coin::getShapes() const {
                                {0.f, -0.5f, 0.f}),
                 Transformation(Transformation::Type::Scale,
                                {0.3f, 0.05f, 0.3f}),
-                Transformation(Transformation::Type::Rotation,
-                               {static_cast<float>(M_PI / 2), 0.f, 0.f})
+                Shape::getVerticalCylinderRotation(direction())
             }
         )
     );

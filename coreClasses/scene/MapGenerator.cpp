@@ -98,8 +98,11 @@ MapGenerator::uncompressMap(std::istringstream &file, const CstDoubleChronometer
                     &keysCounter
                 ](unsigned char itemType, unsigned char direction) -> Item_sptr {
                     const JBTypes::Dir dir = JBTypesMethods::charAsDirection(direction);
-                    const auto blockCoords = Map::getBlockCoords(blockIndexCursor, mapInfo.width,
-                                                                 mapInfo.depth);
+                    const auto blockCoords = Map::getBlockCoords(
+                        blockIndexCursor,
+                        mapInfo.width,
+                        mapInfo.depth
+                    );
                     if (itemType == 'I') {
                         ++coinsCounter;
                         return std::make_shared<Coin>(blockCoords, dir, mapInfo.ball);

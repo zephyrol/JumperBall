@@ -6,57 +6,58 @@
  */
 #include "MeshGenerator.h"
 
-vecMesh_sptr MeshGenerator::genBlocks (const CstMap_sptr& map) {
+vecMesh_sptr MeshGenerator::genBlocks(const CstMap_sptr &map) {
 
     vecMesh_sptr meshes;
-    for (const auto& block: map->getBlocks()) {
+    for (const auto &block: map->getBlocks()) {
         meshes.push_back(genBlock(map, block));
     }
     return meshes;
 }
 
-vecMesh_sptr MeshGenerator::genItems (const CstMap_sptr& map) {
+vecMesh_sptr MeshGenerator::genItems(const CstMap_sptr &map) {
 
     vecMesh_sptr meshes;
-    for (const auto& block: map->getBlocks()) {
-        for (const auto& itemShapes : block->getItemShapes()) {
-            const auto& item = itemShapes.first;
-            const auto& shapes = itemShapes.second;
-            vecCstGeometricShape_sptr geometricShapes;
-            for(const auto& shape: shapes) {
-                geometricShapes.push_back(createGeometricShape(shape));
-            }
-            meshes.push_back(std::make_shared <Mesh>(item, std::move(geometricShapes)));
+    for (const auto &block: map->getBlocks()) {
+        for (const auto &item: block->getItems()) {
+            auto itemMeshes = MeshGenerator::genMeshes(item);
+            meshes.insert(
+                meshes.end(),
+                std::make_move_iterator(itemMeshes.begin()),
+                std::make_move_iterator(itemMeshes.end())
+            );
         }
     }
     return meshes;
 }
 
-vecMesh_sptr MeshGenerator::genEnemies (const CstMap_sptr& map) {
+vecMesh_sptr MeshGenerator::genEnemies(const CstMap_sptr &map) {
 
     vecMesh_sptr meshes;
-    for (const auto& block: map->getBlocks()) {
-        for (const auto& enemy: block->getEnemies()) {
-            vecCstGeometricShape_sptr geometricShapes;
-            for(const auto& shape: enemy->getShapes()) {
-                geometricShapes.push_back(createGeometricShape(shape));
-            }
-            meshes.push_back(std::make_shared <Mesh>(enemy, std::move(geometricShapes)));
+    for (const auto &block: map->getBlocks()) {
+        for (const auto &enemy: block->getEnemies()) {
+            auto enemyMeshes = MeshGenerator::genMeshes(enemy);
+            meshes.insert(
+                meshes.end(),
+                std::make_move_iterator(enemyMeshes.begin()),
+                std::make_move_iterator(enemyMeshes.end())
+            );
         }
     }
     return meshes;
 }
 
-vecMesh_sptr MeshGenerator::genSpecials (const CstMap_sptr& map) {
+vecMesh_sptr MeshGenerator::genSpecials(const CstMap_sptr &map) {
 
     vecMesh_sptr meshes;
-    for (const auto& block: map->getBlocks()) {
-        for (const auto& special: block->getSpecials()) {
-            vecCstGeometricShape_sptr geometricShapes;
-            for(const auto& shape: special->getShapes()) {
-                geometricShapes.push_back(createGeometricShape(shape));
-            }
-            meshes.push_back(std::make_shared <Mesh>(special, std::move(geometricShapes)));
+    for (const auto &block: map->getBlocks()) {
+        for (const auto &special: block->getSpecials()) {
+            auto specialMeshes = MeshGenerator::genMeshes(special);
+            meshes.insert(
+                meshes.end(),
+                std::make_move_iterator(specialMeshes.begin()),
+                std::make_move_iterator(specialMeshes.end())
+            );
         }
     }
     return meshes;
