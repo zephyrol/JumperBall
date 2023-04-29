@@ -102,7 +102,12 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
 
     const auto screenNode = std::make_shared<ScreenNode>(ratio);
     const auto resizedScreenNode = std::make_shared<ScaledNode>(screenNode, 0.95f);
-    const auto notchNode = std::make_shared<UpNode>(resizedScreenNode, 6.f);
+
+    constexpr auto notchNodeDefaultRatio = 6.f;
+    const auto notchNode = std::make_shared<UpNode>(
+        resizedScreenNode,
+        std::max(notchNodeDefaultRatio, notchNodeDefaultRatio * ratio)
+    );
 
     constexpr auto sideNodesRatio = 1.f;
     const auto arrowNode = std::make_shared<LeftNode>(notchNode, sideNodesRatio);
@@ -114,16 +119,20 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
     const auto middleDigitNode = std::make_shared<CenteredNode>(digitsNode, digitNodesRatio);
     const auto rightDigitNode = std::make_shared<RightNode>(digitsNode, digitNodesRatio);
 
-    const auto footNode = std::make_shared<DownNode>(resizedScreenNode, 10.f);
+    constexpr auto footNodeDefaultRatio = 10.f;
+    const auto footNode = std::make_shared<DownNode>(
+        resizedScreenNode,
+        std::max(footNodeDefaultRatio, footNodeDefaultRatio * ratio)
+    );
     constexpr auto keysNodeRatio = 2.f;
     const auto keysNode = std::make_shared<RightNode>(footNode, keysNodeRatio);
 
     constexpr auto keyNodesRatio = 1.f;
-    const auto leftKeyNode = std::make_shared<LeftNode>(keysNode, keyNodesRatio);
-    const auto middleKeyNode = std::make_shared<CenteredNode>(keysNode, keyNodesRatio);
     const auto rightKeyNode = std::make_shared<RightNode>(keysNode, keyNodesRatio);
+    const auto middleKeyNode = std::make_shared<CenteredNode>(keysNode, keyNodesRatio);
+    const auto leftKeyNode = std::make_shared<LeftNode>(keysNode, keyNodesRatio);
 
-    return {arrowNode, leftDigitNode, middleDigitNode, rightDigitNode, leftKeyNode, middleKeyNode, rightKeyNode};
+    return {arrowNode, leftDigitNode, middleDigitNode, rightDigitNode, rightKeyNode, middleKeyNode, leftKeyNode };
 }
 
 std::vector<std::string> InGamePage::shaderDefines() const {
