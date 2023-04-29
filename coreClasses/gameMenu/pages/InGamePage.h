@@ -27,6 +27,7 @@ public:
         Label_sptr key1,
         Label_sptr key2,
         Label_sptr key3,
+        Label_sptr key4,
         const Page_sptr &parent,
         CstItemsContainer_sptr itemsContainer
     );
@@ -73,6 +74,7 @@ private:
     Label_sptr _key1;
     Label_sptr _key2;
     Label_sptr _key3;
+    Label_sptr _key4;
 
     CstItemsContainer_sptr _itemsContainer;
 
@@ -80,6 +82,7 @@ private:
     static const int key1LabelId;
     static const int key2LabelId;
     static const int key3LabelId;
+    static const int key4LabelId;
 
     static vecNode_sptr createNodes(float ratio);
 };
