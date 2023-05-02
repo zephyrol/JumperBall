@@ -13,6 +13,8 @@ out vec3 fs_keyColor;
 uniform int leftDigit;
 uniform int middleDigit;
 uniform int rightDigit;
+uniform int coinsTensDigit;
+uniform int coinsUnitsDigit;
 uniform int selectedLabel;
 uniform int key;
 uniform int currentNumberOfKeys;
@@ -24,6 +26,9 @@ float needsDiscard() {
        || vs_labelId == rightDigit) {
         return -1.0;
     }
+    if(vs_labelId == coinsTensDigit || vs_labelId == coinsUnitsDigit) {
+        return -1.0;
+    }
     return 1.0;
 }
 
@@ -32,7 +37,7 @@ void main() {
     if(selectedLabel < 0 && selectedLabel == vs_labelId) {
         fs_vertexColor = vec3(1.0);
     } else {
-        fs_vertexColor = vs_vertexColor;
+        fs_vertexColor = vec3(0.0, 1.0, 1.0);
     }
     if(vs_labelId < 0) {
         fs_isLetter = -1.0;
@@ -61,6 +66,10 @@ void main() {
         fs_keyColor = vec3(0.0);
     }
 
+    // Coin symbol
+    if(vs_labelId == 400) {
+        fs_needsDiscard = -1.0;
+    }
 
     gl_Position = vec4(vs_vertexPosition.xy, 0.0, 1.0);
 }

@@ -203,3 +203,7 @@ unsigned int Map::getCurrentNumberOfKeys() const {
 unsigned int Map::getMaxNumberOfKeys() const {
     return _nbOfKeys;
 }
+
+unsigned int Map::getCurrentNumberOfCoins() const {
+    return _ball->numberOfCoins();
+}

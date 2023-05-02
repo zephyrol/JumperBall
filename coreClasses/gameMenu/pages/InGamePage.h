@@ -24,10 +24,13 @@ public:
         Node_sptr &&leftDigitNode,
         Node_sptr &&middleDigitNode,
         Node_sptr &&rightDigitNode,
+        Node_sptr &&coinsTensDigit,
+        Node_sptr &&coinsUnitsDigit,
         Label_sptr key1,
         Label_sptr key2,
         Label_sptr key3,
         Label_sptr key4,
+        Label_sptr coinSymbol,
         const Page_sptr &parent,
         CstItemsContainer_sptr itemsContainer
     );
@@ -71,10 +74,13 @@ private:
     Node_sptr _leftDigitNode;
     Node_sptr _middleDigitNode;
     Node_sptr _rightDigitNode;
+    Node_sptr _coinsTensDigit;
+    Node_sptr _coinsUnitsDigit;
     Label_sptr _key1;
     Label_sptr _key2;
     Label_sptr _key3;
     Label_sptr _key4;
+    Label_sptr _coinSymbol;
 
     CstItemsContainer_sptr _itemsContainer;
 
@@ -83,6 +89,7 @@ private:
     static const int key2LabelId;
     static const int key3LabelId;
     static const int key4LabelId;
+    static const int coinSymbolLabelId;
 
     static vecNode_sptr createNodes(float ratio);
 };

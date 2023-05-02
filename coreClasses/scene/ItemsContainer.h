@@ -16,6 +16,8 @@ public:
 
     virtual unsigned int getMaxNumberOfKeys() const = 0;
 
+    virtual unsigned int getCurrentNumberOfCoins() const = 0;
+
     virtual ~ItemsContainer() = default;
 };
 

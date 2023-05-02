@@ -65,6 +65,8 @@ public:
 
     unsigned int getMaxNumberOfKeys() const override;
 
+    unsigned int getCurrentNumberOfCoins() const override;
+
 private:
 
     static JBTypes::vec3ui stringToPosition(const std::string &stringPosition);
