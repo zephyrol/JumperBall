@@ -26,12 +26,13 @@ public:
 
     explicit CreditsPage(
         Player_sptr &&player,
-        Node_sptr&& credits,
-        Node_sptr&& developmentAndDesign,
-        Node_sptr&& mainAuthor,
-        Node_sptr&& musicAndSoundsEffects,
-        Node_sptr&& secondAuthor,
-        Node_sptr&& exitNode,
+        Node_sptr &&credits,
+        Node_sptr &&developmentAndDesign,
+        Node_sptr &&mainAuthor,
+        Node_sptr &&musicAndSoundsEffects,
+        Node_sptr &&secondAuthor,
+        Node_sptr &&exitNode,
+        Label_sptr &&backgroundLabel,
         const Page_sptr &parent
     );
 
@@ -40,6 +41,8 @@ public:
     Page_sptr click(float mouseX, float mouseY) override;
 
     void update(const Mouse &mouse) override;
+
+    vecCstLabel_sptr labels() const override;
 
     std::string getVertexShaderName() const override;
 
@@ -55,6 +58,7 @@ private:
     Node_sptr _musicAndSoundsEffects;
     Node_sptr _secondAuthor;
     Node_sptr _exitNode;
+    Label_sptr _backgroundLabel;
 
     static constexpr int developmentAndDesignLabelId = 1;
     static constexpr int mainAuthorLabelId = 2;

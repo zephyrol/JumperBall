@@ -18,6 +18,7 @@ CreditsPage::CreditsPage(
     Node_sptr &&musicAndSoundsEffects,
     Node_sptr &&secondAuthor,
     Node_sptr &&exitNode,
+    Label_sptr &&backgroundLabel,
     const Page_sptr &parent
 ) : Page(
     std::move(player)
@@ -28,7 +29,8 @@ CreditsPage::CreditsPage(
     _mainAuthor(std::move(mainAuthor)),
     _musicAndSoundsEffects(std::move(musicAndSoundsEffects)),
     _secondAuthor(std::move(secondAuthor)),
-    _exitNode(std::move(exitNode)) {
+    _exitNode(std::move(exitNode)),
+    _backgroundLabel(std::move(backgroundLabel)) {
 }
 
 void CreditsPage::resize(float ratio) {
@@ -39,6 +41,7 @@ void CreditsPage::resize(float ratio) {
     _musicAndSoundsEffects = nodes.at(3);
     _secondAuthor = nodes.at(4);
     _exitNode = nodes.at(5);
+    _backgroundLabel = createBackgroundLabel(nodes.at(6));
 }
 
 CreditsPage_sptr CreditsPage::createInstance(
@@ -55,6 +58,7 @@ CreditsPage_sptr CreditsPage::createInstance(
         std::move(nodes.at(3)),
         std::move(nodes.at(4)),
         std::move(nodes.at(5)),
+        createBackgroundLabel(nodes.at(6)),
         parent
     );
 }
@@ -108,7 +112,7 @@ vecNode_sptr CreditsPage::createNodes(float ratio, bool english) {
         english ? -0.4f : -0.45f // Because Q creates an offset
     );
 
-    return {jumperBallCredits, playNode, storeNode, languageNode, exitNode, authorNode};
+    return {jumperBallCredits, playNode, storeNode, languageNode, exitNode, authorNode, mainCreditsNode};
 }
 
 Page_sptr CreditsPage::click(float mouseX, float mouseY) {
@@ -128,7 +132,7 @@ vecCstTextNode_uptr CreditsPage::genTextNodes() const {
     textNodes.emplace_back(new TextNode(
         _developmentAndDesign,
         english ? "Development, Design:" : "Developpement, Design:",
-       developmentAndDesignLabelId
+        developmentAndDesignLabelId
     ));
     textNodes.emplace_back(new TextNode(_mainAuthor, "S;bastien Morgenthaler", mainAuthorLabelId));
     textNodes.emplace_back(
@@ -136,7 +140,7 @@ vecCstTextNode_uptr CreditsPage::genTextNodes() const {
             _musicAndSoundsEffects,
             english ? "Music and sound effects:" : "Musiques et sons:", musicAndSoundsEffectsLabelId)
     );
-    textNodes.emplace_back(new TextNode( _secondAuthor, "Julien Goettelmann", secondAuthorLabelId));
+    textNodes.emplace_back(new TextNode(_secondAuthor, "Julien Goettelmann", secondAuthorLabelId));
     textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Quitter", exitNodeLabelId));
     return textNodes;
 }
@@ -146,7 +150,7 @@ std::string CreditsPage::getVertexShaderName() const {
 }
 
 std::vector<std::string> CreditsPage::shaderDefines() const {
-    return {"ALWAYS_ALPHA_TEXTURE"};
+    return {"ALWAYS_ALPHA_TEXTURE", "TRANSPARENT_BACKGROUND"};
 }
 
 void CreditsPage::update(const Mouse &mouse) {
@@ -178,5 +182,9 @@ void CreditsPage::update(const Mouse &mouse) {
 
 Page_wptr CreditsPage::parent() {
     return _parent;
+}
+
+vecCstLabel_sptr CreditsPage::labels() const {
+    return {_backgroundLabel};
 }
 
