@@ -22,19 +22,6 @@ public:
         DoubleChronometer_sptr doubleChronometer,
         unsigned int money,
         size_t levelProgression,
-        std::vector<bool> diamonds,
-        unsigned int diamondsCounter,
-        std::vector<bool> crystals,
-        unsigned int crystalsCounter,
-        unsigned int rollSpeedLevel,
-        unsigned int currentRollSpeed,
-        unsigned int jumpSpeedLevel,
-        unsigned int currentJumpSpeed,
-        unsigned int turningSpeedLevel,
-        unsigned int currentTurningSpeed,
-        unsigned int timeLevel,
-        unsigned int clockItemLevel,
-        unsigned int bonusLevel,
         std::vector<bool> ballSkins,
         unsigned int currentBallSkin,
         bool frenchLanguageIsActivated
@@ -135,25 +122,6 @@ private:
 
     unsigned int _money;
     size_t _levelProgression;
-
-    std::vector<bool> _diamonds;
-    unsigned int _diamondsCounter;
-
-    std::vector<bool> _crystals;
-    unsigned int _crystalsCounter;
-
-    unsigned int _rollSpeedLevel;
-    unsigned int _currentRollSpeed;
-
-    unsigned int _jumpSpeedLevel;
-    unsigned int _currentJumpSpeed;
-
-    unsigned int _turningSpeedLevel;
-    unsigned int _currentTurningSpeed;
-
-    unsigned int _timeLevel;
-    unsigned int _clockItemLevel;
-    unsigned int _bonusLevel;
 
     std::vector<bool> _ballSkins;
     unsigned int _currentBallSkin;

@@ -12,19 +12,6 @@ Player::Player(
     DoubleChronometer_sptr doubleChronometer,
     unsigned int money,
     size_t levelProgression,
-    std::vector<bool> diamonds,
-    unsigned int diamondsCounter,
-    std::vector<bool> crystals,
-    unsigned int crystalsCounter,
-    unsigned int rollSpeedLevel,
-    unsigned int currentRollSpeed,
-    unsigned int jumpSpeedLevel,
-    unsigned int currentJumpSpeed,
-    unsigned int turningSpeedLevel,
-    unsigned int currentTurningSpeed,
-    unsigned int timeLevel,
-    unsigned int clockItemLevel,
-    unsigned int bonusLevel,
     std::vector<bool> ballSkins,
     unsigned int currentBallSkin,
     bool frenchLanguageIsActivated
@@ -35,19 +22,6 @@ Player::Player(
     _updateOutputs{},
     _money(money),
     _levelProgression(levelProgression),
-    _diamonds(std::move(diamonds)),
-    _diamondsCounter(diamondsCounter),
-    _crystals(std::move(crystals)),
-    _crystalsCounter(crystalsCounter),
-    _rollSpeedLevel(rollSpeedLevel),
-    _currentRollSpeed(currentRollSpeed),
-    _jumpSpeedLevel(jumpSpeedLevel),
-    _currentJumpSpeed(currentJumpSpeed),
-    _turningSpeedLevel(turningSpeedLevel),
-    _currentTurningSpeed(currentTurningSpeed),
-    _timeLevel(timeLevel),
-    _clockItemLevel(clockItemLevel),
-    _bonusLevel(bonusLevel),
     _ballSkins(std::move(ballSkins)),
     _currentBallSkin(currentBallSkin),
     _frenchLanguageIsActivated(frenchLanguageIsActivated),
@@ -68,14 +42,6 @@ void Player::decreaseMoney(unsigned int value) {
     _money -= value;
 }
 
-void Player::decreaseDiamonds(unsigned int value) {
-    _diamondsCounter -= value;
-}
-
-void Player::addDiamond() {
-    _diamondsCounter++;
-}
-
 void Player::increaseMoney(unsigned int value) {
     _money += value;
 }
@@ -90,26 +56,6 @@ unsigned int Player::getMoney() const {
 
 Player::Status Player::status() const {
     return _status;
-}
-
-void Player::bonusLevelUp() {
-    _bonusLevel++;
-}
-
-void Player::clockItemLevelUp() {
-    _clockItemLevel++;
-}
-
-void Player::timeLevelUp() {
-    _timeLevel++;
-}
-
-void Player::gravityLevelUp() {
-    _jumpSpeedLevel++;
-}
-
-void Player::speedLevelUp() {
-    _rollSpeedLevel++;
 }
 
 void Player::setCurrentLevel(size_t levelNumber) {
@@ -185,21 +131,8 @@ std::string Player::genSaveContent() {
     std::string saveContent =
         std::to_string(_money) + " "
         + std::to_string(_levelProgression) + " "
-        + boolVectorToString(_diamonds) + " "
-        + std::to_string(_diamondsCounter) + " "
-        + boolVectorToString(_crystals) + " "
-        + std::to_string(_crystalsCounter) + " "
-        + std::to_string(_rollSpeedLevel) + " "
-        + std::to_string(_currentRollSpeed) + " "
-        + std::to_string(_jumpSpeedLevel) + " "
-        + std::to_string(_currentJumpSpeed) + " "
-        + std::to_string(_turningSpeedLevel) + " "
-        + std::to_string(_currentTurningSpeed) + " "
-        + std::to_string(_timeLevel) + " "
-        + std::to_string(_clockItemLevel) + " "
-        + std::to_string(_bonusLevel) + " "
         + boolVectorToString(_ballSkins) + " "
-        + std::to_string(_currentJumpSpeed) + " "
+        + std::to_string(_currentBallSkin) + " "
         + (_frenchLanguageIsActivated ? "1" : "0");
 
     return SaveFileOutput(std::move(saveContent)).getOutput();
@@ -222,19 +155,6 @@ Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, con
         std::move(doubleChronometer),
         Player::readValue<unsigned int>(iss), // money
         Player::readValue<size_t>(iss), // levelProgression
-        readBooleanVector(), // diamonds
-        Player::readValue<unsigned int>(iss), // diamondsCounter
-        readBooleanVector(), // crystals
-        Player::readValue<unsigned int>(iss), // crystalsCounter
-        Player::readValue<unsigned int>(iss), // rollSpeedLevel,
-        Player::readValue<unsigned int>(iss), // currentRollSpeed,
-        Player::readValue<unsigned int>(iss), // jumpSpeedLevel,
-        Player::readValue<unsigned int>(iss), // currentJumpSpeed,
-        Player::readValue<unsigned int>(iss), // turningSpeedLevel,
-        Player::readValue<unsigned int>(iss), // currentTurningSpeed,
-        Player::readValue<unsigned int>(iss), // timeLevel,
-        Player::readValue<unsigned int>(iss), // clockItemLevel,
-        Player::readValue<unsigned int>(iss), // bonusLevel,
         readBooleanVector(), //ballSkins
         Player::readValue<unsigned int>(iss), // currentBallSkin,
         [&iss]() {
@@ -273,14 +193,9 @@ float Player::getRemainingTime() const {
     return _remainingTime;
 }
 
-
 void Player::switchLangage() {
     _needsSaveFile = true;
     _frenchLanguageIsActivated = !_frenchLanguageIsActivated;
-}
-
-unsigned int Player::getRollSpeedLevel() const {
-    return _rollSpeedLevel;
 }
 
 bool Player::isUsingEnglishLanguage() const {
