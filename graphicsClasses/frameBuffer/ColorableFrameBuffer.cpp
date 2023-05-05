@@ -39,7 +39,7 @@ ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
             GLuint depthBuffer;
             glGenRenderbuffers(1, &depthBuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, resolutionX, resolutionY);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolutionX, resolutionY);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
             return std::unique_ptr<GLuint>(new GLuint(depthBuffer));
         }()
