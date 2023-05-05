@@ -146,10 +146,9 @@ mat4 itemTranslation() {
     if (!itemIsGotten()) {
         return mat4(1.0);
     }
-    float translateCoeff = 0.0;
     vec3 wayDir = 0.7 * dirToVec[vs_itemDirection];
     if (obtainingTime < thresholdSecondStep) {
-        translateCoeff = obtainingTime / thresholdSecondStep;
+        float translateCoeff = obtainingTime / thresholdSecondStep;
         return translate(translateCoeff * wayDir);
     }
     return translate(wayDir);
@@ -164,7 +163,6 @@ void main() {
     mat4 scale = itemScale();
 
     mat4 modelTransform = translationToItem * translation * rotation * scale;
-
 
     vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, 1.0);
 

@@ -64,7 +64,7 @@ Displayable::GlobalState Item::getGlobalState() const {
 }
 
 JBTypes::vec3f Item::compute3DPosition() const {
-    constexpr float offsetPosition = 1.f;
+    constexpr float offsetPosition = 0.755f;
     auto x = static_cast <float>(_position.at(0));
     auto y = static_cast <float>(_position.at(1));
     auto z = static_cast <float>(_position.at(2));
