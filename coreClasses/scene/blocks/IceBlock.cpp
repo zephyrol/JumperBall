@@ -19,7 +19,7 @@ IceBlock::IceBlock(
 }
 
 Block::Effect IceBlock::detectionEvent() {
-    _ball.lock()->addUpdateOutput(std::make_shared<SoundOutput>("blockTouchedFire"));
+    _ball.lock()->addUpdateOutput(std::make_shared<SoundOutput>("blockTouchedIce"));
     return Block::Effect::Slide;
 }
 

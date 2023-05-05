@@ -6,6 +6,7 @@
  */
 
 #include "JumpBlock.h"
+#include "system/SoundOutput.h"
 
 JumpBlock::JumpBlock(const JBTypes::vec3ui &position,
                      const vecItem_sptr &items,
@@ -24,6 +25,7 @@ std::array<bool, 6> JumpBlock::faceInfo() const {
 Block::Effect JumpBlock::detectionEvent() {
     const auto ball = _ball.lock();
     const unsigned int dir = JBTypesMethods::directionAsInteger(ball->currentSide());
+    ball->addUpdateOutput(std::make_shared<SoundOutput>("touchedJumper"));
     return faceInfo().at(dir) ? Block::Effect::Jump : Block::Effect::Nothing;
 }
 

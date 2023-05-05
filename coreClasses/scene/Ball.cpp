@@ -91,6 +91,7 @@ void Ball::fall() noexcept {
 void Ball::teleport(const JBTypes::Color &col) noexcept {
     _state = Ball::State::Teleporting;
     _teleportationColor = col;
+    _updateOutputs.push_back(std::make_shared<SoundOutput>("teleporting"));
     setActionTimeNow();
 }
 
@@ -168,6 +169,7 @@ void Ball::isGoingStraightAheadIntersectBlock() noexcept {
 
     if (blockNear && blockNear->isExists()) {
         refMechanicsJumping.addShockFromPosition(sizeBlock2MinusRadius);
+        _updateOutputs.push_back(std::make_shared<SoundOutput>("strikingWall"));
         return;
     }
 
@@ -179,6 +181,7 @@ void Ball::isGoingStraightAheadIntersectBlock() noexcept {
     if (blockFar && blockFar->isExists()) {
         constexpr float offsetFar = 1.f;
         refMechanicsJumping.addShockFromPosition(sizeBlock2MinusRadius + offsetFar);
+        _updateOutputs.push_back(std::make_shared<SoundOutput>("strikingWall"));
         return;
     }
 
@@ -304,6 +307,7 @@ void Ball::isFallingIntersectionBlock() noexcept {
     getMechanicsJumping().timesShock({});
     _pos = {positionBlockPtr->at(0), positionBlockPtr->at(1), positionBlockPtr->at(2)};
     stay();
+    _updateOutputs.push_back(std::make_shared<SoundOutput>("landing"));
     blockEvent();
     internalUpdate();
 }
@@ -946,6 +950,6 @@ unsigned int Ball::numberOfClocks() const {
 }
 
 void Ball::obtainClock() {
+    _updateOutputs.push_back(std::make_shared<SoundOutput>("clockIsObtained"));
     ++_nbOfClocks;
 }
-
