@@ -112,7 +112,7 @@ Page_sptr SuccessPage::click(float mouseX, float mouseY) {
 vecCstTextNode_uptr SuccessPage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     const auto english = _player->isUsingEnglishLanguage();
-    textNodes.emplace_back(new TextNode(_goodGameNode, english ? "Good game!" : "Bien jou;!", 0));
+    textNodes.emplace_back(new TextNode(_goodGameNode, english ? "You did it!" : "Bien jou;!", 0));
     textNodes.emplace_back(new TextNode(
         _continueNode,
         english ? "Next level" : "Niveau suivant",

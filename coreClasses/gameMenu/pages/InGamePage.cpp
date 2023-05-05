@@ -157,12 +157,15 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
     const auto leftKeyNode = std::make_shared<HorizontalNode>(keysNode, keyNodesRatio, 0.5f);
     const auto lastKeyNode = std::make_shared<HorizontalNode>(keysNode, keyNodesRatio, 0.25f);
 
-    constexpr auto coinsNodeRatio = 3.f;
+    constexpr auto coinsNodeRatio = 2.5f;
     constexpr auto coinNodesRatio = 1.f;
     const auto coinsNode = std::make_shared<LeftNode>(footNode, coinsNodeRatio);
     const auto coinSymbolNode = std::make_shared<LeftNode>(coinsNode, coinNodesRatio);
-    const auto coinsTensDigit = std::make_shared<CenteredNode>(coinsNode, coinNodesRatio);
-    const auto coinsUnitsDigit = std::make_shared<RightNode>(coinsNode, coinNodesRatio);
+    const auto footCoinNode = std::make_shared<DownNode>(coinSymbolNode, 1.2f);
+    const auto littleCoinNode = std::make_shared<CenteredNode>(footCoinNode, 1.f);
+    const auto coinsDigitNode = std::make_shared<RightNode>(coinsNode, coinsNodeRatio - coinNodesRatio);
+    const auto coinsTensDigit = std::make_shared<LeftNode>(coinsDigitNode, coinNodesRatio);
+    const auto coinsUnitsDigit = std::make_shared<RightNode>(coinsDigitNode, coinNodesRatio);
 
     return {
         arrowNode,
@@ -175,12 +178,12 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
         middleKeyNode,
         leftKeyNode,
         lastKeyNode,
-        coinSymbolNode
+        littleCoinNode
     };
 }
 
 std::vector<std::string> InGamePage::shaderDefines() const {
-    return {"DISCARDING", "TEST_KEY"};
+    return {"DISCARDING", "TEST_KEY", "TEST_COIN"};
 }
 
 const int InGamePage::arrowLabelId = -1;

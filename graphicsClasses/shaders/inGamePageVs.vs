@@ -9,6 +9,7 @@ out float fs_isLetter;
 out float fs_needsDiscard;
 out float fs_needsCheckingKey;
 out vec3 fs_keyColor;
+out float fs_needsCheckingCoin;
 
 uniform int leftDigit;
 uniform int middleDigit;
@@ -69,6 +70,10 @@ void main() {
     // Coin symbol
     if(vs_labelId == 400) {
         fs_needsDiscard = -1.0;
+        fs_isLetter = -1.0;
+        fs_needsCheckingCoin = 1.0;
+    } else {
+        fs_needsCheckingCoin = -1.0;
     }
 
     gl_Position = vec4(vs_vertexPosition.xy, 0.0, 1.0);

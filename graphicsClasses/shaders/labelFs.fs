@@ -18,6 +18,10 @@ in float fs_isLetter;
     in vec3 fs_keyColor;
 #endif
 
+#ifdef(TEST_COIN)
+    in float fs_needsCheckingCoin;
+#endif
+
 out vec4 pixelColor;
 
 #ifdef(TEST_KEY)
@@ -47,6 +51,18 @@ out vec4 pixelColor;
     }
 #endif
 
+#ifdef(TEST_COIN)
+vec3 getCoinColor() {
+    float x = fs_vertexUVs.x - 0.5;
+    float y = fs_vertexUVs.y - 0.5;
+    float pixelDistance = sqrt(x * x + y * y);
+    if(pixelDistance > 0.5) {
+        discard;
+    }
+    return mix(vec3(0.95, 0.95, 0.8), vec3(0.5, 0.25, 0.0), pixelDistance * 2.0);
+}
+#endif
+
 void main() {
     #ifdef(DISCARDING)
         if(fs_needsDiscard > 0.0) {
@@ -62,6 +78,12 @@ void main() {
             }
             color = fs_keyColor;
         }
+    #endif
+
+    #ifdef(TEST_COIN)
+    if(fs_needsCheckingCoin > 0.0) {
+        color = getCoinColor();
+    }
     #endif
 
     float alpha = fs_isLetter < 0.0
