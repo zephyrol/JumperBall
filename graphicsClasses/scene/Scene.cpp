@@ -67,7 +67,7 @@ std::string Scene::update() {
             _player->setAsLoser();
         }
         if (_map->gameIsWon()) {
-            _player->setAsWinner();
+            _player->setAsWinner(_map->getCurrentNumberOfCoins());
         }
     }
     return mapUpdateOutput;

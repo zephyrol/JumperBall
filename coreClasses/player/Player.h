@@ -60,20 +60,6 @@ public:
 
     void decreaseMoney(unsigned int value);
 
-    void decreaseDiamonds(unsigned int value);
-
-    void addDiamond();
-
-    void speedLevelUp();
-
-    void gravityLevelUp();
-
-    void timeLevelUp();
-
-    void clockItemLevelUp();
-
-    void bonusLevelUp();
-
     void switchLangage();
 
     bool isUsingEnglishLanguage() const;
@@ -92,7 +78,7 @@ public:
 
     void setAsInGame();
 
-    void setAsWinner();
+    void setAsWinner(unsigned int earnedMoney);
 
     bool isAWinner() const;
 
@@ -121,6 +107,7 @@ private:
     vecCstUpdateOutput_sptr _updateOutputs;
 
     unsigned int _money;
+    unsigned int _previousMoney;
     size_t _levelProgression;
 
     std::vector<bool> _ballSkins;

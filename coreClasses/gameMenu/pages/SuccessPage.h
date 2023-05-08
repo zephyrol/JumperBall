@@ -24,7 +24,18 @@ public:
         Node_sptr &&goodGameNode,
         Node_sptr &&continueNode,
         Node_sptr &&exitNode,
+        Node_sptr &&previousDigitOne,
+        Node_sptr &&previousDigitTwo,
+        Node_sptr &&previousDigitThree,
+        Node_sptr &&previousDigitFour,
+        Node_sptr &&obtainedDigitOne,
+        Node_sptr &&obtainedDigitTwo,
+        Node_sptr &&sumDigitOne,
+        Node_sptr &&sumDigitTwo,
+        Node_sptr &&sumDigitThree,
+        Node_sptr &&sumDigitFour,
         Label_sptr &&backgroundLabel,
+        Label_sptr &&operationLine,
         const Page_sptr &parent
     );
 
@@ -51,15 +62,29 @@ private:
     Node_sptr _goodGameNode;
     Node_sptr _continueNode;
     Node_sptr _exitNode;
+    Node_sptr _previousDigitOne;
+    Node_sptr _previousDigitTwo;
+    Node_sptr _previousDigitThree;
+    Node_sptr _previousDigitFour;
+    Node_sptr _obtainedDigitOne;
+    Node_sptr _obtainedDigitTwo;
+    Node_sptr _sumDigitOne;
+    Node_sptr _sumDigitTwo;
+    Node_sptr _sumDigitThree;
+    Node_sptr _sumDigitFour;
 
     Label_sptr _backgroundLabel;
+    Label_sptr _operationLine;
 
     Page_sptr _inGamePage;
 
     static constexpr int continueLabelId = 1;
     static constexpr int exitLabelId = 2;
+    static int operationLineLabelId;
 
     static vecNode_sptr createNodes(float ratio);
+
+    static Label_sptr createOperationLine(Node_sptr node);
 };
 
 

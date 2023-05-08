@@ -21,6 +21,7 @@ Player::Player(
     _gameStatus(Player::GameStatus::None),
     _updateOutputs{},
     _money(money),
+    _previousMoney(_money),
     _levelProgression(levelProgression),
     _ballSkins(std::move(ballSkins)),
     _currentBallSkin(currentBallSkin),
@@ -81,13 +82,19 @@ void Player::escapeAction() {
     }
 }
 
-void Player::setAsWinner() {
+void Player::setAsWinner(unsigned int earnedMoney) {
     _needsSaveFile = true;
     setAsInMenu();
     if (_currentLevel == _levelProgression) {
         ++_levelProgression;
     }
     _gameStatus = GameStatus::Winner;
+    _previousMoney = _money;
+    _money += earnedMoney;
+    constexpr unsigned int maxMoney = 9999;
+    if (_money > maxMoney) {
+       _money = maxMoney;
+    }
 }
 
 bool Player::isAWinner() const {
