@@ -1,5 +1,5 @@
 //
-// Created by Sebastien Morgenthaler on 05/05/2023.
+// Created by S.Morgenthaler on 05/05/2023.
 //
 
 #include "RunAdOutput.h"
