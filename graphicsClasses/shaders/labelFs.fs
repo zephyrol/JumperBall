@@ -97,6 +97,5 @@ void main() {
             color = vec3(0.0);
         }
     #endif
-    // pixelColor = vec4(color, alpha);
-    pixelColor = vec4(vec3(1.0), 1.0);
+    pixelColor = vec4(color, alpha);
 }

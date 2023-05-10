@@ -50,9 +50,9 @@ public:
 
     size_t getCurrentLevel() const;
 
-    unsigned int getRollSpeedLevel() const;
-
     unsigned int getMoney() const;
+
+    unsigned int getPreviousMoney() const;
 
     void unlockNewLevel();
 

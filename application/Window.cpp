@@ -55,7 +55,8 @@ JBTypes::FileContent Window::createFilesContent() {
         "starFs.fs",
         "starVs.vs",
         "titlePageVs.vs",
-        "verticalBlurFs.fs"
+        "verticalBlurFs.fs",
+        "successPageVs.vs"
     }) {
         fileDistPath[shader] = "shaders/" + shader;
     }

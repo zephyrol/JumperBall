@@ -47,6 +47,10 @@ public:
 
     void resize(float ratio) override;
 
+    Displayable::DynamicNames getDynamicIntNames() const override;
+
+    Displayable::DynamicValues<int> getDynamicIntValues() const override;
+
     Page_wptr parent() override;
 
     void setInGamePage(Page_sptr inGamePage);
@@ -82,6 +86,7 @@ private:
 
     Page_sptr _inGamePage;
 
+    static constexpr int digitsIdOffset = 100;
     static constexpr int continueLabelId = 1;
     static constexpr int exitLabelId = 2;
     static const int operationLineLabelId;

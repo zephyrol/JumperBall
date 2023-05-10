@@ -189,7 +189,7 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
 
     const auto lineNode = std::make_shared<CenteredNode>(
         lineAndSumNode,
-        previousObtainedNodeChildRatio * 4.f
+        previousObtainedNodeChildRatio * 12.f
     );
 
     const auto sumNode = std::make_shared<DownNode>(
@@ -202,7 +202,15 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
     const auto sumDigitThreeNode = createThirdDigitNode(sumNode);
     const auto sumDigitFourNode = createFourthDigitNode(sumNode);
 
-    const auto coinNode = createLeftNode(sumNode);
+    const auto coinNodeBase = createLeftNode(sumNode);
+    const auto scaledCoinNode = std::make_shared<DownNode>(
+        coinNodeBase,
+        1.4f
+    );
+    const auto coinNode = std::make_shared<CenteredNode>(
+        scaledCoinNode,
+        1.f
+    );
 
     return {
         youDidItNode,
@@ -284,7 +292,7 @@ vecCstTextNode_uptr SuccessPage::genTextNodes() const {
     ));
     textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Sortir", exitLabelId));
 
-    short nodeCount = 100;
+    auto nodeCount = static_cast<short>(SuccessPage::digitsIdOffset);
     for (const auto &node: std::vector<Node_sptr>{
         _previousDigitOne,
         _previousDigitTwo,
@@ -292,7 +300,6 @@ vecCstTextNode_uptr SuccessPage::genTextNodes() const {
         _previousDigitFour,
         _obtainedDigitOne,
         _obtainedDigitTwo,
-        _plusNode,
         _sumDigitOne,
         _sumDigitTwo,
         _sumDigitThree,
@@ -307,15 +314,90 @@ vecCstTextNode_uptr SuccessPage::genTextNodes() const {
             ++nodeCount;
         }
     }
+    textNodes.emplace_back(new TextNode(_plusNode, "+", 0));
     return textNodes;
 }
 
+Displayable::DynamicNames SuccessPage::getDynamicIntNames() const {
+    decltype(getDynamicIntNames()) dynamicNames{
+        "previousDigitOne",
+        "previousDigitTwo",
+        "previousDigitThree",
+        "previousDigitFour",
+        "obtainedDigitOne",
+        "obtainedDigitTwo",
+        "sumDigitOne",
+        "sumDigitTwo",
+        "sumDigitThree",
+        "sumDigitFour"
+    };
+    auto pageDynamicNames = Page::getDynamicIntNames();
+    dynamicNames.insert(
+        dynamicNames.end(),
+        std::make_move_iterator(pageDynamicNames.begin()),
+        std::make_move_iterator(pageDynamicNames.end())
+    );
+    return dynamicNames;
+}
+
+Displayable::DynamicValues<int> SuccessPage::getDynamicIntValues() const {
+
+    const auto previousMoney = static_cast<int>(_player->getPreviousMoney());
+    const auto sumMoney = static_cast<int>(_player->getMoney());
+    const auto diffMoney = sumMoney - previousMoney;
+
+    const auto previousDigitOne = previousMoney % 10;
+    const auto previousDigitTwo = (previousMoney % 100) / 10;
+    const auto previousDigitThree = (previousMoney % 1000) / 100;
+    const auto previousDigitFour = previousMoney / 1000;
+
+    const auto obtainedDigitOne = diffMoney % 10;
+    const auto obtainedDigitTwo = diffMoney / 10;
+
+    const auto sumDigitOne = sumMoney % 10;
+    const auto sumDigitTwo = (sumMoney % 100) / 10;
+    const auto sumDigitThree = (sumMoney % 1000) / 100;
+    const auto sumDigitFour = sumMoney / 1000;
+
+    constexpr auto previousDigitOneOffset = digitsIdOffset;
+    constexpr auto previousDigitTwoOffset = previousDigitOneOffset + 10;
+    constexpr auto previousDigitThreeOffset = previousDigitTwoOffset + 10;
+    constexpr auto previousDigitFourOffset = previousDigitThreeOffset + 10;
+    constexpr auto obtainedDigitOneOffset = previousDigitFourOffset + 10;
+    constexpr auto obtainedDigitTwoOffset = obtainedDigitOneOffset + 10;
+    constexpr auto sumDigitOneOffset = obtainedDigitTwoOffset + 10;
+    constexpr auto sumDigitTwoOffset = sumDigitOneOffset + 10;
+    constexpr auto sumDigitThreeOffset = sumDigitTwoOffset + 10;
+    constexpr auto sumDigitFourOffset = sumDigitThreeOffset + 10;
+
+    decltype(getDynamicIntValues()) dynamicInts{
+        previousDigitOneOffset + previousDigitOne,
+        previousDigitTwoOffset + previousDigitTwo,
+        previousDigitThreeOffset + previousDigitThree,
+        previousDigitFourOffset + previousDigitFour,
+        obtainedDigitOneOffset + obtainedDigitOne,
+        obtainedDigitTwoOffset + obtainedDigitTwo,
+        sumDigitOneOffset + sumDigitOne,
+        sumDigitTwoOffset + sumDigitTwo,
+        sumDigitThreeOffset + sumDigitThree,
+        sumDigitFourOffset + sumDigitFour
+    };
+
+    auto pageDynamicInts = Page::getDynamicIntValues();
+    dynamicInts.insert(
+        dynamicInts.end(),
+        std::make_move_iterator(pageDynamicInts.begin()),
+        std::make_move_iterator(pageDynamicInts.end())
+    );
+    return dynamicInts;
+}
+
 std::vector<std::string> SuccessPage::shaderDefines() const {
-    return {"TRANSPARENT_BACKGROUND"/*, "TEST_COIN"*/};
+    return {"TRANSPARENT_BACKGROUND", "DISCARDING", "TEST_COIN"};
 }
 
 std::string SuccessPage::getVertexShaderName() const {
-    return "titlePageVs.vs";
+    return "successPageVs.vs";
 }
 
 void SuccessPage::update(const Mouse &mouse) {
@@ -341,7 +423,7 @@ void SuccessPage::update(const Mouse &mouse) {
 }
 
 vecCstLabel_sptr SuccessPage::labels() const {
-    return {/*_backgroundLabel, */_operationLine, _coinSymbol};
+    return {_backgroundLabel, _operationLine, _coinSymbol};
 }
 
 const int SuccessPage::operationLineLabelId = 3;

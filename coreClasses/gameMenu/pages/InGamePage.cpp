@@ -205,7 +205,7 @@ Displayable::DynamicNames InGamePage::getDynamicIntNames() const {
         "coinsTensDigit",
         "coinsUnitsDigit",
         "currentNumberOfKeys",
-        "maxNumberOfKeys",
+        "maxNumberOfKeys"
     };
     auto pageDynamicNames = Page::getDynamicIntNames();
     dynamicNames.insert(
