@@ -73,7 +73,7 @@ LevelProcess_sptr LevelProcess::createInstance(
             height,
             true,
             true,
-            std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f))
+            std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f * 0.01f))
         ),
         shadowTexture,
         shadow2Texture,

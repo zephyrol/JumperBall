@@ -100,5 +100,5 @@ void main(){
         }
 
     }
-    pixelColor = vec4(composition, 1.0);
+    pixelColor = vec4(composition * 0.01, 1.0);
 }

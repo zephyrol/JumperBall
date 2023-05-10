@@ -31,7 +31,7 @@ float getLuminance (vec3 xyYColor) {
 
 void main() {
     const float threshold = 4.0;
-    vec3 colorRGB = texture(textureScene, fs_vertexUVs).xyz;
+    vec3 colorRGB = texture(textureScene, fs_vertexUVs).xyz * 100.0;
     vec3 colorxyY = convertRGBToCIExyY(colorRGB);
     if (getLuminance(colorxyY) > threshold) {
         pixelColor = vec4(convertCIExyYToRGB(colorxyY), 1.0);

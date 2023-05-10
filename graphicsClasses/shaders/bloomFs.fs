@@ -62,7 +62,7 @@ vec3 toneMappingOperator (vec3 xyYColor) {
 }
 
 void main() {
-    vec4 baseRGBColor = texture(frameSceneHDRTexture, fs_vertexUVs);
+    vec4 baseRGBColor = texture(frameSceneHDRTexture, fs_vertexUVs) * 100.0;
     vec3 basexyYColor = convertRBGToCIExyY(baseRGBColor.xyz);
     vec3 toneMappedRGBColor = toneMappingOperator(basexyYColor);
     pixelColor = vec4(toneMappedRGBColor, baseRGBColor.a) + texture(frameBluredTexture, fs_vertexUVs);
