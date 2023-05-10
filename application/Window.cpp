@@ -109,7 +109,11 @@ std::string Window::extractSpecificPartOfOutput(const std::string &updateOutput,
     if(offset == std::string::npos) {
         return "";
     }
-    const auto partBeginIterator = updateOutput.begin() + static_cast<int>(offset + key.length());
+    auto partBeginIterator = updateOutput.begin() + static_cast<int>(offset + key.length());
+    if(*partBeginIterator != ',') {
+        return "";
+    }
+    ++partBeginIterator;
     const auto partEndIterator = std::find(partBeginIterator, updateOutput.end(), ';');
     std::string fromBeginToEnd( partBeginIterator, partEndIterator);
     return fromBeginToEnd;
