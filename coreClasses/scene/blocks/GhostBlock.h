@@ -31,6 +31,8 @@ public:
 
     Displayable::GlobalState getGlobalState() const override;
 
+    Displayable::StaticValues<JBTypes::vec3f> getStaticVec3fValues() const override;
+
 
 private:
     const CstChronometer_sptr _chronometer;

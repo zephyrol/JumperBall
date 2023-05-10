@@ -57,11 +57,10 @@ const JBTypes::vec3ui &Block::position() const {
 }
 
 Displayable::StaticValues<JBTypes::vec3f> Block::getStaticVec3fValues() const {
-    constexpr float offset = 0.5f;
     return {{
-                static_cast <float>(_position.at(0)) + offset,
-                static_cast <float>(_position.at(1)) + offset,
-                static_cast <float>(_position.at(2)) + offset
+                static_cast <float>(_position.at(0)),
+                static_cast <float>(_position.at(1)),
+                static_cast <float>(_position.at(2))
             }};
 }
 

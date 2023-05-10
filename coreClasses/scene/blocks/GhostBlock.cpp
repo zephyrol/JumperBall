@@ -73,3 +73,14 @@ Displayable::GlobalState GhostBlock::getGlobalState() const {
     return Displayable::GlobalState::Separate;
 }
 
+Displayable::StaticValues<JBTypes::vec3f> GhostBlock::getStaticVec3fValues() const {
+    // We need to move the position to the center of the block to get
+    // scale animation
+    constexpr float offset = 0.5f;
+    return {{
+                static_cast <float>(_position.at(0)) + offset,
+                static_cast <float>(_position.at(1)) + offset,
+                static_cast <float>(_position.at(2)) + offset
+            }};
+}
+
