@@ -14,7 +14,7 @@ in vec2 fs_vertexPosition;
 in vec3 fs_color;
 
 void main() {
-    const vec4 colorInside = vec4(1.0, 1.0, 1.0, 1.0);
+    const vec4 colorInside = vec4(0.01, 0.01, 0.01, 1.0);
     const float radiusInside = 0.3f;
     const float radiusOutside = 0.5f;
 

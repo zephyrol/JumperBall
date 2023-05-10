@@ -65,6 +65,7 @@ LevelProcess_sptr LevelProcess::createInstance(
         );
     }
 
+    constexpr auto hdrFactor = 0.01f;
     return std::make_shared<LevelProcess>(
         width,
         height,
@@ -73,7 +74,7 @@ LevelProcess_sptr LevelProcess::createInstance(
             height,
             true,
             true,
-            std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f * 0.01f))
+            std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f * hdrFactor))
         ),
         shadowTexture,
         shadow2Texture,

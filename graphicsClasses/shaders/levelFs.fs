@@ -100,5 +100,6 @@ void main(){
         }
 
     }
-    pixelColor = vec4(composition * 0.01, 1.0);
+    const float hdrFactor = 0.01;
+    pixelColor = vec4(composition * hdrFactor, 1.0);
 }

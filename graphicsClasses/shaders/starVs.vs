@@ -61,7 +61,8 @@ void main() {
     const float starRadius = 50.0;
 
     fs_vertexPosition = vs_vertexPosition.xy;
-    fs_color = vs_color;
+    const float hdrFactor = 0.01;
+    fs_color = vs_color * hdrFactor;
     vec4 projectedPosition = VP * starTranslation() * starRotation() * vec4(
         vs_centerToStar + starRadius * vs_vertexPosition, 1.0
     );
