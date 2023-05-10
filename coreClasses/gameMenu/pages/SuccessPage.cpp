@@ -10,6 +10,7 @@
 #include "gameMenu/nodes/DownNode.h"
 #include "gameMenu/nodes/LeftNode.h"
 #include "gameMenu/nodes/RightNode.h"
+#include "gameMenu/nodes/HorizontalNode.h"
 
 SuccessPage::SuccessPage(
     Player_sptr &&player,
@@ -22,12 +23,14 @@ SuccessPage::SuccessPage(
     Node_sptr &&previousDigitFour,
     Node_sptr &&obtainedDigitOne,
     Node_sptr &&obtainedDigitTwo,
+    Node_sptr &&plusNode,
     Node_sptr &&sumDigitOne,
     Node_sptr &&sumDigitTwo,
     Node_sptr &&sumDigitThree,
     Node_sptr &&sumDigitFour,
     Label_sptr &&backgroundLabel,
     Label_sptr &&operationLine,
+    Label_sptr &&coinSymbol,
     const Page_sptr &parent
 ) : Page(std::move(player)),
     _parent(parent),
@@ -40,12 +43,14 @@ SuccessPage::SuccessPage(
     _previousDigitFour(std::move(previousDigitFour)),
     _obtainedDigitOne(std::move(obtainedDigitOne)),
     _obtainedDigitTwo(std::move(obtainedDigitTwo)),
+    _plusNode(std::move(plusNode)),
     _sumDigitOne(std::move(sumDigitOne)),
     _sumDigitTwo(std::move(sumDigitTwo)),
     _sumDigitThree(std::move(sumDigitThree)),
     _sumDigitFour(std::move(sumDigitFour)),
     _backgroundLabel(std::move(backgroundLabel)),
     _operationLine(std::move(operationLine)),
+    _coinSymbol(std::move(coinSymbol)),
     _inGamePage(nullptr) {
 }
 
@@ -71,8 +76,10 @@ SuccessPage_sptr SuccessPage::createInstance(
         std::move(nodes.at(10)),
         std::move(nodes.at(11)),
         std::move(nodes.at(12)),
-        createBackgroundLabel(std::move(nodes.at(13))),
-        createOperationLine(std::move(nodes.at(14))),
+        std::move(nodes.at(13)),
+        createBackgroundLabel(std::move(nodes.at(14))),
+        createOperationLine(std::move(nodes.at(15))),
+        std::make_shared<Label>(std::move(nodes.at(16)), JBTypes::Color::Yellow, coinSymbolLabelId),
         parent
     );
 }
@@ -86,19 +93,9 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
         9.f / 16.f
     );
 
-    const auto goodGameTitle = std::make_shared<UpNode>(
+    const auto youDidItNode = std::make_shared<UpNode>(
         mainTitleNode,
         4.f
-    );
-
-    const auto bodyNode = std::make_shared<DownNode>(
-        mainTitleNode,
-        9.f / 16.f
-    );
-
-    const auto scoreNode = std::make_shared<UpNode>(
-        mainTitleNode,
-        9.f / 10.f
     );
 
     const auto optionsNode = std::make_shared<DownNode>(
@@ -117,6 +114,16 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
         optionsNodeRatio
     );
 
+    const auto scoreBodyNode = std::make_shared<UpNode>(
+        mainTitleNode,
+        9.f / 8.f
+    );
+
+    const auto scoreNode = std::make_shared<DownNode>(
+        scoreBodyNode,
+        9.f / 4.f
+    );
+
     const auto scoreNodeChildRatio = scoreNode->ratio() * 2.f;
 
     const auto previousObtainedNode = std::make_shared<UpNode>(
@@ -125,123 +132,80 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
     );
 
     const auto previousObtainedNodeChildRatio = previousObtainedNode->ratio() * 2.f;
+
+    const auto createDigitNode = [](const Node_sptr &parent, float positionX) {
+        constexpr auto digitRatio = 1.f;
+        constexpr auto width = 9.f;
+        return std::make_shared<HorizontalNode>(
+            parent,
+            digitRatio,
+            positionX / width
+        );
+    };
+
+    const auto createFirstDigitNode = [&createDigitNode](const Node_sptr &parent) {
+        return createDigitNode(parent, 8.f);
+    };
+
+    const auto createSecondDigitNode = [&createDigitNode](const Node_sptr &parent) {
+        return createDigitNode(parent, 6.5f);
+    };
+
+    const auto createThirdDigitNode = [&createDigitNode](const Node_sptr &parent) {
+        return createDigitNode(parent, 5.f);
+    };
+
+    const auto createFourthDigitNode = [&createDigitNode](const Node_sptr &parent) {
+        return createDigitNode(parent, 3.5f);
+    };
+
+    const auto createLeftNode = [&createDigitNode](const Node_sptr &parent) {
+        return createDigitNode(parent, 1.f);
+    };
+
     const auto previousNode = std::make_shared<UpNode>(
         previousObtainedNode,
         previousObtainedNodeChildRatio
     );
-    const auto threeDigitsRatio = previousObtainedNode->ratio() / 2.f;
-    const auto threeDigitNode = std::make_shared<RightNode>(
-        previousNode,
-        threeDigitsRatio
-    );
-    const auto digitRatio = threeDigitsRatio / 3.f;
-    const auto digitOneNode = std::make_shared<RightNode>(
-        threeDigitNode,
-        digitRatio
-    );
-    const auto digitTwoNode = std::make_shared<CenteredNode>(
-        threeDigitNode,
-        digitRatio
-    );
-    const auto digitThreeNode = std::make_shared<RightNode>(
-        threeDigitNode,
-        digitRatio
-    );
 
-    const auto leftDigitsNode = std::make_shared<LeftNode>(
-        previousNode,
-        threeDigitsRatio
-    );
-
-    const auto digitFourNode = std::make_shared<RightNode>(
-        leftDigitsNode,
-        digitRatio
-    );
+    const auto digitOneNode = createFirstDigitNode(previousNode);
+    const auto digitTwoNode = createSecondDigitNode(previousNode);
+    const auto digitThreeNode = createThirdDigitNode(previousNode);
+    const auto digitFourNode = createFourthDigitNode(previousNode);
 
     const auto obtainedNode = std::make_shared<DownNode>(
         previousObtainedNode,
         previousObtainedNodeChildRatio
     );
 
-    const auto obtainedDigits = std::make_shared<RightNode>(
-        obtainedNode,
-        threeDigitsRatio
-    );
-
-    const auto unitDigit = std::make_shared<RightNode>(
-        obtainedDigits,
-        digitRatio
-    );
-
-    const auto tensDigit = std::make_shared<CenteredNode>(
-        obtainedDigits,
-        digitRatio
-    );
-
-    const auto plusAndSpaceNode = std::make_shared<LeftNode>(
-        obtainedNode,
-        threeDigitsRatio
-    );
-
-    const auto plusNode = std::make_shared<LeftNode>(
-        plusAndSpaceNode,
-        digitRatio
-    );
+    const auto unitDigit = createFirstDigitNode(obtainedNode);
+    const auto tensDigit = createSecondDigitNode(obtainedNode);
+    const auto plusNode = createLeftNode(obtainedNode);
 
     const auto lineAndSumNode = std::make_shared<DownNode>(
         scoreNode,
         scoreNodeChildRatio
     );
 
-    const auto lineNodeBase = std::make_shared<UpNode>(
-        lineAndSumNode,
-        previousObtainedNodeChildRatio
-    );
-
     const auto lineNode = std::make_shared<CenteredNode>(
-        lineNodeBase,
+        lineAndSumNode,
         previousObtainedNodeChildRatio * 4.f
     );
 
     const auto sumNode = std::make_shared<DownNode>(
         lineAndSumNode,
-        scoreNodeChildRatio
+        previousObtainedNodeChildRatio
     );
 
-    const auto sumThreeDigitNode = std::make_shared<RightNode>(
-        sumNode,
-        threeDigitsRatio
-    );
-    const auto sumDigitOneNode = std::make_shared<RightNode>(
-        sumThreeDigitNode,
-        digitRatio
-    );
-    const auto sumDigitTwoNode = std::make_shared<CenteredNode>(
-        sumThreeDigitNode,
-        digitRatio
-    );
-    const auto sumDigitThreeNode = std::make_shared<RightNode>(
-        sumThreeDigitNode,
-        digitRatio
-    );
+    const auto sumDigitOneNode = createFirstDigitNode(sumNode);
+    const auto sumDigitTwoNode = createSecondDigitNode(sumNode);
+    const auto sumDigitThreeNode = createThirdDigitNode(sumNode);
+    const auto sumDigitFourNode = createFourthDigitNode(sumNode);
 
-    const auto sumLeftDigitsNode = std::make_shared<LeftNode>(
-        sumNode,
-        threeDigitsRatio
-    );
-
-    const auto sumDigitFourNode = std::make_shared<RightNode>(
-        sumLeftDigitsNode,
-        digitRatio
-    );
-
-    const auto coinNode = std::make_shared<LeftNode>(
-        sumLeftDigitsNode,
-        digitRatio
-    );
+    const auto coinNode = createLeftNode(sumNode);
 
     return {
-        goodGameTitle,
+        youDidItNode,
         continueNode,
         exitNode,
         digitOneNode,
@@ -250,12 +214,14 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
         digitFourNode,
         unitDigit,
         tensDigit,
+        plusNode,
         sumDigitOneNode,
         sumDigitTwoNode,
         sumDigitThreeNode,
         sumDigitFourNode,
         mainTitleNode,
-        lineNode
+        lineNode,
+        coinNode
     };
 
 }
@@ -271,12 +237,14 @@ void SuccessPage::resize(float ratio) {
     _previousDigitFour = nodes.at(6);
     _obtainedDigitOne = nodes.at(7);
     _obtainedDigitTwo = nodes.at(8);
-    _sumDigitOne = nodes.at(9);
-    _sumDigitTwo = nodes.at(10);
-    _sumDigitThree = nodes.at(11);
-    _sumDigitFour = nodes.at(12);
-    _backgroundLabel = createBackgroundLabel(nodes.at(13));
-    _operationLine = createOperationLine(nodes.at(14));
+    _plusNode = nodes.at(9);
+    _sumDigitOne = nodes.at(10);
+    _sumDigitTwo = nodes.at(11);
+    _sumDigitThree = nodes.at(12);
+    _sumDigitFour = nodes.at(13);
+    _backgroundLabel = createBackgroundLabel(nodes.at(14));
+    _operationLine = createOperationLine(nodes.at(15));
+    _coinSymbol = std::make_shared<Label>(nodes.at(16), JBTypes::Color::Yellow, coinSymbolLabelId);
 }
 
 Page_wptr SuccessPage::parent() {
@@ -324,6 +292,7 @@ vecCstTextNode_uptr SuccessPage::genTextNodes() const {
         _previousDigitFour,
         _obtainedDigitOne,
         _obtainedDigitTwo,
+        _plusNode,
         _sumDigitOne,
         _sumDigitTwo,
         _sumDigitThree,
@@ -342,7 +311,7 @@ vecCstTextNode_uptr SuccessPage::genTextNodes() const {
 }
 
 std::vector<std::string> SuccessPage::shaderDefines() const {
-    return {"TRANSPARENT_BACKGROUND"};
+    return {"TRANSPARENT_BACKGROUND"/*, "TEST_COIN"*/};
 }
 
 std::string SuccessPage::getVertexShaderName() const {
@@ -372,10 +341,10 @@ void SuccessPage::update(const Mouse &mouse) {
 }
 
 vecCstLabel_sptr SuccessPage::labels() const {
-    return {_backgroundLabel, _operationLine};
+    return {/*_backgroundLabel, */_operationLine, _coinSymbol};
 }
 
-int SuccessPage::operationLineLabelId = 3;
+const int SuccessPage::operationLineLabelId = 3;
 
 Label_sptr SuccessPage::createOperationLine(Node_sptr node) {
     return std::make_shared<Label>(
@@ -384,3 +353,5 @@ Label_sptr SuccessPage::createOperationLine(Node_sptr node) {
         SuccessPage::operationLineLabelId
     );
 }
+
+const int SuccessPage::coinSymbolLabelId = 400;

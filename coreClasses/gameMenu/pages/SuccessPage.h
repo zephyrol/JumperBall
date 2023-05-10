@@ -30,12 +30,14 @@ public:
         Node_sptr &&previousDigitFour,
         Node_sptr &&obtainedDigitOne,
         Node_sptr &&obtainedDigitTwo,
+        Node_sptr &&plusNode,
         Node_sptr &&sumDigitOne,
         Node_sptr &&sumDigitTwo,
         Node_sptr &&sumDigitThree,
         Node_sptr &&sumDigitFour,
         Label_sptr &&backgroundLabel,
         Label_sptr &&operationLine,
+        Label_sptr &&coinSymbol,
         const Page_sptr &parent
     );
 
@@ -68,6 +70,7 @@ private:
     Node_sptr _previousDigitFour;
     Node_sptr _obtainedDigitOne;
     Node_sptr _obtainedDigitTwo;
+    Node_sptr _plusNode;
     Node_sptr _sumDigitOne;
     Node_sptr _sumDigitTwo;
     Node_sptr _sumDigitThree;
@@ -75,12 +78,14 @@ private:
 
     Label_sptr _backgroundLabel;
     Label_sptr _operationLine;
+    Label_sptr _coinSymbol;
 
     Page_sptr _inGamePage;
 
     static constexpr int continueLabelId = 1;
     static constexpr int exitLabelId = 2;
-    static int operationLineLabelId;
+    static const int operationLineLabelId;
+    static const int coinSymbolLabelId;
 
     static vecNode_sptr createNodes(float ratio);
 
