@@ -137,7 +137,7 @@ vecCstTextNode_uptr CreditsPage::genTextNodes() const {
     textNodes.emplace_back(new TextNode(_credits, english ? "Credits" : "Cr;dits", 0));
     textNodes.emplace_back(new TextNode(
         _developmentAndDesign,
-        english ? "Development, Design:" : "Developpement, Design:",
+        english ? "Development, Design:" : "D;veloppement, Design:",
         developmentAndDesignLabelId
     ));
     textNodes.emplace_back(new TextNode(_mainAuthor, "S;bastien Morgenthaler", mainAuthorLabelId));
