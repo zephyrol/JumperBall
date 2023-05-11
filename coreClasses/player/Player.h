@@ -100,9 +100,9 @@ public:
 
     void resetGameStatus();
 
-    std::string genSaveContent();
-
     void setAsInMenu();
+
+    std::string genOutputs();
 
     static constexpr unsigned int maxLevel = 2;
 
@@ -131,6 +131,8 @@ private:
     float _remainingTime;
     bool _wantsToQuit;
     bool _needsSaveFile;
+
+    std::string genSaveContent();
 };
 
 template<typename T>

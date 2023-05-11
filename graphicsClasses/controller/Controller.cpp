@@ -59,7 +59,8 @@ Controller::Controller(
         [this]() { _scene->setLeft(); },
         [this](float mouseX, float mouseY) { setValidateMouse(mouseX, mouseY); },
         [this]() { _scene->mouseSetUp(); }
-    ) {
+    ),
+    _outputs{}{
 }
 
 void Controller::interactionButtons(const KeyboardKey::Button &button, const KeyboardKey::Status &status) {
@@ -139,7 +140,7 @@ void Controller::escapeAction() {
     }
 }
 
-bool Controller::requestToLeave() const {
+bool Controller::isRequestingLeaving() const {
     return _requestToLeave;
 }
 
@@ -177,7 +178,15 @@ std::string Controller::update() {
 
     _viewer->update();
 
-    return sceneUpdateOutput + _player->genSaveContent();
+    return sceneUpdateOutput + _player->genOutputs();
+}
+
+bool Controller::areMusicsActivated() const {
+    return _player->areMusicsActivated();
+}
+
+bool Controller::areSoundsActivated() const {
+    return _player->areSoundsActivated();
 }
 
 void Controller::stop() {

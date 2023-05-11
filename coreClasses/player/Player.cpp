@@ -7,6 +7,8 @@
 #include <sstream>
 #include "Player.h"
 #include "system/SaveFileOutput.h"
+#include "system/SoundStatusOutput.h"
+#include "system/MusicStatusOutput.h"
 
 Player::Player(
     DoubleChronometer_sptr doubleChronometer,
@@ -226,6 +228,7 @@ bool Player::isUsingEnglishLanguage() const {
 void Player::switchMusicsStatus() {
     _needsSaveFile = true;
     _musicsAreActivated = !_musicsAreActivated;
+    _updateOutputs.emplace_back(new MusicStatusOutput(_musicsAreActivated? "on": "off"));
 }
 
 bool Player::areMusicsActivated() const {
@@ -235,8 +238,13 @@ bool Player::areMusicsActivated() const {
 void Player::switchSoundsStatus() {
     _needsSaveFile = true;
     _soundsAreActivated = !_soundsAreActivated;
+    _updateOutputs.emplace_back(new SoundStatusOutput(_soundsAreActivated ? "on": "off"));
 }
 
 bool Player::areSoundsActivated() const {
     return _soundsAreActivated;
+}
+
+std::string Player::genOutputs() {
+    return genSaveContent() + UpdateOutput::combineUpdateOutputs(std::move(_updateOutputs));
 }

@@ -39,13 +39,17 @@ public:
 
     void render() const;
 
-    bool requestToLeave() const;
+    bool isRequestingLeaving() const;
 
     void resize(int screenWidth, int screenHeight);
 
     void stop();
 
     void resume();
+
+    bool areMusicsActivated() const;
+
+    bool areSoundsActivated() const;
 
 private:
 
@@ -68,7 +72,7 @@ private:
 
     KeyboardKey _keyboardKey;
     Mouse _mouse;
-
+    std::vector<CstUpdateOutput_sptr> _outputs;
 };
 
 #endif /* CONTROLLER_H */

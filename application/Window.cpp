@@ -271,7 +271,7 @@ bool Window::inputManagement() {
         _controller.releaseMouse();
     }
 
-    return glfwWindowShouldClose(_window) != 0 || _controller.requestToLeave();
+    return glfwWindowShouldClose(_window) != 0 || _controller.isRequestingLeaving();
 }
 
 
