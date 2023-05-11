@@ -14,7 +14,9 @@ Player::Player(
     size_t levelProgression,
     std::vector<bool> ballSkins,
     unsigned int currentBallSkin,
-    bool frenchLanguageIsActivated
+    bool frenchLanguageIsActivated,
+    bool musicsAreActivated,
+    bool soundsAreActivated
 ) :
     _doubleChronometer(std::move(doubleChronometer)),
     _status(Player::Status::InMenu),
@@ -26,6 +28,8 @@ Player::Player(
     _ballSkins(std::move(ballSkins)),
     _currentBallSkin(currentBallSkin),
     _frenchLanguageIsActivated(frenchLanguageIsActivated),
+    _musicsAreActivated(musicsAreActivated),
+    _soundsAreActivated(soundsAreActivated),
     _currentLevel(_levelProgression),
     _remainingTime(0.f),
     _wantsToQuit(false),
@@ -97,7 +101,7 @@ void Player::setAsWinner(unsigned int earnedMoney) {
     _money += earnedMoney;
     constexpr unsigned int maxMoney = 9999;
     if (_money > maxMoney) {
-       _money = maxMoney;
+        _money = maxMoney;
     }
 }
 
@@ -144,7 +148,9 @@ std::string Player::genSaveContent() {
         + std::to_string(_levelProgression) + " "
         + boolVectorToString(_ballSkins) + " "
         + std::to_string(_currentBallSkin) + " "
-        + (_frenchLanguageIsActivated ? "1" : "0");
+        + (_frenchLanguageIsActivated ? "1" : "0") + " "
+        + (_musicsAreActivated ? "1" : "0") + " "
+        + (_soundsAreActivated ? "1" : "0");
 
     return SaveFileOutput(std::move(saveContent)).getOutput();
 }
@@ -162,18 +168,22 @@ Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, con
         return values;
     };
 
+    const auto readBoolean = [&iss]() {
+        std::vector<bool> values;
+        std::string w;
+        iss >> w;
+        return w.front() == '1';
+    };
+
     return std::make_shared<Player>(
         std::move(doubleChronometer),
         Player::readValue<unsigned int>(iss), // money
         Player::readValue<size_t>(iss), // levelProgression
         readBooleanVector(), //ballSkins
         Player::readValue<unsigned int>(iss), // currentBallSkin,
-        [&iss]() {
-            std::vector<bool> values;
-            std::string w;
-            iss >> w;
-            return w.front() == '1';
-        }() // frenchLanguageIsActivated
+        readBoolean(), // frenchLanguageIsActivated
+        readBoolean(), // musicsAreActivated
+        readBoolean() //soundsAreActivated
     );
 }
 
@@ -211,4 +221,22 @@ void Player::switchLangage() {
 
 bool Player::isUsingEnglishLanguage() const {
     return !_frenchLanguageIsActivated;
+}
+
+void Player::switchMusicsStatus() {
+    _needsSaveFile = true;
+    _musicsAreActivated = !_musicsAreActivated;
+}
+
+bool Player::areMusicsActivated() const {
+    return _musicsAreActivated;
+}
+
+void Player::switchSoundsStatus() {
+    _needsSaveFile = true;
+    _soundsAreActivated = !_soundsAreActivated;
+}
+
+bool Player::areSoundsActivated() const {
+    return _soundsAreActivated;
 }

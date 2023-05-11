@@ -24,7 +24,9 @@ public:
         size_t levelProgression,
         std::vector<bool> ballSkins,
         unsigned int currentBallSkin,
-        bool frenchLanguageIsActivated
+        bool frenchLanguageIsActivated,
+        bool musicsAreActivated,
+        bool soundsAreActivated
     );
 
     static Player_sptr createInstance(
@@ -63,6 +65,14 @@ public:
     void switchLangage();
 
     bool isUsingEnglishLanguage() const;
+
+    void switchMusicsStatus();
+
+    bool areMusicsActivated() const;
+
+    void switchSoundsStatus();
+
+    bool areSoundsActivated() const;
 
     bool wantsToQuit() const;
 
@@ -114,6 +124,8 @@ private:
     unsigned int _currentBallSkin;
 
     bool _frenchLanguageIsActivated;
+    bool _musicsAreActivated;
+    bool _soundsAreActivated;
 
     size_t _currentLevel;
     float _remainingTime;

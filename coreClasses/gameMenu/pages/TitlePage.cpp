@@ -16,6 +16,8 @@ TitlePage::TitlePage(
     Node_sptr &&play,
     Node_sptr &&store,
     Node_sptr &&language,
+    Node_sptr &&musics,
+    Node_sptr &&sounds,
     Node_sptr &&credits,
     Node_sptr &&exitNode,
     Node_sptr &&author,
@@ -28,6 +30,8 @@ TitlePage::TitlePage(
     _play(std::move(play)),
     _store(std::move(store)),
     _language(std::move(language)),
+    _musics(std::move(musics)),
+    _sounds(std::move(sounds)),
     _credits(std::move(credits)),
     _exitNode(std::move(exitNode)),
     _author(std::move(author)),
@@ -48,10 +52,12 @@ void TitlePage::resetNodes() {
     _play = nodes.at(1);
     _store = nodes.at(2);
     _language = nodes.at(3);
-    _credits = nodes.at(4);
-    _exitNode = nodes.at(5);
-    _author = nodes.at(6);
-    _backgroundLabel = createBackgroundLabel(nodes.at(7));
+    _musics = nodes.at(4);
+    _sounds = nodes.at(5);
+    _credits = nodes.at(6);
+    _exitNode = nodes.at(7);
+    _author = nodes.at(8);
+    _backgroundLabel = createBackgroundLabel(nodes.at(9));
 }
 
 
@@ -66,7 +72,9 @@ TitlePage_sptr TitlePage::createInstance(Player_sptr player, float ratio) {
         std::move(nodes.at(4)),
         std::move(nodes.at(5)),
         std::move(nodes.at(6)),
-        createBackgroundLabel(std::move(nodes.at(7))),
+        std::move(nodes.at(7)),
+        std::move(nodes.at(8)),
+        createBackgroundLabel(std::move(nodes.at(9))),
         ratio
     );
 }
@@ -95,29 +103,41 @@ vecNode_sptr TitlePage::createNodes(float ratio, bool english) {
         1.5f
     );
 
-    constexpr float optionsNodeRatio = 7.f;
+    constexpr float optionsNodeRatio = 10.f;
     const auto playNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
-        english ? 1.35f : 1.4f // Because p creates an offset
+        english ? 1.36f : 1.4f // Because p creates an offset
     );
 
     const auto storeNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
-        english ? 0.9f : 0.85f // Because q creates an offset
+        english ? 1.06f : 1.02f // Because q creates an offset
     );
 
     const auto languageNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
-        0.33f // Because g letter creates an offset
+        0.68f // Because g letter creates an offset
+    );
+
+    const auto musicNode = std::make_shared<VerticalNode>(
+        optionsParentNode,
+        optionsNodeRatio,
+        english ? 0.38f : 0.34f // Because q creates an offset
+    );
+
+    const auto soundNode = std::make_shared<VerticalNode>(
+        optionsParentNode,
+        optionsNodeRatio,
+        0.05f // Because q creates an offset
     );
 
     const auto creditsNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
-        -0.1f
+        -0.28f
     );
 
     const auto exitNode = std::make_shared<VerticalNode>(
@@ -131,6 +151,8 @@ vecNode_sptr TitlePage::createNodes(float ratio, bool english) {
         playNode,
         storeNode,
         languageNode,
+        musicNode,
+        soundNode,
         creditsNode,
         exitNode,
         authorNode,
@@ -147,6 +169,14 @@ Page_sptr TitlePage::click(float mouseX, float mouseY) {
     }
     if (intersectTest(_language)) {
         _player->switchLangage();
+        resetNodes();
+    }
+    if (intersectTest(_musics)) {
+        _player->switchMusicsStatus();
+        resetNodes();
+    }
+    if (intersectTest(_sounds)) {
+        _player->switchSoundsStatus();
         resetNodes();
     }
     if (intersectTest(_exitNode)) {
@@ -175,6 +205,14 @@ vecCstTextNode_uptr TitlePage::genTextNodes() const {
     textNodes.emplace_back(new TextNode(_store, english ? "Store" : "Boutique", storeLabelId));
     textNodes.emplace_back(
         new TextNode(_language, english ? "Change language" : "Changer de langue", languageLabelId)
+    );
+    const std::string musicsStatus = _player->areMusicsActivated() ? "ON" : "OFF";
+    textNodes.emplace_back(
+        new TextNode(_musics, (english ? "Musics: " : "Musiques: ") + musicsStatus, musicsLabelId)
+    );
+    const std::string soundsStatus = _player->areSoundsActivated() ? "ON" : "OFF";
+    textNodes.emplace_back(
+        new TextNode(_sounds, (english ? "Sounds: " : "Sons: ") + soundsStatus, soundsLabelId)
     );
     textNodes.emplace_back(new TextNode(_credits, english ? "Credits" : "Cr;dits", creditsLabelId));
     textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Quitter", exitLabelId));
@@ -214,6 +252,10 @@ void TitlePage::update(const Mouse &mouse) {
         _currentSelectedLabel = storeLabelId;
     } else if (intersectTest(_language)) {
         _currentSelectedLabel = languageLabelId;
+    } else if (intersectTest(_musics)) {
+        _currentSelectedLabel = musicsLabelId;
+    } else if (intersectTest(_sounds)) {
+        _currentSelectedLabel = soundsLabelId;
     } else if (intersectTest(_credits)) {
         _currentSelectedLabel = creditsLabelId;
     } else {

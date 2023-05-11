@@ -26,6 +26,8 @@ public:
         Node_sptr &&play,
         Node_sptr &&store,
         Node_sptr &&language,
+        Node_sptr &&musics,
+        Node_sptr &&sounds,
         Node_sptr &&credits,
         Node_sptr &&exitNode,
         Node_sptr &&author,
@@ -54,6 +56,8 @@ private:
     Node_sptr _play;
     Node_sptr _store;
     Node_sptr _language;
+    Node_sptr _musics;
+    Node_sptr _sounds;
     Node_sptr _credits;
     Node_sptr _exitNode;
     Node_sptr _author;
@@ -69,7 +73,9 @@ private:
     static constexpr int storeLabelId = 2;
     static constexpr int languageLabelId = 3;
     static constexpr int creditsLabelId = 4;
-    static constexpr int exitLabelId = 5;
+    static constexpr int musicsLabelId = 5;
+    static constexpr int soundsLabelId = 6;
+    static constexpr int exitLabelId = 7;
 
     static vecNode_sptr createNodes(float ratio, bool english);
 };
