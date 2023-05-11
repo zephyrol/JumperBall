@@ -307,7 +307,9 @@ void Ball::isFallingIntersectionBlock() noexcept {
     getMechanicsJumping().timesShock({});
     _pos = {positionBlockPtr->at(0), positionBlockPtr->at(1), positionBlockPtr->at(2)};
     stay();
-    _updateOutputs.push_back(std::make_shared<SoundOutput>("landing"));
+    if(_stateOfLife != StateOfLife::Bursting && _stateOfLife != StateOfLife::Dead) {
+        _updateOutputs.push_back(std::make_shared<SoundOutput>("landing"));
+    }
     blockEvent();
     internalUpdate();
 }

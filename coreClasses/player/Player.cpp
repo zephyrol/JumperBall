@@ -10,6 +10,7 @@
 #include "system/SoundStatusOutput.h"
 #include "system/MusicStatusOutput.h"
 #include "system/GoToAuthorPageOutput.h"
+#include "system/SoundOutput.h"
 
 Player::Player(
     DoubleChronometer_sptr doubleChronometer,
@@ -81,6 +82,7 @@ Player::Status Player::status() const {
 void Player::setCurrentLevel(size_t levelNumber) {
     _currentLevel = levelNumber;
     _status = Player::Status::InTransition;
+    _updateOutputs.emplace_back(new SoundOutput("startLevel"));
 }
 
 size_t Player::getCurrentLevel() const {
@@ -228,6 +230,7 @@ float Player::getRemainingTime() const {
 void Player::switchLangage() {
     _needsSaveFile = true;
     _frenchLanguageIsActivated = !_frenchLanguageIsActivated;
+    addValidationSound();
 }
 
 bool Player::isUsingEnglishLanguage() const {
@@ -238,6 +241,7 @@ void Player::switchMusicsStatus() {
     _needsSaveFile = true;
     _musicsAreActivated = !_musicsAreActivated;
     _updateOutputs.emplace_back(new MusicStatusOutput(_musicsAreActivated? "on": "off"));
+    addValidationSound();
 }
 
 bool Player::areMusicsActivated() const {
@@ -245,9 +249,13 @@ bool Player::areMusicsActivated() const {
 }
 
 void Player::switchSoundsStatus() {
+    addValidationSound();
     _needsSaveFile = true;
     _soundsAreActivated = !_soundsAreActivated;
     _updateOutputs.emplace_back(new SoundStatusOutput(_soundsAreActivated ? "on": "off"));
+    if(_soundsAreActivated) {
+        addValidationSound();
+    }
 }
 
 bool Player::areSoundsActivated() const {
@@ -256,4 +264,8 @@ bool Player::areSoundsActivated() const {
 
 std::string Player::genOutputs() {
     return genSaveContent() + UpdateOutput::combineUpdateOutputs(std::move(_updateOutputs));
+}
+
+void Player::addValidationSound() {
+    _updateOutputs.emplace_back(new SoundOutput("validation"));
 }

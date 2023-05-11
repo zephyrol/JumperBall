@@ -165,6 +165,7 @@ Page_sptr TitlePage::click(float mouseX, float mouseY) {
         return node->intersect(mouseX, mouseY);
     };
     if (intersectTest(_play)) {
+        _player->addValidationSound();
         return _levelsPage;
     }
     if (intersectTest(_language)) {

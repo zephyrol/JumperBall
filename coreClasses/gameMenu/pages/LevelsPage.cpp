@@ -126,6 +126,7 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
         }
     }
     if (_arrowLabel->getNode()->intersect(mouseX, mouseY)) {
+        _player->addValidationSound();
         return _parent.lock();
     }
     return nullptr;

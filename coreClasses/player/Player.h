@@ -74,6 +74,8 @@ public:
 
     bool areSoundsActivated() const;
 
+    void addValidationSound();
+
     bool wantsToQuit() const;
 
     void requestQuit();

@@ -268,6 +268,7 @@ Page_sptr SuccessPage::click(float mouseX, float mouseY) {
         return node->intersect(mouseX, mouseY);
     };
     if (intersectTest(_exitNode)) {
+        _player->addValidationSound();
         return _parent.lock();
     }
     if (intersectTest(_continueNode)) {
