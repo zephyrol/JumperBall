@@ -122,6 +122,12 @@ Page_sptr CreditsPage::click(float mouseX, float mouseY) {
     if (intersectTest(_exitNode)) {
         return _parent.lock();
     }
+    if (intersectTest(_mainAuthor) || intersectTest(_developmentAndDesign)) {
+        _player->requestDeveloperPage();
+    }
+    if (intersectTest(_secondAuthor) || intersectTest(_musicAndSoundsEffects)) {
+        _player->requestMusicianPage();
+    }
     return nullptr;
 }
 

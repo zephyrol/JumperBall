@@ -9,6 +9,7 @@
 #include "system/SaveFileOutput.h"
 #include "system/SoundStatusOutput.h"
 #include "system/MusicStatusOutput.h"
+#include "system/GoToAuthorPageOutput.h"
 
 Player::Player(
     DoubleChronometer_sptr doubleChronometer,
@@ -43,6 +44,14 @@ size_t Player::levelProgression() const {
 }
 
 void Player::unlockNewLevel() {
+}
+
+void Player::requestDeveloperPage() {
+    _updateOutputs.emplace_back(new GoToAuthorPageOutput("developer"));
+}
+
+void Player::requestMusicianPage() {
+    _updateOutputs.emplace_back(new GoToAuthorPageOutput("musician"));
 }
 
 void Player::decreaseMoney(unsigned int value) {

@@ -104,6 +104,10 @@ public:
 
     std::string genOutputs();
 
+    void requestDeveloperPage();
+
+    void requestMusicianPage();
+
     static constexpr unsigned int maxLevel = 2;
 
     template<typename T>
