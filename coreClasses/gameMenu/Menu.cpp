@@ -35,9 +35,6 @@ Page_sptr Menu::currentPage() {
 }
 
 void Menu::update(const Mouse &mouse) {
-    if (_player->status() != Player::Status::InMenu) {
-        return;
-    }
     if (_player->isAWinner()) {
         _currentPage = _successPage;
         _player->resetGameStatus();
