@@ -12,7 +12,8 @@
 
 CreditsPage::CreditsPage(
     Player_sptr &&player,
-    Node_sptr &&credits,
+    Node_sptr &&selectAName,
+    Node_sptr &&forMoreInformation,
     Node_sptr &&developmentAndDesign,
     Node_sptr &&mainAuthor,
     Node_sptr &&musicAndSoundsEffects,
@@ -24,7 +25,8 @@ CreditsPage::CreditsPage(
     std::move(player)
 ),
     _parent(parent),
-    _credits(std::move(credits)),
+    _selectAName(std::move(selectAName)),
+    _forMoreInformation(std::move(forMoreInformation)),
     _developmentAndDesign(std::move(developmentAndDesign)),
     _mainAuthor(std::move(mainAuthor)),
     _musicAndSoundsEffects(std::move(musicAndSoundsEffects)),
@@ -35,13 +37,14 @@ CreditsPage::CreditsPage(
 
 void CreditsPage::resize(float ratio) {
     const auto &nodes = createNodes(ratio, _player->isUsingEnglishLanguage());
-    _credits = nodes.at(0);
-    _developmentAndDesign = nodes.at(1);
-    _mainAuthor = nodes.at(2);
-    _musicAndSoundsEffects = nodes.at(3);
-    _secondAuthor = nodes.at(4);
-    _exitNode = nodes.at(5);
-    _backgroundLabel = createBackgroundLabel(nodes.at(6));
+    _selectAName = nodes.at(0);
+    _forMoreInformation = nodes.at(1);
+    _developmentAndDesign = nodes.at(2);
+    _mainAuthor = nodes.at(3);
+    _musicAndSoundsEffects = nodes.at(4);
+    _secondAuthor = nodes.at(5);
+    _exitNode = nodes.at(6);
+    _backgroundLabel = createBackgroundLabel(nodes.at(7));
 }
 
 CreditsPage_sptr CreditsPage::createInstance(
@@ -58,7 +61,8 @@ CreditsPage_sptr CreditsPage::createInstance(
         std::move(nodes.at(3)),
         std::move(nodes.at(4)),
         std::move(nodes.at(5)),
-        createBackgroundLabel(nodes.at(6)),
+        std::move(nodes.at(6)),
+        createBackgroundLabel(nodes.at(7)),
         parent
     );
 }
@@ -72,9 +76,20 @@ vecNode_sptr CreditsPage::createNodes(float ratio, bool english) {
         9.f / 16.f
     );
 
+    constexpr auto creditTitleRatio = 4.f;
     const auto jumperBallCredits = std::make_shared<UpNode>(
         mainCreditsNode,
-        4.f
+        creditTitleRatio
+    );
+
+    constexpr auto titleNodesRatio = creditTitleRatio * 2.f;
+    const auto selectAName = std::make_shared<UpNode>(
+        jumperBallCredits,
+        titleNodesRatio
+    );
+    const auto forMoreInformation = std::make_shared<DownNode>(
+        jumperBallCredits,
+        titleNodesRatio
     );
 
     const auto authorNode = std::make_shared<DownNode>(
@@ -112,7 +127,7 @@ vecNode_sptr CreditsPage::createNodes(float ratio, bool english) {
         english ? -0.4f : -0.45f // Because Q creates an offset
     );
 
-    return {jumperBallCredits, playNode, storeNode, languageNode, exitNode, authorNode, mainCreditsNode};
+    return {selectAName, forMoreInformation, playNode, storeNode, languageNode, exitNode, authorNode, mainCreditsNode};
 }
 
 Page_sptr CreditsPage::click(float mouseX, float mouseY) {
@@ -134,7 +149,8 @@ Page_sptr CreditsPage::click(float mouseX, float mouseY) {
 vecCstTextNode_uptr CreditsPage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     const auto english = _player->isUsingEnglishLanguage();
-    textNodes.emplace_back(new TextNode(_credits, english ? "Credits" : "Cr;dits", 0));
+    textNodes.emplace_back(new TextNode(_selectAName, english ? "Select a name" : "S;lectionnez un nom", 0));
+    textNodes.emplace_back(new TextNode(_forMoreInformation, english ? "for more information" : "pour plus d'information", 0));
     textNodes.emplace_back(new TextNode(
         _developmentAndDesign,
         english ? "Development, Design:" : "D;veloppement, Design:",

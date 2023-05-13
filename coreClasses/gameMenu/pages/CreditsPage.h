@@ -26,7 +26,8 @@ public:
 
     explicit CreditsPage(
         Player_sptr &&player,
-        Node_sptr &&credits,
+        Node_sptr &&selectAName,
+        Node_sptr &&forMoreInformation,
         Node_sptr &&developmentAndDesign,
         Node_sptr &&mainAuthor,
         Node_sptr &&musicAndSoundsEffects,
@@ -50,7 +51,8 @@ public:
 
 private:
     const Page_wptr _parent;
-    Node_sptr _credits;
+    Node_sptr _selectAName;
+    Node_sptr _forMoreInformation;
     Node_sptr _developmentAndDesign;
     Node_sptr _selectNameToGo;
     Node_sptr _toPersonalPage;
