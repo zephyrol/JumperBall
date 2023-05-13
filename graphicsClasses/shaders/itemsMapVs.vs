@@ -146,7 +146,7 @@ mat4 itemTranslation() {
     if (!itemIsGotten()) {
         return mat4(1.0);
     }
-    vec3 wayDir = 0.7 * dirToVec[vs_itemDirection];
+    vec3 wayDir = 0.9 * dirToVec[vs_itemDirection];
     if (obtainingTime < thresholdSecondStep) {
         float translateCoeff = obtainingTime / thresholdSecondStep;
         return translate(translateCoeff * wayDir);
