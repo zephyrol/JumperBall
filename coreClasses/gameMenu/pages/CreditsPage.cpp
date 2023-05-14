@@ -163,7 +163,7 @@ vecCstTextNode_uptr CreditsPage::genTextNodes() const {
             english ? "Music and sound effects:" : "Musiques et sons:", musicAndSoundsEffectsLabelId)
     );
     textNodes.emplace_back(new TextNode(_secondAuthor, "Julien Goettelmann", secondAuthorLabelId));
-    textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Quitter", exitNodeLabelId));
+    textNodes.emplace_back(new TextNode(_exitNode, english ? "Return" : "Sortir", exitNodeLabelId));
     return textNodes;
 }
 

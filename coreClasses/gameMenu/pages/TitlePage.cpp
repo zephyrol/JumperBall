@@ -38,6 +38,7 @@ TitlePage::TitlePage(
     _backgroundLabel(std::move(backgroundLabel)),
     _levelsPage(nullptr),
     _creditsPage(nullptr),
+    _storePage(nullptr),
     _currentRatio(currentRatio) {
 }
 
@@ -186,6 +187,9 @@ Page_sptr TitlePage::click(float mouseX, float mouseY) {
     if (intersectTest(_credits)) {
         return _creditsPage;
     }
+    if (intersectTest(_store)) {
+        return _storePage;
+    }
     return nullptr;
 }
 
@@ -193,9 +197,12 @@ void TitlePage::setLevelsPage(Page_sptr levelsPage) {
     _levelsPage = std::move(levelsPage);
 }
 
-
 void TitlePage::setCreditsPage(Page_sptr creditsPage) {
     _creditsPage = std::move(creditsPage);
+}
+
+void TitlePage::setStorePage(Page_sptr storePage) {
+    _storePage = std::move(storePage);
 }
 
 vecCstTextNode_uptr TitlePage::genTextNodes() const {

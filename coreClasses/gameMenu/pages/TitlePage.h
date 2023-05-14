@@ -35,9 +35,11 @@ public:
         float currentRatio
     );
 
-void setLevelsPage(Page_sptr levelsPage);
+    void setLevelsPage(Page_sptr levelsPage);
 
     void setCreditsPage(Page_sptr creditsPage);
+
+    void setStorePage(Page_sptr storePage);
 
     vecCstTextNode_uptr genTextNodes() const override;
 
@@ -66,6 +68,7 @@ private:
 
     Page_sptr _levelsPage;
     Page_sptr _creditsPage;
+    Page_sptr _storePage;
 
     float _currentRatio;
 
