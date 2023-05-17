@@ -234,7 +234,7 @@ std::array<StorePage::BallSkin, StorePage::numberOfSkins> StorePage::createBallS
     short id = -1;
     for (size_t ballSkinCount = 0; ballSkinCount < StorePage::numberOfSkins; ++ballSkinCount) {
         auto i = offset + ballSkinCount * StorePage::ballSkinNumberOfFields;
-        ballSkins.at(ballSkinCount++) = {
+        ballSkins.at(ballSkinCount) = {
            nodes.at(i++),
            nodes.at(i++),
            nodes.at(i++),
