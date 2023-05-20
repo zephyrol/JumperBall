@@ -22,6 +22,10 @@ in float fs_isLetter;
     in float fs_needsCheckingCoin;
 #endif
 
+#ifdef(TEST_BALL)
+    in float fs_ball;
+#endif
+
 out vec4 pixelColor;
 
 #ifdef(TEST_KEY)
@@ -63,6 +67,36 @@ vec3 getCoinColor() {
 }
 #endif
 
+
+#ifdef(TEST_BALL)
+
+vec3 getBallColor() {
+    float x = (fs_vertexUVs.x - 0.5) * 2.0;
+    float y = (fs_vertexUVs.y - 0.5) * 2.0;
+    float pixelDistance = sqrt(x * x + y * y);
+    if(pixelDistance > 1.0) {
+        discard;
+    }
+    if (fs_ball > 5.5) {
+
+    }
+    if (fs_ball > 4.5) {
+
+    }
+    if (fs_ball > 3.5) {
+
+    }
+    if (fs_ball > 2.5) {
+
+    }
+    if (fs_ball > 1.5) {
+
+    }
+    return vec3(1.0);
+}
+
+#endif
+
 void main() {
     #ifdef(DISCARDING)
         if(fs_needsDiscard > 0.0) {
@@ -83,6 +117,12 @@ void main() {
     #ifdef(TEST_COIN)
     if(fs_needsCheckingCoin > 0.0) {
         color = getCoinColor();
+    }
+    #endif
+
+    #ifdef(TEST_BALL)
+    if(fs_ball > 0.0) {
+        color = getBallColor();
     }
     #endif
 

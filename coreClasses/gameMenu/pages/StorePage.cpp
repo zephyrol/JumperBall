@@ -116,7 +116,7 @@ Displayable::DynamicValues<int> StorePage::getDynamicIntValues() const {
 }
 
 Page_wptr StorePage::parent() {
-    return Page::parent();
+    return _parent;
 }
 
 std::string StorePage::getVertexShaderName() const {
@@ -146,7 +146,7 @@ vecCstTextNode_uptr StorePage::genTextNodes() const {
 }
 
 std::vector<std::string> StorePage::shaderDefines() const {
-    return {"TRANSPARENT_BACKGROUND", "DISCARDING", "TEST_COIN"};
+    return {"TRANSPARENT_BACKGROUND", "DISCARDING", "TEST_COIN", "TEST_BALL"};
 }
 
 vecCstLabel_sptr StorePage::labels() const {

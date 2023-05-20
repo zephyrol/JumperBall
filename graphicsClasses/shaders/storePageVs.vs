@@ -9,6 +9,7 @@ out float fs_isLetter;
 out float fs_needsDiscard;
 out float fs_needsCheckingCoin;
 out float fs_needsTransparentBackground;
+out float fs_ball;
 
 uniform int skinOne;
 uniform int skinTwo;
@@ -74,6 +75,28 @@ void main() {
         fs_needsCheckingCoin = 1.0;
     } else {
         fs_needsCheckingCoin = -1.0;
+    }
+
+    if (vs_labelId == 1002) {
+        fs_isLetter = -1.0;
+        fs_ball = 1.0;
+    } else if (vs_labelId == 1102) {
+        fs_isLetter = -1.0;
+        fs_ball = 2.0;
+    } else if (vs_labelId == 1202) {
+        fs_isLetter = -1.0;
+        fs_ball = 3.0;
+    } else if (vs_labelId == 1302) {
+        fs_isLetter = -1.0;
+        fs_ball = 4.0;
+    } else if (vs_labelId == 1402) {
+        fs_isLetter = -1.0;
+        fs_ball = 5.0;
+    } else if (vs_labelId == 1502) {
+        fs_isLetter = -1.0;
+        fs_ball = 6.0;
+    } else {
+        fs_ball = -1.0;
     }
 
     if (vs_labelId == 2000) {
