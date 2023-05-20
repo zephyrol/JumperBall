@@ -269,3 +269,7 @@ std::string Player::genOutputs() {
 void Player::addValidationSound() {
     _updateOutputs.emplace_back(new SoundOutput("validation"));
 }
+
+bool Player::hasBoughtSkin(size_t skinNumber) const {
+    return _ballSkins.at(skinNumber);
+}

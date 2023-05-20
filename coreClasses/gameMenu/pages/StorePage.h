@@ -14,11 +14,11 @@ using StorePage_sptr = std::shared_ptr<StorePage>;
 class StorePage : public Page {
 private:
     static constexpr size_t numberOfSkins = 6;
-    static constexpr size_t ballSkinNumberOfFields = 6;
+    static constexpr size_t ballSkinNumberOfFields = 5;
+    static const short backgroundId;
     struct BallSkin {
-        Node_sptr ballNode;
-        Node_sptr digitNode;
-        Node_sptr zeroZeroNode;
+        Label_sptr ballLabel;
+        Node_sptr priceNode;
         Node_sptr selectNode;
         Label_sptr coinSymbol;
         Node_sptr coveringNode; // Used to click on it

@@ -10,7 +10,7 @@
 
 class DownNode : public FillingNode {
 public:
-    DownNode(const Node_sptr &localSize, float ratio);
+    DownNode(const Node_sptr &parent, float ratio);
 };
 
 

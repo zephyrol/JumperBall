@@ -95,7 +95,9 @@ void main() {
             float distUv = length(fs_vertexUVs - vec2(0.5));
             alpha = min(1.0 - (distUv * 2.0), 0.4);
             color = vec3(0.0);
+            discard;
         }
     #endif
     pixelColor = vec4(color, alpha);
+    // pixelColor = vec4(1.0);
 }

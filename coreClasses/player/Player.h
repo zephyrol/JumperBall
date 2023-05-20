@@ -110,6 +110,12 @@ public:
 
     void requestMusicianPage();
 
+    /**
+     * True if a skin has been bought.
+     * @param skinNumber between [0-4]
+     */
+    bool hasBoughtSkin(size_t skinNumber) const;
+
     static constexpr unsigned int maxLevel = 2;
 
     template<typename T>

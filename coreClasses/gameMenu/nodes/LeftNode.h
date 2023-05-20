@@ -9,7 +9,7 @@
 
 class LeftNode : public FillingNode {
 public:
-    explicit LeftNode(const CstNode_sptr &localSize, float ratio);
+    explicit LeftNode(const CstNode_sptr &parent, float ratio);
 };
 
 

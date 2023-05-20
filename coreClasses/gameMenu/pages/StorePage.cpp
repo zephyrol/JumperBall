@@ -36,7 +36,11 @@ StorePage_sptr StorePage::createInstance(Player_sptr player, const Page_sptr &pa
         std::move(nodes.at(0)),
         std::move(nodes.at(1)),
         createBallSkins(nodes),
-        createBackgroundLabel(std::move(nodes.at(2))),
+        std::make_shared<Label>(
+            std::move(nodes.at(2)),
+            JBTypes::Color::White,
+            backgroundId
+        ),
         parent
     );
 }
@@ -61,15 +65,54 @@ void StorePage::resize(float ratio) {
     _storeNode = nodes.at(0);
     _exitNode = nodes.at(1);
     _ballSkins = createBallSkins(nodes);
-    _backgroundLabel = createBackgroundLabel(nodes.at(2));
+    _backgroundLabel = std::make_shared<Label>(
+        nodes.at(2),
+        JBTypes::Color::White,
+        backgroundId
+    );
 }
 
 Displayable::DynamicNames StorePage::getDynamicIntNames() const {
-    return Page::getDynamicIntNames();
+    decltype(getDynamicIntNames()) dynamicNames{
+        "skinOne",
+        "skinTwo",
+        "skinThree",
+        "skinFour",
+        "skinFive",
+        "skinSix"
+    };
+    auto pageDynamicNames = Page::getDynamicIntNames();
+    dynamicNames.insert(
+        dynamicNames.end(),
+        std::make_move_iterator(pageDynamicNames.begin()),
+        std::make_move_iterator(pageDynamicNames.end())
+    );
+    return dynamicNames;
 }
 
 Displayable::DynamicValues<int> StorePage::getDynamicIntValues() const {
-    return Page::getDynamicIntValues();
+    const auto currentBallSkin = _player->getCurrentBallSkin();
+    const auto getSkinValue = [&currentBallSkin, this](unsigned int skinNumber) {
+        // 2 means selected
+        if (skinNumber == currentBallSkin) {
+            return 2;
+        }
+        // One means gotten, zero the player does not have it.
+        return _player->hasBoughtSkin(static_cast<size_t>(skinNumber)) ? 1 : 0;
+    };
+
+    decltype(getDynamicIntValues()) dynamicInts;
+    for (size_t i = 0; i < numberOfSkins; ++i) {
+        dynamicInts.emplace_back(getSkinValue(i));
+    }
+
+    auto pageDynamicInts = Page::getDynamicIntValues();
+    dynamicInts.insert(
+        dynamicInts.end(),
+        std::make_move_iterator(pageDynamicInts.begin()),
+        std::make_move_iterator(pageDynamicInts.end())
+    );
+    return dynamicInts;
 }
 
 Page_wptr StorePage::parent() {
@@ -77,8 +120,7 @@ Page_wptr StorePage::parent() {
 }
 
 std::string StorePage::getVertexShaderName() const {
-    // return "storePageVs.vs";
-    return "titlePageVs.vs";
+    return "storePageVs.vs";
 }
 
 vecCstTextNode_uptr StorePage::genTextNodes() const {
@@ -87,33 +129,41 @@ vecCstTextNode_uptr StorePage::genTextNodes() const {
     textNodes.emplace_back(new TextNode(_storeNode, english ? "Store" : "Boutique", 0));
     textNodes.emplace_back(new TextNode(_exitNode, english ? "Return" : "Sortir", 0));
 
-    short id = -1;
+    short id = 1000;
     const auto selectString = english ? "Select" : "Choisir";
-    for(const auto& ballSkin: _ballSkins) {
-        textNodes.emplace_back(new TextNode(ballSkin.digitNode, std::to_string(id + 1), id));
-        textNodes.emplace_back(new TextNode(ballSkin.zeroZeroNode, "00", id));
-        ++id;
-        textNodes.emplace_back( new TextNode(ballSkin.selectNode, selectString, id));
-        ++id;
+    auto price = 0;
+    for (const auto &ballSkin: _ballSkins) {
+        textNodes.emplace_back(new TextNode(ballSkin.selectNode, selectString, id));
+
+        const auto priceNodesId = static_cast<short>(id + 1);
+        textNodes.emplace_back(
+            new TextNode(ballSkin.priceNode, std::to_string(price++) + "00", priceNodesId)
+        );
+        id += 100;
     }
 
     return textNodes;
 }
 
 std::vector<std::string> StorePage::shaderDefines() const {
-    // return {"TRANSPARENT_BACKGROUND", "DISCARDING", "TEST_COIN"};
-    return {"TRANSPARENT_BACKGROUND"};
+    return {"TRANSPARENT_BACKGROUND", "DISCARDING", "TEST_COIN"};
 }
 
 vecCstLabel_sptr StorePage::labels() const {
     return {
         _backgroundLabel,
         _ballSkins.at(0).coinSymbol,
+        _ballSkins.at(0).ballLabel,
         _ballSkins.at(1).coinSymbol,
+        _ballSkins.at(1).ballLabel,
         _ballSkins.at(2).coinSymbol,
+        _ballSkins.at(2).ballLabel,
         _ballSkins.at(3).coinSymbol,
+        _ballSkins.at(3).ballLabel,
         _ballSkins.at(4).coinSymbol,
-        _ballSkins.at(5).coinSymbol
+        _ballSkins.at(4).ballLabel,
+        _ballSkins.at(5).coinSymbol,
+        _ballSkins.at(5).ballLabel
     };
 }
 
@@ -140,7 +190,8 @@ vecNode_sptr StorePage::createNodes(float ratio, bool english) {
 
     constexpr auto skinsNodeRatio = 9.f / 10.f;
     const auto skinsNode = std::make_shared<CenteredNode>(
-        resizedScreenNode,
+        //resizedScreenNode,
+        mainStoreNode,
         skinsNodeRatio
     );
 
@@ -165,18 +216,18 @@ vecNode_sptr StorePage::createNodes(float ratio, bool english) {
 
     const auto downSkins = std::make_shared<DownNode>(
         skinsNode,
-        skinNodesRatio
+        upDownSkinsRatio
     );
     const auto downFirstSkin = std::make_shared<LeftNode>(
-        upSkins,
+        downSkins,
         skinNodesRatio
     );
     const auto downSecondsSkin = std::make_shared<CenteredNode>(
-        upSkins,
+        downSkins,
         skinNodesRatio
     );
     const auto downThirdSkin = std::make_shared<RightNode>(
-        upSkins,
+        downSkins,
         skinNodesRatio
     );
 
@@ -185,18 +236,23 @@ vecNode_sptr StorePage::createNodes(float ratio, bool english) {
         const auto scaledBaseNode = std::make_shared<ScaledNode>(baseNode, 2.f / 3.f);
 
         const auto selectNode = std::make_shared<DownNode>(scaledBaseNode, 4.f);
-        const auto priceNode = std::make_shared<LeftNode>(selectNode, 3.f);
-        const auto digitNode = std::make_shared<LeftNode>(priceNode, 1.f);
-        const auto zeroZeroNode = std::make_shared<LeftNode>(priceNode, 2.f);
-        auto coinNode = std::make_shared<RightNode>(selectNode, 1.f);
+        const auto priceNode = std::make_shared<CenteredNode>(selectNode, 3.f);
+        const auto coinNodeBase = std::make_shared<RightNode>(selectNode, 1.f);
+        const auto scaledCoinNode = std::make_shared<DownNode>(
+            coinNodeBase,
+            1.4f
+        );
+        const auto coinNode = std::make_shared<CenteredNode>(
+            scaledCoinNode,
+            1.f
+        );
 
         const auto ballBaseNode = std::make_shared<UpNode>(scaledBaseNode, 4.f / 3.f);
         const auto ballNode = std::make_shared<CenteredNode>(ballBaseNode, 1.f);
 
         return {
             ballNode,
-            digitNode,
-            zeroZeroNode,
+            priceNode,
             selectNode,
             coinNode,
             coveringNode
@@ -231,18 +287,19 @@ vecNode_sptr StorePage::createNodes(float ratio, bool english) {
 std::array<StorePage::BallSkin, StorePage::numberOfSkins> StorePage::createBallSkins(const vecNode_sptr &nodes) {
     constexpr size_t offset = 3;
     std::array<StorePage::BallSkin, StorePage::numberOfSkins> ballSkins;
-    short id = -1;
+    short id = 1000;
     for (size_t ballSkinCount = 0; ballSkinCount < StorePage::numberOfSkins; ++ballSkinCount) {
         auto i = offset + ballSkinCount * StorePage::ballSkinNumberOfFields;
         ballSkins.at(ballSkinCount) = {
-           nodes.at(i++),
-           nodes.at(i++),
-           nodes.at(i++),
-           nodes.at(i++),
-           std::make_shared<Label>(nodes.at(i++), JBTypes::Color::Yellow, id),
-           nodes.at(i++)
+            std::make_shared<Label>(nodes.at(i++), JBTypes::Color::Yellow, id + 2),
+            nodes.at(i++),
+            nodes.at(i++),
+            std::make_shared<Label>(nodes.at(i++), JBTypes::Color::Yellow, id + 3),
+            nodes.at(i++)
         };
-        id += 2;
+        id += 100;
     }
     return ballSkins;
 }
+
+const short StorePage::backgroundId = 2000;
