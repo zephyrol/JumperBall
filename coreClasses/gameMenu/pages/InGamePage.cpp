@@ -109,11 +109,11 @@ vecCstTextNode_uptr InGamePage::genTextNodes() const {
         _coinsUnitsDigit
     }) {
         for (unsigned int i = 0; i < 10; ++i) {
-            textNodes.push_back(CstTextNode_uptr(new TextNode(
+            textNodes.emplace_back(new TextNode(
                 node,
                 std::to_string(i),
                 nodeCount
-            )));
+            ));
             ++nodeCount;
         }
     }

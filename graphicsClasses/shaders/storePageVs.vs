@@ -17,6 +17,10 @@ uniform int skinThree;
 uniform int skinFour;
 uniform int skinFive;
 uniform int skinSix;
+uniform int sumDigitOne;
+uniform int sumDigitTwo;
+uniform int sumDigitThree;
+uniform int sumDigitFour;
 uniform int selectedLabel;
 
 float needsDiscard() {
@@ -43,6 +47,34 @@ float needsDiscard() {
             }
         }
         ++currentSkin;
+    }
+    if (vs_labelId < 110) {
+        if (vs_labelId != sumDigitOne) {
+            return 1.0;
+        } else {
+            return -1.0;
+        }
+    }
+    if (vs_labelId < 120) {
+        if (vs_labelId != sumDigitTwo) {
+            return 1.0;
+        } else {
+            return -1.0;
+        }
+    }
+    if (vs_labelId < 130) {
+        if (vs_labelId != sumDigitThree) {
+            return 1.0;
+        } else {
+            return -1.0;
+        }
+    }
+    if (vs_labelId < 140) {
+        if (vs_labelId != sumDigitFour) {
+            return 1.0;
+        } else {
+            return -1.0;
+        }
     }
     return -1.0;
 }
@@ -99,10 +131,20 @@ void main() {
         fs_ball = -1.0;
     }
 
-    if (vs_labelId == 2000) {
+    if (vs_labelId >= 2000) {
         fs_needsTransparentBackground = 1.0;
     } else {
         fs_needsTransparentBackground = -1.0;
+    }
+
+    int skins[6] = int[] (
+    skinOne, skinTwo, skinThree, skinFour, skinFive, skinSix
+    );
+
+    for(int i = 0; i < 6; ++i) {
+        if((i + 2000) == vs_labelId && skins[i] == 2) {
+            fs_needsTransparentBackground = 20.0;
+        }
     }
     gl_Position = vec4(vs_vertexPosition.xy, 0.0, 1.0);
 }

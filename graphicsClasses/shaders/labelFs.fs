@@ -156,15 +156,15 @@ void main() {
     #endif
 
     #ifdef(TEST_COIN)
-    if(fs_needsCheckingCoin > 0.0) {
-        color = getCoinColor();
-    }
+        if(fs_needsCheckingCoin > 0.0) {
+            color = getCoinColor();
+        }
     #endif
 
     #ifdef(TEST_BALL)
-    if(fs_ball > 0.0) {
-        color = getBallColor();
-    }
+        if(fs_ball > 0.0) {
+            color = getBallColor();
+        }
     #endif
 
     float alpha = fs_isLetter < 0.0
@@ -175,10 +175,13 @@ void main() {
         if(fs_needsTransparentBackground > 0.0) {
             float distUv = length(fs_vertexUVs - vec2(0.5));
             alpha = min(1.0 - (distUv * 2.0), 0.4);
-            color = vec3(0.0);
-            discard;
+            if(fs_needsTransparentBackground > 10.0) {
+                color = vec3(1.0);
+                alpha *= 1.5;
+            } else {
+                color = vec3(0.0);
+            }
         }
     #endif
     pixelColor = vec4(color, alpha);
-    // pixelColor = vec4(1.0);
 }

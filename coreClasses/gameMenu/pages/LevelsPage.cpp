@@ -187,11 +187,11 @@ vecCstTextNode_uptr LevelsPage::genTextNodes() const {
 
     for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
         const auto levelNumber = static_cast<int> (i) + 1;
-        textNodes.push_back(CstTextNode_uptr(new TextNode(
+        textNodes.emplace_back(new TextNode(
             _levels[i],
             (levelNumber < 10 ? "0" : "") + std::to_string(levelNumber),
             static_cast<short>(levelNumber)
-        )));
+        ));
     }
 
     constexpr int levelsTitleLabelId = -2;

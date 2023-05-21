@@ -11,33 +11,42 @@
 #include "gameMenu/nodes/LeftNode.h"
 #include "gameMenu/nodes/RightNode.h"
 #include "gameMenu/nodes/VerticalNode.h"
+#include "gameMenu/nodes/HorizontalNode.h"
 
 StorePage::StorePage(
     Player_sptr &&player,
     Node_sptr &&storeNode,
-    Node_sptr &&exitNode,
+    Node_sptr &&sumDigitOne,
+    Node_sptr &&sumDigitTwo,
+    Node_sptr &&sumDigitThree,
+    Node_sptr &&sumDigitFour,
     std::array<BallSkin, StorePage::numberOfSkins> &&ballSkins,
-    Label_sptr &&backgroundLabel,
+    Label_sptr &&coinSymbol,
     const Page_sptr &parent
 ) : Page(std::move(player)),
     _parent(parent),
     _storeNode(std::move(storeNode)),
-    _exitNode(std::move(exitNode)),
     _ballSkins(std::move(ballSkins)),
-    _backgroundLabel(std::move(backgroundLabel)) {
-
+    _sumDigitOne(std::move(sumDigitOne)),
+    _sumDigitTwo(std::move(sumDigitTwo)),
+    _sumDigitThree(std::move(sumDigitThree)),
+    _sumDigitFour(std::move(sumDigitFour)),
+    _coinSymbol(std::move(coinSymbol)) {
 }
 
 StorePage_sptr StorePage::createInstance(Player_sptr player, const Page_sptr &parent, float ratio) {
-    auto nodes = createNodes(ratio, player->isUsingEnglishLanguage());
+    auto nodes = createNodes(ratio);
 
     return std::make_shared<StorePage>(
         std::move(player),
         std::move(nodes.at(0)),
         std::move(nodes.at(1)),
+        std::move(nodes.at(2)),
+        std::move(nodes.at(3)),
+        std::move(nodes.at(4)),
         createBallSkins(nodes),
         std::make_shared<Label>(
-            std::move(nodes.at(2)),
+            std::move(nodes.at(5)),
             JBTypes::Color::White,
             backgroundId
         ),
@@ -54,22 +63,13 @@ Page_sptr StorePage::click(float mouseX, float mouseY) {
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
         return node->intersect(mouseX, mouseY);
     };
-    if (intersectTest(_exitNode)) {
-        return _parent.lock();
-    }
     return nullptr;
 }
 
 void StorePage::resize(float ratio) {
-    const auto nodes = createNodes(ratio, _player->isUsingEnglishLanguage());
+    const auto nodes = createNodes(ratio);
     _storeNode = nodes.at(0);
-    _exitNode = nodes.at(1);
     _ballSkins = createBallSkins(nodes);
-    _backgroundLabel = std::make_shared<Label>(
-        nodes.at(2),
-        JBTypes::Color::White,
-        backgroundId
-    );
 }
 
 Displayable::DynamicNames StorePage::getDynamicIntNames() const {
@@ -79,7 +79,11 @@ Displayable::DynamicNames StorePage::getDynamicIntNames() const {
         "skinThree",
         "skinFour",
         "skinFive",
-        "skinSix"
+        "skinSix",
+        "sumDigitOne",
+        "sumDigitTwo",
+        "sumDigitThree",
+        "sumDigitFour"
     };
     auto pageDynamicNames = Page::getDynamicIntNames();
     dynamicNames.insert(
@@ -106,6 +110,22 @@ Displayable::DynamicValues<int> StorePage::getDynamicIntValues() const {
         dynamicInts.emplace_back(getSkinValue(i));
     }
 
+    const auto sumMoney = static_cast<int>(_player->getMoney());
+    const auto sumDigitOne = sumMoney % 10;
+    const auto sumDigitTwo = (sumMoney % 100) / 10;
+    const auto sumDigitThree = (sumMoney % 1000) / 100;
+    const auto sumDigitFour = sumMoney / 1000;
+
+    constexpr auto sumDigitOneOffset = digitsIdOffset;
+    constexpr auto sumDigitTwoOffset = sumDigitOneOffset + 10;
+    constexpr auto sumDigitThreeOffset = sumDigitTwoOffset + 10;
+    constexpr auto sumDigitFourOffset = sumDigitThreeOffset + 10;
+
+    dynamicInts.emplace_back(sumDigitOneOffset + sumDigitOne);
+    dynamicInts.emplace_back(sumDigitTwoOffset + sumDigitTwo);
+    dynamicInts.emplace_back(sumDigitThreeOffset + sumDigitThree);
+    dynamicInts.emplace_back(sumDigitFourOffset + sumDigitFour);
+
     auto pageDynamicInts = Page::getDynamicIntValues();
     dynamicInts.insert(
         dynamicInts.end(),
@@ -127,7 +147,6 @@ vecCstTextNode_uptr StorePage::genTextNodes() const {
     const auto english = _player->isUsingEnglishLanguage();
     vecCstTextNode_uptr textNodes;
     textNodes.emplace_back(new TextNode(_storeNode, english ? "Store" : "Boutique", 0));
-    textNodes.emplace_back(new TextNode(_exitNode, english ? "Return" : "Sortir", 0));
 
     short id = 1000;
     const auto selectString = english ? "Select" : "Choisir";
@@ -142,6 +161,23 @@ vecCstTextNode_uptr StorePage::genTextNodes() const {
         id += 100;
     }
 
+    auto nodeCount = static_cast<short>(StorePage::digitsIdOffset);
+    for (const auto &node: std::vector<Node_sptr>{
+        _sumDigitOne,
+        _sumDigitTwo,
+        _sumDigitThree,
+        _sumDigitFour
+    }) {
+        for (unsigned int i = 0; i < 10; ++i) {
+            textNodes.emplace_back(new TextNode(
+                node,
+                std::to_string(i),
+                nodeCount
+            ));
+            ++nodeCount;
+        }
+    }
+
     return textNodes;
 }
 
@@ -150,24 +186,16 @@ std::vector<std::string> StorePage::shaderDefines() const {
 }
 
 vecCstLabel_sptr StorePage::labels() const {
-    return {
-        _backgroundLabel,
-        _ballSkins.at(0).coinSymbol,
-        _ballSkins.at(0).ballLabel,
-        _ballSkins.at(1).coinSymbol,
-        _ballSkins.at(1).ballLabel,
-        _ballSkins.at(2).coinSymbol,
-        _ballSkins.at(2).ballLabel,
-        _ballSkins.at(3).coinSymbol,
-        _ballSkins.at(3).ballLabel,
-        _ballSkins.at(4).coinSymbol,
-        _ballSkins.at(4).ballLabel,
-        _ballSkins.at(5).coinSymbol,
-        _ballSkins.at(5).ballLabel
-    };
+    vecCstLabel_sptr labels {_coinSymbol};
+    for(const auto& ballSkin: _ballSkins) {
+        labels.emplace_back(ballSkin.background);
+        labels.emplace_back(ballSkin.coinSymbol);
+        labels.emplace_back(ballSkin.ballLabel);
+    }
+    return labels;
 }
 
-vecNode_sptr StorePage::createNodes(float ratio, bool english) {
+vecNode_sptr StorePage::createNodes(float ratio) {
     const auto screenNode = std::make_shared<ScreenNode>(ratio);
     const auto resizedScreenNode = std::make_shared<ScaledNode>(screenNode, 0.95f);
     const auto mainStoreNode = std::make_shared<CenteredNode>(
@@ -179,13 +207,6 @@ vecNode_sptr StorePage::createNodes(float ratio, bool english) {
     const auto jumperBallStore = std::make_shared<UpNode>(
         mainStoreNode,
         storeTitleRatio
-    );
-
-    constexpr float optionsNodeRatio = 7.f;
-    const auto exitNode = std::make_shared<VerticalNode>(
-        mainStoreNode,
-        optionsNodeRatio,
-        english ? -0.4f : -0.45f // Because Q creates an offset
     );
 
     constexpr auto skinsNodeRatio = 9.f / 10.f;
@@ -268,10 +289,34 @@ vecNode_sptr StorePage::createNodes(float ratio, bool english) {
         downThirdSkin
     };
 
+    constexpr auto footNodeDefaultRatio = 10.f;
+    const auto footNode = std::make_shared<DownNode>(
+        resizedScreenNode,
+        footNodeDefaultRatio
+    );
+    constexpr auto coinsNodeRatio = 2.5f;
+    constexpr auto coinNodesRatio = 1.f;
+    const auto coinsNode = std::make_shared<CenteredNode>(footNode, coinsNodeRatio);
+    const auto coinSymbolNode = std::make_shared<LeftNode>(coinsNode, coinNodesRatio);
+    const auto footCoinNode = std::make_shared<DownNode>(coinSymbolNode, 1.2f);
+    const auto littleCoinNode = std::make_shared<CenteredNode>(footCoinNode, 1.f);
+    const auto coinsDigitNode = std::make_shared<RightNode>(coinsNode, coinsNodeRatio - coinNodesRatio);
+    const auto sumDigitOne = std::make_shared<RightNode>(coinsDigitNode, coinNodesRatio);
+    const auto sumDigitTwo = std::make_shared<LeftNode>(coinsDigitNode, coinNodesRatio);
+    const auto sumDigitThree = std::make_shared<LeftNode>(coinsDigitNode, coinNodesRatio);
+    const auto sumDigitFour = std::make_shared<RightNode>(coinsDigitNode, coinNodesRatio);
+
     return std::accumulate(
         coveringNodes.begin(),
         coveringNodes.end(),
-        std::vector<Node_sptr>{jumperBallStore, exitNode, mainStoreNode},
+        std::vector<Node_sptr>{
+            jumperBallStore,
+            sumDigitOne,
+            sumDigitTwo,
+            sumDigitThree,
+            sumDigitFour,
+            littleCoinNode
+        },
         [&createBallSkin](vecNode_sptr &current, const Node_sptr &coveringNode) {
             auto skinNodes = createBallSkin(coveringNode);
             current.insert(
@@ -285,7 +330,7 @@ vecNode_sptr StorePage::createNodes(float ratio, bool english) {
 }
 
 std::array<StorePage::BallSkin, StorePage::numberOfSkins> StorePage::createBallSkins(const vecNode_sptr &nodes) {
-    constexpr size_t offset = 3;
+    constexpr size_t offset = 6;
     std::array<StorePage::BallSkin, StorePage::numberOfSkins> ballSkins;
     short id = 1000;
     for (size_t ballSkinCount = 0; ballSkinCount < StorePage::numberOfSkins; ++ballSkinCount) {
@@ -295,7 +340,7 @@ std::array<StorePage::BallSkin, StorePage::numberOfSkins> StorePage::createBallS
             nodes.at(i++),
             nodes.at(i++),
             std::make_shared<Label>(nodes.at(i++), JBTypes::Color::Yellow, id + 3),
-            nodes.at(i++)
+            std::make_shared<Label>(nodes.at(i++), JBTypes::Color::White, backgroundId + ballSkinCount)
         };
         id += 100;
     }

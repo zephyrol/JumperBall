@@ -21,7 +21,7 @@ private:
         Node_sptr priceNode;
         Node_sptr selectNode;
         Label_sptr coinSymbol;
-        Node_sptr coveringNode; // Used to click on it
+        Label_sptr background; // Also used to click on it
     };
 
 public:
@@ -34,9 +34,12 @@ public:
     StorePage(
         Player_sptr &&player,
         Node_sptr &&storeNode,
-        Node_sptr &&exitNode,
+        Node_sptr &&sumDigitOne,
+        Node_sptr &&sumDigitTwo,
+        Node_sptr &&sumDigitThree,
+        Node_sptr &&sumDigitFour,
         std::array<BallSkin, numberOfSkins> &&ballSkins,
-        Label_sptr &&backgroundLabel,
+        Label_sptr &&coinSymbol,
         const Page_sptr &parent
     );
 
@@ -65,13 +68,18 @@ private:
     const Page_wptr _parent;
 
     Node_sptr _storeNode;
-    Node_sptr _exitNode;
     std::array<BallSkin, numberOfSkins> _ballSkins;
 
-    Label_sptr _backgroundLabel;
+    Node_sptr _sumDigitOne;
+    Node_sptr _sumDigitTwo;
+    Node_sptr _sumDigitThree;
+    Node_sptr _sumDigitFour;
+    Label_sptr _coinSymbol;
 
-    static vecNode_sptr createNodes(float coveringNode, bool english);
+    static vecNode_sptr createNodes(float coveringNode);
     static std::array<BallSkin, numberOfSkins> createBallSkins(const vecNode_sptr& nodes);
+
+    static constexpr int digitsIdOffset = 100;
 };
 
 
