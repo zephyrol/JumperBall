@@ -40,6 +40,7 @@ public:
         Node_sptr &&sumDigitFour,
         std::array<BallSkin, numberOfSkins> &&ballSkins,
         Label_sptr &&coinSymbol,
+        ArrowLabel_sptr &&arrowLabel,
         const Page_sptr &parent
     );
 
@@ -75,9 +76,13 @@ private:
     Node_sptr _sumDigitThree;
     Node_sptr _sumDigitFour;
     Label_sptr _coinSymbol;
+    ArrowLabel_sptr _arrowLabel;
 
     static vecNode_sptr createNodes(float coveringNode);
-    static std::array<BallSkin, numberOfSkins> createBallSkins(const vecNode_sptr& nodes);
+
+    static std::array<BallSkin, numberOfSkins> createBallSkins(const vecNode_sptr &nodes);
+
+    static ArrowLabel_sptr createStoreArrowLabel(const Node_sptr &headerNode);
 
     static constexpr int digitsIdOffset = 100;
 };

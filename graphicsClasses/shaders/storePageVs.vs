@@ -131,7 +131,7 @@ void main() {
         fs_ball = -1.0;
     }
 
-    if (vs_labelId >= 2000) {
+    if (vs_labelId >= 2000 && vs_labelId != 4000) {
         fs_needsTransparentBackground = 1.0;
     } else {
         fs_needsTransparentBackground = -1.0;
@@ -145,6 +145,11 @@ void main() {
         if((i + 2000) == vs_labelId && skins[i] == 2) {
             fs_needsTransparentBackground = 20.0;
         }
+    }
+
+    if(vs_labelId == 4000) {
+        fs_isLetter = -1.0;
+        fs_needsDiscard = -1.0;
     }
     gl_Position = vec4(vs_vertexPosition.xy, 0.0, 1.0);
 }

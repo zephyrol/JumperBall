@@ -22,6 +22,7 @@ StorePage::StorePage(
     Node_sptr &&sumDigitFour,
     std::array<BallSkin, StorePage::numberOfSkins> &&ballSkins,
     Label_sptr &&coinSymbol,
+    ArrowLabel_sptr &&arrowLabel,
     const Page_sptr &parent
 ) : Page(std::move(player)),
     _parent(parent),
@@ -31,7 +32,8 @@ StorePage::StorePage(
     _sumDigitTwo(std::move(sumDigitTwo)),
     _sumDigitThree(std::move(sumDigitThree)),
     _sumDigitFour(std::move(sumDigitFour)),
-    _coinSymbol(std::move(coinSymbol)) {
+    _coinSymbol(std::move(coinSymbol)),
+    _arrowLabel(std::move(arrowLabel)){
 }
 
 StorePage_sptr StorePage::createInstance(Player_sptr player, const Page_sptr &parent, float ratio) {
@@ -50,6 +52,7 @@ StorePage_sptr StorePage::createInstance(Player_sptr player, const Page_sptr &pa
             JBTypes::Color::White,
             backgroundId
         ),
+        createStoreArrowLabel(nodes.at(6)),
         parent
     );
 }
@@ -70,6 +73,12 @@ void StorePage::resize(float ratio) {
     const auto nodes = createNodes(ratio);
     _storeNode = nodes.at(0);
     _ballSkins = createBallSkins(nodes);
+    _sumDigitOne = nodes.at(1);
+    _sumDigitTwo = nodes.at(2);
+    _sumDigitThree = nodes.at(3);
+    _sumDigitFour = nodes.at(4);
+    _coinSymbol = std::make_shared<Label>(std::move(nodes.at(5)), JBTypes::Color::White, backgroundId);
+    _arrowLabel = createStoreArrowLabel(nodes.at(6));
 }
 
 Displayable::DynamicNames StorePage::getDynamicIntNames() const {
@@ -186,12 +195,13 @@ std::vector<std::string> StorePage::shaderDefines() const {
 }
 
 vecCstLabel_sptr StorePage::labels() const {
-    vecCstLabel_sptr labels {_coinSymbol};
-    for(const auto& ballSkin: _ballSkins) {
+    vecCstLabel_sptr labels{_coinSymbol};
+    for (const auto &ballSkin: _ballSkins) {
         labels.emplace_back(ballSkin.background);
         labels.emplace_back(ballSkin.coinSymbol);
         labels.emplace_back(ballSkin.ballLabel);
     }
+    labels.emplace_back(_arrowLabel);
     return labels;
 }
 
@@ -203,15 +213,19 @@ vecNode_sptr StorePage::createNodes(float ratio) {
         9.f / 16.f
     );
 
-    constexpr auto storeTitleRatio = 4.f;
-    const auto jumperBallStore = std::make_shared<UpNode>(
-        mainStoreNode,
-        storeTitleRatio
-    );
+    constexpr auto storeHeaderRatio = 4.f;
+    const auto storeHeaderNode = std::make_shared<UpNode>(mainStoreNode, storeHeaderRatio);
+    const auto arrowNode = std::make_shared<LeftNode>(storeHeaderNode, 3.f);
 
+    const auto getStoreNode = [&storeHeaderNode]() -> Node_sptr {
+        constexpr auto storeTitleRatio = 2.5f;
+        const auto storeNode = std::make_shared<RightNode>(storeHeaderNode, storeTitleRatio);
+        return std::make_shared<CenteredNode>(storeNode, 4.f);
+    };
+
+    const auto storeNode = getStoreNode();
     constexpr auto skinsNodeRatio = 9.f / 10.f;
     const auto skinsNode = std::make_shared<CenteredNode>(
-        //resizedScreenNode,
         mainStoreNode,
         skinsNodeRatio
     );
@@ -310,12 +324,13 @@ vecNode_sptr StorePage::createNodes(float ratio) {
         coveringNodes.begin(),
         coveringNodes.end(),
         std::vector<Node_sptr>{
-            jumperBallStore,
+            storeNode,
             sumDigitOne,
             sumDigitTwo,
             sumDigitThree,
             sumDigitFour,
-            littleCoinNode
+            littleCoinNode,
+            arrowNode
         },
         [&createBallSkin](vecNode_sptr &current, const Node_sptr &coveringNode) {
             auto skinNodes = createBallSkin(coveringNode);
@@ -330,7 +345,7 @@ vecNode_sptr StorePage::createNodes(float ratio) {
 }
 
 std::array<StorePage::BallSkin, StorePage::numberOfSkins> StorePage::createBallSkins(const vecNode_sptr &nodes) {
-    constexpr size_t offset = 6;
+    constexpr size_t offset = 7;
     std::array<StorePage::BallSkin, StorePage::numberOfSkins> ballSkins;
     short id = 1000;
     for (size_t ballSkinCount = 0; ballSkinCount < StorePage::numberOfSkins; ++ballSkinCount) {
@@ -345,6 +360,10 @@ std::array<StorePage::BallSkin, StorePage::numberOfSkins> StorePage::createBallS
         id += 100;
     }
     return ballSkins;
+}
+
+ArrowLabel_sptr StorePage::createStoreArrowLabel(const Node_sptr &headerNode) {
+    return createArrowLabel(headerNode, 4000, false, 1.1f);
 }
 
 const short StorePage::backgroundId = 2000;

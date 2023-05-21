@@ -195,13 +195,11 @@ vecCstTextNode_uptr LevelsPage::genTextNodes() const {
     }
 
     constexpr int levelsTitleLabelId = -2;
-    textNodes.push_back(
-        CstTextNode_uptr(new TextNode(
-            _levelsTitle,
-            _player->isUsingEnglishLanguage() ? "Levels" : "Niveaux",
-            levelsTitleLabelId)
-        )
-    );
+    textNodes.emplace_back(new TextNode(
+        _levelsTitle,
+        _player->isUsingEnglishLanguage() ? "Levels" : "Niveaux",
+        levelsTitleLabelId
+    ));
     return textNodes;
 }
 
