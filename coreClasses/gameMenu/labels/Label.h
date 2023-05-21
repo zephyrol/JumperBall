@@ -35,6 +35,8 @@ public:
 
     const Node_sptr &getNode();
 
+     short getId() const;
+
     const JBTypes::Color& color() const;
 
     std::vector<short> getStaticShortValues() const override;

@@ -36,6 +36,10 @@ const Node_sptr &Label::getNode() {
     return _node;
 }
 
+short Label::getId() const {
+   return _id;
+}
+
 Displayable::GlobalState Label::getGlobalState() const {
     return GlobalState::United;
 }

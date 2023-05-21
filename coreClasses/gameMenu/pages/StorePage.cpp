@@ -59,13 +59,43 @@ StorePage_sptr StorePage::createInstance(Player_sptr player, const Page_sptr &pa
 
 
 void StorePage::update(const Mouse &mouse) {
-    Page::update(mouse);
+    if (!mouse.isPressed()) {
+        _currentSelectedLabel = 0;
+        return;
+    }
+
+    // Positions have to be centered
+    const auto mouseX = mouse.currentXCoord() - 0.5f;
+    const auto mouseY = mouse.currentYCoord() - 0.5f;
+
+    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
+        return node->intersect(mouseX, mouseY);
+    };
+    if (intersectTest(_arrowLabel->getNode())) {
+        _currentSelectedLabel = static_cast<int>(_arrowLabel->getId());
+    }
+    for(size_t i = 0; i < _ballSkins.size(); ++i) {
+        const auto getId = [&i, this](decltype(_currentSelectedLabel) offset) {
+            const decltype(_currentSelectedLabel) id = 1000 + i * 100 + offset;
+            return id;
+        };
+        if (intersectTest(_ballSkins[i].selectNode)) {
+            _currentSelectedLabel = getId(0);
+        }
+        if (intersectTest(_ballSkins[i].priceNode)) {
+            _currentSelectedLabel = getId(1);
+        }
+    }
 }
 
 Page_sptr StorePage::click(float mouseX, float mouseY) {
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
         return node->intersect(mouseX, mouseY);
     };
+    if (intersectTest(_arrowLabel->getNode())) {
+        _player->addValidationSound();
+        return _parent.lock();
+    }
     return nullptr;
 }
 

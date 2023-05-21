@@ -81,11 +81,8 @@ float needsDiscard() {
 
 void main() {
     fs_vertexUVs = vs_vertexUVs;
-    if (selectedLabel < 0 && selectedLabel == vs_labelId) {
-        fs_vertexColor = vec3(1.0);
-    } else {
-        fs_vertexColor = vec3(0.0, 1.0, 1.0);
-    }
+    fs_vertexColor = vec3(0.0, 1.0, 1.0);
+
     if (vs_labelId < 0 || vs_labelId == 3) {
         fs_isLetter = -1.0;
         fs_needsDiscard = -1.0;
@@ -131,6 +128,24 @@ void main() {
         fs_ball = -1.0;
     }
 
+    if(selectedLabel == vs_labelId && (
+        vs_labelId == 1000
+        || vs_labelId == 1001
+        || vs_labelId == 1100
+        || vs_labelId == 1101
+        || vs_labelId == 1200
+        || vs_labelId == 1201
+        || vs_labelId == 1300
+        || vs_labelId == 1301
+        || vs_labelId == 1400
+        || vs_labelId == 1401
+        || vs_labelId == 1501
+        || vs_labelId == 1502
+        || vs_labelId == 4000
+    )) {
+        fs_vertexColor = vec3(1.0);
+    }
+
     if (vs_labelId >= 2000 && vs_labelId != 4000) {
         fs_needsTransparentBackground = 1.0;
     } else {
@@ -141,13 +156,13 @@ void main() {
     skinOne, skinTwo, skinThree, skinFour, skinFive, skinSix
     );
 
-    for(int i = 0; i < 6; ++i) {
-        if((i + 2000) == vs_labelId && skins[i] == 2) {
+    for (int i = 0; i < 6; ++i) {
+        if ((i + 2000) == vs_labelId && skins[i] == 2) {
             fs_needsTransparentBackground = 20.0;
         }
     }
 
-    if(vs_labelId == 4000) {
+    if (vs_labelId == 4000) {
         fs_isLetter = -1.0;
         fs_needsDiscard = -1.0;
     }
