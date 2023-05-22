@@ -12,8 +12,9 @@ class StorePage;
 using StorePage_sptr = std::shared_ptr<StorePage>;
 
 class StorePage : public Page {
-private:
+public:
     static constexpr size_t numberOfSkins = 6;
+private:
     static constexpr size_t ballSkinNumberOfFields = 5;
     static const short backgroundId;
     struct BallSkin {
@@ -64,6 +65,8 @@ public:
 
     vecCstLabel_sptr labels() const override;
 
+    void setValidationPages(const std::array<Page_sptr, numberOfSkins> &validationPages);
+
 private:
 
     const Page_wptr _parent;
@@ -77,6 +80,8 @@ private:
     Node_sptr _sumDigitFour;
     Label_sptr _coinSymbol;
     ArrowLabel_sptr _arrowLabel;
+
+    std::array<Page_wptr, numberOfSkins> _validationPages;
 
     static vecNode_sptr createNodes(float coveringNode);
 

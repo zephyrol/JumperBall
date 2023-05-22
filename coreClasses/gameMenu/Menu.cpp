@@ -15,6 +15,7 @@
 #include "gameMenu/pages/PausePage.h"
 #include "gameMenu/pages/CreditsPage.h"
 #include "gameMenu/pages/StorePage.h"
+#include "gameMenu/pages/ValidationPage.h"
 
 Menu::Menu(
     Player_sptr player,
@@ -72,6 +73,11 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
     const auto creditsPage = CreditsPage::createInstance(player, titlePage, ratio);
     const auto storePage = StorePage::createInstance(player, titlePage, ratio);
 
+    std::array<Page_sptr, StorePage::numberOfSkins> validationPages;
+    for(size_t i = 0; i < StorePage::numberOfSkins; ++i) {
+        validationPages[i] = ValidationPage::createInstance(i, player, storePage, ratio);
+    }
+
     titlePage->setLevelsPage(levelsPage);
     titlePage->setCreditsPage(creditsPage);
     titlePage->setStorePage(storePage);
@@ -79,8 +85,9 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
     successPage->setInGamePage(inGamePage);
     failurePage->setInGamePage(inGamePage);
     pausePage->setInGamePage(inGamePage);
+    storePage->setValidationPages(validationPages);
 
-    const vecPage_sptr pages{
+    vecPage_sptr pages{
         titlePage,
         levelsPage,
         pausePage,
@@ -90,6 +97,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
         creditsPage,
         storePage
     };
+    pages.insert(pages.end(), validationPages.begin(), validationPages.end());
 
     return std::make_shared<Menu>(
         player,

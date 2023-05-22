@@ -10,8 +10,6 @@
 #include "gameMenu/nodes/DownNode.h"
 #include "gameMenu/nodes/LeftNode.h"
 #include "gameMenu/nodes/RightNode.h"
-#include "gameMenu/nodes/VerticalNode.h"
-#include "gameMenu/nodes/HorizontalNode.h"
 
 StorePage::StorePage(
     Player_sptr &&player,
@@ -33,7 +31,8 @@ StorePage::StorePage(
     _sumDigitThree(std::move(sumDigitThree)),
     _sumDigitFour(std::move(sumDigitFour)),
     _coinSymbol(std::move(coinSymbol)),
-    _arrowLabel(std::move(arrowLabel)){
+    _arrowLabel(std::move(arrowLabel)),
+    _validationPages{} {
 }
 
 StorePage_sptr StorePage::createInstance(Player_sptr player, const Page_sptr &parent, float ratio) {
@@ -74,16 +73,13 @@ void StorePage::update(const Mouse &mouse) {
     if (intersectTest(_arrowLabel->getNode())) {
         _currentSelectedLabel = static_cast<int>(_arrowLabel->getId());
     }
-    for(size_t i = 0; i < _ballSkins.size(); ++i) {
-        const auto getId = [&i, this](decltype(_currentSelectedLabel) offset) {
+    for (size_t i = 0; i < _ballSkins.size(); ++i) {
+        const auto getId = [&i](decltype(_currentSelectedLabel) offset) {
             const decltype(_currentSelectedLabel) id = 1000 + i * 100 + offset;
             return id;
         };
-        if (intersectTest(_ballSkins[i].selectNode)) {
-            _currentSelectedLabel = getId(0);
-        }
-        if (intersectTest(_ballSkins[i].priceNode)) {
-            _currentSelectedLabel = getId(1);
+        if (intersectTest(_ballSkins[i].background->getNode())) {
+            _currentSelectedLabel = getId(_player->hasBoughtSkin(i) ? 0 : 1);
         }
     }
 }
@@ -95,6 +91,11 @@ Page_sptr StorePage::click(float mouseX, float mouseY) {
     if (intersectTest(_arrowLabel->getNode())) {
         _player->addValidationSound();
         return _parent.lock();
+    }
+    for(size_t i = 0; i < _validationPages.size(); ++i) {
+        if (intersectTest(_ballSkins.at(i).background->getNode())) {
+            return _validationPages.at(i).lock();
+        }
     }
     return nullptr;
 }
@@ -394,6 +395,12 @@ std::array<StorePage::BallSkin, StorePage::numberOfSkins> StorePage::createBallS
 
 ArrowLabel_sptr StorePage::createStoreArrowLabel(const Node_sptr &headerNode) {
     return createArrowLabel(headerNode, 4000, false, 1.1f);
+}
+
+void StorePage::setValidationPages(const std::array<Page_sptr, StorePage::numberOfSkins> &validationPages) {
+    for(size_t i = 0; i < validationPages.size(); ++i) {
+        _validationPages[i] = validationPages[i];
+    }
 }
 
 const short StorePage::backgroundId = 2000;
