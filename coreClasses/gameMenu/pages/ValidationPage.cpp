@@ -91,7 +91,7 @@ Page_wptr ValidationPage::parent() {
 vecCstTextNode_uptr ValidationPage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     const auto english = _player->isUsingEnglishLanguage();
-    textNodes.emplace_back(new TextNode(_buyNode, english ? "Do you want to buy?" : "Voulez-vous l'acheter?", 0));
+    textNodes.emplace_back(new TextNode(_buyNode, english ? "Do you want to buy it?" : "Voulez-vous l'acheter?", 0));
     textNodes.emplace_back(new TextNode(_yesNode, english ? "Yes" : "Oui", yesLabelId));
     textNodes.emplace_back(new TextNode(_noNode, english ? "No" : "Non", noLabelId));
     return textNodes;
@@ -110,9 +110,11 @@ Page_sptr ValidationPage::click(float mouseX, float mouseY) {
         return node->intersect(mouseX, mouseY);
     };
     if (intersectTest(_yesNode)) {
+        _player->unlockSkin(_skinNumber);
         return _parent.lock();
     }
     if (intersectTest(_noNode)) {
+        _player->addValidationSound();
         return _parent.lock();
     }
     return nullptr;

@@ -103,6 +103,19 @@ void Player::escapeAction() {
     }
 }
 
+void Player::setCurrentSkin(size_t skinNumber) {
+    _currentBallSkin = static_cast<decltype(_currentBallSkin)>(skinNumber);
+    addValidationSound();
+}
+
+void Player::unlockSkin(size_t skinNumber) {
+    _needsSaveFile = true;
+    _money -= static_cast<decltype(_money)>(skinNumber) * 100;
+    _ballSkins.at(skinNumber) = true;
+    _updateOutputs.emplace_back(new SoundOutput("bought"));
+    _currentBallSkin = static_cast<decltype(_currentBallSkin)>(skinNumber);
+}
+
 void Player::setAsWinner(unsigned int earnedMoney) {
     _needsSaveFile = true;
     setAsInMenu();
@@ -272,4 +285,8 @@ void Player::addValidationSound() {
 
 bool Player::hasBoughtSkin(size_t skinNumber) const {
     return _ballSkins.at(skinNumber);
+}
+
+void Player::addNotEnoughMoneySound() {
+    _updateOutputs.emplace_back(new SoundOutput("notEnoughMoney"));
 }

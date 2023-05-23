@@ -94,7 +94,15 @@ Page_sptr StorePage::click(float mouseX, float mouseY) {
     }
     for(size_t i = 0; i < _validationPages.size(); ++i) {
         if (intersectTest(_ballSkins.at(i).background->getNode())) {
-            return _validationPages.at(i).lock();
+            if(_player->hasBoughtSkin(i)) {
+                _player->setCurrentSkin(i);
+                return nullptr;
+            }
+            if(_player->getMoney() >= (i * 100)) {
+                return _validationPages.at(i).lock();
+            }
+
+            return nullptr;
         }
     }
     return nullptr;

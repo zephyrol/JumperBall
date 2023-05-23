@@ -56,11 +56,15 @@ public:
 
     unsigned int getPreviousMoney() const;
 
+    void setCurrentSkin(size_t skinNumber);
+
     void unlockNewLevel();
 
     void increaseMoney(unsigned int value);
 
     void decreaseMoney(unsigned int value);
+
+    void unlockSkin(size_t skinNumber);
 
     void switchLangage();
 
@@ -75,6 +79,8 @@ public:
     bool areSoundsActivated() const;
 
     void addValidationSound();
+
+    void addNotEnoughMoneySound();
 
     bool wantsToQuit() const;
 
