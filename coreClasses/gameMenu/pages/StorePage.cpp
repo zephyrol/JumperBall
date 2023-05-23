@@ -10,6 +10,7 @@
 #include "gameMenu/nodes/DownNode.h"
 #include "gameMenu/nodes/LeftNode.h"
 #include "gameMenu/nodes/RightNode.h"
+#include "gameMenu/nodes/HorizontalNode.h"
 
 StorePage::StorePage(
     Player_sptr &&player,
@@ -49,7 +50,7 @@ StorePage_sptr StorePage::createInstance(Player_sptr player, const Page_sptr &pa
         std::make_shared<Label>(
             std::move(nodes.at(5)),
             JBTypes::Color::White,
-            backgroundId
+            coinMoneyId
         ),
         createStoreArrowLabel(nodes.at(6)),
         parent
@@ -116,7 +117,7 @@ void StorePage::resize(float ratio) {
     _sumDigitTwo = nodes.at(2);
     _sumDigitThree = nodes.at(3);
     _sumDigitFour = nodes.at(4);
-    _coinSymbol = std::make_shared<Label>(std::move(nodes.at(5)), JBTypes::Color::White, backgroundId);
+    _coinSymbol = std::make_shared<Label>(std::move(nodes.at(5)), JBTypes::Color::White, coinMoneyId);
     _arrowLabel = createStoreArrowLabel(nodes.at(6));
 }
 
@@ -342,22 +343,20 @@ vecNode_sptr StorePage::createNodes(float ratio) {
         downThirdSkin
     };
 
-    constexpr auto footNodeDefaultRatio = 10.f;
+    constexpr auto footNodeDefaultRatio = 6.f;
     const auto footNode = std::make_shared<DownNode>(
-        resizedScreenNode,
+        mainStoreNode,
         footNodeDefaultRatio
     );
     constexpr auto coinsNodeRatio = 2.5f;
     constexpr auto coinNodesRatio = 1.f;
-    const auto coinsNode = std::make_shared<CenteredNode>(footNode, coinsNodeRatio);
-    const auto coinSymbolNode = std::make_shared<LeftNode>(coinsNode, coinNodesRatio);
-    const auto footCoinNode = std::make_shared<DownNode>(coinSymbolNode, 1.2f);
+    const auto coinsNode = std::make_shared<HorizontalNode>(footNode, coinsNodeRatio, 0.03f);
+    const auto footCoinNode = std::make_shared<DownNode>(coinsNode, 3.5f);
     const auto littleCoinNode = std::make_shared<CenteredNode>(footCoinNode, 1.f);
-    const auto coinsDigitNode = std::make_shared<RightNode>(coinsNode, coinsNodeRatio - coinNodesRatio);
-    const auto sumDigitOne = std::make_shared<RightNode>(coinsDigitNode, coinNodesRatio);
-    const auto sumDigitTwo = std::make_shared<LeftNode>(coinsDigitNode, coinNodesRatio);
-    const auto sumDigitThree = std::make_shared<LeftNode>(coinsDigitNode, coinNodesRatio);
-    const auto sumDigitFour = std::make_shared<RightNode>(coinsDigitNode, coinNodesRatio);
+    const auto sumDigitOne = std::make_shared<HorizontalNode>(footNode, coinNodesRatio, 0.83f);
+    const auto sumDigitTwo = std::make_shared<HorizontalNode>(footNode, coinNodesRatio, 0.68f);
+    const auto sumDigitThree = std::make_shared<HorizontalNode>(footNode, coinNodesRatio, 0.53f);
+    const auto sumDigitFour = std::make_shared<HorizontalNode>(footNode, coinNodesRatio, 0.38f);
 
     return std::accumulate(
         coveringNodes.begin(),
@@ -412,3 +411,4 @@ void StorePage::setValidationPages(const std::array<Page_sptr, StorePage::number
 }
 
 const short StorePage::backgroundId = 2000;
+const short StorePage::coinMoneyId = 400;

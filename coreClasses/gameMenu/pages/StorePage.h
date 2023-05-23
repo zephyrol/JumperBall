@@ -17,6 +17,7 @@ public:
 private:
     static constexpr size_t ballSkinNumberOfFields = 5;
     static const short backgroundId;
+    static const short coinMoneyId;
     struct BallSkin {
         Label_sptr ballLabel;
         Node_sptr priceNode;
