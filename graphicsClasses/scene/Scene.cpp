@@ -165,4 +165,8 @@ void Scene::mouseSetUp() {
     _currentKey = Scene::ActionKey::Up;
 }
 
+std::shared_ptr<const Player> Scene::getPlayer() const {
+    return _player;
+}
+
 

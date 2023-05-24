@@ -51,7 +51,9 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
     const auto items = std::make_shared<RenderGroupsManager>(MeshGenerator::genItems(scene.getMap()));
     const auto enemies = std::make_shared<RenderGroupsManager>(MeshGenerator::genEnemies(scene.getMap()));
     const auto specials = std::make_shared<RenderGroupsManager>(MeshGenerator::genSpecials(scene.getMap()));
-    const auto ball = std::make_shared<RenderGroupsManager>(MeshGenerator::genBall(scene.getBall()));
+    const auto ball = std::make_shared<RenderGroupsManager>(MeshGenerator::genBall(
+        scene.getBall(), scene.getPlayer()->getCurrentBallSkin())
+    );
     const auto star = std::make_shared<RenderGroupsManager>(
         MeshGenerator::genStars(scene.getStar(), scene.getStar2())
     );

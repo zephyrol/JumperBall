@@ -32,7 +32,7 @@ namespace MeshGenerator {
 
     CstGeometricShape_sptr createGeometricShape(const CstShape_sptr &shape);
 
-    vecMesh_sptr genBall(const CstBall_sptr &ball);
+    vecMesh_sptr genBall(const CstBall_sptr &ball, unsigned int ballSkin);
 
     vecMesh_sptr genBlocks(const CstMap_sptr &map);
 

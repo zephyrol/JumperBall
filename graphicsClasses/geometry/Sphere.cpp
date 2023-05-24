@@ -9,7 +9,7 @@
 
 Sphere::Sphere(const glm::mat4 &modelTransform,
                const glm::mat4 &normalsTransform) :
-    GeometricShape(modelTransform, normalsTransform, {}, {}) {
+    GeometricShape(modelTransform, normalsTransform, {glm::vec3(0.f, 0.f, 0.f)}, {}) {
 }
 
 Sphere::Sphere(const glm::vec3 &customColor,
@@ -33,6 +33,14 @@ Sphere::Sphere(const JBTypes::Color &color,
     Sphere(getSphereColor(color), modelTransform, normalsTransform) {
 }
 
+Sphere::Sphere(
+    std::vector<glm::vec3> &&customColors,
+    const glm::mat4 &modelTransform,
+    const glm::mat4 &normalsTransform
+) : GeometricShape(modelTransform, normalsTransform, std::move(customColors), {}) {
+}
+
+
 std::vector<glm::vec3> Sphere::genColors(const std::vector<glm::vec3> &colors) const {
     if (colors.size() == 1) {
         constexpr size_t numberOfColors = 2400;
@@ -42,18 +50,6 @@ std::vector<glm::vec3> Sphere::genColors(const std::vector<glm::vec3> &colors) c
         );
     }
 
-    bool useCustomColors;
-    glm::vec3 firstColor;
-    glm::vec3 secondColor;
-    if (colors.size() == 2) {
-        useCustomColors = true;
-        firstColor = colors.at(0);
-        secondColor = colors.at(1);
-    } else {
-        useCustomColors = false;
-        firstColor = glm::vec3(0.f);
-        secondColor = glm::vec3(0.f);
-    }
     std::vector<glm::vec3> outputColors{};
 
     constexpr unsigned int iParaCount = 40;
@@ -61,18 +57,10 @@ std::vector<glm::vec3> Sphere::genColors(const std::vector<glm::vec3> &colors) c
 
     // Parallels
     for (unsigned int i = 0; i < iParaCount; ++i) {
-        const auto iFloat = static_cast<float>(i);
 
         for (unsigned int j = 0; j < iMeriCount; ++j) {
-            if (!useCustomColors) {
-                outputColors.emplace_back(
-                    iFloat / iParaCount,
-                    (j < iMeriCount / 2) ? 1.f : 0.f,
-                    0.5f
-                );
-            } else {
-                outputColors.emplace_back((j < iMeriCount / 2) ? firstColor : secondColor);
-            }
+            const size_t colorNumber = j * colors.size() / iMeriCount;
+            outputColors.emplace_back(colors.at(colorNumber));
         }
     }
     return outputColors;

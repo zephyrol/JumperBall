@@ -38,6 +38,12 @@ public:
         const glm::mat4 &normalsTransform = glm::mat4(1.f)
     );
 
+    Sphere(
+        std::vector<glm::vec3> &&customColors,
+        const glm::mat4 &modelTransform = glm::mat4(1.f),
+        const glm::mat4 &normalsTransform = glm::mat4(1.f)
+    );
+
     std::vector<glm::vec3> genPositions() const override;
 
     std::vector<glm::vec3> genNormals() const override;

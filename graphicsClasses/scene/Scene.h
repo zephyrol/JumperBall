@@ -64,6 +64,8 @@ public:
 
     bool isUsingTouchScreen() const;
 
+    std::shared_ptr<const Player> getPlayer() const;
+
 private:
     Map_sptr _map;
     ActionKey _currentKey;
