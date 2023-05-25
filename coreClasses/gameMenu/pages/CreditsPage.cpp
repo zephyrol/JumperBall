@@ -92,9 +92,10 @@ vecNode_sptr CreditsPage::createNodes(float ratio, bool english) {
         titleNodesRatio
     );
 
-    const auto authorNode = std::make_shared<DownNode>(
+    const auto authorNode = std::make_shared<VerticalNode>(
         mainCreditsNode,
-        10.f
+        10.f,
+        0.1f
     );
 
     const auto optionsParentNode = std::make_shared<CenteredNode>(
@@ -103,31 +104,40 @@ vecNode_sptr CreditsPage::createNodes(float ratio, bool english) {
     );
 
     constexpr float optionsNodeRatio = 7.f;
-    const auto playNode = std::make_shared<VerticalNode>(
+    const auto devAndDesignNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
         english ? 1.05f : 1.1f // Because p creates an offset
     );
 
-    const auto storeNode = std::make_shared<VerticalNode>(
+    const auto mainAuthorNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
-        english ? 0.6f : 0.55f // Because q creates an offset
+        english ? 0.8f : 0.75f // Because q creates an offset
     );
 
-    const auto languageNode = std::make_shared<VerticalNode>(
+    const auto musicAndSoundsEffectNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
         0.03f // Because g letter creates an offset
     );
 
-    const auto exitNode = std::make_shared<VerticalNode>(
+    const auto secondAuthorNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
-        english ? -0.4f : -0.45f // Because Q creates an offset
+        english ? -0.2f : -0.25f // Because Q creates an offset
     );
 
-    return {selectAName, forMoreInformation, playNode, storeNode, languageNode, exitNode, authorNode, mainCreditsNode};
+    return {
+        selectAName,
+        forMoreInformation,
+        devAndDesignNode,
+        mainAuthorNode,
+        musicAndSoundsEffectNode,
+        secondAuthorNode,
+        authorNode,
+        mainCreditsNode
+    };
 }
 
 Page_sptr CreditsPage::click(float mouseX, float mouseY) {
@@ -150,7 +160,9 @@ vecCstTextNode_uptr CreditsPage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     const auto english = _player->isUsingEnglishLanguage();
     textNodes.emplace_back(new TextNode(_selectAName, english ? "Select a name" : "S;lectionnez un nom", 0));
-    textNodes.emplace_back(new TextNode(_forMoreInformation, english ? "for more information" : "pour plus d'information", 0));
+    textNodes.emplace_back(
+        new TextNode(_forMoreInformation, english ? "for more information" : "pour plus d'information", 0)
+    );
     textNodes.emplace_back(new TextNode(
         _developmentAndDesign,
         english ? "Development, Design:" : "D;veloppement, Design:",

@@ -21,7 +21,7 @@ LevelsPage::LevelsPage(
     const Page_sptr &parent
 ) : ScrollablePage(
     std::move(player),
-    3.f
+    3.2f
 ),
     _parent(parent),
     _levelsTitle(std::move(levelsTitle)),

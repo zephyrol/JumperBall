@@ -11,6 +11,7 @@
 #include "gameMenu/nodes/LeftNode.h"
 #include "gameMenu/nodes/RightNode.h"
 #include "gameMenu/nodes/HorizontalNode.h"
+#include "gameMenu/nodes/VerticalNode.h"
 
 SuccessPage::SuccessPage(
     Player_sptr &&player,
@@ -109,9 +110,10 @@ vecNode_sptr SuccessPage::createNodes(float ratio) {
         optionsNodeRatio
     );
 
-    const auto exitNode = std::make_shared<DownNode>(
+    const auto exitNode = std::make_shared<VerticalNode>(
         optionsNode,
-        optionsNodeRatio
+        optionsNodeRatio,
+        0.4f
     );
 
     const auto scoreBodyNode = std::make_shared<UpNode>(
