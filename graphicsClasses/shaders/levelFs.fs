@@ -29,8 +29,6 @@ const vec3 specularLightIntensity = vec3(0.0, 0.25, 0.25);
 const vec3 diffuseLight2Intensity = vec3(0.25, 0.20, 0.25);
 const vec3 specularLight2Intensity = vec3(0.25, 0.0, 0.25);
 
-const float shadowTextureSize = 1024.0;
-
 vec3 getLightContribution(vec3 toCamera, vec3 lightDir, vec3 diffuseLightInt, vec3 specularLightInt) {
     vec3 toLight = -lightDir;
     float dotToLightVertexNormal = dot(toLight, fs_vertexNormal);

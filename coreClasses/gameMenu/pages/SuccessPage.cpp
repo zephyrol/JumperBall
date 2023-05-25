@@ -8,8 +8,6 @@
 #include "gameMenu/nodes/CenteredNode.h"
 #include "gameMenu/nodes/UpNode.h"
 #include "gameMenu/nodes/DownNode.h"
-#include "gameMenu/nodes/LeftNode.h"
-#include "gameMenu/nodes/RightNode.h"
 #include "gameMenu/nodes/HorizontalNode.h"
 #include "gameMenu/nodes/VerticalNode.h"
 

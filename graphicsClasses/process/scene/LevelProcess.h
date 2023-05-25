@@ -22,6 +22,7 @@ public:
         GLsizei height,
         GLuint shadowTexture,
         GLuint shadow2Texture,
+        GLsizei shadowsResolution,
         CstRenderGroupsManager_sptr blocks,
         CstRenderGroupsManager_sptr items,
         CstRenderGroupsManager_sptr enemies,
@@ -61,7 +62,8 @@ private:
 
     static ShaderProgram_sptr createLevelProcessShaderProgram(
         const JBTypes::FileContent &fileContent,
-        const std::string &vs
+        const std::string &vs,
+        GLsizei shadowsResolution
     );
 };
 

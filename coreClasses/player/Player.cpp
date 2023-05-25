@@ -24,7 +24,7 @@ Player::Player(
 ) :
     _doubleChronometer(std::move(doubleChronometer)),
     _status(Player::Status::InMenu),
-    _gameStatus(Player::GameStatus::Winner),
+    _gameStatus(Player::GameStatus::None),
     _updateOutputs{},
     _money(money),
     _previousMoney(_money),

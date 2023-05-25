@@ -65,6 +65,8 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         shadowProcesses.emplace_back(
             ShadowProcess::createInstance(
                 fileContent,
+                width,
+                height,
                 blocks,
                 items,
                 enemies,
@@ -80,6 +82,7 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         height,
         *shadowProcesses.front()->getRenderTexture(),
         *shadowProcesses.back()->getRenderTexture(),
+        shadowProcesses.front()->depthTextureSize(),
         blocks,
         items,
         enemies,

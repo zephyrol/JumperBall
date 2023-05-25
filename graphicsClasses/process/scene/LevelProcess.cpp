@@ -29,6 +29,7 @@ LevelProcess_sptr LevelProcess::createInstance(
     GLsizei height,
     GLuint shadowTexture,
     GLuint shadow2Texture,
+    GLsizei shadowsResolution,
     CstRenderGroupsManager_sptr blocks,
     CstRenderGroupsManager_sptr items,
     CstRenderGroupsManager_sptr enemies,
@@ -57,7 +58,7 @@ LevelProcess_sptr LevelProcess::createInstance(
         const auto &vertexShaderFile = vertexShaderFileGroupsManager.first;
         const auto &groupsManager = vertexShaderFileGroupsManager.second;
 
-        const auto shaderProgram = createLevelProcessShaderProgram(fileContent, vertexShaderFile);
+        const auto shaderProgram = createLevelProcessShaderProgram(fileContent, vertexShaderFile, shadowsResolution);
         shadersRenderPasses.emplace_back(
             shaderProgram,
             std::make_shared<RenderPass>(shaderProgram, groupsManager)
@@ -134,13 +135,15 @@ std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
 
 ShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
     const JBTypes::FileContent &fileContent,
-    const std::string &vs
+    const std::string &vs,
+    const GLsizei shadowsResolution
 ) {
     auto shader = ShaderProgram::createInstance(
         fileContent,
         vs,
         "levelFs.fs",
-        {"LEVEL_PASS"}
+        {"LEVEL_PASS"},
+        {{ "shadowTextureSize", static_cast<float>(shadowsResolution)}}
     );
     shader->use();
     shader->setTextureIndex("depthTexture", 0);

@@ -10,15 +10,19 @@
 ShadowProcess::ShadowProcess(
     DepthFrameBuffer_uptr frameBuffer,
     std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr>> &&shadersRenderPasses,
-    bool isFirst
+    bool isFirst,
+    GLsizei depthTextureSize
 ) :
     _frameBuffer(std::move(frameBuffer)),
     _shadersRenderPasses(std::move(shadersRenderPasses)),
-    _isFirst(isFirst) {
+    _isFirst(isFirst),
+    _depthTextureSize(depthTextureSize) {
 }
 
 ShadowProcess_sptr ShadowProcess::createInstance(
     const JBTypes::FileContent &fileContent,
+    GLsizei width,
+    GLsizei height,
     CstRenderGroupsManager_sptr blocks,
     CstRenderGroupsManager_sptr items,
     CstRenderGroupsManager_sptr enemies,
@@ -50,18 +54,29 @@ ShadowProcess_sptr ShadowProcess::createInstance(
             "depthFs.fs",
             shadowDefines
         );
+
         shadersRenderPasses.emplace_back(
             shaderProgram,
             std::make_shared<RenderPass>(shaderProgram, groupsManager)
         );
     }
+
+    const auto nearestPowerOfTwo = std::min(
+        2048,
+        static_cast<GLsizei>(roundf(powf(
+            2.f,
+            floorf(logf(std::max(width, height)) / logf(2.f))
+        )))
+    );
+
     return std::make_shared<ShadowProcess>(
         DepthFrameBuffer::createInstance(
-            sizeDepthTexture,
-            sizeDepthTexture
+            nearestPowerOfTwo,
+            nearestPowerOfTwo
         ),
         std::move(shadersRenderPasses),
-        isFirst
+        isFirst,
+        nearestPowerOfTwo
     );
 }
 
@@ -70,7 +85,7 @@ void ShadowProcess::render() const {
     if (_isFirst) {
         glCullFace(GL_FRONT);
         FrameBuffer::enableDepthTest();
-        FrameBuffer::setViewportSize(sizeDepthTexture, sizeDepthTexture);
+        FrameBuffer::setViewportSize(_depthTextureSize, _depthTextureSize);
     }
     _frameBuffer->bindFrameBuffer();
     _frameBuffer->clear();
@@ -109,5 +124,9 @@ vecCstShaderProgram_sptr ShadowProcess::getShaderPrograms() const {
         shaderPrograms.push_back(shader);
     }
     return shaderPrograms;
+}
+
+GLsizei ShadowProcess::depthTextureSize() const {
+    return _depthTextureSize;
 }
 

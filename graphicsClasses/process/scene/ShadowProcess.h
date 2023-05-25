@@ -16,6 +16,8 @@ public:
 
     static ShadowProcess_sptr createInstance(
         const JBTypes::FileContent &fileContent,
+        GLsizei width,
+        GLsizei height,
         CstRenderGroupsManager_sptr blocks,
         CstRenderGroupsManager_sptr items,
         CstRenderGroupsManager_sptr enemies,
@@ -27,7 +29,8 @@ public:
     ShadowProcess(
         DepthFrameBuffer_uptr frameBuffer,
         std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> >&& shadersRenderPasses,
-        bool isFirst
+        bool isFirst,
+        GLsizei depthTextureSize
     );
 
     void update() override;
@@ -36,6 +39,8 @@ public:
 
     void freeGPUMemory() override;
 
+    GLsizei depthTextureSize() const;
+
     vecCstShaderProgram_sptr getShaderPrograms() const override;
 
     std::shared_ptr<const GLuint> getRenderTexture() const override;
@@ -43,10 +48,10 @@ public:
     ~ShadowProcess() override = default;
 
 private:
-    static constexpr size_t sizeDepthTexture = 1024;
     const DepthFrameBuffer_uptr _frameBuffer;
     const std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > _shadersRenderPasses;
     const bool _isFirst;
+    const GLsizei _depthTextureSize;
 };
 
 #endif //JUMPERBALLAPPLICATION_SHADOWPROCESS_H
