@@ -65,7 +65,7 @@ ShadowProcess_sptr ShadowProcess::createInstance(
         2048,
         static_cast<GLsizei>(roundf(powf(
             2.f,
-            floorf(logf(std::max(width, height)) / logf(2.f))
+            floorf(logf(static_cast<float>(std::max(width, height))) / logf(2.f))
         )))
     );
 

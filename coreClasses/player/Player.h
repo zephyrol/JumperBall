@@ -58,12 +58,6 @@ public:
 
     void setCurrentSkin(size_t skinNumber);
 
-    void unlockNewLevel();
-
-    void increaseMoney(unsigned int value);
-
-    void decreaseMoney(unsigned int value);
-
     void unlockSkin(size_t skinNumber);
 
     void switchLangage();

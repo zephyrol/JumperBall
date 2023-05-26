@@ -44,23 +44,12 @@ size_t Player::levelProgression() const {
     return _levelProgression;
 }
 
-void Player::unlockNewLevel() {
-}
-
 void Player::requestDeveloperPage() {
     _updateOutputs.emplace_back(new GoToAuthorPageOutput("developer"));
 }
 
 void Player::requestMusicianPage() {
     _updateOutputs.emplace_back(new GoToAuthorPageOutput("musician"));
-}
-
-void Player::decreaseMoney(unsigned int value) {
-    _money -= value;
-}
-
-void Player::increaseMoney(unsigned int value) {
-    _money += value;
 }
 
 unsigned int Player::getCurrentBallSkin() const {
@@ -169,8 +158,9 @@ std::string Player::genSaveContent() {
             });
     };
 
-    std::string saveContent =
-        std::to_string(_money) + " "
+    constexpr auto currentSaveVersion = 0;
+    std::string saveContent = std::to_string(currentSaveVersion) + " "
+        + std::to_string(_money) + " "
         + std::to_string(_levelProgression) + " "
         + boolVectorToString(_ballSkins) + " "
         + std::to_string(_currentBallSkin) + " "
@@ -200,6 +190,9 @@ Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, con
         iss >> w;
         return w.front() == '1';
     };
+
+    // Read current version
+    Player::readValue<unsigned int>(iss);
 
     return std::make_shared<Player>(
         std::move(doubleChronometer),
