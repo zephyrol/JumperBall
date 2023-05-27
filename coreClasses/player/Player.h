@@ -26,7 +26,8 @@ public:
         unsigned int currentBallSkin,
         bool frenchLanguageIsActivated,
         bool musicsAreActivated,
-        bool soundsAreActivated
+        bool soundsAreActivated,
+        float initialAdvertisementTime
     );
 
     static Player_sptr createInstance(
@@ -111,6 +112,17 @@ public:
     void requestMusicianPage();
 
     /**
+     * @return true if the time to run an ad is reached.
+     */
+    bool updateAdvertisementChronometer(const Chronometer::TimePointMs& updatingTime);
+
+    void stopChronometer();
+
+    void resumeChronometer();
+
+    void resetChronometer();
+
+    /**
      * True if a skin has been bought.
      * @param skinNumber between [0-4]
      */
@@ -128,6 +140,8 @@ private:
     GameStatus _gameStatus;
     vecCstUpdateOutput_sptr _updateOutputs;
 
+    static constexpr float timeToRunAd = 360.f; // 6 minutes
+
     unsigned int _money;
     unsigned int _previousMoney;
     size_t _levelProgression;
@@ -138,6 +152,11 @@ private:
     bool _frenchLanguageIsActivated;
     bool _musicsAreActivated;
     bool _soundsAreActivated;
+
+    float _initialAdvertisementTime;
+    bool _timeToRunAdReached;
+    Chronometer _advertisementChronometer;
+    Chronometer::TimePointMs _timePointSavedFile;
 
     size_t _currentLevel;
     float _remainingTime;

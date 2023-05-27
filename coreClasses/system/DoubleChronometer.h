@@ -20,7 +20,7 @@ public:
     /**
      * Update both chronometers.
      */
-    void update();
+    void update(const Chronometer::TimePointMs& updatingTime);
 
     /**
      * Reset both chronometers to 0

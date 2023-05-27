@@ -57,9 +57,11 @@ public:
 
     static TimePointMs getTimePointMSNow() noexcept;
 
-private:
-
     using DurationMs = std::chrono::duration<long int, std::ratio<1, 1000> >;
+
+    static float getFloatFromDurationMS(const DurationMs &dms) noexcept;
+
+private:
 
     enum class TimeSession {
         Run, Stop
@@ -100,7 +102,6 @@ private:
     float _msTime;
 
     Request _request;
-    static float getFloatFromDurationMS(const DurationMs &dms) noexcept;
 
 };
 

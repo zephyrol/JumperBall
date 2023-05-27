@@ -55,10 +55,11 @@ public:
 
     virtual void resize(float ratio) = 0;
 
+    virtual bool isCompatibleWithAdvertisements() const;
+
     DynamicNames getDynamicIntNames() const override;
 
     DynamicValues<int> getDynamicIntValues() const override;
-
 
     GlobalState getGlobalState() const override;
 

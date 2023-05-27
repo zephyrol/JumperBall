@@ -6,6 +6,7 @@
 //
 
 #include "Controller.h"
+#include "system/RunAdOutput.h"
 
 Controller::Controller(
     const size_t &screenWidth,
@@ -157,8 +158,10 @@ void Controller::render() const {
 
 std::string Controller::update() {
 
-    // 1. Update chronometer
-    _doubleChronometer->update();
+    // 1. Update chronometers
+    const auto updatingTime = Chronometer::getTimePointMSNow();
+    _doubleChronometer->update(updatingTime);
+    _player->updateAdvertisementChronometer(updatingTime);
 
     // 2. Update controls
     _keyboardKey.update();
@@ -172,8 +175,13 @@ std::string Controller::update() {
 
     // 4. Update viewer
     const auto &newPage = _menu->currentPage();
+    std::string output = "";
     if (newPage != currentPage) {
         _viewer->setPage(newPage);
+        if(newPage->isCompatibleWithAdvertisements()) {
+            output += RunAdOutput().getOutput();
+            _player->resetChronometer();
+        }
     }
 
     _viewer->update();
@@ -191,9 +199,11 @@ bool Controller::areSoundsActivated() const {
 
 void Controller::stop() {
     _doubleChronometer->stopBoth();
+    _player->stopChronometer();
 }
 
 void Controller::resume() {
+    _player->resumeChronometer();
     if (_player->status() != Player::Status::InGame) {
         _doubleChronometer->resumeFirst();
         return;

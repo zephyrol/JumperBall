@@ -437,4 +437,8 @@ Label_sptr SuccessPage::createOperationLine(Node_sptr node) {
     );
 }
 
+bool SuccessPage::isCompatibleWithAdvertisements() const {
+    return true;
+}
+
 const int SuccessPage::coinSymbolLabelId = 400;

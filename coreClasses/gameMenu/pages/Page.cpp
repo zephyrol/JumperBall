@@ -77,3 +77,7 @@ Label_sptr Page::createBackgroundLabel(Node_sptr node) {
         transparentLabelId
     );
 }
+
+bool Page::isCompatibleWithAdvertisements() const {
+    return false;
+}

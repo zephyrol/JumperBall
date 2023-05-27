@@ -20,7 +20,8 @@ Player::Player(
     unsigned int currentBallSkin,
     bool frenchLanguageIsActivated,
     bool musicsAreActivated,
-    bool soundsAreActivated
+    bool soundsAreActivated,
+    float initialAdvertisementTime
 ) :
     _doubleChronometer(std::move(doubleChronometer)),
     _status(Player::Status::InMenu),
@@ -34,6 +35,10 @@ Player::Player(
     _frenchLanguageIsActivated(frenchLanguageIsActivated),
     _musicsAreActivated(musicsAreActivated),
     _soundsAreActivated(soundsAreActivated),
+    _initialAdvertisementTime(initialAdvertisementTime),
+    _timeToRunAdReached(_initialAdvertisementTime > timeToRunAd),
+    _advertisementChronometer(true),
+    _timePointSavedFile(Chronometer::getTimePointMSNow()),
     _currentLevel(_levelProgression),
     _remainingTime(0.f),
     _wantsToQuit(false),
@@ -159,14 +164,18 @@ std::string Player::genSaveContent() {
     };
 
     constexpr auto currentSaveVersion = 0;
-    std::string saveContent = std::to_string(currentSaveVersion) + " "
+    std::string saveContent =
+        std::to_string(currentSaveVersion) + " "
         + std::to_string(_money) + " "
         + std::to_string(_levelProgression) + " "
         + boolVectorToString(_ballSkins) + " "
         + std::to_string(_currentBallSkin) + " "
         + (_frenchLanguageIsActivated ? "1" : "0") + " "
         + (_musicsAreActivated ? "1" : "0") + " "
-        + (_soundsAreActivated ? "1" : "0");
+        + (_soundsAreActivated ? "1" : "0") + " "
+        + std::to_string(static_cast<unsigned int>(
+                             _initialAdvertisementTime + _advertisementChronometer.getTime()
+                         ));
 
     return SaveFileOutput(std::move(saveContent)).getOutput();
 }
@@ -202,7 +211,8 @@ Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, con
         Player::readValue<unsigned int>(iss), // currentBallSkin,
         readBoolean(), // frenchLanguageIsActivated
         readBoolean(), // musicsAreActivated
-        readBoolean() //soundsAreActivated
+        readBoolean(), //soundsAreActivated
+        static_cast<float>(Player::readValue<unsigned int>(iss)) // time
     );
 }
 
@@ -246,7 +256,7 @@ bool Player::isUsingEnglishLanguage() const {
 void Player::switchMusicsStatus() {
     _needsSaveFile = true;
     _musicsAreActivated = !_musicsAreActivated;
-    _updateOutputs.emplace_back(new MusicStatusOutput(_musicsAreActivated? "on": "off"));
+    _updateOutputs.emplace_back(new MusicStatusOutput(_musicsAreActivated ? "on" : "off"));
     addValidationSound();
 }
 
@@ -258,8 +268,8 @@ void Player::switchSoundsStatus() {
     addValidationSound();
     _needsSaveFile = true;
     _soundsAreActivated = !_soundsAreActivated;
-    _updateOutputs.emplace_back(new SoundStatusOutput(_soundsAreActivated ? "on": "off"));
-    if(_soundsAreActivated) {
+    _updateOutputs.emplace_back(new SoundStatusOutput(_soundsAreActivated ? "on" : "off"));
+    if (_soundsAreActivated) {
         addValidationSound();
     }
 }
@@ -282,4 +292,35 @@ bool Player::hasBoughtSkin(size_t skinNumber) const {
 
 void Player::addNotEnoughMoneySound() {
     _updateOutputs.emplace_back(new SoundOutput("notEnoughMoney"));
+}
+
+bool Player::updateAdvertisementChronometer(const Chronometer::TimePointMs &updatingTime) {
+    if (_timeToRunAdReached) {
+        return true;
+    }
+    _advertisementChronometer.update(updatingTime);
+    constexpr auto saveFileDelay = 20.f;
+    if(Chronometer::getFloatFromDurationMS(updatingTime - _timePointSavedFile) > saveFileDelay) {
+        _needsSaveFile = true;
+        _timePointSavedFile = updatingTime;
+    }
+    const float spentTime = _initialAdvertisementTime + _advertisementChronometer.getTime();
+    if (spentTime > Player::timeToRunAd) {
+        _timeToRunAdReached = true;
+    }
+    return _timeToRunAdReached;
+}
+
+void Player::stopChronometer() {
+    _advertisementChronometer.stop();
+}
+
+void Player::resumeChronometer() {
+    _advertisementChronometer.resume();
+}
+
+void Player::resetChronometer() {
+    _advertisementChronometer.reset();
+    _initialAdvertisementTime = 0.f;
+    _timeToRunAdReached = false;
 }

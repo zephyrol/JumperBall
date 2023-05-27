@@ -100,9 +100,10 @@ Page_sptr StorePage::click(float mouseX, float mouseY) {
                 return nullptr;
             }
             if(_player->getMoney() >= (i * 100)) {
+                _player->addValidationSound();
                 return _validationPages.at(i).lock();
             }
-
+            _player->addNotEnoughMoneySound();
             return nullptr;
         }
     }

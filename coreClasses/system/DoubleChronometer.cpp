@@ -18,8 +18,7 @@ DoubleChronometer::DoubleChronometer(
     _cstSecond(_second) {
 }
 
-void DoubleChronometer::update() {
-    const auto updatingTime = Chronometer::getTimePointMSNow();
+void DoubleChronometer::update(const Chronometer::TimePointMs& updatingTime) {
     for (auto &chronometer: _chronometers) {
         chronometer->update(updatingTime);
     }

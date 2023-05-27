@@ -63,6 +63,8 @@ public:
 
     vecCstLabel_sptr labels() const override;
 
+    bool isCompatibleWithAdvertisements() const override;
+
 private:
     const Page_wptr _parent;
     Node_sptr _goodGameNode;
