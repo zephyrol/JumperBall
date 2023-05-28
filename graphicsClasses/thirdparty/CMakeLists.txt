@@ -73,7 +73,7 @@ ENDIF()
 
 
 ExternalProject_Add( _FREETYPE_
-  URL 		"https://github.com/freetype/freetype2/archive/VER-2-11-1.tar.gz"
+  URL 		"https://github.com/freetype/freetype2/archive/VER-2-13-0.tar.gz"
   PREFIX 	FREETYPE_library
   CMAKE_ARGS 	-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
 		-DFT_DISABLE_ZLIB=TRUE
