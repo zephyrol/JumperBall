@@ -2,7 +2,7 @@
 // TurnLeft.h
 // JumperBallApplication
 //
-// Created by Sebastien Morgenthaler on 30/07/2020.
+// Created by S.Morgenthaler on 30/07/2020.
 //
 
 #ifndef TurnLeft_h

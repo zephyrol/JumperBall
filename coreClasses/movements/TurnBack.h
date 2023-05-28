@@ -2,7 +2,7 @@
 // TurnBack.h
 // JumperBallApplication
 //
-// Created by Sebastien Morgenthaler on 31/07/2020.
+// Created by S.Morgenthaler on 31/07/2020.
 //
 #ifndef TurnBack_h
 #define TurnBack_h

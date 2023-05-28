@@ -1,5 +1,5 @@
 //
-// Created by Sebastien Morgenthaler on 09/01/2023.
+// Created by S.Morgenthaler on 09/01/2023.
 //
 
 #ifndef JUMPERBALLAPPLICATION_GPUVERTEXATTRIBUTES_H

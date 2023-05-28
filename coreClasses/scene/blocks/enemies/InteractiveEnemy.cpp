@@ -1,5 +1,5 @@
 //
-// Created by sebastien on 24/08/2021.
+// Created by S.Morgenthaler on 24/08/2021.
 //
 
 #include "InteractiveEnemy.h"

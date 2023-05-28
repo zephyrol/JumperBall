@@ -1,5 +1,5 @@
 //
-// Created by Sebastien Morgenthaler on 16/07/2022.
+// Created by S.Morgenthaler on 16/07/2022.
 //
 
 #include "ScaledNode.h"

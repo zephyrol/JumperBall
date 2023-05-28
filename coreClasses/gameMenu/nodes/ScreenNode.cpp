@@ -1,5 +1,5 @@
 //
-// Created by seb on 20/08/22.
+// Created by S.Morgenthaler on 20/08/22.
 //
 
 #include "ScreenNode.h"

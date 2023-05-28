@@ -1,5 +1,5 @@
 //
-// Created by seb on 13/11/2021.
+// Created by S.Morgenthaler on 13/11/2021.
 //
 #include "Rendering.h"
 

@@ -1,5 +1,5 @@
 //
-// Created by Sébastien Morgenthaler on 30/01/2022.
+// Created by S.Morgenthaler on 30/01/2022.
 //
 
 #ifndef JUMPERBALLAPPLICATION_SCENEUNIFORMBUFFER_H

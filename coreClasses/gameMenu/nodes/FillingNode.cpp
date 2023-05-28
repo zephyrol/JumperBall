@@ -1,5 +1,5 @@
 //
-// Created by sebastien on 13/07/22.
+// Created by S.Morgenthaler on 13/07/22.
 //
 
 #include "FillingNode.h"

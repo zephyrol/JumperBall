@@ -1,5 +1,5 @@
 //
-// Created by Sébastien Morgenthaler on 26/01/2022.
+// Created by S.Morgenthaler on 26/01/2022.
 //
 
 #ifndef JUMPERBALLAPPLICATION_VERTICALBLURPROCESS_H

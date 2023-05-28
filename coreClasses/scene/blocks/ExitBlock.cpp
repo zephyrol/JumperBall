@@ -1,5 +1,5 @@
 //
-// Created by Sébastien Morgenthaler on 15/01/2022.
+// Created by S.Morgenthaler on 15/01/2022.
 //
 
 #include "ExitBlock.h"

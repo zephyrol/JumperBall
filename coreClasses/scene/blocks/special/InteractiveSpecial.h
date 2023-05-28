@@ -1,5 +1,5 @@
 //
-// Created by seb on 23/10/2021.
+// Created by S.Morgenthaler on 23/10/2021.
 //
 
 #ifndef JUMPERBALLAPPLICATION_INTERACTIVESPECIAL_H

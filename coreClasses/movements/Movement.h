@@ -2,7 +2,7 @@
 // Movement.h
 // JumperBallCore
 //
-// Created by Sebastien Morgenthaler on 29/07/2020.
+// Created by S.Morgenthaler on 29/07/2020.
 //
 
 #ifndef Movement_h

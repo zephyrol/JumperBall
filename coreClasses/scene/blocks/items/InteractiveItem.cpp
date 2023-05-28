@@ -1,5 +1,5 @@
 //
-// Created by Sébastien Morgenthaler on 16/01/2022.
+// Created by S.Morgenthaler on 16/01/2022.
 //
 
 #include "InteractiveItem.h"

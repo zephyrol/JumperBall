@@ -2,7 +2,7 @@
 // TurnBack.cpp
 // JumperBallApplication
 //
-// Created by Sebastien Morgenthaler on 31/07/2020.
+// Created by S.Morgenthaler on 31/07/2020.
 //
 
 #include "TurnBack.h"

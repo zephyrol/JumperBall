@@ -1,5 +1,5 @@
 //
-// Created by sebastien on 21/09/22.
+// Created by S.Morgenthaler on 21/09/22.
 //
 
 #ifndef JUMPERBALLAPPLICATION_FAILUREPAGE_H

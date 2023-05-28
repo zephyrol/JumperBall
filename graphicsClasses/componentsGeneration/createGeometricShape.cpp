@@ -1,5 +1,5 @@
 //
-// Created by seb on 14/08/2021.
+// Created by S.Morgenthaler on 14/08/2021.
 //
 
 #include "MeshGenerator.h"

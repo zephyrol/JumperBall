@@ -1,5 +1,5 @@
 //
-// Created by seb on 15/08/22.
+// Created by S.Morgenthaler on 15/08/22.
 //
 
 #include "TitlePage.h"

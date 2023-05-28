@@ -1,6 +1,6 @@
 /*
  * File: JumpBlock.cpp
- * Author: seb
+ * Author: S.Morgenthaler
  *
  * Created on 11 avril 2020, 19:42
  */

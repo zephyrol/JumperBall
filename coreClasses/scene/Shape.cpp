@@ -1,5 +1,5 @@
 //
-// Created by seb on 13/08/2021.
+// Created by S.Morgenthaler on 13/08/2021.
 //
 
 #include "Shape.h"

@@ -1,5 +1,5 @@
 //
-// Created by Sebastien Morgenthaler on 03/01/2023.
+// Created by S.Morgenthaler on 03/01/2023.
 //
 
 #include "MeshGeometry.h"

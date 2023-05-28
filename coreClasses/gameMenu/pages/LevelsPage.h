@@ -1,5 +1,5 @@
 //
-// Created by seb on 11/09/22.
+// Created by S.Morgenthaler on 11/09/22.
 //
 
 #ifndef JUMPERBALLAPPLICATION_LEVELSPAGE_H
