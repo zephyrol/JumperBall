@@ -11,6 +11,7 @@
 #include "system/MusicStatusOutput.h"
 #include "system/GoToAuthorPageOutput.h"
 #include "system/SoundOutput.h"
+#include "system/RunAdOutput.h"
 
 Player::Player(
     DoubleChronometer_sptr doubleChronometer,
@@ -36,7 +37,6 @@ Player::Player(
     _musicsAreActivated(musicsAreActivated),
     _soundsAreActivated(soundsAreActivated),
     _initialAdvertisementTime(initialAdvertisementTime),
-    _timeToRunAdReached(_initialAdvertisementTime > timeToRunAd),
     _advertisementChronometer(true),
     _timePointSavedFile(Chronometer::getTimePointMSNow()),
     _currentLevel(_levelProgression),
@@ -294,21 +294,16 @@ void Player::addNotEnoughMoneySound() {
     _updateOutputs.emplace_back(new SoundOutput("notEnoughMoney"));
 }
 
-bool Player::updateAdvertisementChronometer(const Chronometer::TimePointMs &updatingTime) {
-    if (_timeToRunAdReached) {
-        return true;
-    }
-    _advertisementChronometer.update(updatingTime);
+void Player::updateAdvertisementChronometer(const Chronometer::TimePointMs &updatingTime) {
+
+    // 1 Update save file frequently
     constexpr auto saveFileDelay = 20.f;
     if(Chronometer::getFloatFromDurationMS(updatingTime - _timePointSavedFile) > saveFileDelay) {
         _needsSaveFile = true;
         _timePointSavedFile = updatingTime;
     }
-    const float spentTime = _initialAdvertisementTime + _advertisementChronometer.getTime();
-    if (spentTime > Player::timeToRunAd) {
-        _timeToRunAdReached = true;
-    }
-    return _timeToRunAdReached;
+
+    _advertisementChronometer.update(updatingTime);
 }
 
 void Player::stopChronometer() {
@@ -319,8 +314,12 @@ void Player::resumeChronometer() {
     _advertisementChronometer.resume();
 }
 
-void Player::resetChronometer() {
-    _advertisementChronometer.reset();
-    _initialAdvertisementTime = 0.f;
-    _timeToRunAdReached = false;
+void Player::checkAdvertisement() {
+    static constexpr float timeToRunAd = 360.f; // 6 minutes
+    const float spentTime = _initialAdvertisementTime + _advertisementChronometer.getTime();
+    if(spentTime > timeToRunAd) {
+        _advertisementChronometer.reset();
+        _initialAdvertisementTime = 0.f;
+        _updateOutputs.emplace_back(new RunAdOutput());
+    }
 }

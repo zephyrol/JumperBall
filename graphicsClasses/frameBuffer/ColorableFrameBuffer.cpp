@@ -1,5 +1,5 @@
 //
-// Created by Sebastien Morgenthaler on 21/01/2023.
+// Created by S.Morgenthaler on 21/01/2023.
 //
 
 #include "ColorableFrameBuffer.h"

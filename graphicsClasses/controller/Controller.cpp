@@ -6,7 +6,6 @@
 //
 
 #include "Controller.h"
-#include "system/RunAdOutput.h"
 
 Controller::Controller(
     const size_t &screenWidth,
@@ -173,17 +172,15 @@ std::string Controller::update() {
     const auto sceneUpdateOutput = _scene->update();
     _menu->update(_mouse);
 
-    // 4. Update viewer
     const auto &newPage = _menu->currentPage();
-    std::string output = "";
     if (newPage != currentPage) {
         _viewer->setPage(newPage);
         if(newPage->isCompatibleWithAdvertisements()) {
-            output += RunAdOutput().getOutput();
-            _player->resetChronometer();
+            _player->checkAdvertisement();
         }
     }
 
+    // 4. Update viewer
     _viewer->update();
 
     return sceneUpdateOutput + _player->genOutputs();

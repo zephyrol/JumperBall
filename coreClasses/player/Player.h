@@ -111,16 +111,13 @@ public:
 
     void requestMusicianPage();
 
-    /**
-     * @return true if the time to run an ad is reached.
-     */
-    bool updateAdvertisementChronometer(const Chronometer::TimePointMs& updatingTime);
+    void updateAdvertisementChronometer(const Chronometer::TimePointMs& updatingTime);
 
     void stopChronometer();
 
     void resumeChronometer();
 
-    void resetChronometer();
+    void checkAdvertisement();
 
     /**
      * True if a skin has been bought.
@@ -140,8 +137,6 @@ private:
     GameStatus _gameStatus;
     vecCstUpdateOutput_sptr _updateOutputs;
 
-    static constexpr float timeToRunAd = 360.f; // 6 minutes
-
     unsigned int _money;
     unsigned int _previousMoney;
     size_t _levelProgression;
@@ -154,8 +149,8 @@ private:
     bool _soundsAreActivated;
 
     float _initialAdvertisementTime;
-    bool _timeToRunAdReached;
     Chronometer _advertisementChronometer;
+
     Chronometer::TimePointMs _timePointSavedFile;
 
     size_t _currentLevel;
