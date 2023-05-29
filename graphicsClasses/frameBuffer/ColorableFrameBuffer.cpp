@@ -21,7 +21,7 @@ ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
     glTexStorage2D(
         GL_TEXTURE_2D,
         1,
-        isHDR ? GL_RGB16F : GL_RGB8,
+        isHDR ? GL_RGBA16F : GL_RGBA8,
         resolutionX,
         resolutionY
     );
