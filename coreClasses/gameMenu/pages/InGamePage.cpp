@@ -218,7 +218,7 @@ Displayable::DynamicNames InGamePage::getDynamicIntNames() const {
 
 Displayable::DynamicValues<int> InGamePage::getDynamicIntValues() const {
 
-    const auto remainingTime = static_cast<int> (std::ceilf(_player->getRemainingTime()));
+    const auto remainingTime = static_cast<int> (ceilf(_player->getRemainingTime()));
     const auto leftDigit = remainingTime / 100;
     const auto middleDigit = (remainingTime % 100) / 10;
     const auto rightDigit = remainingTime % 10;

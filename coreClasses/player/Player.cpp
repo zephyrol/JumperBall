@@ -163,6 +163,8 @@ std::string Player::genSaveContent() {
             });
     };
 
+    const auto initialAdvertisementTimeFloat =
+        _initialAdvertisementTime + _advertisementChronometer.getTime();
     constexpr auto currentSaveVersion = 0;
     std::string saveContent =
         std::to_string(currentSaveVersion) + " "
@@ -173,9 +175,7 @@ std::string Player::genSaveContent() {
         + (_frenchLanguageIsActivated ? "1" : "0") + " "
         + (_musicsAreActivated ? "1" : "0") + " "
         + (_soundsAreActivated ? "1" : "0") + " "
-        + std::to_string(static_cast<unsigned int>(
-                             _initialAdvertisementTime + _advertisementChronometer.getTime()
-                         ));
+        + std::to_string(static_cast<unsigned int>(initialAdvertisementTimeFloat));
 
     return SaveFileOutput(std::move(saveContent)).getOutput();
 }
@@ -203,16 +203,27 @@ Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, con
     // Read current version
     Player::readValue<unsigned int>(iss);
 
+    const auto money = Player::readValue<unsigned int>(iss);
+    const auto levelProgression = Player::readValue<size_t>(iss);
+    const auto ballSkins = readBooleanVector();
+    const auto currentBallSkin = Player::readValue<unsigned int>(iss);
+    const auto frenchLanguageIsActivated = readBoolean();
+    const auto musicsAreActivated = readBoolean();
+    const auto soundsAreActivated = readBoolean();
+
+    const auto initialAdvertisementTimeUint = Player::readValue<unsigned int>(iss);
+    const auto initialAdvertisementTime = static_cast<float>(initialAdvertisementTimeUint);
+
     return std::make_shared<Player>(
         std::move(doubleChronometer),
-        Player::readValue<unsigned int>(iss), // money
-        Player::readValue<size_t>(iss), // levelProgression
-        readBooleanVector(), //ballSkins
-        Player::readValue<unsigned int>(iss), // currentBallSkin,
-        readBoolean(), // frenchLanguageIsActivated
-        readBoolean(), // musicsAreActivated
-        readBoolean(), //soundsAreActivated
-        static_cast<float>(Player::readValue<unsigned int>(iss)) // time
+        money,
+        levelProgression,
+        ballSkins,
+        currentBallSkin,
+        frenchLanguageIsActivated,
+        musicsAreActivated,
+        soundsAreActivated,
+        initialAdvertisementTime
     );
 }
 
@@ -298,7 +309,7 @@ void Player::updateAdvertisementChronometer(const Chronometer::TimePointMs &upda
 
     // 1 Update save file frequently
     constexpr auto saveFileDelay = 20.f;
-    if(Chronometer::getFloatFromDurationMS(updatingTime - _timePointSavedFile) > saveFileDelay) {
+    if (Chronometer::getFloatFromDurationMS(updatingTime - _timePointSavedFile) > saveFileDelay) {
         _needsSaveFile = true;
         _timePointSavedFile = updatingTime;
     }
@@ -317,7 +328,7 @@ void Player::resumeChronometer() {
 void Player::checkAdvertisement() {
     static constexpr float timeToRunAd = 360.f; // 6 minutes
     const float spentTime = _initialAdvertisementTime + _advertisementChronometer.getTime();
-    if(spentTime > timeToRunAd) {
+    if (spentTime > timeToRunAd) {
         _advertisementChronometer.reset();
         _initialAdvertisementTime = 0.f;
         _updateOutputs.emplace_back(new RunAdOutput());

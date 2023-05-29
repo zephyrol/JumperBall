@@ -17,7 +17,7 @@ SET( LIST_LIBRARIES
 
 INCLUDE(ExternalProject)
 ExternalProject_Add( _GLFW_
-  URL 		"https://github.com/glfw/glfw/archive/3.3.8.tar.gz"
+  URL 		"https://github.com/glfw/glfw/archive/3.3.4.tar.gz"
   PREFIX 	GLFW_library	
   INSTALL_DIR	${CMAKE_INSTALL_PREFIX}
   CMAKE_ARGS 	-DGLFW_BUILD_DOCS=OFF 
