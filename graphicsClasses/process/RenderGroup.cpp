@@ -82,7 +82,11 @@ RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
         auto& vertexAttribute = vertexAttributes[i];
         vertexAttribute->createDataOnGpu();
         gpuVertexAttributes.push_back(
-            std::make_shared<GpuVertexAttributes>(vbo, std::move(vertexAttribute), i)
+            std::make_shared<GpuVertexAttributes>(
+                vbo,
+                std::move(vertexAttribute),
+                static_cast<GLuint>(i)
+            )
         );
     }
 

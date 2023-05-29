@@ -76,7 +76,8 @@ void StorePage::update(const Mouse &mouse) {
     }
     for (size_t i = 0; i < _ballSkins.size(); ++i) {
         const auto getId = [&i](decltype(_currentSelectedLabel) offset) {
-            const decltype(_currentSelectedLabel) id = 1000 + i * 100 + offset;
+            const decltype(_currentSelectedLabel) id = 1000 + 
+                static_cast<decltype(_currentSelectedLabel)>(i) * 100 + offset;
             return id;
         };
         if (intersectTest(_ballSkins[i].background->getNode())) {
@@ -157,7 +158,7 @@ Displayable::DynamicValues<int> StorePage::getDynamicIntValues() const {
 
     decltype(getDynamicIntValues()) dynamicInts;
     for (size_t i = 0; i < numberOfSkins; ++i) {
-        dynamicInts.emplace_back(getSkinValue(i));
+        dynamicInts.emplace_back(getSkinValue(static_cast<unsigned int>(i)));
     }
 
     const auto sumMoney = static_cast<int>(_player->getMoney());
@@ -394,7 +395,11 @@ std::array<StorePage::BallSkin, StorePage::numberOfSkins> StorePage::createBallS
             nodes.at(i++),
             nodes.at(i++),
             std::make_shared<Label>(nodes.at(i++), JBTypes::Color::Yellow, id + 3),
-            std::make_shared<Label>(nodes.at(i++), JBTypes::Color::White, backgroundId + ballSkinCount)
+            std::make_shared<Label>(
+                nodes.at(i++),
+                JBTypes::Color::White,
+                backgroundId + static_cast<decltype(id)>(ballSkinCount)
+            )
         };
         id += 100;
     }

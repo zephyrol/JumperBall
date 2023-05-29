@@ -76,7 +76,7 @@ std::vector<GLushort> GeometricShape::genIndices() const {
     const size_t nbOfVertices = genPositions().size();
     std::vector<GLushort> indices(nbOfVertices);
     for (size_t i = 0; i < nbOfVertices; ++i) {
-        indices[i] = i;
+        indices[i] = static_cast<GLushort>(i);
     }
     return indices;
 }

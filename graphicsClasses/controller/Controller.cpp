@@ -36,8 +36,8 @@ Controller::Controller(
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
     )),
     _viewer(std::make_shared<Viewer>(
-        screenWidth,
-        screenHeight,
+        static_cast<GLsizei>(screenWidth),
+        static_cast<GLsizei>(screenHeight),
         _scene,
         _menu->currentPage(),
         _filesContent,

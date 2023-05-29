@@ -15,8 +15,8 @@ class Viewer {
 
 public:
     Viewer(
-        unsigned int resolutionX,
-        unsigned int resolutionY,
+        GLsizei resolutionX,
+        GLsizei resolutionY,
         const CstScene_sptr &scene,
         CstPage_sptr page,
         const JBTypes::FileContent &fileContent,

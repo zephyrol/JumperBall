@@ -58,7 +58,7 @@ MeshGeometry MeshGeometry::createInstance(
     auto vertexAttributes = headShape->genVertexAttributes();
 
     GeometricShape::IndicesBuffer indices = headShape->genIndices();
-    GeometricShape::IndexType indicesOffset = vertexAttributes.getNumberOfVertices();
+    auto indicesOffset = static_cast<GeometricShape::IndexType>(vertexAttributes.getNumberOfVertices());
 
     // 1. Merging the shapes vertex attributes and the concat indices together.
     for (auto it = shapes.begin() + 1; it < shapes.end(); ++it) {
@@ -77,7 +77,7 @@ MeshGeometry MeshGeometry::createInstance(
         // Look the number of vertices on the current shape and increase the offset for the next loop turn.
         auto shapeVertexAttributes = shape->genVertexAttributes();
 
-        indicesOffset += shapeVertexAttributes.getNumberOfVertices();
+        indicesOffset += static_cast<decltype(indicesOffset)>(shapeVertexAttributes.getNumberOfVertices());
 
         // Merge vertex attributes.
         vertexAttributes*=(std::move(shapeVertexAttributes));
