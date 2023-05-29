@@ -22,7 +22,7 @@ void MeshGeometry::merge(MeshGeometry &&other) {
     );
 
     // Merge vertex attributes.
-    _vertexAttributes*=(other.moveVertexAttributes());
+    _vertexAttributes *= (other.moveVertexAttributes());
 
     // Concat indices.
     GeometricShape::IndicesBuffer indicesOther(other.moveIndices());
@@ -80,7 +80,7 @@ MeshGeometry MeshGeometry::createInstance(
         indicesOffset += static_cast<decltype(indicesOffset)>(shapeVertexAttributes.getNumberOfVertices());
 
         // Merge vertex attributes.
-        vertexAttributes*=(std::move(shapeVertexAttributes));
+        vertexAttributes *= (std::move(shapeVertexAttributes));
     }
 
 
@@ -107,7 +107,7 @@ MeshGeometry MeshGeometry::createInstance(
         VertexAttributeUnsignedByte
     >(numberOfVertices, displayable->getStaticUnsignedByteValues());
 
-    vertexAttributes += VertexAttributes {
+    vertexAttributes += VertexAttributes{
         VertexAttributeBase::genAndFilter(staticVec3AttributesGeneration),
         VertexAttributeBase::genAndFilter(staticVec2AttributesGeneration),
         VertexAttributeBase::genAndFilter(staticFloatAttributesGeneration),

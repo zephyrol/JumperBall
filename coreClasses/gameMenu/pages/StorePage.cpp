@@ -76,8 +76,8 @@ void StorePage::update(const Mouse &mouse) {
     }
     for (size_t i = 0; i < _ballSkins.size(); ++i) {
         const auto getId = [&i](decltype(_currentSelectedLabel) offset) {
-            const decltype(_currentSelectedLabel) id = 1000 + 
-                static_cast<decltype(_currentSelectedLabel)>(i) * 100 + offset;
+            const decltype(_currentSelectedLabel) id = 1000 + static_cast<decltype(_currentSelectedLabel)>(i)
+                                                              * 100 + offset;
             return id;
         };
         if (intersectTest(_ballSkins[i].background->getNode())) {
@@ -94,13 +94,13 @@ Page_sptr StorePage::click(float mouseX, float mouseY) {
         _player->addValidationSound();
         return _parent.lock();
     }
-    for(size_t i = 0; i < _validationPages.size(); ++i) {
+    for (size_t i = 0; i < _validationPages.size(); ++i) {
         if (intersectTest(_ballSkins.at(i).background->getNode())) {
-            if(_player->hasBoughtSkin(i)) {
+            if (_player->hasBoughtSkin(i)) {
                 _player->setCurrentSkin(i);
                 return nullptr;
             }
-            if(_player->getMoney() >= (i * 100)) {
+            if (_player->getMoney() >= (i * 100)) {
                 _player->addValidationSound();
                 return _validationPages.at(i).lock();
             }
@@ -411,7 +411,7 @@ ArrowLabel_sptr StorePage::createStoreArrowLabel(const Node_sptr &headerNode) {
 }
 
 void StorePage::setValidationPages(const std::array<Page_sptr, StorePage::numberOfSkins> &validationPages) {
-    for(size_t i = 0; i < validationPages.size(); ++i) {
+    for (size_t i = 0; i < validationPages.size(); ++i) {
         _validationPages[i] = validationPages[i];
     }
 }
