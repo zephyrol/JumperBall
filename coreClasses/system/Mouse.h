@@ -6,6 +6,7 @@
 #define JUMPERBALLAPPLICATION_MOUSE_H
 
 #include "system/Types.h"
+#include "Chronometer.h"
 
 class Mouse {
 
@@ -26,20 +27,26 @@ public:
     );
 
     void press(float posX, float posY);
+
     void release();
 
 
     bool isPressed() const;
+
     bool wasPressed() const;
+
     float currentXCoord() const;
+
     float currentYCoord() const;
+
     float previousYCoord() const;
 
-    void update();
+    void update(const Chronometer::TimePointMs &updatingTime);
 
 private:
 
     void pressedMouseUpdate();
+
     void releasedMouseUpdate();
 
     struct MouseCoords {
@@ -49,7 +56,7 @@ private:
 
     struct MouseState {
         std::shared_ptr<MouseCoords> mouseCoords;
-        float updatingTime;
+        Chronometer::TimePointMs updatingTime;
     };
 
     struct CardinalDistance {
@@ -75,6 +82,7 @@ private:
     CstScreenDirection_sptr _currentMovementDir;
 
     static float computeDistance(float x0, float y0, float x1, float y1);
+
     static const std::vector<CardinalPoint> cardinalsPoints;
 
 };

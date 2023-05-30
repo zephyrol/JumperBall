@@ -13,7 +13,10 @@ Mouse::Mouse(
     std::function<void(float mouseX, float mouseY)> validateActionFunc,
     std::function<void()> longPressActionFunc
 ) :
-    _directionActionFunctions{ {northActionFunc}, {southActionFunc}, {eastActionFunc}, {westActionFunc} },
+    _directionActionFunctions{{northActionFunc},
+                              {southActionFunc},
+                              {eastActionFunc},
+                              {westActionFunc}},
     _validateActionFunction(std::move(validateActionFunc)),
     _longPressActionFunction(std::move(longPressActionFunc)),
     _mouseCoords(nullptr),
@@ -28,11 +31,10 @@ Mouse::Mouse(
 void Mouse::press(float posX, float posY) {
     _mouseCoords = std::make_shared<Mouse::MouseCoords>();
     _pressMouseCoords = std::make_shared<Mouse::MouseCoords>();
-    for(const auto& coords: {_mouseCoords, _pressMouseCoords})  {
+    for (const auto &coords: {_mouseCoords, _pressMouseCoords}) {
         coords->xCoord = posX;
         coords->yCoord = posY;
     }
-
 }
 
 void Mouse::release() {
@@ -40,9 +42,10 @@ void Mouse::release() {
     _pressMouseCoords = nullptr;
 }
 
-void Mouse::update() {
+void Mouse::update(const Chronometer::TimePointMs &updatingTime) {
     _previousState = _currentState;
     _currentState.mouseCoords = _mouseCoords;
+    _currentState.updatingTime = updatingTime;
     !_mouseCoords ? releasedMouseUpdate() : pressedMouseUpdate();
 }
 
@@ -55,7 +58,9 @@ void Mouse::pressedMouseUpdate() {
 
     constexpr float updatingDirectionDetectionThreshold = 0.3f; // 0.3 seconds
     if (!_previousState.mouseCoords
-        || (updatingTime - _directionDetectionState.updatingTime) > updatingDirectionDetectionThreshold) {
+        || (Chronometer::getFloatFromDurationMS(
+        updatingTime - _directionDetectionState.updatingTime)
+           ) > updatingDirectionDetectionThreshold) {
         _directionDetectionState = _currentState;
     }
 
@@ -65,12 +70,13 @@ void Mouse::pressedMouseUpdate() {
         const auto &directionStateCoords = _directionDetectionState.mouseCoords;
         const auto &currentStateCoords = _currentState.mouseCoords;
         const auto &point = cardinalPoint.point;
-        return {cardinalPoint.direction, computeDistance(
-            directionStateCoords->xCoord + point.first,
-            directionStateCoords->yCoord + point.second,
-            currentStateCoords->xCoord,
-            currentStateCoords->yCoord
-        )};
+        return {
+            cardinalPoint.direction, computeDistance(
+                directionStateCoords->xCoord + point.first,
+                directionStateCoords->yCoord + point.second,
+                currentStateCoords->xCoord,
+                currentStateCoords->yCoord
+            )};
     };
 
     std::vector<Mouse::CardinalDistance> cardinalDistances(cardinalsPoints.size());
@@ -100,7 +106,9 @@ void Mouse::pressedMouseUpdate() {
 
     constexpr auto pressingDetectionThreshold = 0.1f; // 0.1 seconds
     if (!_currentMovementDir) {
-        if ((updatingTime - _pressingState.updatingTime) > pressingDetectionThreshold) {
+        if (Chronometer::getFloatFromDurationMS(
+            updatingTime - _pressingState.updatingTime
+        ) > pressingDetectionThreshold) {
             _longPressActionFunction();
         }
         return;
@@ -127,7 +135,9 @@ void Mouse::releasedMouseUpdate() {
     constexpr float pressTimeThreshold = 300.f; // 0.3 seconds
     if (
         distance < thresholdMoving
-        && (_currentState.updatingTime - _pressingState.updatingTime) < pressTimeThreshold) {
+        && Chronometer::getFloatFromDurationMS(
+            _currentState.updatingTime - _pressingState.updatingTime
+        ) < pressTimeThreshold) {
         _validateActionFunction(pressingStateCoords->xCoord, previousStateCoords->yCoord);
     }
 }

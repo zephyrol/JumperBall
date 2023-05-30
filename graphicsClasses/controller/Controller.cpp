@@ -164,7 +164,7 @@ std::string Controller::update() {
 
     // 2. Update controls
     _keyboardKey.update();
-    _mouse.update();
+    _mouse.update(updatingTime);
 
     // 3. Update scene and menu
     const auto &currentPage = _menu->currentPage();
