@@ -30,41 +30,38 @@ const vec3 diffuseLight2Intensity = vec3(0.25, 0.20, 0.25);
 const vec3 specularLight2Intensity = vec3(0.25, 0.0, 0.25);
 
 vec3 getLightContribution(vec3 toCamera, vec3 lightDir, vec3 diffuseLightInt, vec3 specularLightInt) {
-    vec3 toLight = -lightDir;
-    float dotToLightVertexNormal = dot(toLight, fs_vertexNormal);
-    vec3 reflection = normalize(-toLight + 2.0 * dotToLightVertexNormal * fs_vertexNormal);
+    float dotToLightVertexNormal = dot(-lightDir, fs_vertexNormal);
+    vec3 reflection = normalize(lightDir + 2.0 * dotToLightVertexNormal * fs_vertexNormal);
     float croppedDot = max(0.0, dotToLightVertexNormal);
     vec3 diffuseComponent = diffuseLightInt * croppedDot;
     vec3 specularComponent = specularLightInt * pow(
-        max(0.0, dot(reflection, toCamera)),
-        20.0
+    max(0.0, dot(reflection, toCamera)),
+    20.0
     );
     return diffuseComponent + specularComponent;
 }
 
-float evaluateShadowOffset(vec4 vertexDepthMapSpace, float offsetX, float offsetY, int textureNumber) {
-    vec2 shadowCoord = vec2(
-        vertexDepthMapSpace.x + offsetX / shadowTextureSize,
-        vertexDepthMapSpace.y + offsetY / shadowTextureSize
-    );
-    if(textureNumber == 0) {
-        if (texture(depthTexture, shadowCoord.xy).x < vertexDepthMapSpace.z) {
-            return 0.0;
-        }
-        return 0.25;
-    }
-    if (texture(depth2Texture, shadowCoord.xy).x < vertexDepthMapSpace.z) {
-        return 0.0;
-    }
-    return 0.25;
-}
+const float shadowPixelSize = 1.0 / shadowTextureSize;
+const vec2 shadowOffset1 = vec2(shadowPixelSize, shadowPixelSize);
+const vec2 shadowOffset2 = vec2(-shadowPixelSize, shadowPixelSize);
+const vec2 shadowOffset3 = -shadowOffset1;
+const vec2 shadowOffset4 = -shadowOffset2;
 
-float evaluateShadow(vec4 vertexDepthMapSpace, int textureNumber) {
+float evaluateShadow(vec4 vertexDepthMapSpace, sampler2D depthT) {
     float shadowCoeff = 0.0;
-    shadowCoeff += evaluateShadowOffset(vertexDepthMapSpace, 1.0, 1.0, textureNumber);
-    shadowCoeff += evaluateShadowOffset(vertexDepthMapSpace, -1.0, 1.0, textureNumber);
-    shadowCoeff += evaluateShadowOffset(vertexDepthMapSpace, 1.0, -1.0, textureNumber);
-    shadowCoeff += evaluateShadowOffset(vertexDepthMapSpace, -1.0, -1.0, textureNumber);
+    vec2 vertexDepthMapSpaceXY = vertexDepthMapSpace.xy;
+    if (texture(depthT, vertexDepthMapSpaceXY + shadowOffset1).x > vertexDepthMapSpace.z) {
+        shadowCoeff += 0.25;
+    }
+    if (texture(depthT, vertexDepthMapSpaceXY + shadowOffset2).x > vertexDepthMapSpace.z) {
+        shadowCoeff += 0.25;
+    }
+    if (texture(depthT, vertexDepthMapSpaceXY + shadowOffset3).x > vertexDepthMapSpace.z) {
+        shadowCoeff += 0.25;
+    }
+    if (texture(depthT, vertexDepthMapSpaceXY + shadowOffset4).x > vertexDepthMapSpace.z) {
+        shadowCoeff += 0.25;
+    }
     return shadowCoeff;
 }
 
@@ -72,34 +69,33 @@ void main(){
 
     bool inFirstShadow;
 
-    float firstShadowCoeff = evaluateShadow(fs_vertexDepthMapSpace, 0);
-    float secondShadowCoeff = evaluateShadow(fs_vertexDepthMap2Space, 1);
+    float firstShadowCoeff = evaluateShadow(fs_vertexDepthMapSpace, depthTexture);
+    float secondShadowCoeff = evaluateShadow(fs_vertexDepthMap2Space, depth2Texture);
 
     const vec3 fireEffet = vec3(10.0, 0.2, 0.0);
 
-    vec3 ambientComponent = ambientLightIntensity;
-    vec3 composition = ambientComponent * (
-        (1.0 - burningCoeff) * fs_vertexColor + burningCoeff * fireEffet
+    vec3 composition = ambientLightIntensity * (
+    (1.0 - burningCoeff) * fs_vertexColor + burningCoeff * fireEffet
     );
 
     if (!(firstShadowCoeff == 0.0 && secondShadowCoeff == 0.0)) {
 
         vec3 toCamera = normalize(cameraPosition - fs_vertexPositionWorld);
-        if(firstShadowCoeff != 0.0) {
+        if (firstShadowCoeff != 0.0) {
             composition += firstShadowCoeff * getLightContribution(
-                toCamera,
-                lightDirection,
-                diffuseLightIntensity,
-                specularLightIntensity
+            toCamera,
+            lightDirection,
+            diffuseLightIntensity,
+            specularLightIntensity
             );
         }
 
-        if(secondShadowCoeff != 0.0) {
+        if (secondShadowCoeff != 0.0) {
             composition += secondShadowCoeff * getLightContribution(
-                toCamera,
-                light2Direction,
-                diffuseLight2Intensity,
-                specularLight2Intensity
+            toCamera,
+            light2Direction,
+            diffuseLight2Intensity,
+            specularLight2Intensity
             );
         }
 
