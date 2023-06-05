@@ -13,6 +13,7 @@ ScrollablePage::ScrollablePage(Player_sptr &&player, float height) :
     _localReleasedPosY(0.f),
     _isPressed(false),
     _pressedScreenPosY(0.f),
+    _previousMouseCoords(nullptr),
     _lastSwipeUpdates{},
     _releaseVelocity(0.f) {
 }
@@ -23,8 +24,8 @@ void ScrollablePage::update(const Mouse &mouse) {
     auto screenPosY = 0.f;
     if (isPressed) {
         screenPosY = mouse.currentYCoord();
-    } else if (mouse.wasPressed()) {
-        screenPosY = mouse.previousYCoord();
+    } else if (_previousMouseCoords != nullptr) {
+        screenPosY = _previousMouseCoords->yCoord;
     }
 
     // Press cases
@@ -80,6 +81,7 @@ void ScrollablePage::update(const Mouse &mouse) {
             _localPosY = _height - 1.f;
         }
     }
+    _previousMouseCoords = mouse.getMouseCoords();
 }
 
 float ScrollablePage::getOffsetY() const {

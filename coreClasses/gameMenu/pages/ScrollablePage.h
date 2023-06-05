@@ -20,7 +20,6 @@ public:
         float height
     );
 
-
     void update(const Mouse &mouse) override;
 
     DynamicNames getDynamicFloatNames() const override;
@@ -38,6 +37,7 @@ private:
     float _localReleasedPosY;
     bool _isPressed;
     float _pressedScreenPosY;
+    std::shared_ptr<const Mouse::MouseCoords> _previousMouseCoords;
     std::list<slideState> _lastSwipeUpdates;
     float _releaseVelocity;
 };

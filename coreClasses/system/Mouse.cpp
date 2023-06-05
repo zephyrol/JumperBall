@@ -20,62 +20,44 @@ Mouse::Mouse(
     _validateActionFunction(std::move(validateActionFunc)),
     _longPressActionFunction(std::move(longPressActionFunc)),
     _mouseCoords(nullptr),
-    _pressMouseCoords(nullptr),
-    _currentState(),
-    _pressingState(),
-    _directionDetectionState(),
-    _previousState(),
-    _currentMovementDir(nullptr) {
+    _movementCircle(nullptr),
+    _isPressed(false){
 }
 
 void Mouse::press(float posX, float posY) {
-    _mouseCoords = std::make_shared<Mouse::MouseCoords>();
-    _pressMouseCoords = std::make_shared<Mouse::MouseCoords>();
-    for (const auto &coords: {_mouseCoords, _pressMouseCoords}) {
-        coords->xCoord = posX;
-        coords->yCoord = posY;
-    }
+    const Mouse::MouseCoords mouseCoords{posX, posY};
+    _mouseCoords = std::make_shared<MouseCoords>(mouseCoords);
+    _isPressed = true;
 }
 
 void Mouse::release() {
-    _mouseCoords = nullptr;
-    _pressMouseCoords = nullptr;
+    _isPressed = false;
 }
 
 void Mouse::update(const Chronometer::TimePointMs &updatingTime) {
-    _previousState = _currentState;
-    _currentState.mouseCoords = _mouseCoords;
-    _currentState.updatingTime = updatingTime;
-    !_mouseCoords ? releasedMouseUpdate() : pressedMouseUpdate();
+    !_isPressed ? releasedMouseUpdate(updatingTime) : pressedMouseUpdate(updatingTime);
 }
 
-void Mouse::pressedMouseUpdate() {
-    if (!_previousState.mouseCoords) {
-        _pressingState = _currentState;
-    }
-
-    const auto &updatingTime = _currentState.updatingTime;
-
-    constexpr float updatingDirectionDetectionThreshold = 0.3f; // 0.3 seconds
-    if (!_previousState.mouseCoords
-        || (Chronometer::getFloatFromDurationMS(
-        updatingTime - _directionDetectionState.updatingTime)
-           ) > updatingDirectionDetectionThreshold) {
-        _directionDetectionState = _currentState;
+void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
+    if (!_movementCircle) {
+        _movementCircle = std::unique_ptr<MovementCircle>(new MovementCircle{
+            nullptr,
+            *_mouseCoords,
+            updatingTime
+        });
     }
 
     const auto computeCardinalDistance = [this](
         const Mouse::CardinalPoint &cardinalPoint
     ) -> CardinalDistance {
-        const auto &directionStateCoords = _directionDetectionState.mouseCoords;
-        const auto &currentStateCoords = _currentState.mouseCoords;
+        const auto &directionStateCoords = _movementCircle->mouseCoords;
         const auto &point = cardinalPoint.point;
         return {
             cardinalPoint.direction, computeDistance(
-                directionStateCoords->xCoord + point.first,
-                directionStateCoords->yCoord + point.second,
-                currentStateCoords->xCoord,
-                currentStateCoords->yCoord
+                directionStateCoords.xCoord + point.first,
+                directionStateCoords.yCoord + point.second,
+                _mouseCoords->xCoord,
+                _mouseCoords->yCoord
             )};
     };
 
@@ -96,50 +78,79 @@ void Mouse::pressedMouseUpdate() {
     }
     constexpr auto movingThreshold = 0.05f;
     if (computeDistance(
-        _currentState.mouseCoords->xCoord,
-        _currentState.mouseCoords->yCoord,
-        _directionDetectionState.mouseCoords->xCoord,
-        _directionDetectionState.mouseCoords->yCoord
+        _mouseCoords->xCoord,
+        _mouseCoords->yCoord,
+        _movementCircle->mouseCoords.xCoord,
+        _movementCircle->mouseCoords.yCoord
     ) > movingThreshold) {
-        _currentMovementDir = std::make_shared<ScreenDirection>(nearestCardinal.direction);
+        _movementCircle = std::unique_ptr<MovementCircle>(new MovementCircle{
+            std::unique_ptr<ScreenDirection>(new ScreenDirection(nearestCardinal.direction)),
+            *_mouseCoords,
+            updatingTime
+        });
+        executeDirectionActionFunction();
+        return;
+    }
+
+    const auto &movement = _movementCircle->movement;
+    constexpr float updatingDirectionDetectionThreshold = 0.3f; // 0.3 seconds
+    const float timeSinceMovementCircleCreation = Chronometer::getFloatFromDurationMS(
+        updatingTime - _movementCircle->creationTime
+    );
+
+    if (movement != nullptr && timeSinceMovementCircleCreation > updatingDirectionDetectionThreshold) {
+        _movementCircle = std::unique_ptr<MovementCircle>(new MovementCircle{
+            std::unique_ptr<ScreenDirection>(new ScreenDirection(*movement)),
+            *_mouseCoords,
+            updatingTime
+        });
+        return;
     }
 
     constexpr auto pressingDetectionThreshold = 0.1f; // 0.1 seconds
-    if (!_currentMovementDir) {
-        if (Chronometer::getFloatFromDurationMS(
-            updatingTime - _pressingState.updatingTime
-        ) > pressingDetectionThreshold) {
+    if (movement == nullptr) {
+        if (timeSinceMovementCircleCreation > pressingDetectionThreshold) {
             _longPressActionFunction();
         }
         return;
     }
-    _directionActionFunctions.at(static_cast<size_t>(*_currentMovementDir))();
-}
-
-void Mouse::releasedMouseUpdate() {
-
-    _currentMovementDir = nullptr;
-    const auto &previousStateCoords = _previousState.mouseCoords;
-    if (!previousStateCoords) {
+    if(*movement == Mouse::ScreenDirection::West || *movement == Mouse::ScreenDirection::East) {
         return;
     }
-    constexpr float thresholdMoving = 0.05f;
-    const auto &pressingStateCoords = _pressingState.mouseCoords;
+    executeDirectionActionFunction();
+}
+
+void Mouse::executeDirectionActionFunction() const {
+    _directionActionFunctions.at(static_cast<size_t>(*(_movementCircle->movement)))();
+}
+
+void Mouse::releasedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
+    if (_movementCircle == nullptr) {
+        return;
+    }
+    if(_movementCircle->movement != nullptr) {
+        _movementCircle = nullptr;
+        return;
+    }
+
+    const float timeSinceMovementCircleCreation = Chronometer::getFloatFromDurationMS(
+        updatingTime - _movementCircle->creationTime
+    );
 
     const float distance = computeDistance(
-        previousStateCoords->xCoord,
-        previousStateCoords->yCoord,
-        pressingStateCoords->xCoord,
-        pressingStateCoords->yCoord
+        _movementCircle->mouseCoords.xCoord,
+        _movementCircle->mouseCoords.yCoord,
+        _mouseCoords->xCoord,
+        _mouseCoords->yCoord
     );
-    constexpr float pressTimeThreshold = 300.f; // 0.3 seconds
+    constexpr float pressTimeThreshold = 0.3f; // 0.3 seconds
+    constexpr float thresholdMoving = 0.05f;
     if (
         distance < thresholdMoving
-        && Chronometer::getFloatFromDurationMS(
-            _currentState.updatingTime - _pressingState.updatingTime
-        ) < pressTimeThreshold) {
-        _validateActionFunction(pressingStateCoords->xCoord, previousStateCoords->yCoord);
+        && timeSinceMovementCircleCreation < pressTimeThreshold) {
+        _validateActionFunction(_mouseCoords->xCoord, _mouseCoords->yCoord);
     }
+    _movementCircle = nullptr;
 }
 
 const std::vector<Mouse::CardinalPoint> Mouse::cardinalsPoints{
@@ -156,22 +167,18 @@ float Mouse::computeDistance(float x0, float y0, float x1, float y1) {
 }
 
 float Mouse::currentXCoord() const {
-    return _currentState.mouseCoords->xCoord;
+    return _mouseCoords->xCoord;
 }
 
 float Mouse::currentYCoord() const {
-    return _currentState.mouseCoords->yCoord;
+    return _mouseCoords->yCoord;
 }
 
 bool Mouse::isPressed() const {
-    return _currentState.mouseCoords != nullptr;
+    return _isPressed;
 }
 
-float Mouse::previousYCoord() const {
-    return _previousState.mouseCoords->yCoord;
-}
-
-bool Mouse::wasPressed() const {
-    return _previousState.mouseCoords != nullptr;
+std::shared_ptr<const Mouse::MouseCoords> Mouse::getMouseCoords() const {
+    return _mouseCoords;
 }
 

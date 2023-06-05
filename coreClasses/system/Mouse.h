@@ -15,7 +15,11 @@ public:
     enum class ScreenDirection {
         North, South, East, West
     };
-    using CstScreenDirection_sptr = std::shared_ptr<const ScreenDirection>;
+
+  struct MouseCoords {
+    const float xCoord;
+    const float yCoord;
+  };
 
     explicit Mouse(
         const std::function<void()> &northActionFunc,
@@ -30,34 +34,23 @@ public:
 
     void release();
 
-
     bool isPressed() const;
-
-    bool wasPressed() const;
 
     float currentXCoord() const;
 
     float currentYCoord() const;
 
-    float previousYCoord() const;
-
     void update(const Chronometer::TimePointMs &updatingTime);
+
+    std::shared_ptr<const Mouse::MouseCoords> getMouseCoords() const;
 
 private:
 
-    void pressedMouseUpdate();
+    void pressedMouseUpdate(const Chronometer::TimePointMs &updatingTime);
 
-    void releasedMouseUpdate();
+    void releasedMouseUpdate(const Chronometer::TimePointMs &updatingTime);
 
-    struct MouseCoords {
-        float xCoord;
-        float yCoord;
-    };
-
-    struct MouseState {
-        std::shared_ptr<MouseCoords> mouseCoords;
-        Chronometer::TimePointMs updatingTime;
-    };
+    void executeDirectionActionFunction() const;
 
     struct CardinalDistance {
         ScreenDirection direction;
@@ -69,19 +62,22 @@ private:
         std::pair<float, float> point;
     };
 
+    struct MovementCircle {
+        const std::unique_ptr<ScreenDirection > movement;
+        const MouseCoords mouseCoords;
+        const Chronometer::TimePointMs creationTime;
+    };
+
     const std::vector<std::function<void()> > _directionActionFunctions;
     const std::function<void(float mouseX, float mouseY)> _validateActionFunction;
     const std::function<void()> _longPressActionFunction;
 
     std::shared_ptr<MouseCoords> _mouseCoords;
-    std::shared_ptr<MouseCoords> _pressMouseCoords;
-    MouseState _currentState;
-    MouseState _pressingState;
-    MouseState _directionDetectionState;
-    MouseState _previousState;
-    CstScreenDirection_sptr _currentMovementDir;
+    std::unique_ptr<MovementCircle> _movementCircle;
+    bool _isPressed;
 
     static float computeDistance(float x0, float y0, float x1, float y1);
+
 
     static const std::vector<CardinalPoint> cardinalsPoints;
 
