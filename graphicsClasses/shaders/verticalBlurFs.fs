@@ -4,32 +4,32 @@ in vec2 fs_vertexUVs;
 out vec4 pixelColor;
 
 const int patchSize = 25;
-const float indicesOffsets[patchSize] = float[] (
-    -12.0,
-    -11.0,
-    -10.0,
-    -9.0,
-    -8.0,
-    -7.0,
-    -6.0,
-    -5.0,
-    -4.0,
-    -3.0,
-    -2.0,
-    -1.0,
-    0.0,
-    1.0,
-    2.0,
-    3.0,
-    4.0,
-    5.0,
-    6.0,
-    7.0,
-    8.0,
-    9.0,
-    10.0,
-    11.0,
-    12.0
+const float offsets[patchSize] = float[] (
+    texelSize.y * -12.0,
+    texelSize.y * -11.0,
+    texelSize.y * -10.0,
+    texelSize.y * -9.0,
+    texelSize.y * -8.0,
+    texelSize.y * -7.0,
+    texelSize.y * -6.0,
+    texelSize.y * -5.0,
+    texelSize.y * -4.0,
+    texelSize.y * -3.0,
+    texelSize.y * -2.0,
+    texelSize.y * -1.0,
+    texelSize.y * 0.0,
+    texelSize.y * 1.0,
+    texelSize.y * 2.0,
+    texelSize.y * 3.0,
+    texelSize.y * 4.0,
+    texelSize.y * 5.0,
+    texelSize.y * 6.0,
+    texelSize.y * 7.0,
+    texelSize.y * 8.0,
+    texelSize.y * 9.0,
+    texelSize.y * 10.0,
+    texelSize.y * 11.0,
+    texelSize.y * 12.0
 );
 
 // Getting 25 Gauss weights computed with sigma = 4
@@ -48,7 +48,7 @@ void main() {
     vec3 blurColor = vec3(0.0, 0.0, 0.0);
     for (int i = 0; i < patchSize; ++i) {
         float coefficient = gaussWeights[i];
-        vec2 neighboringPixelUV = fs_vertexUVs + vec2(0.0, texelSize.y * indicesOffsets[i]);
+        vec2 neighboringPixelUV = fs_vertexUVs + vec2(0.0, offsets[i]);
         blurColor += coefficient * texture(horizontalBlurTexture, neighboringPixelUV).xyz;
     }
     pixelColor = vec4(blurColor, 1.0);
