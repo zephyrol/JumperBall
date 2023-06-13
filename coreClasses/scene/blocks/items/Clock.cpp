@@ -13,42 +13,7 @@ Clock::Clock(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, con
 
 vecCstShape_sptr Clock::getShapes() const {
 
-    const auto createClockBase = [this](
-        JBTypes::Color color,
-        float radius,
-        float thickness
-    ) {
-        return std::make_shared<const Shape>(
-            Shape::Aspect::Cylinder,
-            color,
-            std::initializer_list<Transformation>(
-                {
-                    Transformation(Transformation::Type::Translation,
-                                   {0.f, -0.5f, 0.f}),
-                    Transformation(Transformation::Type::Scale,
-                                   {radius, thickness, radius}),
-                    Shape::getVerticalCylinderRotation(direction())
-                }
-            )
-        );
-    };
-    struct ColorRadiusThickness {
-        JBTypes::Color color;
-        float radius;
-        float thickness;
-    };
-    const std::vector<ColorRadiusThickness> colorsRadiiThickness{
-        {JBTypes::Color::White, 0.4f, 0.055f},
-        {JBTypes::Color::Blue,  0.5f, 0.05f}
-    };
     std::vector<CstShape_sptr> shapes{};
-    for (const auto &colorRadiusThickness: colorsRadiiThickness) {
-        shapes.push_back(createClockBase(
-            colorRadiusThickness.color,
-            colorRadiusThickness.radius,
-            colorRadiusThickness.thickness
-        ));
-    }
 
     const auto clockHandsRotation = Transformation(
         Transformation::Type::Rotation,
@@ -56,7 +21,6 @@ vecCstShape_sptr Clock::getShapes() const {
     );
 
     constexpr auto clockHandsThickness = 0.03f;
-
     shapes.push_back(std::make_shared<const Shape>(
         Shape::Aspect::Cube,
         JBTypes::Color::Black,
@@ -112,6 +76,43 @@ vecCstShape_sptr Clock::getShapes() const {
             }
         )
     ));
+
+
+    const auto createClockBase = [this](
+        JBTypes::Color color,
+        float radius,
+        float thickness
+    ) {
+        return std::make_shared<const Shape>(
+            Shape::Aspect::Cylinder,
+            color,
+            std::initializer_list<Transformation>(
+                {
+                    Transformation(Transformation::Type::Translation,
+                                   {0.f, -0.5f, 0.f}),
+                    Transformation(Transformation::Type::Scale,
+                                   {radius, thickness, radius}),
+                    Shape::getVerticalCylinderRotation(direction())
+                }
+            )
+        );
+    };
+    struct ColorRadiusThickness {
+        JBTypes::Color color;
+        float radius;
+        float thickness;
+    };
+    const std::vector<ColorRadiusThickness> colorsRadiiThickness{
+        {JBTypes::Color::White, 0.4f, 0.055f},
+        {JBTypes::Color::Blue,  0.5f, 0.05f}
+    };
+    for (const auto &colorRadiusThickness: colorsRadiiThickness) {
+        shapes.push_back(createClockBase(
+            colorRadiusThickness.color,
+            colorRadiusThickness.radius,
+            colorRadiusThickness.thickness
+        ));
+    }
 
     return shapes;
 }
