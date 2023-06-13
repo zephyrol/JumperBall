@@ -9,13 +9,16 @@
 
 Sphere::Sphere(const glm::mat4 &modelTransform,
                const glm::mat4 &normalsTransform) :
-    GeometricShape(modelTransform, normalsTransform, {glm::vec3(0.f, 0.f, 0.f)}, {}) {
+    GeometricShape(modelTransform, normalsTransform, {glm::vec3(0.f, 0.f, 0.f)}, {}),
+    _isHq(false){
 }
 
 Sphere::Sphere(const glm::vec3 &customColor,
                const glm::mat4 &modelTransform,
                const glm::mat4 &normalsTransform) :
-    GeometricShape(modelTransform, normalsTransform, {customColor}, {}) {
+    GeometricShape(modelTransform, normalsTransform, {customColor}, {}),
+    _isHq(false)
+    {
 
 }
 
@@ -23,27 +26,32 @@ Sphere::Sphere(const glm::vec3 &customColor,
                const glm::vec3 &customColor2,
                const glm::mat4 &modelTransform,
                const glm::mat4 &normalsTransform) :
-    GeometricShape(modelTransform, normalsTransform, {customColor, customColor2}, {}) {
+    GeometricShape(modelTransform, normalsTransform, {customColor, customColor2}, {}),
+    _isHq(true){
 
 }
 
 Sphere::Sphere(const JBTypes::Color &color,
                const glm::mat4 &modelTransform,
                const glm::mat4 &normalsTransform) :
-    Sphere(getSphereColor(color), modelTransform, normalsTransform) {
+    Sphere(getSphereColor(color), modelTransform, normalsTransform)
+{
 }
 
 Sphere::Sphere(
     std::vector<glm::vec3> &&customColors,
     const glm::mat4 &modelTransform,
     const glm::mat4 &normalsTransform
-) : GeometricShape(modelTransform, normalsTransform, std::move(customColors), {}) {
+) : GeometricShape(modelTransform, normalsTransform, std::move(customColors), {}),
+_isHq(true){
 }
 
 
 std::vector<glm::vec3> Sphere::genColors(const std::vector<glm::vec3> &colors) const {
+    const auto iParaCount = _isHq ? hqIParaCount : sdIParaCount;
+    const auto iMeriCount = _isHq ? hqIMeriCount : sdIMeriCount;
     if (colors.size() == 1) {
-        constexpr size_t numberOfColors = 2400;
+        const size_t numberOfColors = iParaCount* iMeriCount;
         return GeometricShape::createCustomColorBuffer(
             colors.at(0), // customColor
             numberOfColors
@@ -51,13 +59,8 @@ std::vector<glm::vec3> Sphere::genColors(const std::vector<glm::vec3> &colors) c
     }
 
     std::vector<glm::vec3> outputColors{};
-
-    constexpr unsigned int iParaCount = 40;
-    constexpr unsigned int iMeriCount = 60;
-
     // Parallels
     for (unsigned int i = 0; i < iParaCount; ++i) {
-
         for (unsigned int j = 0; j < iMeriCount; ++j) {
             const size_t colorNumber = j * colors.size() / iMeriCount;
             outputColors.emplace_back(colors.at(colorNumber));
@@ -69,12 +72,12 @@ std::vector<glm::vec3> Sphere::genColors(const std::vector<glm::vec3> &colors) c
 std::vector<GLushort> Sphere::genIndices() const {
 
     std::vector<GLushort> indices{};
-    constexpr unsigned int iParaCount = 40;
-    constexpr unsigned int iMeriCount = 60;
+    const auto iParaCount = _isHq ? hqIParaCount : sdIParaCount;
+    const auto iMeriCount = _isHq ? hqIMeriCount : sdIMeriCount;
 
     // For quads split in 2
-    for (unsigned int i = 0; i < (iParaCount - 1); ++i) {
-        for (unsigned int j = 0; j < (iMeriCount - 1); ++j) {
+    for (unsigned int i = 0; i < (iParaCount- 1); ++i) {
+        for (unsigned int j = 0; j < (iMeriCount- 1); ++j) {
             indices.push_back(iMeriCount * i + j);
             indices.push_back(iMeriCount * i + (j + 1));
             indices.push_back(iMeriCount * (i + 1) + (j + 1));
@@ -88,11 +91,11 @@ std::vector<GLushort> Sphere::genIndices() const {
 
 std::vector<glm::vec3> Sphere::genNormals() const {
     std::vector<glm::vec3> normals{};
-    constexpr unsigned int iParaCount = 40;
-    constexpr unsigned int iMeriCount = 60;
 
+    const auto iParaCount = _isHq ? hqIParaCount : sdIParaCount;
+    const auto iMeriCount = _isHq ? hqIMeriCount : sdIMeriCount;
     // Create a sphere
-    constexpr GLuint iVertexCount = iParaCount * iMeriCount;
+    const GLuint iVertexCount = iParaCount * iMeriCount;
 
     // Compute normals
     // on a 0 centered sphere : you just need to normalise the position!
@@ -107,12 +110,13 @@ std::vector<glm::vec3> Sphere::genNormals() const {
 
 std::vector<glm::vec3> Sphere::genPositions() const {
     std::vector<glm::vec3> positions{};
-    constexpr unsigned int iParaCount = 40;
-    constexpr unsigned int iMeriCount = 60;
     constexpr float r = 1.f;
 
-    constexpr float a1 = (180.0f / static_cast <float>(iParaCount - 1)) * static_cast <float>(M_PI) / 180.0f;
-    constexpr float a2 = (360.0f / (iMeriCount - 1)) * static_cast <float>(M_PI) / 180.0f;
+    const auto iParaCount = _isHq ? hqIParaCount : sdIParaCount;
+    const auto iMeriCount = _isHq ? hqIMeriCount : sdIMeriCount;
+
+    const float a1 = (180.0f / static_cast <float>(iParaCount - 1)) * static_cast <float>(M_PI) / 180.0f;
+    const float a2 = (360.0f / static_cast<float>(iMeriCount - 1)) * static_cast <float>(M_PI) / 180.0f;
 
     // Parallels
     for (unsigned int i = 0; i < iParaCount; ++i) {

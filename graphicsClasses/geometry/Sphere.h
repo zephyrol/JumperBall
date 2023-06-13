@@ -54,7 +54,15 @@ public:
 
 private:
 
+    const bool _isHq;
+
     static glm::vec3 getSphereColor(const JBTypes::Color &color);
+
+    static constexpr unsigned int sdIParaCount = 20;
+    static constexpr unsigned int sdIMeriCount = 30;
+    static constexpr unsigned int hqIParaCount = 40;
+    static constexpr unsigned int hqIMeriCount = 60;
+
 };
 
 #endif /* SPHERE_H */
