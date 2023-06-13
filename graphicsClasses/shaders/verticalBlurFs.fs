@@ -45,14 +45,11 @@ void main() {
 
     const int levelOfDetail = 0;
 
-    float sumCoefficients = 0.0;
     vec3 blurColor = vec3(0.0, 0.0, 0.0);
     for (int i = 0; i < patchSize; ++i) {
         float coefficient = gaussWeights[i];
         vec2 neighboringPixelUV = fs_vertexUVs + vec2(0.0, texelSize.y * indicesOffsets[i]);
         blurColor += coefficient * texture(horizontalBlurTexture, neighboringPixelUV).xyz;
-        sumCoefficients += coefficient;
     }
-    blurColor /= sumCoefficients;
     pixelColor = vec4(blurColor, 1.0);
 }
