@@ -83,6 +83,13 @@ void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
         _movementCircle->mouseCoords.xCoord,
         _movementCircle->mouseCoords.yCoord
     ) > movingThreshold) {
+        if(nearestCardinal.direction == ScreenDirection::South && _movementCircle != nullptr) {
+            const auto& movement =_movementCircle->movement;
+            if(movement != nullptr && *movement == ScreenDirection::South) {
+                _directionActionFunctions.at(static_cast<size_t>(*(_movementCircle->movement)))();
+                return;
+            }
+        }
         _movementCircle = std::unique_ptr<MovementCircle>(new MovementCircle{
             std::unique_ptr<ScreenDirection>(new ScreenDirection(nearestCardinal.direction)),
             *_mouseCoords,
