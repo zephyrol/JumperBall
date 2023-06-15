@@ -51,9 +51,9 @@ public:
 
     bool areSoundsActivated() const;
 
-private:
-
     void escapeAction();
+
+private:
 
     void runGame(size_t level);
 
