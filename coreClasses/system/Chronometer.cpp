@@ -58,6 +58,7 @@ void Chronometer::update(const Chronometer::TimePointMs& updatingTime) {
 
 void Chronometer::stop() {
     _request = Chronometer::Request::Stop;
+    update(getTimePointMSNow());
 }
 
 void Chronometer::resume() {
