@@ -29,7 +29,7 @@ protected:
     float getOffsetY() const;
 
 private:
-    constexpr static float decelerationCoefficient = 10.f; // pagePourcentage /s^2
+    constexpr static float decelerationCoefficient = 5.f; // pagePourcentage /s^2
     const CstChronometer_sptr _chronometer;
     const float _height;
     float _localPosY; // Page position
