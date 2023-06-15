@@ -101,7 +101,7 @@ float needsDiscard() {
 
 void main() {
     fs_vertexUVs = vs_vertexUVs;
-    if(selectedLabel < 0 && selectedLabel == vs_labelId) {
+    if(selectedLabel > 0 && selectedLabel < 3 && selectedLabel == vs_labelId) {
         fs_vertexColor = vec3(1.0);
     } else {
         fs_vertexColor = vec3(0.0, 1.0, 1.0);
