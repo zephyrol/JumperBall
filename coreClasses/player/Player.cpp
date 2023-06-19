@@ -4,14 +4,15 @@
  *
  * Created on 10 mai 2020, 11:40
  */
-#include <sstream>
 #include "Player.h"
-#include "system/SaveFileOutput.h"
-#include "system/SoundStatusOutput.h"
-#include "system/MusicStatusOutput.h"
 #include "system/GoToAuthorPageOutput.h"
-#include "system/SoundOutput.h"
+#include "system/MusicStatusOutput.h"
+#include "system/RequestQuitOutput.h"
 #include "system/RunAdOutput.h"
+#include "system/SaveFileOutput.h"
+#include "system/SoundOutput.h"
+#include "system/SoundStatusOutput.h"
+#include <sstream>
 
 Player::Player(
     DoubleChronometer_sptr doubleChronometer,
@@ -41,7 +42,6 @@ Player::Player(
     _timePointSavedFile(Chronometer::getTimePointMSNow()),
     _currentLevel(_levelProgression),
     _remainingTime(0.f),
-    _wantsToQuit(false),
     _needsSaveFile(false) {
 }
 
@@ -81,14 +81,6 @@ void Player::setCurrentLevel(size_t levelNumber) {
 
 size_t Player::getCurrentLevel() const {
     return _currentLevel;
-}
-
-bool Player::wantsToQuit() const {
-    return _wantsToQuit;
-}
-
-void Player::requestQuit() {
-    _wantsToQuit = true;
 }
 
 void Player::escapeAction() {
@@ -333,4 +325,8 @@ void Player::checkAdvertisement() {
         _initialAdvertisementTime = 0.f;
         _updateOutputs.emplace_back(new RunAdOutput());
     }
+}
+
+void Player::addQuitRequest() {
+  _updateOutputs.emplace_back(new RequestQuitOutput());
 }

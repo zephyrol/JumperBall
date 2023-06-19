@@ -75,11 +75,9 @@ public:
 
     void addValidationSound();
 
+    void addQuitRequest();
+
     void addNotEnoughMoneySound();
-
-    bool wantsToQuit() const;
-
-    void requestQuit();
 
     void escapeAction();
 
@@ -155,7 +153,6 @@ private:
 
     size_t _currentLevel;
     float _remainingTime;
-    bool _wantsToQuit;
     bool _needsSaveFile;
 
     std::string genSaveContent();

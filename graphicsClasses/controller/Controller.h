@@ -8,18 +8,17 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include "Viewer.h"
 #include "player/Player.h"
 #include "scene/MapGenerator.h"
 #include "scene/SceneRendering.h"
-#include "Viewer.h"
+#include "system/DoubleChronometer.h"
 #include "system/KeyboardKey.h"
 #include "system/Mouse.h"
-#include "system/DoubleChronometer.h"
 
 class Controller {
 
 public:
-
     Controller(
         const size_t &screenWidth,
         const size_t &screenHeight,
@@ -29,7 +28,10 @@ public:
         bool isUsingTouchScreen
     );
 
-    void interactionButtons(const KeyboardKey::Button &button, const KeyboardKey::Status &status);
+    void interactionButtons(
+        const KeyboardKey::Button &button,
+        const KeyboardKey::Status &status
+    );
 
     void pressMouse(float posX, float posY);
 
@@ -38,8 +40,6 @@ public:
     std::string update();
 
     void render() const;
-
-    bool isRequestingLeaving() const;
 
     void resize(int screenWidth, int screenHeight);
 
@@ -54,7 +54,6 @@ public:
     void escapeAction();
 
 private:
-
     void runGame(size_t level);
 
     void setValidateMouse(float mouseX, float mouseY);
@@ -63,8 +62,6 @@ private:
     const Player_sptr _player;
 
     const JBTypes::FileContent _filesContent;
-
-    bool _requestToLeave;
 
     std::shared_ptr<Scene> _scene;
     const std::shared_ptr<Menu> _menu;

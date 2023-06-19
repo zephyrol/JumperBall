@@ -23,7 +23,6 @@ Controller::Controller(
     ),
     _player(Player::createInstance(_doubleChronometer, filesContent.at("save.txt"))),
     _filesContent(filesContent),
-    _requestToLeave(false),
     _scene(std::make_shared<Scene>(
         filesContent.at("map" + std::to_string(_player->levelProgression()) + ".txt"),
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight),
@@ -60,7 +59,7 @@ Controller::Controller(
         [this](float mouseX, float mouseY) { setValidateMouse(mouseX, mouseY); },
         [this]() { _scene->mouseSetUp(); }
     ),
-    _outputs{}{
+    _outputs{} {
 }
 
 void Controller::interactionButtons(const KeyboardKey::Button &button, const KeyboardKey::Status &status) {
@@ -115,10 +114,6 @@ void Controller::setValidateMouse(float mouseX, float mouseY) {
         _scene->setNoAction();
     }
 
-    if (_player->wantsToQuit()) {
-        _requestToLeave = true;
-        return;
-    }
     const auto newStatus = _player->status();
     if (newStatus != currentStatus && newStatus == Player::Status::InTransition) {
         runGame(_player->getCurrentLevel());
@@ -130,7 +125,7 @@ void Controller::escapeAction() {
 
     const auto &currentPage = _menu->currentPage();
     if (_menu->escapeAction()) {
-        _requestToLeave = true;
+        _player->addQuitRequest();
         return;
     }
     const auto &newPage = _menu->currentPage();
@@ -138,10 +133,6 @@ void Controller::escapeAction() {
     if (newPage != currentPage) {
         _viewer->setPage(newPage);
     }
-}
-
-bool Controller::isRequestingLeaving() const {
-    return _requestToLeave;
 }
 
 void Controller::resize(int screenWidth, int screenHeight) {
@@ -175,7 +166,7 @@ std::string Controller::update() {
     const auto &newPage = _menu->currentPage();
     if (newPage != currentPage) {
         _viewer->setPage(newPage);
-        if(newPage->isCompatibleWithAdvertisements()) {
+        if (newPage->isCompatibleWithAdvertisements()) {
             _player->checkAdvertisement();
         }
     }

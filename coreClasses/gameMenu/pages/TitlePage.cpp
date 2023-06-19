@@ -182,7 +182,7 @@ Page_sptr TitlePage::click(float mouseX, float mouseY) {
         resetNodes();
     }
     if (intersectTest(_exitNode)) {
-        _player->requestQuit();
+        _player->addQuitRequest();
     }
     if (intersectTest(_credits)) {
         return _creditsPage;

@@ -272,19 +272,30 @@ bool Window::inputManagement() {
         _controller.releaseMouse();
     }
 
-    return glfwWindowShouldClose(_window) != 0 || _controller.isRequestingLeaving();
+    return glfwWindowShouldClose(_window) != 0;
 }
 
 
 void Window::run() {
+
+    const auto shouldLeave = [](const std::string& output) {
+        return output.find("quit") != std::string::npos;
+    };
+
     glfwSwapInterval(1);
     glfwSetInputMode(_window, GLFW_STICKY_KEYS, GL_TRUE);
 
     auto before = Chronometer::getTimePointMSNow();
     unsigned int counter = 0;
-    while (!inputManagement()) {
+    bool requestLeaving = false;
+    while (!(inputManagement() || requestLeaving)) {
 
         const auto updateOutput = _controller.update();
+
+        if(shouldLeave(updateOutput)){
+            requestLeaving = true;
+        }
+
         _controller.render();
 
         writeSaveFile(updateOutput);
@@ -302,7 +313,6 @@ void Window::run() {
             std::cout << counter << " FPS" << std::endl;
             counter = 0;
         }
-
     }
 
 }
