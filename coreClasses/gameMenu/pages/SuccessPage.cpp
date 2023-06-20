@@ -394,7 +394,7 @@ Displayable::DynamicValues<int> SuccessPage::getDynamicIntValues() const {
 }
 
 std::vector<std::string> SuccessPage::shaderDefines() const {
-    return {"TRANSPARENT_BACKGROUND", "DISCARDING", "TEST_COIN"};
+    return {"TRANSPARENT_BACKGROUND", "TEST_COIN"};
 }
 
 std::string SuccessPage::getVertexShaderName() const {

@@ -208,7 +208,7 @@ std::string LevelsPage::getVertexShaderName() const {
 }
 
 std::vector<std::string> LevelsPage::shaderDefines() const {
-    return {"TEST_ALPHA_TEXTURE", "DISCARDING", "TRANSPARENT_BACKGROUND"};
+    return {"TEST_ALPHA_TEXTURE", "TRANSPARENT_BACKGROUND"};
 }
 
 Displayable::DynamicNames LevelsPage::getDynamicIntNames() const {

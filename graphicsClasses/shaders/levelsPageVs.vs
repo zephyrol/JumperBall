@@ -6,7 +6,6 @@ layout(location = 3) in int vs_labelId;
 out vec2 fs_vertexUVs;
 out vec3 fs_vertexColor;
 out float fs_isLetter;
-out float fs_needsDiscard;
 out float fs_needsTransparentBackground;
 
 uniform float positionY;
@@ -38,13 +37,13 @@ void main() {
     }
 
     vec2 positionXY = vs_vertexPosition.xy;
-    fs_needsDiscard = -1.0;
+    bool discarding = false;
     if(vs_labelId > 0 && vs_labelId < 1000) {
         positionXY +=  vec2(0.0, positionY);
         if(positionXY.y > heightThreshold) {
-            fs_needsDiscard = 1.0;
+            discarding = true;
         }
     }
 
-    gl_Position = vec4(positionXY, 0.0, 1.0);
+    gl_Position = discarding ? vec4(-2.0, -2.0, 0.0, 1.0): vec4(positionXY, 0.0, 1.0);
 }

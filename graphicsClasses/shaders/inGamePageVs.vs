@@ -6,7 +6,6 @@ layout(location = 3) in int vs_labelId;
 out vec2 fs_vertexUVs;
 out vec3 fs_vertexColor;
 out float fs_isLetter;
-out float fs_needsDiscard;
 out float fs_needsCheckingKey;
 out vec3 fs_keyColor;
 out float fs_needsCheckingCoin;
@@ -21,16 +20,16 @@ uniform int key;
 uniform int currentNumberOfKeys;
 uniform int maxNumberOfKeys;
 
-float needsDiscard() {
+bool needsDiscard() {
     if(vs_labelId == leftDigit && leftDigit != 0
        || vs_labelId == middleDigit && (middleDigit != 10 || leftDigit != 0)
        || vs_labelId == rightDigit) {
-        return -1.0;
+        return false;
     }
     if(vs_labelId == coinsTensDigit || vs_labelId == coinsUnitsDigit) {
-        return -1.0;
+        return false;
     }
-    return 1.0;
+    return true;
 }
 
 void main() {
@@ -40,12 +39,13 @@ void main() {
     } else {
         fs_vertexColor = vec3(0.0, 1.0, 1.0);
     }
+    bool discarding;
     if(vs_labelId < 0) {
         fs_isLetter = -1.0;
-        fs_needsDiscard = -1.0;
+        discarding = false;
     } else {
         fs_isLetter = 1.0;
-        fs_needsDiscard = needsDiscard();
+        discarding = needsDiscard();
     }
 
     const int keyIdOffset = 500;
@@ -53,9 +53,9 @@ void main() {
         fs_isLetter = -1.0;
         int keyNumber = vs_labelId - keyIdOffset;
         fs_needsCheckingKey = 1.0;
-        fs_needsDiscard = 0.0;
+        discarding = false;
         if(keyNumber > maxNumberOfKeys) {
-            fs_needsDiscard = 1.0;
+            discarding = true;
         }
         if(keyNumber > currentNumberOfKeys) {
             fs_keyColor = vec3(0.0);
@@ -69,12 +69,12 @@ void main() {
 
     // Coin symbol
     if(vs_labelId == 400) {
-        fs_needsDiscard = -1.0;
+        discarding = false;
         fs_isLetter = -1.0;
         fs_needsCheckingCoin = 1.0;
     } else {
         fs_needsCheckingCoin = -1.0;
     }
 
-    gl_Position = vec4(vs_vertexPosition.xy, 0.0, 1.0);
+    gl_Position = discarding ? vec4(-2.0, -2.0, 0.0, 1.0): vec4(vs_vertexPosition.xy, 0.0, 1.0);
 }

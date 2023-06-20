@@ -6,7 +6,6 @@ layout(location = 3) in int vs_labelId;
 out vec2 fs_vertexUVs;
 out vec3 fs_vertexColor;
 out float fs_isLetter;
-out float fs_needsDiscard;
 out float fs_needsCheckingCoin;
 out float fs_needsTransparentBackground;
 out float fs_ball;
@@ -23,9 +22,9 @@ uniform int sumDigitThree;
 uniform int sumDigitFour;
 uniform int selectedLabel;
 
-float needsDiscard() {
+bool needsDiscard() {
     if (vs_labelId < 100) {
-        return -1.0;
+        return false;
     }
     int skins[6] = int[] (
     skinOne, skinTwo, skinThree, skinFour, skinFive, skinSix
@@ -35,60 +34,46 @@ float needsDiscard() {
         if (vs_labelId < (i + 100)) {
             // Select
             if (vs_labelId == i) {
-                return skins[currentSkin] == 0 ? 1.0 : -1.0;
+                return skins[currentSkin] == 0;
             }
             // Coins + letters
             if (vs_labelId == (i + 1) || vs_labelId == (i + 3)) {
-                return skins[currentSkin] > 0 ? 1.0 : -1.0;
+                return skins[currentSkin] > 0;
             }
             // Ball
             if (vs_labelId == (i + 2)) {
-                return -1.0;
+                return false;
             }
         }
         ++currentSkin;
     }
     if (vs_labelId < 110) {
-        if (vs_labelId != sumDigitOne) {
-            return 1.0;
-        } else {
-            return -1.0;
-        }
+        return vs_labelId != sumDigitOne;
     }
     if (vs_labelId < 120) {
-        if (vs_labelId != sumDigitTwo) {
-            return 1.0;
-        } else {
-            return -1.0;
-        }
+        return vs_labelId != sumDigitTwo;
     }
     if (vs_labelId < 130) {
-        if (vs_labelId != sumDigitThree) {
-            return 1.0;
-        } else {
-            return -1.0;
-        }
+        return vs_labelId != sumDigitThree;
     }
     if (vs_labelId < 140) {
-        if (vs_labelId != sumDigitFour) {
-            return 1.0;
-        } else {
-            return -1.0;
-        }
+        return vs_labelId != sumDigitFour;
     }
-    return -1.0;
+    return false;
 }
 
 void main() {
     fs_vertexUVs = vs_vertexUVs;
     fs_vertexColor = vec3(0.0, 1.0, 1.0);
 
+    bool discarding;
+
     if (vs_labelId < 0 || vs_labelId == 3) {
         fs_isLetter = -1.0;
-        fs_needsDiscard = -1.0;
+        discarding = false;
     } else {
         fs_isLetter = 1.0;
-        fs_needsDiscard = needsDiscard();
+        discarding = needsDiscard();
     }
 
     // Coin symbol
@@ -164,14 +149,14 @@ void main() {
 
     if (vs_labelId == 4000) {
         fs_isLetter = -1.0;
-        fs_needsDiscard = -1.0;
+        discarding = false;
     }
 
     // Coin symbol
     if(vs_labelId == 400) {
-        fs_needsDiscard = -1.0;
+        discarding = false;
         fs_isLetter = -1.0;
         fs_needsCheckingCoin = 1.0;
     }
-    gl_Position = vec4(vs_vertexPosition.xy, 0.0, 1.0);
+    gl_Position = discarding ? vec4(-2.0, -2.0, 0.0, 1.0): vec4(vs_vertexPosition.xy, 0.0, 1.0);
 }

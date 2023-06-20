@@ -233,7 +233,7 @@ vecCstTextNode_uptr StorePage::genTextNodes() const {
 }
 
 std::vector<std::string> StorePage::shaderDefines() const {
-    return {"TRANSPARENT_BACKGROUND", "DISCARDING", "TEST_COIN", "TEST_BALL"};
+    return {"TRANSPARENT_BACKGROUND", "TEST_COIN", "TEST_BALL"};
 }
 
 vecCstLabel_sptr StorePage::labels() const {

@@ -5,10 +5,6 @@ in vec2 fs_vertexUVs;
 
 in float fs_isLetter;
 
-#ifdef(DISCARDING)
-    in float fs_needsDiscard;
-#endif
-
 #ifdef(TRANSPARENT_BACKGROUND)
     in float fs_needsTransparentBackground;
 #endif
@@ -139,11 +135,6 @@ vec3 getBallColor() {
 #endif
 
 void main() {
-    #ifdef(DISCARDING)
-        if(fs_needsDiscard > 0.0) {
-            discard;
-        }
-    #endif
 
     vec3 color = fs_vertexColor;
     #ifdef(TEST_KEY)

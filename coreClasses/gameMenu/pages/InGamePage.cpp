@@ -183,7 +183,7 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
 }
 
 std::vector<std::string> InGamePage::shaderDefines() const {
-    return {"DISCARDING", "TEST_KEY", "TEST_COIN"};
+    return {"TEST_KEY", "TEST_COIN"};
 }
 
 const int InGamePage::arrowLabelId = -1;
