@@ -33,7 +33,8 @@ StorePage::StorePage(
     _sumDigitFour(std::move(sumDigitFour)),
     _coinSymbol(std::move(coinSymbol)),
     _arrowLabel(std::move(arrowLabel)),
-    _validationPages{} {
+    _nodesToTestIntersection(createNodesToTestIntersection()),
+    _validationPages{}{
 }
 
 StorePage_sptr StorePage::createInstance(Player_sptr player, const Page_sptr &parent, float ratio) {
@@ -57,6 +58,14 @@ StorePage_sptr StorePage::createInstance(Player_sptr player, const Page_sptr &pa
     );
 }
 
+vecNode_sptr StorePage::createNodesToTestIntersection() const {
+    const auto& arrowNode = _arrowLabel->getNode();
+    std::vector<Node_sptr> nodesToTest{arrowNode};
+    for (const auto& ballSkin: _ballSkins) {
+        nodesToTest.emplace_back(ballSkin.background->getNode());
+    }
+    return nodesToTest;
+}
 
 void StorePage::update(const Mouse &mouse) {
     if (!mouse.isPressed()) {
@@ -68,11 +77,11 @@ void StorePage::update(const Mouse &mouse) {
     const auto mouseX = mouse.currentXCoord() - 0.5f;
     const auto mouseY = mouse.currentYCoord() - 0.5f;
 
-    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
-        return node->intersect(mouseX, mouseY);
-    };
-    if (intersectTest(_arrowLabel->getNode())) {
+    const auto nearest = Node::getNearest(_nodesToTestIntersection, mouseX, mouseY);
+
+    if (nearest == _arrowLabel->getNode()) {
         _currentSelectedLabel = static_cast<int>(_arrowLabel->getId());
+        return;
     }
     for (size_t i = 0; i < _ballSkins.size(); ++i) {
         const auto getId = [&i](decltype(_currentSelectedLabel) offset) {
@@ -80,22 +89,22 @@ void StorePage::update(const Mouse &mouse) {
                                                               * 100 + offset;
             return id;
         };
-        if (intersectTest(_ballSkins[i].background->getNode())) {
+        if (nearest == _ballSkins[i].background->getNode()) {
             _currentSelectedLabel = getId(_player->hasBoughtSkin(i) ? 0 : 1);
         }
     }
 }
 
 Page_sptr StorePage::click(float mouseX, float mouseY) {
-    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
-        return node->intersect(mouseX, mouseY);
-    };
-    if (intersectTest(_arrowLabel->getNode())) {
+
+    const auto nearest = Node::getNearest(_nodesToTestIntersection, mouseX, mouseY);
+
+    if (nearest == _arrowLabel->getNode()) {
         _player->addValidationSound();
         return _parent.lock();
     }
     for (size_t i = 0; i < _validationPages.size(); ++i) {
-        if (intersectTest(_ballSkins.at(i).background->getNode())) {
+        if (nearest == _ballSkins.at(i).background->getNode()) {
             if (_player->hasBoughtSkin(i)) {
                 _player->setCurrentSkin(i);
                 return nullptr;
@@ -121,6 +130,7 @@ void StorePage::resize(float ratio) {
     _sumDigitFour = nodes.at(4);
     _coinSymbol = std::make_shared<Label>(std::move(nodes.at(5)), JBTypes::Color::White, coinMoneyId);
     _arrowLabel = createStoreArrowLabel(nodes.at(6));
+    _nodesToTestIntersection = createNodesToTestIntersection();
 }
 
 Displayable::DynamicNames StorePage::getDynamicIntNames() const {

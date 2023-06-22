@@ -39,7 +39,8 @@ TitlePage::TitlePage(
     _levelsPage(nullptr),
     _creditsPage(nullptr),
     _storePage(nullptr),
-    _currentRatio(currentRatio) {
+    _currentRatio(currentRatio),
+    _nodesToTestIntersection(createNodesToTestIntersection()) {
 }
 
 void TitlePage::resize(float ratio) {
@@ -59,6 +60,7 @@ void TitlePage::resetNodes() {
     _exitNode = nodes.at(7);
     _author = nodes.at(8);
     _backgroundLabel = createBackgroundLabel(nodes.at(9));
+    _nodesToTestIntersection = createNodesToTestIntersection();
 }
 
 
@@ -162,32 +164,30 @@ vecNode_sptr TitlePage::createNodes(float ratio, bool english) {
 }
 
 Page_sptr TitlePage::click(float mouseX, float mouseY) {
-    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
-        return node->intersect(mouseX, mouseY);
-    };
-    if (intersectTest(_play)) {
+    const auto nearest = Node::getNearest(_nodesToTestIntersection, mouseX, mouseY);
+    if (nearest == _play) {
         _player->addValidationSound();
         return _levelsPage;
     }
-    if (intersectTest(_language)) {
+    if (nearest == _language) {
         _player->switchLangage();
         resetNodes();
     }
-    if (intersectTest(_musics)) {
+    if (nearest == _musics) {
         _player->switchMusicsStatus();
         resetNodes();
     }
-    if (intersectTest(_sounds)) {
+    if (nearest == _sounds) {
         _player->switchSoundsStatus();
         resetNodes();
     }
-    if (intersectTest(_exitNode)) {
+    if (nearest == _exitNode) {
         _player->addQuitRequest();
     }
-    if (intersectTest(_credits)) {
+    if (nearest == _credits) {
         return _creditsPage;
     }
-    if (intersectTest(_store)) {
+    if (nearest == _store) {
         return _storePage;
     }
     return nullptr;
@@ -249,22 +249,22 @@ void TitlePage::update(const Mouse &mouse) {
     // Positions have to be centered
     const auto mouseX = mouse.currentXCoord() - 0.5f;
     const auto mouseY = mouse.currentYCoord() - 0.5f;
-    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
-        return node->intersect(mouseX, mouseY);
-    };
-    if (intersectTest(_play)) {
+
+    const auto nearest = Node::getNearest(_nodesToTestIntersection, mouseX, mouseY);
+
+    if (nearest == _play) {
         _currentSelectedLabel = playLabelId;
-    } else if (intersectTest(_exitNode)) {
+    } else if (nearest == _exitNode) {
         _currentSelectedLabel = exitLabelId;
-    } else if (intersectTest(_store)) {
+    } else if (nearest == _store) {
         _currentSelectedLabel = storeLabelId;
-    } else if (intersectTest(_language)) {
+    } else if (nearest == _language) {
         _currentSelectedLabel = languageLabelId;
-    } else if (intersectTest(_musics)) {
+    } else if (nearest == _musics) {
         _currentSelectedLabel = musicsLabelId;
-    } else if (intersectTest(_sounds)) {
+    } else if (nearest == _sounds) {
         _currentSelectedLabel = soundsLabelId;
-    } else if (intersectTest(_credits)) {
+    } else if (nearest == _credits) {
         _currentSelectedLabel = creditsLabelId;
     } else {
         _currentSelectedLabel = -1;
@@ -273,4 +273,8 @@ void TitlePage::update(const Mouse &mouse) {
 
 vecCstLabel_sptr TitlePage::labels() const {
     return {_backgroundLabel};
+}
+
+vecNode_sptr TitlePage::createNodesToTestIntersection() const {
+    return {_play, _store, _language, _musics, _sounds, _credits, _exitNode, _author};
 }

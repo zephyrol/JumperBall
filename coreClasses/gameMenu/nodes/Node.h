@@ -57,15 +57,17 @@ public:
      * Check if picking is on the node
      * @param mouseX X coordinate in screen space
      * @param mouseY Y coordinate in screen space
-     * @return true if picking is on the node, else false
+     * @return squared distance from center if picking is on the node, else nullptr
      */
-    bool intersect(float mouseX, float mouseY) const;
+    std::unique_ptr<float> intersect(float mouseX, float mouseY, float touchThreshold = 2.f) const;
 
     float ratio() const;
     float width() const;
     float height() const;
     float positionX() const;
     float positionY() const;
+
+    static Node_sptr getNearest(vecNode_sptr nodes, float mouseX, float mouseY);
 
 protected:
     /**

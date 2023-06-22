@@ -75,7 +75,7 @@ Page_wptr InGamePage::parent() {
 }
 
 Page_sptr InGamePage::click(float mouseX, float mouseY) {
-    if (_arrowLabel->getNode()->intersect(mouseX, mouseY)) {
+    if (_arrowLabel->getNode()->intersect(mouseX, mouseY, 2.f)) {
         _player->setAsInMenu();
         return _parent.lock();
     }
@@ -269,7 +269,7 @@ void InGamePage::update(const Mouse &mouse) {
     const auto mouseX = mouse.currentXCoord() - 0.5f;
     const auto mouseY = mouse.currentYCoord() - 0.5f;
 
-    if (_arrowLabel->getNode()->intersect(mouseX, mouseY)) {
+    if (_arrowLabel->getNode()->intersect(mouseX, mouseY, 2.f)) {
         _currentSelectedLabel = InGamePage::arrowLabelId;
     }
 }

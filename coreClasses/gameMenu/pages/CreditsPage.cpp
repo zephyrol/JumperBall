@@ -32,7 +32,8 @@ CreditsPage::CreditsPage(
     _musicAndSoundsEffects(std::move(musicAndSoundsEffects)),
     _secondAuthor(std::move(secondAuthor)),
     _exitNode(std::move(exitNode)),
-    _backgroundLabel(std::move(backgroundLabel)) {
+    _backgroundLabel(std::move(backgroundLabel)),
+    _nodesToTestIntersection(createNodesToTestIntersection()) {
 }
 
 void CreditsPage::resize(float ratio) {
@@ -45,6 +46,7 @@ void CreditsPage::resize(float ratio) {
     _secondAuthor = nodes.at(5);
     _exitNode = nodes.at(6);
     _backgroundLabel = createBackgroundLabel(nodes.at(7));
+    _nodesToTestIntersection = createNodesToTestIntersection();
 }
 
 CreditsPage_sptr CreditsPage::createInstance(
@@ -141,16 +143,14 @@ vecNode_sptr CreditsPage::createNodes(float ratio, bool english) {
 }
 
 Page_sptr CreditsPage::click(float mouseX, float mouseY) {
-    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
-        return node->intersect(mouseX, mouseY);
-    };
-    if (intersectTest(_exitNode)) {
+    const auto nearest = Node::getNearest(_nodesToTestIntersection, mouseX, mouseY);
+    if (nearest == _exitNode) {
         return _parent.lock();
     }
-    if (intersectTest(_mainAuthor) || intersectTest(_developmentAndDesign)) {
+    if (nearest == _mainAuthor || nearest == _developmentAndDesign) {
         _player->requestDeveloperPage();
     }
-    if (intersectTest(_secondAuthor) || intersectTest(_musicAndSoundsEffects)) {
+    if (nearest == _secondAuthor || nearest == _musicAndSoundsEffects) {
         _player->requestMusicianPage();
     }
     return nullptr;
@@ -196,18 +196,18 @@ void CreditsPage::update(const Mouse &mouse) {
     // Positions have to be centered
     const auto mouseX = mouse.currentXCoord() - 0.5f;
     const auto mouseY = mouse.currentYCoord() - 0.5f;
-    const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
-        return node->intersect(mouseX, mouseY);
-    };
-    if (intersectTest(_developmentAndDesign)) {
+
+    const auto nearest = Node::getNearest(_nodesToTestIntersection, mouseX, mouseY);
+
+    if (nearest == _developmentAndDesign) {
         _currentSelectedLabel = developmentAndDesignLabelId;
-    } else if (intersectTest(_mainAuthor)) {
+    } else if (nearest == _mainAuthor) {
         _currentSelectedLabel = mainAuthorLabelId;
-    } else if (intersectTest(_musicAndSoundsEffects)) {
+    } else if (nearest == _musicAndSoundsEffects) {
         _currentSelectedLabel = musicAndSoundsEffectsLabelId;
-    } else if (intersectTest(_secondAuthor)) {
+    } else if (nearest == _secondAuthor) {
         _currentSelectedLabel = secondAuthorLabelId;
-    } else if (intersectTest(_exitNode)) {
+    } else if (nearest == _exitNode) {
         _currentSelectedLabel = exitNodeLabelId;
     } else {
         _currentSelectedLabel = -1;
@@ -220,5 +220,15 @@ Page_wptr CreditsPage::parent() {
 
 vecCstLabel_sptr CreditsPage::labels() const {
     return {_backgroundLabel};
+}
+
+vecNode_sptr CreditsPage::createNodesToTestIntersection() const {
+    return {
+        _developmentAndDesign,
+        _mainAuthor,
+        _musicAndSoundsEffects,
+        _secondAuthor,
+        _exitNode
+    };
 }
 

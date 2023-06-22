@@ -61,6 +61,7 @@ private:
     Node_sptr _secondAuthor;
     Node_sptr _exitNode;
     Label_sptr _backgroundLabel;
+    vecNode_sptr _nodesToTestIntersection;
 
     static constexpr int developmentAndDesignLabelId = 1;
     static constexpr int mainAuthorLabelId = 2;
@@ -69,6 +70,8 @@ private:
     static constexpr int exitNodeLabelId = 5;
 
     static vecNode_sptr createNodes(float ratio, bool english);
+
+    vecNode_sptr createNodesToTestIntersection() const;
 
 };
 

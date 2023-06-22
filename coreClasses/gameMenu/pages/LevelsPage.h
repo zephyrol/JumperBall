@@ -70,6 +70,7 @@ private:
 
     ArrowLabel_sptr _arrowLabel;
     Page_sptr _inGamePage;
+    vecNode_sptr _nodesToTestIntersection;
 
     float computeHeightThreshold() const;
 
@@ -87,8 +88,11 @@ private:
 
     static Node_sptr getCommonNode(float ratio);
 
+    vecNode_sptr createNodesToTestIntersection() const;
+
     static const int arrowLabelId;
     static constexpr size_t numberOfLevels = 99;
+    static constexpr float arrowTouchThreshold = 1.25f;
 };
 
 template<class T>

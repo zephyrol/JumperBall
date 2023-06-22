@@ -93,7 +93,7 @@ Page_wptr PausePage::parent() {
 
 Page_sptr PausePage::click(float mouseX, float mouseY) {
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
-        return node->intersect(mouseX, mouseY);
+        return node->intersect(mouseX, mouseY, 2.f);
     };
     if (intersectTest(_exitNode)) {
         _player->addValidationSound();
@@ -134,7 +134,7 @@ void PausePage::update(const Mouse &mouse) {
     const auto mouseX = mouse.currentXCoord() - 0.5f;
     const auto mouseY = mouse.currentYCoord() - 0.5f;
     const auto intersectTest = [&mouseX, &mouseY](const Node_sptr &node) {
-        return node->intersect(mouseX, mouseY);
+        return node->intersect(mouseX, mouseY, 2.f);
     };
     if (intersectTest(_resumeNode)) {
         _currentSelectedLabel = resumeLabelId;

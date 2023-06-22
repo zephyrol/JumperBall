@@ -29,7 +29,8 @@ LevelsPage::LevelsPage(
     _levels(std::move(levels)),
     _backgroundLabel(std::move(backgroundLabel)),
     _arrowLabel(std::move(arrowLabel)),
-    _inGamePage(nullptr) {
+    _inGamePage(nullptr),
+    _nodesToTestIntersection(createNodesToTestIntersection()){
 }
 
 LevelsPage_sptr LevelsPage::createInstance(
@@ -96,6 +97,7 @@ void LevelsPage::resize(float ratio) {
     _levels = std::move(levelsNode);
     _arrowLabel = std::move(arrowLabel);
     _backgroundLabel = createBackgroundLabel(levelsPageNode);
+    _nodesToTestIntersection = createNodesToTestIntersection();
 }
 
 Node_sptr LevelsPage::getCommonNode(float ratio) {
@@ -111,12 +113,14 @@ Node_sptr LevelsPage::getCommonNode(float ratio) {
 
 Page_sptr LevelsPage::click(float mouseX, float mouseY) {
 
-    const auto intersectTest = [this, &mouseX, &mouseY](const Node_sptr &node) {
-        return mouseY < _heightThreshold && node->intersect(mouseX, mouseY - getOffsetY());
-    };
+    if (_arrowLabel->getNode()->intersect(mouseX, mouseY, arrowTouchThreshold)) {
+        _player->addValidationSound();
+        return _parent.lock();
+    }
 
+    const auto nearest = Node::getNearest(_nodesToTestIntersection, mouseX, mouseY - getOffsetY());
     for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
-        if (intersectTest(_levels[i])) {
+        if (nearest == _levels[i]) {
             const auto levelNumber = i + 1;
             if (levelNumber > _player->levelProgression()) {
                 return nullptr;
@@ -125,13 +129,17 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
             return _inGamePage;
         }
     }
-    if (_arrowLabel->getNode()->intersect(mouseX, mouseY)) {
-        _player->addValidationSound();
-        return _parent.lock();
-    }
     return nullptr;
 }
 
+
+vecNode_sptr LevelsPage::createNodesToTestIntersection() const {
+    std::vector<Node_sptr> nodesToTest{};
+    for (const auto& level: _levels) {
+        nodesToTest.emplace_back(level);
+    }
+    return nodesToTest;
+}
 
 void LevelsPage::update(const Mouse &mouse) {
     ScrollablePage::update(mouse);
@@ -145,20 +153,20 @@ void LevelsPage::update(const Mouse &mouse) {
     const auto mouseX = mouse.currentXCoord() - 0.5f;
     const auto mouseY = mouse.currentYCoord() - 0.5f;
 
-    const auto intersectTest = [this, &mouseX, &mouseY](const Node_sptr &node) {
-        return node->intersect(mouseX, mouseY - getOffsetY());
-    };
+    if (_arrowLabel->getNode()->intersect(mouseX, mouseY, arrowTouchThreshold)) {
+        _currentSelectedLabel = LevelsPage::arrowLabelId;
+        return;
+    }
+
+    const auto nearest = Node::getNearest(_nodesToTestIntersection, mouseX, mouseY - getOffsetY());
 
     for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
-        if (intersectTest(_levels[i])) {
+        if (nearest == _levels[i]) {
             const auto levelNumber = i + 1;
             if (levelNumber <= _player->levelProgression()) {
                 _currentSelectedLabel = static_cast<int>(levelNumber);
             }
         }
-    }
-    if (_arrowLabel->getNode()->intersect(mouseX, mouseY)) {
-        _currentSelectedLabel = LevelsPage::arrowLabelId;
     }
 }
 

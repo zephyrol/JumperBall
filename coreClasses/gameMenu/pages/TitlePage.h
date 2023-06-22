@@ -72,6 +72,8 @@ private:
 
     float _currentRatio;
 
+    vecNode_sptr _nodesToTestIntersection;
+
     static constexpr int playLabelId = 1;
     static constexpr int storeLabelId = 2;
     static constexpr int languageLabelId = 3;
@@ -81,6 +83,8 @@ private:
     static constexpr int exitLabelId = 7;
 
     static vecNode_sptr createNodes(float ratio, bool english);
+
+    vecNode_sptr createNodesToTestIntersection() const;
 };
 
 

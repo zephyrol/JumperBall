@@ -81,8 +81,11 @@ private:
     Node_sptr _sumDigitFour;
     Label_sptr _coinSymbol;
     ArrowLabel_sptr _arrowLabel;
+    vecNode_sptr _nodesToTestIntersection;
 
     std::array<Page_wptr, numberOfSkins> _validationPages;
+
+    vecNode_sptr createNodesToTestIntersection() const;
 
     static vecNode_sptr createNodes(float coveringNode);
 
