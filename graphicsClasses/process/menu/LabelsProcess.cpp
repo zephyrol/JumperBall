@@ -15,16 +15,14 @@ LabelsProcess::LabelsProcess(
     const FontTexturesGenerator &fontTexturesGenerator,
     RenderGroupsManager_sptr renderGroupsManager,
     RenderPass renderPass,
-    ShaderProgram_sptr labelsShader,
-    CstMap_sptr map
+    ShaderProgram_sptr labelsShader
 ) :
     Rendering(width, height),
     _page(std::move(page)),
     _fontTexturesGenerator(fontTexturesGenerator),
     _renderGroupsManager(std::move(renderGroupsManager)),
     _renderPass(std::move(renderPass)),
-    _labelsShader(std::move(labelsShader)),
-    _map(std::move(map)) {
+    _labelsShader(std::move(labelsShader)) {
 }
 
 std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
@@ -32,8 +30,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     const FontTexturesGenerator::FTContent &ftContent,
     GLsizei width,
     GLsizei height,
-    const CstPage_sptr &page,
-    CstMap_sptr map
+    const CstPage_sptr &page
 ) {
 
     auto fontTexturesGenerator(FontTexturesGenerator::createInstance(width, height, page, ftContent));
@@ -53,8 +50,8 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     }
 
     std::vector<std::pair<std::string, GLfloat>> glFloatConsts{};
-    for(const auto& item: page->getVertexShaderConstants()) {
-       glFloatConsts.emplace_back(item.first, Utility::convertToOpenGLFormat(item.second));
+    for (const auto &item: page->getVertexShaderConstants()) {
+        glFloatConsts.emplace_back(item.first, Utility::convertToOpenGLFormat(item.second));
     }
 
     auto labelsShader = ShaderProgram::createInstance(
@@ -78,8 +75,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
         fontTexturesGenerator,
         renderGroupsManager,
         std::move(renderPass),
-        std::move(labelsShader),
-        std::move(map)
+        std::move(labelsShader)
     ));
 }
 

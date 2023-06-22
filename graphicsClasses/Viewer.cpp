@@ -39,8 +39,7 @@ Viewer::Viewer(
         _ftContent,
         _resolutionX,
         _resolutionY,
-        _page,
-        scene->getMap()
+        _page
     )) {
 }
 
@@ -88,8 +87,7 @@ void Viewer::resetPageRendering() {
         _ftContent,
         _resolutionX,
         _resolutionY,
-        _page,
-        _scene->getMap()
+        _page
     ));
 }
 

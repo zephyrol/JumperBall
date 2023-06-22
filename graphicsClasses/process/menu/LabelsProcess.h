@@ -21,8 +21,7 @@ public:
         const FontTexturesGenerator::FTContent &ftContent,
         GLsizei width,
         GLsizei height,
-        const CstPage_sptr &page,
-        CstMap_sptr map
+        const CstPage_sptr &page
     );
 
     explicit LabelsProcess(
@@ -32,8 +31,7 @@ public:
         const FontTexturesGenerator& fontTexturesGenerator,
         RenderGroupsManager_sptr renderGroupsManager,
         RenderPass renderPass,
-        ShaderProgram_sptr labelsShader,
-        CstMap_sptr map
+        ShaderProgram_sptr labelsShader
     );
 
     void render() const override;
@@ -48,7 +46,6 @@ private:
     RenderGroupsManager_sptr _renderGroupsManager;
     RenderPass _renderPass;
     const ShaderProgram_sptr _labelsShader;
-    CstMap_sptr _map;
 };
 
 

@@ -55,12 +55,12 @@ class FontTexturesGenerator {
         std::vector<unsigned char> lettersData{};
 
         /**
-         * Current texture width
+         * Texture width
          */
         unsigned int width = 0;
 
         /**
-         * Current texture height
+         * Texture height
          */
         unsigned int height = 0;
 
@@ -68,6 +68,11 @@ class FontTexturesGenerator {
          * Current cursor where the next letter should be written
          */
         glm::ivec2 cursor = glm::ivec2(0, 0);
+
+        /**
+         * Current max letter height in the current line in pixels
+         */
+        unsigned int currentMaxLetterHeight = 0;
 
         /**
          * Graphic alphabet
@@ -125,7 +130,6 @@ private:
      * @return GraphicCharacter texture added into currentAlphabet param
      */
     static FontTexturesGenerator::GraphicCharacter createOrGetGraphicCharacter(
-        size_t screenWidth,
         const FontTexturesGenerator::FTContent &ftContent,
         FT_UInt pixelHeight,
         LettersTexture &lettersTexture,
@@ -140,7 +144,6 @@ private:
 
     /**
      * Insert bitmap character into letters texture.
-     * @param screenWidth Width of the screen.
      * @param lettersTexture Current letters texture reference. This is directly modified (side effect).
      * @param letterBitmap Buffer containing letter.
      * @param bitmapWidth Width of the letter in pixels.
@@ -148,7 +151,6 @@ private:
      * @return vec4 containing uvMinX, uvMinY, uvMaxX, uvMaxY of the letter in the texture (in pixels).
      */
     static glm::ivec4 insertCharacterToTexture(
-        size_t screenWidth,
         FontTexturesGenerator::LettersTexture &lettersTexture,
         const unsigned char *letterBitmap,
         unsigned int bitmapWidth,

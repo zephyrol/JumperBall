@@ -59,7 +59,6 @@ void FontTexturesGenerator::freeGPUMemory() {
 
 
 FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphicCharacter(
-    size_t screenWidth,
     const FontTexturesGenerator::FTContent &ftContent,
     FT_UInt pixelHeight,
     LettersTexture &lettersTexture,
@@ -91,7 +90,6 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphi
     const auto advance = glyph->advance.x >> 6;
 
     const auto pixelsUv = insertCharacterToTexture(
-        screenWidth,
         lettersTexture,
         bitmap.buffer,
         width,
@@ -146,6 +144,12 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
 ) {
 
     FontTexturesGenerator::LettersTexture lettersTexture;
+    lettersTexture.width = screenWidth;
+
+    // It's "impossible" that the letters take all the screen, so we can create a smaller texture to save memory.
+    constexpr unsigned int lettersTextureHeightResizingDivider = 3;
+    lettersTexture.height = screenHeight / lettersTextureHeightResizingDivider;
+    lettersTexture.lettersData = std::vector<unsigned char>(lettersTexture.width * lettersTexture.height);
 
     // 1. Generate message labels
     vecTextLabel_sptr textLabels{};
@@ -166,7 +170,6 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
         std::vector<FontTexturesGenerator::GraphicCharacter> transforms;
         for (unsigned char c: message) {
             const auto graphicCharacter = createOrGetGraphicCharacter(
-                screenWidth,
                 ftContent,
                 nodePixelHeight,
                 lettersTexture,
@@ -236,7 +239,6 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
 
 
 glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
-    size_t screenWidth,
     FontTexturesGenerator::LettersTexture &lettersTexture,
     const unsigned char *letterBitmap,
     unsigned int bitmapWidth,
@@ -247,39 +249,18 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
     const auto extendedWidth = bitmapWidth + 1;
     const auto extendedHeight = bitmapHeight + 1;
 
+    lettersTexture.currentMaxLetterHeight = std::max(lettersTexture.currentMaxLetterHeight, extendedHeight);
+
     const auto drawingCursor = [&]() -> glm::ivec2 {
-        if (lettersTexture.cursor.x + extendedWidth > screenWidth) {
-            return {0.f, lettersTexture.height};
+        if (lettersTexture.cursor.x + extendedWidth > lettersTexture.width) {
+            return {0.f, lettersTexture.cursor.y + lettersTexture.currentMaxLetterHeight};
         }
         return lettersTexture.cursor;
     }();
 
-    const glm::ivec2 outputSize = {
-        std::max(lettersTexture.width, drawingCursor.x + extendedWidth),
-        std::max(lettersTexture.height, drawingCursor.y + extendedHeight)
-    };
-
     const auto getIndex = [](unsigned int line, unsigned int column, unsigned int width) {
         return line * width + column;
     };
-
-    // Resize letter textures
-    if (outputSize != glm::ivec2{lettersTexture.width, lettersTexture.height}) {
-        lettersTexture.lettersData = [&]() {
-            std::vector<unsigned char> resized(outputSize.x * outputSize.y, 0);
-            for (unsigned int i = 0; i < lettersTexture.height; ++i) {
-                for (unsigned int j = 0; j < lettersTexture.width; ++j) {
-                    const auto baseIndex = getIndex(i, j, lettersTexture.width);
-                    const auto value = lettersTexture.lettersData[baseIndex];
-                    const auto resizedDataIndex = getIndex(i, j, outputSize.x);
-                    resized[resizedDataIndex] = value;
-                }
-            }
-            return resized;
-        }();
-        lettersTexture.width = outputSize.x;
-        lettersTexture.height = outputSize.y;
-    }
 
     // Write bitmap into texture
     for (unsigned int i = 0; i < bitmapHeight; ++i) {
@@ -290,7 +271,8 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
             const auto targetIndex = getIndex(
                 drawingCursor.y + i,
                 drawingCursor.x + j,
-                outputSize.x
+                //outputSize.x
+                lettersTexture.width
             );
             lettersTexture.lettersData[targetIndex] = value;
         }
@@ -301,6 +283,10 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
         drawingCursor.x + extendedWidth,
         drawingCursor.y
     };
+    if(drawingCursor.x == 0) {
+        // Reset current max letter height
+        lettersTexture.currentMaxLetterHeight = extendedHeight;
+    }
     return {
         drawingCursor.x,
         drawingCursor.y,
