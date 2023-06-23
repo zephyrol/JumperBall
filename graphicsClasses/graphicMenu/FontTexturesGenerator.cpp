@@ -71,8 +71,8 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphi
         return iterator->second;
     }
 
-    const auto getCharCode = [character]() -> FT_ULong  {
-        if(character == ';') {
+    const auto getCharCode = [character]() -> FT_ULong {
+        if (character == ';') {
             return 233; // e with a ' (french)
         }
         return character;
@@ -144,11 +144,14 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
 ) {
 
     FontTexturesGenerator::LettersTexture lettersTexture;
-    lettersTexture.width = screenWidth;
 
-    // It's "impossible" that the letters take all the screen, so we can create a smaller texture to save memory.
-    constexpr unsigned int lettersTextureHeightResizingDivider = 3;
-    lettersTexture.height = screenHeight / lettersTextureHeightResizingDivider;
+    // Width is set to the power of 2 under the smaller side
+    lettersTexture.width = static_cast<decltype(lettersTexture.width)>(
+        roundf(powf(2.f, floorf(logf(static_cast<float>(std::min(screenWidth,screenHeight))) / logf(2.f))))
+    );
+
+    // Height is set to the unsigned power of 2.
+    lettersTexture.height = 1;
     lettersTexture.lettersData = std::vector<unsigned char>(lettersTexture.width * lettersTexture.height);
 
     // 1. Generate message labels
@@ -183,7 +186,7 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
             static_cast<float>(nodePixelWidth) / static_cast<float>(nodePixelHeight)
         );
 
-        auto textLabel =  std::make_shared<TextLabel>(
+        auto textLabel = std::make_shared<TextLabel>(
             std::move(textNode),
             centeredNode,
             lettersUvs,
@@ -258,23 +261,23 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
         return lettersTexture.cursor;
     }();
 
-    const auto getIndex = [](unsigned int line, unsigned int column, unsigned int width) {
-        return line * width + column;
-    };
+    const auto requiredHeight = drawingCursor.y + extendedHeight;
+    if(requiredHeight > lettersTexture.height) {
+        // Resize height to the upper power of two
+        lettersTexture.height = static_cast<decltype(lettersTexture.height)>(
+            roundf(powf(2.f, ceilf(logf(static_cast<float>(requiredHeight)) / logf(2.f))))
+        );
+        lettersTexture.lettersData.resize(lettersTexture.width * lettersTexture.height);
+    }
 
     // Write bitmap into texture
     for (unsigned int i = 0; i < bitmapHeight; ++i) {
+        // First bytes of opengl textures represents the bottom of the texture
+        const auto baseBitmapIndex =  (bitmapHeight - i - 1) * bitmapWidth;
+        const auto baseTargetIndex=  (drawingCursor.y + i) * lettersTexture.width;
         for (unsigned int j = 0; j < bitmapWidth; ++j) {
-            // First bytes of opengl textures represents the bottom of the texture
-            const auto baseIndex = getIndex(bitmapHeight - i - 1, j, bitmapWidth);
-            const auto value = letterBitmap[baseIndex];
-            const auto targetIndex = getIndex(
-                drawingCursor.y + i,
-                drawingCursor.x + j,
-                //outputSize.x
-                lettersTexture.width
-            );
-            lettersTexture.lettersData[targetIndex] = value;
+            const auto value = letterBitmap[baseBitmapIndex + j];
+            lettersTexture.lettersData[baseTargetIndex + (drawingCursor.x + j)] = value;
         }
     }
 
@@ -283,7 +286,7 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
         drawingCursor.x + extendedWidth,
         drawingCursor.y
     };
-    if(drawingCursor.x == 0) {
+    if (drawingCursor.x == 0) {
         // Reset current max letter height
         lettersTexture.currentMaxLetterHeight = extendedHeight;
     }
