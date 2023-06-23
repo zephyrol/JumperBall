@@ -147,7 +147,7 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
 
     // Width is set to the power of 2 under the smaller side
     lettersTexture.width = static_cast<decltype(lettersTexture.width)>(
-        roundf(powf(2.f, floorf(logf(static_cast<float>(std::min(screenWidth,screenHeight))) / logf(2.f))))
+        roundf(powf(2.f, floorf(logf(static_cast<float>(std::min(screenWidth, screenHeight))) / logf(2.f))))
     );
 
     // Height is set to the unsigned power of 2.
@@ -262,7 +262,7 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
     }();
 
     const auto requiredHeight = drawingCursor.y + extendedHeight;
-    if(requiredHeight > lettersTexture.height) {
+    if (requiredHeight > lettersTexture.height) {
         // Resize height to the upper power of two
         lettersTexture.height = static_cast<decltype(lettersTexture.height)>(
             roundf(powf(2.f, ceilf(logf(static_cast<float>(requiredHeight)) / logf(2.f))))
@@ -273,11 +273,13 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
     // Write bitmap into texture
     for (unsigned int i = 0; i < bitmapHeight; ++i) {
         // First bytes of opengl textures represents the bottom of the texture
-        const auto baseBitmapIndex =  (bitmapHeight - i - 1) * bitmapWidth;
-        const auto baseTargetIndex=  (drawingCursor.y + i) * lettersTexture.width;
-        for (unsigned int j = 0; j < bitmapWidth; ++j) {
-            const auto value = letterBitmap[baseBitmapIndex + j];
-            lettersTexture.lettersData[baseTargetIndex + (drawingCursor.x + j)] = value;
+        const auto baseBitmapIndex = (bitmapHeight - i - 1) * bitmapWidth;
+        const auto baseBitmapEnd = baseBitmapIndex + bitmapWidth;
+        auto baseTargetIndex = (drawingCursor.y + i) * lettersTexture.width + drawingCursor.x;
+        for (auto j = baseBitmapIndex; j < baseBitmapEnd; ++j) {
+            const auto value = letterBitmap[j];
+            lettersTexture.lettersData[baseTargetIndex] = value;
+            ++baseTargetIndex;
         }
     }
 
