@@ -76,7 +76,12 @@ void ColorableFrameBuffer::freeGPUMemory() {
 void ColorableFrameBuffer::clear() {
     if(_clearColor != nullptr) {
         glClearColor(_clearColor->r, _clearColor->g, _clearColor->z, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        if(_depthBuffer != nullptr) {
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        } else {
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
+        return;
     }
     if (_depthBuffer != nullptr) {
         glClear(GL_DEPTH_BUFFER_BIT);
