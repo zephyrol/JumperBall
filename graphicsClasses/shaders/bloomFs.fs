@@ -49,22 +49,22 @@ vec3 toneMappingOperator (vec3 xyYColor) {
 
     const float averageLuminance = 1.8;
 
-    float luminanceAfterToonMapping = exposureLevelKey * xyYColor.z
+    float luminanceAfterToneMapping = exposureLevelKey * xyYColor.z
                                       / averageLuminance;
-    /*float compressedLuminance = luminanceAfterToonMapping
-     * ( 1.f + (luminanceAfterToonMapping / (whiteLuminance*whiteLuminance)))
-       / ( 1.f + luminanceAfterToonMapping );
+    /*float compressedLuminance = luminanceAfterToneMapping
+     * ( 1.f + (luminanceAfterToneMapping / (whiteLuminance*whiteLuminance)))
+       / ( 1.f + luminanceAfterToneMapping );
        xyYColor.z = compressedLuminance ;*/
 
-    xyYColor.z = luminanceAfterToonMapping;
+    xyYColor.z = luminanceAfterToneMapping;
 
     return convertCIExyYToRGB(xyYColor);
 }
 
 void main() {
-    vec4 baseRGBColor = texture(frameSceneHDRTexture, fs_vertexUVs);
-    vec3 basexyYColor = convertRBGToCIExyY(baseRGBColor.xyz);
+    vec3 baseRGBColor = texture(frameSceneHDRTexture, fs_vertexUVs).xyz;
+    vec3 basexyYColor = convertRBGToCIExyY(baseRGBColor);
     vec3 toneMappedRGBColor = toneMappingOperator(basexyYColor);
-    pixelColor = vec4(toneMappedRGBColor, baseRGBColor.a) + texture(frameBluredTexture, fs_vertexUVs);
-    pixelColor = mix(pixelColor, vec4(flashColor, 1.0), teleportationCoeff);
+    vec3 pixelColorVec3 = toneMappedRGBColor + texture(frameBluredTexture, fs_vertexUVs).xyz;
+    pixelColor = vec4(mix(pixelColorVec3, flashColor, teleportationCoeff), 1.0);
 }

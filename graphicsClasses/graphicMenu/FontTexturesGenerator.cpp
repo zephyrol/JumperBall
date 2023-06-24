@@ -210,21 +210,14 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
 
     lettersTexture.textureID = FrameBuffer::createTexture();
     glBindTexture(GL_TEXTURE_2D, lettersTexture.textureID);
-    glTexStorage2D(
-        GL_TEXTURE_2D,
-        1,
-        GL_R8,
-        static_cast<GLsizei>(lettersTexture.width),
-        static_cast<GLsizei>(lettersTexture.height)
-    );
-    glTexSubImage2D(
+    glTexImage2D(
         GL_TEXTURE_2D,
         0,
-        0,
-        0,
+        GL_ALPHA,
         static_cast<GLsizei>(lettersTexture.width),
         static_cast<GLsizei>(lettersTexture.height),
-        GL_RED,
+        0,
+        GL_ALPHA,
         GL_UNSIGNED_BYTE,
         lettersTexture.lettersData.data()
     );

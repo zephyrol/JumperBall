@@ -160,7 +160,7 @@ void main() {
 
     float alpha = fs_isLetter < 0.0
         ? 1.0
-        : texture(characterTexture, fs_vertexUVs).x;
+        : texture(characterTexture, fs_vertexUVs).a;
 
     #ifdef(TRANSPARENT_BACKGROUND)
         if(fs_needsTransparentBackground > 0.0) {
