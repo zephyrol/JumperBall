@@ -213,11 +213,11 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
     glTexImage2D(
         GL_TEXTURE_2D,
         0,
-        GL_ALPHA,
+        GL_R8,
         static_cast<GLsizei>(lettersTexture.width),
         static_cast<GLsizei>(lettersTexture.height),
         0,
-        GL_ALPHA,
+        GL_RED,
         GL_UNSIGNED_BYTE,
         lettersTexture.lettersData.data()
     );
