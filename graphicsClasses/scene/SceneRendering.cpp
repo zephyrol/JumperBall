@@ -65,8 +65,6 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         shadowProcesses.emplace_back(
             ShadowProcess::createInstance(
                 fileContent,
-                width,
-                height,
                 blocks,
                 items,
                 enemies,

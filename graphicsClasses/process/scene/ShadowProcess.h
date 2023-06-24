@@ -16,8 +16,6 @@ public:
 
     static ShadowProcess_sptr createInstance(
         const JBTypes::FileContent &fileContent,
-        GLsizei width,
-        GLsizei height,
         CstRenderGroupsManager_sptr blocks,
         CstRenderGroupsManager_sptr items,
         CstRenderGroupsManager_sptr enemies,

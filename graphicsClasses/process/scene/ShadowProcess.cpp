@@ -21,8 +21,6 @@ ShadowProcess::ShadowProcess(
 
 ShadowProcess_sptr ShadowProcess::createInstance(
     const JBTypes::FileContent &fileContent,
-    GLsizei width,
-    GLsizei height,
     CstRenderGroupsManager_sptr blocks,
     CstRenderGroupsManager_sptr items,
     CstRenderGroupsManager_sptr enemies,
@@ -61,22 +59,15 @@ ShadowProcess_sptr ShadowProcess::createInstance(
         );
     }
 
-    const auto nearestPowerOfTwo = std::min(
-        2048,
-        static_cast<GLsizei>(roundf(powf(
-            2.f,
-            floorf(logf(static_cast<float>(std::max(width, height))) / logf(2.f))
-        )))
-    );
-
+    constexpr GLsizei shadowTextureSize = 1024;
     return std::make_shared<ShadowProcess>(
         DepthFrameBuffer::createInstance(
-            nearestPowerOfTwo,
-            nearestPowerOfTwo
+            shadowTextureSize,
+            shadowTextureSize
         ),
         std::move(shadersRenderPasses),
         isFirst,
-        nearestPowerOfTwo
+        shadowTextureSize
     );
 }
 
