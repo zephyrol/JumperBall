@@ -37,7 +37,7 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
 ) {
 
     // Alpha
-    glEnable(GL_BLEND);
+    FrameBuffer::enableBlending();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // Culling
     glEnable(GL_CULL_FACE);

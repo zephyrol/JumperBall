@@ -47,6 +47,10 @@ public:
 
     static void disableDepthTest();
 
+    static void enableBlending();
+
+    static void disableBlending();
+
     static GLuint createTexture();
 
 protected:

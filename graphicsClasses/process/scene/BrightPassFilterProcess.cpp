@@ -28,6 +28,7 @@ BrightPassFilterProcess::BrightPassFilterProcess(
 
 void BrightPassFilterProcess::render() const {
     FrameBuffer::disableDepthTest();
+    FrameBuffer::disableBlending();
     _frameBuffer->bindFrameBuffer();
     FrameBuffer::setViewportSize(_width, _height);
 

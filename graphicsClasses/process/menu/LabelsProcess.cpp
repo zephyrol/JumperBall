@@ -80,6 +80,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
 }
 
 void LabelsProcess::render() const {
+    FrameBuffer::enableBlending();
     _labelsShader->use();
     TextureSampler::setActiveTexture(0);
     TextureSampler::bind(_fontTexturesGenerator.getLettersTexture());

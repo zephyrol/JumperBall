@@ -53,3 +53,10 @@ void FrameBuffer::disableDepthTest() {
     glDisable(GL_DEPTH_TEST);
 }
 
+void FrameBuffer::enableBlending() {
+    glEnable(GL_BLEND);
+}
+
+void FrameBuffer::disableBlending() {
+    glDisable(GL_BLEND);
+}

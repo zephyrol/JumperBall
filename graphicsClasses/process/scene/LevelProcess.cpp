@@ -84,6 +84,7 @@ LevelProcess_sptr LevelProcess::createInstance(
 void LevelProcess::render() const {
 
     glCullFace(GL_BACK);
+    FrameBuffer::enableBlending();
     FrameBuffer::setViewportSize(_width, _height);
     _frameBuffer->bindFrameBuffer();
     _frameBuffer->clear();
