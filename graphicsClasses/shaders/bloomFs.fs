@@ -26,25 +26,12 @@ vec3 convertCIExyYToRGB (vec3 CIExyYColor) {
     return XYZToRGB * CIEXYZ;
 }
 
-float getLuminance (vec3 xyYColor) {
-    return xyYColor.z;
-}
-
 vec3 toneMappingOperator (vec3 xyYColor) {
 
     const float exposureLevelKey = 2.0;
-    // const float luminanceWhite   = 6.39891f;
-    // const float luminanceWhite   = 1.5f;
-
     const float averageLuminance = 1.8;
 
-    float luminanceAfterToneMapping = exposureLevelKey * xyYColor.z
-                                      / averageLuminance;
-    /*float compressedLuminance = luminanceAfterToneMapping
-     * ( 1.f + (luminanceAfterToneMapping / (whiteLuminance*whiteLuminance)))
-       / ( 1.f + luminanceAfterToneMapping );
-       xyYColor.z = compressedLuminance ;*/
-
+    float luminanceAfterToneMapping = exposureLevelKey * xyYColor.z / averageLuminance;
     xyYColor.z = luminanceAfterToneMapping;
 
     return convertCIExyYToRGB(xyYColor);

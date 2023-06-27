@@ -55,7 +55,7 @@ ShaderProgram_sptr BrightPassFilterProcess::createBrightPassFilterProcessShaderP
         "brightPassFilter.fs"
     );
     shader->use();
-    shader->setTextureIndex("textureScene", 0);
+    shader->setTextureIndex("sceneTexture", 0);
     return shader;
 }
 
