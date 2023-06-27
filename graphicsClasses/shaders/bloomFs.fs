@@ -36,11 +36,6 @@ vec3 convertRBGToCIExyY (vec3 rbgColor) {
     return vec3(CIEXYZ.x / sumXYZ, CIEXYZ.y / sumXYZ, CIEXYZ.y);
 }
 
-
-float getLuminance (vec3 xyYColor) {
-    return xyYColor.z;
-}
-
 vec3 toneMappingOperator (vec3 xyYColor) {
 
     const float exposureLevelKey = 2.0;
