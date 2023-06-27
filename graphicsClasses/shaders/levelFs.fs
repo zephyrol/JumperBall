@@ -30,19 +30,19 @@ const vec3 diffuseLight2Intensity = vec3(0.25, 0.20, 0.25);
 const vec3 specularLight2Intensity = vec3(0.25, 0.0, 0.25);
 
 vec3 getLightContribution(
-vec3 normalVec,
-vec3 toCamera,
-vec3 lightDir,
-vec3 diffuseLightInt,
-vec3 specularLightInt
+    vec3 normalVec,
+    vec3 toCamera,
+    vec3 lightDir,
+    vec3 diffuseLightInt,
+    vec3 specularLightInt
 ) {
     float dotToLightVertexNormal = dot(-lightDir, normalVec);
     vec3 reflection = normalize(lightDir + 2.0 * dotToLightVertexNormal * normalVec);
     float croppedDot = max(0.0, dotToLightVertexNormal);
     vec3 diffuseComponent = diffuseLightInt * croppedDot;
     vec3 specularComponent = specularLightInt * pow(
-    max(0.0, dot(reflection, toCamera)),
-    20.0
+        max(0.0, dot(reflection, toCamera)),
+        20.0
     );
     return diffuseComponent + specularComponent;
 }
@@ -74,9 +74,11 @@ float evaluateShadow(vec3 lightDir, vec4 vertexDepthMapSpace, sampler2D depthT) 
     return shadowCoeff;
 }
 
-const mat3 RGBToXYZ = mat3(2.7689, 1.7517, 1.1302,
-                           1.0000, 4.5907, 0.060100,
-                           0.0000, 0.056508, 5.5943);
+const mat3 RGBToXYZ = mat3(
+    2.7689, 1.7517, 1.1302,
+    1.0000, 4.5907, 0.060100,
+    0.0000, 0.056508, 5.5943
+);
 
 vec3 convertRGBToCIExyY (vec3 rbgColor) {
     vec3 CIEXYZ = RGBToXYZ * rbgColor;
