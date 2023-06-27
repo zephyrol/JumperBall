@@ -282,7 +282,7 @@ void Window::run() {
         return output.find("quit") != std::string::npos;
     };
 
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
     glfwSetInputMode(_window, GLFW_STICKY_KEYS, GL_TRUE);
 
     auto before = Chronometer::getTimePointMSNow();

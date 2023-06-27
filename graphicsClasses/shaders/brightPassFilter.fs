@@ -18,12 +18,12 @@ vec3 convertRGBToCIExyY (vec3 rbgColor) {
     return vec3(CIEXYZ.x / sumXYZ, CIEXYZ.y / sumXYZ, CIEXYZ.y);
 }
 
-vec3 convertCIExyYToRGB (vec3 CIExyYColor) {
-    float scalar = CIExyYColor.z / CIExyYColor.y;
-    vec3 CIEXYZ = vec3(scalar * CIExyYColor.x, CIExyYColor.z,
-                       scalar * (1.0 - CIExyYColor.x - CIExyYColor.y));
-    return XYZToRGB * CIEXYZ;
-}
+// vec3 convertCIExyYToRGB (vec3 CIExyYColor) {
+//     float scalar = CIExyYColor.z / CIExyYColor.y;
+//     vec3 CIEXYZ = vec3(scalar * CIExyYColor.x, CIExyYColor.z,
+//                        scalar * (1.0 - CIExyYColor.x - CIExyYColor.y));
+//     return XYZToRGB * CIEXYZ;
+// }
 
 float getLuminance (vec3 xyYColor) {
     return xyYColor.z;
@@ -34,7 +34,7 @@ void main() {
     vec3 colorRGB = texture(textureScene, fs_vertexUVs).xyz;
     vec3 colorxyY = convertRGBToCIExyY(colorRGB);
     if (getLuminance(colorxyY) > threshold) {
-        pixelColor = vec4(convertCIExyYToRGB(colorxyY), 1.0);
+        pixelColor = vec4(colorRGB, 1.0);
     } else {
         pixelColor = vec4(0.0, 0.0, 0.0, 1.0);
     }
