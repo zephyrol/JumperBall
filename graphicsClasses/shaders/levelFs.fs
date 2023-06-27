@@ -30,11 +30,11 @@ const vec3 diffuseLight2Intensity = vec3(0.25, 0.20, 0.25);
 const vec3 specularLight2Intensity = vec3(0.25, 0.0, 0.25);
 
 vec3 getLightContribution(
-    vec3 normalVec,
-    vec3 toCamera,
-    vec3 lightDir,
-    vec3 diffuseLightInt,
-    vec3 specularLightInt
+vec3 normalVec,
+vec3 toCamera,
+vec3 lightDir,
+vec3 diffuseLightInt,
+vec3 specularLightInt
 ) {
     float dotToLightVertexNormal = dot(-lightDir, normalVec);
     vec3 reflection = normalize(lightDir + 2.0 * dotToLightVertexNormal * normalVec);
@@ -54,7 +54,7 @@ const vec2 shadowOffset3 = -shadowOffset1;
 const vec2 shadowOffset4 = -shadowOffset2;
 
 float evaluateShadow(vec3 lightDir, vec4 vertexDepthMapSpace, sampler2D depthT) {
-    if(dot(lightDir, fs_vertexNormal) > 0.0) {
+    if (dot(lightDir, fs_vertexNormal) > 0.0) {
         return 0.0;
     }
     float shadowCoeff = 0.0;
@@ -72,6 +72,16 @@ float evaluateShadow(vec3 lightDir, vec4 vertexDepthMapSpace, sampler2D depthT) 
         shadowCoeff += 0.25;
     }
     return shadowCoeff;
+}
+
+const mat3 RGBToXYZ = mat3(2.7689, 1.7517, 1.1302,
+                           1.0000, 4.5907, 0.060100,
+                           0.0000, 0.056508, 5.5943);
+
+vec3 convertRGBToCIExyY (vec3 rbgColor) {
+    vec3 CIEXYZ = RGBToXYZ * rbgColor;
+    float sumXYZ = CIEXYZ.x + CIEXYZ.y + CIEXYZ.z;
+    return vec3(CIEXYZ.x / sumXYZ, CIEXYZ.y / sumXYZ, CIEXYZ.y);
 }
 
 void main(){
@@ -93,24 +103,24 @@ void main(){
         vec3 normalizedNormal = normalize(fs_vertexNormal);
         if (firstShadowCoeff != 0.0) {
             composition += firstShadowCoeff * getLightContribution(
-                normalizedNormal,
-                toCamera,
-                lightDirection,
-                diffuseLightIntensity,
-                specularLightIntensity
+            normalizedNormal,
+            toCamera,
+            lightDirection,
+            diffuseLightIntensity,
+            specularLightIntensity
             );
         }
 
         if (secondShadowCoeff != 0.0) {
             composition += secondShadowCoeff * getLightContribution(
-                normalizedNormal,
-                toCamera,
-                light2Direction,
-                diffuseLight2Intensity,
-                specularLight2Intensity
+            normalizedNormal,
+            toCamera,
+            light2Direction,
+            diffuseLight2Intensity,
+            specularLight2Intensity
             );
         }
 
     }
-    pixelColor = vec4(composition, 1.0);
+    pixelColor = vec4(convertRGBToCIExyY(composition), 1.0);
 }
