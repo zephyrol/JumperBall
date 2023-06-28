@@ -40,6 +40,14 @@ const float gaussWeights[25] = float[] (
     0.0323794, 0.0215693, 0.0134977, 0.00793491, 0.00438208, 0.00227339, 0.00110796
 );
 
+vec3 convertInput(vec4 scenePixel) {
+    if(scenePixel.a == 0.0) {
+        return scenePixel.xyz;
+    }
+    float length = exp2(scenePixel.a * 3.0);
+    return scenePixel.xyz * length;
+}
+
 
 void main() {
 
@@ -49,7 +57,8 @@ void main() {
     for (int i = 0; i < patchSize; ++i) {
         float coefficient = gaussWeights[i];
         vec2 neighboringPixelUV = fs_vertexUVs + vec2(0.0, offsets[i]);
-        blurColor += coefficient * texture(horizontalBlurTexture, neighboringPixelUV).xyz;
+        vec3 rgbColor = convertInput(texture(horizontalBlurTexture, neighboringPixelUV));
+        blurColor += coefficient * rgbColor;
     }
-    pixelColor = vec4(blurColor, 1.0);
+    pixelColor = vec4(blurColor, 0.0);
 }

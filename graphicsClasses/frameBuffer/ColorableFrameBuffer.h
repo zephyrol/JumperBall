@@ -16,7 +16,7 @@ public:
     static ColorableFrameBuffer_uptr createInstance(
         GLsizei resolutionX,
         GLsizei resolutionY,
-        bool isHDR,
+        bool useNearestFilter,
         bool hasDepthBuffer,
         std::unique_ptr<glm::vec3> clearColor = nullptr
     );

@@ -52,7 +52,7 @@ mat4 starRotation() {
         2.0 * (xy - wz), 1.0 - 2.0 * (x2 + z2), 2.0 * (yz + wx), 0.0,
         2.0 * (xz + wy), 2.0 * (yz - wx), 1.0 - 2.0 * (x2 + y2), 0.0,
         0.0, 0.0, 0.0, 1.0
-        );
+    );
 }
 
 
@@ -63,7 +63,7 @@ void main() {
     fs_vertexPosition = vs_vertexPosition.xy;
     fs_color = vs_color;
     vec4 projectedPosition = VP * starTranslation() * starRotation() * vec4(
-        vs_centerToStar + starRadius * vs_vertexPosition, 1.0
+        vs_centerToStar + starRadius * (vs_vertexPosition * 0.5), 1.0 // * 0.5 to apply a scale and save fs.
     );
 
     // Z is cropped to 0 to display the star in all cases

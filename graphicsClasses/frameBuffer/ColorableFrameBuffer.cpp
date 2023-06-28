@@ -7,7 +7,7 @@
 ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
     GLsizei resolutionX,
     GLsizei resolutionY,
-    bool isHDR,
+    bool useNearestFilter,
     bool hasDepthBuffer,
     std::unique_ptr<glm::vec3> clearColor
 ) {
@@ -21,13 +21,14 @@ ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
     glTexStorage2D(
         GL_TEXTURE_2D,
         1,
-        isHDR ? GL_RGBA16F : GL_RGBA8,
+        GL_RGBA8,
         resolutionX,
         resolutionY
     );
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    const auto filter = useNearestFilter ? GL_NEAREST : GL_LINEAR;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 

@@ -74,6 +74,7 @@ ShadowProcess_sptr ShadowProcess::createInstance(
 void ShadowProcess::render() const {
 
     if (_isFirst) {
+        FrameBuffer::disableBlending();
         glCullFace(GL_FRONT);
         FrameBuffer::enableDepthTest();
         FrameBuffer::setViewportSize(_depthTextureSize, _depthTextureSize);

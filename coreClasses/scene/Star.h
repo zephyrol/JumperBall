@@ -21,13 +21,7 @@ public:
         float radiansPerSecond
     );
 
-    float radiusInside() const;
-
-    float radiusOutside() const;
-
     float distance() const;
-
-    float radius() const;
 
     const JBTypes::vec3f &rotationCenter() const;
 

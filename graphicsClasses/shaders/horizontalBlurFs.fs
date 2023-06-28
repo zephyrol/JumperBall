@@ -40,6 +40,25 @@ const float gaussWeights[25] = float[] (
     0.0323794, 0.0215693, 0.0134977, 0.00793491, 0.00438208, 0.00227339, 0.00110796
 );
 
+vec4 convertOutput(vec3 composition) {
+    float compositionLength = length(composition);
+    if(compositionLength < 1.0) {
+        return vec4(composition, 0.0);
+    }
+    return vec4(
+        normalize(composition),
+        log2(compositionLength) / 3.f // 3 because 2^3 = 8, its the max length
+    );
+}
+
+vec3 convertInput(vec4 scenePixel) {
+    if(scenePixel.a == 0.0) {
+        return scenePixel.xyz;
+    }
+    float length = exp2(scenePixel.a * 3.0);
+    return scenePixel.xyz * length;
+}
+
 void main() {
 
     const int levelOfDetail = 0;
@@ -48,7 +67,8 @@ void main() {
     for (int i = 0; i < patchSize; ++i) {
         float coefficient = gaussWeights[i];
         vec2 neighboringPixelUV = fs_vertexUVs + vec2(offsets[i], 0.0);
-        blurColor += coefficient * texture(brightPassTexture, neighboringPixelUV).xyz;
+        vec3 inputRGB = convertInput(texture(brightPassTexture, neighboringPixelUV));
+        blurColor += coefficient * inputRGB;
     }
-    pixelColor = vec4(blurColor, 1.0);
+    pixelColor = convertOutput(blurColor);
 }

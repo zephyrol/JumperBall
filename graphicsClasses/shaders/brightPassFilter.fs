@@ -16,15 +16,24 @@ vec3 convertRGBToCIExyY (vec3 rbgColor) {
     return vec3(CIEXYZ.x / sumXYZ, CIEXYZ.y / sumXYZ, CIEXYZ.y);
 }
 
+vec3 convertInput(vec4 scenePixel) {
+    if(scenePixel.a == 0.0) {
+        return scenePixel.xyz;
+    }
+    float length = exp2(scenePixel.a * 3.0);
+    return scenePixel.xyz * length;
+}
+
 void main() {
     const float threshold = 4.0;
-    vec3 colorRGB = texture(textureScene, fs_vertexUVs).xyz;
+    vec4 scenePixel = texture(textureScene, fs_vertexUVs);
+    vec3 colorRGB = convertInput(scenePixel);
     vec3 colorxyY = convertRGBToCIExyY(colorRGB);
-    // Check luminance
+    // Check if luminance is greater than the threshold.
     if (colorxyY.z > threshold) {
-        pixelColor = vec4(colorRGB, 1.0);
+        pixelColor = scenePixel;
     } else {
-        pixelColor = vec4(0.0, 0.0, 0.0, 1.0);
+        pixelColor = vec4(0.0, 0.0, 0.0, 0.0);
     }
 
 }

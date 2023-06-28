@@ -15,16 +15,16 @@ in vec3 fs_color;
 
 void main() {
     const vec4 colorInside = vec4(1.0, 1.0, 1.0, 1.0);
-    const float radiusInside = 0.3f;
-    const float radiusOutside = 0.5f;
+    const vec3 backgroundColor = vec3(0.0, 0.0, 0.1);
+    const float radiusInside = 0.6f;
+    const float radiusOutside = 1.f;
 
     vec4 colorOutside = vec4(fs_color, 0.0);
-    // Star center at the position 0.f,0.f
-    float dx = fs_vertexPosition.x;
-    float dy = fs_vertexPosition.y;
-
-    float dist = sqrt(dx * dx + dy * dy);
+    float dist = length(fs_vertexPosition);
     float coefficient = smoothstep(radiusInside, radiusOutside, dist);
 
-    pixelColor = mix(colorInside, colorOutside, coefficient);
+    vec4 starRGBA = mix(colorInside, colorOutside, coefficient);
+    float starAlpha = starRGBA.a;
+
+    pixelColor = vec4(starRGBA.rgb * starAlpha + backgroundColor * (1.0 - starAlpha), 0.0);
 }

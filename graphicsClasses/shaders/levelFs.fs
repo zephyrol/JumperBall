@@ -74,6 +74,17 @@ float evaluateShadow(vec3 lightDir, vec4 vertexDepthMapSpace, sampler2D depthT) 
     return shadowCoeff;
 }
 
+vec4 convertOutput(vec3 composition) {
+    float compositionLength = length(composition);
+    if(compositionLength < 1.0) {
+        return vec4(composition, 0.0);
+    }
+    return vec4(
+        normalize(composition),
+        log2(compositionLength) / 3.f // 3 because 2^3 = 8, its the max length
+    );
+}
+
 void main(){
 
     bool inFirstShadow;
@@ -81,7 +92,7 @@ void main(){
     float firstShadowCoeff = evaluateShadow(lightDirection, fs_vertexDepthMapSpace, depthTexture);
     float secondShadowCoeff = evaluateShadow(light2Direction, fs_vertexDepthMap2Space, depth2Texture);
 
-    const vec3 fireEffet = vec3(10.0, 0.2, 0.0);
+    const vec3 fireEffet = vec3(8.0, 0.2, 0.0);
 
     vec3 composition = ambientLightIntensity * (
     (1.0 - burningCoeff) * fs_vertexColor + burningCoeff * fireEffet
@@ -112,5 +123,5 @@ void main(){
         }
 
     }
-    pixelColor = vec4(composition, 1.0);
+    pixelColor = convertOutput(composition);
 }
