@@ -36,9 +36,8 @@ vec3 getLightContribution(
     vec3 diffuseLightIntensity,
     vec3 specularLightIntensity
 ) {
-    float dotToLightVertexNormal = dot(-lightDir, normalVec);
-    vec3 reflection = normalize(lightDir + 2.0 * dotToLightVertexNormal * normalVec);
-    vec3 diffuseComponent = diffuseLightIntensity * dotToLightVertexNormal;
+    vec3 reflection = normalize(reflect(lightDir, normalVec));
+    vec3 diffuseComponent = diffuseLightIntensity * dot(-lightDir, normalVec);
     vec3 specularComponent = specularLightIntensity * pow(
         dot(reflection, toCamera),
         20.0
@@ -80,7 +79,6 @@ vec4 convertOutput(vec3 composition) {
         log2(compositionLength) / 3.0 // 3 because 2^3 = 8, its the max length
     );
 }
-
 
 void main(){
 
