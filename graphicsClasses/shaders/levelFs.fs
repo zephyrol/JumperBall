@@ -38,8 +38,12 @@ vec3 getLightContribution(
 ) {
     vec3 reflection = normalize(reflect(lightDir, normalVec));
     vec3 diffuseComponent = diffuseLightIntensity * dot(-lightDir, normalVec);
+    float dotReflectionToCamera = dot(reflection, toCamera);
+    if(dotReflectionToCamera < 0.0) {
+        return diffuseComponent;
+    }
     vec3 specularComponent = specularLightIntensity * pow(
-        dot(reflection, toCamera),
+        dotReflectionToCamera,
         20.0
     );
     return diffuseComponent + specularComponent;
