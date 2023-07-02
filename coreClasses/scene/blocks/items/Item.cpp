@@ -97,7 +97,3 @@ std::string Item::getDynamicGroupHash() const {
         std::to_string(_position.at(2)) + ";" +
         std::to_string(static_cast<int>(_direction));
 }
-
-bool Item::dynamicsMayChange() const {
-    return true;
-}

@@ -27,8 +27,6 @@ public:
 
     std::string getDynamicGroupHash() const override;
 
-    bool dynamicsMayChange() const override;
-
     ~ThornBall() override = default;
 
     static constexpr float thornBallRadius = 0.1f;

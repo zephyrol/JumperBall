@@ -302,8 +302,6 @@ private:
     void isFallingIntersectionBlock() noexcept;
 
     void interaction();
-
-    bool dynamicsMayChange() const override;
 };
 
 #endif /* BALL_H */

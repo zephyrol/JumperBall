@@ -9,20 +9,20 @@ uniform Scene {
     float teleportationCoeff;
 };
 
-uniform float creationTime;
-
-uniform float isRedActivated;
-uniform float isGreenActivated;
-uniform float isBlueActivated;
-uniform float isYellowActivated;
+uniform float creationTime[idCount];
+uniform float isRedActivated[idCount];
+uniform float isGreenActivated[idCount];
+uniform float isBlueActivated[idCount];
+uniform float isYellowActivated[idCount];
 
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec3 vs_vertexNormal;
 layout(location = 3) in vec3 vs_specialPosition;
-layout(location = 4) in int vs_specialDirection;
-layout(location = 5) in int vs_specialColor;
-layout(location = 6) in int vs_isAnimated;
+layout(location = 4) in int vs_id;
+layout(location = 5) in int vs_specialDirection;
+layout(location = 6) in int vs_specialColor;
+layout(location = 7) in int vs_isAnimated;
 
 #ifdef(LEVEL_PASS)
     out vec3 fs_vertexColor;
@@ -133,16 +133,16 @@ mat4 rotationUpToDir () {
 
 bool isColorActivated() {
     if (vs_specialColor == 1) {
-        return isRedActivated == 1.0;
+        return isRedActivated[vs_id] == 1.0;
     }
     if (vs_specialColor == 2) {
-        return isGreenActivated == 1.0;
+        return isGreenActivated[vs_id] == 1.0;
     }
     if (vs_specialColor == 3) {
-        return isBlueActivated == 1.0;
+        return isBlueActivated[vs_id] == 1.0;
     }
     if (vs_specialColor == 4) {
-        return isYellowActivated == 1.0;
+        return isYellowActivated[vs_id] == 1.0;
     }
     return false;
 }
@@ -157,7 +157,7 @@ mat4 specialScale (bool isActivated) {
 
 mat4 specialRotation (bool isActivated) {
     const float speedCoefficient = 5.0;
-    float angle = creationTime * speedCoefficient;
+    float angle = creationTime[vs_id] * speedCoefficient;
 
     if (vs_isAnimated == 1 && isActivated) {
         return rotationY(angle);

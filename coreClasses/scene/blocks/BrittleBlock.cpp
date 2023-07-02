@@ -116,10 +116,6 @@ void BrittleBlock::update() {
     }
 }
 
-bool BrittleBlock::dynamicsMayChange() const {
-    return true;
-}
-
 std::string BrittleBlock::getDynamicGroupHash() const {
     return "brittle;" + std::to_string(position().at(0)) + "," +
            std::to_string(position().at(1)) + "," + std::to_string(position().at(2));

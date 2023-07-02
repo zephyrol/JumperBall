@@ -30,38 +30,56 @@ LevelProcess_sptr LevelProcess::createInstance(
     GLuint shadowTexture,
     GLuint shadow2Texture,
     GLsizei shadowsResolution,
-    CstRenderGroupsManager_sptr blocks,
-    CstRenderGroupsManager_sptr items,
-    CstRenderGroupsManager_sptr enemies,
-    CstRenderGroupsManager_sptr specials,
-    CstRenderGroupsManager_sptr ball,
-    CstRenderGroupsManager_sptr star
+    CstRenderGroup_sptr blocks,
+    CstRenderGroup_sptr items,
+    CstRenderGroup_sptr enemies,
+    CstRenderGroup_sptr specials,
+    CstRenderGroup_sptr ball,
+    CstRenderGroup_sptr star
 ) {
 
     std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > shadersRenderPasses{};
 
-    const auto starShaderProgram = ShaderProgram::createInstance(fileContent, "starVs.vs", "starFs.fs");
+    const auto starShaderProgram = ShaderProgram::createInstance(
+        fileContent,
+        "starVs.vs",
+        "starFs.fs",
+        {},
+        {{"idCount", star->numberOfDynamicsIds()}}
+    );
     shadersRenderPasses.emplace_back(
         starShaderProgram,
         std::make_shared<RenderPass>(starShaderProgram, std::move(star))
     );
 
-    std::vector<std::pair<std::string, CstRenderGroupsManager_sptr> > vertexShaderFilesGroupsManagers{
-        {"blocksVs.vs",   std::move(blocks)},
-        {"itemsMapVs.vs", std::move(items)},
-        {"enemiesVs.vs",  std::move(enemies)},
-        {"specialsVs.vs", std::move(specials)},
-        {"ballVs.vs",     std::move(ball)}
+    std::vector<std::pair<std::string, CstRenderGroup_sptr> > vertexShaderFilesGroups{
+        {"blocksVs.vs", std::move(blocks)},
+        {"ballVs.vs",   std::move(ball)}
     };
 
-    for (auto &vertexShaderFileGroupsManager: vertexShaderFilesGroupsManagers) {
-        const auto &vertexShaderFile = vertexShaderFileGroupsManager.first;
-        const auto &groupsManager = vertexShaderFileGroupsManager.second;
+    if (items) {
+        vertexShaderFilesGroups.emplace_back("itemsMapVs.vs", std::move(items));
+    }
+    if (enemies) {
+        vertexShaderFilesGroups.emplace_back("enemiesVs.vs", std::move(enemies));
+    }
+    if (specials) {
+        vertexShaderFilesGroups.emplace_back("specialsVs.vs", std::move(specials));
+    }
 
-        const auto shaderProgram = createLevelProcessShaderProgram(fileContent, vertexShaderFile, shadowsResolution);
+    for (auto &vertexShaderFileGroup: vertexShaderFilesGroups) {
+        const auto &vertexShaderFile = vertexShaderFileGroup.first;
+        const auto &group = vertexShaderFileGroup.second;
+
+        const auto shaderProgram = createLevelProcessShaderProgram(
+            fileContent,
+            vertexShaderFile,
+            shadowsResolution,
+            group->numberOfDynamicsIds()
+        );
         shadersRenderPasses.emplace_back(
             shaderProgram,
-            std::make_shared<RenderPass>(shaderProgram, groupsManager)
+            std::make_shared<RenderPass>(shaderProgram, group)
         );
     }
 
@@ -136,13 +154,15 @@ std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
 ShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
     const JBTypes::FileContent &fileContent,
     const std::string &vs,
-    const GLsizei shadowsResolution
+    const GLsizei shadowsResolution,
+    short idCount
 ) {
     auto shader = ShaderProgram::createInstance(
         fileContent,
         vs,
         "levelFs.fs",
-        {"LEVEL_PASS"}
+        {"LEVEL_PASS"},
+        {{"idCount", idCount}}
     );
     shader->use();
     shader->setTextureIndex("depthTexture", 0);

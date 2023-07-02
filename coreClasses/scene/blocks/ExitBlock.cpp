@@ -93,7 +93,3 @@ JBTypes::Color ExitBlock::getColor() const {
 std::string ExitBlock::getDynamicGroupHash() const {
     return "exit;" + std::string(_isUnlockModel ? "lock" : "unlock");
 }
-
-bool ExitBlock::dynamicsMayChange() const {
-    return true;
-}

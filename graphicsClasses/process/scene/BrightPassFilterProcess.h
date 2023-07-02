@@ -18,7 +18,7 @@ public:
         GLsizei width,
         GLsizei height,
         GLuint hdrSceneTexture,
-        const CstRenderGroupsManager_sptr &screen
+        const CstRenderGroup_sptr &screen
     );
 
     void render() const override;

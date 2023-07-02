@@ -9,7 +9,7 @@ uniform Scene {
     float teleportationCoeff;
 };
 
-uniform float timeSinceCreation;
+uniform float timeSinceCreation[idCount];
 
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_centerToStar;
@@ -18,12 +18,13 @@ layout(location = 3) in vec3 vs_rotationAxis;
 layout(location = 4) in vec3 vs_color;
 // Location 5 is uvs ...
 layout(location = 6) in float vs_velocity;
+layout(location = 7) in int vs_id;
 
 out vec2 fs_vertexPosition;
 out vec3 fs_color;
 
 vec4 createRotationQuaternion() {
-    float angle = vs_velocity * timeSinceCreation;
+    float angle = vs_velocity * timeSinceCreation[vs_id];
     float angleOverTwo = angle / 2.0;
     return vec4(vec3(sin(angleOverTwo) * vs_rotationAxis), cos(angleOverTwo));
 }

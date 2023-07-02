@@ -29,7 +29,7 @@ public:
         GLsizei height,
         CstPage_sptr page,
         const FontTexturesGenerator& fontTexturesGenerator,
-        RenderGroupsManager_sptr renderGroupsManager,
+        RenderGroup_sptr renderGroup,
         RenderPass renderPass,
         ShaderProgram_sptr labelsShader
     );
@@ -43,7 +43,7 @@ public:
 private:
     const CstPage_sptr _page;
     FontTexturesGenerator _fontTexturesGenerator;
-    RenderGroupsManager_sptr _renderGroupsManager;
+    RenderGroup_sptr _renderGroup;
     RenderPass _renderPass;
     const ShaderProgram_sptr _labelsShader;
 };

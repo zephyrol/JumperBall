@@ -9,14 +9,15 @@ uniform Scene {
     float teleportationCoeff;
 };
 
-uniform float creationTime;
-uniform float obtainingTime;
+uniform float creationTime[idCount];
+uniform float obtainingTime[idCount];
 
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec3 vs_vertexNormal;
 layout(location = 3) in vec3 vs_itemPosition;
-layout(location = 4) in int vs_itemDirection;
+layout(location = 4) in int vs_id;
+layout(location = 5) in int vs_itemDirection;
 
 #ifdef(LEVEL_PASS)
     out vec3 fs_vertexColor;
@@ -83,21 +84,22 @@ const float durationSecondStep = thresholdThirdStep - thresholdSecondStep;
 const float durationThirdStep = 0.2;
 
 bool itemIsGotten() {
-    return (obtainingTime > 0.0);
+    return (obtainingTime[vs_id] > 0.0);
 }
 
 mat4 itemScale() {
+    float obtainingTimeValue = obtainingTime[vs_id];
     if (!itemIsGotten()) {
         return mat4(1.0);
     }
-    if (obtainingTime < thresholdSecondStep) {
+    if (obtainingTimeValue < thresholdSecondStep) {
         return mat4(1.0);
     }
-    if (obtainingTime < thresholdThirdStep) {
-        return scaleMat(1.0 + ((obtainingTime - thresholdSecondStep) / durationSecondStep));
+    if (obtainingTimeValue < thresholdThirdStep) {
+        return scaleMat(1.0 + ((obtainingTimeValue - thresholdSecondStep) / durationSecondStep));
     }
-    if (obtainingTime < thresholdThirdStep + durationThirdStep) {
-        return scaleMat(2.0 * (1.0 - ((obtainingTime - thresholdThirdStep) / durationThirdStep)));
+    if (obtainingTimeValue < thresholdThirdStep + durationThirdStep) {
+        return scaleMat(2.0 * (1.0 - ((obtainingTimeValue - thresholdThirdStep) / durationThirdStep)));
     }
     return mat4(0.0);
 }
@@ -127,10 +129,10 @@ mat4 computeRotationMatrix(float angle) {
 mat4 itemRotation() {
     if (!itemIsGotten()) {
         const float speedFactor = 5.0;
-        return computeRotationMatrix(speedFactor * creationTime);
+        return computeRotationMatrix(speedFactor * creationTime[vs_id]);
     }
     const float speedPow = 5.0;
-    return computeRotationMatrix(pow(obtainingTime, speedPow));
+    return computeRotationMatrix(pow(obtainingTime[vs_id], speedPow));
 }
 
 const vec3 dirToVec[6] = vec3[](
@@ -146,9 +148,10 @@ mat4 itemTranslation() {
     if (!itemIsGotten()) {
         return mat4(1.0);
     }
+    float obtainingTimeValue = obtainingTime[vs_id];
     vec3 wayDir = 0.9 * dirToVec[vs_itemDirection];
-    if (obtainingTime < thresholdSecondStep) {
-        float translateCoeff = obtainingTime / thresholdSecondStep;
+    if (obtainingTimeValue < thresholdSecondStep) {
+        float translateCoeff = obtainingTimeValue / thresholdSecondStep;
         return translate(translateCoeff * wayDir);
     }
     return translate(wayDir);

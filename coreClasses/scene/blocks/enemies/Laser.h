@@ -26,8 +26,6 @@ public:
 
     std::string getDynamicGroupHash() const override;
 
-    bool dynamicsMayChange() const override;
-
     vecCstShape_sptr getShapes() const override;
 
     void switchOnOff() override;

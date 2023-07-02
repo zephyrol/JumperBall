@@ -9,12 +9,13 @@ uniform Scene {
     float teleportationCoeff;
 };
 
-uniform vec3 translation;
-uniform vec3 scale;
+uniform vec3 translation[idCount];
+uniform vec3 scale[idCount];
 
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec3 vs_vertexNormal;
+layout(location = 3) in int vs_id;
 
 #ifdef(LEVEL_PASS)
     out vec3 fs_vertexColor;
@@ -46,9 +47,8 @@ mat4 scaleMat (vec3 scaleVec) {
                 0.0, 0.0, 0.0, 1.0);
 }
 
-
 void main() {
-    mat4 modelTransform = translate(translation) * scaleMat(scale);
+    mat4 modelTransform = translate(translation[vs_id]) * scaleMat(scale[vs_id]);
 
     const float w = 1.0;
     vec4 vertexPositionWorldSpace = modelTransform * vec4(vs_vertexPosition, w);

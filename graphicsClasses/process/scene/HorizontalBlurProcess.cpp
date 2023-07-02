@@ -3,13 +3,16 @@
 //
 
 #include "HorizontalBlurProcess.h"
+#include "frameBuffer/TextureSampler.h"
+
+#include <utility>
 
 HorizontalBlurProcess::HorizontalBlurProcess(
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height,
     GLuint brightPassTexture,
-    const RenderGroupsManager_sptr &screen
+    const RenderGroup_sptr &screen
 ) :
     _horizontalBlurShader(createHorizontalBlurProcessShaderProgram(fileContent, width)),
     _screenRenderPass(

@@ -23,12 +23,12 @@ public:
         GLuint shadowTexture,
         GLuint shadow2Texture,
         GLsizei shadowsResolution,
-        CstRenderGroupsManager_sptr blocks,
-        CstRenderGroupsManager_sptr items,
-        CstRenderGroupsManager_sptr enemies,
-        CstRenderGroupsManager_sptr specials,
-        CstRenderGroupsManager_sptr ball,
-        CstRenderGroupsManager_sptr star
+        CstRenderGroup_sptr blocks,
+        CstRenderGroup_sptr items,
+        CstRenderGroup_sptr enemies,
+        CstRenderGroup_sptr specials,
+        CstRenderGroup_sptr ball,
+        CstRenderGroup_sptr star
     );
 
     LevelProcess(
@@ -60,11 +60,9 @@ private:
 
     const std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > _shadersRenderPasses;
 
-    static ShaderProgram_sptr createLevelProcessShaderProgram(
-        const JBTypes::FileContent &fileContent,
-        const std::string &vs,
-        GLsizei shadowsResolution
-    );
+    static ShaderProgram_sptr
+    createLevelProcessShaderProgram(const JBTypes::FileContent &fileContent, const std::string &vs,
+                                    const GLsizei shadowsResolution, short idCount);
 };
 
 #endif //JUMPERBALLAPPLICATION_LEVELPROCESS_H

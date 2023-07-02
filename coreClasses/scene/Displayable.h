@@ -62,8 +62,6 @@ public:
 
     virtual std::string getDynamicGroupHash() const;
 
-    virtual bool dynamicsMayChange() const;
-
     virtual vecCstShape_sptr getShapes() const;
 
 };

@@ -21,8 +21,8 @@ using vecRenderPass_sptr = std::vector<RenderPass_sptr>;
 
 /**
  * Render passes is used to render meshes with a specific shader.
- * During rendering, every render groups (through render groups manager) are rendered with the same shader.
- * The render groups manager may be shared with other render passes.
+ * During rendering, the render group is rendered with the shader.
+ * The render group may be shared with other render passes.
  */
 class RenderPass {
 
@@ -30,7 +30,7 @@ public:
 
     explicit RenderPass(
         CstShaderProgram_sptr shaderProgram,
-        CstRenderGroupsManager_sptr renderGroupsManager
+        CstRenderGroup_sptr renderGroup
     );
 
     RenderPass(const RenderPass &renderPass) = delete;
@@ -46,17 +46,8 @@ public:
 private:
 
     const CstShaderProgram_sptr _shaderProgram;
-    const CstRenderGroupsManager_sptr _renderGroupsManager;
-
-    /**
-     * This pointer contains a list of render group reflecting the group manager state.
-     * The uniforms needs to be recreated if the rendering manager has changed its definition
-     * of its render group. This pointer is used to check if manager has made a redefinition.
-     */
-    std::shared_ptr<const std::vector<RenderGroup>> _currentRenderGroups;
-
-    std::vector<MeshUniforms> _uniforms;
-
+    const CstRenderGroup_sptr _renderGroup;
+    RenderGroupUniforms _uniforms;
 };
 
 #endif /* RENDER_PASS_H */

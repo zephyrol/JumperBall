@@ -54,8 +54,6 @@ public:
 
     std::string getDynamicGroupHash() const override;
 
-    bool dynamicsMayChange() const override;
-
 private:
     const CstChronometer_sptr _chronometer;
     const JBTypes::Dir _direction;

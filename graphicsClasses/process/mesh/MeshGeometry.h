@@ -18,6 +18,10 @@ public:
         GeometricShape::IndicesBuffer indices
     );
 
+    MeshGeometry(const MeshGeometry &meshGeometry) = delete;
+
+    MeshGeometry &operator=(const MeshGeometry &meshGeometry) = delete;
+
     MeshGeometry(MeshGeometry &&meshGeometry) = default;
 
     MeshGeometry &operator=(MeshGeometry &&meshGeometry) = default;

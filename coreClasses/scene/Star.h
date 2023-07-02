@@ -41,8 +41,6 @@ public:
 
     Displayable::DynamicValues<float> getDynamicFloatValues() const override;
 
-    bool dynamicsMayChange() const override;
-
     static std::shared_ptr<Star> createBlurStar(const Map &map);
 
     static std::shared_ptr<Star> createPurpleStar(const Map &map);

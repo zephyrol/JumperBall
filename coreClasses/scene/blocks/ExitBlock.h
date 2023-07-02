@@ -27,8 +27,6 @@ public:
 
     void unlockExit() override;
 
-    bool dynamicsMayChange() const override;
-
     std::string getDynamicGroupHash() const override;
 
 private:

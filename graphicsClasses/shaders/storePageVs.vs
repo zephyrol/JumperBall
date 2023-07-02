@@ -2,6 +2,7 @@ layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec2 vs_vertexUVs;
 layout(location = 3) in int vs_labelId;
+layout(location = 4) in int vs_groupId;
 
 out vec2 fs_vertexUVs;
 out vec3 fs_vertexColor;
@@ -10,24 +11,29 @@ out float fs_needsCheckingCoin;
 out float fs_needsTransparentBackground;
 out float fs_ball;
 
-uniform int skinOne;
-uniform int skinTwo;
-uniform int skinThree;
-uniform int skinFour;
-uniform int skinFive;
-uniform int skinSix;
-uniform int sumDigitOne;
-uniform int sumDigitTwo;
-uniform int sumDigitThree;
-uniform int sumDigitFour;
-uniform int selectedLabel;
+uniform int skinOne[idCount];
+uniform int skinTwo[idCount];
+uniform int skinThree[idCount];
+uniform int skinFour[idCount];
+uniform int skinFive[idCount];
+uniform int skinSix[idCount];
+uniform int sumDigitOne[idCount];
+uniform int sumDigitTwo[idCount];
+uniform int sumDigitThree[idCount];
+uniform int sumDigitFour[idCount];
+uniform int selectedLabel[idCount];
 
 bool needsDiscard() {
     if (vs_labelId < 100) {
         return false;
     }
     int skins[6] = int[] (
-    skinOne, skinTwo, skinThree, skinFour, skinFive, skinSix
+        skinOne[vs_groupId],
+        skinTwo[vs_groupId],
+        skinThree[vs_groupId],
+        skinFour[vs_groupId],
+        skinFive[vs_groupId],
+        skinSix[vs_groupId]
     );
     int currentSkin = 0;
     for (int i = 1000; i < 1600; i += 100) {
@@ -48,16 +54,16 @@ bool needsDiscard() {
         ++currentSkin;
     }
     if (vs_labelId < 110) {
-        return vs_labelId != sumDigitOne;
+        return vs_labelId != sumDigitOne[vs_groupId];
     }
     if (vs_labelId < 120) {
-        return vs_labelId != sumDigitTwo;
+        return vs_labelId != sumDigitTwo[vs_groupId];
     }
     if (vs_labelId < 130) {
-        return vs_labelId != sumDigitThree;
+        return vs_labelId != sumDigitThree[vs_groupId];
     }
     if (vs_labelId < 140) {
-        return vs_labelId != sumDigitFour;
+        return vs_labelId != sumDigitFour[vs_groupId];
     }
     return false;
 }
@@ -113,7 +119,7 @@ void main() {
         fs_ball = -1.0;
     }
 
-    if(selectedLabel == vs_labelId && (
+    if(selectedLabel[vs_groupId] == vs_labelId && (
         vs_labelId == 1000
         || vs_labelId == 1001
         || vs_labelId == 1100
@@ -138,7 +144,12 @@ void main() {
     }
 
     int skins[6] = int[] (
-    skinOne, skinTwo, skinThree, skinFour, skinFive, skinSix
+        skinOne[vs_groupId],
+        skinTwo[vs_groupId],
+        skinThree[vs_groupId],
+        skinFour[vs_groupId],
+        skinFive[vs_groupId],
+        skinSix[vs_groupId]
     );
 
     for (int i = 0; i < 6; ++i) {

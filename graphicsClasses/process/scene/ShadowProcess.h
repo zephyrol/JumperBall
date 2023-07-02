@@ -16,11 +16,11 @@ public:
 
     static ShadowProcess_sptr createInstance(
         const JBTypes::FileContent &fileContent,
-        CstRenderGroupsManager_sptr blocks,
-        CstRenderGroupsManager_sptr items,
-        CstRenderGroupsManager_sptr enemies,
-        CstRenderGroupsManager_sptr specials,
-        CstRenderGroupsManager_sptr ball,
+        CstRenderGroup_sptr blocks,
+        CstRenderGroup_sptr items,
+        CstRenderGroup_sptr enemies,
+        CstRenderGroup_sptr specials,
+        CstRenderGroup_sptr ball,
         bool isFirst
     );
 

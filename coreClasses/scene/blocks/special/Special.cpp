@@ -76,7 +76,3 @@ Displayable::DynamicValues<float> Special::getDynamicFloatValues() const {
 std::string Special::getDynamicGroupHash() const {
     return "special;" + std::to_string(static_cast<int>(_color));
 }
-
-bool Special::dynamicsMayChange() const {
-    return true;
-}

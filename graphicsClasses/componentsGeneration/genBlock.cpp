@@ -7,7 +7,7 @@
 #include "MeshGenerator.h"
 
 
-Mesh_sptr MeshGenerator::genBlock(const CstMap_sptr &map, const CstBlock_sptr &block, short dynamicsId) {
+CstMesh_sptr MeshGenerator::genBlock(const CstMap_sptr &map, const CstBlock_sptr &block, short dynamicsId) {
     const auto& position = block->position();
     const glm::vec3 glmPosition { position.at(0), position.at(1), position.at(2) };
     const glm::mat4 translation = glm::translate(glmPosition);

@@ -82,8 +82,3 @@ Displayable::StaticValues<JBTypes::vec3f> GhostBlock::getStaticVec3fValues() con
 std::string GhostBlock::getDynamicGroupHash() const {
     return "ghost;" + std::to_string(_periodicity);
 }
-
-bool GhostBlock::dynamicsMayChange() const {
-    return true;
-}
-

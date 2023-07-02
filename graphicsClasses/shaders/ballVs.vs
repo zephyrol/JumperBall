@@ -9,20 +9,21 @@ uniform Scene {
     float teleportationCoeff;
 };
 
-uniform float creationTime;
-uniform float ballRadius;
-uniform float crushingCoeff;
-uniform float status;
-uniform float timeStateOfLife;
-uniform vec3 sideDir;
-uniform vec3 position;
-uniform vec4 quaternion;
+uniform float creationTime[idCount];
+uniform float ballRadius[idCount];
+uniform float crushingCoeff[idCount];
+uniform float status[idCount];
+uniform float timeStateOfLife[idCount];
+uniform vec3 sideDir[idCount];
+uniform vec3 position[idCount];
+uniform vec4 quaternion[idCount];
 
 layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec3 vs_vertexNormal;
 layout(location = 3) in vec3 vs_objectPosition;
 layout(location = 4) in float vs_objectDirection;
+layout(location = 5) in int vs_id;
 
 #ifdef(LEVEL_PASS)
     out vec3 fs_vertexColor;
@@ -64,7 +65,7 @@ const float minScaleCrushing = 0.8;
 mat4 burstingScaleMatrix() {
     const float durationBursting = 0.07;
     const float radiusScalarBursting = 2.5;
-    float t = timeStateOfLife / durationBursting;
+    float t = timeStateOfLife[vs_id] / durationBursting;
 
     float scaleBursting;
     if (t > 1.0) {
@@ -72,43 +73,43 @@ mat4 burstingScaleMatrix() {
     } else {
         scaleBursting = (1.0 - t) + radiusScalarBursting * t;
     }
-    return scaleMat(vec3(scaleBursting * ballRadius));
+    return scaleMat(vec3(scaleBursting * ballRadius[vs_id]));
 }
 
 mat4 ballScale(float crushingScale) {
-    if (status == 1.0) {
+    if (status[vs_id] == 1.0) {
         return burstingScaleMatrix();
     }
-    if (status == 2.0) {
+    if (status[vs_id] == 2.0) {
         return mat4(0.0);
     }
-    vec3 deformationVector = abs(sideDir);
+    vec3 deformationVector = abs(sideDir[vs_id]);
     vec3 scaleVector = vec3(1.0) - (1.0 - crushingScale) * deformationVector;
-    return scaleMat(scaleVector * ballRadius);
+    return scaleMat(scaleVector * ballRadius[vs_id]);
 }
 
 mat4 ballTranslation(float crushingScale) {
 
-    mat4 translation = translate(position);
-    if (status != 0.0) {
+    mat4 translation = translate(position[vs_id]);
+    if (status[vs_id] != 0.0) {
         return translation;
     }
-    vec3 translationVector = (crushingScale - 1.0) * ballRadius * sideDir;
+    vec3 translationVector = (crushingScale - 1.0) * ballRadius[vs_id] * sideDir[vs_id];
     return translation * mat4(translate(translationVector));
 }
 
 
 mat4 ballRotation() {
-
-    float x2 = quaternion.x * quaternion.x;
-    float y2 = quaternion.y * quaternion.y;
-    float z2 = quaternion.z * quaternion.z;
-    float xy = quaternion.x * quaternion.y;
-    float xz = quaternion.x * quaternion.z;
-    float yz = quaternion.y * quaternion.z;
-    float wx = quaternion.w * quaternion.x;
-    float wy = quaternion.w * quaternion.y;
-    float wz = quaternion.w * quaternion.z;
+    vec4 ballQuaternion = quaternion[vs_id];
+    float x2 = ballQuaternion.x * ballQuaternion.x;
+    float y2 = ballQuaternion.y * ballQuaternion.y;
+    float z2 = ballQuaternion.z * ballQuaternion.z;
+    float xy = ballQuaternion.x * ballQuaternion.y;
+    float xz = ballQuaternion.x * ballQuaternion.z;
+    float yz = ballQuaternion.y * ballQuaternion.z;
+    float wx = ballQuaternion.w * ballQuaternion.x;
+    float wy = ballQuaternion.w * ballQuaternion.y;
+    float wz = ballQuaternion.w * ballQuaternion.z;
     return mat4(
         1.0 - 2.0 * (y2 + z2), 2.0 * (xy + wz), 2.0 * (xz - wy), 0.0,
         2.0 * (xy - wz), 1.0 - 2.0 * (x2 + z2), 2.0 * (yz + wx), 0.0,
@@ -120,7 +121,7 @@ mat4 ballRotation() {
 
 void main() {
 
-    float crushingScale = crushingCoeff * minScaleCrushing + (1.0 - crushingCoeff);
+    float crushingScale = crushingCoeff[vs_id] * minScaleCrushing + (1.0 - crushingCoeff[vs_id]);
     mat4 rotation = ballRotation();
     mat4 translation = ballTranslation(crushingScale);
     mat4 scale = ballScale(crushingScale);

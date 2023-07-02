@@ -21,11 +21,11 @@ ShadowProcess::ShadowProcess(
 
 ShadowProcess_sptr ShadowProcess::createInstance(
     const JBTypes::FileContent &fileContent,
-    CstRenderGroupsManager_sptr blocks,
-    CstRenderGroupsManager_sptr items,
-    CstRenderGroupsManager_sptr enemies,
-    CstRenderGroupsManager_sptr specials,
-    CstRenderGroupsManager_sptr ball,
+    CstRenderGroup_sptr blocks,
+    CstRenderGroup_sptr items,
+    CstRenderGroup_sptr enemies,
+    CstRenderGroup_sptr specials,
+    CstRenderGroup_sptr ball,
     bool isFirst
 ) {
 
@@ -35,27 +35,36 @@ ShadowProcess_sptr ShadowProcess::createInstance(
         : std::vector<std::string>{"SHADOW_PASS_2"};
 
     std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > shadersRenderPasses{};
-    std::vector<std::pair<std::string, CstRenderGroupsManager_sptr> > vertexShaderFilesGroupsManagers{
+    std::vector<std::pair<std::string, CstRenderGroup_sptr> > vertexShaderFilesGroups{
         {"blocksVs.vs",   std::move(blocks)},
-        {"itemsMapVs.vs", std::move(items)},
-        {"enemiesVs.vs",  std::move(enemies)},
-        {"specialsVs.vs", std::move(specials)},
         {"ballVs.vs",     std::move(ball)}
     };
-    for (auto &vertexShaderFileGroupsManager: vertexShaderFilesGroupsManagers) {
-        const auto &vertexShaderFile = vertexShaderFileGroupsManager.first;
-        const auto &groupsManager = vertexShaderFileGroupsManager.second;
+
+    if(items) {
+        vertexShaderFilesGroups.emplace_back("itemsMapVs.vs", std::move(items));
+    }
+    if(enemies) {
+        vertexShaderFilesGroups.emplace_back( "enemiesVs.vs",  std::move(enemies));
+    }
+    if(specials) {
+        vertexShaderFilesGroups.emplace_back( "specialsVs.vs", std::move(specials));
+    }
+
+    for (auto &vertexShaderFileGroup: vertexShaderFilesGroups) {
+        const auto &vertexShaderFile = vertexShaderFileGroup.first;
+        const auto &group= vertexShaderFileGroup.second;
 
         const auto shaderProgram = ShaderProgram::createInstance(
             fileContent,
             vertexShaderFile,
             "depthFs.fs",
-            shadowDefines
+            shadowDefines,
+            {{"idCount", group->numberOfDynamicsIds()}}
         );
 
         shadersRenderPasses.emplace_back(
             shaderProgram,
-            std::make_shared<RenderPass>(shaderProgram, groupsManager)
+            std::make_shared<RenderPass>(shaderProgram, group)
         );
     }
 

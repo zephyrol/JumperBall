@@ -13,8 +13,16 @@
 #include "process/mesh/uniform/UniformFloat.h"
 #include "process/mesh/uniform/UniformInt.h"
 
+class MeshUniforms;
+
+using MeshUniforms_sptr = std::shared_ptr<MeshUniforms>;
+using CstMeshUniforms_sptr = std::shared_ptr<const MeshUniforms>;
+using vecCstMeshUniforms_sptr = std::vector<CstMeshUniforms_sptr>;
+using vecMeshUniforms_sptr = std::vector<MeshUniforms_sptr>;
+
 class MeshUniforms {
 public:
+
     static MeshUniforms createInstance(
         const CstDisplayable_sptr &displayable,
         const CstShaderProgram_sptr &shaderProgram,

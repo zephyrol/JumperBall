@@ -8,8 +8,9 @@
 #ifndef RENDERGROUP_H
 #define RENDERGROUP_H
 
-#include "process/mesh/Mesh.h"
+#include "componentsGeneration/MeshGenerator.h"
 #include "process/scene/GpuVertexAttributes.h"
+#include "RenderGroupUniforms.h"
 
 class RenderGroup;
 using RenderGroup_sptr = std::shared_ptr<RenderGroup>;
@@ -20,8 +21,8 @@ class RenderGroup {
 
 public:
 
-    explicit RenderGroup(
-        vecMesh_sptr meshes,
+    RenderGroup(
+        MeshDynamicGroup_uptr meshDynamicGroup,
         GLuint vertexArrayObject,
         vecGpuVertexAttributes_sptr gpuVertexAttributes,
         GLuint elementBufferObject,
@@ -32,19 +33,19 @@ public:
 
     RenderGroup &operator=(const RenderGroup &renderGroup) = delete;
 
-    RenderGroup(RenderGroup &&renderGroup) = default;
-
     void freeGPUMemory();
 
     void render() const;
 
-    MeshUniforms genUniforms(const CstShaderProgram_sptr& shaderProgram) const;
+    short numberOfDynamicsIds() const;
 
-    static RenderGroup createInstance(vecMesh_sptr meshes);
+    RenderGroupUniforms genUniforms(const CstShaderProgram_sptr& shaderProgram) const;
+
+    static RenderGroup_sptr createInstance(MeshDynamicGroup_uptr meshDynamicGroup);
 
 private:
 
-    const vecMesh_sptr _meshes;
+    const MeshDynamicGroup_uptr _meshDynamicGroup;
     const GLuint _vertexArrayObject;
     const vecGpuVertexAttributes_sptr _gpuVertexAttributes;
     const GLuint _elementBufferObject;

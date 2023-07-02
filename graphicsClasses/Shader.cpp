@@ -12,13 +12,21 @@ Shader::Shader(
     const JBTypes::FileContent &fileContent,
     const std::string &shaderFilename,
     const std::vector<std::string> &defines,
+    const std::vector<std::pair<std::string, GLshort>> &constShorts,
     const std::vector<std::pair<std::string, GLfloat>> &constFloats,
     const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
 ) :
     _shaderHandle(glCreateShader(shaderType)),
     _shaderType(shaderType),
     _shaderFilename(shaderFilename),
-    _shaderCode(completeShaderCode(fileContent.at(shaderFilename), defines, constFloats, constVec2s)) {
+    _shaderCode(completeShaderCode(
+                    fileContent.at(shaderFilename),
+                    defines,
+                    constShorts,
+                    constFloats,
+                    constVec2s
+                )
+    ) {
     if (_shaderHandle == 0) {
         std::cerr << "Error during creation of the shader ..." << std::endl;
         exit(EXIT_FAILURE);
@@ -67,6 +75,7 @@ CstShader_uptr Shader::createVertexShader(
     const JBTypes::FileContent &fileContent,
     const std::string &shaderName,
     const std::vector<std::string> &defines,
+    const std::vector<std::pair<std::string, GLshort>> &constShorts,
     const std::vector<std::pair<std::string, GLfloat>> &constFloats,
     const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
 ) {
@@ -75,6 +84,7 @@ CstShader_uptr Shader::createVertexShader(
         fileContent,
         shaderName,
         defines,
+        constShorts,
         constFloats,
         constVec2s
     ));
@@ -84,6 +94,7 @@ CstShader_uptr Shader::createFragmentShader(
     const JBTypes::FileContent &fileContent,
     const std::string &shaderName,
     const std::vector<std::string> &defines,
+    const std::vector<std::pair<std::string, GLshort>> &constShorts,
     const std::vector<std::pair<std::string, GLfloat>> &constFloats,
     const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
 ) {
@@ -92,6 +103,7 @@ CstShader_uptr Shader::createFragmentShader(
         fileContent,
         shaderName,
         defines,
+        constShorts,
         constFloats,
         constVec2s
     ));
@@ -100,6 +112,7 @@ CstShader_uptr Shader::createFragmentShader(
 std::string Shader::completeShaderCode(
     const std::string &shaderCode,
     const std::vector<std::string> &defines,
+    const std::vector<std::pair<std::string, GLshort>> &constShorts,
     const std::vector<std::pair<std::string, GLfloat>> &constFloats,
     const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
 ) {
@@ -109,6 +122,12 @@ std::string Shader::completeShaderCode(
         {2, "#version 300 es\nprecision highp float;\nprecision highp sampler2DShadow;\n"}
     };
     std::string finalShader = shaderHeader.at(JB_SYSTEM);
+
+    for (const auto &item: constShorts) {
+        const auto &constName = item.first;
+        const auto &constValue = item.second;
+        finalShader += "const int " + constName + " = " + std::to_string(constValue) + ";\n";
+    }
 
     for (const auto &item: constFloats) {
         const auto &constName = item.first;

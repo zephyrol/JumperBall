@@ -24,6 +24,7 @@ public:
         const JBTypes::FileContent &fileContent,
         const std::string &shaderFilename,
         const std::vector<std::string> &defines,
+        const std::vector<std::pair<std::string, GLshort>> &constShorts,
         const std::vector<std::pair<std::string, GLfloat>> &constFloats,
         const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
     );
@@ -44,6 +45,7 @@ public:
         const JBTypes::FileContent &fileContent,
         const std::string &shaderName,
         const std::vector<std::string> &defines,
+        const std::vector<std::pair<std::string, GLshort>> &constShorts,
         const std::vector<std::pair<std::string, GLfloat>> &constFloats,
         const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
     );
@@ -52,6 +54,7 @@ public:
         const JBTypes::FileContent &fileContent,
         const std::string &shaderName,
         const std::vector<std::string> &defines,
+        const std::vector<std::pair<std::string, GLshort>> &constShorts,
         const std::vector<std::pair<std::string, GLfloat>> &constFloats,
         const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
     );
@@ -61,6 +64,7 @@ private:
     static std::string completeShaderCode(
         const std::string &shaderCode,
         const std::vector<std::string> &defines,
+        const std::vector<std::pair<std::string, GLshort>> &constShorts,
         const std::vector<std::pair<std::string, GLfloat>> &constFloats,
         const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
     );

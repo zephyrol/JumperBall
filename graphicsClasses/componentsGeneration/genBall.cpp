@@ -7,7 +7,7 @@
 
 #include "MeshGenerator.h"
 
-MeshGenerator::MeshDynamicGroup MeshGenerator::genBall(const CstBall_sptr &ball, unsigned int ballSkin) {
+MeshDynamicGroup_uptr MeshGenerator::genBall(const CstBall_sptr &ball, unsigned int ballSkin) {
 
     const auto getCustomColors = [&ballSkin]() -> std::vector<glm::vec3> {
         if (ballSkin == 0) {
@@ -49,5 +49,8 @@ MeshGenerator::MeshDynamicGroup MeshGenerator::genBall(const CstBall_sptr &ball,
     const CstGeometricShape_sptr sphere = std::make_shared<const Sphere>(getCustomColors());
     vecCstGeometricShape_sptr geometricShapes{sphere};
     Mesh_sptr sphereMesh = std::make_shared<Mesh>(ball, std::move(geometricShapes), 0);
-    return {{}, {{sphereMesh}}};
+
+    return std::unique_ptr<MeshDynamicGroup>(new MeshDynamicGroup(
+        {{sphereMesh}}
+    ));
 }

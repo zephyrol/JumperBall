@@ -5,20 +5,20 @@
  * Created on 20 mars 2021, 16:30
  */
 #include "process/RenderGroup.h"
+#include "RenderGroupUniforms.h"
 
 RenderGroup::RenderGroup(
-    vecMesh_sptr meshes,
+    MeshDynamicGroup_uptr meshDynamicGroup,
     GLuint vertexArrayObject,
     vecGpuVertexAttributes_sptr gpuVertexAttributes,
     GLuint elementBufferObject,
     GLsizei numberOfIndices
 ) :
-    _meshes(std::move(meshes)),
+    _meshDynamicGroup(std::move(meshDynamicGroup)),
     _vertexArrayObject(vertexArrayObject),
     _gpuVertexAttributes(std::move(gpuVertexAttributes)),
     _elementBufferObject(elementBufferObject),
-    _numberOfIndices(numberOfIndices)
-{
+    _numberOfIndices(numberOfIndices) {
 }
 
 void RenderGroup::render() const {
@@ -43,7 +43,7 @@ void RenderGroup::freeGPUMemory() {
     glDeleteVertexArrays(1, &_vertexArrayObject);
 }
 
-RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
+RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGroup) {
 
     // 1. VAO
     const auto genVertexArrayObject = []() {
@@ -55,6 +55,8 @@ RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
     const auto vertexArrayObject = genVertexArrayObject();
     glBindVertexArray(vertexArrayObject);
 
+    const auto &meshes = meshDynamicGroup->meshes();
+
     // 2. Merge all geometries
     auto groupGeometry = std::accumulate(
         meshes.begin() + 1,
@@ -63,7 +65,8 @@ RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
         [](MeshGeometry &current, const CstMesh_sptr &other) {
             current.merge(other->genMeshGeometry());
             return std::move(current);
-        });
+        }
+    );
 
     // 3. Create gpu vertex attributes
     const auto genBufferObject = []() {
@@ -75,11 +78,11 @@ RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
     auto vertexAttributes = groupGeometry.extractVertexAttributes();
     vecGpuVertexAttributes_sptr gpuVertexAttributes{};
 
-    for(size_t i = 0; i < vertexAttributes.size(); ++i) {
+    for (size_t i = 0; i < vertexAttributes.size(); ++i) {
         const auto vbo = genBufferObject();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-        auto& vertexAttribute = vertexAttributes[i];
+        auto &vertexAttribute = vertexAttributes[i];
         vertexAttribute->createDataOnGpu();
         gpuVertexAttributes.push_back(
             std::make_shared<GpuVertexAttributes>(
@@ -91,7 +94,8 @@ RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
     }
 
     // 4. Create EBO
-    const auto indices = groupGeometry.indices();
+    const auto& indices =  groupGeometry.indices();
+
     const auto elementBufferObject = genBufferObject();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObject);
     glBufferData(
@@ -101,8 +105,8 @@ RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
         GL_STATIC_DRAW
     );
 
-    return RenderGroup(
-        std::move(meshes),
+    return std::make_shared<RenderGroup>(
+        std::move(meshDynamicGroup),
         vertexArrayObject,
         std::move(gpuVertexAttributes),
         elementBufferObject,
@@ -110,7 +114,10 @@ RenderGroup RenderGroup::createInstance(vecMesh_sptr meshes) {
     );
 }
 
-MeshUniforms RenderGroup::genUniforms(const CstShaderProgram_sptr& shaderProgram) const {
-    return _meshes.front()->genMeshUniforms(shaderProgram);
+RenderGroupUniforms RenderGroup::genUniforms(const CstShaderProgram_sptr &shaderProgram) const {
+    return RenderGroupUniforms::createInstance(*_meshDynamicGroup, shaderProgram);
 }
 
+short RenderGroup::numberOfDynamicsIds() const {
+    return _meshDynamicGroup->numberOfDynamicsIds();
+}

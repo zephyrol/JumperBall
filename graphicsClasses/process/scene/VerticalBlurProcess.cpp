@@ -4,12 +4,14 @@
 
 #include "VerticalBlurProcess.h"
 
+#include <utility>
+
 VerticalBlurProcess::VerticalBlurProcess(
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height,
     GLuint horizontalBlurTexture,
-    const CstRenderGroupsManager_sptr &screen
+    const RenderGroup_sptr &screen
 ) :
     _verticalBlurShader(createVerticalBlurProcessShaderProgram(fileContent, height)),
     _screenRenderPass(_verticalBlurShader, screen),
@@ -84,8 +86,6 @@ ShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgram(
             texelSizeY * 12.f, 0.00110796
         }
     );
-
-
     return shader;
 }
 

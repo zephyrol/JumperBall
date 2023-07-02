@@ -18,7 +18,7 @@ public:
         GLsizei width,
         GLsizei height,
         GLuint horizontalBlurTexture,
-        const CstRenderGroupsManager_sptr &screen
+        const RenderGroup_sptr &screen
     );
 
     void render() const override;

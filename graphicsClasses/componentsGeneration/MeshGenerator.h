@@ -26,50 +26,40 @@
 #include "frameBuffer/FrameBuffer.h"
 #include "process/mesh/Mesh.h"
 #include "graphicMenu/FontTexturesGenerator.h"
+#include "process/mesh/MeshDynamicGroup.h"
 
 
 namespace MeshGenerator {
 
-    /**
-     * Each vecMesh_sptr in this vector contains the same dynamicId. So only the first mesh of each list can be used
-     * to generate the uniforms and to update them.
-     */
-    struct MeshDynamicGroup {
-        std::vector<vecMesh_sptr> staticMeshes;
-        std::vector<vecMesh_sptr> dynamicMeshes;
-    };
-
-    Mesh_sptr genMesh(
+    CstMesh_sptr genMesh(
         const CstDisplayable_sptr &displayable,
         short dynamicsId
     );
 
     CstGeometricShape_sptr createGeometricShape(const CstShape_sptr &shape);
 
-    MeshDynamicGroup genBall(const CstBall_sptr &ball, unsigned int ballSkin);
+    MeshDynamicGroup_uptr genBall(const CstBall_sptr &ball, unsigned int ballSkin);
 
-    MeshDynamicGroup genBlocks(const CstMap_sptr &map);
+    MeshDynamicGroup_uptr genBlocks(const CstMap_sptr &map);
 
-    MeshDynamicGroup genItems(const CstMap_sptr &map);
+    MeshDynamicGroup_uptr genItems(const CstMap_sptr &map);
 
-    MeshDynamicGroup genEnemies(const CstMap_sptr &map);
+    MeshDynamicGroup_uptr genEnemies(const CstMap_sptr &map);
 
-    MeshDynamicGroup genSpecials(const CstMap_sptr &map);
+    MeshDynamicGroup_uptr genSpecials(const CstMap_sptr &map);
 
-    MeshDynamicGroup genStars(const std::shared_ptr<const Star> &star, const std::shared_ptr<const Star> &star2);
+    MeshDynamicGroup_uptr genStars(const std::shared_ptr<const Star> &star, const std::shared_ptr<const Star> &star2);
 
-    MeshDynamicGroup genScreen();
+    MeshDynamicGroup_uptr genScreen();
 
-    MeshDynamicGroup genMeshDynamicGroup(
+    MeshDynamicGroup_uptr genMeshDynamicGroup(
         const vecCstDisplayable_sptr &displayableVector,
-        std::unique_ptr<std::function<Mesh_sptr(
+        std::unique_ptr<std::function<CstMesh_sptr(
             const CstDisplayable_sptr &, short
         )>> customMeshGenerationFunction = nullptr
     );
 
-    Mesh_sptr genBlock(const CstMap_sptr &map, const CstBlock_sptr &block, short dynamicsId);
-
-    Mesh_sptr genItem(const std::shared_ptr<const Item> &item);
+    CstMesh_sptr genBlock(const CstMap_sptr &map, const CstBlock_sptr &block, short dynamicsId);
 
     vecCstGeometricShape_sptr genGeometricShapesFromLabel(const Label &label);
 

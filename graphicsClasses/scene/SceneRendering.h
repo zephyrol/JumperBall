@@ -23,7 +23,7 @@ public:
         const Scene &scene,
         GLsizei width,
         GLsizei height,
-        vecRenderGroupsManager_sptr && renderGroupsManagers,
+        vecRenderGroup_sptr && renderGroups,
         vecRenderProcess_sptr&& processes,
         SceneUniformBuffer&& sceneUniformBuffer
     );
@@ -46,7 +46,7 @@ private:
 
     const Scene &_scene;
 
-    const vecRenderGroupsManager_sptr _renderGroupsManagers;
+    const vecRenderGroup_sptr _renderGroups;
     const vecRenderProcess_sptr _processes;
 
     SceneUniformBuffer _sceneUniformBuffer;

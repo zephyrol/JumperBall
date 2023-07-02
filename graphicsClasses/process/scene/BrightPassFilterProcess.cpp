@@ -4,14 +4,12 @@
 
 #include "BrightPassFilterProcess.h"
 
-#include <utility>
-
 BrightPassFilterProcess::BrightPassFilterProcess(
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height,
     GLuint hdrSceneTexture,
-    const CstRenderGroupsManager_sptr &screen
+    const CstRenderGroup_sptr &screen
 ) :
     _width(width),
     _height(height),

@@ -33,6 +33,7 @@ ShaderProgram_sptr ShaderProgram::createInstance(
     const std::string &vs,
     const std::string &fs,
     const std::vector<std::string> &defines,
+    const std::vector<std::pair<std::string, GLshort>> &constShorts,
     const std::vector<std::pair<std::string, GLfloat>> &constFloats,
     const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
 ) {
@@ -42,8 +43,22 @@ ShaderProgram_sptr ShaderProgram::createInstance(
                   << std::endl;
         exit(EXIT_FAILURE);
     }
-    auto vertexShader = Shader::createVertexShader(fileContent, vs, defines, constFloats, constVec2s);
-    auto fragmentShader = Shader::createFragmentShader(fileContent, fs, defines, constFloats, constVec2s);
+    auto vertexShader = Shader::createVertexShader(
+        fileContent,
+        vs,
+        defines,
+        constShorts,
+        constFloats,
+        constVec2s
+    );
+    auto fragmentShader = Shader::createFragmentShader(
+        fileContent,
+        fs,
+        defines,
+        constShorts,
+        constFloats,
+        constVec2s
+    );
 
     glAttachShader(shaderProgramHandle, vertexShader->getHandle());
     glAttachShader(shaderProgramHandle, fragmentShader->getHandle());

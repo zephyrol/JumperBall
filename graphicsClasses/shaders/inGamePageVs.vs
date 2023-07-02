@@ -2,6 +2,7 @@ layout(location = 0) in vec3 vs_vertexPosition;
 layout(location = 1) in vec3 vs_vertexColor;
 layout(location = 2) in vec2 vs_vertexUVs;
 layout(location = 3) in int vs_labelId;
+layout(location = 4) in int vs_groupId;
 
 out vec2 fs_vertexUVs;
 out vec3 fs_vertexColor;
@@ -10,23 +11,25 @@ out float fs_needsCheckingKey;
 out vec3 fs_keyColor;
 out float fs_needsCheckingCoin;
 
-uniform int leftDigit;
-uniform int middleDigit;
-uniform int rightDigit;
-uniform int coinsTensDigit;
-uniform int coinsUnitsDigit;
-uniform int selectedLabel;
-uniform int key;
-uniform int currentNumberOfKeys;
-uniform int maxNumberOfKeys;
+uniform int leftDigit[idCount];
+uniform int middleDigit[idCount];
+uniform int rightDigit[idCount];
+uniform int coinsTensDigit[idCount];
+uniform int coinsUnitsDigit[idCount];
+uniform int selectedLabel[idCount];
+uniform int currentNumberOfKeys[idCount];
+uniform int maxNumberOfKeys[idCount];
 
 bool needsDiscard() {
-    if(vs_labelId == leftDigit && leftDigit != 0
-       || vs_labelId == middleDigit && (middleDigit != 10 || leftDigit != 0)
-       || vs_labelId == rightDigit) {
+    int leftDigitValue = leftDigit[vs_groupId];
+    int middleDigitValue = middleDigit[vs_groupId];
+    int rightDigitValue = rightDigit[vs_groupId];
+    if(vs_labelId == leftDigitValue && leftDigitValue != 0
+       || vs_labelId == middleDigitValue && (middleDigitValue != 10 || leftDigitValue != 0)
+       || vs_labelId == rightDigitValue) {
         return false;
     }
-    if(vs_labelId == coinsTensDigit || vs_labelId == coinsUnitsDigit) {
+    if(vs_labelId == coinsTensDigit[vs_groupId] || vs_labelId == coinsUnitsDigit[vs_groupId]) {
         return false;
     }
     return true;
@@ -34,7 +37,8 @@ bool needsDiscard() {
 
 void main() {
     fs_vertexUVs = vs_vertexUVs;
-    if(selectedLabel < 0 && selectedLabel == vs_labelId) {
+    int selectedLabelValue = selectedLabel[vs_groupId];
+    if(selectedLabelValue < 0 && selectedLabelValue == vs_labelId) {
         fs_vertexColor = vec3(1.0);
     } else {
         fs_vertexColor = vec3(0.0, 1.0, 1.0);
@@ -54,10 +58,10 @@ void main() {
         int keyNumber = vs_labelId - keyIdOffset;
         fs_needsCheckingKey = 1.0;
         discarding = false;
-        if(keyNumber > maxNumberOfKeys) {
+        if(keyNumber > maxNumberOfKeys[vs_groupId]) {
             discarding = true;
         }
-        if(keyNumber > currentNumberOfKeys) {
+        if(keyNumber > currentNumberOfKeys[vs_groupId]) {
             fs_keyColor = vec3(0.0);
         } else {
             fs_keyColor = vec3(1.0, 1.0, 0.0);

@@ -109,7 +109,3 @@ std::shared_ptr<Star> Star::createPurpleStar(const Map &map) {
         1.1f
     );
 }
-
-bool Star::dynamicsMayChange() const {
-    return true;
-}

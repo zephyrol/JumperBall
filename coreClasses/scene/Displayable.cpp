@@ -51,10 +51,6 @@ std::string Displayable::getDynamicGroupHash() const {
     return "";
 }
 
-bool Displayable::dynamicsMayChange() const {
-    return false;
-}
-
 Displayable::DynamicNames Displayable::getDynamicIntNames() const {
     return {};
 }

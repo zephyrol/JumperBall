@@ -7,9 +7,9 @@
 #include "MeshGenerator.h"
 
 
-MeshGenerator::MeshDynamicGroup genMeshDynamicGroup(
+MeshDynamicGroup_uptr MeshGenerator::genMeshDynamicGroup(
     const vecCstDisplayable_sptr &displayableVector,
-    std::unique_ptr<std::function<Mesh_sptr(
+    std::unique_ptr<std::function<CstMesh_sptr(
         const CstDisplayable_sptr &, short
     )>> customMeshGenerationFunction
 ) {
@@ -22,13 +22,11 @@ MeshGenerator::MeshDynamicGroup genMeshDynamicGroup(
     }
 
     // 2. Create the meshes. Each mesh with the same hash share the same dynamicId.
-    // Some displayable does not change their dynamics values, they are considered as static.
-    std::vector<vecMesh_sptr> staticMeshes;
-    std::vector<vecMesh_sptr> dynamicMeshes;
+    std::vector<vecCstMesh_sptr> outputMeshes;
     short dynamicsId = 0;
     for (const auto &hashDisplayableList: dynamicGroupHashToDisplayableList) {
         const auto &displayableList = hashDisplayableList.second;
-        vecMesh_sptr meshes{};
+        vecCstMesh_sptr meshes{};
         for (const auto &displayable: displayableList) {
             meshes.emplace_back(
                 customMeshGenerationFunction == nullptr
@@ -36,39 +34,38 @@ MeshGenerator::MeshDynamicGroup genMeshDynamicGroup(
                 : (*customMeshGenerationFunction)(displayable, dynamicsId)
             );
         }
-        auto &outputMeshes = displayableList.front()->dynamicsMayChange() ? dynamicMeshes : staticMeshes;
         outputMeshes.emplace_back(std::move(meshes));
         ++dynamicsId;
     }
 
-    return {staticMeshes, dynamicMeshes};
+    return std::unique_ptr<MeshDynamicGroup>(new MeshDynamicGroup(std::move(outputMeshes)));
 }
 
-Mesh_sptr MeshGenerator::genMesh(const CstDisplayable_sptr &displayable, short dynamicsId) {
+CstMesh_sptr MeshGenerator::genMesh(const CstDisplayable_sptr &displayable, short dynamicsId) {
     vecCstGeometricShape_sptr geometricShapes;
     for (const auto &shape: displayable->getShapes()) {
         geometricShapes.emplace_back(createGeometricShape(shape));
     }
-    return std::make_shared<Mesh>(displayable, std::move(geometricShapes), dynamicsId);
+    return std::make_shared<const Mesh>(displayable, std::move(geometricShapes), dynamicsId);
 }
 
 
-MeshGenerator::MeshDynamicGroup MeshGenerator::genBlocks(const CstMap_sptr &map) {
+MeshDynamicGroup_uptr MeshGenerator::genBlocks(const CstMap_sptr &map) {
 
     vecCstDisplayable_sptr displayableList;
-    std::map<CstDisplayable_sptr, std::function<Mesh_sptr(short)>> displayableToMesh;
+    std::map<CstDisplayable_sptr, std::function<CstMesh_sptr(short)>> displayableToMesh;
     for (const auto &block: map->getBlocks()) {
         displayableList.emplace_back(block);
-        displayableToMesh[block] = [&map, &block](short dynamicsId) {
+        displayableToMesh[block] = [map, block](short dynamicsId) {
             return MeshGenerator::genBlock(map, block, dynamicsId);
         };
     }
 
     return MeshGenerator::genMeshDynamicGroup(
         displayableList,
-        std::unique_ptr<std::function<Mesh_sptr(
+        std::unique_ptr<std::function<CstMesh_sptr(
             const CstDisplayable_sptr &, short
-        )>>(new std::function<Mesh_sptr(const CstDisplayable_sptr &, short)>(
+        )>>(new std::function<CstMesh_sptr(const CstDisplayable_sptr &, short)>(
             [&displayableToMesh](const CstDisplayable_sptr &displayable, short dynamicsId) {
                 return displayableToMesh[displayable](dynamicsId);
             }
@@ -76,21 +73,24 @@ MeshGenerator::MeshDynamicGroup MeshGenerator::genBlocks(const CstMap_sptr &map)
     );
 }
 
-MeshGenerator::MeshDynamicGroup MeshGenerator::genItems(const CstMap_sptr &map) {
+MeshDynamicGroup_uptr MeshGenerator::genItems(const CstMap_sptr &map) {
 
     vecCstDisplayable_sptr displayableList;
     for (const auto &block: map->getBlocks()) {
         auto items = block->getItems();
         displayableList.insert(
             displayableList.end(),
-            std::make_move_iterator(items.begin()),
-            std::make_move_iterator(items.end())
+            items.begin(),
+            items.end()
         );
+    }
+    if (displayableList.empty()) {
+        return nullptr;
     }
     return MeshGenerator::genMeshDynamicGroup(displayableList);
 }
 
-MeshGenerator::MeshDynamicGroup MeshGenerator::genEnemies(const CstMap_sptr &map) {
+MeshDynamicGroup_uptr MeshGenerator::genEnemies(const CstMap_sptr &map) {
 
     vecCstDisplayable_sptr displayableList;
     for (const auto &block: map->getBlocks()) {
@@ -101,10 +101,13 @@ MeshGenerator::MeshDynamicGroup MeshGenerator::genEnemies(const CstMap_sptr &map
             std::make_move_iterator(enemies.end())
         );
     }
+    if (displayableList.empty()) {
+        return nullptr;
+    }
     return MeshGenerator::genMeshDynamicGroup(displayableList);
 }
 
-MeshGenerator::MeshDynamicGroup MeshGenerator::genSpecials(const CstMap_sptr &map) {
+MeshDynamicGroup_uptr MeshGenerator::genSpecials(const CstMap_sptr &map) {
 
     vecCstDisplayable_sptr displayableList;
     for (const auto &block: map->getBlocks()) {
@@ -114,6 +117,9 @@ MeshGenerator::MeshDynamicGroup MeshGenerator::genSpecials(const CstMap_sptr &ma
             std::make_move_iterator(specials.begin()),
             std::make_move_iterator(specials.end())
         );
+    }
+    if (displayableList.empty()) {
+        return nullptr;
     }
     return MeshGenerator::genMeshDynamicGroup(displayableList);
 }

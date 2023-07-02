@@ -7,7 +7,7 @@
 
 #include "MeshGenerator.h"
 
-MeshGenerator::MeshDynamicGroup MeshGenerator::genStars(
+MeshDynamicGroup_uptr MeshGenerator::genStars(
     const std::shared_ptr<const Star> &star,
     const std::shared_ptr<const Star> &star2
 ) {
@@ -17,10 +17,9 @@ MeshGenerator::MeshDynamicGroup MeshGenerator::genStars(
 
     CstGeometricShape_sptr shape2 = std::make_shared<Quad>();
     vecCstGeometricShape_sptr geometricShapes2{shape2};
-    Mesh_sptr meshStar2 = std::make_shared<Mesh>(star2, std::move(geometricShapes2), 0);
+    Mesh_sptr meshStar2 = std::make_shared<Mesh>(star2, std::move(geometricShapes2), 1);
 
-    return {
-        {},
-        {{meshStar, meshStar2}}
-    };
+    return std::unique_ptr<MeshDynamicGroup>(new MeshDynamicGroup(
+        {{meshStar}, {meshStar2}}
+    ));
 }

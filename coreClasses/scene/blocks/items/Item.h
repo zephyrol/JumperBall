@@ -50,8 +50,6 @@ public:
 
     std::string getDynamicGroupHash() const override;
 
-    bool dynamicsMayChange() const override;
-
     void setAsGotten();
 
 private:

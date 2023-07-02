@@ -18,7 +18,7 @@ public:
         GLsizei height,
         GLuint blurTexture,
         GLint defaultFrameBuffer,
-        const CstRenderGroupsManager_sptr& screen
+        const CstRenderGroup_sptr& screen
     );
 
     void render() const override;

@@ -13,14 +13,14 @@ LabelsProcess::LabelsProcess(
     GLsizei height,
     CstPage_sptr page,
     const FontTexturesGenerator &fontTexturesGenerator,
-    RenderGroupsManager_sptr renderGroupsManager,
+    RenderGroup_sptr renderGroup,
     RenderPass renderPass,
     ShaderProgram_sptr labelsShader
 ) :
     Rendering(width, height),
     _page(std::move(page)),
     _fontTexturesGenerator(fontTexturesGenerator),
-    _renderGroupsManager(std::move(renderGroupsManager)),
+    _renderGroup(std::move(renderGroup)),
     _renderPass(std::move(renderPass)),
     _labelsShader(std::move(labelsShader)) {
 }
@@ -35,7 +35,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
 
     auto fontTexturesGenerator(FontTexturesGenerator::createInstance(width, height, page, ftContent));
 
-    vecMesh_sptr meshes;
+    vecCstMesh_sptr meshes;
     auto labels = page->labels();
     auto messageLabels = fontTexturesGenerator.getTextLabels();
     labels.insert(
@@ -45,7 +45,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     );
     for (const auto &label: labels) {
         meshes.push_back(std::make_shared<Mesh>(
-            std::make_shared<RenderableLabel>(label, page), MeshGenerator::genGeometricShapesFromLabel(*label)
+            std::make_shared<RenderableLabel>(label, page), MeshGenerator::genGeometricShapesFromLabel(*label), 0
         ));
     }
 
@@ -54,17 +54,21 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
         glFloatConsts.emplace_back(item.first, Utility::convertToOpenGLFormat(item.second));
     }
 
+    auto renderGroup = RenderGroup::createInstance(
+        std::unique_ptr<MeshDynamicGroup>(new MeshDynamicGroup({meshes}))
+    );
+
     auto labelsShader = ShaderProgram::createInstance(
         fileContent,
         page->getVertexShaderName(),
         "labelFs.fs",
         page->shaderDefines(),
+        {{"idCount", renderGroup->numberOfDynamicsIds()}},
         glFloatConsts
     );
     labelsShader->use();
 
-    auto renderGroupsManager = std::make_shared<RenderGroupsManager>(meshes);
-    RenderPass renderPass(labelsShader, renderGroupsManager);
+    RenderPass renderPass(labelsShader, renderGroup);
 
     labelsShader->setTextureIndex("characterTexture", 0);
 
@@ -73,7 +77,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
         height,
         page,
         fontTexturesGenerator,
-        renderGroupsManager,
+        renderGroup,
         std::move(renderPass),
         std::move(labelsShader)
     ));
@@ -89,7 +93,7 @@ void LabelsProcess::render() const {
 
 void LabelsProcess::freeGPUMemory() {
     _labelsShader->freeGPUMemory();
-    _renderGroupsManager->freeGPUMemory();
+    _renderGroup->freeGPUMemory();
     _fontTexturesGenerator.freeGPUMemory();
 }
 
@@ -103,6 +107,5 @@ vecCstShaderProgram_sptr LabelsProcess::getShaderPrograms() const {
 
 void LabelsProcess::update() {
     _labelsShader->use();
-    _renderGroupsManager->update();
     _renderPass.update();
 }

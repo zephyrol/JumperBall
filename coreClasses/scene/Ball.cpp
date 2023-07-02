@@ -945,7 +945,3 @@ void Ball::obtainClock() {
     _updateOutputs.push_back(std::make_shared<SoundOutput>("clockIsObtained"));
     ++_nbOfClocks;
 }
-
-bool Ball::dynamicsMayChange() const {
-    return true;
-}

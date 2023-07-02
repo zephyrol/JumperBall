@@ -32,8 +32,6 @@ public:
 
     JBTypes::Color getColor() const override;
 
-    bool dynamicsMayChange() const override;
-
     std::string getDynamicGroupHash() const override;
 
 private:

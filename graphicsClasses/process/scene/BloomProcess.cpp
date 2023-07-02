@@ -10,7 +10,7 @@ BloomProcess::BloomProcess(
     GLsizei height,
     GLuint blurTexture,
     GLint defaultFrameBuffer,
-    const CstRenderGroupsManager_sptr &screen
+    const CstRenderGroup_sptr &screen
 ) :
     _width(width),
     _height(height),
