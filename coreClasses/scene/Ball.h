@@ -112,8 +112,6 @@ public:
 
     Ball::MovementDestination getNextBlockInfo() const;
 
-    float getTimeToGetDestination() const;
-
     float getTimeSecondsSinceAction() const;
 
     float getTimeSecondsSinceStateOfLife() const;
@@ -129,8 +127,6 @@ public:
     Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
 
     Displayable::DynamicValues<JBTypes::Quaternion> getDynamicQuaternionValues() const override;
-
-    Displayable::GlobalState getGlobalState() const override;
 
     CstBlock_sptr getBlock(const JBTypes::vec3ui &pos) const;
 
@@ -306,6 +302,8 @@ private:
     void isFallingIntersectionBlock() noexcept;
 
     void interaction();
+
+    bool dynamicsMayChange() const override;
 };
 
 #endif /* BALL_H */

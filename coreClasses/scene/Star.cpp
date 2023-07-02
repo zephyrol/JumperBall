@@ -61,10 +61,6 @@ JBTypes::vec3f Star::position() const {
     return JBTypesMethods::rotateVector(initialPosition, getRotation());
 }
 
-Displayable::GlobalState Star::getGlobalState() const {
-    return Displayable::GlobalState::United;
-}
-
 Displayable::StaticValues<JBTypes::vec3f> Star::getStaticVec3fValues() const {
     return {
         JBTypesMethods::scalarApplication(_distance, _initialDirection),
@@ -73,7 +69,6 @@ Displayable::StaticValues<JBTypes::vec3f> Star::getStaticVec3fValues() const {
         _color
     };
 }
-
 
 Displayable::StaticValues<float> Star::getStaticFloatValues() const {
     return {
@@ -113,4 +108,8 @@ std::shared_ptr<Star> Star::createPurpleStar(const Map &map) {
         color,
         1.1f
     );
+}
+
+bool Star::dynamicsMayChange() const {
+    return true;
 }

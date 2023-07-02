@@ -72,10 +72,6 @@ Displayable::DynamicValues<JBTypes::vec3f> Block::getDynamicVec3fValues() const 
     return {_localTranslation, _localScale};
 }
 
-Displayable::GlobalState Block::getGlobalState() const {
-    return Displayable::GlobalState::United;
-}
-
 vecCstItem_sptr Block::getCstItems() const {
     vecCstItem_sptr cstItems;
     for (const auto &item: _items) {

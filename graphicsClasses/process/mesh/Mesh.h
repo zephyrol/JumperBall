@@ -24,25 +24,31 @@ using vecMesh_sptr = std::vector<Mesh_sptr>;
 class Mesh {
 
 public:
-    Mesh(const CstDisplayable_sptr &displayable, vecCstGeometricShape_sptr &&shapes);
+
+    Mesh(
+        CstDisplayable_sptr displayable,
+        vecCstGeometricShape_sptr &&shapes,
+        short dynamicsId
+    );
 
     Mesh(const Mesh &mesh) = delete;
 
     Mesh &operator=(const Mesh &mesh) = delete;
 
-    Displayable::GlobalState getGlobalState() const;
-
     MeshUniforms genMeshUniforms(const CstShaderProgram_sptr& shaderProgram) const;
 
     MeshGeometry genMeshGeometry() const;
-
-    bool updatingIsUseless() const;
 
 private:
 
     const CstDisplayable_sptr _displayable;
     const vecCstGeometricShape_sptr _shapes;
-    const bool _updatingIsUseless;
+
+    /**
+     * Index where the geometry will fetch uniform data in vertex arrays.
+     * Other meshes could have the same dynamic id.
+     */
+    const short _dynamicsId;
 };
 
 #endif // MESH_H

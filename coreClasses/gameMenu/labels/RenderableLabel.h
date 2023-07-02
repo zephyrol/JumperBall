@@ -30,7 +30,6 @@ private:
     const CstDisplayable_sptr _page;
 
 public:
-    GlobalState getGlobalState() const override;
 
     std::vector<unsigned char> getStaticUnsignedByteValues() const override;
 

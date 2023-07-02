@@ -41,8 +41,6 @@ public:
 
     std::vector<short> getStaticShortValues() const override;
 
-    GlobalState getGlobalState() const override;
-
     ~Label() override = default;
 
 protected:

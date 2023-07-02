@@ -38,8 +38,6 @@ public:
 
     virtual void catchingTest() = 0;
 
-    virtual vecCstShape_sptr getShapes() const = 0;
-
     static constexpr float itemBoundingSphereRadius = 0.15f;
 
     Displayable::StaticValues<unsigned char> getStaticUnsignedByteValues() const override;
@@ -50,9 +48,9 @@ public:
 
     Displayable::DynamicValues<float> getDynamicFloatValues() const override;
 
-    Displayable::GlobalState getGlobalState() const override;
+    std::string getDynamicGroupHash() const override;
 
-    bool globalStateMayChange() const override;
+    bool dynamicsMayChange() const override;
 
     void setAsGotten();
 

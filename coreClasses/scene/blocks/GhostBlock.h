@@ -29,9 +29,11 @@ public:
 
     JBTypes::Color getColor() const override;
 
-    Displayable::GlobalState getGlobalState() const override;
-
     Displayable::StaticValues<JBTypes::vec3f> getStaticVec3fValues() const override;
+
+    std::string getDynamicGroupHash() const override;
+
+    bool dynamicsMayChange() const override;
 
 
 private:

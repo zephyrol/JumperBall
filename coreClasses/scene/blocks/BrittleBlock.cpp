@@ -116,11 +116,12 @@ void BrittleBlock::update() {
     }
 }
 
-Displayable::GlobalState BrittleBlock::getGlobalState() const {
-    return !_isGoingToBreak ? Displayable::GlobalState::United : Displayable::GlobalState::Separate;
+bool BrittleBlock::dynamicsMayChange() const {
+    return true;
 }
 
-bool BrittleBlock::globalStateMayChange() const {
-    return true;
+std::string BrittleBlock::getDynamicGroupHash() const {
+    return "brittle;" + std::to_string(position().at(0)) + "," +
+           std::to_string(position().at(1)) + "," + std::to_string(position().at(2));
 }
 

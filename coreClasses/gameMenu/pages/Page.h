@@ -61,8 +61,6 @@ public:
 
     DynamicValues<int> getDynamicIntValues() const override;
 
-    GlobalState getGlobalState() const override;
-
 protected:
     const Player_sptr _player;
     int _currentSelectedLabel;

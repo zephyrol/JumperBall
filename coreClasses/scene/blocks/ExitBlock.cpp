@@ -90,6 +90,10 @@ JBTypes::Color ExitBlock::getColor() const {
     return _isUnlockModel ? JBTypes::Color::Green : JBTypes::Color::Red;
 }
 
-Displayable::GlobalState ExitBlock::getGlobalState() const {
-    return Displayable::GlobalState::Separate;
+std::string ExitBlock::getDynamicGroupHash() const {
+    return "exit;" + std::string(_isUnlockModel ? "lock" : "unlock");
+}
+
+bool ExitBlock::dynamicsMayChange() const {
+    return true;
 }

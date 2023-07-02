@@ -51,12 +51,6 @@ private:
 
     const vecMesh_sptr _meshes;
 
-    struct UpdatableMeshState {
-        Mesh_sptr mesh;
-        Displayable::GlobalState currentState;
-    };
-    std::vector<RenderGroupsManager::UpdatableMeshState> _updatableMeshesStates;
-
     std::shared_ptr<std::vector<RenderGroup>> _renderGroups;
 
     std::shared_ptr<std::vector<RenderGroup>> generateRenderGroups() const;

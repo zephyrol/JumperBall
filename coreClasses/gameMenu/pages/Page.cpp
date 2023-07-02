@@ -32,10 +32,6 @@ std::vector<std::string> Page::shaderDefines() const {
     return {};
 }
 
-Displayable::GlobalState Page::getGlobalState() const {
-    return GlobalState::United;
-}
-
 Displayable::DynamicNames Page::getDynamicIntNames() const {
     return {"selectedLabel"};
 }

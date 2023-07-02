@@ -42,36 +42,42 @@ MeshUniforms::MeshUniforms(
 
 MeshUniforms MeshUniforms::createInstance(
     const CstDisplayable_sptr &displayable,
-    const CstShaderProgram_sptr &shaderProgram
+    const CstShaderProgram_sptr &shaderProgram,
+    short dynamicsId
 ) {
 
     auto uniformVec4s = createUniformsFromDynamics<UniformVec4>(
         displayable->getDynamicQuaternionValues(),
         displayable->getDynamicQuaternionNames(),
+        dynamicsId,
         shaderProgram
     );
 
     auto uniformVec3s = createUniformsFromDynamics<UniformVec3>(
         displayable->getDynamicVec3fValues(),
         displayable->getDynamicVec3fNames(),
+        dynamicsId,
         shaderProgram
     );
 
     auto uniformVec2s = createUniformsFromDynamics<UniformVec2>(
         displayable->getDynamicVec2fValues(),
         displayable->getDynamicVec2fNames(),
+        dynamicsId,
         shaderProgram
     );
 
     auto uniformFloats = createUniformsFromDynamics<UniformFloat>(
         displayable->getDynamicFloatValues(),
         displayable->getDynamicFloatNames(),
+        dynamicsId,
         shaderProgram
     );
 
     auto uniformInts = createUniformsFromDynamics<UniformInt>(
         displayable->getDynamicIntValues(),
         displayable->getDynamicIntNames(),
+        dynamicsId,
         shaderProgram
     );
 

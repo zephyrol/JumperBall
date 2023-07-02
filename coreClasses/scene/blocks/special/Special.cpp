@@ -45,10 +45,6 @@ void Special::switchOnOff() {
     _isActivated = !_isActivated;
 }
 
-Displayable::GlobalState Special::getGlobalState() const {
-    return Displayable::GlobalState::United;
-}
-
 std::vector<unsigned char> Special::getStaticUnsignedByteValues() const {
     return {
         static_cast<unsigned char>(_direction),
@@ -73,6 +69,14 @@ Displayable::DynamicNames Special::getDynamicFloatNames() const {
 Displayable::DynamicValues<float> Special::getDynamicFloatValues() const {
     return {
         _chronometer->getTime(),
-        static_cast<float>(_isActivated) // TODO Use dynamic int ?
+        static_cast<float>(_isActivated)
     };
+}
+
+std::string Special::getDynamicGroupHash() const {
+    return "special;" + std::to_string(static_cast<int>(_color));
+}
+
+bool Special::dynamicsMayChange() const {
+    return true;
 }

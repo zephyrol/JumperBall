@@ -108,3 +108,12 @@ vecCstShape_sptr DarkBall::getShapes() const {
     );
     return {darkBallShape};
 }
+
+std::string DarkBall::getDynamicGroupHash() const {
+    return "darkBall;" + std::to_string(_initialPosition.x) + "," + std::to_string(_initialPosition.y) + ","
+           + std::to_string(_initialPosition.z) + "," + std::to_string(static_cast<int>(_movementDirection));
+}
+
+bool DarkBall::dynamicsMayChange() const {
+    return true;
+}

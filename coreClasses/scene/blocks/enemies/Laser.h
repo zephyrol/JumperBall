@@ -22,13 +22,17 @@ public:
         bool isActivated = true
     );
 
-    virtual JBTypes::Color getColor() const override;
+    JBTypes::Color getColor() const override;
+
+    std::string getDynamicGroupHash() const override;
+
+    bool dynamicsMayChange() const override;
 
     vecCstShape_sptr getShapes() const override;
 
     void switchOnOff() override;
 
-    virtual ~Laser() = default;
+    ~Laser() override = default;
 
 private:
     const JBTypes::Color _color;

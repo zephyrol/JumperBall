@@ -30,42 +30,49 @@
 
 namespace MeshGenerator {
 
+    /**
+     * Each vecMesh_sptr in this vector contains the same dynamicId. So only the first mesh of each list can be used
+     * to generate the uniforms and to update them.
+     */
+    struct MeshDynamicGroup {
+        std::vector<vecMesh_sptr> staticMeshes;
+        std::vector<vecMesh_sptr> dynamicMeshes;
+    };
+
+    Mesh_sptr genMesh(
+        const CstDisplayable_sptr &displayable,
+        short dynamicsId
+    );
+
     CstGeometricShape_sptr createGeometricShape(const CstShape_sptr &shape);
 
-    vecMesh_sptr genBall(const CstBall_sptr &ball, unsigned int ballSkin);
+    MeshDynamicGroup genBall(const CstBall_sptr &ball, unsigned int ballSkin);
 
-    vecMesh_sptr genBlocks(const CstMap_sptr &map);
+    MeshDynamicGroup genBlocks(const CstMap_sptr &map);
 
-    vecMesh_sptr genItems(const CstMap_sptr &map);
+    MeshDynamicGroup genItems(const CstMap_sptr &map);
 
-    vecMesh_sptr genEnemies(const CstMap_sptr &map);
+    MeshDynamicGroup genEnemies(const CstMap_sptr &map);
 
-    vecMesh_sptr genSpecials(const CstMap_sptr &map);
+    MeshDynamicGroup genSpecials(const CstMap_sptr &map);
 
-    vecMesh_sptr genStars(const std::shared_ptr<const Star> &star, const std::shared_ptr<const Star> &star2);
+    MeshDynamicGroup genStars(const std::shared_ptr<const Star> &star, const std::shared_ptr<const Star> &star2);
 
-    vecMesh_sptr genScreen();
+    MeshDynamicGroup genScreen();
 
-    Mesh_sptr genBlock(const CstMap_sptr &map, const CstBlock_sptr &block);
+    MeshDynamicGroup genMeshDynamicGroup(
+        const vecCstDisplayable_sptr &displayableVector,
+        std::unique_ptr<std::function<Mesh_sptr(
+            const CstDisplayable_sptr &, short
+        )>> customMeshGenerationFunction = nullptr
+    );
+
+    Mesh_sptr genBlock(const CstMap_sptr &map, const CstBlock_sptr &block, short dynamicsId);
 
     Mesh_sptr genItem(const std::shared_ptr<const Item> &item);
 
     vecCstGeometricShape_sptr genGeometricShapesFromLabel(const Label &label);
 
-    template<typename T>
-    vecMesh_sptr genMeshes(const T& shapesGenerator);
-
-}
-
-template<typename T>
-vecMesh_sptr MeshGenerator::genMeshes(const T& shapesGenerator) {
-    vecMesh_sptr meshes;
-    vecCstGeometricShape_sptr geometricShapes;
-    for(const auto& shape: shapesGenerator->getShapes()) {
-        geometricShapes.push_back(createGeometricShape(shape));
-    }
-    meshes.push_back(std::make_shared <Mesh>(shapesGenerator, std::move(geometricShapes)));
-    return meshes;
 }
 
 #endif /* MESHGENERATOR_H */

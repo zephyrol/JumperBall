@@ -79,8 +79,6 @@ public:
 
     Displayable::DynamicValues<JBTypes::vec2f> getDynamicVec2fValues() const override;
 
-    Displayable::GlobalState getGlobalState() const override;
-
     static std::string positionToString(const JBTypes::vec3ui &position);
 
     vecCstItem_sptr getCstItems() const;

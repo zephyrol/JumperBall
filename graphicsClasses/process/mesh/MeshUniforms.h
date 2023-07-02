@@ -17,7 +17,8 @@ class MeshUniforms {
 public:
     static MeshUniforms createInstance(
         const CstDisplayable_sptr &displayable,
-        const CstShaderProgram_sptr &shaderProgram
+        const CstShaderProgram_sptr &shaderProgram,
+        short dynamicsId
     );
 
     explicit MeshUniforms(
@@ -46,6 +47,7 @@ private:
     static std::vector<std::shared_ptr<UniformType>> createUniformsFromDynamics(
         std::vector<DynamicType> dynamics,
         const std::vector<std::string> &uniformNames,
+        short dynamicsId,
         const CstShaderProgram_sptr &shaderProgram
     );
 
@@ -61,6 +63,7 @@ template<typename UniformType, typename DynamicType>
 std::vector<std::shared_ptr<UniformType>> MeshUniforms::createUniformsFromDynamics(
     std::vector<DynamicType> dynamics,
     const std::vector<std::string> &uniformNames,
+    short dynamicsId,
     const CstShaderProgram_sptr &shaderProgram
 ) {
     std::vector<std::shared_ptr<UniformType>> uniforms;
@@ -69,7 +72,7 @@ std::vector<std::shared_ptr<UniformType>> MeshUniforms::createUniformsFromDynami
         uniforms.emplace_back(std::make_shared<UniformType>(
             Utility::convertToOpenGLFormat(dynamics[i]),
             shaderProgram,
-            uniformNames[i]
+            uniformNames[i] + "[" + std::to_string(dynamicsId) + "]"
         ));
     }
     return uniforms;

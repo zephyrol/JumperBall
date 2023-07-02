@@ -21,11 +21,15 @@ public:
         const Ball_sptr &ball
     );
 
-    virtual void update() override;
+    void update() override;
 
     const JBTypes::Dir &movementDirection() const;
 
-    virtual ~DarkBall() = default;
+    ~DarkBall() override = default;
+
+    std::string getDynamicGroupHash() const override;
+
+    bool dynamicsMayChange() const override;
 
     static constexpr float darkBallRadius = 0.2f;
 

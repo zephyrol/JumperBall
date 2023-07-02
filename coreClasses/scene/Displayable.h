@@ -8,6 +8,7 @@
 #define DISPLAYABLE_H
 
 #include "system/Types.h"
+#include "Shape.h"
 
 class Displayable;
 
@@ -26,10 +27,6 @@ public:
     template<typename T> using DynamicValues = std::vector<T>;
 
     using DynamicNames = std::vector<std::string>;
-
-    enum class GlobalState {
-        United, Separate, Dead
-    };
 
     virtual ~Displayable() = default;
 
@@ -63,10 +60,12 @@ public:
 
     virtual DynamicValues<JBTypes::Quaternion> getDynamicQuaternionValues() const;
 
-    virtual GlobalState getGlobalState() const = 0;
+    virtual std::string getDynamicGroupHash() const;
 
-    virtual bool globalStateMayChange() const;
+    virtual bool dynamicsMayChange() const;
+
+    virtual vecCstShape_sptr getShapes() const;
 
 };
 
-#endif // DISPLAYABLE_ELEMENT_H
+#endif // DISPLAYABLE_H

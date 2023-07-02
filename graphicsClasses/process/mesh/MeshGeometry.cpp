@@ -3,7 +3,6 @@
 //
 
 #include "MeshGeometry.h"
-#include "process/mesh/vertexAttribute/VertexAttributeUnsignedByte.h"
 
 
 MeshGeometry::MeshGeometry(
@@ -48,9 +47,11 @@ const GeometricShape::IndicesBuffer &MeshGeometry::indices() const {
     return _indices;
 }
 
-MeshGeometry MeshGeometry::createInstance(
+MeshGeometry
+MeshGeometry::createInstance(
     const CstDisplayable_sptr &displayable,
-    const vecCstGeometricShape_sptr &shapes
+    const vecCstGeometricShape_sptr &shapes,
+    short dynamicsId
 ) {
 
     const auto &headShape = shapes.front();
@@ -83,7 +84,6 @@ MeshGeometry MeshGeometry::createInstance(
         vertexAttributes *= (std::move(shapeVertexAttributes));
     }
 
-
     const auto numberOfVertices = vertexAttributes.getNumberOfVertices();
 
     // 2. Generate states vertex attributes.
@@ -99,9 +99,11 @@ MeshGeometry MeshGeometry::createInstance(
         VertexAttributeFloat
     >(numberOfVertices, displayable->getStaticFloatValues());
 
+    auto staticShortValues = displayable->getStaticShortValues();
+    staticShortValues.emplace_back(dynamicsId);
     const auto staticShortAttributesGeneration = createStaticVertexAttributeGenerationFunctions<
         VertexAttributeShort
-    >(numberOfVertices, displayable->getStaticShortValues());
+    >(numberOfVertices, staticShortValues);
 
     const auto staticUnsignedByteAttributesGeneration = createStaticVertexAttributeGenerationFunctions<
         VertexAttributeUnsignedByte

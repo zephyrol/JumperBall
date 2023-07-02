@@ -15,7 +15,6 @@ public :
 
 Screen();
 
-Displayable::GlobalState getGlobalState() const override;
 };
 
 

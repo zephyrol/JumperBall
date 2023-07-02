@@ -24,7 +24,8 @@ public:
 
     static MeshGeometry createInstance(
         const CstDisplayable_sptr &displayable,
-        const vecCstGeometricShape_sptr &shapes
+        const vecCstGeometricShape_sptr &shapes,
+        short dynamicsId
     );
 
     /**

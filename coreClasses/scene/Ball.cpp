@@ -753,16 +753,6 @@ Displayable::DynamicValues<JBTypes::Quaternion> Ball::getDynamicQuaternionValues
     return {getCoveredRotation()};
 }
 
-Displayable::GlobalState Ball::getGlobalState() const {
-    if (_stateOfLife == Ball::StateOfLife::Bursting) {
-        return Displayable::GlobalState::Separate;
-    }
-    if (_stateOfLife == Ball::StateOfLife::Dead) {
-        return Displayable::GlobalState::Dead;
-    }
-    return Displayable::GlobalState::United;
-}
-
 const JBTypes::vec3ui &Ball::getPosition() const noexcept {
     return _pos;
 }
@@ -954,4 +944,8 @@ unsigned int Ball::numberOfClocks() const {
 void Ball::obtainClock() {
     _updateOutputs.push_back(std::make_shared<SoundOutput>("clockIsObtained"));
     ++_nbOfClocks;
+}
+
+bool Ball::dynamicsMayChange() const {
+    return true;
 }

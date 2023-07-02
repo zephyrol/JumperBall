@@ -40,10 +40,6 @@ short Label::getId() const {
    return _id;
 }
 
-Displayable::GlobalState Label::getGlobalState() const {
-    return GlobalState::United;
-}
-
 LabelGeometry Label::createDisplayableTriangle(
     float localX,
     float localY,

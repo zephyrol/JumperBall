@@ -32,7 +32,7 @@ void ThornBall::update() {
 
     const auto movementLength = static_cast <float>(length());
     const float localMovement = (1.f - cosf(2.f * static_cast <float>(M_PI) *
-        //TODO replace by in game time
+                                            //TODO replace by in game time
                                             (_chronometer->getTime() / movementDuration))
                                 ) / 2.f;
     const float movementPosition = localMovement * movementLength;
@@ -67,4 +67,13 @@ vecCstShape_sptr ThornBall::getShapes() const {
         )
     );
     return {thornBallShape};
+}
+
+std::string ThornBall::getDynamicGroupHash() const {
+    return "thornBall;" + std::to_string(_initialPosition.x) + "," + std::to_string(_initialPosition.y) + ","
+           + std::to_string(_initialPosition.z) + "," + std::to_string(static_cast<int>(_movementDirection));
+}
+
+bool ThornBall::dynamicsMayChange() const {
+    return true;
 }

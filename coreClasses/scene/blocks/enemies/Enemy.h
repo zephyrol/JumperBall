@@ -47,15 +47,9 @@ public:
     Displayable::DynamicNames getDynamicVec3fNames() const override;
     Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
 
-    Displayable::GlobalState getGlobalState() const override;
-
-    virtual vecCstShape_sptr getShapes() const = 0;
-
     virtual bool touchingTest() const = 0;
 
     virtual void switchOnOff();
-
-    virtual ~Enemy() = default;
 
 private:
     const JBTypes::Dir _direction;

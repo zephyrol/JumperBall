@@ -281,10 +281,6 @@ glm::mat4 Camera::viewProjection() const noexcept {
     return _perspectiveMatrix * viewMatrix;
 }
 
-Displayable::GlobalState Camera::getGlobalState() const {
-    return Displayable::GlobalState::United;
-}
-
 void Camera::setRatio(float ratio) {
     _fovY = computeFovY(ratio);
     _localOffset = computeLocalOffset(_fovY);

@@ -33,8 +33,6 @@ public:
 
     JBTypes::vec3f position() const;
 
-    Displayable::GlobalState getGlobalState() const override;
-
     StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
 
     StaticValues<float> getStaticFloatValues() const override;
@@ -42,6 +40,8 @@ public:
     Displayable::DynamicNames getDynamicFloatNames() const override;
 
     Displayable::DynamicValues<float> getDynamicFloatValues() const override;
+
+    bool dynamicsMayChange() const override;
 
     static std::shared_ptr<Star> createBlurStar(const Map &map);
 

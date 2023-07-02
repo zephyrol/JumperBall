@@ -7,9 +7,4 @@
 
 #include "Screen.h"
 
-Screen::Screen() {
-}
-
-Displayable::GlobalState Screen::getGlobalState() const {
-    return Displayable::GlobalState::United;
-}
+Screen::Screen() = default;

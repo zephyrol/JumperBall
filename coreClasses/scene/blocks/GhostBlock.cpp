@@ -36,7 +36,6 @@ JBTypes::Color GhostBlock::getColor() const {
 void GhostBlock::update() {
     InteractiveBlock::update();
 
-    // TODO: Update time since creation to game time.
     const auto fPassedTime = _chronometer->getTime();
     const auto nbOfSwitching = static_cast <unsigned int>(fPassedTime / _periodicity);
     _isThere = nbOfSwitching % 2 == 0;
@@ -69,10 +68,6 @@ void GhostBlock::update() {
     _localTranslation = {translation, translation, translation};
 }
 
-Displayable::GlobalState GhostBlock::getGlobalState() const {
-    return Displayable::GlobalState::Separate;
-}
-
 Displayable::StaticValues<JBTypes::vec3f> GhostBlock::getStaticVec3fValues() const {
     // We need to move the position to the center of the block to get
     // scale animation
@@ -82,5 +77,13 @@ Displayable::StaticValues<JBTypes::vec3f> GhostBlock::getStaticVec3fValues() con
                 static_cast <float>(_position.at(1)) + offset,
                 static_cast <float>(_position.at(2)) + offset
             }};
+}
+
+std::string GhostBlock::getDynamicGroupHash() const {
+    return "ghost;" + std::to_string(_periodicity);
+}
+
+bool GhostBlock::dynamicsMayChange() const {
+    return true;
 }
 

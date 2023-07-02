@@ -8,8 +8,8 @@
 #define __SPECIAL_H__
 
 #include <scene/Shape.h>
-#include "scene/Displayable.h"
 #include "system/Chronometer.h"
+#include "scene/Displayable.h"
 
 class Special;
 
@@ -44,16 +44,17 @@ public:
 
     void switchOnOff();
 
-    virtual vecCstShape_sptr getShapes() const = 0;
-
     std::vector<unsigned char> getStaticUnsignedByteValues() const override;
 
     Displayable::StaticValues<JBTypes::vec3f> getStaticVec3fValues() const override;
 
     Displayable::DynamicNames getDynamicFloatNames() const override;
+
     Displayable::DynamicValues<float> getDynamicFloatValues() const override;
 
-    Displayable::GlobalState getGlobalState() const override;
+    std::string getDynamicGroupHash() const override;
+
+    bool dynamicsMayChange() const override;
 
 private:
     const CstChronometer_sptr _chronometer;

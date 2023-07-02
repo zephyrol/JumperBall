@@ -32,8 +32,6 @@ public:
 
     glm::mat4 viewProjection() const noexcept;
 
-    Displayable::GlobalState getGlobalState() const override;
-
     void update(
         const Player::Status &status,
         bool goAbove

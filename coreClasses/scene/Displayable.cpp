@@ -47,7 +47,11 @@ std::vector<JBTypes::Quaternion> Displayable::getDynamicQuaternionValues() const
     return {};
 }
 
-bool Displayable::globalStateMayChange() const {
+std::string Displayable::getDynamicGroupHash() const {
+    return "";
+}
+
+bool Displayable::dynamicsMayChange() const {
     return false;
 }
 
@@ -68,5 +72,9 @@ Displayable::DynamicNames Displayable::getDynamicVec3fNames() const {
 }
 
 Displayable::DynamicNames Displayable::getDynamicQuaternionNames() const {
+    return {};
+}
+
+vecCstShape_sptr Displayable::getShapes() const {
     return {};
 }

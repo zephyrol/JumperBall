@@ -74,13 +74,8 @@ Displayable::DynamicValues<JBTypes::vec3f> Enemy::getDynamicVec3fValues() const 
     return { _position, _scale };
 }
 
-Displayable::GlobalState Enemy::getGlobalState() const {
-    return Displayable::GlobalState::Separate;
-}
-
 void Enemy::update() {
 }
 
 const JBTypes::vec3f Enemy::scaleActivated = {1.f, 1.f, 1.f};
 const JBTypes::vec3f Enemy::scaleDisable = {0.f, 0.f, 0.f};
-

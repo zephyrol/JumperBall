@@ -6,24 +6,22 @@
  */
 #include "Mesh.h"
 
-Mesh::Mesh(const std::shared_ptr<const Displayable> &displayable, vecCstGeometricShape_sptr &&shapes) :
-    _displayable(displayable),
+#include <utility>
+
+Mesh::Mesh(
+    CstDisplayable_sptr displayable,
+    vecCstGeometricShape_sptr &&shapes,
+    short dynamicsId
+) :
+    _displayable(std::move(displayable)),
     _shapes(std::move(shapes)),
-    _updatingIsUseless(!_displayable->globalStateMayChange()) {
+    _dynamicsId(dynamicsId) {
 }
 
-Displayable::GlobalState Mesh::getGlobalState() const {
-    return _displayable->getGlobalState();
-}
-
-MeshUniforms Mesh::genMeshUniforms(const CstShaderProgram_sptr& shaderProgram) const {
-    return MeshUniforms::createInstance(_displayable, shaderProgram);
+MeshUniforms Mesh::genMeshUniforms(const CstShaderProgram_sptr &shaderProgram) const {
+    return MeshUniforms::createInstance(_displayable, shaderProgram, _dynamicsId);
 }
 
 MeshGeometry Mesh::genMeshGeometry() const {
-    return MeshGeometry::createInstance(_displayable, _shapes);
-}
-
-bool Mesh::updatingIsUseless() const {
-    return _updatingIsUseless;
+    return MeshGeometry::createInstance(_displayable, _shapes, _dynamicsId);
 }

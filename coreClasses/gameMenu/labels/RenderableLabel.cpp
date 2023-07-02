@@ -9,10 +9,6 @@ RenderableLabel::RenderableLabel(CstDisplayable_sptr label, CstDisplayable_sptr 
     _page(std::move(page)) {
 }
 
-Displayable::GlobalState RenderableLabel::getGlobalState() const {
-    return GlobalState::United;
-}
-
 std::vector<unsigned char> RenderableLabel::getStaticUnsignedByteValues() const {
     return _label->getStaticUnsignedByteValues();
 }

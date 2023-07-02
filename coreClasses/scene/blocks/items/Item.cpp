@@ -50,19 +50,6 @@ Displayable::DynamicValues<float> Item::getDynamicFloatValues() const {
     return {_chronometer->getTime(), getTimeSinceObtaining()};
 }
 
-Displayable::GlobalState Item::getGlobalState() const {
-    const float timeSinceObtaining = getTimeSinceObtaining();
-
-    if (isGotten()) {
-        constexpr float thresholdThirdStep = 1.5f;
-        constexpr float durationThirdStep = 0.2f;
-        return timeSinceObtaining < thresholdThirdStep + durationThirdStep
-               ? Displayable::GlobalState::Separate
-               : Displayable::GlobalState::Dead;
-    }
-    return Displayable::GlobalState::United;
-}
-
 JBTypes::vec3f Item::compute3DPosition() const {
     constexpr float offsetPosition = 0.755f;
     auto x = static_cast <float>(_position.at(0));
@@ -104,7 +91,13 @@ void Item::setAsGotten() {
     _gotten = true;
 }
 
-bool Item::globalStateMayChange() const {
-    return true;
+std::string Item::getDynamicGroupHash() const {
+    return std::to_string( _position.at(0)) + "," +
+        std::to_string(_position.at(1)) + "," +
+        std::to_string(_position.at(2)) + ";" +
+        std::to_string(static_cast<int>(_direction));
 }
 
+bool Item::dynamicsMayChange() const {
+    return true;
+}

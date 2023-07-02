@@ -28,13 +28,13 @@ public:
 
     Block::Effect detectionEvent() override;
 
-    Displayable::GlobalState getGlobalState() const override;
-
-    bool globalStateMayChange() const override;
-
     bool mayDisappear() const override;
 
     JBTypes::Color getColor() const override;
+
+    bool dynamicsMayChange() const override;
+
+    std::string getDynamicGroupHash() const override;
 
 private:
 
