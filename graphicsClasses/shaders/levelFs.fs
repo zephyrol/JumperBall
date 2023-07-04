@@ -10,8 +10,8 @@ uniform Scene {
 };
 
 uniform float burningCoeff;
-uniform sampler2D depthTexture;
-uniform sampler2D depth2Texture;
+uniform sampler2DShadow depthTexture;
+uniform sampler2DShadow depth2Texture;
 
 in vec3 fs_vertexColor;
 in vec4 fs_vertexDepthMapSpace;
@@ -50,27 +50,18 @@ vec3 getLightContribution(
 }
 
 const float shadowPixelSize = 1.0 / shadowTextureSize;
-const vec2 shadowOffset1 = vec2(shadowPixelSize, shadowPixelSize);
-const vec2 shadowOffset2 = vec2(-shadowPixelSize, shadowPixelSize);
-const vec2 shadowOffset3 = -shadowOffset1;
-const vec2 shadowOffset4 = -shadowOffset2;
+const vec4 shadowOffset1 = vec4(shadowPixelSize, shadowPixelSize, 0.0, 0.0);
+const vec4 shadowOffset2 = vec4(-shadowPixelSize, shadowPixelSize, 0.0, 0.0);
+const vec4 shadowOffset3 = -shadowOffset1;
+const vec4 shadowOffset4 = -shadowOffset2;
 
-float evaluateShadow(vec4 vertexDepthMapSpace, sampler2D depthT) {
+float evaluateShadow(vec4 vertexDepthMapSpace, sampler2DShadow depthT) {
     float shadowCoeff = 0.0;
-    vec2 vertexDepthMapSpaceXY = vertexDepthMapSpace.xy;
-    if (texture(depthT, vertexDepthMapSpaceXY + shadowOffset1).x > vertexDepthMapSpace.z) {
-        shadowCoeff += 0.25;
-    }
-    if (texture(depthT, vertexDepthMapSpaceXY + shadowOffset2).x > vertexDepthMapSpace.z) {
-        shadowCoeff += 0.25;
-    }
-    if (texture(depthT, vertexDepthMapSpaceXY + shadowOffset3).x > vertexDepthMapSpace.z) {
-        shadowCoeff += 0.25;
-    }
-    if (texture(depthT, vertexDepthMapSpaceXY + shadowOffset4).x > vertexDepthMapSpace.z) {
-        shadowCoeff += 0.25;
-    }
-    return shadowCoeff;
+    shadowCoeff += textureProj(depthT, vertexDepthMapSpace + shadowOffset1);
+    shadowCoeff += textureProj(depthT, vertexDepthMapSpace + shadowOffset2);
+    shadowCoeff += textureProj(depthT, vertexDepthMapSpace + shadowOffset3);
+    shadowCoeff += textureProj(depthT, vertexDepthMapSpace + shadowOffset4);
+    return shadowCoeff * 0.25;
 }
 
 vec4 convertOutput(vec3 composition) {
