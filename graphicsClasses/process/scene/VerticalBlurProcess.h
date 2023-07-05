@@ -37,7 +37,6 @@ private:
 
     static ShaderProgram_sptr createVerticalBlurProcessShaderProgram(
         const JBTypes::FileContent &fileContent,
-        GLsizei width,
         GLsizei height
     );
 };

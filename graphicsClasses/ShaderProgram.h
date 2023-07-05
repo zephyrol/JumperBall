@@ -39,7 +39,19 @@ public:
      * texture index (The number of the active texture).
      * Warning: don't forget to call ShaderProgram::use() method before!
      */
-    void setTextureIndex(const std::string &name, GLint index);
+    void setTextureIndex(const std::string &textureName, GLint index);
+
+    /**
+     * For a uniform array of vec2 representing by its name, set its content
+     * Warning: don't forget to call ShaderProgram::use() method before!
+     */
+    void setUniformArrayVec2(const std::string &uniformArrayName, const std::vector<GLfloat> &vec2sData);
+
+    /**
+     * For a uniform array of vec4 representing by its name, set its content
+     * Warning: don't forget to call ShaderProgram::use() method before!
+     */
+    void setUniformArrayVec4(const std::string &uniformArrayName, const std::vector<GLfloat> &vec4sData);
 
     void freeGPUMemory();
 
@@ -59,8 +71,9 @@ private:
     const CstShader_uptr _vertexShader;
     const CstShader_uptr _fragmentShader;
 
-    static void verifyLinkStatus(GLuint shaderProgramHandle);
+    GLint getUniformLocation(const std::string &uniformName) const;
 
+    static void verifyLinkStatus(GLuint shaderProgramHandle);
 };
 
 #endif /* SHADERPROGRAM_H */

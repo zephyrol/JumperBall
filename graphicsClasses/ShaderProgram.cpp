@@ -87,10 +87,31 @@ void ShaderProgram::verifyLinkStatus(GLuint shaderProgramHandle) {
     }
 }
 
-void ShaderProgram::setTextureIndex(const std::string &name, GLint index) {
+GLint ShaderProgram::getUniformLocation(const std::string &uniformName) const {
     const auto location = glGetUniformLocation(
         _shaderProgramHandle,
-        name.c_str()
+        uniformName.c_str()
     );
+    return location;
+}
+
+void ShaderProgram::setTextureIndex(const std::string &textureName, GLint index) {
+    const auto location = getUniformLocation(textureName);
     glUniform1i(location, index);
+}
+
+void ShaderProgram::setUniformArrayVec2(
+    const std::string &uniformArrayName,
+    const std::vector<GLfloat> &vec2sData
+) {
+    const auto location = getUniformLocation(uniformArrayName);
+    glUniform2fv(location, static_cast<GLint>(vec2sData.size()) / 2, vec2sData.data());
+}
+
+void ShaderProgram::setUniformArrayVec4(
+    const std::string &uniformArrayName,
+    const std::vector<GLfloat> &vec4sData
+) {
+    const auto location = getUniformLocation(uniformArrayName);
+    glUniform4fv(location, static_cast<GLint>(vec4sData.size()) / 4, vec4sData.data());
 }

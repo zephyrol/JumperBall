@@ -96,7 +96,7 @@ void LevelProcess::render() const {
 
     // Render star
     FrameBuffer::disableDepthTest();
-    const auto& starShaderRenderPass = _shadersRenderPasses.front();
+    const auto &starShaderRenderPass = _shadersRenderPasses.front();
     const auto &starShader = starShaderRenderPass.first;
     const auto &starRenderPass = starShaderRenderPass.second;
     starShader->use();
@@ -142,12 +142,23 @@ ShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
         fileContent,
         vs,
         "levelFs.fs",
-        {"LEVEL_PASS"},
-        {{ "shadowTextureSize", static_cast<float>(shadowsResolution)}}
+        {"LEVEL_PASS"}
     );
     shader->use();
     shader->setTextureIndex("depthTexture", 0);
     shader->setTextureIndex("depth2Texture", 1);
+
+    const auto shadowPixelSize = 1.f / static_cast<float>(shadowsResolution);
+
+    shader->setUniformArrayVec4(
+        "shadowOffsets[0]",
+        {
+            shadowPixelSize, shadowPixelSize, 0.0, 0.0,
+            -shadowPixelSize, shadowPixelSize, 0.0, 0.0,
+            shadowPixelSize, -shadowPixelSize, 0.0, 0.0,
+            -shadowPixelSize, -shadowPixelSize, 0.0, 0.0
+        }
+    );
     return shader;
 }
 

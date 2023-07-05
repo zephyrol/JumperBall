@@ -13,6 +13,8 @@ uniform float burningCoeff;
 uniform sampler2DShadow depthTexture;
 uniform sampler2DShadow depth2Texture;
 
+uniform vec4 shadowOffsets[4];
+
 in vec3 fs_vertexColor;
 in vec4 fs_vertexDepthMapSpace;
 in vec4 fs_vertexDepthMap2Space;
@@ -20,14 +22,6 @@ in vec3 fs_vertexNormal;
 in vec3 fs_vertexPositionWorld;
 
 out vec4 pixelColor;
-
-const vec3 ambientLightIntensity = vec3(0.7, 0.7, 0.7);
-
-const vec3 diffuseLightIntensity = vec3(0.20, 0.25, 0.25);
-const vec3 specularLightIntensity = vec3(0.0, 0.25, 0.25);
-
-const vec3 diffuseLight2Intensity = vec3(0.25, 0.20, 0.25);
-const vec3 specularLight2Intensity = vec3(0.25, 0.0, 0.25);
 
 vec3 getLightContribution(
     vec3 normalVec,
@@ -39,7 +33,7 @@ vec3 getLightContribution(
     vec3 reflection = normalize(reflect(lightDir, normalVec));
     vec3 diffuseComponent = diffuseLightIntensity * dot(-lightDir, normalVec);
     float dotReflectionToCamera = dot(reflection, toCamera);
-    if(dotReflectionToCamera < 0.0) {
+    if (dotReflectionToCamera < 0.0) {
         return diffuseComponent;
     }
     vec3 specularComponent = specularLightIntensity * pow(
@@ -49,61 +43,55 @@ vec3 getLightContribution(
     return diffuseComponent + specularComponent;
 }
 
-const float shadowPixelSize = 1.0 / shadowTextureSize;
-const vec4 shadowOffset1 = vec4(shadowPixelSize, shadowPixelSize, 0.0, 0.0);
-const vec4 shadowOffset2 = vec4(-shadowPixelSize, shadowPixelSize, 0.0, 0.0);
-const vec4 shadowOffset3 = -shadowOffset1;
-const vec4 shadowOffset4 = -shadowOffset2;
-
 float evaluateShadow(vec4 vertexDepthMapSpace, sampler2DShadow depthT) {
     float shadowCoeff = 0.0;
-    shadowCoeff += textureProj(depthT, vertexDepthMapSpace + shadowOffset1);
-    shadowCoeff += textureProj(depthT, vertexDepthMapSpace + shadowOffset2);
-    shadowCoeff += textureProj(depthT, vertexDepthMapSpace + shadowOffset3);
-    shadowCoeff += textureProj(depthT, vertexDepthMapSpace + shadowOffset4);
+    for(int i = 0; i < 4; ++i) {
+        shadowCoeff += textureProj(depthT, vertexDepthMapSpace + shadowOffsets[i]);
+    }
     return shadowCoeff * 0.25;
 }
 
 vec4 convertOutput(vec3 composition) {
     float compositionLength = length(composition);
-    if(compositionLength < 1.0) {
+    if (compositionLength < 1.0) {
         return vec4(composition, 0.0);
     }
     return vec4(
         normalize(composition),
-        log2(compositionLength) / 3.0 // 3 because 2^3 = 8, its the max length
+        log2(compositionLength) / 3.0// 3 because 2^3 = 8, its the max length
     );
 }
 
 void main(){
 
     const vec3 fireEffet = vec3(8.0, 0.2, 0.0);
+    const vec3 ambientLightIntensity = vec3(0.7, 0.7, 0.7);
     vec3 composition = ambientLightIntensity * mix(fs_vertexColor, fireEffet, burningCoeff);
 
     vec3 normalizedNormal = normalize(fs_vertexNormal);
     vec3 toCamera = normalize(cameraPosition - fs_vertexPositionWorld);
-    if(dot(normalizedNormal, lightDirection) < 0.0) {
+    if (dot(normalizedNormal, lightDirection) < 0.0) {
         float firstShadowCoeff = evaluateShadow(fs_vertexDepthMapSpace, depthTexture);
         if (firstShadowCoeff > 0.0) {
             composition += firstShadowCoeff * getLightContribution(
                 normalizedNormal,
                 toCamera,
                 lightDirection,
-                diffuseLightIntensity,
-                specularLightIntensity
+                vec3(0.20, 0.25, 0.25),
+                vec3(0.0, 0.25, 0.25)
             );
         }
     }
 
-    if(dot(normalizedNormal, light2Direction) < 0.0) {
+    if (dot(normalizedNormal, light2Direction) < 0.0) {
         float secondShadowCoeff = evaluateShadow(fs_vertexDepthMap2Space, depth2Texture);
         if (secondShadowCoeff > 0.0) {
             composition += secondShadowCoeff * getLightContribution(
                 normalizedNormal,
                 toCamera,
                 light2Direction,
-                diffuseLight2Intensity,
-                specularLight2Intensity
+                vec3(0.25, 0.20, 0.25),
+                vec3(0.25, 0.0, 0.25)
             );
         }
     }

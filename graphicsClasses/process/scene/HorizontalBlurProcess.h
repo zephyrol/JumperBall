@@ -27,8 +27,7 @@ public:
     vecCstShaderProgram_sptr getShaderPrograms() const override;
     static ShaderProgram_sptr createHorizontalBlurProcessShaderProgram(
         const JBTypes::FileContent& fileContent,
-        GLsizei width,
-        GLsizei height
+        GLsizei width
     );
 
 private:

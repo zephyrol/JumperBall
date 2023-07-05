@@ -4,8 +4,6 @@
 
 #include "VerticalBlurProcess.h"
 
-#include <utility>
-
 VerticalBlurProcess::VerticalBlurProcess(
     const JBTypes::FileContent &fileContent,
     GLsizei width,
@@ -13,7 +11,7 @@ VerticalBlurProcess::VerticalBlurProcess(
     GLuint horizontalBlurTexture,
     const CstRenderGroupsManager_sptr &screen
 ) :
-    _verticalBlurShader(createVerticalBlurProcessShaderProgram(fileContent, width, height)),
+    _verticalBlurShader(createVerticalBlurProcessShaderProgram(fileContent, height)),
     _screenRenderPass(_verticalBlurShader, screen),
     _frameBuffer(ColorableFrameBuffer::createInstance(
         width,
@@ -44,24 +42,50 @@ void VerticalBlurProcess::freeGPUMemory() {
 
 ShaderProgram_sptr VerticalBlurProcess::createVerticalBlurProcessShaderProgram(
     const JBTypes::FileContent &fileContent,
-    GLsizei width,
     GLsizei height
 ) {
     auto shader = ShaderProgram::createInstance(
         fileContent,
         "basicFboVs.vs",
-        "verticalBlurFs.fs",
-        {},
-        {},
-        {{
-             "texelSize", glm::vec2(
-                1.f / static_cast<float>(width),
-                1.f / static_cast<float>(height)
-            )}
-        }
+        "verticalBlurFs.fs"
     );
     shader->use();
     shader->setTextureIndex("horizontalBlurTexture", 1);
+
+    // Getting 25 Gauss weights computed with sigma = 4
+    const auto texelSizeY = 1.f / static_cast<float>(height);
+    shader->setUniformArrayVec2(
+        "offsetsAndGaussWeights[0]",
+        {
+            texelSizeY * -12.f, 0.00110796,
+            texelSizeY * -11.f, 0.00227339,
+            texelSizeY * -10.f, 0.00438208,
+            texelSizeY * -9.f, 0.00793491,
+            texelSizeY * -8.f, 0.0134977,
+            texelSizeY * -7.f, 0.0215693,
+            texelSizeY * -6.f, 0.0323794,
+            texelSizeY * -5.f, 0.0456623,
+            texelSizeY * -4.f, 0.0604927,
+            texelSizeY * -3.f, 0.0752844,
+            texelSizeY * -2.f, 0.0880163,
+            texelSizeY * -1.f, 0.096667,
+            texelSizeY * 0.f, 0.0997356,
+            texelSizeY * 1.f, 0.096667,
+            texelSizeY * 2.f, 0.0880163,
+            texelSizeY * 3.f, 0.0752844,
+            texelSizeY * 4.f, 0.0604927,
+            texelSizeY * 5.f, 0.0456623,
+            texelSizeY * 6.f, 0.0323794,
+            texelSizeY * 7.f, 0.0215693,
+            texelSizeY * 8.f, 0.0134977,
+            texelSizeY * 9.f, 0.00793491,
+            texelSizeY * 10.f, 0.00438208,
+            texelSizeY * 11.f, 0.00227339,
+            texelSizeY * 12.f, 0.00110796
+        }
+    );
+
+
     return shader;
 }
 
