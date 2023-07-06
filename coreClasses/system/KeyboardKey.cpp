@@ -4,8 +4,12 @@
 
 #include "KeyboardKey.h"
 
-KeyboardKey::KeyboardKey(std::vector<std::function<void()>> &&actionFunctions) :
+KeyboardKey::KeyboardKey(
+    std::vector<std::function<void()>> &&actionFunctions,
+    std::function<void()> &&releaseFunction
+) :
     _actionFunctions(std::move(actionFunctions)),
+    _releaseFunction(std::move(releaseFunction)),
     _currentStatus(6, KeyboardKey::Status::Released),
     _previousStatus(_currentStatus) {
 }
@@ -19,7 +23,7 @@ void KeyboardKey::release(const KeyboardKey::Button &button) {
 }
 
 void KeyboardKey::update() {
-    for(size_t i = 0; i < _currentStatus.size(); ++i) {
+    for (size_t i = 0; i < _currentStatus.size(); ++i) {
         constexpr auto escapeButtonIndex = static_cast<size_t>(KeyboardKey::Button::Escape);
         const auto &status = _currentStatus.at(i);
         if (i != escapeButtonIndex) {
@@ -31,17 +35,10 @@ void KeyboardKey::update() {
             _actionFunctions.at(i)();
         }
     }
-    // for (const auto &keyState: _currentStatus) {
-    //     const auto &key = keyState.first;
-    //     const auto &status = keyState.second;
-    //     if (key != KeyboardKey::Button::Escape) {
-    //         if (status == KeyboardKey::Status::Pressed) {
-    //             _actionFunctions.at(static_cast<size_t>(key))();
-    //         }
-    //     } else if (_previousStatus.at(KeyboardKey::Button::Escape) == KeyboardKey::Status::Pressed
-    //                && status == KeyboardKey::Status::Released) {
-    //         _actionFunctions.at(static_cast<size_t>(key))();
-    //     }
-    // }
+    if (std::all_of(_currentStatus.begin(), _currentStatus.end(), [](const KeyboardKey::Status &status) {
+        return status == KeyboardKey::Status::Released;
+    })) {
+        _releaseFunction();
+    }
     _previousStatus = _currentStatus;
 }

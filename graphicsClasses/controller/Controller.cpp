@@ -50,25 +50,33 @@ Controller::Controller(
                      [this]() { _scene->setRight(); },
                      [this]() { escapeAction(); },
                      [this]() { _scene->setValidate(); },
-                 }),
+                 },
+                 [this]() { _scene->setNoAction(); }
+    ),
     _mouse(
         [this]() { _scene->setUp(); },
         [this]() { _scene->setDown(); },
         [this]() { _scene->setRight(); },
         [this]() { _scene->setLeft(); },
         [this](float mouseX, float mouseY) { setValidateMouse(mouseX, mouseY); },
-        [this]() { _scene->mouseSetUp(); }
+        [this]() { _scene->mouseSetUp(); },
+        [this]() { _scene->setNoAction(); }
     ),
-    _outputs{} {
+    _outputs{},
+    _input(Controller::Input::Keyboard) {
 }
 
 void Controller::interactionButtons(const KeyboardKey::Button &button, const KeyboardKey::Status &status) {
-    status == KeyboardKey::Status::Pressed
-    ? _keyboardKey.press(button)
-    : _keyboardKey.release(button);
+    if (status == KeyboardKey::Status::Pressed) {
+        _keyboardKey.press(button);
+        _input = Controller::Input::Keyboard;
+        return;
+    }
+    _keyboardKey.release(button);
 }
 
 void Controller::pressMouse(float posX, float posY) {
+    _input = Controller::Input::Mouse;
     _mouse.press(posX, posY);
 }
 
@@ -89,6 +97,7 @@ void Controller::runGame(size_t level) {
 }
 
 void Controller::setValidateMouse(float mouseX, float mouseY) {
+    _input = Controller::Input::Mouse;
     const auto currentStatus = _player->status();
     _scene->setValidateMouse();
 
@@ -154,8 +163,11 @@ std::string Controller::update() {
     _player->updateAdvertisementChronometer(updatingTime);
 
     // 2. Update controls
-    _keyboardKey.update();
-    _mouse.update(updatingTime);
+    if (_input == Controller::Input::Keyboard) {
+        _keyboardKey.update();
+    } else {
+        _mouse.update(updatingTime);
+    }
 
     // 3. Update scene and menu
     const auto &currentPage = _menu->currentPage();

@@ -54,6 +54,10 @@ public:
     void escapeAction();
 
 private:
+    enum class Input {
+        Keyboard, Mouse
+    };
+
     void runGame(size_t level);
 
     void setValidateMouse(float mouseX, float mouseY);
@@ -70,6 +74,7 @@ private:
     KeyboardKey _keyboardKey;
     Mouse _mouse;
     std::vector<CstUpdateOutput_sptr> _outputs;
+    Controller::Input _input;
 };
 
 #endif /* CONTROLLER_H */

@@ -17,10 +17,14 @@ public :
         Up, Down, Left, Right, Escape, Validate
     };
 
-    explicit KeyboardKey(std::vector<std::function<void()> > &&actionFunctions);
+    explicit KeyboardKey(
+        std::vector<std::function<void()> > &&actionFunctions,
+        std::function<void()> &&releaseFunction
+    );
 
-    void press(const Button& button);
-    void release(const Button& button);
+    void press(const Button &button);
+
+    void release(const Button &button);
 
     void update();
 
@@ -29,6 +33,7 @@ private:
     using KeyStatus = std::vector<Status>;
 
     const std::vector<std::function<void()> > _actionFunctions;
+    const std::function<void()> _releaseFunction;
     KeyStatus _currentStatus;
     KeyStatus _previousStatus;
 };
