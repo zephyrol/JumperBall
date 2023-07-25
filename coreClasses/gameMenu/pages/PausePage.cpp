@@ -109,7 +109,7 @@ Page_sptr PausePage::click(float mouseX, float mouseY) {
 vecCstTextNode_uptr PausePage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     const auto english = _player->isUsingEnglishLanguage();
-    textNodes.emplace_back(new TextNode(_jumperBallTitleNode, "Jumper Ball", 0));
+    textNodes.emplace_back(new TextNode(_jumperBallTitleNode, "Gravity Globe", 0));
     textNodes.emplace_back(new TextNode(_resumeNode, english ? "Resume" : "Reprendre", resumeLabelId));
     textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Sortir", exitLabelId));
     return textNodes;

@@ -208,7 +208,7 @@ void TitlePage::setStorePage(Page_sptr storePage) {
 vecCstTextNode_uptr TitlePage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     const auto english = _player->isUsingEnglishLanguage();
-    textNodes.emplace_back(new TextNode(_jumperBallTitle, "Jumper Ball", 0));
+    textNodes.emplace_back(new TextNode(_jumperBallTitle, "Gravity Globe", 0));
     textNodes.emplace_back(new TextNode(_play, english ? "Play" : "Jouer", playLabelId));
     textNodes.emplace_back(new TextNode(_store, english ? "Store" : "Boutique", storeLabelId));
     textNodes.emplace_back(

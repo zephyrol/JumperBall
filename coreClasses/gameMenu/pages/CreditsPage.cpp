@@ -105,7 +105,7 @@ vecNode_sptr CreditsPage::createNodes(float ratio, bool english) {
         1.5f
     );
 
-    constexpr float optionsNodeRatio = 7.f;
+    constexpr float optionsNodeRatio = 12.f;
     const auto devAndDesignNode = std::make_shared<VerticalNode>(
         optionsParentNode,
         optionsNodeRatio,
