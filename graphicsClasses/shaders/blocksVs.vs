@@ -7,6 +7,7 @@ uniform Scene {
     vec3 light2Direction;
     vec3 flashColor;
     float teleportationCoeff;
+    float burningCoeff;
 };
 
 uniform vec2 rotation[idCount];

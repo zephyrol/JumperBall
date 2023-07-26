@@ -52,9 +52,20 @@ LevelProcess_sptr LevelProcess::createInstance(
         std::make_shared<RenderPass>(starShaderProgram, std::move(star))
     );
 
+    const auto shaderProgram = createLevelProcessShaderProgram(
+        fileContent,
+        "ballVs.vs",
+        shadowsResolution,
+        ball->numberOfDynamicsIds(),
+       true
+    );
+    shadersRenderPasses.emplace_back(
+        shaderProgram,
+        std::make_shared<RenderPass>(shaderProgram, ball)
+    );
+
     std::vector<std::pair<std::string, CstRenderGroup_sptr> > vertexShaderFilesGroups{
-        {"blocksVs.vs", std::move(blocks)},
-        {"ballVs.vs",   std::move(ball)}
+        {"blocksVs.vs", std::move(blocks)}
     };
 
     if (items) {
@@ -75,7 +86,8 @@ LevelProcess_sptr LevelProcess::createInstance(
             fileContent,
             vertexShaderFile,
             shadowsResolution,
-            group->numberOfDynamicsIds()
+            group->numberOfDynamicsIds(),
+            false
         );
         shadersRenderPasses.emplace_back(
             shaderProgram,
@@ -154,14 +166,17 @@ std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
 ShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
     const JBTypes::FileContent &fileContent,
     const std::string &vs,
-    const GLsizei shadowsResolution,
-    short idCount
+    GLsizei shadowsResolution,
+    short idCount,
+    bool isUsingFireEffect
 ) {
+    std::vector<std::string> definesList {"LEVEL_PASS"};
+    definesList.emplace_back(isUsingFireEffect ? "FIRE_EFFECT": "NO_FIRE_EFFECT");
     auto shader = ShaderProgram::createInstance(
         fileContent,
         vs,
         "levelFs.fs",
-        {"LEVEL_PASS"},
+        definesList,
         {{"idCount", idCount}}
     );
     shader->use();

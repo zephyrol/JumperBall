@@ -60,9 +60,13 @@ private:
 
     const std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > _shadersRenderPasses;
 
-    static ShaderProgram_sptr
-    createLevelProcessShaderProgram(const JBTypes::FileContent &fileContent, const std::string &vs,
-                                    const GLsizei shadowsResolution, short idCount);
+    static ShaderProgram_sptr createLevelProcessShaderProgram(
+        const JBTypes::FileContent &fileContent,
+        const std::string &vs,
+        GLsizei shadowsResolution,
+        short idCount,
+        bool isUsingFireEffect
+    );
 };
 
 #endif //JUMPERBALLAPPLICATION_LEVELPROCESS_H

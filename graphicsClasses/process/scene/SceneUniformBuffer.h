@@ -25,7 +25,8 @@ public:
         const glm::vec3 &lightDirection,
         const glm::vec3 &light2Direction,
         const glm::vec3 &flashColor,
-        const glm::vec1 &teleportationCoeff
+        const glm::vec1 &teleportationCoeff,
+        const glm::vec1 &burningCoeff
     );
 
 private:

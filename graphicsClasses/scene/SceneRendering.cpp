@@ -191,7 +191,8 @@ void SceneRendering::update() {
         Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection()),
         Utility::convertToOpenGLFormat(_scene.getStar2()->lightDirection()),
         Utility::colorAsVec3(sceneBall->getTeleportationColor()),
-        glm::vec1(sceneBall->getTeleportationCoefficient())
+        glm::vec1(sceneBall->getTeleportationCoefficient()),
+        glm::vec1(sceneBall->burnCoefficient())
     );
 
     for (const auto &process: _processes) {
