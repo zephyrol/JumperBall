@@ -170,7 +170,7 @@ Page_sptr TitlePage::click(float mouseX, float mouseY) {
         return _levelsPage;
     }
     if (nearest == _language) {
-        _player->switchLangage();
+        _player->switchLanguage();
         resetNodes();
     }
     if (nearest == _musics) {

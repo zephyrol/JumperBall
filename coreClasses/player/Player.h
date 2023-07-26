@@ -61,7 +61,7 @@ public:
 
     void unlockSkin(size_t skinNumber);
 
-    void switchLangage();
+    void switchLanguage();
 
     bool isUsingEnglishLanguage() const;
 

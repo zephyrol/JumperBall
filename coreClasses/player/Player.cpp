@@ -105,7 +105,7 @@ void Player::unlockSkin(size_t skinNumber) {
 void Player::setAsWinner(unsigned int earnedMoney) {
     _needsSaveFile = true;
     setAsInMenu();
-    if (_currentLevel == _levelProgression) {
+    if (_currentLevel == _levelProgression && _currentLevel != maxLevel) {
         ++_levelProgression;
     }
     _gameStatus = GameStatus::Winner;
@@ -246,7 +246,7 @@ float Player::getRemainingTime() const {
     return _remainingTime;
 }
 
-void Player::switchLangage() {
+void Player::switchLanguage() {
     _needsSaveFile = true;
     _frenchLanguageIsActivated = !_frenchLanguageIsActivated;
     addValidationSound();
