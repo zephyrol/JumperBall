@@ -54,9 +54,7 @@ private:
     std::unique_ptr<SceneRendering> _sceneRendering;
     std::unique_ptr<LabelsProcess> _pageRendering;
 
-    void resetSceneRendering();
-
-    void resetPageRendering();
+    void resetRendering();
 
 };
 

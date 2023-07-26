@@ -15,8 +15,6 @@ RenderGroupUniforms RenderGroupUniforms::createInstance(
     const MeshDynamicGroup &meshDynamicGroup,
     const CstShaderProgram_sptr &shaderProgram
 ) {
-
-    // 2. Create dynamic uniforms. It's useless to update them later
     vecMeshUniforms_sptr dynamicUniforms;
     for (const auto &meshList: meshDynamicGroup.dynamicMeshes()) {
         // We only use the front because all those meshes shared the same dynamic(uniform) hash

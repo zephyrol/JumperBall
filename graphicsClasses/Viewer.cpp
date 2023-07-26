@@ -61,38 +61,25 @@ void Viewer::freeGPUMemory() {
 void Viewer::resize(unsigned int resolutionX, unsigned int resolutionY) {
     _resolutionX = static_cast<GLsizei>(resolutionX);
     _resolutionY = static_cast<GLsizei>(resolutionY);
-    resetSceneRendering();
-    resetPageRendering();
+    resetRendering();
 }
 
 void Viewer::setScene(const CstScene_sptr &scene) {
     _scene = scene;
-    resetSceneRendering();
-    resetPageRendering();
+    resetRendering();
 }
 
 void Viewer::setPage(const CstPage_sptr &page) {
     _page = page;
-    resetPageRendering();
+    resetRendering();
 }
 
 Viewer::~Viewer() {
     FontTexturesGenerator::clearFreeTypeResources(_ftContent);
 }
 
-void Viewer::resetPageRendering() {
-    _pageRendering->freeGPUMemory();
-    _pageRendering = std::unique_ptr<LabelsProcess>(LabelsProcess::createInstance(
-        _fileContent,
-        _ftContent,
-        _resolutionX,
-        _resolutionY,
-        _page
-    ));
-}
-
-void Viewer::resetSceneRendering() {
-    _sceneRendering->freeGPUMemory();
+void Viewer::resetRendering() {
+    freeGPUMemory();
     _sceneRendering = SceneRendering::createInstance(
         *_scene,
         _resolutionX,
@@ -100,4 +87,11 @@ void Viewer::resetSceneRendering() {
         _defaultFrameBuffer,
         _fileContent
     );
+    _pageRendering = std::unique_ptr<LabelsProcess>(LabelsProcess::createInstance(
+        _fileContent,
+        _ftContent,
+        _resolutionX,
+        _resolutionY,
+        _page
+    ));
 }
