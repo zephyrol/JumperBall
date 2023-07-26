@@ -10,7 +10,6 @@
 
 #include "frameBuffer/FrameBuffer.h"
 #include "RenderGroup.h"
-#include "RenderGroupsManager.h"
 
 class RenderPass;
 
