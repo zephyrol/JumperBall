@@ -62,8 +62,7 @@ JBTypes::FileContent Window::createFilesContent() {
         fileDistPath[shader] = "shaders/" + shader;
     }
 
-    constexpr size_t numberOfLevel = 2;
-    for (size_t i = 1; i <= numberOfLevel; ++i) {
+    for (size_t i = 1; i <= Player::maxLevel ; ++i) {
         const auto mapName = "map" + std::to_string(i) + ".txt";
         fileDistPath[mapName] = "maps/" + mapName;
     }
