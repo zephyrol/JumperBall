@@ -25,8 +25,6 @@
 
 namespace Utility {
 
-    std::vector<GLfloat> computeNormals(const std::vector<GLfloat> &positions);
-
     glm::mat4 rotationUpToDir(JBTypes::Dir dir);
 
     float evalGauss1D(float x, float sigma);

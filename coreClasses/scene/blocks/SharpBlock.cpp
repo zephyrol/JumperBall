@@ -56,12 +56,21 @@ std::array<bool, 6> SharpBlock::faceInfo() const {
 vecCstShape_sptr SharpBlock::getExtraShapes() const {
 
     vecCstShape_sptr shapes{};
-    const std::array<float, 7> scales{.2f, .1f, .05f, .1f, .075f, .15f, .175f};
-
-    const std::array<JBTypes::vec2f, 7> translationFloorFactor{
-        JBTypes::vec2f{0.f, 0.f}, JBTypes::vec2f{-0.6f, -0.4f}, JBTypes::vec2f{0.6f, -0.6f},
-        JBTypes::vec2f{0.2f, 0.6f}, JBTypes::vec2f{-0.2f, -0.6f}, JBTypes::vec2f{0.6f, 0.6f},
-        JBTypes::vec2f{-0.6f, 0.6f}
+    constexpr size_t numberOfSpikes = 13;
+    const std::array<JBTypes::vec2f, numberOfSpikes> translationFloorFactor{
+        JBTypes::vec2f{0.f, 0.f},
+        JBTypes::vec2f{0.4f, 0.4f},
+        JBTypes::vec2f{-0.4f, 0.4f},
+        JBTypes::vec2f{0.4f, -0.4f},
+        JBTypes::vec2f{-0.4f, -0.4f},
+        JBTypes::vec2f{0.f, 0.8f},
+        JBTypes::vec2f{0.f, -0.8f},
+        JBTypes::vec2f{0.8f, 0.f},
+        JBTypes::vec2f{-0.8f, 0.f},
+        JBTypes::vec2f{0.8f, 0.8f},
+        JBTypes::vec2f{0.8f, -0.8f},
+        JBTypes::vec2f{-0.8f, 0.8f},
+        JBTypes::vec2f{-0.8f, -0.8f}
     };
 
     for (size_t i = 0; i < _facesSharps.size(); i++) {
@@ -88,8 +97,10 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
             };
 
 
-            for (size_t j = 0; j < scales.size(); j++) {
-                const JBTypes::vec3f localScale{scales.at(j), 0.5f, scales.at(j)};
+            for (size_t j = 0; j < translationFloorFactor.size(); j++) {
+                constexpr auto localScaleFactor = 0.15f;
+
+                const JBTypes::vec3f localScale{localScaleFactor, localScaleFactor, localScaleFactor};
 
                 const JBTypes::vec3f translationFloor{
                     offset * translationFloorFactor.at(j).x,

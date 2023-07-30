@@ -27,49 +27,6 @@ std::vector<GLfloat> Utility::uniColorsCube(const glm::vec3 &color) {
     return colors;
 }
 
-std::vector<GLfloat> Utility::computeNormals(const std::vector<GLfloat> &
-positions) {
-    std::vector<GLfloat> normals;
-    constexpr unsigned int offsetPointA = 0;
-    constexpr unsigned int offsetPointB = 3;
-    constexpr unsigned int offsetPointC = 6;
-
-    constexpr unsigned int offsetCoordX = 0;
-    constexpr unsigned int offsetCoordY = 1;
-    constexpr unsigned int offsetCoordZ = 2;
-
-    constexpr unsigned int coordsPerTriangle = 9;
-    constexpr unsigned int pointsPerTriangles = 3;
-    for (size_t i = 0; i < positions.size(); i += coordsPerTriangle) {
-        glm::vec3 normal(
-            glm::cross(
-                glm::vec3(
-                    positions.at(offsetPointB + offsetCoordX) -
-                    positions.at(offsetPointA + offsetCoordX),
-                    positions.at(offsetPointB + offsetCoordY) -
-                    positions.at(offsetPointA + offsetCoordY),
-                    positions.at(offsetPointB + offsetCoordZ) -
-                    positions.at(offsetPointA + offsetCoordZ)
-                ),
-                glm::vec3(
-                    positions.at(offsetPointC + offsetCoordX) -
-                    positions.at(offsetPointB + offsetCoordX),
-                    positions.at(offsetPointC + offsetCoordY) -
-                    positions.at(offsetPointB + offsetCoordY),
-                    positions.at(offsetPointC + offsetCoordZ) -
-                    positions.at(offsetPointB + offsetCoordZ)
-                )));
-
-        glm::normalize(normal);
-        for (unsigned int j = 0; j < pointsPerTriangles; j++) {
-            normals.push_back(normal.x);
-            normals.push_back(normal.y);
-            normals.push_back(normal.z);
-        }
-    }
-    return normals;
-}
-
 
 std::vector<glm::vec3> Utility::GLfloatListToGlmVec3(
     const std::vector<GLfloat> &list) {
@@ -99,7 +56,6 @@ std::vector<glm::vec2> Utility::GLfloatListToGlmVec2(
     return vecList;
 }
 
-
 glm::mat4 Utility::rotationUpToDir(JBTypes::Dir dir) {
 
     constexpr auto fPI = static_cast <float>(M_PI);
@@ -128,7 +84,6 @@ float Utility::evalGauss1D(float x, float sigma) {
     return static_cast <float>(
         exp((-pow(x, 2.)) / (2. * pow(sigma, 2.))) / (sqrt(2. * M_PI * pow(sigma, 2.))));
 }
-
 
 std::vector<GLfloat> Utility::genGaussBuffer(size_t patchSize, float sigma) {
     std::vector<GLfloat> gaussBuffer;

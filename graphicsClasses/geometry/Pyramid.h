@@ -32,11 +32,7 @@ public:
     virtual std::vector<glm::vec3> genColors(const std::vector<glm::vec3> &colors) const override;
 
 private:
-
-    static const std::vector<glm::vec3> basicPositionsPyramid;
-    static const std::vector<glm::vec3> basicColorsPyramid;
-    static const std::vector<glm::vec3> basicNormalsPyramid;
-    static const std::vector<glm::vec2> basicUVCoordsPyramid;
+    static constexpr auto sharpHeight = 3.f;
 };
 
 #endif /* PYRAMID_H */
