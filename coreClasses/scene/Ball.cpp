@@ -582,22 +582,12 @@ Ball::MovementDestination Ball::getNextBlockInfo() const {
         nextBlock.nextLocal = Ball::NextDestination::InFrontOf;
         nextBlock.nextLook = lookTowards;
         nextBlock.nextSide = currentSide;
-    } else if ((!blockLeft || !blockLeft->isExists()) && (!blockRight || !blockRight->isExists())) {
+    } else {
         nextBlock.pos = _pos;
         nextBlock.nextLocal = Ball::NextDestination::Same;
         const JBTypes::Dir sideBeforeMovement = currentSide;
         nextBlock.nextSide = lookTowards;
         nextBlock.nextLook = _turnBackMovement.evaluate({sideBeforeMovement});
-    } else if (_stateOfLife == Ball::StateOfLife::Sliding) {
-        nextBlock.pos = inFrontOf;
-        nextBlock.nextLocal = Ball::NextDestination::InFrontOf;
-        nextBlock.nextLook = lookTowards;
-        nextBlock.nextSide = currentSide;
-    } else {
-        nextBlock.pos = _pos;
-        nextBlock.nextLocal = Ball::NextDestination::None;
-        nextBlock.nextSide = currentSide;;
-        nextBlock.nextLook = lookTowards;
     }
     return nextBlock;
 }

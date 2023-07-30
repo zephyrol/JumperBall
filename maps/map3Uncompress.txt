@@ -13,13 +13,13 @@
 . . . . . . . . .
 
 . . . . . . . . .
-. X X X . X X X . NI KU N N     N   S U     NI KU 
-. X . X . X . X . N S U           S U N
+. X X X . X X X . NI KU N N     N   S UD     NI KU 
+. X . X . X . X . N S UD           S UD N
 . X X X . X X X . N N N         N N E U
 . . . . . . . . .
-. X X X . . . . . N S U N
+. X X X . . . . . N S UD N
 . X . X . . . . . N NI IU
-. X X X . . . . . N N S U
+. X X X . . . . . N N S UD
 . . . . . . . . .
 
 . . . . . . . . .
