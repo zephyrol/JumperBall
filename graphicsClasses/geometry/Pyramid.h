@@ -32,7 +32,7 @@ public:
     virtual std::vector<glm::vec3> genColors(const std::vector<glm::vec3> &colors) const override;
 
 private:
-    static constexpr auto sharpHeight = 3.f;
+    static constexpr auto sharpHeight = 2.8f;
 };
 
 #endif /* PYRAMID_H */

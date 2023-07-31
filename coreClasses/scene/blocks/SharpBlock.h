@@ -29,11 +29,14 @@ public:
 
     vecCstShape_sptr getExtraShapes() const override;
 
-    std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > computeSharpBoundingBoxes() const;
+    std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > computeSharpBoundingBoxes(float sharpsSize) const;
 
 private:
     const std::array<bool, 6> _facesSharps;
-    const std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > _sharpBoundingBoxes;
+    const std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > _jumpingSharpBoundingBoxes;
+    const std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > _movingSharpBoundingBoxes;
+    static constexpr auto jumpingSharpSize = 0.31f;
+    static constexpr auto movingSharpSize = 0.6f;
 };
 
 #endif /* SHARPBLOCK_H */

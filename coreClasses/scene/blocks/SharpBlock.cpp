@@ -15,8 +15,8 @@ SharpBlock::SharpBlock(const JBTypes::vec3ui &position,
                        const std::array<bool, 6> &facesSharps) :
     InteractiveBlock(position, items, enemies, specials, ball, true),
     _facesSharps((facesSharps)),
-    _sharpBoundingBoxes(computeSharpBoundingBoxes()) {
-
+    _jumpingSharpBoundingBoxes(computeSharpBoundingBoxes(jumpingSharpSize)),
+    _movingSharpBoundingBoxes(computeSharpBoundingBoxes(movingSharpSize)) {
 }
 
 Block::Effect SharpBlock::interaction() const {
@@ -32,7 +32,11 @@ Block::Effect SharpBlock::interaction() const {
                    position.z > z_min && position.z < z_max;
         };
 
-    for (const auto &boundingBox: _sharpBoundingBoxes) {
+    const auto& state = _ball.lock()->state();
+    const auto& sharpBoundingBoxes = state == Ball::State::Jumping || state == Ball::State::Falling
+        ? _jumpingSharpBoundingBoxes
+        : _movingSharpBoundingBoxes;
+    for (const auto &boundingBox: sharpBoundingBoxes) {
         const auto ball = _ball.lock();
         if (isInSharpZone(
             ball->get3DPosition(),
@@ -63,21 +67,21 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
         JBTypes::vec2f{-0.4f, 0.4f},
         JBTypes::vec2f{0.4f, -0.4f},
         JBTypes::vec2f{-0.4f, -0.4f},
-        JBTypes::vec2f{0.f, 0.8f},
-        JBTypes::vec2f{0.f, -0.8f},
-        JBTypes::vec2f{0.8f, 0.f},
-        JBTypes::vec2f{-0.8f, 0.f},
-        JBTypes::vec2f{0.8f, 0.8f},
-        JBTypes::vec2f{0.8f, -0.8f},
-        JBTypes::vec2f{-0.8f, 0.8f},
-        JBTypes::vec2f{-0.8f, -0.8f}
+        JBTypes::vec2f{0.f, 0.85f},
+        JBTypes::vec2f{0.f, -0.85f},
+        JBTypes::vec2f{0.85f, 0.f},
+        JBTypes::vec2f{-0.85f, 0.f},
+        JBTypes::vec2f{0.85f, 0.85f},
+        JBTypes::vec2f{0.85f, -0.85f},
+        JBTypes::vec2f{-0.85f, 0.85f},
+        JBTypes::vec2f{-0.85f, -0.85f}
     };
 
     for (size_t i = 0; i < _facesSharps.size(); i++) {
 
         const bool isSharp = _facesSharps.at(i);
         if (isSharp) {
-            constexpr float sizeBlock = 1.f; // TODO specify it elsewhere
+            constexpr float sizeBlock = 1.f;
             constexpr float offset = sizeBlock / 2.f;
 
             const JBTypes::Dir currentDir = JBTypesMethods::integerAsDirection(
@@ -139,48 +143,48 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
     return shapes;
 }
 
-std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > SharpBlock::computeSharpBoundingBoxes() const {
+std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > SharpBlock::computeSharpBoundingBoxes(
+    float sharpsSize
+) const {
 
     std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f>> boundingBoxes;
 
-
-    constexpr float sizeSharp = 0.31f;
-    const auto posBlockfX = static_cast <float>(_position.at(0));
-    const auto posBlockfY = static_cast <float>(_position.at(1));
-    const auto posBlockfZ = static_cast <float>(_position.at(2));
+    const auto blockfXPos = static_cast <float>(_position.at(0));
+    const auto blockfYPos = static_cast <float>(_position.at(1));
+    const auto blockfZPos = static_cast <float>(_position.at(2));
     for (size_t i = 0; i < _facesSharps.size(); ++i) {
 
         if (_facesSharps.at(i)) {
             constexpr float halfSizeBlock = 0.5f;
-            float posBlockfXMin = posBlockfX - halfSizeBlock;
-            float posBlockfXMax = posBlockfX + halfSizeBlock;
-            float posBlockfYMin = posBlockfY - halfSizeBlock;
-            float posBlockfYMax = posBlockfY + halfSizeBlock;
-            float posBlockfZMin = posBlockfZ - halfSizeBlock;
-            float posBlockfZMax = posBlockfZ + halfSizeBlock;
+            float posBlockfXMin = blockfXPos - halfSizeBlock;
+            float posBlockfXMax = blockfXPos + halfSizeBlock;
+            float posBlockfYMin = blockfYPos - halfSizeBlock;
+            float posBlockfYMax = blockfYPos + halfSizeBlock;
+            float posBlockfZMin = blockfZPos - halfSizeBlock;
+            float posBlockfZMax = blockfZPos + halfSizeBlock;
 
             JBTypes::Dir dir = JBTypesMethods::integerAsDirection(static_cast <unsigned int>(i));
             JBTypes::vec3f dirVec = JBTypesMethods::directionAsVector(dir);
 
             if (dirVec.x > EPSILON_F || dirVec.x < -EPSILON_F) {
                 if (dirVec.x < 0) {
-                    posBlockfXMin -= sizeSharp;
+                    posBlockfXMin -= sharpsSize;
                 } else if (dirVec.x > 0) {
-                    posBlockfXMax += sizeSharp;
+                    posBlockfXMax += sharpsSize;
                 }
             }
             if (dirVec.y > EPSILON_F || dirVec.y < -EPSILON_F) {
                 if (dirVec.y < 0) {
-                    posBlockfYMin -= sizeSharp;
+                    posBlockfYMin -= sharpsSize;
                 } else if (dirVec.y > 0) {
-                    posBlockfYMax += sizeSharp;
+                    posBlockfYMax += sharpsSize;
                 }
             }
             if (dirVec.z > EPSILON_F || dirVec.z < -EPSILON_F) {
                 if (dirVec.z < 0) {
-                    posBlockfZMin -= sizeSharp;
+                    posBlockfZMin -= sharpsSize;
                 } else if (dirVec.z > 0) {
-                    posBlockfZMax += sizeSharp;
+                    posBlockfZMax += sharpsSize;
                 }
             }
             boundingBoxes.push_back(

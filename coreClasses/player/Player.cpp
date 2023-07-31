@@ -31,7 +31,7 @@ Player::Player(
     _updateOutputs{},
     _money(money),
     _previousMoney(_money),
-    _levelProgression(maxLevel),
+    _levelProgression(levelProgression),
     _ballSkins(std::move(ballSkins)),
     _currentBallSkin(currentBallSkin),
     _frenchLanguageIsActivated(frenchLanguageIsActivated),
