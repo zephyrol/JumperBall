@@ -10,7 +10,7 @@
 Camera::Camera(const Map &map, float ratio) :
     _map(map),
     _chronometer(map.getBall()->getCreationChronometer()),
-    _zFar(3.f * map.getLargestSize()),
+    _zFar(4.f * map.getLargestSize()),
     _fovY(computeFovY(ratio)),
     _localOffset(computeLocalOffset(_fovY)),
     _movement(Camera::Movement::TurningAroundMap),
