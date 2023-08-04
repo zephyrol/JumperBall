@@ -101,7 +101,7 @@ std::string Map::update(const Ball::ActionRequest &action) {
         block->update();
     }
 
-    constexpr decltype(_ball->numberOfClocks()) clockTimeBonus = 20;
+    constexpr decltype(_ball->numberOfClocks()) clockTimeBonus = 30;
     _remainingTime = _timeToFinish + static_cast<float>(
         _ball->numberOfClocks() * clockTimeBonus
     ) - _ball->getInGameChronometer()->getTime();
