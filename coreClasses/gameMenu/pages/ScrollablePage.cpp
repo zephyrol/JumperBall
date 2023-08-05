@@ -67,7 +67,7 @@ void ScrollablePage::update(const Mouse &mouse) {
     if (!_isPressed && !_lastSwipeUpdates.empty()) {
         const slideState &lastSlideState = _lastSwipeUpdates.front();
         const float t = _chronometer->getTime() - lastSlideState.first;
-        const float deceleration = decelerationCoefficient * powf(t, 2.f) / 2.f;
+        const float deceleration = decelerationCoefficient * t * t / 2.f;
 
         if (_releaseVelocity > 0.f && t < -(_releaseVelocity) / (2.f * -decelerationCoefficient / 2.f)) {
             _localPosY = -deceleration + _releaseVelocity * t + _localReleasedPosY;

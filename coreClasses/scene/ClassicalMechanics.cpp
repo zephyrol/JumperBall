@@ -41,7 +41,7 @@ ClassicalMechanics::physics2DVector ClassicalMechanics::getVelocity(float t) con
 
 float ClassicalMechanics::evalPositionX(float t) const {
     const float posX = t < _timeToGetDestinationX
-                       ? _v0.x * _timeToGetDestinationX * t - _v0.x * powf(t, 2.f) / 2.f
+                       ? _v0.x * _timeToGetDestinationX * t - _v0.x * t * t / 2.f
                        : _jumpDistance;
     return posX;
 }
@@ -111,7 +111,7 @@ float ClassicalMechanics::getPositionX(float t) const {
 }
 
 float ClassicalMechanics::getPositionY(float t) const {
-    return _v0.y * t - powf(t, 2.f) * gravitationalAccelerationEarth / 2.f;
+    return _v0.y * t - t * t * gravitationalAccelerationEarth / 2.f;
 }
 
 float ClassicalMechanics::getVelocityX(float t) const {
@@ -130,29 +130,17 @@ float ClassicalMechanics::getTimeToGetDestination() const {
 }
 
 std::pair<float, float> ClassicalMechanics::solveQuadraticEquation(float a, float b, float c) {
-    if (a < EPSILON_F && a > -EPSILON_F) {
-        std::cerr << "Error: Trying to divide by 0 ... " <<
-                  "solutions cropped to 0... "
-                  << std::endl;
-        return {0.f, 0.f};
-    }
-    const float delta = static_cast <float>(pow(b, 2.)) - 4.f * a * c;
-    if (delta < 0.f) {
-        std::cerr << "Error: Non-real solutions ... : cropped to 0... "
-                  << std::endl;
-        return {0.f, 0.f};
-    } else {
-        const auto twoA = 2.f * a;
-        const auto sqrtDelta = sqrtf(delta);
-        return {
-            (-b + sqrtDelta) / twoA,
-            (-b - sqrtDelta) / twoA
-        };
-    }
+    const float delta = b * b - 4.f * a * c;
+    const auto twoA = 2.f * a;
+    const auto sqrtDelta = sqrtf(delta);
+    return {
+        (-b + sqrtDelta) / twoA,
+        (-b - sqrtDelta) / twoA
+    };
 }
 
 float ClassicalMechanics::getV0xToRespectDistanceAndTime() const {
-    return 2.f * _jumpDistance / static_cast <float>(powf(_timeToGetDestinationX, 2.f));
+    return 2.f * _jumpDistance / (_timeToGetDestinationX * _timeToGetDestinationX);
 }
 
 float ClassicalMechanics::getTimeToGetDestFromV0y(float v0y) {
