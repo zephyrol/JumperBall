@@ -567,8 +567,6 @@ Ball::MovementDestination Ball::getNextBlockInfo() const {
 
     const CstBlock_sptr &blockAbove = getBlock(above);
     const CstBlock_sptr &blockInFrontOf = getBlock(inFrontOf);
-    const CstBlock_sptr &blockLeft = getBlock(left);
-    const CstBlock_sptr &blockRight = getBlock(right);
 
     Ball::MovementDestination nextBlock{};
     if (blockAbove && blockAbove->isExists()) {
