@@ -307,7 +307,7 @@ void Ball::isFallingIntersectionBlock() noexcept {
     getMechanicsJumping().timesShock({});
     _pos = {positionBlockPtr->at(0), positionBlockPtr->at(1), positionBlockPtr->at(2)};
     stay();
-    if(_stateOfLife != StateOfLife::Bursting && _stateOfLife != StateOfLife::Dead) {
+    if (_stateOfLife != StateOfLife::Bursting && _stateOfLife != StateOfLife::Dead) {
         _updateOutputs.push_back(std::make_shared<SoundOutput>("landing"));
     }
     blockEvent();
@@ -399,8 +399,9 @@ void Ball::blockEvent() noexcept {
         setLifeTimeNow();
         return;
     }
-    const auto hasToJump = _jumpRequest
-                           && (_inGameChronometer->getTime() - _jumpRequestTime) < timeToGetNextBlock;
+    const auto hasToJump = _jumpRequest && (
+                                               _inGameChronometer->getTime() - _jumpRequestTime
+                                           ) < (timeToGetNextBlock / jumpSpeedCoefficient);
     if (hasToJump) {
         _jumpRequest = false;
         jump();
