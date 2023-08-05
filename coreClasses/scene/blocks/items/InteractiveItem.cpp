@@ -17,10 +17,14 @@ void InteractiveItem::catchingTest() {
         return;
     }
     const auto ball = _ball.lock();
-    const auto &boundingSpherePosition = ball->get3DPosition();
-    const auto &boundingSphereRadius = ball->getRadius();
-    const float distance = JBTypesMethods::distance(get3DPosition(), boundingSpherePosition);
-    if (distance < boundingSphereRadius + itemBoundingSphereRadius) {
+    const auto &ballBoundingSpherePosition = ball->get3DPosition();
+    const auto &ballBoundingSphereRadius = ball->getRadius();
+    const float distance = JBTypesMethods::distance(get3DPosition(), ballBoundingSpherePosition);
+    const auto& state = _ball.lock()->state();
+    const auto itemBoundingSphereRadius = state == Ball::State::Jumping || state == Ball::State::Falling
+        ? Item::itemBoundingSphereRadiusJumping
+        : Item::itemBoundingSphereRadiusStaying;
+    if (distance < ballBoundingSphereRadius + itemBoundingSphereRadius) {
         setAsGotten();
         catchItem();
     }

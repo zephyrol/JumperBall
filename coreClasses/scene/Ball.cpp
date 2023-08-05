@@ -732,7 +732,7 @@ Displayable::DynamicNames Ball::getDynamicVec3fNames() const {
 }
 
 Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
-    return {currentSideAsVector(), get3DPosition()};
+    return {currentSideAsVector(), _3DPos};
 }
 
 Displayable::DynamicNames Ball::getDynamicQuaternionNames() const {

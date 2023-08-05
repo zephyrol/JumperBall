@@ -38,7 +38,8 @@ public:
 
     virtual void catchingTest() = 0;
 
-    static constexpr float itemBoundingSphereRadius = 0.15f;
+    static constexpr float itemBoundingSphereRadiusJumping = 0.15f;
+    static constexpr float itemBoundingSphereRadiusStaying = 0.3f;
 
     Displayable::StaticValues<unsigned char> getStaticUnsignedByteValues() const override;
 

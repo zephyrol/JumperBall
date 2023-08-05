@@ -155,10 +155,10 @@ float JBTypesMethods::dot(const JBTypes::vec3f &a, const JBTypes::vec3f &b) {
 
 float JBTypesMethods::distance(const JBTypes::vec3f &a,
                                const JBTypes::vec3f &b) {
-    return sqrtf(powf(b.x - a.x, 2.f) +
-                 powf(b.y - a.y, 2.f) +
-                 powf(b.z - a.z, 2.f)
-    );
+    const auto xDiff = b.x - a.x;
+    const auto yDiff= b.y - a.y;
+    const auto zDiff = b.z - a.z;
+    return sqrtf(xDiff * xDiff + yDiff * yDiff + zDiff * zDiff);
 }
 
 JBTypes::Dir JBTypesMethods::vectorAsDirection(const JBTypes::vec3f &vec) {
@@ -228,7 +228,7 @@ JBTypes::vec3f JBTypesMethods::scalarApplication(float scalar,
 }
 
 float JBTypesMethods::length(const JBTypes::vec3f &vec) {
-    return sqrtf(powf(vec.x, 2.f) + powf(vec.y, 2.f) + powf(vec.z, 2.f));
+    return sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
 
 JBTypes::vec3f JBTypesMethods::normalize(const JBTypes::vec3f &vec) {

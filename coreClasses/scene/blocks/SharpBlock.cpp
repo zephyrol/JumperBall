@@ -61,7 +61,7 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
 
     vecCstShape_sptr shapes{};
     constexpr size_t numberOfSpikes = 13;
-    const std::array<JBTypes::vec2f, numberOfSpikes> translationFloorFactor{
+    const std::array<JBTypes::vec2f, numberOfSpikes> translationFloorFactors{
         JBTypes::vec2f{0.f, 0.f},
         JBTypes::vec2f{0.4f, 0.4f},
         JBTypes::vec2f{-0.4f, 0.4f},
@@ -101,15 +101,15 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
             };
 
 
-            for (size_t j = 0; j < translationFloorFactor.size(); j++) {
+            for (auto translationFloorFactor : translationFloorFactors) {
                 constexpr auto localScaleFactor = 0.15f;
 
                 const JBTypes::vec3f localScale{localScaleFactor, localScaleFactor, localScaleFactor};
 
                 const JBTypes::vec3f translationFloor{
-                    offset * translationFloorFactor.at(j).x,
+                    offset * translationFloorFactor.x,
                     0.f,
-                    offset * translationFloorFactor.at(j).y
+                    offset * translationFloorFactor.y
                 };
 
                 const JBTypes::vec3f localTranslation = JBTypesMethods::add(
