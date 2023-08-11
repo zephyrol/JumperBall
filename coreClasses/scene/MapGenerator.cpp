@@ -409,11 +409,14 @@ void MapGenerator::compressNew(std::ifstream &input) {
     };
 
     for (unsigned int i = 0; i < depth * height; ++i) {
-        std::cout << "line " << i << std::endl;
+        std::cout << "line " << i << ": ";
         std::vector<BlockExistence> blocksExistencesRow;
         for (unsigned int j = 0; j < width; ++j) {
-            blocksExistencesRow.push_back(getBlockExistence(readString(input)));
+            auto readStr = readString(input);
+            std::cout << readStr << " ";
+            blocksExistencesRow.push_back(getBlockExistence(readStr));
         }
+        std::cout << std::endl;
 
         for (const BlockExistence &blockExistence: blocksExistencesRow) {
             if (blockExistence == BlockExistence::NotExist) {
