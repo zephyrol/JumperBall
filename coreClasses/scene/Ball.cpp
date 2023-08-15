@@ -393,7 +393,7 @@ void Ball::blockEvent() noexcept {
         return;
     }
     if (effect == Block::Effect::Burn) {
-        _burnCoefficientCurrent += .2f;
+        _burnCoefficientCurrent += .4f;
         _burnCoefficientTrigger = _burnCoefficientCurrent;
         _stateOfLife = StateOfLife::Burning;
         setLifeTimeNow();
@@ -561,8 +561,6 @@ Ball::MovementDestination Ball::getNextBlockInfo() const {
     };
 
     const auto inFrontOf = getNeighbor(0);
-    const auto left = getNeighbor(1);
-    const auto right = getNeighbor(2);
     const auto above = getNeighbor(3);
 
     const CstBlock_sptr &blockAbove = getBlock(above);

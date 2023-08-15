@@ -38,7 +38,7 @@ public:
     static constexpr float jumpSpeedCoefficient = 1.2f;
     static constexpr float timeToGetNextBlock = 0.25f;
     static constexpr float timeToTurn = 0.3f;
-    static constexpr float timeToBurn = 2.f;
+    static constexpr float timeToBurn = 3.f;
     static constexpr float timeToBurst = 0.8f;
     static constexpr float basicRadius = 0.2f;
     static constexpr float teleportationDuration = 1.f;

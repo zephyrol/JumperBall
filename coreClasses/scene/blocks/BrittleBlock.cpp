@@ -87,7 +87,7 @@ JBTypes::Color BrittleBlock::getColor() const {
 void BrittleBlock::update() {
     InteractiveBlock::update();
 
-    constexpr float timeToFall = 1.f;
+    constexpr float timeToFall = 0.6f;
     if (_isGoingToBreak && _stillThere) {
         // TODO Use in game time
         const auto diff = _chronometer->getTime() - _collisionTime;
