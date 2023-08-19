@@ -12,8 +12,8 @@
 
 . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . 
-. X X X X X . . X X X X X . N N S UD N NI IU   N N N N N
-. X . X . X . . X . X . X . NI IU N J U   B N E U
+. X X X X X . . X X X X X . N NI CU S UD N NI IU   N N N N N
+. X . X . X . . X . X . X . NI IU NI IU J U   B N E U
 . X X X X X . . X X X X X . N NI KU  S UD N N   NI KU N N N N
 . . . . . . . . . . . . . . 
 
@@ -33,7 +33,7 @@
 . . . . . . . . . . . . . . 
 
 . . . . . . . . . . . . . . 
-. . . X X X X . X . X X . . N N NI ID N  BI CD  N N
+. . . X X X X . X . X X . . NI IW NI ID NI ID N  BI CD  NI IN N
 . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . 

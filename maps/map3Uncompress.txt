@@ -1,6 +1,6 @@
 9 9 3
 1 7 1
-45
+60
 
 . . . . . . . . .
 . . . . . . . . .
@@ -14,10 +14,10 @@
 
 . . . . . . . . .
 . X X X . X X X . NI KU N N     N   S UD     NI KU 
-. X . X . X . X . N S UD           S UD N
-. X X X . X X X . N N N         N N E U
+. X . X . X . X . N S UD           S UD NI IU
+. X X X . X X X . NI IU N N         N N E U
 . . . . . . . . .
-. X X X . . . . . N S UD N
+. X X X . . . . . NI CU S UD N
 . X . X . . . . . N NI IU
 . X X X . . . . . N N S UD
 . . . . . . . . .

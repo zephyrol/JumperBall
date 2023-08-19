@@ -19,10 +19,10 @@
 . . . . . . . 
 . . . . . X .             N
 . . . . . X .             NI KU
-. . X X . X . S U N       N
-. . X X . X . NI KU N     N
+. . X X . X . S U NI IU       N
+. . X X . X . NI KU N     NI CU
 . . . . . X .             S U
-. . . . . X .             N
+. . . . . X .             NI IU
 . . . . . X .             E U
 . . . . . . . 
 
@@ -55,7 +55,7 @@
 . . . . . . . 
 . . . . . . . 
 . . . . . . . 
-. X . . . . . N
+. X . . . . . NI CU
 . X . . . . . NI IU
 . X . . . . . N
 . X . . . . . N

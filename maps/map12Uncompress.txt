@@ -11,11 +11,11 @@
 . . . . . . .
 
 . . . . . . .
-. X X X X X . N NI IU N N N
+. X X X X X . N NI IUD N N NI ID
 . X . . . X . NI CU N
 . X . . . X . S U S U
 . X . . . X . N NI CU
-. X X X X X . N N NI KU N N
+. X X X X X . NI IU N NI KU N NI IE
 . . . . . . .
 
 . . . . . . .
@@ -35,10 +35,10 @@
 . . . . . . .
 
 . . . . . . .
-. X X X X X . N N E D N N
+. X X X X X . NI IW N E D N N
 . . . X . . . NI CD
 . . . X . . . S D
-. . . X . . . N
+. . . X . . . NI ID
 . X X X X X . N N NI KD N NI ID
 . . . . . . .
 

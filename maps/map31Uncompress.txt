@@ -43,7 +43,7 @@
 . X . . . X . B B
 . X . . . X . BI IU B
 . X . . . X . B BI IU
-. X . . . X . N N
+. X . . . X . N NI IW
 . . . . . . .
 
 

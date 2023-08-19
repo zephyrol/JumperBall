@@ -19,7 +19,7 @@
 
 
 . . . . . .
-. X . . X . N NI KW
+. X . . X . NI IE NI KW
 . . . . . .
 . . . . . .
 . X . . X . N NI CS
@@ -30,7 +30,7 @@
 . X . . X . S NSEW S NSEW
 . . . . . .
 . . . . . .
-. X . . X . S NSEW N
+. X . . X . S NSEW NI IN
 . . . . . .
 
 
@@ -46,7 +46,7 @@
 . X . . X . NI KS E N
 . . . . . .
 . . . . . .
-. X . . . . N
+. X . . . . NI IS
 . . . . . .
 
 
@@ -54,7 +54,7 @@
 . X . . X . J U N
 . . . . . .
 . . . . . .
-. X . . . . N
+. X . . . . NI IN
 . . . . . .
 
 

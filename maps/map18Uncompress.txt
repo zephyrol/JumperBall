@@ -27,15 +27,15 @@
 
 
 . . . . . .
-. X . . X . NI IE N
+. X . . X . NI IEN N
 . . . . . .
 . . . . . .
-. X . . X . N NI KN
+. X . . X . NI IS NI KN
 . . . . . .
 
 
 . . . . . .
-. X . . X . NI CE N
+. X . . X . NI CE NI IW
 . . . . . .
 . . . . . .
 . X . . X . NI CN N

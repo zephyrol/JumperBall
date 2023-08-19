@@ -17,13 +17,13 @@
 . . . . . . . 
 . . X . . . .  NI CU
 . . X . . . .  NI KU
-. . X . . . .  N
+. . X . . . .  NI IU
 . . X . . . .  J U
-. X X X . . .  S NW     S UD     SI IU NE
+. X X X . . .  SI IU NW     S UD     SI IU NE
 . X . X X X .  S UE   N  NI CU  S U
-. X X X . X .  S W  J U    S UE   E U 
+. X X X . X .  S W  J U    S UE   E U
 . X . X . X .  SI IU EW   J U    N
-. X X X X X .  S U N N S NS S U
+. X X X X X .  S U NI IU N S NS S U
 . . X . . . .  SI IU EWS
 . . . . . . .
 

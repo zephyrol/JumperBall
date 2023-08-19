@@ -16,7 +16,7 @@
 . . . X . . . S UD
 . . . X . . . SI IU EW
 . . . . . . .
-. . . X . . . N
+. . . X . . . NI IS
 . . . . . . .
 
 
@@ -30,7 +30,7 @@
 
 
 . . . . . . .
-. X X X . . . S U    SI KU SN   NI KS
+. X X X . . . SI CS U    SI KU SN   NI KS
 . . . . . . .
 . . . . . . .
 . . . . . . .

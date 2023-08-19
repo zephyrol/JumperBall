@@ -10,7 +10,7 @@
 . . . . . . .
 
 . . . . . . .
-. . X . . . . NI ID
+. . X . . . . NI IDE
 . . X . . . . N
 . . . . . . .
 . . . . . . .
@@ -37,7 +37,7 @@
 . . X . . X . NI IN NI W
 . . X . . X . N NI KE
 . . . . . X . NI IW
-. X X X X X . N NI IU N N NI KD
+. X X X X X . N NI IU NI IS NI ID NI KD
 . . . . . . .
 
 

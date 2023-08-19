@@ -11,8 +11,8 @@
 . . . . . . .
 
 . . . . . . .
-. . . X . . . N 
-. . . X . . . S UDEW 
+. . . X . . . NI IN
+. . . X . . . S DEW
 . . . X . . . NI KU
 . . . X . . . N
 . . . X . . . NI CD
@@ -38,7 +38,7 @@
 . . . . . . .
 . . . . . . . 
 . . . . . . . 
-. X X X X X . N NI KD E U NI ID N
+. X X X X X . NI IW NI KD E U NI ID NI IE
 . . . . . . . 
 . . . . . . . 
 . . . . . . .

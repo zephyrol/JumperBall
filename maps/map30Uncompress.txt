@@ -58,7 +58,7 @@
 . . . . .
 . X X X . N N N
 . X X X . N E D N
-. X X X . N N N
+. X X X . N NI IDU N
 . . . . .
 
 
@@ -85,7 +85,7 @@
 . . . X . SI CU W
 . X X X . N N N
 . X X X . N NI IUD N
-. X X X . N N N
+. X X X . NI IU N N
 . . . . .
 . . . . .
 . . . . .

@@ -11,10 +11,10 @@
 . . . . . . . . . . 
 
 . . . . . . . . . . 
-. X X . X X . X X . E U S UD    N N      N NI KU
-. X X . X X . X X . S D S UD       N S UD   S UD N 
+. X X . X X . X X . E U S UD    NI IU NI CU      N NI KU
+. X X . X X . X X . S D S UD       N S UD   S UD NI IU
 . . . . . . . . . . 
-. X X . X X . X X . N S U       N S UD   S UD N
+. X X . X X . X X . N S U       NI IU S UD   S UD N
 . X X . X X . X X . NI IU N         N S UD   S UD N
 . . . . . . . . . . 
 

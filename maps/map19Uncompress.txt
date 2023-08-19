@@ -14,7 +14,7 @@
 . . . X . . . E U
 . . . . . . . 
 . . . . . . . 
-. X X X X X . N S NS  SI KD NS      S NS N
+. X X X X X . N N  NI KD      N N
 . . . . . . .
 
 
@@ -38,7 +38,7 @@
 . . . . . . .
 . . . . . . .
 . . . . . . .
-. X X X X X . N S NUSD J U S NUSD N
+. X X X X X . NI IU S NUS JI IUS U S NUS NI IU
 . . . . . . .
 
 

@@ -1,6 +1,6 @@
 5 7 3
 1 5 1
-30
+45
 
 . . . . .
 . . . . .
@@ -14,7 +14,7 @@
 . X X X . NI KU N NI IU
 . X . X . N N
 . X . X . NI IU E U
-. X . X . N N
+. X . X . N NI IU
 . X X X . N N N
 . . . . . 
 

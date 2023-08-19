@@ -15,9 +15,9 @@
 . . .
 . X . NI KU
 . X . B
-. X . B
 . X . BI IU
 . X . B
+. X . BI IU
 . X . B
 . X . E U
 . . .
