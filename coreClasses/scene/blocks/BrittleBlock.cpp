@@ -81,7 +81,7 @@ bool BrittleBlock::mayDisappear() const {
 }
 
 JBTypes::Color BrittleBlock::getColor() const {
-    return JBTypes::Color::Red;
+    return JBTypes::Color::White;
 }
 
 void BrittleBlock::update() {

@@ -223,6 +223,30 @@ std::vector<glm::vec3> Cube::genColors(const JBTypes::Color &color) {
             }
         );
     }
+    if (color == JBTypes::Color::White) {
+        return Utility::GLfloatListToGlmVec3(
+            {
+                // Face 1
+                0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f,
+                0.4f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f, 0.4f, 0.4f, 0.4f,
+                // Face 2
+                0.2f, 0.2f, 0.2f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f,
+                0.4f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f, 0.4f, 0.4f, 0.4f,
+                // Face 6
+                0.2f, 0.2f, 0.2f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f,
+                0.4f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f, 0.4f, 0.4f, 0.4f,
+                // Face 5
+                0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f,
+                0.4f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f, 0.4f, 0.4f, 0.4f,
+                // Face 4
+                0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f,
+                0.4f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f, 0.4f, 0.4f, 0.4f,
+                // Face 3
+                0.2f, 0.2f, 0.2f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f,
+                0.4f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f, 0.4f, 0.4f, 0.4f
+            }
+        );
+    }
     if (color == JBTypes::Color::Purple) {
         return Utility::GLfloatListToGlmVec3(
             {
