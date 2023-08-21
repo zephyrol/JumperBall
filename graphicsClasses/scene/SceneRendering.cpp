@@ -12,6 +12,7 @@
 #include "process/scene/HorizontalBlurProcess.h"
 #include "process/scene/VerticalBlurProcess.h"
 #include "process/scene/BloomProcess.h"
+#include "process/scene/PostEffects.h"
 
 SceneRendering::SceneRendering(
     const Scene &scene,
@@ -41,9 +42,9 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
     // Culling
     glEnable(GL_CULL_FACE);
 
-    constexpr size_t expensivePreprocessHeight = 192;
-    const auto expensivePreprocessWidth = static_cast<GLsizei>(
-        static_cast<float>(expensivePreprocessHeight)
+    constexpr size_t expensivePostProcessHeight = 192;
+    const auto expensivePostProcessWidth = static_cast<GLsizei>(
+        static_cast<float>(expensivePostProcessHeight)
         * static_cast<float>(width) / static_cast<float>(height)
     );
 
@@ -97,47 +98,27 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         star
     );
 
-    const auto expensivePreprocessWidthGLsizei = static_cast<GLsizei>(expensivePreprocessWidth);
-    const auto expensivePreprocessHeightGLsizei = static_cast<GLsizei>(expensivePreprocessHeight);
+    const auto expensivePostProcessWidthGLsizei = static_cast<GLsizei>(expensivePostProcessWidth);
+    const auto expensivePostProcessHeightGLsizei = static_cast<GLsizei>(expensivePostProcessHeight);
 
-    const auto brightPassFilter = std::make_shared<BrightPassFilterProcess>(
-        fileContent,
-        expensivePreprocessWidthGLsizei,
-        expensivePreprocessHeightGLsizei,
-        *sceneRenderingProcess->getRenderTexture(),
-        screen
-    );
-
-    const auto horizontalBlur = std::make_shared<HorizontalBlurProcess>(
-        fileContent,
-        expensivePreprocessWidthGLsizei,
-        expensivePreprocessHeightGLsizei,
-        *brightPassFilter->getRenderTexture(),
-        screen
-    );
-    const auto verticalBlur = std::make_shared<VerticalBlurProcess>(
-        fileContent,
-        expensivePreprocessWidthGLsizei,
-        expensivePreprocessHeightGLsizei,
-        *horizontalBlur->getRenderTexture(),
-        screen
-    );
-
-    const auto bloom = std::make_shared<BloomProcess>(
+    const auto postEffects = std::make_shared<PostEffects>(
         fileContent,
         width,
         height,
-        *verticalBlur->getRenderTexture(),
+        expensivePostProcessWidthGLsizei,
+        expensivePostProcessHeightGLsizei,
+        *sceneRenderingProcess->getRenderTexture(),
         defaultFrameBuffer,
         screen
     );
+
 
     auto shadersProgramsUsingUniformBuffer = shadowProcesses.front()->getShaderPrograms();
 
     for (const auto &shaderPrograms: {
         shadowProcesses.back()->getShaderPrograms(),
         sceneRenderingProcess->getShaderPrograms(),
-        bloom->getShaderPrograms()
+        postEffects->getShaderPrograms()
     }) {
         shadersProgramsUsingUniformBuffer.insert(
             shadersProgramsUsingUniformBuffer.end(),
@@ -169,10 +150,7 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
                 shadowProcesses.front(),
                 shadowProcesses.back(),
                 sceneRenderingProcess,
-                brightPassFilter,
-                horizontalBlur,
-                verticalBlur,
-                bloom
+                postEffects
             }
         ),
         SceneUniformBuffer(shadersProgramsUsingUniformBuffer)

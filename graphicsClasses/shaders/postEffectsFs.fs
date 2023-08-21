@@ -1,8 +1,20 @@
+uniform Scene {
+    mat4 VP;
+    mat4 VPStar;
+    mat4 VPStar2;
+    vec3 cameraPosition;
+    vec3 lightDirection;
+    vec3 light2Direction;
+    vec3 flashColor;
+    float teleportationCoeff;
+    float burningCoeff;
+};
 
 uniform sampler2D sceneTexture;
 uniform sampler2D postProcessTexture;
 
-const int patchSize = 25;
+const int patchSize = 50;
+const int verticalBlurFirstIndex = 25;
 uniform vec2 offsetsAndGaussWeights[patchSize];
 uniform int postProcessId;
 
@@ -81,7 +93,7 @@ vec4 getBrightPassFilterColor() {
 
 vec4 getHorizontalBlurColor() {
     vec3 blurColor = vec3(0.0, 0.0, 0.0);
-    for (int i = 0; i < patchSize; ++i) {
+    for (int i = 0; i < verticalBlurFirstIndex; ++i) {
         vec2 offsetAndGaussWeight = offsetsAndGaussWeights[i];
         vec2 neighboringPixelUV = fs_vertexUVs + vec2(offsetAndGaussWeight.x, 0.0);
         vec3 inputRGB = convertInput(texture(postProcessTexture, neighboringPixelUV));
@@ -92,7 +104,7 @@ vec4 getHorizontalBlurColor() {
 
 vec4 getVerticalBlurColor() {
     vec3 blurColor = vec3(0.0, 0.0, 0.0);
-    for (int i = 0; i < patchSize; ++i) {
+    for (int i = verticalBlurFirstIndex; i < patchSize; ++i) {
         vec2 offsetAndGaussWeight = offsetsAndGaussWeights[i];
         vec2 neighboringPixelUV = fs_vertexUVs + vec2(0.0, offsetAndGaussWeight.x);
         vec3 inputRGB = convertInput(texture(postProcessTexture, neighboringPixelUV));
@@ -103,7 +115,7 @@ vec4 getVerticalBlurColor() {
 
 vec4 getBloomColor() {
     vec3 baseRGBColor = convertInput(texture(sceneTexture, fs_vertexUVs));
-    vec3 basexyYColor = convertRBGToCIExyY(baseRGBColor);
+    vec3 basexyYColor = convertRGBToCIExyY(baseRGBColor);
     vec3 toneMappedRGBColor = toneMappingOperator(basexyYColor);
     vec3 pixelColorVec3 = toneMappedRGBColor + texture(postProcessTexture, fs_vertexUVs).xyz;
     return vec4(mix(pixelColorVec3, flashColor, teleportationCoeff), 1.0);

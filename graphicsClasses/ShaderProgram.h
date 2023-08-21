@@ -41,11 +41,25 @@ public:
      */
     void setTextureIndex(const std::string &textureName, GLint index);
 
+
+    /**
+     * For a uniform integer representing by its uniform location, set its content
+     * Warning: don't forget to call ShaderProgram::use() method before!
+     */
+     void setInteger(GLint integerUniformLocation, int value);
+
     /**
      * For a uniform array of vec2 representing by its name, set its content
      * Warning: don't forget to call ShaderProgram::use() method before!
      */
     void setUniformArrayVec2(const std::string &uniformArrayName, const std::vector<GLfloat> &vec2sData);
+
+    /**
+     * Get uniform location giving its name
+     * @param uniformName Name of the uniform in the shader source code
+     * @return Uniform Location
+     */
+    GLint getUniformLocation(const std::string &uniformName) const;
 
     /**
      * For a uniform array of vec4 representing by its name, set its content
@@ -71,9 +85,6 @@ private:
     const GLuint _shaderProgramHandle;
     const CstShader_uptr _vertexShader;
     const CstShader_uptr _fragmentShader;
-
-    GLint getUniformLocation(const std::string &uniformName) const;
-
     static void verifyLinkStatus(GLuint shaderProgramHandle);
 };
 

@@ -110,6 +110,10 @@ GLint ShaderProgram::getUniformLocation(const std::string &uniformName) const {
     return location;
 }
 
+void ShaderProgram::setInteger(GLint integerUniformLocation, int value) {
+    glUniform1i(integerUniformLocation, value);
+}
+
 void ShaderProgram::setTextureIndex(const std::string &textureName, GLint index) {
     const auto location = getUniformLocation(textureName);
     glUniform1i(location, index);

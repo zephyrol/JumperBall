@@ -27,7 +27,7 @@ void RenderGroup::render() const {
 
 void RenderGroup::freeGPUMemory() {
     for (const auto &gpuGeometryBuffer: _gpuGeometryBuffers) {
-       gpuGeometryBuffer->freeGPUMemory();
+        gpuGeometryBuffer->freeGPUMemory();
     }
     glDeleteVertexArrays(1, &_vertexArrayObject);
 }
@@ -58,7 +58,7 @@ RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGr
     );
 
     // 3. Create EBO
-    const auto& indices =  groupGeometry.indices();
+    const auto &indices = groupGeometry.indices();
     vecGpuGeometryBuffer_sptr gpuGeometryBuffers{GpuElementBuffer::createInstance(indices)};
 
     // 4. Create gpu vertex attributes
@@ -69,7 +69,7 @@ RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGr
         gpuGeometryBuffers.emplace_back(GpuVertexBuffer::createInstance(
             std::move(vertexAttribute),
             static_cast<GLuint>(i)
-        ) );
+        ));
     }
 
     return std::make_shared<RenderGroup>(
