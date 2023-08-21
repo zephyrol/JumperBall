@@ -8,10 +8,6 @@
 #include "SceneRendering.h"
 #include "process/scene/ShadowProcess.h"
 #include "process/scene/LevelProcess.h"
-#include "process/scene/BrightPassFilterProcess.h"
-#include "process/scene/HorizontalBlurProcess.h"
-#include "process/scene/VerticalBlurProcess.h"
-#include "process/scene/BloomProcess.h"
 #include "process/scene/PostEffects.h"
 
 SceneRendering::SceneRendering(

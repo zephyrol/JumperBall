@@ -13,10 +13,12 @@
 #include "process/mesh/gpuGeometryBuffers/GpuVertexBuffer.h"
 
 class RenderGroup;
+
 using RenderGroup_sptr = std::shared_ptr<RenderGroup>;
 using CstRenderGroup_sptr = std::shared_ptr<const RenderGroup>;
 using vecRenderGroup_sptr = std::vector<RenderGroup_sptr>;
 using vecCstRenderGroup_sptr = std::vector<CstRenderGroup_sptr>;
+
 class RenderGroup {
 
 public:
@@ -34,11 +36,16 @@ public:
 
     void freeGPUMemory();
 
+    void bind() const;
+
     void render() const;
+
+    // TODO Remove this method or create an helper
+    void bindAndRender() const;
 
     short numberOfDynamicsIds() const;
 
-    RenderGroupUniforms genUniforms(const CstShaderProgram_sptr& shaderProgram) const;
+    RenderGroupUniforms genUniforms(const CstShaderProgram_sptr &shaderProgram) const;
 
     static RenderGroup_sptr createInstance(MeshDynamicGroup_uptr meshDynamicGroup);
 

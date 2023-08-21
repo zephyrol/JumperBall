@@ -56,8 +56,8 @@ void PostEffects::render() const {
 
     TextureSampler::bind(_sceneTexture);
 
-    // TODO : render several time but only one bind vao !
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 0);
+    _screen->bind();
     _screen->render();
 
     // 2. Horizontal blur

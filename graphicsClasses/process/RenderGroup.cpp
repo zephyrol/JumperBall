@@ -20,8 +20,16 @@ RenderGroup::RenderGroup(
     _numberOfIndices(numberOfIndices) {
 }
 
-void RenderGroup::render() const {
+void RenderGroup::bindAndRender() const {
+    bind();
+    render();
+}
+
+void RenderGroup::bind() const {
     glBindVertexArray(_vertexArrayObject);
+}
+
+void RenderGroup::render() const {
     glDrawElements(GL_TRIANGLES, _numberOfIndices, GL_UNSIGNED_SHORT, nullptr);
 }
 
