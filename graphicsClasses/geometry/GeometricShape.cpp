@@ -6,7 +6,6 @@
  */
 
 #include "GeometricShape.h"
-#include "process/mesh/vertexAttribute/VertexAttributeVec3.h"
 
 GeometricShape::GeometricShape(
     const glm::mat4 &modelTransform,

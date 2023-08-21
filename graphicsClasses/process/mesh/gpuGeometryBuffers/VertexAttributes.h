@@ -5,12 +5,12 @@
 #ifndef JUMPERBALLAPPLICATION_VERTEXATTRIBUTES_H
 #define JUMPERBALLAPPLICATION_VERTEXATTRIBUTES_H
 
-#include "process/mesh/vertexAttribute/VertexAttribute.h"
-#include "process/mesh/vertexAttribute/VertexAttributeVec3.h"
-#include "process/mesh/vertexAttribute/VertexAttributeShort.h"
-#include "process/mesh/vertexAttribute/VertexAttributeFloat.h"
-#include "process/mesh/vertexAttribute/VertexAttributeVec2.h"
-#include "process/mesh/vertexAttribute/VertexAttributeUnsignedByte.h"
+#include "process/mesh/gpuGeometryBuffers/VertexAttribute.h"
+#include "process/mesh/gpuGeometryBuffers/VertexAttributeVec3.h"
+#include "process/mesh/gpuGeometryBuffers/VertexAttributeShort.h"
+#include "process/mesh/gpuGeometryBuffers/VertexAttributeFloat.h"
+#include "process/mesh/gpuGeometryBuffers/VertexAttributeVec2.h"
+#include "process/mesh/gpuGeometryBuffers/VertexAttributeUnsignedByte.h"
 
 
 class VertexAttributes {

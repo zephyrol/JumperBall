@@ -6,18 +6,17 @@
  */
 #include "process/RenderGroup.h"
 #include "RenderGroupUniforms.h"
+#include "process/mesh/gpuGeometryBuffers/GpuElementBuffer.h"
 
 RenderGroup::RenderGroup(
     MeshDynamicGroup_uptr meshDynamicGroup,
     GLuint vertexArrayObject,
-    vecGpuVertexBuffer_sptr gpuVertexBuffers,
-    GLuint elementBufferObject,
+    vecGpuGeometryBuffer_sptr gpuGeometryBuffers,
     GLsizei numberOfIndices
 ) :
     _meshDynamicGroup(std::move(meshDynamicGroup)),
     _vertexArrayObject(vertexArrayObject),
-    _gpuVertexBuffers(std::move(gpuVertexBuffers)),
-    _elementBufferObject(elementBufferObject),
+    _gpuGeometryBuffers(std::move(gpuGeometryBuffers)),
     _numberOfIndices(numberOfIndices) {
 }
 
@@ -27,9 +26,8 @@ void RenderGroup::render() const {
 }
 
 void RenderGroup::freeGPUMemory() {
-    glDeleteBuffers(1, &_elementBufferObject);
-    for (const auto &gpuVertexAttribute: _gpuVertexBuffers) {
-        gpuVertexAttribute->freeGPUMemory();
+    for (const auto &gpuGeometryBuffer: _gpuGeometryBuffers) {
+       gpuGeometryBuffer->freeGPUMemory();
     }
     glDeleteVertexArrays(1, &_vertexArrayObject);
 }
@@ -59,41 +57,25 @@ RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGr
         }
     );
 
-    // 3. Create gpu vertex attributes
-    const auto genBufferObject = []() {
-        GLuint bo;
-        glGenBuffers(1, &bo);
-        return bo;
-    };
+    // 3. Create EBO
+    const auto& indices =  groupGeometry.indices();
+    vecGpuGeometryBuffer_sptr gpuGeometryBuffers{GpuElementBuffer::createInstance(indices)};
 
+    // 4. Create gpu vertex attributes
     auto vertexAttributes = groupGeometry.extractVertexAttributes();
-    vecGpuVertexBuffer_sptr gpuVertexAttributes{};
 
     for (size_t i = 0; i < vertexAttributes.size(); ++i) {
         auto &vertexAttribute = vertexAttributes[i];
-        gpuVertexAttributes.push_back( GpuVertexBuffer::createInstance(
+        gpuGeometryBuffers.emplace_back(GpuVertexBuffer::createInstance(
             std::move(vertexAttribute),
             static_cast<GLuint>(i)
         ) );
     }
 
-    // 4. Create EBO
-    const auto& indices =  groupGeometry.indices();
-
-    const auto elementBufferObject = genBufferObject();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObject);
-    glBufferData(
-        GL_ELEMENT_ARRAY_BUFFER,
-        static_cast<GLsizeiptr>(indices.size() * sizeof(decltype(indices.front()))),
-        indices.data(),
-        GL_STATIC_DRAW
-    );
-
     return std::make_shared<RenderGroup>(
         std::move(meshDynamicGroup),
         vertexArrayObject,
-        std::move(gpuVertexAttributes),
-        elementBufferObject,
+        std::move(gpuGeometryBuffers),
         static_cast<GLsizei>(indices.size())
     );
 }

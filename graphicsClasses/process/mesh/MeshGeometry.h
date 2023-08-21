@@ -7,7 +7,6 @@
 
 #include "geometry/GeometricShape.h"
 #include "scene/Displayable.h"
-#include "process/mesh/vertexAttribute/VertexAttribute.h"
 
 class MeshGeometry {
 

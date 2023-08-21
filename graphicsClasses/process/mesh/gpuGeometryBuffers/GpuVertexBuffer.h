@@ -5,7 +5,8 @@
 #ifndef JUMPERBALLAPPLICATION_GPUVERTEXBUFFER_H
 #define JUMPERBALLAPPLICATION_GPUVERTEXBUFFER_H
 
-#include "process/mesh/vertexAttribute/VertexAttributeBase.h"
+#include "GpuGeometryBuffer.h"
+#include "process/mesh/gpuGeometryBuffers/VertexAttributeBase.h"
 
 class GpuVertexBuffer;
 
@@ -14,7 +15,7 @@ using CstGpuVertexBuffer_sptr = std::shared_ptr<const GpuVertexBuffer>;
 using vecCstGpuVertexBuffer_sptr = std::vector<CstGpuVertexBuffer_sptr>;
 using vecGpuVertexBuffer_sptr = std::vector<GpuVertexBuffer_sptr>;
 
-class GpuVertexBuffer {
+class GpuVertexBuffer : public GpuGeometryBuffer {
 
 public:
 
@@ -30,14 +31,11 @@ public:
      * @return New Gpu Vertex Buffer.
      */
     static GpuVertexBuffer_sptr createInstance(
-        const CstVertexAttributeBase_uptr& vertexAttribute,
+        const CstVertexAttributeBase_uptr &vertexAttribute,
         GLuint index
     );
 
-    void freeGPUMemory();
-
-private:
-    const GLuint _vertexBufferObject;
+    ~GpuVertexBuffer() override = default;
 };
 
 

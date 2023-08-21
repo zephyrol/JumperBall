@@ -6,21 +6,16 @@
 
 GpuVertexBuffer::GpuVertexBuffer(
     GLuint vertexBufferObject
-):
-    _vertexBufferObject(vertexBufferObject) {
+) : GpuGeometryBuffer(vertexBufferObject) {
 }
 
-void GpuVertexBuffer::freeGPUMemory() {
-    glDeleteBuffers(1, &_vertexBufferObject);
-}
 
 GpuVertexBuffer_sptr GpuVertexBuffer::createInstance(
-    const CstVertexAttributeBase_uptr& vertexAttribute,
+    const CstVertexAttributeBase_uptr &vertexAttribute,
     GLuint index
 ) {
     // 1. Create buffer object.
-    GLuint bo;
-    glGenBuffers(1, &bo);
+    const auto bo = createBufferObject();
 
     // 2. Bind buffer object.
     glBindBuffer(GL_ARRAY_BUFFER, bo);

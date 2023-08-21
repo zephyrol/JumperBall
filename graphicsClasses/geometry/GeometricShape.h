@@ -9,7 +9,7 @@
 #define GEOMETRICSHAPE_H
 
 #include "Shader.h"
-#include "process/mesh/vertexAttribute/VertexAttributes.h"
+#include "process/mesh/gpuGeometryBuffers/VertexAttributes.h"
 
 class GeometricShape;
 
@@ -31,7 +31,7 @@ public:
     );
 
     // It's useless to have a copy of a shape with exactly the same transform
-    // and vertices, every attributes are const...
+    // and vertices, every attribute is const...
     GeometricShape(const GeometricShape &geometricShape) = delete;
 
     GeometricShape &operator=(const GeometricShape &geometricShape) = delete;

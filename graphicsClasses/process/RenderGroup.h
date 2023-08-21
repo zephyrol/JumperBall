@@ -8,9 +8,9 @@
 #ifndef RENDERGROUP_H
 #define RENDERGROUP_H
 
-#include "componentsGeneration/MeshGenerator.h"
-#include "process/scene/GpuVertexBuffer.h"
 #include "RenderGroupUniforms.h"
+#include "componentsGeneration/MeshGenerator.h"
+#include "process/mesh/gpuGeometryBuffers/GpuVertexBuffer.h"
 
 class RenderGroup;
 using RenderGroup_sptr = std::shared_ptr<RenderGroup>;
@@ -24,8 +24,7 @@ public:
     RenderGroup(
         MeshDynamicGroup_uptr meshDynamicGroup,
         GLuint vertexArrayObject,
-        vecGpuVertexBuffer_sptr gpuVertexBuffers,
-        GLuint elementBufferObject,
+        vecGpuGeometryBuffer_sptr gpuGeometryBuffers,
         GLsizei numberOfIndices
     );
 
@@ -47,8 +46,7 @@ private:
 
     const MeshDynamicGroup_uptr _meshDynamicGroup;
     const GLuint _vertexArrayObject;
-    const vecGpuVertexBuffer_sptr _gpuVertexBuffers;
-    const GLuint _elementBufferObject;
+    const vecGpuGeometryBuffer_sptr _gpuGeometryBuffers;
     const GLsizei _numberOfIndices;
 };
 
