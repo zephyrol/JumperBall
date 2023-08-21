@@ -9,7 +9,7 @@
 #define RENDERGROUP_H
 
 #include "componentsGeneration/MeshGenerator.h"
-#include "process/scene/GpuVertexAttributes.h"
+#include "process/scene/GpuVertexBuffer.h"
 #include "RenderGroupUniforms.h"
 
 class RenderGroup;
@@ -24,7 +24,7 @@ public:
     RenderGroup(
         MeshDynamicGroup_uptr meshDynamicGroup,
         GLuint vertexArrayObject,
-        vecGpuVertexAttributes_sptr gpuVertexAttributes,
+        vecGpuVertexBuffer_sptr gpuVertexBuffers,
         GLuint elementBufferObject,
         GLsizei numberOfIndices
     );
@@ -47,7 +47,7 @@ private:
 
     const MeshDynamicGroup_uptr _meshDynamicGroup;
     const GLuint _vertexArrayObject;
-    const vecGpuVertexAttributes_sptr _gpuVertexAttributes;
+    const vecGpuVertexBuffer_sptr _gpuVertexBuffers;
     const GLuint _elementBufferObject;
     const GLsizei _numberOfIndices;
 };

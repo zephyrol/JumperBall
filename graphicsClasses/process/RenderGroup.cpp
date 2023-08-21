@@ -10,34 +10,25 @@
 RenderGroup::RenderGroup(
     MeshDynamicGroup_uptr meshDynamicGroup,
     GLuint vertexArrayObject,
-    vecGpuVertexAttributes_sptr gpuVertexAttributes,
+    vecGpuVertexBuffer_sptr gpuVertexBuffers,
     GLuint elementBufferObject,
     GLsizei numberOfIndices
 ) :
     _meshDynamicGroup(std::move(meshDynamicGroup)),
     _vertexArrayObject(vertexArrayObject),
-    _gpuVertexAttributes(std::move(gpuVertexAttributes)),
+    _gpuVertexBuffers(std::move(gpuVertexBuffers)),
     _elementBufferObject(elementBufferObject),
     _numberOfIndices(numberOfIndices) {
 }
 
 void RenderGroup::render() const {
     glBindVertexArray(_vertexArrayObject);
-    for (const auto &gpuVertexAttribute: _gpuVertexAttributes) {
-        gpuVertexAttribute->bind();
-    }
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elementBufferObject);
     glDrawElements(GL_TRIANGLES, _numberOfIndices, GL_UNSIGNED_SHORT, nullptr);
-
-    for (const auto &gpuVertexAttribute: _gpuVertexAttributes) {
-        gpuVertexAttribute->unbind();
-    }
 }
 
 void RenderGroup::freeGPUMemory() {
     glDeleteBuffers(1, &_elementBufferObject);
-    for (const auto &gpuVertexAttribute: _gpuVertexAttributes) {
+    for (const auto &gpuVertexAttribute: _gpuVertexBuffers) {
         gpuVertexAttribute->freeGPUMemory();
     }
     glDeleteVertexArrays(1, &_vertexArrayObject);
@@ -76,21 +67,14 @@ RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGr
     };
 
     auto vertexAttributes = groupGeometry.extractVertexAttributes();
-    vecGpuVertexAttributes_sptr gpuVertexAttributes{};
+    vecGpuVertexBuffer_sptr gpuVertexAttributes{};
 
     for (size_t i = 0; i < vertexAttributes.size(); ++i) {
-        const auto vbo = genBufferObject();
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
         auto &vertexAttribute = vertexAttributes[i];
-        vertexAttribute->createDataOnGpu();
-        gpuVertexAttributes.push_back(
-            std::make_shared<GpuVertexAttributes>(
-                vbo,
-                std::move(vertexAttribute),
-                static_cast<GLuint>(i)
-            )
-        );
+        gpuVertexAttributes.push_back( GpuVertexBuffer::createInstance(
+            std::move(vertexAttribute),
+            static_cast<GLuint>(i)
+        ) );
     }
 
     // 4. Create EBO
