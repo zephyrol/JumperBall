@@ -29,14 +29,16 @@ public:
 
     JBTypes::Color getColor() const override;
 
-    Displayable::StaticValues<JBTypes::vec3f> getStaticVec3fValues() const override;
-
     std::string getDynamicGroupHash() const override;
+
+    DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
 
 private:
     const CstChronometer_sptr _chronometer;
     const float _periodicity;
+    const JBTypes::vec3f _fPosition;
     bool _isThere;
+    float _scale;
 };
 
 #endif /* GHOSTBLOCK_H */

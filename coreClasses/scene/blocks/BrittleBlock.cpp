@@ -17,35 +17,44 @@ BrittleBlock::BrittleBlock(
 ) :
     InteractiveBlock(position, items, enemies, specials, ball, true),
     _chronometer(ball->getInGameChronometer()),
+    _fPosition{
+        static_cast<float>(position.at(0)),
+        static_cast<float>(position.at(1)),
+        static_cast<float>(position.at(2))
+    },
     _stillThere(true),
     _isGoingToBreak(false),
     _collisionTime(0.f),
-    _fallDirection(JBTypes::Dir::Down) {
+    _fallDirection{0.f, -1.f, 0.0},
+    _shakingRotation(JBTypesMethods::createQuaternion({0.f, 0.f, 0.f}, 1.f)),
+    _localTranslation{0.f, 0.f, 0.f} {
 }
 
 void BrittleBlock::setFallDirection(JBTypes::Dir direction) {
+    JBTypes::Dir fallDirection;
     switch (direction) {
         case JBTypes::Dir::South:
-            _fallDirection = JBTypes::Dir::North;
+            fallDirection = JBTypes::Dir::North;
             break;
         case JBTypes::Dir::North:
-            _fallDirection = JBTypes::Dir::South;
+            fallDirection = JBTypes::Dir::South;
             break;
         case JBTypes::Dir::East:
-            _fallDirection = JBTypes::Dir::West;
+            fallDirection = JBTypes::Dir::West;
             break;
         case JBTypes::Dir::West:
-            _fallDirection = JBTypes::Dir::East;
+            fallDirection = JBTypes::Dir::East;
             break;
         case JBTypes::Dir::Up:
-            _fallDirection = JBTypes::Dir::Down;
+            fallDirection = JBTypes::Dir::Down;
             break;
         case JBTypes::Dir::Down:
-            _fallDirection = JBTypes::Dir::Up;
+            fallDirection = JBTypes::Dir::Up;
             break;
         default:
             break;
     }
+    _fallDirection = JBTypesMethods::directionAsVector(fallDirection);
 }
 
 bool BrittleBlock::isExists() const {
@@ -53,24 +62,11 @@ bool BrittleBlock::isExists() const {
 }
 
 Block::Effect BrittleBlock::detectionEvent() {
-
     if (!_isGoingToBreak) {
         const auto ball = _ball.lock();
         _collisionTime = ball->getActionTime();
         setFallDirection(ball->currentSide());
         _isGoingToBreak = true;
-
-        const auto lookTowardsVec = ball->lookTowardsAsVector();
-        _localRotation.x = [&lookTowardsVec]() {
-            if (!JBTypesMethods::floatsEqual(lookTowardsVec.x, 0.f)) {
-                return 1.f;
-            }
-            if (!JBTypesMethods::floatsEqual(lookTowardsVec.y, 0.f)) {
-                return 2.f;
-            }
-            return 3.f;
-        }();
-
         ball->addUpdateOutput(std::make_shared<SoundOutput>("blockIsGoingToFall"));
     }
     return Effect::Nothing;
@@ -89,35 +85,39 @@ void BrittleBlock::update() {
 
     constexpr float timeToFall = 0.6f;
     if (_isGoingToBreak && _stillThere) {
-        // TODO Use in game time
         const auto diff = _chronometer->getTime() - _collisionTime;
-        constexpr auto shakingTime = 0.15f; // in seconds
-        const auto shakingPeriod = sinf(diff * 2.f * static_cast<float>(M_PI) / shakingTime);
-        constexpr auto maxAngle = 0.08f; // in radians
         if (diff > timeToFall) {
-            _localRotation = {0.f, 0.f};
+            _shakingRotation = {{0.f, 0.f, 0.f}, 1.f};
             _stillThere = false;
             _ball.lock()->addUpdateOutput(std::make_shared<SoundOutput>("blockIsFalling"));
         } else {
-            _localRotation.y = shakingPeriod * maxAngle;
+            constexpr auto shakingTime = 0.15f; // in seconds
+            const auto shakingPeriod = sinf(diff * 2.f * static_cast<float>(M_PI) / shakingTime);
+            constexpr auto maxAngle = 0.08f; // in radians
+            const auto angle = shakingPeriod * maxAngle;
+            _shakingRotation = JBTypesMethods::createRotationQuaternion(_fallDirection, angle);
         }
     }
 
     constexpr float fallSpeed = 20.f;
     if (!_stillThere) {
-        const JBTypes::vec3f dirVec = JBTypesMethods::directionAsVector(_fallDirection);
-        // TODO Use in game time
         const auto diff = _chronometer->getTime() - _collisionTime;
         const float diffTimeToFall = diff - timeToFall;
         const float distanceTraveled = diffTimeToFall * fallSpeed;
-        _localTranslation.x = dirVec.x * distanceTraveled;
-        _localTranslation.y = dirVec.y * distanceTraveled;
-        _localTranslation.z = dirVec.z * distanceTraveled;
+        _localTranslation = JBTypesMethods::scalarApplication(distanceTraveled, _fallDirection);
     }
 }
 
 std::string BrittleBlock::getDynamicGroupHash() const {
-    return "brittle;" + std::to_string(position().at(0)) + "," +
+    return "brittleBlock;" + std::to_string(position().at(0)) + "," +
            std::to_string(position().at(1)) + "," + std::to_string(position().at(2));
+}
+
+Displayable::DynamicValues<JBTypes::vec3f> BrittleBlock::getDynamicVec3fValues() const {
+    return {JBTypesMethods::add(_localTranslation, _fPosition), {1.f, 1.f, 1.f}};
+}
+
+Displayable::DynamicValues <JBTypes::Quaternion> BrittleBlock::getDynamicQuaternionValues() const {
+    return{{_shakingRotation}};
 }
 

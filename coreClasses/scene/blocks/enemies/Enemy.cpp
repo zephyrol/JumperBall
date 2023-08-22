@@ -79,3 +79,8 @@ void Enemy::update() {
 
 const JBTypes::vec3f Enemy::scaleActivated = {1.f, 1.f, 1.f};
 const JBTypes::vec3f Enemy::scaleDisable = {0.f, 0.f, 0.f};
+
+std::string Enemy::getDynamicGroupHash() const {
+    return "enemy;" + std::to_string(_initialPosition.x) + "," + std::to_string(_initialPosition.y) + ","
+           + std::to_string(_initialPosition.z) + "," + std::to_string(static_cast<int>(_direction));
+}

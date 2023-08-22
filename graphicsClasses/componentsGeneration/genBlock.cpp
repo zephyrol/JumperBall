@@ -8,10 +8,8 @@
 
 
 CstMesh_sptr MeshGenerator::genBlock(const CstMap_sptr &map, const CstBlock_sptr &block, short dynamicsId) {
-    const auto& position = block->position();
-    const glm::vec3 glmPosition { position.at(0), position.at(1), position.at(2) };
-    const glm::mat4 translation = glm::translate(glmPosition);
 
+    const auto& position = block->position();
     constexpr size_t numberOfFaces = 6;
 
     // std::string strSidesInfo {};
@@ -37,9 +35,19 @@ CstMesh_sptr MeshGenerator::genBlock(const CstMap_sptr &map, const CstBlock_sptr
 
     }
 
+    const auto getTranslation = [&block, &position](){
+        // Blocks that may disappear can't be gathered with others, they are independent.
+        if(block->mayDisappear()) {
+            return glm::mat4(1.f);
+        }
+        const glm::vec3 glmPosition { position.at(0), position.at(1), position.at(2) };
+        const glm::mat4 translation = glm::translate(glmPosition);
+        return translation;
+    };
+
     const CstGeometricShape_sptr blockShape = std::make_shared <const Cube>(
         block->getColor(),
-        translation,
+        getTranslation(),
         glm::mat4(1.f),
         boolSidesInfo
     );

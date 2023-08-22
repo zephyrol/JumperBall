@@ -725,15 +725,67 @@ Displayable::DynamicValues<float> Ball::getDynamicFloatValues() const {
 }
 
 Displayable::DynamicNames Ball::getDynamicVec3fNames() const {
-    return {"sideDir", "position"};
+    return {"translation", "scale"};
+    //return {"sideDir", "position"};
 }
 
 Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
-    return {currentSideAsVector(), _3DPos};
+    // return {currentSideAsVector(), _3DPos};
+    constexpr auto minScaleCrushing = 0.8f;
+    // return _currentCrushing
+    const auto crushingScale = _currentCrushing * minScaleCrushing + (1.f - _currentCrushing);
+    const auto currentSideVec = currentSideAsVector();
+
+    const auto computeTranslation = [this, &crushingScale, &currentSideVec]() {
+        if (
+            _stateOfLife != Ball::StateOfLife::Normal &&
+            _stateOfLife != Ball::StateOfLife::Burning &&
+            _stateOfLife != Ball::StateOfLife::Sliding
+            ) {
+            return _3DPos;
+        }
+        return JBTypesMethods::add(
+            JBTypesMethods::scalarApplication((crushingScale - 1.f) * getRadius(), currentSideVec),
+            _3DPos
+        );
+    };
+
+    const auto computeScale = [this, &crushingScale, &currentSideVec](){
+        if (_stateOfLife == Ball::StateOfLife::Dead) {
+            return JBTypes::vec3f{0.f, 0.f, 0.f};
+        }
+        if (_stateOfLife == Ball::StateOfLife::Bursting) {
+            constexpr auto durationBursting = 0.07f;
+            constexpr auto radiusScalarBursting = 2.5f;
+            float t = getTimeSecondsSinceStateOfLife() / durationBursting;
+
+            float scaleBursting;
+            if (t > 1.f) {
+                scaleBursting = 0.0;
+            } else {
+                scaleBursting = (1.f - t) + radiusScalarBursting * t;
+            }
+            return JBTypesMethods::scalarApplication(
+                getRadius(),
+                {scaleBursting, scaleBursting, scaleBursting}
+            );
+        }
+        JBTypes::vec3f deformationVector{
+            -fabs(currentSideVec.x),
+            -fabs(currentSideVec.y),
+            -fabs(currentSideVec.z)
+        };
+        JBTypes::vec3f scaleVector = JBTypesMethods::add(
+            {1.f, 1.f, 1.f},
+            JBTypesMethods::scalarApplication(1.f - crushingScale, deformationVector)
+        );
+        return JBTypesMethods::scalarApplication(getRadius(), scaleVector);
+    };
+    return {computeTranslation(), computeScale()};
 }
 
 Displayable::DynamicNames Ball::getDynamicQuaternionNames() const {
-    return {"quaternion"};
+    return {"rotation"};
 }
 
 Displayable::DynamicValues<JBTypes::Quaternion> Ball::getDynamicQuaternionValues() const {
@@ -931,4 +983,8 @@ unsigned int Ball::numberOfClocks() const {
 void Ball::obtainClock() {
     _updateOutputs.push_back(std::make_shared<SoundOutput>("clockIsObtained"));
     ++_nbOfClocks;
+}
+
+std::string Ball::getDynamicGroupHash() const {
+    return "ball";
 }

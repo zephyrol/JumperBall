@@ -25,8 +25,6 @@ public:
 
     vecCstShape_sptr getShapes() const override;
 
-    std::string getDynamicGroupHash() const override;
-
     ~ThornBall() override = default;
 
     static constexpr float thornBallRadius = 0.1f;

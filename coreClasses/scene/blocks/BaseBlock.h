@@ -7,18 +7,19 @@
 
 #ifndef BASEBLOCK_H
 #define BASEBLOCK_H
+
 #include "InteractiveBlock.h"
 
 
-class BaseBlock:public InteractiveBlock {
+class BaseBlock : public InteractiveBlock {
 public:
-BaseBlock(
-    const JBTypes::vec3ui& position,
-    const vecItem_sptr& items,
-    const vecEnemy_sptr& enemies,
-    const vecSpecial_sptr& specials,
-    const Ball_sptr& ball
-);
+    BaseBlock(
+        const JBTypes::vec3ui &position,
+        const vecItem_sptr &items,
+        const vecEnemy_sptr &enemies,
+        const vecSpecial_sptr &specials,
+        const Ball_sptr &ball
+    );
 };
 
 #endif /* BASEBLOCK_H */

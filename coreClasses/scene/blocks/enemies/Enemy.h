@@ -45,7 +45,10 @@ public:
     size_t length() const;
 
     Displayable::DynamicNames getDynamicVec3fNames() const override;
+
     Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
+
+    std::string getDynamicGroupHash() const override;
 
     virtual bool touchingTest() const = 0;
 

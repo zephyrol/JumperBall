@@ -26,6 +26,10 @@ public:
 
     void update() override;
 
+    DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
+
+    DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
+
     Block::Effect detectionEvent() override;
 
     bool mayDisappear() const override;
@@ -37,10 +41,13 @@ public:
 private:
 
     const CstChronometer_sptr _chronometer;
+    const JBTypes::vec3f _fPosition;
     bool _stillThere;
     bool _isGoingToBreak;
     float _collisionTime;
-    JBTypes::Dir _fallDirection;
+    JBTypes::vec3f _fallDirection;
+    JBTypes::Quaternion _shakingRotation;
+    JBTypes::vec3f _localTranslation;
 };
 
 #endif /* BRITTLEBLOCK_H */

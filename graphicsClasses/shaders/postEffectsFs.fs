@@ -129,7 +129,7 @@ void main() {
         pixelColor = getBrightPassFilterColor();
     } else if (postProcessId == 1) {
         pixelColor = getHorizontalBlurColor();
-    } else if (postProcessId == 2) {
-        pixelColor = getVerticalBlurColor();
     }
+    // Pass id = 2
+    pixelColor = getVerticalBlurColor();
 }

@@ -108,7 +108,6 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         screen
     );
 
-
     auto shadersProgramsUsingUniformBuffer = shadowProcesses.front()->getShaderPrograms();
 
     for (const auto &shaderPrograms: {

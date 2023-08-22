@@ -69,15 +69,17 @@ public:
 
     const JBTypes::vec3ui &position() const;
 
-    Displayable::StaticValues<JBTypes::vec3f> getStaticVec3fValues() const override;
-
     Displayable::DynamicNames getDynamicVec3fNames() const override;
 
     Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
 
-    Displayable::DynamicNames getDynamicVec2fNames() const override;
+    DynamicNames getDynamicFloatNames() const override;
 
-    Displayable::DynamicValues<JBTypes::vec2f> getDynamicVec2fValues() const override;
+    DynamicValues<float> getDynamicFloatValues() const override;
+
+    DynamicNames getDynamicQuaternionNames() const override;
+
+    DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
 
     static std::string positionToString(const JBTypes::vec3ui &position);
 
@@ -93,19 +95,7 @@ public:
 
     vecSpecial_sptr getSpecials();
 
-private:
-
-    struct Rotation {
-        /**
-         *
-         */
-        float axis;
-
-        /**
-         * Rotation angle in radians.
-         */
-        float angle;
-    };
+    std::string getDynamicGroupHash() const override;
 
 protected:
     const JBTypes::vec3ui _position;
@@ -116,16 +106,6 @@ protected:
     const vecSpecial_sptr _specials;
     const vecCstSpecial_sptr _cstSpecials;
     const bool _hasInteraction;
-    JBTypes::vec3f _localScale;
-    JBTypes::vec3f _localTranslation;
-
-    /**
-     * X value: 0.f means X axis, 1.f means Y axis  and 2.f means Z axis.
-     * Y value: rotation angle value.
-     * That allows to don't make cast for each frame.
-     */
-    JBTypes::vec2f _localRotation;
-
 };
 
 #endif /* BLOCK_H */

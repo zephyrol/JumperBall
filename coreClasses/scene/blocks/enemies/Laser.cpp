@@ -112,7 +112,3 @@ vecCstShape_sptr Laser::getShapes() const {
     }
     return shapes;
 }
-
-std::string Laser::getDynamicGroupHash() const {
-    return "laser;" + std::to_string(static_cast<int>(_color));
-}

@@ -24,8 +24,6 @@ public:
 
     JBTypes::Color getColor() const override;
 
-    std::string getDynamicGroupHash() const override;
-
     vecCstShape_sptr getShapes() const override;
 
     void switchOnOff() override;

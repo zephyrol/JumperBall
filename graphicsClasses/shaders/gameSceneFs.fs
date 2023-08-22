@@ -15,6 +15,8 @@ uniform sampler2DShadow depth2Texture;
 
 uniform vec4 shadowOffsets[4];
 
+uniform int passId;
+
 in vec3 fs_vertexColor;
 in vec4 fs_vertexDepthMapSpace;
 in vec4 fs_vertexDepthMap2Space;
@@ -58,23 +60,16 @@ vec4 convertOutput(vec3 composition) {
     }
     return vec4(
         normalize(composition),
-        log2(compositionLength) / 3.0// 3 because 2^3 = 8, its the max length
+        log2(compositionLength) / 3.0 // 3 because 2^3 = 8, its the max length
     );
 }
 
+const vec3 ambientLightIntensity = vec3(0.7, 0.7, 0.7);
+const vec3 fireEffet = vec3(8.0, 0.2, 0.0);
+
 void main(){
 
-    const vec3 ambientLightIntensity = vec3(0.7, 0.7, 0.7);
-    vec3 composition = ambientLightIntensity;
-    #ifdef(FIRE_EFFECT)
-    {
-        const vec3 fireEffet = vec3(8.0, 0.2, 0.0);
-        composition *= mix(fs_vertexColor, fireEffet, burningCoeff);
-    }
-    #endif
-    #ifdef(NO_FIRE_EFFECT)
-        composition *= fs_vertexColor;
-    #endif
+    vec3 composition = ambientLightIntensity * mix(fs_vertexColor, fs_burningCoeff);
 
     vec3 normalizedNormal = normalize(fs_vertexNormal);
     vec3 toCamera = normalize(cameraPosition - fs_vertexPositionWorld);

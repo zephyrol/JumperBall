@@ -302,6 +302,9 @@ private:
     void isFallingIntersectionBlock() noexcept;
 
     void interaction();
+
+public:
+    std::string getDynamicGroupHash() const override;
 };
 
 #endif /* BALL_H */

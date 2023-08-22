@@ -68,8 +68,3 @@ vecCstShape_sptr ThornBall::getShapes() const {
     );
     return {thornBallShape};
 }
-
-std::string ThornBall::getDynamicGroupHash() const {
-    return "thornBall;" + std::to_string(_initialPosition.x) + "," + std::to_string(_initialPosition.y) + ","
-           + std::to_string(_initialPosition.z) + "," + std::to_string(static_cast<int>(_movementDirection));
-}

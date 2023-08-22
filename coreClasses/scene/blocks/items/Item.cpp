@@ -92,7 +92,7 @@ void Item::setAsGotten() {
 }
 
 std::string Item::getDynamicGroupHash() const {
-    return std::to_string( _position.at(0)) + "," +
+    return "item;" + std::to_string( _position.at(0)) + "," +
         std::to_string(_position.at(1)) + "," +
         std::to_string(_position.at(2)) + ";" +
         std::to_string(static_cast<int>(_direction));

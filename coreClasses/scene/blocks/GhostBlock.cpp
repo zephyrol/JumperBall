@@ -18,7 +18,13 @@ GhostBlock::GhostBlock(
     InteractiveBlock(position, items, enemies, specials, ball, true),
     _chronometer(ball->getInGameChronometer()),
     _periodicity(periodicity),
-    _isThere(true) {
+    _fPosition({
+        static_cast<float>(position.at(0)),
+        static_cast<float>(position.at(1)),
+        static_cast<float>(position.at(2))
+    }),
+    _isThere(true),
+    _scale(1.f){
 }
 
 bool GhostBlock::isExists() const {
@@ -55,30 +61,14 @@ void GhostBlock::update() {
                            ? 0.f
                            : 1.f;
 
-    const std::function<float(float, float, float)> getScale =
-        [](float t, float begin, float end) {
-            return t * begin + (1 - t) * end;
-        };
-
-    const float scale = getScale(t, beginScale, endScale);
-    // const float scale = _isThere ? 1.f : 0.f;
-    _localScale = {scale, scale, scale};
-
-    const float translation = (1 - scale) * (-0.5f);
-    _localTranslation = {translation, translation, translation};
-}
-
-Displayable::StaticValues<JBTypes::vec3f> GhostBlock::getStaticVec3fValues() const {
-    // We need to move the position to the center of the block to get
-    // scale animation
-    constexpr float offset = 0.5f;
-    return {{
-                static_cast <float>(_position.at(0)) + offset,
-                static_cast <float>(_position.at(1)) + offset,
-                static_cast <float>(_position.at(2)) + offset
-            }};
+    _scale = t * beginScale + (1.f - t) * endScale;
 }
 
 std::string GhostBlock::getDynamicGroupHash() const {
-    return "ghost;" + std::to_string(_periodicity);
+    return "ghost;" + std::to_string(position().at(0)) + "," +
+           std::to_string(position().at(1)) + "," + std::to_string(position().at(2));
+}
+
+Displayable::DynamicValues<JBTypes::vec3f> GhostBlock::getDynamicVec3fValues() const {
+    return {_fPosition, {_scale, _scale, _scale}};
 }

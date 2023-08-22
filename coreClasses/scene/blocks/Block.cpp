@@ -22,10 +22,7 @@ Block::Block(
     _cstEnemies(getCstEnemies()),
     _specials(specials),
     _cstSpecials(getCstSpecials()),
-    _hasInteraction(alwaysHasInteractions || !items.empty() || !enemies.empty() || !specials.empty()),
-    _localScale{1.f, 1.f, 1.f},
-    _localTranslation{0.f, 0.f, 0.f},
-    _localRotation{0.f, 0.f} {
+    _hasInteraction(alwaysHasInteractions || !items.empty() || !enemies.empty() || !specials.empty()), {
 }
 
 std::array<bool, 6> Block::faceInfo() const {
@@ -54,22 +51,6 @@ bool Block::hasInteraction() const {
 
 const JBTypes::vec3ui &Block::position() const {
     return _position;
-}
-
-Displayable::StaticValues<JBTypes::vec3f> Block::getStaticVec3fValues() const {
-    return {{
-                static_cast <float>(_position.at(0)),
-                static_cast <float>(_position.at(1)),
-                static_cast <float>(_position.at(2))
-            }};
-}
-
-Displayable::DynamicNames Block::getDynamicVec3fNames() const {
-    return {"translation", "scale"};
-}
-
-Displayable::DynamicValues<JBTypes::vec3f> Block::getDynamicVec3fValues() const {
-    return {_localTranslation, _localScale};
 }
 
 vecCstItem_sptr Block::getCstItems() const {
@@ -135,10 +116,32 @@ vecSpecial_sptr Block::getSpecials() {
 void Block::unlockExit() {
 }
 
-Displayable::DynamicNames Block::getDynamicVec2fNames() const {
+std::string Block::getDynamicGroupHash() const {
+    return "block";
+}
+
+Displayable::DynamicNames Block::getDynamicFloatNames() const {
+    return {"burningCoeff"};
+}
+
+Displayable::DynamicValues<float> Block::getDynamicFloatValues() const {
+    return {0.f};
+}
+
+Displayable::DynamicNames Block::getDynamicQuaternionNames() const {
     return {"rotation"};
 }
 
-Displayable::DynamicValues<JBTypes::vec2f> Block::getDynamicVec2fValues() const {
-    return {_localRotation};
+Displayable::DynamicValues<JBTypes::Quaternion> Block::getDynamicQuaternionValues() const {
+    return {{{0.f, 0.f, 0.f}, 1.f}};
 }
+
+Displayable::DynamicNames Block::getDynamicVec3fNames() const {
+    return {"translation", "scale"};
+}
+
+Displayable::DynamicValues<JBTypes::vec3f> Block::getDynamicVec3fValues() const {
+    return {{0.f, 0.f, 0.f},
+            {1.f, 1.f, 1.f}};
+}
+
