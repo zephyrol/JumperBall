@@ -695,38 +695,30 @@ void Ball::die() noexcept {
     _stateOfLife = Ball::StateOfLife::Dead;
 }
 
-Displayable::DynamicNames Ball::getDynamicFloatNames() const {
-    return {"ballRadius", "crushingCoeff", "status", "timeStateOfLife", "burningCoeff"};
-}
-
 Displayable::DynamicValues<float> Ball::getDynamicFloatValues() const {
+    return {burnCoefficient()};
 
-    const auto getStateOfLifeStatus = [this]() {
-        if (
-            _stateOfLife == Ball::StateOfLife::Normal ||
-            _stateOfLife == Ball::StateOfLife::Burning ||
-            _stateOfLife == Ball::StateOfLife::Sliding
-            ) {
-            return 0.f;
-        }
-        if (_stateOfLife == Ball::StateOfLife::Bursting) {
-            return 1.f;
-        }
-        return 2.f;
-    };
+    // const auto getStateOfLifeStatus = [this]() {
+    //     if (
+    //         _stateOfLife == Ball::StateOfLife::Normal ||
+    //         _stateOfLife == Ball::StateOfLife::Burning ||
+    //         _stateOfLife == Ball::StateOfLife::Sliding
+    //         ) {
+    //         return 0.f;
+    //     }
+    //     if (_stateOfLife == Ball::StateOfLife::Bursting) {
+    //         return 1.f;
+    //     }
+    //     return 2.f;
+    // };
 
-    return {
-        getRadius(),
-        _currentCrushing,
-        getStateOfLifeStatus(),
-        getTimeSecondsSinceStateOfLife(),
-        burnCoefficient()
-    };
-}
-
-Displayable::DynamicNames Ball::getDynamicVec3fNames() const {
-    return {"translation", "scale"};
-    //return {"sideDir", "position"};
+    // return {
+    //     getRadius(),
+    //     _currentCrushing,
+    //     getStateOfLifeStatus(),
+    //     getTimeSecondsSinceStateOfLife(),
+    //     burnCoefficient()
+    // };
 }
 
 Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
@@ -782,10 +774,6 @@ Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
         return JBTypesMethods::scalarApplication(getRadius(), scaleVector);
     };
     return {computeTranslation(), computeScale()};
-}
-
-Displayable::DynamicNames Ball::getDynamicQuaternionNames() const {
-    return {"rotation"};
 }
 
 Displayable::DynamicValues<JBTypes::Quaternion> Ball::getDynamicQuaternionValues() const {

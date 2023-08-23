@@ -6,7 +6,6 @@
  */
 
 #include "Block.h"
-#include <utility>
 
 Block::Block(
     const JBTypes::vec3ui &position,
@@ -22,7 +21,7 @@ Block::Block(
     _cstEnemies(getCstEnemies()),
     _specials(specials),
     _cstSpecials(getCstSpecials()),
-    _hasInteraction(alwaysHasInteractions || !items.empty() || !enemies.empty() || !specials.empty()), {
+    _hasInteraction(alwaysHasInteractions || !items.empty() || !enemies.empty() || !specials.empty()){
 }
 
 std::array<bool, 6> Block::faceInfo() const {
@@ -120,24 +119,12 @@ std::string Block::getDynamicGroupHash() const {
     return "block";
 }
 
-Displayable::DynamicNames Block::getDynamicFloatNames() const {
-    return {"burningCoeff"};
-}
-
 Displayable::DynamicValues<float> Block::getDynamicFloatValues() const {
     return {0.f};
 }
 
-Displayable::DynamicNames Block::getDynamicQuaternionNames() const {
-    return {"rotation"};
-}
-
 Displayable::DynamicValues<JBTypes::Quaternion> Block::getDynamicQuaternionValues() const {
     return {{{0.f, 0.f, 0.f}, 1.f}};
-}
-
-Displayable::DynamicNames Block::getDynamicVec3fNames() const {
-    return {"translation", "scale"};
 }
 
 Displayable::DynamicValues<JBTypes::vec3f> Block::getDynamicVec3fValues() const {

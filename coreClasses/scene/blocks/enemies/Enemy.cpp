@@ -66,10 +66,6 @@ const JBTypes::Dir &Enemy::direction() const {
     return _direction;
 }
 
-Displayable::DynamicNames Enemy::getDynamicVec3fNames() const {
-    return {"translation", "scale"};
-}
-
 Displayable::DynamicValues<JBTypes::vec3f> Enemy::getDynamicVec3fValues() const {
     return { _position, _scale };
 }

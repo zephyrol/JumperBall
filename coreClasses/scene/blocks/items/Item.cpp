@@ -11,9 +11,10 @@ Item::Item(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, CstCh
     _chronometer(std::move(chronometer)),
     _position(position),
     _direction(direction),
+    _directionVec(JBTypesMethods::directionAsVector(_direction)),
+    _translationWay(JBTypesMethods::scalarApplication(0.9f, _directionVec)),
     _3DPosition(compute3DPosition()),
-    _gotten(false),
-    _obtainingTime(0.f) {
+    _obtainingTime(nullptr) {
 }
 
 const JBTypes::vec3ui &Item::position() const {
@@ -25,29 +26,13 @@ const JBTypes::vec3f &Item::get3DPosition() const {
 }
 
 bool Item::isGotten() const {
-    return _gotten;
+    return _obtainingTime != nullptr;
 }
 
 float Item::getTimeSinceObtaining() const {
-    return _gotten
-           ? _chronometer->getTime() - _obtainingTime
+    return _obtainingTime != nullptr
+           ? _chronometer->getTime() - *_obtainingTime
            : 0;
-}
-
-Displayable::StaticValues<unsigned char> Item::getStaticUnsignedByteValues() const {
-    return {static_cast<unsigned char>(_direction)};
-}
-
-Displayable::StaticValues<JBTypes::vec3f> Item::getStaticVec3fValues() const {
-    return {_3DPosition};
-}
-
-Displayable::DynamicNames Item::getDynamicFloatNames() const {
-    return {"creationTime", "obtainingTime"};
-}
-
-Displayable::DynamicValues<float> Item::getDynamicFloatValues() const {
-    return {_chronometer->getTime(), getTimeSinceObtaining()};
 }
 
 JBTypes::vec3f Item::compute3DPosition() const {
@@ -87,13 +72,67 @@ const JBTypes::Dir &Item::direction() const {
 }
 
 void Item::setAsGotten() {
-    _obtainingTime = _chronometer->getTime();
-    _gotten = true;
+    _obtainingTime = std::unique_ptr<float>(new float(_chronometer->getTime()));
 }
 
 std::string Item::getDynamicGroupHash() const {
-    return "item;" + std::to_string( _position.at(0)) + "," +
-        std::to_string(_position.at(1)) + "," +
-        std::to_string(_position.at(2)) + ";" +
-        std::to_string(static_cast<int>(_direction));
+    return "item;" + std::to_string(_position.at(0)) + "," +
+           std::to_string(_position.at(1)) + "," +
+           std::to_string(_position.at(2)) + ";" +
+           std::to_string(static_cast<int>(_direction));
+}
+
+Displayable::DynamicValues<float> Item::getDynamicFloatValues() const {
+    return {0.f};
+}
+
+Displayable::DynamicValues<JBTypes::vec3f> Item::getDynamicVec3fValues() const {
+
+    constexpr auto thresholdSecondStep = 1.f;
+
+    const auto computeScale = [this]() -> JBTypes::vec3f {
+        if (_obtainingTime == nullptr) {
+            return {1.f, 1.f, 1.f};
+        }
+        const auto obtainingTime = *_obtainingTime;
+        if (obtainingTime < thresholdSecondStep) {
+            return {1.f, 1.f, 1.f};
+        }
+        constexpr auto thresholdThirdStep = 1.5f;
+        constexpr auto durationSecondStep = thresholdThirdStep - thresholdSecondStep;
+        if (obtainingTime < thresholdThirdStep) {
+            const auto scale = 1.f + ((obtainingTime - thresholdSecondStep) / durationSecondStep);
+            return {scale, scale, scale};
+        }
+
+        constexpr auto durationThirdStep = 0.2f;
+        if (obtainingTime < thresholdThirdStep + durationThirdStep) {
+            const auto scale = 2.f * (1.f - ((obtainingTime - thresholdThirdStep) / durationThirdStep));
+            return {scale, scale, scale};
+        }
+        return {0.f, 0.f, 0.f};
+    };
+    const auto computeLocalTranslation = [this]() -> JBTypes::vec3f {
+        if (_obtainingTime == nullptr) {
+            return {0.f, 0.f, 0.f};
+        }
+        const auto obtainingTime = *_obtainingTime;
+        if (obtainingTime < thresholdSecondStep) {
+            float translateCoeff = obtainingTime / thresholdSecondStep;
+            return JBTypesMethods::scalarApplication(translateCoeff, _translationWay);
+        }
+        return _translationWay;
+    };
+
+    return {JBTypesMethods::add(_3DPosition, computeLocalTranslation()), computeScale()};
+}
+
+Displayable::DynamicValues<JBTypes::Quaternion> Item::getDynamicQuaternionValues() const {
+    if (_obtainingTime != nullptr) {
+        constexpr auto speedPow = 5.f;
+        const auto angle = powf(getTimeSinceObtaining(), speedPow);
+        return {{JBTypesMethods::createRotationQuaternion(_directionVec, angle)}};
+    }
+    constexpr auto speedFactor = 5.f;
+    return {{JBTypesMethods::createRotationQuaternion(_directionVec, speedFactor * _chronometer->getTime())}};
 }

@@ -25,7 +25,7 @@ using Ball_wptr = std::weak_ptr<Ball>;
 using CstBall_sptr = std::shared_ptr<const Ball>;
 using CstBall_wptr = std::weak_ptr<const Ball>;
 
-class Ball : public Displayable {
+class Ball : public SceneElement {
 public:
 
     Ball(
@@ -115,12 +115,6 @@ public:
     float getTimeSecondsSinceAction() const;
 
     float getTimeSecondsSinceStateOfLife() const;
-
-    DynamicNames getDynamicFloatNames() const override;
-
-    DynamicNames getDynamicVec3fNames() const override;
-
-    DynamicNames getDynamicQuaternionNames() const override;
 
     Displayable::DynamicValues<float> getDynamicFloatValues() const override;
 

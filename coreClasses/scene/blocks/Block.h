@@ -12,7 +12,7 @@
 #include <scene/blocks/special/Special.h>
 #include <scene/blocks/items/Item.h>
 #include "system/Types.h"
-#include "scene/Displayable.h"
+#include "scene/SceneElement.h"
 
 class Block;
 
@@ -22,7 +22,7 @@ using vecCstBlock_sptr = std::vector<CstBlock_sptr>;
 using vecBlock_sptr = std::vector<Block_sptr>;
 using BlockDir = std::pair<Block_sptr, JBTypes::Dir>;
 
-class Block : public Displayable {
+class Block : public SceneElement {
 public:
 
     Block(
@@ -69,15 +69,9 @@ public:
 
     const JBTypes::vec3ui &position() const;
 
-    Displayable::DynamicNames getDynamicVec3fNames() const override;
-
     Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
 
-    DynamicNames getDynamicFloatNames() const override;
-
     DynamicValues<float> getDynamicFloatValues() const override;
-
-    DynamicNames getDynamicQuaternionNames() const override;
 
     DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
 

@@ -9,8 +9,8 @@
 #define OBJECT_H
 
 #include "system/Types.h"
-#include "scene/Displayable.h"
 #include "system/Chronometer.h"
+#include "scene/SceneElement.h"
 #include <scene/Shape.h>
 
 class Item;
@@ -21,7 +21,7 @@ using vecCstItem_sptr = std::vector<CstItem_sptr>;
 using vecItem_sptr = std::vector<Item_sptr>;
 using Item_uptr = std::unique_ptr<Item>;
 
-class Item : public Displayable {
+class Item : public SceneElement {
 public:
 
     Item(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, CstChronometer_sptr chronometer);
@@ -41,13 +41,11 @@ public:
     static constexpr float itemBoundingSphereRadiusJumping = 0.15f;
     static constexpr float itemBoundingSphereRadiusStaying = 0.3f;
 
-    Displayable::StaticValues<unsigned char> getStaticUnsignedByteValues() const override;
+    DynamicValues<float> getDynamicFloatValues() const override;
 
-    Displayable::StaticValues<JBTypes::vec3f> getStaticVec3fValues() const override;
+    DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
 
-    Displayable::DynamicNames getDynamicFloatNames() const override;
-
-    Displayable::DynamicValues<float> getDynamicFloatValues() const override;
+    DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
 
     std::string getDynamicGroupHash() const override;
 
@@ -60,9 +58,10 @@ private:
     const CstChronometer_sptr _chronometer;
     const JBTypes::vec3ui _position;
     const JBTypes::Dir _direction;
+    const JBTypes::vec3f _directionVec;
+    const JBTypes::vec3f _translationWay;
     const JBTypes::vec3f _3DPosition;
-    bool _gotten;
-    float _obtainingTime;
+    std::unique_ptr<float> _obtainingTime;
 
 };
 

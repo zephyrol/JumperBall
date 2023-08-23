@@ -33,6 +33,7 @@ private:
 
     const JBTypes::Direction _exitDir;
     const bool _isUnlockModel;
+    JBTypes::vec3f _scale;
     bool _isUnlocked;
 };
 

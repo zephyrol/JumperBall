@@ -17,15 +17,11 @@ ExitBlock::ExitBlock(const JBTypes::vec3ui &position,
         InteractiveBlock(position, items, enemies, specials, ball),
         _exitDir(exitDir),
         _isUnlockModel(isUnlockModel),
+        _scale(_isUnlockModel ? JBTypes::vec3f {1.f, 1.f, 1.f} : JBTypes::vec3f {0.f, 0.f, 0.f}),
         _isUnlocked(false)
 {
-    if (!isUnlockModel) {
-       return;
-    }
-    _localScale.x = 0.f;
-    _localScale.y = 0.f;
-    _localScale.z = 0.f;
 }
+
 vecCstShape_sptr ExitBlock::getExtraShapes() const {
 
     vecCstShape_sptr shapes {};
@@ -65,14 +61,10 @@ vecCstShape_sptr ExitBlock::getExtraShapes() const {
 void ExitBlock::unlockExit() {
     _isUnlocked = true;
     if (_isUnlockModel) {
-        _localScale.x = 1.f;
-        _localScale.y = 1.f;
-        _localScale.z = 1.f;
+        _scale = {1.f, 1.f, 1.f};
         return;
     }
-    _localScale.x = 0.f;
-    _localScale.y = 0.f;
-    _localScale.z = 0.f;
+    _scale = {0.f, 0.f, 0.f};
     _ball.lock()->addUpdateOutput(std::make_shared<SoundOutput>("exitIsUnlocked"));
 }
 

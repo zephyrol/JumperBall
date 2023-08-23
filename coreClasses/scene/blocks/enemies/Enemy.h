@@ -8,7 +8,7 @@
 #define Enemy_hpp
 
 #include <scene/Shape.h>
-#include "scene/Displayable.h"
+#include "scene/SceneElement.h"
 
 class Enemy;
 
@@ -18,12 +18,8 @@ using vecCstEnemy_sptr = std::vector<CstEnemy_sptr>;
 using vecEnemy_sptr = std::vector<Enemy_sptr>;
 using Enemy_uptr = std::unique_ptr<Enemy>;
 
-class Enemy : public Displayable {
+class Enemy : public SceneElement {
 public:
-    enum class Effect {
-        Nothing, Burst
-    };
-
     Enemy(
         const JBTypes::vec3ui &initialPosition,
         const JBTypes::Dir &direction,
@@ -43,8 +39,6 @@ public:
     float size() const;
 
     size_t length() const;
-
-    Displayable::DynamicNames getDynamicVec3fNames() const override;
 
     Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
 
