@@ -20,11 +20,6 @@ RenderGroup::RenderGroup(
     _numberOfIndices(numberOfIndices) {
 }
 
-void RenderGroup::bindAndRender() const {
-    bind();
-    render();
-}
-
 void RenderGroup::bind() const {
     glBindVertexArray(_vertexArrayObject);
 }

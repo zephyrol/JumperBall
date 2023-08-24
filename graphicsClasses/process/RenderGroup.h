@@ -40,9 +40,6 @@ public:
 
     void render() const;
 
-    // TODO Remove this method or create an helper
-    void bindAndRender() const;
-
     short numberOfDynamicsIds() const;
 
     RenderGroupUniforms genUniforms(const CstShaderProgram_sptr &shaderProgram) const;
