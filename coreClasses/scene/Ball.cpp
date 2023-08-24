@@ -763,9 +763,9 @@ Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
             );
         }
         JBTypes::vec3f deformationVector{
-            -fabs(currentSideVec.x),
-            -fabs(currentSideVec.y),
-            -fabs(currentSideVec.z)
+            -fabsf(currentSideVec.x),
+            -fabsf(currentSideVec.y),
+            -fabsf(currentSideVec.z)
         };
         JBTypes::vec3f scaleVector = JBTypesMethods::add(
             {1.f, 1.f, 1.f},

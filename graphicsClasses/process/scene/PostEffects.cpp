@@ -24,6 +24,12 @@ PostEffects::PostEffects(
         ScreenGroupGenerator screenGroupGenerator;
         return screenGroupGenerator.genRenderGroup();
     }()),
+    _blankFrameBuffer(ColorableFrameBuffer::createInstance(
+        1,
+        1,
+        true,
+        false
+    )),
     _brightPassFilterFrameBuffer(ColorableFrameBuffer::createInstance(
         postEffectsWidth,
         postEffectsHeight,
@@ -48,16 +54,14 @@ PostEffects::PostEffects(
 
 void PostEffects::render() const {
 
+    TextureSampler::bind(_sceneTexture);
+    TextureSampler::setActiveTexture(1);
+    TextureSampler::bind(_blankFrameBuffer->getRenderTexture());
+
     _postProcessesShader->use();
-
-    FrameBuffer::disableDepthTest();
-    FrameBuffer::disableBlending();
-
     // 1. Bright pass filter
     _brightPassFilterFrameBuffer->bindFrameBuffer();
     FrameBuffer::setViewportSize(_postEffectsWidth, _postEffectsHeight);
-
-    TextureSampler::bind(_sceneTexture);
 
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 0);
     _screen->bind();
@@ -65,7 +69,6 @@ void PostEffects::render() const {
 
     // 2. Horizontal blur
     _horizontalBlurFrameBuffer->bindFrameBuffer();
-    TextureSampler::setActiveTexture(1);
     TextureSampler::bind(_brightPassFilterFrameBuffer->getRenderTexture());
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 1);
     _screen->render();
@@ -86,6 +89,7 @@ void PostEffects::render() const {
 }
 
 void PostEffects::freeGPUMemory() {
+    _blankFrameBuffer->freeGPUMemory();
     _brightPassFilterFrameBuffer->freeGPUMemory();
     _horizontalBlurFrameBuffer->freeGPUMemory();
     _verticalBlurFrameBuffer->freeGPUMemory();

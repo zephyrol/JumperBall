@@ -69,6 +69,10 @@ const vec3 fireEffet = vec3(8.0, 0.2, 0.0);
 
 void main(){
 
+    if(passId < 2){
+        return;
+    }
+
     vec3 composition = ambientLightIntensity * mix(fs_vertexColor, fireEffet, fs_burningCoeff);
 
     vec3 normalizedNormal = normalize(fs_vertexNormal);

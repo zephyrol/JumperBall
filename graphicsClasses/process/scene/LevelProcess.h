@@ -10,6 +10,7 @@
 #include "frameBuffer/TextureSampler.h"
 #include "frameBuffer/DepthFrameBuffer.h"
 #include "scene/Star.h"
+#include "process/RenderGroup.h"
 
 
 class LevelProcess;

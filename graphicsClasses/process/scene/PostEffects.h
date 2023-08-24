@@ -8,6 +8,7 @@
 #include "process/RenderProcess.h"
 #include "frameBuffer/ColorableFrameBuffer.h"
 #include "frameBuffer/TextureSampler.h"
+#include "process/RenderGroup.h"
 
 class PostEffects : public RenderProcess {
 
@@ -45,6 +46,7 @@ private:
     const ShaderProgram_sptr _postProcessesShader;
     const GLint _postProcessIdUniformLocation;
     const CstRenderGroup_sptr _screen;
+    const ColorableFrameBuffer_uptr _blankFrameBuffer;
     const ColorableFrameBuffer_uptr _brightPassFilterFrameBuffer;
     const ColorableFrameBuffer_uptr _horizontalBlurFrameBuffer;
     const ColorableFrameBuffer_uptr _verticalBlurFrameBuffer;

@@ -8,6 +8,7 @@
 #include "componentsGeneration/RenderGroupGenerator.h"
 #include "gameMenu/labels/RenderableLabel.h"
 #include "componentsGeneration/LabelGroupGenerator.h"
+#include "frameBuffer/FrameBuffer.h"
 
 LabelsProcess::LabelsProcess(
     GLsizei width,
@@ -15,15 +16,14 @@ LabelsProcess::LabelsProcess(
     CstPage_sptr page,
     const FontTexturesGenerator &fontTexturesGenerator,
     RenderGroup_sptr renderGroup,
-    RenderPass renderPass,
     ShaderProgram_sptr labelsShader
 ) :
     Rendering(width, height),
     _page(std::move(page)),
     _fontTexturesGenerator(fontTexturesGenerator),
     _renderGroup(std::move(renderGroup)),
-    _renderPass(std::move(renderPass)),
-    _labelsShader(std::move(labelsShader)) {
+    _labelsShader(std::move(labelsShader)),
+    _renderGroupUniform(_renderGroup->genUniforms(_labelsShader)) {
 }
 
 std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
@@ -49,7 +49,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
         glFloatConsts.emplace_back(item.first, Utility::convertToOpenGLFormat(item.second));
     }
 
-    const auto renderGroup = LabelGroupGenerator(std::move(labels), page).genRenderGroup();
+    auto renderGroup = LabelGroupGenerator(std::move(labels), page).genRenderGroup();
 
     auto labelsShader = ShaderProgram::createInstance(
         fileContent,
@@ -60,9 +60,6 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
         glFloatConsts
     );
     labelsShader->use();
-
-    RenderPass renderPass(labelsShader, renderGroup);
-
     labelsShader->setTextureIndex("characterTexture", 0);
 
     return std::unique_ptr<LabelsProcess>(new LabelsProcess(
@@ -70,8 +67,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
         height,
         page,
         fontTexturesGenerator,
-        renderGroup,
-        std::move(renderPass),
+        std::move(renderGroup),
         std::move(labelsShader)
     ));
 }
@@ -81,7 +77,9 @@ void LabelsProcess::render() const {
     _labelsShader->use();
     TextureSampler::setActiveTexture(0);
     TextureSampler::bind(_fontTexturesGenerator.getLettersTexture());
-    _renderPass.renderGroup();
+    _renderGroupUniform.bind();
+    _renderGroup->bind();
+    _renderGroup->render();
 }
 
 void LabelsProcess::freeGPUMemory() {
@@ -99,6 +97,5 @@ vecCstShaderProgram_sptr LabelsProcess::getShaderPrograms() const {
 }
 
 void LabelsProcess::update() {
-    _labelsShader->use();
-    _renderPass.updateGroupUniforms();
+    _renderGroupUniform.update();
 }

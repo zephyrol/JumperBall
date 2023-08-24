@@ -102,7 +102,6 @@ LevelProcess_sptr LevelProcess::createInstance(
 
 void LevelProcess::render() const {
 
-
     FrameBuffer::disableBlending();
     glCullFace(GL_FRONT);
     FrameBuffer::enableDepthTest();
@@ -115,6 +114,7 @@ void LevelProcess::render() const {
 
     _mapShaderProgram->use();
     _mapGroupUniforms.bind();
+    _mapGroup->bind();
 
     // 1. First shadow
     _firstShadow->bindFrameBuffer();
@@ -149,6 +149,7 @@ void LevelProcess::render() const {
     FrameBuffer::disableDepthTest();
     _starShaderProgram->use();
     _starGroupUniforms.bind();
+    _starGroup->bind();
     _starGroup->render();
 }
 
@@ -156,7 +157,6 @@ void LevelProcess::update() {
     _mapGroupUniforms.update();
     _starGroupUniforms.update();
 }
-
 
 void LevelProcess::freeGPUMemory() {
     _firstShadow->freeGPUMemory();

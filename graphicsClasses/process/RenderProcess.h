@@ -7,8 +7,8 @@
 
 #ifndef RENDER_PROCESS_H
 #define RENDER_PROCESS_H
-
-#include "RenderPass.h"
+#include "Utility.h"
+#include "ShaderProgram.h"
 
 class RenderProcess;
 
@@ -19,8 +19,7 @@ using vecRenderProcess_sptr = std::vector<RenderProcess_sptr>;
 
 /**
  * Render process is used to render a specific effect. It may render it into frame buffer of
- * directly on the screen. It contains a specific shader program. It can create its own render passes
- * or use shareable render passes.
+ * directly on the screen. It contains a specific shader program.
  */
 class RenderProcess {
 

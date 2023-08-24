@@ -12,6 +12,7 @@
 #include "Rendering.h"
 #include "frameBuffer/TextureSampler.h"
 #include "scene/Map.h"
+#include "process/RenderGroup.h"
 
 class LabelsProcess: public RenderProcess, Rendering {
 
@@ -30,7 +31,6 @@ public:
         CstPage_sptr page,
         const FontTexturesGenerator& fontTexturesGenerator,
         RenderGroup_sptr renderGroup,
-        RenderPass renderPass,
         ShaderProgram_sptr labelsShader
     );
 
@@ -43,9 +43,9 @@ public:
 private:
     const CstPage_sptr _page;
     FontTexturesGenerator _fontTexturesGenerator;
-    RenderGroup_sptr _renderGroup;
-    RenderPass _renderPass;
+    const RenderGroup_sptr _renderGroup;
     const ShaderProgram_sptr _labelsShader;
+    RenderGroupUniforms _renderGroupUniform;
 };
 
 

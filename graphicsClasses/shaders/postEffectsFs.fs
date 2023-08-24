@@ -124,10 +124,15 @@ void main() {
     // Bloom is tested first because it's applied on more pixels.
     if (postProcessId == 3) {
         pixelColor = getBloomColor();
-    } else if(postProcessId == 0) {
+        return;
+    }
+    if(postProcessId == 0) {
         pixelColor = getBrightPassFilterColor();
-    } else if (postProcessId == 1) {
+        return;
+    }
+    if (postProcessId == 1) {
         pixelColor = getHorizontalBlurColor();
+        return;
     }
     // Pass id = 2
     pixelColor = getVerticalBlurColor();
