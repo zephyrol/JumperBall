@@ -13,14 +13,17 @@ RenderPass::RenderPass(
 ) :
     _shaderProgram(std::move(shaderProgram)),
     _renderGroup(std::move(renderGroup)),
-    _uniforms(_renderGroup->genUniforms(_shaderProgram)) {
+    _groupUniforms(_renderGroup->genUniforms(_shaderProgram)) {
 }
 
-void RenderPass::update() {
-    _uniforms.update();
+void RenderPass::updateGroupUniforms() {
+    _groupUniforms.update();
 }
 
-void RenderPass::render() const {
-    _uniforms.bind();
-    _renderGroup->bindAndRender();
+void RenderPass::bindGroup() const {
+    _renderGroup->bind();
+}
+
+void RenderPass::renderGroup() const {
+    _renderGroup->render();
 }

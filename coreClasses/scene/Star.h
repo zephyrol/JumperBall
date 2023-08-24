@@ -10,6 +10,9 @@
 
 #include "Map.h"
 
+class Star;
+using CstStar_sptr = std::shared_ptr<const Star>;
+
 class Star : public Displayable {
 public:
     Star(

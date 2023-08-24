@@ -13,6 +13,7 @@
 
 class RenderGroup;
 
+using RenderGroup_uptr = std::unique_ptr<RenderGroup>;
 using RenderGroup_sptr = std::shared_ptr<RenderGroup>;
 using CstRenderGroup_sptr = std::shared_ptr<const RenderGroup>;
 using vecRenderGroup_sptr = std::vector<RenderGroup_sptr>;

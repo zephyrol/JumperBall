@@ -81,7 +81,7 @@ void LabelsProcess::render() const {
     _labelsShader->use();
     TextureSampler::setActiveTexture(0);
     TextureSampler::bind(_fontTexturesGenerator.getLettersTexture());
-    _renderPass.render();
+    _renderPass.renderGroup();
 }
 
 void LabelsProcess::freeGPUMemory() {
@@ -100,5 +100,5 @@ vecCstShaderProgram_sptr LabelsProcess::getShaderPrograms() const {
 
 void LabelsProcess::update() {
     _labelsShader->use();
-    _renderPass.update();
+    _renderPass.updateGroupUniforms();
 }

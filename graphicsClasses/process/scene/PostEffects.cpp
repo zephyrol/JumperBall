@@ -3,6 +3,7 @@
 //
 
 #include "PostEffects.h"
+#include "componentsGeneration/ScreenGroupGenerator.h"
 
 PostEffects::PostEffects(
     const JBTypes::FileContent &fileContent,
@@ -11,8 +12,7 @@ PostEffects::PostEffects(
     GLsizei postEffectsWidth,
     GLsizei postEffectsHeight,
     GLuint sceneTexture,
-    GLint defaultFrameBuffer,
-    CstRenderGroup_sptr screen
+    GLint defaultFrameBuffer
 ) :
     _screenWidth(screenWidth),
     _screenHeight(screenHeight),
@@ -20,7 +20,10 @@ PostEffects::PostEffects(
     _postEffectsHeight(postEffectsHeight),
     _postProcessesShader(createPostProcessesShaderProgram(fileContent, postEffectsWidth, postEffectsHeight)),
     _postProcessIdUniformLocation(_postProcessesShader->getUniformLocation("postProcessId")),
-    _screen(std::move(screen)),
+    _screen([]() {
+        ScreenGroupGenerator screenGroupGenerator;
+        return screenGroupGenerator.genRenderGroup();
+    }()),
     _brightPassFilterFrameBuffer(ColorableFrameBuffer::createInstance(
         postEffectsWidth,
         postEffectsHeight,

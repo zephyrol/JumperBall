@@ -8,6 +8,8 @@
 #include "process/RenderProcess.h"
 #include "frameBuffer/ColorableFrameBuffer.h"
 #include "frameBuffer/TextureSampler.h"
+#include "frameBuffer/DepthFrameBuffer.h"
+#include "scene/Star.h"
 
 
 class LevelProcess;
@@ -21,20 +23,24 @@ public:
         const JBTypes::FileContent &fileContent,
         GLsizei width,
         GLsizei height,
-        GLuint shadowTexture,
-        GLuint shadow2Texture,
-        GLsizei shadowsResolution,
-        CstRenderGroup_sptr map,
-        CstRenderGroup_sptr star
+        CstMap_sptr map,
+        CstStar_sptr firstStar,
+        CstStar_sptr secondStar,
+        unsigned int ballSkin
     );
 
     LevelProcess(
         GLsizei width,
         GLsizei height,
-        ColorableFrameBuffer_uptr frameBuffer,
-        GLuint shadowTexture,
-        GLuint shadow2Texture,
-        std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > &&shadersRenderPasses
+        DepthFrameBuffer_uptr firstShadow,
+        DepthFrameBuffer_uptr firstBlankShadow,
+        DepthFrameBuffer_uptr secondShadow,
+        DepthFrameBuffer_uptr secondBlankShadow,
+        ColorableFrameBuffer_uptr levelFrameBuffer,
+        RenderGroup_sptr mapGroup,
+        ShaderProgram_sptr mapShaderProgram,
+        RenderGroup_sptr starGroup,
+        ShaderProgram_sptr starShaderProgram
     );
 
     void update() override;
@@ -49,17 +55,30 @@ public:
 
 private:
 
-    GLsizei _width;
-    GLsizei _height;
-    const ColorableFrameBuffer_uptr _frameBuffer;
-    const GLuint _shadowTexture;
-    const GLuint _shadow2Texture;
+    static constexpr GLsizei depthTexturesSize = 1024;
 
-    const std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > _shadersRenderPasses;
+    const GLsizei _width;
+    const GLsizei _height;
 
-    static ShaderProgram_sptr createLevelProcessShaderProgram(
+    const DepthFrameBuffer_uptr _firstShadow;
+    const DepthFrameBuffer_uptr _firstBlankShadow;
+    const DepthFrameBuffer_uptr _secondShadow;
+    const DepthFrameBuffer_uptr _secondBlankShadow;
+    const ColorableFrameBuffer_uptr _levelFrameBuffer;
+
+    const RenderGroup_sptr _mapGroup;
+    const ShaderProgram_sptr _mapShaderProgram;
+    RenderGroupUniforms _mapGroupUniforms;
+
+    const RenderGroup_sptr _starGroup;
+    const ShaderProgram_sptr _starShaderProgram;
+    RenderGroupUniforms _starGroupUniforms;
+
+    const GLint _passIdUniformLocation;
+
+
+    static ShaderProgram_sptr createMapShaderProgram(
         const JBTypes::FileContent &fileContent,
-        GLsizei shadowsResolution,
         short idCount
     );
 };

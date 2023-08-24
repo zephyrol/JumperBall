@@ -19,8 +19,7 @@ public:
         GLsizei postEffectsWidth,
         GLsizei postEffectsHeight,
         GLuint sceneTexture,
-        GLint defaultFrameBuffer,
-        CstRenderGroup_sptr screen
+        GLint defaultFrameBuffer
     );
 
     void render() const override;

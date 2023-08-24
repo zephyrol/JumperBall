@@ -3,65 +3,89 @@
 //
 
 #include "LevelProcess.h"
-
-#include <utility>
-
+#include "componentsGeneration/MapGroupGenerator.h"
+#include "componentsGeneration/StarGroupGenerator.h"
 
 LevelProcess::LevelProcess(
     GLsizei width,
     GLsizei height,
-    ColorableFrameBuffer_uptr frameBuffer,
-    GLuint shadowTexture,
-    GLuint shadow2Texture,
-    std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr>> &&shadersRenderPasses
+    DepthFrameBuffer_uptr firstShadow,
+    DepthFrameBuffer_uptr firstBlankShadow,
+    DepthFrameBuffer_uptr secondShadow,
+    DepthFrameBuffer_uptr secondBlankShadow,
+    ColorableFrameBuffer_uptr levelFrameBuffer,
+    RenderGroup_sptr mapGroup,
+    ShaderProgram_sptr mapShaderProgram,
+    RenderGroup_sptr starGroup,
+    ShaderProgram_sptr starShaderProgram
 ) :
     _width(width),
     _height(height),
-    _frameBuffer(std::move(frameBuffer)),
-    _shadowTexture(shadowTexture),
-    _shadow2Texture(shadow2Texture),
-    _shadersRenderPasses(std::move(shadersRenderPasses)) {
+    _firstShadow(std::move(firstShadow)),
+    _firstBlankShadow(std::move(firstBlankShadow)),
+    _secondShadow(std::move(secondShadow)),
+    _secondBlankShadow(std::move(secondBlankShadow)),
+    _levelFrameBuffer(std::move(levelFrameBuffer)),
+    _mapGroup(std::move(mapGroup)),
+    _mapShaderProgram(std::move(mapShaderProgram)),
+    _mapGroupUniforms(_mapGroup->genUniforms(_mapShaderProgram)),
+    _starGroup(std::move(starGroup)),
+    _starShaderProgram(std::move(starShaderProgram)),
+    _starGroupUniforms(_starGroup->genUniforms(_starShaderProgram)),
+    _passIdUniformLocation(_mapShaderProgram->getUniformLocation("passId")) {
 }
+
 
 LevelProcess_sptr LevelProcess::createInstance(
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height,
-    GLuint shadowTexture,
-    GLuint shadow2Texture,
-    GLsizei shadowsResolution,
-    CstRenderGroup_sptr map,
-    CstRenderGroup_sptr star
+    CstMap_sptr map,
+    CstStar_sptr firstStar,
+    CstStar_sptr secondStar,
+    unsigned int ballSkin
 ) {
 
-    std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > shadersRenderPasses{};
+    const MapGroupGenerator mapGroupGenerator(map, ballSkin);
+    auto mapGroup = mapGroupGenerator.genRenderGroup();
 
-    const auto starShaderProgram = ShaderProgram::createInstance(
+    const StarGroupGenerator starGroupGenerator(firstStar, secondStar);
+    auto starGroup = starGroupGenerator.genRenderGroup();
+
+    auto starShaderProgram = ShaderProgram::createInstance(
         fileContent,
         "starVs.vs",
         "starFs.fs",
         {},
-        {{"idCount", star->numberOfDynamicsIds()}}
-    );
-    shadersRenderPasses.emplace_back(
-        starShaderProgram,
-        std::make_shared<RenderPass>(starShaderProgram, std::move(star))
+        {{"idCount", starGroup->numberOfDynamicsIds()}}
     );
 
-    const auto mapShaderProgram = createLevelProcessShaderProgram(
+    auto mapShaderProgram = createMapShaderProgram(
         fileContent,
-        shadowsResolution,
-        map->numberOfDynamicsIds()
+        mapGroup->numberOfDynamicsIds()
     );
 
-    shadersRenderPasses.emplace_back(
-        mapShaderProgram,
-        std::make_shared<RenderPass>(mapShaderProgram, std::move(map))
-    );
+    const auto genDepthTexture = []() {
+        return DepthFrameBuffer::createInstance(
+            depthTexturesSize,
+            depthTexturesSize
+        );
+    };
+    const auto genBlankDepthTexture = []() {
+        constexpr GLsizei blankDepthTexturesSize = 1;
+        return DepthFrameBuffer::createInstance(
+            blankDepthTexturesSize,
+            blankDepthTexturesSize
+        );
+    };
 
     return std::make_shared<LevelProcess>(
         width,
         height,
+        genDepthTexture(),
+        genBlankDepthTexture(),
+        genDepthTexture(),
+        genBlankDepthTexture(),
         ColorableFrameBuffer::createInstance(
             width,
             height,
@@ -69,67 +93,89 @@ LevelProcess_sptr LevelProcess::createInstance(
             true,
             std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f))
         ),
-        shadowTexture,
-        shadow2Texture,
-        std::move(shadersRenderPasses)
+        std::move(mapGroup),
+        std::move(mapShaderProgram),
+        std::move(starGroup),
+        std::move(starShaderProgram)
     );
 }
 
 void LevelProcess::render() const {
 
-    glCullFace(GL_BACK);
-    FrameBuffer::setViewportSize(_width, _height);
-    _frameBuffer->bindFrameBuffer();
-    _frameBuffer->clear();
 
-    TextureSampler::setActiveTexture(1);
-    TextureSampler::bind(_shadow2Texture);
+    FrameBuffer::disableBlending();
+    glCullFace(GL_FRONT);
+    FrameBuffer::enableDepthTest();
+    FrameBuffer::setViewportSize(depthTexturesSize, depthTexturesSize);
 
     TextureSampler::setActiveTexture(0);
-    TextureSampler::bind(_shadowTexture);
+    TextureSampler::bind(_firstBlankShadow->getRenderTexture());
+    TextureSampler::setActiveTexture(1);
+    TextureSampler::bind(_secondBlankShadow->getRenderTexture());
 
-    // Render star
+    _mapShaderProgram->use();
+    _mapGroupUniforms.bind();
+
+    // 1. First shadow
+    _firstShadow->bindFrameBuffer();
+    _firstShadow->clear();
+    _mapShaderProgram->setInteger(_passIdUniformLocation, 0);
+    _mapGroup->render();
+
+    // 2. Second shadow
+    _secondShadow->bindFrameBuffer();
+    _secondShadow->clear();
+    _mapShaderProgram->setInteger(_passIdUniformLocation, 1);
+    _mapGroup->render();
+
+    // 3. Map
+    glCullFace(GL_BACK);
+
+    FrameBuffer::setViewportSize(_width, _height);
+    _levelFrameBuffer->bindFrameBuffer();
+    _levelFrameBuffer->clear();
+
+    TextureSampler::bind(_secondShadow->getRenderTexture());
+    TextureSampler::setActiveTexture(0);
+    TextureSampler::bind(_firstShadow->getRenderTexture());
+
+    _levelFrameBuffer->bindFrameBuffer();
+    _levelFrameBuffer->clear();
+
+    _mapShaderProgram->setInteger(_passIdUniformLocation, 3);
+    _mapGroup->render();
+
+    // 4. Render star
     FrameBuffer::disableDepthTest();
-    const auto &starShaderRenderPass = _shadersRenderPasses.front();
-    const auto &starShader = starShaderRenderPass.first;
-    const auto &starRenderPass = starShaderRenderPass.second;
-    starShader->use();
-    starRenderPass->render();
-
-    // Render others
-    FrameBuffer::enableDepthTest();
-    for (auto it = _shadersRenderPasses.begin() + 1; it != _shadersRenderPasses.end(); ++it) {
-        const auto &shader = it->first;
-        const auto &renderPass = it->second;
-        shader->use();
-        renderPass->render();
-    }
-
+    _starShaderProgram->use();
+    _starGroupUniforms.bind();
+    _starGroup->render();
 }
 
 void LevelProcess::update() {
-    for (const auto &shaderRenderPass: _shadersRenderPasses) {
-        const auto &renderPass = shaderRenderPass.second;
-        renderPass->update();
-    }
+    _mapGroupUniforms.update();
+    _starGroupUniforms.update();
 }
 
 
 void LevelProcess::freeGPUMemory() {
-    _frameBuffer->freeGPUMemory();
-    for (auto &shaderRenderPass: _shadersRenderPasses) {
-        auto &shader = shaderRenderPass.first;
-        shader->freeGPUMemory();
-    }
+    _firstShadow->freeGPUMemory();
+    _firstBlankShadow->freeGPUMemory();
+    _secondShadow->freeGPUMemory();
+    _secondBlankShadow->freeGPUMemory();
+    _levelFrameBuffer->freeGPUMemory();
+    _mapShaderProgram->freeGPUMemory();
+    _mapGroup->freeGPUMemory();
+    _starShaderProgram->freeGPUMemory();
+    _starGroup->freeGPUMemory();
 }
 
 std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
-    return std::make_shared<const GLuint>(_frameBuffer->getRenderTexture());
+    return std::make_shared<const GLuint>(_levelFrameBuffer->getRenderTexture());
 }
 
-ShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
+ShaderProgram_sptr LevelProcess::createMapShaderProgram(
     const JBTypes::FileContent &fileContent,
-    GLsizei shadowsResolution,
     short idCount
 ) {
     auto shader = ShaderProgram::createInstance(
@@ -143,7 +189,7 @@ ShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
     shader->setTextureIndex("depthTexture", 0);
     shader->setTextureIndex("depth2Texture", 1);
 
-    const auto shadowPixelSize = 1.f / static_cast<float>(shadowsResolution);
+    const auto shadowPixelSize = 1.f / static_cast<float>(depthTexturesSize);
 
     shader->setUniformArrayVec4(
         "shadowOffsets[0]",
@@ -158,11 +204,5 @@ ShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
 }
 
 vecCstShaderProgram_sptr LevelProcess::getShaderPrograms() const {
-    vecCstShaderProgram_sptr shaderPrograms;
-    for (auto &shaderRenderPass: _shadersRenderPasses) {
-        auto &shader = shaderRenderPass.first;
-        shaderPrograms.push_back(shader);
-    }
-    return shaderPrograms;
+    return {_mapShaderProgram, _starShaderProgram};
 }
-

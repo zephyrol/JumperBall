@@ -38,15 +38,17 @@ public:
 
     RenderPass(RenderPass &&renderPass) = default;
 
-    void render() const;
+    void renderGroup() const;
 
-    void update();
+    void updateGroupUniforms();
+
+    void bindGroup() const;
 
 private:
 
     const CstShaderProgram_sptr _shaderProgram;
     const CstRenderGroup_sptr _renderGroup;
-    RenderGroupUniforms _uniforms;
+    RenderGroupUniforms _groupUniforms;
 };
 
 #endif /* RENDER_PASS_H */
