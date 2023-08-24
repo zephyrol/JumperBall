@@ -14,19 +14,12 @@ using ShadowProcess_sptr = std::shared_ptr<ShadowProcess>;
 class ShadowProcess : public RenderProcess {
 public:
 
-    static ShadowProcess_sptr createInstance(
-        const JBTypes::FileContent &fileContent,
-        CstRenderGroup_sptr blocks,
-        CstRenderGroup_sptr items,
-        CstRenderGroup_sptr enemies,
-        CstRenderGroup_sptr specials,
-        CstRenderGroup_sptr ball,
-        bool isFirst
-    );
+    static ShadowProcess_sptr createInstance(const JBTypes::FileContent &fileContent, CstRenderGroup_sptr map, bool isFirst);
 
     ShadowProcess(
         DepthFrameBuffer_uptr frameBuffer,
-        std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> >&& shadersRenderPasses,
+        ShaderProgram_sptr shaderProgram,
+        RenderPass_sptr renderPass,
         bool isFirst,
         GLsizei depthTextureSize
     );
@@ -47,7 +40,8 @@ public:
 
 private:
     const DepthFrameBuffer_uptr _frameBuffer;
-    const std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > _shadersRenderPasses;
+    const ShaderProgram_sptr _shaderProgram;
+    const RenderPass_sptr _renderPass;
     const bool _isFirst;
     const GLsizei _depthTextureSize;
 };

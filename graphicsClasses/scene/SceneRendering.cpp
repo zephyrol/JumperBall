@@ -9,6 +9,9 @@
 #include "process/scene/ShadowProcess.h"
 #include "process/scene/LevelProcess.h"
 #include "process/scene/PostEffects.h"
+#include "componentsGeneration/MapGroupGenerator.h"
+#include "componentsGeneration/StarGroupGenerator.h"
+#include "componentsGeneration/ScreenGroupGenerator.h"
 
 SceneRendering::SceneRendering(
     const Scene &scene,
@@ -44,54 +47,34 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         * static_cast<float>(width) / static_cast<float>(height)
     );
 
-    auto blocksGroup = MeshGenerator::genBlocks(scene.getMap());
-    const auto blocks = blocksGroup ? RenderGroup::createInstance(std::move(blocksGroup)) : nullptr;
+    const MapGroupGenerator mapGroupGenerator (scene.getMap(), scene.getPlayer()->getCurrentBallSkin());
+    const auto mapGroup = mapGroupGenerator.genRenderGroup();
 
-    auto itemsGroup = MeshGenerator::genItems(scene.getMap());
-    const auto items = itemsGroup ? RenderGroup::createInstance(std::move(itemsGroup)) : nullptr;
+    const StarGroupGenerator starGroupGenerator(scene.getStar(), scene.getStar2());
+    const auto starGroup = starGroupGenerator.genRenderGroup();
 
-    auto enemiesGroup = MeshGenerator::genEnemies(scene.getMap());
-    const auto enemies = enemiesGroup ? RenderGroup::createInstance(std::move(enemiesGroup)): nullptr;
+    const ScreenGroupGenerator screenGroupGenerator;
+    const auto screenGroup = screenGroupGenerator.genRenderGroup();
 
-    auto specialsGroup = MeshGenerator::genSpecials(scene.getMap());
-    const auto specials = specialsGroup ? RenderGroup::createInstance(std::move(specialsGroup)): nullptr;
-
-    const auto ball = RenderGroup::createInstance(MeshGenerator::genBall(
-        scene.getBall(), scene.getPlayer()->getCurrentBallSkin())
-    );
-    const auto star = RenderGroup::createInstance(
-        MeshGenerator::genStars(scene.getStar(), scene.getStar2())
-    );
-    const auto screen = RenderGroup::createInstance(MeshGenerator::genScreen());
-
-
-    std::vector<std::shared_ptr<ShadowProcess> > shadowProcesses{};
+    /*std::vector<std::shared_ptr<ShadowProcess> > shadowProcesses{};
     for (const auto order: {true, false}) {
         shadowProcesses.emplace_back(
             ShadowProcess::createInstance(
                 fileContent,
-                blocks,
-                items,
-                enemies,
-                specials,
                 ball,
                 order
             )
         );
-    }
-    const auto sceneRenderingProcess = LevelProcess::createInstance(
+    }*/
+    const auto levelProcess = LevelProcess::createInstance(
         fileContent,
         width,
         height,
-        *shadowProcesses.front()->getRenderTexture(),
-        *shadowProcesses.back()->getRenderTexture(),
-        shadowProcesses.front()->depthTextureSize(),
-        blocks,
-        items,
-        enemies,
-        specials,
-        ball,
-        star
+        0,//*shadowProcesses.front()->getRenderTexture(),
+        0,//*shadowProcesses.back()->getRenderTexture(),
+        1024,//shadowProcesses.front()->depthTextureSize(),
+        mapGroup,
+        starGroup
     );
 
     const auto expensivePostProcessWidthGLsizei = static_cast<GLsizei>(expensivePostProcessWidth);
@@ -103,16 +86,17 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         height,
         expensivePostProcessWidthGLsizei,
         expensivePostProcessHeightGLsizei,
-        *sceneRenderingProcess->getRenderTexture(),
+        *levelProcess->getRenderTexture(),
         defaultFrameBuffer,
-        screen
+        screenGroup
     );
 
-    auto shadersProgramsUsingUniformBuffer = shadowProcesses.front()->getShaderPrograms();
+    //auto shadersProgramsUsingUniformBuffer = shadowProcesses.front()->getShaderPrograms();
+    auto shadersProgramsUsingUniformBuffer = levelProcess->getShaderPrograms();
 
     for (const auto &shaderPrograms: {
-        shadowProcesses.back()->getShaderPrograms(),
-        sceneRenderingProcess->getShaderPrograms(),
+        //shadowProcesses.back()->getShaderPrograms(),
+        // levelProcess->getShaderPrograms(),
         postEffects->getShaderPrograms()
     }) {
         shadersProgramsUsingUniformBuffer.insert(
@@ -122,19 +106,7 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         );
     }
 
-    std::vector<RenderGroup_sptr> renderGroups {blocks, ball, star, screen} ;
-    if(items != nullptr) {
-        renderGroups.emplace_back(items);
-    }
-
-    if(enemies != nullptr) {
-        renderGroups.emplace_back(enemies);
-    }
-
-    if(specials != nullptr) {
-        renderGroups.emplace_back(specials);
-    }
-
+    std::vector<RenderGroup_sptr> renderGroups {mapGroup, starGroup, screenGroup} ;
     return std::unique_ptr<SceneRendering>(new SceneRendering(
         scene,
         width,
@@ -142,9 +114,9 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         std::move(renderGroups),
         std::initializer_list<RenderProcess_sptr>(
             {
-                shadowProcesses.front(),
-                shadowProcesses.back(),
-                sceneRenderingProcess,
+                // shadowProcesses.front(),
+                // shadowProcesses.back(),
+                levelProcess,
                 postEffects
             }
         ),
@@ -164,8 +136,7 @@ void SceneRendering::update() {
         Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection()),
         Utility::convertToOpenGLFormat(_scene.getStar2()->lightDirection()),
         Utility::colorAsVec3(sceneBall->getTeleportationColor()),
-        glm::vec1(sceneBall->getTeleportationCoefficient()),
-        glm::vec1(sceneBall->burnCoefficient())
+        glm::vec1(sceneBall->getTeleportationCoefficient())
     );
 
     for (const auto &process: _processes) {

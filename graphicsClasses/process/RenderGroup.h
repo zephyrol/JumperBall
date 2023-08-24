@@ -9,7 +9,6 @@
 #define RENDERGROUP_H
 
 #include "RenderGroupUniforms.h"
-#include "componentsGeneration/MeshGenerator.h"
 #include "process/mesh/gpuGeometryBuffers/GpuVertexBuffer.h"
 
 class RenderGroup;

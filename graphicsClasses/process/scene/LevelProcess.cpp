@@ -30,11 +30,7 @@ LevelProcess_sptr LevelProcess::createInstance(
     GLuint shadowTexture,
     GLuint shadow2Texture,
     GLsizei shadowsResolution,
-    CstRenderGroup_sptr blocks,
-    CstRenderGroup_sptr items,
-    CstRenderGroup_sptr enemies,
-    CstRenderGroup_sptr specials,
-    CstRenderGroup_sptr ball,
+    CstRenderGroup_sptr map,
     CstRenderGroup_sptr star
 ) {
 
@@ -52,48 +48,16 @@ LevelProcess_sptr LevelProcess::createInstance(
         std::make_shared<RenderPass>(starShaderProgram, std::move(star))
     );
 
-    const auto shaderProgram = createLevelProcessShaderProgram(
+    const auto mapShaderProgram = createLevelProcessShaderProgram(
         fileContent,
-        "ballVs.vs",
         shadowsResolution,
-        ball->numberOfDynamicsIds(),
-       true
+        map->numberOfDynamicsIds()
     );
+
     shadersRenderPasses.emplace_back(
-        shaderProgram,
-        std::make_shared<RenderPass>(shaderProgram, ball)
+        mapShaderProgram,
+        std::make_shared<RenderPass>(mapShaderProgram, std::move(map))
     );
-
-    std::vector<std::pair<std::string, CstRenderGroup_sptr> > vertexShaderFilesGroups{
-        {"blocksVs.vs", std::move(blocks)}
-    };
-
-    if (items) {
-        vertexShaderFilesGroups.emplace_back("itemsMapVs.vs", std::move(items));
-    }
-    if (enemies) {
-        vertexShaderFilesGroups.emplace_back("enemiesVs.vs", std::move(enemies));
-    }
-    if (specials) {
-        vertexShaderFilesGroups.emplace_back("specialsVs.vs", std::move(specials));
-    }
-
-    for (auto &vertexShaderFileGroup: vertexShaderFilesGroups) {
-        const auto &vertexShaderFile = vertexShaderFileGroup.first;
-        const auto &group = vertexShaderFileGroup.second;
-
-        const auto shaderProgram = createLevelProcessShaderProgram(
-            fileContent,
-            vertexShaderFile,
-            shadowsResolution,
-            group->numberOfDynamicsIds(),
-            false
-        );
-        shadersRenderPasses.emplace_back(
-            shaderProgram,
-            std::make_shared<RenderPass>(shaderProgram, group)
-        );
-    }
 
     return std::make_shared<LevelProcess>(
         width,
@@ -165,18 +129,14 @@ std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
 
 ShaderProgram_sptr LevelProcess::createLevelProcessShaderProgram(
     const JBTypes::FileContent &fileContent,
-    const std::string &vs,
     GLsizei shadowsResolution,
-    short idCount,
-    bool isUsingFireEffect
+    short idCount
 ) {
-    std::vector<std::string> definesList {"LEVEL_PASS"};
-    definesList.emplace_back(isUsingFireEffect ? "FIRE_EFFECT": "NO_FIRE_EFFECT");
     auto shader = ShaderProgram::createInstance(
         fileContent,
-        vs,
-        "levelFs.fs",
-        definesList,
+        "mapVs.vs",
+        "mapFs.fs",
+        {},
         {{"idCount", idCount}}
     );
     shader->use();

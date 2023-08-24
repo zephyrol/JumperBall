@@ -5,8 +5,9 @@
 #include "LabelsProcess.h"
 
 #include <utility>
-#include "componentsGeneration/MeshGenerator.h"
+#include "componentsGeneration/RenderGroupGenerator.h"
 #include "gameMenu/labels/RenderableLabel.h"
+#include "componentsGeneration/LabelGroupGenerator.h"
 
 LabelsProcess::LabelsProcess(
     GLsizei width,
@@ -35,7 +36,6 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
 
     auto fontTexturesGenerator(FontTexturesGenerator::createInstance(width, height, page, ftContent));
 
-    vecCstMesh_sptr meshes;
     auto labels = page->labels();
     auto messageLabels = fontTexturesGenerator.getTextLabels();
     labels.insert(
@@ -43,20 +43,13 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
         std::make_move_iterator(messageLabels.begin()),
         std::make_move_iterator(messageLabels.end())
     );
-    for (const auto &label: labels) {
-        meshes.push_back(std::make_shared<Mesh>(
-            std::make_shared<RenderableLabel>(label, page), MeshGenerator::genGeometricShapesFromLabel(*label), 0
-        ));
-    }
 
     std::vector<std::pair<std::string, GLfloat>> glFloatConsts{};
     for (const auto &item: page->getVertexShaderConstants()) {
         glFloatConsts.emplace_back(item.first, Utility::convertToOpenGLFormat(item.second));
     }
 
-    auto renderGroup = RenderGroup::createInstance(
-        std::unique_ptr<MeshDynamicGroup>(new MeshDynamicGroup({meshes}))
-    );
+    const auto renderGroup = LabelGroupGenerator(std::move(labels), page).genRenderGroup();
 
     auto labelsShader = ShaderProgram::createInstance(
         fileContent,

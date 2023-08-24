@@ -11,6 +11,7 @@
 
 
 class LevelProcess;
+
 using LevelProcess_sptr = std::shared_ptr<LevelProcess>;
 
 class LevelProcess : public RenderProcess {
@@ -23,11 +24,7 @@ public:
         GLuint shadowTexture,
         GLuint shadow2Texture,
         GLsizei shadowsResolution,
-        CstRenderGroup_sptr blocks,
-        CstRenderGroup_sptr items,
-        CstRenderGroup_sptr enemies,
-        CstRenderGroup_sptr specials,
-        CstRenderGroup_sptr ball,
+        CstRenderGroup_sptr map,
         CstRenderGroup_sptr star
     );
 
@@ -37,7 +34,7 @@ public:
         ColorableFrameBuffer_uptr frameBuffer,
         GLuint shadowTexture,
         GLuint shadow2Texture,
-        std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> >&& shadersRenderPasses
+        std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > &&shadersRenderPasses
     );
 
     void update() override;
@@ -62,10 +59,8 @@ private:
 
     static ShaderProgram_sptr createLevelProcessShaderProgram(
         const JBTypes::FileContent &fileContent,
-        const std::string &vs,
         GLsizei shadowsResolution,
-        short idCount,
-        bool isUsingFireEffect
+        short idCount
     );
 };
 

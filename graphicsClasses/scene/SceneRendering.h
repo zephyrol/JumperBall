@@ -8,7 +8,7 @@
 #ifndef SCENE_RENDERING_H
 #define SCENE_RENDERING_H
 
-#include "componentsGeneration/MeshGenerator.h"
+#include "componentsGeneration/RenderGroupGenerator.h"
 #include "Rendering.h"
 #include "Scene.h"
 #include "process/scene/SceneUniformBuffer.h"

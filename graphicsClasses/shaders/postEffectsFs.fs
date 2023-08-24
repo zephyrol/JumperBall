@@ -7,7 +7,6 @@ uniform Scene {
     vec3 light2Direction;
     vec3 flashColor;
     float teleportationCoeff;
-    float burningCoeff;
 };
 
 uniform sampler2D sceneTexture;

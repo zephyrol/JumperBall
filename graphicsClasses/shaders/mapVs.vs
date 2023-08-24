@@ -7,7 +7,6 @@ uniform Scene {
     vec3 light2Direction;
     vec3 flashColor;
     float teleportationCoeff;
-    float burningCoeff;
 };
 
 // uniform float creationTime[idCount];
@@ -37,8 +36,6 @@ out vec4 fs_vertexDepthMap2Space;
 out vec3 fs_vertexNormal;
 out vec3 fs_vertexPositionWorld;
 out float fs_burningCoeff;
-
-#endif
 
 const mat4 biasMatrix = mat4(
     0.5, 0.0, 0.0, 0.0,
@@ -86,10 +83,9 @@ mat4 getRotationMatrix(vec4 quaternion) {
 
 void main() {
 
-    float crushingScale = crushingCoeff[vs_id] * minScaleCrushing + (1.0 - crushingCoeff[vs_id]);
     mat4 translationMatrix = getTranslationMatrix(translation[vs_id]);
     mat4 rotationMatrix = getRotationMatrix(rotation[vs_id]);
-    mat4 scaleMatrix = getScaleMatrix(rotation[vs_id]);
+    mat4 scaleMatrix = getScaleMatrix(scale[vs_id]);
     mat4 modelTransform = translationMatrix * rotationMatrix * scaleMatrix;
     vec4 vertexPositionWorldSpace = modelTransform *  vec4(vs_vertexPosition, 1.0);
 
@@ -104,7 +100,7 @@ void main() {
     }
     fs_vertexColor = vs_vertexColor;
     mat4 normalTransform = rotationMatrix;
-    fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, w)).xyz);
+    fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, 1.0)).xyz);
     fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
     fs_vertexDepthMapSpace = biasMatrix * VPStar * vertexPositionWorldSpace;
     fs_vertexDepthMap2Space = biasMatrix * VPStar2 * vertexPositionWorldSpace;

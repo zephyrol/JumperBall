@@ -38,6 +38,8 @@ JBTypes::FileContent Window::createFilesContent() {
 
     for (std::string shader: {
         "ballVs.vs",
+        "mapVs.vs",
+        "mapFs.fs",
         "postEffectsFs.fs",
         "basicFboVs.vs",
         "basicFboFs.fs",

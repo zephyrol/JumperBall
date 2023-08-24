@@ -7,7 +7,6 @@ uniform Scene {
     vec3 light2Direction;
     vec3 flashColor;
     float teleportationCoeff;
-    float burningCoeff;
 };
 
 uniform sampler2DShadow depthTexture;
@@ -22,6 +21,7 @@ in vec4 fs_vertexDepthMapSpace;
 in vec4 fs_vertexDepthMap2Space;
 in vec3 fs_vertexNormal;
 in vec3 fs_vertexPositionWorld;
+in float fs_burningCoeff;
 
 out vec4 pixelColor;
 
@@ -69,7 +69,7 @@ const vec3 fireEffet = vec3(8.0, 0.2, 0.0);
 
 void main(){
 
-    vec3 composition = ambientLightIntensity * mix(fs_vertexColor, fs_burningCoeff);
+    vec3 composition = ambientLightIntensity * mix(fs_vertexColor, fireEffet, fs_burningCoeff);
 
     vec3 normalizedNormal = normalize(fs_vertexNormal);
     vec3 toCamera = normalize(cameraPosition - fs_vertexPositionWorld);

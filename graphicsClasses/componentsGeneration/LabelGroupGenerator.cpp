@@ -1,23 +1,29 @@
-/*
- * File: genGeometricShapesFromLabel.cpp
- * Author: Morgenthaler S
- *
- * Created on 30 avril 2021, 14:30
- */
-#include "MeshGenerator.h"
+//
+// Created by S.Morgenthaler on 23/08/2023.
+//
 
-vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel(const Label &label) {
+#include "LabelGroupGenerator.h"
+#include "geometry/Triangle.h"
+#include "geometry/Quad.h"
+#include "gameMenu/labels/RenderableLabel.h"
+
+LabelGroupGenerator::LabelGroupGenerator(vecCstLabel_sptr &&labels, CstPage_sptr page) :
+    _labels(std::move(labels)),
+    _page(std::move(page)) {
+}
+
+vecCstGeometricShape_sptr LabelGroupGenerator::genGeometricShapesFromLabel(const Label &label) {
 
     const glm::vec3 color = label.color() == JBTypes::Color::Blue
-            ? decltype(color)(0.f, 1.f, 1.f)
-            : decltype(color)(1.f, 1.f, 1.f);
+                            ? decltype(color)(0.f, 1.f, 1.f)
+                            : decltype(color)(1.f, 1.f, 1.f);
 
     const auto genGeometricShape =
         [&color](
             const LabelGeometry::Shape &shape,
             const glm::mat4 &model,
             const glm::mat4 &normalTransform,
-            std::vector<glm::vec2>&& uvs
+            std::vector<glm::vec2> &&uvs
         ) -> CstGeometricShape_sptr {
             switch (shape) {
                 case LabelGeometry::Shape::Quad:
@@ -58,12 +64,11 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel(const Label
         // We apply rotation because scale
         const glm::mat4 model = localTranslation * localScale * localRotation;
 
-        std::vector<glm::vec2> uvs {};
-        for(const auto& uv: geometry.getCustomUvs()) {
+        std::vector<glm::vec2> uvs{};
+        for (const auto &uv: geometry.getCustomUvs()) {
             uvs.emplace_back(uv[0], uv[1]);
         }
 
-        // TODO add scale
         const glm::mat4 normalTransform = localRotation;
         geometricShapes.push_back(genGeometricShape(
             geometry.getShape(),
@@ -76,3 +81,18 @@ vecCstGeometricShape_sptr MeshGenerator::genGeometricShapesFromLabel(const Label
     return geometricShapes;
 
 }
+
+RenderGroup_sptr LabelGroupGenerator::genRenderGroup() const {
+    vecCstMesh_sptr meshes;
+    for (const auto &label: _labels) {
+        meshes.push_back(std::make_shared<Mesh>(
+            std::make_shared<RenderableLabel>(label, _page),
+            genGeometricShapesFromLabel(*label),
+            0
+        ));
+    }
+    return RenderGroup::createInstance(
+        std::unique_ptr<MeshDynamicGroup>(new MeshDynamicGroup({meshes}))
+    );
+}
+

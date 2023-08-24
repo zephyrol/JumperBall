@@ -18,8 +18,7 @@ SceneUniformBuffer::SceneUniformBuffer(
             "lightDirection",
             "light2Direction",
             "flashColor",
-            "teleportationCoeff",
-            "burningCoeff"
+            "teleportationCoeff"
         }
     ))
 {
@@ -33,8 +32,7 @@ void SceneUniformBuffer::update(
     const glm::vec3 &lightDirection,
     const glm::vec3 &light2Direction,
     const glm::vec3 &flashColor,
-    const glm::vec1 &teleportationCoeff,
-    const glm::vec1 &burningCoeff
+    const glm::vec1 &teleportationCoeff
 ) {
 
     _uniformBufferBase.updateField(0, VP);
@@ -45,7 +43,6 @@ void SceneUniformBuffer::update(
     _uniformBufferBase.updateField(5, light2Direction);
     _uniformBufferBase.updateField(6, flashColor);
     _uniformBufferBase.updateField(7, teleportationCoeff);
-    _uniformBufferBase.updateField(8, burningCoeff);
 
     _uniformBufferBase.updateBufferOnGPU();
 }

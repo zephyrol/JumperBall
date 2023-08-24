@@ -8,11 +8,9 @@
 #include "Mesh.h"
 
 class MeshDynamicGroup;
+
 using MeshDynamicGroup_uptr = std::unique_ptr<MeshDynamicGroup>;
-/**
- * Each vecMesh_sptr in this vector contains the same dynamicId. So only the first mesh of each list can be
- * used to generate the uniforms and to update them.
- */
+
 class MeshDynamicGroup {
 
 public:
@@ -26,11 +24,11 @@ public:
 
     short numberOfDynamicsIds() const;
 
-    MeshDynamicGroup(const MeshDynamicGroup& meshDynamicGroup) = delete;
+    MeshDynamicGroup(const MeshDynamicGroup &meshDynamicGroup) = delete;
 
-    const MeshDynamicGroup& operator=(const MeshDynamicGroup& meshDynamicGroup) = delete;
+    const MeshDynamicGroup &operator=(const MeshDynamicGroup &meshDynamicGroup) = delete;
 
-    MeshDynamicGroup(MeshDynamicGroup&& meshDynamicGroup) = default;
+    MeshDynamicGroup(MeshDynamicGroup &&meshDynamicGroup) = default;
 
 
 private:

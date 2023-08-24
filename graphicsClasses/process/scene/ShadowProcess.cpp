@@ -9,23 +9,21 @@
 
 ShadowProcess::ShadowProcess(
     DepthFrameBuffer_uptr frameBuffer,
-    std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr>> &&shadersRenderPasses,
+    ShaderProgram_sptr shaderProgram,
+    RenderPass_sptr renderPass,
     bool isFirst,
     GLsizei depthTextureSize
 ) :
     _frameBuffer(std::move(frameBuffer)),
-    _shadersRenderPasses(std::move(shadersRenderPasses)),
+    _shaderProgram(std::move(shaderProgram)),
+    _renderPass(std::move(renderPass)),
     _isFirst(isFirst),
     _depthTextureSize(depthTextureSize) {
 }
 
 ShadowProcess_sptr ShadowProcess::createInstance(
     const JBTypes::FileContent &fileContent,
-    CstRenderGroup_sptr blocks,
-    CstRenderGroup_sptr items,
-    CstRenderGroup_sptr enemies,
-    CstRenderGroup_sptr specials,
-    CstRenderGroup_sptr ball,
+    CstRenderGroup_sptr map,
     bool isFirst
 ) {
 
@@ -34,39 +32,15 @@ ShadowProcess_sptr ShadowProcess::createInstance(
         ? std::vector<std::string>{"SHADOW_PASS"}
         : std::vector<std::string>{"SHADOW_PASS_2"};
 
-    std::vector<std::pair<ShaderProgram_sptr, RenderPass_sptr> > shadersRenderPasses{};
-    std::vector<std::pair<std::string, CstRenderGroup_sptr> > vertexShaderFilesGroups{
-        {"blocksVs.vs",   std::move(blocks)},
-        {"ballVs.vs",     std::move(ball)}
-    };
+    auto shaderProgram = ShaderProgram::createInstance(
+        fileContent,
+        "gameSceneVs.vs",
+        "depthFs.fs",
+        shadowDefines,
+        {{"idCount", map->numberOfDynamicsIds()}}
+    );
 
-    if(items) {
-        vertexShaderFilesGroups.emplace_back("itemsMapVs.vs", std::move(items));
-    }
-    if(enemies) {
-        vertexShaderFilesGroups.emplace_back( "enemiesVs.vs",  std::move(enemies));
-    }
-    if(specials) {
-        vertexShaderFilesGroups.emplace_back( "specialsVs.vs", std::move(specials));
-    }
-
-    for (auto &vertexShaderFileGroup: vertexShaderFilesGroups) {
-        const auto &vertexShaderFile = vertexShaderFileGroup.first;
-        const auto &group= vertexShaderFileGroup.second;
-
-        const auto shaderProgram = ShaderProgram::createInstance(
-            fileContent,
-            vertexShaderFile,
-            "depthFs.fs",
-            shadowDefines,
-            {{"idCount", group->numberOfDynamicsIds()}}
-        );
-
-        shadersRenderPasses.emplace_back(
-            shaderProgram,
-            std::make_shared<RenderPass>(shaderProgram, group)
-        );
-    }
+    auto renderPass = std::make_shared<RenderPass>(shaderProgram, map);
 
     constexpr GLsizei shadowTextureSize = 1024;
     return std::make_shared<ShadowProcess>(
@@ -74,7 +48,8 @@ ShadowProcess_sptr ShadowProcess::createInstance(
             shadowTextureSize,
             shadowTextureSize
         ),
-        std::move(shadersRenderPasses),
+        std::move(shaderProgram),
+        std::move(renderPass),
         isFirst,
         shadowTextureSize
     );
@@ -91,27 +66,27 @@ void ShadowProcess::render() const {
     _frameBuffer->bindFrameBuffer();
     _frameBuffer->clear();
 
-    for (const auto &shaderRenderPass: _shadersRenderPasses) {
-        const auto &shader = shaderRenderPass.first;
-        const auto &renderPass = shaderRenderPass.second;
-        shader->use();
-        renderPass->render();
-    }
+    // for (const auto &shaderRenderPass: _shadersRenderPasses) {
+    //     const auto &shader = shaderRenderPass.first;
+    //     const auto &renderPass = shaderRenderPass.second;
+    //     shader->use();
+    //     renderPass->render();
+    // }
 }
 
 void ShadowProcess::update() {
-    for (const auto &shaderRenderPass: _shadersRenderPasses) {
-        const auto &renderPass = shaderRenderPass.second;
-        renderPass->update();
-    }
+    //for (const auto &shaderRenderPass: _shadersRenderPasses) {
+    //    const auto &renderPass = shaderRenderPass.second;
+    //    renderPass->update();
+    //}
 }
 
 void ShadowProcess::freeGPUMemory() {
-    _frameBuffer->freeGPUMemory();
-    for (auto &shaderRenderPass: _shadersRenderPasses) {
-        auto &shader = shaderRenderPass.first;
-        shader->freeGPUMemory();
-    }
+    //_frameBuffer->freeGPUMemory();
+    //for (auto &shaderRenderPass: _shadersRenderPasses) {
+    //    auto &shader = shaderRenderPass.first;
+    //    shader->freeGPUMemory();
+    //}
 }
 
 std::shared_ptr<const GLuint> ShadowProcess::getRenderTexture() const {
@@ -120,10 +95,10 @@ std::shared_ptr<const GLuint> ShadowProcess::getRenderTexture() const {
 
 vecCstShaderProgram_sptr ShadowProcess::getShaderPrograms() const {
     vecCstShaderProgram_sptr shaderPrograms;
-    for (auto &shaderRenderPass: _shadersRenderPasses) {
-        auto &shader = shaderRenderPass.first;
-        shaderPrograms.push_back(shader);
-    }
+    //for (auto &shaderRenderPass: _shadersRenderPasses) {
+    //    auto &shader = shaderRenderPass.first;
+    //    shaderPrograms.push_back(shader);
+    //}
     return shaderPrograms;
 }
 
