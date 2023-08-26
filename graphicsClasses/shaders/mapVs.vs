@@ -9,15 +9,6 @@ uniform Scene {
     float teleportationCoeff;
 };
 
-// uniform float creationTime[idCount];
-//uniform float ballRadius[idCount];
-//uniform float crushingCoeff[idCount];
-//uniform float status[idCount];
-//uniform float timeStateOfLife[idCount];
-//uniform vec3 sideDir[idCount];
-//uniform vec3 position[idCount];
-//uniform vec4 quaternion[idCount];
-
 uniform vec3 translation[idCount];
 uniform vec4 rotation[idCount];
 uniform vec3 scale[idCount];

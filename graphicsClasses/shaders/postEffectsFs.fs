@@ -60,7 +60,7 @@ vec4 convertOutput(vec3 composition) {
     }
     return vec4(
         normalize(composition),
-        log2(compositionLength) * 0.333333 // divide by 3 because 2^3 = 8, its the max length
+        log2(compositionLength) / 3.0 // divide by 3 because 2^3 = 8, its the max length
     );
 }
 

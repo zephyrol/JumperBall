@@ -37,30 +37,18 @@ JBTypes::FileContent Window::createFilesContent() {
     std::map<std::string, std::string> fileDistPath;
 
     for (std::string shader: {
-        "ballVs.vs",
+        "inGamePageVs.vs",
+        "labelFs.fs",
+        "levelsPageVs.vs",
         "mapVs.vs",
         "mapFs.fs",
+        "postEffectsVs.vs",
         "postEffectsFs.fs",
-        "basicFboVs.vs",
-        "basicFboFs.fs",
-        "blocksVs.vs",
-        "bloomFs.fs",
-        "brightPassFilter.fs",
-        "depthFs.fs",
-        "enemiesVs.vs",
-        "horizontalBlurFs.fs",
-        "inGamePageVs.vs",
-        "itemsMapVs.vs",
-        "labelFs.fs",
-        "levelFs.fs",
-        "levelsPageVs.vs",
-        "specialsVs.vs",
         "starFs.fs",
         "starVs.vs",
-        "titlePageVs.vs",
-        "verticalBlurFs.fs",
         "successPageVs.vs",
-        "storePageVs.vs"
+        "storePageVs.vs",
+        "titlePageVs.vs"
     }) {
         fileDistPath[shader] = "shaders/" + shader;
     }

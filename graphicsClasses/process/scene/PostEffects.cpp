@@ -100,7 +100,7 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
 ) {
     auto shader = ShaderProgram::createInstance(
         fileContent,
-        "basicFboVs.vs",
+        "postEffectsVs.vs",
         "postEffectsFs.fs"
     );
     shader->use();

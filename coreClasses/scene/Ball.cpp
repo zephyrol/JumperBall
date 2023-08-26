@@ -212,7 +212,7 @@ const ClassicalMechanics &Ball::getMechanicsFalling() const noexcept {
 
 JBTypes::Quaternion Ball::getCoveredRotation() const noexcept {
 
-    constexpr float sizeBlock = 1.f; // TODO: use a member in Block or map class
+    constexpr float sizeBlock = 1.f;
 
     const std::function<float()> getCoveredDistance =
         [this]() -> float {
@@ -284,11 +284,10 @@ const JBTypes::Color &Ball::getTeleportationColor() const noexcept {
 }
 
 void Ball::isFallingIntersectionBlock() noexcept {
-    // TODO Get time since action should be used only one at the beginning of the update
     const float fDifference = getTimeSecondsSinceAction();
     const bool descendingJumpPhase = _state == Ball::State::Jumping &&
                                      _mechanicsPatternJumping.getVelocity(fDifference).y < 0;
-    // TODO update it
+
     const auto positionBlockPtr = intersectBlock();
     if (!positionBlockPtr || (!descendingJumpPhase && _state != Ball::State::Falling)) {
         return;
@@ -373,7 +372,6 @@ void Ball::blockEvent() noexcept {
         return;
     }
 
-    // TODO: create attribute strPosition if used more that once
     const std::string blockPosition = Block::positionToString(_pos);
     if (_blocksPositions->find(blockPosition) == _blocksPositions->end()) {
         return;
@@ -697,28 +695,6 @@ void Ball::die() noexcept {
 
 Displayable::DynamicValues<float> Ball::getDynamicFloatValues() const {
     return {burnCoefficient()};
-
-    // const auto getStateOfLifeStatus = [this]() {
-    //     if (
-    //         _stateOfLife == Ball::StateOfLife::Normal ||
-    //         _stateOfLife == Ball::StateOfLife::Burning ||
-    //         _stateOfLife == Ball::StateOfLife::Sliding
-    //         ) {
-    //         return 0.f;
-    //     }
-    //     if (_stateOfLife == Ball::StateOfLife::Bursting) {
-    //         return 1.f;
-    //     }
-    //     return 2.f;
-    // };
-
-    // return {
-    //     getRadius(),
-    //     _currentCrushing,
-    //     getStateOfLifeStatus(),
-    //     getTimeSecondsSinceStateOfLife(),
-    //     burnCoefficient()
-    // };
 }
 
 Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
