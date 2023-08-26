@@ -90,35 +90,28 @@ Displayable::DynamicValues<JBTypes::vec3f> Item::getDynamicVec3fValues() const {
 
     constexpr auto thresholdSecondStep = 1.f;
 
-    const auto computeScale = [this]() -> JBTypes::vec3f {
-        if (_obtainingTime == nullptr) {
-            return {1.f, 1.f, 1.f};
-        }
-        const auto obtainingTime = *_obtainingTime;
-        if (obtainingTime < thresholdSecondStep) {
+    const auto timeSinceObtaining = getTimeSinceObtaining();
+    const auto computeScale = [&timeSinceObtaining]() -> JBTypes::vec3f {
+        if (timeSinceObtaining < thresholdSecondStep) {
             return {1.f, 1.f, 1.f};
         }
         constexpr auto thresholdThirdStep = 1.5f;
         constexpr auto durationSecondStep = thresholdThirdStep - thresholdSecondStep;
-        if (obtainingTime < thresholdThirdStep) {
-            const auto scale = 1.f + ((obtainingTime - thresholdSecondStep) / durationSecondStep);
+        if (timeSinceObtaining < thresholdThirdStep) {
+            const auto scale = 1.f + ((timeSinceObtaining - thresholdSecondStep) / durationSecondStep);
             return {scale, scale, scale};
         }
 
         constexpr auto durationThirdStep = 0.2f;
-        if (obtainingTime < thresholdThirdStep + durationThirdStep) {
-            const auto scale = 2.f * (1.f - ((obtainingTime - thresholdThirdStep) / durationThirdStep));
+        if (timeSinceObtaining < thresholdThirdStep + durationThirdStep) {
+            const auto scale = 2.f * (1.f - ((timeSinceObtaining - thresholdThirdStep) / durationThirdStep));
             return {scale, scale, scale};
         }
         return {0.f, 0.f, 0.f};
     };
-    const auto computeLocalTranslation = [this]() -> JBTypes::vec3f {
-        if (_obtainingTime == nullptr) {
-            return {0.f, 0.f, 0.f};
-        }
-        const auto obtainingTime = *_obtainingTime;
-        if (obtainingTime < thresholdSecondStep) {
-            float translateCoeff = obtainingTime / thresholdSecondStep;
+    const auto computeLocalTranslation = [this, &timeSinceObtaining]() -> JBTypes::vec3f {
+        if (timeSinceObtaining < thresholdSecondStep) {
+            float translateCoeff = timeSinceObtaining / thresholdSecondStep;
             return JBTypesMethods::scalarApplication(translateCoeff, _translationWay);
         }
         return _translationWay;

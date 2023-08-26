@@ -103,6 +103,15 @@ LevelProcess_sptr LevelProcess::createInstance(
 void LevelProcess::render() const {
 
     FrameBuffer::disableBlending();
+    _starShaderProgram->use();
+    _starGroupUniforms.bind();
+    _starGroup->bind();
+
+    _levelFrameBuffer->bindFrameBuffer();
+    _levelFrameBuffer->clear();
+
+    _starGroup->render();
+
     glCullFace(GL_FRONT);
     FrameBuffer::enableDepthTest();
     FrameBuffer::setViewportSize(depthTexturesSize, depthTexturesSize);
@@ -133,7 +142,6 @@ void LevelProcess::render() const {
 
     FrameBuffer::setViewportSize(_width, _height);
     _levelFrameBuffer->bindFrameBuffer();
-    _levelFrameBuffer->clear();
 
     TextureSampler::bind(_secondShadow->getRenderTexture());
     TextureSampler::setActiveTexture(0);
@@ -145,12 +153,6 @@ void LevelProcess::render() const {
     _mapShaderProgram->setInteger(_passIdUniformLocation, 3);
     _mapGroup->render();
 
-    // 4. Render star
-    FrameBuffer::disableDepthTest();
-    _starShaderProgram->use();
-    _starGroupUniforms.bind();
-    _starGroup->bind();
-    _starGroup->render();
 }
 
 void LevelProcess::update() {

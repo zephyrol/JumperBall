@@ -60,7 +60,11 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
         glFloatConsts
     );
     labelsShader->use();
-    labelsShader->setTextureIndex("characterTexture", 0);
+
+    constexpr GLint characterTextureNumber = 5;
+    labelsShader->setTextureIndex("characterTexture", characterTextureNumber);
+    TextureSampler::setActiveTexture(characterTextureNumber);
+    TextureSampler::bind(fontTexturesGenerator.getLettersTexture());
 
     return std::unique_ptr<LabelsProcess>(new LabelsProcess(
         width,
@@ -75,8 +79,6 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
 void LabelsProcess::render() const {
     FrameBuffer::enableBlending();
     _labelsShader->use();
-    TextureSampler::setActiveTexture(0);
-    TextureSampler::bind(_fontTexturesGenerator.getLettersTexture());
     _renderGroupUniform.bind();
     _renderGroup->bind();
     _renderGroup->render();

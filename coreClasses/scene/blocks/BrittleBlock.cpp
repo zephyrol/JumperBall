@@ -25,12 +25,13 @@ BrittleBlock::BrittleBlock(
     _stillThere(true),
     _isGoingToBreak(false),
     _collisionTime(0.f),
-    _fallDirection{0.f, -1.f, 0.0},
+    _fallingDirection{0.f, -1.f, 0.0},
+    _fallingRotationAxis{1.f, 0.f, 0.0},
     _shakingRotation(JBTypesMethods::createQuaternion({0.f, 0.f, 0.f}, 1.f)),
     _localTranslation{0.f, 0.f, 0.f} {
 }
 
-void BrittleBlock::setFallDirection(JBTypes::Dir direction) {
+void BrittleBlock::setFallingDirection(JBTypes::Dir direction) {
     JBTypes::Dir fallDirection;
     switch (direction) {
         case JBTypes::Dir::South:
@@ -54,7 +55,7 @@ void BrittleBlock::setFallDirection(JBTypes::Dir direction) {
         default:
             break;
     }
-    _fallDirection = JBTypesMethods::directionAsVector(fallDirection);
+    _fallingDirection = JBTypesMethods::directionAsVector(fallDirection);
 }
 
 bool BrittleBlock::isExists() const {
@@ -65,7 +66,8 @@ Block::Effect BrittleBlock::detectionEvent() {
     if (!_isGoingToBreak) {
         const auto ball = _ball.lock();
         _collisionTime = ball->getActionTime();
-        setFallDirection(ball->currentSide());
+        setFallingDirection(ball->currentSide());
+        _fallingRotationAxis = ball->lookTowardsAsVector();
         _isGoingToBreak = true;
         ball->addUpdateOutput(std::make_shared<SoundOutput>("blockIsGoingToFall"));
     }
@@ -95,7 +97,7 @@ void BrittleBlock::update() {
             const auto shakingPeriod = sinf(diff * 2.f * static_cast<float>(M_PI) / shakingTime);
             constexpr auto maxAngle = 0.08f; // in radians
             const auto angle = shakingPeriod * maxAngle;
-            _shakingRotation = JBTypesMethods::createRotationQuaternion(_fallDirection, angle);
+            _shakingRotation = JBTypesMethods::createRotationQuaternion(_fallingRotationAxis, angle);
         }
     }
 
@@ -104,7 +106,7 @@ void BrittleBlock::update() {
         const auto diff = _chronometer->getTime() - _collisionTime;
         const float diffTimeToFall = diff - timeToFall;
         const float distanceTraveled = diffTimeToFall * fallSpeed;
-        _localTranslation = JBTypesMethods::scalarApplication(distanceTraveled, _fallDirection);
+        _localTranslation = JBTypesMethods::scalarApplication(distanceTraveled, _fallingDirection);
     }
 }
 

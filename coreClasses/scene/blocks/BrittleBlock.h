@@ -22,7 +22,7 @@ public:
 
     bool isExists() const override;
 
-    void setFallDirection(JBTypes::Direction direction);
+    void setFallingDirection(JBTypes::Dir direction);
 
     void update() override;
 
@@ -45,7 +45,8 @@ private:
     bool _stillThere;
     bool _isGoingToBreak;
     float _collisionTime;
-    JBTypes::vec3f _fallDirection;
+    JBTypes::vec3f _fallingDirection;
+    JBTypes::vec3f _fallingRotationAxis;
     JBTypes::Quaternion _shakingRotation;
     JBTypes::vec3f _localTranslation;
 };

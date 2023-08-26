@@ -24,8 +24,6 @@ public:
         float radiansPerSecond
     );
 
-    float distance() const;
-
     const JBTypes::vec3f &rotationCenter() const;
 
     float envSize() const;

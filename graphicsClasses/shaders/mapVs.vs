@@ -86,7 +86,7 @@ void main() {
     mat4 translationMatrix = getTranslationMatrix(translation[vs_id]);
     mat4 rotationMatrix = getRotationMatrix(rotation[vs_id]);
     mat4 scaleMatrix = getScaleMatrix(scale[vs_id]);
-    mat4 modelTransform = translationMatrix * rotationMatrix * scaleMatrix;
+    mat4 modelTransform = translationMatrix * scaleMatrix * rotationMatrix;
     vec4 vertexPositionWorldSpace = modelTransform *  vec4(vs_vertexPosition, 1.0);
 
     if(passId == 0) {

@@ -41,6 +41,8 @@ public:
 
     void setRatio(float ratio);
 
+    float zFar() const;
+
     static glm::mat4 genVPMatrixFromStar(const Star &star);
 
 private:

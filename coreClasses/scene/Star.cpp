@@ -26,10 +26,6 @@ Star::Star(
 
 }
 
-float Star::distance() const {
-    return _distance;
-}
-
 const JBTypes::vec3f &Star::rotationCenter() const {
     return _rotationCenter;
 }

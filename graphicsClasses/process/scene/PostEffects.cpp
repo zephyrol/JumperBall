@@ -18,18 +18,11 @@ PostEffects::PostEffects(
     _screenHeight(screenHeight),
     _postEffectsWidth(postEffectsWidth),
     _postEffectsHeight(postEffectsHeight),
-    _postProcessesShader(createPostProcessesShaderProgram(fileContent, postEffectsWidth, postEffectsHeight)),
-    _postProcessIdUniformLocation(_postProcessesShader->getUniformLocation("postProcessId")),
+    _sceneTexture(sceneTexture),
     _screen([]() {
         ScreenGroupGenerator screenGroupGenerator;
         return screenGroupGenerator.genRenderGroup();
     }()),
-    _blankFrameBuffer(ColorableFrameBuffer::createInstance(
-        1,
-        1,
-        true,
-        false
-    )),
     _brightPassFilterFrameBuffer(ColorableFrameBuffer::createInstance(
         postEffectsWidth,
         postEffectsHeight,
@@ -48,15 +41,15 @@ PostEffects::PostEffects(
         false,
         false
     )),
-    _sceneTexture(sceneTexture),
+    _postProcessesShader(createPostProcessesShaderProgram(fileContent, postEffectsWidth, postEffectsHeight)),
+    _postProcessIdUniformLocation(_postProcessesShader->getUniformLocation("postProcessId")),
     _defaultFrameBuffer(defaultFrameBuffer) {
 }
 
 void PostEffects::render() const {
 
-    TextureSampler::bind(_sceneTexture);
-    TextureSampler::setActiveTexture(1);
-    TextureSampler::bind(_blankFrameBuffer->getRenderTexture());
+    FrameBuffer::disableDepthTest();
+    TextureSampler::setActiveTexture(postProcessTextureNumber);
 
     _postProcessesShader->use();
     // 1. Bright pass filter
@@ -89,7 +82,6 @@ void PostEffects::render() const {
 }
 
 void PostEffects::freeGPUMemory() {
-    _blankFrameBuffer->freeGPUMemory();
     _brightPassFilterFrameBuffer->freeGPUMemory();
     _horizontalBlurFrameBuffer->freeGPUMemory();
     _verticalBlurFrameBuffer->freeGPUMemory();
@@ -107,8 +99,15 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
         "postEffectsFs.fs"
     );
     shader->use();
-    shader->setTextureIndex("sceneTexture", 0);
-    shader->setTextureIndex("postProcessTexture", 1);
+
+    constexpr GLint sceneTextureNumber = 3;
+    shader->setTextureIndex("sceneTexture", sceneTextureNumber);
+    TextureSampler::setActiveTexture(sceneTextureNumber);
+    TextureSampler::bind(_sceneTexture);
+
+    shader->setTextureIndex("postProcessTexture", postProcessTextureNumber);
+    TextureSampler::setActiveTexture(postProcessTextureNumber);
+    TextureSampler::bind(_verticalBlurFrameBuffer->getRenderTexture());
 
     // Getting 25 Gauss weights computed with sigma = 4
     const auto texelSizeX = 1.f / static_cast<float>(width);

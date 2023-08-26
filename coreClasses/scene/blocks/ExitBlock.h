@@ -29,6 +29,8 @@ public:
 
     std::string getDynamicGroupHash() const override;
 
+    DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
+
 private:
 
     const JBTypes::Direction _exitDir;
