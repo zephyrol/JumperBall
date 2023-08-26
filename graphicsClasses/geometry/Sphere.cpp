@@ -115,13 +115,13 @@ std::vector<glm::vec3> Sphere::genPositions() const {
     const auto iParaCount = _isHq ? hqIParaCount : sdIParaCount;
     const auto iMeriCount = _isHq ? hqIMeriCount : sdIMeriCount;
 
-    const float a1 = (180.0f / static_cast <float>(iParaCount - 1)) * static_cast <float>(M_PI) / 180.0f;
-    const float a2 = (360.0f / static_cast<float>(iMeriCount - 1)) * static_cast <float>(M_PI) / 180.0f;
+    const float a1 = (180.0f / static_cast <float>(iParaCount - 1)) * JBTypes::pi / 180.0f;
+    const float a2 = (360.0f / static_cast<float>(iMeriCount - 1)) * JBTypes::pi / 180.0f;
 
     // Parallels
     for (unsigned int i = 0; i < iParaCount; ++i) {
         const auto iFloat = static_cast<float>(i);
-        const float fAngle = -static_cast <float>(M_PI) / 2.0f + a1 * iFloat;
+        const float fAngle = - JBTypes::pi / 2.0f + a1 * iFloat;
         const float z = r * sinf(fAngle);
         const float fRadius = r * cosf(fAngle);
 

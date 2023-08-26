@@ -156,7 +156,7 @@ float JBTypesMethods::dot(const JBTypes::vec3f &a, const JBTypes::vec3f &b) {
 float JBTypesMethods::distance(const JBTypes::vec3f &a,
                                const JBTypes::vec3f &b) {
     const auto xDiff = b.x - a.x;
-    const auto yDiff= b.y - a.y;
+    const auto yDiff = b.y - a.y;
     const auto zDiff = b.z - a.z;
     return sqrtf(xDiff * xDiff + yDiff * yDiff + zDiff * zDiff);
 }
@@ -304,10 +304,7 @@ JBTypes::Quaternion JBTypesMethods::inverse(const JBTypes::Quaternion &q) {
 }
 
 JBTypes::Quaternion JBTypesMethods::createQuaternion(const JBTypes::vec3f &v, float w) {
-    JBTypes::Quaternion q;
-    q.v = v;
-    q.w = w;
-    return q;
+    return {v, w};
 }
 
 JBTypes::Quaternion JBTypesMethods::createRotationQuaternion(const JBTypes::vec3f &axis, float angle) {

@@ -50,13 +50,13 @@ LabelGeometry Label::createDisplayableTriangle(
 
     const auto getRotation = [&dir]() -> LabelGeometry::ShapeRotation {
         if (dir == JBTypes::Direction::East) {
-            return {0.f, 0.f, static_cast<float>(-M_PI_2)};
+            return {0.f, 0.f, -JBTypes::pi2};
         }
         if (dir == JBTypes::Direction::West) {
-            return {0.f, 0.f, static_cast<float>(M_PI_2)};
+            return {0.f, 0.f, JBTypes::pi2};
         }
         if (dir == JBTypes::Direction::South) {
-            return {0.f, 0.f, static_cast<float>(M_PI)};
+            return {0.f, 0.f, JBTypes::pi};
         }
         return {0.f, 0.f, 0.f};
     };

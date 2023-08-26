@@ -31,15 +31,7 @@ namespace Utility {
 
     std::vector<GLfloat> genGaussBuffer(size_t patchSize, float sigma);
 
-    glm::vec3 convertRBGToCIExyY(const glm::vec3 &rbgColor);
-
-    glm::vec3 convertCIExyYToRGB(const glm::vec3 &CIExyYColor);
-
     glm::vec3 colorAsVec3(const JBTypes::Color &color);
-
-    float getLuminance(const glm::vec3 &rgbColor);
-
-    std::vector<GLfloat> uniColorsCube(const glm::vec3 &color);
 
     std::vector<glm::vec3> GLfloatListToGlmVec3(const std::vector<GLfloat> &list);
 
@@ -60,10 +52,6 @@ namespace Utility {
     GLubyte convertToOpenGLFormat(unsigned char uChar);
 
     float menuPositionToOpenGLScreenFormat(float value);
-
-    extern const glm::mat3 XYZToRGB;
-    extern const glm::mat3 RGBToXYZ;
-
 }
 
 #endif /* UTILITY_H */

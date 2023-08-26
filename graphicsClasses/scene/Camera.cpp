@@ -84,7 +84,7 @@ void Camera::followingBallUpdate() noexcept {
 
         const glm::vec3 axisRotation = glm::cross(vecLookingDirection, axisNewLook);
         const glm::vec3 eulerAngles = (timeSinceAction *
-                                       (static_cast <float>(M_PI_2)) / Ball::timeToGetNextBlock) *
+                                       JBTypes::pi2 / Ball::timeToGetNextBlock) *
                                       axisRotation;
 
         const glm::quat quaternion(eulerAngles);
@@ -92,9 +92,8 @@ void Camera::followingBallUpdate() noexcept {
     } else if (stateBall == Ball::State::TurningLeft || stateBall == Ball::State::TurningRight) {
         const glm::vec3 &axisRotation = toSkyVec3;
 
-        glm::vec3 eulerAngles = static_cast <float>(M_PI_2) * axisRotation -
-                                (timeSinceAction * static_cast <float>(M_PI_2) / (Ball::timeToTurn)) *
-                                axisRotation;
+        glm::vec3 eulerAngles = JBTypes::pi2 * axisRotation
+                                - (timeSinceAction * JBTypes::pi2 / (Ball::timeToTurn)) * axisRotation;
 
         if (stateBall == Ball::State::TurningLeft) {
             eulerAngles = -eulerAngles;
@@ -106,7 +105,6 @@ void Camera::followingBallUpdate() noexcept {
     }
 
     float cameraAboveWay;
-    // TODO: Replace by in game time.
     const auto updatingTime = _chronometer->getTime();
     if (_timePointGoAbove > _timePointComeBack) {
         const float initialOffset = std::min(
@@ -126,7 +124,7 @@ void Camera::followingBallUpdate() noexcept {
     cameraAboveWay = std::min(std::max(cameraAboveWay, 0.f), 1.f);
 
     const glm::vec3 axisRotation = glm::cross(vecLookingDirection, toSkyVec3);
-    const glm::vec3 eulerAngles = cameraAboveWay * static_cast <float>(-M_PI / 2.75) * axisRotation;
+    const glm::vec3 eulerAngles = cameraAboveWay * (-JBTypes::pi / 2.75f) * axisRotation;
     const glm::quat quaternion(eulerAngles);
 
     const glm::vec3 toInitialCameraPosition = distAbove * toSkyVec3 - distBehindBall * vecLookingDirection;
@@ -219,10 +217,10 @@ bool Camera::approachingBallUpdate() noexcept {
     const glm::vec3 toSkyVec3 = Utility::convertToOpenGLFormat(sideBall);
     const glm::vec4 toSky(toSkyVec3, 1.f);
 
-    const float tCos = cosf(t * static_cast <float>(M_PI_2) + static_cast <float>(M_PI)) + 1.f;
+    const float tCos = cosf(t * JBTypes::pi2 + JBTypes::pi) + 1.f;
 
     const glm::vec3 directionVector = glm::normalize(_center - _pos);
-    const glm::mat4 upRotation = glm::rotate(tCos * 2.f * static_cast <float>(M_PI), directionVector);
+    const glm::mat4 upRotation = glm::rotate(tCos * 2.f * JBTypes::pi, directionVector);
     const glm::vec4 upVector = upRotation * glm::vec4(0.f, 1.f, 0.f, 1.f);
 
     const auto oneMinusTCos = 1.f - tCos;
@@ -288,28 +286,27 @@ void Camera::setRatio(float ratio) {
 }
 
 float Camera::computeFovY(float ratio) noexcept {
-    constexpr auto defaultHorizontalModeFovY = static_cast<float>(60 * M_PI) / 180.f;// 65 degrees;
-    constexpr auto defaultVerticalModeFovY = static_cast<float>(55 * M_PI) / 180.f;// 55 degrees;
+    constexpr auto defaultHorizontalModeFovY = 60.f * JBTypes::pi / 180.f;// 65 degrees;
+    constexpr auto defaultVerticalModeFovY = 55.f * JBTypes::pi / 180.f;// 55 degrees;
     constexpr auto changingFovThreshold = 0.9f;
     return ratio > changingFovThreshold
            ? defaultHorizontalModeFovY
-           : 2.f * atanf((1.f / ratio) * tanf(defaultVerticalModeFovY/ 2.f));
+           : 2.f * atanf((1.f / ratio) * tanf(defaultVerticalModeFovY / 2.f));
 }
 
 float Camera::computeLocalOffset(float fovY) noexcept {
     const auto beta = atanf((distBehindBall + distDirPoint) / distAbove);
     const auto halfFovY = fovY / 2.f;
-    constexpr auto fPI = static_cast<float>(M_PI);
     if (beta < halfFovY) {
-        const auto alpha = fPI - halfFovY;
-        const auto gamma = fPI - alpha - beta;
+        const auto alpha = JBTypes::pi - halfFovY;
+        const auto gamma = JBTypes::pi - alpha - beta;
 
         // Sines law
         return distAbove * sinf(gamma) / sinf(alpha);
     }
 
-    const auto alpha = fPI - beta;
-    const auto gamma = fPI - halfFovY - alpha;
+    const auto alpha = JBTypes::pi - beta;
+    const auto gamma = JBTypes::pi - halfFovY - alpha;
     // Sines law
     return -distAbove * sinf(gamma) / sinf(halfFovY); // minus because the camera is behind
 }

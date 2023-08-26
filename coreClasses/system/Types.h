@@ -23,16 +23,10 @@
 #include <numeric>
 
 #define EPSILON_F 0.0001f
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-#ifndef M_PI_2
-#define M_PI_2 3.14159265358979323846 / 2.
-#endif
-
-
 namespace JBTypes {
 
+    constexpr auto pi = 3.14159265358979323846f;
+    constexpr auto pi2 = pi / 2.f;
 
     using FileContent = std::map<std::string, std::string>;
     enum class Direction {

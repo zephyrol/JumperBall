@@ -94,7 +94,7 @@ void BrittleBlock::update() {
             _ball.lock()->addUpdateOutput(std::make_shared<SoundOutput>("blockIsFalling"));
         } else {
             constexpr auto shakingTime = 0.15f; // in seconds
-            const auto shakingPeriod = sinf(diff * 2.f * static_cast<float>(M_PI) / shakingTime);
+            const auto shakingPeriod = sinf(diff * 2.f * JBTypes::pi / shakingTime);
             constexpr auto maxAngle = 0.08f; // in radians
             const auto angle = shakingPeriod * maxAngle;
             _shakingRotation = JBTypesMethods::createRotationQuaternion(_fallingRotationAxis, angle);

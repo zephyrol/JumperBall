@@ -10,24 +10,6 @@
 #include <fstream>
 
 
-const glm::mat3 Utility::RGBToXYZ{2.7689, 1.7517, 1.1302,
-                                  1.0000, 4.5907, 0.060100,
-                                  0.0000, 0.056508, 5.5943};
-
-const glm::mat3 Utility::XYZToRGB = glm::inverse(Utility::XYZToRGB);
-
-
-std::vector<GLfloat> Utility::uniColorsCube(const glm::vec3 &color) {
-    std::vector<GLfloat> colors;
-    for (unsigned int i = 0; i < 36; ++i) {
-        colors.push_back(color.r);
-        colors.push_back(color.g);
-        colors.push_back(color.b);
-    }
-    return colors;
-}
-
-
 std::vector<glm::vec3> Utility::GLfloatListToGlmVec3(
     const std::vector<GLfloat> &list) {
     std::vector<glm::vec3> vecList;
@@ -58,22 +40,19 @@ std::vector<glm::vec2> Utility::GLfloatListToGlmVec2(
 
 glm::mat4 Utility::rotationUpToDir(JBTypes::Dir dir) {
 
-    constexpr auto fPI = static_cast <float>(M_PI);
-    constexpr auto fPI2 = static_cast <float>(M_PI_2);
-
     switch (dir) {
         case JBTypes::Dir::North:
-            return glm::rotate(-fPI2, glm::vec3(1.f, 0.f, 0.f));
+            return glm::rotate(-JBTypes::pi2, glm::vec3(1.f, 0.f, 0.f));
         case JBTypes::Dir::South:
-            return glm::rotate(fPI2, glm::vec3(1.f, 0.f, 0.f));
+            return glm::rotate(JBTypes::pi2, glm::vec3(1.f, 0.f, 0.f));
         case JBTypes::Dir::East:
-            return glm::rotate(-fPI2, glm::vec3(0.f, 0.f, 1.f));
+            return glm::rotate(-JBTypes::pi2, glm::vec3(0.f, 0.f, 1.f));
         case JBTypes::Dir::West:
-            return glm::rotate(fPI2, glm::vec3(0.f, 0.f, 1.f));
+            return glm::rotate(JBTypes::pi2, glm::vec3(0.f, 0.f, 1.f));
         case JBTypes::Dir::Up:
             return glm::mat4(1.f);
         case JBTypes::Dir::Down:
-            return glm::rotate(fPI, glm::vec3(1.f, 0.f, 0.f));
+            return glm::rotate(JBTypes::pi, glm::vec3(1.f, 0.f, 0.f));
         default:
             return glm::mat4(1.f);
     }
@@ -81,8 +60,9 @@ glm::mat4 Utility::rotationUpToDir(JBTypes::Dir dir) {
 
 
 float Utility::evalGauss1D(float x, float sigma) {
-    return static_cast <float>(
-        exp((-pow(x, 2.)) / (2. * pow(sigma, 2.))) / (sqrt(2. * M_PI * pow(sigma, 2.))));
+    return static_cast <float>(exp(
+        (-pow(x, 2.)) / (2. * pow(sigma, 2.))) / (sqrt(2. * static_cast<double>(JBTypes::pi) * pow(sigma, 2.))
+                               ));
 }
 
 std::vector<GLfloat> Utility::genGaussBuffer(size_t patchSize, float sigma) {
@@ -92,25 +72,6 @@ std::vector<GLfloat> Utility::genGaussBuffer(size_t patchSize, float sigma) {
         gaussBuffer.push_back(evalGauss1D(static_cast <float>(i), sigma));
     }
     return gaussBuffer;
-}
-
-glm::vec3 Utility::convertCIExyYToRGB(const glm::vec3 &CIExyYColor) {
-    const float scalar = CIExyYColor.z / CIExyYColor.y;
-    const glm::vec3 CIEXYZ{scalar * CIExyYColor.x,
-                           CIExyYColor.z,
-                           scalar * (1.f - CIExyYColor.x - CIExyYColor.y)};
-    return Utility::XYZToRGB * CIEXYZ;
-}
-
-glm::vec3 Utility::convertRBGToCIExyY(const glm::vec3 &rbgColor) {
-    const glm::vec3 CIEXYZ = Utility::RGBToXYZ * rbgColor;
-    const float sumXYZ = CIEXYZ.x + CIEXYZ.y + CIEXYZ.z;
-    return {CIEXYZ.x / sumXYZ, CIEXYZ.y / sumXYZ, CIEXYZ.y};
-}
-
-float Utility::getLuminance(const glm::vec3 &rgbColor) {
-    const glm::vec3 CIExyYColor = convertRBGToCIExyY(rgbColor);
-    return CIExyYColor.z;
 }
 
 glm::vec3 Utility::colorAsVec3(const JBTypes::Color &color) {
@@ -163,7 +124,7 @@ glm::vec3 Utility::convertToOpenGLFormat(const JBTypes::vec3f &vec3f) {
 }
 
 glm::vec4 Utility::convertToOpenGLFormat(const JBTypes::Quaternion &q) {
-    return glm::vec4(Utility::convertToOpenGLFormat(q.v), q.w);
+    return {Utility::convertToOpenGLFormat(q.v), q.w};
 }
 
 GLshort Utility::convertToOpenGLFormat(const short &s) {
