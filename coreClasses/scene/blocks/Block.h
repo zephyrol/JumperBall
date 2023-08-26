@@ -71,8 +71,6 @@ public:
 
     Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
 
-    DynamicValues<float> getDynamicFloatValues() const override;
-
     DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
 
     static std::string positionToString(const JBTypes::vec3ui &position);

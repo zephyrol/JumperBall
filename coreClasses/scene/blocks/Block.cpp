@@ -119,10 +119,6 @@ std::string Block::getDynamicGroupHash() const {
     return "block";
 }
 
-Displayable::DynamicValues<float> Block::getDynamicFloatValues() const {
-    return {0.f};
-}
-
 Displayable::DynamicValues<JBTypes::Quaternion> Block::getDynamicQuaternionValues() const {
     return {{{0.f, 0.f, 0.f}, 1.f}};
 }

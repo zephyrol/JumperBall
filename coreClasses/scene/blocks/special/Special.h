@@ -9,7 +9,7 @@
 
 #include <scene/Shape.h>
 #include "system/Chronometer.h"
-#include "scene/Displayable.h"
+#include "scene/SceneElement.h"
 
 class Special;
 
@@ -19,7 +19,7 @@ using vecCstSpecial_sptr = std::vector<CstSpecial_sptr>;
 using vecSpecial_sptr = std::vector<Special_sptr>;
 using Special_uptr = std::unique_ptr<Special>;
 
-class Special : public Displayable {
+class Special : public SceneElement {
 public:
 
     Special(
@@ -38,28 +38,24 @@ public:
 
     bool isActivated() const;
 
-    virtual bool isAnimated() const;
-
     virtual void applySpecialEffect() = 0;
 
     void switchOnOff();
 
-    std::vector<unsigned char> getStaticUnsignedByteValues() const override;
-
-    Displayable::StaticValues<JBTypes::vec3f> getStaticVec3fValues() const override;
-
-    Displayable::DynamicNames getDynamicFloatNames() const override;
-
-    Displayable::DynamicValues<float> getDynamicFloatValues() const override;
-
     std::string getDynamicGroupHash() const override;
 
-private:
+protected:
+    const JBTypes::vec3f &positionF() const;
+
     const CstChronometer_sptr _chronometer;
     const JBTypes::Dir _direction;
+    const JBTypes::vec3f _directionVec;
+
+private:
     const JBTypes::Color _color;
     const std::string _colorAttributeName;
     const JBTypes::vec3ui _position;
+    const JBTypes::vec3f _positionF;
     bool _isActivated;
 
 };

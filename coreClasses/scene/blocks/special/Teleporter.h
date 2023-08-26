@@ -9,19 +9,23 @@
 
 #include "InteractiveSpecial.h"
 
-class Teleporter:public InteractiveSpecial{
+class Teleporter : public InteractiveSpecial {
 public:
     Teleporter(
-        const JBTypes::Color& color,
-        const JBTypes::Dir& dir,
-        const JBTypes::vec3ui& position,
+        const JBTypes::Color &color,
+        const JBTypes::Dir &dir,
+        const JBTypes::vec3ui &position,
         const Ball_sptr &ball,
         bool isActivated = true
     );
 
-bool isAnimated() const override;
-void applySpecialEffect() override;
-vecCstShape_sptr getShapes() const override;
+    void applySpecialEffect() override;
+
+    DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
+
+    DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
+
+    vecCstShape_sptr getShapes() const override;
 
 };
 

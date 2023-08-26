@@ -14,6 +14,8 @@ public:
 
     DynamicNames getDynamicFloatNames() const override;
 
+    DynamicValues<float> getDynamicFloatValues() const override;
+
     DynamicNames getDynamicQuaternionNames() const override;
 
     Displayable::DynamicNames getDynamicVec3fNames() const override;

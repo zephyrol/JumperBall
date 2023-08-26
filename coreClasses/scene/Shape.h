@@ -12,27 +12,30 @@
 // TODO: merge it with LabelGeometry class
 
 class Shape;
-using Shape_sptr = std::shared_ptr <Shape>;
-using CstShape_sptr = std::shared_ptr <const Shape>;
-using vecCstShape_sptr = std::vector <CstShape_sptr>;
-using vecShape_sptr = std::vector <Shape_sptr>;
+
+using Shape_sptr = std::shared_ptr<Shape>;
+using CstShape_sptr = std::shared_ptr<const Shape>;
+using vecCstShape_sptr = std::vector<CstShape_sptr>;
+using vecShape_sptr = std::vector<Shape_sptr>;
 
 class Shape {
 public:
 
-    enum class Aspect { Cube, Cylinder, Sphere, Pyramid, Pedestal };
+    enum class Aspect {
+        Cube, Cylinder, Sphere, Pyramid, Pedestal
+    };
 
     explicit Shape(
-        const Aspect& aspect,
-        const JBTypes::Color& color,
-        std::vector<Transformation>&& transformations
+        const Aspect &aspect,
+        const JBTypes::Color &color,
+        std::vector<Transformation> &&transformations
     );
 
-    const Aspect& aspect() const;
-    const JBTypes::Color& color() const;
-    const std::vector<Transformation>& transformations() const;
+    const Aspect &aspect() const;
 
-    static Transformation getVerticalCylinderRotation(const JBTypes::Dir &direction);
+    const JBTypes::Color &color() const;
+
+    const std::vector<Transformation> &transformations() const;
 
 private:
     const Aspect _aspect;

@@ -41,8 +41,6 @@ public:
     static constexpr float itemBoundingSphereRadiusJumping = 0.15f;
     static constexpr float itemBoundingSphereRadiusStaying = 0.3f;
 
-    DynamicValues<float> getDynamicFloatValues() const override;
-
     DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
 
     DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
@@ -50,6 +48,10 @@ public:
     std::string getDynamicGroupHash() const override;
 
     void setAsGotten();
+
+protected:
+
+    static Transformation getVerticalCylinderRotation(const JBTypes::Dir &direction);
 
 private:
 

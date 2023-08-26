@@ -92,7 +92,7 @@ vecCstShape_sptr Clock::getShapes() const {
                                    {0.f, -0.5f, 0.f}),
                     Transformation(Transformation::Type::Scale,
                                    {radius, thickness, radius}),
-                    Shape::getVerticalCylinderRotation(direction())
+                    Item::getVerticalCylinderRotation(direction())
                 }
             )
         );

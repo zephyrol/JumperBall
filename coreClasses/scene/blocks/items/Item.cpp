@@ -82,8 +82,30 @@ std::string Item::getDynamicGroupHash() const {
            std::to_string(static_cast<int>(_direction));
 }
 
-Displayable::DynamicValues<float> Item::getDynamicFloatValues() const {
-    return {0.f};
+Transformation Item::getVerticalCylinderRotation(const JBTypes::Dir &direction) {
+    const auto rotationVector = [](const JBTypes::Dir &direction) -> JBTypes::vec3f {
+
+        constexpr auto fPI = static_cast <float>(M_PI);
+        constexpr auto fPI2 = static_cast <float>(M_PI_2);
+
+        switch (direction) {
+            case JBTypes::Dir::North:
+                return {0.f, 0.f, 0.f};
+            case JBTypes::Dir::South:
+                return {fPI, 0.f, 0.f};
+            case JBTypes::Dir::East:
+                return {fPI2, fPI2, 0.f};
+            case JBTypes::Dir::West:
+                return {-fPI2, -fPI2, 0.f};
+            case JBTypes::Dir::Up:
+                return {fPI2, 0.f, 0.f};
+            case JBTypes::Dir::Down:
+                return {-fPI2, 0.f, 0.f};
+            default:
+                return {0.0f, 0.0f, 0.0f};
+        }
+    }(direction);
+    return Transformation(Transformation::Type::Rotation, rotationVector);
 }
 
 Displayable::DynamicValues<JBTypes::vec3f> Item::getDynamicVec3fValues() const {

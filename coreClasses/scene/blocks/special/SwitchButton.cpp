@@ -6,30 +6,31 @@
  */
 #include "SwitchButton.h"
 
-SwitchButton::SwitchButton(const JBTypes::Color& color,
-                           const JBTypes::Dir& dir,
-                           const JBTypes::vec3ui& position,
-                           const Ball_sptr &ball,
-                           bool isActivated
-                           ):InteractiveSpecial(color, position, dir, ball, isActivated) {
+SwitchButton::SwitchButton(
+    const JBTypes::Color &color,
+    const JBTypes::Dir &dir,
+    const JBTypes::vec3ui &position,
+    const Ball_sptr &ball,
+    bool isActivated
+) : InteractiveSpecial(color, position, dir, ball, isActivated) {
 }
 
 void SwitchButton::applySpecialEffect() {
-    const auto& ball = _ball.lock();
-    for (const auto& block: *ball->getBlocksWithInteraction() ) {
-        for (const auto& special: block->getSpecials()) {
+    const auto &ball = _ball.lock();
+    for (const auto &block: *ball->getBlocksWithInteraction()) {
+        for (const auto &special: block->getSpecials()) {
             if (
                 special->getColor() == getColor() ||
                 special->getColor() == JBTypesMethods::colorToShiny(getColor())
-            ){
+                ) {
                 special->switchOnOff();
             }
         }
-        for (const auto& enemy: block->getEnemies()) {
+        for (const auto &enemy: block->getEnemies()) {
             if (
                 enemy->getColor() == getColor() ||
                 enemy->getColor() == JBTypesMethods::colorToShiny(getColor())
-                ){
+                ) {
                 enemy->switchOnOff();
             }
         }
@@ -40,11 +41,28 @@ vecCstShape_sptr SwitchButton::getShapes() const {
     const auto switchButtonShape = std::make_shared<const Shape>(
         Shape::Aspect::Cylinder,
         getColor(),
-        std::initializer_list<Transformation>({
-            Transformation(Transformation::Type::Scale, { 0.2f, 0.05f, 0.2f }),
-        })
+        std::initializer_list<Transformation>(
+            {
+                Transformation(Transformation::Type::Scale, {0.2f, 0.05f, 0.2f}),
+                Transformation(
+                    Transformation::Type::Rotation,
+                    JBTypesMethods::rotationVectorUpToDir(direction())
+                )
+            }
+        )
     );
 
-    return { switchButtonShape };
+    return {switchButtonShape};
+}
+
+Displayable::DynamicValues<JBTypes::vec3f> SwitchButton::getDynamicVec3fValues() const {
+    return {
+        positionF(),
+        isActivated() ? JBTypes::vec3f{1.f, 0.1f, 1.f} : JBTypes::vec3f{1.f, 1.f, 1.f}
+    };
+}
+
+Displayable::DynamicValues<JBTypes::Quaternion> SwitchButton::getDynamicQuaternionValues() const {
+    return {{{0.f, 0.f, 0.f}, 1.f}};
 }
 
