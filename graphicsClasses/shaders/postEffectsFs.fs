@@ -20,31 +20,6 @@ uniform int postProcessId;
 in vec2 fs_vertexUVs;
 out vec4 pixelColor;
 
-const mat3 RGBToXYZ = mat3(
-    2.7689, 1.7517, 1.1302,
-    1.0000, 4.5907, 0.060100,
-    0.0000, 0.056508, 5.5943
-);
-
-const mat3 XYZToRGB = mat3(
-    0.41847, -0.15866, -0.082835,
-    -0.091169, 0.25243, 0.015708,
-    0.00092090, -0.0025498, 0.17860
-);
-
-vec3 convertRGBToCIExyY (vec3 rbgColor) {
-    vec3 CIEXYZ = RGBToXYZ * rbgColor;
-    float sumXYZ = CIEXYZ.x + CIEXYZ.y + CIEXYZ.z;
-    return vec3(CIEXYZ.x / sumXYZ, CIEXYZ.y / sumXYZ, CIEXYZ.y);
-}
-
-vec3 convertCIExyYToRGB (vec3 CIExyYColor) {
-    float scalar = CIExyYColor.z / CIExyYColor.y;
-    vec3 CIEXYZ = vec3(scalar * CIExyYColor.x, CIExyYColor.z,
-    scalar * (1.0 - CIExyYColor.x - CIExyYColor.y));
-    return XYZToRGB * CIEXYZ;
-}
-
 vec3 convertInput(vec4 scenePixel) {
     if(scenePixel.a == 0.0) {
         return scenePixel.xyz;
@@ -64,27 +39,12 @@ vec4 convertOutput(vec3 composition) {
     );
 }
 
-vec3 toneMappingOperator (vec3 xyYColor) {
-
-    const float exposureLevelKey = 2.0;
-    const float averageLuminance = 1.8;
-
-    float luminanceAfterToneMapping = exposureLevelKey * xyYColor.z
-    / averageLuminance;
-
-    xyYColor.z = luminanceAfterToneMapping;
-
-    return convertCIExyYToRGB(xyYColor);
-}
-
-
 vec4 getBrightPassFilterColor() {
-    const float threshold = 4.0;
+    const vec3 luminanceVector = vec3(0.2126, 0.7152, 0.0722);
     vec4 scenePixel = texture(sceneTexture, fs_vertexUVs);
     vec3 colorRGB = convertInput(scenePixel);
-    vec3 colorxyY = convertRGBToCIExyY(colorRGB);
     // Check if luminance is greater than the threshold.
-    if (colorxyY.z > threshold) {
+    if (dot(colorRGB, luminanceVector) > 0.6) {
         return scenePixel;
     }
     return vec4(0.0);
@@ -114,9 +74,7 @@ vec4 getVerticalBlurColor() {
 
 vec4 getBloomColor() {
     vec3 baseRGBColor = convertInput(texture(sceneTexture, fs_vertexUVs));
-    vec3 basexyYColor = convertRGBToCIExyY(baseRGBColor);
-    vec3 toneMappedRGBColor = toneMappingOperator(basexyYColor);
-    vec3 pixelColorVec3 = toneMappedRGBColor + texture(postProcessTexture, fs_vertexUVs).xyz;
+    vec3 pixelColorVec3 = baseRGBColor + texture(postProcessTexture, fs_vertexUVs).xyz;
     return vec4(mix(pixelColorVec3, flashColor, teleportationCoeff), 1.0);
 }
 
