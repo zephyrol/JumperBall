@@ -123,24 +123,3 @@ MeshGeometry::createInstance(
 vecVertexAttributeBase_uptr MeshGeometry::extractVertexAttributes() {
     return _vertexAttributes.extractVertexAttributes();
 }
-
-template<typename VertexAttribute, typename StaticValues>
-std::vector<std::function<std::unique_ptr<VertexAttribute>()> >
-MeshGeometry::createStaticVertexAttributeGenerationFunctions(
-    size_t numberOfVertices,
-    const StaticValues &staticValues
-) {
-    std::vector<std::function<std::unique_ptr<VertexAttribute>()> > staticVertexAttributeGenerationFunctions;
-    for (const auto &staticValue: staticValues) {
-        // Values are passed by copy, because the function will be called after the end of this current
-        // function execution
-        staticVertexAttributeGenerationFunctions.emplace_back([numberOfVertices, staticValue]() {
-            std::vector<decltype(Utility::convertToOpenGLFormat(staticValue))> openGlValue(
-                numberOfVertices,
-                Utility::convertToOpenGLFormat(staticValue)
-            );
-            return VertexAttributes::genVertexAttribute(std::move(openGlValue));
-        });
-    }
-    return staticVertexAttributeGenerationFunctions;
-}
