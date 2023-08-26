@@ -313,7 +313,3 @@ float Camera::computeLocalOffset(float fovY) noexcept {
     // Sines law
     return -distAbove * sinf(gamma) / sinf(halfFovY); // minus because the camera is behind
 }
-
-float Camera::zFar() const {
-    return _zFar;
-}

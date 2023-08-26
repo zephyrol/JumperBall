@@ -30,6 +30,7 @@ public:
     vecCstShaderProgram_sptr getShaderPrograms() const override;
 
     ShaderProgram_sptr createPostProcessesShaderProgram(
+        GLuint sceneTexture,
         const JBTypes::FileContent &fileContent,
         GLsizei width,
         GLsizei height
@@ -39,13 +40,12 @@ public:
 
 private:
 
-    static constexpr GLint postProcessTextureNumber = 4;
+    static constexpr GLint postProcessTextureNumber = 3;
 
     const GLsizei _screenWidth;
     const GLsizei _screenHeight;
     const GLsizei _postEffectsWidth;
     const GLsizei _postEffectsHeight;
-    const GLuint _sceneTexture;
     const CstRenderGroup_sptr _screen;
     const ColorableFrameBuffer_uptr _brightPassFilterFrameBuffer;
     const ColorableFrameBuffer_uptr _horizontalBlurFrameBuffer;

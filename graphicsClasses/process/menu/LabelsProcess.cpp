@@ -6,7 +6,6 @@
 
 #include <utility>
 #include "componentsGeneration/RenderGroupGenerator.h"
-#include "gameMenu/labels/RenderableLabel.h"
 #include "componentsGeneration/LabelGroupGenerator.h"
 #include "frameBuffer/FrameBuffer.h"
 
@@ -61,7 +60,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     );
     labelsShader->use();
 
-    constexpr GLint characterTextureNumber = 5;
+    constexpr GLint characterTextureNumber = 4;
     labelsShader->setTextureIndex("characterTexture", characterTextureNumber);
     TextureSampler::setActiveTexture(characterTextureNumber);
     TextureSampler::bind(fontTexturesGenerator.getLettersTexture());

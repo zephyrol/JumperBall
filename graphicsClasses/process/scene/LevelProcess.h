@@ -57,6 +57,8 @@ public:
 private:
 
     static constexpr GLsizei depthTexturesSize = 1024;
+    static constexpr GLint firstShadowTextureIndex = 0;
+    static constexpr GLint secondShadowTextureIndex = 1;
 
     const GLsizei _width;
     const GLsizei _height;

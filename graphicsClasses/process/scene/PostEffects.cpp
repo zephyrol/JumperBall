@@ -18,7 +18,6 @@ PostEffects::PostEffects(
     _screenHeight(screenHeight),
     _postEffectsWidth(postEffectsWidth),
     _postEffectsHeight(postEffectsHeight),
-    _sceneTexture(sceneTexture),
     _screen([]() {
         ScreenGroupGenerator screenGroupGenerator;
         return screenGroupGenerator.genRenderGroup();
@@ -41,7 +40,12 @@ PostEffects::PostEffects(
         false,
         false
     )),
-    _postProcessesShader(createPostProcessesShaderProgram(fileContent, postEffectsWidth, postEffectsHeight)),
+    _postProcessesShader(createPostProcessesShaderProgram(
+        sceneTexture,
+        fileContent,
+        postEffectsWidth,
+        postEffectsHeight
+    )),
     _postProcessIdUniformLocation(_postProcessesShader->getUniformLocation("postProcessId")),
     _defaultFrameBuffer(defaultFrameBuffer) {
 }
@@ -89,6 +93,7 @@ void PostEffects::freeGPUMemory() {
 }
 
 ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
+    GLuint sceneTexture,
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height
@@ -100,10 +105,10 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
     );
     shader->use();
 
-    constexpr GLint sceneTextureNumber = 3;
+    constexpr GLint sceneTextureNumber = 2;
     shader->setTextureIndex("sceneTexture", sceneTextureNumber);
     TextureSampler::setActiveTexture(sceneTextureNumber);
-    TextureSampler::bind(_sceneTexture);
+    TextureSampler::bind(sceneTexture);
 
     shader->setTextureIndex("postProcessTexture", postProcessTextureNumber);
     TextureSampler::setActiveTexture(postProcessTextureNumber);

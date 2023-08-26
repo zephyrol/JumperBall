@@ -103,25 +103,24 @@ LevelProcess_sptr LevelProcess::createInstance(
 void LevelProcess::render() const {
 
     FrameBuffer::disableBlending();
-    _starShaderProgram->use();
-    _starGroupUniforms.bind();
-    _starGroup->bind();
-
     _levelFrameBuffer->bindFrameBuffer();
     _levelFrameBuffer->clear();
 
+    _starShaderProgram->use();
+    _starGroupUniforms.bind();
+    _starGroup->bind();
     _starGroup->render();
 
     glCullFace(GL_FRONT);
     FrameBuffer::enableDepthTest();
     FrameBuffer::setViewportSize(depthTexturesSize, depthTexturesSize);
+    _mapShaderProgram->use();
 
-    TextureSampler::setActiveTexture(0);
+    TextureSampler::setActiveTexture(firstShadowTextureIndex);
     TextureSampler::bind(_firstBlankShadow->getRenderTexture());
-    TextureSampler::setActiveTexture(1);
+    TextureSampler::setActiveTexture(secondShadowTextureIndex);
     TextureSampler::bind(_secondBlankShadow->getRenderTexture());
 
-    _mapShaderProgram->use();
     _mapGroupUniforms.bind();
     _mapGroup->bind();
 
@@ -144,12 +143,10 @@ void LevelProcess::render() const {
     _levelFrameBuffer->bindFrameBuffer();
 
     TextureSampler::bind(_secondShadow->getRenderTexture());
-    TextureSampler::setActiveTexture(0);
+    TextureSampler::setActiveTexture(firstShadowTextureIndex);
     TextureSampler::bind(_firstShadow->getRenderTexture());
 
     _levelFrameBuffer->bindFrameBuffer();
-    _levelFrameBuffer->clear();
-
     _mapShaderProgram->setInteger(_passIdUniformLocation, 3);
     _mapGroup->render();
 
@@ -188,8 +185,8 @@ ShaderProgram_sptr LevelProcess::createMapShaderProgram(
         {{"idCount", idCount}}
     );
     shader->use();
-    shader->setTextureIndex("depthTexture", 0);
-    shader->setTextureIndex("depth2Texture", 1);
+    shader->setTextureIndex("depthTexture", firstShadowTextureIndex);
+    shader->setTextureIndex("depth2Texture", secondShadowTextureIndex);
 
     const auto shadowPixelSize = 1.f / static_cast<float>(depthTexturesSize);
 
