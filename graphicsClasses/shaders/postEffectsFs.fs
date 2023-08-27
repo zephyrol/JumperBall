@@ -12,8 +12,8 @@ uniform Scene {
 uniform sampler2D sceneTexture;
 uniform sampler2D postProcessTexture;
 
-const int patchSize = 50;
-const int verticalBlurFirstIndex = 25;
+const int patchSize = 34;
+const int verticalBlurFirstIndex = 17;
 uniform vec2 offsetsAndGaussWeights[patchSize];
 uniform int postProcessId;
 

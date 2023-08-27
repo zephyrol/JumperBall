@@ -114,17 +114,14 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
     TextureSampler::setActiveTexture(postProcessTextureNumber);
     TextureSampler::bind(_verticalBlurFrameBuffer->getRenderTexture());
 
-    // Getting 25 Gauss weights computed with sigma = 4
+    // Getting 17 Gauss weights computed with sigma = 4. Because two standard deviations from mean account
+    // for 95.45%
     const auto texelSizeX = 1.f / static_cast<float>(width);
     const auto texelSizeY = 1.f / static_cast<float>(height);
 
     shader->setUniformArrayVec2(
         "offsetsAndGaussWeights[0]",
         {
-            texelSizeX * -12.f, 0.00110796f,
-            texelSizeX * -11.f, 0.00227339f,
-            texelSizeX * -10.f, 0.00438208f,
-            texelSizeX * -9.f, 0.00793491f,
             texelSizeX * -8.f, 0.0134977f,
             texelSizeX * -7.f, 0.0215693f,
             texelSizeX * -6.f, 0.0323794f,
@@ -142,14 +139,6 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
             texelSizeX * 6.f, 0.0323794f,
             texelSizeX * 7.f, 0.0215693f,
             texelSizeX * 8.f, 0.0134977f,
-            texelSizeX * 9.f, 0.00793491f,
-            texelSizeX * 10.f, 0.00438208f,
-            texelSizeX * 11.f, 0.00227339f,
-            texelSizeX * 12.f, 0.00110796f,
-            texelSizeY * -12.f, 0.00110796f,
-            texelSizeY * -11.f, 0.00227339f,
-            texelSizeY * -10.f, 0.00438208f,
-            texelSizeY * -9.f, 0.00793491f,
             texelSizeY * -8.f, 0.0134977f,
             texelSizeY * -7.f, 0.0215693f,
             texelSizeY * -6.f, 0.0323794f,
@@ -167,10 +156,6 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
             texelSizeY * 6.f, 0.0323794f,
             texelSizeY * 7.f, 0.0215693f,
             texelSizeY * 8.f, 0.0134977f,
-            texelSizeY * 9.f, 0.00793491f,
-            texelSizeY * 10.f, 0.00438208f,
-            texelSizeY * 11.f, 0.00227339f,
-            texelSizeY * 12.f, 0.00110796f
         }
     );
     return shader;
