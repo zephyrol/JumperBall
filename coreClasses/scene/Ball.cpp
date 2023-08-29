@@ -25,6 +25,8 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z, const CstDoubleChrono
     _actionTime(0.f),
     _stateOfLifeTime(0.f),
     _getBackTime(nullptr),
+    _beginMovePosition(_pos),
+    _beginMoveDirection(_currentSide),
     _burnCoefficientTrigger(0.f),
     _burnCoefficientCurrent(0.f),
     _teleportationColor(JBTypes::Color::None),
@@ -109,23 +111,27 @@ void Ball::move() noexcept {
     }
 }
 
-void Ball::smoothMove() noexcept {
-    updateMovements();
-    if (_movementDestination.nextLocal != Ball::NextDestination::None) {
-        _state = Ball::State::SmoothMoving;
-        setActionTimeNow();
-    }
-}
-
 void Ball::doAction(Ball::ActionRequest action) {
     if (_stateOfLife == Ball::StateOfLife::Bursting) {
         return;
     }
+    if (action == Ball::ActionRequest::Nothing) {
+        _beginMovePosition = _pos;
+        _beginMoveDirection = _currentSide;
+    }
+    if(action != Ball::ActionRequest::GoStraightAhead) {
+        if (
+            _state == Ball::State::Moving
+            && _getBackTime == nullptr
+            && getTimeSecondsSinceAction() < (timeToGetNextBlock / 2.f)
+            // && (_beginMovePosition != _pos || _beginMoveDirection != _currentSide)
+            ) {
+            _getBackTime = std::unique_ptr<float>(new float(_inGameChronometer->getTime()));
+            return;
+        }
+    }
     switch (action) {
         case Ball::ActionRequest::Nothing:
-            if (_state == Ball::State::SmoothMoving && _getBackTime == nullptr) {
-                _getBackTime = std::unique_ptr<float>(new float(_inGameChronometer->getTime()));
-            }
             break;
         case Ball::ActionRequest::GoStraightAhead:
             if (_state == Ball::State::Staying) {
@@ -227,7 +233,7 @@ JBTypes::Quaternion Ball::getCoveredRotation() const noexcept {
 
     const std::function<float()> getCoveredDistance =
         [this]() -> float {
-            if (_state == Ball::State::Moving || _state == Ball::State::SmoothMoving) {
+            if (_state == Ball::State::Moving) {
                 const float timeSecondsSinceAction = getTimeSecondsSinceAction();
                 return timeSecondsSinceAction / Ball::timeToGetNextBlock;
             } else if (_state == Ball::State::Jumping) {
@@ -279,7 +285,6 @@ float Ball::getCrushingCoefficient() const noexcept {
 
     if (
         _state == Ball::State::Moving ||
-        _state == Ball::State::SmoothMoving ||
         _state == Ball::State::Jumping
         ) {
         return movementCrushingCoeff(timeToGetNextBlock);
@@ -470,7 +475,7 @@ void Ball::turningUpdate() noexcept {
 
 void Ball::movingUpdate() noexcept {
     const float sSinceAction = getTimeSecondsSinceAction();
-    if(_getBackTime != nullptr && sSinceAction < 0) {
+    if(sSinceAction < 0) {
         _getBackTime = nullptr;
         stay();
         internalUpdate();
@@ -822,7 +827,6 @@ void Ball::internalUpdate() noexcept {
         case Ball::State::TurningRight:
             turningUpdate();
             break;
-        case Ball::State::SmoothMoving:
         case Ball::State::Moving:
             movingUpdate();
             break;
@@ -938,7 +942,8 @@ float Ball::getTimeSecondsSinceStateOfLife() const {
 
 float Ball::getTimeSecondsSinceAction() const {
     if(_getBackTime) {
-        return (*_getBackTime - _actionTime) - (_inGameChronometer->getTime() - *_getBackTime) - _actionTime;
+        const float getBackTime = *_getBackTime;
+        return getBackTime - (_inGameChronometer->getTime() - getBackTime) - _actionTime;
     }
     return _inGameChronometer->getTime() - _actionTime;
 }
