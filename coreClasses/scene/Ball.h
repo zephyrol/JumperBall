@@ -47,6 +47,7 @@ public:
     enum class State {
         Staying,
         Moving,
+        SmoothMoving,
         Jumping,
         TurningLeft,
         TurningRight,
@@ -190,6 +191,7 @@ private:
 
     float _actionTime;
     float _stateOfLifeTime;
+    std::unique_ptr<float> _getBackTime;
 
     /**
      * BurnCoefficient at the last state change
@@ -252,6 +254,8 @@ private:
     void jump() noexcept;
 
     void move() noexcept;
+
+    void smoothMove() noexcept;
 
     void fall() noexcept;
 

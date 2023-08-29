@@ -24,6 +24,7 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z, const CstDoubleChrono
     _mechanicsPatternFalling(getRadius(), 0.f, 0.f, jumpSpeedCoefficient),
     _actionTime(0.f),
     _stateOfLifeTime(0.f),
+    _getBackTime(nullptr),
     _burnCoefficientTrigger(0.f),
     _burnCoefficientCurrent(0.f),
     _teleportationColor(JBTypes::Color::None),
@@ -101,10 +102,17 @@ void Ball::deteleport() noexcept {
 }
 
 void Ball::move() noexcept {
-
     updateMovements();
     if (_movementDestination.nextLocal != Ball::NextDestination::None) {
         _state = Ball::State::Moving;
+        setActionTimeNow();
+    }
+}
+
+void Ball::smoothMove() noexcept {
+    updateMovements();
+    if (_movementDestination.nextLocal != Ball::NextDestination::None) {
+        _state = Ball::State::SmoothMoving;
         setActionTimeNow();
     }
 }
@@ -115,6 +123,9 @@ void Ball::doAction(Ball::ActionRequest action) {
     }
     switch (action) {
         case Ball::ActionRequest::Nothing:
+            if (_state == Ball::State::SmoothMoving && _getBackTime == nullptr) {
+                _getBackTime = std::unique_ptr<float>(new float(_inGameChronometer->getTime()));
+            }
             break;
         case Ball::ActionRequest::GoStraightAhead:
             if (_state == Ball::State::Staying) {
@@ -216,7 +227,7 @@ JBTypes::Quaternion Ball::getCoveredRotation() const noexcept {
 
     const std::function<float()> getCoveredDistance =
         [this]() -> float {
-            if (_state == Ball::State::Moving) {
+            if (_state == Ball::State::Moving || _state == Ball::State::SmoothMoving) {
                 const float timeSecondsSinceAction = getTimeSecondsSinceAction();
                 return timeSecondsSinceAction / Ball::timeToGetNextBlock;
             } else if (_state == Ball::State::Jumping) {
@@ -266,7 +277,11 @@ float Ball::getCrushingCoefficient() const noexcept {
             return (1.f - t) * _currentCrushing;
         };
 
-    if (_state == Ball::State::Moving || _state == Ball::State::Jumping) {
+    if (
+        _state == Ball::State::Moving ||
+        _state == Ball::State::SmoothMoving ||
+        _state == Ball::State::Jumping
+        ) {
         return movementCrushingCoeff(timeToGetNextBlock);
     }
     if (_state == Ball::State::TurningLeft || _state == Ball::State::TurningRight) {
@@ -397,9 +412,8 @@ void Ball::blockEvent() noexcept {
         setLifeTimeNow();
         return;
     }
-    const auto hasToJump = _jumpRequest && (
-                                               _inGameChronometer->getTime() - _jumpRequestTime
-                                           ) < (timeToGetNextBlock / jumpSpeedCoefficient);
+    const auto hasToJump = _jumpRequest && (_inGameChronometer->getTime() - _jumpRequestTime)
+                                           < (timeToGetNextBlock / jumpSpeedCoefficient);
     if (hasToJump) {
         _jumpRequest = false;
         jump();
@@ -456,6 +470,11 @@ void Ball::turningUpdate() noexcept {
 
 void Ball::movingUpdate() noexcept {
     const float sSinceAction = getTimeSecondsSinceAction();
+    if(_getBackTime != nullptr && sSinceAction < 0) {
+        _getBackTime = nullptr;
+        stay();
+        internalUpdate();
+    }
     if (sSinceAction >= timeToGetNextBlock) {
         goStraightAhead();
         stay();
@@ -718,7 +737,7 @@ Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
         );
     };
 
-    const auto computeScale = [this, &crushingScale, &currentSideVec](){
+    const auto computeScale = [this, &crushingScale, &currentSideVec]() {
         if (_stateOfLife == Ball::StateOfLife::Dead) {
             return JBTypes::vec3f{0.f, 0.f, 0.f};
         }
@@ -803,6 +822,7 @@ void Ball::internalUpdate() noexcept {
         case Ball::State::TurningRight:
             turningUpdate();
             break;
+        case Ball::State::SmoothMoving:
         case Ball::State::Moving:
             movingUpdate();
             break;
@@ -917,6 +937,9 @@ float Ball::getTimeSecondsSinceStateOfLife() const {
 }
 
 float Ball::getTimeSecondsSinceAction() const {
+    if(_getBackTime) {
+        return (*_getBackTime - _actionTime) - (_inGameChronometer->getTime() - *_getBackTime) - _actionTime;
+    }
     return _inGameChronometer->getTime() - _actionTime;
 }
 
