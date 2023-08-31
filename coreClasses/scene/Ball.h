@@ -191,7 +191,7 @@ private:
     float _actionTime;
     float _stateOfLifeTime;
 
-    std::unique_ptr<float> _getBackTime;
+    std::unique_ptr<const float> _getBackTime;
     JBTypes::vec3ui _beginMovePosition;
     JBTypes::Dir _beginMoveDirection;
 

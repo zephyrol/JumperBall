@@ -122,7 +122,7 @@ void Ball::doAction(Ball::ActionRequest action) {
             && getTimeSecondsSinceAction() < (timeToGetNextBlock / 4.f)
             && (_beginMovePosition != _pos || _beginMoveDirection != _currentSide)
             ) {
-            _getBackTime = std::unique_ptr<float>(new float(_inGameChronometer->getTime()));
+            _getBackTime = std::unique_ptr<const float>(new float(_inGameChronometer->getTime()));
             return;
         }
     }
