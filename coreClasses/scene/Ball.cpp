@@ -115,20 +115,20 @@ void Ball::doAction(Ball::ActionRequest action) {
     if (_stateOfLife == Ball::StateOfLife::Bursting) {
         return;
     }
-    if (action == Ball::ActionRequest::Nothing) {
-        _beginMovePosition = _pos;
-        _beginMoveDirection = _currentSide;
-    }
     if(action != Ball::ActionRequest::GoStraightAhead) {
         if (
             _state == Ball::State::Moving
             && _getBackTime == nullptr
-            && getTimeSecondsSinceAction() < (timeToGetNextBlock / 2.f)
-            // && (_beginMovePosition != _pos || _beginMoveDirection != _currentSide)
+            && getTimeSecondsSinceAction() < (timeToGetNextBlock / 4.f)
+            && (_beginMovePosition != _pos || _beginMoveDirection != _currentSide)
             ) {
             _getBackTime = std::unique_ptr<float>(new float(_inGameChronometer->getTime()));
             return;
         }
+    }
+    if (action == Ball::ActionRequest::Nothing) {
+        _beginMovePosition = _pos;
+        _beginMoveDirection = _currentSide;
     }
     switch (action) {
         case Ball::ActionRequest::Nothing:
