@@ -18,10 +18,15 @@ SceneUniformBuffer::SceneUniformBuffer(
             "lightDirection",
             "light2Direction",
             "flashColor",
-            "teleportationCoeff"
+            "teleportationCoeff",
+            "ballPosition",
+            "ballUp",
+            "ballLook",
+            "upBorder",
+            "frontBorder",
+            "rearBorder"
         }
-    ))
-{
+    )) {
 }
 
 void SceneUniformBuffer::update(
@@ -32,9 +37,14 @@ void SceneUniformBuffer::update(
     const glm::vec3 &lightDirection,
     const glm::vec3 &light2Direction,
     const glm::vec3 &flashColor,
-    const glm::vec1 &teleportationCoeff
+    const glm::vec1 &teleportationCoeff,
+    const glm::vec3 &ballPosition,
+    const glm::vec3 &ballUp,
+    const glm::vec3 &ballLook,
+    const glm::vec3 &upBorder,
+    const glm::vec3 &frontBorder,
+    const glm::vec3 &rearBorder
 ) {
-
     _uniformBufferBase.updateField(0, VP);
     _uniformBufferBase.updateField(1, VPStar);
     _uniformBufferBase.updateField(2, VPStar2);
@@ -43,7 +53,12 @@ void SceneUniformBuffer::update(
     _uniformBufferBase.updateField(5, light2Direction);
     _uniformBufferBase.updateField(6, flashColor);
     _uniformBufferBase.updateField(7, teleportationCoeff);
-
+    _uniformBufferBase.updateField(8, ballPosition);
+    _uniformBufferBase.updateField(9, ballUp);
+    _uniformBufferBase.updateField(10, ballLook);
+    _uniformBufferBase.updateField(11, upBorder);
+    _uniformBufferBase.updateField(12, frontBorder);
+    _uniformBufferBase.updateField(13, rearBorder);
     _uniformBufferBase.updateBufferOnGPU();
 }
 

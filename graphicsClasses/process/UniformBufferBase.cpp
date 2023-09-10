@@ -39,8 +39,9 @@ UniformBufferBase UniformBufferBase::createInstance(
 
     // 2. Get field offsets
     std::vector<const char *> linearFieldNames;
+    linearFieldNames.reserve(fieldNames.size());
     for (const auto &fieldName: fieldNames) {
-        linearFieldNames.push_back(fieldName.c_str());
+        linearFieldNames.emplace_back(fieldName.c_str());
     }
 
     std::vector<GLuint> indices(fieldNames.size());

@@ -587,6 +587,34 @@ Ball::MovementDestination Ball::getNextBlockInfo() const {
     return nextBlock;
 }
 
+JBTypes::vec3f Ball::getUpVector() const {
+    return JBTypesMethods::directionAsVector(
+        _state == Ball::State::Moving && getTimeSecondsSinceAction() > halfTimeToGetNextBlock
+        ? _currentSide
+        : _movementDestination.nextSide
+    );
+}
+
+JBTypes::vec3f Ball::getLookVector() const {
+    if (_state == Ball::State::Moving) {
+        return JBTypesMethods::directionAsVector(
+            getTimeSecondsSinceAction() > halfTimeToGetNextBlock
+            ? _lookTowards
+            : _movementDestination.nextLook
+        );
+    }
+    if((_state == Ball::State::TurningLeft || _state == Ball::State::TurningRight)
+        || getTimeSecondsSinceAction() > Ball::halftimeToTurn) {
+        return JBTypesMethods::directionAsVector(
+            _state == Ball::State::TurningLeft
+                ? _turnLeftMovement.evaluate({_currentSide, _lookTowards})
+                : _turnRightMovement.evaluate({_currentSide, _lookTowards})
+            );
+    }
+    return JBTypesMethods::directionAsVector(_lookTowards);
+
+}
+
 void Ball::teleportingUpdate() noexcept {
 
     const float timeSinceAction = getTimeSecondsSinceAction();
@@ -718,7 +746,7 @@ Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
         );
     };
 
-    const auto computeScale = [this, &crushingScale, &currentSideVec](){
+    const auto computeScale = [this, &crushingScale, &currentSideVec]() {
         if (_stateOfLife == Ball::StateOfLife::Dead) {
             return JBTypes::vec3f{0.f, 0.f, 0.f};
         }

@@ -37,7 +37,9 @@ public:
 
     static constexpr float jumpSpeedCoefficient = 1.2f;
     static constexpr float timeToGetNextBlock = 0.25f;
+    static constexpr float halfTimeToGetNextBlock = timeToGetNextBlock / 2.f;
     static constexpr float timeToTurn = 0.3f;
+    static constexpr float halftimeToTurn = timeToTurn / 2.f;
     static constexpr float timeToBurn = 3.f;
     static constexpr float timeToBurst = 0.8f;
     static constexpr float basicRadius = 0.2f;
@@ -111,6 +113,10 @@ public:
     const JBTypes::Color &getTeleportationColor() const noexcept;
 
     Ball::MovementDestination getNextBlockInfo() const;
+
+    JBTypes::vec3f getUpVector() const;
+
+    JBTypes::vec3f getLookVector() const;
 
     float getTimeSecondsSinceAction() const;
 

@@ -85,6 +85,11 @@ void SceneRendering::update() {
 
     const auto &sceneCamera = _scene.getCamera();
     const auto &sceneBall = _scene.getBall();
+    const auto ballPosition = Utility::convertToOpenGLFormat(sceneBall->get3DPosition());
+    const auto ballUp = Utility::convertToOpenGLFormat(sceneBall->getUpVector());
+    const auto ballLook =Utility::convertToOpenGLFormat(sceneBall->getLookVector());
+    const auto upBorder = ballPosition + 0.5f * ballUp;
+
     _sceneUniformBuffer.update(
         sceneCamera->viewProjection(),
         Camera::genVPMatrixFromStar(*_scene.getStar()),
@@ -93,7 +98,13 @@ void SceneRendering::update() {
         Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection()),
         Utility::convertToOpenGLFormat(_scene.getStar2()->lightDirection()),
         Utility::colorAsVec3(sceneBall->getTeleportationColor()),
-        glm::vec1(sceneBall->getTeleportationCoefficient())
+        glm::vec1(sceneBall->getTeleportationCoefficient()),
+        ballPosition,
+        ballUp,
+        ballLook,
+        upBorder,
+        upBorder + 0.5f * ballLook,
+        ballPosition - 0.5f * ballLook
     );
 
     for (const auto &process: _processes) {

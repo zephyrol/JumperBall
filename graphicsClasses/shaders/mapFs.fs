@@ -7,6 +7,12 @@ uniform Scene {
     vec3 light2Direction;
     vec3 flashColor;
     float teleportationCoeff;
+    vec3 ballPosition;
+    vec3 ballUp;
+    vec3 ballLook;
+    vec3 upBorder;
+    vec3 frontBorder;
+    vec3 rearBorder;
 };
 
 uniform sampler2DShadow depthTexture;
@@ -67,12 +73,25 @@ vec4 convertOutput(vec3 composition) {
 const vec3 ambientLightIntensity = vec3(0.7, 0.7, 0.7);
 const vec3 fireEffet = vec3(8.0, 0.2, 0.0);
 
+void checkDiscarding() {
+    if(dot(fs_vertexPositionWorld - upBorder, ballUp) > 0.0) {
+        if(dot(fs_vertexPositionWorld - frontBorder, ballLook) < 0.0){
+            discard;
+        }
+        return;
+    }
+    if(dot(fs_vertexPositionWorld - rearBorder, ballLook) < 0.0) {
+        discard;
+    }
+}
+
 void main(){
 
     if(passId < 2){
         return;
     }
 
+    checkDiscarding();
     vec3 composition = ambientLightIntensity * mix(fs_vertexColor, fireEffet, fs_burningCoeff);
 
     vec3 normalizedNormal = normalize(fs_vertexNormal);

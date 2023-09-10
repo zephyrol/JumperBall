@@ -7,6 +7,12 @@ uniform Scene {
     vec3 light2Direction;
     vec3 flashColor;
     float teleportationCoeff;
+    vec3 ballPosition;
+    vec3 ballUp;
+    vec3 ballLook;
+    vec3 upBorder;
+    vec3 frontBorder;
+    vec3 rearBorder;
 };
 
 out vec4 pixelColor;
