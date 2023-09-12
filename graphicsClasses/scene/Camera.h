@@ -30,6 +30,8 @@ public:
 
     const glm::vec3 &pos() const noexcept;
 
+    const glm::vec3 &ballLookingDirection() const noexcept;
+
     glm::mat4 viewProjection() const noexcept;
 
     void update(
@@ -64,6 +66,7 @@ private:
     glm::vec3 _pos;
     glm::vec3 _center;
     glm::vec3 _up;
+    glm::vec3 _ballLookingDirection;
     float _timePointComeBack;
     float _timePointGoAbove;
     glm::mat4 _perspectiveMatrix;
@@ -71,7 +74,6 @@ private:
     static constexpr float distBehindBall = 0.4f;
     static constexpr float distAbove = 1.1f;
     static constexpr float distDirPoint = 2.f;
-
 };
 
 #endif /* CAMERA_H */

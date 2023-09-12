@@ -43,6 +43,8 @@ public:
 
     DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
 
+    DynamicValues <float> getDynamicFloatValues() const override;
+
     DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
 
     std::string getDynamicGroupHash() const override;

@@ -7,13 +7,15 @@ uniform Scene {
     vec3 light2Direction;
     vec3 flashColor;
     float teleportationCoeff;
+    vec3 ballPosition;
+    vec3 ballLookingDirection;
 };
 
 uniform vec3 translation[idCount];
 uniform vec4 rotation[idCount];
 uniform vec3 scale[idCount];
 uniform float burningCoeff[idCount];
-
+uniform float alwaysDisplay[idCount];
 uniform int passId;
 
 layout(location = 0) in vec3 vs_vertexPosition;
@@ -27,6 +29,7 @@ out vec4 fs_vertexDepthMap2Space;
 out vec3 fs_vertexNormal;
 out vec3 fs_vertexPositionWorld;
 out float fs_burningCoeff;
+out float fs_alwaysDisplay;
 
 const mat4 biasMatrix = mat4(
     0.5, 0.0, 0.0, 0.0,
@@ -71,7 +74,6 @@ mat4 getRotationMatrix(vec4 quaternion) {
     );
 }
 
-
 void main() {
 
     mat4 translationMatrix = getTranslationMatrix(translation[vs_id]);
@@ -96,6 +98,7 @@ void main() {
     fs_vertexDepthMapSpace = biasMatrix * VPStar * vertexPositionWorldSpace;
     fs_vertexDepthMap2Space = biasMatrix * VPStar2 * vertexPositionWorldSpace;
     fs_burningCoeff = burningCoeff[vs_id];
+    fs_alwaysDisplay = alwaysDisplay[vs_id];
     gl_Position = VP * vertexPositionWorldSpace;
 
 }

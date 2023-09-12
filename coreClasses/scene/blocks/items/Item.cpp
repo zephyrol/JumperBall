@@ -151,3 +151,7 @@ Displayable::DynamicValues<JBTypes::Quaternion> Item::getDynamicQuaternionValues
     constexpr auto speedFactor = 5.f;
     return {{JBTypesMethods::createRotationQuaternion(_directionVec, speedFactor * _chronometer->getTime())}};
 }
+
+Displayable::DynamicValues<float> Item::getDynamicFloatValues() const {
+    return {0.f, 1.f};
+}

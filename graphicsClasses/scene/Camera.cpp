@@ -17,6 +17,7 @@ Camera::Camera(const Map &map, float ratio) :
     _pos(1.f, 0.f, 0.f),
     _center(0.f, 0.f, 0.f),
     _up(0.f, 1.f, 0.f),
+    _ballLookingDirection(0.f),
     _timePointComeBack(0.f),
     _timePointGoAbove(0.f),
     _perspectiveMatrix(glm::perspective(_fovY, ratio, zNear, _zFar)) {
@@ -135,7 +136,7 @@ void Camera::followingBallUpdate() noexcept {
 
     const JBTypes::vec3f &position = ball.get3DPosition();
     const glm::mat4 matPosBall = glm::translate(Utility::convertToOpenGLFormat(position));
-    matRotationCam = matRotationCam * glm::toMat4(quaternion);
+    matRotationCam *= glm::toMat4(quaternion);
     const glm::mat4 matPosBallRotationCam = matPosBall * matRotationCam;
 
     const glm::vec4 posVec = matPosBallRotationCam * glm::vec4(initPosCam, 1.f);
@@ -147,6 +148,7 @@ void Camera::followingBallUpdate() noexcept {
     const glm::vec3 upVector = matRotationCam * glm::vec4(glm::cross(axisRotation, vecLookingDirection), 1.f);
     _up = upVector;
 
+    _ballLookingDirection = matRotationCam * glm::vec4(vecLookingDirection, 1.f);
 }
 
 void Camera::turningAroundMapUpdate() noexcept {
@@ -186,7 +188,6 @@ void Camera::turningAroundMapUpdate() noexcept {
     _pos = cameraPosition;
     _center = center;
     _up = up;
-
 }
 
 bool Camera::approachingBallUpdate() noexcept {
@@ -272,6 +273,10 @@ glm::mat4 Camera::genVPMatrixFromStar(const Star &star) {
 
 const glm::vec3 &Camera::pos() const noexcept {
     return _pos;
+}
+
+const glm::vec3 &Camera::ballLookingDirection() const noexcept {
+    return _ballLookingDirection;
 }
 
 glm::mat4 Camera::viewProjection() const noexcept {

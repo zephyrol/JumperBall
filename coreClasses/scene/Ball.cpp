@@ -700,7 +700,7 @@ void Ball::die() noexcept {
 }
 
 Displayable::DynamicValues<float> Ball::getDynamicFloatValues() const {
-    return {burnCoefficient()};
+    return {burnCoefficient(), 1.0};
 }
 
 Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
