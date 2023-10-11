@@ -129,7 +129,7 @@ vec3 getBallColor() {
     }
     const vec3 firstLightColor = vec3(32.0 / 255.0, 223.0 / 255.0, 123.0 / 255.0);
     const vec3 firstDarkColor = vec3(1.0) - firstLightColor;
-    return  y > 0.0 ? firstLightColor : firstDarkColor;
+    return y > 0.0 ? firstLightColor : firstDarkColor;
 }
 
 #endif

@@ -62,7 +62,7 @@ void main() {
             discarding = true;
         }
         if(keyNumber > currentNumberOfKeys[vs_groupId]) {
-            fs_keyColor = vec3(0.0);
+            fs_keyColor = vec3(0.3);
         } else {
             fs_keyColor = vec3(1.0, 1.0, 0.0);
         }
