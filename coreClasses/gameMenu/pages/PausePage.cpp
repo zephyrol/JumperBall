@@ -8,21 +8,30 @@
 #include "gameMenu/nodes/CenteredNode.h"
 #include "gameMenu/nodes/UpNode.h"
 #include "gameMenu/nodes/DownNode.h"
+#include "gameMenu/nodes/RightNode.h"
+#include "gameMenu/nodes/LeftNode.h"
 
 PausePage::PausePage(
     Player_sptr &&player,
-    Node_sptr &&jumperBallTitleNode,
+    Node_sptr &&levelNode,
+    Node_sptr &&leftDigitNode,
+    Node_sptr &&middleDigitNode,
+    Node_sptr &&rightDigitNode,
     Node_sptr &&resumeNode,
     Node_sptr &&exitNode,
     Label_sptr &&backgroundLabel,
     const Page_sptr &parent
-) : Page(std::move(player)),
-    _parent(parent),
-    _inGamePage(nullptr),
-    _jumperBallTitleNode(std::move(jumperBallTitleNode)),
-    _resumeNode(std::move(resumeNode)),
-    _exitNode(std::move(exitNode)),
-    _backgroundLabel(std::move(backgroundLabel)) {
+)
+    : Page(std::move(player)),
+      _parent(parent),
+      _inGamePage(nullptr),
+      _levelNode(std::move(levelNode)),
+      _leftDigitNode(std::move(leftDigitNode)),
+      _middleDigitNode(std::move(middleDigitNode)),
+      _rightDigitNode(std::move(rightDigitNode)),
+      _resumeNode(std::move(resumeNode)),
+      _exitNode(std::move(exitNode)),
+      _backgroundLabel(std::move(backgroundLabel)) {
 }
 
 PausePage_sptr PausePage::createInstance(
@@ -36,7 +45,10 @@ PausePage_sptr PausePage::createInstance(
         std::move(nodes.at(0)),
         std::move(nodes.at(1)),
         std::move(nodes.at(2)),
-        createBackgroundLabel(std::move(nodes.at(3))),
+        std::move(nodes.at(3)),
+        std::move(nodes.at(4)),
+        std::move(nodes.at(5)),
+        createBackgroundLabel(std::move(nodes.at(6))),
         parent
     );
 }
@@ -54,8 +66,19 @@ vecNode_sptr PausePage::createNodes(float ratio) {
         9.f / 16.f
     );
 
-    const auto jumperBallTitle = std::make_shared<UpNode>(
+    const auto headerNode = std::make_shared<UpNode>(
         mainTitleNode,
+        6.f
+    );
+
+    const auto digitsNode = std::make_shared<RightNode>(headerNode, 2.f);
+    constexpr auto digitNodesRatio = 1.f;
+    const auto leftDigitNode = std::make_shared<LeftNode>(digitsNode, digitNodesRatio);
+    const auto middleDigitNode = std::make_shared<CenteredNode>(digitsNode, digitNodesRatio);
+    const auto rightDigitNode = std::make_shared<RightNode>(digitsNode, digitNodesRatio);
+
+    const auto levelNode = std::make_shared<LeftNode>(
+        headerNode,
         4.f
     );
 
@@ -75,16 +98,27 @@ vecNode_sptr PausePage::createNodes(float ratio) {
         optionsNodeRatio
     );
 
-    return {jumperBallTitle, resumeNode, exitNode, optionsParentNode};
+    return {
+        levelNode,
+        leftDigitNode,
+        middleDigitNode,
+        rightDigitNode,
+        resumeNode,
+        exitNode,
+        optionsParentNode
+    };
 
 }
 
 void PausePage::resize(float ratio) {
     const auto &nodes = createNodes(ratio);
-    _jumperBallTitleNode = nodes.at(0);
-    _resumeNode = nodes.at(1);
-    _exitNode = nodes.at(2);
-    _backgroundLabel = createBackgroundLabel(nodes.at(3));
+    _levelNode = nodes.at(0);
+    _leftDigitNode = nodes.at(1);
+    _middleDigitNode = nodes.at(2);
+    _rightDigitNode = nodes.at(3);
+    _resumeNode = nodes.at(4);
+    _exitNode = nodes.at(5);
+    _backgroundLabel = createBackgroundLabel(nodes.at(6));
 }
 
 Page_wptr PausePage::parent() {
@@ -109,9 +143,25 @@ Page_sptr PausePage::click(float mouseX, float mouseY) {
 vecCstTextNode_uptr PausePage::genTextNodes() const {
     vecCstTextNode_uptr textNodes;
     const auto english = _player->isUsingEnglishLanguage();
-    textNodes.emplace_back(new TextNode(_jumperBallTitleNode, "Gravity Globe", 0));
+    textNodes.emplace_back(new TextNode(_levelNode, english ? "Level" : "Niveau", levelLabelId));
     textNodes.emplace_back(new TextNode(_resumeNode, english ? "Resume" : "Reprendre", resumeLabelId));
     textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Sortir", exitLabelId));
+
+    short nodeCount = 0;
+    for (const auto &node: std::vector<Node_sptr>{
+        _leftDigitNode,
+        _middleDigitNode,
+        _rightDigitNode
+    }) {
+        for (unsigned int i = 0; i < 10; ++i) {
+            textNodes.emplace_back(new TextNode(
+                node,
+                std::to_string(i),
+                nodeCount
+            ));
+            ++nodeCount;
+        }
+    }
     return textNodes;
 }
 
@@ -120,13 +170,54 @@ std::vector<std::string> PausePage::shaderDefines() const {
 }
 
 std::string PausePage::getVertexShaderName() const {
-    return "titlePageVs.vs";
+    return "pausePageVs.vs";
 }
+
+Displayable::DynamicNames PausePage::getDynamicIntNames() const {
+    decltype(getDynamicIntNames()) dynamicNames{
+        "leftDigit",
+        "middleDigit",
+        "rightDigit",
+    };
+    auto pageDynamicNames = Page::getDynamicIntNames();
+    dynamicNames.insert(
+        dynamicNames.end(),
+        std::make_move_iterator(pageDynamicNames.begin()),
+        std::make_move_iterator(pageDynamicNames.end())
+    );
+    return dynamicNames;
+}
+
+Displayable::DynamicValues<int> PausePage::getDynamicIntValues() const {
+
+    const auto currentLevel = static_cast<int>(_player->getCurrentLevel());
+    const auto leftDigit = currentLevel / 100;
+    const auto middleDigit = (currentLevel % 100) / 10;
+    const auto rightDigit = currentLevel % 10;
+
+    constexpr auto middleDigitIdOffset = 10;
+    constexpr auto rightDigitIdOffset = middleDigitIdOffset + 10;
+
+    decltype(getDynamicIntValues()) dynamicInts{
+        leftDigit,
+        middleDigit + middleDigitIdOffset,
+        rightDigit + rightDigitIdOffset
+    };
+
+    auto pageDynamicInts = Page::getDynamicIntValues();
+    dynamicInts.insert(
+        dynamicInts.end(),
+        std::make_move_iterator(pageDynamicInts.begin()),
+        std::make_move_iterator(pageDynamicInts.end())
+    );
+    return dynamicInts;
+}
+
 
 void PausePage::update(const Mouse &mouse) {
 
     if (!mouse.isPressed()) {
-        _currentSelectedLabel = 0;
+        _currentSelectedLabel = -1;
         return;
     }
 
@@ -141,7 +232,7 @@ void PausePage::update(const Mouse &mouse) {
     } else if (intersectTest(_exitNode)) {
         _currentSelectedLabel = exitLabelId;
     } else {
-        _currentSelectedLabel = 0;
+        _currentSelectedLabel = -1;
     }
 }
 

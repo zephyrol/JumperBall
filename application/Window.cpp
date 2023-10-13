@@ -42,6 +42,7 @@ JBTypes::FileContent Window::createFilesContent() {
         "levelsPageVs.vs",
         "mapVs.vs",
         "mapFs.fs",
+        "pausePageVs.vs",
         "postEffectsVs.vs",
         "postEffectsFs.fs",
         "starFs.fs",

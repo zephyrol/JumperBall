@@ -22,7 +22,10 @@ public:
 
     PausePage(
         Player_sptr &&player,
-        Node_sptr &&jumperBallTitleNode,
+        Node_sptr &&levelNode,
+        Node_sptr &&leftDigitNode,
+        Node_sptr &&middleDigitNode,
+        Node_sptr &&rightDigitNode,
         Node_sptr &&resumeNode,
         Node_sptr &&exitNode,
         Label_sptr &&backgroundLabel,
@@ -47,17 +50,25 @@ public:
 
     vecCstLabel_sptr labels() const override;
 
+    DynamicNames getDynamicIntNames() const override;
+
+    DynamicValues<int> getDynamicIntValues() const override;
+
 private:
     const Page_wptr _parent;
     Page_sptr _inGamePage;
-    Node_sptr _jumperBallTitleNode;
+    Node_sptr _levelNode;
+    Node_sptr _leftDigitNode;
+    Node_sptr _middleDigitNode;
+    Node_sptr _rightDigitNode;
     Node_sptr _resumeNode;
     Node_sptr _exitNode;
 
     Label_sptr _backgroundLabel;
 
-    static constexpr int resumeLabelId = 1;
-    static constexpr int exitLabelId = 2;
+    static constexpr int levelLabelId = 500;
+    static constexpr int resumeLabelId = 501;
+    static constexpr int exitLabelId = 502;
 
     static vecNode_sptr createNodes(float ratio);
 };
