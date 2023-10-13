@@ -61,6 +61,7 @@ private:
     struct CardinalPoint {
         ScreenDirection direction;
         std::pair<float, float> point;
+        float weight;
     };
 
     struct MovementCircle {

@@ -49,18 +49,26 @@ void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
         });
     }
 
-    const auto computeCardinalDistance = [this](
+    const auto &directionStateCoords = _movementCircle->mouseCoords;
+    const auto movementLength = computeDistance(
+        directionStateCoords.xCoord,
+        directionStateCoords.yCoord,
+        _mouseCoords->xCoord,
+        _mouseCoords->yCoord
+    );
+
+    const auto computeCardinalDistance = [this, directionStateCoords, movementLength](
         const Mouse::CardinalPoint &cardinalPoint
     ) -> CardinalDistance {
-        const auto &directionStateCoords = _movementCircle->mouseCoords;
         const auto &point = cardinalPoint.point;
         return {
             cardinalPoint.direction, computeDistance(
-                directionStateCoords.xCoord + point.first,
-                directionStateCoords.yCoord + point.second,
+                directionStateCoords.xCoord + point.first * movementLength,
+                directionStateCoords.yCoord + point.second * movementLength,
                 _mouseCoords->xCoord,
                 _mouseCoords->yCoord
-            )};
+            ) / cardinalPoint.weight
+        };
     };
 
     std::vector<Mouse::CardinalDistance> cardinalDistances(cardinalsPoints.size());
@@ -148,8 +156,8 @@ void Mouse::releasedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
         _mouseCoords->xCoord,
         _mouseCoords->yCoord
     );
-    constexpr float pressTimeThreshold = 0.3f; // 0.3 seconds
-    constexpr float thresholdMoving = 0.05f;
+    constexpr float pressTimeThreshold = 0.15f; // in seconds
+    constexpr float thresholdMoving = 0.03f;
     if (
         distance < thresholdMoving
         && timeSinceMovementCircleCreation < pressTimeThreshold) {
@@ -161,10 +169,10 @@ void Mouse::releasedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
 }
 
 const std::vector<Mouse::CardinalPoint> Mouse::cardinalsPoints{
-    {Mouse::ScreenDirection::North, {0.f,  1.f}},
-    {Mouse::ScreenDirection::South, {0.f,  -1.f}},
-    {Mouse::ScreenDirection::East,  {1.f,  0.f}},
-    {Mouse::ScreenDirection::West,  {-1.f, 0.f}},
+    {Mouse::ScreenDirection::North, {0.f, 1.f}, 1.f},
+    {Mouse::ScreenDirection::South, {0.f, -1.f}, 0.5f},
+    {Mouse::ScreenDirection::East, {1.f, 0.f}, 1.f},
+    {Mouse::ScreenDirection::West, {-1.f, 0.f}, 1.f}
 };
 
 float Mouse::computeDistance(float x0, float y0, float x1, float y1) {
