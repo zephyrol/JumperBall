@@ -87,8 +87,17 @@ void SceneRendering::update() {
     const auto &sceneBall = _scene.getBall();
     const auto ballPosition = Utility::convertToOpenGLFormat(sceneBall->get3DPosition());
     const auto ballUp = Utility::convertToOpenGLFormat(sceneBall->getUpVector());
-    const auto ballLook =Utility::convertToOpenGLFormat(sceneBall->getLookVector());
-    const auto upBorder = ballPosition + 0.5f * ballUp;
+    const auto ballLook = Utility::convertToOpenGLFormat(sceneBall->getLookVector());
+
+    const auto offsetBoundingBox = glm::vec3(0.5);
+
+    const auto behindPosition = ballPosition - ballLook;
+    const auto boundingBoxBehindMin = behindPosition - offsetBoundingBox;
+    const auto boundingBoxBehindMax = behindPosition + offsetBoundingBox;
+
+    const auto boundingBoxAboveMin = ballPosition + ballUp - offsetBoundingBox;
+    constexpr auto maxAboveFactor = 5.f;
+    const auto boundingBoxAboveMax = ballPosition + ballUp * maxAboveFactor + offsetBoundingBox;
 
     _sceneUniformBuffer.update(
         sceneCamera->viewProjection(),
@@ -99,12 +108,10 @@ void SceneRendering::update() {
         Utility::convertToOpenGLFormat(_scene.getStar2()->lightDirection()),
         Utility::colorAsVec3(sceneBall->getTeleportationColor()),
         glm::vec1(sceneBall->getTeleportationCoefficient()),
-        ballPosition,
-        ballUp,
-        ballLook,
-        upBorder,
-        upBorder + 0.5f * ballLook,
-        ballPosition - 0.5f * ballLook
+        boundingBoxBehindMin,
+        boundingBoxBehindMax,
+        boundingBoxAboveMin,
+        boundingBoxAboveMax
     );
 
     for (const auto &process: _processes) {

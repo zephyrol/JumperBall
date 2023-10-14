@@ -26,12 +26,10 @@ public:
         const glm::vec3 &light2Direction,
         const glm::vec3 &flashColor,
         const glm::vec1 &teleportationCoeff,
-        const glm::vec3 &ballPosition,
-        const glm::vec3 &ballUp,
-        const glm::vec3 &ballLook,
-        const glm::vec3 &upBorder,
-        const glm::vec3 &frontBorder,
-        const glm::vec3 &rearBorder
+        const glm::vec3 &boundingBoxBehindMin,
+        const glm::vec3 &boundingBoxBehindMax,
+        const glm::vec3 &boundingBoxAboveMin,
+        const glm::vec3 &boundingBoxAboveMax
     );
 
 private:
