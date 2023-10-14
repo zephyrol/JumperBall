@@ -68,10 +68,17 @@ vec4 convertOutput(vec3 composition) {
     );
 }
 
+bool isInBoundingBox(vec3 v, vec3 bMin, vec3 bMax) {
+    return v.x > bMin.x && v.x < bMax.x
+           && v.y > bMin.y && v.y < bMax.y
+           && v.z > bMin.z && v.z < bMax.z;
+}
+
 void checkDiscarding() {
-    if(dot(fs_vertexPositionWorld - (ballPosition - ballLookingDirection * 0.3), ballLookingDirection) < 0) {
+    if(dot(fs_vertexPositionWorld - (ballPosition - ballLookingDirection * 0.5), ballLookingDirection) < 0) {
         discard;
     }
+
 }
 
 const vec3 ambientLightIntensity = vec3(0.7, 0.7, 0.7);

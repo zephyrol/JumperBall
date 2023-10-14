@@ -13,7 +13,7 @@ Displayable::DynamicNames SceneElement::getDynamicVec3fNames() const {
 }
 
 Displayable::DynamicNames SceneElement::getDynamicFloatNames() const {
-    return {"burningCoeff, alwaysDisplay"};
+    return {"burningCoeff", "alwaysDisplay"};
 }
 
 Displayable::DynamicValues<float> SceneElement::getDynamicFloatValues() const {
