@@ -86,17 +86,19 @@ void SceneRendering::update() {
     const auto &sceneCamera = _scene.getCamera();
     const auto &sceneBall = _scene.getBall();
     const auto ballPosition = Utility::convertToOpenGLFormat(sceneBall->get3DPosition());
-    const auto ballUp = Utility::convertToOpenGLFormat(sceneBall->getUpVector());
-    const auto ballLook = Utility::convertToOpenGLFormat(sceneBall->getLookVector());
+    const auto ballUp = Utility::convertToOpenGLFormat(sceneBall->currentSideAsVector());
+    const auto ballLook = Utility::convertToOpenGLFormat(sceneBall->lookTowardsAsVector());
 
     const auto offsetBoundingBox = glm::vec3(0.5);
 
-    const auto behindPosition = ballPosition - ballLook;
-    const auto boundingBoxBehindMin = behindPosition - offsetBoundingBox;
-    const auto boundingBoxBehindMax = behindPosition + offsetBoundingBox;
+    const auto behindPosition = + ;
+
+    const auto sideVector = glm::cross(ballLook, ballUp);
+    const auto boundingBoxBehindMin = ballPosition - (ballLook * 1.5f) - ballUp * sceneBall->getRadius() - sideVector;
+    constexpr auto maxAboveFactor = 5.f;
+    const auto boundingBoxBehindMax = ballPosition - (ballLook * 0.5f) + ballUp * maxAboveFactor + sideVector;
 
     const auto boundingBoxAboveMin = ballPosition + ballUp - offsetBoundingBox;
-    constexpr auto maxAboveFactor = 5.f;
     const auto boundingBoxAboveMax = ballPosition + ballUp * maxAboveFactor + offsetBoundingBox;
 
     _sceneUniformBuffer.update(

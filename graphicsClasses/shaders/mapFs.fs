@@ -68,20 +68,14 @@ vec4 convertOutput(vec3 composition) {
     );
 }
 
+bool isInBoundingBox(vec3 bMin, vec3 bMax) {
+    return fs_vertexPositionWorld.x > bMin.x && fs_vertexPositionWorld.x < bMax.x
+           && fs_vertexPositionWorld.y > bMin.y && fs_vertexPositionWorld.y < bMax.y
+           && fs_vertexPositionWorld.z > bMin.z && fs_vertexPositionWorld.z < bMax.z;
+}
+
 const vec3 ambientLightIntensity = vec3(0.7, 0.7, 0.7);
 const vec3 fireEffet = vec3(8.0, 0.2, 0.0);
-
-void checkDiscarding() {
-    if(dot(fs_vertexPositionWorld - upBorder, ballUp) > 0.0) {
-        if(dot(fs_vertexPositionWorld - frontBorder, ballLook) < 0.0){
-            discard;
-        }
-        return;
-    }
-    if(dot(fs_vertexPositionWorld - rearBorder, ballLook) < 0.0) {
-        discard;
-    }
-}
 
 void main(){
 
@@ -89,7 +83,13 @@ void main(){
         return;
     }
 
-    checkDiscarding();
+    if(
+        isInBoundingBox(boundingBoxBehindMin, boundingBoxBehindMax) //||
+        //isInBoundingBox(boundingBoxAboveMin, boundingBoxAboveMax)
+    ) {
+        discard;
+    }
+
     vec3 composition = ambientLightIntensity * mix(fs_vertexColor, fireEffet, fs_burningCoeff);
 
     vec3 normalizedNormal = normalize(fs_vertexNormal);
