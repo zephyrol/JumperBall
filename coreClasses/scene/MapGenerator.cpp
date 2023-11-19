@@ -127,7 +127,7 @@ MapGenerator::uncompressMap(std::istringstream &file, const CstDoubleChronometer
         };
 
     const auto isAnEnemyTypeChar = [](unsigned char info) {
-        return info == 'L' || info == 'T' || info == 'D';
+        return info == 'L' || info == 'T' || info == 'Z';
     };
     const auto createEnemies =
         [&getTypeOptions, &isAnEnemyTypeChar, &mapInfo, &blockIndexCursor](const std::string &enemiesInfo) {
