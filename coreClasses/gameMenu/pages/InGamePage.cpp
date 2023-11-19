@@ -197,6 +197,19 @@ std::string InGamePage::getVertexShaderName() const {
     return "inGamePageVs.vs";
 }
 
+Displayable::DynamicNames InGamePage::getDynamicFloatNames() const {
+  return {"missingTimeWarning"};
+}
+
+Displayable::DynamicValues<float> InGamePage::getDynamicFloatValues() const {
+  const auto remainingTime = _player->getRemainingTime();
+  if(remainingTime > 9.f) {
+        return {0.f};
+  }
+  constexpr auto periodFactor = 15.f;
+  return {1.f - (cosf((remainingTime - 10.f) * periodFactor) * 0.5f + 0.5f)};
+}
+
 Displayable::DynamicNames InGamePage::getDynamicIntNames() const {
     decltype(getDynamicIntNames()) dynamicNames{
         "leftDigit",

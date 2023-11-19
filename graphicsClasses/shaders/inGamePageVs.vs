@@ -11,6 +11,7 @@ out float fs_needsCheckingKey;
 out vec3 fs_keyColor;
 out float fs_needsCheckingCoin;
 
+uniform float missingTimeWarning[idCount];
 uniform int leftDigit[idCount];
 uniform int middleDigit[idCount];
 uniform int rightDigit[idCount];
@@ -43,6 +44,11 @@ void main() {
     } else {
         fs_vertexColor = vec3(0.0, 1.0, 1.0);
     }
+
+    if(vs_labelId == rightDigit[vs_groupId]) {
+        fs_vertexColor = mix(fs_vertexColor, vec3(1.0, 0.0, 0.0), missingTimeWarning[vs_groupId]);
+    }
+
     bool discarding;
     if(vs_labelId < 0) {
         fs_isLetter = -1.0;

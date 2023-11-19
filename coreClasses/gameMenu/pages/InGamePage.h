@@ -63,6 +63,9 @@ public:
 
     DynamicNames getDynamicIntNames() const override;
 
+    DynamicNames getDynamicFloatNames() const override;
+    DynamicValues<float> getDynamicFloatValues() const override;
+
     DynamicValues<int> getDynamicIntValues() const override;
 
     std::string getVertexShaderName() const override;
