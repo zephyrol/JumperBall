@@ -71,9 +71,67 @@ void Ball::goStraightAhead() noexcept {
 }
 
 void Ball::jump() noexcept {
+
+    const auto sideVec = JBTypesMethods::directionAsVectorInt(_currentSide);
+    const auto lookVec = JBTypesMethods::directionAsVectorInt(_lookTowards);
+    const auto offsetPosX = _pos.at(0) + sideVec.at(0);
+    const auto offsetPosY = _pos.at(1) + sideVec.at(1);
+    const auto offsetPosZ = _pos.at(2) + sideVec.at(2);
+
+    const auto aboveNearX = offsetPosX + lookVec.at(0);
+    const auto aboveNearY = offsetPosY + lookVec.at(1);
+    const auto aboveNearZ = offsetPosZ + lookVec.at(2);
+
+    const auto aboveBehindX = offsetPosX - lookVec.at(0);
+    const auto aboveBehindY = offsetPosY - lookVec.at(1);
+    const auto aboveBehindZ = offsetPosZ - lookVec.at(2);
+
+    const CstBlock_sptr blockNear = getBlock({aboveNearX, aboveNearY, aboveNearZ});
+    const CstBlock_sptr blockBehind = getBlock({aboveBehindX, aboveBehindY, aboveBehindZ});
+
+    const auto isABlockNearThere = blockNear && blockNear->isExists();
+    const auto isABlockBehindThere = blockBehind && blockBehind->isExists();
+    if (isABlockNearThere && isABlockBehindThere) {
+        return;
+    }
+
     _state = Ball::State::Jumping;
     setActionTimeNow();
-    isGoingStraightAheadIntersectBlock();
+
+    ClassicalMechanics &refMechanicsJumping = getMechanicsJumping();
+    constexpr float sizeBlock = 1.f;
+    const float sizeBlock2MinusRadius = sizeBlock / 2.f - getRadius();
+
+    if (isABlockNearThere) {
+        refMechanicsJumping.addShockFromPosition(sizeBlock2MinusRadius);
+        _updateOutputs.push_back(std::make_shared<SoundOutput>("strikingWall"));
+        return;
+    }
+
+    const auto aboveFarX = offsetPosX + 2 * lookVec.at(0);
+    const auto aboveFarY = offsetPosY + 2 * lookVec.at(1);
+    const auto aboveFarZ = offsetPosZ + 2 * lookVec.at(2);
+    const CstBlock_sptr blockFar = getBlock({aboveFarX, aboveFarY, aboveFarZ});
+
+    if (blockFar && blockFar->isExists()) {
+        constexpr float offsetFar = 1.f;
+        refMechanicsJumping.addShockFromPosition(sizeBlock2MinusRadius + offsetFar);
+        _updateOutputs.push_back(std::make_shared<SoundOutput>("strikingWall"));
+        return;
+    }
+
+    const auto aboveVeryFarX = offsetPosX + 3 * lookVec.at(0);
+    const auto aboveVeryFarY = offsetPosY + 3 * lookVec.at(1);
+    const auto aboveVeryFarZ = offsetPosZ + 3 * lookVec.at(2);
+    const CstBlock_sptr blockVeryFar = getBlock({aboveVeryFarX, aboveVeryFarY, aboveVeryFarZ});
+
+    if (_jumpingType == Ball::JumpingType::Long && blockVeryFar && blockVeryFar->isExists()) {
+        constexpr float offsetVeryFar = 2.f;
+        refMechanicsJumping.addShockFromPosition(sizeBlock2MinusRadius + offsetVeryFar);
+        return;
+    }
+    refMechanicsJumping.timesShock({});
+
 }
 
 void Ball::stay() noexcept {
@@ -135,7 +193,6 @@ void Ball::doAction(Ball::ActionRequest action) {
             break;
         case Ball::ActionRequest::Jump:
             if (_state == Ball::State::Staying) {
-                _state = Ball::State::Jumping;
                 jump();
             } else {
                 _jumpRequest = true;
@@ -145,57 +202,6 @@ void Ball::doAction(Ball::ActionRequest action) {
         default:
             break;
     }
-}
-
-void Ball::isGoingStraightAheadIntersectBlock() noexcept {
-
-    if (_state != Ball::State::Jumping) {
-        return;
-    }
-    const auto sideVec = JBTypesMethods::directionAsVectorInt(_currentSide);
-    const auto lookVec = JBTypesMethods::directionAsVectorInt(_lookTowards);
-    const auto offsetPosX = _pos.at(0) + sideVec.at(0);
-    const auto offsetPosY = _pos.at(1) + sideVec.at(1);
-    const auto offsetPosZ = _pos.at(2) + sideVec.at(2);
-
-    const auto aboveNearX = offsetPosX + lookVec.at(0);
-    const auto aboveNearY = offsetPosY + lookVec.at(1);
-    const auto aboveNearZ = offsetPosZ + lookVec.at(2);
-    const CstBlock_sptr blockNear = getBlock({aboveNearX, aboveNearY, aboveNearZ});
-
-    ClassicalMechanics &refMechanicsJumping = getMechanicsJumping();
-    constexpr float sizeBlock = 1.f;
-    const float sizeBlock2MinusRadius = sizeBlock / 2.f - getRadius();
-
-    if (blockNear && blockNear->isExists()) {
-        refMechanicsJumping.addShockFromPosition(sizeBlock2MinusRadius);
-        _updateOutputs.push_back(std::make_shared<SoundOutput>("strikingWall"));
-        return;
-    }
-
-    const auto aboveFarX = offsetPosX + 2 * lookVec.at(0);
-    const auto aboveFarY = offsetPosY + 2 * lookVec.at(1);
-    const auto aboveFarZ = offsetPosZ + 2 * lookVec.at(2);
-    const CstBlock_sptr blockFar = getBlock({aboveFarX, aboveFarY, aboveFarZ});
-
-    if (blockFar && blockFar->isExists()) {
-        constexpr float offsetFar = 1.f;
-        refMechanicsJumping.addShockFromPosition(sizeBlock2MinusRadius + offsetFar);
-        _updateOutputs.push_back(std::make_shared<SoundOutput>("strikingWall"));
-        return;
-    }
-
-    const auto aboveVeryFarX = offsetPosX + 3 * lookVec.at(0);
-    const auto aboveVeryFarY = offsetPosY + 3 * lookVec.at(1);
-    const auto aboveVeryFarZ = offsetPosZ + 3 * lookVec.at(2);
-    const CstBlock_sptr blockVeryFar = getBlock({aboveVeryFarX, aboveVeryFarY, aboveVeryFarZ});
-
-    if (_jumpingType == Ball::JumpingType::Long && blockVeryFar && blockVeryFar->isExists()) {
-        constexpr float offsetVeryFar = 2.f;
-        refMechanicsJumping.addShockFromPosition(sizeBlock2MinusRadius + offsetVeryFar);
-        return;
-    }
-    refMechanicsJumping.timesShock({});
 }
 
 const ClassicalMechanics &Ball::getMechanicsJumping() const noexcept {
@@ -718,7 +724,7 @@ Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
         );
     };
 
-    const auto computeScale = [this, &crushingScale, &currentSideVec](){
+    const auto computeScale = [this, &crushingScale, &currentSideVec]() {
         if (_stateOfLife == Ball::StateOfLife::Dead) {
             return JBTypes::vec3f{0.f, 0.f, 0.f};
         }

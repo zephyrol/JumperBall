@@ -265,8 +265,6 @@ private:
 
     ClassicalMechanics &getMechanicsJumping() noexcept;
 
-    void isGoingStraightAheadIntersectBlock() noexcept;
-
     void internalUpdate() noexcept;
 
     void fallingUpdate() noexcept;
