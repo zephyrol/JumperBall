@@ -95,7 +95,7 @@ void SceneRendering::update() {
         Utility::colorAsVec3(sceneBall->getTeleportationColor()),
         glm::vec1(sceneBall->getTeleportationCoefficient()),
         Utility::convertToOpenGLFormat(sceneBall->get3DPosition()),
-        sceneCamera->ballLookingDirection()
+        sceneCamera->cameraLookingDirection()
     );
 
     for (const auto &process: _processes) {

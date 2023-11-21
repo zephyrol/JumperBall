@@ -8,7 +8,7 @@ uniform Scene {
     vec3 flashColor;
     float teleportationCoeff;
     vec3 ballPosition;
-    vec3 ballLookingDirection;
+    vec3 cameraLookingDirection;
 };
 
 uniform sampler2DShadow depthTexture;
@@ -75,7 +75,7 @@ bool isInBoundingBox(vec3 v, vec3 bMin, vec3 bMax) {
 }
 
 void checkDiscarding() {
-    if(dot(fs_vertexPositionWorld - (ballPosition - ballLookingDirection * 0.5), ballLookingDirection) < 0) {
+    if(dot(fs_vertexPositionWorld - (ballPosition - cameraLookingDirection * 0.5), cameraLookingDirection) < 0) {
         discard;
     }
 

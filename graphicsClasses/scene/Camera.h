@@ -30,8 +30,6 @@ public:
 
     const glm::vec3 &pos() const noexcept;
 
-    const glm::vec3 &ballLookingDirection() const noexcept;
-
     glm::mat4 viewProjection() const noexcept;
 
     void update(
@@ -66,7 +64,9 @@ private:
     glm::vec3 _pos;
     glm::vec3 _center;
     glm::vec3 _up;
-    glm::vec3 _ballLookingDirection;
+    glm::vec3 _discardingBoundingBoxesMax;
+    glm::vec3 _discardingBoundingBoxAboveMin;
+    glm::vec3 _discardingBoundingBoxBehindMin;
     float _timePointComeBack;
     float _timePointGoAbove;
     glm::mat4 _perspectiveMatrix;

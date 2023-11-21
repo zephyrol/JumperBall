@@ -17,7 +17,9 @@ Camera::Camera(const Map &map, float ratio) :
     _pos(1.f, 0.f, 0.f),
     _center(0.f, 0.f, 0.f),
     _up(0.f, 1.f, 0.f),
-    _ballLookingDirection(0.f),
+    _discardingBoundingBoxesMax(0.f, 0.f, 0.f),
+    _discardingBoundingBoxAboveMin(0.f, 0.f, 0.f),
+    _discardingBoundingBoxBehindMin(0.f, 0.f, 0.f),
     _timePointComeBack(0.f),
     _timePointGoAbove(0.f),
     _perspectiveMatrix(glm::perspective(_fovY, ratio, zNear, _zFar)) {
@@ -133,9 +135,9 @@ void Camera::followingBallUpdate() noexcept {
     const glm::vec3 offsetDirection = glm::normalize(initCenterCam - toInitialCameraPosition);
     const glm::vec3 initPosCam = toInitialCameraPosition + _localOffset * offsetDirection;
 
-
     const JBTypes::vec3f &position = ball.get3DPosition();
-    const glm::mat4 matPosBall = glm::translate(Utility::convertToOpenGLFormat(position));
+    const auto vecBallPosition = Utility::convertToOpenGLFormat(position);
+    const glm::mat4 matPosBall = glm::translate(vecBallPosition);
     matRotationCam *= glm::toMat4(quaternion);
     const glm::mat4 matPosBallRotationCam = matPosBall * matRotationCam;
 
@@ -148,7 +150,31 @@ void Camera::followingBallUpdate() noexcept {
     const glm::vec3 upVector = matRotationCam * glm::vec4(glm::cross(axisRotation, vecLookingDirection), 1.f);
     _up = upVector;
 
-    _ballLookingDirection = matRotationCam * glm::vec4(vecLookingDirection, 1.f);
+
+    glm::vec3 boundingBoxAboveDir;
+    glm::vec3 boundingBoxBehindDir;
+    if (cameraAboveWay < 0.5f) {
+        boundingBoxAboveDir = toSkyVec3;
+        boundingBoxBehindDir = -vecLookingDirection;
+    } else {
+        boundingBoxAboveDir = vecLookingDirection;
+        boundingBoxBehindDir = toSkyVec3;
+    }
+
+    constexpr auto abovePointDistance = 10.f;
+    const auto boundingBoxAbovePoint = vecBallPosition + abovePointDistance *
+                                                         (boundingBoxAboveDir + axisRotation +
+                                                          boundingBoxBehindDir);
+    const auto boundingBoxBehindPoint1 = vecBallPosition + (1.f - ball.getRadius()) * boundingBoxAboveDir
+                                         - boundingBoxBehindDir * 0.5f - axisRotation * abovePointDistance;
+    const auto boundingBoxBehindPoint2 = vecBallPosition + boundingBoxBehindDir * 0.5f -
+                                         abovePointDistance * (boundingBoxAboveDir + axisRotation);
+
+    _discardingBoundingBoxesMax = glm::vec3(
+        std::max()
+    );
+    _discardingBoundingBoxAboveMin = glm::vec3(0);
+    _discardingBoundingBoxBehindMin = glm::vec3(0);
 }
 
 void Camera::turningAroundMapUpdate() noexcept {
@@ -188,6 +214,9 @@ void Camera::turningAroundMapUpdate() noexcept {
     _pos = cameraPosition;
     _center = center;
     _up = up;
+    _discardingBoundingBoxesMax = glm::vec3(0);
+    _discardingBoundingBoxAboveMin = glm::vec3(0);
+    _discardingBoundingBoxBehindMin = glm::vec3(0);
 }
 
 bool Camera::approachingBallUpdate() noexcept {
@@ -242,6 +271,9 @@ bool Camera::approachingBallUpdate() noexcept {
     };
     _center = centerVec;
     _up = upVector;
+    _discardingBoundingBoxesMax = glm::vec3(0);
+    _discardingBoundingBoxAboveMin = glm::vec3(0);
+    _discardingBoundingBoxBehindMin = glm::vec3(0);
 
     return animationIsFinished;
 }
@@ -275,8 +307,8 @@ const glm::vec3 &Camera::pos() const noexcept {
     return _pos;
 }
 
-const glm::vec3 &Camera::ballLookingDirection() const noexcept {
-    return _ballLookingDirection;
+const glm::vec3 &Camera::cameraLookingDirection() const noexcept {
+    return _lookingDirection;
 }
 
 glm::mat4 Camera::viewProjection() const noexcept {

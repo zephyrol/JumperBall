@@ -27,7 +27,7 @@ public:
         const glm::vec3 &flashColor,
         const glm::vec1 &teleportationCoeff,
         const glm::vec3 &ballPosition,
-        const glm::vec3 &ballLookingDirection
+        const glm::vec3 &cameraLookingDirection
     );
 
 private:

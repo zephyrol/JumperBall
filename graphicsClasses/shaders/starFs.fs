@@ -8,7 +8,7 @@ uniform Scene {
     vec3 flashColor;
     float teleportationCoeff;
     vec3 ballPosition;
-    vec3 ballLookingDirection;
+    vec3 cameraLookingDirection;
 };
 
 out vec4 pixelColor;
