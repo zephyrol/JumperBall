@@ -26,6 +26,11 @@ public:
         Node_sptr &&rightDigitNode,
         Node_sptr &&coinsTensDigit,
         Node_sptr &&coinsUnitsDigit,
+        Label_sptr leftArrow,
+        Label_sptr rightArrow,
+        Label_sptr upArrow,
+        Label_sptr downArrow,
+        Label_sptr jumpArrow,
         Label_sptr key1,
         Label_sptr key2,
         Label_sptr key3,
@@ -85,15 +90,26 @@ private:
     Label_sptr _key3;
     Label_sptr _key4;
     Label_sptr _coinSymbol;
+    Label_sptr _leftArrow;
+    Label_sptr _rightArrow;
+    Label_sptr _upArrow;
+    Label_sptr _downArrow;
+    Label_sptr _jumpArrow;
+    vecNode_sptr _nodesToTestIntersection;
 
     CstItemsContainer_sptr _itemsContainer;
 
-    static const int arrowLabelId;
-    static const int key1LabelId;
-    static const int key2LabelId;
-    static const int key3LabelId;
-    static const int key4LabelId;
-    static const int coinSymbolLabelId;
+    static constexpr int arrowLabelId = -1;
+    static constexpr int key1LabelId = 501;
+    static constexpr int key2LabelId = 502;
+    static constexpr int key3LabelId = 503;
+    static constexpr int key4LabelId = 504;
+    static constexpr int coinSymbolLabelId = 400;
+    static constexpr int leftArrowLabelId = 401;
+    static constexpr int rightArrowLabelId = 402;
+    static constexpr int upArrowLabelId = 403;
+    static constexpr int downArrowLabelId = 404;
+    static constexpr int jumpArrowLabelId = 405;
 
     static vecNode_sptr createNodes(float ratio);
 };

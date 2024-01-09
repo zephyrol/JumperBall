@@ -75,6 +75,14 @@ void main() {
     } else {
         fs_needsCheckingKey = -1.0;
         fs_keyColor = vec3(0.0);
+
+        if(vs_labelId >= 401) {
+
+        }
+        // Control symbols
+        if(vs_labelId > 4)
+
+
     }
 
     // Coin symbol

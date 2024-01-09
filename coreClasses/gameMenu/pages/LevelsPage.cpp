@@ -30,7 +30,7 @@ LevelsPage::LevelsPage(
     _backgroundLabel(std::move(backgroundLabel)),
     _arrowLabel(std::move(arrowLabel)),
     _inGamePage(nullptr),
-    _nodesToTestIntersection(createNodesToTestIntersection()){
+    _nodesToTestIntersection(createNodesToTestIntersection()) {
 }
 
 LevelsPage_sptr LevelsPage::createInstance(
@@ -135,7 +135,7 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
 
 vecNode_sptr LevelsPage::createNodesToTestIntersection() const {
     std::vector<Node_sptr> nodesToTest{};
-    for (const auto& level: _levels) {
+    for (const auto &level: _levels) {
         nodesToTest.emplace_back(level);
     }
     return nodesToTest;

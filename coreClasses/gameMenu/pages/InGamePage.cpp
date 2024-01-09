@@ -25,6 +25,11 @@ InGamePage::InGamePage(
     Label_sptr key3,
     Label_sptr key4,
     Label_sptr coinSymbol,
+    Label_sptr leftArrow,
+    Label_sptr rightArrow,
+    Label_sptr upArrow,
+    Label_sptr downArrow,
+    Label_sptr jumpArrow,
     const Page_sptr &parent,
     CstItemsContainer_sptr itemsContainer
 ) : Page(std::move(player)),
@@ -40,6 +45,23 @@ InGamePage::InGamePage(
     _key3(std::move(key3)),
     _key4(std::move(key4)),
     _coinSymbol(std::move(coinSymbol)),
+    _leftArrow(std::move(leftArrow)),
+    _rightArrow(std::move(rightArrow)),
+    _upArrow(std::move(upArrow)),
+    _downArrow(std::move(downArrow)),
+    _jumpArrow(std::move(jumpArrow)),
+    _nodesToTestIntersection(
+        [this]() -> decltype(_nodesToTestIntersection) {
+            return {
+                _arrowLabel->getNode(),
+                _leftArrow->getNode(),
+                _rightArrow->getNode(),
+                _upArrow->getNode(),
+                _downArrow->getNode(),
+                _jumpArrow->getNode()
+            };
+        }()
+    ),
     _itemsContainer(std::move(itemsContainer)) {
 }
 
@@ -64,6 +86,11 @@ InGamePage_sptr InGamePage::createInstance(
         std::make_shared<Label>(std::move(nodes[8]), JBTypes::Color::Yellow, key3LabelId),
         std::make_shared<Label>(std::move(nodes[9]), JBTypes::Color::Yellow, key4LabelId),
         std::make_shared<Label>(std::move(nodes[10]), JBTypes::Color::Yellow, coinSymbolLabelId),
+        std::make_shared<Label>(std::move(nodes[11]), JBTypes::Color::Yellow, leftArrowLabelId),
+        std::make_shared<Label>(std::move(nodes[12]), JBTypes::Color::Yellow, rightArrowLabelId),
+        std::make_shared<Label>(std::move(nodes[13]), JBTypes::Color::Yellow, upArrowLabelId),
+        std::make_shared<Label>(std::move(nodes[14]), JBTypes::Color::Yellow, downArrowLabelId),
+        std::make_shared<Label>(std::move(nodes[15]), JBTypes::Color::Yellow, jumpArrowLabelId),
         parent,
         std::move(itemsContainer)
     );
@@ -95,6 +122,11 @@ void InGamePage::resize(float ratio) {
     _key3 = std::make_shared<Label>(nodes[8], JBTypes::Color::Yellow, key3LabelId);
     _key4 = std::make_shared<Label>(nodes[9], JBTypes::Color::Yellow, key4LabelId);
     _coinSymbol = std::make_shared<Label>(nodes[10], JBTypes::Color::Yellow, coinSymbolLabelId);
+    _leftArrow = std::make_shared<Label>(nodes[11], JBTypes::Color::Yellow, leftArrowLabelId);
+    _rightArrow = std::make_shared<Label>(nodes[12], JBTypes::Color::Yellow, rightArrowLabelId);
+    _upArrow = std::make_shared<Label>(nodes[13], JBTypes::Color::Yellow, upArrowLabelId);
+    _downArrow = std::make_shared<Label>(nodes[14], JBTypes::Color::Yellow, downArrowLabelId);
+    _jumpArrow = std::make_shared<Label>(nodes[15], JBTypes::Color::Yellow, jumpArrowLabelId);
 }
 
 vecCstTextNode_uptr InGamePage::genTextNodes() const {
@@ -185,13 +217,6 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
 std::vector<std::string> InGamePage::shaderDefines() const {
     return {"TEST_KEY", "TEST_COIN"};
 }
-
-const int InGamePage::arrowLabelId = -1;
-const int InGamePage::key1LabelId = 501;
-const int InGamePage::key2LabelId = 502;
-const int InGamePage::key3LabelId = 503;
-const int InGamePage::key4LabelId = 504;
-const int InGamePage::coinSymbolLabelId = 400;
 
 std::string InGamePage::getVertexShaderName() const {
     return "inGamePageVs.vs";
