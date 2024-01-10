@@ -174,14 +174,22 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
     const auto middleDigitNode = std::make_shared<CenteredNode>(digitsNode, digitNodesRatio);
     const auto rightDigitNode = std::make_shared<RightNode>(digitsNode, digitNodesRatio);
 
-    constexpr auto footNodeDefaultRatio = 10.f;
+    constexpr auto footNodeDefaultRatio = 2.5f;
+    const auto footNodeRatio = footNodeDefaultRatio * ratio;
     const auto footNode = std::make_shared<DownNode>(
         resizedScreenNode,
-        std::max(footNodeDefaultRatio, footNodeDefaultRatio * ratio)
+        std::max(footNodeDefaultRatio, footNodeRatio)
+    );
+
+    constexpr auto keysCoinNodeRatioScalar = 4.f;
+    const auto keysCoinNodeRatio = footNodeRatio * keysCoinNodeRatioScalar;
+    const auto keysCoinNode = std::make_shared<DownNode>(
+        footNode,
+        keysCoinNodeRatio
     );
 
     constexpr auto keysNodeRatio = 3.f;
-    const auto keysNode = std::make_shared<RightNode>(footNode, keysNodeRatio);
+    const auto keysNode = std::make_shared<RightNode>(keysCoinNode, keysNodeRatio);
 
     constexpr auto keyNodesRatio = 1.f;
     const auto rightKeyNode = std::make_shared<HorizontalNode>(keysNode, keyNodesRatio, 1.f);
@@ -191,13 +199,21 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
 
     constexpr auto coinsNodeRatio = 2.5f;
     constexpr auto coinNodesRatio = 1.f;
-    const auto coinsNode = std::make_shared<LeftNode>(footNode, coinsNodeRatio);
+    const auto coinsNode = std::make_shared<LeftNode>(keysCoinNode, coinsNodeRatio);
     const auto coinSymbolNode = std::make_shared<LeftNode>(coinsNode, coinNodesRatio);
     const auto footCoinNode = std::make_shared<DownNode>(coinSymbolNode, 1.2f);
     const auto littleCoinNode = std::make_shared<CenteredNode>(footCoinNode, 1.f);
     const auto coinsDigitNode = std::make_shared<RightNode>(coinsNode, coinsNodeRatio - coinNodesRatio);
     const auto coinsTensDigit = std::make_shared<LeftNode>(coinsDigitNode, coinNodesRatio);
     const auto coinsUnitsDigit = std::make_shared<RightNode>(coinsDigitNode, coinNodesRatio);
+
+    constexpr auto arrowsNodeHeight = keysCoinNodeRatioScalar - 1.f;
+    constexpr auto arrowsNodeScalar = keysCoinNodeRatioScalar / arrowsNodeHeight;
+    const auto arrowsNodeRatio = footNodeRatio * arrowsNodeScalar;
+    const auto arrowsNode = std::make_shared<UpNode>(
+        footNode,
+        arrowsNodeRatio
+    );
 
     return {
         arrowNode,
