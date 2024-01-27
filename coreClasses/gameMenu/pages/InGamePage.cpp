@@ -331,3 +331,15 @@ void InGamePage::update(const Mouse &mouse) {
 std::shared_ptr<ArrowLabel> InGamePage::createInGameArrowLabel(const Node_sptr &headerNode) {
     return createArrowLabel(headerNode, InGamePage::arrowLabelId, true, 1.5f);
 }
+
+const short InGamePage::arrowLabelId = -1;
+const short InGamePage::key1LabelId = 501;
+const short InGamePage::key2LabelId = 502;
+const short InGamePage::key3LabelId = 503;
+const short InGamePage::key4LabelId = 504;
+const short InGamePage::coinSymbolLabelId = 400;
+const short InGamePage::leftArrowLabelId = 401;
+const short InGamePage::rightArrowLabelId = 402;
+const short InGamePage::upArrowLabelId = 403;
+const short InGamePage::downArrowLabelId = 404;
+const short InGamePage::jumpArrowLabelId = 405;

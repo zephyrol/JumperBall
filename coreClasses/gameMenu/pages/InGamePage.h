@@ -99,17 +99,17 @@ private:
 
     CstItemsContainer_sptr _itemsContainer;
 
-    static constexpr int arrowLabelId = -1;
-    static constexpr int key1LabelId = 501;
-    static constexpr int key2LabelId = 502;
-    static constexpr int key3LabelId = 503;
-    static constexpr int key4LabelId = 504;
-    static constexpr int coinSymbolLabelId = 400;
-    static constexpr int leftArrowLabelId = 401;
-    static constexpr int rightArrowLabelId = 402;
-    static constexpr int upArrowLabelId = 403;
-    static constexpr int downArrowLabelId = 404;
-    static constexpr int jumpArrowLabelId = 405;
+    static const short arrowLabelId;
+    static const short key1LabelId;
+    static const short key2LabelId;
+    static const short key3LabelId;
+    static const short key4LabelId;
+    static const short coinSymbolLabelId;
+    static const short leftArrowLabelId;
+    static const short rightArrowLabelId;
+    static const short upArrowLabelId;
+    static const short downArrowLabelId;
+    static const short jumpArrowLabelId;
 
     static vecNode_sptr createNodes(float ratio);
 };
