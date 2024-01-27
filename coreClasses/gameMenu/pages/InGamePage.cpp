@@ -331,7 +331,19 @@ Displayable::DynamicValues<int> InGamePage::getDynamicIntValues() const {
 }
 
 vecCstLabel_sptr InGamePage::labels() const {
-    return {_arrowLabel, _key1, _key2, _key3, _key4, _coinSymbol};
+    return {
+        _arrowLabel,
+        _key1,
+        _key2,
+        _key3,
+        _key4,
+        _coinSymbol,
+        _leftArrow,
+        // _rightArrow,
+        // _upArrow,
+        // _downArrow,
+        _jumpArrow
+    };
 }
 
 void InGamePage::setItemsContainer(CstItemsContainer_sptr itemsContainer) {
