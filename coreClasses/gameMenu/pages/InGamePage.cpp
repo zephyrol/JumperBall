@@ -214,6 +214,25 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
         footNode,
         arrowsNodeRatio
     );
+    constexpr auto horizontalNodesRatio = 3.f;
+
+    const auto squareArrowsNode = std::make_shared<LeftNode>(arrowsNode, 1.f);
+    constexpr auto verticalNodesRatio = 1.f / horizontalNodesRatio;
+
+    const auto squareLeftSide = std::make_shared<LeftNode>(squareArrowsNode, horizontalNodesRatio);
+    const auto leftArrowNode = std::make_shared<CenteredNode>(squareLeftSide, 1.f);
+
+    const auto squareRightSide = std::make_shared<RightNode>(squareArrowsNode, horizontalNodesRatio);
+    const auto rightArrowNode = std::make_shared<CenteredNode>(squareRightSide, 1.f);
+
+    const auto squareUpSide = std::make_shared<UpNode>(squareArrowsNode, verticalNodesRatio);
+    const auto upArrowNode = std::make_shared<CenteredNode>(squareUpSide, 1.f);
+
+    const auto squareDownSide = std::make_shared<DownNode>(squareArrowsNode, verticalNodesRatio);
+    const auto downArrowNode = std::make_shared<CenteredNode>(squareDownSide, 1.f);
+
+    const auto jumpNode = std::make_shared<RightNode>(arrowsNode, 1.f);
+    const auto jumpArrowNode = std::make_shared<CenteredNode>(jumpNode, 1.f);
 
     return {
         arrowNode,
@@ -226,12 +245,17 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
         middleKeyNode,
         leftKeyNode,
         lastKeyNode,
-        littleCoinNode
+        littleCoinNode,
+        leftArrowNode,
+        rightArrowNode,
+        upArrowNode,
+        downArrowNode,
+        jumpArrowNode
     };
 }
 
 std::vector<std::string> InGamePage::shaderDefines() const {
-    return {"TEST_KEY", "TEST_COIN"};
+    return {"TEST_KEY", "TEST_COIN", "TEST_ARROW"};
 }
 
 std::string InGamePage::getVertexShaderName() const {
@@ -244,7 +268,8 @@ Displayable::DynamicNames InGamePage::getDynamicFloatNames() const {
 
 Displayable::DynamicValues<float> InGamePage::getDynamicFloatValues() const {
     const auto remainingTime = _player->getRemainingTime();
-    if (remainingTime > 9.f) {
+    constexpr auto colorEffectTimeThreshold = 9.f;
+    if (remainingTime > colorEffectTimeThreshold) {
         return {0.f};
     }
     constexpr auto periodFactor = 15.f;

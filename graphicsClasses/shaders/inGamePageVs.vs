@@ -77,11 +77,9 @@ void main() {
         fs_keyColor = vec3(0.0);
 
         if(vs_labelId >= 401) {
-
+            fs_isLetter = -1.0;
+            discarding = false;
         }
-        // Control symbols
-        if(vs_labelId > 4)
-
 
     }
 

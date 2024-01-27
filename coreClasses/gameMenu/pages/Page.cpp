@@ -60,6 +60,7 @@ std::shared_ptr<ArrowLabel> Page::createArrowLabel(
     auto arrowLabel = std::make_shared<ArrowLabel>(
         node,
         JBTypes::Color::Blue,
+        JBTypes::Direction::West,
         labelId
     );
     return arrowLabel;

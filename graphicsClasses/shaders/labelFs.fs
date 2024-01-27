@@ -52,17 +52,16 @@ out vec4 pixelColor;
 #endif
 
 #ifdef(TEST_COIN)
-vec3 getCoinColor() {
-    float x = fs_vertexUVs.x - 0.5;
-    float y = fs_vertexUVs.y - 0.5;
-    float pixelDistance = sqrt(x * x + y * y);
-    if(pixelDistance > 0.5) {
-        discard;
+    vec3 getCoinColor() {
+        float x = fs_vertexUVs.x - 0.5;
+        float y = fs_vertexUVs.y - 0.5;
+        float pixelDistance = sqrt(x * x + y * y);
+        if(pixelDistance > 0.5) {
+            discard;
+        }
+        return mix(vec3(0.95, 0.95, 0.8), vec3(0.5, 0.25, 0.0), pixelDistance * 2.0);
     }
-    return mix(vec3(0.95, 0.95, 0.8), vec3(0.5, 0.25, 0.0), pixelDistance * 2.0);
-}
 #endif
-
 
 #ifdef(TEST_BALL)
 
