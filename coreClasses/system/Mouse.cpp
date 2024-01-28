@@ -156,7 +156,7 @@ void Mouse::releasedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
         _mouseCoords->xCoord,
         _mouseCoords->yCoord
     );
-    constexpr float pressTimeThreshold = 0.15f; // in seconds
+    constexpr float pressTimeThreshold = 0.3f; // in seconds
     constexpr float thresholdMoving = 0.03f;
     if (
         distance < thresholdMoving
