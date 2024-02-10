@@ -61,9 +61,9 @@ Node_sptr LevelsPage::createHeaderNode(const Node_sptr &commonNode) {
 vecNode_sptr LevelsPage::createLevelsNodes(const Node_sptr &commonNode) {
     vecNode_sptr levelsNodes;
     const auto levelsMainNode = std::make_shared<DownNode>(commonNode, 9.f / 18.f);
-    const auto numberOfLevelsFloat = static_cast<float>(LevelsPage::numberOfLevels);
+    const auto numberOfLevelsFloat = static_cast<float>(Player::maxLevel);
     constexpr auto positionFactor = 4.f;
-    for (size_t i = 0; i < LevelsPage::numberOfLevels; i += 3) {
+    for (size_t i = 0; i < Player::maxLevel; i += 3) {
         const auto positionY = static_cast<float>(i) / numberOfLevelsFloat;
         const auto verticalNode = std::make_shared<VerticalNode>(
             levelsMainNode,
@@ -71,13 +71,16 @@ vecNode_sptr LevelsPage::createLevelsNodes(const Node_sptr &commonNode) {
             1.f - positionY * positionFactor
         );
 
-        auto leftLevel = LevelsPage::createLevelNode<LeftNode>(verticalNode);
+        const auto levelNumber = i + 1;
+        const auto needsThreeDigits = levelNumber >= 100;
+
+        auto leftLevel = LevelsPage::createLevelNode<LeftNode>(verticalNode, needsThreeDigits);
         levelsNodes.push_back(std::move(leftLevel));
 
-        auto middleLevel = LevelsPage::createLevelNode<CenteredNode>(verticalNode);
+        auto middleLevel = LevelsPage::createLevelNode<CenteredNode>(verticalNode, needsThreeDigits);
         levelsNodes.push_back(std::move(middleLevel));
 
-        auto rightLevel = LevelsPage::createLevelNode<RightNode>(verticalNode);
+        auto rightLevel = LevelsPage::createLevelNode<RightNode>(verticalNode, needsThreeDigits);
         levelsNodes.push_back(std::move(rightLevel));
     }
 
@@ -119,7 +122,7 @@ Page_sptr LevelsPage::click(float mouseX, float mouseY) {
     }
 
     const auto nearest = Node::getNearest(_nodesToTestIntersection, mouseX, mouseY - getOffsetY());
-    for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
+    for (size_t i = 0; i < Player::maxLevel; ++i) {
         if (nearest == _levels[i]) {
             const auto levelNumber = i + 1;
             if (levelNumber > _player->levelProgression()) {
@@ -160,7 +163,7 @@ void LevelsPage::update(const Mouse &mouse) {
 
     const auto nearest = Node::getNearest(_nodesToTestIntersection, mouseX, mouseY - getOffsetY());
 
-    for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
+    for (size_t i = 0; i < Player::maxLevel; ++i) {
         if (nearest == _levels[i]) {
             const auto levelNumber = i + 1;
             if (levelNumber <= _player->levelProgression()) {
@@ -193,7 +196,7 @@ void LevelsPage::setInGamePage(Page_sptr inGamePage) {
 vecCstTextNode_uptr LevelsPage::genTextNodes() const {
     decltype(genTextNodes()) textNodes;
 
-    for (size_t i = 0; i < LevelsPage::numberOfLevels; ++i) {
+    for (size_t i = 0; i < Player::maxLevel; ++i) {
         const auto levelNumber = static_cast<int> (i) + 1;
         textNodes.emplace_back(new TextNode(
             _levels[i],

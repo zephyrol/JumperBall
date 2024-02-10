@@ -76,7 +76,7 @@ private:
 
 
     template<class T>
-    static std::shared_ptr<T> createLevelNode(const Node_sptr &parent);
+    static std::shared_ptr<T> createLevelNode(const Node_sptr &parent, bool needsThreeDigits);
 
     static vecNode_sptr createLevelsNodes(const Node_sptr &commonNode);
 
@@ -91,14 +91,14 @@ private:
     vecNode_sptr createNodesToTestIntersection() const;
 
     static const int arrowLabelId;
-    static constexpr size_t numberOfLevels = 99;
     static constexpr float arrowTouchThreshold = 1.25f;
 };
 
 template<class T>
-std::shared_ptr<T> LevelsPage::createLevelNode(const Node_sptr &parent) {
-    constexpr float levelNodeRatio = 1.f;
-    return std::make_shared<T>(parent, levelNodeRatio);
+std::shared_ptr<T> LevelsPage::createLevelNode(const Node_sptr &parent, bool needsThreeDigits) {
+    constexpr auto twoDigitsNodeRatio = 1.f;
+    constexpr auto threeDigitsNodeRatio = 1.3f;
+    return std::make_shared<T>(parent, needsThreeDigits ? threeDigitsNodeRatio : twoDigitsNodeRatio);
 }
 
 
