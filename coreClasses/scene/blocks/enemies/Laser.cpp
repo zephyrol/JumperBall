@@ -44,7 +44,7 @@ bool Laser::touchingTest() const {
     const auto &boundingSpherePosition = ball->get3DPosition();
     const auto &boundingSphereRadius = ball->getRadius();
 
-    constexpr float offsetLaser = 0.5f;
+    constexpr float offsetLaser = 0.20f;
 
     const float entityMinX = boundingSpherePosition.x - boundingSphereRadius;
     const float entityMaxX = boundingSpherePosition.x + boundingSphereRadius;
