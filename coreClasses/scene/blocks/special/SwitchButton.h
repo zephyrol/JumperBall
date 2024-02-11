@@ -16,7 +16,7 @@ public:
         const JBTypes::Dir &dir,
         const JBTypes::vec3ui &position,
         const Ball_sptr &ball,
-        bool isActivated = true
+        bool isActivated
     );
 
     DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;

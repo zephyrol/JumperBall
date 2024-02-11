@@ -19,7 +19,7 @@ public:
         const JBTypes::Dir &dir,
         size_t length,
         const Ball_sptr &ball,
-        bool isActivated = true
+        bool isActivated
     );
 
     JBTypes::Color getColor() const override;
