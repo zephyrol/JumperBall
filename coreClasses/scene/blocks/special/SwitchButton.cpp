@@ -43,7 +43,7 @@ vecCstShape_sptr SwitchButton::getShapes() const {
         getColor(),
         std::initializer_list<Transformation>(
             {
-                Transformation(Transformation::Type::Scale, {0.2f, 0.05f, 0.2f}),
+                Transformation(Transformation::Type::Scale, {0.4f, 0.075f, 0.4f}),
                 Transformation(
                     Transformation::Type::Rotation,
                     JBTypesMethods::rotationVectorUpToDir(direction())

@@ -66,10 +66,10 @@ bool Laser::touchingTest() const {
     const float laserMaxY = direction() == JBTypes::Dir::Up
                             ? _position.y + offsetLaser + fLength
                             : _position.y + offsetLaser;
-    const float laserMinZ = direction() == JBTypes::Dir::South
+    const float laserMinZ = direction() == JBTypes::Dir::North
                             ? _position.z - offsetLaser - fLength
                             : _position.z - offsetLaser;
-    const float laserMaxZ = direction() == JBTypes::Dir::North
+    const float laserMaxZ = direction() == JBTypes::Dir::South
                             ? _position.z + offsetLaser + fLength
                             : _position.z + offsetLaser;
 
