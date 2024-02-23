@@ -19,6 +19,7 @@ FireBlock::FireBlock(
 }
 
 Block::Effect FireBlock::detectionEvent() {
+    InteractiveBlock::detectionEvent();
     _ball.lock()->addUpdateOutput(std::make_shared<SoundOutput>("blockTouchedFire"));
     return Block::Effect::Burn;
 }

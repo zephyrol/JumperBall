@@ -57,8 +57,6 @@ std::string Scene::update() {
 
     _camera->update(status, actionRequest == Ball::ActionRequest::MoveCamera);
 
-    //_currentKey = Scene::ActionKey::Nothing;
-
     if (_camera->getMovement() == Camera::Movement::FollowingBall) {
         _player->setAsInGame();
     }

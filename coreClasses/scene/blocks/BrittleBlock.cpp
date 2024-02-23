@@ -63,6 +63,7 @@ bool BrittleBlock::isExists() const {
 }
 
 Block::Effect BrittleBlock::detectionEvent() {
+    InteractiveBlock::detectionEvent();
     if (!_isGoingToBreak) {
         const auto ball = _ball.lock();
         _collisionTime = ball->getActionTime();

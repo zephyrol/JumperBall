@@ -22,10 +22,7 @@ GLFWwindow *initLibraries() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    /*window = glfwCreateWindow(RESOLUTION_X,RESOLUTION_Y,
-       "JumperBall",glfwGetPrimaryMonitor(),
-       nullptr);*/
-    window = glfwCreateWindow(RESOLUTION_X, RESOLUTION_Y, "JumperBall", nullptr, nullptr);
+    window = glfwCreateWindow(RESOLUTION_X, RESOLUTION_Y, "Gravity Globe", nullptr, nullptr);
 
     if (window == nullptr) {
         std::cerr << "Failed to open GLFW window" << std::endl;
@@ -69,7 +66,7 @@ int main(int argc, char **argv) {
         return EXIT_SUCCESS;
     }
 
-    GLFWwindow *glfwWindow = initLibraries();
+    GLFWwindow * const glfwWindow = initLibraries();
 
     int frameBufferWidth;
     int frameBufferHeight;

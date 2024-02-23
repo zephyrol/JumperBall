@@ -167,11 +167,13 @@ std::map<BlockDir, BlockDir> Map::createBlocksTeleportations() const {
     std::map<JBTypes::Color, BlockDir> foundColors{};
     for (const auto &block: _blocks) {
         for (const auto &special: block->getSpecials()) {
-            const auto &color = special->getColor();
-            if (foundColors.find(color) == foundColors.end()) {
-                foundColors[color] = {block, special->direction()};
-            } else {
-                teleportationBlocks[foundColors[color]] = {block, special->direction()};
+            if (special->doesModifyActivator()) {
+                const auto &color = special->getColor();
+                if (foundColors.find(color) == foundColors.end()) {
+                    foundColors[color] = {block, special->direction()};
+                } else {
+                    teleportationBlocks[foundColors[color]] = {block, special->direction()};
+                }
             }
         }
     }

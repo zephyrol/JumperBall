@@ -40,6 +40,8 @@ public:
 
     virtual void applySpecialEffect() = 0;
 
+    virtual bool doesModifyActivator() const;
+
     void switchOnOff();
 
     std::string getDynamicGroupHash() const override;

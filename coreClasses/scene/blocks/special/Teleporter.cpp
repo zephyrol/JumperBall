@@ -26,6 +26,10 @@ void Teleporter::applySpecialEffect() {
     }
 }
 
+bool Teleporter::doesModifyActivator() const {
+    return true;
+}
+
 vecCstShape_sptr Teleporter::getShapes() const {
     const auto teleporterShape = std::make_shared<const Shape>(
         Shape::Aspect::Pedestal,

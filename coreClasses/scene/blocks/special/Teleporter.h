@@ -21,6 +21,8 @@ public:
 
     void applySpecialEffect() override;
 
+    bool doesModifyActivator() const override;
+
     DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
 
     DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;

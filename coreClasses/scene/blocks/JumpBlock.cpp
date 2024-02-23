@@ -23,6 +23,7 @@ std::array<bool, 6> JumpBlock::faceInfo() const {
 }
 
 Block::Effect JumpBlock::detectionEvent() {
+    InteractiveBlock::detectionEvent();
     const auto ball = _ball.lock();
     const unsigned int dir = JBTypesMethods::directionAsInteger(ball->currentSide());
     ball->addUpdateOutput(std::make_shared<SoundOutput>("touchedJumper"));

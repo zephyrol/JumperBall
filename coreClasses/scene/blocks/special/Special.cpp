@@ -50,6 +50,10 @@ bool Special::isActivated() const {
     return _isActivated;
 }
 
+bool Special::doesModifyActivator() const {
+    return false;
+}
+
 void Special::switchOnOff() {
     _isActivated = !_isActivated;
 }
