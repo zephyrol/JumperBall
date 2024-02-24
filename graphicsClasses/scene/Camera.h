@@ -26,7 +26,7 @@ public:
 
     Camera(const Map &map, float ratio);
 
-    static constexpr float zNear = 0.1f;
+    static constexpr float defaultZNear = 0.1f;
 
     const glm::vec3 &pos() const noexcept;
 
@@ -37,7 +37,7 @@ public:
         bool goAbove
     ) noexcept;
 
-    const Movement &getMovement() noexcept;
+    const Movement &getMovement() const noexcept;
 
     void setRatio(float ratio);
 
@@ -45,31 +45,33 @@ public:
 
 private:
 
+    struct CameraLocalInformation {
+        float localOffset;
+        glm::mat4 perspectiveMatrix;
+    };
+
     void turningAroundMapUpdate() noexcept;
 
     void followingBallUpdate() noexcept;
 
     bool approachingBallUpdate() noexcept;
 
-    static float computeFovY(float ratio) noexcept;
-
-    static float computeLocalOffset(float fovY) noexcept;
+    CameraLocalInformation getCameraLocalInformation(float ratio) const noexcept;
 
     const Map &_map;
     const CstChronometer_sptr _chronometer;
-    const float _zFar;
-    float _fovY;
-    float _localOffset;
+    const float _defaultZFar;
+    CameraLocalInformation _cameraLocalInformation;
+
     Movement _movement;
     glm::vec3 _pos;
     glm::vec3 _center;
     glm::vec3 _up;
     float _timePointComeBack;
     float _timePointGoAbove;
-    glm::mat4 _perspectiveMatrix;
 
-    static constexpr float distBehindBall = 0.4f;
-    static constexpr float distAbove = 1.1f;
+    static constexpr float distBehindBall = 1.8f;
+    static constexpr float distAbove = 1.7f;
     static constexpr float distDirPoint = 2.f;
 
 };
