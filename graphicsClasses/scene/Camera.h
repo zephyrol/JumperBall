@@ -46,7 +46,8 @@ public:
 private:
 
     struct CameraLocalInformation {
-        float localOffset;
+        float rearOffset;
+        float frontOffset;
         glm::mat4 perspectiveMatrix;
     };
 
