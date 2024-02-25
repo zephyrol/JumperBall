@@ -58,8 +58,7 @@ Cylinder::BasicInfo Cylinder::computeBasicInfoCylinder(size_t meriCount) {
     Cylinder::BasicInfo basicInfo;
     constexpr float r = 0.5f;
 
-    const float a2 = (360.0f / static_cast <float>(meriCount - 1)) *
-                     JBTypes::pi / 180.0f;
+    const float a2 = JBTypesMethods::degreesToRadians(360.0f / static_cast <float>(meriCount - 1));
 
     basicInfo.positions.emplace_back(0.f, 0.f, 0.f);
     basicInfo.normals.emplace_back(0.f, -1.f, 0.f);

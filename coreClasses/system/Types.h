@@ -125,6 +125,10 @@ namespace JBTypesMethods {
 
     JBTypes::vec3i directionAsVectorInt(JBTypes::Dir dir);
 
+    constexpr float degreesToRadians(float degrees) {
+        return degrees * JBTypes::pi / 180.f;
+    }
+
     bool floatsEqual(float a, float b);
 
 }

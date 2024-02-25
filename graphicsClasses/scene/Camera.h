@@ -17,18 +17,14 @@
 #include "Utility.h"
 
 class Camera : public Displayable {
-
 public:
-
     enum class Movement {
         TurningAroundMap, FollowingBall, ApproachingBall
     };
 
     Camera(const Map &map, float ratio);
 
-    static constexpr float defaultZNear = 0.1f;
-
-    const glm::vec3 &pos() const noexcept;
+    const glm::vec3& pos() const noexcept;
 
     glm::mat4 viewProjection() const noexcept;
 
@@ -37,17 +33,37 @@ public:
         bool goAbove
     ) noexcept;
 
-    const Movement &getMovement() const noexcept;
+    const Movement& getMovement() const noexcept;
 
     void setRatio(float ratio);
 
     static glm::mat4 genVPMatrixFromStar(const Star &star);
 
 private:
-
     struct CameraLocalInformation {
+        /**
+         * \brief Initial distance behind the ball where the camera is placed.
+         */
+        float distanceBehind;
+
+        /**
+         * \brief Initial distance above the ball where the camera is placed.
+         */
+        float distanceAbove;
+
+        /**
+         * \brief Additional offset behind the initial position to make a good visibility.
+         */
         float rearOffset;
+
+        /**
+         * \brief Additional offset above the initial position to make a good visibility.
+         */
         float frontOffset;
+
+        /**
+         * \brief Perpective matrix of the camera to apply in shaders.
+         */
         glm::mat4 perspectiveMatrix;
     };
 
@@ -71,10 +87,12 @@ private:
     float _timePointComeBack;
     float _timePointGoAbove;
 
-    static constexpr float distBehindBall = 1.8f;
-    static constexpr float distAbove = 1.7f;
-    static constexpr float distDirPoint = 2.f;
+    /**
+     * \brief Distance in front of the ball where the camera is looking at.
+     */
+    static constexpr float targetDistance = 2.f;
 
+    static constexpr float defaultZNear = 0.1f;
 };
 
 #endif /* CAMERA_H */

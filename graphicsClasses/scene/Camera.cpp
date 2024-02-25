@@ -121,8 +121,9 @@ void Camera::followingBallUpdate() noexcept {
     const glm::vec3 eulerAngles = cameraAboveWay * (-JBTypes::pi / 2.75f) * axisRotation;
     const glm::quat quaternion(eulerAngles);
 
-    const glm::vec3 toInitialCameraPosition = distAbove * toSkyVec3 - distBehindBall * vecLookingDirection;
-    const glm::vec3 initCenterCam = distDirPoint * vecLookingDirection;
+    const glm::vec3 toInitialCameraPosition = _cameraLocalInformation.distanceAbove * toSkyVec3 -
+        _cameraLocalInformation.distanceBehind * vecLookingDirection;
+    const glm::vec3 initCenterCam = targetDistance * vecLookingDirection;
     const glm::vec3 offsetDirection = glm::normalize(initCenterCam - toInitialCameraPosition);
     const glm::vec3 initPosCam = toInitialCameraPosition + _cameraLocalInformation.rearOffset *
         offsetDirection + _cameraLocalInformation.frontOffset * vecLookingDirection;
@@ -215,8 +216,9 @@ bool Camera::approachingBallUpdate() noexcept {
 
     const auto oneMinusTCos = 1.f - tCos;
 
-    const glm::vec3 toInitialCameraPosition = distAbove * toSkyVec3 - distBehindBall * vecLookingDirection;
-    const glm::vec3 initCenterCam = distDirPoint * vecLookingDirection;
+    const glm::vec3 toInitialCameraPosition = _cameraLocalInformation.distanceAbove * toSkyVec3 -
+        _cameraLocalInformation.distanceBehind * vecLookingDirection;
+    const glm::vec3 initCenterCam = targetDistance * vecLookingDirection;
     const glm::vec3 offsetDirection = glm::normalize(initCenterCam - toInitialCameraPosition);
     const glm::vec3 initPosCam = toInitialCameraPosition + _cameraLocalInformation.rearOffset *
         offsetDirection;
@@ -274,21 +276,42 @@ void Camera::setRatio(float ratio) {
 }
 
 Camera::CameraLocalInformation Camera::getCameraLocalInformation(float ratio) const noexcept {
-    // Default fov x and y on a square
-    constexpr auto defaultFovXAndY = 60.f * JBTypes::pi / 180.f;
+    // 1. Compute initial distance behind the camera.
+
+    // Set the angle between the ground and the initial camera position.
+    constexpr auto groundCameraAngle = JBTypesMethods::degreesToRadians(45.f);
+    constexpr auto cameraViewGoundAngle = JBTypes::pi - groundCameraAngle;
+
+    // Default fov x and y on a square.
+    constexpr auto defaultFovXAndY = JBTypesMethods::degreesToRadians(60.f);
+    constexpr auto halfDefaultFov = defaultFovXAndY / 2.f;
+    constexpr auto phi = JBTypes::pi - halfDefaultFov - cameraViewGoundAngle;
+
+    // Set the distance behind the ball that is always visible.
+    constexpr auto visibilityDistance = 1.f;
+    const auto sinusHalfDefaultFov = sinf(halfDefaultFov);
+    const auto cameraVisibilityPointDistance = sinf(phi) * (targetDistance + visibilityDistance) /
+        sinusHalfDefaultFov;
+
+    const auto distanceBehind = cosf(groundCameraAngle) * cameraVisibilityPointDistance;
+    const auto distanceAbove = sinf(groundCameraAngle) * cameraVisibilityPointDistance;
+
     if (ratio > 1.f) {
         return {
+            distanceBehind,
+            distanceAbove,
             0.f,
             0.f,
             glm::perspective(defaultFovXAndY, ratio, defaultZNear, _defaultZFar)
         };
     }
 
-    constexpr auto groundDistance = distBehindBall + distAbove;
-    constexpr auto squarePositionToTargetDistance = groundDistance * groundDistance + distAbove * distAbove;
+    // 2. Compute Perspective Matrix.
+    const auto groundDistance = distanceBehind + distanceAbove;
+    const auto squarePositionToTargetDistance = groundDistance * groundDistance + distanceAbove *
+        distanceBehind;
     const auto positionToTargetLength = sqrtf(squarePositionToTargetDistance);
 
-    constexpr auto halfDefaultFov = defaultFovXAndY / 2.f;
     const auto tanHalfDefaultFov = tanf(halfDefaultFov);
 
     // The camera has to see lateralDistance on the side of target point.
@@ -296,18 +319,21 @@ Camera::CameraLocalInformation Camera::getCameraLocalInformation(float ratio) co
     const auto rearDistance = lateralDistance / (ratio * tanHalfDefaultFov) - positionToTargetLength;
 
     const auto zNear = defaultZNear; //+ rearDistance;
-    const auto zFar = _defaultZFar;//+ rearDistance;
+    const auto zFar = _defaultZFar; //+ rearDistance;
     const auto perspectiveMatrix = glm::perspective(defaultFovXAndY, ratio, zNear, zFar);
 
-    const auto phi = atan(distAbove / groundDistance);
+    // 3. Compute rear and front offset.
+    // const auto phi = atan(distAbove / groundDistance);
     const auto theta = JBTypes::pi - phi - halfDefaultFov;
 
     // Sinus law
-    const auto frontOffset = sinf(halfDefaultFov) * rearDistance / sinf(theta);
+    const auto frontOffset = sinusHalfDefaultFov * rearDistance / sinf(theta);
 
     const auto rearOffset = -rearDistance;
 
     return {
+        distanceBehind,
+        distanceAbove,
         rearOffset,
         frontOffset,
         perspectiveMatrix
