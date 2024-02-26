@@ -279,7 +279,7 @@ Camera::CameraLocalInformation Camera::getCameraLocalInformation(float ratio) co
     // 1. Compute initial distance behind the camera.
 
     // Set the angle between the ground and the initial camera position.
-    constexpr auto groundCameraAngle = JBTypesMethods::degreesToRadians(45.f);
+    constexpr auto groundCameraAngle = JBTypesMethods::degreesToRadians(50.f);
     constexpr auto cameraViewGoundAngle = JBTypes::pi - groundCameraAngle;
 
     // Default fov x and y on a square.
@@ -288,12 +288,12 @@ Camera::CameraLocalInformation Camera::getCameraLocalInformation(float ratio) co
     constexpr auto phi = JBTypes::pi - halfDefaultFov - cameraViewGoundAngle;
 
     // Set the distance behind the ball that is always visible.
-    constexpr auto visibilityDistance = 1.f;
+    constexpr auto visibilityDistance = 0.5f;
     const auto sinusHalfDefaultFov = sinf(halfDefaultFov);
     const auto cameraVisibilityPointDistance = sinf(phi) * (targetDistance + visibilityDistance) /
         sinusHalfDefaultFov;
 
-    const auto distanceBehind = cosf(groundCameraAngle) * cameraVisibilityPointDistance;
+    const auto distanceBehind = cosf(groundCameraAngle) * cameraVisibilityPointDistance + visibilityDistance;
     const auto distanceAbove = sinf(groundCameraAngle) * cameraVisibilityPointDistance;
 
     if (ratio > 1.f) {
@@ -307,9 +307,9 @@ Camera::CameraLocalInformation Camera::getCameraLocalInformation(float ratio) co
     }
 
     // 2. Compute Perspective Matrix.
-    const auto groundDistance = distanceBehind + distanceAbove;
+    const auto groundDistance = distanceBehind + targetDistance;
     const auto squarePositionToTargetDistance = groundDistance * groundDistance + distanceAbove *
-        distanceBehind;
+        distanceAbove;
     const auto positionToTargetLength = sqrtf(squarePositionToTargetDistance);
 
     const auto tanHalfDefaultFov = tanf(halfDefaultFov);
@@ -324,12 +324,15 @@ Camera::CameraLocalInformation Camera::getCameraLocalInformation(float ratio) co
 
     // 3. Compute rear and front offset.
     // const auto phi = atan(distAbove / groundDistance);
-    const auto theta = JBTypes::pi - phi - halfDefaultFov;
+    constexpr auto theta = JBTypes::pi - phi - halfDefaultFov;
 
     // Sinus law
     const auto frontOffset = sinusHalfDefaultFov * rearDistance / sinf(theta);
 
     const auto rearOffset = -rearDistance;
+
+    std::cout << distanceBehind << "," << distanceAbove << "," << rearOffset <<  "," << frontOffset << std::endl;
+
 
     return {
         distanceBehind,
