@@ -20,7 +20,7 @@
 . . X X X X X . . J W   I F F     S UD
 . . . . . . . . .
 . . . X X X X . . I G 2 G 3 I
-. . X X X . X . . F GI IUD 4 F I
+. . X X X . X . . F GI IUD 4 F NS TRDY
 . . X . . . X . . I GI IUD 4
 . . X X X X X . . E D J UD J UD F B
 . . . . . . . . .
@@ -52,7 +52,7 @@
 
 . . . . . . . . .
 . . . X X X . . . I I I
-. . . X . X . . . F F
+. . . X . X . . . F NS TRUY
 . . . X . X X . . G 4   NI IUD     SI IUD NE
 . . . X X X X . . S WDU     GI KD 5     G 5     G 5
 . . X X . . X . . J UW NI IUD BI KE
