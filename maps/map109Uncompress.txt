@@ -48,7 +48,7 @@
 . X . . . . . . . I
 . . . . X X . . . SI IUD NW     SI IUD NE
 . . X . X X . . . S D     SI KU WS   S E
-. . X . . X . . . NI IDU   SIS CU SRDN E
+. . X . . X . . . NI IDU   SIS CU SRDY E
 . . X X . X . . . NI ID  S D    S EWSD
 . . X X . . . . . JI CD S   S ED
 . . . . . X . . . B
