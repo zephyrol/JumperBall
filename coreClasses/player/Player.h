@@ -122,7 +122,7 @@ public:
      * @param skinNumber between [0-4]
      */
     bool hasBoughtSkin(size_t skinNumber) const;
-    static constexpr unsigned int maxLevel = 115;
+    static constexpr unsigned int maxLevel = 116;
 
     template<typename T>
     static T readValue(std::istringstream& stream);
