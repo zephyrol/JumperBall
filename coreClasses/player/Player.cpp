@@ -17,7 +17,7 @@
 Player::Player(
     DoubleChronometer_sptr doubleChronometer,
     unsigned int money,
-    size_t,
+    size_t levelProgression,
     std::vector<bool> ballSkins,
     unsigned int currentBallSkin,
     bool frenchLanguageIsActivated,
@@ -31,7 +31,7 @@ Player::Player(
     _updateOutputs{},
     _money(money),
     _previousMoney(_money),
-    _levelProgression(maxLevel),
+    _levelProgression(levelProgression),
     _ballSkins(std::move(ballSkins)),
     _currentBallSkin(currentBallSkin),
     _frenchLanguageIsActivated(frenchLanguageIsActivated),
