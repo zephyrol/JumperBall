@@ -17,9 +17,7 @@
 #include "Utility.h"
 
 class Camera : public Displayable {
-
 public:
-
     enum class Movement {
         TurningAroundMap, FollowingBall, ApproachingBall
     };
@@ -44,6 +42,10 @@ public:
     static glm::mat4 genVPMatrixFromStar(const Star &star);
 
 private:
+    struct Offset {
+        float behind;
+        float above;
+    };
 
     void turningAroundMapUpdate() noexcept;
 
@@ -51,16 +53,15 @@ private:
 
     bool approachingBallUpdate() noexcept;
 
-    static float computeFovY(float ratio) noexcept;
+    static constexpr float getFovY() noexcept;
 
-    static float computeLocalOffset(float fovY) noexcept;
+    static Offset getOffset(float ratio);
 
     const Map &_map;
     const CstChronometer_sptr _chronometer;
     const float _zFar;
-    float _fovY;
-    float _localOffset;
     Movement _movement;
+    Offset _offset;
     glm::vec3 _pos;
     glm::vec3 _center;
     glm::vec3 _up;
@@ -68,10 +69,7 @@ private:
     float _timePointGoAbove;
     glm::mat4 _perspectiveMatrix;
 
-    static constexpr float distBehindBall = 0.4f;
-    static constexpr float distAbove = 1.1f;
-    static constexpr float distDirPoint = 2.f;
-
+    static constexpr float targetDistance = 2.f;
 };
 
 #endif /* CAMERA_H */
