@@ -12,13 +12,14 @@ Camera::Camera(const Map &map, float ratio) :
     _chronometer(map.getBall()->getCreationChronometer()),
     _zFar(4.f * map.getLargestSize()),
     _movement(Camera::Movement::TurningAroundMap),
+    _fovY(getFovY(ratio)),
     _offset(getOffset(ratio)),
     _pos(1.f, 0.f, 0.f),
     _center(0.f, 0.f, 0.f),
     _up(0.f, 1.f, 0.f),
     _timePointComeBack(0.f),
     _timePointGoAbove(0.f),
-    _perspectiveMatrix(glm::perspective(getFovY(), ratio, zNear, _zFar)) {
+    _perspectiveMatrix(glm::perspective(getFovY(ratio), ratio, _offset.zNear, _zFar)) {
 }
 
 void Camera::update(
@@ -147,12 +148,10 @@ void Camera::turningAroundMapUpdate() noexcept {
 
     const glm::vec3 center{(xMax - 1.f) / 2.f, (yMax - 1.f) / 2.f, (zMax - 1.f) / 2.f};
 
-    float distanceMax = xMax;
-    if (distanceMax < yMax) distanceMax = yMax;
-    if (distanceMax < zMax) distanceMax = zMax;
+    const float distanceMax = std::max(std::max(xMax, yMax), zMax);
 
-    const float cameraDistanceNear = distanceMax * 1.f;
-    const float cameraDistanceFar = distanceMax * 1.3f;
+    const float cameraDistanceNear = (distanceMax / 2.f) / tan(_offset.halfMinFov) * 1.1f;
+    const float cameraDistanceFar = cameraDistanceNear * 1.3f;
     const float distanceX = cameraDistanceNear +
         (cameraDistanceFar - cameraDistanceNear) *
         ((-cosf(_chronometer->getTime()) + 1.f) / 2.f);
@@ -244,13 +243,14 @@ glm::mat4 Camera::genVPMatrixFromStar(const Star &star) {
         (Utility::convertToOpenGLFormat(position)) - centerWorld
     ) * halfBoundingBoxSize;
 
+    constexpr auto starZNear = 0.1f;
     return glm::ortho(
         -halfBoundingBoxSize,
         halfBoundingBoxSize,
         -halfBoundingBoxSize,
         halfBoundingBoxSize,
-        zNear,
-        zNear + 2.f * halfBoundingBoxSize
+        starZNear,
+        starZNear + 2.f * halfBoundingBoxSize
     ) * glm::lookAt(closeStarPosition, centerWorld, glm::vec3(0.f, 1.f, 0.f));
 }
 
@@ -265,19 +265,27 @@ glm::mat4 Camera::viewProjection() const noexcept {
 
 void Camera::setRatio(float ratio) {
     _offset = getOffset(ratio);
-    _perspectiveMatrix = glm::perspective(getFovY(), ratio, zNear, _zFar);
+    _perspectiveMatrix = glm::perspective(getFovY(ratio), ratio, _offset.zNear, _zFar);
 }
 
-constexpr float Camera::getFovY() noexcept {
-    return 65.f * JBTypes::pi / 180.f;
+float Camera::getFovY(float ratio) noexcept {
+    constexpr auto fovMin = 60.f;
+    constexpr auto fovMax = 70.f;
+    constexpr auto ratioMin = 0.5f;
+    constexpr auto ratioMax = 2.f;
+    const float croppedRatio = std::max(std::min(ratio, ratioMax), ratioMin);
+    const float fovY = fovMax - (croppedRatio - ratioMin) / (ratioMax - ratioMin) * (fovMax - fovMin);
+    return fovY * JBTypes::pi / 180.f;
 }
 
 Camera::Offset Camera::getOffset(float ratio) {
-    constexpr auto initialBehindBallDistance = 1.4f;
-    constexpr auto initialAboveBallDistance = 1.4f;
+    constexpr auto initialBehindBallDistance = 1.5f;
+    constexpr auto initialAboveBallDistance = 1.5f;
+    constexpr auto initialZNear = 0.2f;
 
+    const auto halfFovY = getFovY(ratio) / 2.f;
     if (ratio > 1.f) {
-        return {initialBehindBallDistance, initialAboveBallDistance};
+        return {initialBehindBallDistance, initialAboveBallDistance, initialZNear, halfFovY};
     }
 
     constexpr auto initialGroundDistance = targetDistance + initialBehindBallDistance;
@@ -285,33 +293,28 @@ Camera::Offset Camera::getOffset(float ratio) {
 
     constexpr auto squareInitialAboveDistance = initialAboveBallDistance * initialAboveBallDistance;
 
-    constexpr auto halfFovY = getFovY() / 2.f;
 
     const auto initialCameraToTargetDistance = sqrtf(
         squareInitialAboveDistance + squareInitialGroundDistance
     );
     const auto lateralDistance = initialCameraToTargetDistance * tanf(halfFovY);
-    const auto halfFovX = atanf(ratio * tan(halfFovY));
 
+    const auto halfFovX = atanf(ratio * tan(halfFovY));
     const auto cameraToTargetDistance = lateralDistance / tan(halfFovX);
 
     // Intersept theorem
     const auto cameraToTargetRatio = cameraToTargetDistance / initialCameraToTargetDistance;
-    const auto above = cameraToTargetRatio * initialAboveBallDistance;
+    const auto above = std::min(cameraToTargetRatio * initialAboveBallDistance, 1.8f);
 
     const auto groundDistance = cameraToTargetRatio * initialGroundDistance;
-    const auto behind = groundDistance - initialGroundDistance + initialBehindBallDistance;
+    const auto behind = std::min(groundDistance - initialGroundDistance + initialBehindBallDistance, 2.f);
 
-    constexpr auto maxAbove = 1.80f;
-    if(above > maxAbove) {
-        return {
-            behind,
-            maxAbove
-        };
-    }
+    const auto zNear = behind - initialBehindBallDistance + initialZNear;
 
     return {
+        above,
         behind,
-        above
+        zNear,
+        halfFovX
     };
 }

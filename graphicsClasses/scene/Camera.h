@@ -24,8 +24,6 @@ public:
 
     Camera(const Map &map, float ratio);
 
-    static constexpr float zNear = 0.1f;
-
     const glm::vec3 &pos() const noexcept;
 
     glm::mat4 viewProjection() const noexcept;
@@ -45,6 +43,8 @@ private:
     struct Offset {
         float behind;
         float above;
+        float zNear;
+        float halfMinFov;
     };
 
     void turningAroundMapUpdate() noexcept;
@@ -53,7 +53,7 @@ private:
 
     bool approachingBallUpdate() noexcept;
 
-    static constexpr float getFovY() noexcept;
+    static float getFovY(float ratio) noexcept;
 
     static Offset getOffset(float ratio);
 
@@ -61,6 +61,7 @@ private:
     const CstChronometer_sptr _chronometer;
     const float _zFar;
     Movement _movement;
+    float _fovY;
     Offset _offset;
     glm::vec3 _pos;
     glm::vec3 _center;
