@@ -1,0 +1,14 @@
+57 rebond et 53 inverser
+76 contient le tuto T mais il y a déjà un torn avant quelque part... 74
+donc mettre 74 plus loin
+79 un peu chaud
+87 trop chaud ... met le plus loin
+95 met le BEAUCOUP plus loin
+90 un peu plus loin
+91 aussi un peu plus loin
+94 plus loin
+100 un peu plus loin
+echange 101 et 102
+inverse 110 et 111
+inverse 113 et 115
+mettre un 3eme brittle de tuto, il n'y en a que deux pour l'instant.

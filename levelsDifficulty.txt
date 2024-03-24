@@ -1,0 +1,120 @@
+1
+2
+3
+4
+5 More time
+7 More time
+6
+8
+10 
+9
+11
+15 Trop dur (augmente le temps)
+13 mais un peu + de temps
+14 mais un peu + de temps
+12
+22 Trop dur ... doit être deplacer
+17.0 J
+17.1 J
+19 Un peu dur et pas de J
+20 J OK mais pas tuto J...
+21 OK
+19.5 car plus facile que le 20 et même le 16...
+25.0 B tuto
+25.1 B tuto
+17.3 J tuto mais ++ temps.
+17.2 J tuto 
+27 J
+28 J mais plus + temps
+29 J Assez dur
+30.0 F
+30.3 F Pas ouf pour un tuto mais ok
+32 B chouette
+30.3 F
+28.5 B Plus facile que le 29
+35 B
+30.7 Tuto assez chaud (mettre + 30 sec)
+20... ?
+38 B Mais pas tuto. + 10 sec
+39 B fun fun
+40 J labyrinth pic
+41 F assez chaud
+42 B mon ancien prefere
+43 pute bien passé
+60 J colonne chaud à déplacer
+41.5 F labyrinthique mais plus chaud que 41 (à mettre avec lui...)
+50 B car plus dur que 47
+47 B
+48 J 52
+50 J 
+F 30.1 bon fire test
+28.5 J assez simple
+29 B assez facile
+53 B
+54 B
+55 S Rebond contre falaise
+22 J Facile
+70 J Bien dur
+65 J
+J 40
+100 F skill ouf
+61.0 I tuto
+61.3 I tuto
+61.2 I tuto
+64 I
+65 I
+66 I
+85 I chaud
+71 I moins chaud
+69.0 T tuto
+69.1 T tuto
+80 T chaud
+76 moins chaud
+90 I Chaud
+75 ice tricky
+74 ice tricky
+100 T ultra chaud
+105 I ultra chaud 
+78 I
+T 110 big ultra chaud
+73 I petit rigolo (avant les tricky)
+81.0 Z tuto
+89 Z assez chaud labyrinth
+85 T labyrinth
+61.1 I tuto
+99 rebond mega jumper
+111 plein de Z reflexe
+50 rebond
+88 I cube
+89.0 G tuto
+90 G
+91 G
+92 G
+89.1 G rebond double
+89.2 G tour
+89.4 G laby
+111
+89.3
+99
+98
+100.0 L
+100.1 L
+102 big L
+103 Switch sur ghost :/ L
+104 jolie L
+100.3 L
+115 laby chaud sa mere
+100.2 L
+108.0 T tuto tele
+117 T mais + temps
+109 T bordel
+108.1 T tuto
+116 T légendaire RAJOUTE LE BLOC EN HAUT POUR LE RACCOURCIE !
+107 L Trop de clé (5 au lieu de 4)
+110 T sympa
+120 Ultime
+111 T Labyrinthe fun
+109 T
+114 T
+112 T Cube
+63 I
