@@ -1,58 +1,60 @@
-3 8 6
-1 6 4
+7 7 7
+3 3 1
 90
 
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
 
+. . . . . . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
 
-. . .
-. X . E U
-. X . II IU
-. X . II IU
-. X . B
-. X . B
-. X . SI KU ESW
-. . .
+. . . . . . .
+. X X X X X . N N N N N
+. X X X X X . N     I I     NI IU     NI IU
+. X X X X X . N     FI IU   NI IU     II IU   N
+. X X X X X . N     I    N     I   N 
+. X X X X X . N N N N N
+. . . . . . .
 
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
+. . . . . . .
+. X X X X X . N     F   I  I   N
+. X . . . X . II IE FI IW
+. X . . . X . I II KW
+. X . . . X . F F
+. X X X X X . N I F F N
+. . . . . . .
 
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
+. . . . . . .
+. X X X X X . N  F S S I N 
+. X . . . X . I F
+. X . . . X . S E S W
+. X . . . X . F S W
+. X X X X X . N I S N F N
+. . . . . . .
 
-. . .
-. X . S EW
-. X . S U
-. X . II IUD
-. X . B
-. X . II IUD
-. X . SI KD ESW
-. . .
+. . . . . . .
+. X X X X X . N I I I N
+. X . . . X . II KE F
+. X . . . X . FI IE I
+. X . . . X . I F
+. X X X X X . N    N     F   S N   N
+. . . . . . .
 
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
-. . .
+. . . . . . .
+. X X X X X . N N N N N 
+. X X X X X . N F NI KD F N
+. X X X X X . NI CE     S D     E D     FI CD    N
+. X X X X X . N NI CD F I N 
+. X X X X X . N N N N N
+. . . . . . .
+
+. . . . . . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
