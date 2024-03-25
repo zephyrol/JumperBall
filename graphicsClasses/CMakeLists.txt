@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 
 ADD_SUBDIRECTORY(thirdparty)
 
@@ -15,38 +15,38 @@ SET (CMAKE_CXX_EXTENSIONS OFF)
 
 
 FILE(GLOB SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/frameBuffer/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/controller/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/animations/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/geometry/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/uniformBlocks/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/scene/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/process/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/process/scene/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/process/menu/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/frameBuffer/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/controller/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/animations/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/geometry/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/uniformBlocks/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/scene/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/process/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/process/scene/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/process/menu/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/*.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/gpuGeometryBuffers/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/uniform/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/componentsGeneration/*.cpp)
+		${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/uniform/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/componentsGeneration/*.cpp)
 
 
 FILE(GLOB HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/frameBuffer/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/controller/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/animations/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/geometry/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/uniformBlocks/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/process/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/process/scene/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/process/menu/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/frameBuffer/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/controller/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/animations/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/geometry/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/uniformBlocks/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/graphicMenu/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/process/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/process/scene/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/process/menu/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/*.h
 		${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/gpuGeometryBuffers/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/uniform/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/scene/*.h)
+		${CMAKE_CURRENT_SOURCE_DIR}/process/mesh/uniform/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/scene/*.h)
 
 INSTALL (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR}/bin)
 
