@@ -343,6 +343,9 @@ void InGamePage::setTutorial(Tutorial_uptr tutorial) {
 }
 
 void InGamePage::update(const Mouse &mouse) {
+    if(_tutorial != nullptr) {
+        _tutorial->update();
+    }
     if (!mouse.isPressed()) {
         _currentSelectedLabel = 0;
         return;

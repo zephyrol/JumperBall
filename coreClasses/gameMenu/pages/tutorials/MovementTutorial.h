@@ -5,6 +5,7 @@
 #ifndef MOVEMENTTUTORIAL_H
 #define MOVEMENTTUTORIAL_H
 #include "Tutorial.h"
+#include "system/Chronometer.h"
 
 class MovementTutorial : public Tutorial {
 public:
@@ -12,11 +13,17 @@ public:
 
     std::vector<Tutorial::Message> getMessages() const override;
 
+    float getAnimationTime() override;
+
     short getCurrentMessageNumberId() const override;
+
+    void update() override;
 
 private:
     const CstMovableObject_sptr _movableObject;
     const bool _isInEnglish;
+    unsigned int _currentStep;
+    Chronometer _chronometer;
 };
 
 

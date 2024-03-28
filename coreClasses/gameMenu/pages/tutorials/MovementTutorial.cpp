@@ -6,7 +6,9 @@
 
 MovementTutorial::MovementTutorial(CstMovableObject_sptr movableObject, bool isInEnglish):
     _movableObject(std::move(movableObject)),
-    _isInEnglish(isInEnglish) {
+    _isInEnglish(isInEnglish),
+    _currentStep(0),
+    _chronometer(true) {
 }
 
 std::vector<Tutorial::Message> MovementTutorial::getMessages() const {
@@ -26,6 +28,43 @@ std::vector<Tutorial::Message> MovementTutorial::getMessages() const {
     };
 }
 
+float MovementTutorial::getAnimationTime() {
+    if (_currentStep < 2) {
+        return _chronometer.getTime();
+    }
+    return -_chronometer.getTime();
+}
+
 short MovementTutorial::getCurrentMessageNumberId() const {
-    return 0;
+    if(_currentStep == 0) {
+        return -1;
+    }
+    if(_currentStep < 3) {
+        return 0;
+    }
+    return -1;
+}
+
+void MovementTutorial::update() {
+    _chronometer.update(Chronometer::getTimePointMSNow());
+    if(_currentStep == 0) {
+        if (_chronometer.getTime() > 2.f) {
+            _currentStep++;
+        }
+        return;
+    }
+    if(_currentStep == 1) {
+        if (_movableObject->isGoingAhead()) {
+            _chronometer.reset();
+            _currentStep++;
+        }
+        return;
+    }
+    if(_currentStep == 2) {
+        if (_chronometer.getTime() > 3.f) {
+            _chronometer.reset();
+            _currentStep++;
+        }
+        return;
+    }
 }

@@ -24,8 +24,8 @@ public:
     explicit Chronometer(bool autoStart);
 
     /**
-     * Get chronometer time in ms.
-     * @return Passed time in ms
+     * Get chronometer time in s.
+     * @return Passed time in s.
      */
     float getTime() const;
 
