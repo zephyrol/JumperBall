@@ -1,5 +1,5 @@
 //
-// Created by Sebastien Morgenthaler on 28/03/2024.
+// Created by S.Morgenthaler on 28/03/2024.
 //
 
 #ifndef JUMPTUTORIAL_H
@@ -10,7 +10,6 @@
 class JumpTutorial {
 
 };
-
 
 
 #endif //JUMPTUTORIAL_H

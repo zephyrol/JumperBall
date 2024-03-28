@@ -20,13 +20,16 @@ InGamePage::InGamePage(
     Node_sptr &&rightDigitNode,
     Node_sptr &&coinsTensDigit,
     Node_sptr &&coinsUnitsDigit,
+    Node_sptr &&topTutorialNode,
+    Node_sptr &&bottomTutorialNode,
     Label_sptr key1,
     Label_sptr key2,
     Label_sptr key3,
     Label_sptr key4,
     Label_sptr coinSymbol,
     const Page_sptr &parent,
-    CstItemsContainer_sptr itemsContainer
+    CstItemsContainer_sptr itemsContainer,
+    Tutorial_uptr tutorial
 ) : Page(std::move(player)),
     _parent(parent),
     _arrowLabel(std::move(arrowLabel)),
@@ -35,11 +38,14 @@ InGamePage::InGamePage(
     _rightDigitNode(std::move(rightDigitNode)),
     _coinsTensDigit(std::move(coinsTensDigit)),
     _coinsUnitsDigit(std::move(coinsUnitsDigit)),
+    _topTutorialNode(std::move(topTutorialNode)),
+    _bottomTutorialNode(std::move(bottomTutorialNode)),
     _key1(std::move(key1)),
     _key2(std::move(key2)),
     _key3(std::move(key3)),
     _key4(std::move(key4)),
     _coinSymbol(std::move(coinSymbol)),
+    _tutorial(std::move(tutorial)),
     _itemsContainer(std::move(itemsContainer)) {
 }
 
@@ -47,7 +53,8 @@ InGamePage_sptr InGamePage::createInstance(
     Player_sptr player,
     const Page_sptr &parent,
     float ratio,
-    CstItemsContainer_sptr itemsContainer
+    CstItemsContainer_sptr itemsContainer,
+    Tutorial_uptr tutorial
 ) {
     auto nodes = createNodes(ratio);
     auto arrowLabel = createInGameArrowLabel(nodes[0]);
@@ -59,13 +66,16 @@ InGamePage_sptr InGamePage::createInstance(
         std::move(nodes[3]),
         std::move(nodes[4]),
         std::move(nodes[5]),
+        std::move(nodes[11]),
+        std::move(nodes[12]),
         std::make_shared<Label>(std::move(nodes[6]), JBTypes::Color::Yellow, key1LabelId),
         std::make_shared<Label>(std::move(nodes[7]), JBTypes::Color::Yellow, key2LabelId),
         std::make_shared<Label>(std::move(nodes[8]), JBTypes::Color::Yellow, key3LabelId),
         std::make_shared<Label>(std::move(nodes[9]), JBTypes::Color::Yellow, key4LabelId),
         std::make_shared<Label>(std::move(nodes[10]), JBTypes::Color::Yellow, coinSymbolLabelId),
         parent,
-        std::move(itemsContainer)
+        std::move(itemsContainer),
+        std::move(tutorial)
     );
     return inGamePage;
 }
@@ -95,6 +105,8 @@ void InGamePage::resize(float ratio) {
     _key3 = std::make_shared<Label>(nodes[8], JBTypes::Color::Yellow, key3LabelId);
     _key4 = std::make_shared<Label>(nodes[9], JBTypes::Color::Yellow, key4LabelId);
     _coinSymbol = std::make_shared<Label>(nodes[10], JBTypes::Color::Yellow, coinSymbolLabelId);
+    _topTutorialNode = nodes[11];
+    _bottomTutorialNode = nodes[12];
 }
 
 vecCstTextNode_uptr InGamePage::genTextNodes() const {
@@ -102,27 +114,55 @@ vecCstTextNode_uptr InGamePage::genTextNodes() const {
 
     short nodeCount = 0;
     for (const auto &node: std::vector<Node_sptr>{
-        _leftDigitNode,
-        _middleDigitNode,
-        _rightDigitNode,
-        _coinsTensDigit,
-        _coinsUnitsDigit
-    }) {
+             _leftDigitNode,
+             _middleDigitNode,
+             _rightDigitNode,
+             _coinsTensDigit,
+             _coinsUnitsDigit
+         }) {
         for (unsigned int i = 0; i < 10; ++i) {
-            textNodes.emplace_back(new TextNode(
-                node,
-                std::to_string(i),
-                nodeCount
-            ));
+            textNodes.emplace_back(
+                new TextNode(
+                    node,
+                    std::to_string(i),
+                    nodeCount
+                )
+            );
             ++nodeCount;
         }
     }
+    if (!_tutorial) {
+        return textNodes;
+    }
+    const auto messages = _tutorial->getMessages();
+    for (size_t i = 0; i < messages.size(); ++i) {
+        const auto &message = messages.at(i);
+        auto topStr = message.front();
+        auto bottomStr = message.back();
+        if (!topStr.empty()) {
+            textNodes.emplace_back(
+                new TextNode(
+                    _topTutorialNode,
+                    std::move(topStr),
+                    static_cast<short>(InGamePage::tutorialFirstMessageTopLabelId + i)
+                )
+            );
+        }
 
+        if (!bottomStr.empty()) {
+            textNodes.emplace_back(
+                new TextNode(
+                    _bottomTutorialNode,
+                    std::move(bottomStr),
+                    static_cast<short>(InGamePage::tutorialFirstMessageBottomLabelId + i)
+                )
+            );
+        }
+    }
     return textNodes;
 }
 
 vecNode_sptr InGamePage::createNodes(float ratio) {
-
     const auto screenNode = std::make_shared<ScreenNode>(ratio);
     const auto resizedScreenNode = std::make_shared<ScaledNode>(screenNode, 0.95f);
 
@@ -167,6 +207,27 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
     const auto coinsTensDigit = std::make_shared<LeftNode>(coinsDigitNode, coinNodesRatio);
     const auto coinsUnitsDigit = std::make_shared<RightNode>(coinsDigitNode, coinNodesRatio);
 
+    const auto tutorialMainNode = std::make_shared<CenteredNode>(
+        resizedScreenNode,
+        9.f / 16.f
+    );
+
+    const auto tutorialUpNode = std::make_shared<UpNode>(
+        tutorialMainNode,
+        3.f
+    );
+
+    constexpr auto tutorialTextNodesRatio = 15.f;
+    const auto tutorialTopTextNode = std::make_shared<CenteredNode>(
+        tutorialUpNode,
+        tutorialTextNodesRatio
+    );
+
+    const auto tutorialBottomTextNode = std::make_shared<DownNode>(
+        tutorialUpNode,
+        tutorialTextNodesRatio
+    );
+
     return {
         arrowNode,
         leftDigitNode,
@@ -178,7 +239,9 @@ vecNode_sptr InGamePage::createNodes(float ratio) {
         middleKeyNode,
         leftKeyNode,
         lastKeyNode,
-        littleCoinNode
+        littleCoinNode,
+        tutorialTopTextNode,
+        tutorialBottomTextNode
     };
 }
 
@@ -192,6 +255,8 @@ const int InGamePage::key2LabelId = 502;
 const int InGamePage::key3LabelId = 503;
 const int InGamePage::key4LabelId = 504;
 const int InGamePage::coinSymbolLabelId = 400;
+const short InGamePage::tutorialFirstMessageTopLabelId = 300;
+const short InGamePage::tutorialFirstMessageBottomLabelId = 310;
 
 std::string InGamePage::getVertexShaderName() const {
     return "inGamePageVs.vs";
@@ -218,7 +283,8 @@ Displayable::DynamicNames InGamePage::getDynamicIntNames() const {
         "coinsTensDigit",
         "coinsUnitsDigit",
         "currentNumberOfKeys",
-        "maxNumberOfKeys"
+        "maxNumberOfKeys",
+        "tutorialId"
     };
     auto pageDynamicNames = Page::getDynamicIntNames();
     dynamicNames.insert(
@@ -230,8 +296,7 @@ Displayable::DynamicNames InGamePage::getDynamicIntNames() const {
 }
 
 Displayable::DynamicValues<int> InGamePage::getDynamicIntValues() const {
-
-    const auto remainingTime = static_cast<int> (ceilf(_player->getRemainingTime()));
+    const auto remainingTime = static_cast<int>(ceilf(_player->getRemainingTime()));
     const auto leftDigit = remainingTime / 100;
     const auto middleDigit = (remainingTime % 100) / 10;
     const auto rightDigit = remainingTime % 10;
@@ -253,6 +318,7 @@ Displayable::DynamicValues<int> InGamePage::getDynamicIntValues() const {
         coinsUnitsDigit + coinsUnitsDigitIdOffset,
         static_cast<int>(_itemsContainer->getCurrentNumberOfKeys()),
         static_cast<int>(_itemsContainer->getMaxNumberOfKeys()),
+        _tutorial != nullptr ? _tutorial->getCurrentMessageNumberId() : -1
     };
 
     auto pageDynamicInts = Page::getDynamicIntValues();
@@ -270,6 +336,10 @@ vecCstLabel_sptr InGamePage::labels() const {
 
 void InGamePage::setItemsContainer(CstItemsContainer_sptr itemsContainer) {
     _itemsContainer = std::move(itemsContainer);
+}
+
+void InGamePage::setTutorial(Tutorial_uptr tutorial) {
+    _tutorial = std::move(tutorial);
 }
 
 void InGamePage::update(const Mouse &mouse) {

@@ -32,6 +32,7 @@ Controller::Controller(
     _menu(Menu::getJumperBallMenu(
         _player,
         _scene->getMap(),
+        _scene->getBall(),
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
     )),
     _viewer(std::make_shared<Viewer>(
@@ -92,7 +93,8 @@ void Controller::runGame(size_t level) {
         _player,
         _scene->isUsingTouchScreen()
     );
-    _menu->setItemsContainers(_scene->getMap());
+    CstMovableObject_sptr movableObject = _scene->getBall();
+    _menu->setBackgroundMap(_scene->getMap(), _scene->getBall());
     _viewer->setScene(_scene);
 }
 

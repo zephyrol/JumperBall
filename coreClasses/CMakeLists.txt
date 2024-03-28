@@ -19,6 +19,7 @@ FILE(GLOB SOURCE_FILES
 		${CMAKE_CURRENT_SOURCE_DIR}/gameMenu/labels/*.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/gameMenu/nodes/*.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/gameMenu/pages/*.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/gameMenu/pages/tutorials/*.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/movements/*.cpp)
 
 FILE(GLOB HEADER_FILES
@@ -33,6 +34,7 @@ FILE(GLOB HEADER_FILES
 		${CMAKE_CURRENT_SOURCE_DIR}/gameMenu/labels/*.h
 		${CMAKE_CURRENT_SOURCE_DIR}/gameMenu/nodes/*.h
 		${CMAKE_CURRENT_SOURCE_DIR}/gameMenu/pages/*.h
+		${CMAKE_CURRENT_SOURCE_DIR}/gameMenu/pages/tutorials/*.h
 		${CMAKE_CURRENT_SOURCE_DIR}/movements/*.h)
 
 

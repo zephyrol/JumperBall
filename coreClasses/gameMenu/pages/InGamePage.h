@@ -9,14 +9,14 @@
 #include "Page.h"
 #include "gameMenu/labels/ArrowLabel.h"
 #include "scene/ItemsContainer.h"
+#include "scene/MovableObject.h"
+#include "tutorials/Tutorial.h"
 
 class InGamePage;
 
 using InGamePage_sptr = std::shared_ptr<InGamePage>;
 
 class InGamePage : public Page {
-
-
 public:
     explicit InGamePage(
         Player_sptr &&player,
@@ -26,20 +26,24 @@ public:
         Node_sptr &&rightDigitNode,
         Node_sptr &&coinsTensDigit,
         Node_sptr &&coinsUnitsDigit,
+        Node_sptr &&topTutorialNode,
+        Node_sptr &&bottomTutorialNode,
         Label_sptr key1,
         Label_sptr key2,
         Label_sptr key3,
         Label_sptr key4,
         Label_sptr coinSymbol,
         const Page_sptr &parent,
-        CstItemsContainer_sptr itemsContainer
+        CstItemsContainer_sptr itemsContainer,
+        Tutorial_uptr tutorial
     );
 
     static InGamePage_sptr createInstance(
         Player_sptr player,
         const Page_sptr &parent,
         float ratio,
-        CstItemsContainer_sptr itemsContainer
+        CstItemsContainer_sptr itemsContainer,
+        Tutorial_uptr tutorial
     );
 
 
@@ -59,6 +63,8 @@ public:
 
     void setItemsContainer(CstItemsContainer_sptr itemsContainer);
 
+    void setTutorial(Tutorial_uptr tutorial);
+
     std::vector<std::string> shaderDefines() const override;
 
     DynamicNames getDynamicIntNames() const override;
@@ -72,7 +78,6 @@ public:
     std::string getVertexShaderName() const override;
 
 private:
-
     Page_wptr _parent;
     ArrowLabel_sptr _arrowLabel;
     Node_sptr _leftDigitNode;
@@ -80,11 +85,14 @@ private:
     Node_sptr _rightDigitNode;
     Node_sptr _coinsTensDigit;
     Node_sptr _coinsUnitsDigit;
+    Node_sptr _topTutorialNode;
+    Node_sptr _bottomTutorialNode;
     Label_sptr _key1;
     Label_sptr _key2;
     Label_sptr _key3;
     Label_sptr _key4;
     Label_sptr _coinSymbol;
+    Tutorial_uptr _tutorial;
 
     CstItemsContainer_sptr _itemsContainer;
 
@@ -94,6 +102,8 @@ private:
     static const int key3LabelId;
     static const int key4LabelId;
     static const int coinSymbolLabelId;
+    static const short tutorialFirstMessageTopLabelId;
+    static const short tutorialFirstMessageBottomLabelId;
 
     static vecNode_sptr createNodes(float ratio);
 };

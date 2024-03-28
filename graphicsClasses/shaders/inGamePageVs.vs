@@ -20,6 +20,7 @@ uniform int coinsUnitsDigit[idCount];
 uniform int selectedLabel[idCount];
 uniform int currentNumberOfKeys[idCount];
 uniform int maxNumberOfKeys[idCount];
+uniform int tutorialId[idCount];
 
 bool needsDiscard() {
     int leftDigitValue = leftDigit[vs_groupId];
@@ -31,6 +32,9 @@ bool needsDiscard() {
         return false;
     }
     if(vs_labelId == coinsTensDigit[vs_groupId] || vs_labelId == coinsUnitsDigit[vs_groupId]) {
+        return false;
+    }
+    if(vs_labelId >= 300 && vs_labelId < 320 && vs_labelId != tutorialId[vs_groupId]) {
         return false;
     }
     return true;
@@ -84,6 +88,16 @@ void main() {
         fs_needsCheckingCoin = 1.0;
     } else {
         fs_needsCheckingCoin = -1.0;
+    }
+
+    if(vs_labelId >= 300 && vs_labelId < 320) {
+        if(vs_labelId == tutorialId[vs_groupId] + 300) {
+            discarding = false;
+        } else if(vs_labelId == tutorialId[vs_groupId] + 310) {
+            discarding = false;
+        } else {
+            discarding = true;
+        }
     }
 
     gl_Position = discarding ? vec4(-2.0, -2.0, 0.0, 1.0): vec4(vs_vertexPosition.xy, 0.0, 1.0);

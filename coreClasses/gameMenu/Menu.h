@@ -15,9 +15,10 @@
 #include "gameMenu/pages/InGamePage.h"
 #include <player/Player.h>
 
+#include "pages/tutorials/Tutorial.h"
+
 class Menu {
 public:
-
     explicit Menu(
         Player_sptr player,
         Page_sptr successPage,
@@ -41,10 +42,11 @@ public:
     static std::shared_ptr<Menu> getJumperBallMenu(
         const Player_sptr &player,
         CstItemsContainer_sptr itemsContainer,
+        const CstMovableObject_sptr &movableObject,
         float ratio
     );
 
-    void setItemsContainers(CstItemsContainer_sptr itemsContainer);
+    void setBackgroundMap(CstItemsContainer_sptr itemsContainer, const CstMovableObject_sptr &movableObject);
     void resize(float screenRatio);
 
 private:
@@ -55,6 +57,8 @@ private:
     const InGamePage_sptr _inGamePage;
     Page_sptr _currentPage;
 
+    static Tutorial_uptr createTutorial(size_t level, const CstMovableObject_sptr &movableObject,
+                                        bool isUsingEnglish);
 };
 
 #endif /* MENU_H */

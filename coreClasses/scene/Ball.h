@@ -16,6 +16,7 @@
 #include "system/Chronometer.h"
 #include "system/UpdateOutput.h"
 #include "system/DoubleChronometer.h"
+#include "MovableObject.h"
 #include <scene/blocks/Block.h>
 
 class Ball;
@@ -25,7 +26,7 @@ using Ball_wptr = std::weak_ptr<Ball>;
 using CstBall_sptr = std::shared_ptr<const Ball>;
 using CstBall_wptr = std::weak_ptr<const Ball>;
 
-class Ball : public SceneElement {
+class Ball : public SceneElement, public MovableObject {
 public:
 
     Ball(
@@ -154,7 +155,7 @@ public:
 
     void teleport(const JBTypes::Color &col) noexcept;
 
-    unsigned int numberOfKeys() const;
+    unsigned int numberOfKeys() const override;
 
     unsigned int numberOfCoins() const;
 
@@ -167,6 +168,16 @@ public:
     void addUpdateOutput(CstUpdateOutput_sptr &&updateOutput);
 
     vecCstUpdateOutput_sptr &&retrieveUpdateOutput();
+
+    bool isTurningRight() const override;
+
+    bool isTurningLeft() const override;
+
+    bool isGoingAhead() const override;
+
+    bool isJumping() const override;
+
+    bool hasChangedAFace() const override;
 
 private:
 

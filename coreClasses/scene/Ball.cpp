@@ -946,6 +946,26 @@ vecCstUpdateOutput_sptr &&Ball::retrieveUpdateOutput() {
     return std::move(_updateOutputs);
 }
 
+bool Ball::isTurningRight() const {
+    return _state == State::TurningRight;
+}
+
+bool Ball::isTurningLeft() const {
+    return _state == State::TurningLeft;
+}
+
+bool Ball::isGoingAhead() const {
+    return _state == State::Moving;
+}
+
+bool Ball::isJumping() const {
+    return _state == State::Jumping;
+}
+
+bool Ball::hasChangedAFace() const {
+    return _currentSide != JBTypes::Dir::Up;
+}
+
 unsigned int Ball::numberOfClocks() const {
     return _nbOfClocks;
 }

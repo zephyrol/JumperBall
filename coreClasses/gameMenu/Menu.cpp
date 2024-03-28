@@ -7,7 +7,6 @@
 
 #include "Menu.h"
 
-#include <utility>
 #include "gameMenu/pages/TitlePage.h"
 #include "gameMenu/pages/LevelsPage.h"
 #include "gameMenu/pages/SuccessPage.h"
@@ -16,6 +15,8 @@
 #include "gameMenu/pages/CreditsPage.h"
 #include "gameMenu/pages/StorePage.h"
 #include "gameMenu/pages/ValidationPage.h"
+#include "pages/tutorials/MovementTutorial.h"
+#include "pages/tutorials/Tutorial.h"
 
 Menu::Menu(
     Player_sptr player,
@@ -61,20 +62,26 @@ void Menu::mouseClick(float mouseX, float mouseY) {
 std::shared_ptr<Menu> Menu::getJumperBallMenu(
     const Player_sptr &player,
     CstItemsContainer_sptr itemsContainer,
+    const CstMovableObject_sptr &movableObject,
     float ratio
 ) {
-
     const auto titlePage = TitlePage::createInstance(player, ratio);
     const auto levelsPage = LevelsPage::createInstance(player, titlePage, ratio);
     const auto pausePage = PausePage::createInstance(player, titlePage, ratio);
-    const auto inGamePage = InGamePage::createInstance(player, pausePage, ratio, std::move(itemsContainer));
+    const auto inGamePage = InGamePage::createInstance(
+        player,
+        pausePage,
+        ratio,
+        std::move(itemsContainer),
+        createTutorial(player->getCurrentLevel(), movableObject, player->isUsingEnglishLanguage())
+    );
     const auto successPage = SuccessPage::createInstance(player, titlePage, ratio);
     const auto failurePage = FailurePage::createInstance(player, titlePage, ratio);
     const auto creditsPage = CreditsPage::createInstance(player, titlePage, ratio);
     const auto storePage = StorePage::createInstance(player, titlePage, ratio);
 
     std::array<Page_sptr, StorePage::numberOfSkins> validationPages;
-    for(size_t i = 0; i < StorePage::numberOfSkins; ++i) {
+    for (size_t i = 0; i < StorePage::numberOfSkins; ++i) {
         validationPages[i] = ValidationPage::createInstance(i, player, storePage, ratio);
     }
 
@@ -124,7 +131,32 @@ void Menu::resize(float ratio) {
     }
 }
 
-void Menu::setItemsContainers(CstItemsContainer_sptr itemsContainer) {
+Tutorial_uptr Menu::createTutorial(size_t level, const CstMovableObject_sptr &movableObject,
+                                   bool isUsingEnglish) {
+    std::map<size_t, std::function<Tutorial_uptr()>> tutorialFactory{
+        {
+            1,
+            [movableObject, isUsingEnglish]() {
+                return std::unique_ptr<Tutorial>(
+                    new MovementTutorial(movableObject, isUsingEnglish)
+                );
+            }
+        }
+    };
+    const auto tutorialIterator = tutorialFactory.find(level);
+    if (tutorialIterator == tutorialFactory.cend()) {
+        return nullptr;
+    }
+    return tutorialIterator->second();
+}
+
+void Menu::setBackgroundMap(
+    CstItemsContainer_sptr itemsContainer,
+    const CstMovableObject_sptr &movableObject
+) {
     _inGamePage->setItemsContainer(std::move(itemsContainer));
+    _inGamePage->setTutorial(
+        createTutorial(_player->getCurrentLevel(), movableObject, _player->isUsingEnglishLanguage())
+    );
 }
 
