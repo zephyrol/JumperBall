@@ -132,8 +132,11 @@ void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
         }
         return;
     }
-    if (*movement == Mouse::ScreenDirection::West || *movement == Mouse::ScreenDirection::East || *movement ==
-        Mouse::ScreenDirection::North) {
+    if (
+        *movement == Mouse::ScreenDirection::West
+        || *movement == Mouse::ScreenDirection::East
+        || *movement == Mouse::ScreenDirection::North
+    ) {
         _releaseFunction();
         return;
     }
