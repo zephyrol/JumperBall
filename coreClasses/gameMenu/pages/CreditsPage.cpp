@@ -172,9 +172,9 @@ vecCstTextNode_uptr CreditsPage::genTextNodes() const {
     textNodes.emplace_back(
         new TextNode(
             _musicAndSoundsEffects,
-            english ? "Music and sound effects:" : "Musiques et sons:", musicAndSoundsEffectsLabelId)
+            english ? "Musics and sound effects:" : "Musiques et sons:", musicAndSoundsEffectsLabelId)
     );
-    textNodes.emplace_back(new TextNode(_secondAuthor, "Julien Goettelmann", secondAuthorLabelId));
+    textNodes.emplace_back(new TextNode(_secondAuthor, "Nomad Hills", secondAuthorLabelId));
     textNodes.emplace_back(new TextNode(_exitNode, english ? "Return" : "Sortir", exitNodeLabelId));
     return textNodes;
 }
