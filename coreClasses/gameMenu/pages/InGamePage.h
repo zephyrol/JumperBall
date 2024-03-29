@@ -35,7 +35,9 @@ public:
         Label_sptr coinSymbol,
         const Page_sptr &parent,
         CstItemsContainer_sptr itemsContainer,
-        Tutorial_uptr tutorial
+        Tutorial_uptr tutorial,
+        JBTypes::vec2f tutorialCenter,
+        JBTypes::vec2f ratioAndInverse
     );
 
     static InGamePage_sptr createInstance(
@@ -73,6 +75,10 @@ public:
 
     DynamicValues<float> getDynamicFloatValues() const override;
 
+    DynamicNames getDynamicVec2fNames() const override;
+
+    DynamicValues<JBTypes::vec2f> getDynamicVec2fValues() const override;
+
     DynamicValues<int> getDynamicIntValues() const override;
 
     std::string getVertexShaderName() const override;
@@ -93,8 +99,20 @@ private:
     Label_sptr _key4;
     Label_sptr _coinSymbol;
     Tutorial_uptr _tutorial;
-
+    JBTypes::vec2f _tutorialCenter;
+    JBTypes::vec2f _ratioAndInverse;
     CstItemsContainer_sptr _itemsContainer;
+
+    /**
+     * Get the tutorial center from top and bottom nodes.
+     * @return The position in the projected [-1,1] space
+     */
+    static JBTypes::vec2f getTutorialCenter(const Node_sptr& top, const Node_sptr& bottom);
+
+    /**
+     * Get the ratio and its inverse
+     */
+    static JBTypes::vec2f getRatioAndInverse(float ratio);
 
     static const int arrowLabelId;
     static const int key1LabelId;

@@ -29,7 +29,9 @@ InGamePage::InGamePage(
     Label_sptr coinSymbol,
     const Page_sptr &parent,
     CstItemsContainer_sptr itemsContainer,
-    Tutorial_uptr tutorial
+    Tutorial_uptr tutorial,
+    JBTypes::vec2f tutorialCenter,
+    JBTypes::vec2f ratioAndInverse
 ) : Page(std::move(player)),
     _parent(parent),
     _arrowLabel(std::move(arrowLabel)),
@@ -46,6 +48,8 @@ InGamePage::InGamePage(
     _key4(std::move(key4)),
     _coinSymbol(std::move(coinSymbol)),
     _tutorial(std::move(tutorial)),
+    _tutorialCenter(tutorialCenter),
+    _ratioAndInverse(ratioAndInverse),
     _itemsContainer(std::move(itemsContainer)) {
 }
 
@@ -58,6 +62,7 @@ InGamePage_sptr InGamePage::createInstance(
 ) {
     auto nodes = createNodes(ratio);
     auto arrowLabel = createInGameArrowLabel(nodes[0]);
+    const auto tutorialCenter = getTutorialCenter(nodes[11], nodes[12]);
     auto inGamePage = std::make_shared<InGamePage>(
         std::move(player),
         arrowLabel,
@@ -75,7 +80,9 @@ InGamePage_sptr InGamePage::createInstance(
         std::make_shared<Label>(std::move(nodes[10]), JBTypes::Color::Yellow, coinSymbolLabelId),
         parent,
         std::move(itemsContainer),
-        std::move(tutorial)
+        std::move(tutorial),
+        tutorialCenter,
+        getRatioAndInverse(ratio)
     );
     return inGamePage;
 }
@@ -107,6 +114,8 @@ void InGamePage::resize(float ratio) {
     _coinSymbol = std::make_shared<Label>(nodes[10], JBTypes::Color::Yellow, coinSymbolLabelId);
     _topTutorialNode = nodes[11];
     _bottomTutorialNode = nodes[12];
+    _tutorialCenter = getTutorialCenter(_topTutorialNode, _bottomTutorialNode);
+    _ratioAndInverse = getRatioAndInverse(ratio);
 }
 
 vecCstTextNode_uptr InGamePage::genTextNodes() const {
@@ -160,6 +169,19 @@ vecCstTextNode_uptr InGamePage::genTextNodes() const {
         }
     }
     return textNodes;
+}
+
+JBTypes::vec2f InGamePage::getTutorialCenter(const Node_sptr &top, const Node_sptr &bottom) {
+    // Return the average position from [-0.5,0.5] to [-1.0, 1.0] explains why no addition computing
+    // is required
+    return {
+        (top->positionX() + bottom->positionX()),
+        (top->positionY() + bottom->positionY())
+    };
+}
+
+JBTypes::vec2f InGamePage::getRatioAndInverse(float ratio) {
+    return {ratio, 1.f / ratio};
 }
 
 vecNode_sptr InGamePage::createNodes(float ratio) {
@@ -263,16 +285,26 @@ std::string InGamePage::getVertexShaderName() const {
 }
 
 Displayable::DynamicNames InGamePage::getDynamicFloatNames() const {
-    return {"missingTimeWarning"};
+    return {"missingTimeWarning", "tutorialAnimationTime"};
 }
 
 Displayable::DynamicValues<float> InGamePage::getDynamicFloatValues() const {
     const auto remainingTime = _player->getRemainingTime();
-    if (remainingTime > 9.f) {
-        return {0.f};
-    }
     constexpr auto periodFactor = 15.f;
-    return {1.f - (cosf((remainingTime - 10.f) * periodFactor) * 0.5f + 0.5f)};
+    return {
+        remainingTime > 9.f
+            ? 0.f
+            : 1.f - (cosf((remainingTime - 10.f) * periodFactor) * 0.5f + 0.5f),
+        _tutorial != nullptr ? _tutorial->getAnimationTime() : 0.f
+    };
+}
+
+Displayable::DynamicNames InGamePage::getDynamicVec2fNames() const {
+    return {"tutorialCenter", "ratioAndInverse"};
+}
+
+Displayable::DynamicValues<JBTypes::vec2f> InGamePage::getDynamicVec2fValues() const {
+    return {_tutorialCenter, _ratioAndInverse};
 }
 
 Displayable::DynamicNames InGamePage::getDynamicIntNames() const {
@@ -343,7 +375,7 @@ void InGamePage::setTutorial(Tutorial_uptr tutorial) {
 }
 
 void InGamePage::update(const Mouse &mouse) {
-    if(_tutorial != nullptr) {
+    if (_tutorial != nullptr) {
         _tutorial->update();
     }
     if (!mouse.isPressed()) {

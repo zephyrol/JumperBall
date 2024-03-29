@@ -32,7 +32,7 @@ float MovementTutorial::getAnimationTime() {
     if (_currentStep < 2) {
         return _chronometer.getTime();
     }
-    return -_chronometer.getTime();
+    return -std::min(1.f, _chronometer.getTime());
 }
 
 short MovementTutorial::getCurrentMessageNumberId() const {
@@ -50,6 +50,7 @@ void MovementTutorial::update() {
     if(_currentStep == 0) {
         if (_chronometer.getTime() > 2.f) {
             _currentStep++;
+            _chronometer.reset();
         }
         return;
     }

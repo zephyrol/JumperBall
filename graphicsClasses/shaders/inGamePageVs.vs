@@ -12,6 +12,10 @@ out vec3 fs_keyColor;
 out float fs_needsCheckingCoin;
 
 uniform float missingTimeWarning[idCount];
+uniform float tutorialAnimationTime[idCount];
+uniform vec2 tutorialCenter[idCount];
+uniform vec2 ratioAndInverse[idCount];
+
 uniform int leftDigit[idCount];
 uniform int middleDigit[idCount];
 uniform int rightDigit[idCount];
@@ -21,6 +25,53 @@ uniform int selectedLabel[idCount];
 uniform int currentNumberOfKeys[idCount];
 uniform int maxNumberOfKeys[idCount];
 uniform int tutorialId[idCount];
+
+mat4 rotationZ (float angle) {
+    float cosAngle = cos(angle);
+    float sinAngle = sin(angle);
+    return mat4(
+        cosAngle, sinAngle, 0.0, 0.0,
+        -sinAngle, cosAngle, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0
+    );
+}
+
+mat4 getTutorialTransform(float animationTime) {
+    if(animationTime < 0.0) {
+        animationTime = 1.0 + animationTime;
+    }
+    vec2 tutorialCenterValue = tutorialCenter[vs_groupId];
+    mat4 translationStart = mat4(
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        -tutorialCenterValue.x, -tutorialCenterValue.y, 0.0, 1.0
+    );
+    mat4 translationEnd = mat4(
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        tutorialCenterValue.x, tutorialCenterValue.y, 0.0, 1.0
+    );
+    vec2 ratioAndInverseValue = ratioAndInverse[vs_groupId];
+    mat4 scaleStart = mat4(
+        ratioAndInverseValue.x * animationTime, 0.0, 0.0, 0.0,
+        0.0, animationTime, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0
+    );
+    mat4 scaleEnd = mat4(
+        ratioAndInverseValue.y, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0
+    );
+
+    const float rotationFactor = 6.2830 * 2.0;
+    mat4 rotation = rotationZ(animationTime * rotationFactor);
+    return translationEnd * scaleEnd * rotation * scaleStart * translationStart;
+}
 
 bool needsDiscard() {
     int leftDigitValue = leftDigit[vs_groupId];
@@ -32,9 +83,6 @@ bool needsDiscard() {
         return false;
     }
     if(vs_labelId == coinsTensDigit[vs_groupId] || vs_labelId == coinsUnitsDigit[vs_groupId]) {
-        return false;
-    }
-    if(vs_labelId >= 300 && vs_labelId < 320 && vs_labelId != tutorialId[vs_groupId]) {
         return false;
     }
     return true;
@@ -90,15 +138,27 @@ void main() {
         fs_needsCheckingCoin = -1.0;
     }
 
+    vec4 vertexPositionVec4 = vec4(vs_vertexPosition.xy, 0.0, 1.0);
+
     if(vs_labelId >= 300 && vs_labelId < 320) {
-        if(vs_labelId == tutorialId[vs_groupId] + 300) {
+        if(vs_labelId == tutorialId[vs_groupId] + 300
+        || vs_labelId == tutorialId[vs_groupId] + 310) {
             discarding = false;
-        } else if(vs_labelId == tutorialId[vs_groupId] + 310) {
-            discarding = false;
+            float animationTimeValue = tutorialAnimationTime[vs_groupId];
+            if(animationTimeValue > 1.f) {
+                const float periodFactor = 5.0;
+                fs_vertexColor = mix(
+                    fs_vertexColor,
+                    vec3(1.0, 1.0, 0.0),
+                    sin((animationTimeValue - 1.0) * periodFactor) * 0.5 + 0.5
+                );
+            } else {
+                vertexPositionVec4 = getTutorialTransform(animationTimeValue) * vertexPositionVec4;
+            }
         } else {
             discarding = true;
         }
     }
 
-    gl_Position = discarding ? vec4(-2.0, -2.0, 0.0, 1.0): vec4(vs_vertexPosition.xy, 0.0, 1.0);
+    gl_Position = discarding ? vec4(-2.0, -2.0, 0.0, 1.0): vertexPositionVec4;
 }
