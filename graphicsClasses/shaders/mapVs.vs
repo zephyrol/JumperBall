@@ -25,7 +25,9 @@ out vec3 fs_vertexColor;
 out vec4 fs_vertexDepthMapSpace;
 out vec4 fs_vertexDepthMap2Space;
 out vec3 fs_vertexNormal;
-out vec3 fs_vertexPositionWorld;
+out vec3 fs_vertexToCamera;
+out float fs_vertexIsIlluminatedLight1;
+out float fs_vertexIsIlluminatedLight2;
 
 const mat4 biasMatrix = mat4(
     0.5, 0.0, 0.0, 0.0,
@@ -92,10 +94,12 @@ void main() {
     }
     fs_vertexColor = mix(vs_vertexColor, fireEffect, burningCoeff[vs_id]) * ambientLightIntensity;
     mat4 normalTransform = rotationMatrix;
-    fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, 1.0)).xyz);
-    fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
+    fs_vertexNormal = (normalTransform * vec4(vs_vertexNormal, 1.0)).xyz;
+    fs_vertexToCamera = cameraPosition - vertexPositionWorldSpace.xyz;
     fs_vertexDepthMapSpace = biasMatrix * VPStar * vertexPositionWorldSpace;
     fs_vertexDepthMap2Space = biasMatrix * VPStar2 * vertexPositionWorldSpace;
+    fs_vertexIsIlluminatedLight1 = min(0.0, dot(fs_vertexNormal, lightDirection));
+    fs_vertexIsIlluminatedLight2 = min(0.0, dot(fs_vertexNormal, light2Direction));
     gl_Position = VP * vertexPositionWorldSpace;
 
 }
