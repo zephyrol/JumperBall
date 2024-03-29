@@ -26,7 +26,6 @@ out vec4 fs_vertexDepthMapSpace;
 out vec4 fs_vertexDepthMap2Space;
 out vec3 fs_vertexNormal;
 out vec3 fs_vertexPositionWorld;
-out float fs_burningCoeff;
 
 const mat4 biasMatrix = mat4(
     0.5, 0.0, 0.0, 0.0,
@@ -71,6 +70,8 @@ mat4 getRotationMatrix(vec4 quaternion) {
     );
 }
 
+const vec3 fireEffect = vec3(8.0, 0.2, 0.0);
+const vec3 ambientLightIntensity = vec3(0.7, 0.7, 0.7);
 
 void main() {
 
@@ -89,13 +90,12 @@ void main() {
         gl_Position = VPStar2 * vertexPositionWorldSpace;
         return;
     }
-    fs_vertexColor = vs_vertexColor;
+    fs_vertexColor = mix(vs_vertexColor, fireEffect, burningCoeff[vs_id]) * ambientLightIntensity;
     mat4 normalTransform = rotationMatrix;
     fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, 1.0)).xyz);
     fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
     fs_vertexDepthMapSpace = biasMatrix * VPStar * vertexPositionWorldSpace;
     fs_vertexDepthMap2Space = biasMatrix * VPStar2 * vertexPositionWorldSpace;
-    fs_burningCoeff = burningCoeff[vs_id];
     gl_Position = VP * vertexPositionWorldSpace;
 
 }
