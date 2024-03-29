@@ -11,48 +11,57 @@ Controller::Controller(
     const size_t &screenWidth,
     const size_t &screenHeight,
     const JBTypes::FileContent &filesContent,
-    const unsigned char *fontData,
+    const unsigned char* fontData,
     size_t fontDataSize,
     bool isUsingTouchScreen
 ) :
-    _doubleChronometer(std::make_shared<DoubleChronometer>(
-        // The chronometer tracking creation time needs to be started directly
-        true,
-        // The chronometer tracking in game time needs to be started later
-        false)
+    _doubleChronometer(
+        std::make_shared<DoubleChronometer>(
+            // The chronometer tracking creation time needs to be started directly
+            true,
+            // The chronometer tracking in game time needs to be started later
+            false
+        )
     ),
     _player(Player::createInstance(_doubleChronometer, filesContent.at("save.txt"))),
     _filesContent(filesContent),
-    _scene(std::make_shared<Scene>(
-        filesContent.at("map" + std::to_string(_player->levelProgression()) + ".txt"),
-        static_cast<float>(screenWidth) / static_cast<float>(screenHeight),
-        _player,
-        isUsingTouchScreen
-    )),
-    _menu(Menu::getJumperBallMenu(
-        _player,
-        _scene->getMap(),
-        _scene->getBall(),
-        static_cast<float>(screenWidth) / static_cast<float>(screenHeight)
-    )),
-    _viewer(std::make_shared<Viewer>(
-        static_cast<GLsizei>(screenWidth),
-        static_cast<GLsizei>(screenHeight),
-        _scene,
-        _menu->currentPage(),
-        _filesContent,
-        fontData,
-        fontDataSize
-    )),
-    _keyboardKey({
-                     [this]() { _scene->setUp(); },
-                     [this]() { _scene->setDown(); },
-                     [this]() { _scene->setLeft(); },
-                     [this]() { _scene->setRight(); },
-                     [this]() { escapeAction(); },
-                     [this]() { _scene->setValidate(); },
-                 },
-                 [this]() { _scene->setNoAction(); }
+    _scene(
+        std::make_shared<Scene>(
+            filesContent.at("map" + std::to_string(_player->levelProgression()) + ".txt"),
+            static_cast<float>(screenWidth) / static_cast<float>(screenHeight),
+            _player
+        )
+    ),
+    _menu(
+        Menu::getJumperBallMenu(
+            _player,
+            _scene->getMap(),
+            _scene->getBall(),
+            static_cast<float>(screenWidth) / static_cast<float>(screenHeight),
+            isUsingTouchScreen
+        )
+    ),
+    _viewer(
+        std::make_shared<Viewer>(
+            static_cast<GLsizei>(screenWidth),
+            static_cast<GLsizei>(screenHeight),
+            _scene,
+            _menu->currentPage(),
+            _filesContent,
+            fontData,
+            fontDataSize
+        )
+    ),
+    _keyboardKey(
+        {
+            [this]() { _scene->setUp(); },
+            [this]() { _scene->setDown(); },
+            [this]() { _scene->setLeft(); },
+            [this]() { _scene->setRight(); },
+            [this]() { escapeAction(); },
+            [this]() { _scene->setValidate(); },
+        },
+        [this]() { _scene->setNoAction(); }
     ),
     _mouse(
         [this]() { _scene->setUp(); },
@@ -90,8 +99,7 @@ void Controller::runGame(size_t level) {
     _scene = std::make_shared<Scene>(
         _filesContent.at("map" + std::to_string(level) + ".txt"),
         _scene->getRatio(),
-        _player,
-        _scene->isUsingTouchScreen()
+        _player
     );
     CstMovableObject_sptr movableObject = _scene->getBall();
     _menu->setBackgroundMap(_scene->getMap(), _scene->getBall());
@@ -120,7 +128,7 @@ void Controller::setValidateMouse(float mouseX, float mouseY) {
         || newLanguage != currentLanguage
         || newMusicsStatus != currentMusicsStatus
         || newSoundsStatus != currentSoundsStatus
-        ) {
+    ) {
         _viewer->setPage(newPage);
         _scene->setNoAction();
     }
@@ -133,7 +141,6 @@ void Controller::setValidateMouse(float mouseX, float mouseY) {
 }
 
 void Controller::escapeAction() {
-
     const auto &currentPage = _menu->currentPage();
     if (_menu->escapeAction()) {
         _player->addQuitRequest();
@@ -158,7 +165,6 @@ void Controller::render() const {
 }
 
 std::string Controller::update() {
-
     // 1. Update chronometers
     const auto updatingTime = Chronometer::getTimePointMSNow();
     _doubleChronometer->update(updatingTime);

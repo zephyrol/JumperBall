@@ -6,15 +6,14 @@
  */
 #include "Scene.h"
 
-Scene::Scene(const std::string &mapContent, float screenRatio, Player_sptr player, bool isUsingTouchScreen) :
+Scene::Scene(const std::string &mapContent, float screenRatio, Player_sptr player) :
     _map(MapGenerator::loadMap(mapContent, player->getDoubleChronometer())),
     _currentKey(Scene::ActionKey::Nothing),
     _camera(std::make_shared<Camera>(*_map, screenRatio)),
     _star(Star::createBlurStar(*_map)),
     _star2(Star::createPurpleStar(*_map)),
     _player(std::move(player)),
-    _ratio(screenRatio),
-    _isUsingTouchScreen(isUsingTouchScreen) {
+    _ratio(screenRatio) {
 }
 
 std::string Scene::update() {
@@ -129,7 +128,7 @@ void Scene::setUp() {
     if (!isInGame()) {
         return;
     }
-    _currentKey = _isUsingTouchScreen ? Scene::ActionKey::Validate : Scene::ActionKey::Up;
+    _currentKey = Scene::ActionKey::Up;
 }
 
 void Scene::setDown() {
@@ -143,21 +142,15 @@ void Scene::setValidateMouse() {
     if(!isInGame()) {
         return;
     }
-    if(!_isUsingTouchScreen) {
-        _currentKey = Scene::ActionKey::Validate;
-    }
+    _currentKey = Scene::ActionKey::Validate;
 }
 
 bool Scene::isInGame() const {
     return _player->status() == Player::Status::InGame;
 }
 
-bool Scene::isUsingTouchScreen() const {
-    return _isUsingTouchScreen;
-}
-
 void Scene::mouseSetUp() {
-    if(!isInGame() || !_isUsingTouchScreen) {
+    if(!isInGame()) {
         return;
     }
     _currentKey = Scene::ActionKey::Up;

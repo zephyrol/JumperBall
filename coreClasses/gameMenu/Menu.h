@@ -24,7 +24,8 @@ public:
         Page_sptr successPage,
         Page_sptr failurePage,
         InGamePage_sptr inGamePage,
-        vecPage_sptr pages
+        vecPage_sptr pages,
+        bool isUsingTouchScreen
     );
 
     Page_sptr currentPage();
@@ -43,13 +44,15 @@ public:
         const Player_sptr &player,
         CstItemsContainer_sptr itemsContainer,
         const CstMovableObject_sptr &movableObject,
-        float ratio
+        float ratio, bool isUsingTouchScreen
     );
 
     void setBackgroundMap(CstItemsContainer_sptr itemsContainer, const CstMovableObject_sptr &movableObject);
     void resize(float screenRatio);
 
 private:
+
+    const bool _isUsingTouchScreen;
     const Player_sptr _player;
     const vecPage_sptr _pages;
     const Page_sptr _successPage;
@@ -58,7 +61,7 @@ private:
     Page_sptr _currentPage;
 
     static Tutorial_uptr createTutorial(size_t level, const CstMovableObject_sptr &movableObject,
-                                        bool isUsingEnglish);
+                                        bool isUsingEnglish, bool isUsingTouchScreen);
 };
 
 #endif /* MENU_H */

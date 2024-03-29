@@ -4,27 +4,59 @@
 
 #include "MovementTutorial.h"
 
-MovementTutorial::MovementTutorial(CstMovableObject_sptr movableObject, bool isInEnglish):
+MovementTutorial::MovementTutorial(
+    CstMovableObject_sptr movableObject,
+    bool isInEnglish,
+    bool isUsingTouchScreen
+):
     _movableObject(std::move(movableObject)),
     _isInEnglish(isInEnglish),
+    _isUsingTouchScreen(isUsingTouchScreen),
     _currentStep(0),
     _chronometer(true) {
 }
 
 std::vector<Tutorial::Message> MovementTutorial::getMessages() const {
+    const Tutorial::Message finishLevel =
+        _isInEnglish
+            ? Tutorial::Message{
+                "Go to the green circle", "to finish the level"
+            }
+            : Tutorial::Message{
+                "Allez sur le cercle vert", "pour finir le niveau"
+            };
+
+    if (_isUsingTouchScreen) {
+        if (_isInEnglish) {
+            return {
+                {"Swipe up to go ahead", ""},
+                {"Swipe left to turn right", ""},
+                {"Swipe right to turn left", ""},
+                finishLevel
+            };
+        }
+        return {
+            {"Balayez vers le haut", "pour avancer"},
+            {"Balayez vers la gauche", "pour tourner à droite"},
+            {"Balayez vers la droite", "pour tourner à gauche"},
+            finishLevel
+        };
+    }
     if (_isInEnglish) {
         return {
-            {"Swipe up to go ahead", ""},
-            {"Swipe left to turn right", ""},
-            {"Swipe right to turn left", ""},
-            {"Go to the green circle", "to finish the level"}
+            {"Press the up arrow", "to move forward"},
+            {"Press the left arrow", "to turn right"},
+            {"Press the right arrow", "to turn left"},
+            {"Go to the green circle", "to finish the level"},
+            finishLevel
         };
     }
     return {
-        {"Balayez vers le haut", "pour avancer"},
-        {"Balayez vers la gauche", "pour tourner à droite"},
-        {"Balayez vers la droite", "pour tourner à gauche"},
-        {"Allez sur le cercle vert", "pour finir le niveau"}
+        {"Appuyez sur la fl^che", "du haut pour avancer"},
+        {"Appuyez sur la fl^che", "de gauche pour tourner à droite"},
+        {"Appuyez sur la fl^che", "de droite pour tourner à gauche"},
+        {"Allez sur le cercle vert", "pour finir le niveau"},
+        finishLevel
     };
 }
 
@@ -36,10 +68,10 @@ float MovementTutorial::getAnimationTime() {
 }
 
 short MovementTutorial::getCurrentMessageNumberId() const {
-    if(_currentStep == 0) {
+    if (_currentStep == 0) {
         return -1;
     }
-    if(_currentStep < 3) {
+    if (_currentStep < 3) {
         return 0;
     }
     return -1;
@@ -47,21 +79,21 @@ short MovementTutorial::getCurrentMessageNumberId() const {
 
 void MovementTutorial::update() {
     _chronometer.update(Chronometer::getTimePointMSNow());
-    if(_currentStep == 0) {
+    if (_currentStep == 0) {
         if (_chronometer.getTime() > 2.f) {
             _currentStep++;
             _chronometer.reset();
         }
         return;
     }
-    if(_currentStep == 1) {
+    if (_currentStep == 1) {
         if (_movableObject->isGoingAhead()) {
             _chronometer.reset();
             _currentStep++;
         }
         return;
     }
-    if(_currentStep == 2) {
+    if (_currentStep == 2) {
         if (_chronometer.getTime() > 3.f) {
             _chronometer.reset();
             _currentStep++;

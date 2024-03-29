@@ -28,7 +28,7 @@ public:
         Up, Down, Left, Right, Validate, Nothing
     };
 
-    Scene(const std::string &mapContent, float screenRatio, Player_sptr player, bool isUsingTouchScreen);
+    Scene(const std::string &mapContent, float screenRatio, Player_sptr player);
 
     void setNoAction();
 
@@ -62,8 +62,6 @@ public:
 
     float getRatio() const;
 
-    bool isUsingTouchScreen() const;
-
     std::shared_ptr<const Player> getPlayer() const;
 
 private:
@@ -74,7 +72,6 @@ private:
     const std::shared_ptr<Star> _star2;
     const Player_sptr _player;
     float _ratio;
-    const bool _isUsingTouchScreen;
 
     bool isInGame() const;
 

@@ -9,7 +9,7 @@
 
 class MovementTutorial : public Tutorial {
 public:
-    explicit MovementTutorial(CstMovableObject_sptr movableObject, bool isInEnglish);
+    explicit MovementTutorial(CstMovableObject_sptr movableObject, bool isInEnglish, bool isUsingTouchScreen);
 
     std::vector<Tutorial::Message> getMessages() const override;
 
@@ -22,6 +22,7 @@ public:
 private:
     const CstMovableObject_sptr _movableObject;
     const bool _isInEnglish;
+    const bool _isUsingTouchScreen;
     unsigned int _currentStep;
     Chronometer _chronometer;
 };

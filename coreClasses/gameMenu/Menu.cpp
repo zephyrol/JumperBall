@@ -23,8 +23,10 @@ Menu::Menu(
     Page_sptr successPage,
     Page_sptr failurePage,
     InGamePage_sptr inGamePage,
-    vecPage_sptr pages
+    vecPage_sptr pages,
+    bool isUsingTouchScreen
 ) :
+    _isUsingTouchScreen(isUsingTouchScreen),
     _player(std::move(player)),
     _pages(std::move(pages)),
     _successPage(std::move(successPage)),
@@ -63,7 +65,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
     const Player_sptr &player,
     CstItemsContainer_sptr itemsContainer,
     const CstMovableObject_sptr &movableObject,
-    float ratio
+    float ratio, bool isUsingTouchScreen
 ) {
     const auto titlePage = TitlePage::createInstance(player, ratio);
     const auto levelsPage = LevelsPage::createInstance(player, titlePage, ratio);
@@ -73,7 +75,12 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
         pausePage,
         ratio,
         std::move(itemsContainer),
-        createTutorial(player->getCurrentLevel(), movableObject, player->isUsingEnglishLanguage())
+        createTutorial(
+            player->getCurrentLevel(),
+            movableObject,
+            player->isUsingEnglishLanguage(),
+            isUsingTouchScreen
+        )
     );
     const auto successPage = SuccessPage::createInstance(player, titlePage, ratio);
     const auto failurePage = FailurePage::createInstance(player, titlePage, ratio);
@@ -111,7 +118,8 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(
         successPage,
         failurePage,
         inGamePage,
-        pages
+        pages,
+        isUsingTouchScreen
     );
 }
 
@@ -132,13 +140,13 @@ void Menu::resize(float ratio) {
 }
 
 Tutorial_uptr Menu::createTutorial(size_t level, const CstMovableObject_sptr &movableObject,
-                                   bool isUsingEnglish) {
+                                   bool isUsingEnglish, bool isUsingTouchScreen) {
     std::map<size_t, std::function<Tutorial_uptr()>> tutorialFactory{
         {
             1,
-            [movableObject, isUsingEnglish]() {
+            [movableObject, isUsingEnglish, isUsingTouchScreen]() {
                 return std::unique_ptr<Tutorial>(
-                    new MovementTutorial(movableObject, isUsingEnglish)
+                    new MovementTutorial(movableObject, isUsingEnglish, isUsingTouchScreen)
                 );
             }
         }
@@ -156,7 +164,12 @@ void Menu::setBackgroundMap(
 ) {
     _inGamePage->setItemsContainer(std::move(itemsContainer));
     _inGamePage->setTutorial(
-        createTutorial(_player->getCurrentLevel(), movableObject, _player->isUsingEnglishLanguage())
+        createTutorial(
+            _player->getCurrentLevel(),
+            movableObject,
+            _player->isUsingEnglishLanguage(),
+            _isUsingTouchScreen
+        )
     );
 }
 

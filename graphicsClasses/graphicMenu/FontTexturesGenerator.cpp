@@ -75,6 +75,9 @@ FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphi
         if (character == ';') {
             return 233; // e with a ' (french)
         }
+        if (character == '^') {
+            return 234; // e with a ^ (french)
+        }
         return character;
     };
 
