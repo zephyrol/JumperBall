@@ -45,7 +45,7 @@ vecCstShape_sptr ExitBlock::getExtraShapes() const {
 
     shapes.push_back(std::make_shared<const Shape>(
         Shape::Aspect::Cylinder,
-        _isUnlockModel ? JBTypes::Color::Green : JBTypes::Color::Red,
+        _isUnlockModel ? JBTypes::Color::ShinyGreen: JBTypes::Color::Red,
         std::initializer_list<Transformation>({
                                                   Transformation(Transformation::Type::Scale, localScale),
                                                   Transformation(Transformation::Type::Translation, translationOnBlock),

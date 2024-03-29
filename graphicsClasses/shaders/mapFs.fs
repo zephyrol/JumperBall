@@ -65,7 +65,7 @@ vec4 convertOutput(vec3 composition) {
 }
 
 const vec3 ambientLightIntensity = vec3(0.7, 0.7, 0.7);
-const vec3 fireEffet = vec3(8.0, 0.2, 0.0);
+const vec3 fireEffect = vec3(8.0, 0.2, 0.0);
 
 void main(){
 
@@ -73,7 +73,7 @@ void main(){
         return;
     }
 
-    vec3 composition = ambientLightIntensity * mix(fs_vertexColor, fireEffet, fs_burningCoeff);
+    vec3 composition = ambientLightIntensity * mix(fs_vertexColor, fireEffect, fs_burningCoeff);
 
     vec3 normalizedNormal = normalize(fs_vertexNormal);
     vec3 toCamera = normalize(cameraPosition - fs_vertexPositionWorld);
