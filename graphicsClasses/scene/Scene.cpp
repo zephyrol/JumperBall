@@ -149,13 +149,6 @@ bool Scene::isInGame() const {
     return _player->status() == Player::Status::InGame;
 }
 
-void Scene::mouseSetUp() {
-    if(!isInGame()) {
-        return;
-    }
-    _currentKey = Scene::ActionKey::Up;
-}
-
 std::shared_ptr<const Player> Scene::getPlayer() const {
     return _player;
 }

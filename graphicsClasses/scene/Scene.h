@@ -42,8 +42,6 @@ public:
 
     void setUp();
 
-    void mouseSetUp();
-
     void setDown();
 
     std::string update();
