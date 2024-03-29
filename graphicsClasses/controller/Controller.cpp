@@ -66,8 +66,8 @@ Controller::Controller(
     _mouse(
         [this]() { _scene->setUp(); },
         [this]() { _scene->setDown(); },
-        [this]() { _scene->setRight(); },
         [this]() { _scene->setLeft(); },
+        [this]() { _scene->setRight(); },
         [this](float mouseX, float mouseY) { setValidateMouse(mouseX, mouseY); },
         []() {
         },
