@@ -14,10 +14,12 @@ Mouse::Mouse(
     std::function<void()> longPressActionFunc,
     std::function<void()> releaseFunction
 ) :
-    _directionActionFunctions{{northActionFunc},
-                              {southActionFunc},
-                              {eastActionFunc},
-                              {westActionFunc}},
+    _directionActionFunctions{
+        {northActionFunc},
+        {southActionFunc},
+        {eastActionFunc},
+        {westActionFunc}
+    },
     _validateActionFunction(std::move(validateActionFunc)),
     _longPressActionFunction(std::move(longPressActionFunc)),
     _releaseFunction(std::move(releaseFunction)),
@@ -42,11 +44,13 @@ void Mouse::update(const Chronometer::TimePointMs &updatingTime) {
 
 void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
     if (!_movementCircle) {
-        _movementCircle = std::unique_ptr<MovementCircle>(new MovementCircle{
-            nullptr,
-            *_mouseCoords,
-            updatingTime
-        });
+        _movementCircle = std::unique_ptr<MovementCircle>(
+            new MovementCircle{
+                nullptr,
+                *_mouseCoords,
+                updatingTime
+            }
+        );
     }
 
     const auto &directionStateCoords = _movementCircle->mouseCoords;
@@ -93,11 +97,13 @@ void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
         _movementCircle->mouseCoords.xCoord,
         _movementCircle->mouseCoords.yCoord
     ) > movingThreshold) {
-        _movementCircle = std::unique_ptr<MovementCircle>(new MovementCircle{
-            std::unique_ptr<ScreenDirection>(new ScreenDirection(nearestCardinal.direction)),
-            *_mouseCoords,
-            updatingTime
-        });
+        _movementCircle = std::unique_ptr<MovementCircle>(
+            new MovementCircle{
+                std::unique_ptr<ScreenDirection>(new ScreenDirection(nearestCardinal.direction)),
+                *_mouseCoords,
+                updatingTime
+            }
+        );
         executeDirectionActionFunction();
         return;
     }
@@ -109,11 +115,13 @@ void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
     );
 
     if (movement != nullptr && timeSinceMovementCircleCreation > updatingDirectionDetectionThreshold) {
-        _movementCircle = std::unique_ptr<MovementCircle>(new MovementCircle{
-            std::unique_ptr<ScreenDirection>(new ScreenDirection(*movement)),
-            *_mouseCoords,
-            updatingTime
-        });
+        _movementCircle = std::unique_ptr<MovementCircle>(
+            new MovementCircle{
+                std::unique_ptr<ScreenDirection>(new ScreenDirection(*movement)),
+                *_mouseCoords,
+                updatingTime
+            }
+        );
         return;
     }
 
@@ -124,7 +132,8 @@ void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
         }
         return;
     }
-    if (*movement == Mouse::ScreenDirection::West || *movement == Mouse::ScreenDirection::East) {
+    if (*movement == Mouse::ScreenDirection::West || *movement == Mouse::ScreenDirection::East || *movement ==
+        Mouse::ScreenDirection::North) {
         _releaseFunction();
         return;
     }
