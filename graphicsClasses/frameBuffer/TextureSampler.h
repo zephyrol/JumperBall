@@ -24,8 +24,8 @@ public :
     /**
      * Move constructor and assignment are deleted because the destructor free the GPU memory.
      */
-    TextureSampler(TextureSampler&& textureSampler) noexcept = delete;
-    TextureSampler& operator=(TextureSampler&& textureSampler) noexcept = delete;
+    TextureSampler(TextureSampler&& textureSampler) = delete;
+    TextureSampler& operator=(TextureSampler&& textureSampler) = delete;
 
     /**
      * Bind a texture from its id.

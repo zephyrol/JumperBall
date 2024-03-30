@@ -8,8 +8,9 @@
 #ifndef RENDERGROUP_H
 #define RENDERGROUP_H
 
+#include "GpuBuffer.h"
+#include "GpuVertexArray.h"
 #include "RenderGroupUniforms.h"
-#include "process/mesh/gpuGeometryBuffers/GpuVertexBuffer.h"
 
 class RenderGroup;
 
@@ -20,13 +21,11 @@ using vecRenderGroup_sptr = std::vector<RenderGroup_sptr>;
 using vecCstRenderGroup_sptr = std::vector<CstRenderGroup_sptr>;
 
 class RenderGroup {
-
 public:
-
     RenderGroup(
         MeshDynamicGroup_uptr meshDynamicGroup,
-        GLuint vertexArrayObject,
-        vecGpuGeometryBuffer_sptr gpuGeometryBuffers,
+        vecCstGpuBuffer_uptr gpuGeometryBuffers,
+        CstGpuVertexArray_uptr gpuVertexArray,
         GLsizei numberOfIndices
     );
 
@@ -44,13 +43,16 @@ public:
 
     static RenderGroup_sptr createInstance(MeshDynamicGroup_uptr meshDynamicGroup);
 
-    ~RenderGroup();
-
 private:
+    static CstGpuBuffer_uptr createElementBuffer(const GeometricShape::IndicesBuffer &indices);
+    static CstGpuBuffer_uptr createGeometryBuffer(
+        const CstVertexAttributeBase_uptr &vertexAttribute,
+        GLuint index
+    );
 
     const MeshDynamicGroup_uptr _meshDynamicGroup;
-    const GLuint _vertexArrayObject;
-    const vecGpuGeometryBuffer_sptr _gpuGeometryBuffers;
+    const vecCstGpuBuffer_uptr _gpuGeometryBuffers;
+    const CstGpuVertexArray_uptr _gpuVertexArray;
     const GLsizei _numberOfIndices;
 };
 

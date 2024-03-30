@@ -5,23 +5,24 @@
  * Created on 20 mars 2021, 16:30
  */
 #include "process/RenderGroup.h"
+
+#include "GpuVertexArray.h"
 #include "RenderGroupUniforms.h"
-#include "process/mesh/gpuGeometryBuffers/GpuElementBuffer.h"
 
 RenderGroup::RenderGroup(
     MeshDynamicGroup_uptr meshDynamicGroup,
-    GLuint vertexArrayObject,
-    vecGpuGeometryBuffer_sptr gpuGeometryBuffers,
+    vecCstGpuBuffer_uptr gpuGeometryBuffers,
+    CstGpuVertexArray_uptr gpuVertexArray,
     GLsizei numberOfIndices
 ) :
     _meshDynamicGroup(std::move(meshDynamicGroup)),
-    _vertexArrayObject(vertexArrayObject),
     _gpuGeometryBuffers(std::move(gpuGeometryBuffers)),
+    _gpuVertexArray(std::move(gpuVertexArray)),
     _numberOfIndices(numberOfIndices) {
 }
 
 void RenderGroup::bind() const {
-    glBindVertexArray(_vertexArrayObject);
+    _gpuVertexArray->bind();
 }
 
 void RenderGroup::render() const {
@@ -29,16 +30,9 @@ void RenderGroup::render() const {
 }
 
 RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGroup) {
-
     // 1. VAO
-    const auto genVertexArrayObject = []() {
-        GLuint vao;
-        glGenVertexArrays(1, &vao);
-        return vao;
-    };
-
-    const auto vertexArrayObject = genVertexArrayObject();
-    glBindVertexArray(vertexArrayObject);
+    auto gpuVertexArray = CstGpuVertexArray_uptr(new GpuVertexArray());
+    gpuVertexArray->bind();
 
     const auto &meshes = meshDynamicGroup->meshes();
 
@@ -55,29 +49,65 @@ RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGr
 
     // 3. Create EBO
     const auto &indices = groupGeometry.indices();
-    vecGpuGeometryBuffer_sptr gpuGeometryBuffers{GpuElementBuffer::createInstance(indices)};
+    vecCstGpuBuffer_uptr gpuGeometryBuffers;
+    gpuGeometryBuffers.emplace_back(createElementBuffer(indices));
 
     // 4. Create gpu vertex attributes
     auto vertexAttributes = groupGeometry.extractVertexAttributes();
 
     for (size_t i = 0; i < vertexAttributes.size(); ++i) {
         auto &vertexAttribute = vertexAttributes[i];
-        gpuGeometryBuffers.emplace_back(GpuVertexBuffer::createInstance(
-            std::move(vertexAttribute),
-            static_cast<GLuint>(i)
-        ));
+        gpuGeometryBuffers.emplace_back( createGeometryBuffer(
+                std::move(vertexAttribute),
+                static_cast<GLuint>(i)
+            )
+        );
     }
 
     return std::make_shared<RenderGroup>(
         std::move(meshDynamicGroup),
-        vertexArrayObject,
         std::move(gpuGeometryBuffers),
+        std::move(gpuVertexArray),
         static_cast<GLsizei>(indices.size())
     );
 }
 
-RenderGroup::~RenderGroup() {
-    glDeleteVertexArrays(1, &_vertexArrayObject);
+CstGpuBuffer_uptr RenderGroup::createElementBuffer(const GeometricShape::IndicesBuffer &indices) {
+    // 1. Create buffer object.
+    auto bo = CstGpuBuffer_uptr(new GpuBuffer());
+
+    // 2. Bind buffer object.
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bo->getId());
+
+    // 3. Create data on gpu
+    glBufferData(
+        GL_ELEMENT_ARRAY_BUFFER,
+        static_cast<GLsizeiptr>(indices.size() * sizeof(decltype(indices.front()))),
+        indices.data(),
+        GL_STATIC_DRAW
+    );
+
+    return bo;
+}
+
+CstGpuBuffer_uptr RenderGroup::createGeometryBuffer(
+    const CstVertexAttributeBase_uptr &vertexAttribute,
+    GLuint index
+) {
+    // 1. Create buffer object.
+    auto bo = CstGpuBuffer_uptr(new GpuBuffer());
+
+    // 2. Bind buffer object.
+    glBindBuffer(GL_ARRAY_BUFFER, bo->getId());
+
+    // 3. Create data on gpu
+    vertexAttribute->createDataOnGpu();
+
+    // 4. Link and activate this vbo in the vao at the index location.
+    vertexAttribute->getVertexAttribPointerFunc()(index);
+    glEnableVertexAttribArray(index);
+
+    return bo;
 }
 
 RenderGroupUniforms RenderGroup::genUniforms(const CstShaderProgram_sptr &shaderProgram) const {
