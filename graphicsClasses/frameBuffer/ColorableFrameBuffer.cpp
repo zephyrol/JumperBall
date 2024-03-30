@@ -11,12 +11,12 @@ ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
     bool hasDepthBuffer,
     std::unique_ptr<glm::vec3> clearColor
 ) {
-    const auto fboHandle = createFrameBufferObject();
     auto renderTexture = CstTextureSampler_uptr(new TextureSampler());
-
-    glBindFramebuffer(GL_FRAMEBUFFER, fboHandle);
     TextureSampler::setActiveTexture(0);
     renderTexture->bind();
+
+    auto gpuFrameBuffer = CstGpuFrameBuffer_uptr(new GpuFrameBuffer());
+    gpuFrameBuffer->bind();
 
     glTexStorage2D(
         GL_TEXTURE_2D,
@@ -55,8 +55,8 @@ ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
 
     return ColorableFrameBuffer_uptr(
         new ColorableFrameBuffer(
-            fboHandle,
             std::move(renderTexture),
+            std::move(gpuFrameBuffer),
             std::move(depthBuffer),
             std::move(clearColor)
         )
@@ -64,26 +64,28 @@ ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
 }
 
 ColorableFrameBuffer::ColorableFrameBuffer(
-    GLuint fboHandle,
     CstTextureSampler_uptr renderTexture,
+    CstGpuFrameBuffer_uptr gpuFrameBuffer,
     CstRenderBuffer_uptr depthBuffer,
     std::unique_ptr<glm::vec3> clearColor
-) : FrameBuffer(fboHandle, std::move(renderTexture)),
-    _depthBuffer(std::move(depthBuffer)),
+) : FrameBuffer(std::move(renderTexture), std::move(depthBuffer), std::move(gpuFrameBuffer)),
     _clearColor(std::move(clearColor)) {
 }
 
 void ColorableFrameBuffer::clear() {
     if (_clearColor != nullptr) {
         glClearColor(_clearColor->r, _clearColor->g, _clearColor->z, 0.0f);
-        if (_depthBuffer != nullptr) {
+
+        // If we use a depth buffer
+        if (_renderBuffer != nullptr) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         } else {
             glClear(GL_COLOR_BUFFER_BIT);
         }
         return;
     }
-    if (_depthBuffer != nullptr) {
+    // If we use a depth buffer
+    if (_renderBuffer != nullptr) {
         glClear(GL_DEPTH_BUFFER_BIT);
     }
 }

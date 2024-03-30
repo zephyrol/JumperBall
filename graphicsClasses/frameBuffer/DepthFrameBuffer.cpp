@@ -5,19 +5,19 @@
 #include "DepthFrameBuffer.h"
 
 
-DepthFrameBuffer::DepthFrameBuffer(GLuint fboHandle, CstTextureSampler_uptr renderTexture) :
-    FrameBuffer(fboHandle, std::move(renderTexture)) {
+DepthFrameBuffer::DepthFrameBuffer(
+    CstTextureSampler_uptr renderTexture,
+    CstGpuFrameBuffer_uptr gpuFrameBuffer):
+    FrameBuffer(std::move(renderTexture), nullptr, std::move(gpuFrameBuffer)) {
 }
 
 DepthFrameBuffer_uptr DepthFrameBuffer::createInstance(GLsizei resolutionX, GLsizei resolutionY) {
-
-    const auto fboHandle = createFrameBufferObject();
     auto depthTexture = CstTextureSampler_uptr(new TextureSampler());
-
-    glBindFramebuffer(GL_FRAMEBUFFER, fboHandle);
     TextureSampler::setActiveTexture(0);
     depthTexture->bind();
 
+    auto gpuFrameBuffer = CstGpuFrameBuffer_uptr(new GpuFrameBuffer());
+    gpuFrameBuffer->bind();
 
     glTexStorage2D(
         GL_TEXTURE_2D,
@@ -39,10 +39,12 @@ DepthFrameBuffer_uptr DepthFrameBuffer::createInstance(GLsizei resolutionX, GLsi
     const GLenum drawBuffer = GL_NONE;
     glDrawBuffers(1, &drawBuffer);
 
-    return DepthFrameBuffer_uptr (new DepthFrameBuffer(
-        fboHandle,
-        std::move(depthTexture)
-    ));
+    return DepthFrameBuffer_uptr(
+        new DepthFrameBuffer(
+            std::move(depthTexture),
+            std::move(gpuFrameBuffer)
+        )
+    );
 }
 
 void DepthFrameBuffer::clear() {

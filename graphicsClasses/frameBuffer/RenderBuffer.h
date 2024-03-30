@@ -18,14 +18,14 @@ public:
     /**
      * Copy constructor and assignment are deleted because a OpenGL buffer id is unique.
      */
-    RenderBuffer(const RenderBuffer &gpuBuffer) = delete;
-    RenderBuffer &operator=(const RenderBuffer &gpuBuffer) = delete;
+    RenderBuffer(const RenderBuffer &renderBuffer) = delete;
+    RenderBuffer &operator=(const RenderBuffer &renderBuffer) = delete;
 
     /**
      * Move constructor and assignment are deleted because the destructor free the GPU memory.
      */
-    RenderBuffer(RenderBuffer &&gpuBuffer) = delete;
-    RenderBuffer &operator=(RenderBuffer &&gpuBuffer) = delete;
+    RenderBuffer(RenderBuffer &&renderBuffer) = delete;
+    RenderBuffer &operator=(RenderBuffer &&renderBuffer) = delete;
 
     /**
      * Bind a texture from its id.

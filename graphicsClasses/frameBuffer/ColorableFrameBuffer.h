@@ -23,8 +23,8 @@ public:
     );
 
     ColorableFrameBuffer(
-        GLuint fboHandle,
         CstTextureSampler_uptr renderTexture,
+        CstGpuFrameBuffer_uptr gpuFrameBuffer,
         CstRenderBuffer_uptr depthBuffer,
         std::unique_ptr<glm::vec3> clearColor
     );
@@ -32,7 +32,6 @@ public:
     void clear() override;
 
 private:
-    const CstRenderBuffer_uptr _depthBuffer;
     const std::unique_ptr<const glm::vec3> _clearColor;
 
 };

@@ -29,7 +29,7 @@ public:
     GpuBuffer &operator=(GpuBuffer &&gpuBuffer) = delete;
 
     /**
-    * Get OpenGL buffer Id. Use this getter ONLY to reference the ID to OpenGL API.
+    * Get OpenGL render buffer Id. Use this getter ONLY to reference the ID to OpenGL API.
     * Do not store it anywhere!
     */
     GLuint getId() const;

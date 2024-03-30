@@ -7,31 +7,22 @@
 
 #include "FrameBuffer.h"
 
-FrameBuffer::FrameBuffer(GLuint fboHandle, CstTextureSampler_uptr renderTexture):
-_fboHandle(fboHandle),
-_renderTexture(std::move(renderTexture)){
+FrameBuffer::FrameBuffer(
+    CstTextureSampler_uptr renderTexture,
+    CstRenderBuffer_uptr renderBuffer,
+    CstGpuFrameBuffer_uptr gpuFrameBuffer
+):
+    _renderTexture(std::move(renderTexture)),
+    _renderBuffer(std::move(renderBuffer)),
+    _gpuFrameBuffer(std::move(gpuFrameBuffer)) {
 }
 
 void FrameBuffer::bindFrameBuffer() const {
-    glBindFramebuffer(GL_FRAMEBUFFER, _fboHandle);
+    _gpuFrameBuffer->bind();
 }
 
-const CstTextureSampler_uptr& FrameBuffer::getRenderTexture() const {
+const CstTextureSampler_uptr &FrameBuffer::getRenderTexture() const {
     return _renderTexture;
-}
-
-FrameBuffer::~FrameBuffer() {
-    glDeleteFramebuffers(1, &_fboHandle);
-}
-
-void FrameBuffer::bindDefaultFrameBuffer(GLint defaultFrameBuffer) {
-    glBindFramebuffer(GL_FRAMEBUFFER, defaultFrameBuffer);
-}
-
-GLuint FrameBuffer::createFrameBufferObject() {
-    GLuint fbo;
-    glGenFramebuffers(1, &fbo);
-    return fbo;
 }
 
 void FrameBuffer::setViewportSize(GLsizei resolutionX, GLsizei resolutionY) {

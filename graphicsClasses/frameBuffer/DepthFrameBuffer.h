@@ -19,8 +19,8 @@ public:
     );
 
     DepthFrameBuffer(
-        GLuint fboHandle,
-        CstTextureSampler_uptr renderTexture
+        CstTextureSampler_uptr renderTexture,
+        CstGpuFrameBuffer_uptr gpuFrameBuffer
     );
 
     void clear() override;

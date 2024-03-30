@@ -8,7 +8,8 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#include "ShaderProgram.h"
+#include "GpuFrameBuffer.h"
+#include "RenderBuffer.h"
 #include "TextureSampler.h"
 
 class FrameBuffer;
@@ -17,26 +18,24 @@ using FrameBuffer_uptr = std::unique_ptr<FrameBuffer>;
 using CstFrameBuffer_uptr = std::unique_ptr<const FrameBuffer>;
 
 class FrameBuffer {
-
 public:
     explicit FrameBuffer(
-        GLuint fboHandle,
-        CstTextureSampler_uptr renderTexture
+        CstTextureSampler_uptr renderTexture,
+        CstRenderBuffer_uptr renderBuffer,
+        CstGpuFrameBuffer_uptr gpuFrameBuffer
     );
 
     FrameBuffer(const FrameBuffer &frameBuffer) = delete;
 
     FrameBuffer &operator=(const FrameBuffer &) = delete;
 
-    const CstTextureSampler_uptr& getRenderTexture() const;
+    const CstTextureSampler_uptr &getRenderTexture() const;
 
     void bindFrameBuffer() const;
 
     virtual void clear() = 0;
 
-    virtual ~FrameBuffer();
-
-    static void bindDefaultFrameBuffer(GLint defaultFrameBuffer);
+    virtual ~FrameBuffer() = default;
 
     static void setViewportSize(GLsizei resolutionX, GLsizei resolutionY);
 
@@ -49,11 +48,9 @@ public:
     static void disableBlending();
 
 protected:
-    static GLuint createFrameBufferObject();
-
-private:
-    const GLuint _fboHandle;
     const CstTextureSampler_uptr _renderTexture;
+    const CstRenderBuffer_uptr _renderBuffer;
+    const CstGpuFrameBuffer_uptr _gpuFrameBuffer;
 };
 
 #endif /* FRAMEBUFFER_H */

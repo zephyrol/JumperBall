@@ -77,7 +77,7 @@ void PostEffects::render() const {
     _screen->render();
 
     // 4. Bloom
-    FrameBuffer::bindDefaultFrameBuffer(_defaultFrameBuffer);
+    GpuFrameBuffer::bindDefaultFrameBuffer(_defaultFrameBuffer);
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 3);
     FrameBuffer::setViewportSize(_screenWidth, _screenHeight);
 
