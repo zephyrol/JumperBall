@@ -12,7 +12,6 @@
 #include "process/menu/LabelsProcess.h"
 
 class Viewer {
-
 public:
     Viewer(
         GLsizei resolutionX,
@@ -20,7 +19,7 @@ public:
         const CstScene_sptr &scene,
         CstPage_sptr page,
         const JBTypes::FileContent &fileContent,
-        const unsigned char *fontData,
+        const unsigned char* fontData,
         size_t fontDataSize
     );
 
@@ -36,9 +35,7 @@ public:
 
     void setScene(const CstScene_sptr &scene);
 
-
 private:
-
     CstScene_sptr _scene;
     CstPage_sptr _page;
     FontTexturesGenerator::FTContent _ftContent;
@@ -53,7 +50,6 @@ private:
     std::unique_ptr<LabelsProcess> _pageRendering;
 
     void resetRendering();
-
 };
 
 #endif // VIEWER_H

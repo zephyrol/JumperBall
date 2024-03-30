@@ -18,10 +18,6 @@ ShaderProgram::ShaderProgram(
 
 }
 
-ShaderProgram::~ShaderProgram() {
-    glDeleteProgram(_shaderProgramHandle);
-}
-
 GLuint ShaderProgram::getHandle() const {
     return _shaderProgramHandle;
 }
@@ -130,3 +126,8 @@ void ShaderProgram::setUniformArrayVec4(
     const auto location = getUniformLocation(uniformArrayName);
     glUniform4fv(location, static_cast<GLint>(vec4sData.size()) / 4, vec4sData.data());
 }
+
+ShaderProgram::~ShaderProgram() {
+    glDeleteProgram(_shaderProgramHandle);
+}
+

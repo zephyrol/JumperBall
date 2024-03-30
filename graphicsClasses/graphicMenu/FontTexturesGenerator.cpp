@@ -221,11 +221,13 @@ FontTexturesGenerator_uptr FontTexturesGenerator::createInstance(
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    return FontTexturesGenerator_uptr(new FontTexturesGenerator(
-        std::move(lettersTexture), std::move(textLabels)
-    ));
+    return FontTexturesGenerator_uptr(
+        new FontTexturesGenerator(
+            std::move(lettersTexture),
+            std::move(textLabels)
+        )
+    );
 }
-
 
 glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
     FontTexturesGenerator::LettersTexture &lettersTexture,

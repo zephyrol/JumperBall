@@ -32,7 +32,6 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     GLsizei height,
     const CstPage_sptr &page
 ) {
-
     auto fontTexturesGenerator = FontTexturesGenerator::createInstance(width, height, page, ftContent);
 
     auto labels = page->labels();
@@ -65,14 +64,16 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     TextureSampler::setActiveTexture(characterTextureNumber);
     fontTexturesGenerator->getLettersTexture()->bind();
 
-    return std::unique_ptr<LabelsProcess>(new LabelsProcess(
-        width,
-        height,
-        page,
-        std::move(fontTexturesGenerator),
-        std::move(renderGroup),
-        std::move(labelsShader)
-    ));
+    return std::unique_ptr<LabelsProcess>(
+        new LabelsProcess(
+            width,
+            height,
+            page,
+            std::move(fontTexturesGenerator),
+            std::move(renderGroup),
+            std::move(labelsShader)
+        )
+    );
 }
 
 void LabelsProcess::render() const {

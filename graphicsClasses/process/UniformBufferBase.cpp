@@ -81,7 +81,7 @@ UniformBufferBase UniformBufferBase::createInstance(
 }
 
 UniformBufferBase::~UniformBufferBase() {
-    glDeleteBuffers(1, &_ubo);
+    // glDeleteBuffers(1, &_ubo);
 }
 
 void UniformBufferBase::updateBufferOnGPU() {
