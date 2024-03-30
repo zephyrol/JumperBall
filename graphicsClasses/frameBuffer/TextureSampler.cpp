@@ -4,10 +4,27 @@
 
 #include "TextureSampler.h"
 
-void TextureSampler::bind(GLuint textureId) {
-    glBindTexture(GL_TEXTURE_2D, textureId);
+TextureSampler::TextureSampler(): _textureId(
+    []() {
+        GLuint texture;
+        glGenTextures(1, &texture);
+        return texture;
+    }()
+) {
+}
+
+void TextureSampler::bind() const {
+    glBindTexture(GL_TEXTURE_2D, _textureId);
 }
 
 void TextureSampler::setActiveTexture(GLint index) {
     glActiveTexture(GL_TEXTURE0 + index);
+}
+
+GLuint TextureSampler::getId() const {
+    return _textureId;
+}
+
+TextureSampler::~TextureSampler() {
+    glDeleteTextures(1, &_textureId);
 }

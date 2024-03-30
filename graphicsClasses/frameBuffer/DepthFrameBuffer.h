@@ -20,10 +20,12 @@ public:
 
     DepthFrameBuffer(
         GLuint fboHandle,
-        GLuint renderTexture
+        CstTextureSampler_uptr renderTexture
     );
 
     void clear() override;
+
+    ~DepthFrameBuffer() override = default;
 };
 
 

@@ -23,14 +23,14 @@ public:
 
     ColorableFrameBuffer(
         GLuint fboHandle,
-        GLuint renderTexture,
+        CstTextureSampler_uptr renderTexture,
         std::unique_ptr<const GLuint> depthBuffer,
         std::unique_ptr<glm::vec3> clearColor
     );
 
-    void freeGPUMemory() override;
-
     void clear() override;
+
+    ~ColorableFrameBuffer() override;
 
 private:
     const std::unique_ptr<const GLuint> _depthBuffer;

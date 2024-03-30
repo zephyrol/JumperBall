@@ -21,9 +21,7 @@ public:
         GLuint bufferObject
     );
 
-    void freeGPUMemory();
-
-    virtual ~GpuGeometryBuffer() = default;
+    virtual ~GpuGeometryBuffer();
 
 protected:
     const GLuint _bufferObject;

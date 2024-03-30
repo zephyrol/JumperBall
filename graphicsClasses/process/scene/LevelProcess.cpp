@@ -117,9 +117,9 @@ void LevelProcess::render() const {
     _mapShaderProgram->use();
 
     TextureSampler::setActiveTexture(firstShadowTextureIndex);
-    TextureSampler::bind(_firstBlankShadow->getRenderTexture());
+    _firstBlankShadow->getRenderTexture()->bind();
     TextureSampler::setActiveTexture(secondShadowTextureIndex);
-    TextureSampler::bind(_secondBlankShadow->getRenderTexture());
+    _secondBlankShadow->getRenderTexture()->bind();
 
     _mapGroupUniforms.bind();
     _mapGroup->bind();
@@ -142,9 +142,9 @@ void LevelProcess::render() const {
     FrameBuffer::setViewportSize(_width, _height);
     _levelFrameBuffer->bindFrameBuffer();
 
-    TextureSampler::bind(_secondShadow->getRenderTexture());
+    _secondShadow->getRenderTexture()->bind();
     TextureSampler::setActiveTexture(firstShadowTextureIndex);
-    TextureSampler::bind(_firstShadow->getRenderTexture());
+    _firstShadow->getRenderTexture()->bind();
 
     _levelFrameBuffer->bindFrameBuffer();
     _mapShaderProgram->setInteger(_passIdUniformLocation, 3);
@@ -157,20 +157,8 @@ void LevelProcess::update() {
     _starGroupUniforms.update();
 }
 
-void LevelProcess::freeGPUMemory() {
-    _firstShadow->freeGPUMemory();
-    _firstBlankShadow->freeGPUMemory();
-    _secondShadow->freeGPUMemory();
-    _secondBlankShadow->freeGPUMemory();
-    _levelFrameBuffer->freeGPUMemory();
-    _mapShaderProgram->freeGPUMemory();
-    _mapGroup->freeGPUMemory();
-    _starShaderProgram->freeGPUMemory();
-    _starGroup->freeGPUMemory();
-}
-
-std::shared_ptr<const GLuint> LevelProcess::getRenderTexture() const {
-    return std::make_shared<const GLuint>(_levelFrameBuffer->getRenderTexture());
+const CstTextureSampler_uptr &LevelProcess::getRenderTexture() const {
+    return _levelFrameBuffer->getRenderTexture();
 }
 
 ShaderProgram_sptr LevelProcess::createMapShaderProgram(
@@ -188,7 +176,7 @@ ShaderProgram_sptr LevelProcess::createMapShaderProgram(
     shader->setTextureIndex("depthTexture", firstShadowTextureIndex);
     shader->setTextureIndex("depth2Texture", secondShadowTextureIndex);
 
-    const auto shadowPixelSize = 1.f / static_cast<float>(depthTexturesSize);
+    constexpr auto shadowPixelSize = 1.f / static_cast<float>(depthTexturesSize);
 
     shader->setUniformArrayVec4(
         "shadowOffsets[0]",

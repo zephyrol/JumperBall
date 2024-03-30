@@ -60,7 +60,7 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         height,
         expensivePostProcessWidthGLsizei,
         expensivePostProcessHeightGLsizei,
-        *levelProcess->getRenderTexture(),
+        levelProcess->getRenderTexture(),
         defaultFrameBuffer
     );
 
@@ -106,11 +106,3 @@ void SceneRendering::render() const {
         process->render();
     }
 }
-
-void SceneRendering::freeGPUMemory() {
-    for (const auto &process: _processes) {
-        process->freeGPUMemory();
-    }
-    _sceneUniformBuffer.freeGPUMemory();
-}
-

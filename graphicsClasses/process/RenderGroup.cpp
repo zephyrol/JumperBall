@@ -28,13 +28,6 @@ void RenderGroup::render() const {
     glDrawElements(GL_TRIANGLES, _numberOfIndices, GL_UNSIGNED_SHORT, nullptr);
 }
 
-void RenderGroup::freeGPUMemory() {
-    for (const auto &gpuGeometryBuffer: _gpuGeometryBuffers) {
-        gpuGeometryBuffer->freeGPUMemory();
-    }
-    glDeleteVertexArrays(1, &_vertexArrayObject);
-}
-
 RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGroup) {
 
     // 1. VAO
@@ -81,6 +74,10 @@ RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGr
         std::move(gpuGeometryBuffers),
         static_cast<GLsizei>(indices.size())
     );
+}
+
+RenderGroup::~RenderGroup() {
+    glDeleteVertexArrays(1, &_vertexArrayObject);
 }
 
 RenderGroupUniforms RenderGroup::genUniforms(const CstShaderProgram_sptr &shaderProgram) const {

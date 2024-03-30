@@ -47,8 +47,4 @@ void SceneUniformBuffer::update(
     _uniformBufferBase.updateBufferOnGPU();
 }
 
-void SceneUniformBuffer::freeGPUMemory() {
-    _uniformBufferBase.freeGPUMemory();
-}
-
 

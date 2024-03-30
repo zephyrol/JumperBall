@@ -14,7 +14,7 @@
 #include "scene/Map.h"
 #include "process/RenderGroup.h"
 
-class LabelsProcess: public RenderProcess, Rendering {
+class LabelsProcess: Rendering {
 
 public:
     static std::unique_ptr<LabelsProcess> createInstance(
@@ -29,20 +29,18 @@ public:
         GLsizei width,
         GLsizei height,
         CstPage_sptr page,
-        const FontTexturesGenerator& fontTexturesGenerator,
+        FontTexturesGenerator_uptr fontTexturesGenerator,
         RenderGroup_sptr renderGroup,
         ShaderProgram_sptr labelsShader
     );
 
     void render() const override;
     void update() override;
-    void freeGPUMemory() override;
-    vecCstShaderProgram_sptr getShaderPrograms() const override;
-    std::shared_ptr<const GLuint> getRenderTexture() const override;
+    vecCstShaderProgram_sptr getShaderPrograms() const;
 
 private:
     const CstPage_sptr _page;
-    FontTexturesGenerator _fontTexturesGenerator;
+    const FontTexturesGenerator_uptr _fontTexturesGenerator;
     const RenderGroup_sptr _renderGroup;
     const ShaderProgram_sptr _labelsShader;
     RenderGroupUniforms _renderGroupUniform;

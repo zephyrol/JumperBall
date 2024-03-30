@@ -18,14 +18,12 @@ ShaderProgram::ShaderProgram(
 
 }
 
-GLuint ShaderProgram::getHandle() const {
-    return _shaderProgramHandle;
+ShaderProgram::~ShaderProgram() {
+    glDeleteProgram(_shaderProgramHandle);
 }
 
-void ShaderProgram::freeGPUMemory() {
-    _vertexShader->freeGPUMemory();
-    _fragmentShader->freeGPUMemory();
-    glDeleteProgram(_shaderProgramHandle);
+GLuint ShaderProgram::getHandle() const {
+    return _shaderProgramHandle;
 }
 
 ShaderProgram_sptr ShaderProgram::createInstance(
@@ -69,8 +67,6 @@ ShaderProgram_sptr ShaderProgram::createInstance(
 
     glDetachShader(shaderProgramHandle, vertexShader->getHandle());
     glDetachShader(shaderProgramHandle, fragmentShader->getHandle());
-    glDeleteShader(vertexShader->getHandle());
-    glDeleteShader(fragmentShader->getHandle());
 
     return std::make_shared<ShaderProgram>(
         std::move(vertexShader),

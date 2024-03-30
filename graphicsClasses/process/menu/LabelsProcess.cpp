@@ -13,13 +13,13 @@ LabelsProcess::LabelsProcess(
     GLsizei width,
     GLsizei height,
     CstPage_sptr page,
-    const FontTexturesGenerator &fontTexturesGenerator,
+    FontTexturesGenerator_uptr fontTexturesGenerator,
     RenderGroup_sptr renderGroup,
     ShaderProgram_sptr labelsShader
 ) :
     Rendering(width, height),
     _page(std::move(page)),
-    _fontTexturesGenerator(fontTexturesGenerator),
+    _fontTexturesGenerator(std::move(fontTexturesGenerator)),
     _renderGroup(std::move(renderGroup)),
     _labelsShader(std::move(labelsShader)),
     _renderGroupUniform(_renderGroup->genUniforms(_labelsShader)) {
@@ -33,10 +33,10 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     const CstPage_sptr &page
 ) {
 
-    auto fontTexturesGenerator(FontTexturesGenerator::createInstance(width, height, page, ftContent));
+    auto fontTexturesGenerator = FontTexturesGenerator::createInstance(width, height, page, ftContent);
 
     auto labels = page->labels();
-    auto messageLabels = fontTexturesGenerator.getTextLabels();
+    auto messageLabels = fontTexturesGenerator->getTextLabels();
     labels.insert(
         labels.end(),
         std::make_move_iterator(messageLabels.begin()),
@@ -63,13 +63,13 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     constexpr GLint characterTextureNumber = 4;
     labelsShader->setTextureIndex("characterTexture", characterTextureNumber);
     TextureSampler::setActiveTexture(characterTextureNumber);
-    TextureSampler::bind(fontTexturesGenerator.getLettersTexture());
+    fontTexturesGenerator->getLettersTexture()->bind();
 
     return std::unique_ptr<LabelsProcess>(new LabelsProcess(
         width,
         height,
         page,
-        fontTexturesGenerator,
+        std::move(fontTexturesGenerator),
         std::move(renderGroup),
         std::move(labelsShader)
     ));
@@ -81,16 +81,6 @@ void LabelsProcess::render() const {
     _renderGroupUniform.bind();
     _renderGroup->bind();
     _renderGroup->render();
-}
-
-void LabelsProcess::freeGPUMemory() {
-    _labelsShader->freeGPUMemory();
-    _renderGroup->freeGPUMemory();
-    _fontTexturesGenerator.freeGPUMemory();
-}
-
-std::shared_ptr<const GLuint> LabelsProcess::getRenderTexture() const {
-    return nullptr;
 }
 
 vecCstShaderProgram_sptr LabelsProcess::getShaderPrograms() const {

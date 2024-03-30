@@ -20,10 +20,9 @@ FontTexturesGenerator::FontTexturesGenerator(
 
 
 FontTexturesGenerator::FTContent FontTexturesGenerator::initFreeTypeAndFont(
-    const unsigned char *fontData,
+    const unsigned char* fontData,
     size_t fontDataSize
 ) {
-
     FontTexturesGenerator::FTContent ftContent{};
 
     if (FT_Init_FreeType(&ftContent.ftLib)) {
@@ -53,18 +52,12 @@ void FontTexturesGenerator::clearFreeTypeResources(FontTexturesGenerator::FTCont
     FT_Done_FreeType(ftContent.ftLib);
 }
 
-void FontTexturesGenerator::freeGPUMemory() {
-    glDeleteTextures(1, &_lettersTexture.textureID);
-}
-
-
 FontTexturesGenerator::GraphicCharacter FontTexturesGenerator::createOrGetGraphicCharacter(
     const FontTexturesGenerator::FTContent &ftContent,
     FT_UInt pixelHeight,
     LettersTexture &lettersTexture,
     unsigned char character
 ) {
-
     const auto hash = TextLabel::createLetterHash(static_cast<size_t>(pixelHeight), character);
     const auto &iterator = lettersTexture.graphicAlphabet.find(hash);
     if (iterator != lettersTexture.graphicAlphabet.end()) {
@@ -115,7 +108,6 @@ std::vector<TextLabel::CharacterLocalTransform> FontTexturesGenerator::getCharac
     unsigned int nodePixelWidth,
     unsigned int nodePixelHeight
 ) {
-
     std::vector<TextLabel::CharacterLocalTransform> localTransforms{};
     const auto fNodePixelWidth = static_cast<float>(nodePixelWidth);
     const auto fNodePixelHeight = static_cast<float>(nodePixelHeight);
@@ -139,13 +131,12 @@ const vecTextLabel_sptr &FontTexturesGenerator::getTextLabels() {
     return _messageLabels;
 }
 
-FontTexturesGenerator FontTexturesGenerator::createInstance(
+FontTexturesGenerator_uptr FontTexturesGenerator::createInstance(
     size_t screenWidth,
     size_t screenHeight,
     const CstPage_sptr &page,
     const FontTexturesGenerator::FTContent &ftContent
 ) {
-
     FontTexturesGenerator::LettersTexture lettersTexture;
 
     // Width is set to the power of 2 under the smaller side
@@ -211,8 +202,8 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
         };
     }
 
-    lettersTexture.textureID = FrameBuffer::createTexture();
-    glBindTexture(GL_TEXTURE_2D, lettersTexture.textureID);
+    lettersTexture.texture = CstTextureSampler_uptr(new TextureSampler());
+    lettersTexture.texture->bind();
     glTexImage2D(
         GL_TEXTURE_2D,
         0,
@@ -230,20 +221,18 @@ FontTexturesGenerator FontTexturesGenerator::createInstance(
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    return {
-        lettersTexture,
-        std::move(textLabels)
-    };
+    return FontTexturesGenerator_uptr(new FontTexturesGenerator(
+        std::move(lettersTexture), std::move(textLabels)
+    ));
 }
 
 
 glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
     FontTexturesGenerator::LettersTexture &lettersTexture,
-    const unsigned char *letterBitmap,
+    const unsigned char* letterBitmap,
     unsigned int bitmapWidth,
     unsigned int bitmapHeight
 ) {
-
     // Add a blank line and column to avoid neighbor pixel picking through linear
     const auto extendedWidth = bitmapWidth + 1;
     const auto extendedHeight = bitmapHeight + 1;
@@ -296,6 +285,7 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
     };
 }
 
-GLuint FontTexturesGenerator::getLettersTexture() const {
-    return _lettersTexture.textureID;
+const CstTextureSampler_uptr &FontTexturesGenerator::getLettersTexture() const {
+    return _lettersTexture.texture;
 }
+

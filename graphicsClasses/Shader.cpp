@@ -59,16 +59,16 @@ void Shader::verifyCompileStatus(const std::string &shaderCode) const {
     }
 }
 
+Shader::~Shader() {
+    glDeleteShader(_shaderHandle);
+}
+
 GLuint Shader::getHandle() const {
     return _shaderHandle;
 }
 
 GLenum Shader::getShaderType() const {
     return _shaderType;
-}
-
-void Shader::freeGPUMemory() const {
-    glDeleteShader(_shaderHandle);
 }
 
 CstShader_uptr Shader::createVertexShader(

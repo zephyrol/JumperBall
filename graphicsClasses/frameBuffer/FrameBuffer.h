@@ -9,6 +9,7 @@
 #define FRAMEBUFFER_H
 
 #include "ShaderProgram.h"
+#include "TextureSampler.h"
 
 class FrameBuffer;
 
@@ -20,24 +21,20 @@ class FrameBuffer {
 public:
     explicit FrameBuffer(
         GLuint fboHandle,
-        GLuint renderTexture
+        CstTextureSampler_uptr renderTexture
     );
 
     FrameBuffer(const FrameBuffer &frameBuffer) = delete;
 
     FrameBuffer &operator=(const FrameBuffer &) = delete;
 
-    FrameBuffer(FrameBuffer &&frameBuffer) = default;
-
-    GLuint getRenderTexture() const;
+    const CstTextureSampler_uptr& getRenderTexture() const;
 
     void bindFrameBuffer() const;
 
-    virtual void freeGPUMemory();
-
     virtual void clear() = 0;
 
-    virtual ~FrameBuffer() = default;
+    virtual ~FrameBuffer();
 
     static void bindDefaultFrameBuffer(GLint defaultFrameBuffer);
 
@@ -51,14 +48,12 @@ public:
 
     static void disableBlending();
 
-    static GLuint createTexture();
-
 protected:
     static GLuint createFrameBufferObject();
 
 private:
     const GLuint _fboHandle;
-    const GLuint _renderTexture;
+    const CstTextureSampler_uptr _renderTexture;
 };
 
 #endif /* FRAMEBUFFER_H */

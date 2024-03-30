@@ -33,13 +33,11 @@ public:
 
     Shader &operator=(const Shader &shader) = delete;
 
-    ~Shader() = default;
+    ~Shader();
 
     GLuint getHandle() const;
 
     GLenum getShaderType() const;
-
-    void freeGPUMemory() const;
 
     static CstShader_uptr createVertexShader(
         const JBTypes::FileContent &fileContent,

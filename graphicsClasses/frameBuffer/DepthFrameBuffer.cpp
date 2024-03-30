@@ -4,18 +4,20 @@
 
 #include "DepthFrameBuffer.h"
 
-DepthFrameBuffer::DepthFrameBuffer(GLuint fboHandle, GLuint renderTexture) :
-    FrameBuffer(fboHandle, renderTexture) {
+
+DepthFrameBuffer::DepthFrameBuffer(GLuint fboHandle, CstTextureSampler_uptr renderTexture) :
+    FrameBuffer(fboHandle, std::move(renderTexture)) {
 }
 
 DepthFrameBuffer_uptr DepthFrameBuffer::createInstance(GLsizei resolutionX, GLsizei resolutionY) {
 
     const auto fboHandle = createFrameBufferObject();
-    const auto depthTexture = createTexture();
+    auto depthTexture = CstTextureSampler_uptr(new TextureSampler());
 
     glBindFramebuffer(GL_FRAMEBUFFER, fboHandle);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, depthTexture);
+    TextureSampler::setActiveTexture(0);
+    depthTexture->bind();
+
 
     glTexStorage2D(
         GL_TEXTURE_2D,
@@ -32,14 +34,14 @@ DepthFrameBuffer_uptr DepthFrameBuffer::createInstance(GLsizei resolutionX, GLsi
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture->getId(), 0);
 
     const GLenum drawBuffer = GL_NONE;
     glDrawBuffers(1, &drawBuffer);
 
     return DepthFrameBuffer_uptr (new DepthFrameBuffer(
         fboHandle,
-        depthTexture
+        std::move(depthTexture)
     ));
 }
 

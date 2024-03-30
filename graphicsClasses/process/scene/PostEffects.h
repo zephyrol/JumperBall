@@ -19,24 +19,22 @@ public:
         GLsizei screenHeight,
         GLsizei postEffectsWidth,
         GLsizei postEffectsHeight,
-        GLuint sceneTexture,
+        const CstTextureSampler_uptr& sceneTexture,
         GLint defaultFrameBuffer
     );
 
     void render() const override;
 
-    void freeGPUMemory() override;
-
     vecCstShaderProgram_sptr getShaderPrograms() const override;
 
     ShaderProgram_sptr createPostProcessesShaderProgram(
-        GLuint sceneTexture,
+        const CstTextureSampler_uptr &sceneTexture,
         const JBTypes::FileContent &fileContent,
         GLsizei width,
         GLsizei height
     );
 
-    std::shared_ptr<const GLuint> getRenderTexture() const override;
+    const CstTextureSampler_uptr &getRenderTexture() const override;
 
 private:
 

@@ -30,7 +30,7 @@ public:
 
     ShaderProgram &operator=(const ShaderProgram &shaderProgram) = delete;
 
-    ~ShaderProgram() = default;
+    ~ShaderProgram();
 
     GLuint getHandle() const;
 
@@ -66,8 +66,6 @@ public:
      * Warning: don't forget to call ShaderProgram::use() method before!
      */
     void setUniformArrayVec4(const std::string &uniformArrayName, const std::vector<GLfloat> &vec4sData);
-
-    void freeGPUMemory();
 
     static ShaderProgram_sptr createInstance(
         const JBTypes::FileContent &fileContent,

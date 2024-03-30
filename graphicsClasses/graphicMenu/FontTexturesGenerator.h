@@ -23,6 +23,11 @@
 #include FT_FREETYPE_H
 #include <gameMenu/Menu.h>
 
+#include "frameBuffer/TextureSampler.h"
+
+class FontTexturesGenerator;
+using FontTexturesGenerator_uptr = std::unique_ptr<FontTexturesGenerator>;
+
 /**
  * A font textures generator is attached to a page, because only one page is rendered on the same time.
  */
@@ -82,7 +87,7 @@ class FontTexturesGenerator {
         /**
          * Texture Id
          */
-        GLuint textureID = 0;
+        CstTextureSampler_uptr texture = nullptr;
     };
 
 public:
@@ -97,29 +102,31 @@ public:
         vecTextLabel_sptr &&textLabels
     );
 
-    FontTexturesGenerator(const FontTexturesGenerator &ft) = default;
-
     FontTexturesGenerator &operator=(const FontTexturesGenerator &ft) = delete;
 
-    static FontTexturesGenerator createInstance(
+    static FontTexturesGenerator_uptr createInstance(
         size_t screenWidth,
         size_t screenHeight,
         const CstPage_sptr &page,
         const FTContent &ftContent
     );
 
-    void freeGPUMemory();
-
-    GLuint getLettersTexture() const;
+    const CstTextureSampler_uptr &getLettersTexture() const;
 
     const vecTextLabel_sptr &getTextLabels();
+
+    static FTContent initFreeTypeAndFont(
+        const unsigned char *fontData,
+        size_t fontDataSize
+    );
+
+    static void clearFreeTypeResources(FTContent &ftContent);
 
 private:
 
     const LettersTexture _lettersTexture;
 
     const vecTextLabel_sptr _messageLabels;
-
 
     /**
      * Create and add a new graphic character in alphabet.
@@ -157,13 +164,6 @@ private:
         unsigned int bitmapHeight
     );
 
-public:
-    static FTContent initFreeTypeAndFont(
-        const unsigned char *fontData,
-        size_t fontDataSize
-    );
-
-    static void clearFreeTypeResources(FTContent &ftContent);
 };
 
 

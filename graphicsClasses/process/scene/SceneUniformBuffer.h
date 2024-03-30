@@ -15,8 +15,6 @@ public:
         const vecCstShaderProgram_sptr &sceneShaderPrograms
     );
 
-    void freeGPUMemory();
-
     void update(
         const glm::mat4 &VP,
         const glm::mat4 &VPStar,

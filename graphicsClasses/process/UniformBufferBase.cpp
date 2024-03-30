@@ -80,7 +80,7 @@ UniformBufferBase UniformBufferBase::createInstance(
     };
 }
 
-void UniformBufferBase::freeGPUMemory() {
+UniformBufferBase::~UniformBufferBase() {
     glDeleteBuffers(1, &_ubo);
 }
 

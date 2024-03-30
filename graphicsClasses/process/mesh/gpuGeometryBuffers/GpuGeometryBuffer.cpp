@@ -9,7 +9,7 @@ GpuGeometryBuffer::GpuGeometryBuffer(
 ) : _bufferObject(bufferObject) {
 }
 
-void GpuGeometryBuffer::freeGPUMemory() {
+GpuGeometryBuffer::~GpuGeometryBuffer() {
     glDeleteBuffers(1, &_bufferObject);
 }
 

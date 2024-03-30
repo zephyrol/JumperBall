@@ -34,8 +34,6 @@ public:
 
     RenderGroup &operator=(const RenderGroup &renderGroup) = delete;
 
-    void freeGPUMemory();
-
     void bind() const;
 
     void render() const;
@@ -45,6 +43,8 @@ public:
     RenderGroupUniforms genUniforms(const CstShaderProgram_sptr &shaderProgram) const;
 
     static RenderGroup_sptr createInstance(MeshDynamicGroup_uptr meshDynamicGroup);
+
+    ~RenderGroup();
 
 private:
 

@@ -18,8 +18,6 @@ public:
 
     virtual void update() = 0;
 
-    virtual void freeGPUMemory() = 0;
-
     virtual void render() const = 0;
 
     virtual ~Rendering() = default;

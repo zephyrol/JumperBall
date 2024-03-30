@@ -53,11 +53,6 @@ void Viewer::render() const {
     _pageRendering->render();
 }
 
-void Viewer::freeGPUMemory() {
-    _sceneRendering->freeGPUMemory();
-    _pageRendering->freeGPUMemory();
-}
-
 void Viewer::resize(unsigned int resolutionX, unsigned int resolutionY) {
     _resolutionX = static_cast<GLsizei>(resolutionX);
     _resolutionY = static_cast<GLsizei>(resolutionY);
@@ -79,7 +74,6 @@ Viewer::~Viewer() {
 }
 
 void Viewer::resetRendering() {
-    freeGPUMemory();
     _sceneRendering = SceneRendering::createInstance(
         *_scene,
         _resolutionX,

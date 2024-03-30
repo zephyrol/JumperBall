@@ -11,7 +11,7 @@ PostEffects::PostEffects(
     GLsizei screenHeight,
     GLsizei postEffectsWidth,
     GLsizei postEffectsHeight,
-    GLuint sceneTexture,
+    const CstTextureSampler_uptr& sceneTexture,
     GLint defaultFrameBuffer
 ) :
     _screenWidth(screenWidth),
@@ -66,14 +66,14 @@ void PostEffects::render() const {
 
     // 2. Horizontal blur
     _horizontalBlurFrameBuffer->bindFrameBuffer();
-    TextureSampler::bind(_brightPassFilterFrameBuffer->getRenderTexture());
+    _brightPassFilterFrameBuffer->getRenderTexture()->bind();
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 1);
     _screen->render();
 
     // 3. Vertical blur
     _verticalBlurFrameBuffer->bindFrameBuffer();
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 2);
-    TextureSampler::bind(_horizontalBlurFrameBuffer->getRenderTexture());
+    _horizontalBlurFrameBuffer->getRenderTexture()->bind();
     _screen->render();
 
     // 4. Bloom
@@ -81,19 +81,12 @@ void PostEffects::render() const {
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 3);
     FrameBuffer::setViewportSize(_screenWidth, _screenHeight);
 
-    TextureSampler::bind(_verticalBlurFrameBuffer->getRenderTexture());
+    _verticalBlurFrameBuffer->getRenderTexture()->bind();
     _screen->render();
 }
 
-void PostEffects::freeGPUMemory() {
-    _brightPassFilterFrameBuffer->freeGPUMemory();
-    _horizontalBlurFrameBuffer->freeGPUMemory();
-    _verticalBlurFrameBuffer->freeGPUMemory();
-    _postProcessesShader->freeGPUMemory();
-}
-
 ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
-    GLuint sceneTexture,
+    const CstTextureSampler_uptr &sceneTexture,
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height
@@ -108,12 +101,11 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
     constexpr GLint sceneTextureNumber = 2;
     shader->setTextureIndex("sceneTexture", sceneTextureNumber);
     TextureSampler::setActiveTexture(sceneTextureNumber);
-    TextureSampler::bind(sceneTexture);
+    sceneTexture->bind();
 
     shader->setTextureIndex("postProcessTexture", postProcessTextureNumber);
     TextureSampler::setActiveTexture(postProcessTextureNumber);
-    TextureSampler::bind(_verticalBlurFrameBuffer->getRenderTexture());
-
+    _verticalBlurFrameBuffer->getRenderTexture()->bind();
     // Getting 17 Gauss weights computed with sigma = 4. Because two standard deviations from mean account
     // for 95.45%
     const auto texelSizeX = 1.f / static_cast<float>(width);
@@ -165,6 +157,6 @@ vecCstShaderProgram_sptr PostEffects::getShaderPrograms() const {
     return {_postProcessesShader};
 }
 
-std::shared_ptr<const GLuint> PostEffects::getRenderTexture() const {
+const CstTextureSampler_uptr &PostEffects::getRenderTexture() const {
     return nullptr;
 }

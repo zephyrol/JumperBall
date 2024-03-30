@@ -32,6 +32,7 @@ public:
         const GeometricShape::IndicesBuffer& indices
     );
 
+    ~GpuElementBuffer() override = default;
 };
 
 

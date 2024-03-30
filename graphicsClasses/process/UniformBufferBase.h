@@ -36,8 +36,7 @@ public:
 
     void updateBufferOnGPU();
 
-    void freeGPUMemory();
-
+    ~UniformBufferBase();
 
 private:
     /**

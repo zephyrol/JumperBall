@@ -37,8 +37,6 @@ public:
 
     void update() override;
 
-    void freeGPUMemory() override;
-
     void render() const override;
 
 private:
