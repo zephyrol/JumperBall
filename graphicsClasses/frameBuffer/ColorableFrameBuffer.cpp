@@ -34,15 +34,19 @@ ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture->getId(), 0);
 
-    std::unique_ptr<GLuint> depthBuffer =
+    CstRenderBuffer_uptr depthBuffer =
         hasDepthBuffer
             ? [&resolutionX, &resolutionY]() {
-                GLuint depthBuffer;
-                glGenRenderbuffers(1, &depthBuffer);
-                glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+                auto renderBuffer = CstRenderBuffer_uptr(new RenderBuffer);
+                renderBuffer->bind();
                 glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolutionX, resolutionY);
-                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
-                return std::unique_ptr<GLuint>(new GLuint(depthBuffer));
+                glFramebufferRenderbuffer(
+                    GL_FRAMEBUFFER,
+                    GL_DEPTH_ATTACHMENT,
+                    GL_RENDERBUFFER,
+                    renderBuffer->getId()
+                );
+                return renderBuffer;
             }()
             : nullptr;
 
@@ -62,7 +66,7 @@ ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
 ColorableFrameBuffer::ColorableFrameBuffer(
     GLuint fboHandle,
     CstTextureSampler_uptr renderTexture,
-    std::unique_ptr<const GLuint> depthBuffer,
+    CstRenderBuffer_uptr depthBuffer,
     std::unique_ptr<glm::vec3> clearColor
 ) : FrameBuffer(fboHandle, std::move(renderTexture)),
     _depthBuffer(std::move(depthBuffer)),
@@ -83,10 +87,3 @@ void ColorableFrameBuffer::clear() {
         glClear(GL_DEPTH_BUFFER_BIT);
     }
 }
-
-ColorableFrameBuffer::~ColorableFrameBuffer() {
-    if (_depthBuffer) {
-        glDeleteRenderbuffers(1, _depthBuffer.get());
-    }
-}
-

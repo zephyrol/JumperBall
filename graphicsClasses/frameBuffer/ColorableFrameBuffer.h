@@ -7,6 +7,7 @@
 
 
 #include "FrameBuffer.h"
+#include "RenderBuffer.h"
 
 class ColorableFrameBuffer;
 using ColorableFrameBuffer_uptr = std::unique_ptr<ColorableFrameBuffer>;
@@ -24,16 +25,14 @@ public:
     ColorableFrameBuffer(
         GLuint fboHandle,
         CstTextureSampler_uptr renderTexture,
-        std::unique_ptr<const GLuint> depthBuffer,
+        CstRenderBuffer_uptr depthBuffer,
         std::unique_ptr<glm::vec3> clearColor
     );
 
     void clear() override;
 
-    ~ColorableFrameBuffer() override;
-
 private:
-    const std::unique_ptr<const GLuint> _depthBuffer;
+    const CstRenderBuffer_uptr _depthBuffer;
     const std::unique_ptr<const glm::vec3> _clearColor;
 
 };

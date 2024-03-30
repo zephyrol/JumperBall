@@ -5,12 +5,9 @@
 #ifndef JUMPERBALLAPPLICATION_LABELSPROCESS_H
 #define JUMPERBALLAPPLICATION_LABELSPROCESS_H
 
-
-#include "process/RenderProcess.h"
 #include "gameMenu/pages/Page.h"
 #include "graphicMenu/FontTexturesGenerator.h"
 #include "Rendering.h"
-#include "frameBuffer/TextureSampler.h"
 #include "scene/Map.h"
 #include "process/RenderGroup.h"
 
