@@ -35,16 +35,16 @@ void SceneUniformBuffer::update(
     const glm::vec1 &teleportationCoeff
 ) {
 
-    _uniformBufferBase.updateField(0, VP);
-    _uniformBufferBase.updateField(1, VPStar);
-    _uniformBufferBase.updateField(2, VPStar2);
-    _uniformBufferBase.updateField(3, cameraPosition);
-    _uniformBufferBase.updateField(4, lightDirection);
-    _uniformBufferBase.updateField(5, light2Direction);
-    _uniformBufferBase.updateField(6, flashColor);
-    _uniformBufferBase.updateField(7, teleportationCoeff);
+    _uniformBufferBase->updateField(0, VP);
+    _uniformBufferBase->updateField(1, VPStar);
+    _uniformBufferBase->updateField(2, VPStar2);
+    _uniformBufferBase->updateField(3, cameraPosition);
+    _uniformBufferBase->updateField(4, lightDirection);
+    _uniformBufferBase->updateField(5, light2Direction);
+    _uniformBufferBase->updateField(6, flashColor);
+    _uniformBufferBase->updateField(7, teleportationCoeff);
 
-    _uniformBufferBase.updateBufferOnGPU();
+    _uniformBufferBase->updateBufferOnGPU();
 }
 
 

@@ -27,7 +27,7 @@ public:
     );
 
 private:
-    UniformBufferBase _uniformBufferBase;
+    std::unique_ptr<UniformBufferBase> _uniformBufferBase;
 };
 
 

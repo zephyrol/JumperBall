@@ -8,6 +8,11 @@
 #include "ShaderProgram.h"
 #include <glm/gtc/type_ptr.hpp>
 
+#include "GpuBuffer.h"
+
+
+class UniformBufferBase;
+using UniformBufferBase_uptr = std::unique_ptr<UniformBufferBase>;
 
 class UniformBufferBase {
 
@@ -16,27 +21,22 @@ public:
     UniformBufferBase(
         GLsizeiptr bufferSize,
         const std::vector<GLint> &fieldOffsets,
-        GLuint ubo
+        CstGpuBuffer_uptr gpuBuffer
     );
 
-    static UniformBufferBase createInstance(
+    static UniformBufferBase_uptr createInstance(
         const std::string &name,
         const vecCstShaderProgram_sptr &shaderPrograms,
         const std::vector<std::string> &fieldNames
     );
 
-    // The UniformBufferBase cannot be copied, because the ubo is a unique id
-    UniformBufferBase(const UniformBufferBase& uniformBufferBase) = delete;
-    UniformBufferBase& operator=(const UniformBufferBase& uniformBufferBase) = delete;
-
-    UniformBufferBase(UniformBufferBase&& uniformBufferBase) = default;
-
     template<class T>
     void updateField(size_t fieldNumber, const T &value);
 
+    /**
+     * Update UBO data. The uniform buffer needs to be bound before.
+     */
     void updateBufferOnGPU();
-
-    ~UniformBufferBase();
 
 private:
     /**
@@ -58,9 +58,9 @@ private:
     const std::vector<GLubyte *> _fieldDataLocations;
 
     /**
-     * Uniform buffer object OpenGL id.
+     * Uniform buffer object.
      */
-    const GLuint _ubo;
+     const CstGpuBuffer_uptr _gpuBuffer;
 };
 
 template<class T>
