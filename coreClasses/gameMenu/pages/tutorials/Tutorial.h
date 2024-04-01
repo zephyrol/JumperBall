@@ -7,7 +7,7 @@
 #include <string>
 #include <array>
 #include <vector>
-#include "scene/MovableObject.h"
+#include <memory>
 
 class Tutorial;
 using Tutorial_uptr = std::unique_ptr<Tutorial>;

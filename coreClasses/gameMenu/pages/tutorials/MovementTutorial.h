@@ -5,6 +5,7 @@
 #ifndef MOVEMENTTUTORIAL_H
 #define MOVEMENTTUTORIAL_H
 #include "Tutorial.h"
+#include "scene/MovableObject.h"
 #include "system/Chronometer.h"
 
 class MovementTutorial : public Tutorial {
