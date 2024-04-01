@@ -1,98 +1,331 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
+cmake_minimum_required(VERSION 3.20)
+project(GravityGlobe)
 
-IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-	SET(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR} CACHE PATH "" FORCE)
-ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# GLFW
+find_package(glfw3 REQUIRED)
 
-PROJECT(JumperBallApplication)
+# glm
+find_package(GLM REQUIRED)
 
+# FreeType
+find_package(Freetype REQUIRED)
 
-IF (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
-	#	SET (CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
-	IF ( MSVC OR (CMAKE_GENERATOR STREQUAL Xcode) )
-		SET (CMAKE_BUILD_TYPE "Debug" CACHE STRING "" FORCE)
-	ELSE()
-		SET (CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
-	ENDIF()
-ENDIF()
+# Ajouter les fichiers sources
+set(SOURCES
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/DepthFrameBuffer.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/GpuFrameBuffer.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/FrameBuffer.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/RenderBuffer.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/TextureSampler.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/ColorableFrameBuffer.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/Viewer.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/MapGroupGenerator.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/StarGroupGenerator.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/ScreenGroupGenerator.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/LabelGroupGenerator.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/Shader.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/controller/Controller.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/graphicMenu/FontTexturesGenerator.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/ShaderProgram.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/Rendering.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Pyramid.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Cylinder.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Quad.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Triangle.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Sphere.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Cube.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/GeometricShape.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/scene/Scene.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/scene/Camera.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/scene/SceneRendering.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/Utility.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/MeshDynamicGroup.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/Mesh.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformVec2.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformVec3.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformVec4.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformFloat.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformBase.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformInt.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/MeshGeometry.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributeShort.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributeFloat.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributeVec2.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributeVec3.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributeUnsignedByte.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributes.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/MeshUniforms.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/RenderProcess.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/RenderGroupUniforms.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/GpuVertexArray.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/UniformBufferBase.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/menu/LabelsProcess.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/RenderGroup.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/scene/SceneUniformBuffer.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/scene/PostEffects.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/scene/LevelProcess.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/GpuBuffer.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/RunAdOutput.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/Types.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/GoToAuthorPageOutput.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/KeyboardKey.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/UpdateOutput.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/SoundStatusOutput.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/Mouse.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/Chronometer.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/MusicStatusOutput.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/RequestQuitOutput.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/SoundOutput.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/DoubleChronometer.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/SaveFileOutput.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/movements/TurnRight.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/movements/TurnBack.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/movements/NextBlock.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/movements/TurnLeft.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/JumpBlock.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/ExitBlock.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/FireBlock.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/IceBlock.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/SharpBlock.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/Block.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/GhostBlock.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/special/Special.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/special/InteractiveSpecial.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/special/Teleporter.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/special/SwitchButton.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/BrittleBlock.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/Transformation.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/BaseBlock.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/Coin.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/Clock.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/Item.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/InteractiveItem.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/Bonus.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/Key.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/InteractiveBlock.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/DarkBall.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/InteractiveEnemy.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/Laser.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/ThornBall.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/Enemy.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/MapGenerator.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Star.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/SceneElement.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/CMakeFiles/3.28.3/CompilerIdCXX/CMakeCXXCompilerId.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Screen.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Displayable.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Map.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/ClassicalMechanics.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Shape.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Ball.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/LabelGeometry.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/CenteredNode.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/Node.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/DownNode.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/RightNode.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/ScreenNode.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/LeftNode.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/ScaledNode.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/TextNode.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/HorizontalNode.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/FillingNode.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/UpNode.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/VerticalNode.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/Menu.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/labels/ArrowLabel.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/labels/TextLabel.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/labels/Label.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/labels/RenderableLabel.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/Page.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/ValidationPage.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/CreditsPage.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/TitlePage.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/LevelsPage.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/FailurePage.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/PausePage.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/ScrollablePage.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/StorePage.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/SuccessPage.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/MovementTutorial.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/InGamePage.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/player/Player.cpp
+    ${CMAKE_SOURCE_DIR}/application/Window.cpp
+    ${CMAKE_SOURCE_DIR}/application/main.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/thirdparty/glad/glad.c
+# Ajouter ici vos autres fichiers .cpp
+)
 
-ADD_SUBDIRECTORY(coreClasses)
-ADD_SUBDIRECTORY(graphicsClasses)
+# Ajouter les fichiers headers
+set(HEADERS
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/ColorableFrameBuffer.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/FrameBuffer.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/TextureSampler.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/RenderBuffer.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/DepthFrameBuffer.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/GpuFrameBuffer.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/Shader.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/Viewer.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/ShaderProgram.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/Rendering.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/RenderGroupGenerator.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/ScreenGroupGenerator.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/StarGroupGenerator.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/MapGroupGenerator.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/LabelGroupGenerator.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/controller/Controller.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/graphicMenu/FontTexturesGenerator.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Quad.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Sphere.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Cylinder.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Pyramid.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Cube.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/GeometricShape.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Triangle.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/scene/Camera.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/scene/SceneRendering.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/scene/Scene.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/Utility.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/thirdparty/glad/glad.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/thirdparty/glad/KHR/khrplatform.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/GpuBuffer.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/MeshGeometry.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformInt.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformVec2.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformFloat.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformBase.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformVec3.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/UniformVec4.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/uniform/Uniform.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/MeshDynamicGroup.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/Mesh.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/MeshUniforms.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributeVec2.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributeUnsignedByte.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributes.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttribute.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributeBase.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributeFloat.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributeShort.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/mesh/gpuGeometryBuffers/VertexAttributeVec3.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/RenderGroup.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/GpuVertexArray.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/menu/LabelsProcess.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/scene/SceneUniformBuffer.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/scene/PostEffects.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/scene/LevelProcess.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/UniformBufferBase.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/RenderGroupUniforms.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/RenderProcess.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/Types.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/Chronometer.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/UpdateOutput.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/DoubleChronometer.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/Mouse.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/RequestQuitOutput.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/GoToAuthorPageOutput.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/KeyboardKey.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/MusicStatusOutput.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/SoundOutput.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/SoundStatusOutput.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/SaveFileOutput.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/RunAdOutput.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/movements/TurnBack.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/movements/Movement.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/movements/TurnRight.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/movements/TurnLeft.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/movements/NextBlock.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/InteractiveBlock.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/GhostBlock.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/BrittleBlock.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/special/SwitchButton.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/special/InteractiveSpecial.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/special/Teleporter.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/special/Special.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/ExitBlock.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/IceBlock.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/Block.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/Transformation.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/SharpBlock.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/Bonus.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/Coin.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/Key.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/Item.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/InteractiveItem.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/items/Clock.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/BaseBlock.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/JumpBlock.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/FireBlock.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/InteractiveEnemy.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/Laser.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/DarkBall.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/Enemy.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/ThornBall.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/MapGenerator.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/ClassicalMechanics.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Displayable.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Map.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/SceneElement.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Ball.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/MovableObject.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Shape.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Star.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/Screen.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/scene/ItemsContainer.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/LabelGeometry.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/ScaledNode.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/CenteredNode.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/VerticalNode.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/Node.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/HorizontalNode.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/ScreenNode.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/DownNode.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/RightNode.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/FillingNode.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/UpNode.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/TextNode.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/nodes/LeftNode.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/labels/Label.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/labels/RenderableLabel.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/labels/TextLabel.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/labels/ArrowLabel.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/Menu.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/PausePage.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/Page.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/SuccessPage.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/CreditsPage.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/FailurePage.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/ScrollablePage.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/LevelsPage.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/InGamePage.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/MovementTutorial.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/Tutorial.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/StorePage.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/ValidationPage.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/TitlePage.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/player/Player.h
+    ${CMAKE_SOURCE_DIR}/application/Window.h
 
-IF (UNIX AND NOT APPLE)
-	SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -no-pie" CACHE STRING "" FORCE) #allows Netbeans to load the app
-ENDIF()
+        # Ajouter ici vos autres fichiers .h
+)
 
+install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/fonts DESTINATION ${CMAKE_BINARY_DIR}/bin)
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/maps DESTINATION ${CMAKE_BINARY_DIR}/bin)
+install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/save DESTINATION ${CMAKE_BINARY_DIR}/bin)
 
+# Créer l'exécutable
+add_executable(GravityGlobe ${SOURCES} ${HEADERS})
 
-SET(CMAKE_CXX_STANDARD 11)
-SET(CMAKE_CXX_STANDARD_REQUIRED ON)
-SET(CMAKE_CXX_EXTENSIONS OFF)
+# Inclure les répertoires d'en-tête
+target_include_directories(GravityGlobe PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
-IF ( CMAKE_COMPILER_IS_GNUCC )
-	SET (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wlogical-op" CACHE STRING "" FORCE)
-ENDIF()
-
-IF ( MSVC )
-	SET (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W3" CACHE STRING "" FORCE)
-ENDIF()
-
-IF (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-	SET (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -Woverloaded-virtual -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wcast-align -Wredundant-decls -Wdouble-promotion -Winit-self -Wswitch-default -Wswitch-enum -Wc++11-compat-pedantic" CACHE STRING "" FORCE)
-ENDIF()
-
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-
-FILE(GLOB SOURCE_FILES
-		${CMAKE_SOURCE_DIR}/application/*.cpp)
-
-FILE(GLOB HEADER_FILES
-		${CMAKE_SOURCE_DIR}/application/*.h)
-
-
-INSTALL (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/fonts DESTINATION ${CMAKE_BINARY_DIR}/bin)
-
-INSTALL (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/save DESTINATION ${CMAKE_BINARY_DIR}/bin)
-
-
-# Directory for output files
-SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-		CACHE PATH "Output directory for static libraries.")
-
-SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-		CACHE PATH "Output directory for shared libraries.")
-
-SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-		CACHE PATH "Output directory for executables and DLL's.")
-
-FOREACH( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
-	STRING( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
-	SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/bin" CACHE PATH "" FORCE)
-	SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/lib" CACHE PATH "" FORCE)
-	SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_BINARY_DIR}/lib" CACHE PATH "" FORCE)
-ENDFOREACH()
-
-
-ADD_EXECUTABLE(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
-
-INSTALL (DIRECTORY ${CMAKE_SOURCE_DIR}/maps DESTINATION ${CMAKE_BINARY_DIR}/bin)
-
-#set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-ADD_DEPENDENCIES(${PROJECT_NAME} _GLFW_)
-ADD_DEPENDENCIES(${PROJECT_NAME} _GLM_)
-ADD_DEPENDENCIES(${PROJECT_NAME} _FREETYPE_)
-
-INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/include/)
-INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/include/freetype2)
-
-LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/lib/)
-
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} JumperBallGraphic )
-
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-
-#INSTALL(TARGETS ${PROJECT_NAME} DESTINATION bin)
-
+# Liens avec les bibliothèques
+target_link_libraries(GravityGlobe PUBLIC
+        glfw 
+        glm::glm
+        Freetype::Freetype
+)
