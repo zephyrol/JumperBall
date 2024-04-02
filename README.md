@@ -1,120 +1,98 @@
-# JUMPER BALL GAME
+# GRAVITY GLOBE GAME
 
-This project was started in October 2019.
-The project is currently under development.
+**Gravity globe** (formerly Jumper Ball) is a 3D video game. The project is currently under development.
 It works on **Windows**, **Unix/Linux** and **macOS**.
 
 
 ## Install requirements
 
-- **CMake >= 3.2** to generate the solution : [Download CMake](https://cmake.org/download/)
+- **Conan >= 2** to build third party libraries : [Install Conan](https://docs.conan.io/2/installation.html)
 
+- **CMake >= 3.20** to generate the solution : [Install CMake](https://cmake.org/download/)
 
-### Specifically for Windows
+## Generation of the solution
 
-
-- **Microsoft Visual Studio 2017/2019** or **MinGW**
-
-
-### Specifically for Unix/Linux
-
-- Install those packages (necessary to build GLFW and the project)
-
-  ```
-  sudo apt-get install build-essential libx11-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev xorg-dev
-  ```
-
-## Generation of the solution and compilation
-
-- Checkout this repository's master branch:
+- Download the project as zip file or checkout this repository's master branch:
 
   ```sh
   git clone https://github.com/zephyrol/JumperBall.git
   ```
 
+- In the root project folder, run **Conan**:
 
-### Specifically for Windows
+  ```
+  conan install . --output-folder=build --build=missing -s build_type=Release
+  ```
 
-- Run Cmake-gui once, select the repo root as a source directory, `REPO_DIR/build/` as the build directory. 
-- Configure
-- Select the Visual Studio 2019, Visual Studio 2017 or MinGW Makesfiles generator 
-- Generate
+  If you wish, you can switch the **build_type** to **Debug** ```build_type=Debug```
 
+- The dependencies are installed now. You can run **CMake**:
+  ```
+  cmake -G YOUR_GENERATOR --preset conan-release
+  ```
+
+  or if you have set your conan profile on **Debug**, run
+  ```
+  cmake -G YOUR_GENERATOR --preset conan-debug
+  ```
+
+Replace **YOUR_GENERATOR** by the generator you would like to use. Here is a list of examples:
+
+- **"Visual Studio 15 2017"** or **"Visual Studio 16 2019"** on **Windows**
+- "**Unix Makefiles**" on **Linux**
+- "**Unix Makefiles**", **Xcode** on **macOS**
+
+### Commands examples: 
+- Windows: 
+```
+cmake -G "Visual Studio 15 2017" --preset conan-release
+```
+
+- macOS:
+```
+cmake -G Xcode --preset conan-release
+```
+
+- Linux:
+
+On Linux (and on macOS), **Unix Makefiles** are usually used by default, you don't need to specify it:
+```
+cmake --preset conan-release
+```
+
+## Compilation of the solution
+
+- Go to the build directories.
 
 If you use **Visual Studio**:
 
-- Open the generated Visual Studio solution (`build/JumperBallApplication.sln`)
+- Open the generated Visual Studio solution
 - Build the `ALL_BUILD` target, and then the `INSTALL` target
-- Select the JumperBallApplication as startup project and run it
+- Select `GravityGlobe` as startup project and run it
 
+Don't forget to set the build to **Release** or **Debug** depending on your initial choice.
 
-If you use a **MinGW Makefile**:
+If you use **Unix Makefiles**:
 
-- Go to your build directory with the terminal (use cmd or cygwin)
-- Build and install the project
-  ```
-  cmake --build . --target install 
-  ```
+- Build and install the project using:
 
-- Run the project
   ```
-  JumperBallApplication.exe
-  ```
-
-
-### Specifically for Unix/Linux
-
-- Go to the repo root directory and create a `build` directory
-  ```
-  mkdir build
-  ```
-
-- Go to the `build` dir
-  ```
-  cd build
-  ```
-
-- Run cmake specifying the parent directory containing sources
-  ```
-  cmake ..
-  ```
-
-- Build the solution
-  ```
-  make -j 4
-  ```
-
-- Install the project
-  ```
-  make install
-  ```
-
-- Go to the `bin` dir
-  ```
-  cd bin 
+  make -j 8 install
   ```
 
 - Run the project
   ```
-  ./JumperBallApplication
+  ./GravityGlobe
   ```
-### Specifically for macOS
 
-- Run Cmake-gui once, select the repo root as a source directory, `REPO_DIR/build/` as the build directory. 
-- Configure
-- Select the Xcode or Unix Makefiles generator 
-- Generate
 
 If you use **Xcode**:
-
-- In Cmake-gui, run `Open Project`
+- Open the **Xcode** solution
 - Build the `ALL_BUILD` target, and then the `install` target
-- Select the JumperBallApplication project and run it
+- Select the **GravityGlobe** project and run it
 
 
-If you use a **Unix Makefiles**:
-
-- Follow the steps in **Specifically for Unix/Linux** session
+Don't forget to set the build to **Release** or **Debug** depending on your initial choice.
 
 
 ## How to play

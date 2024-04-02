@@ -75,7 +75,7 @@ JBTypes::FileContent Window::createFilesContent() {
 std::string Window::readFile(const std::string& fileName) {
 
     bool foundFile = false;
-    const auto searchingDirs = {"./", "bin/"};
+    const auto searchingDirs = {"./", "bin/", "../"};
     std::ifstream inFile;
     for (const auto &searchingDir: searchingDirs) {
         if (!foundFile) {
@@ -118,7 +118,7 @@ void Window::writeSaveFile(const std::string& updateOutput) {
     }
 
     bool foundFile = false;
-    const auto searchingDirs = {"./", "bin/"};
+    const auto searchingDirs = {"./", "bin/", "../"};
     std::ofstream outFile;
     const std::string fileName = "save/save.txt";
     for (const auto &searchingDir: searchingDirs) {
@@ -139,7 +139,7 @@ void Window::writeSaveFile(const std::string& updateOutput) {
 }
 
 std::vector<unsigned char> Window::createBinaryFont() {
-    const auto searchingDirs = {"./", "bin/"};
+    const auto searchingDirs = {"./", "bin/", "../"};
 
     const std::string &fileName = "Cousine-Regular.ttf";
     const auto &path = "fonts/" + fileName;

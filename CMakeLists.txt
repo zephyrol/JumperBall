@@ -13,7 +13,7 @@ find_package(glm REQUIRED)
 # FreeType
 find_package(Freetype REQUIRED)
 
-# Ajouter les fichiers sources
+# Sources
 set(SOURCES
     ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/DepthFrameBuffer.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/GpuFrameBuffer.cpp
@@ -308,23 +308,24 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/application/Window.h
 )
 
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/fonts DESTINATION ${CMAKE_BINARY_DIR}/bin)
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/maps DESTINATION ${CMAKE_BINARY_DIR}/bin)
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/save DESTINATION ${CMAKE_BINARY_DIR}/bin)
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/graphicsClasses/shaders DESTINATION ${CMAKE_BINARY_DIR}/bin)
+# Set the install
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/fonts DESTINATION ${CMAKE_BINARY_DIR})
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/maps DESTINATION ${CMAKE_BINARY_DIR})
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/save DESTINATION ${CMAKE_BINARY_DIR})
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/graphicsClasses/shaders DESTINATION ${CMAKE_BINARY_DIR})
 
 # Create the executable
 add_executable(GravityGlobe ${SOURCES} ${HEADERS})
 
 # Include headers
-target_include_directories(GravityGlobe PUBLIC
+target_include_directories(GravityGlobe PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/coreClasses
         ${CMAKE_CURRENT_SOURCE_DIR}/graphicsClasses
         ${CMAKE_CURRENT_SOURCE_DIR}/graphicsClasses/thirdparty/glad
 )
 
 # Link Libraries
-target_link_libraries(GravityGlobe PUBLIC
+target_link_libraries(GravityGlobe PRIVATE
         glfw 
         glm::glm
         Freetype::Freetype
