@@ -58,7 +58,7 @@ void Ball::turnRight() noexcept {
     setActionTimeNow();
 }
 
-const JBTypes::vec3f &Ball::get3DPosition() const noexcept {
+const glm::vec3 &Ball::get3DPosition() const noexcept {
     return _3DPos;
 }
 
@@ -216,7 +216,7 @@ const ClassicalMechanics &Ball::getMechanicsFalling() const noexcept {
     return _mechanicsPatternFalling;
 }
 
-JBTypes::Quaternion Ball::getCoveredRotation() const noexcept {
+glm::quat Ball::getCoveredRotation() const noexcept {
 
     constexpr float sizeBlock = 1.f;
 
@@ -237,7 +237,7 @@ JBTypes::Quaternion Ball::getCoveredRotation() const noexcept {
     const float coveredDistance = getCoveredDistance();
     const float angle = sizeBlock * coveredDistance / getRadius();
 
-    const JBTypes::Quaternion movementRotation = JBTypesMethods::createRotationQuaternion(
+    const glm::quat movementRotation = JBTypesMethods::createRotationQuaternion(
         getRotationAxis(),
         angle
     );
@@ -319,11 +319,11 @@ void Ball::isFallingIntersectionBlock() noexcept {
     internalUpdate();
 }
 
-JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const {
+glm::vec3 Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const {
     const float offsetRealPosition = 0.5f + getRadius();
 
-    const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
-    const JBTypes::vec3f lookVec = JBTypesMethods::directionAsVector(_lookTowards);
+    const glm::vec3 sideVec = JBTypesMethods::directionAsVector(_currentSide);
+    const glm::vec3 lookVec = JBTypesMethods::directionAsVector(_lookTowards);
 
     const auto x = static_cast <float>(_pos.at(0)) +
                    sideVec.x * (offsetRealPosition + p2D.y) + lookVec.x * p2D.x;
@@ -332,7 +332,7 @@ JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const {
     const auto z = static_cast <float>(_pos.at(2)) +
                    sideVec.z * (offsetRealPosition + p2D.y) + lookVec.z * p2D.x;
 
-    return JBTypes::vec3f{x, y, z};
+    return glm::vec3{x, y, z};
 }
 
 float Ball::getRadius() {
@@ -347,11 +347,11 @@ JBTypes::Dir Ball::lookTowards() const {
     return _lookTowards;
 }
 
-JBTypes::vec3f Ball::lookTowardsAsVector() const {
+glm::vec3 Ball::lookTowardsAsVector() const {
     return JBTypesMethods::directionAsVector(_lookTowards);
 }
 
-JBTypes::vec3f Ball::currentSideAsVector() const {
+glm::vec3 Ball::currentSideAsVector() const {
     return JBTypesMethods::directionAsVector(_currentSide);
 }
 
@@ -360,10 +360,10 @@ ClassicalMechanics &Ball::getMechanicsJumping() noexcept {
     return const_cast <ClassicalMechanics &>(static_cast <const Ball &>(*this).getMechanicsJumping());
 }
 
-JBTypes::vec3f Ball::get3DPosStayingBall() const {
+glm::vec3 Ball::get3DPosStayingBall() const {
     const float offsetPosition = 0.5f + getRadius();
 
-    const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
+    const glm::vec3 sideVec = JBTypesMethods::directionAsVector(_currentSide);
     const auto x = static_cast <float>(_pos.at(0)) + sideVec.x * offsetPosition;
     const auto y = static_cast <float>(_pos.at(1)) + sideVec.y * offsetPosition;
     const auto z = static_cast <float>(_pos.at(2)) + sideVec.z * offsetPosition;
@@ -427,7 +427,7 @@ void Ball::jumpingUpdate() noexcept {
     const ClassicalMechanics::physics2DVector pos2D =
         getMechanicsJumping().getPosition(getTimeSecondsSinceAction());
 
-    const JBTypes::vec3f relativePositionJump = P2DTo3D(pos2D);
+    const glm::vec3 relativePositionJump = P2DTo3D(pos2D);
     _3DPos = relativePositionJump;
     isFallingIntersectionBlock();
 }
@@ -437,7 +437,7 @@ void Ball::fallingUpdate() noexcept {
         getTimeSecondsSinceAction()
     );
 
-    const JBTypes::vec3f relativePositionJump = P2DTo3D(pos2D);
+    const glm::vec3 relativePositionJump = P2DTo3D(pos2D);
     _3DPos = relativePositionJump;
     isFallingIntersectionBlock();
 }
@@ -470,7 +470,7 @@ void Ball::movingUpdate() noexcept {
         return;
     }
 
-    const JBTypes::vec3f position3D = get3DPosStayingBall();
+    const glm::vec3 position3D = get3DPosStayingBall();
     if (_movementDestination.nextLocal == Ball::NextDestination::InFrontOf) {
         _3DPos.x = (sSinceAction * (static_cast <float>(_movementDestination.pos.at(0))
                                     - static_cast <float>(_pos.at(0)))
@@ -500,8 +500,8 @@ void Ball::movingUpdate() noexcept {
                                 ? sSinceAction - halfTimeToGetNextBlock
                                 : 0.f;
 
-        const JBTypes::vec3f lookVec = JBTypesMethods::directionAsVector(_lookTowards);
-        const JBTypes::vec3f nextLookVec = JBTypesMethods::directionAsVector(_movementDestination.nextLook);
+        const glm::vec3 lookVec = JBTypesMethods::directionAsVector(_lookTowards);
+        const glm::vec3 nextLookVec = JBTypesMethods::directionAsVector(_movementDestination.nextLook);
 
         const float distStep1 = distancePerStep * timeStep1 / halfTimeToGetNextBlock;
         const float distStep2 = distancePerStep * timeStep2 / halfTimeToGetNextBlock;
@@ -555,7 +555,7 @@ Ball::MovementDestination Ball::getNextBlockInfo() const {
         {currentSide, lookTowards}
     );
 
-    const auto getNeighbor = [this, offsetsNextBlocks](size_t n) -> JBTypes::vec3ui {
+    const auto getNeighbor = [this, offsetsNextBlocks](size_t n) -> glm::u32vec3 {
         const size_t offset = 3 * n;
         return {
             _pos.at(0) + offsetsNextBlocks.at(offset),
@@ -609,7 +609,7 @@ void Ball::teleportingUpdate() noexcept {
     const auto destinationDir = destination.second;
 
     if (_currentSide != destinationDir) {
-        const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(destinationDir);
+        const glm::vec3 vecDir = JBTypesMethods::directionAsVector(destinationDir);
         _lookTowards = JBTypesMethods::vectorAsDirection(
             JBTypesMethods::cross(vecDir, {vecDir.y, -vecDir.x, 0.f})
         );
@@ -650,14 +650,14 @@ void Ball::applyRotation(bool inverse) {
     );
 }
 
-JBTypes::vec3f Ball::getRotationAxis() const noexcept {
+glm::vec3 Ball::getRotationAxis() const noexcept {
     return JBTypesMethods::cross(
         JBTypesMethods::directionAsVector(_currentSide),
         JBTypesMethods::directionAsVector(_lookTowards)
     );
 }
 
-JBTypes::vec3f Ball::getInverseRotationAxis() const noexcept {
+glm::vec3 Ball::getInverseRotationAxis() const noexcept {
     return JBTypesMethods::cross(
         JBTypesMethods::directionAsVector(_lookTowards),
         JBTypesMethods::directionAsVector(_currentSide)
@@ -703,7 +703,7 @@ Displayable::DynamicValues<float> Ball::getDynamicFloatValues() const {
     return {burnCoefficient()};
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
+Displayable::DynamicValues<glm::vec3> Ball::getDynamicVec3fValues() const {
     // return {currentSideAsVector(), _3DPos};
     constexpr auto minScaleCrushing = 0.8f;
     // return _currentCrushing
@@ -726,7 +726,7 @@ Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
 
     const auto computeScale = [this, &crushingScale, &currentSideVec]() {
         if (_stateOfLife == Ball::StateOfLife::Dead) {
-            return JBTypes::vec3f{0.f, 0.f, 0.f};
+            return glm::vec3{0.f, 0.f, 0.f};
         }
         if (_stateOfLife == Ball::StateOfLife::Bursting) {
             constexpr auto durationBursting = 0.07f;
@@ -744,12 +744,12 @@ Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
                 {scaleBursting, scaleBursting, scaleBursting}
             );
         }
-        JBTypes::vec3f deformationVector{
+        glm::vec3 deformationVector{
             -fabsf(currentSideVec.x),
             -fabsf(currentSideVec.y),
             -fabsf(currentSideVec.z)
         };
-        JBTypes::vec3f scaleVector = JBTypesMethods::add(
+        glm::vec3 scaleVector = JBTypesMethods::add(
             {1.f, 1.f, 1.f},
             JBTypesMethods::scalarApplication(1.f - crushingScale, deformationVector)
         );
@@ -758,11 +758,11 @@ Displayable::DynamicValues<JBTypes::vec3f> Ball::getDynamicVec3fValues() const {
     return {computeTranslation(), computeScale()};
 }
 
-Displayable::DynamicValues<JBTypes::Quaternion> Ball::getDynamicQuaternionValues() const {
+Displayable::DynamicValues<glm::quat> Ball::getDynamicQuaternionValues() const {
     return {getCoveredRotation()};
 }
 
-const JBTypes::vec3ui &Ball::getPosition() const noexcept {
+const glm::u32vec3 &Ball::getPosition() const noexcept {
     return _pos;
 }
 
@@ -836,7 +836,7 @@ void Ball::setBlockPositions(
     _blocksPositions = blocksPositions;
 }
 
-CstBlock_sptr Ball::getBlock(const JBTypes::vec3ui &pos) const {
+CstBlock_sptr Ball::getBlock(const glm::u32vec3 &pos) const {
     const std::string strPos = Block::positionToString(pos);
     const auto blockPositionIterator = _blocksPositions->find(strPos);
     return blockPositionIterator != _blocksPositions->end()
@@ -844,13 +844,13 @@ CstBlock_sptr Ball::getBlock(const JBTypes::vec3ui &pos) const {
            : nullptr;
 }
 
-JBTypes::vec3f Ball::getNextLook() const {
+glm::vec3 Ball::getNextLook() const {
     return JBTypesMethods::directionAsVector(_movementDestination.nextLook);
 }
 
-std::shared_ptr<const JBTypes::vec3ui> Ball::intersectBlock() const {
+std::shared_ptr<const glm::u32vec3> Ball::intersectBlock() const {
 
-    const JBTypes::vec3f sideVec = currentSideAsVector();
+    const glm::vec3 sideVec = currentSideAsVector();
     const float offsetBlockPosition = getRadius();
 
     const float xIntersectionUnder = _3DPos.x - sideVec.x * offsetBlockPosition;
@@ -865,7 +865,7 @@ std::shared_ptr<const JBTypes::vec3ui> Ball::intersectBlock() const {
     const CstBlock_sptr &block = getBlock({xInteger, yInteger, zInteger});
 
     return (block && block->isExists())
-           ? std::make_shared<const JBTypes::vec3ui>(block->position())
+           ? std::make_shared<const glm::u32vec3>(block->position())
            : nullptr;
 }
 

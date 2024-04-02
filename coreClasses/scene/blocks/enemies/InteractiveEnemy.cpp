@@ -5,7 +5,7 @@
 #include "InteractiveEnemy.h"
 
 InteractiveEnemy::InteractiveEnemy(
-    const JBTypes::vec3ui &initialPosition,
+    const glm::u32vec3 &initialPosition,
     const JBTypes::Dir &direction,
     float size,
     size_t length,

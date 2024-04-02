@@ -9,7 +9,7 @@
 Teleporter::Teleporter(
     const JBTypes::Color &color,
     const JBTypes::Dir &dir,
-    const JBTypes::vec3ui &position,
+    const glm::u32vec3 &position,
     const Ball_sptr &ball,
     bool isActivated
 ) :
@@ -48,14 +48,14 @@ vecCstShape_sptr Teleporter::getShapes() const {
     return {teleporterShape};
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> Teleporter::getDynamicVec3fValues() const {
+Displayable::DynamicValues<glm::vec3> Teleporter::getDynamicVec3fValues() const {
     return {
         positionF(),
         {1.f, 1.f, 1.f}
     };
 }
 
-Displayable::DynamicValues<JBTypes::Quaternion> Teleporter::getDynamicQuaternionValues() const {
+Displayable::DynamicValues<glm::quat> Teleporter::getDynamicQuaternionValues() const {
     constexpr auto speedFactor = 5.f;
     if (!isActivated()) {
         return {{{0.f, 0.f, 0.f}, 1.f}};

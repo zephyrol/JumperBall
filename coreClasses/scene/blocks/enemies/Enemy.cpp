@@ -8,7 +8,7 @@
 #include "Enemy.h"
 
 Enemy::Enemy(
-    const JBTypes::vec3ui &initialPosition,
+    const glm::u32vec3 &initialPosition,
     const JBTypes::Dir &direction,
     float size,
     size_t length,
@@ -38,12 +38,12 @@ size_t Enemy::length() const {
 void Enemy::switchOnOff() {
 }
 
-JBTypes::vec3f Enemy::init3DPosition(const JBTypes::vec3ui &initialPosition) const {
+glm::vec3 Enemy::init3DPosition(const glm::u32vec3 &initialPosition) const {
 
     const JBTypes::Dir &currentDir = _direction;
-    const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(currentDir);
+    const glm::vec3 vecDir = JBTypesMethods::directionAsVector(currentDir);
 
-    const JBTypes::vec3f posWorld = {
+    const glm::vec3 posWorld = {
         static_cast <float>(initialPosition.at(0)),
         static_cast <float>(initialPosition.at(1)),
         static_cast <float>(initialPosition.at(2))
@@ -58,7 +58,7 @@ JBTypes::vec3f Enemy::init3DPosition(const JBTypes::vec3ui &initialPosition) con
     };
 }
 
-const JBTypes::vec3f &Enemy::position() const {
+const glm::vec3 &Enemy::position() const {
     return _position;
 }
 
@@ -66,15 +66,15 @@ const JBTypes::Dir &Enemy::direction() const {
     return _direction;
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> Enemy::getDynamicVec3fValues() const {
+Displayable::DynamicValues<glm::vec3> Enemy::getDynamicVec3fValues() const {
     return { _position, _scale };
 }
 
 void Enemy::update() {
 }
 
-const JBTypes::vec3f Enemy::scaleActivated = {1.f, 1.f, 1.f};
-const JBTypes::vec3f Enemy::scaleDisable = {0.f, 0.f, 0.f};
+const glm::vec3 Enemy::scaleActivated = {1.f, 1.f, 1.f};
+const glm::vec3 Enemy::scaleDisable = {0.f, 0.f, 0.f};
 
 std::string Enemy::getDynamicGroupHash() const {
     return "enemy;" + std::to_string(_initialPosition.x) + "," + std::to_string(_initialPosition.y) + ","

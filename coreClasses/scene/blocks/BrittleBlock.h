@@ -13,7 +13,7 @@
 class BrittleBlock : public InteractiveBlock {
 public:
     BrittleBlock(
-        const JBTypes::vec3ui &position,
+        const glm::u32vec3 &position,
         const vecItem_sptr &items,
         const vecEnemy_sptr &enemies,
         const vecSpecial_sptr &specials,
@@ -26,9 +26,9 @@ public:
 
     void update() override;
 
-    DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
+    DynamicValues <glm::vec3> getDynamicVec3fValues() const override;
 
-    DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
+    DynamicValues <glm::quat> getDynamicQuaternionValues() const override;
 
     Block::Effect detectionEvent() override;
 
@@ -41,14 +41,14 @@ public:
 private:
 
     const CstChronometer_sptr _chronometer;
-    const JBTypes::vec3f _fPosition;
+    const glm::vec3 _fPosition;
     bool _stillThere;
     bool _isGoingToBreak;
     float _collisionTime;
-    JBTypes::vec3f _fallingDirection;
-    JBTypes::vec3f _fallingRotationAxis;
-    JBTypes::Quaternion _shakingRotation;
-    JBTypes::vec3f _localTranslation;
+    glm::vec3 _fallingDirection;
+    glm::vec3 _fallingRotationAxis;
+    glm::quat _shakingRotation;
+    glm::vec3 _localTranslation;
 };
 
 #endif /* BRITTLEBLOCK_H */

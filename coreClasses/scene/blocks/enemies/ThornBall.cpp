@@ -8,7 +8,7 @@
 #include "ThornBall.h"
 
 ThornBall::ThornBall(
-    const JBTypes::vec3ui &initialPosition,
+    const glm::u32vec3 &initialPosition,
     const JBTypes::Dir &dir,
     const JBTypes::Dir &movementDirection,
     size_t movementLength,
@@ -28,7 +28,7 @@ ThornBall::ThornBall(
 void ThornBall::update() {
     constexpr float movementDuration = 2.f;
 
-    const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(_movementDirection);
+    const glm::vec3 vecDir = JBTypesMethods::directionAsVector(_movementDirection);
 
     const auto movementLength = static_cast <float>(length());
     const float localMovement = (1.f - cosf(2.f * JBTypes::pi *

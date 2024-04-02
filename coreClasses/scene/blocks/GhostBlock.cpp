@@ -8,7 +8,7 @@
 #include "GhostBlock.h"
 
 GhostBlock::GhostBlock(
-    const JBTypes::vec3ui &position,
+    const glm::u32vec3 &position,
     const vecItem_sptr &items,
     const vecEnemy_sptr &enemies,
     const vecSpecial_sptr &specials,
@@ -69,6 +69,6 @@ std::string GhostBlock::getDynamicGroupHash() const {
            std::to_string(position().at(1)) + "," + std::to_string(position().at(2));
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> GhostBlock::getDynamicVec3fValues() const {
+Displayable::DynamicValues<glm::vec3> GhostBlock::getDynamicVec3fValues() const {
     return {_fPosition, {_scale, _scale, _scale}};
 }

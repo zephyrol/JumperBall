@@ -9,7 +9,7 @@
 SwitchButton::SwitchButton(
     const JBTypes::Color &color,
     const JBTypes::Dir &dir,
-    const JBTypes::vec3ui &position,
+    const glm::u32vec3 &position,
     const Ball_sptr &ball,
     bool isActivated
 ) : InteractiveSpecial(color, position, dir, ball, isActivated) {
@@ -55,14 +55,14 @@ vecCstShape_sptr SwitchButton::getShapes() const {
     return {switchButtonShape};
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> SwitchButton::getDynamicVec3fValues() const {
+Displayable::DynamicValues<glm::vec3> SwitchButton::getDynamicVec3fValues() const {
     return {
         positionF(),
-        isActivated() ? JBTypes::vec3f{1.f, 0.1f, 1.f} : JBTypes::vec3f{1.f, 1.f, 1.f}
+        isActivated() ? glm::vec3{1.f, 0.1f, 1.f} : glm::vec3{1.f, 1.f, 1.f}
     };
 }
 
-Displayable::DynamicValues<JBTypes::Quaternion> SwitchButton::getDynamicQuaternionValues() const {
+Displayable::DynamicValues<glm::quat> SwitchButton::getDynamicQuaternionValues() const {
     return {{{0.f, 0.f, 0.f}, 1.f}};
 }
 

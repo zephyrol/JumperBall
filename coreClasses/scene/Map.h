@@ -41,7 +41,7 @@ public:
 
     unsigned int depth() const;
 
-    JBTypes::vec3f getCenterMap() const;
+    glm::vec3 getCenterMap() const;
 
     float getLargestSize() const;
 
@@ -49,11 +49,11 @@ public:
 
     CstBall_sptr getBall() const;
 
-    CstBlock_sptr getBlock(const JBTypes::vec3ui &pos) const;
+    CstBlock_sptr getBlock(const glm::u32vec3 &pos) const;
 
-    static JBTypes::vec3ui getBlockCoords(size_t index, unsigned int width, unsigned int depth);
+    static glm::u32vec3 getBlockCoords(size_t index, unsigned int width, unsigned int depth);
 
-    JBTypes::vec3f getNextLook() const;
+    glm::vec3 getNextLook() const;
 
     bool gameIsLost() const;
 
@@ -69,7 +69,7 @@ public:
 
 private:
 
-    static JBTypes::vec3ui stringToPosition(const std::string &stringPosition);
+    static glm::u32vec3 stringToPosition(const std::string &stringPosition);
 
     bool isBallsOut() const;
 

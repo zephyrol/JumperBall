@@ -7,7 +7,7 @@
 LeftNode::LeftNode(const CstNode_sptr &parent, float ratio) : FillingNode(
     parent,
     ratio,
-    [](const JBTypes::vec2f &localSize) -> JBTypes::vec2f {
+    [](const glm::vec2 &localSize) -> glm::vec2 {
         return {(localSize.x * 0.5f) - 0.5f, 0.f};
     }
 ) {}

@@ -8,7 +8,7 @@
 #include "JumpBlock.h"
 #include "system/SoundOutput.h"
 
-JumpBlock::JumpBlock(const JBTypes::vec3ui &position,
+JumpBlock::JumpBlock(const glm::u32vec3 &position,
                      const vecItem_sptr &items,
                      const vecEnemy_sptr &enemies,
                      const vecSpecial_sptr &specials,
@@ -44,15 +44,15 @@ vecCstShape_sptr JumpBlock::getExtraShapes() const {
                 static_cast <unsigned int>(i)
             );
 
-            const JBTypes::vec3f localScale{0.7f, 0.05f, 0.7f};
+            const glm::vec3 localScale{0.7f, 0.05f, 0.7f};
 
-            const JBTypes::vec3f translationOnBlock{
+            const glm::vec3 translationOnBlock{
                 0.f,
                 offset,
                 0.f
             };
 
-            const JBTypes::vec3f translationPosition{
+            const glm::vec3 translationPosition{
                 static_cast<float>(_position.at(0)),
                 static_cast<float>(_position.at(1)),
                 static_cast<float>(_position.at(2))

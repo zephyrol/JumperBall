@@ -7,7 +7,7 @@
 UpNode::UpNode(const Node_sptr &parent, float ratio) : FillingNode(
     parent,
     ratio,
-    [](const JBTypes::vec2f &localSize) -> JBTypes::vec2f {
+    [](const glm::vec2 &localSize) -> glm::vec2 {
         return {0.f,  0.5f - (localSize.y * 0.5f) };
     }
 ) {}

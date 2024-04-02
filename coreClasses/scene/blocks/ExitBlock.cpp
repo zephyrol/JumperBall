@@ -5,7 +5,7 @@
 #include "ExitBlock.h"
 #include "system/SoundOutput.h"
 
-ExitBlock::ExitBlock(const JBTypes::vec3ui &position,
+ExitBlock::ExitBlock(const glm::u32vec3 &position,
                      const vecItem_sptr &items,
                      const vecEnemy_sptr &enemies,
                      const vecSpecial_sptr &specials,
@@ -17,7 +17,7 @@ ExitBlock::ExitBlock(const JBTypes::vec3ui &position,
     InteractiveBlock(position, items, enemies, specials, ball),
     _exitDir(exitDir),
     _isUnlockModel(isUnlockModel),
-    _scale(_isUnlockModel ? JBTypes::vec3f{0.f, 0.f, 0.f} : JBTypes::vec3f{1.f, 1.f, 1.f}),
+    _scale(_isUnlockModel ? glm::vec3{0.f, 0.f, 0.f} : glm::vec3{1.f, 1.f, 1.f}),
     _isUnlocked(false) {
 }
 
@@ -27,15 +27,15 @@ vecCstShape_sptr ExitBlock::getExtraShapes() const {
     constexpr float sizeBlock = 1.f; // TODO specify it elsewhere
     constexpr float offset = sizeBlock / 2.f;
 
-    const JBTypes::vec3f localScale{0.7f, 0.05f, 0.7f};
+    const glm::vec3 localScale{0.7f, 0.05f, 0.7f};
 
-    const JBTypes::vec3f translationOnBlock{
+    const glm::vec3 translationOnBlock{
         0.f,
         offset,
         0.f
     };
 
-    const JBTypes::vec3f translationPosition{
+    const glm::vec3 translationPosition{
         static_cast<float>(_position.at(0)),
         static_cast<float>(_position.at(1)),
         static_cast<float>(_position.at(2))
@@ -60,7 +60,7 @@ vecCstShape_sptr ExitBlock::getExtraShapes() const {
 void ExitBlock::unlockExit() {
     _isUnlocked = true;
     _ball.lock()->addUpdateOutput(std::make_shared<SoundOutput>("exitIsUnlocked"));
-    _scale = _isUnlockModel ? JBTypes::vec3f{1.f, 1.f, 1.f} : JBTypes::vec3f{0.f, 0.f, 0.f};
+    _scale = _isUnlockModel ? glm::vec3{1.f, 1.f, 1.f} : glm::vec3{0.f, 0.f, 0.f};
 }
 
 Block::Effect ExitBlock::detectionEvent() {
@@ -82,6 +82,6 @@ std::string ExitBlock::getDynamicGroupHash() const {
     return "exit;" + std::string(_isUnlockModel ? "lock" : "unlock");
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> ExitBlock::getDynamicVec3fValues() const {
+Displayable::DynamicValues<glm::vec3> ExitBlock::getDynamicVec3fValues() const {
     return {{0.f, 0.f, 0.f}, {_scale}};
 }

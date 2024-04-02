@@ -76,7 +76,7 @@ protected:
      * @param childRatio Ratio of the inside node (child)
      * @return Width and height as vec2
      */
-    static JBTypes::vec2f computeNodeSize(float parentRatio, float childRatio);
+    static glm::vec2 computeNodeSize(float parentRatio, float childRatio);
 
 private:
 

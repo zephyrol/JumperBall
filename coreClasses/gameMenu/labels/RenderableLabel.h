@@ -37,9 +37,9 @@ public:
 
     StaticValues<float> getStaticFloatValues() const override;
 
-    StaticValues <JBTypes::vec2f> getStaticVec2fValues() const override;
+    StaticValues <glm::vec2> getStaticVec2fValues() const override;
 
-    StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+    StaticValues <glm::vec3> getStaticVec3fValues() const override;
 
     DynamicNames getDynamicIntNames() const override;
 
@@ -51,15 +51,15 @@ public:
 
     DynamicNames getDynamicVec2fNames() const override;
 
-    DynamicValues <JBTypes::vec2f> getDynamicVec2fValues() const override;
+    DynamicValues <glm::vec2> getDynamicVec2fValues() const override;
 
     DynamicNames getDynamicVec3fNames() const override;
 
-    DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
+    DynamicValues <glm::vec3> getDynamicVec3fValues() const override;
 
     DynamicNames getDynamicQuaternionNames() const override;
 
-    DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
+    DynamicValues <glm::quat> getDynamicQuaternionValues() const override;
 };
 
 

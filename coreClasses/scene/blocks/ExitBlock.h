@@ -10,7 +10,7 @@
 class ExitBlock : public InteractiveBlock {
 public:
     ExitBlock(
-        const JBTypes::vec3ui &position,
+        const glm::u32vec3 &position,
         const vecItem_sptr &items,
         const vecEnemy_sptr &enemies,
         const vecSpecial_sptr &specials,
@@ -29,13 +29,13 @@ public:
 
     std::string getDynamicGroupHash() const override;
 
-    DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
+    DynamicValues <glm::vec3> getDynamicVec3fValues() const override;
 
 private:
 
     const JBTypes::Direction _exitDir;
     const bool _isUnlockModel;
-    JBTypes::vec3f _scale;
+    glm::vec3 _scale;
     bool _isUnlocked;
 };
 

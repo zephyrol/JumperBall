@@ -12,7 +12,7 @@
 class ThornBall : public InteractiveEnemy {
 public:
     ThornBall(
-        const JBTypes::vec3ui &initialPosition,
+        const glm::u32vec3 &initialPosition,
         const JBTypes::Dir &dir,
         const JBTypes::Dir &movementDirection,
         size_t movementLength,

@@ -7,7 +7,7 @@
 
 #include "SharpBlock.h"
 
-SharpBlock::SharpBlock(const JBTypes::vec3ui &position,
+SharpBlock::SharpBlock(const glm::u32vec3 &position,
                        const vecItem_sptr &items,
                        const vecEnemy_sptr &enemies,
                        const vecSpecial_sptr &specials,
@@ -22,7 +22,7 @@ SharpBlock::SharpBlock(const JBTypes::vec3ui &position,
 Block::Effect SharpBlock::interaction() const {
 
     const auto isInSharpZone =
-        [](const JBTypes::vec3f &position,
+        [](const glm::vec3 &position,
            float x_min, float x_max,
            float y_min, float y_max,
            float z_min, float z_max
@@ -61,20 +61,20 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
 
     vecCstShape_sptr shapes{};
     constexpr size_t numberOfSpikes = 13;
-    const std::array<JBTypes::vec2f, numberOfSpikes> translationFloorFactors{
-        JBTypes::vec2f{0.f, 0.f},
-        JBTypes::vec2f{0.4f, 0.4f},
-        JBTypes::vec2f{-0.4f, 0.4f},
-        JBTypes::vec2f{0.4f, -0.4f},
-        JBTypes::vec2f{-0.4f, -0.4f},
-        JBTypes::vec2f{0.f, 0.85f},
-        JBTypes::vec2f{0.f, -0.85f},
-        JBTypes::vec2f{0.85f, 0.f},
-        JBTypes::vec2f{-0.85f, 0.f},
-        JBTypes::vec2f{0.85f, 0.85f},
-        JBTypes::vec2f{0.85f, -0.85f},
-        JBTypes::vec2f{-0.85f, 0.85f},
-        JBTypes::vec2f{-0.85f, -0.85f}
+    const std::array<glm::vec2, numberOfSpikes> translationFloorFactors{
+        glm::vec2{0.f, 0.f},
+        glm::vec2{0.4f, 0.4f},
+        glm::vec2{-0.4f, 0.4f},
+        glm::vec2{0.4f, -0.4f},
+        glm::vec2{-0.4f, -0.4f},
+        glm::vec2{0.f, 0.85f},
+        glm::vec2{0.f, -0.85f},
+        glm::vec2{0.85f, 0.f},
+        glm::vec2{-0.85f, 0.f},
+        glm::vec2{0.85f, 0.85f},
+        glm::vec2{0.85f, -0.85f},
+        glm::vec2{-0.85f, 0.85f},
+        glm::vec2{-0.85f, -0.85f}
     };
 
     for (size_t i = 0; i < _facesSharps.size(); i++) {
@@ -88,13 +88,13 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
                 static_cast <unsigned int>(i)
             );
 
-            const JBTypes::vec3f translationOnBlock{
+            const glm::vec3 translationOnBlock{
                 0.f,
                 offset,
                 0.f
             };
 
-            const JBTypes::vec3f translationPosition{
+            const glm::vec3 translationPosition{
                 static_cast<float>(_position.at(0)),
                 static_cast<float>(_position.at(1)),
                 static_cast<float>(_position.at(2))
@@ -104,15 +104,15 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
             for (auto translationFloorFactor : translationFloorFactors) {
                 constexpr auto localScaleFactor = 0.15f;
 
-                const JBTypes::vec3f localScale{localScaleFactor, localScaleFactor, localScaleFactor};
+                const glm::vec3 localScale{localScaleFactor, localScaleFactor, localScaleFactor};
 
-                const JBTypes::vec3f translationFloor{
+                const glm::vec3 translationFloor{
                     offset * translationFloorFactor.x,
                     0.f,
                     offset * translationFloorFactor.y
                 };
 
-                const JBTypes::vec3f localTranslation = JBTypesMethods::add(
+                const glm::vec3 localTranslation = JBTypesMethods::add(
                     translationOnBlock,
                     translationFloor
                 );
@@ -143,11 +143,11 @@ vecCstShape_sptr SharpBlock::getExtraShapes() const {
     return shapes;
 }
 
-std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > SharpBlock::computeSharpBoundingBoxes(
+std::vector<std::pair<glm::vec3, glm::vec3> > SharpBlock::computeSharpBoundingBoxes(
     float sharpsSize
 ) const {
 
-    std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f>> boundingBoxes;
+    std::vector<std::pair<glm::vec3, glm::vec3>> boundingBoxes;
 
     const auto blockfXPos = static_cast <float>(_position.at(0));
     const auto blockfYPos = static_cast <float>(_position.at(1));
@@ -164,7 +164,7 @@ std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > SharpBlock::computeSharp
             float posBlockfZMax = blockfZPos + halfSizeBlock;
 
             JBTypes::Dir dir = JBTypesMethods::integerAsDirection(static_cast <unsigned int>(i));
-            JBTypes::vec3f dirVec = JBTypesMethods::directionAsVector(dir);
+            glm::vec3 dirVec = JBTypesMethods::directionAsVector(dir);
 
             if (dirVec.x > EPSILON_F || dirVec.x < -EPSILON_F) {
                 if (dirVec.x < 0) {

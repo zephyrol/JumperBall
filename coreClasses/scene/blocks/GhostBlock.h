@@ -13,7 +13,7 @@
 class GhostBlock : public InteractiveBlock {
 public:
     GhostBlock(
-        const JBTypes::vec3ui &position,
+        const glm::u32vec3 &position,
         const vecItem_sptr &items,
         const vecEnemy_sptr &enemies,
         const vecSpecial_sptr &specials,
@@ -31,12 +31,12 @@ public:
 
     std::string getDynamicGroupHash() const override;
 
-    DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
+    DynamicValues <glm::vec3> getDynamicVec3fValues() const override;
 
 private:
     const CstChronometer_sptr _chronometer;
     const float _periodicity;
-    const JBTypes::vec3f _fPosition;
+    const glm::vec3 _fPosition;
     bool _isThere;
     float _scale;
 };

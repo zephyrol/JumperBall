@@ -30,8 +30,8 @@ InGamePage::InGamePage(
     const Page_sptr &parent,
     CstItemsContainer_sptr itemsContainer,
     Tutorial_uptr tutorial,
-    JBTypes::vec2f tutorialCenter,
-    JBTypes::vec2f ratioAndInverse
+    glm::vec2 tutorialCenter,
+    glm::vec2 ratioAndInverse
 ) : Page(std::move(player)),
     _parent(parent),
     _arrowLabel(std::move(arrowLabel)),
@@ -171,7 +171,7 @@ vecCstTextNode_uptr InGamePage::genTextNodes() const {
     return textNodes;
 }
 
-JBTypes::vec2f InGamePage::getTutorialCenter(const Node_sptr &top, const Node_sptr &bottom) {
+glm::vec2 InGamePage::getTutorialCenter(const Node_sptr &top, const Node_sptr &bottom) {
     // Return the average position from [-0.5,0.5] to [-1.0, 1.0] explains why no addition computing
     // is required
     return {
@@ -180,7 +180,7 @@ JBTypes::vec2f InGamePage::getTutorialCenter(const Node_sptr &top, const Node_sp
     };
 }
 
-JBTypes::vec2f InGamePage::getRatioAndInverse(float ratio) {
+glm::vec2 InGamePage::getRatioAndInverse(float ratio) {
     return {ratio, 1.f / ratio};
 }
 
@@ -303,7 +303,7 @@ Displayable::DynamicNames InGamePage::getDynamicVec2fNames() const {
     return {"tutorialCenter", "ratioAndInverse"};
 }
 
-Displayable::DynamicValues<JBTypes::vec2f> InGamePage::getDynamicVec2fValues() const {
+Displayable::DynamicValues<glm::vec2> InGamePage::getDynamicVec2fValues() const {
     return {_tutorialCenter, _ratioAndInverse};
 }
 

@@ -13,7 +13,7 @@
 class Key : public InteractiveItem {
 public:
     Key(
-        const JBTypes::vec3ui &position,
+        const glm::u32vec3 &position,
         const JBTypes::Dir &direction,
         const Ball_sptr &ball
     );

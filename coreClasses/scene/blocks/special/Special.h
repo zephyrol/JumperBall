@@ -26,7 +26,7 @@ public:
         CstChronometer_sptr chronometer,
         const JBTypes::Color &color,
         const JBTypes::Dir &dir,
-        const JBTypes::vec3ui &position,
+        const glm::u32vec3 &position,
         bool isActivated = true
     );
 
@@ -34,7 +34,7 @@ public:
 
     const JBTypes::Dir &direction() const;
 
-    const JBTypes::vec3ui &position() const;
+    const glm::u32vec3 &position() const;
 
     bool isActivated() const;
 
@@ -47,17 +47,17 @@ public:
     std::string getDynamicGroupHash() const override;
 
 protected:
-    const JBTypes::vec3f &positionF() const;
+    const glm::vec3 &positionF() const;
 
     const CstChronometer_sptr _chronometer;
     const JBTypes::Dir _direction;
-    const JBTypes::vec3f _directionVec;
+    const glm::vec3 _directionVec;
 
 private:
     const JBTypes::Color _color;
     const std::string _colorAttributeName;
-    const JBTypes::vec3ui _position;
-    const JBTypes::vec3f _positionF;
+    const glm::u32vec3 _position;
+    const glm::vec3 _positionF;
     bool _isActivated;
 
 };

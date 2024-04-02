@@ -21,11 +21,11 @@ Displayable::StaticValues<float> RenderableLabel::getStaticFloatValues() const {
     return _label->getStaticFloatValues();
 }
 
-Displayable::StaticValues<JBTypes::vec2f> RenderableLabel::getStaticVec2fValues() const {
+Displayable::StaticValues<glm::vec2> RenderableLabel::getStaticVec2fValues() const {
     return _label->getStaticVec2fValues();
 }
 
-Displayable::StaticValues<JBTypes::vec3f> RenderableLabel::getStaticVec3fValues() const {
+Displayable::StaticValues<glm::vec3> RenderableLabel::getStaticVec3fValues() const {
     return _label->getStaticVec3fValues();
 }
 
@@ -49,7 +49,7 @@ Displayable::DynamicNames RenderableLabel::getDynamicVec2fNames() const {
     return _page->getDynamicVec2fNames();
 }
 
-Displayable::DynamicValues<JBTypes::vec2f> RenderableLabel::getDynamicVec2fValues() const {
+Displayable::DynamicValues<glm::vec2> RenderableLabel::getDynamicVec2fValues() const {
     return _page->getDynamicVec2fValues();
 }
 
@@ -57,7 +57,7 @@ Displayable::DynamicNames RenderableLabel::getDynamicVec3fNames() const {
     return _page->getDynamicVec3fNames();
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> RenderableLabel::getDynamicVec3fValues() const {
+Displayable::DynamicValues<glm::vec3> RenderableLabel::getDynamicVec3fValues() const {
     return _page->getDynamicVec3fValues();
 }
 
@@ -65,7 +65,7 @@ Displayable::DynamicNames RenderableLabel::getDynamicQuaternionNames() const {
     return _page->getDynamicQuaternionNames();
 }
 
-Displayable::DynamicValues<JBTypes::Quaternion> RenderableLabel::getDynamicQuaternionValues() const {
+Displayable::DynamicValues<glm::quat> RenderableLabel::getDynamicQuaternionValues() const {
     return _page->getDynamicQuaternionValues();
 }
 

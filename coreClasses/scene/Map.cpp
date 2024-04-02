@@ -30,7 +30,7 @@ Map::Map(Map::MapInfo &&mapInfo) :
     _ball->updateMovements();
 }
 
-JBTypes::vec3ui Map::stringToPosition(const std::string &stringPosition) {
+glm::u32vec3 Map::stringToPosition(const std::string &stringPosition) {
     const auto &firstComma = std::find(stringPosition.begin(), stringPosition.end(), ',');
     const auto &secondComma = std::find(firstComma + 1, stringPosition.end(), ',');
     return {
@@ -71,7 +71,7 @@ unsigned int Map::depth() const {
     return _depth;
 }
 
-JBTypes::vec3f Map::getCenterMap() const {
+glm::vec3 Map::getCenterMap() const {
     return {
         static_cast <float>(_width) / 2.F,
         static_cast <float>(_height) / 2.F,
@@ -120,7 +120,7 @@ std::string Map::update(const Ball::ActionRequest &action) {
     return UpdateOutput::combineUpdateOutputs(_ball->retrieveUpdateOutput());
 }
 
-JBTypes::vec3ui Map::getBlockCoords(size_t index, unsigned int width, unsigned int depth) {
+glm::u32vec3 Map::getBlockCoords(size_t index, unsigned int width, unsigned int depth) {
     const auto uIntIndex = static_cast <unsigned int>(index);
     const unsigned int widthDepth = width * depth;
     return {uIntIndex % width, uIntIndex / widthDepth, (uIntIndex % widthDepth) / width};
@@ -138,11 +138,11 @@ bool Map::isBallsOut() const {
     );
 }
 
-JBTypes::vec3f Map::getNextLook() const {
+glm::vec3 Map::getNextLook() const {
     return _ball->getNextLook();
 }
 
-CstBlock_sptr Map::getBlock(const JBTypes::vec3ui &pos) const {
+CstBlock_sptr Map::getBlock(const glm::u32vec3 &pos) const {
     const std::string strPos = Block::positionToString(pos);
     const auto blockIterator = _blocksPositions->find(strPos);
     return blockIterator != _blocksPositions->end()

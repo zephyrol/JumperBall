@@ -9,7 +9,7 @@
 #include "system/SoundOutput.h"
 
 BrittleBlock::BrittleBlock(
-    const JBTypes::vec3ui &position,
+    const glm::u32vec3 &position,
     const vecItem_sptr &items,
     const vecEnemy_sptr &enemies,
     const vecSpecial_sptr &specials,
@@ -116,11 +116,11 @@ std::string BrittleBlock::getDynamicGroupHash() const {
            std::to_string(position().at(1)) + "," + std::to_string(position().at(2));
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> BrittleBlock::getDynamicVec3fValues() const {
+Displayable::DynamicValues<glm::vec3> BrittleBlock::getDynamicVec3fValues() const {
     return {JBTypesMethods::add(_localTranslation, _fPosition), {1.f, 1.f, 1.f}};
 }
 
-Displayable::DynamicValues <JBTypes::Quaternion> BrittleBlock::getDynamicQuaternionValues() const {
+Displayable::DynamicValues <glm::quat> BrittleBlock::getDynamicQuaternionValues() const {
     return{{_shakingRotation}};
 }
 

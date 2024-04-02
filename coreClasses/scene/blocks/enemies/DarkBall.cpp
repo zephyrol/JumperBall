@@ -8,7 +8,7 @@
 #include "DarkBall.h"
 
 DarkBall::DarkBall(
-    const JBTypes::vec3ui &initialPosition,
+    const glm::u32vec3 &initialPosition,
     const JBTypes::Dir &dir,
     const JBTypes::Dir &movementDirection,
     size_t nbOfJumps,
@@ -27,9 +27,9 @@ DarkBall::DarkBall(
 void DarkBall::update() {
     const ClassicalMechanics &mechanics = darkBallClassicalMechanics;
 
-    const JBTypes::vec3f vecDirMovement = JBTypesMethods::directionAsVector(_movementDirection);
+    const glm::vec3 vecDirMovement = JBTypesMethods::directionAsVector(_movementDirection);
 
-    const JBTypes::vec3f vecDirSide = JBTypesMethods::directionAsVector(direction());
+    const glm::vec3 vecDirSide = JBTypesMethods::directionAsVector(direction());
 
     const auto timeSinceCreation = _chronometer->getTime();
     // TODO: replace time since creation by time in game

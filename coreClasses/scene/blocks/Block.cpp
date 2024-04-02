@@ -8,7 +8,7 @@
 #include "Block.h"
 
 Block::Block(
-    const JBTypes::vec3ui &position,
+    const glm::u32vec3 &position,
     const vecItem_sptr &items,
     const vecEnemy_sptr &enemies,
     const vecSpecial_sptr &specials,
@@ -48,7 +48,7 @@ bool Block::hasInteraction() const {
     return _hasInteraction;
 }
 
-const JBTypes::vec3ui &Block::position() const {
+const glm::u32vec3 &Block::position() const {
     return _position;
 }
 
@@ -88,7 +88,7 @@ vecCstShape_sptr Block::getExtraShapes() const {
     return {};
 }
 
-std::string Block::positionToString(const JBTypes::vec3ui &position) {
+std::string Block::positionToString(const glm::u32vec3 &position) {
     return std::to_string(position.at(0)) + "," +
            std::to_string(position.at(1)) + "," +
            std::to_string(position.at(2));
@@ -119,11 +119,11 @@ std::string Block::getDynamicGroupHash() const {
     return "block";
 }
 
-Displayable::DynamicValues<JBTypes::Quaternion> Block::getDynamicQuaternionValues() const {
+Displayable::DynamicValues<glm::quat> Block::getDynamicQuaternionValues() const {
     return {{{0.f, 0.f, 0.f}, 1.f}};
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> Block::getDynamicVec3fValues() const {
+Displayable::DynamicValues<glm::vec3> Block::getDynamicVec3fValues() const {
     return {{0.f, 0.f, 0.f},
             {1.f, 1.f, 1.f}};
 }

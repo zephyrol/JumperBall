@@ -19,11 +19,11 @@ std::vector<float> Displayable::getStaticFloatValues() const {
     return {};
 }
 
-std::vector<JBTypes::vec2f> Displayable::getStaticVec2fValues() const {
+std::vector<glm::vec2> Displayable::getStaticVec2fValues() const {
     return {};
 }
 
-std::vector<JBTypes::vec3f> Displayable::getStaticVec3fValues() const {
+std::vector<glm::vec3> Displayable::getStaticVec3fValues() const {
     return {};
 }
 
@@ -35,15 +35,15 @@ std::vector<float> Displayable::getDynamicFloatValues() const {
     return {};
 }
 
-std::vector<JBTypes::vec2f> Displayable::getDynamicVec2fValues() const {
+std::vector<glm::vec2> Displayable::getDynamicVec2fValues() const {
     return {};
 }
 
-std::vector<JBTypes::vec3f> Displayable::getDynamicVec3fValues() const {
+std::vector<glm::vec3> Displayable::getDynamicVec3fValues() const {
     return {};
 }
 
-std::vector<JBTypes::Quaternion> Displayable::getDynamicQuaternionValues() const {
+std::vector<glm::quat> Displayable::getDynamicQuaternionValues() const {
     return {};
 }
 

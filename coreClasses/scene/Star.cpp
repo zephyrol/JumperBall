@@ -10,9 +10,9 @@
 Star::Star(
     const Map &map,
     float distance,
-    const JBTypes::vec3f &initialDirection,
-    const JBTypes::vec3f &rotationAxis,
-    const JBTypes::vec3f &color,
+    const glm::vec3 &initialDirection,
+    const glm::vec3 &rotationAxis,
+    const glm::vec3 &color,
     float radiansPerSecond
 ) :
     _chronometer(map.getBall()->getCreationChronometer()),
@@ -26,7 +26,7 @@ Star::Star(
 
 }
 
-const JBTypes::vec3f &Star::rotationCenter() const {
+const glm::vec3 &Star::rotationCenter() const {
     return _rotationCenter;
 }
 
@@ -34,14 +34,14 @@ float Star::envSize() const {
     return _envSize;
 }
 
-JBTypes::Quaternion Star::getRotation() const {
+glm::quat Star::getRotation() const {
     const float angle = _chronometer->getTime() * _radiansPerSeconds;
     return JBTypesMethods::createRotationQuaternion(_rotationAxis, angle);
 }
 
-JBTypes::vec3f Star::lightDirection() const {
+glm::vec3 Star::lightDirection() const {
     const float angle = _chronometer->getTime() * _radiansPerSeconds;
-    const JBTypes::vec3f toStar = JBTypesMethods::add(
+    const glm::vec3 toStar = JBTypesMethods::add(
         JBTypesMethods::scalarApplication(cosf(angle), _initialDirection),
         JBTypesMethods::scalarApplication(
             sinf(angle),
@@ -52,12 +52,12 @@ JBTypes::vec3f Star::lightDirection() const {
     return JBTypesMethods::scalarApplication(-2.f, toStar);
 }
 
-JBTypes::vec3f Star::position() const {
-    const JBTypes::vec3f initialPosition = JBTypesMethods::scalarApplication(_distance, _initialDirection);
+glm::vec3 Star::position() const {
+    const glm::vec3 initialPosition = JBTypesMethods::scalarApplication(_distance, _initialDirection);
     return JBTypesMethods::rotateVector(initialPosition, getRotation());
 }
 
-Displayable::StaticValues<JBTypes::vec3f> Star::getStaticVec3fValues() const {
+Displayable::StaticValues<glm::vec3> Star::getStaticVec3fValues() const {
     return {
         JBTypesMethods::scalarApplication(_distance, _initialDirection),
         _rotationCenter,
@@ -81,8 +81,8 @@ Displayable::DynamicValues<float> Star::getDynamicFloatValues() const {
 }
 
 std::shared_ptr<Star> Star::createBlurStar(const Map &map) {
-    const JBTypes::vec3f initialDirection = {0.f, 0.f, -1.f};
-    const JBTypes::vec3f color = {0.f, 1.f, 1.f};
+    const glm::vec3 initialDirection = {0.f, 0.f, -1.f};
+    const glm::vec3 color = {0.f, 1.f, 1.f};
     return std::make_shared<Star>(
         map,
         500.f,
@@ -94,8 +94,8 @@ std::shared_ptr<Star> Star::createBlurStar(const Map &map) {
 }
 
 std::shared_ptr<Star> Star::createPurpleStar(const Map &map) {
-    const JBTypes::vec3f initialDirection = {0.f, 0.f, -1.f};
-    const JBTypes::vec3f color = {1.f, 0.f, 1.f};
+    const glm::vec3 initialDirection = {0.f, 0.f, -1.f};
+    const glm::vec3 color = {1.f, 0.f, 1.f};
     return std::make_shared<Star>(
         map,
         550.f,

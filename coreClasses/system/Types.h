@@ -23,6 +23,15 @@
 #include <numeric>
 
 #define EPSILON_F 0.0001f
+#include <glm/glm.hpp>
+
+#define GLM_ENABLE_EXPERIMENTAL
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/detail/type_quat.hpp>
+
+
 namespace JBTypes {
 
     constexpr auto pi = 3.14159265358979323846f;
@@ -49,71 +58,23 @@ namespace JBTypes {
     };
 
     using Dir = Direction;
-
-    struct vec3f {
-        float x;
-        float y;
-        float z;
-    };
-    struct vec2f {
-        float x;
-        float y;
-    };
-
-    using vec3ui = std::array<unsigned int, 3>;
-    using vec3i = std::array<int, 3>;
-
-    struct Quaternion {
-        JBTypes::vec3f v;
-        float w;
-    };
 }
 
 namespace JBTypesMethods {
 
-    JBTypes::vec3f directionAsVector(JBTypes::Dir dir);
+    glm::vec3 directionAsVector(JBTypes::Dir dir);
 
-    JBTypes::vec3f rotationVectorUpToDir(const JBTypes::Dir &dir);
+    glm::vec3 rotationVectorUpToDir(const JBTypes::Dir &dir);
 
     JBTypes::Dir integerAsDirection(unsigned int number);
 
     JBTypes::Dir charAsDirection(unsigned char dirChar);
 
-    JBTypes::Dir vectorAsDirection(const JBTypes::vec3f &vec);
+    JBTypes::Dir vectorAsDirection(const glm::vec3 &vec);
 
     unsigned int directionAsInteger(JBTypes::Dir dir);
 
     std::array<bool, 6> strDirAsArray(const std::string &directions);
-
-    float dot(const JBTypes::vec3f &a, const JBTypes::vec3f &b);
-
-    JBTypes::vec3f cross(const JBTypes::vec3f &a, const JBTypes::vec3f &b);
-
-    JBTypes::vec3f add(const JBTypes::vec3f &a, const JBTypes::vec3f &b);
-
-    JBTypes::vec3f scalarApplication(float scalar, const JBTypes::vec3f &vec);
-
-    float distance(const JBTypes::vec3f &a, const JBTypes::vec3f &b);
-
-    float length(const JBTypes::vec3f &vec);
-
-    JBTypes::vec3f normalize(const JBTypes::vec3f &vec);
-
-    JBTypes::Quaternion createQuaternion(const JBTypes::vec3f &v, float w);
-
-    JBTypes::Quaternion multiply(const JBTypes::Quaternion &q1, const JBTypes::Quaternion &q2);
-
-    JBTypes::Quaternion q2q1(
-        const JBTypes::Quaternion &q1q2,
-        const JBTypes::Quaternion &q1,
-        const JBTypes::Quaternion &q2
-    );
-
-    JBTypes::Quaternion inverse(const JBTypes::Quaternion &q);
-
-    JBTypes::Quaternion createRotationQuaternion(const JBTypes::vec3f &axis, float angle);
-
-    JBTypes::vec3f rotateVector(const JBTypes::vec3f &v, const JBTypes::Quaternion &q);
 
     void displayInstallError();
 
@@ -123,7 +84,7 @@ namespace JBTypesMethods {
 
     JBTypes::Color charAsColor(unsigned char charColor);
 
-    JBTypes::vec3i directionAsVectorInt(JBTypes::Dir dir);
+    glm::i32vec3 directionAsVectorInt(JBTypes::Dir dir);
 
     bool floatsEqual(float a, float b);
 

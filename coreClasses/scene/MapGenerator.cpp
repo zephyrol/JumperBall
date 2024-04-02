@@ -198,7 +198,7 @@ MapGenerator::uncompressMap(std::istringstream &file, const CstDoubleChronometer
     const auto createSpecials =
         [&getTypeOptions, &isAnSpecialTypeChar, &mapInfo](
         const std::string &specialsInfo,
-        const JBTypes::vec3ui &blockCoords
+        const glm::u32vec3 &blockCoords
     ) {
         const auto typeOptions = getTypeOptions(specialsInfo, isAnSpecialTypeChar);
 
@@ -657,7 +657,7 @@ bool MapGenerator::blockHasAnyProperties(unsigned char blockType) {
 
 vecBlock_sptr MapGenerator::createBlocks(
     unsigned char blockType,
-    const JBTypes::vec3ui &position,
+    const glm::u32vec3 &position,
     const vecItem_sptr &items,
     const vecEnemy_sptr &enemies,
     const vecSpecial_sptr &specials,

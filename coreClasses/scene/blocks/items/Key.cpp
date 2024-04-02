@@ -8,7 +8,7 @@
 #include "Key.h"
 #include <initializer_list>
 
-Key::Key(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, const Ball_sptr &ball) :
+Key::Key(const glm::u32vec3 &position, const JBTypes::Dir &direction, const Ball_sptr &ball) :
     InteractiveItem(position, direction, ball) {
 }
 

@@ -15,7 +15,7 @@ class SharpBlock : public InteractiveBlock {
 public:
 
     SharpBlock(
-        const JBTypes::vec3ui &position,
+        const glm::u32vec3 &position,
         const vecItem_sptr &items,
         const vecEnemy_sptr &enemies,
         const vecSpecial_sptr &specials,
@@ -29,12 +29,12 @@ public:
 
     vecCstShape_sptr getExtraShapes() const override;
 
-    std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > computeSharpBoundingBoxes(float sharpsSize) const;
+    std::vector<std::pair<glm::vec3, glm::vec3> > computeSharpBoundingBoxes(float sharpsSize) const;
 
 private:
     const std::array<bool, 6> _facesSharps;
-    const std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > _jumpingSharpBoundingBoxes;
-    const std::vector<std::pair<JBTypes::vec3f, JBTypes::vec3f> > _movingSharpBoundingBoxes;
+    const std::vector<std::pair<glm::vec3, glm::vec3> > _jumpingSharpBoundingBoxes;
+    const std::vector<std::pair<glm::vec3, glm::vec3> > _movingSharpBoundingBoxes;
     static constexpr auto jumpingSharpSize = 0.31f;
     static constexpr auto movingSharpSize = 0.6f;
 };

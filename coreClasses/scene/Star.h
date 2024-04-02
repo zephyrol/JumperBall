@@ -18,23 +18,23 @@ public:
     Star(
         const Map &map,
         float distance,
-        const JBTypes::vec3f &initialDirection,
-        const JBTypes::vec3f &rotationAxis,
-        const JBTypes::vec3f &color,
+        const glm::vec3 &initialDirection,
+        const glm::vec3 &rotationAxis,
+        const glm::vec3 &color,
         float radiansPerSecond
     );
 
-    const JBTypes::vec3f &rotationCenter() const;
+    const glm::vec3 &rotationCenter() const;
 
     float envSize() const;
 
-    JBTypes::Quaternion getRotation() const;
+    glm::quat getRotation() const;
 
-    JBTypes::vec3f lightDirection() const;
+    glm::vec3 lightDirection() const;
 
-    JBTypes::vec3f position() const;
+    glm::vec3 position() const;
 
-    StaticValues <JBTypes::vec3f> getStaticVec3fValues() const override;
+    StaticValues <glm::vec3> getStaticVec3fValues() const override;
 
     StaticValues<float> getStaticFloatValues() const override;
 
@@ -50,12 +50,12 @@ private:
 
     const CstChronometer_sptr _chronometer;
     const float _distance;
-    const JBTypes::vec3f _initialDirection;
-    const JBTypes::vec3f _rotationAxis;
-    const JBTypes::vec3f _rotationCenter;
+    const glm::vec3 _initialDirection;
+    const glm::vec3 _rotationAxis;
+    const glm::vec3 _rotationCenter;
     const float _envSize;
     const float _radiansPerSeconds;
-    const JBTypes::vec3f _color;
+    const glm::vec3 _color;
 
 };
 

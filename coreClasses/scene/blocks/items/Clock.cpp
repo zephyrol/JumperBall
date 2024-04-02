@@ -7,7 +7,7 @@
 
 #include "Clock.h"
 
-Clock::Clock(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, const Ball_sptr &ball) :
+Clock::Clock(const glm::u32vec3 &position, const JBTypes::Dir &direction, const Ball_sptr &ball) :
     InteractiveItem(position, direction, ball) {
 }
 

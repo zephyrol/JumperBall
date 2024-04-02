@@ -10,7 +10,7 @@ Special::Special(
     CstChronometer_sptr chronometer,
     const JBTypes::Color &color,
     const JBTypes::Dir &dir,
-    const JBTypes::vec3ui &position,
+    const glm::u32vec3 &position,
     bool isActivated
 ) :
     _chronometer(std::move(chronometer)),
@@ -20,7 +20,7 @@ Special::Special(
     _colorAttributeName("is" + JBTypesMethods::colorToString(_color) + "Activated"),
     _position(position),
     _positionF([this]() {
-        const JBTypes::vec3f positionF{
+        const glm::vec3 positionF{
             static_cast<float>(_position[0]),
             static_cast<float>(_position[1]),
             static_cast<float>(_position[2])
@@ -38,11 +38,11 @@ const JBTypes::Dir &Special::direction() const {
     return _direction;
 }
 
-const JBTypes::vec3f &Special::positionF() const {
+const glm::vec3 &Special::positionF() const {
     return _positionF;
 }
 
-const JBTypes::vec3ui &Special::position() const {
+const glm::u32vec3 &Special::position() const {
     return _position;
 }
 

@@ -15,15 +15,15 @@ public :
         Translation, Rotation, Scale
     };
 
-    explicit Transformation(const Type &type, const JBTypes::vec3f &value);
+    explicit Transformation(const Type &type, const glm::vec3 &value);
 
     const Type &type() const;
 
-    const JBTypes::vec3f &value() const;
+    const glm::vec3 &value() const;
 
 private:
     const Type _type;
-    const JBTypes::vec3f _value;
+    const glm::vec3 _value;
 };
 
 

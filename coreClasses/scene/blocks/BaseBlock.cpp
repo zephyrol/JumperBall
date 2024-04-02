@@ -7,7 +7,7 @@
 
 #include "BaseBlock.h"
 
-BaseBlock::BaseBlock(const JBTypes::vec3ui &position,
+BaseBlock::BaseBlock(const glm::u32vec3 &position,
                      const vecItem_sptr &items,
                      const vecEnemy_sptr &enemies,
                      const vecSpecial_sptr &specials,

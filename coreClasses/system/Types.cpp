@@ -1,8 +1,8 @@
 #include "Types.h"
 
-JBTypes::vec3f JBTypesMethods::directionAsVector(JBTypes::Dir dir) {
+glm::vec3 JBTypesMethods::directionAsVector(JBTypes::Dir dir) {
 
-    JBTypes::vec3f dirVec3{0.f, 0.f, 0.f};
+    glm::vec3 dirVec3{0.f, 0.f, 0.f};
     switch (dir) {
         case JBTypes::Dir::North:
             dirVec3.z = -1.f;
@@ -29,27 +29,27 @@ JBTypes::vec3f JBTypesMethods::directionAsVector(JBTypes::Dir dir) {
     return dirVec3;
 }
 
-JBTypes::vec3i JBTypesMethods::directionAsVectorInt(JBTypes::Dir dir) {
+glm::i32vec3 JBTypesMethods::directionAsVectorInt(JBTypes::Dir dir) {
 
-    JBTypes::vec3i dirVec3{0, 0, 0};
+    glm::i32vec3 dirVec3{0, 0, 0};
     switch (dir) {
         case JBTypes::Dir::North:
-            dirVec3.at(2) = -1;
+            dirVec3.z = -1;
             break;
         case JBTypes::Dir::South:
-            dirVec3.at(2) = 1;
+            dirVec3.y = 1;
             break;
         case JBTypes::Dir::East:
-            dirVec3.at(0) = 1;
+            dirVec3.x = 1;
             break;
         case JBTypes::Dir::West:
-            dirVec3.at(0) = -1;
+            dirVec3.x = -1;
             break;
         case JBTypes::Dir::Up:
-            dirVec3.at(1) = 1;
+            dirVec3.y = 1;
             break;
         case JBTypes::Dir::Down:
-            dirVec3.at(1) = -1;
+            dirVec3.y = -1;
             break;
         default:
             break;
@@ -59,7 +59,7 @@ JBTypes::vec3i JBTypesMethods::directionAsVectorInt(JBTypes::Dir dir) {
 }
 
 
-JBTypes::vec3f JBTypesMethods::rotationVectorUpToDir(const JBTypes::Dir &dir) {
+glm::vec3 JBTypesMethods::rotationVectorUpToDir(const JBTypes::Dir &dir) {
 
     switch (dir) {
         case JBTypes::Dir::North:
@@ -138,27 +138,7 @@ unsigned int JBTypesMethods::directionAsInteger(JBTypes::Dir dir) {
     return number;
 }
 
-JBTypes::vec3f JBTypesMethods::cross(const JBTypes::vec3f &a, const JBTypes::vec3f &b) {
-    return {
-        a.y * b.z - a.z * b.y,
-        a.z * b.x - a.x * b.z,
-        a.x * b.y - a.y * b.x
-    };
-}
-
-float JBTypesMethods::dot(const JBTypes::vec3f &a, const JBTypes::vec3f &b) {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
-}
-
-float JBTypesMethods::distance(const JBTypes::vec3f &a,
-                               const JBTypes::vec3f &b) {
-    const auto xDiff = b.x - a.x;
-    const auto yDiff = b.y - a.y;
-    const auto zDiff = b.z - a.z;
-    return sqrtf(xDiff * xDiff + yDiff * yDiff + zDiff * zDiff);
-}
-
-JBTypes::Dir JBTypesMethods::vectorAsDirection(const JBTypes::vec3f &vec) {
+JBTypes::Dir JBTypesMethods::vectorAsDirection(const glm::vec3& vec) {
     if (
         vec.x - 1.f < EPSILON_F && vec.x - 1.f > -EPSILON_F &&
         vec.y < EPSILON_F && vec.y > -EPSILON_F &&
@@ -209,25 +189,6 @@ void JBTypesMethods::displayInstallError() {
               "or \"make install\"" << std::endl;
 }
 
-JBTypes::vec3f JBTypesMethods::add(const JBTypes::vec3f &a,
-                                   const JBTypes::vec3f &b) {
-    return JBTypes::vec3f{a.x + b.x, a.y + b.y, a.z + b.z};
-}
-
-JBTypes::vec3f JBTypesMethods::scalarApplication(float scalar,
-                                                 const JBTypes::vec3f &vec) {
-    return JBTypes::vec3f{scalar * vec.x, scalar * vec.y, scalar * vec.z};
-}
-
-float JBTypesMethods::length(const JBTypes::vec3f &vec) {
-    return sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-}
-
-JBTypes::vec3f JBTypesMethods::normalize(const JBTypes::vec3f &vec) {
-    const float vecLength = JBTypesMethods::length(vec);
-    return {vec.x / vecLength, vec.y / vecLength, vec.z / vecLength};
-}
-
 std::string JBTypesMethods::colorToString(const JBTypes::Color &color) {
     switch (color) {
         case JBTypes::Color::Blue:
@@ -258,66 +219,6 @@ std::string JBTypesMethods::colorToString(const JBTypes::Color &color) {
             return "None";
     }
     return "None";
-}
-
-JBTypes::Quaternion JBTypesMethods::multiply(const JBTypes::Quaternion &q1, const JBTypes::Quaternion &q2) {
-    const JBTypes::vec3f v1xv2 = JBTypesMethods::cross(q1.v, q2.v);
-    const float v1DotV2 = JBTypesMethods::dot(q1.v, q2.v);
-    const JBTypes::vec3f s1v2 = JBTypesMethods::scalarApplication(q1.w, q2.v);
-    const JBTypes::vec3f s2v1 = JBTypesMethods::scalarApplication(q2.w, q1.v);
-    const float s1s2 = q1.w * q2.w;
-
-    return JBTypesMethods::createQuaternion(
-        JBTypesMethods::add(JBTypesMethods::add(v1xv2, s1v2), s2v1),
-        s1s2 - v1DotV2
-    );
-}
-
-JBTypes::Quaternion JBTypesMethods::q2q1(
-    const JBTypes::Quaternion &q1q2,
-    const JBTypes::Quaternion &q1,
-    const JBTypes::Quaternion &q2
-) {
-    const JBTypes::vec3f v1xv2 = JBTypesMethods::cross(q1.v, q2.v);
-    return JBTypesMethods::createQuaternion(
-        JBTypesMethods::add(q1q2.v, JBTypesMethods::scalarApplication(-2.f, v1xv2)),
-        q1q2.w
-    );
-}
-
-JBTypes::Quaternion JBTypesMethods::inverse(const JBTypes::Quaternion &q) {
-    const JBTypes::vec3f &v = q.v;
-    const float v2PlusS2 = v.x * v.x + v.y * v.y + v.z * v.z + q.w * q.w;
-
-    return JBTypesMethods::createQuaternion(
-        {-v.x / v2PlusS2, -v.y / v2PlusS2, -v.z / v2PlusS2},
-        q.w / v2PlusS2
-    );
-}
-
-JBTypes::Quaternion JBTypesMethods::createQuaternion(const JBTypes::vec3f &v, float w) {
-    return {v, w};
-}
-
-JBTypes::Quaternion JBTypesMethods::createRotationQuaternion(const JBTypes::vec3f &axis, float angle) {
-    return JBTypesMethods::createQuaternion(
-        JBTypesMethods::scalarApplication(sinf(angle / 2.f), axis),
-        cosf(angle / 2.f)
-    );
-}
-
-JBTypes::vec3f JBTypesMethods::rotateVector(const JBTypes::vec3f &v, const JBTypes::Quaternion &q) {
-    const auto &qv = q.v;
-    const float twoVDotQv = 2.f * JBTypesMethods::dot(v, qv);
-    const float qvDotQv = JBTypesMethods::dot(qv, qv);
-    const JBTypes::vec3f qvCrossV = JBTypesMethods::cross(qv, v);
-    const float qwqwMinusBtwo = q.w * q.w - qvDotQv;
-
-    const JBTypes::vec3f vPart = JBTypesMethods::scalarApplication(qwqwMinusBtwo, v);
-    const JBTypes::vec3f qvPart = JBTypesMethods::scalarApplication(twoVDotQv, qv);
-    const JBTypes::vec3f qvCrosVPart = JBTypesMethods::scalarApplication(2.f * q.w, qvCrossV);
-
-    return JBTypesMethods::add(JBTypesMethods::add(vPart, qvPart), qvCrosVPart);
 }
 
 JBTypes::Dir JBTypesMethods::charAsDirection(unsigned char dirChar) {

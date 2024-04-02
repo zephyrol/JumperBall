@@ -4,7 +4,7 @@
 
 #include "Transformation.h"
 
-Transformation::Transformation(const Transformation::Type &type, const JBTypes::vec3f &value):
+Transformation::Transformation(const Transformation::Type &type, const glm::vec3 &value):
 _type(type),
 _value(value)
 {
@@ -14,6 +14,6 @@ const Transformation::Type &Transformation::type() const {
     return _type;
 }
 
-const JBTypes::vec3f& Transformation::value() const {
+const glm::vec3& Transformation::value() const {
     return _value;
 }

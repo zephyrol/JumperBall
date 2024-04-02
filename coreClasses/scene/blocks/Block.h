@@ -26,7 +26,7 @@ class Block : public SceneElement {
 public:
 
     Block(
-        const JBTypes::vec3ui &position,
+        const glm::u32vec3 &position,
         const vecItem_sptr &items,
         const vecEnemy_sptr &enemies,
         const vecSpecial_sptr &specials,
@@ -67,13 +67,13 @@ public:
 
     virtual bool mayDisappear() const;
 
-    const JBTypes::vec3ui &position() const;
+    const glm::u32vec3 &position() const;
 
-    Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
+    Displayable::DynamicValues<glm::vec3> getDynamicVec3fValues() const override;
 
-    DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
+    DynamicValues <glm::quat> getDynamicQuaternionValues() const override;
 
-    static std::string positionToString(const JBTypes::vec3ui &position);
+    static std::string positionToString(const glm::u32vec3 &position);
 
     vecCstItem_sptr getCstItems() const;
 
@@ -90,7 +90,7 @@ public:
     std::string getDynamicGroupHash() const override;
 
 protected:
-    const JBTypes::vec3ui _position;
+    const glm::u32vec3 _position;
     const vecItem_sptr _items;
     const vecCstItem_sptr _cstItems;
     const vecEnemy_sptr _enemies;

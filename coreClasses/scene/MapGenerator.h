@@ -80,7 +80,7 @@ void verificationMap(std::istringstream& input, const Map& map);
 
     vecBlock_sptr createBlocks(
         unsigned char blockType,
-        const JBTypes::vec3ui &position,
+        const glm::u32vec3 &position,
         const vecItem_sptr &items,
         const vecEnemy_sptr &enemies,
         const vecSpecial_sptr &specials,

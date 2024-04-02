@@ -7,7 +7,7 @@
 CenteredNode::CenteredNode(const CstNode_sptr& parent, float ratio): FillingNode(
     parent,
     ratio,
-    [](const JBTypes::vec2f&) -> JBTypes::vec2f {
+    [](const glm::vec2&) -> glm::vec2 {
         return { 0.f, 0.f};
     }
 )

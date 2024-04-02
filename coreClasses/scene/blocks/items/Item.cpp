@@ -7,7 +7,7 @@
 
 #include "Item.h"
 
-Item::Item(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, CstChronometer_sptr chronometer) :
+Item::Item(const glm::u32vec3 &position, const JBTypes::Dir &direction, CstChronometer_sptr chronometer) :
     _chronometer(std::move(chronometer)),
     _position(position),
     _direction(direction),
@@ -17,11 +17,11 @@ Item::Item(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, CstCh
     _obtainingTime(nullptr) {
 }
 
-const JBTypes::vec3ui &Item::position() const {
+const glm::u32vec3 &Item::position() const {
     return _position;
 }
 
-const JBTypes::vec3f &Item::get3DPosition() const {
+const glm::vec3 &Item::get3DPosition() const {
     return _3DPosition;
 }
 
@@ -35,7 +35,7 @@ float Item::getTimeSinceObtaining() const {
            : 0;
 }
 
-JBTypes::vec3f Item::compute3DPosition() const {
+glm::vec3 Item::compute3DPosition() const {
     constexpr float offsetPosition = 0.755f;
     auto x = static_cast <float>(_position.at(0));
     auto y = static_cast <float>(_position.at(1));
@@ -64,7 +64,7 @@ JBTypes::vec3f Item::compute3DPosition() const {
             break;
     }
 
-    return JBTypes::vec3f{x, y, z};
+    return glm::vec3{x, y, z};
 }
 
 const JBTypes::Dir &Item::direction() const {
@@ -83,7 +83,7 @@ std::string Item::getDynamicGroupHash() const {
 }
 
 Transformation Item::getVerticalCylinderRotation(const JBTypes::Dir &direction) {
-    const auto rotationVector = [](const JBTypes::Dir &direction) -> JBTypes::vec3f {
+    const auto rotationVector = [](const JBTypes::Dir &direction) -> glm::vec3 {
 
         switch (direction) {
             case JBTypes::Dir::North:
@@ -105,12 +105,12 @@ Transformation Item::getVerticalCylinderRotation(const JBTypes::Dir &direction) 
     return Transformation(Transformation::Type::Rotation, rotationVector);
 }
 
-Displayable::DynamicValues<JBTypes::vec3f> Item::getDynamicVec3fValues() const {
+Displayable::DynamicValues<glm::vec3> Item::getDynamicVec3fValues() const {
 
     constexpr auto thresholdSecondStep = 1.f;
 
     const auto timeSinceObtaining = getTimeSinceObtaining();
-    const auto computeScale = [&timeSinceObtaining]() -> JBTypes::vec3f {
+    const auto computeScale = [&timeSinceObtaining]() -> glm::vec3 {
         if (timeSinceObtaining < thresholdSecondStep) {
             return {1.f, 1.f, 1.f};
         }
@@ -128,7 +128,7 @@ Displayable::DynamicValues<JBTypes::vec3f> Item::getDynamicVec3fValues() const {
         }
         return {0.f, 0.f, 0.f};
     };
-    const auto computeLocalTranslation = [this, &timeSinceObtaining]() -> JBTypes::vec3f {
+    const auto computeLocalTranslation = [this, &timeSinceObtaining]() -> glm::vec3 {
         if (timeSinceObtaining < thresholdSecondStep) {
             float translateCoeff = timeSinceObtaining / thresholdSecondStep;
             return JBTypesMethods::scalarApplication(translateCoeff, _translationWay);
@@ -139,7 +139,7 @@ Displayable::DynamicValues<JBTypes::vec3f> Item::getDynamicVec3fValues() const {
     return {JBTypesMethods::add(_3DPosition, computeLocalTranslation()), computeScale()};
 }
 
-Displayable::DynamicValues<JBTypes::Quaternion> Item::getDynamicQuaternionValues() const {
+Displayable::DynamicValues<glm::quat> Item::getDynamicQuaternionValues() const {
     if (_obtainingTime != nullptr) {
         constexpr auto speedPow = 5.f;
         const auto angle = powf(getTimeSinceObtaining(), speedPow);

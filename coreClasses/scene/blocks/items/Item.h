@@ -24,11 +24,11 @@ using Item_uptr = std::unique_ptr<Item>;
 class Item : public SceneElement {
 public:
 
-    Item(const JBTypes::vec3ui &position, const JBTypes::Dir &direction, CstChronometer_sptr chronometer);
+    Item(const glm::u32vec3 &position, const JBTypes::Dir &direction, CstChronometer_sptr chronometer);
 
-    const JBTypes::vec3ui &position() const;
+    const glm::u32vec3 &position() const;
 
-    const JBTypes::vec3f &get3DPosition() const;
+    const glm::vec3 &get3DPosition() const;
 
     const JBTypes::Dir &direction() const;
 
@@ -41,9 +41,9 @@ public:
     static constexpr float itemBoundingSphereRadiusJumping = 0.15f;
     static constexpr float itemBoundingSphereRadiusStaying = 0.3f;
 
-    DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
+    DynamicValues <glm::vec3> getDynamicVec3fValues() const override;
 
-    DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
+    DynamicValues <glm::quat> getDynamicQuaternionValues() const override;
 
     std::string getDynamicGroupHash() const override;
 
@@ -55,14 +55,14 @@ protected:
 
 private:
 
-    JBTypes::vec3f compute3DPosition() const;
+    glm::vec3 compute3DPosition() const;
 
     const CstChronometer_sptr _chronometer;
-    const JBTypes::vec3ui _position;
+    const glm::u32vec3 _position;
     const JBTypes::Dir _direction;
-    const JBTypes::vec3f _directionVec;
-    const JBTypes::vec3f _translationWay;
-    const JBTypes::vec3f _3DPosition;
+    const glm::vec3 _directionVec;
+    const glm::vec3 _translationWay;
+    const glm::vec3 _3DPosition;
     std::unique_ptr<float> _obtainingTime;
 
 };

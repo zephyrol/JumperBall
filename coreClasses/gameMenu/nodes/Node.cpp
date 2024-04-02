@@ -17,7 +17,7 @@ float Node::ratio() const {
     return _ratio;
 }
 
-JBTypes::vec2f Node::computeNodeSize(float parentRatio, float childRatio) {
+glm::vec2 Node::computeNodeSize(float parentRatio, float childRatio) {
     if (childRatio < parentRatio) {
         return {childRatio / parentRatio, 1.f};
     }

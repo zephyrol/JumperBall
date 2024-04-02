@@ -7,7 +7,7 @@
 FillingNode::FillingNode(
     const CstNode_sptr &parent,
     float ratio,
-    const std::function<JBTypes::vec2f(const JBTypes::vec2f &)> &computePositionFromLocalSize
+    const std::function<glm::vec2(const glm::vec2 &)> &computePositionFromLocalSize
 ) : Node(
     [&ratio, &parent, &computePositionFromLocalSize]() -> Transform {
         const auto localSize = Node::computeNodeSize(

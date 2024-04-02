@@ -9,7 +9,7 @@
 
 Laser::Laser(
     const JBTypes::Color &color,
-    const JBTypes::vec3ui &initialPosition,
+    const glm::u32vec3 &initialPosition,
     const JBTypes::Dir &dir,
     size_t length,
     const Ball_sptr &ball,
@@ -84,14 +84,14 @@ vecCstShape_sptr Laser::getShapes() const {
 
     constexpr float offsetLaserSide = 0.15f;
 
-    const std::array<JBTypes::vec3f, 4> translationsFloor{
-        JBTypes::vec3f{-offsetLaserSide, 0.f, -offsetLaserSide},
-        JBTypes::vec3f{offsetLaserSide, 0.f, -offsetLaserSide},
-        JBTypes::vec3f{-offsetLaserSide, 0.f, offsetLaserSide},
-        JBTypes::vec3f{offsetLaserSide, 0.f, offsetLaserSide}
+    const std::array<glm::vec3, 4> translationsFloor{
+        glm::vec3{-offsetLaserSide, 0.f, -offsetLaserSide},
+        glm::vec3{offsetLaserSide, 0.f, -offsetLaserSide},
+        glm::vec3{-offsetLaserSide, 0.f, offsetLaserSide},
+        glm::vec3{offsetLaserSide, 0.f, offsetLaserSide}
     };
 
-    const JBTypes::vec3f scale{size(), static_cast <float>(length()), size()};
+    const glm::vec3 scale{size(), static_cast <float>(length()), size()};
     const auto directionRotation = JBTypesMethods::rotationVectorUpToDir(direction());
 
     for (const auto &translationFloor: translationsFloor) {

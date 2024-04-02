@@ -12,7 +12,7 @@ class InteractiveSpecial : public Special {
 public:
     InteractiveSpecial(
         const JBTypes::Color &color,
-        const JBTypes::vec3ui &position,
+        const glm::u32vec3 &position,
         const JBTypes::Dir &direction,
         const Ball_sptr &ball,
         bool isActivated = true

@@ -76,18 +76,18 @@ public:
         JBTypes::Dir nextSide;
         JBTypes::Dir nextLook;
         NextDestination nextLocal;
-        JBTypes::vec3ui pos;
+        glm::u32vec3 pos;
     };
 
-    const JBTypes::vec3f &get3DPosition() const noexcept;
+    const glm::vec3 &get3DPosition() const noexcept;
 
-    const JBTypes::vec3ui &getPosition() const noexcept;
+    const glm::u32vec3 &getPosition() const noexcept;
 
     static float getRadius();
 
-    JBTypes::vec3f lookTowardsAsVector() const;
+    glm::vec3 lookTowardsAsVector() const;
 
-    JBTypes::vec3f currentSideAsVector() const;
+    glm::vec3 currentSideAsVector() const;
 
     JBTypes::Dir currentSide() const;
 
@@ -103,7 +103,7 @@ public:
 
     const ClassicalMechanics &getMechanicsFalling() const noexcept;
 
-    JBTypes::Quaternion getCoveredRotation() const noexcept;
+    glm::quat getCoveredRotation() const noexcept;
 
     float getCrushingCoefficient() const noexcept;
 
@@ -119,13 +119,13 @@ public:
 
     Displayable::DynamicValues<float> getDynamicFloatValues() const override;
 
-    Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
+    Displayable::DynamicValues<glm::vec3> getDynamicVec3fValues() const override;
 
-    Displayable::DynamicValues<JBTypes::Quaternion> getDynamicQuaternionValues() const override;
+    Displayable::DynamicValues<glm::quat> getDynamicQuaternionValues() const override;
 
-    CstBlock_sptr getBlock(const JBTypes::vec3ui &pos) const;
+    CstBlock_sptr getBlock(const glm::u32vec3 &pos) const;
 
-    JBTypes::vec3f getNextLook() const;
+    glm::vec3 getNextLook() const;
 
     void update(const Ball::ActionRequest &action) noexcept;
 
@@ -184,12 +184,12 @@ private:
     const CstChronometer_sptr _creationChronometer;
     const CstChronometer_sptr _inGameChronometer;
 
-    JBTypes::vec3ui _pos;
+    glm::u32vec3 _pos;
 
     JBTypes::Dir _currentSide;
     JBTypes::Dir _lookTowards;
 
-    JBTypes::vec3f _3DPos;
+    glm::vec3 _3DPos;
 
     Ball::State _state;
     Ball::StateOfLife _stateOfLife;
@@ -218,7 +218,7 @@ private:
     bool _jumpRequest;
     float _jumpRequestTime;
 
-    JBTypes::Quaternion _currentCoveredRotation;
+    glm::quat _currentCoveredRotation;
     float _currentCrushing;
 
     const TurnLeft _turnLeftMovement;
@@ -238,13 +238,13 @@ private:
 
     vecCstUpdateOutput_sptr _updateOutputs;
 
-    JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
+    glm::vec3 P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
 
-    JBTypes::vec3f get3DPosStayingBall() const;
+    glm::vec3 get3DPosStayingBall() const;
 
     bool isBurstingFinished() const;
 
-    JBTypes::vec3f getRotationAxis() const noexcept;
+    glm::vec3 getRotationAxis() const noexcept;
 
     float getJumpingPosX() const noexcept;
 
@@ -296,11 +296,11 @@ private:
 
     void doAction(ActionRequest action);
 
-    std::shared_ptr<const JBTypes::vec3ui> intersectBlock() const;
+    std::shared_ptr<const glm::u32vec3> intersectBlock() const;
 
     void applyRotation(bool inverse = false);
 
-    JBTypes::vec3f getInverseRotationAxis() const noexcept;
+    glm::vec3 getInverseRotationAxis() const noexcept;
 
     void isFallingIntersectionBlock() noexcept;
 

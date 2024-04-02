@@ -21,7 +21,7 @@ using Enemy_uptr = std::unique_ptr<Enemy>;
 class Enemy : public SceneElement {
 public:
     Enemy(
-        const JBTypes::vec3ui &initialPosition,
+        const glm::u32vec3 &initialPosition,
         const JBTypes::Dir &direction,
         float size,
         size_t length,
@@ -32,7 +32,7 @@ public:
 
     virtual JBTypes::Color getColor() const;
 
-    const JBTypes::vec3f &position() const;
+    const glm::vec3 &position() const;
 
     const JBTypes::Dir &direction() const;
 
@@ -40,7 +40,7 @@ public:
 
     size_t length() const;
 
-    Displayable::DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const override;
+    Displayable::DynamicValues<glm::vec3> getDynamicVec3fValues() const override;
 
     std::string getDynamicGroupHash() const override;
 
@@ -54,16 +54,16 @@ private:
     const size_t _length;
 
 protected:
-    const JBTypes::vec3f _initialPosition;
-    JBTypes::vec3f _position;
+    const glm::vec3 _initialPosition;
+    glm::vec3 _position;
     bool _isActivated;
-    JBTypes::vec3f _scale;
+    glm::vec3 _scale;
 
-    static const JBTypes::vec3f scaleActivated;
-    static const JBTypes::vec3f scaleDisable;
+    static const glm::vec3 scaleActivated;
+    static const glm::vec3 scaleDisable;
 
 private:
-    JBTypes::vec3f init3DPosition(const JBTypes::vec3ui &initialPosition) const;
+    glm::vec3 init3DPosition(const glm::u32vec3 &initialPosition) const;
 
 };
 

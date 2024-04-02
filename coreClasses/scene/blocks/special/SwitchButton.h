@@ -14,14 +14,14 @@ public:
     SwitchButton(
         const JBTypes::Color &color,
         const JBTypes::Dir &dir,
-        const JBTypes::vec3ui &position,
+        const glm::u32vec3 &position,
         const Ball_sptr &ball,
         bool isActivated
     );
 
-    DynamicValues <JBTypes::vec3f> getDynamicVec3fValues() const override;
+    DynamicValues <glm::vec3> getDynamicVec3fValues() const override;
 
-    DynamicValues <JBTypes::Quaternion> getDynamicQuaternionValues() const override;
+    DynamicValues <glm::quat> getDynamicQuaternionValues() const override;
 
     void applySpecialEffect() override;
 

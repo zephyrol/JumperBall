@@ -15,7 +15,7 @@ public:
 
     Laser(
         const JBTypes::Color &color,
-        const JBTypes::vec3ui &initialPosition,
+        const glm::u32vec3 &initialPosition,
         const JBTypes::Dir &dir,
         size_t length,
         const Ball_sptr &ball,

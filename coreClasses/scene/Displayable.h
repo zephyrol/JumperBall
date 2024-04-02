@@ -36,9 +36,9 @@ public:
 
     virtual StaticValues<float> getStaticFloatValues() const;
 
-    virtual StaticValues<JBTypes::vec2f> getStaticVec2fValues() const;
+    virtual StaticValues<glm::vec2> getStaticVec2fValues() const;
 
-    virtual StaticValues<JBTypes::vec3f> getStaticVec3fValues() const;
+    virtual StaticValues<glm::vec3> getStaticVec3fValues() const;
 
     virtual DynamicNames getDynamicIntNames() const;
 
@@ -50,15 +50,15 @@ public:
 
     virtual DynamicNames getDynamicVec2fNames() const;
 
-    virtual DynamicValues<JBTypes::vec2f> getDynamicVec2fValues() const;
+    virtual DynamicValues<glm::vec2> getDynamicVec2fValues() const;
 
     virtual DynamicNames getDynamicVec3fNames() const;
 
-    virtual DynamicValues<JBTypes::vec3f> getDynamicVec3fValues() const;
+    virtual DynamicValues<glm::vec3> getDynamicVec3fValues() const;
 
     virtual DynamicNames getDynamicQuaternionNames() const;
 
-    virtual DynamicValues<JBTypes::Quaternion> getDynamicQuaternionValues() const;
+    virtual DynamicValues<glm::quat> getDynamicQuaternionValues() const;
 
     virtual std::string getDynamicGroupHash() const;
 

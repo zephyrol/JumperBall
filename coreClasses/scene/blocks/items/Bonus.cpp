@@ -8,7 +8,7 @@
 #include "Bonus.h"
 
 Bonus::Bonus(
-    const JBTypes::vec3ui &position,
+    const glm::u32vec3 &position,
     const JBTypes::Dir &direction,
     unsigned int value,
     const Ball_sptr &ball

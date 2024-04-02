@@ -13,7 +13,7 @@
 class IceBlock : public InteractiveBlock {
 public:
     IceBlock(
-        const JBTypes::vec3ui &position,
+        const glm::u32vec3 &position,
         const vecItem_sptr &items,
         const vecEnemy_sptr &enemies,
         const vecSpecial_sptr &specials,
