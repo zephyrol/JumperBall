@@ -7,7 +7,7 @@
 
 #include "Camera.h"
 
-Camera::Camera(const Map &map, float ratio) :
+Camera::Camera(const Map& map, float ratio) :
     _map(map),
     _chronometer(map.getBall()->getCreationChronometer()),
     _zFar(4.f * map.getLargestSize()),
@@ -19,80 +19,95 @@ Camera::Camera(const Map &map, float ratio) :
     _up(0.f, 1.f, 0.f),
     _timePointComeBack(0.f),
     _timePointGoAbove(0.f),
-    _perspectiveMatrix(glm::perspective(getFovY(ratio), ratio, _offset.zNear, _zFar)) {
+    _perspectiveMatrix(glm::perspective(getFovY(ratio), ratio, _offset.zNear, _zFar))
+{
 }
 
 void Camera::update(
-    const Player::Status &status,
+    const Player::Status& status,
     bool goAbove
-) noexcept {
-    if (status == Player::Status::InMenu) {
+) noexcept
+{
+    if (status == Player::Status::InMenu)
+    {
         _movement = Camera::Movement::TurningAroundMap;
-    } else if (status == Player::Status::InGame) {
+    }
+    else if (status == Player::Status::InGame)
+    {
         _movement = Camera::Movement::FollowingBall;
-    } else if (status == Player::Status::InTransition) {
+    }
+    else if (status == Player::Status::InTransition)
+    {
         _movement = Camera::Movement::ApproachingBall;
     }
 
     // TODO : Replace by in game time
     const auto updatingTime = _chronometer->getTime();
-    if (goAbove && _timePointComeBack >= _timePointGoAbove) {
+    if (goAbove && _timePointComeBack >= _timePointGoAbove)
+    {
         _timePointGoAbove = updatingTime;
-    } else if (!goAbove && _timePointGoAbove >= _timePointComeBack) {
+    }
+    else if (!goAbove && _timePointGoAbove >= _timePointComeBack)
+    {
         _timePointComeBack = updatingTime;
     }
-    if (_movement == Camera::Movement::TurningAroundMap) {
+    if (_movement == Camera::Movement::TurningAroundMap)
+    {
         turningAroundMapUpdate();
         return;
     }
-    if (_movement == Camera::Movement::FollowingBall) {
+    if (_movement == Camera::Movement::FollowingBall)
+    {
         followingBallUpdate();
         return;
     }
-    if (approachingBallUpdate()) {
+    if (approachingBallUpdate())
+    {
         _movement = Camera::Movement::FollowingBall;
     }
 }
 
-const Camera::Movement &Camera::getMovement() noexcept {
+const Camera::Movement& Camera::getMovement() noexcept
+{
     return _movement;
 }
 
-void Camera::followingBallUpdate() noexcept {
-    const auto &ball = *_map.getBall();
+void Camera::followingBallUpdate() noexcept
+{
+    const auto& ball = *_map.getBall();
     const auto lookingDirection = ball.lookTowardsAsVector();
 
     const auto stateBall = ball.state();
 
     constexpr float durationMoveAbove = 0.2f;
 
-    const auto sideBall = ball.currentSideAsVector();
-    const glm::vec3 toSkyVec3 = Utility::convertToOpenGLFormat(sideBall);
+    const glm::vec3 toSkyVec3 = ball.currentSideAsVector();
 
     const float timeSinceAction = ball.getTimeSecondsSinceAction();
 
     glm::mat4 matRotationCam(1.f);
-    const glm::vec3 vecLookingDirection = Utility::convertToOpenGLFormat(lookingDirection);
 
-    if (stateBall == Ball::State::Moving) {
-        const JBTypes::vec3f vecNextLook = _map.getNextLook();
+    if (stateBall == Ball::State::Moving)
+    {
+        const glm::vec3 vecNextLook = _map.getNextLook();
 
-        const glm::vec3 axisNewLook = Utility::convertToOpenGLFormat(vecNextLook);
-
-        const glm::vec3 axisRotation = glm::cross(vecLookingDirection, axisNewLook);
+        const glm::vec3 axisRotation = glm::cross(lookingDirection, vecNextLook);
         const glm::vec3 eulerAngles = (timeSinceAction *
                 JBTypes::pi2 / Ball::timeToGetNextBlock) *
             axisRotation;
 
         const glm::quat quaternion(eulerAngles);
         matRotationCam = glm::toMat4(quaternion);
-    } else if (stateBall == Ball::State::TurningLeft || stateBall == Ball::State::TurningRight) {
-        const glm::vec3 &axisRotation = toSkyVec3;
+    }
+    else if (stateBall == Ball::State::TurningLeft || stateBall == Ball::State::TurningRight)
+    {
+        const glm::vec3& axisRotation = toSkyVec3;
 
         glm::vec3 eulerAngles = JBTypes::pi2 * axisRotation
             - (timeSinceAction * JBTypes::pi2 / (Ball::timeToTurn)) * axisRotation;
 
-        if (stateBall == Ball::State::TurningLeft) {
+        if (stateBall == Ball::State::TurningLeft)
+        {
             eulerAngles = -eulerAngles;
         }
 
@@ -102,14 +117,17 @@ void Camera::followingBallUpdate() noexcept {
 
     float cameraAboveWay;
     const auto updatingTime = _chronometer->getTime();
-    if (_timePointGoAbove > _timePointComeBack) {
+    if (_timePointGoAbove > _timePointComeBack)
+    {
         const float initialOffset = std::min(
             (_timePointGoAbove - _timePointComeBack) / durationMoveAbove,
             1.f
         );
         const float aboveCoeff = std::min((updatingTime - _timePointGoAbove) / durationMoveAbove, 1.f);
         cameraAboveWay = -(std::min(initialOffset - aboveCoeff, 1.f) - 1.f);
-    } else {
+    }
+    else
+    {
         const float initialOffset = std::min(
             (_timePointComeBack - _timePointGoAbove) / durationMoveAbove,
             1.f
@@ -119,15 +137,15 @@ void Camera::followingBallUpdate() noexcept {
     }
     cameraAboveWay = std::min(std::max(cameraAboveWay, 0.f), 1.f);
 
-    const glm::vec3 axisRotation = glm::cross(vecLookingDirection, toSkyVec3);
+    const glm::vec3 axisRotation = glm::cross(lookingDirection, toSkyVec3);
     const glm::vec3 eulerAngles = cameraAboveWay * (-JBTypes::pi / 2.75f) * axisRotation;
     const glm::quat quaternion(eulerAngles);
 
-    const glm::vec3 initCenterCam = targetDistance * vecLookingDirection;
-    const glm::vec3 toCameraPosition = _offset.above * toSkyVec3 - _offset.behind * vecLookingDirection;
+    const glm::vec3 initCenterCam = targetDistance * lookingDirection;
+    const glm::vec3 toCameraPosition = _offset.above * toSkyVec3 - _offset.behind * lookingDirection;
 
-    const JBTypes::vec3f &position = ball.get3DPosition();
-    const glm::mat4 matPosBall = glm::translate(Utility::convertToOpenGLFormat(position));
+    const glm::vec3& position = ball.get3DPosition();
+    const glm::mat4 matPosBall = glm::translate(position);
     matRotationCam = matRotationCam * glm::toMat4(quaternion);
     const glm::mat4 matPosBallRotationCam = matPosBall * matRotationCam;
 
@@ -137,11 +155,12 @@ void Camera::followingBallUpdate() noexcept {
     const glm::vec4 centerVec = matPosBallRotationCam * glm::vec4(initCenterCam, 1.f);
     _center = centerVec;
 
-    const glm::vec3 upVector = matRotationCam * glm::vec4(glm::cross(axisRotation, vecLookingDirection), 1.f);
+    const glm::vec3 upVector = matRotationCam * glm::vec4(glm::cross(axisRotation, lookingDirection), 1.f);
     _up = upVector;
 }
 
-void Camera::turningAroundMapUpdate() noexcept {
+void Camera::turningAroundMapUpdate() noexcept
+{
     const auto xMax = static_cast<float>(_map.width());
     const auto yMax = static_cast<float>(_map.height());
     const auto zMax = static_cast<float>(_map.depth());
@@ -177,8 +196,9 @@ void Camera::turningAroundMapUpdate() noexcept {
     _up = up;
 }
 
-bool Camera::approachingBallUpdate() noexcept {
-    const JBTypes::vec3f &position = _map.getBall()->get3DPosition();
+bool Camera::approachingBallUpdate() noexcept
+{
+    const glm::vec3& position = _map.getBall()->get3DPosition();
 
     constexpr float transitionDuration = 2.f;
 
@@ -189,19 +209,20 @@ bool Camera::approachingBallUpdate() noexcept {
     constexpr float distanceZStarting = 10.f;
 
     bool animationIsFinished;
-    if (t > 1.f) {
+    if (t > 1.f)
+    {
         t = 1.f;
         animationIsFinished = true;
-    } else {
+    }
+    else
+    {
         animationIsFinished = false;
     }
 
-    const auto &ball = *_map.getBall();
+    const auto& ball = *_map.getBall();
     const auto lookingDirection = ball.lookTowardsAsVector();
-    const glm::vec3 vecLookingDirection = Utility::convertToOpenGLFormat(lookingDirection);
 
-    const auto sideBall = ball.currentSideAsVector();
-    const glm::vec3 toSkyVec3 = Utility::convertToOpenGLFormat(sideBall);
+    const auto toSkyVec3 = ball.currentSideAsVector();
 
     const float tCos = cosf(t * JBTypes::pi2 + JBTypes::pi) + 1.f;
 
@@ -211,10 +232,10 @@ bool Camera::approachingBallUpdate() noexcept {
 
     const auto oneMinusTCos = 1.f - tCos;
 
-    const glm::vec3 toCameraPosition = _offset.above * toSkyVec3 - _offset.behind * vecLookingDirection;
-    const glm::vec3 initCenterCam = targetDistance * vecLookingDirection;
+    const glm::vec3 toCameraPosition = _offset.above * toSkyVec3 - _offset.behind * lookingDirection;
+    const glm::vec3 initCenterCam = targetDistance * lookingDirection;
 
-    const glm::mat4 matPosBall = glm::translate(Utility::convertToOpenGLFormat(position));
+    const glm::mat4 matPosBall = glm::translate(position);
     const glm::vec4 posVec = matPosBall * glm::vec4(toCameraPosition, 1.f);
     const glm::vec4 centerVec = matPosBall * glm::vec4(initCenterCam, 1.f);
 
@@ -229,18 +250,19 @@ bool Camera::approachingBallUpdate() noexcept {
     return animationIsFinished;
 }
 
-glm::mat4 Camera::genVPMatrixFromStar(const Star &star) {
+glm::mat4 Camera::genVPMatrixFromStar(const Star& star)
+{
     constexpr float offsetJumpingBall = 1.f; // size of ball + jump height
     const float envSize = star.envSize();
     const float halfBoundingBoxSize = envSize / 2.f + offsetJumpingBall;
 
     // We use a close star position to get a better ZBuffer accuracy
-    const JBTypes::vec3f &rotationCenter = star.rotationCenter();
-    const glm::vec3 centerWorld = Utility::convertToOpenGLFormat(rotationCenter);
+    const glm::vec3& rotationCenter = star.rotationCenter();
+    const glm::vec3& centerWorld = rotationCenter;
 
-    const JBTypes::vec3f &position = star.position();
+    const glm::vec3& position = star.position();
     const glm::vec3 closeStarPosition = centerWorld + glm::normalize(
-        (Utility::convertToOpenGLFormat(position)) - centerWorld
+        (position) - centerWorld
     ) * halfBoundingBoxSize;
 
     constexpr auto starZNear = 0.1f;
@@ -254,21 +276,25 @@ glm::mat4 Camera::genVPMatrixFromStar(const Star &star) {
     ) * glm::lookAt(closeStarPosition, centerWorld, glm::vec3(0.f, 1.f, 0.f));
 }
 
-const glm::vec3 &Camera::pos() const noexcept {
+const glm::vec3& Camera::pos() const noexcept
+{
     return _pos;
 }
 
-glm::mat4 Camera::viewProjection() const noexcept {
+glm::mat4 Camera::viewProjection() const noexcept
+{
     const glm::mat4 viewMatrix = glm::lookAt(_pos, _center, _up);
     return _perspectiveMatrix * viewMatrix;
 }
 
-void Camera::setRatio(float ratio) {
+void Camera::setRatio(float ratio)
+{
     _offset = getOffset(ratio);
     _perspectiveMatrix = glm::perspective(getFovY(ratio), ratio, _offset.zNear, _zFar);
 }
 
-float Camera::getFovY(float ratio) noexcept {
+float Camera::getFovY(float ratio) noexcept
+{
     constexpr auto fovMin = 60.f;
     constexpr auto fovMax = 70.f;
     constexpr auto ratioMin = 0.5f;
@@ -278,13 +304,15 @@ float Camera::getFovY(float ratio) noexcept {
     return fovY * JBTypes::pi / 180.f;
 }
 
-Camera::Offset Camera::getOffset(float ratio) {
+Camera::Offset Camera::getOffset(float ratio)
+{
     constexpr auto initialBehindBallDistance = 1.5f;
     constexpr auto initialAboveBallDistance = 1.5f;
     constexpr auto initialZNear = 0.2f;
 
     const auto halfFovY = getFovY(ratio) / 2.f;
-    if (ratio > 1.f) {
+    if (ratio > 1.f)
+    {
         return {initialBehindBallDistance, initialAboveBallDistance, initialZNear, halfFovY};
     }
 

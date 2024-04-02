@@ -27,19 +27,19 @@ Mesh_sptr MapGroupGenerator::genBlock(const CstBlock_sptr &block, short dynamics
     constexpr size_t numberOfFaces = 6;
 
     std::array<bool, numberOfFaces> boolSidesInfo{}; // true <=> close, false <=> open
-    const std::array<JBTypes::vec3ui, numberOfFaces> positions{
+    const std::array<glm::u32vec3, numberOfFaces> positions{
         {
-            {position.at(0), position.at(1), position.at(2) - 1},
-            {position.at(0), position.at(1), position.at(2) + 1},
-            {position.at(0) + 1, position.at(1), position.at(2)},
-            {position.at(0) - 1, position.at(1), position.at(2)},
-            {position.at(0), position.at(1) + 1, position.at(2)},
-            {position.at(0), position.at(1) - 1, position.at(2)}
+            {position.x, position.y, position.z - 1},
+            {position.x, position.y, position.z + 1},
+            {position.x + 1, position.y, position.z},
+            {position.x - 1, position.y, position.z},
+            {position.x, position.y + 1, position.z},
+            {position.x, position.y - 1, position.z}
         }
     };
 
     for (size_t i = 0; i < numberOfFaces; ++i) {
-        const JBTypes::vec3ui &neighborPosition = positions.at(i);
+        const glm::u32vec3 &neighborPosition = positions.at(i);
         // true = closed
         if (block->mayDisappear()) {
             boolSidesInfo.at(i) = true;
@@ -55,7 +55,7 @@ Mesh_sptr MapGroupGenerator::genBlock(const CstBlock_sptr &block, short dynamics
         if (block->mayDisappear()) {
             return glm::mat4(1.f);
         }
-        const glm::vec3 glmPosition{position.at(0), position.at(1), position.at(2)};
+        const glm::vec3 glmPosition{position.x, position.y, position.z};
         const glm::mat4 translation = glm::translate(glmPosition);
         return translation;
     };
@@ -120,23 +120,23 @@ Mesh_sptr MapGroupGenerator::genBall(const CstBall_sptr &ball, short dynamicsId)
 
 CstGeometricShape_sptr MapGroupGenerator::createGeometricShape(const CstShape_sptr &shape) {
 
-    const auto getRotationMatrix = [](const JBTypes::vec3f &rotation) {
+    const auto getRotationMatrix = [](const glm::vec3 &rotation) {
         return glm::rotate(rotation.x, glm::vec3(1.f, 0.f, 0.f))
                * glm::rotate(rotation.y, glm::vec3(0.f, 1.f, 0.f))
                * glm::rotate(rotation.z, glm::vec3(0.f, 0.f, 1.f));
     };
 
-    const auto getTranslationMatrix = [](const JBTypes::vec3f &translation) {
-        return glm::translate(Utility::convertToOpenGLFormat(translation));
+    const auto getTranslationMatrix = [](const glm::vec3 &translation) {
+        return glm::translate(translation);
     };
 
-    const auto getScaleMatrix = [](const JBTypes::vec3f &scale) {
-        return glm::scale(Utility::convertToOpenGLFormat(scale));
+    const auto getScaleMatrix = [](const glm::vec3 &scale) {
+        return glm::scale(scale);
     };
 
     const std::map<
         Transformation::Type,
-        std::function<glm::mat4(const JBTypes::vec3f &)>
+        std::function<glm::mat4(const glm::vec3 &)>
     > transformationFunctions = {
         {
             Transformation::Type::Translation,

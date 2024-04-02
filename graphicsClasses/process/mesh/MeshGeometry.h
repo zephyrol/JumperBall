@@ -84,9 +84,9 @@ MeshGeometry::createStaticVertexAttributeGenerationFunctions(
         // Values are passed by copy, because the function will be called after the end of this current
         // function execution
         staticVertexAttributeGenerationFunctions.emplace_back([numberOfVertices, staticValue]() {
-            std::vector<decltype(Utility::convertToOpenGLFormat(staticValue))> openGlValue(
+            std::vector<decltype(staticValue)> openGlValue(
                 numberOfVertices,
-                Utility::convertToOpenGLFormat(staticValue)
+                staticValue
             );
             return VertexAttributes::genVertexAttribute(std::move(openGlValue));
         });

@@ -119,30 +119,6 @@ glm::vec3 Utility::colorAsVec3(const JBTypes::Color &color) {
     return {0.f, 0.f, 0.f};
 }
 
-glm::vec3 Utility::convertToOpenGLFormat(const JBTypes::vec3f &vec3f) {
-    return {vec3f.x, vec3f.y, vec3f.z};
-}
-
-glm::vec4 Utility::convertToOpenGLFormat(const JBTypes::Quaternion &q) {
-    return {Utility::convertToOpenGLFormat(q.v), q.w};
-}
-
-GLshort Utility::convertToOpenGLFormat(const short &s) {
-    return static_cast<GLshort>(s);
-}
-
-GLfloat Utility::convertToOpenGLFormat(const float &f) {
-    return static_cast <GLfloat>(f);
-}
-
-GLint Utility::convertToOpenGLFormat(const int &i) {
-    return static_cast <GLint>(i);
-}
-
-glm::vec2 Utility::convertToOpenGLFormat(const JBTypes::vec2f &vec2f) {
-    return {vec2f.x, vec2f.y};
-}
-
 GLubyte Utility::convertToOpenGLFormat(unsigned char uChar) {
     return static_cast <GLubyte>(uChar);
 }

@@ -16,12 +16,6 @@
 #endif
 
 #include <system/Types.h>
-#include <glm/glm.hpp>
-
-#define GLM_ENABLE_EXPERIMENTAL
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp>
 
 namespace Utility {
 
@@ -36,18 +30,6 @@ namespace Utility {
     std::vector<glm::vec3> GLfloatListToGlmVec3(const std::vector<GLfloat> &list);
 
     std::vector<glm::vec2> GLfloatListToGlmVec2(const std::vector<GLfloat> &list);
-
-    glm::vec4 convertToOpenGLFormat(const JBTypes::Quaternion &q);
-
-    glm::vec3 convertToOpenGLFormat(const JBTypes::vec3f &vec3f);
-
-    glm::vec2 convertToOpenGLFormat(const JBTypes::vec2f &vec2f);
-
-    GLshort convertToOpenGLFormat(const short &s);
-
-    GLfloat convertToOpenGLFormat(const float &f);
-
-    GLint convertToOpenGLFormat(const int &i);
 
     GLubyte convertToOpenGLFormat(unsigned char uChar);
 
