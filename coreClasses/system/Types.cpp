@@ -61,22 +61,19 @@ JBTypes::vec3i JBTypesMethods::directionAsVectorInt(JBTypes::Dir dir) {
 
 JBTypes::vec3f JBTypesMethods::rotationVectorUpToDir(const JBTypes::Dir &dir) {
 
-    constexpr auto fPI = static_cast <float>(M_PI);
-    constexpr auto fPI2 = static_cast <float>(M_PI_2);
-
     switch (dir) {
         case JBTypes::Dir::North:
-            return {-fPI2, 0.f, 0.f};
+            return {-JBTypes::pi2, 0.f, 0.f};
         case JBTypes::Dir::South:
-            return {fPI2, 0.f, 0.f};
+            return {JBTypes::pi2, 0.f, 0.f};
         case JBTypes::Dir::East:
-            return {0.f, 0.f, -fPI2};
+            return {0.f, 0.f, -JBTypes::pi2};
         case JBTypes::Dir::West:
-            return {0.f, 0.f, fPI2};
+            return {0.f, 0.f, JBTypes::pi2};
         case JBTypes::Dir::Up:
             return {0.0f, 0.0f, 0.0f};
         case JBTypes::Dir::Down:
-            return {fPI, 0.f, 0.f};
+            return {JBTypes::pi, 0.f, 0.f};
         default:
             return {0.0f, 0.0f, 0.0f};
     }

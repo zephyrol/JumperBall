@@ -31,7 +31,7 @@ void ThornBall::update() {
     const JBTypes::vec3f vecDir = JBTypesMethods::directionAsVector(_movementDirection);
 
     const auto movementLength = static_cast <float>(length());
-    const float localMovement = (1.f - cosf(2.f * static_cast <float>(M_PI) *
+    const float localMovement = (1.f - cosf(2.f * JBTypes::pi *
                                             //TODO replace by in game time
                                             (_chronometer->getTime() / movementDuration))
                                 ) / 2.f;

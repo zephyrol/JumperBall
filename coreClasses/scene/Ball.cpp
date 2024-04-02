@@ -256,7 +256,7 @@ float Ball::getCrushingCoefficient() const noexcept {
             [this]() -> float {
                 constexpr float durationWaitingCrushing = 0.7f;
                 const float angleInCosinusFunc = getTimeSecondsSinceAction() * 2.f *
-                                                 static_cast <float>(M_PI) / durationWaitingCrushing;
+                                                 JBTypes::pi / durationWaitingCrushing;
                 return 0.5f - cosf(angleInCosinusFunc) / 2.f;
             };
 

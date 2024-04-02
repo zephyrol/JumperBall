@@ -85,22 +85,19 @@ std::string Item::getDynamicGroupHash() const {
 Transformation Item::getVerticalCylinderRotation(const JBTypes::Dir &direction) {
     const auto rotationVector = [](const JBTypes::Dir &direction) -> JBTypes::vec3f {
 
-        constexpr auto fPI = static_cast <float>(M_PI);
-        constexpr auto fPI2 = static_cast <float>(M_PI_2);
-
         switch (direction) {
             case JBTypes::Dir::North:
                 return {0.f, 0.f, 0.f};
             case JBTypes::Dir::South:
-                return {fPI, 0.f, 0.f};
+                return {JBTypes::pi, 0.f, 0.f};
             case JBTypes::Dir::East:
-                return {fPI2, fPI2, 0.f};
+                return {JBTypes::pi2, JBTypes::pi2, 0.f};
             case JBTypes::Dir::West:
-                return {-fPI2, -fPI2, 0.f};
+                return {-JBTypes::pi2, -JBTypes::pi2, 0.f};
             case JBTypes::Dir::Up:
-                return {fPI2, 0.f, 0.f};
+                return {JBTypes::pi2, 0.f, 0.f};
             case JBTypes::Dir::Down:
-                return {-fPI2, 0.f, 0.f};
+                return {-JBTypes::pi2, 0.f, 0.f};
             default:
                 return {0.0f, 0.0f, 0.0f};
         }
