@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.23)
 project(GravityGlobe)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(glfw3 REQUIRED)
 
 # glm
-find_package(GLM REQUIRED)
+find_package(glm REQUIRED)
 
 # FreeType
 find_package(Freetype REQUIRED)
@@ -114,7 +114,6 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/MapGenerator.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/Star.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/SceneElement.cpp
-    ${CMAKE_SOURCE_DIR}/coreClasses/scene/CMakeFiles/3.28.3/CompilerIdCXX/CMakeCXXCompilerId.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/Screen.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/Displayable.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/Map.cpp
@@ -307,23 +306,24 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/TitlePage.h
     ${CMAKE_SOURCE_DIR}/coreClasses/player/Player.h
     ${CMAKE_SOURCE_DIR}/application/Window.h
-
-        # Ajouter ici vos autres fichiers .h
 )
 
-install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/fonts DESTINATION ${CMAKE_BINARY_DIR}/bin)
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/fonts DESTINATION ${CMAKE_BINARY_DIR}/bin)
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/maps DESTINATION ${CMAKE_BINARY_DIR}/bin)
-install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/save DESTINATION ${CMAKE_BINARY_DIR}/bin)
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/save DESTINATION ${CMAKE_BINARY_DIR}/bin)
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/graphicsClasses/shaders DESTINATION ${CMAKE_BINARY_DIR}/bin)
 
-# Créer l'exécutable
+# Create the executable
 add_executable(GravityGlobe ${SOURCES} ${HEADERS})
 
-# Inclure les répertoires d'en-tête
+# Include headers
 target_include_directories(GravityGlobe PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/coreClasses
+        ${CMAKE_CURRENT_SOURCE_DIR}/graphicsClasses
+        ${CMAKE_CURRENT_SOURCE_DIR}/graphicsClasses/thirdparty/glad
 )
 
-# Liens avec les bibliothèques
+# Link Libraries
 target_link_libraries(GravityGlobe PUBLIC
         glfw 
         glm::glm
