@@ -4,7 +4,7 @@ project(GravityGlobe)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# GLFW
+# glfw3
 find_package(glfw3 REQUIRED)
 
 # glm
@@ -154,10 +154,9 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/application/Window.cpp
     ${CMAKE_SOURCE_DIR}/application/main.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/thirdparty/glad/glad.c
-# Ajouter ici vos autres fichiers .cpp
 )
 
-# Ajouter les fichiers headers
+# Headers
 set(HEADERS
     ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/ColorableFrameBuffer.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/FrameBuffer.h
