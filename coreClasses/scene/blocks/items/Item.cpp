@@ -107,10 +107,10 @@ Transformation Item::getVerticalCylinderRotation(const JBTypes::Dir &direction) 
 
 Displayable::DynamicValues<JBTypes::vec3f> Item::getDynamicVec3fValues() const {
 
-    constexpr auto thresholdSecondStep = 1.f;
 
     const auto timeSinceObtaining = getTimeSinceObtaining();
     const auto computeScale = [&timeSinceObtaining]() -> JBTypes::vec3f {
+        constexpr auto thresholdSecondStep = 1.f;
         if (timeSinceObtaining < thresholdSecondStep) {
             return {1.f, 1.f, 1.f};
         }
@@ -129,6 +129,7 @@ Displayable::DynamicValues<JBTypes::vec3f> Item::getDynamicVec3fValues() const {
         return {0.f, 0.f, 0.f};
     };
     const auto computeLocalTranslation = [this, &timeSinceObtaining]() -> JBTypes::vec3f {
+        constexpr auto thresholdSecondStep = 1.f;
         if (timeSinceObtaining < thresholdSecondStep) {
             float translateCoeff = timeSinceObtaining / thresholdSecondStep;
             return JBTypesMethods::scalarApplication(translateCoeff, _translationWay);
