@@ -74,6 +74,10 @@ Viewer::~Viewer() {
 }
 
 void Viewer::resetRendering() {
+    // Free memory first
+    _sceneRendering = nullptr;
+    _pageRendering = nullptr;
+
     _sceneRendering = SceneRendering::createInstance(
         *_scene,
         _resolutionX,
