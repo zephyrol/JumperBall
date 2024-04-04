@@ -22,14 +22,14 @@ Window::Window(
     _windowHeight(windowHeight),
     _windowWidth(windowWidth),
     _binaryFont(createBinaryFont()),
-    _controller(
+    _controller(new Controller(
         _frameBufferWidth,
         _frameBufferHeight,
         createFilesContent(),
         _binaryFont.data(),
         _binaryFont.size(),
         false
-    ) {
+    )) {
 }
 
 JBTypes::FileContent Window::createFilesContent() {
@@ -179,7 +179,7 @@ bool Window::inputManagement() {
         // Frame buffer resizing
         _frameBufferWidth = frameBufferWidth;
         _frameBufferHeight = frameBufferHeight;
-        _controller.resize(_frameBufferWidth, _frameBufferHeight);
+        _controller->resize(_frameBufferWidth, _frameBufferHeight);
 
         // Window sizes updating
         int windowWidth;
@@ -208,38 +208,38 @@ bool Window::inputManagement() {
 
     // ESCAPE
     const KeyboardKey::Status escapeStatus = getButtonStatus({GLFW_KEY_ESCAPE});
-    _controller.interactionButtons(KeyboardKey::Button::Escape, escapeStatus);
+    _controller->interactionButtons(KeyboardKey::Button::Escape, escapeStatus);
 
     // VALIDATE
     const KeyboardKey::Status validateStatus = getButtonStatus({GLFW_KEY_ENTER, GLFW_KEY_SPACE});
-    _controller.interactionButtons(KeyboardKey::Button::Validate, validateStatus);
+    _controller->interactionButtons(KeyboardKey::Button::Validate, validateStatus);
 
     // RIGHT
     const KeyboardKey::Status rightStatus = getButtonStatus({GLFW_KEY_RIGHT, GLFW_KEY_L});
-    _controller.interactionButtons(KeyboardKey::Button::Right, rightStatus);
+    _controller->interactionButtons(KeyboardKey::Button::Right, rightStatus);
 
     // LEFT
     const KeyboardKey::Status leftStatus = getButtonStatus({GLFW_KEY_LEFT, GLFW_KEY_H});
-    _controller.interactionButtons(KeyboardKey::Button::Left, leftStatus);
+    _controller->interactionButtons(KeyboardKey::Button::Left, leftStatus);
 
     // UP
     const KeyboardKey::Status upStatus = getButtonStatus({GLFW_KEY_UP, GLFW_KEY_K});
-    _controller.interactionButtons(KeyboardKey::Button::Up, upStatus);
+    _controller->interactionButtons(KeyboardKey::Button::Up, upStatus);
 
     // Down
     const KeyboardKey::Status downStatus = getButtonStatus({GLFW_KEY_DOWN, GLFW_KEY_J});
-    _controller.interactionButtons(KeyboardKey::Button::Down, downStatus);
+    _controller->interactionButtons(KeyboardKey::Button::Down, downStatus);
 
 
     /* For debugging only
     const KeyboardKey::Status stopStatus= getButtonStatus({GLFW_KEY_S});
     if(stopStatus == KeyboardKey::Status::Pressed) {
-        _controller.stop();
+        _controller->stop();
     }
 
     const KeyboardKey::Status resumeStatus = getButtonStatus({GLFW_KEY_R});
     if(resumeStatus == KeyboardKey::Status::Pressed) {
-        _controller.resume();
+        _controller->resume();
     }
      */
 
@@ -258,9 +258,9 @@ bool Window::inputManagement() {
 
         // GLFW defines y=0 as the top
         const auto posY = 1.f - posXY.second / static_cast <float>(_windowHeight);
-        _controller.pressMouse(posX, posY);
+        _controller->pressMouse(posX, posY);
     } else {
-        _controller.releaseMouse();
+        _controller->releaseMouse();
     }
 
     return glfwWindowShouldClose(_window) != 0;
@@ -281,13 +281,13 @@ void Window::run() {
     bool requestLeaving = false;
     while (!(inputManagement() || requestLeaving)) {
 
-        const auto updateOutput = _controller.update();
+        const auto updateOutput = _controller->update();
 
         if(shouldLeave(updateOutput)){
             requestLeaving = true;
         }
 
-        _controller.render();
+        _controller->render();
 
         writeSaveFile(updateOutput);
 
@@ -306,5 +306,7 @@ void Window::run() {
         }
     }
 
+    // Call destructors to destroy GPU memory and context
+    _controller = nullptr;
 }
 

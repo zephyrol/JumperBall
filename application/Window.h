@@ -35,7 +35,7 @@ private:
     int _windowWidth;
     const std::vector<unsigned char> _binaryFont;
 
-    Controller _controller;
+    std::unique_ptr<Controller> _controller;
 
     bool inputManagement();
 
