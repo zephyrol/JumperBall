@@ -150,7 +150,7 @@ void Camera::turningAroundMapUpdate() noexcept {
 
     const float distanceMax = std::max(std::max(xMax, yMax), zMax);
 
-    const float cameraDistanceNear = (distanceMax / 2.f) / tan(_offset.halfMinFov) * 1.1f;
+    const float cameraDistanceNear = (distanceMax / 2.f) / tanf(_offset.halfMinFov) * 1.1f;
     const float cameraDistanceFar = cameraDistanceNear * 1.3f;
     const float distanceX = cameraDistanceNear +
         (cameraDistanceFar - cameraDistanceNear) *
@@ -299,8 +299,8 @@ Camera::Offset Camera::getOffset(float ratio) {
     );
     const auto lateralDistance = initialCameraToTargetDistance * tanf(halfFovY);
 
-    const auto halfFovX = atanf(ratio * tan(halfFovY));
-    const auto cameraToTargetDistance = lateralDistance / tan(halfFovX);
+    const auto halfFovX = atanf(ratio * tanf(halfFovY));
+    const auto cameraToTargetDistance = lateralDistance / tanf(halfFovX);
 
     // Intersept theorem
     const auto cameraToTargetRatio = cameraToTargetDistance / initialCameraToTargetDistance;
