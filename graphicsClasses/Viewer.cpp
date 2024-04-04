@@ -61,12 +61,12 @@ void Viewer::resize(unsigned int resolutionX, unsigned int resolutionY) {
 
 void Viewer::setScene(const CstScene_sptr &scene) {
     _scene = scene;
-    resetRendering();
+    resetSceneRendering();
 }
 
 void Viewer::setPage(const CstPage_sptr &page) {
     _page = page;
-    resetRendering();
+    resetPageRendering();
 }
 
 Viewer::~Viewer() {
@@ -74,17 +74,13 @@ Viewer::~Viewer() {
 }
 
 void Viewer::resetRendering() {
-    // Free memory first
-    _sceneRendering = nullptr;
-    _pageRendering = nullptr;
+    resetSceneRendering();
+    resetPageRendering();
+}
 
-    _sceneRendering = SceneRendering::createInstance(
-        *_scene,
-        _resolutionX,
-        _resolutionY,
-        _defaultFrameBuffer,
-        _fileContent
-    );
+void Viewer::resetPageRendering() {
+    // Free memory first
+    _pageRendering = nullptr;
     _pageRendering = std::unique_ptr<LabelsProcess>(LabelsProcess::createInstance(
         _fileContent,
         _ftContent,
@@ -93,3 +89,16 @@ void Viewer::resetRendering() {
         _page
     ));
 }
+
+void Viewer::resetSceneRendering() {
+    // Free memory first
+    _sceneRendering = nullptr;
+    _sceneRendering = SceneRendering::createInstance(
+        *_scene,
+        _resolutionX,
+        _resolutionY,
+        _defaultFrameBuffer,
+        _fileContent
+    );
+}
+
