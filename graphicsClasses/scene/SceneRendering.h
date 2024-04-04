@@ -8,11 +8,12 @@
 #ifndef SCENE_RENDERING_H
 #define SCENE_RENDERING_H
 
-#include "componentsGeneration/RenderGroupGenerator.h"
 #include "Rendering.h"
 #include "Scene.h"
 #include "process/scene/SceneUniformBuffer.h"
 #include "process/RenderProcess.h"
+#include "process/scene/LevelProcess.h"
+#include "process/scene/PostEffects.h"
 
 
 class SceneRendering : public Rendering {
@@ -23,7 +24,8 @@ public:
         const Scene &scene,
         GLsizei width,
         GLsizei height,
-        vecRenderProcess_sptr&& processes,
+        LevelProcess_uptr levelProcess,
+        PostEffects_uptr postEffects,
         SceneUniformBuffer&& sceneUniformBuffer
     );
 
@@ -42,7 +44,8 @@ public:
 private:
 
     const Scene &_scene;
-    const vecRenderProcess_sptr _processes;
+    const LevelProcess_uptr _levelProcess;
+    const PostEffects_uptr _postEffects;
     SceneUniformBuffer _sceneUniformBuffer;
 };
 

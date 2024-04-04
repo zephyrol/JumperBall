@@ -5,12 +5,13 @@
 #ifndef JUMPERBALLAPPLICATION_POSTEFFECTS_H
 #define JUMPERBALLAPPLICATION_POSTEFFECTS_H
 
-#include "process/RenderProcess.h"
 #include "frameBuffer/ColorableFrameBuffer.h"
 #include "frameBuffer/TextureSampler.h"
 #include "process/RenderGroup.h"
 
-class PostEffects : public RenderProcess {
+class PostEffects;
+using PostEffects_uptr = std::unique_ptr<PostEffects>;
+class PostEffects {
 
 public:
     PostEffects(
@@ -23,9 +24,9 @@ public:
         GLint defaultFrameBuffer
     );
 
-    void render() const override;
+    void render() const;
 
-    vecCstShaderProgram_sptr getShaderPrograms() const override;
+    vecCstShaderProgram_sptr getShaderPrograms() const;
 
     ShaderProgram_sptr createPostProcessesShaderProgram(
         const CstTextureSampler_uptr &sceneTexture,
@@ -33,8 +34,6 @@ public:
         GLsizei width,
         GLsizei height
     );
-
-    const CstTextureSampler_uptr &getRenderTexture() const override;
 
 private:
 

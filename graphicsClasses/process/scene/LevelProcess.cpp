@@ -32,11 +32,11 @@ LevelProcess::LevelProcess(
     _starGroup(std::move(starGroup)),
     _starShaderProgram(std::move(starShaderProgram)),
     _starGroupUniforms(_starGroup->genUniforms(_starShaderProgram)),
-    _passIdUniformLocation(_mapShaderProgram->getUniformLocation("passId")) {
+    _passIdUniformLocation(_mapShaderProgram->getUniformLocation("passId")){
 }
 
 
-LevelProcess_sptr LevelProcess::createInstance(
+LevelProcess_uptr LevelProcess::createInstance(
     const JBTypes::FileContent &fileContent,
     GLsizei width,
     GLsizei height,
@@ -79,7 +79,7 @@ LevelProcess_sptr LevelProcess::createInstance(
         );
     };
 
-    return std::make_shared<LevelProcess>(
+    return std::unique_ptr<LevelProcess>(new LevelProcess(
         width,
         height,
         genDepthTexture(),
@@ -97,7 +97,7 @@ LevelProcess_sptr LevelProcess::createInstance(
         std::move(mapShaderProgram),
         std::move(starGroup),
         std::move(starShaderProgram)
-    );
+    ));
 }
 
 void LevelProcess::render() const {
@@ -152,12 +152,12 @@ void LevelProcess::render() const {
 
 }
 
-void LevelProcess::update() {
+void LevelProcess::update(){
     _mapGroupUniforms.update();
     _starGroupUniforms.update();
 }
 
-const CstTextureSampler_uptr &LevelProcess::getRenderTexture() const {
+const CstTextureSampler_uptr &LevelProcess::getRenderTexture() const{
     return _levelFrameBuffer->getRenderTexture();
 }
 

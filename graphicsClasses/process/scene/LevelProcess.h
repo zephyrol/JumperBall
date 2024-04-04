@@ -15,12 +15,12 @@
 
 class LevelProcess;
 
-using LevelProcess_sptr = std::shared_ptr<LevelProcess>;
+using LevelProcess_uptr = std::unique_ptr<LevelProcess>;
 
 class LevelProcess : public RenderProcess {
 public:
 
-    static LevelProcess_sptr createInstance(
+    static LevelProcess_uptr createInstance(
         const JBTypes::FileContent &fileContent,
         GLsizei width,
         GLsizei height,

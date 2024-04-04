@@ -13,13 +13,15 @@ SceneRendering::SceneRendering(
     const Scene &scene,
     GLsizei width,
     GLsizei height,
-    vecRenderProcess_sptr &&processes,
+    LevelProcess_uptr levelProcess,
+    PostEffects_uptr postEffects,
     SceneUniformBuffer &&sceneUniformBuffer
 ) :
     Rendering(width, height),
     _scene(scene),
-    _processes(std::move(processes)),
-    _sceneUniformBuffer(std::move(sceneUniformBuffer)) {
+    _levelProcess(std::move(levelProcess)),
+    _postEffects(std::move(postEffects)),
+    _sceneUniformBuffer(std::move(sceneUniformBuffer)){
 }
 
 std::unique_ptr<SceneRendering> SceneRendering::createInstance(
@@ -35,7 +37,7 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
     // Culling
     glEnable(GL_CULL_FACE);
 
-    const auto levelProcess = LevelProcess::createInstance(
+    auto levelProcess = LevelProcess::createInstance(
         fileContent,
         width,
         height,
@@ -54,7 +56,7 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
     const auto expensivePostProcessWidthGLsizei = static_cast<GLsizei>(expensivePostProcessWidth);
     const auto expensivePostProcessHeightGLsizei = static_cast<GLsizei>(expensivePostProcessHeight);
 
-    const auto postEffects = std::make_shared<PostEffects>(
+    auto postEffects = std::unique_ptr<PostEffects>(new PostEffects(
         fileContent,
         width,
         height,
@@ -62,7 +64,7 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         expensivePostProcessHeightGLsizei,
         levelProcess->getRenderTexture(),
         defaultFrameBuffer
-    );
+    ));
 
     auto shadersProgramsUsingUniformBuffer = levelProcess->getShaderPrograms();
     auto postEffectsShaderPrograms = postEffects->getShaderPrograms();
@@ -76,7 +78,8 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
         scene,
         width,
         height,
-        std::initializer_list<RenderProcess_sptr>({levelProcess, postEffects}),
+        std::move(levelProcess),
+        std::move(postEffects),
         SceneUniformBuffer(shadersProgramsUsingUniformBuffer)
     ));
 }
@@ -96,13 +99,10 @@ void SceneRendering::update() {
         glm::vec1(sceneBall->getTeleportationCoefficient())
     );
 
-    for (const auto &process: _processes) {
-        process->update();
-    }
+    _levelProcess->update();
 }
 
 void SceneRendering::render() const {
-    for (const auto &process: _processes) {
-        process->render();
-    }
+    _levelProcess->render();
+    _postEffects->render();
 }

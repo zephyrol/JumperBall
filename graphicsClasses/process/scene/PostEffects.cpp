@@ -156,7 +156,3 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
 vecCstShaderProgram_sptr PostEffects::getShaderPrograms() const {
     return {_postProcessesShader};
 }
-
-const CstTextureSampler_uptr &PostEffects::getRenderTexture() const {
-    return nullptr;
-}
