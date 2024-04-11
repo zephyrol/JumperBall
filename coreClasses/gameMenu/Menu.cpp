@@ -7,14 +7,15 @@
 
 #include "Menu.h"
 
-#include "gameMenu/pages/TitlePage.h"
-#include "gameMenu/pages/LevelsPage.h"
-#include "gameMenu/pages/SuccessPage.h"
-#include "gameMenu/pages/FailurePage.h"
-#include "gameMenu/pages/PausePage.h"
 #include "gameMenu/pages/CreditsPage.h"
+#include "gameMenu/pages/FailurePage.h"
+#include "gameMenu/pages/LevelsPage.h"
+#include "gameMenu/pages/PausePage.h"
 #include "gameMenu/pages/StorePage.h"
+#include "gameMenu/pages/SuccessPage.h"
+#include "gameMenu/pages/TitlePage.h"
 #include "gameMenu/pages/ValidationPage.h"
+#include "pages/tutorials/KeysTutorial.h"
 #include "pages/tutorials/MovementTutorial.h"
 #include "pages/tutorials/Tutorial.h"
 
@@ -147,6 +148,14 @@ Tutorial_uptr Menu::createTutorial(size_t level, const CstMovableObject_sptr &mo
             [movableObject, isUsingEnglish, isUsingTouchScreen]() {
                 return std::unique_ptr<Tutorial>(
                     new MovementTutorial(movableObject, isUsingEnglish, isUsingTouchScreen)
+                );
+            }
+        },
+        {
+            2,
+            [movableObject, isUsingEnglish](){
+                return std::unique_ptr<Tutorial>(
+                    new KeysTutorial(movableObject, isUsingEnglish)
                 );
             }
         }

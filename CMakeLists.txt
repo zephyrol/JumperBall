@@ -149,6 +149,7 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/StorePage.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/SuccessPage.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/MovementTutorial.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/KeysTutorial.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/InGamePage.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/player/Player.cpp
     ${CMAKE_SOURCE_DIR}/application/Window.cpp
@@ -299,6 +300,7 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/LevelsPage.h
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/InGamePage.h
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/MovementTutorial.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/KeysTutorial.h
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/Tutorial.h
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/StorePage.h
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/ValidationPage.h

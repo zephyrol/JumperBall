@@ -11,7 +11,7 @@
 . . . . .
 
 . . . . . 
-. X X X . NI KU N NI IU
+. X X X . NI IU N NI IU
 . X . X . N N
 . X . X . NI IU E U
 . X . X . N NI IU

@@ -62,6 +62,7 @@ void Viewer::resize(unsigned int resolutionX, unsigned int resolutionY) {
 void Viewer::setScene(const CstScene_sptr &scene) {
     _scene = scene;
     resetSceneRendering();
+    resetPageRendering();
 }
 
 void Viewer::setPage(const CstPage_sptr &page) {
