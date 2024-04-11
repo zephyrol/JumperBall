@@ -15,6 +15,8 @@
 #include "gameMenu/pages/SuccessPage.h"
 #include "gameMenu/pages/TitlePage.h"
 #include "gameMenu/pages/ValidationPage.h"
+#include "pages/tutorials/FacesTutorial.h"
+#include "pages/tutorials/JumpTutorial.h"
 #include "pages/tutorials/KeysTutorial.h"
 #include "pages/tutorials/MovementTutorial.h"
 #include "pages/tutorials/Tutorial.h"
@@ -156,6 +158,22 @@ Tutorial_uptr Menu::createTutorial(size_t level, const CstMovableObject_sptr &mo
             [movableObject, isUsingEnglish](){
                 return std::unique_ptr<Tutorial>(
                     new KeysTutorial(movableObject, isUsingEnglish)
+                );
+            }
+        },
+        {
+            3,
+            [movableObject, isUsingEnglish](){
+                return std::unique_ptr<Tutorial>(
+                    new JumpTutorial(movableObject, isUsingEnglish)
+                );
+            }
+        },
+        {
+            5,
+            [movableObject, isUsingEnglish](){
+                return std::unique_ptr<Tutorial>(
+                    new FacesTutorial(movableObject, isUsingEnglish)
                 );
             }
         }
