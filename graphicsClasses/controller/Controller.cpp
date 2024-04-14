@@ -37,6 +37,7 @@ Controller::Controller(
             _player,
             _scene->getMap(),
             _scene->getBall(),
+            _scene->getCamera(),
             static_cast<float>(screenWidth) / static_cast<float>(screenHeight),
             isUsingTouchScreen
         )
@@ -103,7 +104,7 @@ void Controller::runGame(size_t level) {
         _player
     );
     CstMovableObject_sptr movableObject = _scene->getBall();
-    _menu->setBackgroundMap(_scene->getMap(), _scene->getBall());
+    _menu->setBackgroundMap(_scene->getMap(), _scene->getBall(), _scene->getCamera());
     _viewer->setScene(_scene);
 }
 

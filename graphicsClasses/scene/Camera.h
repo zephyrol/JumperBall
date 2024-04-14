@@ -8,44 +8,45 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <scene/Star.h>
 #include <scene/Map.h>
-#include "player/Player.h"
+#include <scene/Star.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
+
+#include "AboveMovingCamera.h"
 #include "Utility.h"
+#include "player/Player.h"
 
-class Camera : public Displayable {
-public:
-    enum class Movement {
-        TurningAroundMap, FollowingBall, ApproachingBall
-    };
+class Camera : public Displayable, public AboveMovingCamera {
+   public:
+    enum class Movement { TurningAroundMap, FollowingBall, ApproachingBall };
 
-    Camera(const Map &map, float ratio);
+    Camera(const Map& map, float ratio);
 
-    const glm::vec3 &pos() const noexcept;
+    const glm::vec3& pos() const noexcept;
 
     glm::mat4 viewProjection() const noexcept;
 
-    void update(
-        const Player::Status &status,
-        bool goAbove
-    ) noexcept;
+    bool isMovingAbove() const override;
 
-    const Movement &getMovement() noexcept;
+    void update(const Player::Status& status, bool goAbove) noexcept;
+
+    const Movement& getMovement() noexcept;
 
     void setRatio(float ratio);
 
-    static glm::mat4 genVPMatrixFromStar(const Star &star);
+    static glm::mat4 genVPMatrixFromStar(const Star& star);
 
-private:
+   private:
     struct Offset {
         float behind;
         float above;
         float zNear;
         float halfMinFov;
     };
+
+    float getAboveWay() const;
 
     void turningAroundMapUpdate() noexcept;
 
@@ -57,7 +58,7 @@ private:
 
     static Offset getOffset(float ratio);
 
-    const Map &_map;
+    const Map& _map;
     const CstChronometer_sptr _chronometer;
     const float _zFar;
     Movement _movement;

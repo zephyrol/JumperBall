@@ -27,6 +27,7 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/ScreenGroupGenerator.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/LabelGroupGenerator.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/Shader.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/RenderingCache.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/controller/Controller.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/graphicMenu/FontTexturesGenerator.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/ShaderProgram.cpp
@@ -152,6 +153,7 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/KeysTutorial.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/JumpTutorial.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/FacesTutorial.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/LookDownTutorial.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/InGamePage.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/player/Player.cpp
     ${CMAKE_SOURCE_DIR}/application/Window.cpp
@@ -168,6 +170,7 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/DepthFrameBuffer.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/GpuFrameBuffer.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/Shader.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/RenderingCache.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/Viewer.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/ShaderProgram.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/Rendering.h
@@ -185,6 +188,7 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Cube.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/GeometricShape.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/geometry/Triangle.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/scene/AboveMovingCamera.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/scene/Camera.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/scene/SceneRendering.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/scene/Scene.h
@@ -305,6 +309,7 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/KeysTutorial.h
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/JumpTutorial.h
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/FacesTutorial.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/LookDownTutorial.h
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/Tutorial.h
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/StorePage.h
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/ValidationPage.h

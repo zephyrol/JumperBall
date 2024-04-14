@@ -8,29 +8,28 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "gameMenu/pages/Page.h"
-#include "gameMenu/labels/TextLabel.h"
-#include "gameMenu/labels/ArrowLabel.h"
-#include "system/Mouse.h"
-#include "gameMenu/pages/InGamePage.h"
 #include <player/Player.h>
+#include "gameMenu/labels/ArrowLabel.h"
+#include "gameMenu/labels/TextLabel.h"
+#include "gameMenu/pages/InGamePage.h"
+#include "gameMenu/pages/Page.h"
+#include "system/Mouse.h"
 
 #include "pages/tutorials/Tutorial.h"
+#include "scene/AboveMovingCamera.h"
 
 class Menu {
-public:
-    explicit Menu(
-        Player_sptr player,
-        Page_sptr successPage,
-        Page_sptr failurePage,
-        InGamePage_sptr inGamePage,
-        vecPage_sptr pages,
-        bool isUsingTouchScreen
-    );
+   public:
+    explicit Menu(Player_sptr player,
+                  Page_sptr successPage,
+                  Page_sptr failurePage,
+                  InGamePage_sptr inGamePage,
+                  vecPage_sptr pages,
+                  bool isUsingTouchScreen);
 
     Page_sptr currentPage();
 
-    void update(const Mouse &mouse);
+    void update(const Mouse& mouse);
 
     /**
      * Action escape operation.
@@ -40,18 +39,19 @@ public:
 
     void mouseClick(float mouseX, float mouseY);
 
-    static std::shared_ptr<Menu> getJumperBallMenu(
-        const Player_sptr &player,
-        CstItemsContainer_sptr itemsContainer,
-        const CstMovableObject_sptr &movableObject,
-        float ratio, bool isUsingTouchScreen
-    );
+    static std::shared_ptr<Menu> getJumperBallMenu(const Player_sptr& player,
+                                                   CstItemsContainer_sptr itemsContainer,
+                                                   const CstMovableObject_sptr& movableObject,
+                                                   const CstAboveMovingCamera_sptr& camera,
+                                                   float ratio,
+                                                   bool isUsingTouchScreen);
 
-    void setBackgroundMap(CstItemsContainer_sptr itemsContainer, const CstMovableObject_sptr &movableObject);
+    void setBackgroundMap(CstItemsContainer_sptr itemsContainer,
+                          const CstMovableObject_sptr& movableObject,
+                          const CstAboveMovingCamera_sptr& camera);
     void resize(float screenRatio);
 
-private:
-
+   private:
     const bool _isUsingTouchScreen;
     const Player_sptr _player;
     const vecPage_sptr _pages;
@@ -60,8 +60,11 @@ private:
     const InGamePage_sptr _inGamePage;
     Page_sptr _currentPage;
 
-    static Tutorial_uptr createTutorial(size_t level, const CstMovableObject_sptr &movableObject,
-                                        bool isUsingEnglish, bool isUsingTouchScreen);
+    static Tutorial_uptr createTutorial(size_t level,
+                                        const CstMovableObject_sptr& movableObject,
+                                        const CstAboveMovingCamera_sptr& camera,
+                                        bool isUsingEnglish,
+                                        bool isUsingTouchScreen);
 };
 
 #endif /* MENU_H */
