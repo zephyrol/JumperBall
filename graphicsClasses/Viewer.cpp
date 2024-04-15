@@ -27,13 +27,13 @@ Viewer::Viewer(
     }()),
     _resolutionX(static_cast<GLsizei>(resolutionX)),
     _resolutionY(static_cast<GLsizei>(resolutionY)),
-    _sceneRendering(SceneRendering::createInstance(
-        *scene,
-        _resolutionX,
-        _resolutionY,
-        _defaultFrameBuffer,
-        fileContent
-    )),
+    _sceneRenderingCache(2),
+    _sceneRendering(SceneRendering::createInstance(*scene,
+                                                     _resolutionX,
+                                                     _resolutionY,
+                                                     _defaultFrameBuffer,
+                                                     fileContent,
+                                                     _sceneRenderingCache)),
     _pageRendering(LabelsProcess::createInstance(
         fileContent,
         _ftContent,
@@ -94,12 +94,7 @@ void Viewer::resetPageRendering() {
 void Viewer::resetSceneRendering() {
     // Free memory first
     _sceneRendering = nullptr;
-    _sceneRendering = SceneRendering::createInstance(
-        *_scene,
-        _resolutionX,
-        _resolutionY,
-        _defaultFrameBuffer,
-        _fileContent
-    );
+    _sceneRendering = SceneRendering::createInstance(*_scene, _resolutionX, _resolutionY, _defaultFrameBuffer,
+                                                     _fileContent, _sceneRenderingCache);
 }
 

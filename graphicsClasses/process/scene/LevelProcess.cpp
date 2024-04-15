@@ -6,102 +6,74 @@
 #include "componentsGeneration/MapGroupGenerator.h"
 #include "componentsGeneration/StarGroupGenerator.h"
 
-LevelProcess::LevelProcess(
-    GLsizei width,
-    GLsizei height,
-    DepthFrameBuffer_uptr firstShadow,
-    DepthFrameBuffer_uptr firstBlankShadow,
-    DepthFrameBuffer_uptr secondShadow,
-    DepthFrameBuffer_uptr secondBlankShadow,
-    ColorableFrameBuffer_uptr levelFrameBuffer,
-    RenderGroup_sptr mapGroup,
-    ShaderProgram_sptr mapShaderProgram,
-    RenderGroup_sptr starGroup,
-    ShaderProgram_sptr starShaderProgram
-) :
-    _width(width),
-    _height(height),
-    _firstShadow(std::move(firstShadow)),
-    _firstBlankShadow(std::move(firstBlankShadow)),
-    _secondShadow(std::move(secondShadow)),
-    _secondBlankShadow(std::move(secondBlankShadow)),
-    _levelFrameBuffer(std::move(levelFrameBuffer)),
-    _mapGroup(std::move(mapGroup)),
-    _mapShaderProgram(std::move(mapShaderProgram)),
-    _mapGroupUniforms(_mapGroup->genUniforms(_mapShaderProgram)),
-    _starGroup(std::move(starGroup)),
-    _starShaderProgram(std::move(starShaderProgram)),
-    _starGroupUniforms(_starGroup->genUniforms(_starShaderProgram)),
-    _passIdUniformLocation(_mapShaderProgram->getUniformLocation("passId")){
-}
+LevelProcess::LevelProcess(GLsizei width,
+                           GLsizei height,
+                           DepthFrameBuffer_uptr firstShadow,
+                           DepthFrameBuffer_uptr firstBlankShadow,
+                           DepthFrameBuffer_uptr secondShadow,
+                           DepthFrameBuffer_uptr secondBlankShadow,
+                           ColorableFrameBuffer_uptr levelFrameBuffer,
+                           RenderGroup_sptr mapGroup,
+                           ShaderProgram_sptr mapShaderProgram,
+                           RenderGroup_sptr starGroup,
+                           ShaderProgram_sptr starShaderProgram)
+    : _width(width),
+      _height(height),
+      _firstShadow(std::move(firstShadow)),
+      _firstBlankShadow(std::move(firstBlankShadow)),
+      _secondShadow(std::move(secondShadow)),
+      _secondBlankShadow(std::move(secondBlankShadow)),
+      _levelFrameBuffer(std::move(levelFrameBuffer)),
+      _mapGroup(std::move(mapGroup)),
+      _mapShaderProgram(std::move(mapShaderProgram)),
+      _mapGroupUniforms(_mapGroup->genUniforms(_mapShaderProgram)),
+      _starGroup(std::move(starGroup)),
+      _starShaderProgram(std::move(starShaderProgram)),
+      _starGroupUniforms(_starGroup->genUniforms(_starShaderProgram)),
+      _passIdUniformLocation(_mapShaderProgram->getUniformLocation("passId")) {}
 
-
-LevelProcess_uptr LevelProcess::createInstance(
-    const JBTypes::FileContent &fileContent,
-    GLsizei width,
-    GLsizei height,
-    CstMap_sptr map,
-    CstStar_sptr firstStar,
-    CstStar_sptr secondStar,
-    unsigned int ballSkin
-) {
-
+LevelProcess_uptr LevelProcess::createInstance(const JBTypes::FileContent& fileContent,
+                                               GLsizei width,
+                                               GLsizei height,
+                                               CstMap_sptr map,
+                                               CstStar_sptr firstStar,
+                                               CstStar_sptr secondStar,
+                                               unsigned int ballSkin,
+                                               RenderingCache& renderingCache) {
     const MapGroupGenerator mapGroupGenerator(map, ballSkin);
     auto mapGroup = mapGroupGenerator.genRenderGroup();
 
     const StarGroupGenerator starGroupGenerator(firstStar, secondStar);
     auto starGroup = starGroupGenerator.genRenderGroup();
 
-    auto starShaderProgram = ShaderProgram::createInstance(
-        fileContent,
-        "starVs.vs",
-        "starFs.fs",
-        {},
-        {{"idCount", starGroup->numberOfDynamicsIds()}}
-    );
+    const auto starIdsCount = starGroup->numberOfDynamicsIds();
+    const std::string starShaderHash = "star;" + std::to_string(starIdsCount);
 
-    auto mapShaderProgram = createMapShaderProgram(
-        fileContent,
-        mapGroup->numberOfDynamicsIds()
-    );
+    auto starShaderProgram = renderingCache.getShaderProgram(starShaderHash);
+    if (starShaderProgram == nullptr) {
+        starShaderProgram = ShaderProgram::createInstance(fileContent, "starVs.vs", "starFs.fs",
+                                                          starShaderHash, {}, {{"idCount", starIdsCount}});
+    }
+
+    auto mapShaderProgram = createMapShaderProgram(fileContent, mapGroup->numberOfDynamicsIds(), renderingCache);
 
     const auto genDepthTexture = []() {
-        return DepthFrameBuffer::createInstance(
-            depthTexturesSize,
-            depthTexturesSize
-        );
+        return DepthFrameBuffer::createInstance(depthTexturesSize, depthTexturesSize);
     };
     const auto genBlankDepthTexture = []() {
         constexpr GLsizei blankDepthTexturesSize = 1;
-        return DepthFrameBuffer::createInstance(
-            blankDepthTexturesSize,
-            blankDepthTexturesSize
-        );
+        return DepthFrameBuffer::createInstance(blankDepthTexturesSize, blankDepthTexturesSize);
     };
 
     return std::unique_ptr<LevelProcess>(new LevelProcess(
-        width,
-        height,
-        genDepthTexture(),
-        genBlankDepthTexture(),
-        genDepthTexture(),
-        genBlankDepthTexture(),
-        ColorableFrameBuffer::createInstance(
-            width,
-            height,
-            true,
-            true,
-            std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f))
-        ),
-        std::move(mapGroup),
-        std::move(mapShaderProgram),
-        std::move(starGroup),
-        std::move(starShaderProgram)
-    ));
+        width, height, genDepthTexture(), genBlankDepthTexture(), genDepthTexture(), genBlankDepthTexture(),
+        ColorableFrameBuffer::createInstance(width, height, true, true,
+                                             std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f))),
+        std::move(mapGroup), std::move(mapShaderProgram), std::move(starGroup),
+        std::move(starShaderProgram)));
 }
 
 void LevelProcess::render() const {
-
     FrameBuffer::disableBlending();
     _levelFrameBuffer->bindFrameBuffer();
     _levelFrameBuffer->clear();
@@ -149,29 +121,27 @@ void LevelProcess::render() const {
     _levelFrameBuffer->bindFrameBuffer();
     _mapShaderProgram->setInteger(_passIdUniformLocation, 3);
     _mapGroup->render();
-
 }
 
-void LevelProcess::update(){
+void LevelProcess::update() {
     _mapGroupUniforms.update();
     _starGroupUniforms.update();
 }
 
-const CstTextureSampler_uptr &LevelProcess::getRenderTexture() const{
+const CstTextureSampler_uptr& LevelProcess::getRenderTexture() const {
     return _levelFrameBuffer->getRenderTexture();
 }
 
-ShaderProgram_sptr LevelProcess::createMapShaderProgram(
-    const JBTypes::FileContent &fileContent,
-    short idCount
-) {
-    auto shader = ShaderProgram::createInstance(
-        fileContent,
-        "mapVs.vs",
-        "mapFs.fs",
-        {},
-        {{"idCount", idCount}}
-    );
+ShaderProgram_sptr LevelProcess::createMapShaderProgram(const JBTypes::FileContent& fileContent,
+                                                        short idCount,
+                                                        RenderingCache& renderingCache) {
+    const std::string shaderHash("map;" + std::to_string(idCount));
+
+    auto shader = renderingCache.getShaderProgram(shaderHash);
+    if (shader == nullptr) {
+        shader = ShaderProgram::createInstance(fileContent, "mapVs.vs", "mapFs.fs", shaderHash, {},
+                                                    {{"idCount", idCount}});
+    }
     shader->use();
     shader->setTextureIndex("depthTexture", firstShadowTextureIndex);
     shader->setTextureIndex("depth2Texture", secondShadowTextureIndex);
@@ -180,13 +150,8 @@ ShaderProgram_sptr LevelProcess::createMapShaderProgram(
 
     shader->setUniformArrayVec4(
         "shadowOffsets[0]",
-        {
-            shadowPixelSize, shadowPixelSize, 0.0, 0.0,
-            -shadowPixelSize, shadowPixelSize, 0.0, 0.0,
-            shadowPixelSize, -shadowPixelSize, 0.0, 0.0,
-            -shadowPixelSize, -shadowPixelSize, 0.0, 0.0
-        }
-    );
+        {shadowPixelSize, shadowPixelSize, 0.0, 0.0, -shadowPixelSize, shadowPixelSize, 0.0, 0.0,
+         shadowPixelSize, -shadowPixelSize, 0.0, 0.0, -shadowPixelSize, -shadowPixelSize, 0.0, 0.0});
     return shader;
 }
 

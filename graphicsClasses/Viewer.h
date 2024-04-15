@@ -6,10 +6,9 @@
 #ifndef VIEWER_H
 #define VIEWER_H
 
-#include <player/Player.h>
-#include <scene/MapGenerator.h>
-#include "scene/SceneRendering.h"
+#include "RenderingCache.h"
 #include "process/menu/LabelsProcess.h"
+#include "scene/SceneRendering.h"
 
 class Viewer {
 public:
@@ -46,6 +45,7 @@ private:
     GLsizei _resolutionX;
     GLsizei _resolutionY;
 
+    RenderingCache _sceneRenderingCache;
     std::unique_ptr<SceneRendering> _sceneRendering;
     std::unique_ptr<LabelsProcess> _pageRendering;
 

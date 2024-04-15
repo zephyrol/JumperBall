@@ -15,6 +15,7 @@ class ShaderProgram;
 using ShaderProgram_sptr = std::shared_ptr<ShaderProgram>;
 using CstShaderProgram_sptr = std::shared_ptr<const ShaderProgram>;
 using vecCstShaderProgram_sptr = std::vector<CstShaderProgram_sptr>;
+using vecShaderProgram_sptr = std::vector<ShaderProgram_sptr>;
 
 class ShaderProgram {
 
@@ -23,7 +24,8 @@ public:
     ShaderProgram(
         CstShader_uptr &&vertexShader,
         CstShader_uptr &&fragmentShader,
-        GLuint shaderProgramHandle
+        GLuint shaderProgramHandle,
+        std::string hash
     );
 
     ShaderProgram(const ShaderProgram &shaderProgram) = delete;
@@ -33,6 +35,8 @@ public:
     ~ShaderProgram();
 
     GLuint getHandle() const;
+
+    const std::string& getHash() const;
 
     /**
      * For a uniform sampler variable representing by its name, set a
@@ -71,6 +75,7 @@ public:
         const JBTypes::FileContent &fileContent,
         const std::string &vs,
         const std::string &fs,
+        const std::string &hash,
         const std::vector<std::string> &defines = {},
         const std::vector<std::pair<std::string, GLshort>> &constShorts = {},
         const std::vector<std::pair<std::string, GLfloat>> &constFloats = {},
@@ -83,6 +88,7 @@ private:
     const GLuint _shaderProgramHandle;
     const CstShader_uptr _vertexShader;
     const CstShader_uptr _fragmentShader;
+    const std::string _hash;
     static void verifyLinkStatus(GLuint shaderProgramHandle);
 };
 

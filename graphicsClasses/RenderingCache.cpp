@@ -1,5 +1,5 @@
 //
-// Created by Sebastien Morgenthaler on 14/04/2024.
+// Created by S.Morgenthaler on 14/04/2024.
 //
 
 #include "RenderingCache.h"

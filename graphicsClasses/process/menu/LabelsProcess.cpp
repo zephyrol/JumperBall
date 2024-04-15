@@ -49,10 +49,12 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
 
     auto renderGroup = LabelGroupGenerator(std::move(labels), page).genRenderGroup();
 
+    // TODO Use shaderCache
     auto labelsShader = ShaderProgram::createInstance(
         fileContent,
         page->getVertexShaderName(),
         "labelFs.fs",
+        "",
         page->shaderDefines(),
         {{"idCount", renderGroup->numberOfDynamicsIds()}},
         glFloatConsts

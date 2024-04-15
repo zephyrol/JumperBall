@@ -5,53 +5,37 @@
 #include "PostEffects.h"
 #include "componentsGeneration/ScreenGroupGenerator.h"
 
-PostEffects::PostEffects(
-    const JBTypes::FileContent &fileContent,
-    GLsizei screenWidth,
-    GLsizei screenHeight,
-    GLsizei postEffectsWidth,
-    GLsizei postEffectsHeight,
-    const CstTextureSampler_uptr& sceneTexture,
-    GLint defaultFrameBuffer
-) :
-    _screenWidth(screenWidth),
-    _screenHeight(screenHeight),
-    _postEffectsWidth(postEffectsWidth),
-    _postEffectsHeight(postEffectsHeight),
-    _screen([]() {
-        ScreenGroupGenerator screenGroupGenerator;
-        return screenGroupGenerator.genRenderGroup();
-    }()),
-    _brightPassFilterFrameBuffer(ColorableFrameBuffer::createInstance(
-        postEffectsWidth,
-        postEffectsHeight,
-        true,
-        false
-    )),
-    _horizontalBlurFrameBuffer(ColorableFrameBuffer::createInstance(
-        postEffectsWidth,
-        postEffectsHeight,
-        true,
-        false
-    )),
-    _verticalBlurFrameBuffer(ColorableFrameBuffer::createInstance(
-        postEffectsWidth,
-        postEffectsHeight,
-        false,
-        false
-    )),
-    _postProcessesShader(createPostProcessesShaderProgram(
-        sceneTexture,
-        fileContent,
-        postEffectsWidth,
-        postEffectsHeight
-    )),
-    _postProcessIdUniformLocation(_postProcessesShader->getUniformLocation("postProcessId")),
-    _defaultFrameBuffer(defaultFrameBuffer) {
-}
+PostEffects::PostEffects(const JBTypes::FileContent& fileContent,
+                         GLsizei screenWidth,
+                         GLsizei screenHeight,
+                         GLsizei postEffectsWidth,
+                         GLsizei postEffectsHeight,
+                         const CstTextureSampler_uptr& sceneTexture,
+                         GLint defaultFrameBuffer,
+                         RenderingCache& renderingCache)
+    : _screenWidth(screenWidth),
+      _screenHeight(screenHeight),
+      _postEffectsWidth(postEffectsWidth),
+      _postEffectsHeight(postEffectsHeight),
+      _screen([]() {
+          ScreenGroupGenerator screenGroupGenerator;
+          return screenGroupGenerator.genRenderGroup();
+      }()),
+      _brightPassFilterFrameBuffer(
+          ColorableFrameBuffer::createInstance(postEffectsWidth, postEffectsHeight, true, false)),
+      _horizontalBlurFrameBuffer(
+          ColorableFrameBuffer::createInstance(postEffectsWidth, postEffectsHeight, true, false)),
+      _verticalBlurFrameBuffer(
+          ColorableFrameBuffer::createInstance(postEffectsWidth, postEffectsHeight, false, false)),
+      _postProcessesShader(createPostProcessesShaderProgram(sceneTexture,
+                                                            fileContent,
+                                                            postEffectsWidth,
+                                                            postEffectsHeight,
+                                                            renderingCache)),
+      _postProcessIdUniformLocation(_postProcessesShader->getUniformLocation("postProcessId")),
+      _defaultFrameBuffer(defaultFrameBuffer) {}
 
 void PostEffects::render() const {
-
     FrameBuffer::disableDepthTest();
     TextureSampler::setActiveTexture(postProcessTextureNumber);
 
@@ -85,17 +69,17 @@ void PostEffects::render() const {
     _screen->render();
 }
 
-ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
-    const CstTextureSampler_uptr &sceneTexture,
-    const JBTypes::FileContent &fileContent,
-    GLsizei width,
-    GLsizei height
-) {
-    auto shader = ShaderProgram::createInstance(
-        fileContent,
-        "postEffectsVs.vs",
-        "postEffectsFs.fs"
-    );
+ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(const CstTextureSampler_uptr& sceneTexture,
+                                                                 const JBTypes::FileContent& fileContent,
+                                                                 GLsizei width,
+                                                                 GLsizei height,
+                                                                 RenderingCache& renderingCache) {
+    const std::string shaderHash = "postEffects";
+    auto shader = renderingCache.getShaderProgram(shaderHash);
+    if (shader == nullptr) {
+        shader =
+            ShaderProgram::createInstance(fileContent, "postEffectsVs.vs", "postEffectsFs.fs", shaderHash);
+    }
     shader->use();
 
     constexpr GLint sceneTextureNumber = 2;
@@ -114,42 +98,19 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
     shader->setUniformArrayVec2(
         "offsetsAndGaussWeights[0]",
         {
-            texelSizeX * -8.f, 0.0134977f,
-            texelSizeX * -7.f, 0.0215693f,
-            texelSizeX * -6.f, 0.0323794f,
-            texelSizeX * -5.f, 0.0456623f,
-            texelSizeX * -4.f, 0.0604927f,
-            texelSizeX * -3.f, 0.0752844f,
-            texelSizeX * -2.f, 0.0880163f,
-            texelSizeX * -1.f, 0.096667f,
-            texelSizeX * 0.f, 0.0997356f,
-            texelSizeX * 1.f, 0.096667f,
-            texelSizeX * 2.f, 0.0880163f,
-            texelSizeX * 3.f, 0.0752844f,
-            texelSizeX * 4.f, 0.0604927f,
-            texelSizeX * 5.f, 0.0456623f,
-            texelSizeX * 6.f, 0.0323794f,
-            texelSizeX * 7.f, 0.0215693f,
-            texelSizeX * 8.f, 0.0134977f,
-            texelSizeY * -8.f, 0.0134977f,
-            texelSizeY * -7.f, 0.0215693f,
-            texelSizeY * -6.f, 0.0323794f,
-            texelSizeY * -5.f, 0.0456623f,
-            texelSizeY * -4.f, 0.0604927f,
-            texelSizeY * -3.f, 0.0752844f,
-            texelSizeY * -2.f, 0.0880163f,
-            texelSizeY * -1.f, 0.096667f,
-            texelSizeY * 0.f, 0.0997356f,
-            texelSizeY * 1.f, 0.096667f,
-            texelSizeY * 2.f, 0.0880163f,
-            texelSizeY * 3.f, 0.0752844f,
-            texelSizeY * 4.f, 0.0604927f,
-            texelSizeY * 5.f, 0.0456623f,
-            texelSizeY * 6.f, 0.0323794f,
-            texelSizeY * 7.f, 0.0215693f,
-            texelSizeY * 8.f, 0.0134977f,
-        }
-    );
+            texelSizeX * -8.f, 0.0134977f, texelSizeX * -7.f, 0.0215693f, texelSizeX * -6.f, 0.0323794f,
+            texelSizeX * -5.f, 0.0456623f, texelSizeX * -4.f, 0.0604927f, texelSizeX * -3.f, 0.0752844f,
+            texelSizeX * -2.f, 0.0880163f, texelSizeX * -1.f, 0.096667f,  texelSizeX * 0.f,  0.0997356f,
+            texelSizeX * 1.f,  0.096667f,  texelSizeX * 2.f,  0.0880163f, texelSizeX * 3.f,  0.0752844f,
+            texelSizeX * 4.f,  0.0604927f, texelSizeX * 5.f,  0.0456623f, texelSizeX * 6.f,  0.0323794f,
+            texelSizeX * 7.f,  0.0215693f, texelSizeX * 8.f,  0.0134977f, texelSizeY * -8.f, 0.0134977f,
+            texelSizeY * -7.f, 0.0215693f, texelSizeY * -6.f, 0.0323794f, texelSizeY * -5.f, 0.0456623f,
+            texelSizeY * -4.f, 0.0604927f, texelSizeY * -3.f, 0.0752844f, texelSizeY * -2.f, 0.0880163f,
+            texelSizeY * -1.f, 0.096667f,  texelSizeY * 0.f,  0.0997356f, texelSizeY * 1.f,  0.096667f,
+            texelSizeY * 2.f,  0.0880163f, texelSizeY * 3.f,  0.0752844f, texelSizeY * 4.f,  0.0604927f,
+            texelSizeY * 5.f,  0.0456623f, texelSizeY * 6.f,  0.0323794f, texelSizeY * 7.f,  0.0215693f,
+            texelSizeY * 8.f,  0.0134977f,
+        });
     return shader;
 }
 

@@ -6,53 +6,43 @@
  */
 
 #include "ShaderProgram.h"
+#include <utility>
 
-ShaderProgram::ShaderProgram(
-    CstShader_uptr &&vertexShader,
-    CstShader_uptr &&fragmentShader,
-    GLuint shaderProgramHandle
-) :
-    _shaderProgramHandle(shaderProgramHandle),
-    _vertexShader(std::move(vertexShader)),
-    _fragmentShader(std::move(fragmentShader)) {
-
-}
+ShaderProgram::ShaderProgram(CstShader_uptr&& vertexShader,
+                             CstShader_uptr&& fragmentShader,
+                             GLuint shaderProgramHandle,
+                             std::string hash)
+    : _shaderProgramHandle(shaderProgramHandle),
+      _vertexShader(std::move(vertexShader)),
+      _fragmentShader(std::move(fragmentShader)),
+      _hash(std::move(hash)) {}
 
 GLuint ShaderProgram::getHandle() const {
     return _shaderProgramHandle;
 }
 
+const std::string& ShaderProgram::getHash() const {
+    return _hash;
+}
+
 ShaderProgram_sptr ShaderProgram::createInstance(
-    const JBTypes::FileContent &fileContent,
-    const std::string &vs,
-    const std::string &fs,
-    const std::vector<std::string> &defines,
-    const std::vector<std::pair<std::string, GLshort>> &constShorts,
-    const std::vector<std::pair<std::string, GLfloat>> &constFloats,
-    const std::vector<std::pair<std::string, glm::vec2>> &constVec2s
-) {
+    const JBTypes::FileContent& fileContent,
+    const std::string& vs,
+    const std::string& fs,
+    const std::string& hash,
+    const std::vector<std::string>& defines,
+    const std::vector<std::pair<std::string, GLshort>>& constShorts,
+    const std::vector<std::pair<std::string, GLfloat>>& constFloats,
+    const std::vector<std::pair<std::string, glm::vec2>>& constVec2s) {
     const auto shaderProgramHandle = glCreateProgram();
     if (shaderProgramHandle == 0) {
-        std::cerr << "Error during creation of the shader program ..."
-                  << std::endl;
+        std::cerr << "Error during creation of the shader program ..." << std::endl;
         exit(EXIT_FAILURE);
     }
-    auto vertexShader = Shader::createVertexShader(
-        fileContent,
-        vs,
-        defines,
-        constShorts,
-        constFloats,
-        constVec2s
-    );
-    auto fragmentShader = Shader::createFragmentShader(
-        fileContent,
-        fs,
-        defines,
-        constShorts,
-        constFloats,
-        constVec2s
-    );
+    auto vertexShader =
+        Shader::createVertexShader(fileContent, vs, defines, constShorts, constFloats, constVec2s);
+    auto fragmentShader =
+        Shader::createFragmentShader(fileContent, fs, defines, constShorts, constFloats, constVec2s);
 
     glAttachShader(shaderProgramHandle, vertexShader->getHandle());
     glAttachShader(shaderProgramHandle, fragmentShader->getHandle());
@@ -61,11 +51,8 @@ ShaderProgram_sptr ShaderProgram::createInstance(
 
     verifyLinkStatus(shaderProgramHandle);
 
-    return std::make_shared<ShaderProgram>(
-        std::move(vertexShader),
-        std::move(fragmentShader),
-        shaderProgramHandle
-    );
+    return std::make_shared<ShaderProgram>(std::move(vertexShader), std::move(fragmentShader),
+                                           shaderProgramHandle, hash);
 }
 
 void ShaderProgram::use() const {
@@ -73,7 +60,6 @@ void ShaderProgram::use() const {
 }
 
 void ShaderProgram::verifyLinkStatus(GLuint shaderProgramHandle) {
-
     GLint status;
     glGetProgramiv(shaderProgramHandle, GL_LINK_STATUS, &status);
 
@@ -91,11 +77,8 @@ void ShaderProgram::verifyLinkStatus(GLuint shaderProgramHandle) {
     }
 }
 
-GLint ShaderProgram::getUniformLocation(const std::string &uniformName) const {
-    const auto location = glGetUniformLocation(
-        _shaderProgramHandle,
-        uniformName.c_str()
-    );
+GLint ShaderProgram::getUniformLocation(const std::string& uniformName) const {
+    const auto location = glGetUniformLocation(_shaderProgramHandle, uniformName.c_str());
     return location;
 }
 
@@ -103,23 +86,19 @@ void ShaderProgram::setInteger(GLint integerUniformLocation, int value) {
     glUniform1i(integerUniformLocation, value);
 }
 
-void ShaderProgram::setTextureIndex(const std::string &textureName, GLint index) {
+void ShaderProgram::setTextureIndex(const std::string& textureName, GLint index) {
     const auto location = getUniformLocation(textureName);
     glUniform1i(location, index);
 }
 
-void ShaderProgram::setUniformArrayVec2(
-    const std::string &uniformArrayName,
-    const std::vector<GLfloat> &vec2sData
-) {
+void ShaderProgram::setUniformArrayVec2(const std::string& uniformArrayName,
+                                        const std::vector<GLfloat>& vec2sData) {
     const auto location = getUniformLocation(uniformArrayName);
     glUniform2fv(location, static_cast<GLint>(vec2sData.size()) / 2, vec2sData.data());
 }
 
-void ShaderProgram::setUniformArrayVec4(
-    const std::string &uniformArrayName,
-    const std::vector<GLfloat> &vec4sData
-) {
+void ShaderProgram::setUniformArrayVec4(const std::string& uniformArrayName,
+                                        const std::vector<GLfloat>& vec4sData) {
     const auto location = getUniformLocation(uniformArrayName);
     glUniform4fv(location, static_cast<GLint>(vec4sData.size()) / 4, vec4sData.data());
 }
@@ -129,4 +108,3 @@ ShaderProgram::~ShaderProgram() {
     glDetachShader(_shaderProgramHandle, _fragmentShader->getHandle());
     glDeleteProgram(_shaderProgramHandle);
 }
-

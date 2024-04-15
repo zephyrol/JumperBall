@@ -5,6 +5,7 @@
 #ifndef JUMPERBALLAPPLICATION_POSTEFFECTS_H
 #define JUMPERBALLAPPLICATION_POSTEFFECTS_H
 
+#include "RenderingCache.h"
 #include "frameBuffer/ColorableFrameBuffer.h"
 #include "frameBuffer/TextureSampler.h"
 #include "process/RenderGroup.h"
@@ -12,31 +13,27 @@
 class PostEffects;
 using PostEffects_uptr = std::unique_ptr<PostEffects>;
 class PostEffects {
-
-public:
-    PostEffects(
-        const JBTypes::FileContent &fileContent,
-        GLsizei screenWidth,
-        GLsizei screenHeight,
-        GLsizei postEffectsWidth,
-        GLsizei postEffectsHeight,
-        const CstTextureSampler_uptr& sceneTexture,
-        GLint defaultFrameBuffer
-    );
+   public:
+    PostEffects(const JBTypes::FileContent& fileContent,
+                GLsizei screenWidth,
+                GLsizei screenHeight,
+                GLsizei postEffectsWidth,
+                GLsizei postEffectsHeight,
+                const CstTextureSampler_uptr& sceneTexture,
+                GLint defaultFrameBuffer,
+                RenderingCache& renderingCache);
 
     void render() const;
 
     vecCstShaderProgram_sptr getShaderPrograms() const;
 
-    ShaderProgram_sptr createPostProcessesShaderProgram(
-        const CstTextureSampler_uptr &sceneTexture,
-        const JBTypes::FileContent &fileContent,
-        GLsizei width,
-        GLsizei height
-    );
+    ShaderProgram_sptr createPostProcessesShaderProgram(const CstTextureSampler_uptr& sceneTexture,
+                                                        const JBTypes::FileContent& fileContent,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        RenderingCache& renderingCache);
 
-private:
-
+   private:
     static constexpr GLint postProcessTextureNumber = 3;
 
     const GLsizei _screenWidth;
@@ -52,5 +49,4 @@ private:
     const GLint _defaultFrameBuffer;
 };
 
-
-#endif //JUMPERBALLAPPLICATION_POSTEFFECTS_H
+#endif  // JUMPERBALLAPPLICATION_POSTEFFECTS_H

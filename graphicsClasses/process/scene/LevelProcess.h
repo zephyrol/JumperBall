@@ -5,13 +5,13 @@
 #ifndef JUMPERBALLAPPLICATION_LEVELPROCESS_H
 #define JUMPERBALLAPPLICATION_LEVELPROCESS_H
 
-#include "process/RenderProcess.h"
+#include "RenderingCache.h"
 #include "frameBuffer/ColorableFrameBuffer.h"
-#include "frameBuffer/TextureSampler.h"
 #include "frameBuffer/DepthFrameBuffer.h"
-#include "scene/Star.h"
+#include "frameBuffer/TextureSampler.h"
 #include "process/RenderGroup.h"
-
+#include "process/RenderProcess.h"
+#include "scene/Star.h"
 
 class LevelProcess;
 
@@ -27,7 +27,8 @@ public:
         CstMap_sptr map,
         CstStar_sptr firstStar,
         CstStar_sptr secondStar,
-        unsigned int ballSkin
+        unsigned int ballSkin,
+        RenderingCache& renderingCache
     );
 
     LevelProcess(
@@ -78,10 +79,9 @@ private:
     const GLint _passIdUniformLocation;
 
 
-    static ShaderProgram_sptr createMapShaderProgram(
-        const JBTypes::FileContent &fileContent,
-        short idCount
-    );
+    static ShaderProgram_sptr createMapShaderProgram(const JBTypes::FileContent& fileContent,
+                                                     short idCount,
+                                                     RenderingCache& renderingCache);
 };
 
 #endif //JUMPERBALLAPPLICATION_LEVELPROCESS_H
