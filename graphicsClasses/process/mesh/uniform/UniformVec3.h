@@ -15,7 +15,7 @@ using vecUniformVec3_sptr = std::vector<UniformVec3_sptr>;
 
 class UniformVec3 : public Uniform<glm::vec3> {
 public:
-    UniformVec3(const glm::vec3 &value, const CstShaderProgram_sptr &shaderProgram, const std::string &name);
+    UniformVec3(const glm::vec3 &value, const ShaderProgram_uptr &shaderProgram, const std::string &name);
 
     void bind() const override;
 };

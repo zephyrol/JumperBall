@@ -8,17 +8,19 @@
 
 LevelProcess::LevelProcess(GLsizei width,
                            GLsizei height,
+                           std::string uniformBufferName,
                            DepthFrameBuffer_uptr firstShadow,
                            DepthFrameBuffer_uptr firstBlankShadow,
                            DepthFrameBuffer_uptr secondShadow,
                            DepthFrameBuffer_uptr secondBlankShadow,
                            ColorableFrameBuffer_uptr levelFrameBuffer,
                            RenderGroup_sptr mapGroup,
-                           ShaderProgram_sptr mapShaderProgram,
+                           ShaderProgram_uptr mapShaderProgram,
                            RenderGroup_sptr starGroup,
-                           ShaderProgram_sptr starShaderProgram)
+                           ShaderProgram_uptr starShaderProgram)
     : _width(width),
       _height(height),
+      _uniformBufferName(std::move(uniformBufferName)),
       _firstShadow(std::move(firstShadow)),
       _firstBlankShadow(std::move(firstBlankShadow)),
       _secondShadow(std::move(secondShadow)),
@@ -38,12 +40,14 @@ LevelProcess_uptr LevelProcess::createInstance(const JBTypes::FileContent& fileC
                                                CstMap_sptr map,
                                                CstStar_sptr firstStar,
                                                CstStar_sptr secondStar,
+                                               GLuint uniformBufferBindingPoint,
+                                               const std::string& uniformBufferName,
                                                unsigned int ballSkin,
                                                RenderingCache& renderingCache) {
-    const MapGroupGenerator mapGroupGenerator(map, ballSkin);
+    const MapGroupGenerator mapGroupGenerator(std::move(map), ballSkin);
     auto mapGroup = mapGroupGenerator.genRenderGroup();
 
-    const StarGroupGenerator starGroupGenerator(firstStar, secondStar);
+    const StarGroupGenerator starGroupGenerator(std::move(firstStar), std::move(secondStar));
     auto starGroup = starGroupGenerator.genRenderGroup();
 
     const auto starIdsCount = starGroup->numberOfDynamicsIds();
@@ -51,11 +55,14 @@ LevelProcess_uptr LevelProcess::createInstance(const JBTypes::FileContent& fileC
 
     auto starShaderProgram = renderingCache.getShaderProgram(starShaderHash);
     if (starShaderProgram == nullptr) {
-        starShaderProgram = ShaderProgram::createInstance(fileContent, "starVs.vs", "starFs.fs",
-                                                          starShaderHash, {}, {{"idCount", starIdsCount}});
+        starShaderProgram = ShaderProgram::createInstance(
+            fileContent, "starVs.vs", "starFs.fs", starShaderHash, {}, {{"idCount", starIdsCount}}, {}, {},
+            {{uniformBufferName, uniformBufferBindingPoint}});
     }
 
-    auto mapShaderProgram = createMapShaderProgram(fileContent, mapGroup->numberOfDynamicsIds(), renderingCache);
+    auto mapShaderProgram =
+        createMapShaderProgram(fileContent, mapGroup->numberOfDynamicsIds(), uniformBufferBindingPoint,
+                               uniformBufferName, renderingCache);
 
     const auto genDepthTexture = []() {
         return DepthFrameBuffer::createInstance(depthTexturesSize, depthTexturesSize);
@@ -66,7 +73,8 @@ LevelProcess_uptr LevelProcess::createInstance(const JBTypes::FileContent& fileC
     };
 
     return std::unique_ptr<LevelProcess>(new LevelProcess(
-        width, height, genDepthTexture(), genBlankDepthTexture(), genDepthTexture(), genBlankDepthTexture(),
+        width, height, uniformBufferName, genDepthTexture(), genBlankDepthTexture(), genDepthTexture(),
+        genBlankDepthTexture(),
         ColorableFrameBuffer::createInstance(width, height, true, true,
                                              std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f))),
         std::move(mapGroup), std::move(mapShaderProgram), std::move(starGroup),
@@ -132,15 +140,27 @@ const CstTextureSampler_uptr& LevelProcess::getRenderTexture() const {
     return _levelFrameBuffer->getRenderTexture();
 }
 
-ShaderProgram_sptr LevelProcess::createMapShaderProgram(const JBTypes::FileContent& fileContent,
+GLsizeiptr LevelProcess::getUniformBufferSize() const {
+    return _mapShaderProgram->getUniformBufferSize(_uniformBufferName);
+}
+
+std::vector<GLint> LevelProcess::getUniformBufferFieldOffsets(
+    const std::vector<std::string>& fieldNames) const {
+    return _mapShaderProgram->getUniformBufferFieldOffsets(fieldNames);
+}
+
+ShaderProgram_uptr LevelProcess::createMapShaderProgram(const JBTypes::FileContent& fileContent,
                                                         short idCount,
+                                                        GLuint uniformBufferBindingPoint,
+                                                        const std::string& uniformBufferName,
                                                         RenderingCache& renderingCache) {
     const std::string shaderHash("map;" + std::to_string(idCount));
 
     auto shader = renderingCache.getShaderProgram(shaderHash);
     if (shader == nullptr) {
         shader = ShaderProgram::createInstance(fileContent, "mapVs.vs", "mapFs.fs", shaderHash, {},
-                                                    {{"idCount", idCount}});
+                                               {{"idCount", idCount}}, {}, {},
+                                               {{uniformBufferName, uniformBufferBindingPoint}});
     }
     shader->use();
     shader->setTextureIndex("depthTexture", firstShadowTextureIndex);
@@ -153,8 +173,4 @@ ShaderProgram_sptr LevelProcess::createMapShaderProgram(const JBTypes::FileConte
         {shadowPixelSize, shadowPixelSize, 0.0, 0.0, -shadowPixelSize, shadowPixelSize, 0.0, 0.0,
          shadowPixelSize, -shadowPixelSize, 0.0, 0.0, -shadowPixelSize, -shadowPixelSize, 0.0, 0.0});
     return shader;
-}
-
-vecCstShaderProgram_sptr LevelProcess::getShaderPrograms() const {
-    return {_mapShaderProgram, _starShaderProgram};
 }

@@ -24,9 +24,9 @@ class RenderingCache {
     /**
      * Get a shader program from the cache. The caller becomes the owner.
      * @param key Key as string.
-     * @return The related frame buffer if it exists, otherwise nullptr.
+     * @return The related shader program if it exists, otherwise nullptr.
      */
-    ShaderProgram_sptr getShaderProgram(const std::string& key);
+    ShaderProgram_uptr getShaderProgram(const std::string& key);
 
     /**
      * Set a frame buffer in the cache. The cache becomes the owner.
@@ -36,7 +36,7 @@ class RenderingCache {
     /**
      * Set a shader program in the cache. The cache becomes the owner.
      */
-    void setShaderProgram(const std::string& key, ShaderProgram_sptr shaderProgram);
+    void setShaderProgram(const std::string& key, ShaderProgram_uptr shaderProgram);
 
     /**
      * Decrease the lifetime of all the rendering objects existing in the cache. For each rendering object,
@@ -63,7 +63,7 @@ class RenderingCache {
 
     std::unordered_map<std::string, CachedRenderingObject<FrameBuffer_uptr>> _frameBuffers;
 
-    std::unordered_map<std::string, CachedRenderingObject<ShaderProgram_sptr>> _shaderPrograms;
+    std::unordered_map<std::string, CachedRenderingObject<ShaderProgram_uptr>> _shaderPrograms{};
 };
 
 template <typename T>

@@ -9,17 +9,14 @@
 #include "GpuVertexArray.h"
 #include "RenderGroupUniforms.h"
 
-RenderGroup::RenderGroup(
-    MeshDynamicGroup_uptr meshDynamicGroup,
-    vecCstGpuBuffer_uptr gpuGeometryBuffers,
-    CstGpuVertexArray_uptr gpuVertexArray,
-    GLsizei numberOfIndices
-) :
-    _meshDynamicGroup(std::move(meshDynamicGroup)),
-    _gpuGeometryBuffers(std::move(gpuGeometryBuffers)),
-    _gpuVertexArray(std::move(gpuVertexArray)),
-    _numberOfIndices(numberOfIndices) {
-}
+RenderGroup::RenderGroup(MeshDynamicGroup_uptr meshDynamicGroup,
+                         vecCstGpuBuffer_uptr gpuGeometryBuffers,
+                         CstGpuVertexArray_uptr gpuVertexArray,
+                         GLsizei numberOfIndices)
+    : _meshDynamicGroup(std::move(meshDynamicGroup)),
+      _gpuGeometryBuffers(std::move(gpuGeometryBuffers)),
+      _gpuVertexArray(std::move(gpuVertexArray)),
+      _numberOfIndices(numberOfIndices) {}
 
 void RenderGroup::bind() const {
     _gpuVertexArray->bind();
@@ -34,21 +31,17 @@ RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGr
     auto gpuVertexArray = CstGpuVertexArray_uptr(new GpuVertexArray());
     gpuVertexArray->bind();
 
-    const auto &meshes = meshDynamicGroup->meshes();
+    const auto& meshes = meshDynamicGroup->meshes();
 
     // 2. Merge all geometries
-    auto groupGeometry = std::accumulate(
-        meshes.begin() + 1,
-        meshes.end(),
-        meshes.front()->genMeshGeometry(),
-        [](MeshGeometry &current, const CstMesh_sptr &other) {
-            current.merge(other->genMeshGeometry());
-            return std::move(current);
-        }
-    );
+    auto groupGeometry = std::accumulate(meshes.begin() + 1, meshes.end(), meshes.front()->genMeshGeometry(),
+                                         [](MeshGeometry& current, const CstMesh_sptr& other) {
+                                             current.merge(other->genMeshGeometry());
+                                             return std::move(current);
+                                         });
 
     // 3. Create EBO
-    const auto &indices = groupGeometry.indices();
+    const auto& indices = groupGeometry.indices();
     vecCstGpuBuffer_uptr gpuGeometryBuffers;
     gpuGeometryBuffers.emplace_back(createElementBuffer(indices));
 
@@ -56,23 +49,16 @@ RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGr
     auto vertexAttributes = groupGeometry.extractVertexAttributes();
 
     for (size_t i = 0; i < vertexAttributes.size(); ++i) {
-        auto &vertexAttribute = vertexAttributes[i];
-        gpuGeometryBuffers.emplace_back( createGeometryBuffer(
-                std::move(vertexAttribute),
-                static_cast<GLuint>(i)
-            )
-        );
+        auto& vertexAttribute = vertexAttributes[i];
+        gpuGeometryBuffers.emplace_back(
+            createGeometryBuffer(std::move(vertexAttribute), static_cast<GLuint>(i)));
     }
 
-    return std::make_shared<RenderGroup>(
-        std::move(meshDynamicGroup),
-        std::move(gpuGeometryBuffers),
-        std::move(gpuVertexArray),
-        static_cast<GLsizei>(indices.size())
-    );
+    return std::make_shared<RenderGroup>(std::move(meshDynamicGroup), std::move(gpuGeometryBuffers),
+                                         std::move(gpuVertexArray), static_cast<GLsizei>(indices.size()));
 }
 
-CstGpuBuffer_uptr RenderGroup::createElementBuffer(const GeometricShape::IndicesBuffer &indices) {
+CstGpuBuffer_uptr RenderGroup::createElementBuffer(const GeometricShape::IndicesBuffer& indices) {
     // 1. Create buffer object.
     auto bo = CstGpuBuffer_uptr(new GpuBuffer());
 
@@ -80,20 +66,15 @@ CstGpuBuffer_uptr RenderGroup::createElementBuffer(const GeometricShape::Indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bo->getId());
 
     // 3. Create data on gpu
-    glBufferData(
-        GL_ELEMENT_ARRAY_BUFFER,
-        static_cast<GLsizeiptr>(indices.size() * sizeof(decltype(indices.front()))),
-        indices.data(),
-        GL_STATIC_DRAW
-    );
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 static_cast<GLsizeiptr>(indices.size() * sizeof(decltype(indices.front()))), indices.data(),
+                 GL_STATIC_DRAW);
 
     return bo;
 }
 
-CstGpuBuffer_uptr RenderGroup::createGeometryBuffer(
-    const CstVertexAttributeBase_uptr &vertexAttribute,
-    GLuint index
-) {
+CstGpuBuffer_uptr RenderGroup::createGeometryBuffer(const CstVertexAttributeBase_uptr& vertexAttribute,
+                                                    GLuint index) {
     // 1. Create buffer object.
     auto bo = CstGpuBuffer_uptr(new GpuBuffer());
 
@@ -110,7 +91,7 @@ CstGpuBuffer_uptr RenderGroup::createGeometryBuffer(
     return bo;
 }
 
-RenderGroupUniforms RenderGroup::genUniforms(const CstShaderProgram_sptr &shaderProgram) const {
+RenderGroupUniforms RenderGroup::genUniforms(const ShaderProgram_uptr& shaderProgram) const {
     return RenderGroupUniforms::createInstance(*_meshDynamicGroup, shaderProgram);
 }
 

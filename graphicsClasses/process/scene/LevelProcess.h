@@ -11,6 +11,7 @@
 #include "frameBuffer/TextureSampler.h"
 #include "process/RenderGroup.h"
 #include "process/RenderProcess.h"
+#include "process/UniformBuffer.h"
 #include "scene/Star.h"
 
 class LevelProcess;
@@ -18,43 +19,41 @@ class LevelProcess;
 using LevelProcess_uptr = std::unique_ptr<LevelProcess>;
 
 class LevelProcess : public RenderProcess {
-public:
+   public:
+    static LevelProcess_uptr createInstance(const JBTypes::FileContent& fileContent,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            CstMap_sptr map,
+                                            CstStar_sptr firstStar,
+                                            CstStar_sptr secondStar,
+                                            GLuint uniformBufferBindingPoint,
+                                            const std::string& uniformBufferName,
+                                            unsigned int ballSkin,
+                                            RenderingCache& renderingCache);
 
-    static LevelProcess_uptr createInstance(
-        const JBTypes::FileContent &fileContent,
-        GLsizei width,
-        GLsizei height,
-        CstMap_sptr map,
-        CstStar_sptr firstStar,
-        CstStar_sptr secondStar,
-        unsigned int ballSkin,
-        RenderingCache& renderingCache
-    );
-
-    LevelProcess(
-        GLsizei width,
-        GLsizei height,
-        DepthFrameBuffer_uptr firstShadow,
-        DepthFrameBuffer_uptr firstBlankShadow,
-        DepthFrameBuffer_uptr secondShadow,
-        DepthFrameBuffer_uptr secondBlankShadow,
-        ColorableFrameBuffer_uptr levelFrameBuffer,
-        RenderGroup_sptr mapGroup,
-        ShaderProgram_sptr mapShaderProgram,
-        RenderGroup_sptr starGroup,
-        ShaderProgram_sptr starShaderProgram
-    );
+    LevelProcess(GLsizei width,
+                 GLsizei height,
+                 std::string uniformBufferName,
+                 DepthFrameBuffer_uptr firstShadow,
+                 DepthFrameBuffer_uptr firstBlankShadow,
+                 DepthFrameBuffer_uptr secondShadow,
+                 DepthFrameBuffer_uptr secondBlankShadow,
+                 ColorableFrameBuffer_uptr levelFrameBuffer,
+                 RenderGroup_sptr mapGroup,
+                 ShaderProgram_uptr mapShaderProgram,
+                 RenderGroup_sptr starGroup,
+                 ShaderProgram_uptr starShaderProgram);
 
     void update() override;
 
     void render() const override;
 
-    vecCstShaderProgram_sptr getShaderPrograms() const override;
+    const CstTextureSampler_uptr& getRenderTexture() const override;
 
-    const CstTextureSampler_uptr &getRenderTexture() const override;
+    GLsizeiptr getUniformBufferSize() const;
+    std::vector<GLint> getUniformBufferFieldOffsets(const std::vector<std::string>& fieldNames) const;
 
-private:
-
+   private:
     static constexpr GLsizei depthTexturesSize = 1024;
     static constexpr GLint firstShadowTextureIndex = 0;
     static constexpr GLint secondShadowTextureIndex = 1;
@@ -69,19 +68,21 @@ private:
     const ColorableFrameBuffer_uptr _levelFrameBuffer;
 
     const RenderGroup_sptr _mapGroup;
-    const ShaderProgram_sptr _mapShaderProgram;
+    const ShaderProgram_uptr _mapShaderProgram;
     RenderGroupUniforms _mapGroupUniforms;
 
     const RenderGroup_sptr _starGroup;
-    const ShaderProgram_sptr _starShaderProgram;
+    const ShaderProgram_uptr _starShaderProgram;
     RenderGroupUniforms _starGroupUniforms;
 
     const GLint _passIdUniformLocation;
+    const std::string _uniformBufferName;
 
-
-    static ShaderProgram_sptr createMapShaderProgram(const JBTypes::FileContent& fileContent,
+    static ShaderProgram_uptr createMapShaderProgram(const JBTypes::FileContent& fileContent,
                                                      short idCount,
+                                                     GLuint uniformBufferBindingPoint,
+                                                     const std::string& uniformBufferName,
                                                      RenderingCache& renderingCache);
 };
 
-#endif //JUMPERBALLAPPLICATION_LEVELPROCESS_H
+#endif  // JUMPERBALLAPPLICATION_LEVELPROCESS_H

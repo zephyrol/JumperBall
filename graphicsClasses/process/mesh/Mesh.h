@@ -8,11 +8,11 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include "MeshGeometry.h"
+#include "MeshUniforms.h"
 #include "ShaderProgram.h"
 #include "geometry/GeometricShape.h"
 #include "scene/Displayable.h"
-#include "MeshGeometry.h"
-#include "MeshUniforms.h"
 
 class Mesh;
 
@@ -22,25 +22,18 @@ using vecCstMesh_sptr = std::vector<CstMesh_sptr>;
 using vecMesh_sptr = std::vector<Mesh_sptr>;
 
 class Mesh {
+   public:
+    Mesh(CstDisplayable_sptr displayable, vecCstGeometricShape_sptr&& shapes, short dynamicsId);
 
-public:
+    Mesh(const Mesh& mesh) = delete;
 
-    Mesh(
-        CstDisplayable_sptr displayable,
-        vecCstGeometricShape_sptr &&shapes,
-        short dynamicsId
-    );
+    Mesh& operator=(const Mesh& mesh) = delete;
 
-    Mesh(const Mesh &mesh) = delete;
-
-    Mesh &operator=(const Mesh &mesh) = delete;
-
-    MeshUniforms genMeshUniforms(const CstShaderProgram_sptr& shaderProgram) const;
+    MeshUniforms genMeshUniforms(const ShaderProgram_uptr& shaderProgram) const;
 
     MeshGeometry genMeshGeometry() const;
 
-private:
-
+   private:
     const CstDisplayable_sptr _displayable;
     const vecCstGeometricShape_sptr _shapes;
 
@@ -51,4 +44,4 @@ private:
     const short _dynamicsId;
 };
 
-#endif // MESH_H
+#endif  // MESH_H

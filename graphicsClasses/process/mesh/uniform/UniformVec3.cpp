@@ -5,7 +5,7 @@
 
 UniformVec3::UniformVec3(
     const glm::vec3 &value,
-    const CstShaderProgram_sptr &shaderProgram,
+    const ShaderProgram_uptr &shaderProgram,
     const std::string &name
 ) : Uniform(value, shaderProgram, name) {
 }

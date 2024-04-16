@@ -28,18 +28,17 @@ public:
         CstPage_sptr page,
         FontTexturesGenerator_uptr fontTexturesGenerator,
         RenderGroup_sptr renderGroup,
-        ShaderProgram_sptr labelsShader
+        ShaderProgram_uptr labelsShader
     );
 
     void render() const override;
     void update() override;
-    vecCstShaderProgram_sptr getShaderPrograms() const;
 
 private:
     const CstPage_sptr _page;
     const FontTexturesGenerator_uptr _fontTexturesGenerator;
     const RenderGroup_sptr _renderGroup;
-    const ShaderProgram_sptr _labelsShader;
+    const ShaderProgram_uptr _labelsShader;
     RenderGroupUniforms _renderGroupUniform;
 };
 

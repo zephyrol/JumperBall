@@ -13,11 +13,10 @@ using UniformVec4_sptr = std::shared_ptr<UniformVec4>;
 using vecUniformVec4_sptr = std::vector<UniformVec4_sptr>;
 
 class UniformVec4 : public Uniform<glm::vec4> {
-
-public:
-    UniformVec4(const glm::vec4 &value, const CstShaderProgram_sptr &shaderProgram, const std::string &name);
+   public:
+    UniformVec4(const glm::vec4& value, const ShaderProgram_uptr& shaderProgram, const std::string& name);
 
     void bind() const override;
 };
 
-#endif //JUMPERBALLAPPLICATION_UNIFORMVEC4_H
+#endif  // JUMPERBALLAPPLICATION_UNIFORMVEC4_H

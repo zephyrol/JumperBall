@@ -4,8 +4,5 @@
 
 #include "UniformBase.h"
 
-UniformBase::UniformBase(
-    const CstShaderProgram_sptr &shaderProgram,
-    const std::string &name
-) : _location(glGetUniformLocation(shaderProgram->getHandle(), name.c_str())) {
-}
+UniformBase::UniformBase(const ShaderProgram_uptr& shaderProgram, const std::string& name)
+    : _location(glGetUniformLocation(shaderProgram->getHandle(), name.c_str())) {}

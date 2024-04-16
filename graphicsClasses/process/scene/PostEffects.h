@@ -19,18 +19,20 @@ class PostEffects {
                 GLsizei screenHeight,
                 GLsizei postEffectsWidth,
                 GLsizei postEffectsHeight,
+                GLuint uniformBufferBindingPoint,
+                const std::string& uniformBufferName,
                 const CstTextureSampler_uptr& sceneTexture,
                 GLint defaultFrameBuffer,
                 RenderingCache& renderingCache);
 
     void render() const;
 
-    vecCstShaderProgram_sptr getShaderPrograms() const;
-
-    ShaderProgram_sptr createPostProcessesShaderProgram(const CstTextureSampler_uptr& sceneTexture,
+    ShaderProgram_uptr createPostProcessesShaderProgram(const CstTextureSampler_uptr& sceneTexture,
                                                         const JBTypes::FileContent& fileContent,
                                                         GLsizei width,
                                                         GLsizei height,
+                                                        GLuint uniformBufferBindingPoint,
+                                                        const std::string& uniformBufferName,
                                                         RenderingCache& renderingCache);
 
    private:
@@ -44,7 +46,7 @@ class PostEffects {
     const ColorableFrameBuffer_uptr _brightPassFilterFrameBuffer;
     const ColorableFrameBuffer_uptr _horizontalBlurFrameBuffer;
     const ColorableFrameBuffer_uptr _verticalBlurFrameBuffer;
-    const ShaderProgram_sptr _postProcessesShader;
+    const ShaderProgram_uptr _postProcessesShader;
     const GLint _postProcessIdUniformLocation;
     const GLint _defaultFrameBuffer;
 };

@@ -4,12 +4,8 @@
 
 #include "UniformFloat.h"
 
-UniformFloat::UniformFloat(
-    GLfloat value,
-    const CstShaderProgram_sptr &shaderProgram,
-    const std::string &name
-) : Uniform(value, shaderProgram, name) {
-}
+UniformFloat::UniformFloat(GLfloat value, const ShaderProgram_uptr& shaderProgram, const std::string& name)
+    : Uniform(value, shaderProgram, name) {}
 
 void UniformFloat::bind() const {
     glUniform1fv(_location, 1, &_value);

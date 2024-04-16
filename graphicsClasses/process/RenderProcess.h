@@ -38,8 +38,6 @@ public:
 
     virtual void render() const = 0;
 
-    virtual vecCstShaderProgram_sptr getShaderPrograms() const = 0;
-
     virtual const CstTextureSampler_uptr &getRenderTexture() const = 0;
 };
 

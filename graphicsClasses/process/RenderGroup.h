@@ -21,17 +21,15 @@ using vecRenderGroup_sptr = std::vector<RenderGroup_sptr>;
 using vecCstRenderGroup_sptr = std::vector<CstRenderGroup_sptr>;
 
 class RenderGroup {
-public:
-    RenderGroup(
-        MeshDynamicGroup_uptr meshDynamicGroup,
-        vecCstGpuBuffer_uptr gpuGeometryBuffers,
-        CstGpuVertexArray_uptr gpuVertexArray,
-        GLsizei numberOfIndices
-    );
+   public:
+    RenderGroup(MeshDynamicGroup_uptr meshDynamicGroup,
+                vecCstGpuBuffer_uptr gpuGeometryBuffers,
+                CstGpuVertexArray_uptr gpuVertexArray,
+                GLsizei numberOfIndices);
 
-    RenderGroup(const RenderGroup &renderGroup) = delete;
+    RenderGroup(const RenderGroup& renderGroup) = delete;
 
-    RenderGroup &operator=(const RenderGroup &renderGroup) = delete;
+    RenderGroup& operator=(const RenderGroup& renderGroup) = delete;
 
     void bind() const;
 
@@ -39,16 +37,14 @@ public:
 
     short numberOfDynamicsIds() const;
 
-    RenderGroupUniforms genUniforms(const CstShaderProgram_sptr &shaderProgram) const;
+    RenderGroupUniforms genUniforms(const ShaderProgram_uptr& shaderProgram) const;
 
     static RenderGroup_sptr createInstance(MeshDynamicGroup_uptr meshDynamicGroup);
 
-private:
-    static CstGpuBuffer_uptr createElementBuffer(const GeometricShape::IndicesBuffer &indices);
-    static CstGpuBuffer_uptr createGeometryBuffer(
-        const CstVertexAttributeBase_uptr &vertexAttribute,
-        GLuint index
-    );
+   private:
+    static CstGpuBuffer_uptr createElementBuffer(const GeometricShape::IndicesBuffer& indices);
+    static CstGpuBuffer_uptr createGeometryBuffer(const CstVertexAttributeBase_uptr& vertexAttribute,
+                                                  GLuint index);
 
     const MeshDynamicGroup_uptr _meshDynamicGroup;
     const vecCstGpuBuffer_uptr _gpuGeometryBuffers;
@@ -56,5 +52,4 @@ private:
     const GLsizei _numberOfIndices;
 };
 
-
-#endif // RENDERGROUP_H
+#endif  // RENDERGROUP_H

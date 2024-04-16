@@ -21,11 +21,37 @@ GLuint ShaderProgram::getHandle() const {
     return _shaderProgramHandle;
 }
 
+GLsizeiptr ShaderProgram::getUniformBufferSize(const std::string& uboName) const {
+    const GLuint blockIndex = glGetUniformBlockIndex(_shaderProgramHandle, uboName.c_str());
+    GLint bufferSize;
+    glGetActiveUniformBlockiv(_shaderProgramHandle, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &bufferSize);
+    return static_cast<GLsizeiptr>(bufferSize);
+}
+
+std::vector<GLint> ShaderProgram::getUniformBufferFieldOffsets(
+    const std::vector<std::string>& fieldNames) const {
+    std::vector<const char*> linearFieldNames;
+    linearFieldNames.reserve(fieldNames.size());
+    for (const auto& fieldName : fieldNames) {
+        linearFieldNames.push_back(fieldName.c_str());
+    }
+
+    std::vector<GLuint> indices(fieldNames.size());
+    glGetUniformIndices(_shaderProgramHandle, static_cast<GLsizei>(fieldNames.size()),
+                        linearFieldNames.data(), indices.data());
+
+    std::vector<GLint> offsets(fieldNames.size());
+    glGetActiveUniformsiv(_shaderProgramHandle, static_cast<GLsizei>(fieldNames.size()), indices.data(),
+                          GL_UNIFORM_OFFSET, offsets.data());
+
+    return offsets;
+}
+
 const std::string& ShaderProgram::getHash() const {
     return _hash;
 }
 
-ShaderProgram_sptr ShaderProgram::createInstance(
+ShaderProgram_uptr ShaderProgram::createInstance(
     const JBTypes::FileContent& fileContent,
     const std::string& vs,
     const std::string& fs,
@@ -33,7 +59,8 @@ ShaderProgram_sptr ShaderProgram::createInstance(
     const std::vector<std::string>& defines,
     const std::vector<std::pair<std::string, GLshort>>& constShorts,
     const std::vector<std::pair<std::string, GLfloat>>& constFloats,
-    const std::vector<std::pair<std::string, glm::vec2>>& constVec2s) {
+    const std::vector<std::pair<std::string, glm::vec2>>& constVec2s,
+    const std::vector<std::pair<std::string, GLuint>>& ubos) {
     const auto shaderProgramHandle = glCreateProgram();
     if (shaderProgramHandle == 0) {
         std::cerr << "Error during creation of the shader program ..." << std::endl;
@@ -51,8 +78,17 @@ ShaderProgram_sptr ShaderProgram::createInstance(
 
     verifyLinkStatus(shaderProgramHandle);
 
-    return std::make_shared<ShaderProgram>(std::move(vertexShader), std::move(fragmentShader),
-                                           shaderProgramHandle, hash);
+    for (const auto& ubo : ubos) {
+        const auto& uniformBufferName = ubo.first;
+        const auto uniformBlockIndex = glGetUniformBlockIndex(shaderProgramHandle, uniformBufferName.c_str());
+
+        const auto bindingPointNumber = ubo.second;
+        glUniformBlockBinding(shaderProgramHandle, uniformBlockIndex, bindingPointNumber);
+    }
+
+    return std::unique_ptr<ShaderProgram>(
+        new ShaderProgram(std::move(vertexShader), std::move(fragmentShader), shaderProgramHandle, hash));
+    ;
 }
 
 void ShaderProgram::use() const {

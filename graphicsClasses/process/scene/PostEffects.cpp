@@ -10,6 +10,8 @@ PostEffects::PostEffects(const JBTypes::FileContent& fileContent,
                          GLsizei screenHeight,
                          GLsizei postEffectsWidth,
                          GLsizei postEffectsHeight,
+                         GLuint uniformBufferBindingPoint,
+                         const std::string& uniformBufferName,
                          const CstTextureSampler_uptr& sceneTexture,
                          GLint defaultFrameBuffer,
                          RenderingCache& renderingCache)
@@ -31,6 +33,8 @@ PostEffects::PostEffects(const JBTypes::FileContent& fileContent,
                                                             fileContent,
                                                             postEffectsWidth,
                                                             postEffectsHeight,
+                                                            uniformBufferBindingPoint,
+                                                            uniformBufferName,
                                                             renderingCache)),
       _postProcessIdUniformLocation(_postProcessesShader->getUniformLocation("postProcessId")),
       _defaultFrameBuffer(defaultFrameBuffer) {}
@@ -69,16 +73,19 @@ void PostEffects::render() const {
     _screen->render();
 }
 
-ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(const CstTextureSampler_uptr& sceneTexture,
+ShaderProgram_uptr PostEffects::createPostProcessesShaderProgram(const CstTextureSampler_uptr& sceneTexture,
                                                                  const JBTypes::FileContent& fileContent,
                                                                  GLsizei width,
                                                                  GLsizei height,
+                                                                 GLuint uniformBufferBindingPoint,
+                                                                 const std::string& uniformBufferName,
                                                                  RenderingCache& renderingCache) {
     const std::string shaderHash = "postEffects";
     auto shader = renderingCache.getShaderProgram(shaderHash);
     if (shader == nullptr) {
         shader =
-            ShaderProgram::createInstance(fileContent, "postEffectsVs.vs", "postEffectsFs.fs", shaderHash);
+            ShaderProgram::createInstance(fileContent, "postEffectsVs.vs", "postEffectsFs.fs", shaderHash, {},
+                                          {}, {}, {}, {{uniformBufferName, uniformBufferBindingPoint}});
     }
     shader->use();
 
@@ -112,8 +119,4 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(const CstTextur
             texelSizeY * 8.f,  0.0134977f,
         });
     return shader;
-}
-
-vecCstShaderProgram_sptr PostEffects::getShaderPrograms() const {
-    return {_postProcessesShader};
 }

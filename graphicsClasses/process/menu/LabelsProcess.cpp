@@ -15,7 +15,7 @@ LabelsProcess::LabelsProcess(
     CstPage_sptr page,
     FontTexturesGenerator_uptr fontTexturesGenerator,
     RenderGroup_sptr renderGroup,
-    ShaderProgram_sptr labelsShader
+    ShaderProgram_uptr labelsShader
 ) :
     Rendering(width, height),
     _page(std::move(page)),
@@ -84,10 +84,6 @@ void LabelsProcess::render() const {
     _renderGroupUniform.bind();
     _renderGroup->bind();
     _renderGroup->render();
-}
-
-vecCstShaderProgram_sptr LabelsProcess::getShaderPrograms() const {
-    return {_labelsShader};
 }
 
 void LabelsProcess::update() {

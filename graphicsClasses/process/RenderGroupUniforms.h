@@ -19,7 +19,7 @@ public:
 
     static RenderGroupUniforms createInstance(
         const MeshDynamicGroup& meshDynamicGroup,
-        const CstShaderProgram_sptr &shaderProgram
+        const ShaderProgram_uptr &shaderProgram
     );
 
     void bind() const;

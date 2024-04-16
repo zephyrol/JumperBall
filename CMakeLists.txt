@@ -62,7 +62,7 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/graphicsClasses/process/RenderProcess.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/process/RenderGroupUniforms.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/process/GpuVertexArray.cpp
-    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/UniformBufferBase.cpp
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/UniformBuffer.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/process/menu/LabelsProcess.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/process/RenderGroup.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/process/scene/SceneUniformBuffer.cpp
@@ -221,7 +221,7 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/graphicsClasses/process/scene/SceneUniformBuffer.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/process/scene/PostEffects.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/process/scene/LevelProcess.h
-    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/UniformBufferBase.h
+    ${CMAKE_SOURCE_DIR}/graphicsClasses/process/UniformBuffer.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/process/RenderGroupUniforms.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/process/RenderProcess.h
     ${CMAKE_SOURCE_DIR}/coreClasses/system/Types.h

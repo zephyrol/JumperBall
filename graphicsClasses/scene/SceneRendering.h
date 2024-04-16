@@ -12,9 +12,9 @@
 #include "RenderingCache.h"
 #include "Scene.h"
 #include "process/RenderProcess.h"
+#include "process/UniformBuffer.h"
 #include "process/scene/LevelProcess.h"
 #include "process/scene/PostEffects.h"
-#include "process/scene/SceneUniformBuffer.h"
 
 class SceneRendering : public Rendering {
    public:
@@ -23,7 +23,7 @@ class SceneRendering : public Rendering {
                    GLsizei height,
                    LevelProcess_uptr levelProcess,
                    PostEffects_uptr postEffects,
-                   SceneUniformBuffer&& sceneUniformBuffer);
+                   UniformBuffer_uptr sceneUniformBuffer);
 
     static std::unique_ptr<SceneRendering> createInstance(const Scene& scene,
                                                           GLsizei width,
@@ -34,15 +34,13 @@ class SceneRendering : public Rendering {
 
     void update() override;
 
-    vecShaderProgram_sptr getShaderPrograms();
-
     void render() const override;
 
    private:
     const Scene& _scene;
-    const LevelProcess_uptr _levelProcess;
-    const PostEffects_uptr _postEffects;
-    SceneUniformBuffer _sceneUniformBuffer;
+    LevelProcess_uptr _levelProcess;
+    PostEffects_uptr _postEffects;
+    UniformBuffer_uptr _sceneUniformBuffer;
 };
 
 #endif /* SCENE_RENDERING_H */
