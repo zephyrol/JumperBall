@@ -36,6 +36,8 @@ class SceneRendering : public Rendering {
 
     void render() const override;
 
+    void fillCache(RenderingCache& renderingCache);
+
    private:
     const Scene& _scene;
     LevelProcess_uptr _levelProcess;

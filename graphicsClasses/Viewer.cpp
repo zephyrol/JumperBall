@@ -92,9 +92,11 @@ void Viewer::resetPageRendering() {
 }
 
 void Viewer::resetSceneRendering() {
-    // Free memory first
-    _sceneRendering = nullptr;
+    _sceneRendering->fillCache(_sceneRenderingCache);
+    // Free memory
+    //_sceneRendering = nullptr;
     _sceneRendering = SceneRendering::createInstance(*_scene, _resolutionX, _resolutionY, _defaultFrameBuffer,
                                                      _fileContent, _sceneRenderingCache);
+    _sceneRenderingCache.decreaseLifetime();
 }
 

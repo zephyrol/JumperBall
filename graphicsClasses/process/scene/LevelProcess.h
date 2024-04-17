@@ -6,8 +6,6 @@
 #define JUMPERBALLAPPLICATION_LEVELPROCESS_H
 
 #include "RenderingCache.h"
-#include "frameBuffer/ColorableFrameBuffer.h"
-#include "frameBuffer/DepthFrameBuffer.h"
 #include "frameBuffer/TextureSampler.h"
 #include "process/RenderGroup.h"
 #include "process/RenderProcess.h"
@@ -34,11 +32,11 @@ class LevelProcess : public RenderProcess {
     LevelProcess(GLsizei width,
                  GLsizei height,
                  std::string uniformBufferName,
-                 DepthFrameBuffer_uptr firstShadow,
-                 DepthFrameBuffer_uptr firstBlankShadow,
-                 DepthFrameBuffer_uptr secondShadow,
-                 DepthFrameBuffer_uptr secondBlankShadow,
-                 ColorableFrameBuffer_uptr levelFrameBuffer,
+                 FrameBuffer_uptr firstShadow,
+                 FrameBuffer_uptr firstBlankShadow,
+                 FrameBuffer_uptr secondShadow,
+                 FrameBuffer_uptr secondBlankShadow,
+                 FrameBuffer_uptr levelFrameBuffer,
                  RenderGroup_sptr mapGroup,
                  ShaderProgram_uptr mapShaderProgram,
                  RenderGroup_sptr starGroup,
@@ -53,26 +51,33 @@ class LevelProcess : public RenderProcess {
     GLsizeiptr getUniformBufferSize() const;
     std::vector<GLint> getUniformBufferFieldOffsets(const std::vector<std::string>& fieldNames) const;
 
+    void fillCache(RenderingCache& renderingCache);
+
    private:
-    static constexpr GLsizei depthTexturesSize = 1024;
     static constexpr GLint firstShadowTextureIndex = 0;
     static constexpr GLint secondShadowTextureIndex = 1;
+    static const GLsizei depthTexturesSize;
+    static const std::string firstShadowHash;
+    static const std::string secondShadowHash;
+    static const std::string firstBlankShadowHash;
+    static const std::string secondBlankShadowHash;
+
 
     const GLsizei _width;
     const GLsizei _height;
 
-    const DepthFrameBuffer_uptr _firstShadow;
-    const DepthFrameBuffer_uptr _firstBlankShadow;
-    const DepthFrameBuffer_uptr _secondShadow;
-    const DepthFrameBuffer_uptr _secondBlankShadow;
-    const ColorableFrameBuffer_uptr _levelFrameBuffer;
+    FrameBuffer_uptr _firstShadow;
+    FrameBuffer_uptr _firstBlankShadow;
+    FrameBuffer_uptr _secondShadow;
+    FrameBuffer_uptr _secondBlankShadow;
+    FrameBuffer_uptr _levelFrameBuffer;
 
     const RenderGroup_sptr _mapGroup;
-    const ShaderProgram_uptr _mapShaderProgram;
+    ShaderProgram_uptr _mapShaderProgram;
     RenderGroupUniforms _mapGroupUniforms;
 
     const RenderGroup_sptr _starGroup;
-    const ShaderProgram_uptr _starShaderProgram;
+    ShaderProgram_uptr _starShaderProgram;
     RenderGroupUniforms _starGroupUniforms;
 
     const GLint _passIdUniformLocation;
@@ -83,6 +88,8 @@ class LevelProcess : public RenderProcess {
                                                      GLuint uniformBufferBindingPoint,
                                                      const std::string& uniformBufferName,
                                                      RenderingCache& renderingCache);
+
+    static std::string getLevelFrameBufferHash(GLsizei width, GLsizei height);
 };
 
 #endif  // JUMPERBALLAPPLICATION_LEVELPROCESS_H

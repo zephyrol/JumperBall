@@ -15,9 +15,11 @@ ShaderProgram_uptr RenderingCache::getShaderProgram(const std::string& key) {
 }
 
 void RenderingCache::setFrameBuffer(const std::string& key, FrameBuffer_uptr frameBuffer) {
-    CachedRenderingObject<FrameBuffer_uptr> cachedFrameBuffer{std::move(frameBuffer), _objectsLifetime};
+    CachedRenderingObject<FrameBuffer_uptr> cachedFrameBuffer{std::move(frameBuffer),
+                                                                       _objectsLifetime};
     _frameBuffers.emplace(key, std::move(cachedFrameBuffer));
 }
+
 
 void RenderingCache::setShaderProgram(const std::string& key, ShaderProgram_uptr shaderProgram) {
     CachedRenderingObject<ShaderProgram_uptr> cachedShaderProgram{std::move(shaderProgram), _objectsLifetime};

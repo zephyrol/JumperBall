@@ -4,7 +4,8 @@
 
 #ifndef RENDERINGCACHE_H
 #define RENDERINGCACHE_H
-#include "frameBuffer/FrameBuffer.h"
+#include "frameBuffer/ColorableFrameBuffer.h"
+#include "frameBuffer/DepthFrameBuffer.h"
 
 class RenderingCache {
    public:
@@ -62,7 +63,6 @@ class RenderingCache {
                                 std::unordered_map<std::string, CachedRenderingObject<T>>& renderingObjects);
 
     std::unordered_map<std::string, CachedRenderingObject<FrameBuffer_uptr>> _frameBuffers;
-
     std::unordered_map<std::string, CachedRenderingObject<ShaderProgram_uptr>> _shaderPrograms{};
 };
 

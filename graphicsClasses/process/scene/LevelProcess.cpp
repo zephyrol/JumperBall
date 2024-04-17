@@ -9,11 +9,11 @@
 LevelProcess::LevelProcess(GLsizei width,
                            GLsizei height,
                            std::string uniformBufferName,
-                           DepthFrameBuffer_uptr firstShadow,
-                           DepthFrameBuffer_uptr firstBlankShadow,
-                           DepthFrameBuffer_uptr secondShadow,
-                           DepthFrameBuffer_uptr secondBlankShadow,
-                           ColorableFrameBuffer_uptr levelFrameBuffer,
+                           FrameBuffer_uptr firstShadow,
+                           FrameBuffer_uptr firstBlankShadow,
+                           FrameBuffer_uptr secondShadow,
+                           FrameBuffer_uptr secondBlankShadow,
+                           FrameBuffer_uptr levelFrameBuffer,
                            RenderGroup_sptr mapGroup,
                            ShaderProgram_uptr mapShaderProgram,
                            RenderGroup_sptr starGroup,
@@ -64,21 +64,33 @@ LevelProcess_uptr LevelProcess::createInstance(const JBTypes::FileContent& fileC
         createMapShaderProgram(fileContent, mapGroup->numberOfDynamicsIds(), uniformBufferBindingPoint,
                                uniformBufferName, renderingCache);
 
-    const auto genDepthTexture = []() {
-        return DepthFrameBuffer::createInstance(depthTexturesSize, depthTexturesSize);
-    };
-    const auto genBlankDepthTexture = []() {
-        constexpr GLsizei blankDepthTexturesSize = 1;
-        return DepthFrameBuffer::createInstance(blankDepthTexturesSize, blankDepthTexturesSize);
-    };
+    constexpr GLsizei blankDepthTexturesSize = 1;
+    std::vector<FrameBuffer_uptr> depthFrameBuffers;
+    for (const auto& nameSize :
+         {std::pair<std::string, GLsizei>{firstShadowHash, depthTexturesSize},
+          std::pair<std::string, GLsizei>{firstBlankShadowHash, blankDepthTexturesSize},
+          std::pair<std::string, GLsizei>{secondShadowHash, depthTexturesSize},
+          std::pair<std::string, GLsizei>{secondBlankShadowHash, blankDepthTexturesSize}}) {
+        auto depthFrameBuffer = renderingCache.getFrameBuffer(nameSize.first);
+        if (depthFrameBuffer == nullptr) {
+            depthFrameBuffer = DepthFrameBuffer::createInstance(nameSize.second, nameSize.second);
+        }
+        depthFrameBuffers.emplace_back(std::move(depthFrameBuffer));
+    }
+    // getLevelFrameBufferHash()
+    auto levelFrameBuffer = renderingCache.getFrameBuffer(getLevelFrameBufferHash(width, height));
+    if (levelFrameBuffer == nullptr) {
+        levelFrameBuffer = ColorableFrameBuffer::createInstance(
+            width, height, true, true, std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f)));
+    } else {
+        std::cout << "level from hash" << std::endl;
+    }
 
-    return std::unique_ptr<LevelProcess>(new LevelProcess(
-        width, height, uniformBufferName, genDepthTexture(), genBlankDepthTexture(), genDepthTexture(),
-        genBlankDepthTexture(),
-        ColorableFrameBuffer::createInstance(width, height, true, true,
-                                             std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f))),
-        std::move(mapGroup), std::move(mapShaderProgram), std::move(starGroup),
-        std::move(starShaderProgram)));
+    return std::unique_ptr<LevelProcess>(
+        new LevelProcess(width, height, uniformBufferName, std::move(depthFrameBuffers.at(0)),
+                         std::move(depthFrameBuffers.at(1)), std::move(depthFrameBuffers.at(2)),
+                         std::move(depthFrameBuffers.at(3)), std::move(levelFrameBuffer), std::move(mapGroup),
+                         std::move(mapShaderProgram), std::move(starGroup), std::move(starShaderProgram)));
 }
 
 void LevelProcess::render() const {
@@ -166,7 +178,7 @@ ShaderProgram_uptr LevelProcess::createMapShaderProgram(const JBTypes::FileConte
     shader->setTextureIndex("depthTexture", firstShadowTextureIndex);
     shader->setTextureIndex("depth2Texture", secondShadowTextureIndex);
 
-    constexpr auto shadowPixelSize = 1.f / static_cast<float>(depthTexturesSize);
+    const auto shadowPixelSize = 1.f / static_cast<float>(depthTexturesSize);
 
     shader->setUniformArrayVec4(
         "shadowOffsets[0]",
@@ -174,3 +186,24 @@ ShaderProgram_uptr LevelProcess::createMapShaderProgram(const JBTypes::FileConte
          shadowPixelSize, -shadowPixelSize, 0.0, 0.0, -shadowPixelSize, -shadowPixelSize, 0.0, 0.0});
     return shader;
 }
+std::string LevelProcess::getLevelFrameBufferHash(GLsizei width, GLsizei height) {
+    return "level" + std::to_string(width) + ";" + std::to_string(height);
+}
+
+void LevelProcess::fillCache(RenderingCache& renderingCache) {
+    renderingCache.setFrameBuffer(getLevelFrameBufferHash(_width, _height), std::move(_levelFrameBuffer));
+    renderingCache.setFrameBuffer(firstShadowHash, std::move(_firstShadow));
+    renderingCache.setFrameBuffer(secondShadowHash, std::move(_secondShadow));
+    renderingCache.setFrameBuffer(firstBlankShadowHash, std::move(_firstBlankShadow));
+    renderingCache.setFrameBuffer(secondBlankShadowHash, std::move(_secondBlankShadow));
+    const auto mapShaderHash = _mapShaderProgram->getHash();
+    const auto starShaderHash = _starShaderProgram->getHash();
+    renderingCache.setShaderProgram(mapShaderHash, std::move(_mapShaderProgram));
+    renderingCache.setShaderProgram(starShaderHash, std::move(_starShaderProgram));
+}
+
+const GLsizei LevelProcess::depthTexturesSize = 1024;
+const std::string LevelProcess::firstShadowHash = "shadow1";
+const std::string LevelProcess::secondShadowHash = "shadow2";
+const std::string LevelProcess::firstBlankShadowHash = "blankShadow1";
+const std::string LevelProcess::secondBlankShadowHash = "blankShadow2";

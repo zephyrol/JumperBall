@@ -21,7 +21,7 @@ void FrameBuffer::bindFrameBuffer() const {
     _gpuFrameBuffer->bind();
 }
 
-const CstTextureSampler_uptr &FrameBuffer::getRenderTexture() const {
+const CstTextureSampler_uptr& FrameBuffer::getRenderTexture() const {
     return _renderTexture;
 }
 
