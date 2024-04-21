@@ -41,11 +41,9 @@ class PostEffects {
 
    private:
     static constexpr GLint postProcessTextureNumber = 3;
-    static const std::string brightPassFilterFrameBufferHashBase;
-    static const std::string horizontalBlurFrameBufferHashBase;
-    static const std::string verticalBlurFrameBufferHashBase;
-
-    static std::string getFrameBufferHash(const std::string& base, GLsizei width, GLsizei height);
+    static const std::string brightPassFilterFrameBufferHash;
+    static const std::string horizontalBlurFrameBufferHash;
+    static const std::string verticalBlurFrameBufferHash;
 
     static ShaderProgram_uptr createPostProcessesShaderProgram(
         const CstTextureSampler_uptr& sceneTexture,
@@ -54,7 +52,7 @@ class PostEffects {
         GLsizei height,
         GLuint uniformBufferBindingPoint,
         const std::string& uniformBufferName,
-        ColorableFrameBuffer_uptr const& verticalBlurFrameBuffer,
+        FrameBuffer_uptr const& verticalBlurFrameBuffer,
         RenderingCache& renderingCache);
 
     const GLsizei _screenWidth;

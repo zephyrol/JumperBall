@@ -33,6 +33,7 @@ public:
     void setPage(const CstPage_sptr &page);
 
     void setScene(const CstScene_sptr &scene);
+    void resetSceneRendering();
 
 private:
     CstScene_sptr _scene;
@@ -51,7 +52,6 @@ private:
     std::unique_ptr<LabelsProcess> _pageRendering;
 
     void resetPageRendering();
-    void resetSceneRendering();
     void resetRendering();
 
 };

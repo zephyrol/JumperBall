@@ -83,4 +83,5 @@ void SceneRendering::render() const {
 
 void SceneRendering::fillCache(RenderingCache& renderingCache) {
     _levelProcess->fillCache(renderingCache);
+    _postEffects->fillCache(renderingCache);
 }

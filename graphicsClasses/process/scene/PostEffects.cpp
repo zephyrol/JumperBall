@@ -15,19 +15,11 @@ PostEffects_uptr PostEffects::createInstance(const JBTypes::FileContent& fileCon
                                              const CstTextureSampler_uptr& sceneTexture,
                                              GLint defaultFrameBuffer,
                                              RenderingCache& renderingCache) {
-    auto brightPassFilterFrameBuffer =
-        ColorableFrameBuffer::createInstance(postEffectsWidth, postEffectsHeight, true, false);
-    auto horizontalBlurFrameBuffer(
-        ColorableFrameBuffer::createInstance(postEffectsWidth, postEffectsHeight, true, false));
-    auto verticalBlurFrameBuffer(
-        ColorableFrameBuffer::createInstance(postEffectsWidth, postEffectsHeight, false, false));
-
     std::vector<FrameBuffer_uptr> frameBuffers;
-    for (const auto& nameNearestFilter : {std::pair<std::string, bool>{brightPassFilterFrameBufferHashBase, true},
-                                          std::pair<std::string, bool>{horizontalBlurFrameBufferHashBase, true},
-                                          std::pair<std::string, bool>{verticalBlurFrameBufferHashBase, false}}) {
-        auto frameBuffer = renderingCache.getFrameBuffer(
-            getFrameBufferHash(nameNearestFilter.first, postEffectsWidth, postEffectsHeight));
+    for (const auto& nameNearestFilter : {std::pair<std::string, bool>{brightPassFilterFrameBufferHash, true},
+                                          std::pair<std::string, bool>{horizontalBlurFrameBufferHash, true},
+                                          std::pair<std::string, bool>{verticalBlurFrameBufferHash, false}}) {
+        auto frameBuffer = renderingCache.getFrameBuffer(nameNearestFilter.first);
         if (frameBuffer == nullptr) {
             frameBuffer = ColorableFrameBuffer::createInstance(postEffectsWidth, postEffectsHeight,
                                                                nameNearestFilter.second, false);
@@ -37,12 +29,12 @@ PostEffects_uptr PostEffects::createInstance(const JBTypes::FileContent& fileCon
 
     auto postProcessesShader = createPostProcessesShaderProgram(
         sceneTexture, fileContent, postEffectsWidth, postEffectsHeight, uniformBufferBindingPoint,
-        uniformBufferName, verticalBlurFrameBuffer, renderingCache);
+        uniformBufferName, frameBuffers.at(2), renderingCache);
 
-    return PostEffects_uptr(new PostEffects(
-        screenWidth, screenHeight, postEffectsWidth, postEffectsHeight,
-        std::move(brightPassFilterFrameBuffer), std::move(horizontalBlurFrameBuffer),
-        std::move(verticalBlurFrameBuffer), std::move(postProcessesShader), defaultFrameBuffer));
+    return PostEffects_uptr(new PostEffects(screenWidth, screenHeight, postEffectsWidth, postEffectsHeight,
+                                            std::move(frameBuffers.at(0)), std::move(frameBuffers.at(1)),
+                                            std::move(frameBuffers.at(2)), std::move(postProcessesShader),
+                                            defaultFrameBuffer));
 }
 
 PostEffects::PostEffects(GLsizei screenWidth,
@@ -103,10 +95,6 @@ void PostEffects::render() const {
     _screen->render();
 }
 
-std::string PostEffects::getFrameBufferHash(const std::string& base, GLsizei width, GLsizei height) {
-    return base + std::to_string(width) + ";" + std::to_string(height);
-}
-
 ShaderProgram_uptr PostEffects::createPostProcessesShaderProgram(
     const CstTextureSampler_uptr& sceneTexture,
     const JBTypes::FileContent& fileContent,
@@ -114,7 +102,7 @@ ShaderProgram_uptr PostEffects::createPostProcessesShaderProgram(
     GLsizei height,
     GLuint uniformBufferBindingPoint,
     const std::string& uniformBufferName,
-    ColorableFrameBuffer_uptr const& verticalBlurFrameBuffer,
+    FrameBuffer_uptr const& verticalBlurFrameBuffer,
     RenderingCache& renderingCache) {
     const std::string shaderHash = "postEffects";
     auto shader = renderingCache.getShaderProgram(shaderHash);
@@ -157,11 +145,11 @@ ShaderProgram_uptr PostEffects::createPostProcessesShaderProgram(
     return shader;
 }
 void PostEffects::fillCache(RenderingCache& renderingCache) {
-    renderingCache.setFrameBuffer(getFrameBufferHash(brightPassFilterFrameBufferHashBase, _screenWidth, _screenHeight), std::move(_brightPassFilterFrameBuffer));
-    renderingCache.setFrameBuffer(getFrameBufferHash(horizontalBlurFrameBufferHashBase, _screenWidth, _screenHeight), std::move(_brightPassFilterFrameBuffer));
-    renderingCache.setFrameBuffer(getFrameBufferHash(verticalBlurFrameBufferHashBase, _screenWidth, _screenHeight), std::move(_brightPassFilterFrameBuffer));
+    //renderingCache.setFrameBuffer(brightPassFilterFrameBufferHash, std::move(_brightPassFilterFrameBuffer));
+    //renderingCache.setFrameBuffer(horizontalBlurFrameBufferHash, std::move(_horizontalBlurFrameBuffer));
+    //renderingCache.setFrameBuffer(verticalBlurFrameBufferHash, std::move(_verticalBlurFrameBuffer));
 }
 
-const std::string PostEffects::brightPassFilterFrameBufferHashBase = "brightPassFilter";
-const std::string PostEffects::horizontalBlurFrameBufferHashBase = "horizontalBlur";
-const std::string PostEffects::verticalBlurFrameBufferHashBase = "verticalBlur";
+const std::string PostEffects::brightPassFilterFrameBufferHash = "brightPassFilter";
+const std::string PostEffects::horizontalBlurFrameBufferHash = "horizontalBlur";
+const std::string PostEffects::verticalBlurFrameBufferHash = "verticalBlur";

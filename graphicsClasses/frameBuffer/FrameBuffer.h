@@ -35,7 +35,7 @@ public:
 
     virtual void clear() = 0;
 
-    virtual ~FrameBuffer() = default;
+    virtual ~FrameBuffer();
 
     static void setViewportSize(GLsizei resolutionX, GLsizei resolutionY);
 

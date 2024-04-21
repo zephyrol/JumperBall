@@ -25,6 +25,9 @@ const CstTextureSampler_uptr& FrameBuffer::getRenderTexture() const {
     return _renderTexture;
 }
 
+FrameBuffer::~FrameBuffer() {
+    std::cout << "Delete frame buffer" << std::endl;
+}
 void FrameBuffer::setViewportSize(GLsizei resolutionX, GLsizei resolutionY) {
     glViewport(0, 0, resolutionX, resolutionY);
 }
