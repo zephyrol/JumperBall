@@ -127,8 +127,11 @@ std::vector<TextLabel::CharacterLocalTransform> FontTexturesGenerator::getCharac
     return localTransforms;
 }
 
-const vecTextLabel_sptr &FontTexturesGenerator::getTextLabels() {
+const vecTextLabel_sptr& FontTexturesGenerator::getTextLabels() {
     return _messageLabels;
+}
+
+void FontTexturesGenerator::fillCache(RenderingCache& renderingCache) {
 }
 
 FontTexturesGenerator_uptr FontTexturesGenerator::createInstance(
@@ -291,3 +294,4 @@ const CstTextureSampler_uptr &FontTexturesGenerator::getLettersTexture() const {
     return _lettersTexture.texture;
 }
 
+const std::string FontTexturesGenerator::lettersTextureHash = "lettersTexture";

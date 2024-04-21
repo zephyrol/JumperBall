@@ -28,6 +28,7 @@ Viewer::Viewer(
     _resolutionX(static_cast<GLsizei>(resolutionX)),
     _resolutionY(static_cast<GLsizei>(resolutionY)),
     _sceneRenderingCache(2),
+    _pageRenderingCache(2),
     _sceneRendering(SceneRendering::createInstance(*scene,
                                                      _resolutionX,
                                                      _resolutionY,

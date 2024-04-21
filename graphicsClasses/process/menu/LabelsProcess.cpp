@@ -89,3 +89,7 @@ void LabelsProcess::render() const {
 void LabelsProcess::update() {
     _renderGroupUniform.update();
 }
+
+void LabelsProcess::fillCache(RenderingCache& renderingCache) {
+    // renderingCache.setTexture("lol", _fontTexturesGenerator->getLettersTexture())
+}

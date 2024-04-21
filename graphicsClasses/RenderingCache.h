@@ -30,6 +30,13 @@ class RenderingCache {
     ShaderProgram_uptr getShaderProgram(const std::string& key);
 
     /**
+     * Get a texture from the cache. The caller becomes the owner.
+     * @param key Key as string.
+     * @return The related texture if it exists, otherwise nullptr.
+     */
+    CstTextureSampler_uptr getTexture(const std::string& key);
+
+    /**
      * Set a frame buffer in the cache. The cache becomes the owner.
      */
     void setFrameBuffer(const std::string& key, FrameBuffer_uptr frameBuffer);
@@ -38,6 +45,11 @@ class RenderingCache {
      * Set a shader program in the cache. The cache becomes the owner.
      */
     void setShaderProgram(const std::string& key, ShaderProgram_uptr shaderProgram);
+
+    /**
+     * Set a texture in the cache. The cache becomes the owner.
+     */
+    void setTexture(const std::string& key, CstTextureSampler_uptr texture);
 
     /**
      * Decrease the lifetime of all the rendering objects existing in the cache. For each rendering object,
@@ -63,7 +75,8 @@ class RenderingCache {
                                 std::unordered_map<std::string, CachedRenderingObject<T>>& renderingObjects);
 
     std::unordered_map<std::string, CachedRenderingObject<FrameBuffer_uptr>> _frameBuffers;
-    std::unordered_map<std::string, CachedRenderingObject<ShaderProgram_uptr>> _shaderPrograms{};
+    std::unordered_map<std::string, CachedRenderingObject<ShaderProgram_uptr>> _shaderPrograms;
+    std::unordered_map<std::string, CachedRenderingObject<CstTextureSampler_uptr>> _textures;
 };
 
 template <typename T>

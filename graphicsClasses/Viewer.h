@@ -46,6 +46,7 @@ private:
     GLsizei _resolutionY;
 
     RenderingCache _sceneRenderingCache;
+    RenderingCache _pageRenderingCache;
     std::unique_ptr<SceneRendering> _sceneRendering;
     std::unique_ptr<LabelsProcess> _pageRendering;
 
