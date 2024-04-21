@@ -33,6 +33,8 @@ public:
     void setPage(const CstPage_sptr &page);
 
     void setScene(const CstScene_sptr &scene);
+
+    // Move it to private
     void resetSceneRendering();
 
 private:

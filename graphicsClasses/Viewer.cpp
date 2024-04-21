@@ -90,7 +90,6 @@ void Viewer::resetPageRendering() {
         _resolutionY,
         _page
     ));
-    // resetSceneRendering();
 }
 
 void Viewer::resetSceneRendering() {

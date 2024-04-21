@@ -62,9 +62,9 @@ VertexAttribute<T>::VertexAttribute(std::vector<T> &&data):
 
 template<class T>
 void VertexAttribute<T>::createDataOnGpu() const {
-    // glBufferData(GL_ARRAY_BUFFER, _data.size() * sizeof(T), _data.data(), GL_STATIC_DRAW);
-    char a = 0;
-    glBufferData(GL_ARRAY_BUFFER, 1, &a, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, _data.size() * sizeof(T), _data.data(), GL_STATIC_DRAW);
+    //char a = 0;
+    //glBufferData(GL_ARRAY_BUFFER, 1, &a, GL_STATIC_DRAW);
 }
 
 template<class T>

@@ -104,7 +104,7 @@ ShaderProgram_uptr PostEffects::createPostProcessesShaderProgram(
     const std::string& uniformBufferName,
     FrameBuffer_uptr const& verticalBlurFrameBuffer,
     RenderingCache& renderingCache) {
-    const std::string shaderHash = "postEffects";
+    const std::string shaderHash = "postEffects;" + std::to_string(width) + "," + std::to_string(height);
     auto shader = renderingCache.getShaderProgram(shaderHash);
     if (shader == nullptr) {
         shader =
@@ -115,6 +115,8 @@ ShaderProgram_uptr PostEffects::createPostProcessesShaderProgram(
 
     constexpr GLint sceneTextureNumber = 2;
     shader->setTextureIndex("sceneTexture", sceneTextureNumber);
+
+    //TODO: remove those setActive texture + bind ????
     TextureSampler::setActiveTexture(sceneTextureNumber);
     sceneTexture->bind();
 
@@ -144,10 +146,13 @@ ShaderProgram_uptr PostEffects::createPostProcessesShaderProgram(
         });
     return shader;
 }
+
 void PostEffects::fillCache(RenderingCache& renderingCache) {
-    //renderingCache.setFrameBuffer(brightPassFilterFrameBufferHash, std::move(_brightPassFilterFrameBuffer));
-    //renderingCache.setFrameBuffer(horizontalBlurFrameBufferHash, std::move(_horizontalBlurFrameBuffer));
-    //renderingCache.setFrameBuffer(verticalBlurFrameBufferHash, std::move(_verticalBlurFrameBuffer));
+    renderingCache.setFrameBuffer(brightPassFilterFrameBufferHash, std::move(_brightPassFilterFrameBuffer));
+    renderingCache.setFrameBuffer(horizontalBlurFrameBufferHash, std::move(_horizontalBlurFrameBuffer));
+    renderingCache.setFrameBuffer(verticalBlurFrameBufferHash, std::move(_verticalBlurFrameBuffer));
+    const auto shaderHash = _postProcessesShader->getHash();
+    // renderingCache.setShaderProgram(shaderHash, std::move(_postProcessesShader));
 }
 
 const std::string PostEffects::brightPassFilterFrameBufferHash = "brightPassFilter";

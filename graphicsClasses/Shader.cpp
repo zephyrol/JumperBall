@@ -60,7 +60,7 @@ void Shader::verifyCompileStatus(const std::string &shaderCode) const {
 }
 
 Shader::~Shader() {
-    glDeleteShader(_shaderHandle);
+    // glDeleteShader(_shaderHandle);
 }
 
 GLuint Shader::getHandle() const {

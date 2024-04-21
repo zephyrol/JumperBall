@@ -76,6 +76,13 @@ ShaderProgram_uptr ShaderProgram::createInstance(
 
     glLinkProgram(shaderProgramHandle);
 
+    glDetachShader(shaderProgramHandle, vertexShader->getHandle());
+    glDetachShader(shaderProgramHandle, fragmentShader->getHandle());
+
+    glDeleteShader(vertexShader->getHandle());
+    glDeleteShader(fragmentShader->getHandle());
+
+
     verifyLinkStatus(shaderProgramHandle);
 
     for (const auto& ubo : ubos) {
@@ -140,7 +147,11 @@ void ShaderProgram::setUniformArrayVec4(const std::string& uniformArrayName,
 }
 
 ShaderProgram::~ShaderProgram() {
-    glDetachShader(_shaderProgramHandle, _vertexShader->getHandle());
-    glDetachShader(_shaderProgramHandle, _fragmentShader->getHandle());
     glDeleteProgram(_shaderProgramHandle);
+    glFinish();
+    GLint deleteStatus;
+    glGetProgramiv(_shaderProgramHandle, GL_DELETE_STATUS, &deleteStatus);
+    const bool isDeleted = deleteStatus == GL_TRUE;
+    //std::cout << isDeleted << std::endl;
+    std::cout << "errors: " << glGetError() << std::endl;
 }

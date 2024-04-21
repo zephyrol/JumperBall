@@ -191,15 +191,15 @@ std::string LevelProcess::getLevelFrameBufferHash(GLsizei width, GLsizei height)
 }
 
 void LevelProcess::fillCache(RenderingCache& renderingCache) {
-    // renderingCache.setFrameBuffer(getLevelFrameBufferHash(_width, _height), std::move(_levelFrameBuffer));
-    // renderingCache.setFrameBuffer(firstShadowHash, std::move(_firstShadow));
-    // renderingCache.setFrameBuffer(secondShadowHash, std::move(_secondShadow));
-    // renderingCache.setFrameBuffer(firstBlankShadowHash, std::move(_firstBlankShadow));
-    // renderingCache.setFrameBuffer(secondBlankShadowHash, std::move(_secondBlankShadow));
+    renderingCache.setFrameBuffer(getLevelFrameBufferHash(_width, _height), std::move(_levelFrameBuffer));
+    renderingCache.setFrameBuffer(firstShadowHash, std::move(_firstShadow));
+    renderingCache.setFrameBuffer(secondShadowHash, std::move(_secondShadow));
+    renderingCache.setFrameBuffer(firstBlankShadowHash, std::move(_firstBlankShadow));
+    renderingCache.setFrameBuffer(secondBlankShadowHash, std::move(_secondBlankShadow));
     const auto mapShaderHash = _mapShaderProgram->getHash();
     const auto starShaderHash = _starShaderProgram->getHash();
-    // renderingCache.setShaderProgram(mapShaderHash, std::move(_mapShaderProgram));
-    // renderingCache.setShaderProgram(starShaderHash, std::move(_starShaderProgram));
+    renderingCache.setShaderProgram(mapShaderHash, std::move(_mapShaderProgram));
+    renderingCache.setShaderProgram(starShaderHash, std::move(_starShaderProgram));
 }
 
 const GLsizei LevelProcess::depthTexturesSize = 1024;

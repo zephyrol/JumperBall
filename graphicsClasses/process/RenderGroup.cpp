@@ -65,11 +65,11 @@ CstGpuBuffer_uptr RenderGroup::createElementBuffer(const GeometricShape::Indices
     // 2. Bind buffer object.
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bo->getId());
 
-    GeometricShape::IndicesBuffer test{0};
+    // GeometricShape::IndicesBuffer test{0};
     // 3. Create data on gpu
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 //static_cast<GLsizeiptr>(indices.size() * sizeof(decltype(indices.front()))), indices.data(),
-                 static_cast<GLsizeiptr>(test.size() * sizeof(decltype(test.front()))), test.data(),
+                 static_cast<GLsizeiptr>(indices.size() * sizeof(decltype(indices.front()))), indices.data(),
+                 // static_cast<GLsizeiptr>(test.size() * sizeof(decltype(test.front()))), test.data(),
                  GL_STATIC_DRAW);
 
     return bo;
