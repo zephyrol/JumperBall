@@ -156,7 +156,7 @@ bool Camera::approachingBallUpdate() noexcept {
 
     float t = _chronometer->getTime() / transitionDuration;
 
-    constexpr float distanceXStarting = 10.f;
+    constexpr float distanceXStarting = -10.f;
     constexpr float distanceYStarting = 5.f;
     constexpr float distanceZStarting = 10.f;
 
@@ -177,7 +177,7 @@ bool Camera::approachingBallUpdate() noexcept {
 
     const float tCos = cosf(t * JBTypes::pi2 + JBTypes::pi) + 1.f;
 
-    const glm::vec3 directionVector = glm::normalize(_center - _pos);
+    const glm::vec3 directionVector = -glm::normalize(_center - _pos);
     const glm::mat4 upRotation = glm::rotate(tCos * 2.f * JBTypes::pi, directionVector);
     const glm::vec4 upVector = upRotation * glm::vec4(0.f, 1.f, 0.f, 1.f);
 
