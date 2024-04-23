@@ -20,9 +20,7 @@ in vec3 fs_vertexColor;
 in vec4 fs_vertexDepthMapSpace;
 in vec4 fs_vertexDepthMap2Space;
 in vec3 fs_vertexNormal;
-in vec3 fs_vertexToCamera;
-in float fs_vertexIsIlluminatedLight1;
-in float fs_vertexIsIlluminatedLight2;
+in vec3 fs_vertexPositionWorld;
 
 out vec4 pixelColor;
 
@@ -75,8 +73,8 @@ void main(){
     vec3 composition = fs_vertexColor;
 
     vec3 normalizedNormal = normalize(fs_vertexNormal);
-    vec3 toCamera = normalize(fs_vertexToCamera);
-    if (fs_vertexIsIlluminatedLight1 < 0.0) {
+    vec3 toCamera = normalize(cameraPosition - fs_vertexPositionWorld);
+    if (dot(normalizedNormal, lightDirection) < 0.0) {
         float firstShadowCoeff = evaluateShadow(fs_vertexDepthMapSpace, depthTexture);
         if (firstShadowCoeff > 0.0) {
             composition += firstShadowCoeff * getLightContribution(
@@ -89,7 +87,7 @@ void main(){
         }
     }
 
-    if (fs_vertexIsIlluminatedLight2 < 0.0) {
+    if (dot(normalizedNormal, light2Direction) < 0.0) {
         float secondShadowCoeff = evaluateShadow(fs_vertexDepthMap2Space, depth2Texture);
         if (secondShadowCoeff > 0.0) {
             composition += secondShadowCoeff * getLightContribution(
