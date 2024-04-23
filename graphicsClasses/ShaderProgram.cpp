@@ -59,6 +59,11 @@ ShaderProgram_sptr ShaderProgram::createInstance(
 
     glLinkProgram(shaderProgramHandle);
 
+    glDetachShader(shaderProgramHandle, vertexShader->getHandle());
+    glDetachShader(shaderProgramHandle, fragmentShader->getHandle());
+    glDeleteShader(vertexShader->getHandle());
+    glDeleteShader(fragmentShader->getHandle());
+
     verifyLinkStatus(shaderProgramHandle);
 
     return std::make_shared<ShaderProgram>(
@@ -125,8 +130,7 @@ void ShaderProgram::setUniformArrayVec4(
 }
 
 ShaderProgram::~ShaderProgram() {
-    glDetachShader(_shaderProgramHandle, _vertexShader->getHandle());
-    glDetachShader(_shaderProgramHandle, _fragmentShader->getHandle());
     glDeleteProgram(_shaderProgramHandle);
+    std::cout << "delete shader program" << std::endl;
 }
 

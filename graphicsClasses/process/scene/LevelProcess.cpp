@@ -102,53 +102,53 @@ LevelProcess_uptr LevelProcess::createInstance(
 
 void LevelProcess::render() const {
 
-    FrameBuffer::disableBlending();
-    _levelFrameBuffer->bindFrameBuffer();
-    _levelFrameBuffer->clear();
+    //FrameBuffer::disableBlending();
+    // _levelFrameBuffer->bindFrameBuffer();
+    // _levelFrameBuffer->clear();
 
-    _starShaderProgram->use();
-    _starGroupUniforms.bind();
-    _starGroup->bind();
-    _starGroup->render();
+    // _starShaderProgram->use();
+    // _starGroupUniforms.bind();
+    // _starGroup->bind();
+    // _starGroup->render();
 
-    glCullFace(GL_FRONT);
-    FrameBuffer::enableDepthTest();
-    FrameBuffer::setViewportSize(depthTexturesSize, depthTexturesSize);
-    _mapShaderProgram->use();
+    // glCullFace(GL_FRONT);
+    // FrameBuffer::enableDepthTest();
+    // FrameBuffer::setViewportSize(depthTexturesSize, depthTexturesSize);
+    // _mapShaderProgram->use();
 
-    TextureSampler::setActiveTexture(firstShadowTextureIndex);
-    _firstBlankShadow->getRenderTexture()->bind();
-    TextureSampler::setActiveTexture(secondShadowTextureIndex);
-    _secondBlankShadow->getRenderTexture()->bind();
+    // TextureSampler::setActiveTexture(firstShadowTextureIndex);
+    // _firstBlankShadow->getRenderTexture()->bind();
+    // TextureSampler::setActiveTexture(secondShadowTextureIndex);
+    // _secondBlankShadow->getRenderTexture()->bind();
 
-    _mapGroupUniforms.bind();
-    _mapGroup->bind();
+    // _mapGroupUniforms.bind();
+    // _mapGroup->bind();
 
-    // 1. First shadow
-    _firstShadow->bindFrameBuffer();
-    _firstShadow->clear();
-    _mapShaderProgram->setInteger(_passIdUniformLocation, 0);
-    _mapGroup->render();
+    // // 1. First shadow
+    // _firstShadow->bindFrameBuffer();
+    // _firstShadow->clear();
+    // _mapShaderProgram->setInteger(_passIdUniformLocation, 0);
+    // _mapGroup->render();
 
-    // 2. Second shadow
-    _secondShadow->bindFrameBuffer();
-    _secondShadow->clear();
-    _mapShaderProgram->setInteger(_passIdUniformLocation, 1);
-    _mapGroup->render();
-
-    // 3. Map
-    glCullFace(GL_BACK);
-
-    FrameBuffer::setViewportSize(_width, _height);
-    _levelFrameBuffer->bindFrameBuffer();
-
-    _secondShadow->getRenderTexture()->bind();
-    TextureSampler::setActiveTexture(firstShadowTextureIndex);
-    _firstShadow->getRenderTexture()->bind();
-
-    _levelFrameBuffer->bindFrameBuffer();
-    _mapShaderProgram->setInteger(_passIdUniformLocation, 3);
-    _mapGroup->render();
+//     // 2. Second shadow
+//     _secondShadow->bindFrameBuffer();
+//     _secondShadow->clear();
+//     _mapShaderProgram->setInteger(_passIdUniformLocation, 1);
+//     _mapGroup->render();
+//
+//     // 3. Map
+//     glCullFace(GL_BACK);
+//
+//     FrameBuffer::setViewportSize(_width, _height);
+//     _levelFrameBuffer->bindFrameBuffer();
+//
+//     _secondShadow->getRenderTexture()->bind();
+//     TextureSampler::setActiveTexture(firstShadowTextureIndex);
+//     _firstShadow->getRenderTexture()->bind();
+//
+//     _levelFrameBuffer->bindFrameBuffer();
+//        _mapShaderProgram->setInteger(_passIdUniformLocation, 3);
+         _mapGroup->render();
 
 }
 

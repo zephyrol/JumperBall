@@ -25,8 +25,7 @@ public:
         GLsizei width,
         GLsizei height,
         LevelProcess_uptr levelProcess,
-        PostEffects_uptr postEffects,
-        SceneUniformBuffer&& sceneUniformBuffer
+        PostEffects_uptr postEffects
     );
 
     static std::unique_ptr<SceneRendering> createInstance(
@@ -46,7 +45,6 @@ private:
     const Scene &_scene;
     const LevelProcess_uptr _levelProcess;
     const PostEffects_uptr _postEffects;
-    SceneUniformBuffer _sceneUniformBuffer;
 };
 
 #endif /* SCENE_RENDERING_H */

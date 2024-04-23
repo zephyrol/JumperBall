@@ -22,24 +22,9 @@ PostEffects::PostEffects(
         ScreenGroupGenerator screenGroupGenerator;
         return screenGroupGenerator.genRenderGroup();
     }()),
-    _brightPassFilterFrameBuffer(ColorableFrameBuffer::createInstance(
-        postEffectsWidth,
-        postEffectsHeight,
-        true,
-        false
-    )),
-    _horizontalBlurFrameBuffer(ColorableFrameBuffer::createInstance(
-        postEffectsWidth,
-        postEffectsHeight,
-        true,
-        false
-    )),
-    _verticalBlurFrameBuffer(ColorableFrameBuffer::createInstance(
-        postEffectsWidth,
-        postEffectsHeight,
-        false,
-        false
-    )),
+    _brightPassFilterFrameBuffer(nullptr),
+    _horizontalBlurFrameBuffer(nullptr),
+    _verticalBlurFrameBuffer(nullptr),
     _postProcessesShader(createPostProcessesShaderProgram(
         sceneTexture,
         fileContent,
@@ -52,37 +37,38 @@ PostEffects::PostEffects(
 
 void PostEffects::render() const {
 
-    FrameBuffer::disableDepthTest();
-    TextureSampler::setActiveTexture(postProcessTextureNumber);
+    // FrameBuffer::disableDepthTest();
+    // TextureSampler::setActiveTexture(postProcessTextureNumber);
 
     _postProcessesShader->use();
-    // 1. Bright pass filter
-    _brightPassFilterFrameBuffer->bindFrameBuffer();
-    FrameBuffer::setViewportSize(_postEffectsWidth, _postEffectsHeight);
+    // // 1. Bright pass filter
+    // _brightPassFilterFrameBuffer->bindFrameBuffer();
+    // FrameBuffer::setViewportSize(_postEffectsWidth, _postEffectsHeight);
 
-    _postProcessesShader->setInteger(_postProcessIdUniformLocation, 0);
-    _screen->bind();
-    _screen->render();
+    // _postProcessesShader->setInteger(_postProcessIdUniformLocation, 0);
+    // _screen->bind();
+    // _screen->render();
 
-    // 2. Horizontal blur
-    _horizontalBlurFrameBuffer->bindFrameBuffer();
-    _brightPassFilterFrameBuffer->getRenderTexture()->bind();
-    _postProcessesShader->setInteger(_postProcessIdUniformLocation, 1);
-    _screen->render();
+    // // 2. Horizontal blur
+    // _horizontalBlurFrameBuffer->bindFrameBuffer();
+    // _brightPassFilterFrameBuffer->getRenderTexture()->bind();
+    // _postProcessesShader->setInteger(_postProcessIdUniformLocation, 1);
+    // _screen->render();
 
-    // 3. Vertical blur
-    _verticalBlurFrameBuffer->bindFrameBuffer();
-    _postProcessesShader->setInteger(_postProcessIdUniformLocation, 2);
-    _horizontalBlurFrameBuffer->getRenderTexture()->bind();
-    _screen->render();
+    // // 3. Vertical blur
+    // _verticalBlurFrameBuffer->bindFrameBuffer();
+    // _postProcessesShader->setInteger(_postProcessIdUniformLocation, 2);
+    // _horizontalBlurFrameBuffer->getRenderTexture()->bind();
+    // _screen->render();
 
     // 4. Bloom
-    GpuFrameBuffer::bindDefaultFrameBuffer(_defaultFrameBuffer);
-    _postProcessesShader->setInteger(_postProcessIdUniformLocation, 3);
-    FrameBuffer::setViewportSize(_screenWidth, _screenHeight);
+    // GpuFrameBuffer::bindDefaultFrameBuffer(_defaultFrameBuffer);
+    // _postProcessesShader->setInteger(_postProcessIdUniformLocation, 3);
+    // FrameBuffer::setViewportSize(_screenWidth, _screenHeight);
 
-    _verticalBlurFrameBuffer->getRenderTexture()->bind();
+    // _verticalBlurFrameBuffer->getRenderTexture()->bind();
     _screen->render();
+    glUseProgram(0);
 }
 
 ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
@@ -91,11 +77,24 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
     GLsizei width,
     GLsizei height
 ) {
+    // auto shader = ShaderProgram::createInstance(
+    //     fileContent,
+    //     "inGamePageVs.vs",//"postEffectsFs.fs"
+    //     "labelFs.fs",
+    //     {""},
+    //     {{"idCount", 1}},
+    //     {}
+    // );
+
     auto shader = ShaderProgram::createInstance(
         fileContent,
-        "postEffectsVs.vs",
-        "postEffectsFs.fs"
+        "starVs.vs",//"postEffectsFs.fs"
+        "starFs.fs",
+        {""},
+        {{"idCount", 1}},
+        {}
     );
+    return shader;
     shader->use();
 
     constexpr GLint sceneTextureNumber = 2;
@@ -154,5 +153,5 @@ ShaderProgram_sptr PostEffects::createPostProcessesShaderProgram(
 }
 
 vecCstShaderProgram_sptr PostEffects::getShaderPrograms() const {
-    return {_postProcessesShader};
+    return {};
 }

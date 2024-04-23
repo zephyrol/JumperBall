@@ -6,6 +6,17 @@
  */
 
 #include "Shader.h"
+#define CHECK_SHADER_COMPILE_STATUS(shader) \
+do { \
+GLint compileStatus; \
+glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus); \
+GLint logLength; \
+glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength); \
+char *log = (char *)malloc(logLength); \
+glGetShaderInfoLog(shader, logLength, NULL, log); \
+fprintf(stderr, "Shader compilation failed:\n%s\n", log); \
+free(log); \
+} while (0)
 
 Shader::Shader(
     const GLenum &shaderType,
@@ -60,7 +71,7 @@ void Shader::verifyCompileStatus(const std::string &shaderCode) const {
 }
 
 Shader::~Shader() {
-    glDeleteShader(_shaderHandle);
+    // glDeleteShader(_shaderHandle);
 }
 
 GLuint Shader::getHandle() const {

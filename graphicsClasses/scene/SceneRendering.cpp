@@ -14,14 +14,13 @@ SceneRendering::SceneRendering(
     GLsizei width,
     GLsizei height,
     LevelProcess_uptr levelProcess,
-    PostEffects_uptr postEffects,
-    SceneUniformBuffer &&sceneUniformBuffer
+    PostEffects_uptr postEffects
 ) :
     Rendering(width, height),
     _scene(scene),
     _levelProcess(std::move(levelProcess)),
-    _postEffects(std::move(postEffects)),
-    _sceneUniformBuffer(std::move(sceneUniformBuffer)){
+    _postEffects(std::move(postEffects))
+    {
 }
 
 std::unique_ptr<SceneRendering> SceneRendering::createInstance(
@@ -33,19 +32,19 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
 ) {
 
     // Alpha
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // Culling
-    glEnable(GL_CULL_FACE);
+    // glEnable(GL_CULL_FACE);
 
-    auto levelProcess = LevelProcess::createInstance(
-        fileContent,
-        width,
-        height,
-        scene.getMap(),
-        scene.getStar(),
-        scene.getStar2(),
-        scene.getPlayer()->getCurrentBallSkin()
-    );
+   //  auto levelProcess = LevelProcess::createInstance(
+   //      fileContent,
+   //      width,
+   //      height,
+   //      scene.getMap(),
+   //      scene.getStar(),
+   //      scene.getStar2(),
+   //      scene.getPlayer()->getCurrentBallSkin()
+   //  );
 
     constexpr size_t expensivePostProcessHeight = 192;
     const auto expensivePostProcessWidth = static_cast<GLsizei>(
@@ -58,29 +57,29 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(
 
     auto postEffects = std::unique_ptr<PostEffects>(new PostEffects(
         fileContent,
-        width,
-        height,
-        expensivePostProcessWidthGLsizei,
-        expensivePostProcessHeightGLsizei,
-        levelProcess->getRenderTexture(),
-        defaultFrameBuffer
-    ));
+         width,
+         height,
+         expensivePostProcessWidthGLsizei,
+         expensivePostProcessHeightGLsizei,
+         nullptr,//levelProcess->getRenderTexture(),
+         defaultFrameBuffer
+     ));
 
-    auto shadersProgramsUsingUniformBuffer = levelProcess->getShaderPrograms();
+    //auto shadersProgramsUsingUniformBuffer = levelProcess->getShaderPrograms();
     auto postEffectsShaderPrograms = postEffects->getShaderPrograms();
-    shadersProgramsUsingUniformBuffer.insert(
-        shadersProgramsUsingUniformBuffer.end(),
-        postEffectsShaderPrograms.begin(),
-        postEffectsShaderPrograms.end()
-    );
+    //shadersProgramsUsingUniformBuffer.insert(
+    //    shadersProgramsUsingUniformBuffer.end(),
+    //    postEffectsShaderPrograms.begin(),
+    //    postEffectsShaderPrograms.end()
+    //);
 
     return std::unique_ptr<SceneRendering>(new SceneRendering(
         scene,
         width,
         height,
-        std::move(levelProcess),
-        std::move(postEffects),
-        SceneUniformBuffer(shadersProgramsUsingUniformBuffer)
+        //std::move(levelProcess),
+        nullptr,
+        std::move(postEffects)
     ));
 }
 
@@ -88,21 +87,21 @@ void SceneRendering::update() {
 
     const auto &sceneCamera = _scene.getCamera();
     const auto &sceneBall = _scene.getBall();
-    _sceneUniformBuffer.update(
-        sceneCamera->viewProjection(),
-        Camera::genVPMatrixFromStar(*_scene.getStar()),
-        Camera::genVPMatrixFromStar((*_scene.getStar2())),
-        sceneCamera->pos(),
-        Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection()),
-        Utility::convertToOpenGLFormat(_scene.getStar2()->lightDirection()),
-        Utility::colorAsVec3(sceneBall->getTeleportationColor()),
-        glm::vec1(sceneBall->getTeleportationCoefficient())
-    );
+    // _sceneUniformBuffer.update(
+    //     sceneCamera->viewProjection(),
+    //     Camera::genVPMatrixFromStar(*_scene.getStar()),
+    //     Camera::genVPMatrixFromStar((*_scene.getStar2())),
+    //     sceneCamera->pos(),
+    //     Utility::convertToOpenGLFormat(_scene.getStar()->lightDirection()),
+    //     Utility::convertToOpenGLFormat(_scene.getStar2()->lightDirection()),
+    //     Utility::colorAsVec3(sceneBall->getTeleportationColor()),
+    //     glm::vec1(sceneBall->getTeleportationCoefficient())
+    // );
 
-    _levelProcess->update();
+    // _levelProcess->update();
 }
 
 void SceneRendering::render() const {
-    _levelProcess->render();
+    // _levelProcess->render();
     _postEffects->render();
 }

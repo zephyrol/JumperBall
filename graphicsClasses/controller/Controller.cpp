@@ -167,6 +167,7 @@ void Controller::render() const {
 }
 
 std::string Controller::update() {
+    _viewer->resetRendering();
     // 1. Update chronometers
     const auto updatingTime = Chronometer::getTimePointMSNow();
     _doubleChronometer->update(updatingTime);

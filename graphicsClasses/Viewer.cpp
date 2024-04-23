@@ -45,12 +45,12 @@ Viewer::Viewer(
 
 void Viewer::update() {
     _sceneRendering->update();
-    _pageRendering->update();
+    // _pageRendering->update();
 }
 
 void Viewer::render() const {
     _sceneRendering->render();
-    _pageRendering->render();
+    // _pageRendering->render();
 }
 
 void Viewer::resize(unsigned int resolutionX, unsigned int resolutionY) {
@@ -82,13 +82,13 @@ void Viewer::resetRendering() {
 void Viewer::resetPageRendering() {
     // Free memory first
     _pageRendering = nullptr;
-    _pageRendering = std::unique_ptr<LabelsProcess>(LabelsProcess::createInstance(
-        _fileContent,
-        _ftContent,
-        _resolutionX,
-        _resolutionY,
-        _page
-    ));
+    // _pageRendering = std::unique_ptr<LabelsProcess>(LabelsProcess::createInstance(
+    //     _fileContent,
+    //     _ftContent,
+    //     _resolutionX,
+    //     _resolutionY,
+    //     _page
+    // ));
 }
 
 void Viewer::resetSceneRendering() {
