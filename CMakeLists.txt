@@ -27,7 +27,6 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/ScreenGroupGenerator.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/componentsGeneration/LabelGroupGenerator.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/Shader.cpp
-    ${CMAKE_SOURCE_DIR}/graphicsClasses/RenderingCache.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/controller/Controller.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/graphicMenu/FontTexturesGenerator.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/ShaderProgram.cpp
@@ -170,7 +169,6 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/DepthFrameBuffer.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/frameBuffer/GpuFrameBuffer.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/Shader.h
-    ${CMAKE_SOURCE_DIR}/graphicsClasses/RenderingCache.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/Viewer.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/ShaderProgram.h
     ${CMAKE_SOURCE_DIR}/graphicsClasses/Rendering.h
