@@ -35,8 +35,8 @@ std::vector<Tutorial::Message> MovementTutorial::getMessages() const {
                     finishLevel};
         }
         return {{"Balayez vers le haut", "pour avancer"},
-                {"Balayez vers la gauche", "pour tourner à droite"},
-                {"Balayez vers la droite", "pour tourner à gauche"},
+                {"Balayez vers la gauche", "pour tourner ` droite"},
+                {"Balayez vers la droite", "pour tourner ` gauche"},
                 finishLevel};
     }
     if (_isInEnglish) {
@@ -46,8 +46,8 @@ std::vector<Tutorial::Message> MovementTutorial::getMessages() const {
                 finishLevel};
     }
     return {{"Appuyez sur la fl^che", "du haut pour avancer"},
-            {"Appuyez sur la fl^che", "de droite pour tourner à droite"},
-            {"Appuyez sur la fl^che", "de gauche pour tourner à gauche"},
+            {"Appuyez sur la fl^che", "de droite pour tourner ` droite"},
+            {"Appuyez sur la fl^che", "de gauche pour tourner ` gauche"},
             finishLevel};
 }
 
