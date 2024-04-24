@@ -6,9 +6,11 @@
 
 LookDownTutorial::LookDownTutorial(CstMovableObject_sptr movableObject,
                                    CstAboveMovingCamera_sptr camera,
-                                   bool isInEnglish)
+                                   bool isInEnglish,
+                                   bool isUsingTouchScreen)
     : _movableObject(std::move(movableObject)),
       _isInEnglish(isInEnglish),
+      _isUsingTouchScreen(isUsingTouchScreen),
       _currentStep(0),
       _camera(std::move(camera)),
       _chronometer(true),
@@ -17,9 +19,13 @@ LookDownTutorial::LookDownTutorial(CstMovableObject_sptr movableObject,
       _numberIdTable({-1, 0, 0}) {}
 
 std::vector<Tutorial::Message> LookDownTutorial::getMessages() const {
-    return _isInEnglish ? std::vector<Tutorial::Message>{{"You can move on all", "sides of the maze!"}}
-                        : std::vector<Tutorial::Message>{
-                              {"Vous pouvez avancer sur toutes", "les lookDown du labyrinthe !"}};
+    if (_isUsingTouchScreen) {
+        return _isInEnglish ? std::vector<Tutorial::Message>{{"Swipe down to", "look down"}}
+                            : std::vector<Tutorial::Message>{{"Balayez vers le bas", "pour regarder en bas"}};
+    }
+    return _isInEnglish
+               ? std::vector<Tutorial::Message>{{"Press the down arrow", "to look down"}}
+               : std::vector<Tutorial::Message>{{"Appuyez sur la fl^che du", "bas pour regarder en bas"}};
 }
 
 float LookDownTutorial::getAnimationTime() {

@@ -4,9 +4,10 @@
 
 #include "JumpTutorial.h"
 
-JumpTutorial::JumpTutorial(CstMovableObject_sptr movableObject, bool isInEnglish)
+JumpTutorial::JumpTutorial(CstMovableObject_sptr movableObject, bool isInEnglish, bool isUsingTouchScreen)
     : _movableObject(std::move(movableObject)),
       _isInEnglish(isInEnglish),
+      _isUsingTouchScreen(isUsingTouchScreen),
       _currentStep(0),
       _chronometer(true),
       _stepsConditions({[this]() { return _chronometer.getTime() > 2.f; },
@@ -14,8 +15,12 @@ JumpTutorial::JumpTutorial(CstMovableObject_sptr movableObject, bool isInEnglish
       _numberIdTable({-1, 0, 0}) {}
 
 std::vector<Tutorial::Message> JumpTutorial::getMessages() const {
-    return _isInEnglish ? std::vector<Tutorial::Message>{{"Tap on screen to jump!", ""}}
-                        : std::vector<Tutorial::Message>{{"Tapez sur l';cran pour sauter!", ""}};
+    if (_isUsingTouchScreen) {
+        return _isInEnglish ? std::vector<Tutorial::Message>{{"Tap on screen to jump!", ""}}
+                            : std::vector<Tutorial::Message>{{"Tapez sur l';cran", "pour sauter!"}};
+    }
+    return _isInEnglish ? std::vector<Tutorial::Message>{{"Press space to jump!", ""}}
+                        : std::vector<Tutorial::Message>{{"Appuyez sur espace", "pour sauter !"}};
 }
 
 float JumpTutorial::getAnimationTime() {

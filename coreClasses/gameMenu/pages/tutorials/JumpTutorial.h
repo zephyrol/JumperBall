@@ -10,7 +10,7 @@
 
 class JumpTutorial : public Tutorial {
    public:
-    explicit JumpTutorial(CstMovableObject_sptr movableObject, bool isInEnglish);
+    explicit JumpTutorial(CstMovableObject_sptr movableObject, bool isInEnglish, bool isUsingTouchScreen);
 
     std::vector<Tutorial::Message> getMessages() const override;
 
@@ -23,6 +23,7 @@ class JumpTutorial : public Tutorial {
    private:
     const CstMovableObject_sptr _movableObject;
     const bool _isInEnglish;
+    const bool _isUsingTouchScreen;
     size_t _currentStep;
     Chronometer _chronometer;
     const std::vector<std::function<bool()>> _stepsConditions;

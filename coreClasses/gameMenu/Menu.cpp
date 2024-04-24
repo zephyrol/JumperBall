@@ -131,15 +131,17 @@ Tutorial_uptr Menu::createTutorial(size_t level,
              return std::unique_ptr<Tutorial>(new KeysTutorial(movableObject, isUsingEnglish));
          }},
         {3,
-         [movableObject, isUsingEnglish]() {
-             return std::unique_ptr<Tutorial>(new JumpTutorial(movableObject, isUsingEnglish));
+         [movableObject, isUsingEnglish, isUsingTouchScreen]() {
+             return std::unique_ptr<Tutorial>(
+                 new JumpTutorial(movableObject, isUsingEnglish, isUsingTouchScreen));
          }},
         {5,
          [movableObject, isUsingEnglish]() {
              return std::unique_ptr<Tutorial>(new FacesTutorial(movableObject, isUsingEnglish));
          }},
-        {6, [movableObject, isUsingEnglish, camera]() {
-             return std::unique_ptr<Tutorial>(new LookDownTutorial(movableObject, camera, isUsingEnglish));
+        {6, [movableObject, isUsingEnglish, isUsingTouchScreen, camera]() {
+             return std::unique_ptr<Tutorial>(
+                 new LookDownTutorial(movableObject, camera, isUsingEnglish, isUsingTouchScreen));
          }}};
     const auto tutorialIterator = tutorialFactory.find(level);
     if (tutorialIterator == tutorialFactory.cend()) {

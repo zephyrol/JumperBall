@@ -11,7 +11,10 @@
 
 class LookDownTutorial : public Tutorial {
    public:
-    explicit LookDownTutorial(CstMovableObject_sptr movableObject, CstAboveMovingCamera_sptr camera, bool isInEnglish);
+    explicit LookDownTutorial(CstMovableObject_sptr movableObject,
+                              CstAboveMovingCamera_sptr camera,
+                              bool isInEnglish,
+                              bool isUsingTouchScreen);
 
     std::vector<Tutorial::Message> getMessages() const override;
 
@@ -25,6 +28,7 @@ class LookDownTutorial : public Tutorial {
     const CstMovableObject_sptr _movableObject;
     const CstAboveMovingCamera_sptr _camera;
     const bool _isInEnglish;
+    const bool _isUsingTouchScreen;
     size_t _currentStep;
     Chronometer _chronometer;
     const std::vector<std::function<bool()>> _stepsConditions;
