@@ -35,6 +35,8 @@ public:
 
     void setScene(const CstScene_sptr &scene);
 
+    void resetRendering();
+
 private:
     CstScene_sptr _scene;
     CstPage_sptr _page;
@@ -51,7 +53,6 @@ private:
 
     void resetPageRendering();
     void resetSceneRendering();
-    void resetRendering();
 
 };
 
