@@ -32,16 +32,15 @@ using FontTexturesGenerator_uptr = std::unique_ptr<FontTexturesGenerator>;
  * A font textures generator is attached to a page, because only one page is rendered on the same time.
  */
 class FontTexturesGenerator {
-
     struct GraphicCharacter {
         // Texture info
         glm::ivec2 pixelsUvPixelsMin;
         glm::ivec2 pixelsUvPixelsMax;
 
         // Letter info
-        glm::ivec2 size; // Size of the letter
-        glm::ivec2 bearing; // Offset from baseline to left/top of the letter
-        unsigned int advance; // Offset to advance to next letter
+        glm::ivec2 size;       // Size of the letter
+        glm::ivec2 bearing;    // Offset from baseline to left/top of the letter
+        unsigned int advance;  // Offset to advance to next letter
     };
 
     /**
@@ -52,8 +51,7 @@ class FontTexturesGenerator {
     /**
      * Struct containing letters texture state
      */
-    struct LettersTexture {
-
+    struct LettersTextureState {
         /**
          * Current texture data
          */
@@ -90,41 +88,31 @@ class FontTexturesGenerator {
         CstTextureSampler_uptr texture = nullptr;
     };
 
-public:
-
+   public:
     struct FTContent {
         FT_Library ftLib;
         FT_Face fontFace;
     };
 
-    FontTexturesGenerator(
-        LettersTexture lettersTexture,
-        vecTextLabel_sptr &&textLabels
-    );
+    FontTexturesGenerator(CstTextureSampler_uptr lettersTexture, vecTextLabel_sptr&& textLabels);
 
-    FontTexturesGenerator &operator=(const FontTexturesGenerator &ft) = delete;
+    FontTexturesGenerator& operator=(const FontTexturesGenerator& ft) = delete;
 
-    static FontTexturesGenerator_uptr createInstance(
-        size_t screenWidth,
-        size_t screenHeight,
-        const CstPage_sptr &page,
-        const FTContent &ftContent
-    );
+    static FontTexturesGenerator_uptr createInstance(size_t screenWidth,
+                                                     size_t screenHeight,
+                                                     const CstPage_sptr& page,
+                                                     const FTContent& ftContent);
 
-    const CstTextureSampler_uptr &getLettersTexture() const;
+    const CstTextureSampler_uptr& getLettersTexture() const;
 
-    const vecTextLabel_sptr &getTextLabels();
+    const vecTextLabel_sptr& getTextLabels();
 
-    static FTContent initFreeTypeAndFont(
-        const unsigned char *fontData,
-        size_t fontDataSize
-    );
+    static FTContent initFreeTypeAndFont(const unsigned char* fontData, size_t fontDataSize);
 
-    static void clearFreeTypeResources(FTContent &ftContent);
+    static void clearFreeTypeResources(FTContent& ftContent);
 
-private:
-
-    const LettersTexture _lettersTexture;
+   private:
+    const CstTextureSampler_uptr _lettersTexture;
 
     const vecTextLabel_sptr _messageLabels;
 
@@ -137,17 +125,15 @@ private:
      * @return GraphicCharacter texture added into currentAlphabet param
      */
     static FontTexturesGenerator::GraphicCharacter createOrGetGraphicCharacter(
-        const FontTexturesGenerator::FTContent &ftContent,
+        const FontTexturesGenerator::FTContent& ftContent,
         FT_UInt pixelHeight,
-        LettersTexture &lettersTexture,
-        unsigned char character
-    );
+        LettersTextureState& lettersTexture,
+        unsigned char character);
 
     static std::vector<TextLabel::CharacterLocalTransform> getCharacterLocalTransforms(
-        const std::vector<GraphicCharacter> &graphicCharacters,
+        const std::vector<GraphicCharacter>& graphicCharacters,
         unsigned int nodePixelWidth,
-        unsigned int nodePixelHeight
-    );
+        unsigned int nodePixelHeight);
 
     /**
      * Insert bitmap character into letters texture.
@@ -157,14 +143,10 @@ private:
      * @param bitmapHeight Height of the letter in pixels.
      * @return vec4 containing uvMinX, uvMinY, uvMaxX, uvMaxY of the letter in the texture (in pixels).
      */
-    static glm::ivec4 insertCharacterToTexture(
-        FontTexturesGenerator::LettersTexture &lettersTexture,
-        const unsigned char *letterBitmap,
-        unsigned int bitmapWidth,
-        unsigned int bitmapHeight
-    );
-
+    static glm::ivec4 insertCharacterToTexture(FontTexturesGenerator::LettersTextureState& lettersTexture,
+                                               const unsigned char* letterBitmap,
+                                               unsigned int bitmapWidth,
+                                               unsigned int bitmapHeight);
 };
-
 
 #endif
