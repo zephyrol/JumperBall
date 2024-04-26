@@ -257,18 +257,18 @@ void Camera::setRatio(float ratio) {
 }
 
 float Camera::getFovY(float ratio) noexcept {
-    constexpr auto fovMin = 60.f;
-    constexpr auto fovMax = 70.f;
+    constexpr auto fovMin = 50.f;
+    constexpr auto fovMax = 72.f;
     constexpr auto ratioMin = 0.5f;
-    constexpr auto ratioMax = 2.f;
+    constexpr auto ratioMax = 3.f;
     const float croppedRatio = std::max(std::min(ratio, ratioMax), ratioMin);
     const float fovY = fovMax - (croppedRatio - ratioMin) / (ratioMax - ratioMin) * (fovMax - fovMin);
     return fovY * JBTypes::pi / 180.f;
 }
 
 Camera::Offset Camera::getOffset(float ratio) {
-    constexpr auto initialBehindBallDistance = 1.5f;
-    constexpr auto initialAboveBallDistance = 1.5f;
+    constexpr auto initialBehindBallDistance = 1.6f;
+    constexpr auto initialAboveBallDistance = 1.6f;
     constexpr auto initialZNear = 0.2f;
 
     const auto halfFovY = getFovY(ratio) / 2.f;
