@@ -17,9 +17,9 @@ UniformBufferBase::UniformBufferBase(
             fieldOffsets.begin(),
             fieldOffsets.end(),
             std::vector<GLubyte*>(),
-            [this](std::vector<GLubyte*> &current, GLint offset) {
+            [this](std::vector<GLubyte*> current, GLint offset) {
                 current.emplace_back(_uniformBufferContent.data() + offset);
-                return current;
+                return std::move(current);
             }
         )
     ),

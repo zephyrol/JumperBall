@@ -37,15 +37,10 @@ RenderGroup_sptr RenderGroup::createInstance(MeshDynamicGroup_uptr meshDynamicGr
     const auto &meshes = meshDynamicGroup->meshes();
 
     // 2. Merge all geometries
-    auto groupGeometry = std::accumulate(
-        meshes.begin() + 1,
-        meshes.end(),
-        meshes.front()->genMeshGeometry(),
-        [](MeshGeometry &current, const CstMesh_sptr &other) {
-            current.merge(other->genMeshGeometry());
-            return std::move(current);
-        }
-    );
+    auto groupGeometry = meshes.front()->genMeshGeometry();
+    for(auto it = meshes.begin() + 1; it != meshes.end(); ++it) {
+        groupGeometry.merge((*it)->genMeshGeometry());
+    }
 
     // 3. Create EBO
     const auto &indices = groupGeometry.indices();

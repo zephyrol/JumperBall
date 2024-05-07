@@ -1,4 +1,4 @@
-﻿/*
+/*
  * File: Player.cpp
  * Author: Morgenthaler S
  *
@@ -150,7 +150,7 @@ std::string Player::genSaveContent() {
             boolVector.cbegin(),
             boolVector.cend(),
             std::string(),
-            [](std::string &acc, bool booleanValue) {
+            [](const std::string &acc, bool booleanValue) {
                 return acc + (booleanValue ? std::string("1") : std::string("0"));
             });
     };

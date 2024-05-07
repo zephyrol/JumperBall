@@ -55,7 +55,7 @@ private:
      */
     template<typename T>
     static std::vector<std::unique_ptr<T>> filterUnused(
-        std::vector<std::unique_ptr<T> > &current,
+        std::vector<std::unique_ptr<T> > current,
         const std::function<std::unique_ptr<T>()> &vertexAttributeGenerationFunction
     );
 };
@@ -63,7 +63,7 @@ private:
 template<typename T>
 std::vector<std::unique_ptr<T>>
 VertexAttributeBase::filterUnused(
-    std::vector<std::unique_ptr<T>> &current,
+    std::vector<std::unique_ptr<T>> current,
     const std::function<std::unique_ptr<T>()> &vertexAttributeGenerationFunction
 ) {
     auto vertexAttribute = vertexAttributeGenerationFunction();

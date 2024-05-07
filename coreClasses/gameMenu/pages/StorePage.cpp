@@ -382,14 +382,14 @@ vecNode_sptr StorePage::createNodes(float ratio) {
             littleCoinNode,
             arrowNode
         },
-        [&createBallSkin](vecNode_sptr &current, const Node_sptr &coveringNode) {
+        [&createBallSkin](vecNode_sptr current, const Node_sptr &coveringNode) {
             auto skinNodes = createBallSkin(coveringNode);
             current.insert(
                 current.end(),
                 std::make_move_iterator(skinNodes.begin()),
                 std::make_move_iterator(skinNodes.end())
             );
-            return current;
+            return std::move(current);
         }
     );
 }
