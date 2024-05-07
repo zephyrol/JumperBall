@@ -389,7 +389,7 @@ vecNode_sptr StorePage::createNodes(float ratio) {
                 std::make_move_iterator(skinNodes.begin()),
                 std::make_move_iterator(skinNodes.end())
             );
-            return std::move(current);
+            return current;
         }
     );
 }

@@ -71,7 +71,6 @@ protected:
      *  @param localY Y position in range [-0.5, 0.5]
      *  @param quadScaleX Quad X scale. Scale = 1 means that the quad covers the entire node space.
      *  @param quadScaleY Quad X scale. Scale = 1 means that the quad covers the entire node space.
-     *  @param color Triangle color.
      *  @return LabelGeometry to display in menu
      */
     LabelGeometry createDisplayableQuad(
