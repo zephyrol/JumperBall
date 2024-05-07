@@ -20,13 +20,12 @@ using vecCstVertexAttributeBase_uptr = std::vector<CstVertexAttributeBase_uptr>;
 using vecVertexAttributeBase_uptr = std::vector<VertexAttributeBase_uptr>;
 
 class VertexAttributeBase {
-
-public:
+   public:
     VertexAttributeBase() = default;
 
-    VertexAttributeBase(const VertexAttributeBase &vertexAttributeBase) = delete;
+    VertexAttributeBase(const VertexAttributeBase& vertexAttributeBase) = delete;
 
-    VertexAttributeBase &operator=(const VertexAttributeBase &vertexAttributeBase) = delete;
+    VertexAttributeBase& operator=(const VertexAttributeBase& vertexAttributeBase) = delete;
 
     virtual void createDataOnGpu() const = 0;
 
@@ -43,47 +42,22 @@ public:
     /**
      * Use vertex attribute generation functions to gen them and filter the unused ones
      */
-    template<typename T>
+    template <typename T>
     static std::vector<std::unique_ptr<T>> genAndFilter(
-        const std::vector<std::function<std::unique_ptr<T>()> > &vertexAttributeGenerationFunctions
-    );
-
-private:
-
-    /**
-     * Binary operation function usually used in reduce function to filter the unused vertex attributes
-     */
-    template<typename T>
-    static std::vector<std::unique_ptr<T>> filterUnused(
-        std::vector<std::unique_ptr<T> > current,
-        const std::function<std::unique_ptr<T>()> &vertexAttributeGenerationFunction
-    );
+        const std::vector<std::function<std::unique_ptr<T>()>>& vertexAttributeGenerationFunctions);
 };
 
-template<typename T>
-std::vector<std::unique_ptr<T>>
-VertexAttributeBase::filterUnused(
-    std::vector<std::unique_ptr<T>> current,
-    const std::function<std::unique_ptr<T>()> &vertexAttributeGenerationFunction
-) {
-    auto vertexAttribute = vertexAttributeGenerationFunction();
-    if (vertexAttribute != nullptr) {
-        current.emplace_back(std::move(vertexAttribute));
-    }
-    return std::move(current);
-}
-
-template<typename T>
+template <typename T>
 std::vector<std::unique_ptr<T>> VertexAttributeBase::genAndFilter(
-    const std::vector<std::function<std::unique_ptr<T>()>> &vertexAttributeGenerationFunctions
-) {
-    return std::accumulate(
-        vertexAttributeGenerationFunctions.begin(),
-        vertexAttributeGenerationFunctions.end(),
-        std::vector<std::unique_ptr<T>>{},
-        VertexAttributeBase::filterUnused<T>
-    );
+    const std::vector<std::function<std::unique_ptr<T>()>>& vertexAttributeGenerationFunctions) {
+    std::vector<std::unique_ptr<T>> usefulVertexAttributes{};
+    for (const auto& vertexAttributeGenerationFunction : vertexAttributeGenerationFunctions) {
+        auto vertexAttribute = vertexAttributeGenerationFunction();
+        if (vertexAttribute != nullptr) {
+            usefulVertexAttributes.emplace_back(std::move(vertexAttribute));
+        }
+    }
+    return usefulVertexAttributes;
 }
 
-
-#endif //JUMPERBALLAPPLICATION_VERTEXATTRIBUTEBASE_H
+#endif  // JUMPERBALLAPPLICATION_VERTEXATTRIBUTEBASE_H
