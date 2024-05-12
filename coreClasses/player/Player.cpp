@@ -267,6 +267,7 @@ bool Player::areSoundsActivated() const {
 }
 
 void Player::switchLeftRightStatus() {
+    _needsSaveFile = true;
     _leftRightIsInverted = !_leftRightIsInverted;
 }
 

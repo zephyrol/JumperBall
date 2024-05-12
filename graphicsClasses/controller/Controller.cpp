@@ -90,6 +90,7 @@ void Controller::setValidateMouse(float mouseX, float mouseY) {
 
     const auto& currentPage = _menu->currentPage();
     const auto& currentLanguage = _player->isUsingEnglishLanguage();
+    const auto& currentLeftRightStatus = _player->isLeftRightInverted();
     const auto& currentMusicsStatus = _player->areMusicsActivated();
     const auto& currentSoundsStatus = _player->areSoundsActivated();
     _menu->mouseClick(mouseX, mouseY);
@@ -97,11 +98,12 @@ void Controller::setValidateMouse(float mouseX, float mouseY) {
     // Reset the viewer if the language has changed.
     const auto& newPage = _menu->currentPage();
     const auto newLanguage = _player->isUsingEnglishLanguage();
+    const auto newLeftRightStatus = _player->isLeftRightInverted();
     const auto newMusicsStatus = _player->areMusicsActivated();
     const auto newSoundsStatus = _player->areSoundsActivated();
 
     if (newPage != currentPage || newLanguage != currentLanguage || newMusicsStatus != currentMusicsStatus ||
-        newSoundsStatus != currentSoundsStatus) {
+        newSoundsStatus != currentSoundsStatus || newLeftRightStatus != currentLeftRightStatus) {
         _viewer->setPage(newPage);
         _scene->setNoAction();
     }

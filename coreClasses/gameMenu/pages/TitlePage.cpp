@@ -28,8 +28,8 @@ TitlePage::TitlePage(Player_sptr&& player,
       _jumperBallTitle(std::move(jumperBallTitle)),
       _play(std::move(play)),
       _store(std::move(store)),
-      _scrollingDown(std::move(scrollingDown)),
       _scrollingUp(std::move(scrollingUp)),
+      _scrollingDown(std::move(scrollingDown)),
       _language(std::move(language)),
       _musics(std::move(musics)),
       _sounds(std::move(sounds)),
@@ -50,7 +50,7 @@ void TitlePage::resize(float ratio) {
 
 void TitlePage::resetNodes() {
     const auto& nodes =
-        createNodes(_currentRatio, _player->isUsingEnglishLanguage(), _player->isLeftRightInverted());
+        createNodes(_currentRatio, _player->isUsingEnglishLanguage());
     _jumperBallTitle = nodes.at(0);
     _play = nodes.at(1);
     _store = nodes.at(2);
@@ -67,7 +67,7 @@ void TitlePage::resetNodes() {
 }
 
 TitlePage_sptr TitlePage::createInstance(Player_sptr player, float ratio) {
-    auto nodes = createNodes(ratio, player->isUsingEnglishLanguage(), player->isLeftRightInverted());
+    auto nodes = createNodes(ratio, player->isUsingEnglishLanguage());
     return std::make_shared<TitlePage>(
         std::move(player), std::move(nodes.at(0)), std::move(nodes.at(1)), std::move(nodes.at(2)),
         std::move(nodes.at(3)), std::move(nodes.at(4)), std::move(nodes.at(5)), std::move(nodes.at(6)),
@@ -75,7 +75,7 @@ TitlePage_sptr TitlePage::createInstance(Player_sptr player, float ratio) {
         createBackgroundLabel(std::move(nodes.at(11))), ratio);
 }
 
-vecNode_sptr TitlePage::createNodes(float ratio, bool english, bool isLeftRightReversed) {
+vecNode_sptr TitlePage::createNodes(float ratio, bool english) {
     const auto screenNode = std::make_shared<ScreenNode>(ratio);
     const auto resizedScreenNode = std::make_shared<ScaledNode>(screenNode, 0.95f);
     const auto mainTitleNode = std::make_shared<CenteredNode>(resizedScreenNode, 9.f / 16.f);
@@ -86,43 +86,39 @@ vecNode_sptr TitlePage::createNodes(float ratio, bool english, bool isLeftRightR
 
     const auto optionsParentNode = std::make_shared<CenteredNode>(mainTitleNode, 1.5f);
 
-    constexpr float optionsNodeRatio = 10.f;
+    constexpr float optionsNodeRatio = 15.f;
     const auto playNode =
         std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                       english ? 1.36f : 1.4f  // Because p creates an offset
+                                       english ? 1.36f : 1.38f  // Because p creates an offset
         );
 
     const auto storeNode =
         std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                       english ? 1.06f : 1.02f  // Because q creates an offset
+                                       english ? 1.11f : 1.09f  // Because q creates an offset
         );
 
     const auto languageNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                                             0.68f  // Because g letter creates an offset
+                                                             0.46f  // Because g letter creates an offset
     );
 
-    const auto scrollingUpNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                                                0.68f  // Because g letter creates an offset
-    );
+    const auto scrollingUpNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio, 0.85f);
 
-    const auto scrollingDownNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                                                  0.68f  // Because g letter creates an offset
-    );
+    const auto scrollingDownNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio, 0.73f);
 
     const auto musicNode =
         std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                       english ? 0.38f : 0.34f  // Because q creates an offset
+                                       english ? 0.22f : 0.20f  // Because q creates an offset
         );
 
     const auto soundNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                                          0.05f  // Because q creates an offset
+                                                          -0.05f  // Because q creates an offset
     );
 
-    const auto creditsNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio, -0.28f);
+    const auto creditsNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio, -0.33f);
 
     const auto exitNode =
         std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                       english ? -0.6f : -0.65f  // Because Q creates an offset
+                                       english ? -0.6f : -0.62f  // Because Q creates an offset
         );
 
     return {jumperBallTitle, playNode,  storeNode,   languageNode, scrollingUpNode, scrollingDownNode,
@@ -194,8 +190,8 @@ vecCstTextNode_uptr TitlePage::genTextNodes() const {
     textNodes.emplace_back(new TextNode(
         _scrollingUp, english ? "Left-right movements:" : "D;placements gauche-droite:", scrollingLabelsIds));
 
-    const auto leftRightStatus = getLeftRightStatus();
-    textNodes.emplace_back(new TextNode(_scrollingDown, getLeftRightStatus(), scrollingLabelsIds));
+    std::string leftRightStatus = getLeftRightStatus();
+    textNodes.emplace_back(new TextNode(_scrollingDown, std::move(leftRightStatus), scrollingLabelsIds));
 
     const std::string musicsStatus = _player->areMusicsActivated() ? "ON" : "OFF";
     textNodes.emplace_back(
@@ -238,6 +234,8 @@ void TitlePage::update(const Mouse& mouse) {
         _currentSelectedLabel = storeLabelId;
     } else if (nearest == _language) {
         _currentSelectedLabel = languageLabelId;
+    } else if (nearest == _scrollingUp || nearest == _scrollingDown) {
+        _currentSelectedLabel = scrollingLabelsIds;
     } else if (nearest == _musics) {
         _currentSelectedLabel = musicsLabelId;
     } else if (nearest == _sounds) {
@@ -255,5 +253,5 @@ vecCstLabel_sptr TitlePage::labels() const {
 
 vecNode_sptr TitlePage::createNodesToTestIntersection() const {
     return {_play,   _store,  _language, _scrollingDown, _scrollingUp,
-            _musics, _sounds, _credits,  _exitNode,_author};
+            _musics, _sounds, _credits,  _exitNode,      _author};
 }

@@ -84,7 +84,7 @@ class TitlePage : public Page {
     static constexpr int soundsLabelId = 7;
     static constexpr int exitLabelId = 8;
 
-    static vecNode_sptr createNodes(float ratio, bool english, bool isLeftRightReversed);
+    static vecNode_sptr createNodes(float ratio, bool english);
 
     vecNode_sptr createNodesToTestIntersection() const;
 };
