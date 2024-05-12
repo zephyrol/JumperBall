@@ -12,28 +12,27 @@ class TitlePage;
 using TitlePage_sptr = std::shared_ptr<TitlePage>;
 
 class TitlePage : public Page {
-public:
-
+   public:
     static TitlePage_sptr createInstance(Player_sptr player, float ratio);
 
     void resetNodes();
 
     void resize(float ratio) override;
 
-    explicit TitlePage(
-        Player_sptr &&player,
-        Node_sptr &&jumperBallTitle,
-        Node_sptr &&play,
-        Node_sptr &&store,
-        Node_sptr &&language,
-        Node_sptr &&musics,
-        Node_sptr &&sounds,
-        Node_sptr &&credits,
-        Node_sptr &&exitNode,
-        Node_sptr &&author,
-        Label_sptr &&backgroundLabel,
-        float currentRatio
-    );
+    explicit TitlePage(Player_sptr&& player,
+                       Node_sptr&& jumperBallTitle,
+                       Node_sptr&& play,
+                       Node_sptr&& store,
+                       Node_sptr&& language,
+                       Node_sptr&& scrollingUp,
+                       Node_sptr&& scrollingDown,
+                       Node_sptr&& musics,
+                       Node_sptr&& sounds,
+                       Node_sptr&& credits,
+                       Node_sptr&& exitNode,
+                       Node_sptr&& author,
+                       Label_sptr&& backgroundLabel,
+                       float currentRatio);
 
     void setLevelsPage(Page_sptr levelsPage);
 
@@ -45,7 +44,7 @@ public:
 
     Page_sptr click(float mouseX, float mouseY) override;
 
-    void update(const Mouse &mouse) override;
+    void update(const Mouse& mouse) override;
 
     std::string getVertexShaderName() const override;
 
@@ -53,11 +52,13 @@ public:
 
     vecCstLabel_sptr labels() const override;
 
-private:
+   private:
     Node_sptr _jumperBallTitle;
     Node_sptr _play;
     Node_sptr _store;
     Node_sptr _language;
+    Node_sptr _scrollingUp;
+    Node_sptr _scrollingDown;
     Node_sptr _musics;
     Node_sptr _sounds;
     Node_sptr _credits;
@@ -76,16 +77,16 @@ private:
 
     static constexpr int playLabelId = 1;
     static constexpr int storeLabelId = 2;
-    static constexpr int languageLabelId = 3;
-    static constexpr int creditsLabelId = 4;
-    static constexpr int musicsLabelId = 5;
-    static constexpr int soundsLabelId = 6;
-    static constexpr int exitLabelId = 7;
+    static constexpr int scrollingLabelsIds = 3;
+    static constexpr int languageLabelId = 4;
+    static constexpr int creditsLabelId = 5;
+    static constexpr int musicsLabelId = 6;
+    static constexpr int soundsLabelId = 7;
+    static constexpr int exitLabelId = 8;
 
-    static vecNode_sptr createNodes(float ratio, bool english);
+    static vecNode_sptr createNodes(float ratio, bool english, bool isLeftRightReversed);
 
     vecNode_sptr createNodesToTestIntersection() const;
 };
 
-
-#endif //JUMPERBALLAPPLICATION_TITLEPAGE_H
+#endif  // JUMPERBALLAPPLICATION_TITLEPAGE_H
