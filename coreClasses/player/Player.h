@@ -25,7 +25,7 @@ class Player {
                     bool frenchLanguageIsActivated,
                     bool musicsAreActivated,
                     bool soundsAreActivated,
-                    bool leftRightIsInverted,
+                    bool leftRightIsReversed,
                     float initialAdvertisementTime);
 
     static Player_sptr createInstance(DoubleChronometer_sptr doubleChronometer, const std::string& saveFile);
@@ -66,7 +66,7 @@ class Player {
 
     void switchLeftRightStatus();
 
-    bool isLeftRightInverted() const;
+    bool isLeftRightReversed() const;
 
     void addValidationSound();
 
@@ -138,7 +138,7 @@ class Player {
     bool _frenchLanguageIsActivated;
     bool _musicsAreActivated;
     bool _soundsAreActivated;
-    bool _leftRightIsInverted;
+    bool _leftRightIsReversed;
 
     float _initialAdvertisementTime;
     Chronometer _advertisementChronometer;

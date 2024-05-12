@@ -22,7 +22,7 @@ Player::Player(DoubleChronometer_sptr doubleChronometer,
                bool frenchLanguageIsActivated,
                bool musicsAreActivated,
                bool soundsAreActivated,
-               bool leftRightIsInverted,
+               bool leftRightIsReversed,
                float initialAdvertisementTime)
     : _doubleChronometer(std::move(doubleChronometer)),
       _status(Player::Status::InMenu),
@@ -36,7 +36,7 @@ Player::Player(DoubleChronometer_sptr doubleChronometer,
       _frenchLanguageIsActivated(frenchLanguageIsActivated),
       _musicsAreActivated(musicsAreActivated),
       _soundsAreActivated(soundsAreActivated),
-      _leftRightIsInverted(leftRightIsInverted),
+      _leftRightIsReversed(leftRightIsReversed),
       _initialAdvertisementTime(initialAdvertisementTime),
       _advertisementChronometer(true),
       _timePointSavedFile(Chronometer::getTimePointMSNow()),
@@ -159,7 +159,7 @@ std::string Player::genSaveContent() {
                               std::to_string(_currentBallSkin) + " " +
                               (_frenchLanguageIsActivated ? "1" : "0") + " " +
                               (_musicsAreActivated ? "1" : "0") + " " + (_soundsAreActivated ? "1" : "0") +
-                              " " + (_leftRightIsInverted ? "1" : "0") + " " +
+                              " " + (_leftRightIsReversed ? "1" : "0") + " " +
                               std::to_string(static_cast<unsigned int>(initialAdvertisementTimeFloat));
 
     return SaveFileOutput(std::move(saveContent)).getOutput();
@@ -195,14 +195,14 @@ Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, con
     const auto frenchLanguageIsActivated = readBoolean();
     const auto musicsAreActivated = readBoolean();
     const auto soundsAreActivated = readBoolean();
-    const auto leftRightIsInverted = readBoolean();
+    const auto leftRightIsReversed = readBoolean();
 
     const auto initialAdvertisementTimeUint = Player::readValue<unsigned int>(iss);
     const auto initialAdvertisementTime = static_cast<float>(initialAdvertisementTimeUint);
 
     return std::make_shared<Player>(std::move(doubleChronometer), money, levelProgression, ballSkins,
                                     currentBallSkin, frenchLanguageIsActivated, musicsAreActivated,
-                                    soundsAreActivated, leftRightIsInverted, initialAdvertisementTime);
+                                    soundsAreActivated, leftRightIsReversed, initialAdvertisementTime);
 }
 
 CstChronometer_sptr Player::getCreationChronometer() const {
@@ -268,11 +268,11 @@ bool Player::areSoundsActivated() const {
 
 void Player::switchLeftRightStatus() {
     _needsSaveFile = true;
-    _leftRightIsInverted = !_leftRightIsInverted;
+    _leftRightIsReversed = !_leftRightIsReversed;
 }
 
-bool Player::isLeftRightInverted() const {
-    return _leftRightIsInverted;
+bool Player::isLeftRightReversed() const {
+    return _leftRightIsReversed;
 }
 
 std::string Player::genOutputs() {

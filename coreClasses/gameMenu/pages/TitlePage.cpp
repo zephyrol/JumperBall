@@ -181,9 +181,9 @@ vecCstTextNode_uptr TitlePage::genTextNodes() const {
 
     const auto getLeftRightStatus = [this, english]() -> std::string {
         if (english) {
-            return _player->isLeftRightInverted() ? "Reversed" : "Natural";
+            return _player->isLeftRightReversed() ? "Reversed" : "Natural";
         }
-        return _player->isLeftRightInverted() ? "Invers;" : "Naturel";
+        return _player->isLeftRightReversed() ? "Invers;" : "Naturel";
     };
 
     textNodes.emplace_back(new TextNode(

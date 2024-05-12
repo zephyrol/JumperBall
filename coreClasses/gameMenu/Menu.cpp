@@ -72,7 +72,7 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr& player,
     const auto inGamePage = InGamePage::createInstance(
         player, pausePage, ratio, std::move(itemsContainer),
         createTutorial(player->getCurrentLevel(), movableObject, camera, player->isUsingEnglishLanguage(),
-                       isUsingTouchScreen, player->isLeftRightInverted()));
+                       isUsingTouchScreen, player->isLeftRightReversed()));
     const auto successPage = SuccessPage::createInstance(player, titlePage, ratio);
     const auto failurePage = FailurePage::createInstance(player, titlePage, ratio);
     const auto creditsPage = CreditsPage::createInstance(player, titlePage, ratio);
@@ -157,5 +157,5 @@ void Menu::setBackgroundMap(CstItemsContainer_sptr itemsContainer,
     _inGamePage->setItemsContainer(std::move(itemsContainer));
     _inGamePage->setTutorial(createTutorial(_player->getCurrentLevel(), movableObject, camera,
                                             _player->isUsingEnglishLanguage(), _isUsingTouchScreen,
-                                            _player->isLeftRightInverted()));
+                                            _player->isLeftRightReversed()));
 }
