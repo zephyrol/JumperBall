@@ -49,8 +49,7 @@ void TitlePage::resize(float ratio) {
 }
 
 void TitlePage::resetNodes() {
-    const auto& nodes =
-        createNodes(_currentRatio, _player->isUsingEnglishLanguage());
+    const auto& nodes = createNodes(_currentRatio, _player->isUsingEnglishLanguage());
     _jumperBallTitle = nodes.at(0);
     _play = nodes.at(1);
     _store = nodes.at(2);
@@ -182,9 +181,9 @@ vecCstTextNode_uptr TitlePage::genTextNodes() const {
 
     const auto getLeftRightStatus = [this, english]() -> std::string {
         if (english) {
-            return _player->isLeftRightInverted() ? "Natural" : "Reversed";
+            return _player->isLeftRightInverted() ? "Reversed" : "Natural";
         }
-        return _player->isLeftRightInverted() ? "Naturel" : "Invers;";
+        return _player->isLeftRightInverted() ? "Invers;" : "Naturel";
     };
 
     textNodes.emplace_back(new TextNode(
