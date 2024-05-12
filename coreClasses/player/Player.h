@@ -8,40 +8,31 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "system/UpdateOutput.h"
 #include "system/DoubleChronometer.h"
-
+#include "system/UpdateOutput.h"
 
 class Player;
 
 using Player_sptr = std::shared_ptr<Player>;
 
 class Player {
-public:
-    explicit Player(
-        DoubleChronometer_sptr doubleChronometer,
-        unsigned int money,
-        size_t levelProgression,
-        std::vector<bool> ballSkins,
-        unsigned int currentBallSkin,
-        bool frenchLanguageIsActivated,
-        bool musicsAreActivated,
-        bool soundsAreActivated,
-        float initialAdvertisementTime
-    );
+   public:
+    explicit Player(DoubleChronometer_sptr doubleChronometer,
+                    unsigned int money,
+                    size_t levelProgression,
+                    std::vector<bool> ballSkins,
+                    unsigned int currentBallSkin,
+                    bool frenchLanguageIsActivated,
+                    bool musicsAreActivated,
+                    bool soundsAreActivated,
+                    bool leftRightIsInverted,
+                    float initialAdvertisementTime);
 
-    static Player_sptr createInstance(
-        DoubleChronometer_sptr doubleChronometer,
-        const std::string &saveFile
-    );
+    static Player_sptr createInstance(DoubleChronometer_sptr doubleChronometer, const std::string& saveFile);
 
-    enum class Status {
-        InGame, InMenu, InTransition
-    };
+    enum class Status { InGame, InMenu, InTransition };
 
-    enum class GameStatus {
-        None, Winner, Loser
-    };
+    enum class GameStatus { None, Winner, Loser };
 
     CstDoubleChronometer_sptr getDoubleChronometer() const;
 
@@ -72,6 +63,10 @@ public:
     void switchSoundsStatus();
 
     bool areSoundsActivated() const;
+
+    void switchLeftRightStatus();
+
+    bool isLeftRightInverted() const;
 
     void addValidationSound();
 
@@ -124,11 +119,10 @@ public:
     bool hasBoughtSkin(size_t skinNumber) const;
     static constexpr unsigned int maxLevel = 120;
 
-    template<typename T>
+    template <typename T>
     static T readValue(std::istringstream& stream);
 
-private:
-
+   private:
     const DoubleChronometer_sptr _doubleChronometer;
     Status _status;
     GameStatus _gameStatus;
@@ -144,6 +138,7 @@ private:
     bool _frenchLanguageIsActivated;
     bool _musicsAreActivated;
     bool _soundsAreActivated;
+    bool _leftRightIsInverted;
 
     float _initialAdvertisementTime;
     Chronometer _advertisementChronometer;
@@ -157,12 +152,11 @@ private:
     std::string genSaveContent();
 };
 
-template<typename T>
+template <typename T>
 T Player::readValue(std::istringstream& stream) {
     T value;
     stream >> value;
     return value;
 }
-
 
 #endif /* PLAYER_H */

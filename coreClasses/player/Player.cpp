@@ -5,6 +5,7 @@
  * Created on 10 mai 2020, 11:40
  */
 #include "Player.h"
+#include <sstream>
 #include "system/GoToAuthorPageOutput.h"
 #include "system/MusicStatusOutput.h"
 #include "system/RequestQuitOutput.h"
@@ -12,38 +13,36 @@
 #include "system/SaveFileOutput.h"
 #include "system/SoundOutput.h"
 #include "system/SoundStatusOutput.h"
-#include <sstream>
 
-Player::Player(
-    DoubleChronometer_sptr doubleChronometer,
-    unsigned int money,
-    size_t levelProgression,
-    std::vector<bool> ballSkins,
-    unsigned int currentBallSkin,
-    bool frenchLanguageIsActivated,
-    bool musicsAreActivated,
-    bool soundsAreActivated,
-    float initialAdvertisementTime
-) :
-    _doubleChronometer(std::move(doubleChronometer)),
-    _status(Player::Status::InMenu),
-    _gameStatus(Player::GameStatus::None),
-    _updateOutputs{},
-    _money(money),
-    _previousMoney(_money),
-    _levelProgression(levelProgression),
-    _ballSkins(std::move(ballSkins)),
-    _currentBallSkin(currentBallSkin),
-    _frenchLanguageIsActivated(frenchLanguageIsActivated),
-    _musicsAreActivated(musicsAreActivated),
-    _soundsAreActivated(soundsAreActivated),
-    _initialAdvertisementTime(initialAdvertisementTime),
-    _advertisementChronometer(true),
-    _timePointSavedFile(Chronometer::getTimePointMSNow()),
-    _currentLevel(_levelProgression),
-    _remainingTime(0.f),
-    _needsSaveFile(false) {
-}
+Player::Player(DoubleChronometer_sptr doubleChronometer,
+               unsigned int money,
+               size_t levelProgression,
+               std::vector<bool> ballSkins,
+               unsigned int currentBallSkin,
+               bool frenchLanguageIsActivated,
+               bool musicsAreActivated,
+               bool soundsAreActivated,
+               bool leftRightIsInverted,
+               float initialAdvertisementTime)
+    : _doubleChronometer(std::move(doubleChronometer)),
+      _status(Player::Status::InMenu),
+      _gameStatus(Player::GameStatus::None),
+      _updateOutputs{},
+      _money(money),
+      _previousMoney(_money),
+      _levelProgression(levelProgression),
+      _ballSkins(std::move(ballSkins)),
+      _currentBallSkin(currentBallSkin),
+      _frenchLanguageIsActivated(frenchLanguageIsActivated),
+      _musicsAreActivated(musicsAreActivated),
+      _soundsAreActivated(soundsAreActivated),
+      _leftRightIsInverted(leftRightIsInverted),
+      _initialAdvertisementTime(initialAdvertisementTime),
+      _advertisementChronometer(true),
+      _timePointSavedFile(Chronometer::getTimePointMSNow()),
+      _currentLevel(_levelProgression),
+      _remainingTime(0.f),
+      _needsSaveFile(false) {}
 
 size_t Player::levelProgression() const {
     return _levelProgression;
@@ -145,41 +144,35 @@ std::string Player::genSaveContent() {
     }
     _needsSaveFile = false;
 
-    const auto boolVectorToString = [](const std::vector<bool> &boolVector) {
-        return std::accumulate(
-            boolVector.cbegin(),
-            boolVector.cend(),
-            std::string(),
-            [](const std::string &acc, bool booleanValue) {
-                return acc + (booleanValue ? std::string("1") : std::string("0"));
-            });
+    const auto boolVectorToString = [](const std::vector<bool>& boolVector) {
+        return std::accumulate(boolVector.cbegin(), boolVector.cend(), std::string(),
+                               [](const std::string& acc, bool booleanValue) {
+                                   return acc + (booleanValue ? std::string("1") : std::string("0"));
+                               });
     };
 
     const auto initialAdvertisementTimeFloat =
         _initialAdvertisementTime + _advertisementChronometer.getTime();
     constexpr auto currentSaveVersion = 0;
-    std::string saveContent =
-        std::to_string(currentSaveVersion) + " "
-        + std::to_string(_money) + " "
-        + std::to_string(_levelProgression) + " "
-        + boolVectorToString(_ballSkins) + " "
-        + std::to_string(_currentBallSkin) + " "
-        + (_frenchLanguageIsActivated ? "1" : "0") + " "
-        + (_musicsAreActivated ? "1" : "0") + " "
-        + (_soundsAreActivated ? "1" : "0") + " "
-        + std::to_string(static_cast<unsigned int>(initialAdvertisementTimeFloat));
+    std::string saveContent = std::to_string(currentSaveVersion) + " " + std::to_string(_money) + " " +
+                              std::to_string(_levelProgression) + " " + boolVectorToString(_ballSkins) + " " +
+                              std::to_string(_currentBallSkin) + " " +
+                              (_frenchLanguageIsActivated ? "1" : "0") + " " +
+                              (_musicsAreActivated ? "1" : "0") + " " + (_soundsAreActivated ? "1" : "0") +
+                              " " + (_leftRightIsInverted ? "1" : "0") + " " +
+                              std::to_string(static_cast<unsigned int>(initialAdvertisementTimeFloat));
 
     return SaveFileOutput(std::move(saveContent)).getOutput();
 }
 
-Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, const std::string &saveFile) {
+Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, const std::string& saveFile) {
     std::istringstream iss(saveFile);
 
     const auto readBooleanVector = [&iss]() {
         std::vector<bool> values;
         std::string w;
         iss >> w;
-        for (const auto c: w) {
+        for (const auto c : w) {
             values.push_back(c == '1');
         }
         return values;
@@ -202,23 +195,15 @@ Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, con
     const auto frenchLanguageIsActivated = readBoolean();
     const auto musicsAreActivated = readBoolean();
     const auto soundsAreActivated = readBoolean();
+    const auto leftRightIsInverted = readBoolean();
 
     const auto initialAdvertisementTimeUint = Player::readValue<unsigned int>(iss);
     const auto initialAdvertisementTime = static_cast<float>(initialAdvertisementTimeUint);
 
-    return std::make_shared<Player>(
-        std::move(doubleChronometer),
-        money,
-        levelProgression,
-        ballSkins,
-        currentBallSkin,
-        frenchLanguageIsActivated,
-        musicsAreActivated,
-        soundsAreActivated,
-        initialAdvertisementTime
-    );
+    return std::make_shared<Player>(std::move(doubleChronometer), money, levelProgression, ballSkins,
+                                    currentBallSkin, frenchLanguageIsActivated, musicsAreActivated,
+                                    soundsAreActivated, leftRightIsInverted, initialAdvertisementTime);
 }
-
 
 CstChronometer_sptr Player::getCreationChronometer() const {
     return _doubleChronometer->first();
@@ -281,6 +266,14 @@ bool Player::areSoundsActivated() const {
     return _soundsAreActivated;
 }
 
+void Player::switchLeftRightStatus() {
+    _leftRightIsInverted = !_leftRightIsInverted;
+}
+
+bool Player::isLeftRightInverted() const {
+    return _leftRightIsInverted;
+}
+
 std::string Player::genOutputs() {
     return genSaveContent() + UpdateOutput::combineUpdateOutputs(std::move(_updateOutputs));
 }
@@ -297,8 +290,7 @@ void Player::addNotEnoughMoneySound() {
     _updateOutputs.emplace_back(new SoundOutput("notEnoughMoney"));
 }
 
-void Player::updateAdvertisementChronometer(const Chronometer::TimePointMs &updatingTime) {
-
+void Player::updateAdvertisementChronometer(const Chronometer::TimePointMs& updatingTime) {
     // 1 Update save file frequently
     constexpr auto saveFileDelay = 20.f;
     if (Chronometer::getFloatFromDurationMS(updatingTime - _timePointSavedFile) > saveFileDelay) {
@@ -318,7 +310,7 @@ void Player::resumeChronometer() {
 }
 
 void Player::checkAdvertisement() {
-    static constexpr float timeToRunAd = 180.f; // 3 minutes
+    static constexpr float timeToRunAd = 180.f;  // 3 minutes
     const float spentTime = _initialAdvertisementTime + _advertisementChronometer.getTime();
     if (spentTime > timeToRunAd) {
         _advertisementChronometer.reset();
@@ -328,5 +320,5 @@ void Player::checkAdvertisement() {
 }
 
 void Player::addQuitRequest() {
-  _updateOutputs.emplace_back(new RequestQuitOutput());
+    _updateOutputs.emplace_back(new RequestQuitOutput());
 }
