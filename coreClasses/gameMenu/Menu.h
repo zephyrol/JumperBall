@@ -64,7 +64,8 @@ class Menu {
                                         const CstMovableObject_sptr& movableObject,
                                         const CstAboveMovingCamera_sptr& camera,
                                         bool isUsingEnglish,
-                                        bool isUsingTouchScreen);
+                                        bool isUsingTouchScreen,
+                                        bool isLeftRightReverted);
 };
 
 #endif /* MENU_H */

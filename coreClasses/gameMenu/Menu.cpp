@@ -69,10 +69,10 @@ std::shared_ptr<Menu> Menu::getJumperBallMenu(const Player_sptr& player,
     const auto titlePage = TitlePage::createInstance(player, ratio);
     const auto levelsPage = LevelsPage::createInstance(player, titlePage, ratio);
     const auto pausePage = PausePage::createInstance(player, titlePage, ratio);
-    const auto inGamePage =
-        InGamePage::createInstance(player, pausePage, ratio, std::move(itemsContainer),
-                                   createTutorial(player->getCurrentLevel(), movableObject, camera,
-                                                  player->isUsingEnglishLanguage(), isUsingTouchScreen));
+    const auto inGamePage = InGamePage::createInstance(
+        player, pausePage, ratio, std::move(itemsContainer),
+        createTutorial(player->getCurrentLevel(), movableObject, camera, player->isUsingEnglishLanguage(),
+                       isUsingTouchScreen, player->isLeftRightInverted()));
     const auto successPage = SuccessPage::createInstance(player, titlePage, ratio);
     const auto failurePage = FailurePage::createInstance(player, titlePage, ratio);
     const auto creditsPage = CreditsPage::createInstance(player, titlePage, ratio);
@@ -119,12 +119,13 @@ Tutorial_uptr Menu::createTutorial(size_t level,
                                    const CstMovableObject_sptr& movableObject,
                                    const CstAboveMovingCamera_sptr& camera,
                                    bool isUsingEnglish,
-                                   bool isUsingTouchScreen) {
+                                   bool isUsingTouchScreen,
+                                   bool isLeftRightReverted) {
     std::map<size_t, std::function<Tutorial_uptr()>> tutorialFactory{
         {1,
-         [movableObject, isUsingEnglish, isUsingTouchScreen]() {
-             return std::unique_ptr<Tutorial>(
-                 new MovementTutorial(movableObject, isUsingEnglish, isUsingTouchScreen));
+         [movableObject, isUsingEnglish, isUsingTouchScreen, isLeftRightReverted]() {
+             return std::unique_ptr<Tutorial>(new MovementTutorial(movableObject, isUsingEnglish,
+                                                                   isUsingTouchScreen, isLeftRightReverted));
          }},
         {2,
          [movableObject, isUsingEnglish]() {
@@ -155,5 +156,6 @@ void Menu::setBackgroundMap(CstItemsContainer_sptr itemsContainer,
                             const CstAboveMovingCamera_sptr& camera) {
     _inGamePage->setItemsContainer(std::move(itemsContainer));
     _inGamePage->setTutorial(createTutorial(_player->getCurrentLevel(), movableObject, camera,
-                                            _player->isUsingEnglishLanguage(), _isUsingTouchScreen));
+                                            _player->isUsingEnglishLanguage(), _isUsingTouchScreen,
+                                            _player->isLeftRightInverted()));
 }

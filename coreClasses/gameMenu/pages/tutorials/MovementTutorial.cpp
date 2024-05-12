@@ -6,10 +6,12 @@
 
 MovementTutorial::MovementTutorial(CstMovableObject_sptr movableObject,
                                    bool isInEnglish,
-                                   bool isUsingTouchScreen)
+                                   bool isUsingTouchScreen,
+                                   bool isLeftRightReverted)
     : _movableObject(std::move(movableObject)),
       _isInEnglish(isInEnglish),
       _isUsingTouchScreen(isUsingTouchScreen),
+      _isLeftRightReverted(isLeftRightReverted),
       _currentStep(0),
       _chronometer(true),
       _stepsConditions({[this]() { return _chronometer.getTime() > 2.f; },
@@ -30,13 +32,15 @@ std::vector<Tutorial::Message> MovementTutorial::getMessages() const {
     if (_isUsingTouchScreen) {
         if (_isInEnglish) {
             return {{"Swipe up to go ahead", ""},
-                    {"Swipe left to turn right", ""},
-                    {"Swipe right to turn left", ""},
+                    {"Swipe " + std::string(_isLeftRightReverted ? "right" : "left") + " to turn right", ""},
+                    {"Swipe " + std::string(_isLeftRightReverted ? "left" : "right") + " to turn left", ""},
                     finishLevel};
         }
         return {{"Balayez vers le haut", "pour avancer"},
-                {"Balayez vers la gauche", "pour tourner ` droite"},
-                {"Balayez vers la droite", "pour tourner ` gauche"},
+                {"Balayez vers la " + std::string(_isLeftRightReverted ? "droite" : "gauche"),
+                 "pour tourner ` droite"},
+                {"Balayez vers la " + std::string(_isLeftRightReverted ? "gauche" : "droite"),
+                 "pour tourner ` gauche"},
                 finishLevel};
     }
     if (_isInEnglish) {

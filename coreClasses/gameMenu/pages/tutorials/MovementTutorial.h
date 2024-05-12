@@ -10,7 +10,7 @@
 
 class MovementTutorial : public Tutorial {
    public:
-    explicit MovementTutorial(CstMovableObject_sptr movableObject, bool isInEnglish, bool isUsingTouchScreen);
+    explicit MovementTutorial(CstMovableObject_sptr movableObject, bool isInEnglish, bool isUsingTouchScreen, bool isLeftRightReverted);
 
     std::vector<Tutorial::Message> getMessages() const override;
 
@@ -24,6 +24,7 @@ class MovementTutorial : public Tutorial {
     const CstMovableObject_sptr _movableObject;
     const bool _isInEnglish;
     const bool _isUsingTouchScreen;
+    const bool _isLeftRightReverted;
     size_t _currentStep;
     Chronometer _chronometer;
     const std::vector<std::function<bool()>> _stepsConditions;
