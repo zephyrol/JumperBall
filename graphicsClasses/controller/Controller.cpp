@@ -51,7 +51,6 @@ Controller::Controller(const size_t& screenWidth,
              [this]() { _player->isLeftRightReversed() ? _scene->setRight() : _scene->setLeft(); },
              [this]() { _player->isLeftRightReversed() ? _scene->setLeft() : _scene->setRight(); },
              [this](float mouseX, float mouseY) { setValidateMouse(mouseX, mouseY); },
-             []() {},
              [this]() { _scene->setNoAction(); }),
       _outputs{},
       _input(Controller::Input::Keyboard) {}

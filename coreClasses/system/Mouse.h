@@ -27,7 +27,6 @@ public:
         const std::function<void()> &eastActionFunc,
         const std::function<void()> &westActionFunc,
         std::function<void(float mouseX, float mouseY)> validateActionFunc,
-        std::function<void()> longPressActionFunc,
         std::function<void()> releaseFunction
     );
 
@@ -72,7 +71,6 @@ private:
 
     const std::vector<std::function<void()> > _directionActionFunctions;
     const std::function<void(float mouseX, float mouseY)> _validateActionFunction;
-    const std::function<void()> _longPressActionFunction;
     const std::function<void()> _releaseFunction;
 
     std::shared_ptr<MouseCoords> _mouseCoords;

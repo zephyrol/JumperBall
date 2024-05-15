@@ -11,7 +11,6 @@ Mouse::Mouse(
     const std::function<void()> &eastActionFunc,
     const std::function<void()> &westActionFunc,
     std::function<void(float mouseX, float mouseY)> validateActionFunc,
-    std::function<void()> longPressActionFunc,
     std::function<void()> releaseFunction
 ) :
     _directionActionFunctions{
@@ -21,7 +20,6 @@ Mouse::Mouse(
         {westActionFunc}
     },
     _validateActionFunction(std::move(validateActionFunc)),
-    _longPressActionFunction(std::move(longPressActionFunc)),
     _releaseFunction(std::move(releaseFunction)),
     _mouseCoords(nullptr),
     _movementCircle(nullptr),
@@ -125,11 +123,7 @@ void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
         return;
     }
 
-    constexpr auto pressingDetectionThreshold = 0.1f; // 0.1 seconds
     if (movement == nullptr) {
-        if (timeSinceMovementCircleCreation > pressingDetectionThreshold) {
-            _longPressActionFunction();
-        }
         return;
     }
     if (
