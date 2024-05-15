@@ -5,26 +5,25 @@
 
 #include <utility>
 
-Mouse::Mouse(
-    const std::function<void()> &northActionFunc,
-    const std::function<void()> &southActionFunc,
-    const std::function<void()> &eastActionFunc,
-    const std::function<void()> &westActionFunc,
-    std::function<void(float mouseX, float mouseY)> validateActionFunc,
-    std::function<void()> releaseFunction
-) :
-    _directionActionFunctions{
-        {northActionFunc},
-        {southActionFunc},
-        {eastActionFunc},
-        {westActionFunc}
-    },
-    _validateActionFunction(std::move(validateActionFunc)),
-    _releaseFunction(std::move(releaseFunction)),
-    _mouseCoords(nullptr),
-    _movementCircle(nullptr),
-    _isPressed(false) {
-}
+Mouse::Mouse(const std::function<void()>& northActionFunc,
+             const std::function<void()>& southActionFunc,
+             const std::function<void()>& eastActionFunc,
+             const std::function<void()>& westActionFunc,
+             float northActionRepeatingDuration,
+             float southActionRepeatingDuration,
+             float eastActionRepeatingDuration,
+             float westActionRepeatingDuration,
+             std::function<void(float mouseX, float mouseY)> validateActionFunc,
+             std::function<void()> releaseFunction)
+    : _directionActionFunctions{northActionFunc, southActionFunc, eastActionFunc, westActionFunc},
+      _directionActionRepeatingDurations{northActionRepeatingDuration, southActionRepeatingDuration,
+                                         eastActionRepeatingDuration, westActionRepeatingDuration},
+      _validateActionFunction(std::move(validateActionFunc)),
+      _releaseFunction(std::move(releaseFunction)),
+      _mouseCoords(nullptr),
+      _movementCircle(nullptr),
+      _directionActionTimePoint(nullptr),
+      _isPressed(false) {}
 
 void Mouse::press(float posX, float posY) {
     const Mouse::MouseCoords mouseCoords{posX, posY};
@@ -36,112 +35,87 @@ void Mouse::release() {
     _isPressed = false;
 }
 
-void Mouse::update(const Chronometer::TimePointMs &updatingTime) {
+void Mouse::update(const Chronometer::TimePointMs& updatingTime) {
     !_isPressed ? releasedMouseUpdate(updatingTime) : pressedMouseUpdate(updatingTime);
 }
 
-void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
+void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs& updatingTime) {
     if (!_movementCircle) {
-        _movementCircle = std::unique_ptr<MovementCircle>(
-            new MovementCircle{
-                nullptr,
-                *_mouseCoords,
-                updatingTime
-            }
-        );
+        _movementCircle =
+            std::unique_ptr<MovementCircle>(new MovementCircle{nullptr, *_mouseCoords, updatingTime});
     }
 
-    const auto &directionStateCoords = _movementCircle->mouseCoords;
-    const auto movementLength = computeDistance(
-        directionStateCoords.xCoord,
-        directionStateCoords.yCoord,
-        _mouseCoords->xCoord,
-        _mouseCoords->yCoord
-    );
+    const auto& directionStateCoords = _movementCircle->mouseCoords;
+    const auto movementLength = computeDistance(directionStateCoords.xCoord, directionStateCoords.yCoord,
+                                                _mouseCoords->xCoord, _mouseCoords->yCoord);
 
     const auto computeCardinalDistance = [this, directionStateCoords, movementLength](
-        const Mouse::CardinalPoint &cardinalPoint
-    ) -> CardinalDistance {
-        const auto &point = cardinalPoint.point;
-        return {
-            cardinalPoint.direction, computeDistance(
-                directionStateCoords.xCoord + point.first * movementLength,
-                directionStateCoords.yCoord + point.second * movementLength,
-                _mouseCoords->xCoord,
-                _mouseCoords->yCoord
-            ) / cardinalPoint.weight
-        };
+                                             const Mouse::CardinalPoint& cardinalPoint) -> CardinalDistance {
+        const auto& point = cardinalPoint.point;
+        return {cardinalPoint.direction,
+                computeDistance(directionStateCoords.xCoord + point.first * movementLength,
+                                directionStateCoords.yCoord + point.second * movementLength,
+                                _mouseCoords->xCoord, _mouseCoords->yCoord) /
+                    cardinalPoint.weight};
     };
 
     std::vector<Mouse::CardinalDistance> cardinalDistances(cardinalsPoints.size());
-    std::transform(
-        cardinalsPoints.begin(),
-        cardinalsPoints.end(),
-        cardinalDistances.begin(),
-        computeCardinalDistance
-    );
+    std::transform(cardinalsPoints.begin(), cardinalsPoints.end(), cardinalDistances.begin(),
+                   computeCardinalDistance);
 
     Mouse::CardinalDistance nearestCardinal = cardinalDistances.front();
     for (auto iter = cardinalDistances.begin() + 1; iter != cardinalDistances.end(); ++iter) {
-        const auto &cardinal = *iter;
+        const auto& cardinal = *iter;
         if (cardinal.distance < nearestCardinal.distance) {
             nearestCardinal = cardinal;
         }
     }
     constexpr auto movingThreshold = 0.05f;
-    if (computeDistance(
-        _mouseCoords->xCoord,
-        _mouseCoords->yCoord,
-        _movementCircle->mouseCoords.xCoord,
-        _movementCircle->mouseCoords.yCoord
-    ) > movingThreshold) {
-        _movementCircle = std::unique_ptr<MovementCircle>(
-            new MovementCircle{
-                std::unique_ptr<ScreenDirection>(new ScreenDirection(nearestCardinal.direction)),
-                *_mouseCoords,
-                updatingTime
-            }
-        );
-        executeDirectionActionFunction();
+    if (computeDistance(_mouseCoords->xCoord, _mouseCoords->yCoord, _movementCircle->mouseCoords.xCoord,
+                        _movementCircle->mouseCoords.yCoord) > movingThreshold) {
+        _movementCircle = std::unique_ptr<MovementCircle>(new MovementCircle{
+            std::unique_ptr<ScreenDirection>(new ScreenDirection(nearestCardinal.direction)), *_mouseCoords,
+            updatingTime});
+        executeDirectionActionFunction(updatingTime);
         return;
     }
 
-    const auto &movement = _movementCircle->movement;
-    constexpr float updatingDirectionDetectionThreshold = 0.3f; // 0.3 seconds
-    const float timeSinceMovementCircleCreation = Chronometer::getFloatFromDurationMS(
-        updatingTime - _movementCircle->creationTime
-    );
-
-    if (movement != nullptr && timeSinceMovementCircleCreation > updatingDirectionDetectionThreshold) {
-        _movementCircle = std::unique_ptr<MovementCircle>(
-            new MovementCircle{
-                std::unique_ptr<ScreenDirection>(new ScreenDirection(*movement)),
-                *_mouseCoords,
-                updatingTime
-            }
-        );
-        return;
-    }
+    const auto& movement = _movementCircle->movement;
+    constexpr float updatingDirectionDetectionThreshold = 0.3f;  // 0.3 seconds
+    const float timeSinceMovementCircleCreation =
+        Chronometer::getFloatFromDurationMS(updatingTime - _movementCircle->creationTime);
 
     if (movement == nullptr) {
         return;
     }
-    if (
-        *movement == Mouse::ScreenDirection::West
-        || *movement == Mouse::ScreenDirection::East
-        || *movement == Mouse::ScreenDirection::North
-    ) {
-        _releaseFunction();
+
+    if (timeSinceMovementCircleCreation > updatingDirectionDetectionThreshold) {
+        _movementCircle = std::unique_ptr<MovementCircle>(new MovementCircle{
+            std::unique_ptr<ScreenDirection>(new ScreenDirection(*movement)), *_mouseCoords, updatingTime});
+    }
+
+    if (_directionActionTimePoint == nullptr) {
         return;
     }
-    executeDirectionActionFunction();
+
+    const float timeSinceMovementStarting =
+        Chronometer::getFloatFromDurationMS(updatingTime - (*_directionActionTimePoint));
+
+    if (timeSinceMovementStarting >
+        _directionActionRepeatingDurations.at(static_cast<size_t>(*(_movementCircle->movement)))) {
+        executeDirectionActionFunction(updatingTime);
+        return;
+    }
+    _releaseFunction();
 }
 
-void Mouse::executeDirectionActionFunction() const {
+void Mouse::executeDirectionActionFunction(const Chronometer::TimePointMs& updatingTime) {
+    _directionActionTimePoint =
+        std::unique_ptr<Chronometer::TimePointMs>(new Chronometer::TimePointMs(updatingTime));
     _directionActionFunctions.at(static_cast<size_t>(*(_movementCircle->movement)))();
 }
 
-void Mouse::releasedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
+void Mouse::releasedMouseUpdate(const Chronometer::TimePointMs& updatingTime) {
     if (_movementCircle == nullptr) {
         _releaseFunction();
         return;
@@ -152,21 +126,15 @@ void Mouse::releasedMouseUpdate(const Chronometer::TimePointMs &updatingTime) {
         return;
     }
 
-    const float timeSinceMovementCircleCreation = Chronometer::getFloatFromDurationMS(
-        updatingTime - _movementCircle->creationTime
-    );
+    const float timeSinceMovementCircleCreation =
+        Chronometer::getFloatFromDurationMS(updatingTime - _movementCircle->creationTime);
 
-    const float distance = computeDistance(
-        _movementCircle->mouseCoords.xCoord,
-        _movementCircle->mouseCoords.yCoord,
-        _mouseCoords->xCoord,
-        _mouseCoords->yCoord
-    );
-    constexpr float pressTimeThreshold = 0.3f; // in seconds
+    const float distance =
+        computeDistance(_movementCircle->mouseCoords.xCoord, _movementCircle->mouseCoords.yCoord,
+                        _mouseCoords->xCoord, _mouseCoords->yCoord);
+    constexpr float pressTimeThreshold = 0.3f;  // in seconds
     constexpr float thresholdMoving = 0.03f;
-    if (
-        distance < thresholdMoving
-        && timeSinceMovementCircleCreation < pressTimeThreshold) {
+    if (distance < thresholdMoving && timeSinceMovementCircleCreation < pressTimeThreshold) {
         _validateActionFunction(_mouseCoords->xCoord, _mouseCoords->yCoord);
     } else {
         _releaseFunction();
@@ -178,8 +146,7 @@ const std::vector<Mouse::CardinalPoint> Mouse::cardinalsPoints{
     {Mouse::ScreenDirection::North, {0.f, 1.f}, 1.f},
     {Mouse::ScreenDirection::South, {0.f, -1.f}, 0.5f},
     {Mouse::ScreenDirection::East, {1.f, 0.f}, 1.f},
-    {Mouse::ScreenDirection::West, {-1.f, 0.f}, 1.f}
-};
+    {Mouse::ScreenDirection::West, {-1.f, 0.f}, 1.f}};
 
 float Mouse::computeDistance(float x0, float y0, float x1, float y1) {
     const auto x1MinusX0 = x1 - x0;
@@ -202,4 +169,3 @@ bool Mouse::isPressed() const {
 std::shared_ptr<const Mouse::MouseCoords> Mouse::getMouseCoords() const {
     return _mouseCoords;
 }
-
