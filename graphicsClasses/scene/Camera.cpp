@@ -98,8 +98,8 @@ void Camera::followingBallUpdate() noexcept {
     const glm::vec3 eulerAngles = cameraAboveWay * (-JBTypes::pi / 2.75f) * axisRotation;
     const glm::quat quaternion(eulerAngles);
 
-    const glm::vec3 initCenterCam = targetDistance * vecLookingDirection;
-    const glm::vec3 toCameraPosition = _offset.above * toSkyVec3 - _offset.behind * vecLookingDirection;
+    const glm::vec3 initCenterCam = _offset.targetDistance * vecLookingDirection;
+    const glm::vec3 toCameraPosition = _offset.above * toSkyVec3 - behindCameraDistance * vecLookingDirection;
 
     const JBTypes::vec3f& position = ball.get3DPosition();
     const glm::mat4 matPosBall = glm::translate(Utility::convertToOpenGLFormat(position));
@@ -183,8 +183,8 @@ bool Camera::approachingBallUpdate() noexcept {
 
     const auto oneMinusTCos = 1.f - tCos;
 
-    const glm::vec3 toCameraPosition = _offset.above * toSkyVec3 - _offset.behind * vecLookingDirection;
-    const glm::vec3 initCenterCam = targetDistance * vecLookingDirection;
+    const glm::vec3 toCameraPosition = _offset.above * toSkyVec3 - behindCameraDistance * vecLookingDirection;
+    const glm::vec3 initCenterCam = _offset.targetDistance * vecLookingDirection;
 
     const glm::mat4 matPosBall = glm::translate(Utility::convertToOpenGLFormat(position));
     const glm::vec4 posVec = matPosBall * glm::vec4(toCameraPosition, 1.f);
@@ -257,45 +257,38 @@ void Camera::setRatio(float ratio) {
 }
 
 float Camera::getFovY(float ratio) noexcept {
-    constexpr auto fovMin = 50.f;
+    constexpr auto fovMin = 40.f;
     constexpr auto fovMax = 72.f;
     constexpr auto ratioMin = 0.5f;
-    constexpr auto ratioMax = 3.f;
+    constexpr auto ratioMax = 2.f;
     const float croppedRatio = std::max(std::min(ratio, ratioMax), ratioMin);
     const float fovY = fovMax - (croppedRatio - ratioMin) / (ratioMax - ratioMin) * (fovMax - fovMin);
     return fovY * JBTypes::pi / 180.f;
 }
 
 Camera::Offset Camera::getOffset(float ratio) {
-    constexpr auto initialBehindBallDistance = 1.6f;
-    constexpr auto initialAboveBallDistance = 1.6f;
+    constexpr auto initialAboveBallDistance = 1.8f;
     constexpr auto initialZNear = 0.2f;
 
+    constexpr auto initialTargetDistance = 2.f;
+    const auto gamma = atanf((initialTargetDistance + behindCameraDistance) / initialAboveBallDistance);
+
     const auto halfFovY = getFovY(ratio) / 2.f;
-    if (ratio > 1.f) {
-        return {initialBehindBallDistance, initialAboveBallDistance, initialZNear, halfFovY};
+    const auto alpha = gamma - halfFovY;
+
+    constexpr auto behindBallVisibility = 0.7f;
+    constexpr auto maximalVisibilityDistance = behindCameraDistance - behindBallVisibility;
+
+    const auto visibilityDistance = tanf(alpha) * initialAboveBallDistance;
+
+    const auto halfMinFov = ratio > 1.f ? halfFovY : atanf(ratio * tanf(halfFovY));
+    if (visibilityDistance < maximalVisibilityDistance) {
+        std::cout << "initial " << initialAboveBallDistance<< std::endl;
+        return {initialAboveBallDistance, initialTargetDistance, initialZNear, halfMinFov};
     }
-
-    constexpr auto initialGroundDistance = targetDistance + initialBehindBallDistance;
-    constexpr auto squareInitialGroundDistance = initialGroundDistance * initialGroundDistance;
-
-    constexpr auto squareInitialAboveDistance = initialAboveBallDistance * initialAboveBallDistance;
-
-    const auto initialCameraToTargetDistance =
-        sqrtf(squareInitialAboveDistance + squareInitialGroundDistance);
-    const auto lateralDistance = initialCameraToTargetDistance * tanf(halfFovY);
-
-    const auto halfFovX = atanf(ratio * tanf(halfFovY));
-    const auto cameraToTargetDistance = lateralDistance / tanf(halfFovX);
-
-    // Intersept theorem
-    const auto cameraToTargetRatio = cameraToTargetDistance / initialCameraToTargetDistance;
-    const auto above = std::min(cameraToTargetRatio * initialAboveBallDistance, 1.8f);
-
-    const auto groundDistance = cameraToTargetRatio * initialGroundDistance;
-    const auto behind = std::min(groundDistance - initialGroundDistance + initialBehindBallDistance, 2.f);
-
-    const auto zNear = behind - initialBehindBallDistance + initialZNear;
-
-    return {above, behind, zNear, halfFovX};
+    const auto aboveBallDistance = maximalVisibilityDistance / tanf(alpha);
+    const auto groundDistance = tanf(gamma) * aboveBallDistance;
+    const auto targetDistance = groundDistance - maximalVisibilityDistance;
+        std::cout << "computed " << aboveBallDistance << std::endl;
+    return {aboveBallDistance, targetDistance, initialZNear, halfMinFov};
 }

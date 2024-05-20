@@ -40,8 +40,8 @@ class Camera : public Displayable, public AboveMovingCamera {
 
    private:
     struct Offset {
-        float behind;
         float above;
+        float targetDistance;
         float zNear;
         float halfMinFov;
     };
@@ -71,7 +71,7 @@ class Camera : public Displayable, public AboveMovingCamera {
     float _timePointGoAbove;
     glm::mat4 _perspectiveMatrix;
 
-    static constexpr float targetDistance = 2.f;
+    static constexpr float behindCameraDistance = 1.8f;
 };
 
 #endif /* CAMERA_H */
