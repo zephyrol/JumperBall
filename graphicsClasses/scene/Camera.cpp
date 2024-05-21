@@ -283,12 +283,10 @@ Camera::Offset Camera::getOffset(float ratio) {
 
     const auto halfMinFov = ratio > 1.f ? halfFovY : atanf(ratio * tanf(halfFovY));
     if (visibilityDistance < maximalVisibilityDistance) {
-        std::cout << "initial " << initialAboveBallDistance<< std::endl;
         return {initialAboveBallDistance, initialTargetDistance, initialZNear, halfMinFov};
     }
     const auto aboveBallDistance = maximalVisibilityDistance / tanf(alpha);
     const auto groundDistance = tanf(gamma) * aboveBallDistance;
     const auto targetDistance = groundDistance - maximalVisibilityDistance;
-        std::cout << "computed " << aboveBallDistance << std::endl;
     return {aboveBallDistance, targetDistance, initialZNear, halfMinFov};
 }
