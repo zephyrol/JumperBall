@@ -261,7 +261,7 @@ void Camera::setRatio(float ratio) {
 std::vector<float> Camera::catmullRomSpline(const std::vector<ControlPoint>& controlPoints, float t) {
     const auto getCatmullRomPointsIndices = [&controlPoints](float tValue) -> std::array<size_t, 4> {
         if (tValue <= controlPoints.at(1).t) {
-            return {0, 0, 1, 2};
+            return {0, 1, 2, 3};
         }
         for (size_t i = 0; i < controlPoints.size() - 3; ++i) {
             if (tValue <= controlPoints.at(i + 2).t) {
@@ -365,8 +365,8 @@ Camera::IntrinsicProperties Camera::getIntrinsicProperties(float ratio, float zF
 
     const auto fovY = interpolatedVector.at(0);
     const auto behind = interpolatedVector.at(1);
-    const auto above = interpolatedVector.at(1);
-    const auto targetDistance = interpolatedVector.at(1);
+    const auto above = interpolatedVector.at(2);
+    const auto targetDistance = interpolatedVector.at(3);
     const auto halfFovY = fovY / 2.f;
     const auto halfMinFov = ratio > 1.f ? halfFovY : atanf(ratio * tanf(halfFovY));
     constexpr auto defaultZNear = 0.2f;
