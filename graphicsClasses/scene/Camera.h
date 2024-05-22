@@ -39,11 +39,13 @@ class Camera : public Displayable, public AboveMovingCamera {
     static glm::mat4 genVPMatrixFromStar(const Star& star);
 
    private:
-    struct Offset {
-        float above;
-        float targetDistance;
-        float zNear;
-        float halfMinFov;
+    struct IntrinsicProperties {
+        const float above;
+        const float behind;
+        const float targetDistance;
+        const float halfMinFov;
+        const float zNear;
+        const glm::mat4 perspectiveMatrix;
     };
 
     float getAboveWay() const;
@@ -54,24 +56,25 @@ class Camera : public Displayable, public AboveMovingCamera {
 
     bool approachingBallUpdate() noexcept;
 
-    static float getFovY(float ratio) noexcept;
+    static IntrinsicProperties getIntrinsicProperties(float ratio, float zFar);
 
-    static Offset getOffset(float ratio);
+    struct ControlPoint {
+        const float t;
+        const std::vector<float> values;
+    };
+
+    static std::vector<float> catmullRomSpline(const std::vector<ControlPoint>& controlPoints, float t);
 
     const Map& _map;
     const CstChronometer_sptr _chronometer;
     const float _zFar;
     Movement _movement;
-    float _fovY;
-    Offset _offset;
+    std::unique_ptr<const IntrinsicProperties> _intrinsicProperties;
     glm::vec3 _pos;
     glm::vec3 _center;
     glm::vec3 _up;
     float _timePointComeBack;
     float _timePointGoAbove;
-    glm::mat4 _perspectiveMatrix;
-
-    static constexpr float behindCameraDistance = 1.8f;
 };
 
 #endif /* CAMERA_H */
