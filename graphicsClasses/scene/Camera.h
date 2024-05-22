@@ -63,7 +63,7 @@ class Camera : public Displayable, public AboveMovingCamera {
         const std::vector<float> values;
     };
 
-    static std::vector<float> catmullRomSpline(const std::vector<ControlPoint>& controlPoints, float t);
+    static std::vector<float> lagrangeInterpolation(const std::vector<ControlPoint>& controlPoints, float t);
 
     const Map& _map;
     const CstChronometer_sptr _chronometer;
