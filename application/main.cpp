@@ -22,7 +22,9 @@ GLFWwindow *initLibraries() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(RESOLUTION_X, RESOLUTION_Y, "Gravity Globe", nullptr, nullptr);
+    constexpr int screenWidth = 1024;
+    constexpr int screenHeight = 768;
+    window = glfwCreateWindow(screenWidth, screenHeight, "Gravity Globe", nullptr, nullptr);
 
     if (window == nullptr) {
         std::cerr << "Failed to open GLFW window" << std::endl;

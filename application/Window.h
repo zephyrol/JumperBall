@@ -7,8 +7,6 @@
 
 #ifndef WINDOW_H
 #define WINDOW_H
-#define RESOLUTION_X 1024
-#define RESOLUTION_Y 768
 
 #include "controller/Controller.h"
 #include <GLFW/glfw3.h>
