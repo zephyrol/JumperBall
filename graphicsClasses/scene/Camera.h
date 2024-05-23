@@ -44,6 +44,7 @@ class Camera : public Displayable, public AboveMovingCamera {
         const float behind;
         const float targetDistance;
         const float halfMinFov;
+        const float upRotationAngle;
         const glm::mat4 perspectiveMatrix;
     };
 
@@ -62,7 +63,7 @@ class Camera : public Displayable, public AboveMovingCamera {
         const std::vector<float> values;
     };
 
-    static std::vector<float> lagrangeInterpolation(const std::vector<ControlPoint>& controlPoints, float t);
+    static std::vector<float> linearInterpolation(const std::vector<ControlPoint>& controlPoints, float t);
 
     const Map& _map;
     const CstChronometer_sptr _chronometer;

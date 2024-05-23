@@ -94,7 +94,7 @@ void Camera::followingBallUpdate() noexcept {
 
     const auto cameraAboveWay = getAboveWay();
     const glm::vec3 axisRotation = glm::cross(vecLookingDirection, toSkyVec3);
-    const glm::vec3 eulerAngles = cameraAboveWay * (-JBTypes::pi / 2.75f) * axisRotation;
+    const glm::vec3 eulerAngles = cameraAboveWay * (-_intrinsicProperties->upRotationAngle) * axisRotation;
     const glm::quat quaternion(eulerAngles);
 
     const glm::vec3 initCenterCam = _intrinsicProperties->targetDistance * vecLookingDirection;
@@ -257,25 +257,31 @@ void Camera::setRatio(float ratio) {
         std::unique_ptr<IntrinsicProperties>(new IntrinsicProperties(getIntrinsicProperties(ratio, _zFar)));
 }
 
-std::vector<float> Camera::lagrangeInterpolation(const std::vector<ControlPoint>& controlPoints, float t) {
-    const auto getLagrangeBasis = [controlPoints, t](size_t j) {
-        float basis = 1.f;
-        for (size_t k = 0; k < controlPoints.size(); ++k) {
-            if (j != k) {
-                basis *= (t - controlPoints[k].t) / (controlPoints[j].t - controlPoints[k].t);
+std::vector<float> Camera::linearInterpolation(const std::vector<ControlPoint>& controlPoints, float t) {
+    // 1. Find the segment where t is located
+    const auto getSegment = [controlPoints, t]() -> size_t {
+        for (size_t i = 0; i < controlPoints.size() - 1; ++i) {
+            if (t <= controlPoints[i + 1].t) {
+                return i;
             }
         }
-        return basis;
+        return 0;
     };
+    const auto segment = getSegment();
 
+    // 2. Get the two points around t
+    const auto& p0 = controlPoints[segment];
+    const auto& p1 = controlPoints[segment + 1];
+
+    const auto localT = (t - p0.t) / (p1.t - p0.t);
+
+    // 3 Apply the linear interpolation
     std::vector<float> interpolatedVector;
     const auto vectorSize = controlPoints.front().values.size();
     for (size_t i = 0; i < vectorSize; ++i) {
-        auto interpolatedValue = 0.f;
-        for (int j = 0; j < controlPoints.size(); ++j) {
-            const auto basis = getLagrangeBasis(j);
-            interpolatedValue += basis * controlPoints[j].values[i];
-        }
+        const auto p0Element = p0.values.at(i);
+        const auto p1Element = p1.values.at(i);
+        const auto interpolatedValue = p0Element + localT * (p1Element - p0Element);
         interpolatedVector.emplace_back(interpolatedValue);
     }
 
@@ -283,9 +289,8 @@ std::vector<float> Camera::lagrangeInterpolation(const std::vector<ControlPoint>
 }
 
 Camera::IntrinsicProperties Camera::getIntrinsicProperties(float ratio, float zFar) {
-
-    const std::vector<float> ratioList = {9.f / 22.f,  9.f / 16.f, 3.f / 4.f, 1.f,
-                                          4.f / 3.f, 16.f / 9.f, 22.f / 9.f, 32.f / 9.f};
+    const std::vector<float> ratioList = {9.f / 22.f, 9.f / 16.f, 3.f / 4.f,  1.f,
+                                          4.f / 3.f,  16.f / 9.f, 22.f / 9.f, 32.f / 9.f};
     const auto getT = [&ratioList](float ratioValue) {
         const auto ratioMin = ratioList.front();
         const auto ratioMax = ratioList.back();
@@ -293,25 +298,28 @@ Camera::IntrinsicProperties Camera::getIntrinsicProperties(float ratio, float zF
         return std::max(std::min((ratioValue - ratioMin) / ratioLimitsLength, 1.f), 0.f);
     };
 
-
     const auto degreesToRadians = [](float degrees) { return degrees * JBTypes::pi / 180.f; };
-    const std::vector<float> degreesAngles = {77.f, 72.f, 68.f, 62.f, 58.f, 50.f, 42.f, 30.f};
-    std::vector<float> radiansAngles(degreesAngles.size());
-    std::transform(degreesAngles.cbegin(), degreesAngles.cend(), radiansAngles.begin(), degreesToRadians);
+    const std::vector<float> fovDegrees = {77.f, 72.f, 68.f, 62.f, 58.f, 50.f, 42.f, 30.f};
+    std::vector<float> fovRadians(fovDegrees.size());
+    std::transform(fovDegrees.cbegin(), fovDegrees.cend(), fovRadians.begin(), degreesToRadians);
+
+    const std::vector<float> upRotationDegrees = {66.f, 66.f, 66.f, 66.f, 68.f, 70.f, 75.f, 75.f};
+    std::vector<float> upRotationRadians(upRotationDegrees.size());
+    std::transform(upRotationDegrees.cbegin(), upRotationDegrees.cend(), upRotationRadians.begin(),
+                   degreesToRadians);
 
     const std::vector<ControlPoint> controlPoints = {
-        {getT(ratioList.at(0)), {radiansAngles.at(0), 1.8f, 1.8f, 2.f, 0.6f}},
-        {getT(ratioList.at(1) ), {radiansAngles.at(1), 1.8f, 1.8f, 2.f, 0.6f}},
-        {getT(ratioList.at(2)), {radiansAngles.at(2), 1.8f, 1.8f, 2.f, 0.6f}},
-        {getT(ratioList.at(3)), {radiansAngles.at(3), 1.9f, 1.8f, 1.7f, 0.7f}},
-        {getT(ratioList.at(4)), {radiansAngles.at(4), 2.f, 1.8f, 1.6f, 0.9f}},
-        {getT(ratioList.at(5)), {radiansAngles.at(5), 2.4f, 1.8f, 1.8f, 1.3f}},
-        {getT(ratioList.at(6)), {radiansAngles.at(6), 3.0f, 1.8f, 2.f, 2.0f}},
-        {getT(ratioList.at(7)), {radiansAngles.at(7), 3.3f, 1.8f, 2.f, 2.3f}},
-    };
+        {getT(ratioList.at(0)), {fovRadians.at(0), 1.8f, 1.8f, 2.f, 0.6f, upRotationRadians.at(0)}},
+        {getT(ratioList.at(1)), {fovRadians.at(1), 1.8f, 1.8f, 2.f, 0.6f, upRotationRadians.at(1)}},
+        {getT(ratioList.at(2)), {fovRadians.at(2), 1.8f, 1.8f, 2.f, 0.6f, upRotationRadians.at(2)}},
+        {getT(ratioList.at(3)), {fovRadians.at(3), 1.9f, 1.8f, 1.7f, 0.7f, upRotationRadians.at(3)}},
+        {getT(ratioList.at(4)), {fovRadians.at(4), 2.f, 1.8f, 1.6f, 0.9f, upRotationRadians.at(4)}},
+        {getT(ratioList.at(5)), {fovRadians.at(5), 2.4f, 1.8f, 1.8f, 1.3f, upRotationRadians.at(5)}},
+        {getT(ratioList.at(6)), {fovRadians.at(6), 3.0f, 1.8f, 2.f, 2.0f, upRotationRadians.at(6)}},
+        {getT(ratioList.at(7)), {fovRadians.at(7), 3.3f, 1.8f, 2.f, 2.3f, upRotationRadians.at(7)}}};
 
     const auto t = getT(ratio);
-    const auto interpolatedVector = lagrangeInterpolation(controlPoints, t);
+    const auto interpolatedVector = linearInterpolation(controlPoints, t);
 
     const auto fovY = interpolatedVector.at(0);
     const auto behind = interpolatedVector.at(1);
@@ -320,7 +328,8 @@ Camera::IntrinsicProperties Camera::getIntrinsicProperties(float ratio, float zF
     const auto zNear = interpolatedVector.at(4);
     const auto halfFovY = fovY / 2.f;
     const auto halfMinFov = ratio > 1.f ? halfFovY : atanf(ratio * tanf(halfFovY));
+    const auto upRotationAngle = interpolatedVector.at(5);
     const auto perspectiveMatrix = glm::perspective(fovY, ratio, zNear, zFar);
 
-    return {above, behind, targetDistance, halfMinFov, perspectiveMatrix};
+    return {above, behind, targetDistance, halfMinFov, upRotationAngle, perspectiveMatrix};
 }
