@@ -44,7 +44,6 @@ class Camera : public Displayable, public AboveMovingCamera {
         const float behind;
         const float targetDistance;
         const float halfMinFov;
-        const float zNear;
         const glm::mat4 perspectiveMatrix;
     };
 

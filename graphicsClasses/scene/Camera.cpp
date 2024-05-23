@@ -19,7 +19,6 @@ Camera::Camera(const Map& map, float ratio)
       _up(0.f, 1.f, 0.f),
       _timePointComeBack(0.f),
       _timePointGoAbove(0.f) {}
-//_perspectiveMatrix(glm::perspective(getFovY(ratio), ratio, _intrinsecProperties.zNear, _zFar)) {}
 
 void Camera::update(const Player::Status& status, bool goAbove) noexcept {
     if (status == Player::Status::InMenu) {
@@ -284,29 +283,31 @@ std::vector<float> Camera::lagrangeInterpolation(const std::vector<ControlPoint>
 }
 
 Camera::IntrinsicProperties Camera::getIntrinsicProperties(float ratio, float zFar) {
-    constexpr auto ratioMin = 9.f / 22.f;
-    constexpr auto ratioMax = 22.f / 9.f;
-    const auto getT = [ratioMin, ratioMax](float ratioValue) {
-        constexpr auto ratioLimitsLength = ratioMax - ratioMin;
+
+    const std::vector<float> ratioList = {9.f / 22.f,  9.f / 16.f, 3.f / 4.f, 1.f,
+                                          4.f / 3.f, 16.f / 9.f, 22.f / 9.f, 32.f / 9.f};
+    const auto getT = [&ratioList](float ratioValue) {
+        const auto ratioMin = ratioList.front();
+        const auto ratioMax = ratioList.back();
+        const auto ratioLimitsLength = ratioMax - ratioMin;
         return std::max(std::min((ratioValue - ratioMin) / ratioLimitsLength, 1.f), 0.f);
     };
 
-    const std::vector<float> ratioList = {ratioMin,  9.f / 16.f, 3.f / 4.f, 1.f,
-                                          4.f / 3.f, 16.f / 9.f, ratioMax};
 
     const auto degreesToRadians = [](float degrees) { return degrees * JBTypes::pi / 180.f; };
-    const std::vector<float> degreesAngles = {75.f, 40.f, 40.f, 40.f, 40.f, 40.f, 40.f};
+    const std::vector<float> degreesAngles = {77.f, 72.f, 68.f, 62.f, 58.f, 50.f, 42.f, 30.f};
     std::vector<float> radiansAngles(degreesAngles.size());
     std::transform(degreesAngles.cbegin(), degreesAngles.cend(), radiansAngles.begin(), degreesToRadians);
 
     const std::vector<ControlPoint> controlPoints = {
-        {getT(ratioMin), {radiansAngles.at(0), 1.f, 1.8f, 2.f}},
-        {getT(9.f / 16.f), {radiansAngles.at(1), 2.f, 1.8f, 2.f}},
-        {getT(3.f / 4.f), {radiansAngles.at(2), 3.f, 1.8f, 2.f}},
-        {getT(1.f), {radiansAngles.at(3), 4.f, 1.8f, 2.f}},
-        {getT(4.f / 3.f), {radiansAngles.at(4), 5.f, 1.8f, 2.f}},
-        {getT(16.f / 9.f), {radiansAngles.at(5), 6.f, 1.8f, 2.f}},
-        {getT(ratioMax), {radiansAngles.at(6), 7.f, 1.8f, 2.f}},
+        {getT(ratioList.at(0)), {radiansAngles.at(0), 1.8f, 1.8f, 2.f, 0.6f}},
+        {getT(ratioList.at(1) ), {radiansAngles.at(1), 1.8f, 1.8f, 2.f, 0.6f}},
+        {getT(ratioList.at(2)), {radiansAngles.at(2), 1.8f, 1.8f, 2.f, 0.6f}},
+        {getT(ratioList.at(3)), {radiansAngles.at(3), 1.9f, 1.8f, 1.7f, 0.7f}},
+        {getT(ratioList.at(4)), {radiansAngles.at(4), 2.f, 1.8f, 1.6f, 0.9f}},
+        {getT(ratioList.at(5)), {radiansAngles.at(5), 2.4f, 1.8f, 1.8f, 1.3f}},
+        {getT(ratioList.at(6)), {radiansAngles.at(6), 3.0f, 1.8f, 2.f, 2.0f}},
+        {getT(ratioList.at(7)), {radiansAngles.at(7), 3.3f, 1.8f, 2.f, 2.3f}},
     };
 
     const auto t = getT(ratio);
@@ -316,10 +317,10 @@ Camera::IntrinsicProperties Camera::getIntrinsicProperties(float ratio, float zF
     const auto behind = interpolatedVector.at(1);
     const auto above = interpolatedVector.at(2);
     const auto targetDistance = interpolatedVector.at(3);
+    const auto zNear = interpolatedVector.at(4);
     const auto halfFovY = fovY / 2.f;
     const auto halfMinFov = ratio > 1.f ? halfFovY : atanf(ratio * tanf(halfFovY));
-    constexpr auto defaultZNear = 0.2f;
-    const auto perspectiveMatrix = glm::perspective(fovY, ratio, defaultZNear, zFar);
+    const auto perspectiveMatrix = glm::perspective(fovY, ratio, zNear, zFar);
 
-    return {above, behind, targetDistance, halfMinFov, defaultZNear, perspectiveMatrix};
+    return {above, behind, targetDistance, halfMinFov, perspectiveMatrix};
 }
