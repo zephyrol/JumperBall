@@ -154,8 +154,8 @@ std::string Player::genSaveContent() {
     const auto initialAdvertisementTimeFloat =
         _initialAdvertisementTime + _advertisementChronometer.getTime();
     constexpr auto currentSaveVersion = 0;
-    std::string saveContent = std::to_string(currentSaveVersion) + " " + std::to_string(_money) + " " +
-                              std::to_string(_levelProgression) + " " + boolVectorToString(_ballSkins) + " " +
+    std::string saveContent = std::to_string(currentSaveVersion) + " " + compressTransformAttribute(_money, moneyTransformFactor) + " " +
+                              compressTransformAttribute(_levelProgression, levelTransformFactor) + " " + boolVectorToString(_ballSkins) + " " +
                               std::to_string(_currentBallSkin) + " " +
                               (_frenchLanguageIsActivated ? "1" : "0") + " " +
                               (_musicsAreActivated ? "1" : "0") + " " + (_soundsAreActivated ? "1" : "0") +
@@ -189,7 +189,7 @@ Player_sptr Player::createInstance(DoubleChronometer_sptr doubleChronometer, con
     Player::readValue<unsigned int>(iss);
 
     const auto money = Player::readValue<unsigned int>(iss);
-    const auto levelProgression = Player::readValue<size_t>(iss);
+    const auto levelProgression = Player::read<size_t>(iss);
     const auto ballSkins = readBooleanVector();
     const auto currentBallSkin = Player::readValue<unsigned int>(iss);
     const auto frenchLanguageIsActivated = readBoolean();

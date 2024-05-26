@@ -315,7 +315,7 @@ std::string MapGenerator::convertToBase(unsigned long int number, unsigned char 
 unsigned long int MapGenerator::convertToBase10(const std::string &s, unsigned int base) {
     unsigned long int value = 0;
     std::string copyS = s;
-    while (copyS.length() > 0) {
+    while (!copyS.empty()) {
         const auto number = static_cast<unsigned int>(copyS.front());
         value += static_cast<unsigned long>(
             number * static_cast<unsigned int>(pow(base, copyS.length() - 1))

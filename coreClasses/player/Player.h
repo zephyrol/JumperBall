@@ -122,14 +122,24 @@ class Player {
     template <typename T>
     static T readValue(std::istringstream& stream);
 
+    template <typename T>
+    static std::string compressTransformAttribute(const T& value, T factor);
+
+    template <typename T>
+    static T uncompressTransformAttribute(std::string value, T factor);
+
    private:
+
     const DoubleChronometer_sptr _doubleChronometer;
     Status _status;
     GameStatus _gameStatus;
     vecCstUpdateOutput_sptr _updateOutputs;
 
+    static constexpr unsigned int moneyTransformFactor = 2;
     unsigned int _money;
     unsigned int _previousMoney;
+
+    static constexpr size_t levelTransformFactor = 3;
     size_t _levelProgression;
 
     std::vector<bool> _ballSkins;
@@ -157,6 +167,18 @@ T Player::readValue(std::istringstream& stream) {
     T value;
     stream >> value;
     return value;
+}
+
+template <typename T>
+std::string Player::compressTransformAttribute(const T& value, T factor) {
+    auto levelProgressionStr = std::to_string(value * factor);
+    std::reverse(levelProgressionStr.begin(), levelProgressionStr.end());
+    return levelProgressionStr;
+}
+template <typename T>
+T Player::uncompressTransformAttribute(std::string value, T factor) {
+    std::reverse(value.begin(), value.end());
+    return static_cast<T>(std::stoi(value) / factor);
 }
 
 #endif /* PLAYER_H */
