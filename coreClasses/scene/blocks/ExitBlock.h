@@ -25,7 +25,7 @@ public:
 
     vecCstShape_sptr getExtraShapes() const override;
 
-    void unlockExit() override;
+    void unlockExit(bool makeSound) override;
 
     std::string getDynamicGroupHash() const override;
 

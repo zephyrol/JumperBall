@@ -111,8 +111,9 @@ std::string Map::update(const Ball::ActionRequest &action) {
     }
 
     if (!_isExitUnlocked && _ball->numberOfKeys() >= _nbOfKeys) {
+        const auto makeSound = _nbOfKeys > 0;
         for (const auto &block: _blocks) {
-            block->unlockExit();
+            block->unlockExit(makeSound);
         }
         _isExitUnlocked = true;
     }

@@ -59,7 +59,7 @@ public:
 
     virtual void update();
 
-    virtual void unlockExit();
+    virtual void unlockExit(bool makeSound);
 
     virtual Effect interaction() const = 0;
 
