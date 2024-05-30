@@ -94,6 +94,7 @@ Page_wptr InGamePage::parent() {
 Page_sptr InGamePage::click(float mouseX, float mouseY) {
     if (_arrowLabel->getNode()->intersect(mouseX, mouseY, 2.f)) {
         _player->setAsInMenu();
+        _player->addValidationSound();
         return _parent.lock();
     }
     return nullptr;

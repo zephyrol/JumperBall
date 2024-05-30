@@ -267,6 +267,7 @@ bool Player::areSoundsActivated() const {
 }
 
 void Player::switchLeftRightStatus() {
+    addValidationSound();
     _needsSaveFile = true;
     _leftRightIsReversed = !_leftRightIsReversed;
 }

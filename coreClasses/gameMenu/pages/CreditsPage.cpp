@@ -145,6 +145,7 @@ vecNode_sptr CreditsPage::createNodes(float ratio, bool english) {
 Page_sptr CreditsPage::click(float mouseX, float mouseY) {
     const auto nearest = Node::getNearest(_nodesToTestIntersection, mouseX, mouseY);
     if (nearest == _exitNode) {
+        _player->addValidationSound();
         return _parent.lock();
     }
     if (nearest == _mainAuthor || nearest == _developmentAndDesign) {

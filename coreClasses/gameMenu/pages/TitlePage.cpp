@@ -150,9 +150,11 @@ Page_sptr TitlePage::click(float mouseX, float mouseY) {
         _player->addQuitRequest();
     }
     if (nearest == _credits) {
+        _player->addValidationSound();
         return _creditsPage;
     }
     if (nearest == _store) {
+        _player->addValidationSound();
         return _storePage;
     }
     return nullptr;
