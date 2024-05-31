@@ -144,7 +144,7 @@ void Mouse::releasedMouseUpdate(const Chronometer::TimePointMs& updatingTime) {
 
 const std::vector<Mouse::CardinalPoint> Mouse::cardinalsPoints{
     {Mouse::ScreenDirection::North, {0.f, 1.f}, 1.f},
-    {Mouse::ScreenDirection::South, {0.f, -1.f}, 0.5f},
+    {Mouse::ScreenDirection::South, {0.f, -1.f}, 0.7f},
     {Mouse::ScreenDirection::East, {1.f, 0.f}, 1.f},
     {Mouse::ScreenDirection::West, {-1.f, 0.f}, 1.f}};
 
