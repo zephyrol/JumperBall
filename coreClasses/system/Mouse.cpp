@@ -5,7 +5,8 @@
 
 #include <utility>
 
-Mouse::Mouse(const std::function<void()>& northActionFunc,
+Mouse::Mouse(float screenRatio,
+             const std::function<void()>& northActionFunc,
              const std::function<void()>& southActionFunc,
              const std::function<void()>& eastActionFunc,
              const std::function<void()>& westActionFunc,
@@ -20,6 +21,7 @@ Mouse::Mouse(const std::function<void()>& northActionFunc,
                                          eastActionRepeatingDuration, westActionRepeatingDuration},
       _validateActionFunction(std::move(validateActionFunc)),
       _releaseFunction(std::move(releaseFunction)),
+      _screenRatio(screenRatio),
       _mouseCoords(nullptr),
       _movementCircle(nullptr),
       _directionActionTimePoint(nullptr),
@@ -33,6 +35,10 @@ void Mouse::press(float posX, float posY) {
 
 void Mouse::release() {
     _isPressed = false;
+}
+
+void Mouse::setScreenRatio(float screenRatio) {
+    _screenRatio = screenRatio;
 }
 
 void Mouse::update(const Chronometer::TimePointMs& updatingTime) {
@@ -148,10 +154,20 @@ const std::vector<Mouse::CardinalPoint> Mouse::cardinalsPoints{
     {Mouse::ScreenDirection::East, {1.f, 0.f}, 1.f},
     {Mouse::ScreenDirection::West, {-1.f, 0.f}, 1.f}};
 
-float Mouse::computeDistance(float x0, float y0, float x1, float y1) {
-    const auto x1MinusX0 = x1 - x0;
-    const auto y1MinusY0 = y1 - y0;
-    return sqrtf(x1MinusX0 * x1MinusX0 + y1MinusY0 * y1MinusY0);
+float Mouse::computeDistance(float x0, float y0, float x1, float y1) const {
+    // Screen is rarely a square, we use the ratio to avoid distance scaling and to get orthonormal base.
+    // So length could be > sqrt 2
+    const auto getLengths = [this, x0, y0, x1, y1]() {
+        const auto x1MinusX0 = x1 - x0;
+        const auto y1MinusY0 = y1 - y0;
+
+        return _screenRatio > 1.f ? std::pair<float, float>{x1MinusX0 * _screenRatio, y1MinusY0}
+                                  : std::pair<float, float>{x1MinusX0, y1MinusY0 / _screenRatio};
+    };
+    const auto lengths = getLengths();
+    const auto& horizontalLength = lengths.first;
+    const auto& verticalLength = lengths.second;
+    return sqrtf(horizontalLength * horizontalLength + verticalLength * verticalLength);
 }
 
 float Mouse::currentXCoord() const {

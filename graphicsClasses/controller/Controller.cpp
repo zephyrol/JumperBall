@@ -46,16 +46,18 @@ Controller::Controller(const size_t& screenWidth,
                        [this]() { _scene->setValidate(); },
                    },
                    [this]() { _scene->setNoAction(); }),
-      _mouse([this]() { _scene->setUp(); },
-             [this]() { _scene->setDown(); },
-             [this]() { _player->isLeftRightReversed() ? _scene->setRight() : _scene->setLeft(); },
-             [this]() { _player->isLeftRightReversed() ? _scene->setLeft() : _scene->setRight(); },
-             0.4f,
-             0.f,  // South direction action function is always executed
-             0.6f,
-             0.6f,
-             [this](float mouseX, float mouseY) { setValidateMouse(mouseX, mouseY); },
-             [this]() { _scene->setNoAction(); }),
+      _mouse(
+          static_cast<float>(screenWidth) / static_cast<float>(screenHeight),
+          [this]() { _scene->setUp(); },
+          [this]() { _scene->setDown(); },
+          [this]() { _player->isLeftRightReversed() ? _scene->setRight() : _scene->setLeft(); },
+          [this]() { _player->isLeftRightReversed() ? _scene->setLeft() : _scene->setRight(); },
+          0.4f,
+          0.f,  // South direction action function is always executed
+          0.6f,
+          0.6f,
+          [this](float mouseX, float mouseY) { setValidateMouse(mouseX, mouseY); },
+          [this]() { _scene->setNoAction(); }),
       _outputs{},
       _input(Controller::Input::Keyboard) {}
 
@@ -136,6 +138,7 @@ void Controller::resize(int screenWidth, int screenHeight) {
     _scene->updateScreenRatio(ratio);
     _menu->resize(ratio);
     _viewer->resize(screenWidth, screenHeight);
+    _mouse.setScreenRatio(ratio);
 }
 
 void Controller::render() const {

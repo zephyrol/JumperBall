@@ -17,7 +17,8 @@ class Mouse {
         const float yCoord;
     };
 
-    explicit Mouse(const std::function<void()>& northActionFunc,
+    explicit Mouse(float screenRatio,
+                   const std::function<void()>& northActionFunc,
                    const std::function<void()>& southActionFunc,
                    const std::function<void()>& eastActionFunc,
                    const std::function<void()>& westActionFunc,
@@ -31,6 +32,8 @@ class Mouse {
     void press(float posX, float posY);
 
     void release();
+
+    void setScreenRatio(float screenRatio);
 
     bool isPressed() const;
 
@@ -48,6 +51,8 @@ class Mouse {
     void releasedMouseUpdate(const Chronometer::TimePointMs& updatingTime);
 
     void executeDirectionActionFunction(const Chronometer::TimePointMs& updatingTime);
+
+    float computeDistance(float x0, float y0, float x1, float y1) const;
 
     struct CardinalDistance {
         ScreenDirection direction;
@@ -71,12 +76,11 @@ class Mouse {
     const std::function<void(float mouseX, float mouseY)> _validateActionFunction;
     const std::function<void()> _releaseFunction;
 
+    float _screenRatio;
     std::shared_ptr<MouseCoords> _mouseCoords;
     std::unique_ptr<MovementCircle> _movementCircle;
     std::unique_ptr<Chronometer::TimePointMs> _directionActionTimePoint;
     bool _isPressed;
-
-    static float computeDistance(float x0, float y0, float x1, float y1);
 
     static const std::vector<CardinalPoint> cardinalsPoints;
 };
