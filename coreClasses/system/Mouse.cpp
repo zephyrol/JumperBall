@@ -65,8 +65,9 @@ void Mouse::pressedMouseUpdate(const Chronometer::TimePointMs& updatingTime) {
                     cardinalPoint.weight};
     };
 
-    std::vector<Mouse::CardinalDistance> cardinalDistances(cardinalsPoints.size());
-    std::transform(cardinalsPoints.begin(), cardinalsPoints.end(), cardinalDistances.begin(),
+    const auto cardinalPoints = generateCardinalPoints();
+    std::vector<Mouse::CardinalDistance> cardinalDistances(cardinalPoints.size());
+    std::transform(cardinalPoints.begin(), cardinalPoints.end(), cardinalDistances.begin(),
                    computeCardinalDistance);
 
     Mouse::CardinalDistance nearestCardinal = cardinalDistances.front();
@@ -148,12 +149,6 @@ void Mouse::releasedMouseUpdate(const Chronometer::TimePointMs& updatingTime) {
     _movementCircle = nullptr;
 }
 
-const std::vector<Mouse::CardinalPoint> Mouse::cardinalsPoints{
-    {Mouse::ScreenDirection::North, {0.f, 1.f}, 1.f},
-    {Mouse::ScreenDirection::South, {0.f, -1.f}, 0.7f},
-    {Mouse::ScreenDirection::East, {1.f, 0.f}, 1.f},
-    {Mouse::ScreenDirection::West, {-1.f, 0.f}, 1.f}};
-
 float Mouse::computeDistance(float x0, float y0, float x1, float y1) const {
     // Screen is rarely a square, we use the ratio to avoid distance scaling and to get orthonormal base.
     // So length could be > sqrt 2
@@ -168,6 +163,15 @@ float Mouse::computeDistance(float x0, float y0, float x1, float y1) const {
     const auto& horizontalLength = lengths.first;
     const auto& verticalLength = lengths.second;
     return sqrtf(horizontalLength * horizontalLength + verticalLength * verticalLength);
+}
+
+std::vector<Mouse::CardinalPoint> Mouse::generateCardinalPoints() const {
+    const auto horizontalDistance = _screenRatio > 1.f ? 1.f / _screenRatio : 1.f;
+    const auto verticalDistance = _screenRatio < 1.f ? 1.f * _screenRatio : 1.f;
+    return {{Mouse::ScreenDirection::North, {0.f, verticalDistance}, 1.f},
+            {Mouse::ScreenDirection::South, {0.f, -verticalDistance}, 0.5f},
+            {Mouse::ScreenDirection::East, {horizontalDistance, 0.f}, 1.f},
+            {Mouse::ScreenDirection::West, {-horizontalDistance, 0.f}, 1.f}};
 }
 
 float Mouse::currentXCoord() const {

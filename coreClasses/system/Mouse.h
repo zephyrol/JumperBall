@@ -65,6 +65,11 @@ class Mouse {
         float weight;
     };
 
+    /**
+     * Genererate cardinal points located at the same distance from a center
+     */
+    std::vector<CardinalPoint> generateCardinalPoints() const;
+
     struct MovementCircle {
         const std::unique_ptr<ScreenDirection> movement;
         const MouseCoords mouseCoords;
@@ -81,8 +86,6 @@ class Mouse {
     std::unique_ptr<MovementCircle> _movementCircle;
     std::unique_ptr<Chronometer::TimePointMs> _directionActionTimePoint;
     bool _isPressed;
-
-    static const std::vector<CardinalPoint> cardinalsPoints;
 };
 
 #endif  // JUMPERBALLAPPLICATION_MOUSE_H
