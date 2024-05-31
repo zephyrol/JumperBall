@@ -58,9 +58,7 @@ void ExitBlock::unlockExit(bool makeSound) {
 Block::Effect ExitBlock::detectionEvent() {
     InteractiveBlock::detectionEvent();
     const auto ball = _ball.lock();
-    if (_isUnlockModel) {
-        ball->addUpdateOutput(std::make_shared<SoundOutput>("hasWon"));
-    }
+    ball->addUpdateOutput(std::make_shared<SoundOutput>("hasWon"));
     return _isUnlocked && ball->currentSide() == _exitDir ? Block::Effect::FinishLevel
                                                           : Block::Effect::Nothing;
 }
