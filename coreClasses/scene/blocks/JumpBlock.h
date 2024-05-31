@@ -11,15 +11,13 @@
 #include "InteractiveBlock.h"
 
 class JumpBlock : public InteractiveBlock {
-public:
-    JumpBlock(
-        const JBTypes::vec3ui &position,
-        const vecItem_sptr &items,
-        const vecEnemy_sptr &enemies,
-        const vecSpecial_sptr &specials,
-        const Ball_sptr &ball,
-        const std::array<bool, 6> &facesJumpers
-    );
+   public:
+    JumpBlock(const JBTypes::vec3ui& position,
+              const vecItem_sptr& items,
+              const vecEnemy_sptr& enemies,
+              const vecSpecial_sptr& specials,
+              const Ball_sptr& ball,
+              const std::array<bool, 6>& facesJumpers);
 
     std::array<bool, 6> faceInfo() const override;
 
@@ -27,10 +25,8 @@ public:
 
     vecCstShape_sptr getExtraShapes() const override;
 
-
-private:
+   private:
     const std::array<bool, 6> _facesJumpers;
-
 };
 
 #endif /* JUMPBLOCK_H */
