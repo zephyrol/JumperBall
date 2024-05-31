@@ -23,7 +23,7 @@ std::vector<Tutorial::Message> KeysTutorial::getMessages() const {
             {"Watch out for spikes!", ""}, {"Get all keys to", "unlock the exit"}, {"The exit is open!", ""}};
     }
     return {{"Attention aux pics !", ""},
-            {"Trouve toutes les cl;s", "pour ouvrir la sortie"},
+            {"Trouvez toutes les cl;s", "pour ouvrir la sortie"},
             {"La sortie est ouverte !", ""}};
 }
 
