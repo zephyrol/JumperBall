@@ -105,28 +105,30 @@ vecNode_sptr CreditsPage::createNodes(float ratio, bool english) {
         1.5f
     );
 
-    constexpr float optionsNodeRatio = 12.f;
+    constexpr float jobNodesRatio = 15.f;
+    constexpr float nameNodesRatio= 12.f;
+
     const auto devAndDesignNode = std::make_shared<VerticalNode>(
         optionsParentNode,
-        optionsNodeRatio,
+        jobNodesRatio,
         english ? 1.05f : 1.1f // Because p creates an offset
     );
 
     const auto mainAuthorNode = std::make_shared<VerticalNode>(
         optionsParentNode,
-        optionsNodeRatio,
-        english ? 0.8f : 0.75f // Because q creates an offset
+        nameNodesRatio,
+        english ? 0.82f : 0.77f // Because q creates an offset
     );
 
     const auto musicAndSoundsEffectNode = std::make_shared<VerticalNode>(
         optionsParentNode,
-        optionsNodeRatio,
+        jobNodesRatio,
         0.03f // Because g letter creates an offset
     );
 
     const auto secondAuthorNode = std::make_shared<VerticalNode>(
         optionsParentNode,
-        optionsNodeRatio,
+        nameNodesRatio,
         english ? -0.2f : -0.25f // Because Q creates an offset
     );
 
