@@ -154,27 +154,25 @@ ShaderProgram_sptr LevelProcess::createMapShaderProgram(const JBTypes::FileConte
 CstTextureSampler_uptr LevelProcess::createDepthKernel() {
     constexpr GLsizei numberOfChannels = 4;
 
-    std::vector<unsigned char> kernelData{};
-    std::uniform_real_distribution<float> randomFloats(0.0f, JBTypes::pi);
-    std::default_random_engine generator;
+    // Random kernel sample
+    std::vector<unsigned char> kernelData{
+        255, 128, 0,   127, 250, 161, 5,   94, 88,  249, 167, 6,   7,   170, 248, 85, 1,   140, 254, 115,
+        233, 199, 22,  56,  122, 255, 133, 0,  168, 249, 87,  6,   214, 221, 41,  34, 39,  219, 216, 36,
+        250, 163, 5,   92,  103, 253, 152, 2,  95,  251, 160, 4,   22,  199, 233, 56, 91,  250, 164, 5,
+        123, 255, 132, 0,   9,   176, 246, 79, 0,   129, 255, 126, 44,  224, 211, 31, 1,   141, 254, 114,
+        203, 230, 52,  25,  157, 252, 98,  3,  6,   167, 249, 88,  69,  241, 186, 14, 6,   166, 249, 89,
+        1,   143, 254, 112, 238, 191, 17,  64, 12,  183, 243, 72,  5,   164, 250, 91, 204, 229, 51,  26,
+        3,   153, 252, 102, 161, 250, 94,  5,  200, 233, 55,  22,  122, 255, 133, 0,  169, 248, 86,  7,
+        27,  206, 228, 49,  56,  233, 199, 22, 110, 254, 145, 1,   91,  250, 164, 5,  250, 164, 5,   91,
+        85,  248, 170, 7,   154, 252, 101, 3,  88,  249, 167, 6,   15,  187, 240, 68, 131, 255, 124, 0,
+        31,  211, 224, 44,  252, 156, 3,   99, 233, 200, 22,  55,  225, 210, 30,  45, 29,  209, 226, 46,
+        251, 161, 4,   94,  235, 196, 20,  59, 82,  247, 173, 8,   96,  251, 159, 4,  40,  221, 215, 34,
+        198, 234, 57,  21,  152, 253, 103, 2,  162, 250, 93,  5,   5,   163, 250, 92, 0,   131, 255, 124,
+        97,  251, 158, 4,   238, 190, 17,  65, 53,  231, 202, 24,  191, 238, 64,  17
+    };
     auto kernelTexture = CstTextureSampler_uptr(new TextureSampler());
     TextureSampler::setActiveTexture(kernelTextureIndex);
     kernelTexture->bind();
-
-    for (size_t i = 0; i < kernelTextureSize * kernelTextureSize; ++i) {
-        const float angle = randomFloats(generator);
-        const auto r = static_cast<unsigned char>(std::round((cosf(angle) * 0.5 + 0.5) * 255.0));
-        const auto g = static_cast<unsigned char>(std::round((sinf(angle) * 0.5 + 0.5) * 255.0));
-        const unsigned char b = 255 - r;
-        const unsigned char a = 255 - g;
-        kernelData.push_back(r);
-        kernelData.push_back(g);
-        kernelData.push_back(b);
-        kernelData.push_back(a);
-        std::cout << int(r) << "," << int(g) << "," << int(b) << "," << int(a) << ",";
-    }
-    std::cout << std::endl;
-
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kernelTextureSize, kernelTextureSize, 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, kernelData.data());
 
