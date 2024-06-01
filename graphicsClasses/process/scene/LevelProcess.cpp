@@ -14,7 +14,7 @@ LevelProcess::LevelProcess(GLsizei width,
                            DepthFrameBuffer_uptr firstShadow,
                            DepthFrameBuffer_uptr secondShadow,
                            ColorableFrameBuffer_uptr levelFrameBuffer,
-                           CstTextureSampler_uptr shadowKernel,
+                           CstTextureSampler_uptr depthKernel,
                            RenderGroup_sptr mapGroup,
                            ShaderProgram_sptr mapShaderProgram,
                            RenderGroup_sptr starGroup,
@@ -24,7 +24,7 @@ LevelProcess::LevelProcess(GLsizei width,
       _firstShadow(std::move(firstShadow)),
       _secondShadow(std::move(secondShadow)),
       _levelFrameBuffer(std::move(levelFrameBuffer)),
-      _depthKernel(std::move(shadowKernel)),
+      _depthKernel(std::move(depthKernel)),
       _mapGroup(std::move(mapGroup)),
       _mapShaderProgram(std::move(mapShaderProgram)),
       _mapGroupUniforms(_mapGroup->genUniforms(_mapShaderProgram)),
@@ -155,10 +155,14 @@ CstTextureSampler_uptr LevelProcess::createDepthKernel() {
     constexpr GLsizei numberOfChannels = 4;
 
     std::vector<unsigned char> kernelData{};
-    srand((unsigned)time(NULL));
+    std::uniform_real_distribution<float> randomFloats(0.0f, JBTypes::pi);
+    std::default_random_engine generator;
+    auto kernelTexture = CstTextureSampler_uptr(new TextureSampler());
+    TextureSampler::setActiveTexture(kernelTextureIndex);
+    kernelTexture->bind();
 
     for (size_t i = 0; i < kernelTextureSize * kernelTextureSize; ++i) {
-        const float angle = (float(rand()) / float((RAND_MAX))) * M_PI;
+        const float angle = randomFloats(generator);
         const auto r = static_cast<unsigned char>(std::round((cosf(angle) * 0.5 + 0.5) * 255.0));
         const auto g = static_cast<unsigned char>(std::round((sinf(angle) * 0.5 + 0.5) * 255.0));
         const unsigned char b = 255 - r;
@@ -167,14 +171,13 @@ CstTextureSampler_uptr LevelProcess::createDepthKernel() {
         kernelData.push_back(g);
         kernelData.push_back(b);
         kernelData.push_back(a);
+        std::cout << int(r) << "," << int(g) << "," << int(b) << "," << int(a) << ",";
     }
+    std::cout << std::endl;
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kernelTextureSize, kernelTextureSize, 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, kernelData.data());
 
-    auto kernelTexture = CstTextureSampler_uptr(new TextureSampler());
-    TextureSampler::setActiveTexture(kernelTextureIndex);
-    kernelTexture->bind();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

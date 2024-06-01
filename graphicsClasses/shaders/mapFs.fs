@@ -46,7 +46,9 @@ vec3 getLightContribution(
 }
 
 float evaluateShadow(vec4 vertexDepthMapSpace, sampler2DShadow depthT) {
-    vec4 kernelValue = texture(depthKernelTexture, gl_FragCoord.xy * fragCoordToKernelUv);
+    vec4 kernelValue = texture(depthKernelTexture, (gl_FragCoord.xy * 0.5 + 0.5) * fragCoordToKernelUv);
+    // vec4 kernelValue = texture(depthKernelTexture, vec2(0.0, 0.0));
+    // vec4 kernelValue = vec4(0.0);
     vec4 offset = (kernelValue * 2.0 - 1.0) * shadowPixelsSize * 2.0;
     float shadowCoeff = textureProj(depthT, vertexDepthMapSpace + vec4(offset.xy, 0.0, 0.0));
     shadowCoeff += textureProj(depthT, vertexDepthMapSpace + vec4(offset.zw, 0.0, 0.0));

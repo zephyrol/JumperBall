@@ -31,7 +31,7 @@ class LevelProcess : public RenderProcess {
                  DepthFrameBuffer_uptr firstShadow,
                  DepthFrameBuffer_uptr secondShadow,
                  ColorableFrameBuffer_uptr levelFrameBuffer,
-                 CstTextureSampler_uptr shadowKernel,
+                 CstTextureSampler_uptr depthKernel,
                  RenderGroup_sptr mapGroup,
                  ShaderProgram_sptr mapShaderProgram,
                  RenderGroup_sptr starGroup,
@@ -50,7 +50,7 @@ class LevelProcess : public RenderProcess {
     static constexpr GLsizei kernelTextureSize = 8;
     static constexpr GLint firstShadowTextureIndex = 0;
     static constexpr GLint secondShadowTextureIndex = 1;
-    static constexpr GLint kernelTextureIndex = 5;
+    static constexpr GLint kernelTextureIndex = 7;
 
     const GLsizei _width;
     const GLsizei _height;
