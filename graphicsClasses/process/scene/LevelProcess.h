@@ -5,44 +5,37 @@
 #ifndef JUMPERBALLAPPLICATION_LEVELPROCESS_H
 #define JUMPERBALLAPPLICATION_LEVELPROCESS_H
 
-#include "process/RenderProcess.h"
 #include "frameBuffer/ColorableFrameBuffer.h"
-#include "frameBuffer/TextureSampler.h"
 #include "frameBuffer/DepthFrameBuffer.h"
-#include "scene/Star.h"
+#include "frameBuffer/TextureSampler.h"
 #include "process/RenderGroup.h"
-
+#include "process/RenderProcess.h"
+#include "scene/Star.h"
 
 class LevelProcess;
 
 using LevelProcess_uptr = std::unique_ptr<LevelProcess>;
 
 class LevelProcess : public RenderProcess {
-public:
+   public:
+    static LevelProcess_uptr createInstance(const JBTypes::FileContent& fileContent,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            CstMap_sptr map,
+                                            CstStar_sptr firstStar,
+                                            CstStar_sptr secondStar,
+                                            unsigned int ballSkin);
 
-    static LevelProcess_uptr createInstance(
-        const JBTypes::FileContent &fileContent,
-        GLsizei width,
-        GLsizei height,
-        CstMap_sptr map,
-        CstStar_sptr firstStar,
-        CstStar_sptr secondStar,
-        unsigned int ballSkin
-    );
-
-    LevelProcess(
-        GLsizei width,
-        GLsizei height,
-        DepthFrameBuffer_uptr firstShadow,
-        DepthFrameBuffer_uptr firstBlankShadow,
-        DepthFrameBuffer_uptr secondShadow,
-        DepthFrameBuffer_uptr secondBlankShadow,
-        ColorableFrameBuffer_uptr levelFrameBuffer,
-        RenderGroup_sptr mapGroup,
-        ShaderProgram_sptr mapShaderProgram,
-        RenderGroup_sptr starGroup,
-        ShaderProgram_sptr starShaderProgram
-    );
+    LevelProcess(GLsizei width,
+                 GLsizei height,
+                 DepthFrameBuffer_uptr firstShadow,
+                 DepthFrameBuffer_uptr secondShadow,
+                 ColorableFrameBuffer_uptr levelFrameBuffer,
+                 CstTextureSampler_uptr shadowKernel,
+                 RenderGroup_sptr mapGroup,
+                 ShaderProgram_sptr mapShaderProgram,
+                 RenderGroup_sptr starGroup,
+                 ShaderProgram_sptr starShaderProgram);
 
     void update() override;
 
@@ -50,22 +43,22 @@ public:
 
     vecCstShaderProgram_sptr getShaderPrograms() const override;
 
-    const CstTextureSampler_uptr &getRenderTexture() const override;
+    const CstTextureSampler_uptr& getRenderTexture() const override;
 
-private:
-
+   private:
     static constexpr GLsizei depthTexturesSize = 1024;
+    static constexpr GLsizei kernelTextureSize = 8;
     static constexpr GLint firstShadowTextureIndex = 0;
     static constexpr GLint secondShadowTextureIndex = 1;
+    static constexpr GLint kernelTextureIndex = 5;
 
     const GLsizei _width;
     const GLsizei _height;
 
     const DepthFrameBuffer_uptr _firstShadow;
-    const DepthFrameBuffer_uptr _firstBlankShadow;
     const DepthFrameBuffer_uptr _secondShadow;
-    const DepthFrameBuffer_uptr _secondBlankShadow;
     const ColorableFrameBuffer_uptr _levelFrameBuffer;
+    const CstTextureSampler_uptr _depthKernel;
 
     const RenderGroup_sptr _mapGroup;
     const ShaderProgram_sptr _mapShaderProgram;
@@ -77,11 +70,12 @@ private:
 
     const GLint _passIdUniformLocation;
 
+    static ShaderProgram_sptr createMapShaderProgram(const JBTypes::FileContent& fileContent,
+                                                     short idCount,
+                                                     GLsizei width,
+                                                     GLsizei height);
 
-    static ShaderProgram_sptr createMapShaderProgram(
-        const JBTypes::FileContent &fileContent,
-        short idCount
-    );
+    static CstTextureSampler_uptr createDepthKernel();
 };
 
-#endif //JUMPERBALLAPPLICATION_LEVELPROCESS_H
+#endif  // JUMPERBALLAPPLICATION_LEVELPROCESS_H

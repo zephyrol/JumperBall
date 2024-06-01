@@ -16,6 +16,9 @@ TextureSampler::TextureSampler(): _textureId(
 void TextureSampler::bind() const {
     glBindTexture(GL_TEXTURE_2D, _textureId);
 }
+void TextureSampler::bindNoTexture() {
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
 
 void TextureSampler::setActiveTexture(GLint index) {
     glActiveTexture(GL_TEXTURE0 + index);

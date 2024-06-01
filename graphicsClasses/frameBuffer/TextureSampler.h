@@ -36,6 +36,13 @@ public :
     void bind() const;
 
     /**
+     * Bind no texture.
+     * Warning: Ensure that TextureSampler::setActiveTexture was previously called with
+     * the index corresponding to one you want to disable.
+     */
+    static void bindNoTexture();
+
+    /**
      * Set the current active texture.
      * After this call, the TextureSampler.bind() function will bind a texture id to
      * this specified index.
