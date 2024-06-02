@@ -50,7 +50,7 @@ class LevelProcess : public RenderProcess {
     static constexpr GLsizei kernelTextureSize = 8;
     static constexpr GLint firstShadowTextureIndex = 0;
     static constexpr GLint secondShadowTextureIndex = 1;
-    static constexpr GLint kernelTextureIndex = 7;
+    static constexpr GLint kernelTextureIndex = 3;
 
     const GLsizei _width;
     const GLsizei _height;

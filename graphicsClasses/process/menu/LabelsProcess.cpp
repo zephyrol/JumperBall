@@ -59,7 +59,7 @@ std::unique_ptr<LabelsProcess> LabelsProcess::createInstance(
     );
     labelsShader->use();
 
-    constexpr GLint characterTextureNumber = 4;
+    constexpr GLint characterTextureNumber = 5;
     labelsShader->setTextureIndex("characterTexture", characterTextureNumber);
     TextureSampler::setActiveTexture(characterTextureNumber);
     fontTexturesGenerator->getLettersTexture()->bind();

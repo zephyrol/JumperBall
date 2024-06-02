@@ -37,7 +37,7 @@ public:
 
 private:
 
-    static constexpr GLint postProcessTextureNumber = 3;
+    static constexpr GLint postProcessTextureNumber = 4;
 
     const GLsizei _screenWidth;
     const GLsizei _screenHeight;

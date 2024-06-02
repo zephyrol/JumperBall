@@ -107,9 +107,6 @@ void LevelProcess::render() const {
 
     _secondShadow->getRenderTexture()->bind();
 
-    TextureSampler::setActiveTexture(kernelTextureIndex);
-    _depthKernel->bind();
-
     TextureSampler::setActiveTexture(firstShadowTextureIndex);
     _firstShadow->getRenderTexture()->bind();
 
@@ -139,6 +136,7 @@ ShaderProgram_sptr LevelProcess::createMapShaderProgram(const JBTypes::FileConte
         {{"fragCoordToKernelUv",
           {static_cast<float>(width) / static_cast<float>(kernelTextureSize),
            static_cast<float>(height) / static_cast<float>(kernelTextureSize)}}});
+
     shader->use();
     shader->setTextureIndex("depthTexture", firstShadowTextureIndex);
     shader->setTextureIndex("depth2Texture", secondShadowTextureIndex);
@@ -166,15 +164,16 @@ CstTextureSampler_uptr LevelProcess::createDepthKernel() {
     };
     auto kernelTexture = CstTextureSampler_uptr(new TextureSampler());
     TextureSampler::setActiveTexture(kernelTextureIndex);
-    kernelTexture->bind();
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kernelTextureSize, kernelTextureSize, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, kernelData.data());
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kernelTextureSize, kernelTextureSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, kernelData.data());
+
+    kernelTexture->bind();
     return kernelTexture;
 }
 
