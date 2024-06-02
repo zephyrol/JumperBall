@@ -13,8 +13,6 @@ uniform sampler2DShadow depthTexture;
 uniform sampler2DShadow depth2Texture;
 uniform sampler2D depthKernelTexture;
 
-uniform vec4 shadowOffsets[4];
-
 uniform int passId;
 
 in vec3 fs_vertexColor;
@@ -47,15 +45,10 @@ vec3 getLightContribution(
 
 float evaluateShadow(vec4 vertexDepthMapSpace, sampler2DShadow depthT) {
     vec4 kernelValue = texture(depthKernelTexture, (gl_FragCoord.xy * 0.5 + 0.5) * fragCoordToKernelUv);
-    // vec4 kernelValue = texture(depthKernelTexture, vec2(0.0, 0.0));
-    // vec4 kernelValue = vec4(0.0);
-    vec4 offset = (kernelValue * 2.0 - 1.0) * shadowPixelsSize * 2.0;
+    vec4 offset = (kernelValue * 2.0 - 1.0) * shadowPixelsSize;
     float shadowCoeff = textureProj(depthT, vertexDepthMapSpace + vec4(offset.xy, 0.0, 0.0));
     shadowCoeff += textureProj(depthT, vertexDepthMapSpace + vec4(offset.zw, 0.0, 0.0));
-    // float shadowCoeff = textureProj(depthT, vertexDepthMapSpace + shadowOffsets[0]);
-    // shadowCoeff += textureProj(depthT, vertexDepthMapSpace + shadowOffsets[2]);
-
-    return shadowCoeff * 0.5;
+    return shadowCoeff;
 }
 
 vec4 convertOutput(vec3 composition) {
@@ -80,21 +73,32 @@ void main(){
 
     vec3 normalizedNormal = normalize(fs_vertexNormal);
     vec3 toCamera = normalize(cameraPosition - fs_vertexPositionWorld);
-    float firstShadowCoeff = evaluateShadow(fs_vertexDepthMapSpace, depthTexture);
     if (dot(normalizedNormal, lightDirection) < 0.0) {
-        if (firstShadowCoeff > 0.9) {
-            pixelColor = vec4(1.0, 1.0, 1.0, 0.0);
-            return;
-        }
-        if (firstShadowCoeff > 0.4) {
-            pixelColor = vec4(0.0, 0.0, 1.0, 0.0);
-            return;
-        }
-        if (firstShadowCoeff > -0.1) {
-            pixelColor = vec4(0.0, 0.0, 0.0, 0.0);
-            return;
+        float firstShadowCoeff = evaluateShadow(fs_vertexDepthMapSpace, depthTexture);
+        if (firstShadowCoeff > 0.0) {
+            composition += firstShadowCoeff * 0.5 * getLightContribution(
+                normalizedNormal,
+                toCamera,
+                lightDirection,
+                vec3(0.20, 0.25, 0.25),
+                vec3(0.0, 0.25, 0.25)
+            );
         }
     }
-    pixelColor = vec4(0.0, 0.0, 0.0, 0.0);
+
+    if (dot(normalizedNormal, light2Direction) < 0.0) {
+        float secondShadowCoeff = evaluateShadow(fs_vertexDepthMap2Space, depth2Texture);
+        if (secondShadowCoeff > 0.0) {
+            composition += secondShadowCoeff * 0.5 * getLightContribution(
+                normalizedNormal,
+                toCamera,
+                light2Direction,
+                vec3(0.25, 0.20, 0.25),
+                vec3(0.25, 0.0, 0.25)
+            );
+        }
+    }
+
+    pixelColor = convertOutput(composition);
 }
 

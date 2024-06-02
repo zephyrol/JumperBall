@@ -135,7 +135,7 @@ ShaderProgram_sptr LevelProcess::createMapShaderProgram(const JBTypes::FileConte
     constexpr auto shadowPixelsSize = 1.f / static_cast<float>(depthTexturesSize);
     auto shader = ShaderProgram::createInstance(
         fileContent, "mapVs.vs", "mapFs.fs", {}, {{"idCount", idCount}},
-        {{"penumbraHalfSize", penumbraHalfSize}, {"shadowPixelsSize", shadowPixelsSize}},
+        {{"shadowPixelsSize", shadowPixelsSize}},
         {{"fragCoordToKernelUv",
           {static_cast<float>(width) / static_cast<float>(kernelTextureSize),
            static_cast<float>(height) / static_cast<float>(kernelTextureSize)}}});
@@ -143,11 +143,6 @@ ShaderProgram_sptr LevelProcess::createMapShaderProgram(const JBTypes::FileConte
     shader->setTextureIndex("depthTexture", firstShadowTextureIndex);
     shader->setTextureIndex("depth2Texture", secondShadowTextureIndex);
     shader->setTextureIndex("depthKernelTexture", kernelTextureIndex);
-
-    shader->setUniformArrayVec4(
-        "shadowOffsets[0]",
-        {shadowPixelsSize, shadowPixelsSize, 0.0, 0.0, -shadowPixelsSize, shadowPixelsSize, 0.0, 0.0,
-         shadowPixelsSize, -shadowPixelsSize, 0.0, 0.0, -shadowPixelsSize, -shadowPixelsSize, 0.0, 0.0});
     return shader;
 }
 
