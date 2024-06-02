@@ -147,7 +147,6 @@ ShaderProgram_sptr LevelProcess::createMapShaderProgram(const JBTypes::FileConte
 }
 
 CstTextureSampler_uptr LevelProcess::createDepthKernel() {
-    constexpr GLsizei numberOfChannels = 4;
 
     // Random kernel sample
     std::vector<unsigned char> kernelData{

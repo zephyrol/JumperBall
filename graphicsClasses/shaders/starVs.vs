@@ -2,6 +2,8 @@ uniform Scene {
     mat4 VP;
     mat4 VPStar;
     mat4 VPStar2;
+    mat4 VDepthPStar;
+    mat4 VDepthPStar2;
     vec3 cameraPosition;
     vec3 lightDirection;
     vec3 light2Direction;

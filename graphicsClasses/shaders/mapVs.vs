@@ -2,6 +2,8 @@ uniform Scene {
     mat4 VP;
     mat4 VPStar;
     mat4 VPStar2;
+    mat4 VDepthPStar;
+    mat4 VDepthPStar2;
     vec3 cameraPosition;
     vec3 lightDirection;
     vec3 light2Direction;
@@ -26,13 +28,6 @@ out vec4 fs_vertexDepthMapSpace;
 out vec4 fs_vertexDepthMap2Space;
 out vec3 fs_vertexNormal;
 out vec3 fs_vertexPositionWorld;
-
-const mat4 biasMatrix = mat4(
-    0.5, 0.0, 0.0, 0.0,
-    0.0, 0.5, 0.0, 0.0,
-    0.0, 0.0, 0.5, 0.0,
-    0.5, 0.5, 0.5, 1.0
-);
 
 mat4 getTranslationMatrix(vec3 translation) {
     return mat4(
@@ -94,8 +89,8 @@ void main() {
     mat4 normalTransform = rotationMatrix;
     fs_vertexNormal = normalize((normalTransform * vec4(vs_vertexNormal, 1.0)).xyz);
     fs_vertexPositionWorld = vertexPositionWorldSpace.xyz;
-    fs_vertexDepthMapSpace = biasMatrix * VPStar * vertexPositionWorldSpace;
-    fs_vertexDepthMap2Space = biasMatrix * VPStar2 * vertexPositionWorldSpace;
+    fs_vertexDepthMapSpace = VDepthPStar * vertexPositionWorldSpace;
+    fs_vertexDepthMap2Space = VDepthPStar2 * vertexPositionWorldSpace;
     gl_Position = VP * vertexPositionWorldSpace;
 
 }
