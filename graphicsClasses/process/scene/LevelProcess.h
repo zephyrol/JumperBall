@@ -45,12 +45,14 @@ class LevelProcess : public RenderProcess {
 
     const CstTextureSampler_uptr& getRenderTexture() const override;
 
+    static constexpr GLint levelTextureIndex = 3;
+
    private:
     static constexpr GLsizei depthTexturesSize = 1024;
     static constexpr GLsizei kernelTextureSize = 8;
-    static constexpr GLint firstShadowTextureIndex = 0;
-    static constexpr GLint secondShadowTextureIndex = 1;
-    static constexpr GLint kernelTextureIndex = 3;
+    static constexpr GLint firstDepthTextureIndex = 0;
+    static constexpr GLint secondDepthTextureIndex = 1;
+    static constexpr GLint kernelTextureIndex = 2;
 
     const GLsizei _width;
     const GLsizei _height;

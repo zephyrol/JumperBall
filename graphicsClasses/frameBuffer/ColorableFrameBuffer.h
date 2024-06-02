@@ -5,7 +5,6 @@
 #ifndef JUMPERBALLAPPLICATION_COLORABLEFRAMEBUFFER_H
 #define JUMPERBALLAPPLICATION_COLORABLEFRAMEBUFFER_H
 
-
 #include "FrameBuffer.h"
 #include "RenderBuffer.h"
 
@@ -13,28 +12,27 @@ class ColorableFrameBuffer;
 using ColorableFrameBuffer_uptr = std::unique_ptr<ColorableFrameBuffer>;
 
 class ColorableFrameBuffer : public FrameBuffer {
-public:
-    static ColorableFrameBuffer_uptr createInstance(
-        GLsizei resolutionX,
-        GLsizei resolutionY,
-        bool useNearestFilter,
-        bool hasDepthBuffer,
-        std::unique_ptr<glm::vec3> clearColor = nullptr
-    );
+   public:
 
-    ColorableFrameBuffer(
-        CstTextureSampler_uptr renderTexture,
-        CstGpuFrameBuffer_uptr gpuFrameBuffer,
-        CstRenderBuffer_uptr depthBuffer,
-        std::unique_ptr<glm::vec3> clearColor
-    );
+    /**
+     * Create a colorable frame buffer and bind the render texture in the current active texture index.
+     * Warning: The active texture index has to be specified before.
+     */
+    static ColorableFrameBuffer_uptr createInstance(GLsizei resolutionX,
+                                                    GLsizei resolutionY,
+                                                    bool useNearestFilter,
+                                                    bool hasDepthBuffer,
+                                                    std::unique_ptr<glm::vec3> clearColor = nullptr);
+
+    ColorableFrameBuffer(CstTextureSampler_uptr renderTexture,
+                         CstGpuFrameBuffer_uptr gpuFrameBuffer,
+                         CstRenderBuffer_uptr depthBuffer,
+                         std::unique_ptr<glm::vec3> clearColor);
 
     void clear() override;
 
-private:
+   private:
     const std::unique_ptr<const glm::vec3> _clearColor;
-
 };
 
-
-#endif //JUMPERBALLAPPLICATION_COLORABLEFRAMEBUFFER_H
+#endif  // JUMPERBALLAPPLICATION_COLORABLEFRAMEBUFFER_H

@@ -13,7 +13,6 @@ DepthFrameBuffer::DepthFrameBuffer(
 
 DepthFrameBuffer_uptr DepthFrameBuffer::createInstance(GLsizei resolutionX, GLsizei resolutionY) {
     auto depthTexture = CstTextureSampler_uptr(new TextureSampler());
-    TextureSampler::setActiveTexture(0);
     depthTexture->bind();
 
     auto gpuFrameBuffer = CstGpuFrameBuffer_uptr(new GpuFrameBuffer());

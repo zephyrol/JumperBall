@@ -6,38 +6,43 @@
 #define JUMPERBALLAPPLICATION_POSTEFFECTS_H
 
 #include "frameBuffer/ColorableFrameBuffer.h"
-#include "frameBuffer/TextureSampler.h"
 #include "process/RenderGroup.h"
 
 class PostEffects;
 using PostEffects_uptr = std::unique_ptr<PostEffects>;
 class PostEffects {
-
-public:
+   public:
     PostEffects(
-        const JBTypes::FileContent &fileContent,
+
         GLsizei screenWidth,
         GLsizei screenHeight,
         GLsizei postEffectsWidth,
         GLsizei postEffectsHeight,
-        const CstTextureSampler_uptr& sceneTexture,
-        GLint defaultFrameBuffer
-    );
+        RenderGroup_sptr screen,
+        ColorableFrameBuffer_uptr brightPassFilterFrameBuffer,
+        ColorableFrameBuffer_uptr horizontalBlurFrameBuffer,
+        ColorableFrameBuffer_uptr verticalBlurFrameBuffer,
+        ShaderProgram_sptr postProcessesShader,
+        GLint postProcessIdUniformLocation,
+        GLint postProcessTextureUniformLocation,
+        GLint defaultFrameBuffer);
 
     void render() const;
 
+    static PostEffects_uptr createInstance(const JBTypes::FileContent& fileContent,
+                                    GLsizei screenWidth,
+                                    GLsizei screenHeight,
+                                    GLsizei postEffectsWidth,
+                                    GLsizei postEffectsHeight,
+                                    GLint sceneTextureIndex,
+                                    GLint defaultFrameBuffer);
+
     vecCstShaderProgram_sptr getShaderPrograms() const;
 
-    ShaderProgram_sptr createPostProcessesShaderProgram(
-        const CstTextureSampler_uptr &sceneTexture,
-        const JBTypes::FileContent &fileContent,
-        GLsizei width,
-        GLsizei height
-    );
-
-private:
-
-    static constexpr GLint postProcessTextureNumber = 4;
+   private:
+    static constexpr GLint brightPassFilterTextureIndex = 4;
+    static constexpr GLint horizontalBlurTextureIndex = 5;
+    static constexpr GLint verticalBlurTextureIndex = 6;
 
     const GLsizei _screenWidth;
     const GLsizei _screenHeight;
@@ -49,8 +54,8 @@ private:
     const ColorableFrameBuffer_uptr _verticalBlurFrameBuffer;
     const ShaderProgram_sptr _postProcessesShader;
     const GLint _postProcessIdUniformLocation;
+    const GLint _postProcessTextureUniformLocation;
     const GLint _defaultFrameBuffer;
 };
 
-
-#endif //JUMPERBALLAPPLICATION_POSTEFFECTS_H
+#endif  // JUMPERBALLAPPLICATION_POSTEFFECTS_H

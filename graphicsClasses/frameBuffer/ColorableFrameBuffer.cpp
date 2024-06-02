@@ -12,7 +12,6 @@ ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
     std::unique_ptr<glm::vec3> clearColor
 ) {
     auto renderTexture = CstTextureSampler_uptr(new TextureSampler());
-    TextureSampler::setActiveTexture(0);
     renderTexture->bind();
 
     auto gpuFrameBuffer = CstGpuFrameBuffer_uptr(new GpuFrameBuffer());
