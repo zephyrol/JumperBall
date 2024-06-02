@@ -13,10 +13,6 @@ using DepthFrameBuffer_uptr = std::unique_ptr<DepthFrameBuffer>;
 
 class DepthFrameBuffer : public FrameBuffer {
    public:
-    /**
-     * Create a depth frame buffer and bind the render texture in the current active texture index.
-     * Warning: The active texture index has to be specified before.
-     */
     static DepthFrameBuffer_uptr createInstance(GLsizei resolutionX, GLsizei resolutionY);
 
     DepthFrameBuffer(CstTextureSampler_uptr renderTexture, CstGpuFrameBuffer_uptr gpuFrameBuffer);

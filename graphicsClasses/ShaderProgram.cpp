@@ -80,7 +80,7 @@ void ShaderProgram::setInteger(GLint integerUniformLocation, int value) {
 
 void ShaderProgram::setTextureIndex(const std::string& textureName, GLint index) {
     const auto location = getUniformLocation(textureName);
-    glUniform1i(location, index);
+    setInteger(location, index);
 }
 
 void ShaderProgram::setUniformArrayVec2(const std::string& uniformArrayName,

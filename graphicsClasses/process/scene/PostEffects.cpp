@@ -42,21 +42,27 @@ PostEffects_uptr PostEffects::createInstance(const JBTypes::FileContent& fileCon
         return screenGroupGenerator.genRenderGroup();
     }());
 
-    TextureSampler::setActiveTexture(brightPassFilterTextureIndex);
     auto brightPassFilterFrameBuffer =
         ColorableFrameBuffer::createInstance(postEffectsWidth, postEffectsHeight, true, false);
 
-    TextureSampler::setActiveTexture(horizontalBlurTextureIndex);
     auto horizontalBlurFrameBuffer =
         ColorableFrameBuffer::createInstance(postEffectsWidth, postEffectsHeight, true, false);
 
-    TextureSampler::setActiveTexture(verticalBlurTextureIndex);
     auto verticalBlurFrameBuffer =
         ColorableFrameBuffer::createInstance(postEffectsWidth, postEffectsHeight, false, false);
 
     auto shader = ShaderProgram::createInstance(fileContent, "postEffectsVs.vs", "postEffectsFs.fs");
     shader->use();
     shader->setTextureIndex("sceneTexture", sceneTextureIndex);
+
+    TextureSampler::setActiveTexture(brightPassFilterTextureIndex);
+    brightPassFilterFrameBuffer->getRenderTexture()->bind();
+
+    TextureSampler::setActiveTexture(horizontalBlurTextureIndex);
+    horizontalBlurFrameBuffer->getRenderTexture()->bind();
+
+    TextureSampler::setActiveTexture(verticalBlurTextureIndex);
+    verticalBlurFrameBuffer->getRenderTexture()->bind();
 
     // shader->setTextureIndex("postProcessTexture", postProcessTextureNumber);
     // Getting 17 Gauss weights computed with sigma = 4. Because two standard deviations from mean account
@@ -111,18 +117,30 @@ void PostEffects::render() const {
     _horizontalBlurFrameBuffer->bindFrameBuffer();
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 1);
     _postProcessesShader->setInteger(_postProcessTextureUniformLocation, brightPassFilterTextureIndex);
+
+    TextureSampler::setActiveTexture(brightPassFilterTextureIndex);
+    _brightPassFilterFrameBuffer->getRenderTexture()->bind();
+
     _screen->render();
 
     // 3. Vertical blur
     _verticalBlurFrameBuffer->bindFrameBuffer();
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 2);
     _postProcessesShader->setInteger(_postProcessTextureUniformLocation, horizontalBlurTextureIndex);
+
+    TextureSampler::setActiveTexture(horizontalBlurTextureIndex);
+    _horizontalBlurFrameBuffer->getRenderTexture()->bind();
+
     _screen->render();
 
     // 4. Bloom
     GpuFrameBuffer::bindDefaultFrameBuffer(_defaultFrameBuffer);
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 3);
     _postProcessesShader->setInteger(_postProcessTextureUniformLocation, verticalBlurTextureIndex);
+
+    TextureSampler::setActiveTexture(verticalBlurTextureIndex);
+    _verticalBlurFrameBuffer->getRenderTexture()->bind();
+
     FrameBuffer::setViewportSize(_screenWidth, _screenHeight);
     _screen->render();
 }

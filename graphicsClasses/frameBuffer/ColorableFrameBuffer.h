@@ -13,11 +13,6 @@ using ColorableFrameBuffer_uptr = std::unique_ptr<ColorableFrameBuffer>;
 
 class ColorableFrameBuffer : public FrameBuffer {
    public:
-
-    /**
-     * Create a colorable frame buffer and bind the render texture in the current active texture index.
-     * Warning: The active texture index has to be specified before.
-     */
     static ColorableFrameBuffer_uptr createInstance(GLsizei resolutionX,
                                                     GLsizei resolutionY,
                                                     bool useNearestFilter,

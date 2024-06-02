@@ -31,7 +31,9 @@ LevelProcess::LevelProcess(GLsizei width,
       _starGroup(std::move(starGroup)),
       _starShaderProgram(std::move(starShaderProgram)),
       _starGroupUniforms(_starGroup->genUniforms(_starShaderProgram)),
-      _passIdUniformLocation(_mapShaderProgram->getUniformLocation("passId")) {}
+      _passIdUniformLocation(_mapShaderProgram->getUniformLocation("passId")),
+      _depthTextureUniformLocation(_mapShaderProgram->getUniformLocation("depthTexture")),
+      _depth2TextureUniformLocation(_mapShaderProgram->getUniformLocation("depth2Texture")) {}
 
 LevelProcess_uptr LevelProcess::createInstance(const JBTypes::FileContent& fileContent,
                                                GLsizei width,
@@ -56,16 +58,14 @@ LevelProcess_uptr LevelProcess::createInstance(const JBTypes::FileContent& fileC
         return DepthFrameBuffer::createInstance(depthTexturesSize, depthTexturesSize);
     };
 
-    TextureSampler::setActiveTexture(firstDepthTextureIndex);
     auto firstDepthFrameBuffer = genDepthFrameBuffer();
-
-    TextureSampler::setActiveTexture(secondDepthTextureIndex);
     auto secondDepthFrameBuffer = genDepthFrameBuffer();
 
     TextureSampler::setActiveTexture(levelTextureIndex);
     auto levelFrameBuffer = ColorableFrameBuffer::createInstance(
         width, height, true, true, std::unique_ptr<glm::vec3>(new glm::vec3(0.f, 0.f, 0.1f)));
 
+    mapShaderProgram->use();
     return std::unique_ptr<LevelProcess>(
         new LevelProcess(width, height, std::move(firstDepthFrameBuffer), std::move(secondDepthFrameBuffer),
                          std::move(levelFrameBuffer), createDepthKernel(), std::move(mapGroup),
@@ -90,6 +90,11 @@ void LevelProcess::render() const {
     _mapGroupUniforms.bind();
     _mapGroup->bind();
 
+    TextureSampler::setActiveTexture(firstDepthTextureIndex);
+    TextureSampler::bindNoTexture();
+    TextureSampler::setActiveTexture(secondDepthTextureIndex);
+    TextureSampler::bindNoTexture();
+
     // 1. First shadow
     _firstShadow->bindFrameBuffer();
     _firstShadow->clear();
@@ -108,13 +113,15 @@ void LevelProcess::render() const {
     FrameBuffer::setViewportSize(_width, _height);
     _levelFrameBuffer->bindFrameBuffer();
 
-    // _secondShadow->getRenderTexture()->bind();
+    _mapShaderProgram->setInteger(_passIdUniformLocation, 2);
+    _secondShadow->getRenderTexture()->bind();
 
-    // TextureSampler::setActiveTexture(firstDepthTextureIndex);
-    // _firstShadow->getRenderTexture()->bind();
+    TextureSampler::setActiveTexture(firstDepthTextureIndex);
+    _firstShadow->getRenderTexture()->bind();
 
-    // _levelFrameBuffer->bindFrameBuffer();
-    _mapShaderProgram->setInteger(_passIdUniformLocation, 3);
+    TextureSampler::setActiveTexture(kernelTextureIndex);
+    _depthKernel->bind();
+
     _mapGroup->render();
 }
 
@@ -140,9 +147,9 @@ ShaderProgram_sptr LevelProcess::createMapShaderProgram(const JBTypes::FileConte
            static_cast<float>(height) / static_cast<float>(kernelTextureSize)}}});
 
     shader->use();
+    shader->setTextureIndex("depthKernelTexture", kernelTextureIndex);
     shader->setTextureIndex("depthTexture", firstDepthTextureIndex);
     shader->setTextureIndex("depth2Texture", secondDepthTextureIndex);
-    shader->setTextureIndex("depthKernelTexture", kernelTextureIndex);
     return shader;
 }
 
@@ -162,8 +169,9 @@ CstTextureSampler_uptr LevelProcess::createDepthKernel() {
         251, 161, 4,   94,  235, 196, 20,  59, 82,  247, 173, 8,   96,  251, 159, 4,  40,  221, 215, 34,
         198, 234, 57,  21,  152, 253, 103, 2,  162, 250, 93,  5,   5,   163, 250, 92, 0,   131, 255, 124,
         97,  251, 158, 4,   238, 190, 17,  65, 53,  231, 202, 24,  191, 238, 64,  17};
-    auto kernelTexture = CstTextureSampler_uptr(new TextureSampler());
+
     TextureSampler::setActiveTexture(kernelTextureIndex);
+    auto kernelTexture = CstTextureSampler_uptr(new TextureSampler());
     kernelTexture->bind();
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kernelTextureSize, kernelTextureSize, 0, GL_RGBA,
@@ -173,7 +181,6 @@ CstTextureSampler_uptr LevelProcess::createDepthKernel() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    // TODO ?? kernelTexture->bind();
     return kernelTexture;
 }
 

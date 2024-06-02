@@ -35,7 +35,8 @@ class LevelProcess : public RenderProcess {
                  RenderGroup_sptr mapGroup,
                  ShaderProgram_sptr mapShaderProgram,
                  RenderGroup_sptr starGroup,
-                 ShaderProgram_sptr starShaderProgram);
+                 ShaderProgram_sptr starShaderProgram
+                 );
 
     void update() override;
 
@@ -71,6 +72,8 @@ class LevelProcess : public RenderProcess {
     RenderGroupUniforms _starGroupUniforms;
 
     const GLint _passIdUniformLocation;
+    const GLint _depthTextureUniformLocation;
+    const GLint _depth2TextureUniformLocation;
 
     static ShaderProgram_sptr createMapShaderProgram(const JBTypes::FileContent& fileContent,
                                                      short idCount,
