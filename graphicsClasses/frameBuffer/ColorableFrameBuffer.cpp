@@ -14,9 +14,6 @@ ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
     auto renderTexture = CstTextureSampler_uptr(new TextureSampler());
     renderTexture->bind();
 
-    auto gpuFrameBuffer = CstGpuFrameBuffer_uptr(new GpuFrameBuffer());
-    gpuFrameBuffer->bind();
-
     glTexStorage2D(
         GL_TEXTURE_2D,
         1,
@@ -30,7 +27,10 @@ ColorableFrameBuffer_uptr ColorableFrameBuffer::createInstance(
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    TextureSampler::bindNoTexture();
 
+    auto gpuFrameBuffer = CstGpuFrameBuffer_uptr(new GpuFrameBuffer());
+    gpuFrameBuffer->bind();
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture->getId(), 0);
 
     CstRenderBuffer_uptr depthBuffer =

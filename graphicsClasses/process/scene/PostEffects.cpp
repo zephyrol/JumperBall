@@ -36,6 +36,7 @@ PostEffects_uptr PostEffects::createInstance(const JBTypes::FileContent& fileCon
                                              GLsizei postEffectsWidth,
                                              GLsizei postEffectsHeight,
                                              GLint sceneTextureIndex,
+                                             const CstTextureSampler_uptr& sceneTexture,
                                              GLint defaultFrameBuffer) {
     auto screen = ([]() {
         ScreenGroupGenerator screenGroupGenerator;
@@ -53,6 +54,8 @@ PostEffects_uptr PostEffects::createInstance(const JBTypes::FileContent& fileCon
 
     auto shader = ShaderProgram::createInstance(fileContent, "postEffectsVs.vs", "postEffectsFs.fs");
     shader->use();
+    TextureSampler::setActiveTexture(sceneTextureIndex);
+    sceneTexture->bind();
     shader->setTextureIndex("sceneTexture", sceneTextureIndex);
 
     TextureSampler::setActiveTexture(brightPassFilterTextureIndex);
@@ -116,20 +119,20 @@ void PostEffects::render() const {
     // 2. Horizontal blur
     _horizontalBlurFrameBuffer->bindFrameBuffer();
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 1);
-    _postProcessesShader->setInteger(_postProcessTextureUniformLocation, brightPassFilterTextureIndex);
 
     TextureSampler::setActiveTexture(brightPassFilterTextureIndex);
     _brightPassFilterFrameBuffer->getRenderTexture()->bind();
+    _postProcessesShader->setInteger(_postProcessTextureUniformLocation, brightPassFilterTextureIndex);
 
     _screen->render();
 
     // 3. Vertical blur
     _verticalBlurFrameBuffer->bindFrameBuffer();
     _postProcessesShader->setInteger(_postProcessIdUniformLocation, 2);
-    _postProcessesShader->setInteger(_postProcessTextureUniformLocation, horizontalBlurTextureIndex);
 
     TextureSampler::setActiveTexture(horizontalBlurTextureIndex);
     _horizontalBlurFrameBuffer->getRenderTexture()->bind();
+    _postProcessesShader->setInteger(_postProcessTextureUniformLocation, horizontalBlurTextureIndex);
 
     _screen->render();
 

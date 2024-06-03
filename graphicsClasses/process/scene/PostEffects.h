@@ -35,6 +35,7 @@ class PostEffects {
                                     GLsizei postEffectsWidth,
                                     GLsizei postEffectsHeight,
                                     GLint sceneTextureIndex,
+                                    const CstTextureSampler_uptr& sceneTexture,
                                     GLint defaultFrameBuffer);
 
     vecCstShaderProgram_sptr getShaderPrograms() const;

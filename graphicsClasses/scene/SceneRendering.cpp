@@ -45,7 +45,7 @@ std::unique_ptr<SceneRendering> SceneRendering::createInstance(const Scene& scen
 
     auto postEffects = PostEffects::createInstance(
         fileContent, width, height, expensivePostProcessWidthGLsizei, expensivePostProcessHeightGLsizei,
-        LevelProcess::levelTextureIndex, defaultFrameBuffer);
+        LevelProcess::levelTextureIndex, levelProcess->getRenderTexture(), defaultFrameBuffer);
 
     auto shadersProgramsUsingUniformBuffer = levelProcess->getShaderPrograms();
     auto postEffectsShaderPrograms = postEffects->getShaderPrograms();

@@ -7,7 +7,6 @@
 
 #include "FontTexturesGenerator.h"
 
-#include <utility>
 #include "frameBuffer/FrameBuffer.h"
 #include "gameMenu/nodes/CenteredNode.h"
 
@@ -179,6 +178,7 @@ FontTexturesGenerator_uptr FontTexturesGenerator::createInstance(
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    TextureSampler::bindNoTexture();
 
     return FontTexturesGenerator_uptr(
         new FontTexturesGenerator(std::move(lettersTexture.texture), std::move(textLabels)));
