@@ -26,7 +26,7 @@ public:
         GLsizei width,
         GLsizei height,
         CstPage_sptr page,
-        FontTexturesGenerator_uptr fontTexturesGenerator,
+        CstTextureSampler_uptr fontTexture,
         RenderGroup_sptr renderGroup,
         ShaderProgram_sptr labelsShader
     );
@@ -36,8 +36,9 @@ public:
     vecCstShaderProgram_sptr getShaderPrograms() const;
 
 private:
+    static constexpr GLint characterTextureNumber = 7;
     const CstPage_sptr _page;
-    const FontTexturesGenerator_uptr _fontTexturesGenerator;
+    const CstTextureSampler_uptr _fontTexture;
     const RenderGroup_sptr _renderGroup;
     const ShaderProgram_sptr _labelsShader;
     RenderGroupUniforms _renderGroupUniform;

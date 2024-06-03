@@ -103,7 +103,10 @@ class FontTexturesGenerator {
                                                      const CstPage_sptr& page,
                                                      const FTContent& ftContent);
 
-    const CstTextureSampler_uptr& getLettersTexture() const;
+    /**
+     * Get letters texture ownership. Must be called only once.
+     */
+    CstTextureSampler_uptr getLettersTexture();
 
     const vecTextLabel_sptr& getTextLabels();
 
@@ -112,7 +115,7 @@ class FontTexturesGenerator {
     static void clearFreeTypeResources(FTContent& ftContent);
 
    private:
-    const CstTextureSampler_uptr _lettersTexture;
+    CstTextureSampler_uptr _lettersTexture;
 
     const vecTextLabel_sptr _messageLabels;
 

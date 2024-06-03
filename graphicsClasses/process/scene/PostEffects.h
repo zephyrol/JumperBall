@@ -19,6 +19,8 @@ class PostEffects {
         GLsizei postEffectsWidth,
         GLsizei postEffectsHeight,
         RenderGroup_sptr screen,
+        const CstTextureSampler_uptr& sceneTexture,
+        GLint sceneTextureIndex,
         ColorableFrameBuffer_uptr brightPassFilterFrameBuffer,
         ColorableFrameBuffer_uptr horizontalBlurFrameBuffer,
         ColorableFrameBuffer_uptr verticalBlurFrameBuffer,
@@ -30,13 +32,13 @@ class PostEffects {
     void render() const;
 
     static PostEffects_uptr createInstance(const JBTypes::FileContent& fileContent,
-                                    GLsizei screenWidth,
-                                    GLsizei screenHeight,
-                                    GLsizei postEffectsWidth,
-                                    GLsizei postEffectsHeight,
-                                    GLint sceneTextureIndex,
-                                    const CstTextureSampler_uptr& sceneTexture,
-                                    GLint defaultFrameBuffer);
+                                           GLsizei screenWidth,
+                                           GLsizei screenHeight,
+                                           GLsizei postEffectsWidth,
+                                           GLsizei postEffectsHeight,
+                                           GLint sceneTextureIndex,
+                                           const CstTextureSampler_uptr& sceneTexture,
+                                           GLint defaultFrameBuffer);
 
     vecCstShaderProgram_sptr getShaderPrograms() const;
 
@@ -50,6 +52,8 @@ class PostEffects {
     const GLsizei _postEffectsWidth;
     const GLsizei _postEffectsHeight;
     const CstRenderGroup_sptr _screen;
+    const CstTextureSampler_uptr& _sceneTexture;
+    const GLint _sceneTextureIndex;
     const ColorableFrameBuffer_uptr _brightPassFilterFrameBuffer;
     const ColorableFrameBuffer_uptr _horizontalBlurFrameBuffer;
     const ColorableFrameBuffer_uptr _verticalBlurFrameBuffer;

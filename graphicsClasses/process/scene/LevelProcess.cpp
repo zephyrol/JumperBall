@@ -65,17 +65,8 @@ LevelProcess_uptr LevelProcess::createInstance(const JBTypes::FileContent& fileC
         createMapShaderProgram(fileContent, mapGroup->numberOfDynamicsIds(), width, height);
 
     mapShaderProgram->use();
-
-    TextureSampler::setActiveTexture(firstDepthTextureIndex);
-    firstDepthFrameBuffer->getRenderTexture()->bind();
     mapShaderProgram->setTextureIndex("depthTexture", firstDepthTextureIndex);
-
-    TextureSampler::setActiveTexture(secondDepthTextureIndex);
-    secondDepthFrameBuffer->getRenderTexture()->bind();
     mapShaderProgram->setTextureIndex("depth2Texture", secondDepthTextureIndex);
-
-    TextureSampler::setActiveTexture(kernelTextureIndex);
-    kernelTexture->bind();
     mapShaderProgram->setTextureIndex("depthKernelTexture", kernelTextureIndex);
 
     return std::unique_ptr<LevelProcess>(
@@ -131,8 +122,8 @@ void LevelProcess::render() const {
     TextureSampler::setActiveTexture(firstDepthTextureIndex);
     _firstShadow->getRenderTexture()->bind();
 
-    // TextureSampler::setActiveTexture(kernelTextureIndex);
-    // _depthKernel->bind();
+    TextureSampler::setActiveTexture(kernelTextureIndex);
+    _depthKernel->bind();
 
     _mapGroup->render();
 }

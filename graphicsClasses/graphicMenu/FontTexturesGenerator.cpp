@@ -232,6 +232,6 @@ glm::ivec4 FontTexturesGenerator::insertCharacterToTexture(
     return {drawingCursor.x, drawingCursor.y, drawingCursor.x + bitmapWidth, drawingCursor.y + bitmapHeight};
 }
 
-const CstTextureSampler_uptr& FontTexturesGenerator::getLettersTexture() const {
-    return _lettersTexture;
+CstTextureSampler_uptr FontTexturesGenerator::getLettersTexture() {
+    return std::move(_lettersTexture);
 }

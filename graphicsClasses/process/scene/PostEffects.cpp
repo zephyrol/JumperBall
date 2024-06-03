@@ -10,6 +10,8 @@ PostEffects::PostEffects(GLsizei screenWidth,
                          GLsizei postEffectsWidth,
                          GLsizei postEffectsHeight,
                          RenderGroup_sptr screen,
+                         const CstTextureSampler_uptr& sceneTexture,
+                         GLint sceneTextureIndex,
                          ColorableFrameBuffer_uptr brightPassFilterFrameBuffer,
                          ColorableFrameBuffer_uptr horizontalBlurFrameBuffer,
                          ColorableFrameBuffer_uptr verticalBlurFrameBuffer,
@@ -21,6 +23,8 @@ PostEffects::PostEffects(GLsizei screenWidth,
       _screenHeight(screenHeight),
       _postEffectsWidth(postEffectsWidth),
       _postEffectsHeight(postEffectsHeight),
+      _sceneTexture(sceneTexture),
+      _sceneTextureIndex(sceneTextureIndex),
       _screen(std::move(screen)),
       _brightPassFilterFrameBuffer(std::move(brightPassFilterFrameBuffer)),
       _horizontalBlurFrameBuffer(std::move(horizontalBlurFrameBuffer)),
@@ -54,22 +58,9 @@ PostEffects_uptr PostEffects::createInstance(const JBTypes::FileContent& fileCon
 
     auto shader = ShaderProgram::createInstance(fileContent, "postEffectsVs.vs", "postEffectsFs.fs");
     shader->use();
-    TextureSampler::setActiveTexture(sceneTextureIndex);
-    sceneTexture->bind();
     shader->setTextureIndex("sceneTexture", sceneTextureIndex);
 
-    TextureSampler::setActiveTexture(brightPassFilterTextureIndex);
-    brightPassFilterFrameBuffer->getRenderTexture()->bind();
-
-    TextureSampler::setActiveTexture(horizontalBlurTextureIndex);
-    horizontalBlurFrameBuffer->getRenderTexture()->bind();
-
-    TextureSampler::setActiveTexture(verticalBlurTextureIndex);
-    verticalBlurFrameBuffer->getRenderTexture()->bind();
-
-    // shader->setTextureIndex("postProcessTexture", postProcessTextureNumber);
     // Getting 17 Gauss weights computed with sigma = 4. Because two standard deviations from mean account
-
     // for 95.45%
     const auto texelSizeX = 1.f / static_cast<float>(postEffectsWidth);
     const auto texelSizeY = 1.f / static_cast<float>(postEffectsHeight);
@@ -98,16 +89,19 @@ PostEffects_uptr PostEffects::createInstance(const JBTypes::FileContent& fileCon
     // (common state at the end of rendering).
     shader->setInteger(postProcessTextureUniformLocation, verticalBlurTextureIndex);
 
-    return PostEffects_uptr(
-        new PostEffects(screenWidth, screenHeight, postEffectsWidth, postEffectsHeight, std::move(screen),
-                        std::move(brightPassFilterFrameBuffer), std::move(horizontalBlurFrameBuffer),
-                        std::move(verticalBlurFrameBuffer), std::move(shader), postProcessIdUniformLocation,
-                        postProcessTextureUniformLocation, defaultFrameBuffer));
+    return PostEffects_uptr(new PostEffects(
+        screenWidth, screenHeight, postEffectsWidth, postEffectsHeight, std::move(screen), sceneTexture,
+        sceneTextureIndex, std::move(brightPassFilterFrameBuffer), std::move(horizontalBlurFrameBuffer),
+        std::move(verticalBlurFrameBuffer), std::move(shader), postProcessIdUniformLocation,
+        postProcessTextureUniformLocation, defaultFrameBuffer));
 }
 
 void PostEffects::render() const {
     FrameBuffer::disableDepthTest();
     _postProcessesShader->use();
+
+    TextureSampler::setActiveTexture(_sceneTextureIndex);
+    _sceneTexture->bind();
 
     // 1. Bright pass filter
     _brightPassFilterFrameBuffer->bindFrameBuffer();
