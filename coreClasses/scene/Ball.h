@@ -53,7 +53,8 @@ public:
         TurningRight,
         Falling,
         Teleporting,
-        Deteleporting
+        Deteleporting,
+        WaitingJump,
     };
 
     enum class StateOfLife {
@@ -283,6 +284,8 @@ private:
     void stayingUpdate() noexcept;
 
     void movingUpdate() noexcept;
+
+    void waitingJumpUpdate() noexcept;
 
     void turningUpdate() noexcept;
 
