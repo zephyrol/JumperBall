@@ -140,7 +140,7 @@ Tutorial_uptr Menu::createTutorial(size_t level,
          [movableObject, isUsingEnglish]() {
              return std::unique_ptr<Tutorial>(new FacesTutorial(movableObject, isUsingEnglish));
          }},
-        {6, [movableObject, isUsingEnglish, isUsingTouchScreen, camera]() {
+        {8, [movableObject, isUsingEnglish, isUsingTouchScreen, camera]() {
              return std::unique_ptr<Tutorial>(
                  new LookDownTutorial(movableObject, camera, isUsingEnglish, isUsingTouchScreen));
          }}};

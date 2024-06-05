@@ -1,6 +1,6 @@
-9 9 3
-4 4 1
-80
+9 8 6
+4 6 1
+120
 
 . . . . . . . . .
 . . . . . . . . .
@@ -10,19 +10,47 @@
 . . . . . . . . .
 . . . . . . . . .
 . . . . . . . . .
-. . . . . . . . .
 
 . . . . . . . . .
-. X X X X X X X . NI KU G 4 G 4 G 4 G 4 G 4 GI IU 4
-. X X X X X X X . G 4 GI IU 3 G 3 NI KU GI IU 3 G 3 G 4
-. X X X X X X X . GI CU 4 G 3 G 2 G 2 GI CU 2 NI KU G 4
-. X X X X X X X . G 4 G 3 GI IU 2 E U G 2 G 3 G 4
-. X X X X X X X . G 4 GI IU 3 G 2 G 2 GI CU 2 G 3 G 4
-. X X X X X X X . G 4 G 3 NI KU GI CU 3 G 3 G 3 GI IU 4
-. X X X X X X X . GI CU 4 G 4 G 4 G 4 G 4 G 4 GI IU 4
+. . . . . . X . .  E U
+. . . . . . . . .
+. . X . . X X X . JI IW D I I SI ID USN
+. . X . X X . . . S SW JI IU UD NI IWDU
+. X . . X . . X . SI CDU WE J U JI KU U
+. X . . X . . . . JI ID S S S
 . . . . . . . . .
 
+
 . . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . X . . . NI CU
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+
+
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+
+
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. X X . X . X . . NI IU FI ID BI ID NI KU
+. X . . . . . . . N
+. . . . . . . . .
+
+
 . . . . . . . . .
 . . . . . . . . .
 . . . . . . . . .

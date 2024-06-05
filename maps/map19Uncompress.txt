@@ -1,6 +1,6 @@
-10 10 3
-6 8 1
-150
+10 6 3
+3 4 1
+60
 
 . . . . . . . . . .
 . . . . . . . . . .
@@ -8,25 +8,13 @@
 . . . . . . . . . .
 . . . . . . . . . .
 . . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-
-
 
 . . . . . . . . . .
-. X X X . . X X X . NI KU S S   N   J U S S     NI IU
-. X . X . . X . X . S U J U         J U NI KU
-. X X X . . X X X . J U NI IU NI CU       N N S U
+. X X X X X X X X . S WN NI CU NI KU JI IU U NI IU J U N S NE
+. X . . X . . . X . S UEDW S UEDW N
+. X . . X X . . X . S UEDW S UDW N NI KW
+. X X X X . . X X . NI IU J U N E U NI CS NI IU
 . . . . . . . . . .
-. . . . . . . . . .
-. X X X . . X X X . N NI IU J U     J U NI KU N
-. X . X . . X . X . S U J U       J U N
-. X X X . . X X X . N S N J U      N SI IU N E U
-. . . . . . . . . .
-
-
 
 . . . . . . . . . .
 . . . . . . . . . .
@@ -34,9 +22,3 @@
 . . . . . . . . . .
 . . . . . . . . . .
 . . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-
-
