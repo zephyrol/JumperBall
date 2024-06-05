@@ -13,7 +13,7 @@
 . . . . . . . .
 
 . . . . . . . .
-. X X X X X X . S WDNS N SI KD U BI IU I S DNES
+. X X X X X X . S WDNS N SI KD U BI IU S NS S DNES
 . . . . . . . .
 . . . . . . . .
 . . . . . . . .
@@ -22,7 +22,7 @@
 . . . . . . . .
 
 . . . . . . . .
-. X . . . . X . IE TEU3 IE TWU3
+. X . . . . X . IE TEU2 SE TWU2 NS
 . . . . . . . .
 . . . . . . . .
 . . . . . . . .
@@ -59,10 +59,10 @@
 
 . . . . . . . .
 . X . . . . X . SI CU NW SI CWE NU
-. X . . . . X . IE TES3 II IEW
+. X . . . . X . NE TES2 II IEW
 . X . . . . X . II IUE II KE
 . X . . . . X . II KE I
-. X . . . . . . IE TUN3
+. X . . . . . . IE TUN2
 . X . . . . . . E E
 . . . . . . . .
 

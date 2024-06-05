@@ -27,8 +27,8 @@
 . . . . . . .
 
 . . . . . . .
-. . X . X X . GS SBDN 5 I GS SRDE 6
-. X X . X . . GS SGDW 4 I NI CD
+. . X . X X . GS SBDN 5     N   GS SRDE 6
+. X X . X . . GS SGDW 4     N   NI CD
 . . . . . . .
 . . X X X . . NI IWS NI CD NI IES
 . . . X . . . B

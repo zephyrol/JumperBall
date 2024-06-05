@@ -14,7 +14,7 @@
 
 . . . . . . . . . .
 . X . . . . . . . . EI IWND E
-. . . . X . X . . . SI IU EWND NI IEU
+. . . . X . X . . . SI IU EWD NI IEU
 . X . . X . . . X . BI IW SI KD UEW NI IEU
 . X . . X . X . X . J E I NI CW F
 . X . . X . . . . . NI KE B
