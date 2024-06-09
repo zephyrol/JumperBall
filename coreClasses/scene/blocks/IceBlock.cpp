@@ -20,7 +20,6 @@ IceBlock::IceBlock(
 
 Block::Effect IceBlock::detectionEvent() {
     InteractiveBlock::detectionEvent();
-    _ball.lock()->addUpdateOutput(std::make_shared<SoundOutput>("blockTouchedIce"));
     return Block::Effect::Slide;
 }
 

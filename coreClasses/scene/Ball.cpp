@@ -442,6 +442,7 @@ void Ball::waitingJumpUpdate() noexcept {
         return;
     }
     if(timeSinceSliding > timeBeforeStartSliding) {
+        addUpdateOutput(std::make_shared<SoundOutput>("blockTouchedIce"));
         move();
         internalUpdate();
     }

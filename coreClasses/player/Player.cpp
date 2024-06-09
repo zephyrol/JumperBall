@@ -312,7 +312,7 @@ void Player::resumeChronometer() {
 }
 
 void Player::checkAdvertisement() {
-    constexpr decltype(_levelProgression) firstAdLevels = 5;
+    constexpr decltype(_levelProgression) firstAdLevels = 6;
     if(_levelProgression < firstAdLevels) {
         return;
     }
