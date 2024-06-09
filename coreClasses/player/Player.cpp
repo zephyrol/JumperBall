@@ -312,6 +312,10 @@ void Player::resumeChronometer() {
 }
 
 void Player::checkAdvertisement() {
+    constexpr decltype(_levelProgression) firstAdLevels = 5;
+    if(_levelProgression < firstAdLevels) {
+        return;
+    }
     static constexpr float timeToRunAd = 180.f;  // 3 minutes
     const float spentTime = _initialAdvertisementTime + _advertisementChronometer.getTime();
     if (spentTime > timeToRunAd) {
