@@ -22,6 +22,7 @@ TitlePage::TitlePage(Player_sptr&& player,
                      Node_sptr&& credits,
                      Node_sptr&& exitNode,
                      Node_sptr&& author,
+                     Node_sptr&& privacyPolicy,
                      Label_sptr&& backgroundLabel,
                      float currentRatio)
     : Page(std::move(player)),
@@ -35,6 +36,7 @@ TitlePage::TitlePage(Player_sptr&& player,
       _sounds(std::move(sounds)),
       _credits(std::move(credits)),
       _exitNode(std::move(exitNode)),
+      _privacyPolicy(std::move(privacyPolicy)),
       _author(std::move(author)),
       _backgroundLabel(std::move(backgroundLabel)),
       _levelsPage(nullptr),
@@ -61,7 +63,8 @@ void TitlePage::resetNodes() {
     _credits = nodes.at(8);
     _exitNode = nodes.at(9);
     _author = nodes.at(10);
-    _backgroundLabel = createBackgroundLabel(nodes.at(11));
+    _privacyPolicy = nodes.at(11);
+    _backgroundLabel = createBackgroundLabel(nodes.at(12));
     _nodesToTestIntersection = createNodesToTestIntersection();
 }
 
@@ -71,7 +74,7 @@ TitlePage_sptr TitlePage::createInstance(Player_sptr player, float ratio) {
         std::move(player), std::move(nodes.at(0)), std::move(nodes.at(1)), std::move(nodes.at(2)),
         std::move(nodes.at(3)), std::move(nodes.at(4)), std::move(nodes.at(5)), std::move(nodes.at(6)),
         std::move(nodes.at(7)), std::move(nodes.at(8)), std::move(nodes.at(9)), std::move(nodes.at(10)),
-        createBackgroundLabel(std::move(nodes.at(11))), ratio);
+        std::move(nodes.at(11)), createBackgroundLabel(std::move(nodes.at(12))), ratio);
 }
 
 vecNode_sptr TitlePage::createNodes(float ratio, bool english) {
@@ -85,7 +88,7 @@ vecNode_sptr TitlePage::createNodes(float ratio, bool english) {
 
     const auto optionsParentNode = std::make_shared<CenteredNode>(mainTitleNode, 1.5f);
 
-    constexpr float optionsNodeRatio = 15.f;
+    constexpr float optionsNodeRatio = 16.f;
     const auto playNode =
         std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
                                        english ? 1.36f : 1.38f  // Because p creates an offset
@@ -93,35 +96,39 @@ vecNode_sptr TitlePage::createNodes(float ratio, bool english) {
 
     const auto storeNode =
         std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                       english ? 1.11f : 1.09f  // Because q creates an offset
+                                       english ? 1.14f : 1.12f  // Because q creates an offset
         );
 
     const auto languageNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                                             0.46f  // Because g letter creates an offset
+                                                             0.53f  // Because g letter creates an offset
     );
 
-    const auto scrollingUpNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio, 0.85f);
+    const auto scrollingUpNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio, 0.89f);
 
-    const auto scrollingDownNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio, 0.73f);
+    const auto scrollingDownNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio, 0.77f);
 
     const auto musicNode =
         std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                       english ? 0.22f : 0.20f  // Because q creates an offset
+                                       english ? 0.32f : 0.3f  // Because q creates an offset
         );
 
     const auto soundNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
-                                                          -0.05f  // Because q creates an offset
+                                                          0.09f  // Because q creates an offset
     );
 
-    const auto creditsNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio, -0.33f);
+    const auto creditsNode = std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio, -0.14f);
+
+    const auto privacyPolicyNode =
+        std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio, -0.39f);
 
     const auto exitNode =
         std::make_shared<VerticalNode>(optionsParentNode, optionsNodeRatio,
                                        english ? -0.6f : -0.62f  // Because Q creates an offset
         );
 
-    return {jumperBallTitle, playNode,  storeNode,   languageNode, scrollingUpNode, scrollingDownNode,
-            musicNode,       soundNode, creditsNode, exitNode,     authorNode,      mainTitleNode};
+    return {jumperBallTitle,   playNode,          storeNode,    languageNode, scrollingUpNode,
+            scrollingDownNode, musicNode,         soundNode,    creditsNode,  exitNode,
+            authorNode,        privacyPolicyNode, mainTitleNode};
 }
 
 Page_sptr TitlePage::click(float mouseX, float mouseY) {
@@ -152,6 +159,10 @@ Page_sptr TitlePage::click(float mouseX, float mouseY) {
     if (nearest == _credits) {
         _player->addValidationSound();
         return _creditsPage;
+    }
+    if (nearest == _privacyPolicy) {
+        _player->addValidationSound();
+        _player->addPrivacyPolicyRequest();
     }
     if (nearest == _store) {
         _player->addValidationSound();
@@ -197,13 +208,21 @@ vecCstTextNode_uptr TitlePage::genTextNodes() const {
     const std::string musicsStatus = _player->areMusicsActivated() ? "ON" : "OFF";
     textNodes.emplace_back(
         new TextNode(_musics, (english ? "Musics: " : "Musiques: ") + musicsStatus, musicsLabelId));
+
     const std::string soundsStatus = _player->areSoundsActivated() ? "ON" : "OFF";
     textNodes.emplace_back(
         new TextNode(_sounds, (english ? "Sounds: " : "Sons: ") + soundsStatus, soundsLabelId));
+
     textNodes.emplace_back(new TextNode(_credits, english ? "Credits" : "Cr;dits", creditsLabelId));
+
+    textNodes.emplace_back(new TextNode(
+        _privacyPolicy, english ? "Privacy Policy" : "Politique de confidentialit;", privacyPolicyLabelId));
+
     textNodes.emplace_back(new TextNode(_exitNode, english ? "Exit" : "Quitter", exitLabelId));
+
     textNodes.emplace_back(new TextNode(
         _author, std::string(english ? "Created by" : "Cr;; par") + std::string(" S.Morgenthaler"), 0));
+
     return textNodes;
 }
 
@@ -243,6 +262,8 @@ void TitlePage::update(const Mouse& mouse) {
         _currentSelectedLabel = soundsLabelId;
     } else if (nearest == _credits) {
         _currentSelectedLabel = creditsLabelId;
+    } else if (nearest == _privacyPolicy) {
+        _currentSelectedLabel = privacyPolicyLabelId;
     } else {
         _currentSelectedLabel = -1;
     }
@@ -253,6 +274,6 @@ vecCstLabel_sptr TitlePage::labels() const {
 }
 
 vecNode_sptr TitlePage::createNodesToTestIntersection() const {
-    return {_play,   _store,  _language, _scrollingDown, _scrollingUp,
-            _musics, _sounds, _credits,  _exitNode,      _author};
+    return {_play,   _store,   _language,      _scrollingDown, _scrollingUp, _musics,
+            _sounds, _credits, _privacyPolicy, _exitNode,      _author};
 }

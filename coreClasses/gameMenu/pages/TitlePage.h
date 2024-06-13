@@ -31,6 +31,7 @@ class TitlePage : public Page {
                        Node_sptr&& credits,
                        Node_sptr&& exitNode,
                        Node_sptr&& author,
+                       Node_sptr&& privacyPolicy,
                        Label_sptr&& backgroundLabel,
                        float currentRatio);
 
@@ -64,6 +65,7 @@ class TitlePage : public Page {
     Node_sptr _credits;
     Node_sptr _exitNode;
     Node_sptr _author;
+    Node_sptr _privacyPolicy;
 
     Label_sptr _backgroundLabel;
 
@@ -83,6 +85,7 @@ class TitlePage : public Page {
     static constexpr int musicsLabelId = 6;
     static constexpr int soundsLabelId = 7;
     static constexpr int exitLabelId = 8;
+    static constexpr int privacyPolicyLabelId = 9;
 
     static vecNode_sptr createNodes(float ratio, bool english);
 

@@ -72,6 +72,8 @@ class Player {
 
     void addQuitRequest();
 
+    void addPrivacyPolicyRequest();
+
     void addNotEnoughMoneySound();
 
     void escapeAction();

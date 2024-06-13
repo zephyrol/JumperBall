@@ -81,6 +81,7 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/coreClasses/system/SoundOutput.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/system/DoubleChronometer.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/system/SaveFileOutput.cpp
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/ShowPrivacyPolicyOutput.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/movements/TurnRight.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/movements/TurnBack.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/movements/NextBlock.cpp
@@ -234,6 +235,7 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/coreClasses/system/SoundOutput.h
     ${CMAKE_SOURCE_DIR}/coreClasses/system/SoundStatusOutput.h
     ${CMAKE_SOURCE_DIR}/coreClasses/system/SaveFileOutput.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/system/ShowPrivacyPolicyOutput.h
     ${CMAKE_SOURCE_DIR}/coreClasses/system/RunAdOutput.h
     ${CMAKE_SOURCE_DIR}/coreClasses/movements/TurnBack.h
     ${CMAKE_SOURCE_DIR}/coreClasses/movements/Movement.h

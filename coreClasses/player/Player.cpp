@@ -11,6 +11,7 @@
 #include "system/RequestQuitOutput.h"
 #include "system/RunAdOutput.h"
 #include "system/SaveFileOutput.h"
+#include "system/ShowPrivacyPolicyOutput.h"
 #include "system/SoundOutput.h"
 #include "system/SoundStatusOutput.h"
 
@@ -327,4 +328,8 @@ void Player::checkAdvertisement() {
 
 void Player::addQuitRequest() {
     _updateOutputs.emplace_back(new RequestQuitOutput());
+}
+
+void Player::addPrivacyPolicyRequest() {
+    _updateOutputs.emplace_back(new ShowPrivacyPolicyOutput());
 }

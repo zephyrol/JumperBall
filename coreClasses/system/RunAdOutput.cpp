@@ -4,7 +4,4 @@
 
 #include "RunAdOutput.h"
 
-RunAdOutput::RunAdOutput()
-:UpdateOutput("ad", "")
-{
-}
+RunAdOutput::RunAdOutput() : UpdateOutput("ad", "") {}
