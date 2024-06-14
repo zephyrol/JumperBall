@@ -1,6 +1,6 @@
 # GRAVITY GLOBE GAME
 
-**Gravity globe** (formerly Jumper Ball) is a 3D video game. The project is currently under development.
+**Gravity globe** (formerly Jumper Ball) is a 3D video game.
 It works on **Windows**, **Unix/Linux** and **macOS**.
 
 
