@@ -32,14 +32,14 @@ std::vector<Tutorial::Message> MovementTutorial::getMessages() const {
     if (_isUsingTouchScreen) {
         if (_isInEnglish) {
             return {{"Swipe up to go ahead", ""},
-                    {"Swipe " + std::string(_isLeftRightReverted ? "right" : "left") + " to turn right", ""},
-                    {"Swipe " + std::string(_isLeftRightReverted ? "left" : "right") + " to turn left", ""},
+                    {"Swipe " + std::string(_isLeftRightReverted ? "left" : "right") + " to turn right", ""},
+                    {"Swipe " + std::string(_isLeftRightReverted ? "right" : "left") + " to turn left", ""},
                     finishLevel};
         }
         return {{"Balayez vers le haut", "pour avancer"},
-                {"Balayez vers la " + std::string(_isLeftRightReverted ? "droite" : "gauche"),
-                 "pour tourner ` droite"},
                 {"Balayez vers la " + std::string(_isLeftRightReverted ? "gauche" : "droite"),
+                 "pour tourner ` droite"},
+                {"Balayez vers la " + std::string(_isLeftRightReverted ? "droite" : "gauche"),
                  "pour tourner ` gauche"},
                 finishLevel};
     }
