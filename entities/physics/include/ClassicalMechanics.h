@@ -1,14 +1,13 @@
-#ifndef CLASSICALMECHANICS_H
-#define CLASSICALMECHANICS_H
 
 /*
  * File: ClassicalMechanics.h
  * Author: Morgenthaler S
- *
- * Created on 17 octobre 2019, 22:14
  */
 
-#include "system/Types.h"
+#ifndef CLASSICALMECHANICS_H
+#define CLASSICALMECHANICS_H
+#include <iostream>
+#include <vector>
 
 class ClassicalMechanics {
 public:

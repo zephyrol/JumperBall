@@ -4,6 +4,9 @@ project(GravityGlobe)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Add entities subdirectory (contains physics library)
+add_subdirectory(entities)
+
 # glfw3
 find_package(glfw3 REQUIRED)
 
@@ -118,7 +121,6 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/Screen.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/Displayable.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/Map.cpp
-    ${CMAKE_SOURCE_DIR}/coreClasses/scene/ClassicalMechanics.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/Shape.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/Ball.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/LabelGeometry.cpp
@@ -269,7 +271,6 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/Enemy.h
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/blocks/enemies/ThornBall.h
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/MapGenerator.h
-    ${CMAKE_SOURCE_DIR}/coreClasses/scene/ClassicalMechanics.h
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/Displayable.h
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/Map.h
     ${CMAKE_SOURCE_DIR}/coreClasses/scene/SceneElement.h
@@ -336,7 +337,8 @@ target_include_directories(GravityGlobe PRIVATE
 
 # Link Libraries
 target_link_libraries(GravityGlobe PRIVATE
-        glfw 
+        Physics
+        glfw
         glm::glm
         Freetype::Freetype
 )

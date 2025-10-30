@@ -8,7 +8,7 @@
 #ifndef DarkBall_h
 #define DarkBall_h
 
-#include "scene/ClassicalMechanics.h"
+#include "ClassicalMechanics.h"
 #include "InteractiveEnemy.h"
 
 class DarkBall : public InteractiveEnemy {

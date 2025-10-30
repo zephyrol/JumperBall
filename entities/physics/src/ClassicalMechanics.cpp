@@ -7,7 +7,6 @@
 
 #include "ClassicalMechanics.h"
 
-
 ClassicalMechanics::ClassicalMechanics(float ballRadius, float speedCoefficient) :
     _jumpDistance{basicJumpDistance},
     _timeToGetDestinationX(getTimeToGetDestFromV0y(basicV0y)),
