@@ -38,13 +38,6 @@ else()
     target_compile_options(Physics PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
-# Install rules (optional)
-install(TARGETS Physics
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-)
-
 install(FILES ${PHYSICS_HEADERS}
-    DESTINATION include/physics
+    DESTINATION ${CMAKE_BINARY_DIR}/include/physics
 )
