@@ -9,6 +9,7 @@
 #include <iostream>
 #include <scene/MapGenerator.h>
 #include "Window.h"
+#include "../adapters/ClassicalMechanicsFactory.h"
 
 
 GLFWwindow *initLibraries() {
@@ -78,7 +79,11 @@ int main(int argc, char **argv) {
     int windowHeight;
     glfwGetWindowSize(glfwWindow, &windowWidth, &windowHeight);
 
-    Window window(glfwWindow, frameBufferWidth, frameBufferHeight, windowWidth, windowHeight);
+    // Create the physics factory (Dependency Injection - DIP)
+    // This is where we wire up the concrete implementation
+    auto physicsFactory = std::make_shared<ClassicalMechanicsFactory>();
+
+    Window window(glfwWindow, frameBufferWidth, frameBufferHeight, windowWidth, windowHeight, physicsFactory);
     window.run();
 
     cleanLibraries();

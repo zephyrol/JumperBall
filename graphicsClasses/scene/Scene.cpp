@@ -6,8 +6,8 @@
  */
 #include "Scene.h"
 
-Scene::Scene(const std::string &mapContent, float screenRatio, Player_sptr player) :
-    _map(MapGenerator::loadMap(mapContent, player->getDoubleChronometer())),
+Scene::Scene(const std::string &mapContent, float screenRatio, Player_sptr player, const CstIPhysicsEngineFactory_sptr &physicsFactory) :
+    _map(MapGenerator::loadMap(mapContent, player->getDoubleChronometer(), physicsFactory)),
     _currentKey(Scene::ActionKey::Nothing),
     _camera(std::make_shared<Camera>(*_map, screenRatio)),
     _star(Star::createBlurStar(*_map)),

@@ -9,6 +9,7 @@
 #define MAPGENERATOR_H
 #include "Map.h"
 #include "system/DoubleChronometer.h"
+#include "physics/IPhysicsEngineFactory.h"
 #include <sstream>
 
 namespace MapGenerator {
@@ -48,9 +49,17 @@ std::string uncompressString(const std::string& compressedString);
 void compressNew(std::ifstream& input);
 
 std::shared_ptr <Map> loadMap(size_t mapNumber);
-std::shared_ptr<Map> loadMap(const std::string &mapContent, const CstDoubleChronometer_sptr& doubleChronometer);
+std::shared_ptr<Map> loadMap(
+    const std::string &mapContent,
+    const CstDoubleChronometer_sptr& doubleChronometer,
+    const CstIPhysicsEngineFactory_sptr& physicsFactory
+);
 
-Map::MapInfo uncompressMap(std::istringstream &file, const CstDoubleChronometer_sptr& doubleChronometer);
+Map::MapInfo uncompressMap(
+    std::istringstream &file,
+    const CstDoubleChronometer_sptr& doubleChronometer,
+    const CstIPhysicsEngineFactory_sptr& physicsFactory
+);
 
 std::string convertToBase(unsigned long int number, unsigned char base);
 unsigned long int convertToBase10(const std::string& s, unsigned int base);

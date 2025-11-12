@@ -12,18 +12,21 @@ Controller::Controller(const size_t& screenWidth,
                        const JBTypes::FileContent& filesContent,
                        const unsigned char* fontData,
                        size_t fontDataSize,
-                       bool isUsingTouchScreen)
+                       bool isUsingTouchScreen,
+                       const CstIPhysicsEngineFactory_sptr &physicsFactory)
     : _doubleChronometer(std::make_shared<DoubleChronometer>(
           // The chronometer tracking creation time needs to be started directly
           true,
           // The chronometer tracking in game time needs to be started later
           false)),
       _player(Player::createInstance(_doubleChronometer, filesContent.at("save.txt"))),
+      _physicsFactory(physicsFactory),
       _filesContent(filesContent),
       _scene(std::make_shared<Scene>(
           filesContent.at("map" + std::to_string(_player->levelProgression()) + ".txt"),
           static_cast<float>(screenWidth) / static_cast<float>(screenHeight),
-          _player)),
+          _player,
+          _physicsFactory)),
       _menu(Menu::getJumperBallMenu(_player,
                                     _scene->getMap(),
                                     _scene->getBall(),
@@ -82,7 +85,7 @@ void Controller::releaseMouse() {
 void Controller::runGame(size_t level) {
     _doubleChronometer->reset();
     _scene = std::make_shared<Scene>(_filesContent.at("map" + std::to_string(level) + ".txt"),
-                                     _scene->getRatio(), _player);
+                                     _scene->getRatio(), _player, _physicsFactory);
     CstMovableObject_sptr movableObject = _scene->getBall();
     _menu->setBackgroundMap(_scene->getMap(), _scene->getBall(), _scene->getCamera());
     _viewer->setScene(_scene);

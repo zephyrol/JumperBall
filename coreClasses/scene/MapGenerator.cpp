@@ -23,13 +23,13 @@
 #include "blocks/GhostBlock.h"
 
 std::shared_ptr<Map>
-MapGenerator::loadMap(const std::string &mapContent, const CstDoubleChronometer_sptr &doubleChronometer) {
+MapGenerator::loadMap(const std::string &mapContent, const CstDoubleChronometer_sptr &doubleChronometer, const CstIPhysicsEngineFactory_sptr &physicsFactory) {
     std::istringstream sst(mapContent);
-    return std::make_shared<Map>(uncompressMap(sst, doubleChronometer));
+    return std::make_shared<Map>(uncompressMap(sst, doubleChronometer, physicsFactory));
 }
 
 Map::MapInfo
-MapGenerator::uncompressMap(std::istringstream &file, const CstDoubleChronometer_sptr &doubleChronometer) {
+MapGenerator::uncompressMap(std::istringstream &file, const CstDoubleChronometer_sptr &doubleChronometer, const CstIPhysicsEngineFactory_sptr &physicsFactory) {
     Map::MapInfo mapInfo{};
 
     const auto getUncompressedDimension = [](const std::string &compressedDimension) {
@@ -47,7 +47,7 @@ MapGenerator::uncompressMap(std::istringstream &file, const CstDoubleChronometer
     const auto beginX = getUncompressedDimension(readString(file));
     const auto beginY = getUncompressedDimension(readString(file));
     const auto beginZ = getUncompressedDimension(readString(file));
-    mapInfo.ball = std::make_shared<Ball>(beginX, beginY, beginZ, doubleChronometer);
+    mapInfo.ball = std::make_shared<Ball>(beginX, beginY, beginZ, doubleChronometer, physicsFactory);
     mapInfo.timeToFinish = getUncompressedDimension(readString(file));
 
 

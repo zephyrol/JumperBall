@@ -158,6 +158,8 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/tutorials/LookDownTutorial.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/InGamePage.cpp
     ${CMAKE_SOURCE_DIR}/coreClasses/player/Player.cpp
+    ${CMAKE_SOURCE_DIR}/adapters/ClassicalMechanicsAdapter.cpp
+    ${CMAKE_SOURCE_DIR}/adapters/ClassicalMechanicsFactory.cpp
     ${CMAKE_SOURCE_DIR}/application/Window.cpp
     ${CMAKE_SOURCE_DIR}/application/main.cpp
     ${CMAKE_SOURCE_DIR}/graphicsClasses/thirdparty/glad/glad.c
@@ -316,6 +318,10 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/ValidationPage.h
     ${CMAKE_SOURCE_DIR}/coreClasses/gameMenu/pages/TitlePage.h
     ${CMAKE_SOURCE_DIR}/coreClasses/player/Player.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/physics/IPhysicsEngine.h
+    ${CMAKE_SOURCE_DIR}/coreClasses/physics/IPhysicsEngineFactory.h
+    ${CMAKE_SOURCE_DIR}/adapters/ClassicalMechanicsAdapter.h
+    ${CMAKE_SOURCE_DIR}/adapters/ClassicalMechanicsFactory.h
     ${CMAKE_SOURCE_DIR}/application/Window.h
 )
 
@@ -333,6 +339,7 @@ target_include_directories(GravityGlobe PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/coreClasses
         ${CMAKE_CURRENT_SOURCE_DIR}/graphicsClasses
         ${CMAKE_CURRENT_SOURCE_DIR}/graphicsClasses/thirdparty/glad
+        ${CMAKE_CURRENT_SOURCE_DIR}/adapters
 )
 
 # Link Libraries

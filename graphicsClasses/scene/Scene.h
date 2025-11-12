@@ -12,6 +12,7 @@
 #include <scene/MapGenerator.h>
 #include <scene/Ball.h>
 #include <scene/Star.h>
+#include <physics/IPhysicsEngineFactory.h>
 #include "Camera.h"
 
 
@@ -28,7 +29,12 @@ public:
         Up, Down, Left, Right, Validate, Nothing
     };
 
-    Scene(const std::string &mapContent, float screenRatio, Player_sptr player);
+    Scene(
+        const std::string &mapContent,
+        float screenRatio,
+        Player_sptr player,
+        const CstIPhysicsEngineFactory_sptr &physicsFactory
+    );
 
     void setNoAction();
 

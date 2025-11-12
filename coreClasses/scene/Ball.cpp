@@ -8,7 +8,7 @@
 #include "Ball.h"
 #include "system/SoundOutput.h"
 
-Ball::Ball(unsigned int x, unsigned int y, unsigned int z, const CstDoubleChronometer_sptr &doubleChronometer)
+Ball::Ball(unsigned int x, unsigned int y, unsigned int z, const CstDoubleChronometer_sptr &doubleChronometer, const CstIPhysicsEngineFactory_sptr &physicsFactory)
     :
     _creationChronometer(doubleChronometer->first()),
     _inGameChronometer(doubleChronometer->second()),
@@ -19,9 +19,10 @@ Ball::Ball(unsigned int x, unsigned int y, unsigned int z, const CstDoubleChrono
     _state(Ball::State::Staying),
     _stateOfLife(Ball::StateOfLife::Normal),
     _jumpingType(Ball::JumpingType::Short),
-    _mechanicsPatternJumping(getRadius(), jumpSpeedCoefficient),
-    _mechanicsPatternLongJumping(getRadius(), 3.f, 4.2f, jumpSpeedCoefficient),
-    _mechanicsPatternFalling(getRadius(), 0.f, 0.f, jumpSpeedCoefficient),
+    _physicsFactory(physicsFactory),
+    _mechanicsPatternJumping(physicsFactory->createPhysicsEngine(getRadius(), jumpSpeedCoefficient)),
+    _mechanicsPatternLongJumping(physicsFactory->createPhysicsEngine(getRadius(), 3.f, 4.2f, jumpSpeedCoefficient)),
+    _mechanicsPatternFalling(physicsFactory->createPhysicsEngine(getRadius(), 0.f, 0.f, jumpSpeedCoefficient)),
     _actionTime(0.f),
     _stateOfLifeTime(0.f),
     _burnCoefficientTrigger(0.f),
@@ -98,7 +99,7 @@ void Ball::jump() noexcept {
     _state = Ball::State::Jumping;
     setActionTimeNow();
 
-    ClassicalMechanics &refMechanicsJumping = getMechanicsJumping();
+    IPhysicsEngine &refMechanicsJumping = getMechanicsJumping();
     constexpr float sizeBlock = 1.f;
     const float sizeBlock2MinusRadius = sizeBlock / 2.f - getRadius();
 
@@ -204,16 +205,16 @@ void Ball::doAction(Ball::ActionRequest action) {
     }
 }
 
-const ClassicalMechanics &Ball::getMechanicsJumping() const noexcept {
+const IPhysicsEngine &Ball::getMechanicsJumping() const noexcept {
     if (_jumpingType == Ball::JumpingType::Short) {
-        return _mechanicsPatternJumping;
+        return *_mechanicsPatternJumping;
     } else {
-        return _mechanicsPatternLongJumping;
+        return *_mechanicsPatternLongJumping;
     }
 }
 
-const ClassicalMechanics &Ball::getMechanicsFalling() const noexcept {
-    return _mechanicsPatternFalling;
+const IPhysicsEngine &Ball::getMechanicsFalling() const noexcept {
+    return *_mechanicsPatternFalling;
 }
 
 JBTypes::Quaternion Ball::getCoveredRotation() const noexcept {
@@ -292,7 +293,7 @@ const JBTypes::Color &Ball::getTeleportationColor() const noexcept {
 void Ball::isFallingIntersectionBlock() noexcept {
     const float fDifference = getTimeSecondsSinceAction();
     const bool descendingJumpPhase = _state == Ball::State::Jumping &&
-                                     _mechanicsPatternJumping.getVelocity(fDifference).y < 0;
+                                     _mechanicsPatternJumping->getVelocity(fDifference).y < 0;
 
     const auto positionBlockPtr = intersectBlock();
     if (!positionBlockPtr || (!descendingJumpPhase && _state != Ball::State::Falling)) {
@@ -319,7 +320,7 @@ void Ball::isFallingIntersectionBlock() noexcept {
     internalUpdate();
 }
 
-JBTypes::vec3f Ball::P2DTo3D(ClassicalMechanics::physics2DVector p2D) const {
+JBTypes::vec3f Ball::P2DTo3D(IPhysicsEngine::Vector2D p2D) const {
     const float offsetRealPosition = 0.5f + getRadius();
 
     const JBTypes::vec3f sideVec = JBTypesMethods::directionAsVector(_currentSide);
@@ -355,9 +356,9 @@ JBTypes::vec3f Ball::currentSideAsVector() const {
     return JBTypesMethods::directionAsVector(_currentSide);
 }
 
-ClassicalMechanics &Ball::getMechanicsJumping() noexcept {
+IPhysicsEngine &Ball::getMechanicsJumping() noexcept {
     // Scott Meyer's advice to avoid code duplication
-    return const_cast <ClassicalMechanics &>(static_cast <const Ball &>(*this).getMechanicsJumping());
+    return const_cast <IPhysicsEngine &>(static_cast <const Ball &>(*this).getMechanicsJumping());
 }
 
 JBTypes::vec3f Ball::get3DPosStayingBall() const {
@@ -425,7 +426,7 @@ void Ball::blockEvent() noexcept {
 }
 
 void Ball::jumpingUpdate() noexcept {
-    const ClassicalMechanics::physics2DVector pos2D =
+    const IPhysicsEngine::Vector2D pos2D =
         getMechanicsJumping().getPosition(getTimeSecondsSinceAction());
 
     const JBTypes::vec3f relativePositionJump = P2DTo3D(pos2D);
@@ -449,7 +450,7 @@ void Ball::waitingJumpUpdate() noexcept {
 }
 
 void Ball::fallingUpdate() noexcept {
-    const ClassicalMechanics::physics2DVector pos2D = _mechanicsPatternFalling.getPosition(
+    const IPhysicsEngine::Vector2D pos2D = _mechanicsPatternFalling->getPosition(
         getTimeSecondsSinceAction()
     );
 

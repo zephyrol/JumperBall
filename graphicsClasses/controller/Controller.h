@@ -15,6 +15,7 @@
 #include "system/DoubleChronometer.h"
 #include "system/KeyboardKey.h"
 #include "system/Mouse.h"
+#include "physics/IPhysicsEngineFactory.h"
 
 class Controller {
 
@@ -25,7 +26,8 @@ public:
         const JBTypes::FileContent &filesContent,
         const unsigned char *fontData,
         size_t fontDataSize,
-        bool isUsingTouchScreen
+        bool isUsingTouchScreen,
+        const CstIPhysicsEngineFactory_sptr &physicsFactory
     );
 
     void interactionButtons(
@@ -64,6 +66,7 @@ private:
 
     const DoubleChronometer_sptr _doubleChronometer;
     const Player_sptr _player;
+    const CstIPhysicsEngineFactory_sptr _physicsFactory;
 
     const JBTypes::FileContent _filesContent;
 

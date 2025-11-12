@@ -14,7 +14,8 @@ Window::Window(
     int frameBufferWidth,
     int frameBufferHeight,
     int windowWidth,
-    int windowHeight
+    int windowHeight,
+    const CstIPhysicsEngineFactory_sptr &physicsFactory
 ) :
     _window(glfwWindow),
     _frameBufferWidth(frameBufferWidth),
@@ -28,7 +29,8 @@ Window::Window(
         createFilesContent(),
         _binaryFont.data(),
         _binaryFont.size(),
-        false
+        false,
+        physicsFactory
     )) {
 }
 

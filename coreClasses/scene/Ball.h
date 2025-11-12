@@ -8,7 +8,8 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include "ClassicalMechanics.h"
+#include "physics/IPhysicsEngine.h"
+#include "physics/IPhysicsEngineFactory.h"
 #include "movements/TurnLeft.h"
 #include "movements/TurnRight.h"
 #include "movements/TurnBack.h"
@@ -33,7 +34,8 @@ public:
         unsigned int x,
         unsigned int y,
         unsigned int z,
-        const CstDoubleChronometer_sptr &doubleChronometer
+        const CstDoubleChronometer_sptr &doubleChronometer,
+        const CstIPhysicsEngineFactory_sptr &physicsFactory
     );
 
     static constexpr float jumpSpeedCoefficient = 1.2f;
@@ -100,9 +102,9 @@ public:
 
     float burnCoefficient() const;
 
-    const ClassicalMechanics &getMechanicsJumping() const noexcept;
+    const IPhysicsEngine &getMechanicsJumping() const noexcept;
 
-    const ClassicalMechanics &getMechanicsFalling() const noexcept;
+    const IPhysicsEngine &getMechanicsFalling() const noexcept;
 
     JBTypes::Quaternion getCoveredRotation() const noexcept;
 
@@ -196,9 +198,10 @@ private:
     Ball::StateOfLife _stateOfLife;
     Ball::JumpingType _jumpingType;
 
-    const ClassicalMechanics _mechanicsPatternJumping;
-    const ClassicalMechanics _mechanicsPatternLongJumping;
-    const ClassicalMechanics _mechanicsPatternFalling;
+    const CstIPhysicsEngineFactory_sptr _physicsFactory;
+    IPhysicsEngine_uptr _mechanicsPatternJumping;
+    IPhysicsEngine_uptr _mechanicsPatternLongJumping;
+    IPhysicsEngine_uptr _mechanicsPatternFalling;
 
     float _actionTime;
     float _stateOfLifeTime;
@@ -239,7 +242,7 @@ private:
 
     vecCstUpdateOutput_sptr _updateOutputs;
 
-    JBTypes::vec3f P2DTo3D(ClassicalMechanics::physics2DVector p2D) const;
+    JBTypes::vec3f P2DTo3D(IPhysicsEngine::Vector2D p2D) const;
 
     JBTypes::vec3f get3DPosStayingBall() const;
 
@@ -275,7 +278,7 @@ private:
 
     void blockEvent() noexcept;
 
-    ClassicalMechanics &getMechanicsJumping() noexcept;
+    IPhysicsEngine &getMechanicsJumping() noexcept;
 
     void internalUpdate() noexcept;
 

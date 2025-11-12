@@ -9,6 +9,7 @@
 #define WINDOW_H
 
 #include "controller/Controller.h"
+#include "physics/IPhysicsEngineFactory.h"
 #include <GLFW/glfw3.h>
 
 class Window {
@@ -19,7 +20,8 @@ public:
         int frameBufferWidth,
         int frameBufferHeight,
         int windowWidth,
-        int windowHeight
+        int windowHeight,
+        const CstIPhysicsEngineFactory_sptr &physicsFactory
     );
 
     void run();
